@@ -34,6 +34,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["root-workspace-0b6124", ["workspace:."]]
     ],
     "fallbackPool": [
+      [
+        "prettier",
+        "npm:2.0.4"
+      ]
     ],
     "locationBlacklistData": [
     ],
@@ -42,6 +46,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {
           "packageLocation": "./",
           "packageDependencies": [
+            ["prettier", "npm:2.0.4"]
           ],
           "linkType": "SOFT",
         }]
@@ -12409,6 +12414,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["prettier", [
+        ["npm:2.0.4", {
+          "packageLocation": "./.yarn/cache/prettier-npm-2.0.4-8d1f5f638d-2.zip/node_modules/prettier/",
+          "packageDependencies": [
+            ["prettier", "npm:2.0.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["pretty-bytes", [
         ["npm:5.3.0", {
           "packageLocation": "./.yarn/cache/pretty-bytes-npm-5.3.0-d118630c4c-2.zip/node_modules/pretty-bytes/",
@@ -13488,7 +13502,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:.", {
           "packageLocation": "./",
           "packageDependencies": [
-            ["root-workspace-0b6124", "workspace:."]
+            ["root-workspace-0b6124", "workspace:."],
+            ["prettier", "npm:2.0.4"]
           ],
           "linkType": "SOFT",
         }]

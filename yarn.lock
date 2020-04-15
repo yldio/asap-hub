@@ -11033,6 +11033,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"prettier@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "prettier@npm:2.0.4"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 2/a43343ac00250ce239439a723e5b0860a46e4703542b925c962d8c3dfceab1f69a326ba4c8de2f24ad39c4daef07831439b0b237cda9c63e4981164075e7dc5a
+  languageName: node
+  linkType: hard
+
 "pretty-bytes@npm:^5.1.0":
   version: 5.3.0
   resolution: "pretty-bytes@npm:5.3.0"
@@ -12036,6 +12045,8 @@ resolve@1.15.0:
 "root-workspace-0b6124@workspace:.":
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
+  dependencies:
+    prettier: ^2.0.4
   dependenciesMeta:
     core-js:
       built: false

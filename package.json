@@ -4,6 +4,13 @@
     "apps/*",
     "packages/*"
   ],
+  "scripts": {
+    "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
+    "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\""
+  },
+  "devDependencies": {
+    "prettier": "^2.0.4"
+  },
   "dependenciesMeta": {
     "core-js": {
       "built": false
@@ -14,5 +21,9 @@
     "fsevents": {
       "built": false
     }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
   }
 }

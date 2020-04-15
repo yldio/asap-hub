@@ -1,0 +1,13 @@
+# dependencies
+/.pnp.js
+/.yarn
+
+# testing
+/coverage
+/apps/*/coverage
+/packages/*/coverage
+
+# production
+/build
+/apps/*/build
+/packages/*/build

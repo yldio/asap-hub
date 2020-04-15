@@ -2,10 +2,13 @@
   "name": "@asap-hub/frontend",
   "private": true,
   "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "echo Run the workspace root script instead",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -17,13 +20,13 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "react": "^16.13.1",
+    "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "typescript": "~3.8.3"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [

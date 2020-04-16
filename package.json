@@ -12,7 +12,7 @@
     "build": "yarn build:typecheck && yarn build:babel && yarn workspace @asap-hub/frontend build",
     "build:babel": "yarn workspaces foreach -pt run build:babel",
     "watch:babel": "yarn workspaces foreach -pi -j 1000 run watch:babel",
-    "build:typecheck": "tsc -b packages/example-lib",
+    "build:typecheck": "tsc -b -v packages/example-lib",
     "watch:typecheck": "yarn build:typecheck -w",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\""

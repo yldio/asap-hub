@@ -2,10 +2,14 @@
 
 # dependencies
 node_modules
+**/node_modules/*
+!**/node_modules/serverless*
+
 .yarn/*
 !.yarn/cache
 !.yarn/releases
 !.yarn/plugins
+
 
 # testing
 /coverage
@@ -16,6 +20,7 @@ node_modules
 /build
 /apps/*/build
 /packages/*/build
+.serverless
 
 *.tsbuildinfo
 

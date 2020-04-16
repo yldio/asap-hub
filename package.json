@@ -9,16 +9,49 @@
     "node": "12.x"
   },
   "scripts": {
-    "build": "yarn build:typecheck && yarn build:babel && yarn workspace @asap-hub/frontend build",
     "build:babel": "yarn workspaces foreach -pt run build:babel",
-    "watch:babel": "yarn workspaces foreach -pi -j 1000 run watch:babel",
     "build:typecheck": "tsc -b -v packages/example-lib",
-    "watch:typecheck": "yarn build:typecheck -w",
-    "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
+    "build": "yarn build:typecheck && yarn build:babel && yarn workspace @asap-hub/frontend build",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "test": "jest"
+    "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
+    "test": "jest",
+    "watch:babel": "yarn workspaces foreach -pi -j 1000 run watch:babel",
+    "watch:typecheck": "yarn build:typecheck -w"
   },
-  "dependencies": {
+  "dependenciesMeta": {
+    "core-js": {
+      "built": false
+    },
+    "core-js-pure": {
+      "built": false
+    },
+    "fsevents": {
+      "built": false
+    },
+    "serverless": {
+      "built": false
+    },
+    "serverless-s3-sync": {
+      "unplugged": true
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
@@ -43,34 +76,10 @@
     "jest-runner-eslint": "^0.7.6",
     "jest-watch-select-projects": "^2.0.0",
     "jest-watch-typeahead": "^0.5.0",
+    "param-case": "^3.0.3",
     "prettier": "^2.0.4",
+    "serverless": "^1.67.3",
+    "serverless-s3-sync": "^1.12.0",
     "typescript": "~3.8.3"
-  },
-  "dependenciesMeta": {
-    "core-js": {
-      "built": false
-    },
-    "core-js-pure": {
-      "built": false
-    },
-    "fsevents": {
-      "built": false
-    }
-  },
-  "prettier": {
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

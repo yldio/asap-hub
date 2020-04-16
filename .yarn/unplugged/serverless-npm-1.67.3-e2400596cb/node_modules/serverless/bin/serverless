@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+// TODO (BREAKING): Remove this file with next major release
+// Left as a fallback placeholder to not accidentally break things
+// https://github.com/search?q=%22bin%2Fserverless%22&type=Code
+
+'use strict';
+
+require('./serverless.js');

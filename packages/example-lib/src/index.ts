@@ -1,1 +1,1 @@
-export const LINK_TEXT = 'React is cool.';
+export const LINK_TEXT = 'React is cool :)';

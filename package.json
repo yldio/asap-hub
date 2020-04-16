@@ -15,7 +15,8 @@
     "build:typecheck": "tsc -b -v packages/example-lib",
     "watch:typecheck": "yarn build:typecheck -w",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\""
+    "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
+    "test": "jest"
   },
   "dependencies": {
     "@babel/cli": "^7.8.4",

@@ -14,10 +14,12 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'eslint-config-airbnb-base',
+    'plugin:jest/recommended',
     'eslint-config-prettier',
     'prettier',
   ],
   rules: {
+    'import/prefer-default-export': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',

@@ -11,3 +11,7 @@
 /build
 /apps/*/build
 /packages/*/build
+
+# editors
+.vscode
+.vim

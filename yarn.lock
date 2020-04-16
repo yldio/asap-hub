@@ -4,10 +4,19 @@
 __metadata:
   version: 4
 
+"@asap-hub/example-lib@workspace:packages/example-lib":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/example-lib@workspace:packages/example-lib"
+  dependencies:
+    "@types/jest": ^25.2.1
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/frontend@workspace:apps/frontend":
   version: 0.0.0-use.local
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
   dependencies:
+    "@asap-hub/example-lib": "workspace:packages/example-lib"
     "@testing-library/dom": ^7.2.1
     "@testing-library/jest-dom": ^5.5.0
     "@testing-library/react": ^10.0.2
@@ -21,10 +30,35 @@ __metadata:
     react: ^16.13.1
     react-app-polyfill: ^1.0.6
     react-dom: ^16.13.1
-    react-scripts: 3.4.1
+    react-scripts: "patch:react-scripts@3.4.1#./patches/react-scripts.patch"
     typescript: ~3.8.3
   languageName: unknown
   linkType: soft
+
+"@babel/cli@npm:^7.8.4":
+  version: 7.8.4
+  resolution: "@babel/cli@npm:7.8.4"
+  dependencies:
+    chokidar: ^2.1.8
+    commander: ^4.0.1
+    convert-source-map: ^1.1.0
+    fs-readdir-recursive: ^1.1.0
+    glob: ^7.0.0
+    lodash: ^4.17.13
+    make-dir: ^2.1.0
+    slash: ^2.0.0
+    source-map: ^0.5.0
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  dependenciesMeta:
+    chokidar:
+      optional: true
+  bin:
+    babel: ./bin/babel.js
+    babel-external-helpers: ./bin/babel-external-helpers.js
+  checksum: 2/c378a1ad7d9001811a98472c3dec54f9c6efbd2acf9786bc75e7763b5cdc6f5c4437fdda5792b54b419a3fff9347a416b544d0e341335770ce6e26f041926517
+  languageName: node
+  linkType: hard
 
 "@babel/code-frame@npm:7.8.3, @babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.8.3":
   version: 7.8.3
@@ -46,7 +80,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.9.0, @babel/core@npm:^7.1.0, @babel/core@npm:^7.4.5, @babel/core@npm:^7.7.5":
+"@babel/core@npm:7.9.0, @babel/core@npm:^7.1.0, @babel/core@npm:^7.4.5, @babel/core@npm:^7.7.5, @babel/core@npm:^7.9.0":
   version: 7.9.0
   resolution: "@babel/core@npm:7.9.0"
   dependencies:
@@ -1229,7 +1263,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:^7.4.5":
+"@babel/preset-env@npm:^7.4.5, @babel/preset-env@npm:^7.9.5":
   version: 7.9.5
   resolution: "@babel/preset-env@npm:7.9.5"
   dependencies:
@@ -2346,7 +2380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/experimental-utils@npm:2.28.0":
+"@typescript-eslint/experimental-utils@npm:2.28.0, @typescript-eslint/experimental-utils@npm:^2.5.0":
   version: 2.28.0
   resolution: "@typescript-eslint/experimental-utils@npm:2.28.0"
   dependencies:
@@ -4313,7 +4347,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^4.1.1":
+"commander@npm:^4.0.1, commander@npm:^4.1.1":
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
   checksum: 2/448585071bf8fb4c0bf9dd52abaee43dea086f801334caec2c8e8c9f456f8abc224c1614ccbbdbf7da5ac2524d230f13cf1fc86c233cf8a041ebecea7df106e9
@@ -4463,7 +4497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"convert-source-map@npm:1.7.0, convert-source-map@npm:^1.4.0, convert-source-map@npm:^1.6.0, convert-source-map@npm:^1.7.0":
+"convert-source-map@npm:1.7.0, convert-source-map@npm:^1.1.0, convert-source-map@npm:^1.4.0, convert-source-map@npm:^1.6.0, convert-source-map@npm:^1.7.0":
   version: 1.7.0
   resolution: "convert-source-map@npm:1.7.0"
   dependencies:
@@ -5881,6 +5915,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-jest@npm:^23.8.2":
+  version: 23.8.2
+  resolution: "eslint-plugin-jest@npm:23.8.2"
+  dependencies:
+    "@typescript-eslint/experimental-utils": ^2.5.0
+  peerDependencies:
+    eslint: ">=5"
+  checksum: 2/eec0f788a98f3c6b962e47533a421a15e2cc6e74fd971ae890ac322446a7b964775b8eb781898ac45d0508f25922765e0dc118d4c4385e6ca3281db104d036ee
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-jsx-a11y@npm:6.2.3, eslint-plugin-jsx-a11y@npm:^6.2.3":
   version: 6.2.3
   resolution: "eslint-plugin-jsx-a11y@npm:6.2.3"
@@ -6761,6 +6806,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-readdir-recursive@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "fs-readdir-recursive@npm:1.1.0"
+  checksum: 2/dec853d7418a9a2c1295d0dbf602505655bebed76474d656d68ed3e06bc84db651325b795509221f186955791965ec0add261919d464cae76dd3b8564f462054
+  languageName: node
+  linkType: hard
+
 "fs-write-stream-atomic@npm:^1.0.8":
   version: 1.0.10
   resolution: "fs-write-stream-atomic@npm:1.0.10"
@@ -6947,7 +6999,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"glob@npm:^7.0.3, glob@npm:^7.1.1, glob@npm:^7.1.2, glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.1.6":
+"glob@npm:^7.0.0, glob@npm:^7.0.3, glob@npm:^7.1.1, glob@npm:^7.1.2, glob@npm:^7.1.3, glob@npm:^7.1.4, glob@npm:^7.1.6":
   version: 7.1.6
   resolution: "glob@npm:7.1.6"
   dependencies:
@@ -12738,7 +12790,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-scripts@npm:3.4.1":
+react-scripts@3.4.1:
   version: 3.4.1
   resolution: "react-scripts@npm:3.4.1"
   dependencies:
@@ -12806,6 +12858,77 @@ fsevents@^1.2.7:
   bin:
     react-scripts: ./bin/react-scripts.js
   checksum: 2/417fc7cfb3c7b632f8286e02febf2301ae4a4bc25299a9ef8662c777dcaef8de9d7f2320cd7491bf796674fa1de7d86fdb9e9a2852266167e19085dd78b15f79
+  languageName: node
+  linkType: hard
+
+"react-scripts@patch:react-scripts@3.4.1#./patches/react-scripts.patch::locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend":
+  version: 3.4.1
+  resolution: "react-scripts@patch:react-scripts@npm%3A3.4.1#./patches/react-scripts.patch::version=3.4.1&hash=441eae&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"
+  dependencies:
+    "@babel/core": 7.9.0
+    "@svgr/webpack": 4.3.3
+    "@typescript-eslint/eslint-plugin": ^2.10.0
+    "@typescript-eslint/parser": ^2.10.0
+    babel-eslint: 10.1.0
+    babel-jest: ^24.9.0
+    babel-loader: 8.1.0
+    babel-plugin-named-asset-import: ^0.3.6
+    babel-preset-react-app: ^9.1.2
+    camelcase: ^5.3.1
+    case-sensitive-paths-webpack-plugin: 2.3.0
+    css-loader: 3.4.2
+    dotenv: 8.2.0
+    dotenv-expand: 5.1.0
+    eslint: ^6.6.0
+    eslint-config-react-app: ^5.2.1
+    eslint-loader: 3.0.3
+    eslint-plugin-flowtype: 4.6.0
+    eslint-plugin-import: 2.20.1
+    eslint-plugin-jsx-a11y: 6.2.3
+    eslint-plugin-react: 7.19.0
+    eslint-plugin-react-hooks: ^1.6.1
+    file-loader: 4.3.0
+    fs-extra: ^8.1.0
+    fsevents: 2.1.2
+    html-webpack-plugin: 4.0.0-beta.11
+    identity-obj-proxy: 3.0.0
+    jest: 24.9.0
+    jest-environment-jsdom-fourteen: 1.0.1
+    jest-resolve: 24.9.0
+    jest-watch-typeahead: 0.4.2
+    mini-css-extract-plugin: 0.9.0
+    optimize-css-assets-webpack-plugin: 5.0.3
+    pnp-webpack-plugin: 1.6.4
+    postcss-flexbugs-fixes: 4.1.0
+    postcss-loader: 3.0.0
+    postcss-normalize: 8.0.1
+    postcss-preset-env: 6.7.0
+    postcss-safe-parser: 4.0.1
+    react-app-polyfill: ^1.0.6
+    react-dev-utils: ^10.2.1
+    resolve: 1.15.0
+    resolve-url-loader: 3.1.1
+    sass-loader: 8.0.2
+    semver: 6.3.0
+    style-loader: 0.23.1
+    terser-webpack-plugin: 2.3.5
+    ts-pnp: 1.1.6
+    url-loader: 2.3.0
+    webpack: 4.42.0
+    webpack-dev-server: 3.10.3
+    webpack-manifest-plugin: 2.2.0
+    workbox-webpack-plugin: 4.3.1
+  peerDependencies:
+    typescript: ^3.2.1
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  bin:
+    react-scripts: ./bin/react-scripts.js
+  checksum: 2/84db5e94f683f3d8506bb7b3b2d44e2918007ef20d6df1524687dc4ee11aebd9a7a8dde552e75b87bf1457f1d827da7fecba13f1620422858dbf8d99fd8bea3b
   languageName: node
   linkType: hard
 
@@ -13393,6 +13516,9 @@ resolve@1.15.0:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
+    "@babel/cli": ^7.8.4
+    "@babel/core": ^7.9.0
+    "@babel/preset-env": ^7.9.5
     "@typescript-eslint/eslint-plugin": ^2.28.0
     "@typescript-eslint/parser": ^2.28.0
     "@yarnpkg/pnpify": ^2.0.0-rc.20
@@ -13404,6 +13530,7 @@ resolve@1.15.0:
     eslint-config-react-app: ^5.2.1
     eslint-plugin-flowtype: ^4.7.0
     eslint-plugin-import: ^2.20.2
+    eslint-plugin-jest: ^23.8.2
     eslint-plugin-jsx-a11y: ^6.2.3
     eslint-plugin-prettier: ^3.1.3
     eslint-plugin-react: ^7.19.0

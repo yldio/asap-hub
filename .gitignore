@@ -17,6 +17,8 @@ node_modules
 /apps/*/build
 /packages/*/build
 
+*.tsbuildinfo
+
 # misc
 .DS_Store
 .env.local

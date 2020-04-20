@@ -1,8 +1,7 @@
 image: node:12
 
 stages:
-  - build-packages
-  - build-apps
+  - build
   - build-native
   - test
   - deploy
@@ -34,41 +33,20 @@ test:
     paths:
       - coverage
   needs:
-    - build:babel
+    - build
   stage: test
 
-# stage build-packages
+# stage build
 
-build:babel:
+build:
   script:
-    - yarn run build:babel
+    - yarn run build
   artifacts:
     paths:
-      - packages/*/build/
+      - 'packages/*/build/'
+      - 'apps/*/build/'
   needs: []
-  stage: build-packages
-
-build:typecheck:
-  script:
-    - yarn run build:typecheck
-  artifacts:
-    paths:
-      - packages/*/build/
-  needs: []
-  stage: build-packages
-
-# stage build-apps
-
-build:frontend:
-  script:
-    - yarn build:frontend
-  artifacts:
-    paths:
-      - apps/frontend/build/
-  needs:
-    - build:babel
-    - build:typecheck
-  stage: build-apps
+  stage: build
 
 # stage build-native
 
@@ -97,7 +75,7 @@ deploy:sls:branch:
   only:
     - external_pull_requests
   needs:
-    - build:frontend
+    - build
     - build:native
   stage: deploy
   variables:

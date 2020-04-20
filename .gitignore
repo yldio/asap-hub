@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules
+
 .yarn/*
 !.yarn/cache
 !.yarn/releases
@@ -16,6 +17,8 @@ node_modules
 /build
 /apps/*/build
 /packages/*/build
+
+/.serverless*
 
 *.tsbuildinfo
 

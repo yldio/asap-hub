@@ -1,0 +1,94 @@
+image: node:12
+
+stages:
+  - build
+  - test
+  - deploy
+
+# stage test
+
+check:packages:
+  script:
+    - yarn install --immutable --immutable-cache
+  needs: []
+  stage: test
+
+check:constraints:
+  script:
+    - yarn constraints
+  needs: []
+  stage: test
+
+check:format:
+  script:
+    - yarn run lint:format
+  needs: []
+  stage: test
+
+test:
+  script:
+    - yarn run test --coverage
+  artifacts:
+    paths:
+      - coverage
+  needs:
+    - build
+  stage: test
+
+# stage build
+
+build:
+  script:
+    - yarn run build
+  artifacts:
+    paths:
+      - 'packages/*/build'
+      - 'apps/*/build'
+  needs: []
+  stage: build
+
+build:native-deps:
+  script:
+    - yarn rebuild
+  artifacts:
+    paths:
+      - .yarn/unplugged
+  needs: []
+  stage: build
+
+# stage deploy
+
+deploy:sls:branch:
+  artifacts:
+    reports:
+      dotenv: deploy.env
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: https://$APP_URL
+    on_stop: deploy:sls:branch_remove
+  script:
+    - yarn pnpify serverless deploy --verbose
+    - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
+  only:
+    - external_pull_requests
+  needs:
+    - build
+    - build:native-deps
+  stage: deploy
+  variables:
+    SLS_STAGE: $CI_COMMIT_REF_SLUG
+
+deploy:sls:branch_remove:
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  script:
+    - yarn pnpify serverless remove --verbose
+  only:
+    - external_pull_requests
+  needs:
+    - build:native-deps
+  stage: deploy
+  variables:
+    SLS_STAGE: $CI_COMMIT_REF_SLUG
+  when: manual

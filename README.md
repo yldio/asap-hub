@@ -32,3 +32,8 @@ For a list of individual package and particularly app scripts, look inside the r
 ## Editor setup
 
 Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler in this repository.
+
+## Further documentation
+
+Individual `packages` or `apps` may contain their own readme files as deemed necessary.
+The [`docs`](docs) folder contains overall architecture / decision documentation.

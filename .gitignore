@@ -18,8 +18,7 @@ node_modules
 /apps/*/build
 /packages/*/build
 
-.serverless
-/.serverless-plugins
+/.serverless*
 
 *.tsbuildinfo
 

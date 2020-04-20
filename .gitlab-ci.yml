@@ -1,17 +1,13 @@
 image: node:12
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - .yarn
-
-before_script:
-  - yarn
-
 stages:
-  - build
+  - build-packages
+  - build-apps
+  - build-native
   - test
   - deploy
+
+# stage test
 
 check:packages:
   script:
@@ -31,31 +27,65 @@ check:format:
   needs: []
   stage: test
 
-# We commit symlinks to packages with hashes into .serverless_plugins,
-# check that they're not out of sync / dangling
-check:symlinks:
-  script:
-    - find -xtype l -printf '%p\n' -exec false {} +
-  needs: []
-  stage: test
-
 test:
   script:
     - yarn run test --coverage
   artifacts:
     paths:
       - coverage
+  needs:
+    - build:babel
   stage: test
 
-build:
+# stage build-packages
+
+build:babel:
   script:
-    - yarn run build
+    - yarn run build:babel
   artifacts:
     untracked: true
     paths:
-      - apps/
       - packages/
-  stage: build
+  needs: []
+  stage: build-packages
+
+build:typecheck:
+  script:
+    - yarn run build:typecheck
+  artifacts:
+    untracked: true
+    paths:
+      - packages/
+  needs: []
+  stage: build-packages
+
+# stage build-apps
+
+build:frontend:
+  script:
+    - yarn build:frontend
+  artifacts:
+    untracked: true
+    paths:
+      - apps/frontend/
+  needs:
+    - build:babel
+    - build:typecheck
+  stage: build-apps
+
+# stage build-native
+
+build:native:
+  script:
+    - yarn rebuild
+  artifacts:
+    untracked: true
+    paths:
+      - .yarn/
+  needs: []
+  stage: build-native
+
+# stage deploy
 
 deploy:sls:branch:
   artifacts:
@@ -70,12 +100,14 @@ deploy:sls:branch:
     - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
   only:
     - external_pull_requests
+  needs:
+    - build:frontend
+    - build:native
   stage: deploy
   variables:
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 deploy:sls:branch_remove:
-  dependencies: []
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     action: stop
@@ -83,6 +115,8 @@ deploy:sls:branch_remove:
     - yarn pnpify serverless remove --verbose
   only:
     - external_pull_requests
+  needs:
+    - build:native
   stage: deploy
   variables:
     SLS_STAGE: $CI_COMMIT_REF_SLUG

@@ -1,8 +1,23 @@
+const { mkdirSync, existsSync, unlinkSync, symlinkSync } = require('fs');
+const { join, dirname } = require('path');
 const { paramCase } = require('param-case');
 const pkg = require('./package.json');
 
 const service = paramCase(pkg.name);
 const plugins = ['serverless-s3-sync'];
+
+(function ensurePluginsDir() {
+  const pluginsDir = join(__dirname, '.serverless-plugins');
+  mkdirSync(pluginsDir, { recursive: true });
+  plugins.forEach((plugin) => {
+    const symlinkPath = join(pluginsDir, plugin);
+    const pluginDirectory = dirname(require.resolve(`${plugin}/package.json`));
+    try {
+      unlinkSync(symlinkPath);
+    } catch {}
+    symlinkSync(pluginDirectory, symlinkPath);
+  });
+})();
 
 module.exports = {
   service,

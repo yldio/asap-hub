@@ -11,7 +11,8 @@
   "scripts": {
     "build:babel": "yarn workspaces foreach -pt run build:babel",
     "build:typecheck": "tsc -b -v packages/example-lib",
-    "build": "yarn build:typecheck && yarn build:babel && yarn workspace @asap-hub/frontend build",
+    "build:frontend": "yarn workspace @asap-hub/frontend build",
+    "build": "yarn build:typecheck && yarn build:babel && yarn build:frontend",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "test": "jest",

@@ -2,7 +2,6 @@ image: node:12
 
 stages:
   - build
-  - build-native
   - test
   - deploy
 
@@ -48,16 +47,14 @@ build:
   needs: []
   stage: build
 
-# stage build-native
-
-build:native:
+build:native-deps:
   script:
     - yarn rebuild
   artifacts:
     paths:
       - .yarn/unplugged
   needs: []
-  stage: build-native
+  stage: build
 
 # stage deploy
 
@@ -76,7 +73,7 @@ deploy:sls:branch:
     - external_pull_requests
   needs:
     - build
-    - build:native
+    - build:native-deps
   stage: deploy
   variables:
     SLS_STAGE: $CI_COMMIT_REF_SLUG
@@ -90,7 +87,7 @@ deploy:sls:branch_remove:
   only:
     - external_pull_requests
   needs:
-    - build:native
+    - build:native-deps
   stage: deploy
   variables:
     SLS_STAGE: $CI_COMMIT_REF_SLUG

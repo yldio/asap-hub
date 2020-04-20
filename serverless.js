@@ -7,7 +7,7 @@ const service = paramCase(pkg.name);
 const plugins = ['serverless-s3-sync'];
 
 (function ensurePluginsDir() {
-  const pluginsDir = join(__dirname, '.serverless-plugins');
+  const pluginsDir = join(__dirname, '.serverless_plugins');
   mkdirSync(pluginsDir, { recursive: true });
   plugins.forEach((plugin) => {
     const symlinkPath = join(pluginsDir, plugin);

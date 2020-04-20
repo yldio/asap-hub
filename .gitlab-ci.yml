@@ -1,4 +1,47 @@
+.tmpl:master_rules: &tmpl_master_rules
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      when: always
+  stage: deploy
+  variables:
+    SLS_STAGE: production
+
+.tmpl:branch_rules: &tmpl_branch_rules
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+      when: always
+  stage: deploy
+  variables:
+    SLS_STAGE: $CI_COMMIT_REF_SLUG
+
+.tmpl:branch_remove_rules: &tmpl_branch_remove_rules
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+      when: manual
+      allow_failure: true
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+    GIT_CHECKOUT: 'false'
+    SLS_STAGE: $CI_COMMIT_REF_SLUG
+
+.tmpl:deploy: &tmpl_deploy
+  artifacts:
+    reports:
+      dotenv: deploy.env
+  script:
+    - yarn pnpify serverless deploy --verbose
+    - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
+  dependencies:
+    - build
+    - build:native-deps
+
 image: node:12
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 stages:
   - build
@@ -58,37 +101,28 @@ build:native-deps:
 
 # stage deploy
 
+deploy:sls:master:
+  <<: *tmpl_master_rules
+  <<: *tmpl_deploy
+  environment:
+    name: production
+    url: https://$APP_URL
+
 deploy:sls:branch:
-  artifacts:
-    reports:
-      dotenv: deploy.env
+  <<: *tmpl_branch_rules
+  <<: *tmpl_deploy
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     url: https://$APP_URL
     on_stop: deploy:sls:branch_remove
-  script:
-    - yarn pnpify serverless deploy --verbose
-    - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
-  only:
-    - external_pull_requests
-  needs:
-    - build
-    - build:native-deps
-  stage: deploy
-  variables:
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 deploy:sls:branch_remove:
+  <<: *tmpl_branch_remove_rules
+  dependencies:
+    - build:native-deps
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     action: stop
   script:
+    - git checkout $CI_COMMIT_SHA # the branch may not exist
     - yarn pnpify serverless remove --verbose
-  only:
-    - external_pull_requests
-  needs:
-    - build:native-deps
-  stage: deploy
-  variables:
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
-  when: manual

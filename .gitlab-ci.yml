@@ -43,9 +43,8 @@ build:babel:
   script:
     - yarn run build:babel
   artifacts:
-    untracked: true
     paths:
-      - packages/
+      - packages/*/build/
   needs: []
   stage: build-packages
 
@@ -53,9 +52,8 @@ build:typecheck:
   script:
     - yarn run build:typecheck
   artifacts:
-    untracked: true
     paths:
-      - packages/
+      - packages/*/build/
   needs: []
   stage: build-packages
 
@@ -65,9 +63,8 @@ build:frontend:
   script:
     - yarn build:frontend
   artifacts:
-    untracked: true
     paths:
-      - apps/frontend/
+      - apps/frontend/build/
   needs:
     - build:babel
     - build:typecheck
@@ -79,9 +76,8 @@ build:native:
   script:
     - yarn rebuild
   artifacts:
-    untracked: true
     paths:
-      - .yarn/
+      - .yarn/unplugged/
   needs: []
   stage: build-native
 

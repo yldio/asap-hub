@@ -1,25 +1,31 @@
 import React from 'react';
-import { LINK_TEXT } from '@asap-hub/example-lib';
+import { ASAP_LINK } from '@asap-hub/example-lib';
 
-import logo from './logo.svg';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          <img
+            src="https://parkinsonsroadmap.org/wp-content/uploads/2019/08/cropped-ASAP_Logo_FullColor.png"
+            className="App-logo"
+            alt="logo"
+          />
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {LINK_TEXT}
-        </a>
+        <p>Welcome to the ASAP Hub!</p>
+        <p>
+          By{' '}
+          <a
+            className="App-link"
+            href={ASAP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ASAP: Aligning Science Across Parkinson's
+          </a>
+        </p>
       </header>
     </div>
   );

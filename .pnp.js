@@ -1820,6 +1820,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.5.3"
       ],
       [
+        "cross-env",
+        "npm:7.0.2"
+      ],
+      [
         "cross-spawn",
         "npm:6.0.5"
       ],
@@ -5253,7 +5257,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "shebang-command",
-        "npm:1.2.0"
+        "npm:2.0.0"
       ],
       [
         "shebang-regex",
@@ -6279,6 +6283,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:12.12.35"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
+            ["cross-env", "npm:7.0.2"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
             ["react", "npm:16.13.1"],
@@ -12584,6 +12589,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["cross-env", [
+        ["npm:7.0.2", {
+          "packageLocation": "./.yarn/cache/cross-env-npm-7.0.2-1e9c9fdbca-2.zip/node_modules/cross-env/",
+          "packageDependencies": [
+            ["cross-env", "npm:7.0.2"],
+            ["cross-spawn", "npm:7.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["cross-spawn", [
         ["npm:5.1.0", {
           "packageLocation": "./.yarn/cache/cross-spawn-npm-5.1.0-a3e220603e-2.zip/node_modules/cross-spawn/",
@@ -12611,6 +12626,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/cross-spawn-npm-7.0.1-ef4846765e-2.zip/node_modules/cross-spawn/",
           "packageDependencies": [
             ["cross-spawn", "npm:7.0.1"],
+            ["path-key", "npm:3.1.1"],
+            ["shebang-command", "npm:2.0.0"],
+            ["which", "npm:2.0.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:7.0.2", {
+          "packageLocation": "./.yarn/cache/cross-spawn-npm-7.0.2-fef0e84eed-2.zip/node_modules/cross-spawn/",
+          "packageDependencies": [
+            ["cross-spawn", "npm:7.0.2"],
             ["path-key", "npm:3.1.1"],
             ["shebang-command", "npm:2.0.0"],
             ["which", "npm:2.0.2"]

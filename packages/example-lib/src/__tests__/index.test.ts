@@ -1,5 +1,5 @@
-import { LINK_TEXT } from '..';
+import { ASAP_LINK } from '..';
 
-it('exports a link text', () => {
-  expect(LINK_TEXT).toEqual(expect.any(String));
+it('exports a link', () => {
+  expect(ASAP_LINK).toEqual(expect.any(String));
 });

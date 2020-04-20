@@ -43,8 +43,8 @@ build:
     - yarn run build
   artifacts:
     paths:
-      - 'packages/*/build/'
-      - 'apps/*/build/'
+      - 'packages/*/build'
+      - 'apps/*/build'
   needs: []
   stage: build
 
@@ -55,7 +55,7 @@ build:native:
     - yarn rebuild
   artifacts:
     paths:
-      - .yarn/unplugged/
+      - .yarn/unplugged
   needs: []
   stage: build-native
 

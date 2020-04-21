@@ -1,3 +1,7 @@
+const {
+  defaults: { testMatch },
+} = require('jest-config');
+
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -20,6 +24,10 @@ module.exports = {
   ],
   rules: {
     'import/prefer-default-export': 'off',
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: testMatch },
+    ],
     'import/extensions': [
       'error',
       'ignorePackages',

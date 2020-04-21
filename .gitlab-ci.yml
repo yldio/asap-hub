@@ -21,8 +21,7 @@
       allow_failure: true
   stage: deploy
   variables:
-    GIT_STRATEGY: none
-    GIT_CHECKOUT: 'false'
+    GIT_CHECKOUT: 0
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:deploy: &tmpl_deploy
@@ -44,85 +43,86 @@ workflow:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 stages:
-  - build
-  - test
+  # - build
+  # - test
   - deploy
 
 # stage test
 
-check:packages:
-  script:
-    - yarn install --immutable --immutable-cache
-  needs: []
-  stage: test
+# check:packages:
+#   script:
+#     - yarn install --immutable --immutable-cache
+#   needs: []
+#   stage: test
 
-check:constraints:
-  script:
-    - yarn constraints
-  needs: []
-  stage: test
+# check:constraints:
+#   script:
+#     - yarn constraints
+#   needs: []
+#   stage: test
 
-check:format:
-  script:
-    - yarn run lint:format
-  needs: []
-  stage: test
+# check:format:
+#   script:
+#     - yarn run lint:format
+#   needs: []
+#   stage: test
 
-test:
-  script:
-    - yarn run test --coverage
-  artifacts:
-    paths:
-      - coverage
-  needs:
-    - build
-  stage: test
+# test:
+#   script:
+#     - yarn run test --coverage
+#   artifacts:
+#     paths:
+#       - coverage
+#   needs:
+#     - build
+#   stage: test
 
 # stage build
 
-build:
-  script:
-    - yarn run build
-  artifacts:
-    paths:
-      - 'packages/*/build'
-      - 'apps/*/build'
-  needs: []
-  stage: build
+# build:
+#   script:
+#     - yarn run build
+#   artifacts:
+#     paths:
+#       - 'packages/*/build'
+#       - 'apps/*/build'
+#   needs: []
+#   stage: build
 
-build:native-deps:
-  script:
-    - yarn rebuild
-  artifacts:
-    paths:
-      - .yarn/unplugged
-  needs: []
-  stage: build
+# build:native-deps:
+#   script:
+#     - yarn rebuild
+#   artifacts:
+#     paths:
+#       - .yarn/unplugged
+#   needs: []
+#   stage: build
 
 # stage deploy
 
-deploy:sls:master:
-  <<: *tmpl_master_rules
-  <<: *tmpl_deploy
-  environment:
-    name: production
-    url: https://$APP_URL
+# deploy:sls:master:
+#   <<: *tmpl_master_rules
+#   <<: *tmpl_deploy
+#   environment:
+#     name: production
+#     url: https://$APP_URL
 
-deploy:sls:branch:
-  <<: *tmpl_branch_rules
-  <<: *tmpl_deploy
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    url: https://$APP_URL
-    on_stop: deploy:sls:branch_remove
+# deploy:sls:branch:
+#   <<: *tmpl_branch_rules
+#   <<: *tmpl_deploy
+#   environment:
+#     name: review/$CI_COMMIT_REF_SLUG
+#     url: https://$APP_URL
+#     on_stop: deploy:sls:branch_remove
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove_rules
-  dependencies:
-    - build:native-deps
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    action: stop
+  # dependencies:
+  #   - build:native-deps
+  # environment:
+  #   name: review/$CI_COMMIT_REF_SLUG
+  #   action: stop
   script:
+    - printenv
     - git checkout $CI_COMMIT_SHA # the branch may not exist
-    - yarn pnpify serverless remove --verbose
+    - echo "It's working"

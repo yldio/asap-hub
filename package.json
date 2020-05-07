@@ -21,6 +21,9 @@
     "watch:typecheck": "yarn build:typecheck -w"
   },
   "dependenciesMeta": {
+    "browser-tabs-lock": {
+      "built": false
+    },
     "core-js": {
       "built": false
     },

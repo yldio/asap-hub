@@ -760,6 +760,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:7.1.1"
       ],
       [
+        "@types/history",
+        "npm:4.7.5"
+      ],
+      [
         "@types/istanbul-lib-coverage",
         "npm:2.0.1"
       ],
@@ -822,6 +826,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/react-dom",
         "npm:16.9.6"
+      ],
+      [
+        "@types/react-router",
+        "npm:5.1.7"
+      ],
+      [
+        "@types/react-router-dom",
+        "npm:5.1.5"
       ],
       [
         "@types/responselike",
@@ -6288,6 +6300,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:12.12.35"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
+            ["@types/react-router-dom", "npm:5.1.5"],
+            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__react", "npm:10.0.1"],
             ["cross-env", "npm:7.0.2"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
@@ -9147,6 +9162,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/history", [
+        ["npm:4.7.5", {
+          "packageLocation": "./.yarn/cache/@types-history-npm-4.7.5-a9538c96b6-3.zip/node_modules/@types/history/",
+          "packageDependencies": [
+            ["@types/history", "npm:4.7.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/istanbul-lib-coverage", [
         ["npm:2.0.1", {
           "packageLocation": "./.yarn/cache/@types-istanbul-lib-coverage-npm-2.0.1-c8b87e4b03-3.zip/node_modules/@types/istanbul-lib-coverage/",
@@ -9303,6 +9327,29 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@types/react-dom", "npm:16.9.6"],
             ["@types/react", "npm:16.9.34"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/react-router", [
+        ["npm:5.1.7", {
+          "packageLocation": "./.yarn/cache/@types-react-router-npm-5.1.7-f0979c7a97-3.zip/node_modules/@types/react-router/",
+          "packageDependencies": [
+            ["@types/react-router", "npm:5.1.7"],
+            ["@types/history", "npm:4.7.5"],
+            ["@types/react", "npm:16.9.34"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/react-router-dom", [
+        ["npm:5.1.5", {
+          "packageLocation": "./.yarn/cache/@types-react-router-dom-npm-5.1.5-b0a728cc6d-3.zip/node_modules/@types/react-router-dom/",
+          "packageDependencies": [
+            ["@types/react-router-dom", "npm:5.1.5"],
+            ["@types/history", "npm:4.7.5"],
+            ["@types/react", "npm:16.9.34"],
+            ["@types/react-router", "npm:5.1.7"]
           ],
           "linkType": "HARD",
         }]

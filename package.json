@@ -40,6 +40,12 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
+  "jest-runner-eslint": {
+    "cliOptions": {
+      "maxWarnings": 0,
+      "reportUnusedDisableDirectives": true
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",

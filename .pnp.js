@@ -52,6 +52,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "workspace:apps/frontend"
       ],
       [
+        "@auth0/auth0-spa-js",
+        "npm:1.8.1"
+      ],
+      [
         "@auth0/s3",
         "npm:1.0.0"
       ],
@@ -588,6 +592,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.2.4"
       ],
       [
+        "@peculiar/asn1-schema",
+        "npm:2.0.3"
+      ],
+      [
+        "@peculiar/json-schema",
+        "npm:1.1.10"
+      ],
+      [
+        "@peculiar/webcrypto",
+        "npm:1.1.1"
+      ],
+      [
         "@serverless/cli",
         "npm:1.4.0"
       ],
@@ -724,6 +740,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:10.0.1"
       ],
       [
+        "@types/asn1js",
+        "npm:0.0.1"
+      ],
+      [
         "@types/babel__core",
         "npm:7.1.7"
       ],
@@ -814,6 +834,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/prop-types",
         "npm:15.7.3"
+      ],
+      [
+        "@types/pvutils",
+        "npm:0.0.1"
       ],
       [
         "@types/q",
@@ -978,6 +1002,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "abbrev",
         "npm:1.1.1"
+      ],
+      [
+        "abortcontroller-polyfill",
+        "npm:1.4.0"
       ],
       [
         "accepts",
@@ -1162,6 +1190,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "asn1.js",
         "npm:4.10.1"
+      ],
+      [
+        "asn1js",
+        "npm:2.0.26"
       ],
       [
         "assert",
@@ -1398,6 +1430,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "browser-resolve",
         "npm:1.11.3"
+      ],
+      [
+        "browser-tabs-lock",
+        "npm:1.2.8"
       ],
       [
         "browserify-aes",
@@ -1789,7 +1825,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "core-js",
-        "npm:2.6.11"
+        "npm:3.6.5"
       ],
       [
         "core-js-compat",
@@ -2316,6 +2352,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.17.5"
       ],
       [
+        "es-cookie",
+        "npm:1.3.2"
+      ],
+      [
         "es-to-primitive",
         "npm:1.2.1"
       ],
@@ -2558,6 +2598,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "fast-safe-stringify",
         "npm:2.0.7"
+      ],
+      [
+        "fast-text-encoding",
+        "npm:1.0.2"
       ],
       [
         "fastq",
@@ -2856,6 +2900,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.3.0"
       ],
       [
+        "gud",
+        "npm:1.0.0"
+      ],
+      [
         "gzip-size",
         "npm:5.1.1"
       ],
@@ -2940,8 +2988,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.0"
       ],
       [
+        "history",
+        "npm:4.10.1"
+      ],
+      [
         "hmac-drbg",
         "npm:1.0.1"
+      ],
+      [
+        "hoist-non-react-statics",
+        "npm:3.3.2"
       ],
       [
         "hosted-git-info",
@@ -3884,6 +3940,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.0"
       ],
       [
+        "mini-create-react-context",
+        "virtual:ceb4f0683ddf762ddb81146a02c0ff4ae88f7983b6291cebdaaf8af075038b905eac656e9ea59c2718e180f00a3e22c5239aa5fa88823a9870106e07774606cf#npm:0.3.2"
+      ],
+      [
         "mini-css-extract-plugin",
         "virtual:30fad2d2a5b2e98b3317032543233dd575c8c4abf95c0d0add88ee96995e774448abed640a9bd7ef302f092a80b7bf40268560713e41aac8bca514f12099dc59#npm:0.9.0"
       ],
@@ -4796,6 +4856,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.1"
       ],
       [
+        "promise-polyfill",
+        "npm:8.1.3"
+      ],
+      [
         "promise-queue",
         "npm:2.2.5"
       ],
@@ -4842,6 +4906,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "punycode",
         "npm:2.1.1"
+      ],
+      [
+        "pvtsutils",
+        "npm:1.0.10"
+      ],
+      [
+        "pvutils",
+        "npm:1.0.17"
       ],
       [
         "q",
@@ -4922,6 +4994,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "react-is",
         "npm:16.13.1"
+      ],
+      [
+        "react-router",
+        "virtual:26226e3e7a03d4a3d68955bad4552f8ad92ca47ee262a7baf8c6ad04b0f0fc8a4b25c81d22057329f9833b7d4a1f207118d444809b3abe914628f93e0ed67a79#npm:5.1.2"
+      ],
+      [
+        "react-router-dom",
+        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:5.1.2"
       ],
       [
         "react-scripts",
@@ -5077,6 +5157,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "resolve-from",
+        "npm:3.0.0"
+      ],
+      [
+        "resolve-pathname",
         "npm:3.0.0"
       ],
       [
@@ -5668,6 +5752,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.3.0"
       ],
       [
+        "tiny-invariant",
+        "npm:1.1.0"
+      ],
+      [
+        "tiny-warning",
+        "npm:1.0.3"
+      ],
+      [
         "tmp",
         "npm:0.0.33"
       ],
@@ -5794,6 +5886,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "unbzip2-stream",
         "npm:1.4.1"
+      ],
+      [
+        "unfetch",
+        "npm:4.1.0"
       ],
       [
         "unicode-canonical-property-names-ecmascript",
@@ -5940,6 +6036,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.0.4"
       ],
       [
+        "value-equal",
+        "npm:1.0.1"
+      ],
+      [
         "vary",
         "npm:1.1.2"
       ],
@@ -5978,6 +6078,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "wbuf",
         "npm:1.7.3"
+      ],
+      [
+        "webcrypto-core",
+        "npm:1.1.1"
       ],
       [
         "webidl-conversions",
@@ -6292,10 +6396,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/frontend", "workspace:apps/frontend"],
             ["@asap-hub/example-lib", "workspace:packages/example-lib"],
+            ["@auth0/auth0-spa-js", "npm:1.8.1"],
+            ["@peculiar/webcrypto", "npm:1.1.1"],
             ["@testing-library/dom", "npm:7.2.1"],
             ["@testing-library/jest-dom", "npm:5.5.0"],
             ["@testing-library/react", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:10.0.2"],
             ["@testing-library/user-event", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:10.0.1"],
+            ["@types/history", "npm:4.7.5"],
             ["@types/jest", "npm:25.2.1"],
             ["@types/node", "npm:12.12.35"],
             ["@types/react", "npm:16.9.34"],
@@ -6304,15 +6411,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.0.3"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["cross-env", "npm:7.0.2"],
+            ["history", "npm:4.10.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
             ["react", "npm:16.13.1"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:16.13.1"],
+            ["react-router-dom", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:5.1.2"],
             ["react-scripts", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:react-scripts@npm%3A3.4.1#./patches/react-scripts.patch::version=3.4.1&hash=4dc748&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"],
             ["typescript", "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=8cac75"]
           ],
           "linkType": "SOFT",
+        }]
+      ]],
+      ["@auth0/auth0-spa-js", [
+        ["npm:1.8.1", {
+          "packageLocation": "./.yarn/cache/@auth0-auth0-spa-js-npm-1.8.1-035947c732-3.zip/node_modules/@auth0/auth0-spa-js/",
+          "packageDependencies": [
+            ["@auth0/auth0-spa-js", "npm:1.8.1"],
+            ["abortcontroller-polyfill", "npm:1.4.0"],
+            ["browser-tabs-lock", "npm:1.2.8"],
+            ["core-js", "npm:3.6.5"],
+            ["es-cookie", "npm:1.3.2"],
+            ["fast-text-encoding", "npm:1.0.2"],
+            ["promise-polyfill", "npm:8.1.3"],
+            ["unfetch", "npm:4.1.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@auth0/s3", [
@@ -7956,6 +8081,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["regenerator-runtime", "npm:0.13.5"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:7.9.6", {
+          "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.9.6-93b1a0d418-3.zip/node_modules/@babel/runtime/",
+          "packageDependencies": [
+            ["@babel/runtime", "npm:7.9.6"],
+            ["regenerator-runtime", "npm:0.13.5"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@babel/runtime-corejs3", [
@@ -8559,6 +8692,43 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@peculiar/asn1-schema", [
+        ["npm:2.0.3", {
+          "packageLocation": "./.yarn/cache/@peculiar-asn1-schema-npm-2.0.3-012134dc5d-3.zip/node_modules/@peculiar/asn1-schema/",
+          "packageDependencies": [
+            ["@peculiar/asn1-schema", "npm:2.0.3"],
+            ["@types/asn1js", "npm:0.0.1"],
+            ["asn1js", "npm:2.0.26"],
+            ["pvtsutils", "npm:1.0.10"],
+            ["tslib", "npm:1.11.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@peculiar/json-schema", [
+        ["npm:1.1.10", {
+          "packageLocation": "./.yarn/cache/@peculiar-json-schema-npm-1.1.10-b0042875c5-3.zip/node_modules/@peculiar/json-schema/",
+          "packageDependencies": [
+            ["@peculiar/json-schema", "npm:1.1.10"],
+            ["tslib", "npm:1.11.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@peculiar/webcrypto", [
+        ["npm:1.1.1", {
+          "packageLocation": "./.yarn/cache/@peculiar-webcrypto-npm-1.1.1-c620c2e1cc-3.zip/node_modules/@peculiar/webcrypto/",
+          "packageDependencies": [
+            ["@peculiar/webcrypto", "npm:1.1.1"],
+            ["@peculiar/asn1-schema", "npm:2.0.3"],
+            ["@peculiar/json-schema", "npm:1.1.10"],
+            ["pvtsutils", "npm:1.0.10"],
+            ["tslib", "npm:1.11.2"],
+            ["webcrypto-core", "npm:1.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@serverless/cli", [
         ["npm:1.4.0", {
           "packageLocation": "./.yarn/cache/@serverless-cli-npm-1.4.0-b665fe8339-3.zip/node_modules/@serverless/cli/",
@@ -9069,6 +9239,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/asn1js", [
+        ["npm:0.0.1", {
+          "packageLocation": "./.yarn/cache/@types-asn1js-npm-0.0.1-884021f10a-3.zip/node_modules/@types/asn1js/",
+          "packageDependencies": [
+            ["@types/asn1js", "npm:0.0.1"],
+            ["@types/pvutils", "npm:0.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/babel__core", [
         ["npm:7.1.7", {
           "packageLocation": "./.yarn/cache/@types-babel__core-npm-7.1.7-f2ee4098a7-3.zip/node_modules/@types/babel__core/",
@@ -9297,6 +9477,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-prop-types-npm-15.7.3-084e0015c6-3.zip/node_modules/@types/prop-types/",
           "packageDependencies": [
             ["@types/prop-types", "npm:15.7.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/pvutils", [
+        ["npm:0.0.1", {
+          "packageLocation": "./.yarn/cache/@types-pvutils-npm-0.0.1-76ce753b5b-3.zip/node_modules/@types/pvutils/",
+          "packageDependencies": [
+            ["@types/pvutils", "npm:0.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -9823,6 +10012,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/abbrev-npm-1.1.1-3659247eab-3.zip/node_modules/abbrev/",
           "packageDependencies": [
             ["abbrev", "npm:1.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["abortcontroller-polyfill", [
+        ["npm:1.4.0", {
+          "packageLocation": "./.yarn/cache/abortcontroller-polyfill-npm-1.4.0-d2ba6da917-3.zip/node_modules/abortcontroller-polyfill/",
+          "packageDependencies": [
+            ["abortcontroller-polyfill", "npm:1.4.0"]
           ],
           "linkType": "HARD",
         }]
@@ -10461,6 +10659,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bn.js", "npm:4.11.8"],
             ["inherits", "npm:2.0.4"],
             ["minimalistic-assert", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["asn1js", [
+        ["npm:2.0.26", {
+          "packageLocation": "./.yarn/cache/asn1js-npm-2.0.26-d9792b0aa5-3.zip/node_modules/asn1js/",
+          "packageDependencies": [
+            ["asn1js", "npm:2.0.26"],
+            ["pvutils", "npm:1.0.17"]
           ],
           "linkType": "HARD",
         }]
@@ -11244,6 +11452,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["browser-resolve", "npm:1.11.3"],
             ["resolve", "patch:resolve@npm%3A1.1.7#builtin<compat/resolve>::version=1.1.7&hash=e7677c"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["browser-tabs-lock", [
+        ["npm:1.2.8", {
+          "packageLocation": "./.yarn/cache/browser-tabs-lock-npm-1.2.8-b4ae14bffc-3.zip/node_modules/browser-tabs-lock/",
+          "packageDependencies": [
+            ["browser-tabs-lock", "npm:1.2.8"]
           ],
           "linkType": "HARD",
         }]
@@ -14307,6 +14524,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["es-cookie", [
+        ["npm:1.3.2", {
+          "packageLocation": "./.yarn/cache/es-cookie-npm-1.3.2-626e96a30a-3.zip/node_modules/es-cookie/",
+          "packageDependencies": [
+            ["es-cookie", "npm:1.3.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["es-to-primitive", [
         ["npm:1.2.1", {
           "packageLocation": "./.yarn/cache/es-to-primitive-npm-1.2.1-b7a7eac6c5-3.zip/node_modules/es-to-primitive/",
@@ -15312,6 +15538,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/fast-safe-stringify-npm-2.0.7-4c71091538-3.zip/node_modules/fast-safe-stringify/",
           "packageDependencies": [
             ["fast-safe-stringify", "npm:2.0.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["fast-text-encoding", [
+        ["npm:1.0.2", {
+          "packageLocation": "./.yarn/cache/fast-text-encoding-npm-1.0.2-e959f40182-3.zip/node_modules/fast-text-encoding/",
+          "packageDependencies": [
+            ["fast-text-encoding", "npm:1.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -16430,6 +16665,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["gud", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/gud-npm-1.0.0-9747ac46ec-3.zip/node_modules/gud/",
+          "packageDependencies": [
+            ["gud", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["gzip-size", [
         ["npm:5.1.1", {
           "packageLocation": "./.yarn/cache/gzip-size-npm-5.1.1-b757f76e19-3.zip/node_modules/gzip-size/",
@@ -16660,6 +16904,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["history", [
+        ["npm:4.10.1", {
+          "packageLocation": "./.yarn/cache/history-npm-4.10.1-ee217563ae-3.zip/node_modules/history/",
+          "packageDependencies": [
+            ["history", "npm:4.10.1"],
+            ["@babel/runtime", "npm:7.9.6"],
+            ["loose-envify", "npm:1.4.0"],
+            ["resolve-pathname", "npm:3.0.0"],
+            ["tiny-invariant", "npm:1.1.0"],
+            ["tiny-warning", "npm:1.0.3"],
+            ["value-equal", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["hmac-drbg", [
         ["npm:1.0.1", {
           "packageLocation": "./.yarn/cache/hmac-drbg-npm-1.0.1-3499ad31cd-3.zip/node_modules/hmac-drbg/",
@@ -16668,6 +16927,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hash.js", "npm:1.1.7"],
             ["minimalistic-assert", "npm:1.0.1"],
             ["minimalistic-crypto-utils", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["hoist-non-react-statics", [
+        ["npm:3.3.2", {
+          "packageLocation": "./.yarn/cache/hoist-non-react-statics-npm-3.3.2-e7b709e6c1-3.zip/node_modules/hoist-non-react-statics/",
+          "packageDependencies": [
+            ["hoist-non-react-statics", "npm:3.3.2"],
+            ["react-is", "npm:16.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -17935,6 +18204,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["isarray", [
+        ["npm:0.0.1", {
+          "packageLocation": "./.yarn/cache/isarray-npm-0.0.1-92e37e0a70-3.zip/node_modules/isarray/",
+          "packageDependencies": [
+            ["isarray", "npm:0.0.1"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:1.0.0", {
           "packageLocation": "./.yarn/cache/isarray-npm-1.0.0-db4f547720-3.zip/node_modules/isarray/",
           "packageDependencies": [
@@ -20409,6 +20685,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["mini-create-react-context", [
+        ["virtual:ceb4f0683ddf762ddb81146a02c0ff4ae88f7983b6291cebdaaf8af075038b905eac656e9ea59c2718e180f00a3e22c5239aa5fa88823a9870106e07774606cf#npm:0.3.2", {
+          "packageLocation": "./.yarn/$$virtual/mini-create-react-context-virtual-706d5d45a5/0/cache/mini-create-react-context-npm-0.3.2-18e0e6feca-3.zip/node_modules/mini-create-react-context/",
+          "packageDependencies": [
+            ["mini-create-react-context", "virtual:ceb4f0683ddf762ddb81146a02c0ff4ae88f7983b6291cebdaaf8af075038b905eac656e9ea59c2718e180f00a3e22c5239aa5fa88823a9870106e07774606cf#npm:0.3.2"],
+            ["@babel/runtime", "npm:7.9.6"],
+            ["gud", "npm:1.0.0"],
+            ["prop-types", "npm:15.7.2"],
+            ["react", "npm:16.13.1"],
+            ["tiny-warning", "npm:1.0.3"]
+          ],
+          "packagePeers": [
+            "prop-types",
+            "react"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["mini-css-extract-plugin", [
         ["virtual:30fad2d2a5b2e98b3317032543233dd575c8c4abf95c0d0add88ee96995e774448abed640a9bd7ef302f092a80b7bf40268560713e41aac8bca514f12099dc59#npm:0.9.0", {
           "packageLocation": "./.yarn/$$virtual/mini-css-extract-plugin-virtual-8d7c3208cc/0/cache/mini-css-extract-plugin-npm-0.9.0-f8c8899095-3.zip/node_modules/mini-css-extract-plugin/",
@@ -22015,6 +22309,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["path-to-regexp", "npm:0.1.7"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:1.8.0", {
+          "packageLocation": "./.yarn/cache/path-to-regexp-npm-1.8.0-a1904f5c44-3.zip/node_modules/path-to-regexp/",
+          "packageDependencies": [
+            ["path-to-regexp", "npm:1.8.0"],
+            ["isarray", "npm:0.0.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["path-type", [
@@ -23309,6 +23611,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["promise-polyfill", [
+        ["npm:8.1.3", {
+          "packageLocation": "./.yarn/cache/promise-polyfill-npm-8.1.3-d68a56f46f-3.zip/node_modules/promise-polyfill/",
+          "packageDependencies": [
+            ["promise-polyfill", "npm:8.1.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["promise-queue", [
         ["npm:2.2.5", {
           "packageLocation": "./.yarn/cache/promise-queue-npm-2.2.5-32863d050a-3.zip/node_modules/promise-queue/",
@@ -23454,6 +23765,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/punycode-npm-2.1.1-26eb3e15cf-3.zip/node_modules/punycode/",
           "packageDependencies": [
             ["punycode", "npm:2.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["pvtsutils", [
+        ["npm:1.0.10", {
+          "packageLocation": "./.yarn/cache/pvtsutils-npm-1.0.10-d808b8450e-3.zip/node_modules/pvtsutils/",
+          "packageDependencies": [
+            ["pvtsutils", "npm:1.0.10"],
+            ["tslib", "npm:1.11.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["pvutils", [
+        ["npm:1.0.17", {
+          "packageLocation": "./.yarn/cache/pvutils-npm-1.0.17-c7280ed2c7-3.zip/node_modules/pvutils/",
+          "packageDependencies": [
+            ["pvutils", "npm:1.0.17"]
           ],
           "linkType": "HARD",
         }]
@@ -23718,6 +24048,49 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/react-is-npm-16.13.1-a9b9382b4f-3.zip/node_modules/react-is/",
           "packageDependencies": [
             ["react-is", "npm:16.13.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["react-router", [
+        ["virtual:26226e3e7a03d4a3d68955bad4552f8ad92ca47ee262a7baf8c6ad04b0f0fc8a4b25c81d22057329f9833b7d4a1f207118d444809b3abe914628f93e0ed67a79#npm:5.1.2", {
+          "packageLocation": "./.yarn/$$virtual/react-router-virtual-ceb4f0683d/0/cache/react-router-npm-5.1.2-e30b2ba46e-3.zip/node_modules/react-router/",
+          "packageDependencies": [
+            ["react-router", "virtual:26226e3e7a03d4a3d68955bad4552f8ad92ca47ee262a7baf8c6ad04b0f0fc8a4b25c81d22057329f9833b7d4a1f207118d444809b3abe914628f93e0ed67a79#npm:5.1.2"],
+            ["@babel/runtime", "npm:7.9.6"],
+            ["history", "npm:4.10.1"],
+            ["hoist-non-react-statics", "npm:3.3.2"],
+            ["loose-envify", "npm:1.4.0"],
+            ["mini-create-react-context", "virtual:ceb4f0683ddf762ddb81146a02c0ff4ae88f7983b6291cebdaaf8af075038b905eac656e9ea59c2718e180f00a3e22c5239aa5fa88823a9870106e07774606cf#npm:0.3.2"],
+            ["path-to-regexp", "npm:1.8.0"],
+            ["prop-types", "npm:15.7.2"],
+            ["react", "npm:16.13.1"],
+            ["react-is", "npm:16.13.1"],
+            ["tiny-invariant", "npm:1.1.0"],
+            ["tiny-warning", "npm:1.0.3"]
+          ],
+          "packagePeers": [
+            "react"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["react-router-dom", [
+        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:5.1.2", {
+          "packageLocation": "./.yarn/$$virtual/react-router-dom-virtual-26226e3e7a/0/cache/react-router-dom-npm-5.1.2-7a7ab4790f-3.zip/node_modules/react-router-dom/",
+          "packageDependencies": [
+            ["react-router-dom", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:5.1.2"],
+            ["@babel/runtime", "npm:7.9.6"],
+            ["history", "npm:4.10.1"],
+            ["loose-envify", "npm:1.4.0"],
+            ["prop-types", "npm:15.7.2"],
+            ["react", "npm:16.13.1"],
+            ["react-router", "virtual:26226e3e7a03d4a3d68955bad4552f8ad92ca47ee262a7baf8c6ad04b0f0fc8a4b25c81d22057329f9833b7d4a1f207118d444809b3abe914628f93e0ed67a79#npm:5.1.2"],
+            ["tiny-invariant", "npm:1.1.0"],
+            ["tiny-warning", "npm:1.0.3"]
+          ],
+          "packagePeers": [
+            "react"
           ],
           "linkType": "HARD",
         }]
@@ -24343,6 +24716,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/resolve-from-npm-5.0.0-15c9db4d33-3.zip/node_modules/resolve-from/",
           "packageDependencies": [
             ["resolve-from", "npm:5.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["resolve-pathname", [
+        ["npm:3.0.0", {
+          "packageLocation": "./.yarn/cache/resolve-pathname-npm-3.0.0-bab4d7e47c-3.zip/node_modules/resolve-pathname/",
+          "packageDependencies": [
+            ["resolve-pathname", "npm:3.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -26330,6 +26712,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["tiny-invariant", [
+        ["npm:1.1.0", {
+          "packageLocation": "./.yarn/cache/tiny-invariant-npm-1.1.0-105cc1fc8e-3.zip/node_modules/tiny-invariant/",
+          "packageDependencies": [
+            ["tiny-invariant", "npm:1.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["tiny-warning", [
+        ["npm:1.0.3", {
+          "packageLocation": "./.yarn/cache/tiny-warning-npm-1.0.3-750b7a07c4-3.zip/node_modules/tiny-warning/",
+          "packageDependencies": [
+            ["tiny-warning", "npm:1.0.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["tmp", [
         ["npm:0.0.33", {
           "packageLocation": "./.yarn/cache/tmp-npm-0.0.33-bcbf65df2a-3.zip/node_modules/tmp/",
@@ -26552,6 +26952,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["tslib", "npm:1.11.1"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:1.11.2", {
+          "packageLocation": "./.yarn/cache/tslib-npm-1.11.2-c70457db38-3.zip/node_modules/tslib/",
+          "packageDependencies": [
+            ["tslib", "npm:1.11.2"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["tsutils", [
@@ -26719,6 +27126,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["unbzip2-stream", "npm:1.4.1"],
             ["buffer", "npm:5.6.0"],
             ["through", "npm:2.3.8"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["unfetch", [
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/unfetch-npm-4.1.0-400b98ec2c-3.zip/node_modules/unfetch/",
+          "packageDependencies": [
+            ["unfetch", "npm:4.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -27157,6 +27573,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["value-equal", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/value-equal-npm-1.0.1-7811e93c9b-3.zip/node_modules/value-equal/",
+          "packageDependencies": [
+            ["value-equal", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["vary", [
         ["npm:1.1.2", {
           "packageLocation": "./.yarn/cache/vary-npm-1.1.2-b49f70ae63-3.zip/node_modules/vary/",
@@ -27263,6 +27688,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["wbuf", "npm:1.7.3"],
             ["minimalistic-assert", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["webcrypto-core", [
+        ["npm:1.1.1", {
+          "packageLocation": "./.yarn/cache/webcrypto-core-npm-1.1.1-81341b342b-3.zip/node_modules/webcrypto-core/",
+          "packageDependencies": [
+            ["webcrypto-core", "npm:1.1.1"],
+            ["@peculiar/asn1-schema", "npm:2.0.3"],
+            ["@peculiar/json-schema", "npm:1.1.10"],
+            ["asn1js", "npm:2.0.26"],
+            ["pvtsutils", "npm:1.0.10"],
+            ["tslib", "npm:1.11.2"]
           ],
           "linkType": "HARD",
         }]

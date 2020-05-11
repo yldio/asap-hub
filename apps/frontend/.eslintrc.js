@@ -14,6 +14,8 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
 
+    'no-console': 'off',
+
     '@typescript-eslint/explicit-function-return-type': 'off',
   },
 };

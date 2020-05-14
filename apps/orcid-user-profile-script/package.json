@@ -1,0 +1,19 @@
+{
+  "name": "@asap-hub/orcid-user-profile-script",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {
+    "@asap-hub/auth": "workspace:packages/auth",
+    "@types/jest": "^25.2.2",
+    "@types/jsonwebtoken": "^8.5.0"
+  }
+}

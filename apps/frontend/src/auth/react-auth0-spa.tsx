@@ -3,13 +3,12 @@
 /* eslint-disable no-shadow */
 
 import React, { useState, useEffect, useContext } from 'react';
+import { User } from '@asap-hub/auth';
 import createAuth0Client, {
   Auth0ClientOptions,
   Auth0Client,
   RedirectLoginResult,
 } from '@auth0/auth0-spa-js';
-
-import { User } from './User';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);

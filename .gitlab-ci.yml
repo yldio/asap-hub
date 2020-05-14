@@ -8,13 +8,13 @@
 
 .tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
   rules:
-    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH != 'master'
   variables:
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:branch_remove_rules: &tmpl_branch_remove_rules
   rules:
-    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH != 'master'
       when: manual
       allow_failure: true
   variables:
@@ -55,8 +55,7 @@ image: node:12
 
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH
 
 stages:
   - build

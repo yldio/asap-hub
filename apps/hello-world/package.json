@@ -1,0 +1,22 @@
+{
+  "name": "@asap-hub/hello-world",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "main": "build/handler.js",
+  "types": "build/handler.d.ts",
+  "scripts": {
+    "build:babel": "tsc",
+    "watch:babel": "yarn build:babel"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.51",
+    "@types/jest": "^25.2.2"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.6",
+    "aws-sdk": "^2.678.0"
+  }
+}

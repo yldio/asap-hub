@@ -14,11 +14,13 @@
     "build:frontend": "yarn workspace @asap-hub/frontend build",
     "build:frontend:typecheck": "yarn workspace @asap-hub/frontend typecheck",
     "build": "yarn build:typecheck && yarn build:babel && yarn build:frontend:typecheck && yarn build:frontend",
+    "watch:babel": "yarn workspaces foreach -pi -j 1000 run watch:babel",
+    "watch:typecheck": "yarn build:typecheck -w",
+    "dev": "yarn sls offline",
+    "sls": "node serverless/link-plugins.js && yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "test": "jest",
-    "watch:babel": "yarn workspaces foreach -pi -j 1000 run watch:babel",
-    "watch:typecheck": "yarn build:typecheck -w"
+    "test": "jest"
   },
   "dependenciesMeta": {
     "browser-tabs-lock": {
@@ -35,6 +37,15 @@
     },
     "serverless": {
       "built": false
+    },
+    "serverless-offline": {
+      "unplugged": true
+    },
+    "serverless-plugin-ncc": {
+      "unplugged": true
+    },
+    "serverless-plugin-typescript": {
+      "unplugged": true
     },
     "serverless-s3-sync": {
       "unplugged": true
@@ -70,8 +81,10 @@
     "@typescript-eslint/eslint-plugin": "^2.28.0",
     "@typescript-eslint/parser": "^2.28.0",
     "@yarnpkg/pnpify": "^2.0.0-rc.20",
+    "@zeit/ncc": "^0.22.1",
     "babel-eslint": "^10.1.0",
     "babel-preset-react-app": "^9.1.2",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-config-prettier": "^6.10.1",
@@ -91,7 +104,9 @@
     "jest-watch-typeahead": "^0.5.0",
     "param-case": "^3.0.3",
     "prettier": "^2.0.4",
-    "serverless": "^1.67.3",
+    "serverless": "^1.71.1",
+    "serverless-offline": "^6.1.5",
+    "serverless-plugin-ncc": "^0.4.0",
     "serverless-s3-sync": "^1.12.0",
     "typescript": "~3.8.3"
   }

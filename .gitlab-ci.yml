@@ -8,13 +8,13 @@
 
 .tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
   rules:
-    - if: $CI_COMMIT_BRANCH != 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
   variables:
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:branch_remove_rules: &tmpl_branch_remove_rules
   rules:
-    - if: $CI_COMMIT_BRANCH != 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
       when: manual
       allow_failure: true
   variables:
@@ -27,8 +27,8 @@
       dotenv: deploy.env
   script:
     - export NODE_ENV=production
-    - yarn pnpify serverless deploy --verbose
-    - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
+    - yarn sls deploy --verbose
+    - echo "APP_URL=$(yarn sls info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
   stage: deploy
   dependencies:
     - build
@@ -56,7 +56,8 @@ image: node:12
 
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 stages:
   - build
@@ -162,5 +163,5 @@ deploy:sls:branch_remove:
     action: stop
   script:
     - git checkout $CI_COMMIT_SHA # the branch may not exist
-    - yarn pnpify serverless remove --verbose
+    - yarn sls remove --verbose
   stage: deploy

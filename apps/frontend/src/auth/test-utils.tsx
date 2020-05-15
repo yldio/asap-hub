@@ -1,7 +1,7 @@
 import React from 'react';
+import { User } from '@asap-hub/auth';
 
 import { useAuth0, Auth0Context } from './react-auth0-spa';
-import { User } from './User';
 
 export const WhenAuth0Loaded: React.FC<{ children: React.ReactNode }> = ({
   children,

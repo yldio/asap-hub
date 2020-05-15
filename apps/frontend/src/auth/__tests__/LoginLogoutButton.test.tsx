@@ -91,7 +91,7 @@ describe('when logged in', () => {
   });
 
   describe('and clicking log out', () => {
-    it('TODO', async () => {
+    it('redirects to the logout URL', async () => {
       let button!: HTMLElement;
       await act(async () => {
         const { findByRole } = render(

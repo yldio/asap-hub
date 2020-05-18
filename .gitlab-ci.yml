@@ -26,6 +26,7 @@
     reports:
       dotenv: deploy.env
   script:
+    - export NODE_ENV=production
     - yarn pnpify serverless deploy --verbose
     - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
   stage: deploy

@@ -8,7 +8,9 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
 
   transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
+    '^.+\\.(js|jsx|ts|tsx)$': require.resolve(
+      'react-scripts/config/jest/babelTransform.js',
+    ),
     '^.+\\.css$': require.resolve('react-scripts/config/jest/cssTransform.js'),
     '^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)': require.resolve(
       'react-scripts/config/jest/fileTransform.js',

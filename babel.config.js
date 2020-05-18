@@ -10,5 +10,4 @@ module.exports = {
     ],
     '@babel/preset-typescript',
   ],
-  babelrcRoots: ['packages/*', 'apps/*'],
 };

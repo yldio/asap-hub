@@ -15,7 +15,7 @@
     "build": "yarn build:typecheck && yarn build:babel && yarn build:frontend",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "test": "jest",
+    "test": "jest --no-cache",
     "watch:babel": "yarn workspaces foreach -pi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w"
   },

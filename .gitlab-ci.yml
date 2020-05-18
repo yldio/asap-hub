@@ -29,13 +29,16 @@
     reports:
       dotenv: deploy.env
   script:
+    - printenv
     - yarn pnpify serverless deploy --verbose
     - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
   dependencies:
     - build
     - build:native-deps
+  variables:
+    NODE_ENV: production
 
-image: node:12.10.0
+image: node:12
 
 workflow:
   rules:

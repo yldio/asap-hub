@@ -85,7 +85,7 @@ check:format:
 
 test:
   script:
-    - yarn run test --coverage
+    - yarn run test --coverage --no-cache
   artifacts:
     paths:
       - coverage

@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build:babel": "yarn workspaces foreach -pt run build:babel",
-    "build:typecheck": "tsc -b -v packages/example-lib apps/orcid-user-profile-script",
+    "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
     "build:frontend": "yarn workspace @asap-hub/frontend build",
     "build:frontend:typecheck": "yarn workspace @asap-hub/frontend typecheck",
     "build": "yarn build:typecheck && yarn build:babel && yarn build:frontend:typecheck && yarn build:frontend",

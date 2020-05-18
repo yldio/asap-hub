@@ -67,8 +67,10 @@ __metadata:
   dependencies:
     "@types/aws-lambda": 8.10.51
     "@types/jest": ^25.2.2
+    "@types/source-map-support": 0.5.1
     aws-lambda: ^1.0.6
     aws-sdk: ^2.678.0
+    source-map-support: ^0.5.19
   languageName: unknown
   linkType: soft
 
@@ -3180,6 +3182,15 @@ __metadata:
   version: 0.12.0
   resolution: "@types/retry@npm:0.12.0"
   checksum: 3/0755164f2c8d615a0385609c478aaa20b17e55bc8b16d5d56ffe6a5d30b0a9845d49452a2e8903ec7c43fa361f19daf5e68c60e7381ad10a95dd3d0bb5c9f7fd
+  languageName: node
+  linkType: hard
+
+"@types/source-map-support@npm:0.5.1":
+  version: 0.5.1
+  resolution: "@types/source-map-support@npm:0.5.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: 3/9b36338825696b330e5a80d6f050533fa1577b02d26ce19033a9d04545d4e90c22280405a76fab6cc0164ab2dc7a51bfd5dc4d97bd681ac0cea7d0f9b3c2ae26
   languageName: node
   linkType: hard
 

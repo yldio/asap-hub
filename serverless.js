@@ -36,6 +36,32 @@ module.exports = {
     ],
   },
   functions: {
+    error: {
+      handler: 'apps/hello-world/build/handler.error',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/api/error',
+            cors: {
+              origin: {
+                'Fn::Join': [
+                  '',
+                  [
+                    'https://',
+                    {
+                      'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+                    },
+                  ],
+                ],
+              },
+              headers: ['*'],
+              allowCredentials: false,
+            },
+          },
+        },
+      ],
+    },
     helloWorld: {
       handler: 'apps/hello-world/build/handler.hello',
       events: [
@@ -172,6 +198,7 @@ module.exports = {
                 Compress: true,
                 DefaultTTL: 0,
                 ForwardedValues: {
+                  Headers: ['Authorization', 'authorization'],
                   Cookies: {
                     Forward: 'all',
                   },
@@ -179,7 +206,7 @@ module.exports = {
                 },
                 MaxTTL: 0,
                 MinTTL: 0,
-                PathPattern: '/api',
+                PathPattern: '/api/*',
                 TargetOriginId: 'apigw',
                 ViewerProtocolPolicy: 'redirect-to-https',
               },

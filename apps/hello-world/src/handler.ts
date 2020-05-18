@@ -7,3 +7,7 @@ export const hello: APIGatewayProxyHandler = async () => ({
     hello: 'world',
   }),
 });
+
+export const error: APIGatewayProxyHandler = async () => {
+  throw new Error('Not implemented');
+};

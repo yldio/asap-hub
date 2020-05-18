@@ -10,10 +10,9 @@
   },
   "scripts": {
     "build:babel": "yarn workspaces foreach -pt run build:babel",
-    "build:typecheck": "tsc -b -v packages/example-lib apps/orcid-user-profile-script",
+    "build:typecheck": "tsc -b -v packages/example-lib",
     "build:frontend": "yarn workspace @asap-hub/frontend build",
-    "build:frontend:typecheck": "yarn workspace @asap-hub/frontend typecheck",
-    "build": "yarn build:typecheck && yarn build:babel && yarn build:frontend:typecheck && yarn build:frontend",
+    "build": "yarn build:typecheck && yarn build:babel && yarn build:frontend",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "test": "jest",
@@ -21,9 +20,6 @@
     "watch:typecheck": "yarn build:typecheck -w"
   },
   "dependenciesMeta": {
-    "browser-tabs-lock": {
-      "built": false
-    },
     "core-js": {
       "built": false
     },
@@ -44,12 +40,6 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "jest-runner-eslint": {
-    "cliOptions": {
-      "maxWarnings": 0,
-      "reportUnusedDisableDirectives": true
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -66,7 +56,6 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
-    "@babel/preset-typescript": "^7.9.0",
     "@typescript-eslint/eslint-plugin": "^2.28.0",
     "@typescript-eslint/parser": "^2.28.0",
     "@yarnpkg/pnpify": "^2.0.0-rc.20",

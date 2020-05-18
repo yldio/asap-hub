@@ -1,22 +1,25 @@
-# https://gitlab.com/yldio/asap-hub/-/ci/lint
-
-.tmpl:master_deploy_rules: &tmpl_master_deploy_rules
+.tmpl:master_rules: &tmpl_master_rules
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
+      when: always
+  stage: deploy
   variables:
     SLS_STAGE: production
 
-.tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
+.tmpl:branch_rules: &tmpl_branch_rules
   rules:
-    - if: $CI_COMMIT_BRANCH != 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+      when: always
+  stage: deploy
   variables:
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:branch_remove_rules: &tmpl_branch_remove_rules
   rules:
-    - if: $CI_COMMIT_BRANCH != 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
       when: manual
       allow_failure: true
+  stage: deploy
   variables:
     GIT_CHECKOUT: 0
     SLS_STAGE: $CI_COMMIT_REF_SLUG
@@ -28,39 +31,20 @@
   script:
     - yarn pnpify serverless deploy --verbose
     - echo "APP_URL=$(yarn pnpify serverless info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
-  stage: deploy
   dependencies:
     - build
     - build:native-deps
 
-.tmpl:prepare: &tmpl_prepare
-  image:
-    name: amazon/aws-cli
-    entrypoint: ['']
-  script:
-    - exit_code=0
-    - stack=$(aws cloudformation describe-stacks --stack-name $SLS_STAGE || exit_code=$?)
-    - |
-      if [[ "$exit_code" != 0 ]] && echo $stack | grep -nqe "UPDATE_IN_PROGRESS"; then
-        aws cloudformation cancel-update-stack --stack-name $SLS_STAGE
-        aws cloudformation wait stack-update-rollback-complete --stack-name $SLS_STAGE
-      fi;
-    - |
-      if [[ "$exit_code" != 0 ]] && echo $stack | grep -nqe "CREATE_IN_PROGRESS"; then
-        aws cloudformation wait stack-create-complete --stack-name $SLS_STAGE
-      fi;
-  stage: prepare
-
-image: node:14
+image: node:12
 
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 stages:
   - build
   - test
-  - prepare
   - deploy
 
 # stage test
@@ -85,7 +69,7 @@ check:format:
 
 test:
   script:
-    - yarn run test --coverage --no-cache
+    - yarn run test --coverage
   artifacts:
     paths:
       - coverage
@@ -114,34 +98,17 @@ build:native-deps:
   needs: []
   stage: build
 
-prepare:sls:master:
-  <<: *tmpl_master_deploy_rules
-  <<: *tmpl_prepare
-  needs:
-    - test
-
-prepare:sls:branch:
-  <<: *tmpl_branch_deploy_rules
-  <<: *tmpl_prepare
-  needs:
-    - build
-    - build:native-deps
-
 # stage deploy
 
 deploy:sls:master:
-  <<: *tmpl_master_deploy_rules
+  <<: *tmpl_master_rules
   <<: *tmpl_deploy
   environment:
     name: production
     url: https://$APP_URL
-  needs:
-    - build
-    - build:native-deps
-    - prepare:sls:master
 
 deploy:sls:branch:
-  <<: *tmpl_branch_deploy_rules
+  <<: *tmpl_branch_rules
   <<: *tmpl_deploy
   environment:
     name: review/$CI_COMMIT_REF_SLUG
@@ -150,7 +117,6 @@ deploy:sls:branch:
   needs:
     - build
     - build:native-deps
-    - prepare:sls:branch
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove_rules
@@ -162,4 +128,3 @@ deploy:sls:branch_remove:
   script:
     - git checkout $CI_COMMIT_SHA # the branch may not exist
     - yarn pnpify serverless remove --verbose
-  stage: deploy

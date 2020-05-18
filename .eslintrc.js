@@ -26,7 +26,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: [...testMatch, '**/*{t,T}est*.{js,jsx,ts,tsx}'] },
+      { devDependencies: testMatch },
     ],
     'import/extensions': [
       'error',
@@ -44,12 +44,6 @@ module.exports = {
       files: ['*.d.ts'],
       rules: {
         'spaced-comment': 'off',
-      },
-    },
-    {
-      files: testMatch,
-      rules: {
-        '@typescript-eslint/no-non-null-assertion': 'off',
       },
     },
   ],

@@ -35,7 +35,7 @@
     - build
     - build:native-deps
 
-image: node:12
+image: node:12.10.0
 
 workflow:
   rules:

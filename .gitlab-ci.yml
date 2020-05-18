@@ -51,7 +51,7 @@
       fi;
   stage: prepare
 
-image: node:12.16.2
+image: 829feffa12d50aac270ea88d05725c4b32d0780d3053cd61adafc398fad1aedc
 
 workflow:
   rules:

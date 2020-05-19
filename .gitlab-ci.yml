@@ -3,30 +3,29 @@
 .tmpl:master_deploy_rules: &tmpl_master_deploy_rules
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
-  variables:
-    SLS_STAGE: production
+.tmpl:master_deploy_variables: &tmpl_master_deploy_variables
+  SLS_STAGE: production
 
 .tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
-  variables:
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
+.tmpl:branch_deploy_variables: &tmpl_branch_deploy_variables
+  SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:branch_remove_rules: &tmpl_branch_remove_rules
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
       when: manual
       allow_failure: true
-  variables:
-    GIT_CHECKOUT: 0
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
+.tmpl:branch_remove_variables: &tmpl_branch_remove_variables
+  GIT_CHECKOUT: 0
+  SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:deploy: &tmpl_deploy
   artifacts:
     reports:
       dotenv: deploy.env
   script:
-    - export NODE_ENV=production
     - yarn sls deploy --verbose
     - echo "APP_URL=$(yarn sls info --verbose | grep -w "CloudFrontDistributionDomain" | cut -d ' ' -f2)" >> deploy.env
   stage: deploy
@@ -51,6 +50,9 @@
         aws cloudformation wait stack-create-complete --stack-name $SLS_STAGE
       fi;
   stage: prepare
+
+.tmpl:node_production_variables: &tmpl_node_production_variables
+  NODE_ENV: production
 
 image: node:12
 
@@ -100,6 +102,8 @@ test:
 build:
   script:
     - yarn run build
+  variables:
+    <<: *tmpl_node_production_variables
   artifacts:
     paths:
       - 'packages/*/build'
@@ -117,14 +121,18 @@ build:native-deps:
   stage: build
 
 prepare:sls:master:
-  <<: *tmpl_master_deploy_rules
   <<: *tmpl_prepare
+  <<: *tmpl_master_deploy_rules
+  variables:
+    <<: *tmpl_master_deploy_variables
   needs:
     - test
 
 prepare:sls:branch:
-  <<: *tmpl_branch_deploy_rules
   <<: *tmpl_prepare
+  <<: *tmpl_branch_deploy_rules
+  variables:
+    <<: *tmpl_branch_deploy_variables
   needs:
     - build
     - build:native-deps
@@ -132,8 +140,11 @@ prepare:sls:branch:
 # stage deploy
 
 deploy:sls:master:
-  <<: *tmpl_master_deploy_rules
   <<: *tmpl_deploy
+  <<: *tmpl_master_deploy_rules
+  variables:
+    <<: *tmpl_node_production_variables
+    <<: *tmpl_master_deploy_variables
   environment:
     name: production
     url: https://$APP_URL
@@ -143,8 +154,11 @@ deploy:sls:master:
     - prepare:sls:master
 
 deploy:sls:branch:
-  <<: *tmpl_branch_deploy_rules
   <<: *tmpl_deploy
+  <<: *tmpl_branch_deploy_rules
+  variables:
+    <<: *tmpl_node_production_variables
+    <<: *tmpl_branch_deploy_variables
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     url: https://$APP_URL
@@ -156,6 +170,8 @@ deploy:sls:branch:
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove_rules
+  variables:
+    <<: *tmpl_branch_remove_variables
   dependencies:
     - build:native-deps
   environment:

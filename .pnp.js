@@ -5644,7 +5644,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "shebang-command",
-        "npm:1.2.0"
+        "npm:2.0.0"
       ],
       [
         "shebang-regex",
@@ -6636,7 +6636,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@zeit/ncc", "npm:0.22.1"],
             ["babel-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:10.1.0"],
             ["babel-preset-react-app", "npm:9.1.2"],
-            ["cross-env", "npm:7.0.2"],
             ["eslint", "npm:6.8.0"],
             ["eslint-config-airbnb-base", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:14.1.0"],
             ["eslint-config-prettier", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.10.1"],
@@ -11344,7 +11343,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@zeit/ncc", "npm:0.22.1"],
             ["babel-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:10.1.0"],
             ["babel-preset-react-app", "npm:9.1.2"],
-            ["cross-env", "npm:7.0.2"],
             ["eslint", "npm:6.8.0"],
             ["eslint-config-airbnb-base", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:14.1.0"],
             ["eslint-config-prettier", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.10.1"],

@@ -1,23 +1,15 @@
-const { mkdirSync, existsSync, unlinkSync, symlinkSync } = require('fs');
-const { join, dirname } = require('path');
 const { paramCase } = require('param-case');
 const pkg = require('./package.json');
 
-const service = paramCase(pkg.name);
-const plugins = ['serverless-s3-sync'];
+const { NODE_ENV = 'development' } = process.env;
 
-(function ensurePluginsDir() {
-  const pluginsDir = join(__dirname, '.serverless_plugins');
-  mkdirSync(pluginsDir, { recursive: true });
-  plugins.forEach((plugin) => {
-    const symlinkPath = join(pluginsDir, plugin);
-    const pluginDirectory = dirname(require.resolve(`${plugin}/package.json`));
-    try {
-      unlinkSync(symlinkPath);
-    } catch {}
-    symlinkSync(pluginDirectory, symlinkPath);
-  });
-})();
+const service = paramCase(pkg.name);
+const plugins = [
+  'serverless-s3-sync',
+  ...(NODE_ENV === 'production'
+    ? ['serverless-plugin-ncc']
+    : ['serverless-offline']),
+];
 
 module.exports = {
   service,
@@ -30,6 +22,11 @@ module.exports = {
     region: `\${env:AWS_REGION, "us-east-1"}`,
     stage: `\${env:SLS_STAGE, "development"}`,
   },
+  package: {
+    individually: true,
+    // we don't need this because of ncc
+    excludeDevDependencies: false,
+  },
   custom: {
     s3Sync: [
       {
@@ -37,6 +34,60 @@ module.exports = {
         localDir: 'apps/frontend/build',
       },
     ],
+  },
+  functions: {
+    error: {
+      handler: 'apps/hello-world/build/handler.error',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/api/error',
+            cors: {
+              origin: {
+                'Fn::Join': [
+                  '',
+                  [
+                    'https://',
+                    {
+                      'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+                    },
+                  ],
+                ],
+              },
+              headers: ['*'],
+              allowCredentials: false,
+            },
+          },
+        },
+      ],
+    },
+    helloWorld: {
+      handler: 'apps/hello-world/build/handler.hello',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: '/api/hello',
+            cors: {
+              origin: {
+                'Fn::Join': [
+                  '',
+                  [
+                    'https://',
+                    {
+                      'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+                    },
+                  ],
+                ],
+              },
+              headers: ['*'],
+              allowCredentials: false,
+            },
+          },
+        },
+      ],
+    },
   },
   resources: {
     Resources: {
@@ -86,7 +137,7 @@ module.exports = {
       },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['Bucket'],
+        DependsOn: ['Bucket', 'HttpApi'],
         Properties: {
           DistributionConfig: {
             CustomErrorResponses: [
@@ -114,8 +165,52 @@ module.exports = {
                   },
                 },
               },
+              {
+                CustomOriginConfig: {
+                  OriginProtocolPolicy: 'https-only',
+                },
+                DomainName: {
+                  'Fn::Join': [
+                    '.',
+                    [
+                      { Ref: 'HttpApi' },
+                      'execute-api',
+                      { Ref: 'AWS::Region' },
+                      { Ref: 'AWS::URLSuffix' },
+                    ],
+                  ],
+                },
+                Id: 'apigw',
+              },
             ],
-            Enabled: true,
+            CacheBehaviors: [
+              {
+                AllowedMethods: [
+                  'HEAD',
+                  'DELETE',
+                  'POST',
+                  'GET',
+                  'OPTIONS',
+                  'PUT',
+                  'PATCH',
+                ],
+                CachedMethods: ['HEAD', 'GET', 'OPTIONS'],
+                Compress: true,
+                DefaultTTL: 0,
+                ForwardedValues: {
+                  Headers: ['Authorization', 'authorization'],
+                  Cookies: {
+                    Forward: 'all',
+                  },
+                  QueryString: true,
+                },
+                MaxTTL: 0,
+                MinTTL: 0,
+                PathPattern: '/api/*',
+                TargetOriginId: 'apigw',
+                ViewerProtocolPolicy: 'redirect-to-https',
+              },
+            ],
             DefaultRootObject: 'index.html',
             DefaultCacheBehavior: {
               AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
@@ -131,6 +226,7 @@ module.exports = {
               TargetOriginId: 's3origin',
               ViewerProtocolPolicy: 'redirect-to-https',
             },
+            Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
               CloudFrontDefaultCertificate: true,

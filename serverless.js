@@ -17,7 +17,7 @@ module.exports = {
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
-    timeout: 128,
+    timeout: 16,
     memorySize: 512,
     region: `\${env:AWS_REGION, "us-east-1"}`,
     stage: `\${env:SLS_STAGE, "development"}`,

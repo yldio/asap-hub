@@ -1015,10 +1015,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.12.0"
       ],
       [
-        "@types/source-map-support",
-        "npm:0.5.1"
-      ],
-      [
         "@types/stack-utils",
         "npm:1.0.1"
       ],
@@ -6741,10 +6737,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/hello-world", "workspace:apps/hello-world"],
             ["@types/aws-lambda", "npm:8.10.51"],
             ["@types/jest", "npm:25.2.2"],
-            ["@types/source-map-support", "npm:0.5.1"],
-            ["aws-lambda", "npm:1.0.6"],
-            ["aws-sdk", "npm:2.678.0"],
-            ["source-map-support", "npm:0.5.19"]
+            ["aws-lambda", "npm:1.0.6"]
           ],
           "linkType": "SOFT",
         }]
@@ -10257,16 +10250,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-retry-npm-0.12.0-e4e6294a2c-3.zip/node_modules/@types/retry/",
           "packageDependencies": [
             ["@types/retry", "npm:0.12.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/source-map-support", [
-        ["npm:0.5.1", {
-          "packageLocation": "./.yarn/cache/@types-source-map-support-npm-0.5.1-08b9c9bac4-3.zip/node_modules/@types/source-map-support/",
-          "packageDependencies": [
-            ["@types/source-map-support", "npm:0.5.1"],
-            ["@types/node", "npm:13.11.1"]
           ],
           "linkType": "HARD",
         }]

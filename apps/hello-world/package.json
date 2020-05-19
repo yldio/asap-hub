@@ -8,17 +8,14 @@
   "main": "build/handler.js",
   "types": "build/handler.d.ts",
   "scripts": {
-    "build:babel": "babel src --source-maps true -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward",
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward",
     "watch:babel": "yarn build:babel -w --verbose"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.51",
-    "@types/jest": "^25.2.2",
-    "@types/source-map-support": "0.5.1"
+    "@types/jest": "^25.2.2"
   },
   "dependencies": {
-    "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.678.0",
-    "source-map-support": "^0.5.19"
+    "aws-lambda": "^1.0.6"
   }
 }

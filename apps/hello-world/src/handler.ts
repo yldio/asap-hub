@@ -5,6 +5,9 @@ export const hello: APIGatewayProxyHandler = async () => ({
   body: JSON.stringify({
     hello: 'world',
   }),
+  headers: {
+    'content-type': 'application/json',
+  },
 });
 
 export const error: APIGatewayProxyHandler = async () => {

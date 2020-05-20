@@ -8,7 +8,7 @@
   "main": "build/handler.js",
   "types": "build/handler.d.ts",
   "scripts": {
-    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward",
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
     "watch:babel": "yarn build:babel -w --verbose"
   },
   "devDependencies": {

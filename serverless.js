@@ -27,6 +27,22 @@ const plugins = [
     : ['serverless-offline']),
 ];
 
+const cors = {
+  origin: {
+    'Fn::Join': [
+      '',
+      [
+        'https://',
+        {
+          'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+        },
+      ],
+    ],
+  },
+  headers: ['*'],
+  allowCredentials: false,
+};
+
 module.exports = {
   service,
   plugins,
@@ -60,18 +76,47 @@ module.exports = {
     ],
   },
   functions: {
+<<<<<<< HEAD
     hello: {
       handler: 'apps/hello-world/build/handler.hello',
+=======
+    'create-user': {
+      handler: 'apps/user-service/build/handler.createUser',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/api/users`,
+            cors,
+          },
+        },
+      ],
+    },
+    welcome: {
+      handler: 'apps/user-service/build/handler.welcome',
+>>>>>>> f45b197... chore: add data related docs
       events: [
         {
           httpApi: {
             method: 'GET',
+<<<<<<< HEAD
             path: '/hello',
             cors: {
               origin: `api.\${self:custom.origin}`,
               headers: ['*'],
               allowCredentials: false,
             },
+=======
+            path: `/api/profile/{code}`,
+            cors,
+          },
+        },
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/api/profile/{code}`,
+            cors,
+>>>>>>> f45b197... chore: add data related docs
           },
         },
       ],

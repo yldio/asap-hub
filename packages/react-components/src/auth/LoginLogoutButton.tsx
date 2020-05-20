@@ -23,6 +23,8 @@ const LoginLogoutButton = () => {
           Log out{user && ` ${user.name}`}
         </button>
       )}
+
+      {isAuthenticated && JSON.stringify(user, null, 2)}
     </div>
   );
 };

@@ -1,0 +1,35 @@
+{
+  "name": "@asap-hub/user-service",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "main": "build/handler.js",
+  "types": "build/handler.d.ts",
+  "scripts": {
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
+    "watch:babel": "yarn build:babel -w --verbose"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.51",
+    "@types/debug": "4.1.5",
+    "@types/hapi": "^18.0.3",
+    "@types/hapi__boom": "^9.0.1",
+    "@types/hapi__joi": "17.1.0",
+    "@types/jest": "^25.2.2",
+    "@types/mongodb": "3.5.18",
+    "@types/shortid": "0.0.29",
+    "mongodb-memory-server": "^6.6.1"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.0",
+    "@hapi/bourne": "^2.0.0",
+    "@hapi/joi": "^17.1.1",
+    "apr-intercept": "^3.0.3",
+    "aws-lambda": "^1.0.6",
+    "debug": "^4.1.1",
+    "mongodb": "^3.5.7",
+    "shortid": "^2.2.15"
+  }
+}

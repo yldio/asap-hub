@@ -11,6 +11,22 @@ const plugins = [
     : ['serverless-offline']),
 ];
 
+const cors = {
+  origin: {
+    'Fn::Join': [
+      '',
+      [
+        'https://',
+        {
+          'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+        },
+      ],
+    ],
+  },
+  headers: ['*'],
+  allowCredentials: false,
+};
+
 module.exports = {
   service,
   plugins,
@@ -36,54 +52,33 @@ module.exports = {
     ],
   },
   functions: {
-    error: {
-      handler: 'apps/hello-world/build/handler.error',
+    'create-user': {
+      handler: 'apps/user-service/build/handler.createUser',
       events: [
         {
           httpApi: {
-            method: 'GET',
-            path: '/api/error',
-            cors: {
-              origin: {
-                'Fn::Join': [
-                  '',
-                  [
-                    'https://',
-                    {
-                      'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
-                    },
-                  ],
-                ],
-              },
-              headers: ['*'],
-              allowCredentials: false,
-            },
+            method: 'POST',
+            path: `/api/users`,
+            cors,
           },
         },
       ],
     },
-    helloWorld: {
-      handler: 'apps/hello-world/build/handler.hello',
+    welcome: {
+      handler: 'apps/user-service/build/handler.welcome',
       events: [
         {
           httpApi: {
             method: 'GET',
-            path: '/api/hello',
-            cors: {
-              origin: {
-                'Fn::Join': [
-                  '',
-                  [
-                    'https://',
-                    {
-                      'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
-                    },
-                  ],
-                ],
-              },
-              headers: ['*'],
-              allowCredentials: false,
-            },
+            path: `/api/profile/{code}`,
+            cors,
+          },
+        },
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/api/profile/{code}`,
+            cors,
           },
         },
       ],

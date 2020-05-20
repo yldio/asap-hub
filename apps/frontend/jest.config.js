@@ -5,7 +5,9 @@ module.exports = {
   testEnvironment: require.resolve('jest-environment-jsdom-sixteen'),
 
   setupFiles: [require.resolve('react-app-polyfill/jsdom')],
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  setupFilesAfterEnv: [
+    require.resolve('../../jest/dom-extensions-setup-after-env.js'),
+  ],
 
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': require.resolve(

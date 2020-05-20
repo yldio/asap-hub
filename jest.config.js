@@ -2,6 +2,28 @@ const { readdirSync } = require('fs');
 const { resolve } = require('path');
 
 const baseConfig = require('./jest-base.config.js');
+const makeDefaultConfig = (parentDir, packageName) => {
+  const rootDir = resolve(parentDir, packageName);
+  const displayName = `test-${packageName}`;
+  const setupFilesAfterEnv = [...(baseConfig.setupFilesAfterEnv || [])];
+
+  const packageTsLibs = require(resolve(rootDir, 'tsconfig.json'))
+    .compilerOptions.lib;
+  if (
+    packageTsLibs &&
+    packageTsLibs.some((lib) => lib.toLowerCase() === 'dom')
+  ) {
+    setupFilesAfterEnv.push(
+      require.resolve('./jest/dom-extensions-setup-after-env.js'),
+    );
+  }
+  return {
+    ...baseConfig,
+    rootDir,
+    displayName,
+    setupFilesAfterEnv,
+  };
+};
 
 const packagesDir = resolve(__dirname, 'packages');
 const appsDir = resolve(__dirname, 'apps');
@@ -20,20 +42,12 @@ apps.forEach((app) => {
   }
 });
 
-const packageTestConfigs = packages.map((package) => ({
-  ...baseConfig,
-
-  rootDir: resolve(packagesDir, package),
-
-  displayName: `test-${package}`,
-}));
-const appTestConfigs = appsWithDefaultConfig.map((app) => ({
-  ...baseConfig,
-
-  rootDir: resolve(appsDir, app),
-
-  displayName: `test-${app}`,
-}));
+const packageTestConfigs = packages.map((package) =>
+  makeDefaultConfig(packagesDir, package),
+);
+const appTestConfigs = appsWithDefaultConfig.map((app) =>
+  makeDefaultConfig(appsDir, app),
+);
 // For apps with a custom config in their directory, we just have to give Jest the path to them
 const appPaths = appsWithCustomConfig.map((app) => resolve(appsDir, app));
 

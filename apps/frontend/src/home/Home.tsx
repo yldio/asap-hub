@@ -1,7 +1,6 @@
 import React from 'react';
-import { ASAP_LINK } from '@asap-hub/example-lib';
 
-import { LoginLogoutButton } from '../auth';
+import { LoginLogoutButton } from '@asap-hub/react-components';
 
 import './Home.css';
 
@@ -21,7 +20,7 @@ const Home = () => {
           By{' '}
           <a
             className="App-link"
-            href={ASAP_LINK}
+            href="https://parkinsonsroadmap.org/"
             target="_blank"
             rel="noopener noreferrer"
           >

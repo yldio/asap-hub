@@ -2,8 +2,9 @@
 /* istanbul ignore file */
 /* eslint-disable no-shadow */
 
-import React, { useState, useEffect, useContext } from 'react';
-import { User } from '@asap-hub/auth';
+import React, { useState, useEffect } from 'react';
+import { User, Auth0 } from '@asap-hub/auth';
+import { Auth0Context } from '@asap-hub/react-context';
 import createAuth0Client, {
   Auth0ClientOptions,
   Auth0Client,
@@ -12,37 +13,6 @@ import createAuth0Client, {
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
-
-export type Auth0 = {
-  isAuthenticated?: boolean;
-  user?: User;
-  loading: boolean;
-  popupOpen: boolean;
-  handleRedirectCallback: () => Promise<void>;
-} & Pick<
-  Auth0Client,
-  | 'getIdTokenClaims'
-  | 'loginWithRedirect'
-  | 'loginWithPopup'
-  | 'getTokenSilently'
-  | 'getTokenWithPopup'
-  | 'logout'
->;
-const auth0ClientNotProvided = () => {
-  throw new Error('Auth0 client not provided');
-};
-export const Auth0Context = React.createContext<Auth0>({
-  loading: true,
-  popupOpen: false,
-  handleRedirectCallback: auth0ClientNotProvided,
-  getIdTokenClaims: auth0ClientNotProvided,
-  loginWithRedirect: auth0ClientNotProvided,
-  loginWithPopup: auth0ClientNotProvided,
-  getTokenSilently: auth0ClientNotProvided,
-  getTokenWithPopup: auth0ClientNotProvided,
-  logout: auth0ClientNotProvided,
-});
-export const useAuth0 = () => useContext(Auth0Context);
 
 interface Auth0ProviderProps extends Auth0ClientOptions {
   children: React.ReactNode;

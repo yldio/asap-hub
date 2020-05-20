@@ -17,14 +17,8 @@ __metadata:
 "@asap-hub/auth@workspace:packages/auth":
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth@workspace:packages/auth"
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/example-lib@workspace:packages/example-lib":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/example-lib@workspace:packages/example-lib"
   dependencies:
-    "@types/jest": ^25.2.2
+    "@auth0/auth0-spa-js": ^1.8.0
   languageName: unknown
   linkType: soft
 
@@ -33,9 +27,9 @@ __metadata:
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/example-lib": "workspace:packages/example-lib"
+    "@asap-hub/react-components": "workspace:packages/react-components"
+    "@asap-hub/react-context": "workspace:packages/react-context"
     "@auth0/auth0-spa-js": ^1.8.0
-    "@peculiar/webcrypto": ^1.1.1
     "@testing-library/dom": ^7.2.1
     "@testing-library/jest-dom": ^5.5.0
     "@testing-library/react": ^10.0.2
@@ -79,6 +73,47 @@ __metadata:
     "@types/jest": ^25.2.2
     "@types/jsonwebtoken": ^8.5.0
     jsonwebtoken: ^8.5.1
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/react-components@workspace:packages/react-components":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/react-components@workspace:packages/react-components"
+  dependencies:
+    "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/react-context": "workspace:packages/react-context"
+    "@auth0/auth0-spa-js": ^1.8.0
+    "@babel/core": ^7.9.0
+    "@babel/preset-react": ^7.9.0
+    "@testing-library/dom": ^7.2.1
+    "@testing-library/jest-dom": ^5.5.0
+    "@testing-library/react": ^10.0.2
+    "@testing-library/user-event": ^10.0.1
+    "@types/jest": ^25.2.2
+    "@types/react": ^16.9.0
+    "@types/testing-library__jest-dom": ^5.0.3
+    "@types/testing-library__react": ^10.0.1
+    react: ^16.13.1
+    react-dom: ^16.13.1
+  peerDependencies:
+    "@asap-hub/react-context": "*"
+    react: ^16.13.1
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/react-context@workspace:packages/react-context":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/react-context@workspace:packages/react-context"
+  dependencies:
+    "@asap-hub/auth": "workspace:packages/auth"
+    "@testing-library/react-hooks": ^3.2.1
+    "@types/jest": ^25.2.2
+    "@types/react": ^16.9.0
+    "@types/testing-library__react-hooks": 3.2.0
+    react: ^16.13.1
+    react-test-renderer: ^16.9.0
+  peerDependencies:
+    react: ^16.13.1
   languageName: unknown
   linkType: soft
 
@@ -1443,7 +1478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-react@npm:^7.0.0":
+"@babel/preset-react@npm:^7.0.0, @babel/preset-react@npm:^7.9.0":
   version: 7.9.4
   resolution: "@babel/preset-react@npm:7.9.4"
   dependencies:
@@ -1499,7 +1534,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.4.0":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.4.0, @babel/runtime@npm:^7.5.4":
   version: 7.9.6
   resolution: "@babel/runtime@npm:7.9.6"
   dependencies:
@@ -2859,6 +2894,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@testing-library/react-hooks@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "@testing-library/react-hooks@npm:3.2.1"
+  dependencies:
+    "@babel/runtime": ^7.5.4
+    "@types/testing-library__react-hooks": ^3.0.0
+  peerDependencies:
+    react: ">=16.9.0"
+    react-test-renderer: ">=16.9.0"
+  checksum: 3/0037acdbbd54c1fe3a98437137ddec50e977f95786e46063ea89648f47e5317588ff013088df9aef635302bc40ec9dc7bd24bea17551619b98bae3f61ac47547
+  languageName: node
+  linkType: hard
+
 "@testing-library/react@npm:^10.0.2":
   version: 10.0.2
   resolution: "@testing-library/react@npm:10.0.2"
@@ -3156,6 +3204,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-test-renderer@npm:*":
+  version: 16.9.2
+  resolution: "@types/react-test-renderer@npm:16.9.2"
+  dependencies:
+    "@types/react": "*"
+  checksum: 3/d8a45e1be5208221eaa612e6de8638575011b18f7b3a1dadb70e560d376086656ab89934d35d1be9194fd3238e5ff169322a6f15e6c27bc796a205ac8331eb88
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:*, @types/react@npm:^16.9.0":
   version: 16.9.34
   resolution: "@types/react@npm:16.9.34"
@@ -3204,6 +3261,16 @@ __metadata:
   dependencies:
     "@types/jest": "*"
   checksum: 3/3af40a69300fd6ec9da570cd7ad2b48adb4e3c0b2ffe40874c743c8692fb2b5e6ef2ecb281b2e7025389b91f37eaa7ffd932ab8e1f0f2bf13970c11f706664cc
+  languageName: node
+  linkType: hard
+
+"@types/testing-library__react-hooks@npm:3.2.0, @types/testing-library__react-hooks@npm:^3.0.0":
+  version: 3.2.0
+  resolution: "@types/testing-library__react-hooks@npm:3.2.0"
+  dependencies:
+    "@types/react": "*"
+    "@types/react-test-renderer": "*"
+  checksum: 3/13af79e150039e8b43f3ba2a2bb4f6dd0f1b60bc6fea8b4552047ff6962bef15b5ad579316ea94f7bb8750dd3e7149d0da8b9344a803d50ae2f156701da9ad0e
   languageName: node
   linkType: hard
 
@@ -4115,6 +4182,8 @@ __metadata:
     "@babel/core": ^7.9.0
     "@babel/preset-env": ^7.9.5
     "@babel/preset-typescript": ^7.9.0
+    "@peculiar/webcrypto": ^1.1.1
+    "@testing-library/jest-dom": ^5.5.0
     "@typescript-eslint/eslint-plugin": ^2.28.0
     "@typescript-eslint/parser": ^2.28.0
     "@yarnpkg/pnpify": ^2.0.0-rc.20
@@ -16827,7 +16896,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0, react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1, react-is@npm:^16.8.4":
+"react-is@npm:^16.12.0, react-is@npm:^16.6.0, react-is@npm:^16.7.0, react-is@npm:^16.8.1, react-is@npm:^16.8.4, react-is@npm:^16.8.6":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: 3/11bcf1267a314a522615f626f3ce3727a3a24cdbf61c4d452add3550a7875326669631326cfb1ba3e92b6f72244c32ffecf93ad21c0cad8455d3e169d0e3f060
@@ -17010,6 +17079,20 @@ react-scripts@3.4.1:
   bin:
     react-scripts: ./bin/react-scripts.js
   checksum: 3/3a35dff5791edc7be66ac1da642f607b7ff4c4814c86d5487d0b492b21fb94e92cdb61493b1a352cb13572e427a1fa325f33fd744fd8f08fb7b4bfabe9f15769
+  languageName: node
+  linkType: hard
+
+"react-test-renderer@npm:^16.9.0":
+  version: 16.13.1
+  resolution: "react-test-renderer@npm:16.13.1"
+  dependencies:
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+    react-is: ^16.8.6
+    scheduler: ^0.19.1
+  peerDependencies:
+    react: ^16.13.1
+  checksum: 3/e9c3c068d09a4252103eed270635d05897e23cbb86c6f0f74beced9345ed1b94a0fff44f16f97526e6f7a8337669156616e1e02eacb6d7b8f40295c92d91be12
   languageName: node
   linkType: hard
 

@@ -1,0 +1,35 @@
+{
+  "name": "@asap-hub/react-components",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
+    "watch:babel": "yarn build:babel -w --verbose"
+  },
+  "peerDependencies": {
+    "@asap-hub/react-context": "*",
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "@asap-hub/auth": "workspace:packages/auth",
+    "@asap-hub/react-context": "workspace:packages/react-context",
+    "@auth0/auth0-spa-js": "^1.8.0",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-react": "^7.9.0",
+    "@testing-library/dom": "^7.2.1",
+    "@testing-library/jest-dom": "^5.5.0",
+    "@testing-library/react": "^10.0.2",
+    "@testing-library/user-event": "^10.0.1",
+    "@types/jest": "^25.2.2",
+    "@types/react": "^16.9.0",
+    "@types/testing-library__jest-dom": "^5.0.3",
+    "@types/testing-library__react": "^10.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}

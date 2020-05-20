@@ -78,6 +78,8 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-typescript": "^7.9.0",
+    "@peculiar/webcrypto": "^1.1.1",
+    "@testing-library/jest-dom": "^5.5.0",
     "@typescript-eslint/eslint-plugin": "^2.28.0",
     "@typescript-eslint/parser": "^2.28.0",
     "@yarnpkg/pnpify": "^2.0.0-rc.20",

@@ -1,21 +1,20 @@
+/** @jest-environment jsdom */
 import React from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 
-import AuthProvider from '../AuthProvider';
-import { domain, clientId } from '../config';
-import { WhenAuth0Loaded, LoggedIn } from '../test-utils';
+import { LoggedIn, Auth0Provider } from '../test-utils';
 
 import LoginLogoutButton from '../LoginLogoutButton';
 
-const originalLocation = window.location;
-let assign: jest.MockedFunction<typeof window.location.assign>;
+const originalLocation = globalThis.location;
+let assign: jest.MockedFunction<typeof globalThis.location.assign>;
 beforeEach(() => {
   assign = jest.fn();
-  delete window.location;
-  window.location = { ...originalLocation, assign };
+  delete globalThis.location;
+  globalThis.location = { ...originalLocation, assign };
 });
 afterEach(() => {
-  window.location = originalLocation;
+  globalThis.location = originalLocation;
 });
 
 describe('when not logged in', () => {
@@ -30,11 +29,9 @@ describe('when not logged in', () => {
       let button!: HTMLElement;
       await act(async () => {
         const { findByRole } = render(
-          <AuthProvider>
-            <WhenAuth0Loaded>
-              <LoginLogoutButton />
-            </WhenAuth0Loaded>
-          </AuthProvider>,
+          <Auth0Provider>
+            <LoginLogoutButton />
+          </Auth0Provider>,
         );
         button = await findByRole('button');
       });
@@ -45,9 +42,11 @@ describe('when not logged in', () => {
       const { origin, pathname, searchParams } = new URL(
         assign.mock.calls[0][0],
       );
-      expect(origin).toBe(`https://${domain}`);
+      expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
       expect(pathname).toMatchInlineSnapshot(`"/authorize"`);
-      expect(searchParams.get('client_id')).toBe(clientId);
+      expect(searchParams.get('client_id')).toMatchInlineSnapshot(
+        `"client_id"`,
+      );
       expect(searchParams.get('redirect_uri')).toMatchInlineSnapshot(
         `"http://localhost"`,
       );
@@ -64,11 +63,11 @@ describe('when logged in', () => {
     let button!: HTMLElement;
     await act(async () => {
       const { findByRole } = render(
-        <AuthProvider>
+        <Auth0Provider>
           <LoggedIn user={undefined}>
             <LoginLogoutButton />
           </LoggedIn>
-        </AuthProvider>,
+        </Auth0Provider>,
       );
       button = await findByRole('button');
     });
@@ -79,11 +78,11 @@ describe('when logged in', () => {
     let button!: HTMLElement;
     await act(async () => {
       const { findByRole } = render(
-        <AuthProvider>
+        <Auth0Provider>
           <LoggedIn user={{ name: 'John Doe' }}>
             <LoginLogoutButton />
           </LoggedIn>
-        </AuthProvider>,
+        </Auth0Provider>,
       );
       button = await findByRole('button');
     });
@@ -95,11 +94,11 @@ describe('when logged in', () => {
       let button!: HTMLElement;
       await act(async () => {
         const { findByRole } = render(
-          <AuthProvider>
+          <Auth0Provider>
             <LoggedIn user={undefined}>
               <LoginLogoutButton />
             </LoggedIn>
-          </AuthProvider>,
+          </Auth0Provider>,
         );
         button = await findByRole('button');
       });
@@ -109,9 +108,11 @@ describe('when logged in', () => {
       const { origin, pathname, searchParams } = new URL(
         assign.mock.calls[0][0],
       );
-      expect(origin).toBe(`https://${domain}`);
+      expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
       expect(pathname).toMatchInlineSnapshot(`"/v2/logout"`);
-      expect(searchParams.get('client_id')).toBe(clientId);
+      expect(searchParams.get('client_id')).toMatchInlineSnapshot(
+        `"client_id"`,
+      );
       expect(searchParams.get('returnTo')).toMatchInlineSnapshot(
         `"http://localhost"`,
       );

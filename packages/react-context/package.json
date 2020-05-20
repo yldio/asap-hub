@@ -1,0 +1,26 @@
+{
+  "name": "@asap-hub/react-context",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
+    "watch:babel": "yarn build:babel -w --verbose"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "@asap-hub/auth": "workspace:packages/auth",
+    "@testing-library/react-hooks": "^3.2.1",
+    "@types/jest": "^25.2.2",
+    "@types/react": "^16.9.0",
+    "@types/testing-library__react-hooks": "3.2.0",
+    "react": "^16.13.1",
+    "react-test-renderer": "^16.9.0"
+  }
+}

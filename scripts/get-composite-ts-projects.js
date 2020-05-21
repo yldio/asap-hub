@@ -9,7 +9,7 @@ we still want to typecheck everything that's in the repo.
 
 const { readdirSync } = require('fs');
 const { resolve } = require('path');
-const { stdout } = require('process');
+const { stdout, exit } = require('process');
 const {
   findConfigFile,
   readConfigFile,
@@ -22,11 +22,26 @@ const packagesDir = resolve(rootDir, 'packages');
 const appsDir = resolve(rootDir, 'apps');
 
 const compositeProjectPaths = [];
+const configErrors = [];
 
 [packagesDir, appsDir].forEach((parentDir) => {
   const projects = readdirSync(parentDir);
   projects.forEach((projectDir) => {
     const dir = resolve(parentDir, projectDir);
+
+    let dependencies, devDependencies;
+    // read package.json
+    try {
+      ({ dependencies = {}, devDependencies = {} } = require(resolve(
+        dir,
+        'package.json',
+      )));
+    } catch {
+      // obsolete project dir without a package.json, pretend it doesn't exist
+      return;
+    }
+
+    // read tsconfig.json
     const { error, config } = readConfigFile(
       findConfigFile(dir, tsSys.fileExists),
       tsSys.readFile,
@@ -34,14 +49,45 @@ const compositeProjectPaths = [];
     if (error) {
       throw new Error(error.messageText);
     }
-    const { errors, options } = parseJsonConfigFileContent(config, tsSys, dir);
+    const {
+      errors,
+      options,
+      projectReferences = [],
+    } = parseJsonConfigFileContent(config, tsSys, dir);
     if (errors.length) {
       throw new Error(errors.map((error) => error.messageText).join('\n'));
     }
-    if (options.composite) {
-      compositeProjectPaths.push(dir);
+    // Non-composite projects cannot be built using `tsc -b`
+    if (!options.composite) {
+      return;
     }
+    // add to TS projects to compile
+    compositeProjectPaths.push(dir);
+
+    // make sure the TS project is not missing any project references
+    const dependencyWorkspacePaths = Object.values({
+      ...dependencies,
+      ...devDependencies,
+    }).flatMap((version) => (/workspace:(.+)/.exec(version) || []).slice(1));
+    const projectReferencePaths = projectReferences.map(({ path }) => path);
+    dependencyWorkspacePaths.forEach((dependencyWorkspacePath) => {
+      if (
+        !projectReferencePaths.includes(
+          resolve(rootDir, dependencyWorkspacePath),
+        )
+      ) {
+        configErrors.push(
+          `Error: tsconfig.json of project ${projectDir} is missing a project reference ` +
+            `to its workspace dependency ${dependencyWorkspacePath}.`,
+        );
+      }
+    });
   });
 });
+
+if (configErrors.length) {
+  configErrors.forEach((error) => console.error(error));
+  exit(1);
+}
 
 stdout.write(compositeProjectPaths.join(' '));

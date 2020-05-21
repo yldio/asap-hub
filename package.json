@@ -9,12 +9,12 @@
     "node": "12.x"
   },
   "scripts": {
-    "build:babel": "yarn workspaces foreach -pt run build:babel",
+    "build:babel": "yarn workspaces foreach -vpt run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
     "build:frontend": "yarn workspace @asap-hub/frontend build",
     "build:frontend:typecheck": "yarn workspace @asap-hub/frontend typecheck",
     "build": "yarn build:typecheck && yarn build:babel && yarn build:frontend:typecheck && yarn build:frontend",
-    "watch:babel": "yarn workspaces foreach -pi -j 1000 run watch:babel",
+    "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
     "start:backend": "yarn sls offline",
     "sls": "node serverless/link-plugins.js && yarn pnpify serverless",

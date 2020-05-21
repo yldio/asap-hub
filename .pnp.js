@@ -5509,7 +5509,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "rimraf",
-        "npm:2.7.1"
+        "npm:3.0.2"
       ],
       [
         "ripemd160",
@@ -6682,6 +6682,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-typeahead", "npm:0.5.0"],
             ["param-case", "npm:3.0.3"],
             ["prettier", "npm:2.0.4"],
+            ["rimraf", "npm:3.0.2"],
             ["serverless", "npm:1.71.1"],
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.1.5"],
             ["serverless-plugin-ncc", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.4.0"],
@@ -11550,6 +11551,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-typeahead", "npm:0.5.0"],
             ["param-case", "npm:3.0.3"],
             ["prettier", "npm:2.0.4"],
+            ["rimraf", "npm:3.0.2"],
             ["serverless", "npm:1.71.1"],
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.1.5"],
             ["serverless-plugin-ncc", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.4.0"],

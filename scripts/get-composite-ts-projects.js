@@ -11,7 +11,6 @@ const { readdirSync } = require('fs');
 const { resolve } = require('path');
 const { stdout, exit } = require('process');
 const {
-  findConfigFile,
   readConfigFile,
   parseJsonConfigFileContent,
   sys: tsSys,
@@ -43,7 +42,7 @@ const configErrors = [];
 
     // read tsconfig.json
     const { error, config } = readConfigFile(
-      findConfigFile(dir, tsSys.fileExists),
+      resolve(dir, 'tsconfig.json'),
       tsSys.readFile,
     );
     if (error) {

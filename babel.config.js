@@ -1,14 +1,17 @@
 module.exports = {
   presets: [
     [
-      '@babel/preset-env',
+      require.resolve('@babel/preset-env'),
       {
         targets: {
           node: true,
         },
       },
     ],
-    '@babel/preset-typescript',
+    require.resolve('@babel/preset-typescript'),
+  ],
+  plugins: [
+    [require.resolve('@babel/plugin-transform-runtime'), { corejs: 3 }],
   ],
   babelrcRoots: ['.', 'apps/*', 'packages/*'],
 };

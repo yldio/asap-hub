@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:packages/auth",
+    "@babel/runtime-corejs3": "^7.9.6",
     "@types/jest": "^25.2.2",
     "@types/jsonwebtoken": "^8.5.0"
   }

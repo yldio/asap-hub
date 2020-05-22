@@ -15,6 +15,10 @@
     "@asap-hub/react-context": "*",
     "react": "^16.13.1"
   },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.9.6",
+    "core-js": "^3.6.5"
+  },
   "devDependencies": {
     "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/react-context": "workspace:packages/react-context",

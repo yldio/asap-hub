@@ -53,7 +53,7 @@ module.exports = {
   },
   functions: {
     'create-user': {
-      handler: 'apps/user-service/build/handler.createUser',
+      handler: 'apps/user-service/build/handlers/create.handler',
       events: [
         {
           httpApi: {
@@ -65,19 +65,19 @@ module.exports = {
       ],
     },
     welcome: {
-      handler: 'apps/user-service/build/handler.welcome',
+      handler: 'apps/user-service/build/handlers/welcome.handler',
       events: [
         {
           httpApi: {
             method: 'GET',
-            path: `/api/profile/{code}`,
+            path: `/api/users/{code}`,
             cors,
           },
         },
         {
           httpApi: {
             method: 'POST',
-            path: `/api/profile/{code}`,
+            path: `/api/users/{code}`,
             cors,
           },
         },

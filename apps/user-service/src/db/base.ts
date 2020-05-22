@@ -14,6 +14,14 @@ export default class Base<T> {
     this.collection = collection;
   }
 
+  async findOne(filter: FilterQuery<any>): Promise<T> {
+    const [res] = await this.collection.find(filter).limit(1).toArray();
+    if (res) {
+      return res as T;
+    }
+    throw Boom.forbidden();
+  }
+
   async findOneAndUpdate(filter: FilterQuery<any>, update: any): Promise<T> {
     const res = await this.collection.findOneAndUpdate(filter, {
       ...update,

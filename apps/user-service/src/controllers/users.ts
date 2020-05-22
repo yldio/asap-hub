@@ -1,19 +1,13 @@
 import Boom from '@hapi/boom';
-import Joi from '@hapi/joi';
 import { generate } from 'shortid';
-import { Db } from '../database';
-import { UserModel } from '../database/users';
+import { Db } from '../db';
+import { UserModel } from '../db/users';
 
 export interface User {
   id: string;
   displayName: string;
   email: string;
 }
-
-const schema = Joi.object({
-  displayName: Joi.string().required(),
-  email: Joi.string().email().required(),
-});
 
 function transform(user: UserModel): User {
   return {
@@ -31,13 +25,8 @@ export default class Users {
   }
 
   async create(user: User): Promise<User> {
-    const { value, error } = schema.validate(user);
-    if (error) {
-      throw Boom.badRequest('Payload object is invalid.', error.details);
-    }
-
     const createdUser = await this.db.users.create({
-      ...value,
+      ...user,
       invite: {
         code: generate(),
         source: 'manual',
@@ -56,7 +45,12 @@ export default class Users {
     throw Boom.forbidden();
   }
 
-  async linkByCode(code: string, identity: string): Promise<User> {
-    return transform(await this.db.users.linkByCode(code, identity));
+  async connectByCode(code: string, identity: string): Promise<User> {
+    const user = await this.fetchByCode(code);
+    await this.db.accounts.create({
+      _id: user.id,
+      identity,
+    });
+    return user;
   }
 }

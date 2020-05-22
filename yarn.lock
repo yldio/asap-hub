@@ -140,6 +140,7 @@ __metadata:
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
     "@types/aws-lambda": 8.10.51
+    "@types/chance": 1.1.0
     "@types/debug": 4.1.5
     "@types/hapi": ^18.0.3
     "@types/hapi__boom": ^9.0.1
@@ -149,6 +150,7 @@ __metadata:
     "@types/shortid": 0.0.29
     apr-intercept: ^3.0.3
     aws-lambda: ^1.0.6
+    chance: ^1.1.5
     debug: ^4.1.1
     mongodb: ^3.5.7
     mongodb-memory-server: ^6.6.1
@@ -4139,6 +4141,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chance@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@types/chance@npm:1.1.0"
+  checksum: 3/daaa9528de2d94060c49cca49d0326c974d089a0bf956e33cf63bc427abfceb449de42f5fde5e622089302b47540dd15709595c38bdcf24996d48c02f3024777
+  languageName: node
+  linkType: hard
+
 "@types/color-name@npm:^1.1.1":
   version: 1.1.1
   resolution: "@types/color-name@npm:1.1.1"
@@ -7736,6 +7745,13 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: 3/12b01a228b5ca2f03a82684c62d54c06e2ba2f7b81dd08fac56c5b9288958dd24f9cae866e140df5c29cb736059cb4be0165157ebb0b15039cc1ea511a2dab60
+  languageName: node
+  linkType: hard
+
+"chance@npm:^1.1.5":
+  version: 1.1.5
+  resolution: "chance@npm:1.1.5"
+  checksum: 3/c2692be44d67485d0c5bc0e4090440340037e5ccd2e201dc3182adb40c4c2cad48fba193f4f7ec90f1302aa24916cc3cbe6b33003968e4d63730d90ac27e2171
   languageName: node
   linkType: hard
 

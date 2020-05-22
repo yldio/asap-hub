@@ -76,12 +76,8 @@ module.exports = {
     ],
   },
   functions: {
-<<<<<<< HEAD
-    hello: {
-      handler: 'apps/hello-world/build/handler.hello',
-=======
     'create-user': {
-      handler: 'apps/user-service/build/handler.createUser',
+      handler: 'apps/user-service/build/handlers/create.handler',
       events: [
         {
           httpApi: {
@@ -93,30 +89,20 @@ module.exports = {
       ],
     },
     welcome: {
-      handler: 'apps/user-service/build/handler.welcome',
->>>>>>> f45b197... chore: add data related docs
+      handler: 'apps/user-service/build/handlers/welcome.handler',
       events: [
         {
           httpApi: {
             method: 'GET',
-<<<<<<< HEAD
-            path: '/hello',
-            cors: {
-              origin: `api.\${self:custom.origin}`,
-              headers: ['*'],
-              allowCredentials: false,
-            },
-=======
-            path: `/api/profile/{code}`,
+            path: `/api/users/{code}`,
             cors,
           },
         },
         {
           httpApi: {
             method: 'POST',
-            path: `/api/profile/{code}`,
+            path: `/api/users/{code}`,
             cors,
->>>>>>> f45b197... chore: add data related docs
           },
         },
       ],

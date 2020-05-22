@@ -1118,6 +1118,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:10.0.6"
       ],
       [
+        "@types/chance",
+        "npm:1.1.0"
+      ],
+      [
         "@types/color-name",
         "npm:1.1.1"
       ],
@@ -2312,6 +2316,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "chalk",
         "npm:2.4.2"
+      ],
+      [
+        "chance",
+        "npm:1.1.5"
       ],
       [
         "char-regex",
@@ -7999,6 +8007,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
             ["@types/aws-lambda", "npm:8.10.51"],
+            ["@types/chance", "npm:1.1.0"],
             ["@types/debug", "npm:4.1.5"],
             ["@types/hapi", "npm:18.0.3"],
             ["@types/hapi__boom", "npm:9.0.1"],
@@ -8008,6 +8017,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/shortid", "npm:0.0.29"],
             ["apr-intercept", "npm:3.0.3"],
             ["aws-lambda", "npm:1.0.6"],
+            ["chance", "npm:1.1.5"],
             ["debug", "virtual:22f562d986a179c134348e2f9a34c16e7aac83723b52994f6cd838d1e1bdc151316b5a5b757f52d4a71ffe2a5b2aea9b0dc0bf8f24d573669717b6ff6df418b2#npm:4.1.1"],
             ["mongodb", "npm:3.5.7"],
             ["mongodb-memory-server", "npm:6.6.1"],
@@ -12638,6 +12648,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/chance", [
+        ["npm:1.1.0", {
+          "packageLocation": "./.yarn/cache/@types-chance-npm-1.1.0-9358f4029b-3.zip/node_modules/@types/chance/",
+          "packageDependencies": [
+            ["@types/chance", "npm:1.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/color-name", [
         ["npm:1.1.1", {
           "packageLocation": "./.yarn/cache/@types-color-name-npm-1.1.1-00b0925070-3.zip/node_modules/@types/color-name/",
@@ -16696,6 +16715,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chalk", "npm:4.0.0"],
             ["ansi-styles", "npm:4.2.1"],
             ["supports-color", "npm:7.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["chance", [
+        ["npm:1.1.5", {
+          "packageLocation": "./.yarn/cache/chance-npm-1.1.5-45e9585942-3.zip/node_modules/chance/",
+          "packageDependencies": [
+            ["chance", "npm:1.1.5"]
           ],
           "linkType": "HARD",
         }]

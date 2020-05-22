@@ -32,4 +32,4 @@ The providers we looked into that fit he previous requirements were:
 
 ## Decision
 
-At this stage of development, we decide to use Amazon SES. The disadvantage of using Amazon SES is the lackluster dashboard and the visibility of the emails sent. Still, we believe that the ease of integration at this stage of the project is important to deliver the first user stories quickly. We will make sure that the email provider can be changed with reasonable effort in the future.
+At this stage of development, we decide to use Amazon SES. The disadvantage of using Amazon SES is the lack of a dashboard and the visibility of the emails sent. Still, we believe that the ease of integration at this stage of the project is important to deliver the first user stories quickly. We will make sure that the email provider can be changed with reasonable effort in the future.

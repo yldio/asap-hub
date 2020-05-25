@@ -19,11 +19,14 @@
     "@types/hapi__boom": "^9.0.1",
     "@types/hapi__joi": "17.1.0",
     "@types/jest": "^25.2.2",
+    "@types/migrate-mongo": "7.0.1",
     "@types/mongodb": "3.5.18",
     "@types/shortid": "0.0.29",
+    "migrate-mongo": "^7.2.1",
     "mongodb-memory-server": "^6.6.1"
   },
   "dependencies": {
+    "@babel/runtime-corejs3": "^7.9.6",
     "@hapi/boom": "^9.1.0",
     "@hapi/bourne": "^2.0.0",
     "@hapi/joi": "^17.1.1",

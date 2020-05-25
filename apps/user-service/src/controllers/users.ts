@@ -1,7 +1,8 @@
 import Boom from '@hapi/boom';
 import { generate } from 'shortid';
-import { Db } from '../db';
-import { UserModel } from '../db/users';
+import { ObjectId } from 'mongodb';
+import { Db } from '../data';
+import { UserModel } from '../data/users';
 
 export interface User {
   id: string;
@@ -48,7 +49,7 @@ export default class Users {
   async connectByCode(code: string, identity: string): Promise<User> {
     const user = await this.fetchByCode(code);
     await this.db.accounts.create({
-      _id: user.id,
+      user: new ObjectId(user.id),
       identity,
     });
     return user;

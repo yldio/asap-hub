@@ -3,13 +3,15 @@ import Chance from 'chance';
 import { MongoClient, Db } from 'mongodb';
 import { fetchByCode } from '../../src/routes/users';
 
+const { MONGODB_URL = 'mongodb://localhost:27017/asap' } = process.env;
+
 const chance = new Chance();
 describe('GET /api/users/{code}', () => {
   let db: Db;
   let connection: MongoClient;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect('mongodb://localhost/local', {
+    connection = await MongoClient.connect(MONGODB_URL, {
       useUnifiedTopology: true,
     });
     db = connection.db();
@@ -30,7 +32,7 @@ describe('GET /api/users/{code}', () => {
         connection,
       },
     );
-    
+
     expect(result).rejects.toThrow('Error "params": "code" is required');
   });
 

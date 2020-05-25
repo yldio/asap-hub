@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "build",
-    "typeRoots": ["types"]
+    "typeRoots": ["src/@types"]
   },
   "include": ["src/*", "src/**/*", "test/utils/events.test.ts"]
 }

@@ -7,8 +7,8 @@ export class Db {
 
   accounts: Accounts;
 
-  constructor(client: MongoClient) {
-    this.users = new Users(client.db().collection('users'));
-    this.accounts = new Accounts(client.db().collection('accounts'));
+  constructor(connection: MongoClient) {
+    this.users = new Users(connection.db().collection('users'));
+    this.accounts = new Accounts(connection.db().collection('accounts'));
   }
 }

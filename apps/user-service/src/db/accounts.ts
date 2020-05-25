@@ -1,21 +1,24 @@
+import { ObjectId } from 'mongodb';
 import Base, { BaseModel } from './base';
-import { UserModel } from './users';
 
 export interface AccountModel extends BaseModel {
-  user: UserModel;
+  user: ObjectId;
 }
 
 export interface CreateAccountModel {
-  _id: string;
+  user: ObjectId;
   identity: string;
 }
 
 export default class Accounts extends Base<AccountModel> {
   async create(account: CreateAccountModel): Promise<AccountModel> {
-    return super.insertOne(account);
+    return super.insertOne({
+      _id: account.identity,
+      user: account.user,
+    });
   }
 
-  async fetch(identifier: string): Promise<AccountModel> {
-    return super.findOne({ _id: identifier });
-  }
+  // async fetch(identifier: string): Promise<AccountModel> {
+  //   return super.findOne({ _id: identifier });
+  // }
 }

@@ -4,7 +4,7 @@ import { handler } from '../../src/handlers/create';
 import { apiGatewayEvent } from '../helpers/events';
 
 jest.mock('../../src/routes/users', () => ({
-  create: jest.fn().mockResolvedValue({ statusCode: 499 }),
+  create: jest.fn().mockResolvedValue({ statusCode: 200 }),
 }));
 
 test('POST /api/users invoke route create', async () => {
@@ -14,17 +14,5 @@ test('POST /api/users invoke route create', async () => {
     null,
   )) as APIGatewayProxyResult;
 
-  expect(result.statusCode).toStrictEqual(499);
-});
-
-test('POST /api/users throws 400 on invalid body', async () => {
-  const result = (await handler(
-    apiGatewayEvent({
-      body: 'invalid json',
-    }),
-    null,
-    null,
-  )) as APIGatewayProxyResult;
-
-  expect(result.statusCode).toStrictEqual(400);
+  expect(result.statusCode).toStrictEqual(200);
 });

@@ -12,6 +12,9 @@ export const apiGatewayEvent = (event: any): APIGatewayEvent => {
     queryStringParameters: null,
     resource: '/api',
     ...event,
-    body: JSON.stringify(event.body || {}),
+    body:
+      typeof event.body === 'object'
+        ? JSON.stringify(event.body || {})
+        : event.body,
   };
 };

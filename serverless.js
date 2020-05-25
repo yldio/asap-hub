@@ -33,10 +33,9 @@ module.exports = {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
         localDir: 'apps/frontend/build',
       },
-    ],
-    s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-storybook`,
+        bucketPrefix: '.storybook',
         localDir: 'apps/storybook/build',
       },
     ],
@@ -229,7 +228,7 @@ module.exports = {
                 S3OriginConfig: {
                   OriginAccessIdentity: {
                     'Fn::Join': [
-                      '/.storybook/',
+                      '/',
                       [
                         'origin-access-identity/cloudfront',
                         { Ref: 'CloudFrontOriginAccessIdentityStorybook' },
@@ -293,7 +292,7 @@ module.exports = {
                 },
                 MaxTTL: 0,
                 MinTTL: 0,
-                PathPattern: '/api/*',
+                PathPattern: 'api/*',
                 TargetOriginId: 'apigw',
                 ViewerProtocolPolicy: 'redirect-to-https',
               },
@@ -306,9 +305,9 @@ module.exports = {
                   Cookies: {
                     Forward: 'none',
                   },
-                  QueryString: false,
+                  QueryString: true,
                 },
-                PathPattern: '/.storybook/*',
+                PathPattern: '.storybook/*',
                 TargetOriginId: 's3origin-storybook',
                 ViewerProtocolPolicy: 'redirect-to-https',
               },
@@ -324,12 +323,6 @@ module.exports = {
       },
     },
     Outputs: {
-      FrontendBucketName: {
-        Value: `\${self:service}-\${self:provider.stage}-frontend`,
-      },
-      StorybookBucketName: {
-        Value: `\${self:service}-\${self:provider.stage}-frontend`,
-      },
       CloudFrontDistributionDomain: {
         Value: {
           'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],

@@ -1,6 +1,8 @@
 import Chance from 'chance';
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, ObjectId } from 'mongodb';
 import { create } from '../../src/routes/users';
+
+const { MONGODB_URL = 'mongodb://localhost:27017/asap' } = process.env;
 
 const chance = new Chance();
 describe('POST /api/users', () => {
@@ -8,7 +10,7 @@ describe('POST /api/users', () => {
   let connection: MongoClient;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect('mongodb://localhost/local', {
+    connection = await MongoClient.connect(MONGODB_URL, {
       useUnifiedTopology: true,
     });
     db = connection.db();
@@ -20,7 +22,7 @@ describe('POST /api/users', () => {
 
   test('throws when adding an existent email', async () => {
     const payload = {
-      displayName: `${chance.string()} ${chance.string()}`,
+      displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
     };
 
@@ -46,12 +48,13 @@ describe('POST /api/users', () => {
         connection,
       },
     );
+
     expect(result2).rejects.toThrow('Forbidden');
   });
 
-  test('throws forbidden when code doesn\t exist', async () => {
+  test('creates a new user', async () => {
     const payload = {
-      displayName: `${chance.string()} ${chance.string()}`,
+      displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
     };
 
@@ -65,9 +68,18 @@ describe('POST /api/users', () => {
         connection,
       },
     );
+
     expect(result.statusCode).toStrictEqual(201);
     expect(result.payload.id).toBeDefined();
-    expect(result.payload.displayName).toStrictEqual(payload.displayName);
-    expect(result.payload.email).toStrictEqual(payload.email);
+    expect(result.payload.invite).not.toBeDefined();
+
+    const [record] = await db
+      .collection('users')
+      .find({ _id: new ObjectId(result.payload.id) })
+      .limit(1)
+      .toArray();
+
+    expect(record.invite).toBeDefined();
+    expect(record.displayName).toStrictEqual(payload.displayName);
   });
 });

@@ -136,6 +136,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/user-service@workspace:apps/user-service"
   dependencies:
+    "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
@@ -146,12 +147,14 @@ __metadata:
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__joi": 17.1.0
     "@types/jest": ^25.2.2
+    "@types/migrate-mongo": 7.0.1
     "@types/mongodb": 3.5.18
     "@types/shortid": 0.0.29
     apr-intercept: ^3.0.3
     aws-lambda: ^1.0.6
     chance: ^1.1.5
     debug: ^4.1.1
+    migrate-mongo: ^7.2.1
     mongodb: ^3.5.7
     mongodb-memory-server: ^6.6.1
     shortid: ^2.2.15
@@ -4405,6 +4408,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/migrate-mongo@npm:7.0.1":
+  version: 7.0.1
+  resolution: "@types/migrate-mongo@npm:7.0.1"
+  dependencies:
+    "@types/mongodb": "*"
+  checksum: 3/5a39172b5f253e4be9c99c452fdf11319c2ed9cbcc7a6be86e658ae713d4c7e85b661913982e63f750096f2152ce5a57bb14e9bca8e3841205884b4e7dea87ff
+  languageName: node
+  linkType: hard
+
 "@types/mime-db@npm:*":
   version: 1.43.0
   resolution: "@types/mime-db@npm:1.43.0"
@@ -4437,7 +4449,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mongodb@npm:3.5.18":
+"@types/mongodb@npm:*, @types/mongodb@npm:3.5.18":
   version: 3.5.18
   resolution: "@types/mongodb@npm:3.5.18"
   dependencies:
@@ -8241,6 +8253,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:5.0.0":
+  version: 5.0.0
+  resolution: "commander@npm:5.0.0"
+  checksum: 3/2d86041c5d959936c05b02a42cba28dee1ff117f3275aef3737ceb89fd8de23aafd19c1508ab3598d0736f7aae9a0ddb75d7f52c7d6ea1e8fb6efa7cc61571c3
+  languageName: node
+  linkType: hard
+
 "commander@npm:^2.11.0, commander@npm:^2.13.0, commander@npm:^2.16.0, commander@npm:^2.19.0, commander@npm:^2.20.0, commander@npm:^2.8.1, commander@npm:^2.9.0":
   version: 2.20.3
   resolution: "commander@npm:2.20.3"
@@ -9206,6 +9225,13 @@ __metadata:
     whatwg-mimetype: ^2.3.0
     whatwg-url: ^8.0.0
   checksum: 3/42239927c6a202e2d02b7f41c94ca53e3cea036898b97b8bf6120ed1b25e0dd11c48ec7aa5c84cf807c2cb9f3a637df9fb50f3ca25a52863186a4ac46254726b
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:2.12.0":
+  version: 2.12.0
+  resolution: "date-fns@npm:2.12.0"
+  checksum: 3/43f28ac910b785ee00e98c8114dd4e7d3b5c59a6c44da8c9cea292c3c84f068c5d753a22c241160a80247417df92df8fa44cf3b49e41395e273bb0929ce6017c
   languageName: node
   linkType: hard
 
@@ -11763,6 +11789,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fn-args@npm:5.0.0":
+  version: 5.0.0
+  resolution: "fn-args@npm:5.0.0"
+  checksum: 3/6ccf7dd3bebd76ba5a762724c01b2b459aac4e7030a1b6f4ee144176cd76de5d17d24a62a1ac9c71eb17a1591fca4190a92c4867f58a96331062d092823e85ea
+  languageName: node
+  linkType: hard
+
 "follow-redirects@npm:1.5.10":
   version: 1.5.10
   resolution: "follow-redirects@npm:1.5.10"
@@ -11918,6 +11951,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-extra@npm:8.1.0, fs-extra@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "fs-extra@npm:8.1.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^4.0.0
+    universalify: ^0.1.0
+  checksum: 3/056a96d4f55ab8728b021e251175a4a6440d1edb5845e6c2e8e010019bde3e63de188a0eb99386c21c71804ca1a571cd6e08f507971f10a2bc4f4f7667720fa4
+  languageName: node
+  linkType: hard
+
 "fs-extra@npm:^0.30.0":
   version: 0.30.0
   resolution: "fs-extra@npm:0.30.0"
@@ -11950,17 +11994,6 @@ __metadata:
     jsonfile: ^4.0.0
     universalify: ^0.1.0
   checksum: 3/0de3773953a13b517f053dbfa291166da076cc563cdd8f0ecefc64018ab15d2614f1707860b82e6b0e41695f613c1855f410749bd01bcb585f0243b1018a6595
-  languageName: node
-  linkType: hard
-
-"fs-extra@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "fs-extra@npm:8.1.0"
-  dependencies:
-    graceful-fs: ^4.2.0
-    jsonfile: ^4.0.0
-    universalify: ^0.1.0
-  checksum: 3/056a96d4f55ab8728b021e251175a4a6440d1edb5845e6c2e8e010019bde3e63de188a0eb99386c21c71804ca1a571cd6e08f507971f10a2bc4f4f7667720fa4
   languageName: node
   linkType: hard
 
@@ -16328,7 +16361,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.x, lodash@npm:>=3.5 <5, lodash@npm:^4.0.1, lodash@npm:^4.17.11, lodash@npm:^4.17.12, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.5":
+"lodash@npm:4.17.15, lodash@npm:4.17.x, lodash@npm:>=3.5 <5, lodash@npm:^4.0.1, lodash@npm:^4.17.11, lodash@npm:^4.17.12, lodash@npm:^4.17.13, lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.5":
   version: 4.17.15
   resolution: "lodash@npm:4.17.15"
   checksum: 3/aec3fbb7570aa67bda500b8299b1b1821d60646bede87f76a74dfcc7666ab3445267d734ec71424d70809d52ad67a1356fab5ab694a3faa1908d68e9d48f00f5
@@ -16783,6 +16816,24 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"migrate-mongo@npm:^7.2.1":
+  version: 7.2.1
+  resolution: "migrate-mongo@npm:7.2.1"
+  dependencies:
+    cli-table3: 0.6.0
+    commander: 5.0.0
+    date-fns: 2.12.0
+    fn-args: 5.0.0
+    fs-extra: 8.1.0
+    lodash: 4.17.15
+    mongodb: 3.5.6
+    p-each-series: 2.1.0
+  bin:
+    migrate-mongo: bin/migrate-mongo.js
+  checksum: 3/2a7eecde96b53c5e5ef8bfe5cc49c547fe26c922b8e9d4ddc956376c1f2641def012180fc35687d7102c9b937091e4e10d8870fb76441dfbb8119b8141c17980
+  languageName: node
+  linkType: hard
+
 "miller-rabin@npm:^4.0.0":
   version: 4.0.1
   resolution: "miller-rabin@npm:4.0.1"
@@ -17165,6 +17216,23 @@ fsevents@^1.2.7:
   dependencies:
     mongodb-memory-server-core: 6.6.1
   checksum: 3/6f399dadd2ac0cfc912e5524f45f370dc4e643593965b0a3416fa6878c2b4ebc92c5575d3a6d7db7c2d2fc86d5c0f666b5b91d1bca5e5d3bb793d6f2cb6480b3
+  languageName: node
+  linkType: hard
+
+"mongodb@npm:3.5.6":
+  version: 3.5.6
+  resolution: "mongodb@npm:3.5.6"
+  dependencies:
+    bl: ^2.2.0
+    bson: ^1.1.4
+    denque: ^1.4.1
+    require_optional: ^1.0.1
+    safe-buffer: ^5.1.2
+    saslprep: ^1.0.0
+  dependenciesMeta:
+    saslprep:
+      optional: true
+  checksum: 3/7acf7c7aca77a20d428f56af1d0d476e114ea98c7e9519ff8ae0bd9cf1cba34f70f0868e1a6d4e94ce58bf0fc12b8a14f3f6720aeda857275061b09f0a2875fb
   languageName: node
   linkType: hard
 
@@ -18078,19 +18146,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"p-each-series@npm:2.1.0, p-each-series@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "p-each-series@npm:2.1.0"
+  checksum: 3/cc7516dbb8330eb09d3de44df4bba3c4a1b37ed711a3a4a25acef67f262e2a7400e1df1497e947ba505b1773fc2e2bf9e087d15676d511055659c21ed3e3eb3a
+  languageName: node
+  linkType: hard
+
 "p-each-series@npm:^1.0.0":
   version: 1.0.0
   resolution: "p-each-series@npm:1.0.0"
   dependencies:
     p-reduce: ^1.0.0
   checksum: 3/3a8ed61be01368877ca1f632412fd781aa8bc0e9ab6469f0f10074887c1684f38b24e6f2a1479ad7edb5581800dc0aed5b41bfdf194a95c370bcb942ae7f881b
-  languageName: node
-  linkType: hard
-
-"p-each-series@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "p-each-series@npm:2.1.0"
-  checksum: 3/cc7516dbb8330eb09d3de44df4bba3c4a1b37ed711a3a4a25acef67f262e2a7400e1df1497e947ba505b1773fc2e2bf9e087d15676d511055659c21ed3e3eb3a
   languageName: node
   linkType: hard
 

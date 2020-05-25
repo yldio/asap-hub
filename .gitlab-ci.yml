@@ -88,6 +88,9 @@ check:format:
   stage: test
 
 test:
+  services:
+    - name: mongo:4.2.6
+      alias: mongodb
   script:
     - yarn run test --coverage
   artifacts:
@@ -96,6 +99,8 @@ test:
   needs:
     - build
   stage: test
+  variables:
+    MONGODB_URL: mongodb://mongodb:27017/asap
 
 # stage build
 

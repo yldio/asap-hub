@@ -1217,6 +1217,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.0.2"
       ],
       [
+        "@types/migrate-mongo",
+        "npm:7.0.1"
+      ],
+      [
         "@types/mime-db",
         "npm:1.43.0"
       ],
@@ -2753,6 +2757,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.0"
       ],
       [
+        "date-fns",
+        "npm:2.12.0"
+      ],
+      [
         "dayjs",
         "npm:1.8.27"
       ],
@@ -3555,6 +3563,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "flush-write-stream",
         "npm:1.1.1"
+      ],
+      [
+        "fn-args",
+        "npm:5.0.0"
       ],
       [
         "follow-redirects",
@@ -4981,6 +4993,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.1.10"
       ],
       [
+        "migrate-mongo",
+        "npm:7.2.1"
+      ],
+      [
         "miller-rabin",
         "npm:4.0.1"
       ],
@@ -5418,7 +5434,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "p-each-series",
-        "npm:1.0.0"
+        "npm:2.1.0"
       ],
       [
         "p-event",
@@ -7927,6 +7943,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./apps/user-service/",
           "packageDependencies": [
             ["@asap-hub/user-service", "workspace:apps/user-service"],
+            ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
@@ -7937,12 +7954,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__boom", "npm:9.0.1"],
             ["@types/hapi__joi", "npm:17.1.0"],
             ["@types/jest", "npm:25.2.2"],
+            ["@types/migrate-mongo", "npm:7.0.1"],
             ["@types/mongodb", "npm:3.5.18"],
             ["@types/shortid", "npm:0.0.29"],
             ["apr-intercept", "npm:3.0.3"],
             ["aws-lambda", "npm:1.0.6"],
             ["chance", "npm:1.1.5"],
             ["debug", "virtual:22f562d986a179c134348e2f9a34c16e7aac83723b52994f6cd838d1e1bdc151316b5a5b757f52d4a71ffe2a5b2aea9b0dc0bf8f24d573669717b6ff6df418b2#npm:4.1.1"],
+            ["migrate-mongo", "npm:7.2.1"],
             ["mongodb", "npm:3.5.7"],
             ["mongodb-memory-server", "npm:6.6.1"],
             ["shortid", "npm:2.2.15"]
@@ -12853,6 +12872,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/migrate-mongo", [
+        ["npm:7.0.1", {
+          "packageLocation": "./.yarn/cache/@types-migrate-mongo-npm-7.0.1-e5294fe34d-3.zip/node_modules/@types/migrate-mongo/",
+          "packageDependencies": [
+            ["@types/migrate-mongo", "npm:7.0.1"],
+            ["@types/mongodb", "npm:3.5.18"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/mime-db", [
         ["npm:1.43.0", {
           "packageLocation": "./.yarn/cache/@types-mime-db-npm-1.43.0-125c1fb2a1-3.zip/node_modules/@types/mime-db/",
@@ -17146,6 +17175,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
+        ["npm:5.0.0", {
+          "packageLocation": "./.yarn/cache/commander-npm-5.0.0-7f140fb018-3.zip/node_modules/commander/",
+          "packageDependencies": [
+            ["commander", "npm:5.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:5.1.0", {
           "packageLocation": "./.yarn/cache/commander-npm-5.1.0-7e939e7832-3.zip/node_modules/commander/",
           "packageDependencies": [
@@ -18175,6 +18211,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["abab", "npm:2.0.3"],
             ["whatwg-mimetype", "npm:2.3.0"],
             ["whatwg-url", "npm:8.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["date-fns", [
+        ["npm:2.12.0", {
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.12.0-c3ff0ea3cb-3.zip/node_modules/date-fns/",
+          "packageDependencies": [
+            ["date-fns", "npm:2.12.0"]
           ],
           "linkType": "HARD",
         }]
@@ -21047,6 +21092,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["flush-write-stream", "npm:1.1.1"],
             ["inherits", "npm:2.0.4"],
             ["readable-stream", "npm:2.3.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["fn-args", [
+        ["npm:5.0.0", {
+          "packageLocation": "./.yarn/cache/fn-args-npm-5.0.0-25d5b107c5-3.zip/node_modules/fn-args/",
+          "packageDependencies": [
+            ["fn-args", "npm:5.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -26458,6 +26512,23 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["migrate-mongo", [
+        ["npm:7.2.1", {
+          "packageLocation": "./.yarn/cache/migrate-mongo-npm-7.2.1-371a78a7ee-3.zip/node_modules/migrate-mongo/",
+          "packageDependencies": [
+            ["migrate-mongo", "npm:7.2.1"],
+            ["cli-table3", "npm:0.6.0"],
+            ["commander", "npm:5.0.0"],
+            ["date-fns", "npm:2.12.0"],
+            ["fn-args", "npm:5.0.0"],
+            ["fs-extra", "npm:8.1.0"],
+            ["lodash", "npm:4.17.15"],
+            ["mongodb", "npm:3.5.6"],
+            ["p-each-series", "npm:2.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["miller-rabin", [
         ["npm:4.0.1", {
           "packageLocation": "./.yarn/cache/miller-rabin-npm-4.0.1-3426ac0bf7-3.zip/node_modules/miller-rabin/",
@@ -26821,6 +26892,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["mongodb", [
+        ["npm:3.5.6", {
+          "packageLocation": "./.yarn/cache/mongodb-npm-3.5.6-d2780b9dee-3.zip/node_modules/mongodb/",
+          "packageDependencies": [
+            ["mongodb", "npm:3.5.6"],
+            ["bl", "npm:2.2.0"],
+            ["bson", "npm:1.1.4"],
+            ["denque", "npm:1.4.1"],
+            ["require_optional", "npm:1.0.1"],
+            ["safe-buffer", "npm:5.2.0"],
+            ["saslprep", "npm:1.0.3"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:3.5.7", {
           "packageLocation": "./.yarn/cache/mongodb-npm-3.5.7-d5164d6606-3.zip/node_modules/mongodb/",
           "packageDependencies": [

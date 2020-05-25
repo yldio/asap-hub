@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 import Users from '../controllers/users';
-import { Db } from '../db';
+import { Db } from '../data';
 import { validate, Request, Response } from '../framework/lambda';
 
 export const create = async (

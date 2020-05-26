@@ -1,4 +1,4 @@
-const { readdirSync } = require('fs');
+const { existsSync, readdirSync } = require('fs');
 const { resolve } = require('path');
 
 const baseConfig = require('./jest-base.config.js');
@@ -7,8 +7,10 @@ const makeDefaultConfig = (parentDir, packageName) => {
   const displayName = `test-${packageName}`;
   const setupFilesAfterEnv = [...(baseConfig.setupFilesAfterEnv || [])];
 
-  const packageTsLibs = require(resolve(rootDir, 'tsconfig.json'))
-    .compilerOptions.lib;
+  const tsconfigPath = resolve(rootDir, 'tsconfig.json');
+  const packageTsLibs = existsSync(tsconfigPath)
+    ? require(tsconfigPath).compilerOptions.lib
+    : undefined;
   if (
     packageTsLibs &&
     packageTsLibs.some((lib) => lib.toLowerCase() === 'dom')

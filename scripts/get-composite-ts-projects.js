@@ -7,7 +7,7 @@ even if a package in the repo is not used by any of our apps (dead code),
 we still want to typecheck everything that's in the repo.
 */
 
-const { readdirSync } = require('fs');
+const { existsSync, readdirSync } = require('fs');
 const { resolve } = require('path');
 const { stdout, exit } = require('process');
 const {
@@ -39,12 +39,14 @@ const configErrors = [];
       // obsolete project dir without a package.json, pretend it doesn't exist
       return;
     }
+    const tsconfigPath = resolve(dir, 'tsconfig.json');
+    if (!existsSync(tsconfigPath)) {
+      // non-TypeScript project, pretend it doesn't exist
+      return;
+    }
 
     // read tsconfig.json
-    const { error, config } = readConfigFile(
-      resolve(dir, 'tsconfig.json'),
-      tsSys.readFile,
-    );
+    const { error, config } = readConfigFile(tsconfigPath, tsSys.readFile);
     if (error) {
       throw new Error(error.messageText);
     }
@@ -70,10 +72,10 @@ const configErrors = [];
     }).flatMap((version) => (/workspace:(.+)/.exec(version) || []).slice(1));
     const projectReferencePaths = projectReferences.map(({ path }) => path);
     dependencyWorkspacePaths.forEach((dependencyWorkspacePath) => {
+      const dependencyDir = resolve(rootDir, dependencyWorkspacePath);
       if (
-        !projectReferencePaths.includes(
-          resolve(rootDir, dependencyWorkspacePath),
-        )
+        !projectReferencePaths.includes(dependencyDir) &&
+        existsSync(resolve(dependencyDir, 'tsconfig.json'))
       ) {
         configErrors.push(
           `Error: tsconfig.json of project ${projectDir} is missing a project reference ` +

@@ -10,7 +10,7 @@ Reviewed-by: Tim Seckinger <tim.seckinger@yld.io>
 
 ## Context
 
-The ASAP Hub has to store data about users and usage of the application. To make that decision, we need to take into consideration the data model and data access patterns the application needs.
+The ASAP Hub has to store data about users and usage of the application. To decide how to implement our data storage, we need to take into consideration the data model and data access patterns the application needs.
 
 ## Data Model
 
@@ -48,29 +48,29 @@ The user entity contains the information about a user of the platform:
 
 ### Data Storage Options
 
-A decision on what storage solution to choose should consider the entities of the system and how they relate to each other and data access patterns to retrieve them.
-As you can be above the ERD doesn't have many of the entities and relationships required further in the project, although we need to pick a storage solution.
+A decision on what storage solution to choose should consider the entities of the system, how they relate to each other, and the data access patterns to retrieve them.
+As you can see above, the ERD doesn't have many of the entities and relationships required later in the project, but we need to pick a first storage solution now.
 
 An important decision is about managed or unmanaged services. A managed service is better in our context due to the size of the team and to enable focus on different areas.
 
 Our options are:
 
-- An SQL database. Our data is strongly relational. A relational database would be an excellent fit.
+- A SQL database. Our data is strongly relational. A relational database would be an excellent fit.
 - MongoDB. MongoDB is a document database with high adoption due to the flexibility of schemaless documents.
-- DynamoDB. We are using serverless in AWS for the backend, which turns DynamoDB is an attractive pairing. DynamosDB is a key/value and document database.
+- DynamoDB. We are using serverless in AWS for the backend, which is an attractive pairing with DynamoDB. DynamoDB is a key/value and document database.
 
 A **relational database** allows us to map the ERD without too much consideration due to the possibility to join data on different tables.
-The tooling for the relational database is wide-spread, and it gives substantial flexibility in our data model.
+The tooling for the relational database is wide-spread, and the database gives us substantial flexibility in our data model.
 
 **MongoDB** is the go-to solution when considering a document database due to the simple API.
-Modelling data in MongoDB isn't has straightforward has in a relational database, but you still have the flexibility when querying your data and changing access patterns.
+Modelling data in MongoDB isn't as straightforward as in a relational database, but you still have flexibility when querying your data and changing access patterns.
 
 **DynamoDB** is a document database hosted by AWS. DynamoDB offers a simple API tailored for data sets with known access patterns.
-To ensure the scaling capabilities, you need to think about your data model in a more intentional way than MongoDB. Has you can read in the Peter Parker principle "with great power comes great responsibility".
+To ensure the scaling capabilities, you need to think about your data model in a more intentional way than for a MongoDB. As you can read in the Peter Parker principle "with great power comes great responsibility".
 
 **Considerations**
 
-- Due to the serverless nature of our application databases that use connection pools to manage database connection aren't a good fit. The nature of a serverless arquitecture can exhaust the connection limit creating zombie connections that may impact database performance.
+- Due to the serverless nature of our application, databases that use connection pools to manage database connection aren't a good fit. A serverless architecture can exhaust the connection limit, creating zombie connections that may impact database performance.
 
 ## Options
 
@@ -79,7 +79,7 @@ To ensure the scaling capabilities, you need to think about your data model in a
 **Amazon Aurora Serverless**
 
 Amazon Aurora Serverless is an on-demand database. It starts, stops, and scales according to the needs of the application.
-Amazon Aurora Serverless supports the Data API removing the need to have a persistent connection to the cluster.
+Amazon Aurora Serverless supports the Data API, removing the need to have a persistent connection to the cluster.
 
 https://aws.amazon.com/rds/aurora/pricing/
 
@@ -91,14 +91,14 @@ https://aws.amazon.com/rds/aurora/
 
 **MongoDB Atlas**
 
-MongoDB Atlas is a managed service, and we can deploy the cluster on AWS, GCP, or Azure. In our case, AWS is the most suitable option so we can leverage VPC peering to added security. It works in a pay per hour and starts at \$0.08/h (~\$58/mo).
+MongoDB Atlas is a managed service, and we can deploy the cluster on AWS, GCP, or Azure. In our case, AWS is the most suitable option so that we can leverage VPC peering to added security. It it priced per hour starting at \$0.08/h (~\$58/mo).
 
 https://www.mongodb.com/cloud/atlas/pricing/
 
 ### DynamoDB
 
-DynamoDB is a pay-per request or pay-per provisioned capacity. Since we don't know the capacity needed for our application, the choice needs to be on-demand mode.
-DynamoDb is a key-value and document database performant at scale. It's fully managed, and the HTTP API fits nicely with the serverless model.
+DynamoDB is a pay-per-request or pay-per-provisioned-capacity. Since we don't know the capacity needed for our application, the choice would need to be its on-demand mode.
+DynamoDB is a key-value and document database performant at scale. It's fully managed, and the HTTP API fits nicely with the serverless model.
 
 https://aws.amazon.com/dynamodb/pricing/on-demand/
 

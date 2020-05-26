@@ -30,8 +30,13 @@ module.exports = {
   custom: {
     s3Sync: [
       {
-        bucketName: `\${self:service}-\${self:provider.stage}-static`,
+        bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
         localDir: 'apps/frontend/build',
+      },
+      {
+        bucketName: `\${self:service}-\${self:provider.stage}-storybook`,
+        bucketPrefix: '.storybook',
+        localDir: 'apps/storybook/build',
       },
     ],
   },
@@ -91,11 +96,11 @@ module.exports = {
   },
   resources: {
     Resources: {
-      Bucket: {
+      FrontendBucket: {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',
         Properties: {
-          BucketName: `\${self:service}-\${self:provider.stage}-static`,
+          BucketName: `\${self:service}-\${self:provider.stage}-frontend`,
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -109,10 +114,28 @@ module.exports = {
           },
         },
       },
-      BucketPolicy: {
+      StorybookBucket: {
+        Type: 'AWS::S3::Bucket',
+        DeletionPolicy: 'Delete',
+        Properties: {
+          BucketName: `\${self:service}-\${self:provider.stage}-storybook`,
+          AccessControl: 'PublicRead',
+          CorsConfiguration: {
+            CorsRules: [
+              {
+                AllowedMethods: ['GET', 'HEAD'],
+                AllowedHeaders: ['*'],
+                AllowedOrigins: ['*'],
+                MaxAge: 3000,
+              },
+            ],
+          },
+        },
+      },
+      BucketPolicyFrontend: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
-          Bucket: `\${self:service}-\${self:provider.stage}-static`,
+          Bucket: `\${self:service}-\${self:provider.stage}-frontend`,
           PolicyDocument: {
             Statement: [
               {
@@ -120,24 +143,56 @@ module.exports = {
                 Effect: 'Allow',
                 Principal: '*',
                 Resource: {
-                  'Fn::Join': ['', [{ 'Fn::GetAtt': ['Bucket', 'Arn'] }, '/*']],
+                  'Fn::Join': [
+                    '',
+                    [{ 'Fn::GetAtt': ['FrontendBucket', 'Arn'] }, '/*'],
+                  ],
                 },
               },
             ],
           },
         },
       },
-      CloudFrontOriginAccessIdentity: {
+      BucketPolicyStorybook: {
+        Type: 'AWS::S3::BucketPolicy',
+        Properties: {
+          Bucket: `\${self:service}-\${self:provider.stage}-storybook`,
+          PolicyDocument: {
+            Statement: [
+              {
+                Action: ['s3:GetObject'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: {
+                  'Fn::Join': [
+                    '',
+                    [{ 'Fn::GetAtt': ['StorybookBucket', 'Arn'] }, '/*'],
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+      CloudFrontOriginAccessIdentityFrontend: {
         Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         Properties: {
           CloudFrontOriginAccessIdentityConfig: {
-            Comment: { Ref: 'Bucket' },
+            Comment: { Ref: 'FrontendBucket' },
+          },
+        },
+      },
+      CloudFrontOriginAccessIdentityStorybook: {
+        Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
+        Properties: {
+          CloudFrontOriginAccessIdentityConfig: {
+            Comment: { Ref: 'StorybookBucket' },
           },
         },
       },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['Bucket', 'HttpApi'],
+        DependsOn: ['FrontendBucket', 'StorybookBucket', 'HttpApi'],
         Properties: {
           DistributionConfig: {
             CustomErrorResponses: [
@@ -150,16 +205,33 @@ module.exports = {
             Origins: [
               {
                 DomainName: {
-                  'Fn::GetAtt': ['Bucket', 'RegionalDomainName'],
+                  'Fn::GetAtt': ['FrontendBucket', 'RegionalDomainName'],
                 },
-                Id: 's3origin',
+                Id: 's3origin-frontend',
                 S3OriginConfig: {
                   OriginAccessIdentity: {
                     'Fn::Join': [
                       '/',
                       [
                         'origin-access-identity/cloudfront',
-                        { Ref: 'CloudFrontOriginAccessIdentity' },
+                        { Ref: 'CloudFrontOriginAccessIdentityFrontend' },
+                      ],
+                    ],
+                  },
+                },
+              },
+              {
+                DomainName: {
+                  'Fn::GetAtt': ['StorybookBucket', 'RegionalDomainName'],
+                },
+                Id: 's3origin-storybook',
+                S3OriginConfig: {
+                  OriginAccessIdentity: {
+                    'Fn::Join': [
+                      '/',
+                      [
+                        'origin-access-identity/cloudfront',
+                        { Ref: 'CloudFrontOriginAccessIdentityStorybook' },
                       ],
                     ],
                   },
@@ -183,6 +255,20 @@ module.exports = {
                 Id: 'apigw',
               },
             ],
+            DefaultCacheBehavior: {
+              AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+              CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+              Compress: true,
+              DefaultTTL: 3600,
+              ForwardedValues: {
+                Cookies: {
+                  Forward: 'none',
+                },
+                QueryString: false,
+              },
+              TargetOriginId: 's3origin-frontend',
+              ViewerProtocolPolicy: 'redirect-to-https',
+            },
             CacheBehaviors: [
               {
                 AllowedMethods: [
@@ -206,26 +292,27 @@ module.exports = {
                 },
                 MaxTTL: 0,
                 MinTTL: 0,
-                PathPattern: '/api/*',
+                PathPattern: 'api/*',
                 TargetOriginId: 'apigw',
+                ViewerProtocolPolicy: 'redirect-to-https',
+              },
+              {
+                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                Compress: true,
+                DefaultTTL: 3600,
+                ForwardedValues: {
+                  Cookies: {
+                    Forward: 'none',
+                  },
+                  QueryString: true,
+                },
+                PathPattern: '.storybook/*',
+                TargetOriginId: 's3origin-storybook',
                 ViewerProtocolPolicy: 'redirect-to-https',
               },
             ],
             DefaultRootObject: 'index.html',
-            DefaultCacheBehavior: {
-              AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
-              CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
-              Compress: true,
-              DefaultTTL: 3600,
-              ForwardedValues: {
-                Cookies: {
-                  Forward: 'none',
-                },
-                QueryString: false,
-              },
-              TargetOriginId: 's3origin',
-              ViewerProtocolPolicy: 'redirect-to-https',
-            },
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
@@ -236,9 +323,6 @@ module.exports = {
       },
     },
     Outputs: {
-      StaticBucketName: {
-        Value: `\${self:service}-\${self:provider.stage}-static`,
-      },
       CloudFrontDistributionDomain: {
         Value: {
           'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],

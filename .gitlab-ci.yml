@@ -3,23 +3,23 @@
 .tmpl:master_deploy_rules: &tmpl_master_deploy_rules
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
-.tmpl:master_deploy_variables: &tmpl_master_deploy_variables
-  SLS_STAGE: production
+  variables: &tmpl_master_deploy_variables
+    SLS_STAGE: production
 
 .tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
-.tmpl:branch_deploy_variables: &tmpl_branch_deploy_variables
-  SLS_STAGE: $CI_COMMIT_REF_SLUG
+  variables: &tmpl_branch_deploy_variables
+    SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:branch_remove_rules: &tmpl_branch_remove_rules
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
       when: manual
       allow_failure: true
-.tmpl:branch_remove_variables: &tmpl_branch_remove_variables
-  GIT_CHECKOUT: 0
-  SLS_STAGE: $CI_COMMIT_REF_SLUG
+  variables: &tmpl_branch_remove_variables
+    GIT_CHECKOUT: 0
+    SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:deploy: &tmpl_deploy
   artifacts:
@@ -170,8 +170,6 @@ deploy:sls:branch:
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove_rules
-  variables:
-    <<: *tmpl_branch_remove_variables
   dependencies:
     - build:native-deps
   environment:

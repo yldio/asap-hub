@@ -23,41 +23,6 @@
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "test": "jest"
   },
-  "dependenciesMeta": {
-    "browser-tabs-lock": {
-      "built": false
-    },
-    "core-js": {
-      "built": false
-    },
-    "core-js-pure": {
-      "built": false
-    },
-    "ejs": {
-      "built": false
-    },
-    "fsevents": {
-      "built": false
-    },
-    "serverless": {
-      "built": false
-    },
-    "serverless-offline": {
-      "unplugged": true
-    },
-    "serverless-plugin-ncc": {
-      "unplugged": true
-    },
-    "serverless-plugin-typescript": {
-      "unplugged": true
-    },
-    "serverless-s3-sync": {
-      "unplugged": true
-    },
-    "term-size": {
-      "unplugged": false
-    }
-  },
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all"

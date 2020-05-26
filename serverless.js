@@ -64,25 +64,6 @@ module.exports = {
         },
       ],
     },
-    welcome: {
-      handler: 'apps/user-service/build/handlers/welcome.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/api/users/{code}`,
-            cors,
-          },
-        },
-        {
-          httpApi: {
-            method: 'POST',
-            path: `/api/users/{code}`,
-            cors,
-          },
-        },
-      ],
-    },
   },
   resources: {
     Resources: {

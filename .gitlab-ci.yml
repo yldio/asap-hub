@@ -1,5 +1,10 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .yarn/cache
+
 .tmpl:master_deploy_rules: &tmpl_master_deploy_rules
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'

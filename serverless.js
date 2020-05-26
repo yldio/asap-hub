@@ -130,6 +130,9 @@ module.exports = {
               },
             ],
           },
+          WebsiteConfiguration: {
+            IndexDocument: 'index.html',
+          },
         },
       },
       BucketPolicyFrontend: {
@@ -221,21 +224,23 @@ module.exports = {
                 },
               },
               {
+                CustomOriginConfig: {
+                  OriginProtocolPolicy: 'http-only',
+                },
                 DomainName: {
-                  'Fn::GetAtt': ['StorybookBucket', 'RegionalDomainName'],
+                  'Fn::Select': [
+                    '1',
+                    {
+                      'Fn::Split': [
+                        'http://',
+                        {
+                          'Fn::GetAtt': ['StorybookBucket', 'WebsiteURL'],
+                        },
+                      ],
+                    },
+                  ],
                 },
                 Id: 's3origin-storybook',
-                S3OriginConfig: {
-                  OriginAccessIdentity: {
-                    'Fn::Join': [
-                      '/',
-                      [
-                        'origin-access-identity/cloudfront',
-                        { Ref: 'CloudFrontOriginAccessIdentityStorybook' },
-                      ],
-                    ],
-                  },
-                },
               },
               {
                 CustomOriginConfig: {

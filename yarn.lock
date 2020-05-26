@@ -18,7 +18,31 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth@workspace:packages/auth"
   dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@auth0/auth0-spa-js": ^1.8.0
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub"
+  dependencies:
+    "@typescript-eslint/eslint-plugin": ^2.28.0
+    "@typescript-eslint/parser": ^2.28.0
+    babel-eslint: ^10.1.0
+    eslint: ^6.8.0
+    eslint-config-airbnb-base: ^14.1.0
+    eslint-config-prettier: ^6.10.1
+    eslint-config-react-app: ^5.2.1
+    eslint-plugin-flowtype: ^4.7.0
+    eslint-plugin-import: ^2.20.2
+    eslint-plugin-jest: ^23.8.2
+    eslint-plugin-jsx-a11y: ^6.2.3
+    eslint-plugin-prettier: ^3.1.3
+    eslint-plugin-react: ^7.19.0
+    eslint-plugin-react-hooks: ^2.0.0
+    jest-config: ^25.4.0
+    prettier: ^2.0.4
   languageName: unknown
   linkType: soft
 
@@ -27,6 +51,7 @@ __metadata:
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@asap-hub/react-context": "workspace:packages/react-context"
     "@auth0/auth0-spa-js": ^1.8.0
@@ -70,6 +95,7 @@ __metadata:
   resolution: "@asap-hub/orcid-user-profile-script@workspace:apps/orcid-user-profile-script"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@babel/runtime-corejs3": ^7.9.6
     "@types/jest": ^25.2.2
     "@types/jsonwebtoken": ^8.5.0
@@ -82,6 +108,7 @@ __metadata:
   resolution: "@asap-hub/react-components@workspace:packages/react-components"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/react-context": "workspace:packages/react-context"
     "@auth0/auth0-spa-js": ^1.8.0
     "@babel/core": ^7.9.0
@@ -126,6 +153,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/storybook@workspace:apps/storybook"
   dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@asap-hub/react-context": "workspace:packages/react-context"
     "@babel/core": ^7.9.0
@@ -5634,6 +5662,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "asap-hub@workspace:."
   dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@babel/cli": ^7.8.4
     "@babel/core": ^7.9.0
     "@babel/plugin-transform-runtime": ^7.9.6
@@ -5642,27 +5671,13 @@ __metadata:
     "@babel/runtime-corejs3": ^7.9.6
     "@peculiar/webcrypto": ^1.1.1
     "@testing-library/jest-dom": ^5.5.0
-    "@typescript-eslint/eslint-plugin": ^2.28.0
-    "@typescript-eslint/parser": ^2.28.0
     "@yarnpkg/pnpify": ^2.0.0-rc.20
     "@zeit/ncc": ^0.22.1
-    babel-eslint: ^10.1.0
     babel-preset-react-app: ^9.1.2
     eslint: ^6.8.0
-    eslint-config-airbnb-base: ^14.1.0
-    eslint-config-prettier: ^6.10.1
-    eslint-config-react-app: ^5.2.1
-    eslint-plugin-flowtype: ^4.7.0
-    eslint-plugin-import: ^2.20.2
-    eslint-plugin-jest: ^23.8.2
-    eslint-plugin-jsx-a11y: ^6.2.3
-    eslint-plugin-prettier: ^3.1.3
-    eslint-plugin-react: ^7.19.0
-    eslint-plugin-react-hooks: ^2.0.0
     jest: ^25.4.0
     jest-circus: ^25.4.0
-    jest-config: ^25.4.0
-    jest-runner-eslint: ^0.7.6
+    jest-runner-eslint: ^0.9.0
     jest-watch-select-projects: ^2.0.0
     jest-watch-typeahead: ^0.5.0
     param-case: ^3.0.3
@@ -14650,9 +14665,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"jest-runner-eslint@npm:^0.7.6":
-  version: 0.7.6
-  resolution: "jest-runner-eslint@npm:0.7.6"
+"jest-runner-eslint@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "jest-runner-eslint@npm:0.9.0"
   dependencies:
     chalk: ^2.4.1
     cosmiconfig: ^5.0.0
@@ -14660,8 +14675,8 @@ fsevents@^1.2.7:
     eslint: ^4.0.0 || ^5.0.0 || ^6.0.0
   peerDependencies:
     eslint: ^4.0.0 || ^5.0.0 || ^6.0.0
-    jest: ^21.0.0 || ^22.0.0 || ^23.0.0 || ^24.0.0 || ^25.1.0
-  checksum: 3/dd0756db907aa0b7862384cb039c59c6baa0a6a7e56cc7b2b5b5339d38d56a45060f7ff5004278020fff350132717ef985732e77bda6c94b90cc589fb600380d
+    jest: ^21.0.0 || ^22.0.0 || ^23.0.0 || ^24.0.0 || ^25.1.0 || ^26.0.0
+  checksum: 3/caeef39867aeb868c0a97cbcadd242bbabe4589b44bc7b12f05228f2b2d66a988f9602e0d1b0ea2dd54a52ffbf9719ad62e2b731e75113390c5c9f7c40d7c400
   languageName: node
   linkType: hard
 

@@ -12,6 +12,7 @@
     "watch:babel": "yarn build:babel -w --verbose"
   },
   "devDependencies": {
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@auth0/auth0-spa-js": "^1.8.0"
   }
 }

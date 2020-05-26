@@ -11,6 +11,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@asap-hub/react-components": "workspace:packages/react-components",
     "@asap-hub/react-context": "workspace:packages/react-context",
     "@storybook/addon-actions": "^6.0.0-beta.12",

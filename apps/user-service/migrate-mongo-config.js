@@ -1,12 +1,16 @@
 // In this file you can configure migrate-mongo
+const url = require('url');
 
-const { MONGODB_URL = 'mongodb://localhost:27017/asap' } = process.env;
+const {
+  MONGODB_CONNECTION_STRING = 'mongodb://localhost:27017/asap',
+} = process.env;
 
+const connectionString = new url.URL(MONGODB_CONNECTION_STRING);
+const databaseName = connectionString.pathname.substring(1);
 const config = {
   mongodb: {
-    url: MONGODB_URL,
-
-    databaseName: MONGODB_DATABASE,
+    url: connectionString.toString(),
+    databaseName,
 
     options: {
       useNewUrlParser: true,

@@ -2,7 +2,9 @@ import Chance from 'chance';
 import { MongoClient, Db, ObjectId } from 'mongodb';
 import { create } from '../../src/routes/users';
 
-const { MONGODB_URL = 'mongodb://localhost:27017/asap' } = process.env;
+const {
+  MONGODB_CONNECTION_STRING = 'mongodb://localhost:27017/asap',
+} = process.env;
 
 const chance = new Chance();
 describe('POST /api/users', () => {
@@ -10,7 +12,7 @@ describe('POST /api/users', () => {
   let connection: MongoClient;
 
   beforeAll(async () => {
-    connection = await MongoClient.connect(MONGODB_URL, {
+    connection = await MongoClient.connect(MONGODB_CONNECTION_STRING, {
       useUnifiedTopology: true,
     });
     db = connection.db();

@@ -88,6 +88,9 @@ module.exports = {
           },
         },
       ],
+      environment: {
+        MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING}`,
+      },
     },
     welcome: {
       handler: 'apps/user-service/build/handlers/welcome.handler',

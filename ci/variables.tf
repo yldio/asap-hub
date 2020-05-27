@@ -2,7 +2,7 @@ variable "domain" {
   type = string
 }
 
-variable "subdomain" {
+variable "record" {
   type    = string
   default = ""
 }

@@ -16,8 +16,8 @@ data "aws_route53_zone" "external" {
 }
 
 resource "aws_acm_certificate" "cert" {
-  domain_name               = join(".", compact([var.subdomain, var.domain]))
-  subject_alternative_names = [join(".", compact(["*", var.subdomain, var.domain]))]
+  domain_name               = join(".", compact([var.record, var.domain]))
+  subject_alternative_names = [join(".", compact(["*", var.record, var.domain]))]
   validation_method         = "DNS"
 }
 
@@ -34,4 +34,8 @@ resource "aws_acm_certificate_validation" "cert" {
   validation_record_fqdns = [
     aws_route53_record.validation.fqdn
   ]
+}
+
+output "aws_acm_certificate_arn" {
+  value = aws_acm_certificate.cert.arn
 }

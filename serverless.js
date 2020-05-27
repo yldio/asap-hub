@@ -7,7 +7,7 @@ const service = paramCase(pkg.name);
 const plugins = [
   'serverless-s3-sync',
   ...(NODE_ENV === 'production'
-    ? ['serverless-plugin-ncc']
+    ? ['serverless-webpack']
     : ['serverless-offline']),
 ];
 
@@ -40,10 +40,11 @@ module.exports = {
   },
   package: {
     individually: true,
-    // we don't need this because of ncc
-    excludeDevDependencies: false,
   },
   custom: {
+    webpack: {
+      config: 'serverless/webpack.config.js',
+    },
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-static`,

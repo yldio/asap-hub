@@ -25,7 +25,7 @@ erDiagram
 https://mermaid-js.github.io/mermaid-live-editor/
 [![](https://mermaid.ink/img/eyJjb2RlIjoiZXJEaWFncmFtXG4gIFVzZXIgfHwuLnx8IEludml0ZSA6IGhhc1xuICBVc2VyIHx8Li5veyBBdXRoIDogaGFzIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZX0)](https://mermaid-js.github.io/mermaid-live-editor/#/edit/eyJjb2RlIjoiZXJEaWFncmFtXG4gIFVzZXIgfHwuLnx8IEludml0ZSA6IGhhc1xuICBVc2VyIHx8Li5veyBBdXRoIDogaGFzIiwibWVybWFpZCI6eyJ0aGVtZSI6ImRlZmF1bHQifSwidXBkYXRlRWRpdG9yIjpmYWxzZX0)
 
-### Data access patterns
+### Potential data access patterns
 
 **Invite (one time token)**
 

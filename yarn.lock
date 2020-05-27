@@ -114,6 +114,9 @@ __metadata:
     "@babel/core": ^7.9.0
     "@babel/preset-react": ^7.9.0
     "@babel/runtime-corejs3": ^7.9.6
+    "@emotion/babel-preset-css-prop": ^10.0.27
+    "@emotion/core": ^10.0.28
+    "@emotion/css": ^10.0.27
     "@testing-library/dom": ^7.2.1
     "@testing-library/jest-dom": ^5.5.0
     "@testing-library/react": ^10.0.2
@@ -123,6 +126,8 @@ __metadata:
     "@types/testing-library__jest-dom": ^5.0.3
     "@types/testing-library__react": ^10.0.1
     core-js: ^3.6.5
+    emotion-normalize: ^10.1.0
+    jest-emotion: ^10.0.32
     react: ^16.13.1
     react-dom: ^16.13.1
   peerDependencies:
@@ -843,7 +848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-syntax-jsx@npm:^7.8.3":
+"@babel/plugin-syntax-jsx@npm:^7.2.0, @babel/plugin-syntax-jsx@npm:^7.8.3":
   version: 7.8.3
   resolution: "@babel/plugin-syntax-jsx@npm:7.8.3"
   dependencies:
@@ -1331,7 +1336,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-react-jsx@npm:^7.9.1, @babel/plugin-transform-react-jsx@npm:^7.9.4":
+"@babel/plugin-transform-react-jsx@npm:^7.3.0, @babel/plugin-transform-react-jsx@npm:^7.9.1, @babel/plugin-transform-react-jsx@npm:^7.9.4":
   version: 7.9.4
   resolution: "@babel/plugin-transform-react-jsx@npm:7.9.4"
   dependencies:
@@ -1903,6 +1908,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emotion/babel-plugin-jsx-pragmatic@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "@emotion/babel-plugin-jsx-pragmatic@npm:0.1.5"
+  dependencies:
+    "@babel/plugin-syntax-jsx": ^7.2.0
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: 3/3957a41cac694c3c57d663f224b3484462002ab9665a5560f263e52b5f77b5b00cddf6588f24bff9efd26084ae6b2bf0a89fcb4ae093c4a1e19c22f46ce24a15
+  languageName: node
+  linkType: hard
+
+"@emotion/babel-preset-css-prop@npm:^10.0.27":
+  version: 10.0.27
+  resolution: "@emotion/babel-preset-css-prop@npm:10.0.27"
+  dependencies:
+    "@babel/plugin-transform-react-jsx": ^7.3.0
+    "@babel/runtime": ^7.5.5
+    "@emotion/babel-plugin-jsx-pragmatic": ^0.1.5
+    babel-plugin-emotion: ^10.0.27
+  peerDependencies:
+    "@babel/core": ^7.0.0
+  checksum: 3/2e29dd5581031fa06134f7e03b3de2c6fbdce672db339bffecadc37e3be95df1f1551d1f0dd48fdec3fcfe2e17a224b3d6ee5e4d100dfbc2a2a9545e96fcc024
+  languageName: node
+  linkType: hard
+
 "@emotion/cache@npm:^10.0.27, @emotion/cache@npm:^10.0.9":
   version: 10.0.29
   resolution: "@emotion/cache@npm:10.0.29"
@@ -1915,7 +1945,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/core@npm:^10.0.20, @emotion/core@npm:^10.0.9":
+"@emotion/core@npm:^10.0.20, @emotion/core@npm:^10.0.28, @emotion/core@npm:^10.0.9":
   version: 10.0.28
   resolution: "@emotion/core@npm:10.0.28"
   dependencies:
@@ -4158,6 +4188,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jest@npm:^23.0.2":
+  version: 23.3.14
+  resolution: "@types/jest@npm:23.3.14"
+  checksum: 3/1d28aa15ea6ddc7ff781f1576173e87d78b1e69f405e642048791561fb48b0a2ffef6b7b900795239406626d0c63785f626e8cb9712cfde5556a3e9eabbc6ba3
+  languageName: node
+  linkType: hard
+
 "@types/jest@npm:^25.2.2":
   version: 25.2.2
   resolution: "@types/jest@npm:25.2.2"
@@ -5677,6 +5714,7 @@ __metadata:
     eslint: ^6.8.0
     jest: ^25.4.0
     jest-circus: ^25.4.0
+    jest-emotion: ^10.0.32
     jest-runner-eslint: ^0.9.0
     jest-watch-select-projects: ^2.0.0
     jest-watch-typeahead: ^0.5.0
@@ -8670,7 +8708,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css@npm:^2.0.0, css@npm:^2.2.4":
+"css@npm:^2.0.0, css@npm:^2.2.1, css@npm:^2.2.4":
   version: 2.2.4
   resolution: "css@npm:2.2.4"
   dependencies:
@@ -9859,6 +9897,16 @@ __metadata:
   version: 3.0.0
   resolution: "emojis-list@npm:3.0.0"
   checksum: 3/a79126b55bc86ee8fd938235a6adf9d457c05fb5bb934e8608b7d35c878d9d1e312a67759244f5c3fba0810b508eb5617e5e6ad6886496ebcfa6832d1c8de3c4
+  languageName: node
+  linkType: hard
+
+"emotion-normalize@npm:^10.1.0":
+  version: 10.1.0
+  resolution: "emotion-normalize@npm:10.1.0"
+  peerDependencies:
+    "@emotion/core": ">=10.0.0"
+    react: ">=16.3.0"
+  checksum: 3/3d175ab87cb80410eb37201c79b4e9a36900a79f36b35a2f8e56ddd2d931ba73b7c2c680f78fa490b3e20ed3744e3e736ac3ab83e3008625c1687f77a401e4ec
   languageName: node
   linkType: hard
 
@@ -14266,6 +14314,18 @@ fsevents@^1.2.7:
     jest-util: ^25.4.0
     pretty-format: ^25.4.0
   checksum: 3/13bb5c78fcc748ebc9c57689eba979619f5213658d65f19a35401ad93f506729bc9b0fb4211b555566b9b55c4cd571109a226b2a2646963e43d9f181eadd467d
+  languageName: node
+  linkType: hard
+
+"jest-emotion@npm:^10.0.32":
+  version: 10.0.32
+  resolution: "jest-emotion@npm:10.0.32"
+  dependencies:
+    "@babel/runtime": ^7.5.5
+    "@types/jest": ^23.0.2
+    chalk: ^2.4.1
+    css: ^2.2.1
+  checksum: 3/a11ed3f3a4ba0ab7a9572d3c3720fdc817bba07dde23245226c2417e54d0e287566bdbc59bae0ac62ba0b418b6321303985b355f03088ea5a76ef5dc1b8da4f1
   languageName: node
   linkType: hard
 

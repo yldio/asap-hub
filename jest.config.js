@@ -5,6 +5,7 @@ const baseConfig = require('./jest-base.config.js');
 const makeDefaultConfig = (parentDir, packageName) => {
   const rootDir = resolve(parentDir, packageName);
   const displayName = `test-${packageName}`;
+  let testEnvironment = 'node';
   const setupFilesAfterEnv = [...(baseConfig.setupFilesAfterEnv || [])];
 
   const tsconfigPath = resolve(rootDir, 'tsconfig.json');
@@ -15,14 +16,18 @@ const makeDefaultConfig = (parentDir, packageName) => {
     packageTsLibs &&
     packageTsLibs.some((lib) => lib.toLowerCase() === 'dom')
   ) {
+    testEnvironment = 'jsdom';
     setupFilesAfterEnv.push(
       require.resolve('./jest/dom-extensions-setup-after-env.js'),
     );
   }
   return {
     ...baseConfig,
+
     rootDir,
     displayName,
+
+    testEnvironment,
     setupFilesAfterEnv,
   };
 };

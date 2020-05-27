@@ -37,6 +37,8 @@ module.exports = {
         tsx: 'never',
       },
     ],
+
+    'no-nested-ternary': 'off',
   },
   overrides: [
     {

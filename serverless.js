@@ -11,11 +11,13 @@ const {
   NODE_ENV = 'development',
 } = process.env;
 
-assert.ok(BASE_URL, 'process.env.BASE_URL not defined');
-assert.ok(
-  AWS_ACM_CERTIFICATE_ARN,
-  'process.env.AWS_ACM_CERTIFICATE_ARN not defined',
-);
+if (NODE_ENV === 'production') {
+  assert.ok(BASE_URL, 'process.env.BASE_URL not defined');
+  assert.ok(
+    AWS_ACM_CERTIFICATE_ARN,
+    'process.env.AWS_ACM_CERTIFICATE_ARN not defined',
+  );
+}
 
 const service = paramCase(pkg.name);
 const plugins = [

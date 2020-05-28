@@ -16,6 +16,8 @@ import { pixelsPerRem } from '../lengths';
 const borderWidth = 1;
 const styles = css({
   outline: 'none',
+
+  borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderRadius: '4px',
 
@@ -31,8 +33,8 @@ const largeStyles = css({
 
   paddingTop: `${15 / pixelsPerRem}em`,
   paddingBottom: `${15 / pixelsPerRem}em`,
-  paddingLeft: `${18 / pixelsPerRem}em`,
-  paddingRight: `${18 / pixelsPerRem}em`,
+  paddingLeft: `${42 / pixelsPerRem}em`,
+  paddingRight: `${42 / pixelsPerRem}em`,
 });
 const smallStyles = css({
   height: `${(36 + 2 * borderWidth) / pixelsPerRem}em`,
@@ -73,9 +75,11 @@ const secondaryStyles = css({
 
   ':hover, :focus': {
     borderColor: charcoal.rgb,
+    boxShadow: boxShadow(steel),
   },
 
   ':active': {
+    borderColor: steel.rgb,
     boxShadow: 'none',
   },
 });
@@ -98,6 +102,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
 }) => (
   <button
+    disabled={!enabled}
     css={[
       styles,
       small ? smallStyles : largeStyles,

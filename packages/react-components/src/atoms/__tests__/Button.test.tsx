@@ -22,11 +22,13 @@ it('renders a primary button', () => {
 
 it('renders a disabled button', () => {
   const { getByRole, rerender } = render(<Button />);
+  expect((getByRole('button') as HTMLButtonElement).disabled).toBeFalsy();
   expect(getComputedStyle(getByRole('button')).backgroundColor).not.toBe(
     silver.rgb,
   );
 
   rerender(<Button enabled={false} />);
+  expect((getByRole('button') as HTMLButtonElement).disabled).toBe(true);
   expect(getComputedStyle(getByRole('button')).backgroundColor).toBe(
     silver.rgb,
   );

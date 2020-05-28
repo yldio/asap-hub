@@ -22,7 +22,7 @@ export const color = (r: number, g: number, b: number): OpaqueColor => ({
 // Monochrome
 export const paper = color(255, 255, 255);
 export const pearl = color(252, 253, 254);
-export const silver = color(235, 241, 243);
+export const silver = color(237, 241, 243);
 export const steel = color(223, 229, 234);
 export const tin = color(194, 201, 206);
 export const lead = color(77, 100, 107);

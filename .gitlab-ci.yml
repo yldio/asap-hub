@@ -175,7 +175,7 @@ deploy:sls:master:
   environment:
     name: production
     url: https://$BASE_URL
-  dependencies:
+  needs:
     - build
     - build:native-deps
     - prepare:sls:master

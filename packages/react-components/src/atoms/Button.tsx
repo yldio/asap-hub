@@ -15,6 +15,9 @@ import { pixelsPerRem } from '../lengths';
 
 const borderWidth = 1;
 const styles = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+
   outline: 'none',
 
   borderStyle: 'solid',
@@ -24,20 +27,31 @@ const styles = css({
   fontWeight: 'bold',
 });
 
-// TODO different paddings for icon-only buttons
 const largeStyles = css({
   height: `${(54 + 2 * borderWidth) / pixelsPerRem}em`,
+  '> svg': {
+    height: `${24 / pixelsPerRem}em`,
+  },
+  '> *:not(:last-child)': {
+    marginRight: `${12 / pixelsPerRem}em`,
+  },
 
   marginTop: `${(18 - 2 * borderWidth) / pixelsPerRem}em`,
   marginBottom: `${(18 - 2 * borderWidth) / pixelsPerRem}em`,
 
   paddingTop: `${15 / pixelsPerRem}em`,
   paddingBottom: `${15 / pixelsPerRem}em`,
-  paddingLeft: `${42 / pixelsPerRem}em`,
-  paddingRight: `${42 / pixelsPerRem}em`,
+  paddingLeft: `${18 / pixelsPerRem}em`,
+  paddingRight: `${18 / pixelsPerRem}em`,
 });
 const smallStyles = css({
   height: `${(36 + 2 * borderWidth) / pixelsPerRem}em`,
+  '> svg': {
+    height: `${18 / pixelsPerRem}em`,
+  },
+  '> *:not(:last-child)': {
+    marginRight: `${6 / pixelsPerRem}em`,
+  },
 
   marginTop: `${(12 - 2 * borderWidth) / pixelsPerRem}em`,
   marginBottom: `${(12 - 2 * borderWidth) / pixelsPerRem}em`,
@@ -46,6 +60,19 @@ const smallStyles = css({
   paddingBottom: `${9 / pixelsPerRem}em`,
   paddingLeft: `${12 / pixelsPerRem}em`,
   paddingRight: `${12 / pixelsPerRem}em`,
+});
+
+const largeTextOnlyStyles = css({
+  paddingLeft: `${42 / pixelsPerRem}em`,
+  paddingRight: `${42 / pixelsPerRem}em`,
+});
+const largeIconOnlyStyles = css({
+  paddingLeft: `${15 / pixelsPerRem}em`,
+  paddingRight: `${15 / pixelsPerRem}em`,
+});
+const smallIconOnlyStyles = css({
+  paddingLeft: `${9 / pixelsPerRem}em`,
+  paddingRight: `${9 / pixelsPerRem}em`,
 });
 
 const boxShadow = (color: OpaqueColor) => `0px 2px 4px -2px ${color.rgb}`;
@@ -93,7 +120,7 @@ interface ButtonProps {
   enabled?: boolean;
   primary?: boolean;
   small?: boolean;
-  children?: React.ReactText | ReadonlyArray<React.ReactText>;
+  children?: React.ReactNode | React.ReactNodeArray;
 }
 const Button: React.FC<ButtonProps> = ({
   enabled = true,
@@ -107,9 +134,25 @@ const Button: React.FC<ButtonProps> = ({
       styles,
       small ? smallStyles : largeStyles,
       enabled ? (primary ? primaryStyles : secondaryStyles) : disabledStyles,
+      (Array.isArray(children)
+        ? children.some((child) => child && typeof child === 'object')
+        : children && typeof children === 'object') ||
+        (small ? null : largeTextOnlyStyles),
+      (Array.isArray(children)
+        ? children.some((child) => typeof child === 'string')
+        : typeof children === 'string') ||
+        (small ? smallIconOnlyStyles : largeIconOnlyStyles),
     ]}
   >
-    {children}
+    {Array.isArray(children) ? (
+      children.map((child) =>
+        typeof child === 'string' ? <span key={child}>{child}</span> : child,
+      )
+    ) : typeof children === 'string' ? (
+      <span>{children}</span>
+    ) : (
+      children
+    )}
   </button>
 );
 

@@ -2,12 +2,47 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import { silver, fern } from '../../colors';
+import { orcidIcon } from '../../icons';
 
 import Button from '../Button';
 
-it('renders a button with text', () => {
-  const { getByRole } = render(<Button>Text</Button>);
+it('renders a button with an icon and text', () => {
+  const { getByRole } = render(
+    <Button>
+      {orcidIcon}
+      Text
+    </Button>,
+  );
+  expect(getByRole('button')).toContainHTML('<svg');
   expect(getByRole('button')).toHaveTextContent('Text');
+});
+
+it('renders a button with text only with increased horizontal padding', () => {
+  const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
+  const normalPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  rerender(<Button>Text</Button>);
+  const textOnlyPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  expect(textOnlyPaddingLeft).toBeGreaterThan(normalPaddingLeft);
+});
+
+it('renders a button with an icon only with decreased horizontal padding', () => {
+  const { getByRole, rerender } = render(<Button>{orcidIcon}Text</Button>);
+  const normalPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  rerender(<Button>{orcidIcon}</Button>);
+  const iconOnlyPaddingLeft = Number(
+    getComputedStyle(getByRole('button')).paddingLeft.replace(/em$/, ''),
+  );
+
+  expect(iconOnlyPaddingLeft).toBeLessThan(normalPaddingLeft);
 });
 
 it('renders a primary button', () => {

@@ -1,7 +1,23 @@
+const assert = require('assert');
 const { paramCase } = require('param-case');
+
 const pkg = require('./package.json');
 
-const { NODE_ENV = 'development' } = process.env;
+const {
+  AWS_REGION = 'us-east-1',
+  SLS_STAGE = 'development',
+  BASE_URL,
+  AWS_ACM_CERTIFICATE_ARN,
+  NODE_ENV = 'development',
+} = process.env;
+
+if (NODE_ENV === 'production') {
+  assert.ok(BASE_URL, 'process.env.BASE_URL not defined');
+  assert.ok(
+    AWS_ACM_CERTIFICATE_ARN,
+    'process.env.AWS_ACM_CERTIFICATE_ARN not defined',
+  );
+}
 
 const service = paramCase(pkg.name);
 const plugins = [
@@ -19,8 +35,8 @@ module.exports = {
     runtime: 'nodejs12.x',
     timeout: 16,
     memorySize: 512,
-    region: `\${env:AWS_REGION, "us-east-1"}`,
-    stage: `\${env:SLS_STAGE, "development"}`,
+    region: AWS_REGION,
+    stage: SLS_STAGE,
   },
   package: {
     individually: true,
@@ -28,6 +44,9 @@ module.exports = {
     excludeDevDependencies: false,
   },
   custom: {
+    origin: [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_URL]
+      .filter(Boolean)
+      .join('.'),
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
@@ -41,51 +60,15 @@ module.exports = {
     ],
   },
   functions: {
-    error: {
-      handler: 'apps/hello-world/build/handler.error',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: '/api/error',
-            cors: {
-              origin: {
-                'Fn::Join': [
-                  '',
-                  [
-                    'https://',
-                    {
-                      'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
-                    },
-                  ],
-                ],
-              },
-              headers: ['*'],
-              allowCredentials: false,
-            },
-          },
-        },
-      ],
-    },
-    helloWorld: {
+    hello: {
       handler: 'apps/hello-world/build/handler.hello',
       events: [
         {
           httpApi: {
             method: 'GET',
-            path: '/api/hello',
+            path: '/hello',
             cors: {
-              origin: {
-                'Fn::Join': [
-                  '',
-                  [
-                    'https://',
-                    {
-                      'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
-                    },
-                  ],
-                ],
-              },
+              origin: `api.\${self:custom.origin}`,
               headers: ['*'],
               allowCredentials: false,
             },
@@ -96,6 +79,48 @@ module.exports = {
   },
   resources: {
     Resources: {
+      HttpApiDomain: {
+        Type: 'AWS::ApiGatewayV2::DomainName',
+        Properties: {
+          DomainName: `api.\${self:custom.origin}`,
+          DomainNameConfigurations: [
+            {
+              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              EndpointType: 'REGIONAL',
+            },
+          ],
+        },
+      },
+      HttpApiApiMapping: {
+        Type: 'AWS::ApiGatewayV2::ApiMapping',
+        DependsOn: ['HttpApiDomain'],
+        Properties: {
+          ApiId: { Ref: 'HttpApi' },
+          ApiMappingKey: 'users',
+          DomainName: `api.\${self:custom.origin}`,
+          Stage: { Ref: 'HttpApiStage' },
+        },
+      },
+      HttpApiRecordSetGroup: {
+        Type: 'AWS::Route53::RecordSetGroup',
+        Properties: {
+          HostedZoneName: `${BASE_URL}.`,
+          RecordSets: [
+            {
+              Name: `api.\${self:custom.origin}`,
+              Type: 'A',
+              AliasTarget: {
+                DNSName: {
+                  'Fn::GetAtt': ['HttpApiDomain', 'RegionalDomainName'],
+                },
+                HostedZoneId: {
+                  'Fn::GetAtt': ['HttpApiDomain', 'RegionalHostedZoneId'],
+                },
+              },
+            },
+          ],
+        },
+      },
       FrontendBucket: {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',
@@ -195,9 +220,10 @@ module.exports = {
       },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['FrontendBucket', 'StorybookBucket', 'HttpApi'],
+        DependsOn: ['FrontendBucket', 'StorybookBucket'],
         Properties: {
           DistributionConfig: {
+            Aliases: [`\${self:custom.origin}`],
             CustomErrorResponses: [
               {
                 ErrorCode: 404,
@@ -276,32 +302,6 @@ module.exports = {
             },
             CacheBehaviors: [
               {
-                AllowedMethods: [
-                  'HEAD',
-                  'DELETE',
-                  'POST',
-                  'GET',
-                  'OPTIONS',
-                  'PUT',
-                  'PATCH',
-                ],
-                CachedMethods: ['HEAD', 'GET', 'OPTIONS'],
-                Compress: true,
-                DefaultTTL: 0,
-                ForwardedValues: {
-                  Headers: ['Authorization', 'authorization'],
-                  Cookies: {
-                    Forward: 'all',
-                  },
-                  QueryString: true,
-                },
-                MaxTTL: 0,
-                MinTTL: 0,
-                PathPattern: 'api/*',
-                TargetOriginId: 'apigw',
-                ViewerProtocolPolicy: 'redirect-to-https',
-              },
-              {
                 AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
                 CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
                 Compress: true,
@@ -321,16 +321,30 @@ module.exports = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              CloudFrontDefaultCertificate: true,
+              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              MinimumProtocolVersion: 'TLSv1.2_2018',
+              SslSupportMethod: 'sni-only',
             },
           },
         },
       },
-    },
-    Outputs: {
-      CloudFrontDistributionDomain: {
-        Value: {
-          'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+      CloudFrontRecordSetGroup: {
+        Type: 'AWS::Route53::RecordSetGroup',
+        Properties: {
+          HostedZoneName: `${BASE_URL}.`,
+          RecordSets: [
+            {
+              Name: `\${self:custom.origin}`,
+              Type: 'A',
+              AliasTarget: {
+                DNSName: {
+                  'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+                },
+                // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html#cfn-route53-aliastarget-hostedzoneid
+                HostedZoneId: 'Z2FDTNDATAQYW2',
+              },
+            },
+          ],
         },
       },
     },

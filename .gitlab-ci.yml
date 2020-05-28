@@ -191,7 +191,7 @@ deploy:sls:branch:
     name: review/$CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$BASE_URL
     on_stop: deploy:sls:branch_remove
-  dependencies:
+  needs:
     - build
     - build:native-deps
     - prepare:sls:branch

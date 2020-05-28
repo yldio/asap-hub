@@ -1,5 +1,15 @@
+import React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { addParameters, addDecorator } from '@storybook/react';
+
+import { GlobalStyles } from '@asap-hub/react-components';
+
+addDecorator((story) => (
+  <>
+    <GlobalStyles />
+    {story()}
+  </>
+));
 
 addDecorator(withKnobs);
 addParameters({

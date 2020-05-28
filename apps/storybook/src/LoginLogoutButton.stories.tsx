@@ -4,7 +4,7 @@ import { text } from '@storybook/addon-knobs';
 import { LoginLogoutButton } from '@asap-hub/react-components';
 import { Auth0Context, useAuth0 } from '@asap-hub/react-context';
 
-export default { title: 'Auth / Login and Logout Button' };
+export default { title: 'Organisms / Auth / Login and Logout Button' };
 
 export const LoggedOut = () => <LoginLogoutButton />;
 export const LoggedIn = () => {

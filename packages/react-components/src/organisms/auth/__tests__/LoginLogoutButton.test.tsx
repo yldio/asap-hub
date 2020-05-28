@@ -1,4 +1,3 @@
-/** @jest-environment jsdom */
 import React from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 

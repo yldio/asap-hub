@@ -4,6 +4,9 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 
+import { matchers } from 'jest-emotion';
+expect.extend(matchers);
+
 // The Auth0 library needs the WebCrypto API
 import { Crypto } from '@peculiar/webcrypto';
 

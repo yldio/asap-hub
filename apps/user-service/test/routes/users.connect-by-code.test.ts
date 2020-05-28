@@ -20,7 +20,7 @@ describe('POST /api/users/{code}', () => {
   });
 
   afterAll(async () => {
-    await connection.close();
+    await connection.close(true);
   });
 
   test('throws forbidden when code doesn\t exist', async () => {

@@ -10,9 +10,10 @@ export interface User {
   email: string;
 }
 
+const key = '_id';
 function transform(user: UserModel): User {
   return {
-    id: user._id.toString(),
+    id: user[key].toString(),
     displayName: user.displayName,
     email: user.email,
   } as User;

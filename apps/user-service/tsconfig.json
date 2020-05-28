@@ -5,5 +5,5 @@
     "outDir": "build",
     "typeRoots": ["src/@types"]
   },
-  "include": ["src/*", "src/**/*", "test/utils/events.test.ts"]
+  "include": ["src"]
 }

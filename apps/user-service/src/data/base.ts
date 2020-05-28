@@ -1,5 +1,5 @@
+import go from 'apr-intercept';
 import Boom from '@hapi/boom';
-import Intercept from 'apr-intercept';
 import { Collection, ObjectId } from 'mongodb';
 
 export interface BaseModel {
@@ -41,8 +41,8 @@ export default class Base<T> {
   //   return res.value as T;
   // }
 
-  async insertOne(docs: any): Promise<T> {
-    const [err, res] = await Intercept(
+  async insertOne(docs: object): Promise<T> {
+    const [err, res] = await go(
       this.collection.insertOne({
         ...docs,
         createdAt: new Date(),

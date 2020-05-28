@@ -1,11 +1,16 @@
 import Joi from '@hapi/joi';
-import Users from '../controllers/users';
+import Users, { User } from '../controllers/users';
 import { Db } from '../data';
-import { validate, Request, Response } from '../framework/lambda';
+import {
+  validate,
+  Request,
+  Response,
+  RequestContext,
+} from '../framework/lambda';
 
 export const create = async (
   request: Request,
-  context: any,
+  context: RequestContext,
 ): Promise<Response> => {
   const payload = validate(
     'payload',
@@ -14,7 +19,7 @@ export const create = async (
       displayName: Joi.string().required(),
       email: Joi.string().email().required(),
     }).required(),
-  );
+  ) as User;
 
   const users = new Users(new Db(context.connection));
   const user = await users.create(payload);
@@ -27,7 +32,7 @@ export const create = async (
 
 export const connectByCode = async (
   request: Request,
-  context: any,
+  context: RequestContext,
 ): Promise<Response> => {
   const params = validate(
     'params',
@@ -35,7 +40,9 @@ export const connectByCode = async (
     Joi.object({
       code: Joi.string().required(),
     }).required(),
-  );
+  ) as {
+    code: string;
+  };
 
   const headers = validate(
     'headers',
@@ -49,7 +56,9 @@ export const connectByCode = async (
       .options({
         allowUnknown: true,
       }),
-  );
+  ) as {
+    authorization: string;
+  };
 
   const [, accessToken] = headers.authorization.split(' ');
   const users = new Users(new Db(context.connection));
@@ -62,7 +71,7 @@ export const connectByCode = async (
 
 export const fetchByCode = async (
   request: Request,
-  context: any,
+  context: RequestContext,
 ): Promise<Response> => {
   const params = validate(
     'params',
@@ -70,7 +79,9 @@ export const fetchByCode = async (
     Joi.object({
       code: Joi.string().required(),
     }).required(),
-  );
+  ) as {
+    code: string;
+  };
 
   const users = new Users(new Db(context.connection));
   const user = await users.fetchByCode(params.code);

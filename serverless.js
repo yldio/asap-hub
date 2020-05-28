@@ -110,6 +110,9 @@ module.exports = {
           },
         },
       ],
+      environment: {
+        MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING}`,
+      },
     },
   },
   resources: {

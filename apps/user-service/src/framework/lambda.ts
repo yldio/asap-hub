@@ -1,21 +1,22 @@
+import go from 'apr-intercept';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Debug from 'debug';
-import Intercept from 'apr-intercept';
-import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import Joi from '@hapi/joi';
+import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
+import { MongoClient } from 'mongodb';
 
 export interface Request {
   method: 'get' | 'post';
-  headers: any;
-  params?: any;
-  payload?: any;
-  query?: any;
+  headers: object;
+  params?: object;
+  payload?: object;
+  query?: object;
 }
 
 export interface Response {
   statusCode?: number | undefined;
-  payload?: any;
+  payload?: object;
   headers?:
     | {
         [header: string]: string | number | boolean;
@@ -23,12 +24,16 @@ export interface Response {
     | undefined;
 }
 
+export interface RequestContext {
+  connection: MongoClient;
+}
+
 export const validate = <T>(
   prop: string,
   value: T,
   schema: Joi.AnySchema,
   options?: Joi.ValidationOptions,
-) => {
+): T => {
   const { error, value: res } = schema.validate(value, options);
   if (error) {
     throw Boom.badRequest(`Error "${prop}": ${error.message}`, {
@@ -43,9 +48,9 @@ const debug = Debug('http');
 export const http = <T>(
   fn: (request: Request) => Promise<Response> | Response,
 ) => async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  let payload;
+  let body;
   try {
-    payload = event.body && Bourne.parse(event.body);
+    body = event.body && Bourne.parse(event.body);
   } catch (err) {
     const boom = Boom.badRequest(err.message);
     return {
@@ -68,11 +73,11 @@ export const http = <T>(
     method: event.httpMethod.toLocaleLowerCase(),
     headers,
     params: event.pathParameters,
-    payload,
+    payload: body,
     query: event.queryStringParameters,
   } as Request;
 
-  const [err, result] = await Intercept(fn(request));
+  const [err, res] = await go(fn(request));
 
   if (err) {
     debug('http:error', err);
@@ -107,11 +112,11 @@ export const http = <T>(
   }
 
   return {
-    statusCode: result.statusCode || 200,
-    body: result.payload && JSON.stringify(result.payload),
+    statusCode: res.statusCode || 200,
+    body: res.payload && JSON.stringify(res.payload),
     headers: {
       'content-type': 'application/json',
-      ...result.headers,
+      ...res.headers,
     },
   };
 };

@@ -19,7 +19,7 @@ describe('POST /api/users', () => {
   });
 
   afterAll(async () => {
-    await connection.close();
+    await connection.close(true);
   });
 
   test('throws when adding an existent email', async () => {

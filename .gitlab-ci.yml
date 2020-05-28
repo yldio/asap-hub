@@ -100,8 +100,10 @@ test:
   services:
     - mongo:4.2.6
   script:
+    # variables defined alongside services are prepended
+    # with the service name, to test the service we need to
+    # set the variable inline
     - MONGODB_CONNECTION_STRING=mongodb://mongo:27017/asap
-    - printenv
     - yarn workspace @asap-hub/user-service migrate up
     - yarn run test --coverage
   artifacts:

@@ -20,7 +20,7 @@ describe('GET /api/users/{code}', () => {
   });
 
   afterAll(async () => {
-    await connection.close();
+    await connection.close(true);
   });
 
   test("throws bad request when code isn't present", async () => {

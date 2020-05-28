@@ -35,12 +35,9 @@
 
 .tmpl:deploy: &tmpl_deploy
   script:
-    - export $(grep -v '^#' .env | xargs)
+    - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
     - yarn sls deploy --verbose
   stage: deploy
-  dependencies:
-    - build
-    - build:native-deps
 
 .tmpl:prepare: &tmpl_prepare
   image:
@@ -180,6 +177,10 @@ deploy:sls:master:
     - build:native-deps
     - prepare:sls:master
     - prepare:cert:master
+  dependencies:
+    - build
+    - build:native-deps
+    - prepare:cert:master
 
 deploy:sls:branch:
   <<: *tmpl_deploy
@@ -195,6 +196,10 @@ deploy:sls:branch:
     - build
     - build:native-deps
     - prepare:sls:branch
+    - prepare:cert:branch
+  dependencies:
+    - build
+    - build:native-deps
     - prepare:cert:branch
 
 deploy:sls:branch_remove:

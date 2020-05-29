@@ -17,6 +17,9 @@ const borderWidth = 1;
 const styles = css({
   display: 'inline-flex',
   alignItems: 'center',
+  '> span': {
+    whiteSpace: 'pre',
+  },
 
   outline: 'none',
 
@@ -32,8 +35,11 @@ const largeStyles = css({
   '> svg': {
     height: `${24 / pixelsPerRem}em`,
   },
-  '> *:not(:last-child)': {
-    marginRight: `${12 / pixelsPerRem}em`,
+  '> svg + span': {
+    marginLeft: `${12 / pixelsPerRem}em`,
+  },
+  '> span + svg': {
+    marginLeft: `${12 / pixelsPerRem}em`,
   },
 
   marginTop: `${(18 - 2 * borderWidth) / pixelsPerRem}em`,
@@ -49,8 +55,11 @@ const smallStyles = css({
   '> svg': {
     height: `${18 / pixelsPerRem}em`,
   },
-  '> *:not(:last-child)': {
-    marginRight: `${6 / pixelsPerRem}em`,
+  '> svg + span': {
+    marginLeft: `${6 / pixelsPerRem}em`,
+  },
+  '> span + svg': {
+    marginLeft: `${6 / pixelsPerRem}em`,
   },
 
   marginTop: `${(12 - 2 * borderWidth) / pixelsPerRem}em`,
@@ -120,16 +129,23 @@ interface ButtonProps {
   enabled?: boolean;
   primary?: boolean;
   small?: boolean;
+
   children?: React.ReactNode | React.ReactNodeArray;
+
+  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
 }
 const Button: React.FC<ButtonProps> = ({
   enabled = true,
   primary = false,
   small = false,
+
   children,
+
+  onClick,
 }) => (
   <button
     disabled={!enabled}
+    onClick={onClick}
     css={[
       styles,
       small ? smallStyles : largeStyles,

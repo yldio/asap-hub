@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useAuth0 } from '@asap-hub/react-context';
+import { Button } from '../../atoms';
 
 const LoginLogoutButton = () => {
   const { isAuthenticated, user, loginWithRedirect, logout } = useAuth0();
@@ -8,11 +9,14 @@ const LoginLogoutButton = () => {
   return (
     <div>
       {!isAuthenticated && (
-        <button onClick={() => loginWithRedirect()}>Log in / Register</button>
+        <Button primary onClick={() => loginWithRedirect()}>
+          Log in / Register
+        </Button>
       )}
 
       {isAuthenticated && (
-        <button
+        <Button
+          primary
           onClick={() =>
             logout({
               // We can assume a DOM environment and thus that location is present in a click handler
@@ -21,7 +25,7 @@ const LoginLogoutButton = () => {
           }
         >
           Log out{user && ` ${user.name}`}
-        </button>
+        </Button>
       )}
     </div>
   );

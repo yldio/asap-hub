@@ -8,6 +8,7 @@ import {
   OpaqueColor,
   lead,
   steel,
+  tin,
   charcoal,
   silver,
 } from '../colors';
@@ -120,6 +121,7 @@ const secondaryStyles = css({
   },
 });
 const disabledStyles = css({
+  color: tin.rgb,
   backgroundColor: silver.rgb,
   borderColor: steel.rgb,
   boxShadow: 'none',

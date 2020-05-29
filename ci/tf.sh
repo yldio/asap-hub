@@ -8,7 +8,7 @@ STAGE=${SLS_STAGE:-production}
 cd $CURPATH
 
 terraform init
-if [ `terraform workspace list | grep -q "$STAGE"` ]; then
+if [ `terraform workspace list | grep -ac "${STAGE}" || true` -eq 0 ]; then
     terraform workspace new "$STAGE";
 fi
 

@@ -84,6 +84,7 @@
     "@babel/runtime-corejs3": "^7.9.6",
     "@peculiar/webcrypto": "^1.1.1",
     "@testing-library/jest-dom": "^5.5.0",
+    "@types/jest": "^25.2.3",
     "@yarnpkg/pnpify": "^2.0.0-rc.20",
     "babel-eslint": "^10.1.0",
     "babel-preset-react-app": "^9.1.2",

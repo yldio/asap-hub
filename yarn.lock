@@ -4416,6 +4416,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jest@npm:^25.2.3":
+  version: 25.2.3
+  resolution: "@types/jest@npm:25.2.3"
+  dependencies:
+    jest-diff: ^25.2.1
+    pretty-format: ^25.2.1
+  checksum: 3/fe92624fd7b3b5358ffba8e59108b484de1d01df08dfc66bb597d59d09900db1950717adb8d42ce5f81ba615fa0b8de55fd5446808d92f75b45e08fcbe4cec6e
+  languageName: node
+  linkType: hard
+
 "@types/joi@npm:*":
   version: 14.3.4
   resolution: "@types/joi@npm:14.3.4"
@@ -6018,6 +6028,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.9.6
     "@peculiar/webcrypto": ^1.1.1
     "@testing-library/jest-dom": ^5.5.0
+    "@types/jest": ^25.2.3
     "@yarnpkg/pnpify": ^2.0.0-rc.20
     babel-eslint: ^10.1.0
     babel-preset-react-app: ^9.1.2

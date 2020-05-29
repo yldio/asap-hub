@@ -165,9 +165,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/user-service@workspace:apps/user-service":
+"@asap-hub/user-service@workspace:apps/users-service":
   version: 0.0.0-use.local
-  resolution: "@asap-hub/user-service@workspace:apps/user-service"
+  resolution: "@asap-hub/user-service@workspace:apps/users-service"
   dependencies:
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0

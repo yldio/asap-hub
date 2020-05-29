@@ -78,7 +78,7 @@ module.exports = {
   },
   functions: {
     'create-user': {
-      handler: 'apps/user-service/build/handlers/create.handler',
+      handler: 'apps/users-service/build/handlers/create.handler',
       events: [
         {
           httpApi: {
@@ -93,7 +93,7 @@ module.exports = {
       },
     },
     welcome: {
-      handler: 'apps/user-service/build/handlers/welcome.handler',
+      handler: 'apps/users-service/build/handlers/welcome.handler',
       events: [
         {
           httpApi: {

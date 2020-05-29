@@ -36,7 +36,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       },
       {
         "name": "@asap-hub/user-service",
-        "reference": "workspace:apps/user-service"
+        "reference": "workspace:apps/users-service"
       },
       {
         "name": "@asap-hub/auth",
@@ -65,7 +65,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/react-components", ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/react-components", "workspace:packages/react-components"]],
       ["@asap-hub/react-context", ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-context", "workspace:packages/react-context"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
-      ["@asap-hub/user-service", ["workspace:apps/user-service"]],
+      ["@asap-hub/user-service", ["workspace:apps/users-service"]],
       ["asap-hub", ["workspace:."]]
     ],
     "fallbackPool": [
@@ -103,7 +103,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@asap-hub/user-service",
-        "workspace:apps/user-service"
+        "workspace:apps/users-service"
       ],
       [
         "@auth0/auth0-spa-js",
@@ -8000,10 +8000,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@asap-hub/user-service", [
-        ["workspace:apps/user-service", {
-          "packageLocation": "./apps/user-service/",
+        ["workspace:apps/users-service", {
+          "packageLocation": "./apps/users-service/",
           "packageDependencies": [
-            ["@asap-hub/user-service", "workspace:apps/user-service"],
+            ["@asap-hub/user-service", "workspace:apps/users-service"],
             ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],

@@ -11,8 +11,7 @@ const googleSigninLightNormal = (
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
-    <title>btn_google_light_normal_ios</title>
-    <desc>Created with Sketch.</desc>
+    <title>Google signin icon</title>
     <defs>
       <filter
         x="-50%"

@@ -14,6 +14,7 @@ const orcidIcon = (
     style={{ enableBackground: 'new 0 0 256 256' } as React.CSSProperties}
     xmlSpace="preserve"
   >
+    <title>ORCID icon</title>
     <path
       css={{ fill: '#A6CE39' }}
       d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z"

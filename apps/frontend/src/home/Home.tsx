@@ -15,17 +15,21 @@ const Home = () => {
             alt="logo"
           />
         </p>
-        <p>Welcome to the ASAP Hub!</p>
         <p>
-          By{' '}
-          <a
-            className="App-link"
-            href="https://parkinsonsroadmap.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            ASAP: Aligning Science Across Parkinson's
-          </a>
+          <big>Welcome to the ASAP Hub!</big>
+        </p>
+        <p>
+          <big>
+            By{' '}
+            <a
+              className="App-link"
+              href="https://parkinsonsroadmap.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              ASAP: Aligning Science Across Parkinson's
+            </a>
+          </big>
         </p>
         <LoginLogoutButton />
       </header>

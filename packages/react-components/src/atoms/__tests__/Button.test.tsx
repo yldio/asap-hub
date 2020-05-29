@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 
 import { silver, fern } from '../../colors';
 import { orcidIcon } from '../../icons';
@@ -81,4 +81,13 @@ it('renders a small button', () => {
   );
 
   expect(smallHeight).toBeLessThan(normalHeight);
+});
+
+it('forwards the onClick event handler', () => {
+  const clickHandler = jest.fn();
+  const { getByRole } = render(<Button onClick={clickHandler} />);
+  const button = getByRole('button');
+
+  fireEvent.click(button);
+  expect(clickHandler).toHaveBeenCalled();
 });

@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "asap-hub",
+  "license": "MIT",
   "workspaces": [
     "apps/*",
     "packages/*"

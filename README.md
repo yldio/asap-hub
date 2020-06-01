@@ -37,3 +37,9 @@ Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks
 
 Individual `packages` or `apps` may contain their own readme files as deemed necessary.
 The [`docs`](docs) folder contains overall architecture / decision documentation.
+
+## License
+
+The source code of this project is licensed under the MIT License.
+A copy of it can be found [alongside the repository files](LICENSE.txt).
+This repository contains some externally created content, such as logos, that are not included in this licensing.

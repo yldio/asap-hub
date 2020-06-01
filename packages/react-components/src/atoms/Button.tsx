@@ -16,6 +16,7 @@ import { pixelsPerRem } from '../lengths';
 
 const borderWidth = 1;
 const styles = css({
+  cursor: 'pointer',
   display: 'inline-flex',
   alignItems: 'center',
   '> span': {

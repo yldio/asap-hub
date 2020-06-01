@@ -165,9 +165,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/user-service@workspace:apps/users-service":
+"@asap-hub/users-service@workspace:apps/users-service":
   version: 0.0.0-use.local
-  resolution: "@asap-hub/user-service@workspace:apps/users-service"
+  resolution: "@asap-hub/users-service@workspace:apps/users-service"
   dependencies:
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0
@@ -185,6 +185,7 @@ __metadata:
     "@types/shortid": 0.0.29
     apr-intercept: ^3.0.3
     aws-lambda: ^1.0.6
+    aws-sdk: ^2.686.0
     chance: ^1.1.5
     debug: ^4.1.1
     migrate-mongo: ^7.2.1
@@ -6317,6 +6318,23 @@ __metadata:
     uuid: 3.3.2
     xml2js: 0.4.19
   checksum: 3/b6af0e77f9250f8e92dd488d93ec8a63444456f288b4b132eca9f2254e581ec65c695a3a06635e26617cd1adf179888ddfc7368dffad07a1dfc801395ae58d58
+  languageName: node
+  linkType: hard
+
+"aws-sdk@npm:^2.686.0":
+  version: 2.686.0
+  resolution: "aws-sdk@npm:2.686.0"
+  dependencies:
+    buffer: 4.9.1
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.15.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    uuid: 3.3.2
+    xml2js: 0.4.19
+  checksum: 3/d69ab5d7a8ef17d54b044ebefbd96023d9eabc57334b4410be4588379fba1e358bff6bf87d4516f0b4e4ed71d55bddda46cfdd1bfb94088a8ea93c127ad9ac21
   languageName: node
   linkType: hard
 

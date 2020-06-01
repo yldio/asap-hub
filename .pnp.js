@@ -35,7 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/storybook"
       },
       {
-        "name": "@asap-hub/user-service",
+        "name": "@asap-hub/users-service",
         "reference": "workspace:apps/users-service"
       },
       {
@@ -65,7 +65,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/react-components", ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/react-components", "workspace:packages/react-components"]],
       ["@asap-hub/react-context", ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-context", "workspace:packages/react-context"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
-      ["@asap-hub/user-service", ["workspace:apps/users-service"]],
+      ["@asap-hub/users-service", ["workspace:apps/users-service"]],
       ["asap-hub", ["workspace:."]]
     ],
     "fallbackPool": [
@@ -102,7 +102,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "workspace:apps/storybook"
       ],
       [
-        "@asap-hub/user-service",
+        "@asap-hub/users-service",
         "workspace:apps/users-service"
       ],
       [
@@ -1823,7 +1823,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "aws-sdk",
-        "npm:2.678.0"
+        "npm:2.686.0"
       ],
       [
         "aws-sign2",
@@ -2191,7 +2191,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "buffer",
-        "npm:5.6.0"
+        "npm:4.9.1"
       ],
       [
         "buffer-alloc",
@@ -3359,7 +3359,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "events",
-        "npm:3.1.0"
+        "npm:1.1.1"
       ],
       [
         "eventsource",
@@ -6551,7 +6551,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "sax",
-        "npm:1.2.4"
+        "npm:1.2.1"
       ],
       [
         "saxes",
@@ -7347,7 +7347,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "url",
-        "npm:0.11.0"
+        "npm:0.10.3"
       ],
       [
         "url-parse",
@@ -8000,11 +8000,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
-      ["@asap-hub/user-service", [
+      ["@asap-hub/users-service", [
         ["workspace:apps/users-service", {
           "packageLocation": "./apps/users-service/",
           "packageDependencies": [
-            ["@asap-hub/user-service", "workspace:apps/users-service"],
+            ["@asap-hub/users-service", "workspace:apps/users-service"],
             ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],
@@ -8021,6 +8021,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/shortid", "npm:0.0.29"],
             ["apr-intercept", "npm:3.0.3"],
             ["aws-lambda", "npm:1.0.6"],
+            ["aws-sdk", "npm:2.686.0"],
             ["chance", "npm:1.1.5"],
             ["debug", "virtual:22f562d986a179c134348e2f9a34c16e7aac83723b52994f6cd838d1e1bdc151316b5a5b757f52d4a71ffe2a5b2aea9b0dc0bf8f24d573669717b6ff6df418b2#npm:4.1.1"],
             ["migrate-mongo", "npm:7.2.1"],
@@ -15027,6 +15028,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/aws-sdk-npm-2.678.0-f76c706379-3.zip/node_modules/aws-sdk/",
           "packageDependencies": [
             ["aws-sdk", "npm:2.678.0"],
+            ["buffer", "npm:4.9.1"],
+            ["events", "npm:1.1.1"],
+            ["ieee754", "npm:1.1.13"],
+            ["jmespath", "npm:0.15.0"],
+            ["querystring", "npm:0.2.0"],
+            ["sax", "npm:1.2.1"],
+            ["url", "npm:0.10.3"],
+            ["uuid", "npm:3.3.2"],
+            ["xml2js", "npm:0.4.19"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.686.0", {
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.686.0-d4a47d7769-3.zip/node_modules/aws-sdk/",
+          "packageDependencies": [
+            ["aws-sdk", "npm:2.686.0"],
             ["buffer", "npm:4.9.1"],
             ["events", "npm:1.1.1"],
             ["ieee754", "npm:1.1.13"],

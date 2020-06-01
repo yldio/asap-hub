@@ -53,9 +53,7 @@ export default class Base<T> {
     if (err) {
       // istanbul ignore else
       if (err.code === 11000) {
-        throw Boom.forbidden('Forbidden', {
-          error: err,
-        });
+        throw Boom.badRequest();
       }
       // an error from mongo, just rethrow 🤞
       // istanbul ignore next

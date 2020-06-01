@@ -2,7 +2,7 @@ import React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { addParameters, addDecorator } from '@storybook/react';
 
-import { GlobalStyles } from '@asap-hub/react-components';
+import { GlobalStyles, pixels } from '@asap-hub/react-components';
 
 addDecorator((story) => (
   <>
@@ -11,36 +11,36 @@ addDecorator((story) => (
   </>
 ));
 
-addDecorator(withKnobs);
+addDecorator(withKnobs({ escapeHTML: false }));
 addParameters({
   viewport: {
     viewports: {
       mobile: {
         name: 'Mobile',
         styles: {
-          width: '375px',
-          height: '667px',
+          width: `${pixels.mobileScreen.width}px`,
+          height: `${pixels.mobileScreen.height}px`,
         },
       },
       tablet: {
         name: 'Tablet',
         styles: {
-          width: '768px',
-          height: `${(768 * 4) / 3}px`,
+          width: `${pixels.tabletScreen.width}px`,
+          height: `${pixels.tabletScreen.height}px`,
         },
       },
       smallDesktop: {
         name: 'Small Desktop',
         styles: {
-          width: '1024px',
-          height: `${(1024 * 9) / 16}px`,
+          width: `${pixels.smallDesktopScreen.width}px`,
+          height: `${pixels.smallDesktopScreen.height}px`,
         },
       },
       largeDesktop: {
         name: 'Large Desktop',
         styles: {
-          width: '1440px',
-          height: `${(1440 * 9) / 16}px`,
+          width: `${pixels.largeDesktopScreen.width}px`,
+          height: `${pixels.largeDesktopScreen.height}px`,
         },
       },
     },

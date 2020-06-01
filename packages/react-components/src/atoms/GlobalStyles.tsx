@@ -3,13 +3,16 @@ import { Global } from '@emotion/core';
 import css from '@emotion/css';
 import emotionNormalize from 'emotion-normalize';
 
-import { pixelsPerRem } from '../lengths';
+import { perRem } from '../pixels';
+import { charcoal, paper } from '../colors';
 
 const styles = css`
   ${emotionNormalize}
-  body {
+  html {
     font-family: Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif;
-    font-size: ${pixelsPerRem}px;
+    font-size: ${perRem}px;
+    background-color: ${paper.rgb};
+    color: ${charcoal.rgb};
   }
 `;
 

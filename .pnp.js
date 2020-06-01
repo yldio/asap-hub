@@ -6622,6 +6622,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.71.1"
       ],
       [
+        "serverless-iam-roles-per-function",
+        "npm:2.0.2"
+      ],
+      [
         "serverless-offline",
         "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.1.5"
       ],
@@ -7733,6 +7737,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:2.0.5"],
             ["rimraf", "npm:3.0.2"],
             ["serverless", "npm:1.71.1"],
+            ["serverless-iam-roles-per-function", "npm:2.0.2"],
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.1.5"],
             ["serverless-s3-sync", "npm:1.12.0"],
             ["serverless-webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.3.2"],
@@ -14765,6 +14770,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["prettier", "npm:2.0.5"],
             ["rimraf", "npm:3.0.2"],
             ["serverless", "npm:1.71.1"],
+            ["serverless-iam-roles-per-function", "npm:2.0.2"],
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.1.5"],
             ["serverless-s3-sync", "npm:1.12.0"],
             ["serverless-webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.3.2"],
@@ -32225,6 +32231,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["write-file-atomic", "npm:2.4.3"],
             ["yaml-ast-parser", "npm:0.0.43"],
             ["yargs-parser", "npm:18.1.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["serverless-iam-roles-per-function", [
+        ["npm:2.0.2", {
+          "packageLocation": "./.yarn/unplugged/serverless-iam-roles-per-function-npm-2.0.2-0b9e12113d/node_modules/serverless-iam-roles-per-function/",
+          "packageDependencies": [
+            ["serverless-iam-roles-per-function", "npm:2.0.2"],
+            ["lodash", "npm:4.17.15"]
           ],
           "linkType": "HARD",
         }]

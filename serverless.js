@@ -22,6 +22,7 @@ if (NODE_ENV === 'production') {
 const service = paramCase(pkg.name);
 const plugins = [
   'serverless-s3-sync',
+  'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'
     ? ['serverless-webpack']
     : ['serverless-offline']),
@@ -91,6 +92,13 @@ module.exports = {
       environment: {
         MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING}`,
       },
+      iamRoleStatements: [
+        {
+          Effect: 'Allow',
+          Action: ['ses:SendEmail'],
+          Resource: '*',
+        },
+      ],
     },
     welcome: {
       handler: 'apps/users-service/build/handlers/welcome.handler',

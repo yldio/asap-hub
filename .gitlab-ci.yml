@@ -37,6 +37,7 @@
   script:
     - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
     - yarn sls deploy --verbose
+    - yarn workspace @asap-hub/users-service migrate up
   stage: deploy
 
 .tmpl:prepare: &tmpl_prepare

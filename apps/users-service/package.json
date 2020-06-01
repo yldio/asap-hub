@@ -1,0 +1,42 @@
+{
+  "name": "@asap-hub/users-service",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "main": "build/handler.js",
+  "types": "build/handler.d.ts",
+  "scripts": {
+    "migrate": "migrate-mongo",
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
+    "watch:babel": "yarn build:babel -w --verbose"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.51",
+    "@types/chance": "1.1.0",
+    "@types/debug": "4.1.5",
+    "@types/hapi": "^18.0.3",
+    "@types/hapi__boom": "^9.0.1",
+    "@types/hapi__joi": "17.1.0",
+    "@types/jest": "^25.2.2",
+    "@types/migrate-mongo": "7.0.1",
+    "@types/mongodb": "3.5.18",
+    "@types/shortid": "0.0.29",
+    "migrate-mongo": "^7.2.1",
+    "mongodb-memory-server": "^6.6.1"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.9.6",
+    "@hapi/boom": "^9.1.0",
+    "@hapi/bourne": "^2.0.0",
+    "@hapi/joi": "^17.1.1",
+    "apr-intercept": "^3.0.4",
+    "aws-lambda": "^1.0.6",
+    "aws-sdk": "^2.686.0",
+    "chance": "^1.1.5",
+    "debug": "^4.1.1",
+    "mongodb": "^3.5.7",
+    "shortid": "^2.2.15"
+  }
+}

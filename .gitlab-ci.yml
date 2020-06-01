@@ -37,6 +37,7 @@
   script:
     - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
     - yarn sls deploy --verbose
+    - yarn workspace @asap-hub/users-service migrate up
   stage: deploy
 
 .tmpl:prepare: &tmpl_prepare
@@ -97,7 +98,14 @@ check:format:
   stage: test
 
 test:
+  services:
+    - mongo:4.2.6
   script:
+    # variables defined alongside services are prepended
+    # with the service name, to test the service we need to
+    # set the variable inline
+    - MONGODB_CONNECTION_STRING=mongodb://mongo:27017/asap
+    - yarn workspace @asap-hub/users-service migrate up
     - yarn run test --coverage
   artifacts:
     paths:

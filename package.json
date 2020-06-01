@@ -15,6 +15,8 @@
     "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
+    "start": "yarn workspaces foreach -pt run start",
+    "start:mongodb": "docker run --name asap-mongodb -p 27017:27017 -e MONGO_INITDB_DATABASE=asap --rm -d mongo:4.2.6",
     "start:backend": "yarn sls offline",
     "sls": "node serverless/link-plugins.js && yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
@@ -40,16 +42,19 @@
     "serverless": {
       "built": false
     },
-    "serverless-offline": {
+    "serverless-iam-roles-per-function": {
       "unplugged": true
     },
-    "serverless-plugin-ncc": {
+    "serverless-offline": {
       "unplugged": true
     },
     "serverless-plugin-typescript": {
       "unplugged": true
     },
     "serverless-s3-sync": {
+      "unplugged": true
+    },
+    "serverless-webpack": {
       "unplugged": true
     },
     "term-size": {
@@ -82,8 +87,9 @@
     "@babel/runtime-corejs3": "^7.9.6",
     "@peculiar/webcrypto": "^1.1.1",
     "@testing-library/jest-dom": "^5.5.0",
+    "@types/jest": "^25.2.2",
     "@yarnpkg/pnpify": "^2.0.0-rc.20",
-    "@zeit/ncc": "^0.22.1",
+    "babel-eslint": "^10.1.0",
     "babel-preset-react-app": "^9.1.2",
     "eslint": "^6.8.0",
     "jest": "^26.0.1",
@@ -96,9 +102,11 @@
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "serverless": "^1.71.1",
+    "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-offline": "^6.1.5",
-    "serverless-plugin-ncc": "^0.4.0",
     "serverless-s3-sync": "^1.12.0",
-    "typescript": "~3.8.3"
+    "serverless-webpack": "^5.3.2",
+    "typescript": "~3.8.3",
+    "webpack": "^5.0.0-beta.16"
   }
 }

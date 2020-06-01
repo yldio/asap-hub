@@ -22,10 +22,27 @@ if (NODE_ENV === 'production') {
 const service = paramCase(pkg.name);
 const plugins = [
   'serverless-s3-sync',
+  'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'
-    ? ['serverless-plugin-ncc']
+    ? ['serverless-webpack']
     : ['serverless-offline']),
 ];
+
+const cors = {
+  origin: {
+    'Fn::Join': [
+      '',
+      [
+        'https://',
+        {
+          'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
+        },
+      ],
+    ],
+  },
+  headers: ['*'],
+  allowCredentials: false,
+};
 
 module.exports = {
   service,
@@ -40,8 +57,6 @@ module.exports = {
   },
   package: {
     individually: true,
-    // we don't need this because of ncc
-    excludeDevDependencies: false,
   },
   custom: {
     origin: [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_URL]
@@ -58,23 +73,54 @@ module.exports = {
         localDir: 'apps/storybook/build',
       },
     ],
+    webpack: {
+      config: 'serverless/webpack.config.js',
+    },
   },
   functions: {
-    hello: {
-      handler: 'apps/hello-world/build/handler.hello',
+    'create-user': {
+      handler: 'apps/users-service/build/handlers/create.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/users`,
+            cors,
+          },
+        },
+      ],
+      environment: {
+        MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING}`,
+      },
+      iamRoleStatements: [
+        {
+          Effect: 'Allow',
+          Action: ['ses:SendEmail'],
+          Resource: '*',
+        },
+      ],
+    },
+    welcome: {
+      handler: 'apps/users-service/build/handlers/welcome.handler',
       events: [
         {
           httpApi: {
             method: 'GET',
-            path: '/hello',
-            cors: {
-              origin: `api.\${self:custom.origin}`,
-              headers: ['*'],
-              allowCredentials: false,
-            },
+            path: `/users/{code}`,
+            cors,
+          },
+        },
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/users/{code}`,
+            cors,
           },
         },
       ],
+      environment: {
+        MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING}`,
+      },
     },
   },
   resources: {
@@ -96,7 +142,7 @@ module.exports = {
         DependsOn: ['HttpApiDomain'],
         Properties: {
           ApiId: { Ref: 'HttpApi' },
-          ApiMappingKey: 'users',
+          ApiMappingKey: '',
           DomainName: `api.\${self:custom.origin}`,
           Stage: { Ref: 'HttpApiStage' },
         },

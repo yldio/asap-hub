@@ -183,7 +183,7 @@ __metadata:
     "@types/migrate-mongo": 7.0.1
     "@types/mongodb": 3.5.18
     "@types/shortid": 0.0.29
-    apr-intercept: ^3.0.3
+    apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     aws-sdk: ^2.686.0
     chance: ^1.1.5
@@ -5767,10 +5767,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apr-intercept@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "apr-intercept@npm:3.0.3"
-  checksum: 3/8a991ceb986b3654c1a53554a55907bfd0fc8ffdbd8f18c25e5015a396a3f75de4d1658bcde51151ca32959ca82e5f4a025ff1fdcc0a681c70d3e688993560f5
+"apr-intercept@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "apr-intercept@npm:3.0.4"
+  checksum: 3/7d31433733a7d1a245cd92608a65d5929794806091894f748518e5ffdb7447626e1d5091d84ef71966d56fea4ee09afb997daa826ef614db9ecbe0e0a11a92d3
   languageName: node
   linkType: hard
 

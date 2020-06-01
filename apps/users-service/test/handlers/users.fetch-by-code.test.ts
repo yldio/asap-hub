@@ -5,7 +5,7 @@ import connection from '../../src/utils/connection';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
 const chance = new Chance();
-describe('GET /api/users/{code}', () => {
+describe('GET /users/{code}', () => {
   afterAll(async () => {
     const c = await connection();
     await c.close(true);

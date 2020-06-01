@@ -105,7 +105,7 @@ test:
     # with the service name, to test the service we need to
     # set the variable inline
     - MONGODB_CONNECTION_STRING=mongodb://mongo:27017/asap
-    - yarn workspace @asap-hub/user-service migrate up
+    - yarn workspace @asap-hub/users-service migrate up
     - yarn run test --coverage
   artifacts:
     paths:

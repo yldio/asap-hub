@@ -5,7 +5,7 @@ import { apiGatewayEvent } from '../helpers/events';
 import connection from '../../src/utils/connection';
 
 const chance = new Chance();
-describe('POST /api/users/{code}', () => {
+describe('POST /users/{code}', () => {
   afterAll(async () => {
     // close the singleton conneciton to local database
     const c = await connection();

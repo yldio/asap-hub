@@ -11,6 +11,8 @@ export default (): Promise<MongoClient> => {
   if (singleton) {
     return singleton;
   }
+
+  /* istanbul ignore next */
   const {
     MONGODB_CONNECTION_STRING = 'mongodb://localhost/asap',
   } = process.env;

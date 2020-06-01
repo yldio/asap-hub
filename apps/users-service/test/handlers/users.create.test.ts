@@ -15,7 +15,11 @@ jest.mock('aws-sdk', () => {
 });
 
 const chance = new Chance();
-describe('POST /api/users', () => {
+describe('POST /users', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   afterAll(async () => {
     const c = await connection();
     c.close();
@@ -43,7 +47,7 @@ describe('POST /api/users', () => {
     expect(result.statusCode).toStrictEqual(400);
   });
 
-  test('returns 400 when email is a duplicate', async () => {
+  test('returns 403 when email is a duplicate', async () => {
     const payload = {
       displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
@@ -55,13 +59,16 @@ describe('POST /api/users', () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
-        body: payload,
+        body: {
+          displayName: payload.displayName,
+          email: payload.email,
+        },
       }),
       null,
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(400);
+    expect(result.statusCode).toStrictEqual(403);
   });
 
   test('returns 201 and sends email with token', async () => {

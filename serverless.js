@@ -84,7 +84,7 @@ module.exports = {
         {
           httpApi: {
             method: 'POST',
-            path: `/api/users`,
+            path: `/users`,
             cors,
           },
         },
@@ -106,14 +106,14 @@ module.exports = {
         {
           httpApi: {
             method: 'GET',
-            path: `/api/users/{code}`,
+            path: `/users/{code}`,
             cors,
           },
         },
         {
           httpApi: {
             method: 'POST',
-            path: `/api/users/{code}`,
+            path: `/users/{code}`,
             cors,
           },
         },
@@ -142,7 +142,7 @@ module.exports = {
         DependsOn: ['HttpApiDomain'],
         Properties: {
           ApiId: { Ref: 'HttpApi' },
-          ApiMappingKey: 'users',
+          ApiMappingKey: '',
           DomainName: `api.\${self:custom.origin}`,
           Stage: { Ref: 'HttpApiStage' },
         },

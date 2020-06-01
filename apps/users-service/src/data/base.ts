@@ -53,14 +53,16 @@ export default class Base<T> {
     if (err) {
       // istanbul ignore else
       if (err.code === 11000) {
-        throw Boom.badRequest();
+        throw Boom.forbidden('Forbidden', {
+          error: err,
+        });
       }
       // an error from mongo, just rethrow 🤞
       // istanbul ignore next
       throw err;
     }
 
-    // mongo throws when it can insert a document, not throwing and not inserting
+    // mongo throws when it can't insert a document, not throwing and not inserting
     // is a strange condition
     // istanbul ignore if
     if (res.insertedCount !== 1) {

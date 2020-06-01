@@ -1651,7 +1651,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "apr-intercept",
-        "npm:3.0.3"
+        "npm:3.0.4"
       ],
       [
         "aproba",
@@ -8024,7 +8024,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/migrate-mongo", "npm:7.0.1"],
             ["@types/mongodb", "npm:3.5.18"],
             ["@types/shortid", "npm:0.0.29"],
-            ["apr-intercept", "npm:3.0.3"],
+            ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["aws-sdk", "npm:2.686.0"],
             ["chance", "npm:1.1.5"],
@@ -14458,10 +14458,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["apr-intercept", [
-        ["npm:3.0.3", {
-          "packageLocation": "./.yarn/cache/apr-intercept-npm-3.0.3-c567fe08e0-3.zip/node_modules/apr-intercept/",
+        ["npm:3.0.4", {
+          "packageLocation": "./.yarn/cache/apr-intercept-npm-3.0.4-10fcaacf92-3.zip/node_modules/apr-intercept/",
           "packageDependencies": [
-            ["apr-intercept", "npm:3.0.3"]
+            ["apr-intercept", "npm:3.0.4"]
           ],
           "linkType": "HARD",
         }]

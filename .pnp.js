@@ -1211,7 +1211,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/jest",
-        "npm:25.2.3"
+        "npm:25.2.2"
       ],
       [
         "@types/joi",
@@ -7718,7 +7718,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
             ["@testing-library/jest-dom", "npm:5.5.0"],
-            ["@types/jest", "npm:25.2.3"],
+            ["@types/jest", "npm:25.2.2"],
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.0.0-rc.20"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-preset-react-app", "npm:9.1.2"],
@@ -12906,15 +12906,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pretty-format", "npm:25.3.0"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:25.2.3", {
-          "packageLocation": "./.yarn/cache/@types-jest-npm-25.2.3-41912c4b23-3.zip/node_modules/@types/jest/",
-          "packageDependencies": [
-            ["@types/jest", "npm:25.2.3"],
-            ["jest-diff", "npm:25.3.0"],
-            ["pretty-format", "npm:25.3.0"]
-          ],
-          "linkType": "HARD",
         }]
       ]],
       ["@types/joi", [
@@ -14759,7 +14750,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
             ["@testing-library/jest-dom", "npm:5.5.0"],
-            ["@types/jest", "npm:25.2.3"],
+            ["@types/jest", "npm:25.2.2"],
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.0.0-rc.20"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-preset-react-app", "npm:9.1.2"],

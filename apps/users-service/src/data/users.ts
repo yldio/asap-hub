@@ -1,17 +1,6 @@
 import { generate } from 'shortid';
-import Base, { Entity } from './base';
-
-export interface Connection {
-  id: string;
-  raw: unknown;
-  source: string;
-}
-
-export interface User extends Entity {
-  connections: [Connection];
-  displayName: string;
-  email: string;
-}
+import Base from './base';
+import { User, Connection } from '../entities/user';
 
 export interface CreateUser {
   displayName: string;

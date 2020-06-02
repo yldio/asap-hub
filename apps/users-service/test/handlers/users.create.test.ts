@@ -4,6 +4,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { handler } from '../../src/handlers/create';
 import { apiGatewayEvent } from '../helpers/events';
 import connection from '../../src/utils/connection';
+import { globalToken } from '../../src/config';
 
 jest.mock('aws-sdk', () => {
   const m = {
@@ -39,7 +40,11 @@ describe('POST /users', () => {
 
   test('return 400 when body is empty', async () => {
     const result = (await handler(
-      apiGatewayEvent({}),
+      apiGatewayEvent({
+        headers: {
+          Authorization: `Bearer ${globalToken}`,
+        },
+      }),
       null,
       null,
     )) as APIGatewayProxyResult;
@@ -51,6 +56,7 @@ describe('POST /users', () => {
     const payload = {
       displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
+      connections: [chance.string()],
     };
 
     const c = await connection();
@@ -58,6 +64,9 @@ describe('POST /users', () => {
 
     const res = (await handler(
       apiGatewayEvent({
+        headers: {
+          Authorization: `Bearer ${globalToken}`,
+        },
         httpMethod: 'post',
         body: {
           displayName: payload.displayName,
@@ -80,6 +89,9 @@ describe('POST /users', () => {
 
     const res = (await handler(
       apiGatewayEvent({
+        headers: {
+          Authorization: `Bearer ${globalToken}`,
+        },
         httpMethod: 'post',
         body: payload,
       }),

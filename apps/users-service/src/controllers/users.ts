@@ -1,10 +1,9 @@
 import Boom from '@hapi/boom';
-import aws from 'aws-sdk';
-import got from 'got';
-import Intercept from 'apr-intercept';
 import { Db } from '../data';
-import { User, CreateUser } from '../data/users';
-import { auth0BaseUrl } from '../config';
+import * as auth0 from '../entities/auth0';
+import { CreateUser } from '../data/users';
+import { User } from '../entities/user';
+import { sendEmail } from '../utils/postman';
 
 export interface ReplyUser {
   id: string;
@@ -21,7 +20,6 @@ function transform(user: User): ReplyUser {
   } as ReplyUser;
 }
 
-const ses = new aws.SES({ apiVersion: '2010-12-01' });
 export default class Users {
   db: Db;
 
@@ -34,30 +32,16 @@ export default class Users {
       ...user,
     });
 
-    const [connection] = createdUser.connections;
-    const params = {
-      Destination: {
-        ToAddresses: [user.email],
+    const [code] = createdUser.connections;
+    await sendEmail({
+      to: [user.email],
+      template: 'welcome',
+      values: {
+        displayName: user.displayName,
+        code,
       },
-      Message: {
-        Body: {
-          Html: {
-            Charset: 'UTF-8',
-            Data: `<p>${connection}</p>`,
-          },
-          Text: {
-            Charset: 'UTF-8',
-            Data: `${connection}`,
-          },
-        },
-        Subject: {
-          Charset: 'UTF-8',
-          Data: 'Welcome',
-        },
-      },
-      Source: 'no-reply@asap.yld.io',
-    };
-    await ses.sendEmail(params).promise();
+    });
+
     return transform(createdUser);
   }
 
@@ -69,27 +53,11 @@ export default class Users {
     throw Boom.forbidden();
   }
 
-  async connectByCode(code: string, accessToken: string): Promise<User> {
-    // use the provided accessToken to get information about the user
-    const [err, res] = await Intercept(
-      got(`${auth0BaseUrl}/userinfo`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      }).json(),
-    );
-
-    if (err) {
-      throw Boom.forbidden('Forbidden', {
-        error: err,
-      });
-    }
-
+  async connectByCode(code: string, user: auth0.UserInfo): Promise<User> {
     return this.db.users.connectByCode(code, {
-      id: res.sub,
+      id: user.sub,
       source: 'auth0',
-      raw: res,
+      raw: user,
     });
   }
 }

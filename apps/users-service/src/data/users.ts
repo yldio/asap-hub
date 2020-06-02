@@ -1,5 +1,5 @@
 import { generate } from 'shortid';
-import Base, { BaseModel } from './base';
+import Base, { Entity } from './base';
 
 export interface Connection {
   id: string;
@@ -7,7 +7,7 @@ export interface Connection {
   source: string;
 }
 
-export interface User extends BaseModel {
+export interface User extends Entity {
   connections: [Connection];
   displayName: string;
   email: string;
@@ -36,7 +36,7 @@ export default class Users extends Base<User> {
   }
 
   async connectByCode(code: string, profile: Connection): Promise<User> {
-    const res = await this.collection.findOneAndUpdate(
+    const res = await super.findOneAndUpdate(
       {
         connections: code,
       },
@@ -44,7 +44,7 @@ export default class Users extends Base<User> {
         $addToSet: {
           connections: profile.id,
         },
-      },
+      } as object,
     );
 
     return res as User;

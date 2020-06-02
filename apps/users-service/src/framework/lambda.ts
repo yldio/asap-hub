@@ -1,4 +1,4 @@
-import go from 'apr-intercept';
+import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Debug from 'debug';
@@ -48,6 +48,7 @@ const debug = Debug('http');
 export const http = <T>(
   fn: (request: Request) => Promise<Response> | Response,
 ) => async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  // we assume the body is json
   let body;
   try {
     body = event.body && Bourne.parse(event.body);
@@ -77,19 +78,18 @@ export const http = <T>(
     query: event.queryStringParameters,
   } as Request;
 
-  const [err, res] = await go(fn(request));
+  const [err, res] = await Intercept(fn(request));
 
   if (err) {
-    debug('Error caught on request', err);
     const error = !Boom.isBoom(err)
       ? Boom.boomify(err, {
-          statusCode: 500,
           data: {
             error: err,
           },
         })
       : err;
 
+    debug('Error caught on request', error);
     const data = error.data as { details: unknown };
     const payload =
       data && data.details

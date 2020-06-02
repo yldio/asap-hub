@@ -1,8 +1,8 @@
 import go from 'apr-intercept';
 import Boom from '@hapi/boom';
-import { Collection, ObjectId } from 'mongodb';
+import { Collection, ObjectId, FilterQuery } from 'mongodb';
 
-export interface BaseModel {
+export interface Entity {
   _id: ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -23,23 +23,26 @@ export default class Base<T> {
   //   throw Boom.forbidden();
   // }
 
-  // async findOneAndUpdate(filter: FilterQuery<any>, update: any): Promise<T> {
-  //   const res = await this.collection.findOneAndUpdate(filter, {
-  //     ...update,
-  //     $set: {
-  //       ...update.$set,
-  //       updatedAt: new Date(),
-  //     },
-  //   });
+  async findOneAndUpdate(
+    filter: FilterQuery<object>,
+    update: object & { $set?: object },
+  ): Promise<T> {
+    const res = await this.collection.findOneAndUpdate(filter, {
+      ...update,
+      $set: {
+        ...update.$set,
+        updatedAt: new Date(),
+      },
+    });
 
-  //   // res.ok indicates the request was successful but we need to confirm
-  //   // a document was found
-  //   if (res.ok !== 1 || res.value === null) {
-  //     throw Boom.forbidden();
-  //   }
+    // res.ok indicates the request was successful but we need to confirm
+    // a document was found
+    if (res.ok !== 1 || res.value === null) {
+      throw Boom.forbidden();
+    }
 
-  //   return res.value as T;
-  // }
+    return res.value as T;
+  }
 
   async insertOne(docs: object): Promise<T> {
     const [err, res] = await go(

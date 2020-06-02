@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import Users, { User } from '../controllers/users';
+import Users from '../controllers/users';
 import { Db } from '../data';
 import {
   validate,

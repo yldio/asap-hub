@@ -16,7 +16,7 @@
     "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
-    "start": "yarn workspaces foreach -pt run start",
+    "start": "yarn workspaces foreach -pt --interlaced run start",
     "start:mongodb": "docker run --name asap-mongodb -p 27017:27017 -e MONGO_INITDB_DATABASE=asap --rm -d mongo:4.2.6",
     "start:backend": "yarn sls offline",
     "sls": "node serverless/link-plugins.js && yarn pnpify serverless",

@@ -60,12 +60,12 @@ export const connectByCode = async (
     authorization: string;
   };
 
-  const [, accessToken] = headers.authorization.split(' ');
+  const [, token] = headers.authorization.split(' ');
   const users = new Users(new Db(context.connection));
-  await users.connectByCode(params.code, accessToken);
+  await users.connectByCode(params.code, token);
 
   return {
-    statusCode: 201,
+    statusCode: 202,
   };
 };
 

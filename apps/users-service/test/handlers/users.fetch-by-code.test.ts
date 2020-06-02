@@ -44,9 +44,7 @@ describe('GET /users/{code}', () => {
     const user = {
       displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
-      invite: {
-        code,
-      },
+      connections: [code],
     };
 
     await c.db().collection('users').insertMany([user]);

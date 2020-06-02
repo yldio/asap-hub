@@ -26,7 +26,7 @@ describe('POST /users', () => {
   });
 
   test("returns 400 when body isn't parsable as JSON", async () => {
-    const result = (await handler(
+    const res = (await handler(
       apiGatewayEvent({
         body: 'invalid json',
       }),
@@ -34,7 +34,7 @@ describe('POST /users', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(400);
+    expect(res.statusCode).toStrictEqual(400);
   });
 
   test('return 400 when body is empty', async () => {
@@ -56,7 +56,7 @@ describe('POST /users', () => {
     const c = await connection();
     await c.db().collection('users').insertMany([payload]);
 
-    const result = (await handler(
+    const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
         body: {
@@ -68,17 +68,17 @@ describe('POST /users', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(403);
+    expect(res.statusCode).toStrictEqual(403);
   });
 
-  test('returns 201 and sends email with token', async () => {
+  test('returns 201 and sends email with code', async () => {
     const ses = new aws.SES();
     const payload = {
       displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
     };
 
-    const result = (await handler(
+    const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
         body: payload,
@@ -87,13 +87,14 @@ describe('POST /users', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(201);
+    expect(res.statusCode).toStrictEqual(201);
 
     const c = await connection();
     const user = await c.db().collection('users').findOne({
       email: payload.email,
     });
 
+    const [code] = user.connections;
     expect(ses.sendEmail).toBeCalledTimes(1);
     expect(ses.sendEmail).toBeCalledWith({
       Source: 'no-reply@asap.yld.io',
@@ -104,11 +105,11 @@ describe('POST /users', () => {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: `<p>${user.invite.code}</p>`,
+            Data: `<p>${code}</p>`,
           },
           Text: {
             Charset: 'UTF-8',
-            Data: `${user.invite.code}`,
+            Data: `${code}`,
           },
         },
         Subject: {

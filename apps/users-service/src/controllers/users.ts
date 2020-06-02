@@ -1,23 +1,24 @@
 import Boom from '@hapi/boom';
 import aws from 'aws-sdk';
-import { generate } from 'shortid';
-import { ObjectId } from 'mongodb';
+import got from 'got';
+import Intercept from 'apr-intercept';
 import { Db } from '../data';
-import { UserModel } from '../data/users';
+import { User, CreateUser } from '../data/users';
+import { auth0BaseUrl } from '../config';
 
-export interface User {
+export interface ReplyUser {
   id: string;
   displayName: string;
   email: string;
 }
 
 const key = '_id';
-function transform(user: UserModel): User {
+function transform(user: User): ReplyUser {
   return {
     id: user[key].toString(),
     displayName: user.displayName,
     email: user.email,
-  } as User;
+  } as ReplyUser;
 }
 
 const ses = new aws.SES({ apiVersion: '2010-12-01' });
@@ -28,17 +29,12 @@ export default class Users {
     this.db = db;
   }
 
-  async create(user: User): Promise<User> {
-    const code = generate();
+  async create(user: CreateUser): Promise<ReplyUser> {
     const createdUser = await this.db.users.create({
       ...user,
-      invite: {
-        code,
-        source: 'manual',
-        createdAt: new Date(),
-      },
     });
 
+    const [connection] = createdUser.connections;
     const params = {
       Destination: {
         ToAddresses: [user.email],
@@ -47,11 +43,11 @@ export default class Users {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: `<p>${code}</p>`,
+            Data: `<p>${connection}</p>`,
           },
           Text: {
             Charset: 'UTF-8',
-            Data: `${code}`,
+            Data: `${connection}`,
           },
         },
         Subject: {
@@ -65,7 +61,7 @@ export default class Users {
     return transform(createdUser);
   }
 
-  async fetchByCode(code: string): Promise<User> {
+  async fetchByCode(code: string): Promise<ReplyUser> {
     const user = await this.db.users.fetchByCode(code);
     if (user) {
       return transform(user);
@@ -73,12 +69,27 @@ export default class Users {
     throw Boom.forbidden();
   }
 
-  async connectByCode(code: string, identity: string): Promise<User> {
-    const user = await this.fetchByCode(code);
-    await this.db.accounts.create({
-      user: new ObjectId(user.id),
-      identity,
+  async connectByCode(code: string, accessToken: string): Promise<User> {
+    // use the provided accessToken to get information about the user
+    const [err, res] = await Intercept(
+      got(`${auth0BaseUrl}/userinfo`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      }).json(),
+    );
+
+    if (err) {
+      throw Boom.forbidden('Forbidden', {
+        error: err,
+      });
+    }
+
+    return this.db.users.connectByCode(code, {
+      id: res.sub,
+      source: 'auth0',
+      raw: res,
     });
-    return user;
   }
 }

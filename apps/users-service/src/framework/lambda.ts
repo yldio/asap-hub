@@ -80,7 +80,7 @@ export const http = <T>(
   const [err, res] = await go(fn(request));
 
   if (err) {
-    debug('http:error', err);
+    debug('Error caught on request', err);
     const error = !Boom.isBoom(err)
       ? Boom.boomify(err, {
           statusCode: 500,

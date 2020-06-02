@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import { mongoDbConnectionString } from '../config';
 
 export const create = (connectionString: string): Promise<MongoClient> => {
   return MongoClient.connect(connectionString, {
@@ -12,11 +13,6 @@ export default (): Promise<MongoClient> => {
     return singleton;
   }
 
-  /* istanbul ignore next */
-  const {
-    MONGODB_CONNECTION_STRING = 'mongodb://localhost/asap',
-  } = process.env;
-
-  singleton = create(MONGODB_CONNECTION_STRING);
+  singleton = create(mongoDbConnectionString);
   return singleton;
 };

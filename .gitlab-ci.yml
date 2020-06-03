@@ -21,21 +21,21 @@
     GIT_CHECKOUT: 0
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
-.tmpl:prepare:cert: &tmpl_prepare_cert
-  artifacts:
-    paths:
-      - .env
-  image:
-    name: hashicorp/terraform:light
-    entrypoint: ['/bin/sh', '-c']
-  script:
-    - ./ci/tf.sh
-  needs: []
-  stage: prepare
+# .tmpl:prepare:cert: &tmpl_prepare_cert
+#   artifacts:
+#     paths:
+#       - .env
+#   image:
+#     name: hashicorp/terraform:light
+#     entrypoint: ['/bin/sh', '-c']
+#   script:
+#     - ./ci/tf.sh
+#   needs: []
+#   stage: prepare
 
 .tmpl:deploy: &tmpl_deploy
   script:
-    - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
+    # - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
     - yarn sls deploy --verbose
     - yarn workspace @asap-hub/users-service migrate up
   stage: deploy
@@ -154,20 +154,20 @@ prepare:sls:branch:
     - build
     - build:native-deps
 
-prepare:cert:master:
-  <<: *tmpl_master_deploy_rules
-  <<: *tmpl_prepare_cert
-  variables:
-    <<: *tmpl_master_deploy_variables
-    TF_VAR_domain: $BASE_URL
+# prepare:cert:master:
+#   <<: *tmpl_master_deploy_rules
+#   <<: *tmpl_prepare_cert
+#   variables:
+#     <<: *tmpl_master_deploy_variables
+#     TF_VAR_domain: $BASE_URL
 
-prepare:cert:branch:
-  <<: *tmpl_branch_deploy_rules
-  <<: *tmpl_prepare_cert
-  variables:
-    <<: *tmpl_branch_deploy_variables
-    TF_VAR_domain: $BASE_URL
-    TF_VAR_record: $CI_COMMIT_REF_SLUG
+# prepare:cert:branch:
+#   <<: *tmpl_branch_deploy_rules
+#   <<: *tmpl_prepare_cert
+#   variables:
+#     <<: *tmpl_branch_deploy_variables
+#     TF_VAR_domain: $BASE_URL
+#     TF_VAR_record: $CI_COMMIT_REF_SLUG
 
 # stage deploy
 
@@ -184,11 +184,11 @@ deploy:sls:master:
     - build
     - build:native-deps
     - prepare:sls:master
-    - prepare:cert:master
+    # - prepare:cert:master
   dependencies:
     - build
     - build:native-deps
-    - prepare:cert:master
+    # - prepare:cert:master
 
 deploy:sls:branch:
   <<: *tmpl_deploy
@@ -204,11 +204,11 @@ deploy:sls:branch:
     - build
     - build:native-deps
     - prepare:sls:branch
-    - prepare:cert:branch
+    # - prepare:cert:branch
   dependencies:
     - build
     - build:native-deps
-    - prepare:cert:branch
+    # - prepare:cert:branch
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove_rules

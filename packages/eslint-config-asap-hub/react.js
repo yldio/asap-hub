@@ -1,3 +1,5 @@
+const { overrides } = require('.');
+
 module.exports = {
   extends: [
     '@asap-hub/eslint-config-asap-hub',
@@ -10,4 +12,5 @@ module.exports = {
 
     '@typescript-eslint/explicit-function-return-type': 'off',
   },
+  overrides,
 };

@@ -1,6 +1,7 @@
 const {
   defaults: { testMatch },
 } = require('jest-config');
+const testFiles = [...testMatch, '**/*{t,T}est*.{js,jsx,ts,tsx}'];
 
 module.exports = {
   parser: '@typescript-eslint/parser',
@@ -25,7 +26,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-extraneous-dependencies': [
       'error',
-      { devDependencies: [...testMatch, '**/*{t,T}est*.{js,jsx,ts,tsx}'] },
+      { devDependencies: testFiles },
     ],
     'import/extensions': [
       'error',
@@ -48,9 +49,10 @@ module.exports = {
       },
     },
     {
-      files: testMatch,
+      files: testFiles,
       rules: {
         '@typescript-eslint/no-non-null-assertion': 'off',
+        'no-new-func': 'off',
       },
     },
   ],

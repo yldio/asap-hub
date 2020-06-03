@@ -5,5 +5,7 @@ import GlobalStyles from '../GlobalStyles';
 
 it('applies global styles to the body', () => {
   render(<GlobalStyles />);
-  expect(getComputedStyle(document.body).fontFamily).toMatch(/^Calibri/);
+  expect(getComputedStyle(document.documentElement).fontFamily).toMatch(
+    /^Calibri/,
+  );
 });

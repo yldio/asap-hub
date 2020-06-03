@@ -18271,10 +18271,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:2.2.0", {
-          "packageLocation": "./.yarn/cache/cssstyle-npm-2.2.0-97097c0f85-3.zip/node_modules/cssstyle/",
+        ["npm:2.3.0", {
+          "packageLocation": "./.yarn/cache/cssstyle-npm-2.3.0-b5d112c450-3.zip/node_modules/cssstyle/",
           "packageDependencies": [
-            ["cssstyle", "npm:2.2.0"],
+            ["cssstyle", "npm:2.3.0"],
             ["cssom", "npm:0.3.8"]
           ],
           "linkType": "HARD",
@@ -25353,7 +25353,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["acorn-globals", "npm:6.0.0"],
             ["canvas", null],
             ["cssom", "npm:0.4.4"],
-            ["cssstyle", "npm:2.2.0"],
+            ["cssstyle", "npm:2.3.0"],
             ["data-urls", "npm:2.0.0"],
             ["decimal.js", "npm:10.2.0"],
             ["domexception", "npm:2.0.1"],

@@ -28,6 +28,8 @@ const styles = css({
   borderWidth: `${borderWidth}px`,
   borderRadius: '4px',
 
+  cursor: 'pointer',
+
   fontWeight: 'bold',
 });
 

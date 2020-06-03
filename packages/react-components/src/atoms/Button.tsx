@@ -16,7 +16,6 @@ import { pixelsPerRem } from '../lengths';
 
 const borderWidth = 1;
 const styles = css({
-  cursor: 'pointer',
   display: 'inline-flex',
   alignItems: 'center',
   '> span': {
@@ -28,6 +27,8 @@ const styles = css({
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderRadius: '4px',
+
+  cursor: 'pointer',
 
   fontWeight: 'bold',
 });

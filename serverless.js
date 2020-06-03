@@ -44,6 +44,9 @@ const cors = {
   allowCredentials: false,
 };
 
+const origin = [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_URL]
+  .filter(Boolean)
+  .join('.');
 module.exports = {
   service,
   plugins,
@@ -59,9 +62,8 @@ module.exports = {
     individually: true,
   },
   custom: {
-    origin: [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_URL]
-      .filter(Boolean)
-      .join('.'),
+    apiOrigin: `${SLS_STAGE === 'production' ? 'api.' : 'api-'}${origin}`,
+    origin,
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
@@ -128,7 +130,7 @@ module.exports = {
       HttpApiDomain: {
         Type: 'AWS::ApiGatewayV2::DomainName',
         Properties: {
-          DomainName: `api.\${self:custom.origin}`,
+          DomainName: `\${self:custom.apiOrigin}`,
           DomainNameConfigurations: [
             {
               CertificateArn: AWS_ACM_CERTIFICATE_ARN,
@@ -143,7 +145,7 @@ module.exports = {
         Properties: {
           ApiId: { Ref: 'HttpApi' },
           ApiMappingKey: '',
-          DomainName: `api.\${self:custom.origin}`,
+          DomainName: `\${self:custom.apiOrigin}`,
           Stage: { Ref: 'HttpApiStage' },
         },
       },
@@ -153,7 +155,7 @@ module.exports = {
           HostedZoneName: `${BASE_URL}.`,
           RecordSets: [
             {
-              Name: `api.\${self:custom.origin}`,
+              Name: `\${self:custom.apiOrigin}`,
               Type: 'A',
               AliasTarget: {
                 DNSName: {

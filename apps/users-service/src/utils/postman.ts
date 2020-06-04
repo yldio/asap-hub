@@ -1,9 +1,16 @@
 import aws from 'aws-sdk';
 
+export interface Welcome {
+  displayName: string;
+  link: string;
+}
+
 const templates = {
   welcome: {
-    html: ({ code }: { code: string }): string => `<p>${code}</p>`,
-    text: ({ code }: { code: string }): string => code,
+    html: ({ displayName, link }: Welcome): string =>
+      `<div><p>Hey, ${displayName}</p><a href="${link}">${link}</a></div>`,
+    text: ({ displayName, link }: Welcome): string =>
+      `Hey, ${displayName}\n\n${link}`,
   },
 };
 

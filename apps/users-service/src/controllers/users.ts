@@ -1,9 +1,13 @@
 import Boom from '@hapi/boom';
+import path from 'path';
+import url from 'url';
 import { Db } from '../data';
 import * as auth0 from '../entities/auth0';
 import { CreateUser } from '../data/users';
 import { User } from '../entities/user';
 import { sendEmail } from '../utils/postman';
+import { origin } from '../config';
+import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 
 export interface ReplyUser {
   id: string;
@@ -33,12 +37,13 @@ export default class Users {
     });
 
     const [code] = createdUser.connections;
+    const link = new url.URL(path.join(`/welcome/${code}`), origin);
     await sendEmail({
       to: [user.email],
       template: 'welcome',
       values: {
         displayName: user.displayName,
-        code,
+        link: link.toString(),
       },
     });
 

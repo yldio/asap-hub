@@ -117,11 +117,11 @@ describe('POST /users', () => {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: `<p>${code}</p>`,
+            Data: `<div><p>Hey, ${payload.displayName}</p><a href=\"https://localhost:3000/welcome/${code}\">https://localhost:3000/welcome/${code}</a></div>`,
           },
           Text: {
             Charset: 'UTF-8',
-            Data: `${code}`,
+            Data: `Hey, ${payload.displayName}\n\nhttps://localhost:3000/welcome/${code}`,
           },
         },
         Subject: {

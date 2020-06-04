@@ -4,7 +4,7 @@ set -eo pipefail
 EMAIL_ADDRESS=no-reply@asap.yld.io
 
 # Wait for the SES service to be available before executing any post-run scripts
-while ! nc -z localhost 4566; do   
+while ! nc -z localhost 4566; do
     echo "Waiting for SES to launch on port 4566..."
     sleep 2
 done

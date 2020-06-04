@@ -20,11 +20,11 @@
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:packages/auth",
-    "@testing-library/react-hooks": "^3.2.1",
+    "@testing-library/react-hooks": "^3.3.0",
     "@types/jest": "^25.2.2",
     "@types/react": "^16.9.0",
-    "@types/testing-library__react-hooks": "3.2.0",
+    "@types/testing-library__react-hooks": "^3.2.0",
     "react": "^16.13.1",
-    "react-test-renderer": "^16.9.0"
+    "react-test-renderer": "^16.13.1"
   }
 }

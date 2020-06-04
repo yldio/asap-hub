@@ -19,6 +19,8 @@ node_modules
 /packages/*/build
 
 /.serverless*
+dev/localstack
+dev/mongodb
 
 *.tsbuildinfo
 

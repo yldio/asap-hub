@@ -1,6 +1,16 @@
-export const origin = process.env.APP_BASE_URL || 'https://localhost:3000';
-export const globalToken = "temp_token_that_shouldn't_be_used";
-export const auth0BaseUrl =
-  process.env.AUTH0_BASE_URL || 'https://localhost:4000';
+/* istanbul ignore file */
+
+const {
+  APP_BASE_URL,
+  AUTH0_BASE_URL,
+  MONGODB_CONNECTION_STRING,
+  NODE_ENV,
+} = process.env;
+
+export const auth0BaseUrl = AUTH0_BASE_URL || 'https://jeysal.eu.auth0.com';
+export const globalToken = 'change_me_when_we_have_admins';
 export const mongoDbConnectionString =
-  process.env.MONGODB_CONNECTION_STRING || 'mongodb://localhost:27017/asap';
+  MONGODB_CONNECTION_STRING || 'mongodb://localhost:27017/asap';
+export const origin = APP_BASE_URL || 'http://localhost:3000';
+export const sesEndpoint =
+  NODE_ENV !== 'production' ? 'http://localhost:4566' : undefined;

@@ -1,4 +1,5 @@
 import aws from 'aws-sdk';
+import { sesEndpoint } from '../config';
 
 export interface Welcome {
   displayName: string;
@@ -14,7 +15,7 @@ const templates = {
   },
 };
 
-const ses = new aws.SES({ apiVersion: '2010-12-01' });
+const ses = new aws.SES({ apiVersion: '2010-12-01', endpoint: sesEndpoint });
 export const sendEmail = async ({
   to,
   template,

@@ -52,6 +52,63 @@ describe('POST /users', () => {
     expect(result.statusCode).toStrictEqual(400);
   });
 
+  test('return 401 when authorization header not present', async () => {
+    const payload = {
+      displayName: `${chance.first()} ${chance.last()}`,
+      email: chance.email(),
+    };
+
+    const result = (await handler(
+      apiGatewayEvent({
+        body: payload,
+      }),
+      null,
+      null,
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(401);
+  });
+
+  test('return 403 when authorization header is not bearer', async () => {
+    const payload = {
+      displayName: `${chance.first()} ${chance.last()}`,
+      email: chance.email(),
+    };
+
+    const result = (await handler(
+      apiGatewayEvent({
+        headers: {
+          Authorization: `Basic invalid_token`,
+        },
+        body: payload,
+      }),
+      null,
+      null,
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(403);
+  });
+
+  test("return 403 when authorization header isn't valid", async () => {
+    const payload = {
+      displayName: `${chance.first()} ${chance.last()}`,
+      email: chance.email(),
+    };
+
+    const result = (await handler(
+      apiGatewayEvent({
+        headers: {
+          Authorization: `Bearer invalid_token`,
+        },
+        body: payload,
+      }),
+      null,
+      null,
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(403);
+  });
+
   test('returns 403 when email is a duplicate', async () => {
     const payload = {
       displayName: `${chance.first()} ${chance.last()}`,
@@ -117,11 +174,11 @@ describe('POST /users', () => {
         Body: {
           Html: {
             Charset: 'UTF-8',
-            Data: `<div><p>Hey, ${payload.displayName}</p><a href=\"https://localhost:3000/welcome/${code}\">https://localhost:3000/welcome/${code}</a></div>`,
+            Data: `<div><p>Hey, ${payload.displayName}</p><a href=\"http://localhost:3000/welcome/${code}\">http://localhost:3000/welcome/${code}</a></div>`,
           },
           Text: {
             Charset: 'UTF-8',
-            Data: `Hey, ${payload.displayName}\n\nhttps://localhost:3000/welcome/${code}`,
+            Data: `Hey, ${payload.displayName}\n\nhttp://localhost:3000/welcome/${code}`,
           },
         },
         Subject: {

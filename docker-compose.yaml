@@ -1,0 +1,19 @@
+version: '2.1'
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - '4566-4584:4566-4584'
+      - '8081:8080'
+    environment:
+      - SERVICES=ses
+    volumes:
+      - ./dev/localstack:/tmp/localstack
+  mongodb:
+    image: mongo:4.2.6
+    ports:
+      - '27017:27017'
+    environment:
+      - MONGO_INITDB_DATABASE=asap
+    volumes:
+      - ./dev/mongodb:/data/db

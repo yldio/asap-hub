@@ -7,7 +7,6 @@ import { CreateUser } from '../data/users';
 import { User } from '../entities/user';
 import { sendEmail } from '../utils/postman';
 import { origin } from '../config';
-import { ConfigurationServicePlaceholders } from 'aws-sdk/lib/config_service_placeholders';
 
 export interface ReplyUser {
   id: string;

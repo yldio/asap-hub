@@ -22,7 +22,6 @@ const validateUser = async (request: lambda.Request): Promise<void> => {
     throw Boom.forbidden();
   }
 
-  // TODO: change me
   if (token !== globalToken) {
     throw Boom.forbidden();
   }

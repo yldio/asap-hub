@@ -57,6 +57,11 @@ module.exports = {
     memorySize: 512,
     region: AWS_REGION,
     stage: SLS_STAGE,
+    environment: {
+      APP_BASE_URL: `https://${origin}`,
+      NODE_ENV: `\${env:NODE_ENV}`,
+      MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING, ""}`,
+    },
   },
   package: {
     individually: true,
@@ -91,9 +96,6 @@ module.exports = {
           },
         },
       ],
-      environment: {
-        MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING}`,
-      },
       iamRoleStatements: [
         {
           Effect: 'Allow',
@@ -120,9 +122,6 @@ module.exports = {
           },
         },
       ],
-      environment: {
-        MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING}`,
-      },
     },
   },
   resources: {

@@ -37,7 +37,9 @@ export default class Users {
 
     const [code] = createdUser.connections;
     const link = new url.URL(path.join(`/welcome/${code}`), origin);
-    await sendEmail({
+
+    // TODO: handle issues when sending email
+    sendEmail({
       to: [user.email],
       template: 'welcome',
       values: {

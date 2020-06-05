@@ -4,19 +4,18 @@ const { paramCase } = require('param-case');
 const pkg = require('./package.json');
 
 const {
-  AWS_REGION = 'us-east-1',
-  SLS_STAGE = 'development',
-  BASE_URL,
   AWS_ACM_CERTIFICATE_ARN,
+  AWS_REGION = 'us-east-1',
+  BASE_URL,
+  GLOBAL_TOKEN,
   NODE_ENV = 'development',
+  SLS_STAGE = 'development',
 } = process.env;
 
 if (NODE_ENV === 'production') {
-  assert.ok(BASE_URL, 'process.env.BASE_URL not defined');
-  assert.ok(
-    AWS_ACM_CERTIFICATE_ARN,
-    'process.env.AWS_ACM_CERTIFICATE_ARN not defined',
-  );
+  assert.ok(AWS_ACM_CERTIFICATE_ARN, 'AWS_ACM_CERTIFICATE_ARN not defined');
+  assert.ok(BASE_URL, 'BASE_URL not defined');
+  assert.ok(GLOBAL_TOKEN, 'GLOBAL_TOKEN not defined');
 }
 
 const service = paramCase(pkg.name);
@@ -103,6 +102,9 @@ module.exports = {
           Resource: '*',
         },
       ],
+      environment: {
+        GLOBAL_TOKEN: `\${env:GLOBAL_TOKEN}`,
+      },
     },
     welcome: {
       handler: 'apps/users-service/build/handlers/welcome.handler',

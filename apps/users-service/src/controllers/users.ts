@@ -1,26 +1,28 @@
 import Boom from '@hapi/boom';
-import aws from 'aws-sdk';
-import { generate } from 'shortid';
-import { ObjectId } from 'mongodb';
+import path from 'path';
+import url from 'url';
 import { Db } from '../data';
-import { UserModel } from '../data/users';
+import * as auth0 from '../entities/auth0';
+import { CreateUser } from '../data/users';
+import { User } from '../entities/user';
+import { sendEmail } from '../utils/postman';
+import { origin } from '../config';
 
-export interface User {
+export interface ReplyUser {
   id: string;
   displayName: string;
   email: string;
 }
 
 const key = '_id';
-function transform(user: UserModel): User {
+function transform(user: User): ReplyUser {
   return {
     id: user[key].toString(),
     displayName: user.displayName,
     email: user.email,
-  } as User;
+  } as ReplyUser;
 }
 
-const ses = new aws.SES({ apiVersion: '2010-12-01' });
 export default class Users {
   db: Db;
 
@@ -28,44 +30,28 @@ export default class Users {
     this.db = db;
   }
 
-  async create(user: User): Promise<User> {
-    const code = generate();
+  async create(user: CreateUser): Promise<ReplyUser> {
     const createdUser = await this.db.users.create({
       ...user,
-      invite: {
-        code,
-        source: 'manual',
-        createdAt: new Date(),
+    });
+
+    const [code] = createdUser.connections;
+    const link = new url.URL(path.join(`/welcome/${code}`), origin);
+
+    // TODO: handle issues when sending email
+    sendEmail({
+      to: [user.email],
+      template: 'welcome',
+      values: {
+        displayName: user.displayName,
+        link: link.toString(),
       },
     });
 
-    const params = {
-      Destination: {
-        ToAddresses: [user.email],
-      },
-      Message: {
-        Body: {
-          Html: {
-            Charset: 'UTF-8',
-            Data: `<p>${code}</p>`,
-          },
-          Text: {
-            Charset: 'UTF-8',
-            Data: `${code}`,
-          },
-        },
-        Subject: {
-          Charset: 'UTF-8',
-          Data: 'Welcome',
-        },
-      },
-      Source: 'no-reply@asap.yld.io',
-    };
-    await ses.sendEmail(params).promise();
     return transform(createdUser);
   }
 
-  async fetchByCode(code: string): Promise<User> {
+  async fetchByCode(code: string): Promise<ReplyUser> {
     const user = await this.db.users.fetchByCode(code);
     if (user) {
       return transform(user);
@@ -73,12 +59,11 @@ export default class Users {
     throw Boom.forbidden();
   }
 
-  async connectByCode(code: string, identity: string): Promise<User> {
-    const user = await this.fetchByCode(code);
-    await this.db.accounts.create({
-      user: new ObjectId(user.id),
-      identity,
+  async connectByCode(code: string, user: auth0.UserInfo): Promise<User> {
+    return this.db.users.connectByCode(code, {
+      id: user.sub,
+      source: 'auth0',
+      raw: user,
     });
-    return user;
   }
 }

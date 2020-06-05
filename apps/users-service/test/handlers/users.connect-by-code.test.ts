@@ -1,8 +1,10 @@
 import Chance from 'chance';
+import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { handler } from '../../src/handlers/welcome';
 import { apiGatewayEvent } from '../helpers/events';
 import connection from '../../src/utils/connection';
+import { auth0BaseUrl } from '../../src/config';
 
 const chance = new Chance();
 describe('POST /users/{code}', () => {
@@ -13,7 +15,7 @@ describe('POST /users/{code}', () => {
   });
 
   test("returns 403 when code doesn't exist", async () => {
-    const result = (await handler(
+    const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
         headers: {
@@ -27,10 +29,12 @@ describe('POST /users/{code}', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(403);
+    expect(res.statusCode).toStrictEqual(403);
   });
 
-  test('returns 200 for valid code', async () => {
+  test('returns 403 when auth0 return an error', async () => {
+    nock(auth0BaseUrl).get('/userinfo').reply(404);
+
     const code = chance.string();
     const c = await connection();
     await c
@@ -40,13 +44,11 @@ describe('POST /users/{code}', () => {
         {
           displayName: `${chance.first()} ${chance.last()}`,
           email: chance.email(),
-          invite: {
-            code,
-          },
+          connections: [code],
         },
       ]);
 
-    const result = (await handler(
+    const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
         headers: {
@@ -60,6 +62,93 @@ describe('POST /users/{code}', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(201);
+    expect(res.statusCode).toStrictEqual(403);
+
+    const user = await c.db().collection('users').findOne({
+      connections: code,
+    });
+
+    expect(user).toBeDefined();
+    expect(user.connections).toHaveLength(1);
+  });
+
+  test('returns 403 for invalid code', async () => {
+    const response = {
+      sub: `google-oauth2|${chance.string()}`,
+    };
+    nock(auth0BaseUrl).get('/userinfo').reply(200, response);
+
+    const code = chance.string();
+    const c = await connection();
+    await c
+      .db()
+      .collection('users')
+      .insertMany([
+        {
+          displayName: `${chance.first()} ${chance.last()}`,
+          email: chance.email(),
+          connections: [code],
+        },
+      ]);
+
+    const res = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'post',
+        headers: {
+          authorization: `Bearer ${chance.string()}`,
+        },
+        pathParameters: {
+          code: chance.string(),
+        },
+      }),
+      null,
+      null,
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(403);
+  });
+
+  test('returns 202 for valid code and updates the user', async () => {
+    const response = {
+      sub: `google-oauth2|${chance.string()}`,
+    };
+    nock(auth0BaseUrl).get('/userinfo').reply(200, response);
+
+    const code = chance.string();
+    const c = await connection();
+    await c
+      .db()
+      .collection('users')
+      .insertMany([
+        {
+          displayName: `${chance.first()} ${chance.last()}`,
+          email: chance.email(),
+          connections: [code],
+        },
+      ]);
+
+    const res = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'post',
+        headers: {
+          authorization: `Bearer ${chance.string()}`,
+        },
+        pathParameters: {
+          code,
+        },
+      }),
+      null,
+      null,
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(202);
+
+    const user = await c.db().collection('users').findOne({
+      connections: code,
+    });
+
+    expect(user).toBeDefined();
+    expect(user.connections).toHaveLength(2);
+    expect(user.connections[1]).toStrictEqual(response.sub);
   });
 });

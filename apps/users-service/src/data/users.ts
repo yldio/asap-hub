@@ -1,27 +1,41 @@
-import Base, { BaseModel } from './base';
+import { generate } from 'shortid';
+import Base from './base';
+import { User, Connection } from '../entities/user';
 
-export interface UserModel extends BaseModel {
+export interface CreateUser {
   displayName: string;
   email: string;
 }
 
-export interface CreateUserModel {
-  displayName: string;
-  email: string;
-  invite?: {
-    code: string;
-    source: 'manual';
-    createdAt: Date;
-  };
-}
-
-export default class Users extends Base<UserModel> {
-  async create(user: CreateUserModel): Promise<UserModel> {
-    return super.insertOne(user);
+export default class Users extends Base<User> {
+  async create(user: CreateUser): Promise<User> {
+    const code = generate();
+    return super.insertOne({
+      ...user,
+      connections: [code],
+    });
   }
 
-  async fetchByCode(code: string): Promise<UserModel> {
-    const res = await this.collection.findOne({ 'invite.code': code });
-    return res as UserModel;
+  async fetchByCode(code: string): Promise<User> {
+    const res = await this.collection.findOne({
+      connections: code,
+    });
+
+    return res as User;
+  }
+
+  async connectByCode(code: string, profile: Connection): Promise<User> {
+    const res = await super.findOneAndUpdate(
+      {
+        connections: code,
+      },
+      {
+        $addToSet: {
+          connections: profile.id,
+        },
+      } as object,
+    );
+
+    return res as User;
   }
 }

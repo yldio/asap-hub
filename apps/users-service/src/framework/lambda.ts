@@ -28,6 +28,17 @@ export interface RequestContext {
   connection: MongoClient;
 }
 
+export const response = (res: APIGatewayProxyResult): APIGatewayProxyResult => {
+  return {
+    ...res,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+      ...res.headers,
+    },
+  };
+};
+
 export const validate = <T>(
   prop: string,
   value: T,
@@ -54,10 +65,10 @@ export const http = <T>(
     body = event.body && Bourne.parse(event.body);
   } catch (err) {
     const boom = Boom.badRequest(err.message);
-    return {
+    return response({
       statusCode: boom.output.statusCode,
       body: JSON.stringify(boom.output.payload),
-    };
+    });
   }
 
   // lowercase headers
@@ -99,7 +110,7 @@ export const http = <T>(
           }
         : error.output.payload;
 
-    return {
+    return response({
       statusCode: error.output.statusCode,
       body: JSON.stringify(payload),
       headers: {
@@ -108,15 +119,15 @@ export const http = <T>(
           | { [header: string]: string | number | boolean }
           | undefined),
       },
-    };
+    });
   }
 
-  return {
+  return response({
     statusCode: res.statusCode || 200,
     body: res.payload && JSON.stringify(res.payload),
     headers: {
       'content-type': 'application/json',
       ...res.headers,
     },
-  };
+  });
 };

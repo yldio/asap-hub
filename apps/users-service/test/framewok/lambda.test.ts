@@ -86,3 +86,21 @@ test('http stringifies payload into body', async () => {
   const result = await handler(apiGatewayEvent({}));
   expect(result.body).toStrictEqual(JSON.stringify(payload));
 });
+
+test('http returns cors headers', async () => {
+  const payload = {
+    hello: 'world',
+  };
+  const handler = http(async (_) => {
+    return {
+      payload,
+    };
+  });
+
+  const result = await handler(apiGatewayEvent({}));
+  expect(result.headers).toStrictEqual({
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Origin': '*',
+    'content-type': 'application/json',
+  });
+});

@@ -6,8 +6,8 @@
     "node": "12.x"
   },
   "scripts": {
-    "start": "start-storybook -c config -p 3001",
-    "build": "build-storybook -c config -o build",
+    "start": "start-storybook --quiet -c config -p 3001",
+    "build": "build-storybook --quiet -c config -o build",
     "typecheck": "tsc"
   },
   "dependencies": {

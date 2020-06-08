@@ -7,7 +7,10 @@ import '@testing-library/jest-dom/extend-expect';
 import { matchers } from 'jest-emotion';
 expect.extend(matchers);
 
+// form validation polyfill
+import hyperform from 'hyperform';
+hyperform(window);
+
 // The Auth0 library needs the WebCrypto API
 import { Crypto } from '@peculiar/webcrypto';
-
 Object.defineProperty(window, 'crypto', { value: new Crypto() });

@@ -15,22 +15,24 @@
   "dependencies": {
     "@asap-hub/react-components": "workspace:packages/react-components",
     "@asap-hub/react-context": "workspace:packages/react-context",
-    "@auth0/auth0-spa-js": "^1.8.0",
+    "@auth0/auth0-spa-js": "^1.9.0",
     "history": "^4.10.1",
+    "node-fetch": "^3.0.0-beta.5",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.1",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
-    "@testing-library/dom": "^7.2.1",
-    "@testing-library/jest-dom": "^5.5.0",
-    "@testing-library/react": "^10.0.2",
-    "@testing-library/user-event": "^10.0.1",
-    "@types/history": "^4.7.5",
+    "@testing-library/dom": "^7.10.0",
+    "@testing-library/jest-dom": "^5.9.0",
+    "@testing-library/react": "^10.2.0",
+    "@testing-library/user-event": "^11.1.0",
+    "@types/history": "^4.7.6",
     "@types/jest": "^25.2.2",
+    "@types/nock": "^11.1.0",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
@@ -40,6 +42,7 @@
     "cross-env": "^7.0.2",
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
+    "nock": "^12.0.3",
     "react-scripts": "patch:react-scripts@3.4.1#./patches/react-scripts.patch",
     "typescript": "~3.8.3"
   }

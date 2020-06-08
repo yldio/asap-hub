@@ -39,6 +39,7 @@ module.exports = {
       },
     ],
 
+    'no-multi-assign': 'off',
     'no-nested-ternary': 'off',
   },
   overrides: [

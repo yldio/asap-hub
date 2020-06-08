@@ -19,7 +19,7 @@ __metadata:
   resolution: "@asap-hub/auth@workspace:packages/auth"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@auth0/auth0-spa-js": ^1.8.0
+    "@auth0/auth0-spa-js": ^1.9.0
   languageName: unknown
   linkType: soft
 
@@ -54,13 +54,14 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@asap-hub/react-context": "workspace:packages/react-context"
-    "@auth0/auth0-spa-js": ^1.8.0
-    "@testing-library/dom": ^7.2.1
-    "@testing-library/jest-dom": ^5.5.0
-    "@testing-library/react": ^10.0.2
-    "@testing-library/user-event": ^10.0.1
-    "@types/history": ^4.7.5
+    "@auth0/auth0-spa-js": ^1.9.0
+    "@testing-library/dom": ^7.10.0
+    "@testing-library/jest-dom": ^5.9.0
+    "@testing-library/react": ^10.2.0
+    "@testing-library/user-event": ^11.1.0
+    "@types/history": ^4.7.6
     "@types/jest": ^25.2.2
+    "@types/nock": ^11.1.0
     "@types/node": ^12.0.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
@@ -71,10 +72,12 @@ __metadata:
     history: ^4.10.1
     identity-obj-proxy: ^3.0.0
     jest-environment-jsdom-sixteen: ^1.0.3
+    nock: ^12.0.3
+    node-fetch: ^3.0.0-beta.5
     react: ^16.13.1
     react-app-polyfill: ^1.0.6
     react-dom: ^16.13.1
-    react-router-dom: ^5.1.2
+    react-router-dom: ^5.2.0
     react-scripts: "patch:react-scripts@3.4.1#./patches/react-scripts.patch"
     typescript: ~3.8.3
   languageName: unknown
@@ -100,26 +103,30 @@ __metadata:
     "@asap-hub/auth": "workspace:packages/auth"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/react-context": "workspace:packages/react-context"
-    "@auth0/auth0-spa-js": ^1.8.0
+    "@auth0/auth0-spa-js": ^1.9.0
     "@babel/core": ^7.9.0
     "@babel/preset-react": ^7.9.0
     "@babel/runtime-corejs3": ^7.9.6
     "@emotion/babel-preset-css-prop": ^10.0.27
     "@emotion/core": ^10.0.28
     "@emotion/css": ^10.0.27
-    "@testing-library/dom": ^7.2.1
-    "@testing-library/jest-dom": ^5.5.0
-    "@testing-library/react": ^10.0.2
-    "@testing-library/user-event": ^10.0.1
+    "@testing-library/dom": ^7.10.0
+    "@testing-library/jest-dom": ^5.9.0
+    "@testing-library/react": ^10.2.0
+    "@testing-library/react-hooks": ^3.3.0
+    "@testing-library/user-event": ^11.1.0
     "@types/jest": ^25.2.2
     "@types/react": ^16.9.0
+    "@types/react-test-renderer": 16.9.2
     "@types/testing-library__jest-dom": ^5.0.3
     "@types/testing-library__react": ^10.0.1
+    "@types/testing-library__react-hooks": ^3.2.0
     core-js: ^3.6.5
     emotion-normalize: ^10.1.0
     jest-emotion: ^10.0.32
     react: ^16.13.1
     react-dom: ^16.13.1
+    react-test-renderer: ^16.13.1
   peerDependencies:
     "@asap-hub/react-context": "*"
     react: ^16.13.1
@@ -132,13 +139,13 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
     "@babel/runtime-corejs3": ^7.9.6
-    "@testing-library/react-hooks": ^3.2.1
+    "@testing-library/react-hooks": ^3.3.0
     "@types/jest": ^25.2.2
     "@types/react": ^16.9.0
-    "@types/testing-library__react-hooks": 3.2.0
+    "@types/testing-library__react-hooks": ^3.2.0
     core-js: ^3.6.5
     react: ^16.13.1
-    react-test-renderer: ^16.9.0
+    react-test-renderer: ^16.13.1
   peerDependencies:
     react: ^16.13.1
   languageName: unknown
@@ -199,9 +206,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@auth0/auth0-spa-js@npm:^1.8.0":
-  version: 1.8.1
-  resolution: "@auth0/auth0-spa-js@npm:1.8.1"
+"@auth0/auth0-spa-js@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@auth0/auth0-spa-js@npm:1.9.0"
   dependencies:
     abortcontroller-polyfill: ^1.4.0
     browser-tabs-lock: ^1.2.8
@@ -210,7 +217,7 @@ __metadata:
     fast-text-encoding: ^1.0.1
     promise-polyfill: ^8.1.3
     unfetch: ^4.1.0
-  checksum: 3/ccc241ab3390cfe9506026ff5e73f0ae5903d6367f32fd5e2657f8b0b9920812233a4da26f1786aa27f284040c330baf327a4906c3c3a1388c890dd6e6c9d733
+  checksum: 3/da084191ce3d8c88c71279b0f2bcc6b4df8692b56a70a8c9c403bf6dc9c8bf09db8a596eeb5ce0d6a5678ae3fce1941484d923015c60b48245e4be81b3e531d1
   languageName: node
   linkType: hard
 
@@ -1840,12 +1847,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.0, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.6":
+"@babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.3.1, @babel/runtime@npm:^7.4.4, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.6":
   version: 7.9.6
   resolution: "@babel/runtime@npm:7.9.6"
   dependencies:
     regenerator-runtime: ^0.13.4
   checksum: 3/ff94d6861daea1c6e4639f2e6d22992539fab45ce6ef468de37e0dd0df109aee94276f72fc962b48946dde0b8554a71343fc398ea5a565cab59c596829ccc2ad
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.10.2":
+  version: 7.10.2
+  resolution: "@babel/runtime@npm:7.10.2"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 3/0f3466d63518eca76e58ee523a21d9181949e10eb6d51d4e84d42702da5fae06f90f5e1e0a8e51420feb432ee73d7b6aae4a03d2210ac5c8aeaba3d2de7f2bf9
   languageName: node
   linkType: hard
 
@@ -2914,6 +2930,18 @@ __metadata:
     "@types/yargs": ^15.0.0
     chalk: ^3.0.0
   checksum: 3/1822dbb23ba8cc7dcf812ecedde1e3d3280857d9cd89bdaa12dcecc5b347e026558a478f6c0bd5f2b729a13c7c6bb5e132bc456050d0bcffc97d3bf04de030e9
+  languageName: node
+  linkType: hard
+
+"@jest/types@npm:^25.5.0":
+  version: 25.5.0
+  resolution: "@jest/types@npm:25.5.0"
+  dependencies:
+    "@types/istanbul-lib-coverage": ^2.0.0
+    "@types/istanbul-reports": ^1.1.1
+    "@types/yargs": ^15.0.0
+    chalk: ^3.0.0
+  checksum: 3/33ad68320efb297c4bd98975105130e1b4096d631decfc5a093691e24f27fce0410b4a7c5a87b736873271ebc003e48e853529587e584b3152efca572139a4a3
   languageName: node
   linkType: hard
 
@@ -4066,22 +4094,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^7.1.0, @testing-library/dom@npm:^7.2.1":
-  version: 7.2.1
-  resolution: "@testing-library/dom@npm:7.2.1"
+"@testing-library/dom@npm:^7.10.0, @testing-library/dom@npm:^7.9.0":
+  version: 7.10.0
+  resolution: "@testing-library/dom@npm:7.10.0"
   dependencies:
-    "@babel/runtime": ^7.9.2
-    "@types/testing-library__dom": ^7.0.0
+    "@babel/runtime": ^7.10.2
     aria-query: ^4.0.2
-    dom-accessibility-api: ^0.4.2
-    pretty-format: ^25.1.0
-  checksum: 3/8375d0c696d588c3725bbf28fb48818c4cc7e2ae4369784192558f9ff980d03a83a8e18f59cd262564be008d334f1284063bb2c0441b421ae1129a190d298761
+    dom-accessibility-api: ^0.4.4
+    pretty-format: ^25.5.0
+  checksum: 3/3af727065a0cfa03ff84d3a589677068f39c21aeb89855b9b4c26c5eebcebc18a42d04a5f422554afca8939f8b1e74037d18573f035d8e15088c3693ef0ab32b
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "@testing-library/jest-dom@npm:5.5.0"
+"@testing-library/jest-dom@npm:^5.9.0":
+  version: 5.9.0
+  resolution: "@testing-library/jest-dom@npm:5.9.0"
   dependencies:
     "@babel/runtime": ^7.9.2
     "@types/testing-library__jest-dom": ^5.0.2
@@ -4092,43 +4119,44 @@ __metadata:
     jest-matcher-utils: ^25.1.0
     lodash: ^4.17.15
     redent: ^3.0.0
-  checksum: 3/e1644919a7aabc2d5a45d953644acbc238e9a0475526b6aa1b8301791bc2bac7a442ba2de488606817e9b89de3736708d11e602da1dd64277c8134318f496c26
+  checksum: 3/31566ae3f1d85718cdda507c9cd04ee82989390f1761f49198815ce5d84419677da3f8b385de7ed8a807ab0be51ecaa726ac68b2d78a351e00a0c460b5730c8d
   languageName: node
   linkType: hard
 
-"@testing-library/react-hooks@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "@testing-library/react-hooks@npm:3.2.1"
+"@testing-library/react-hooks@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@testing-library/react-hooks@npm:3.3.0"
   dependencies:
     "@babel/runtime": ^7.5.4
     "@types/testing-library__react-hooks": ^3.0.0
   peerDependencies:
     react: ">=16.9.0"
     react-test-renderer: ">=16.9.0"
-  checksum: 3/0037acdbbd54c1fe3a98437137ddec50e977f95786e46063ea89648f47e5317588ff013088df9aef635302bc40ec9dc7bd24bea17551619b98bae3f61ac47547
+  checksum: 3/d3b857d34ec565f71c5baa8c07966834daef574e719c89e335fc60cd2220f70c63945238737d42c1fe425a1cb9c0a28919c175b19bb3157c8e575f14593468b1
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^10.0.2":
-  version: 10.0.2
-  resolution: "@testing-library/react@npm:10.0.2"
+"@testing-library/react@npm:^10.2.0":
+  version: 10.2.0
+  resolution: "@testing-library/react@npm:10.2.0"
   dependencies:
-    "@babel/runtime": ^7.9.2
-    "@testing-library/dom": ^7.1.0
-    "@types/testing-library__react": ^10.0.0
+    "@babel/runtime": ^7.10.2
+    "@testing-library/dom": ^7.9.0
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 3/23d970cbb030dd85d31ceb8986cb4787fd91d8a37139a2490af83092354cf9fa63f65fe100f506d73b55e9e6e7ee932d93fc25ae18b86443e04c5ef3cc76cf09
+  checksum: 3/6297d50a8b9467cfeddd17610ee6a235ab9efad32d2f231aad798d9872c2f05d95d7ef5909bafcb229ebb20fa8f9581520c95f629f2bc141c8b2a86ec3e74565
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^10.0.1":
-  version: 10.0.1
-  resolution: "@testing-library/user-event@npm:10.0.1"
+"@testing-library/user-event@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "@testing-library/user-event@npm:11.1.0"
+  dependencies:
+    "@babel/runtime": ^7.10.2
   peerDependencies:
-    "@testing-library/dom": ">=5"
-  checksum: 3/b4dd3674ae74eae2bae637513f0a49365db8a4b6e50e5eb401398b196f54d3ae11314657ae81e257b4da48d50e98f51a20742c3584816181e3252f9f6c3ded8e
+    "@testing-library/dom": ">=7.9.0"
+  checksum: 3/218d7a070f5f017e7ce4078845b0efd169853fa09da8315f162e965e0170eb2cc09ad615a1001750336065be2b6bad756239bb7d1608b04e5da3a122914736c7
   languageName: node
   linkType: hard
 
@@ -4366,10 +4394,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/history@npm:*, @types/history@npm:^4.7.5":
+"@types/history@npm:*":
   version: 4.7.5
   resolution: "@types/history@npm:4.7.5"
   checksum: 3/c62e216239e27178b016a15c6833c42414d34a0f82831a089db47f1d4be144018c8015777e5c478d8828c5a0ddec509892d70a9f26faf2f972d31f9d9f70fba9
+  languageName: node
+  linkType: hard
+
+"@types/history@npm:^4.7.6":
+  version: 4.7.6
+  resolution: "@types/history@npm:4.7.6"
+  checksum: 3/8782d92953946314f7a4c76c2f47168f2fe6e43f01c31d44acac128638d8d5cd599247d2e593c3ed829387e8d48d8bf67155a3d0f7ce57e1920b9c1f2de10783
   languageName: node
   linkType: hard
 
@@ -4569,6 +4604,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/nock@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "@types/nock@npm:11.1.0"
+  dependencies:
+    nock: "*"
+  checksum: 3/09eada0afdd6c59a91fc05ea886fe5b86f8dace2a337773ed4447b2e5423543a74951e0830fd5d89f963ea8758513343c9b2b27c94b82aa0c6923a39a9bef930
+  languageName: node
+  linkType: hard
+
 "@types/node-fetch@npm:^2.5.4":
   version: 2.5.7
   resolution: "@types/node-fetch@npm:2.5.7"
@@ -4714,7 +4758,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-test-renderer@npm:*":
+"@types/react-test-renderer@npm:*, @types/react-test-renderer@npm:16.9.2":
   version: 16.9.2
   resolution: "@types/react-test-renderer@npm:16.9.2"
   dependencies:
@@ -4802,7 +4846,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__dom@npm:*, @types/testing-library__dom@npm:^7.0.0":
+"@types/testing-library__dom@npm:*":
   version: 7.0.1
   resolution: "@types/testing-library__dom@npm:7.0.1"
   dependencies:
@@ -4820,7 +4864,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__react-hooks@npm:3.2.0, @types/testing-library__react-hooks@npm:^3.0.0":
+"@types/testing-library__react-hooks@npm:^3.0.0, @types/testing-library__react-hooks@npm:^3.2.0":
   version: 3.2.0
   resolution: "@types/testing-library__react-hooks@npm:3.2.0"
   dependencies:
@@ -4830,7 +4874,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__react@npm:^10.0.0, @types/testing-library__react@npm:^10.0.1":
+"@types/testing-library__react@npm:^10.0.1":
   version: 10.0.1
   resolution: "@types/testing-library__react@npm:10.0.1"
   dependencies:
@@ -6057,12 +6101,13 @@ __metadata:
     "@babel/preset-typescript": ^7.9.0
     "@babel/runtime-corejs3": ^7.9.6
     "@peculiar/webcrypto": ^1.1.1
-    "@testing-library/jest-dom": ^5.5.0
+    "@testing-library/jest-dom": ^5.9.0
     "@types/jest": ^25.2.2
     "@yarnpkg/pnpify": ^2.0.0-rc.20
     babel-eslint: ^10.1.0
     babel-preset-react-app: ^9.1.2
     eslint: ^6.8.0
+    hyperform: ^0.12.0
     jest: ^26.0.1
     jest-circus: ^26.0.1
     jest-emotion: ^10.0.32
@@ -9348,6 +9393,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"data-uri-to-buffer@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "data-uri-to-buffer@npm:3.0.1"
+  checksum: 3/9f28217ba76eaca400a75f4b1a1d0f55058082c8152a3d88ad5feeec5e54b8c7b6d8a7bb210206bfa552a927c1b942b6102ddbb2feaa557321ea94762c4f14e2
+  languageName: node
+  linkType: hard
+
 "data-urls@npm:^1.0.0, data-urls@npm:^1.1.0":
   version: 1.1.0
   resolution: "data-urls@npm:1.1.0"
@@ -10028,10 +10080,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dom-accessibility-api@npm:^0.4.2":
-  version: 0.4.3
-  resolution: "dom-accessibility-api@npm:0.4.3"
-  checksum: 3/2fda22716f591972f8c4b3b912b8062b5a199aea03db82cca86d320fbc647325e3149f2e9157fdd1627a5c5ea09242c9b91d169e4737122df23af7d80b76100c
+"dom-accessibility-api@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "dom-accessibility-api@npm:0.4.4"
+  checksum: 3/476d96a5fdd717e7d760bd5ebbecd1b2cee165171a2c85ea66166ccf46e88807e01ae86b50266e1afedbda233c8394447680e96c3847f769e148e762625e63a3
   languageName: node
   linkType: hard
 
@@ -11570,6 +11622,13 @@ __metadata:
   version: 2.3.3
   resolution: "fecha@npm:2.3.3"
   checksum: 3/1761ec8cd88dc165bad8d726e5bc38c933de6cc7ae479eea83260bcbadd3dd285f67b7605db6d2d5e2f8cb92ab5fe7f7634fe09229f0746bdc032a84d824dedb
+  languageName: node
+  linkType: hard
+
+"fetch-blob@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "fetch-blob@npm:1.0.6"
+  checksum: 3/d79ff6a4af89357d82970588d6a0b28803c03ef9a28df3d4fa48e73a63bc2cf2765bdfc47a2412070f836e4bcb1c65ea7bf506a5fd006bbb9d8e63ee03db34ab
   languageName: node
   linkType: hard
 
@@ -13346,6 +13405,13 @@ fsevents@^1.2.7:
   version: 1.1.1
   resolution: "human-signals@npm:1.1.1"
   checksum: 3/cac115f635090055427bbd9d066781b17de3a2d8bbf839d920ae2fa52c3eab4efc63b4c8abc10e9a8b979233fa932c43a83a48864003a8c684ed9fb78135dd45
+  languageName: node
+  linkType: hard
+
+"hyperform@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "hyperform@npm:0.12.0"
+  checksum: 3/edb9e0b9836be7a06f59611838e3352695ae3348dc9b1dc20e2ffd194ae1ef261ae904d0665956c66fd035b1379ac1901061d7f8badd587da416b2d0e5f3b815
   languageName: node
   linkType: hard
 
@@ -17165,17 +17231,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"mini-create-react-context@npm:^0.3.0":
-  version: 0.3.2
-  resolution: "mini-create-react-context@npm:0.3.2"
+"mini-create-react-context@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "mini-create-react-context@npm:0.4.0"
   dependencies:
-    "@babel/runtime": ^7.4.0
-    gud: ^1.0.0
-    tiny-warning: ^1.0.2
+    "@babel/runtime": ^7.5.5
+    tiny-warning: ^1.0.3
   peerDependencies:
     prop-types: ^15.0.0
     react: ^0.14.0 || ^15.0.0 || ^16.0.0
-  checksum: 3/ed91c072bd099ae19b4fc7450211ca44907c3d7e1e0c3494bfeb9a697e3a1c6700db41b7cd2a985e72c8b6cad2284e1ebca3826214a2acb77c3bf8c380c2a08e
+  checksum: 3/51f07df1ed473597e997a6be181262cc06a68e6f29e1ff4d7c6f0a201cfb191e840e504fad1e417cbe622cb3575354fb29cde3327443ce428e09927520078ab2
   languageName: node
   linkType: hard
 
@@ -17684,7 +17749,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"nock@npm:^12.0.3":
+"nock@npm:*, nock@npm:^12.0.3":
   version: 12.0.3
   resolution: "nock@npm:12.0.3"
   dependencies:
@@ -17719,6 +17784,16 @@ fsevents@^1.2.7:
   version: 2.6.0
   resolution: "node-fetch@npm:2.6.0"
   checksum: 3/dd9f586a9f7ddb7dd94d2aba9cb693d32f5001e9850098512fbc8a4cbdd56838afa08ed0a6725b9fce9b01ec12b713e622cbfc16d92762d8b937b238330a632a
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^3.0.0-beta.5":
+  version: 3.0.0-beta.6-exportfix
+  resolution: "node-fetch@npm:3.0.0-beta.6-exportfix"
+  dependencies:
+    data-uri-to-buffer: ^3.0.0
+    fetch-blob: ^1.0.6
+  checksum: 3/9a98f12932a21004120f5f1a94563c5fb64b1001284618a1d2612b708bdb2c4763fc883113b3bd22a729a24ceeffe5a728bd4c334151991513994f57ac4e9fc7
   languageName: node
   linkType: hard
 
@@ -20029,6 +20104,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"pretty-format@npm:^25.5.0":
+  version: 25.5.0
+  resolution: "pretty-format@npm:25.5.0"
+  dependencies:
+    "@jest/types": ^25.5.0
+    ansi-regex: ^5.0.0
+    ansi-styles: ^4.0.0
+    react-is: ^16.12.0
+  checksum: 3/f7cc631d51e22c809d429d20facfd886ba0b212d419d153467872f68688256c2c55563bf70e943b7347ec9180b41a1d19c4235dc171850f9d5382a52959c0245
+  languageName: node
+  linkType: hard
+
 "pretty-format@npm:^26.0.1":
   version: 26.0.1
   resolution: "pretty-format@npm:26.0.1"
@@ -20737,32 +20824,32 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "react-router-dom@npm:5.1.2"
+"react-router-dom@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "react-router-dom@npm:5.2.0"
   dependencies:
     "@babel/runtime": ^7.1.2
     history: ^4.9.0
     loose-envify: ^1.3.1
     prop-types: ^15.6.2
-    react-router: 5.1.2
+    react-router: 5.2.0
     tiny-invariant: ^1.0.2
     tiny-warning: ^1.0.0
   peerDependencies:
     react: ">=15"
-  checksum: 3/d09e55a5d5605375f54cafd2679ffef3ff322818bcb520d52307aa5d2f6ec63cc19de99926c84c2faf52ea23aada1b6ac812ace9088ada3654ba0a7caa1219a3
+  checksum: 3/9ad2d72630491f324a0f0c1dbcc3dc04d8d7cee7cb9dc9effd115fe736ba06104360a78a624170f863738d77e487d459864206a79d91d3c9663cf1dadb3b637f
   languageName: node
   linkType: hard
 
-"react-router@npm:5.1.2":
-  version: 5.1.2
-  resolution: "react-router@npm:5.1.2"
+"react-router@npm:5.2.0":
+  version: 5.2.0
+  resolution: "react-router@npm:5.2.0"
   dependencies:
     "@babel/runtime": ^7.1.2
     history: ^4.9.0
     hoist-non-react-statics: ^3.1.0
     loose-envify: ^1.3.1
-    mini-create-react-context: ^0.3.0
+    mini-create-react-context: ^0.4.0
     path-to-regexp: ^1.7.0
     prop-types: ^15.6.2
     react-is: ^16.6.0
@@ -20770,7 +20857,7 @@ fsevents@^1.2.7:
     tiny-warning: ^1.0.0
   peerDependencies:
     react: ">=15"
-  checksum: 3/534e43eaafd9519c0e2f3dc0996f738b9e81d6e5625681530f0804ac3268e507ef223b3a356e55286a694fee377cb4b831243aca5aa7a9f940d278a2b6641ca3
+  checksum: 3/4437eaa9bab02d46a7d6ea4915731c1f31642d6c3e3f7b9f951f5c6a9a73f35d4deb43a2d6b4be85f27816a20de96c3b9a9239f4b7e9136742106794ad20e95c
   languageName: node
   linkType: hard
 
@@ -20965,7 +21052,7 @@ react-scripts@3.4.1:
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:^16.9.0":
+"react-test-renderer@npm:^16.13.1":
   version: 16.13.1
   resolution: "react-test-renderer@npm:16.13.1"
   dependencies:
@@ -23900,7 +23987,7 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
-"tiny-warning@npm:^1.0.0, tiny-warning@npm:^1.0.2":
+"tiny-warning@npm:^1.0.0, tiny-warning@npm:^1.0.3":
   version: 1.0.3
   resolution: "tiny-warning@npm:1.0.3"
   checksum: 3/6cf9f66cb765b893976b8cd1c1310338861f30fb04d02ef2c8e0a748cbc2ed5acd8bb1954b78c15f640ad4116def67134d7d705f2a0c9bf27e6e2eb3e92bff29

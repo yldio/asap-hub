@@ -27,25 +27,10 @@ const plugins = [
     : ['serverless-offline']),
 ];
 
-const cors = {
-  origin: {
-    'Fn::Join': [
-      '',
-      [
-        'https://',
-        {
-          'Fn::GetAtt': ['CloudFrontDistribution', 'DomainName'],
-        },
-      ],
-    ],
-  },
-  headers: ['*'],
-  allowCredentials: false,
-};
-
 const origin = [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_URL]
   .filter(Boolean)
   .join('.');
+
 module.exports = {
   service,
   plugins,
@@ -56,6 +41,12 @@ module.exports = {
     memorySize: 512,
     region: AWS_REGION,
     stage: SLS_STAGE,
+    httpApi: {
+      cors: {
+        allowedOrigins: [`https://${origin}`],
+        allowCredentials: true,
+      },
+    },
     environment: {
       APP_BASE_URL: `https://${origin}`,
       NODE_ENV: `\${env:NODE_ENV}`,
@@ -91,10 +82,10 @@ module.exports = {
       handler: 'apps/users-service/build/handlers/create.handler',
       events: [
         {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
             path: `/users`,
-            cors,
           },
         },
       ],
@@ -113,17 +104,17 @@ module.exports = {
       handler: 'apps/users-service/build/handlers/welcome.handler',
       events: [
         {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/users/{code}`,
-            cors,
           },
         },
         {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
             path: `/users/{code}`,
-            cors,
           },
         },
       ],

@@ -4,7 +4,8 @@
   "license": "MIT",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "@types/*"
   ],
   "engines": {
     "node": "12.x"

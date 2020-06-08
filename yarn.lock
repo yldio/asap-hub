@@ -180,17 +180,19 @@ __metadata:
     "@hapi/boom": ^9.1.0
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
-    "@types/aws-lambda": 8.10.51
-    "@types/chance": 1.1.0
-    "@types/debug": 4.1.5
+    "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/aws-lambda": ^8.10.51
+    "@types/chance": ^1.1.0
+    "@types/debug": ^4.1.5
     "@types/hapi": ^18.0.3
     "@types/hapi__boom": ^9.0.1
-    "@types/hapi__joi": 17.1.0
+    "@types/hapi__bourne": "workspace:@types/hapi__bourne"
+    "@types/hapi__joi": ^17.1.0
     "@types/jest": ^25.2.2
     "@types/jsonwebtoken": ^8.5.0
-    "@types/migrate-mongo": 7.0.1
-    "@types/mongodb": 3.5.18
-    "@types/shortid": 0.0.29
+    "@types/migrate-mongo": ^7.0.1
+    "@types/mongodb": ^3.5.18
+    "@types/shortid": ^0.0.29
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     aws-sdk: ^2.686.0
@@ -4167,6 +4169,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/apr-intercept@workspace:@types/apr-intercept":
+  version: 0.0.0-use.local
+  resolution: "@types/apr-intercept@workspace:@types/apr-intercept"
+  languageName: unknown
+  linkType: soft
+
 "@types/asn1js@npm:^0.0.1":
   version: 0.0.1
   resolution: "@types/asn1js@npm:0.0.1"
@@ -4176,10 +4184,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/aws-lambda@npm:8.10.51":
-  version: 8.10.51
-  resolution: "@types/aws-lambda@npm:8.10.51"
-  checksum: 3/e630f4981bbf1c50db8b327eaa468cf235834fa3c574f6577c13b695da4d2fb140e82ffd2f7992766c14c601032e38e8403a899aa49608db32643185cdfd616c
+"@types/aws-lambda@npm:^8.10.51":
+  version: 8.10.53
+  resolution: "@types/aws-lambda@npm:8.10.53"
+  checksum: 3/7c26e6fcf4040cd45704d0195f06897c7565818665b86125db1106f9fb175ca8e45bcbf848fe15a1538a102141e25f64483c9e03c84ce61e63b5e5f2f68679bf
   languageName: node
   linkType: hard
 
@@ -4259,7 +4267,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chance@npm:1.1.0":
+"@types/chance@npm:^1.1.0":
   version: 1.1.0
   resolution: "@types/chance@npm:1.1.0"
   checksum: 3/daaa9528de2d94060c49cca49d0326c974d089a0bf956e33cf63bc427abfceb449de42f5fde5e622089302b47540dd15709595c38bdcf24996d48c02f3024777
@@ -4282,7 +4290,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/debug@npm:4.1.5, @types/debug@npm:^4.1.5":
+"@types/debug@npm:^4.1.5":
   version: 4.1.5
   resolution: "@types/debug@npm:4.1.5"
   checksum: 3/416ad24bc589be0fb8c78bea972aa7d4ffdf6b136239701b1792674463b2dbf8c6707f6055ec484f79ec1f2b528ffef90c87e55df7e4a0f458184cad5bf0cfc8
@@ -4387,10 +4395,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/hapi__joi@npm:17.1.0":
-  version: 17.1.0
-  resolution: "@types/hapi__joi@npm:17.1.0"
-  checksum: 3/645d3c5428f6d85e61301729d52f55c3a9d96fb1b8118f2708da023ee779e549aa52afe84fd1595413c13c1873ed87ae690b7aa56510b97c660f5e4b4ed166cf
+"@types/hapi__bourne@workspace:@types/hapi__bourne":
+  version: 0.0.0-use.local
+  resolution: "@types/hapi__bourne@workspace:@types/hapi__bourne"
+  languageName: unknown
+  linkType: soft
+
+"@types/hapi__joi@npm:^17.1.0":
+  version: 17.1.2
+  resolution: "@types/hapi__joi@npm:17.1.2"
+  checksum: 3/1b87c6a562dad3caffe96be8eb992ae29d7f54c6bb113dbd7737e999f2e85d3388fa46dc120fb5ee48f8f8fdff69a3102ffc2dfec6909c70cf5bc87883554f7c
   languageName: node
   linkType: hard
 
@@ -4553,7 +4567,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/migrate-mongo@npm:7.0.1":
+"@types/migrate-mongo@npm:^7.0.1":
   version: 7.0.1
   resolution: "@types/migrate-mongo@npm:7.0.1"
   dependencies:
@@ -4594,13 +4608,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mongodb@npm:*, @types/mongodb@npm:3.5.18":
+"@types/mongodb@npm:*":
   version: 3.5.18
   resolution: "@types/mongodb@npm:3.5.18"
   dependencies:
     "@types/bson": "*"
     "@types/node": "*"
   checksum: 3/f4d24268cecb955f8340fcae4e807ada6b817c46f968c065bb56f8d539f6c2463a49da6d42342c1e17b96fbffc5ce07d0463bfeda93ab798db8a45b2a2687671
+  languageName: node
+  linkType: hard
+
+"@types/mongodb@npm:^3.5.18":
+  version: 3.5.20
+  resolution: "@types/mongodb@npm:3.5.20"
+  dependencies:
+    "@types/bson": "*"
+    "@types/node": "*"
+  checksum: 3/8db2d72c38601f6497da2adc563f9ffbb82ea99a07af3168299386a8d4b7596cf6b979ee8c8ce0416afebf33529dfdd49f82f6131d30b687ac4e29ec806c2c31
   languageName: node
   linkType: hard
 
@@ -4809,7 +4833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/shortid@npm:0.0.29":
+"@types/shortid@npm:^0.0.29":
   version: 0.0.29
   resolution: "@types/shortid@npm:0.0.29"
   checksum: 3/4c96e2e820bc431502d3ce45628a1c0354cdd02fa588b31efa461faa7762988effc4b6a769c8bcbebdb5727e616ac7fc7216b8fe6e980aac0d4e8328652a6d6e

@@ -57,9 +57,9 @@ export const validate = <T>(
 
 // ensure any thrown exception is handled and returned correctly
 const debug = Debug('http');
-export const http = <T>(
-  fn: (request: Request) => Promise<Response> | Response,
-) => async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
+  event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
   // we assume the body is json
   let body;
   try {
@@ -125,7 +125,7 @@ export const http = <T>(
 
   return response({
     statusCode: res.statusCode || 200,
-    body: res.payload && JSON.stringify(res.payload),
+    body: JSON.stringify(res.payload || null),
     headers: {
       'content-type': 'application/json',
       ...res.headers,

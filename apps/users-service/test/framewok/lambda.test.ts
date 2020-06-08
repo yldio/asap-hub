@@ -1,6 +1,7 @@
+import Boom from '@hapi/boom';
 import { http } from '../../src/framework/lambda';
 import { apiGatewayEvent } from '../helpers/events';
-import Boom from '@hapi/boom';
+import { origin } from '../../src/config';
 
 test('http returns 400 on invalid body', async () => {
   const handler = http(async (_) => {
@@ -85,4 +86,22 @@ test('http stringifies payload into body', async () => {
   });
   const result = await handler(apiGatewayEvent({}));
   expect(result.body).toStrictEqual(JSON.stringify(payload));
+});
+
+test('http returns cors headers', async () => {
+  const payload = {
+    hello: 'world',
+  };
+  const handler = http(async (_) => {
+    return {
+      payload,
+    };
+  });
+
+  const result = await handler(apiGatewayEvent({}));
+  expect(result.headers).toStrictEqual({
+    'Access-Control-Allow-Credentials': true,
+    'Access-Control-Allow-Origin': origin,
+    'content-type': 'application/json',
+  });
 });

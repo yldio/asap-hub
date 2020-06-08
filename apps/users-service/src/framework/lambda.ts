@@ -5,6 +5,7 @@ import Debug from 'debug';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { MongoClient } from 'mongodb';
+import { origin } from '../config';
 
 export interface Request {
   method: 'get' | 'post';
@@ -27,6 +28,17 @@ export interface Response {
 export interface RequestContext {
   connection: MongoClient;
 }
+
+export const response = (res: APIGatewayProxyResult): APIGatewayProxyResult => {
+  return {
+    ...res,
+    headers: {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Credentials': true,
+      ...res.headers,
+    },
+  };
+};
 
 export const validate = <T>(
   prop: string,
@@ -54,10 +66,10 @@ export const http = <T>(
     body = event.body && Bourne.parse(event.body);
   } catch (err) {
     const boom = Boom.badRequest(err.message);
-    return {
+    return response({
       statusCode: boom.output.statusCode,
       body: JSON.stringify(boom.output.payload),
-    };
+    });
   }
 
   // lowercase headers
@@ -99,7 +111,7 @@ export const http = <T>(
           }
         : error.output.payload;
 
-    return {
+    return response({
       statusCode: error.output.statusCode,
       body: JSON.stringify(payload),
       headers: {
@@ -108,15 +120,15 @@ export const http = <T>(
           | { [header: string]: string | number | boolean }
           | undefined),
       },
-    };
+    });
   }
 
-  return {
+  return response({
     statusCode: res.statusCode || 200,
     body: res.payload && JSON.stringify(res.payload),
     headers: {
       'content-type': 'application/json',
       ...res.headers,
     },
-  };
+  });
 };

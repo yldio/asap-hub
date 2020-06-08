@@ -5,6 +5,7 @@ import Debug from 'debug';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { MongoClient } from 'mongodb';
+import { origin } from '../config';
 
 export interface Request {
   method: 'get' | 'post';
@@ -32,7 +33,7 @@ export const response = (res: APIGatewayProxyResult): APIGatewayProxyResult => {
   return {
     ...res,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Credentials': true,
       ...res.headers,
     },

@@ -1,4 +1,4 @@
-import React, { EventHandler, MouseEvent } from 'react';
+import React, { useRef } from 'react';
 
 import { Paragraph, Button } from '../atoms';
 import { useInput } from '../hooks';
@@ -15,16 +15,17 @@ const InviteUserForm: React.FC<InviteUserFormProps> = ({ onSubmit = noop }) => {
   const [emailInputProps, email] = useInput<string>('');
   const [adminPasswordInputProps, adminPassword] = useInput<string>('');
 
-  const handleSubmit: EventHandler<MouseEvent<HTMLButtonElement>> = (event) => {
+  const form = useRef<HTMLFormElement>(null);
+
+  const handleSubmit = () => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (!event.currentTarget.form!.reportValidity()) {
-      return;
+    if (form.current!.reportValidity()) {
+      onSubmit({ displayName, email }, adminPassword);
     }
-    event.preventDefault();
-    onSubmit({ displayName, email }, adminPassword);
   };
   return (
     <form
+      ref={form}
       css={{
         width: 'max-content',
         maxWidth: '100%',

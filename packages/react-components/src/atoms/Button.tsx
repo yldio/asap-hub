@@ -13,6 +13,7 @@ import {
   silver,
 } from '../colors';
 import { perRem } from '../pixels';
+import { noop } from '../utils';
 
 const borderWidth = 1;
 const styles = css({
@@ -136,7 +137,7 @@ interface ButtonProps {
 
   children?: React.ReactNode | React.ReactNodeArray;
 
-  onClick?: React.ButtonHTMLAttributes<HTMLButtonElement>['onClick'];
+  onClick?: () => void;
 }
 const Button: React.FC<ButtonProps> = ({
   enabled = true,
@@ -145,11 +146,14 @@ const Button: React.FC<ButtonProps> = ({
 
   children,
 
-  onClick,
+  onClick = noop,
 }) => (
   <button
     disabled={!enabled}
-    onClick={onClick}
+    onClick={(event) => {
+      onClick();
+      event.preventDefault();
+    }}
     css={[
       styles,
       small ? smallStyles : largeStyles,

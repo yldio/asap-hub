@@ -5,30 +5,18 @@ import userEvent from '@testing-library/user-event';
 import InviteUserForm from '../InviteUserForm';
 
 it('renders a user invitation form', () => {
-  const { getByRole, getAllByLabelText } = render(<InviteUserForm />);
-  expect(getAllByLabelText(/.*/)).toMatchInlineSnapshot(`
+  const { getAllByLabelText, getByRole } = render(<InviteUserForm />);
+  expect(
+    getAllByLabelText(/.*/).flatMap((input) =>
+      [...((input as HTMLInputElement).labels ?? [])].map(
+        ({ textContent }) => textContent,
+      ),
+    ),
+  ).toMatchInlineSnapshot(`
     Array [
-      <input
-        name="displayName"
-        placeholder="John Doe"
-        required=""
-        type="text"
-        value=""
-      />,
-      <input
-        name="email"
-        placeholder="john.doe@example.com"
-        required=""
-        type="email"
-        value=""
-      />,
-      <input
-        name="adminPassword"
-        placeholder="_%6.o*fGR75)':7,"
-        required=""
-        type="password"
-        value=""
-      />,
+      "Invitee Full Name",
+      "Invitee E-Mail Address",
+      "Administrator Password",
     ]
   `);
   expect(getByRole('button')).toHaveTextContent(/invite/i);

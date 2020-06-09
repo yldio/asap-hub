@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
-import { Paragraph, Button } from '../atoms';
-import { useInput } from '../hooks';
+import { Button } from '../atoms';
 import { noop } from '../utils';
+import { LabeledTextField } from '../molecules';
 
 interface InviteUserFormProps {
   onSubmit?: (
@@ -11,9 +11,9 @@ interface InviteUserFormProps {
   ) => void;
 }
 const InviteUserForm: React.FC<InviteUserFormProps> = ({ onSubmit = noop }) => {
-  const [displayNameInputProps, displayName] = useInput<string>('');
-  const [emailInputProps, email] = useInput<string>('');
-  const [adminPasswordInputProps, adminPassword] = useInput<string>('');
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
 
   const form = useRef<HTMLFormElement>(null);
 
@@ -29,51 +29,31 @@ const InviteUserForm: React.FC<InviteUserFormProps> = ({ onSubmit = noop }) => {
       css={{
         width: 'max-content',
         maxWidth: '100%',
-
-        '& label': {
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          whiteSpace: 'pre',
-        },
       }}
     >
-      <Paragraph>
-        <label>
-          Invitee Full Name:{' '}
-          <input
-            {...displayNameInputProps}
-            type="text"
-            name="displayName"
-            placeholder="John Doe"
-            required
-          />
-        </label>
-      </Paragraph>
-      <Paragraph>
-        <label>
-          Invitee E-Mail Address:{' '}
-          <input
-            {...emailInputProps}
-            type="email"
-            name="email"
-            placeholder="john.doe@example.com"
-            required
-          />
-        </label>
-      </Paragraph>
-      <Paragraph>
-        <label>
-          Administrator Password:{' '}
-          <input
-            {...adminPasswordInputProps}
-            type="password"
-            name="adminPassword"
-            placeholder="_%6.o*fGR75)':7,"
-            required
-          />
-        </label>
-      </Paragraph>
+      <LabeledTextField
+        title="Invitee Full Name"
+        placeholder="John Doe"
+        required
+        value={displayName}
+        onChange={setDisplayName}
+      />
+      <LabeledTextField
+        type="email"
+        title="Invitee E-Mail Address"
+        placeholder="john.doe@example.com"
+        required
+        value={email}
+        onChange={setEmail}
+      />
+      <LabeledTextField
+        type="password"
+        title="Administrator Password"
+        placeholder="_%6.o*fGR75)':7,"
+        required
+        value={adminPassword}
+        onChange={setAdminPassword}
+      />
       <Button onClick={handleSubmit} primary>
         Invite
       </Button>

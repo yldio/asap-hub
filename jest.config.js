@@ -5,6 +5,9 @@ const baseConfig = require('./jest-base.config.js');
 const makeDefaultConfig = (parentDir, packageName) => {
   const rootDir = resolve(parentDir, packageName);
   const displayName = `test-${packageName}`;
+
+  const transform = { '^.+\\.[jt]sx?$': 'babel-jest' };
+
   let testEnvironment = 'node';
   const setupFilesAfterEnv = [...(baseConfig.setupFilesAfterEnv || [])];
 
@@ -16,6 +19,9 @@ const makeDefaultConfig = (parentDir, packageName) => {
     packageTsLibs &&
     packageTsLibs.some((lib) => lib.toLowerCase() === 'dom')
   ) {
+    transform['^.+\\.(gif|jpg|png)$'] = require.resolve(
+      './jest/filename-transform.js',
+    );
     testEnvironment = 'jsdom';
     setupFilesAfterEnv.push(
       require.resolve('./jest/dom-extensions-setup-after-env.js'),
@@ -26,6 +32,8 @@ const makeDefaultConfig = (parentDir, packageName) => {
 
     rootDir,
     displayName,
+
+    transform,
 
     testEnvironment,
     setupFilesAfterEnv,

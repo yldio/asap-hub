@@ -37,7 +37,7 @@
     "@types/hapi__boom": "^9.0.1",
     "@types/hapi__bourne": "workspace:@types/hapi__bourne",
     "@types/hapi__joi": "^17.1.0",
-    "@types/jest": "^25.2.2",
+    "@types/jest": "^26.0.0",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/migrate-mongo": "^7.0.1",
     "@types/mongodb": "^3.5.18",

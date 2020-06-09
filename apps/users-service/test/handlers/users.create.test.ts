@@ -109,7 +109,7 @@ describe('POST /users', () => {
     expect(result.statusCode).toStrictEqual(403);
   });
 
-  test('returns 403 when email is a duplicate', async () => {
+  test('returns 409 when email is a duplicate', async () => {
     const payload = {
       displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
@@ -134,7 +134,7 @@ describe('POST /users', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(403);
+    expect(res.statusCode).toStrictEqual(409);
   });
 
   test('returns 201 and sends email with code', async () => {

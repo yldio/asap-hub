@@ -14,7 +14,7 @@ const centerStyles = css({
   textAlign: 'center',
 });
 
-export interface AdminInviteUserPageProps {
+interface AdminInviteUserPageProps {
   state: 'initial' | 'loading' | 'success' | Error;
   onInviteUser?: ComponentProps<typeof InviteUserForm>['onSubmit'];
 }

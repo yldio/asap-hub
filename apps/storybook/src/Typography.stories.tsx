@@ -14,7 +14,7 @@ import { ThemeDecorator } from './theme';
 import { accentColor } from './text';
 
 export default {
-  title: 'Typography',
+  title: 'Atoms / Typography',
   decorators: [ThemeDecorator],
 };
 

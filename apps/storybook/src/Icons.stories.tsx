@@ -4,7 +4,7 @@ import {
   orcidIcon,
 } from '@asap-hub/react-components';
 
-export default { title: 'Icons' };
+export default { title: 'Atoms / Icons' };
 
 export const Google = () => googleIcon;
 export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;

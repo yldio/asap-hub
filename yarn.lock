@@ -192,7 +192,7 @@ __metadata:
     "@types/jsonwebtoken": ^8.5.0
     "@types/migrate-mongo": ^7.0.1
     "@types/mongodb": ^3.5.18
-    "@types/shortid": ^0.0.29
+    "@types/uuid": ^8.0.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     aws-sdk: ^2.686.0
@@ -203,7 +203,7 @@ __metadata:
     migrate-mongo: ^7.2.1
     mongodb: ^3.5.7
     nock: ^12.0.3
-    shortid: ^2.2.15
+    uuid: ^8.1.0
   languageName: unknown
   linkType: soft
 
@@ -4768,13 +4768,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/shortid@npm:^0.0.29":
-  version: 0.0.29
-  resolution: "@types/shortid@npm:0.0.29"
-  checksum: 3/4c96e2e820bc431502d3ce45628a1c0354cdd02fa588b31efa461faa7762988effc4b6a769c8bcbebdb5727e616ac7fc7216b8fe6e980aac0d4e8328652a6d6e
-  languageName: node
-  linkType: hard
-
 "@types/shot@npm:*":
   version: 4.0.0
   resolution: "@types/shot@npm:4.0.0"
@@ -4850,6 +4843,13 @@ __metadata:
   dependencies:
     source-map: ^0.6.1
   checksum: 3/dbcb77cd980b9bb4b42a6f5d3e3cf9fa2f53292e49e042a1ab9eef68ce01859facbcf6cdbb83a672cf876026e18dce8b75ec6b9d56d5ea31d1466f8758988d6f
+  languageName: node
+  linkType: hard
+
+"@types/uuid@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@types/uuid@npm:8.0.0"
+  checksum: 3/a1d953039620278f03198b2ad7574ba884d73338756fe1ce2628f44518140f1e1fc3ee676251713e212b9a5d2cbd5bd081e67afa439c8988619540076b627a86
   languageName: node
   linkType: hard
 
@@ -22462,7 +22462,7 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
-"shortid@npm:^2.2.14, shortid@npm:^2.2.15":
+"shortid@npm:^2.2.14":
   version: 2.2.15
   resolution: "shortid@npm:2.2.15"
   dependencies:
@@ -24671,6 +24671,15 @@ resolve@^1.17.0:
   bin:
     uuid: dist/bin/uuid
   checksum: 3/22da594669649efaa4b2ba80a6c612cf267a5f72c1159fed83d4450c12e4dc16a214dae5f757eb455971539b099af3b5ff5e1c06d9a4f20318db7a3e3bf46b18
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "uuid@npm:8.1.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 3/e212e1e9dcf38baf070b6a892653e3504cf6ec2baf9d830d844ba4e4411af28b0937e94c631fb093fa1d72dd85166856f0fb5e4bd79bbcfeca021b80fa18e9a8
   languageName: node
   linkType: hard
 

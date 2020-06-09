@@ -1,4 +1,4 @@
-import { generate } from 'shortid';
+import { v4 as uuidV4 } from 'uuid';
 import Base from './base';
 import { User, Connection } from '../entities/user';
 
@@ -9,7 +9,7 @@ export interface CreateUser {
 
 export default class Users extends Base<User> {
   async create(user: CreateUser): Promise<User> {
-    const code = generate();
+    const code = uuidV4();
     return super.insertOne({
       ...user,
       connections: [code],

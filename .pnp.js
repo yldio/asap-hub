@@ -1360,10 +1360,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.0"
       ],
       [
-        "@types/shortid",
-        "npm:0.0.29"
-      ],
-      [
         "@types/shot",
         "npm:4.0.0"
       ],
@@ -1398,6 +1394,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/uglify-js",
         "npm:3.9.2"
+      ],
+      [
+        "@types/uuid",
+        "npm:8.0.0"
       ],
       [
         "@types/webpack",
@@ -8044,7 +8044,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jsonwebtoken", "npm:8.5.0"],
             ["@types/migrate-mongo", "npm:7.0.1"],
             ["@types/mongodb", "npm:3.5.20"],
-            ["@types/shortid", "npm:0.0.29"],
+            ["@types/uuid", "npm:8.0.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["aws-sdk", "npm:2.686.0"],
@@ -8055,7 +8055,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["migrate-mongo", "npm:7.2.1"],
             ["mongodb", "npm:3.5.7"],
             ["nock", "npm:12.0.3"],
-            ["shortid", "npm:2.2.15"]
+            ["uuid", "npm:8.1.0"]
           ],
           "linkType": "SOFT",
         }]
@@ -13366,15 +13366,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@types/shortid", [
-        ["npm:0.0.29", {
-          "packageLocation": "./.yarn/cache/@types-shortid-npm-0.0.29-e4223b4e78-3.zip/node_modules/@types/shortid/",
-          "packageDependencies": [
-            ["@types/shortid", "npm:0.0.29"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["@types/shot", [
         ["npm:4.0.0", {
           "packageLocation": "./.yarn/cache/@types-shot-npm-4.0.0-28008932eb-3.zip/node_modules/@types/shot/",
@@ -13461,6 +13452,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@types/uglify-js", "npm:3.9.2"],
             ["source-map", "npm:0.6.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/uuid", [
+        ["npm:8.0.0", {
+          "packageLocation": "./.yarn/cache/@types-uuid-npm-8.0.0-904217d00f-3.zip/node_modules/@types/uuid/",
+          "packageDependencies": [
+            ["@types/uuid", "npm:8.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -35110,6 +35110,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/uuid-npm-8.0.0-591e3a2e23-3.zip/node_modules/uuid/",
           "packageDependencies": [
             ["uuid", "npm:8.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:8.1.0", {
+          "packageLocation": "./.yarn/cache/uuid-npm-8.1.0-e66b0feced-3.zip/node_modules/uuid/",
+          "packageDependencies": [
+            ["uuid", "npm:8.1.0"]
           ],
           "linkType": "HARD",
         }]

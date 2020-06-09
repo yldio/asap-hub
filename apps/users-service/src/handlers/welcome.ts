@@ -32,7 +32,7 @@ const validateUser = async (headers: object): Promise<auth0.UserInfo> => {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-    }).json(),
+    }).json<auth0.UserInfo>(),
   );
 
   if (err) {

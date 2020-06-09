@@ -53,6 +53,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@asap-hub/react-context",
         "reference": "workspace:packages/react-context"
+      },
+      {
+        "name": "@types/apr-intercept",
+        "reference": "workspace:@types/apr-intercept"
+      },
+      {
+        "name": "@types/hapi__bourne",
+        "reference": "workspace:@types/hapi__bourne"
       }
     ],
     "enableTopLevelFallback": true,
@@ -66,6 +74,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/react-context", ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-context", "workspace:packages/react-context"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
       ["@asap-hub/users-service", ["workspace:apps/users-service"]],
+      ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
+      ["@types/hapi__bourne", ["workspace:@types/hapi__bourne"]],
       ["asap-hub", ["workspace:."]]
     ],
     "fallbackPool": [
@@ -1082,12 +1092,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.3.1"
       ],
       [
+        "@types/apr-intercept",
+        "workspace:@types/apr-intercept"
+      ],
+      [
         "@types/asn1js",
         "npm:0.0.1"
       ],
       [
         "@types/aws-lambda",
-        "npm:8.10.51"
+        "npm:8.10.53"
       ],
       [
         "@types/babel__core",
@@ -1182,8 +1196,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:9.0.1"
       ],
       [
+        "@types/hapi__bourne",
+        "workspace:@types/hapi__bourne"
+      ],
+      [
         "@types/hapi__joi",
-        "npm:17.1.0"
+        "npm:17.1.2"
       ],
       [
         "@types/history",
@@ -1275,7 +1293,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/mongodb",
-        "npm:3.5.18"
+        "npm:3.5.20"
       ],
       [
         "@types/nock",
@@ -8078,16 +8096,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
-            ["@types/aws-lambda", "npm:8.10.51"],
+            ["@types/apr-intercept", "workspace:@types/apr-intercept"],
+            ["@types/aws-lambda", "npm:8.10.53"],
             ["@types/chance", "npm:1.1.0"],
             ["@types/debug", "npm:4.1.5"],
             ["@types/hapi", "npm:18.0.3"],
             ["@types/hapi__boom", "npm:9.0.1"],
-            ["@types/hapi__joi", "npm:17.1.0"],
+            ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
+            ["@types/hapi__joi", "npm:17.1.2"],
             ["@types/jest", "npm:25.2.2"],
             ["@types/jsonwebtoken", "npm:8.5.0"],
             ["@types/migrate-mongo", "npm:7.0.1"],
-            ["@types/mongodb", "npm:3.5.18"],
+            ["@types/mongodb", "npm:3.5.20"],
             ["@types/shortid", "npm:0.0.29"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -12710,6 +12730,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/apr-intercept", [
+        ["workspace:@types/apr-intercept", {
+          "packageLocation": "./@types/apr-intercept/",
+          "packageDependencies": [
+            ["@types/apr-intercept", "workspace:@types/apr-intercept"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@types/asn1js", [
         ["npm:0.0.1", {
           "packageLocation": "./.yarn/cache/@types-asn1js-npm-0.0.1-884021f10a-3.zip/node_modules/@types/asn1js/",
@@ -12721,10 +12750,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/aws-lambda", [
-        ["npm:8.10.51", {
-          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.51-54d0e167be-3.zip/node_modules/@types/aws-lambda/",
+        ["npm:8.10.53", {
+          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.53-c41bdf7f9a-3.zip/node_modules/@types/aws-lambda/",
           "packageDependencies": [
-            ["@types/aws-lambda", "npm:8.10.51"]
+            ["@types/aws-lambda", "npm:8.10.53"]
           ],
           "linkType": "HARD",
         }]
@@ -12966,11 +12995,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@types/hapi__joi", [
-        ["npm:17.1.0", {
-          "packageLocation": "./.yarn/cache/@types-hapi__joi-npm-17.1.0-6a9a096561-3.zip/node_modules/@types/hapi__joi/",
+      ["@types/hapi__bourne", [
+        ["workspace:@types/hapi__bourne", {
+          "packageLocation": "./@types/hapi__bourne/",
           "packageDependencies": [
-            ["@types/hapi__joi", "npm:17.1.0"]
+            ["@types/hapi__bourne", "workspace:@types/hapi__bourne"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@types/hapi__joi", [
+        ["npm:17.1.2", {
+          "packageLocation": "./.yarn/cache/@types-hapi__joi-npm-17.1.2-ff856771e3-3.zip/node_modules/@types/hapi__joi/",
+          "packageDependencies": [
+            ["@types/hapi__joi", "npm:17.1.2"]
           ],
           "linkType": "HARD",
         }]
@@ -13213,6 +13251,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-mongodb-npm-3.5.18-54a0e809ea-3.zip/node_modules/@types/mongodb/",
           "packageDependencies": [
             ["@types/mongodb", "npm:3.5.18"],
+            ["@types/bson", "npm:4.0.2"],
+            ["@types/node", "npm:13.11.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.5.20", {
+          "packageLocation": "./.yarn/cache/@types-mongodb-npm-3.5.20-b5c72893e9-3.zip/node_modules/@types/mongodb/",
+          "packageDependencies": [
+            ["@types/mongodb", "npm:3.5.20"],
             ["@types/bson", "npm:4.0.2"],
             ["@types/node", "npm:13.11.1"]
           ],

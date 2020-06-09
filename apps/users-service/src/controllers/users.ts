@@ -1,6 +1,8 @@
 import Boom from '@hapi/boom';
+import Debug from 'debug';
 import path from 'path';
 import url from 'url';
+import Intercept from 'apr-intercept';
 import { Db } from '../data';
 import * as auth0 from '../entities/auth0';
 import { CreateUser } from '../data/users';
@@ -23,6 +25,7 @@ function transform(user: User): ReplyUser {
   } as ReplyUser;
 }
 
+const debug = Debug('users.create');
 export default class Users {
   db: Db;
 
@@ -38,15 +41,21 @@ export default class Users {
     const [code] = createdUser.connections;
     const link = new url.URL(path.join(`/welcome/${code}`), origin);
 
-    // TODO: handle issues when sending email
-    sendEmail({
-      to: [user.email],
-      template: 'welcome',
-      values: {
-        displayName: user.displayName,
-        link: link.toString(),
-      },
-    });
+    const [err] = await Intercept(
+      sendEmail({
+        to: [user.email],
+        template: 'welcome',
+        values: {
+          displayName: user.displayName,
+          link: link.toString(),
+        },
+      }),
+    ).catch();
+
+    // istanbul ignore if
+    if (err) {
+      debug(err);
+    }
 
     return transform(createdUser);
   }

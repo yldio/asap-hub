@@ -52,5 +52,6 @@ export const sendEmail = async ({
     },
     Source: 'no-reply@asap.yld.io',
   };
+
   return ses.sendEmail(params).promise();
 };

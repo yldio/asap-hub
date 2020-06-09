@@ -29,7 +29,7 @@ const Admin = () => {
     })
       .then((resp) => {
         if (resp.ok) setInvitationState('success');
-        else setInvitationState(new Error(resp.statusText));
+        else setInvitationState(new Error(`${resp.status} ${resp.statusText}`));
       })
       .catch((error) => {
         if (error.name === 'AbortError') return;

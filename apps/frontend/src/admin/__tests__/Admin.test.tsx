@@ -113,7 +113,9 @@ describe('when submitting the form', () => {
 
     it('shows a failure message', async () => {
       const { findByText } = result;
-      await expect(findByText(/failed/i)).resolves.toBeInTheDocument();
+      expect((await findByText(/failed/i)).textContent).toMatchInlineSnapshot(
+        `"Failed to invite user. Error: 401 "`,
+      );
     });
   });
 
@@ -136,7 +138,9 @@ describe('when submitting the form', () => {
 
     it('shows an error message', async () => {
       const { findByText } = result;
-      await expect(findByText(/failed/i)).resolves.toBeInTheDocument();
+      expect((await findByText(/failed/i)).textContent).toMatchInlineSnapshot(
+        `"Failed to invite user. FetchError: request to http://api/users failed, reason: socket timeout"`,
+      );
     });
   });
 });

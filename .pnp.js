@@ -5209,7 +5209,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "node-fetch",
-        "npm:2.6.0"
+        "npm:3.0.0-beta.6-exportfix"
       ],
       [
         "node-forge",
@@ -7736,6 +7736,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.9.0"],
             ["jest-watch-select-projects", "npm:2.0.0"],
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.0"],
+            ["node-fetch", "npm:3.0.0-beta.6-exportfix"],
             ["param-case", "npm:3.0.3"],
             ["prettier", "npm:2.0.5"],
             ["rimraf", "npm:3.0.2"],
@@ -7825,7 +7826,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
             ["nock", "npm:12.0.3"],
-            ["node-fetch", "npm:3.0.0-beta.6-exportfix"],
             ["react", "npm:16.13.1"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:16.13.1"],
@@ -14837,6 +14837,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.9.0"],
             ["jest-watch-select-projects", "npm:2.0.0"],
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.0"],
+            ["node-fetch", "npm:3.0.0-beta.6-exportfix"],
             ["param-case", "npm:3.0.3"],
             ["prettier", "npm:2.0.5"],
             ["rimraf", "npm:3.0.2"],

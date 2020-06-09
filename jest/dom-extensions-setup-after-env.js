@@ -4,8 +4,13 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom/extend-expect';
 
+// emotion CSS matchers
 import { matchers } from 'jest-emotion';
 expect.extend(matchers);
+
+// fetch polyfill
+import fetch from 'node-fetch';
+window.fetch = fetch;
 
 // form validation polyfill
 import hyperform from 'hyperform';

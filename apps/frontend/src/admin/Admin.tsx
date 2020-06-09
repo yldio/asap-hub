@@ -1,5 +1,4 @@
 import React, { useState, ComponentProps, useRef, useEffect } from 'react';
-import fetch, { AbortError } from 'node-fetch';
 
 import { AdminInviteUserPage } from '@asap-hub/react-components';
 
@@ -33,7 +32,7 @@ const Admin = () => {
         else setInvitationState(new Error(resp.statusText));
       })
       .catch((error) => {
-        if (error instanceof AbortError) return;
+        if (error.name === 'AbortError') return;
         setInvitationState(error);
       });
   };

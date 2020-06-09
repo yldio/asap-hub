@@ -42,7 +42,6 @@
     "@types/migrate-mongo": "^7.0.1",
     "@types/mongodb": "^3.5.18",
     "@types/shortid": "^0.0.29",
-    "migrate-mongo": "^7.2.1",
-    "mongodb-memory-server": "^6.6.1"
+    "migrate-mongo": "^7.2.1"
   }
 }

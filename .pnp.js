@@ -1144,16 +1144,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.1"
       ],
       [
-        "@types/cross-spawn",
-        "npm:6.0.2"
-      ],
-      [
         "@types/debug",
         "npm:4.1.5"
-      ],
-      [
-        "@types/dedent",
-        "npm:0.7.0"
       ],
       [
         "@types/emscripten",
@@ -1166,18 +1158,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/events",
         "npm:3.0.0"
-      ],
-      [
-        "@types/find-cache-dir",
-        "npm:3.2.0"
-      ],
-      [
-        "@types/find-package-json",
-        "npm:1.1.1"
-      ],
-      [
-        "@types/get-port",
-        "npm:4.2.0"
       ],
       [
         "@types/glob",
@@ -1256,20 +1236,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.1.1"
       ],
       [
-        "@types/lockfile",
-        "npm:1.0.1"
-      ],
-      [
         "@types/lodash",
         "npm:4.14.149"
       ],
       [
         "@types/markdown-to-jsx",
         "npm:6.11.0"
-      ],
-      [
-        "@types/md5-file",
-        "npm:4.0.2"
       ],
       [
         "@types/migrate-mongo",
@@ -1286,10 +1258,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/minimatch",
         "npm:3.0.3"
-      ],
-      [
-        "@types/mkdirp",
-        "npm:1.0.0"
       ],
       [
         "@types/mongodb",
@@ -1428,16 +1396,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.2.0"
       ],
       [
-        "@types/tmp",
-        "npm:0.1.0"
-      ],
-      [
         "@types/uglify-js",
         "npm:3.9.2"
-      ],
-      [
-        "@types/uuid",
-        "npm:7.0.0"
       ],
       [
         "@types/webpack",
@@ -3584,10 +3544,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.3.1"
       ],
       [
-        "find-package-json",
-        "npm:1.2.0"
-      ],
-      [
         "find-process",
         "npm:1.4.3"
       ],
@@ -3750,10 +3706,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "get-own-enumerable-property-symbols",
         "npm:3.0.2"
-      ],
-      [
-        "get-port",
-        "npm:5.1.1"
       ],
       [
         "get-proxy",
@@ -4832,10 +4784,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.0.0"
       ],
       [
-        "lockfile",
-        "npm:1.0.4"
-      ],
-      [
         "lodash",
         "npm:4.17.15"
       ],
@@ -5002,10 +4950,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "material-colors",
         "npm:1.2.6"
-      ],
-      [
-        "md5-file",
-        "npm:4.0.0"
       ],
       [
         "md5.js",
@@ -5182,14 +5126,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "mongodb",
         "npm:3.5.7"
-      ],
-      [
-        "mongodb-memory-server",
-        "npm:6.6.1"
-      ],
-      [
-        "mongodb-memory-server-core",
-        "npm:6.6.1"
       ],
       [
         "move-concurrently",
@@ -7101,7 +7037,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "tar-stream",
-        "npm:2.1.2"
+        "npm:1.6.2"
       ],
       [
         "telejson",
@@ -7189,7 +7125,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "tmp",
-        "npm:0.1.0"
+        "npm:0.0.33"
       ],
       [
         "tmpl",
@@ -8118,7 +8054,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:8.5.1"],
             ["migrate-mongo", "npm:7.2.1"],
             ["mongodb", "npm:3.5.7"],
-            ["mongodb-memory-server", "npm:6.6.1"],
             ["nock", "npm:12.0.3"],
             ["shortid", "npm:2.2.15"]
           ],
@@ -12862,30 +12797,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@types/cross-spawn", [
-        ["npm:6.0.2", {
-          "packageLocation": "./.yarn/cache/@types-cross-spawn-npm-6.0.2-f5d63b3325-3.zip/node_modules/@types/cross-spawn/",
-          "packageDependencies": [
-            ["@types/cross-spawn", "npm:6.0.2"],
-            ["@types/node", "npm:13.11.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["@types/debug", [
         ["npm:4.1.5", {
           "packageLocation": "./.yarn/cache/@types-debug-npm-4.1.5-3464d6c971-3.zip/node_modules/@types/debug/",
           "packageDependencies": [
             ["@types/debug", "npm:4.1.5"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/dedent", [
-        ["npm:0.7.0", {
-          "packageLocation": "./.yarn/cache/@types-dedent-npm-0.7.0-6255895dfd-3.zip/node_modules/@types/dedent/",
-          "packageDependencies": [
-            ["@types/dedent", "npm:0.7.0"]
           ],
           "linkType": "HARD",
         }]
@@ -12913,35 +12829,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-events-npm-3.0.0-2eee0ea973-3.zip/node_modules/@types/events/",
           "packageDependencies": [
             ["@types/events", "npm:3.0.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/find-cache-dir", [
-        ["npm:3.2.0", {
-          "packageLocation": "./.yarn/cache/@types-find-cache-dir-npm-3.2.0-7225b24209-3.zip/node_modules/@types/find-cache-dir/",
-          "packageDependencies": [
-            ["@types/find-cache-dir", "npm:3.2.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/find-package-json", [
-        ["npm:1.1.1", {
-          "packageLocation": "./.yarn/cache/@types-find-package-json-npm-1.1.1-225fa8d600-3.zip/node_modules/@types/find-package-json/",
-          "packageDependencies": [
-            ["@types/find-package-json", "npm:1.1.1"],
-            ["@types/node", "npm:13.11.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/get-port", [
-        ["npm:4.2.0", {
-          "packageLocation": "./.yarn/cache/@types-get-port-npm-4.2.0-c594c92c19-3.zip/node_modules/@types/get-port/",
-          "packageDependencies": [
-            ["@types/get-port", "npm:4.2.0"],
-            ["get-port", "npm:5.1.1"]
           ],
           "linkType": "HARD",
         }]
@@ -13161,15 +13048,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@types/lockfile", [
-        ["npm:1.0.1", {
-          "packageLocation": "./.yarn/cache/@types-lockfile-npm-1.0.1-4e4ad982dc-3.zip/node_modules/@types/lockfile/",
-          "packageDependencies": [
-            ["@types/lockfile", "npm:1.0.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["@types/lodash", [
         ["npm:4.14.149", {
           "packageLocation": "./.yarn/cache/@types-lodash-npm-4.14.149-d92d0adff6-3.zip/node_modules/@types/lodash/",
@@ -13185,15 +13063,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@types/markdown-to-jsx", "npm:6.11.0"],
             ["@types/react", "npm:16.9.34"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/md5-file", [
-        ["npm:4.0.2", {
-          "packageLocation": "./.yarn/cache/@types-md5-file-npm-4.0.2-6749013b85-3.zip/node_modules/@types/md5-file/",
-          "packageDependencies": [
-            ["@types/md5-file", "npm:4.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -13232,16 +13101,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-minimatch-npm-3.0.3-c8b0625f84-3.zip/node_modules/@types/minimatch/",
           "packageDependencies": [
             ["@types/minimatch", "npm:3.0.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/mkdirp", [
-        ["npm:1.0.0", {
-          "packageLocation": "./.yarn/cache/@types-mkdirp-npm-1.0.0-cca8bf6956-3.zip/node_modules/@types/mkdirp/",
-          "packageDependencies": [
-            ["@types/mkdirp", "npm:1.0.0"],
-            ["@types/node", "npm:13.11.1"]
           ],
           "linkType": "HARD",
         }]
@@ -13596,30 +13455,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@types/tmp", [
-        ["npm:0.1.0", {
-          "packageLocation": "./.yarn/cache/@types-tmp-npm-0.1.0-2b1dac0b33-3.zip/node_modules/@types/tmp/",
-          "packageDependencies": [
-            ["@types/tmp", "npm:0.1.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["@types/uglify-js", [
         ["npm:3.9.2", {
           "packageLocation": "./.yarn/cache/@types-uglify-js-npm-3.9.2-512b22418a-3.zip/node_modules/@types/uglify-js/",
           "packageDependencies": [
             ["@types/uglify-js", "npm:3.9.2"],
             ["source-map", "npm:0.6.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/uuid", [
-        ["npm:7.0.0", {
-          "packageLocation": "./.yarn/cache/@types-uuid-npm-7.0.0-516a7cf051-3.zip/node_modules/@types/uuid/",
-          "packageDependencies": [
-            ["@types/uuid", "npm:7.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -21413,15 +21254,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["find-package-json", [
-        ["npm:1.2.0", {
-          "packageLocation": "./.yarn/cache/find-package-json-npm-1.2.0-0adfc8b282-3.zip/node_modules/find-package-json/",
-          "packageDependencies": [
-            ["find-package-json", "npm:1.2.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["find-process", [
         ["npm:1.4.3", {
           "packageLocation": "./.yarn/cache/find-process-npm-1.4.3-72e7e22f8c-3.zip/node_modules/find-process/",
@@ -21978,15 +21810,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/get-own-enumerable-property-symbols-npm-3.0.2-f143f9e8d3-3.zip/node_modules/get-own-enumerable-property-symbols/",
           "packageDependencies": [
             ["get-own-enumerable-property-symbols", "npm:3.0.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["get-port", [
-        ["npm:5.1.1", {
-          "packageLocation": "./.yarn/cache/get-port-npm-5.1.1-2f6074007a-3.zip/node_modules/get-port/",
-          "packageDependencies": [
-            ["get-port", "npm:5.1.1"]
           ],
           "linkType": "HARD",
         }]
@@ -26345,16 +26168,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["lockfile", [
-        ["npm:1.0.4", {
-          "packageLocation": "./.yarn/cache/lockfile-npm-1.0.4-00301b5723-3.zip/node_modules/lockfile/",
-          "packageDependencies": [
-            ["lockfile", "npm:1.0.4"],
-            ["signal-exit", "npm:3.0.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["lodash", [
         ["npm:4.17.15", {
           "packageLocation": "./.yarn/cache/lodash-npm-4.17.15-566d9324f7-3.zip/node_modules/lodash/",
@@ -26803,15 +26616,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/material-colors-npm-1.2.6-38f7e3d1c1-3.zip/node_modules/material-colors/",
           "packageDependencies": [
             ["material-colors", "npm:1.2.6"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["md5-file", [
-        ["npm:4.0.0", {
-          "packageLocation": "./.yarn/cache/md5-file-npm-4.0.0-189d6c6fc5-3.zip/node_modules/md5-file/",
-          "packageDependencies": [
-            ["md5-file", "npm:4.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -27436,52 +27240,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["require_optional", "npm:1.0.1"],
             ["safe-buffer", "npm:5.2.0"],
             ["saslprep", "npm:1.0.3"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["mongodb-memory-server", [
-        ["npm:6.6.1", {
-          "packageLocation": "./.yarn/unplugged/mongodb-memory-server-npm-6.6.1-65abee7c1b/node_modules/mongodb-memory-server/",
-          "packageDependencies": [
-            ["mongodb-memory-server", "npm:6.6.1"],
-            ["mongodb-memory-server-core", "npm:6.6.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["mongodb-memory-server-core", [
-        ["npm:6.6.1", {
-          "packageLocation": "./.yarn/cache/mongodb-memory-server-core-npm-6.6.1-f0803af9b2-3.zip/node_modules/mongodb-memory-server-core/",
-          "packageDependencies": [
-            ["mongodb-memory-server-core", "npm:6.6.1"],
-            ["@types/cross-spawn", "npm:6.0.2"],
-            ["@types/debug", "npm:4.1.5"],
-            ["@types/dedent", "npm:0.7.0"],
-            ["@types/find-cache-dir", "npm:3.2.0"],
-            ["@types/find-package-json", "npm:1.1.1"],
-            ["@types/get-port", "npm:4.2.0"],
-            ["@types/lockfile", "npm:1.0.1"],
-            ["@types/md5-file", "npm:4.0.2"],
-            ["@types/mkdirp", "npm:1.0.0"],
-            ["@types/tmp", "npm:0.1.0"],
-            ["@types/uuid", "npm:7.0.0"],
-            ["camelcase", "npm:5.3.1"],
-            ["cross-spawn", "npm:7.0.2"],
-            ["debug", "virtual:22f562d986a179c134348e2f9a34c16e7aac83723b52994f6cd838d1e1bdc151316b5a5b757f52d4a71ffe2a5b2aea9b0dc0bf8f24d573669717b6ff6df418b2#npm:4.1.1"],
-            ["dedent", "npm:0.7.0"],
-            ["find-cache-dir", "npm:3.3.1"],
-            ["find-package-json", "npm:1.2.0"],
-            ["get-port", "npm:5.1.1"],
-            ["https-proxy-agent", "npm:5.0.0"],
-            ["lockfile", "npm:1.0.4"],
-            ["md5-file", "npm:4.0.0"],
-            ["mkdirp", "npm:1.0.4"],
-            ["mongodb", "npm:3.5.7"],
-            ["tar-stream", "npm:2.1.2"],
-            ["tmp", "npm:0.1.0"],
-            ["uuid", "npm:7.0.3"],
-            ["yauzl", "npm:2.10.0"]
           ],
           "linkType": "HARD",
         }]
@@ -34455,14 +34213,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["tmp", "npm:0.0.33"],
             ["os-tmpdir", "npm:1.0.2"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:0.1.0", {
-          "packageLocation": "./.yarn/cache/tmp-npm-0.1.0-fa18ef19c4-3.zip/node_modules/tmp/",
-          "packageDependencies": [
-            ["tmp", "npm:0.1.0"],
-            ["rimraf", "npm:2.7.1"]
           ],
           "linkType": "HARD",
         }]

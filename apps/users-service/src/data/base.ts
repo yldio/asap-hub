@@ -57,7 +57,7 @@ export default class Base<T> {
       // istanbul ignore else
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((err as any).code === 11000) {
-        throw Boom.forbidden('Forbidden', {
+        throw Boom.conflict('Conflict', {
           error: err,
         });
       }

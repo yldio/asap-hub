@@ -4,8 +4,6 @@ import React from 'react';
 
 const googleSigninLightNormal = (
   <svg
-    width="46px"
-    height="46px"
     viewBox="0 0 46 46"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +79,7 @@ const googleSigninLightNormal = (
           filter="url(#filter-1)"
         >
           <g id="button-bg">
-            <use fill="#FFFFFF" fill-rule="evenodd" xlinkHref="#path-2"></use>
+            <use fill="#FFFFFF" fillRule="evenodd" xlinkHref="#path-2"></use>
             <use fill="none" xlinkHref="#path-2"></use>
             <use fill="none" xlinkHref="#path-2"></use>
             <use fill="none" xlinkHref="#path-2"></use>

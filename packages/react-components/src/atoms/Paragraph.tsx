@@ -3,7 +3,7 @@ import css from '@emotion/css';
 
 import * as colors from '../colors';
 import { perRem } from '../pixels';
-import { spacing, AccentColorName } from '../text';
+import { commonStyles, AccentColorName } from '../text';
 
 const secondaryStyles = css({
   fontSize: `${17 / perRem}em`,
@@ -26,7 +26,7 @@ const Paragraph: React.FC<ParagraphProps> = ({
 }) => (
   <p
     css={[
-      spacing,
+      commonStyles,
       primary ? primaryStyles : secondaryStyles,
       accent ? { color: colors[accent].rgb } : null,
     ]}

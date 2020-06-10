@@ -2,7 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { largeDesktopScreen, mobileScreen, vminLinearCalc } from '../pixels';
-import { TextChildren, spacing } from '../text';
+import { TextChildren, commonStyles } from '../text';
 
 const styles = css({
   fontWeight: 'bold',
@@ -14,7 +14,7 @@ interface Headline4Props {
   children: TextChildren;
 }
 const Headline4: React.FC<Headline4Props> = ({ children }) => (
-  <h4 css={[spacing, styles]}>{children}</h4>
+  <h4 css={[commonStyles, styles]}>{children}</h4>
 );
 
 export default Headline4;

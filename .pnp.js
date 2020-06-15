@@ -4564,6 +4564,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.0"
       ],
       [
+        "jest-watch-suspend",
+        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"
+      ],
+      [
         "jest-watch-typeahead",
         "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.0"
       ],
@@ -7316,6 +7320,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.1.2"
       ],
       [
+        "unpartial",
+        "npm:0.6.3"
+      ],
+      [
         "unpipe",
         "npm:1.0.0"
       ],
@@ -7735,6 +7743,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-emotion", "npm:10.0.32"],
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.9.0"],
             ["jest-watch-select-projects", "npm:2.0.0"],
+            ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.0"],
             ["node-fetch", "npm:3.0.0-beta.6-exportfix"],
             ["param-case", "npm:3.0.3"],
@@ -14836,6 +14845,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-emotion", "npm:10.0.32"],
             ["jest-runner-eslint", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.9.0"],
             ["jest-watch-select-projects", "npm:2.0.0"],
+            ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.0"],
             ["node-fetch", "npm:3.0.0-beta.6-exportfix"],
             ["param-case", "npm:3.0.3"],
@@ -25271,6 +25281,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["jest-watch-suspend", [
+        ["virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2", {
+          "packageLocation": "./.yarn/$$virtual/jest-watch-suspend-virtual-5493e21eb0/0/cache/jest-watch-suspend-npm-1.1.2-947454efef-ef665abf78.zip/node_modules/jest-watch-suspend/",
+          "packageDependencies": [
+            ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
+            ["chalk", "npm:2.4.2"],
+            ["jest", "npm:26.0.1"],
+            ["unpartial", "npm:0.6.3"]
+          ],
+          "packagePeers": [
+            "jest"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["jest-watch-typeahead", [
         ["npm:0.4.2", {
           "packageLocation": "./.yarn/cache/jest-watch-typeahead-npm-0.4.2-2bcb9ae624-cc2aabcba6.zip/node_modules/jest-watch-typeahead/",
@@ -34779,6 +34804,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/universalify-npm-1.0.0-eff81409f3-d74303a8d9.zip/node_modules/universalify/",
           "packageDependencies": [
             ["universalify", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["unpartial", [
+        ["npm:0.6.3", {
+          "packageLocation": "./.yarn/cache/unpartial-npm-0.6.3-7050a8c667-7870a5c447.zip/node_modules/unpartial/",
+          "packageDependencies": [
+            ["unpartial", "npm:0.6.3"]
           ],
           "linkType": "HARD",
         }]

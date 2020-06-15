@@ -6058,6 +6058,7 @@ __metadata:
     jest-emotion: ^10.0.32
     jest-runner-eslint: ^0.9.0
     jest-watch-select-projects: ^2.0.0
+    jest-watch-suspend: ^1.1.2
     jest-watch-typeahead: ^0.6.0
     node-fetch: ^3.0.0-beta.6
     param-case: ^3.0.3
@@ -15552,6 +15553,18 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"jest-watch-suspend@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "jest-watch-suspend@npm:1.1.2"
+  dependencies:
+    chalk: ^2.4.2
+    unpartial: ^0.6.1
+  peerDependencies:
+    jest: ">=23"
+  checksum: ef665abf78650fa13ccdfe1f38a6f16a6284b521dc7f406f564a3684427baa47ae3da8535aed010a7756266df8b0c9db192d4c38530e77c0444d193535bc3b95
+  languageName: node
+  linkType: hard
+
 "jest-watch-typeahead@npm:0.4.2":
   version: 0.4.2
   resolution: "jest-watch-typeahead@npm:0.4.2"
@@ -24361,6 +24374,13 @@ resolve@^1.17.0:
   version: 1.0.0
   resolution: "universalify@npm:1.0.0"
   checksum: d74303a8d9ff18598804f3e9f261c9376cad55b81a92346f086e59261803ae75bef347044dd6a25549eb3b1490c0dd106dc07154cd7ccad8f037fdae947c125d
+  languageName: node
+  linkType: hard
+
+"unpartial@npm:^0.6.1":
+  version: 0.6.3
+  resolution: "unpartial@npm:0.6.3"
+  checksum: 7870a5c447a7c971f268f0f7e2efcea7be41912eb708cc30fc348575bd31e5d5ebf44a47bae45e84cf934438e869d1f7f7ca5388528d4d0e5ad0703d29221b3d
   languageName: node
   linkType: hard
 

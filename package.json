@@ -99,6 +99,7 @@
     "jest-emotion": "^10.0.32",
     "jest-runner-eslint": "^0.9.0",
     "jest-watch-select-projects": "^2.0.0",
+    "jest-watch-suspend": "^1.1.2",
     "jest-watch-typeahead": "^0.6.0",
     "node-fetch": "^3.0.0-beta.6",
     "param-case": "^3.0.3",

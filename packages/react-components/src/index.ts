@@ -4,6 +4,7 @@ import * as text from './text';
 export { pixels, text };
 
 export * from './icons';
+export * from './images';
 export * from './theme';
 
 export {
@@ -18,7 +19,7 @@ export {
   Paragraph,
   GlobalStyles,
 } from './atoms';
-export {} from './molecules';
+export { LabeledTextField } from './molecules';
 export {
   LoginLogoutButton,
   OrcidSigninButton,

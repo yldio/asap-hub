@@ -33,5 +33,6 @@ export {
   SsoButtons,
   Layout,
 } from './organisms';
-export { InviteUserForm, Signin } from './templates';
+
+export { InviteUserForm, Signin, Messages } from './templates';
 export { AdminInviteUserPage, SigninPage } from './pages';

@@ -83,6 +83,13 @@ it('renders a small button', () => {
   expect(smallHeight).toBeLessThan(normalHeight);
 });
 
+it('renders a link-styled button', () => {
+  const { getByRole } = render(<Button linkStyle />);
+  const { color, padding } = getComputedStyle(getByRole('button'));
+  expect(color).toBe(fern.rgb);
+  expect(padding).toMatchInlineSnapshot(`"0px"`);
+});
+
 it('forwards the onClick event handler', () => {
   const clickHandler = jest.fn();
   const { getByRole } = render(<Button onClick={clickHandler} />);

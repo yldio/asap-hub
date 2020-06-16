@@ -53,9 +53,9 @@ describe('when submitting the form', () => {
     });
 
     beforeEach(() => {
-      const { getByRole } = result;
+      const { getByText } = result;
 
-      userEvent.click(getByRole('button'));
+      userEvent.click(getByText(/invite/i, { selector: 'button *' }));
     });
 
     it('hides the form', () => {
@@ -77,9 +77,9 @@ describe('when submitting the form', () => {
     });
 
     beforeEach(async () => {
-      const { getByRole } = result;
+      const { getByText } = result;
 
-      userEvent.click(getByRole('button'));
+      userEvent.click(getByText(/invite/i, { selector: 'button *' }));
       await waitFor(() => nock.isDone());
     });
 
@@ -100,9 +100,9 @@ describe('when submitting the form', () => {
     });
 
     beforeEach(async () => {
-      const { getByRole } = result;
+      const { getByText } = result;
 
-      userEvent.click(getByRole('button'));
+      userEvent.click(getByText(/invite/i, { selector: 'button *' }));
       await waitFor(() => nock.isDone());
     });
 
@@ -125,9 +125,9 @@ describe('when submitting the form', () => {
     });
 
     beforeEach(async () => {
-      const { getByRole } = result;
+      const { getByText } = result;
 
-      userEvent.click(getByRole('button'));
+      userEvent.click(getByText(/invite/i, { selector: 'button *' }));
       await waitFor(() => nock.isDone());
     });
 

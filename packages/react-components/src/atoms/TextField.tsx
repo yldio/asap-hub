@@ -4,29 +4,37 @@ import { useDebounce } from 'use-debounce';
 
 import { perRem } from '../pixels';
 import { steel, fern, lead, silver, ember, rose, tin } from '../colors';
-import { noop } from '../utils';
+import { noop, getSvgAspectRatio } from '../utils';
 import { loadingImage, validTickGreenImage } from '../images';
 import { useGifReplay } from '../hooks';
 
 const borderWidth = 1;
 const padding = 15;
 const lineHeight = 24;
-const iconSize = lineHeight;
-const iconPadding = padding;
+const indicatorHeight = lineHeight;
+const indicatorPadding = padding;
 
 const disabledStyles = css({
   color: lead.rgb,
   backgroundColor: silver.rgb,
 });
 
+const customIndicatorPadding = (aspectRatio: number) =>
+  css({
+    paddingRight: `${
+      (padding + indicatorHeight * aspectRatio + indicatorPadding) / perRem
+    }em`,
+  });
 const loadingStyles = css({
-  paddingRight: `${(padding + iconSize + iconPadding) / perRem}em`,
+  paddingRight: `${(padding + indicatorHeight + indicatorPadding) / perRem}em`,
   backgroundImage: `url(${loadingImage})`,
 });
 const validStyles = (gifUrl: string) =>
   css({
     ':valid': {
-      paddingRight: `${(padding + iconSize + iconPadding) / perRem}em`,
+      paddingRight: `${
+        (padding + indicatorHeight + indicatorPadding) / perRem
+      }em`,
       backgroundImage: `url(${gifUrl})`,
     },
   });
@@ -36,8 +44,14 @@ const invalidStyles = css({
     borderColor: ember.rgb,
     backgroundColor: rose.rgb,
 
-    '+ div': {
+    '~ div:last-of-type': {
       display: 'block',
+    },
+    '~ div': {
+      color: ember.rgb,
+    },
+    '~ div svg': {
+      fill: ember.rgb,
     },
   },
 });
@@ -64,28 +78,33 @@ const styles = css({
 
   backgroundPosition: `right ${padding / perRem}em center`,
   backgroundRepeat: 'no-repeat',
-  backgroundSize: `${iconSize / perRem}em`,
+  backgroundSize: `auto ${indicatorHeight / perRem}em`,
 
-  '+ div': {
+  '~ div:last-of-type': {
     display: 'none',
   },
 });
 
+const containerStyles = css({
+  position: 'relative',
+});
+const customIndicatorStyles = (aspectRatio: number) =>
+  css({
+    position: 'absolute',
+
+    top: `${padding / perRem}em`,
+    right: `${padding / perRem}em`,
+
+    height: `${indicatorHeight / perRem}em`,
+    width: `${(indicatorHeight * aspectRatio) / perRem}em`,
+  });
 const validationMessageStyles = css({
   paddingTop: `${6 / perRem}em`,
   paddingBottom: `${6 / perRem}em`,
-
-  color: ember.rgb,
 });
 
 type TextFieldProps = {
-  type?:
-    | 'text'
-    | 'search'
-    | 'email'
-    | 'tel'
-    | 'url'
-    | /* TODO advanced PW field */ 'password';
+  type?: 'text' | 'search' | 'email' | 'tel' | 'url' | 'password';
   enabled?: boolean;
 
   /**
@@ -97,7 +116,9 @@ type TextFieldProps = {
    */
   indicateValid?: boolean;
   customValidationMessage?: string;
+
   loading?: boolean;
+  customIndicator?: React.ReactElement;
 
   value: string;
   onChange?: (newValue: string) => void;
@@ -114,12 +135,13 @@ const TextField: React.FC<TextFieldProps> = ({
   pattern,
 
   customValidationMessage = '',
-  indicateValid = !!customValidationMessage ||
-    required !== undefined ||
+  indicateValid = required !== undefined ||
     minLength !== undefined ||
     maxLength !== undefined ||
     pattern !== undefined,
+
   loading = false,
+  customIndicator,
 
   value,
   onChange = noop,
@@ -145,7 +167,7 @@ const TextField: React.FC<TextFieldProps> = ({
   const debouncedIndicateValid = indicateValid && value === debouncedValue;
 
   return (
-    <>
+    <div css={containerStyles}>
       <input
         {...props}
         ref={inputRef}
@@ -169,13 +191,22 @@ const TextField: React.FC<TextFieldProps> = ({
         css={[
           styles,
           enabled || disabledStyles,
+
           debouncedIndicateValid && validStyles(validGifUrl),
           validationMessage && invalidStyles,
+
+          customIndicator &&
+            customIndicatorPadding(getSvgAspectRatio(customIndicator)),
           loading && loadingStyles,
         ]}
       />
+      {customIndicator && (
+        <div css={customIndicatorStyles(getSvgAspectRatio(customIndicator))}>
+          {customIndicator}
+        </div>
+      )}
       <div css={validationMessageStyles}>{validationMessage}</div>
-    </>
+    </div>
   );
 };
 

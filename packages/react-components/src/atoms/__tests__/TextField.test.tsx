@@ -40,6 +40,49 @@ it('with the loading prop shows a loading indicator', () => {
   );
 });
 
+describe('with a custom indicator', () => {
+  it('shows the indicator', () => {
+    const { getByRole } = render(
+      <TextField
+        value=""
+        customIndicator={<svg role="img" viewBox="0 0 2 1" />}
+      />,
+    );
+    const { width, height } = getComputedStyle(getByRole('img').parentElement!);
+    expect(
+      Number(width.replace(/em$/, '')) / Number(height.replace(/em$/, '')),
+    ).toBeCloseTo(2);
+  });
+
+  it('pads the field to make space for the indicator', () => {
+    const { getByRole, rerender } = render(<TextField value="" />);
+    const normalPaddingRight = Number(
+      getComputedStyle(getByRole('textbox')).paddingRight.replace(/em$/, ''),
+    );
+
+    rerender(
+      <TextField
+        value=""
+        customIndicator={<svg role="img" viewBox="0 0 2 1" />}
+      />,
+    );
+    const customIndicatorPaddingRight = Number(
+      getComputedStyle(getByRole('textbox')).paddingRight.replace(/em$/, ''),
+    );
+    const indicatorWidth = Number(
+      getComputedStyle(getByRole('img').parentElement!).width.replace(
+        /em$/,
+        '',
+      ),
+    );
+
+    expect(customIndicatorPaddingRight).toBeCloseTo(
+      // times 2 because there is now padding on both sides of the indicator
+      normalPaddingRight * 2 + indicatorWidth,
+    );
+  });
+});
+
 describe('when valid', () => {
   beforeAll(() => {
     jest.useFakeTimers('modern');

@@ -3,7 +3,7 @@ import css from '@emotion/css';
 
 import * as colors from '../colors';
 import { perRem } from '../pixels';
-import { commonStyles, AccentColorName } from '../text';
+import { layoutStyles, AccentColorName } from '../text';
 
 const styles = css({
   fontSize: `${13.6 / perRem}em`,
@@ -16,7 +16,7 @@ interface CaptionProps {
 }
 const Caption: React.FC<CaptionProps> = ({ children, accent }) => (
   <figcaption
-    css={[commonStyles, styles, accent ? { color: colors[accent].rgb } : null]}
+    css={[layoutStyles, styles, accent ? { color: colors[accent].rgb } : null]}
   >
     {children}
   </figcaption>

@@ -19,9 +19,7 @@ const borderWidth = 1;
 const styles = css({
   display: 'inline-flex',
   alignItems: 'center',
-  '> span': {
-    whiteSpace: 'pre',
-  },
+  whiteSpace: 'pre',
 
   outline: 'none',
 
@@ -130,19 +128,53 @@ const disabledStyles = css({
   boxShadow: 'none',
 });
 
-interface ButtonProps {
+const linkStyles = css({
+  display: 'inline',
+  '> svg': {
+    minHeight: '1em',
+    height: '100%',
+  },
+
+  padding: 0,
+  border: 'none',
+  outline: 'none',
+
+  cursor: 'pointer',
+
+  textDecoration: 'underline',
+  ':hover, :focus': {
+    textDecoration: 'none',
+  },
+
+  backgroundColor: 'unset',
+  color: fern.rgb,
+  ':active': {
+    color: pine.rgb,
+  },
+});
+
+interface NormalButtonProps {
   enabled?: boolean;
   primary?: boolean;
   small?: boolean;
-
-  children?: React.ReactNode | React.ReactNodeArray;
+  linkStyle?: undefined;
+}
+interface LinkStyleButtonProps {
+  linkStyle: true;
+  enabled?: undefined;
+  primary?: undefined;
+  small?: undefined;
+}
+type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
+  children?: React.ReactNode;
 
   onClick?: () => void;
-}
+};
 const Button: React.FC<ButtonProps> = ({
   enabled = true,
   primary = false,
   small = false,
+  linkStyle = false,
 
   children,
 
@@ -154,19 +186,27 @@ const Button: React.FC<ButtonProps> = ({
       onClick();
       event.preventDefault();
     }}
-    css={[
-      styles,
-      small ? smallStyles : largeStyles,
-      enabled ? (primary ? primaryStyles : secondaryStyles) : disabledStyles,
-      (Array.isArray(children)
-        ? children.some((child) => child && typeof child === 'object')
-        : children && typeof children === 'object') ||
-        (small ? null : largeTextOnlyStyles),
-      (Array.isArray(children)
-        ? children.some((child) => typeof child === 'string')
-        : typeof children === 'string') ||
-        (small ? smallIconOnlyStyles : largeIconOnlyStyles),
-    ]}
+    css={
+      linkStyle
+        ? linkStyles
+        : [
+            styles,
+            small ? smallStyles : largeStyles,
+            enabled
+              ? primary
+                ? primaryStyles
+                : secondaryStyles
+              : disabledStyles,
+            (Array.isArray(children)
+              ? children.some((child) => child && typeof child === 'object')
+              : children && typeof children === 'object') ||
+              (small ? null : largeTextOnlyStyles),
+            (Array.isArray(children)
+              ? children.some((child) => typeof child === 'string')
+              : typeof children === 'string') ||
+              (small ? smallIconOnlyStyles : largeIconOnlyStyles),
+          ]
+    }
   >
     {Array.isArray(children) ? (
       children.map((child) =>

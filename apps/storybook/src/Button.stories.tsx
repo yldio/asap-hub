@@ -38,3 +38,8 @@ export const IconAndText = () => (
     {text('Text', 'Text')}
   </Button>
 );
+
+export const LinkStyledText = () => (
+  <Button linkStyle>{text('Text', 'Text')}</Button>
+);
+export const LinkStyledIcon = () => <Button linkStyle>{orcidIcon}</Button>;

@@ -19,7 +19,7 @@ export {
   Paragraph,
   GlobalStyles,
 } from './atoms';
-export { LabeledTextField } from './molecules';
+export { LabeledTextField, LabeledPasswordField } from './molecules';
 export {
   LoginLogoutButton,
   OrcidSigninButton,

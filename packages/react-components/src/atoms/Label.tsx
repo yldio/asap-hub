@@ -3,7 +3,7 @@ import React from 'react';
 import { perRem } from '../pixels';
 
 interface LabelProps {
-  children?: React.ReactNode | React.ReactNodeArray;
+  children?: React.ReactNode;
 }
 const Label: React.FC<LabelProps> = ({ children }) => (
   <label

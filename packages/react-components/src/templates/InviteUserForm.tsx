@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 
 import { Button } from '../atoms';
 import { noop } from '../utils';
-import { LabeledTextField } from '../molecules';
+import { LabeledTextField, LabeledPasswordField } from '../molecules';
 
 interface InviteUserFormProps {
   onSubmit?: (
@@ -46,11 +46,10 @@ const InviteUserForm: React.FC<InviteUserFormProps> = ({ onSubmit = noop }) => {
         value={email}
         onChange={setEmail}
       />
-      <LabeledTextField
-        type="password"
+      <LabeledPasswordField
+        forgotPasswordHref="mailto:philanthropy@milkeninstitute.org"
         title="Administrator Password"
         placeholder="_%6.o*fGR75)':7,"
-        required
         value={adminPassword}
         onChange={setAdminPassword}
       />

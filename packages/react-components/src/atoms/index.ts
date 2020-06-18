@@ -1,6 +1,7 @@
 export { default as Button } from './Button';
 export { default as Caption } from './Caption';
 export { default as Display } from './Display';
+export { default as Divider } from './Divider';
 export { default as GlobalStyles } from './GlobalStyles';
 export { default as Headline2 } from './Headline2';
 export { default as Headline3 } from './Headline3';

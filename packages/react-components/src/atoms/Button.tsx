@@ -12,14 +12,17 @@ import {
   charcoal,
   silver,
 } from '../colors';
-import { perRem } from '../pixels';
+import { perRem, formTargetWidth } from '../pixels';
 import { noop } from '../utils';
 
 const borderWidth = 1;
 const styles = css({
-  display: 'inline-flex',
+  display: 'flex',
+  justifyContent: 'center',
   alignItems: 'center',
   whiteSpace: 'pre',
+
+  maxWidth: `${formTargetWidth / perRem}em`,
 
   outline: 'none',
 
@@ -30,6 +33,10 @@ const styles = css({
   cursor: 'pointer',
 
   fontWeight: 'bold',
+
+  '+ button': {
+    marginTop: 0,
+  },
 });
 
 const largeStyles = css({

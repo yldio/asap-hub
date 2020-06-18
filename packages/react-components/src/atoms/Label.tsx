@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { perRem } from '../pixels';
+import { perRem, formTargetWidth } from '../pixels';
 
 interface LabelProps {
   children?: React.ReactNode;
@@ -9,8 +9,8 @@ const Label: React.FC<LabelProps> = ({ children }) => (
   <label
     css={{
       display: 'block',
-      width: `${354 / perRem}em`,
-      maxWidth: '100%',
+      width: `${formTargetWidth / perRem}em`,
+      maxWidth: `min(${formTargetWidth / perRem}em, 100%)`,
       paddingBottom: `${18 / perRem}em`,
     }}
   >

@@ -10,6 +10,16 @@ const forgotPasswordStyles = css({
   paddingTop: `${6 / perRem}em`,
 });
 
+const showPasswordIndicatorStyles = css({
+  display: 'grid', // force the button to fill
+
+  // because our indicator is just text,
+  // move it down from the center to align with the field text that is also below center
+  paddingTop: `${1 / perRem}em`,
+
+  fill: fern.rgb,
+});
+
 type LabeledPasswordFieldProps = {
   title?: string;
 
@@ -39,12 +49,7 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
         type={showPassword ? 'text' : 'password'}
         customIndicator={
           value ? (
-            <div
-              css={{
-                display: 'grid', // force the button to fill
-                fill: fern.rgb,
-              }}
-            >
+            <div css={showPasswordIndicatorStyles}>
               <Button linkStyle onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? hidePasswordIcon : showPasswordIcon}
               </Button>

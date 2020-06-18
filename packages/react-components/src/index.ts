@@ -19,11 +19,12 @@ export {
   Paragraph,
   GlobalStyles,
 } from './atoms';
-export { LabeledTextField, LabeledPasswordField } from './molecules';
 export {
-  LoginLogoutButton,
   OrcidSigninButton,
   GoogleSigninButton,
-} from './organisms';
+  LabeledTextField,
+  LabeledPasswordField,
+} from './molecules';
+export { LoginLogoutButton } from './organisms';
 export { InviteUserForm } from './templates';
 export { AdminInviteUserPage } from './pages';

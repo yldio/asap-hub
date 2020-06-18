@@ -4,7 +4,7 @@ import { text, button } from '@storybook/addon-knobs';
 import { LabeledPasswordField } from '@asap-hub/react-components';
 
 export default {
-  title: 'Molecules / Labeled Password Field',
+  title: 'Molecules / Auth / Labeled Password Field',
   component: LabeledPasswordField,
 };
 

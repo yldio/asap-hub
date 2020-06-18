@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 
-import { Button } from '../../atoms';
-import { orcidIcon } from '../../icons';
+import { Button } from '../atoms';
+import { orcidIcon } from '../icons';
 
 type OrcidSigninButtonProps = Pick<ComponentProps<typeof Button>, 'enabled'>;
 const OrcidSigninButton: React.FC<OrcidSigninButtonProps> = ({ enabled }) => (

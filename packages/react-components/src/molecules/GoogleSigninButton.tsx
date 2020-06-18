@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 
-import { Button } from '../../atoms';
-import { googleIcon } from '../../icons';
+import { Button } from '../atoms';
+import { googleIcon } from '../icons';
 
 type GoogleSigninButtonProps = Pick<ComponentProps<typeof Button>, 'enabled'>;
 const GoogleSigninButton: React.FC<GoogleSigninButtonProps> = ({ enabled }) => (

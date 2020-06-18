@@ -9,10 +9,15 @@ import { loadingImage, validTickGreenImage } from '../images';
 import { useGifReplay } from '../hooks';
 
 const borderWidth = 1;
+
 const padding = 15;
+const indicatorPadding = padding;
+
+const textPaddingTop = padding + 1;
+const textPaddingBottom = padding - 1;
+
 const lineHeight = 24;
 const indicatorHeight = lineHeight;
-const indicatorPadding = padding;
 
 const disabledStyles = css({
   color: lead.rgb,
@@ -59,7 +64,10 @@ const invalidStyles = css({
 const styles = css({
   boxSizing: 'border-box',
   width: '100%',
-  padding: `${padding / perRem}em`,
+  paddingLeft: `${padding / perRem}em`,
+  paddingRight: `${padding / perRem}em`,
+  paddingTop: `${textPaddingTop / perRem}em`,
+  paddingBottom: `${textPaddingBottom / perRem}em`,
 
   lineHeight: `${lineHeight / perRem}em`,
 
@@ -76,7 +84,7 @@ const styles = css({
     borderColor: fern.rgb,
   },
 
-  backgroundPosition: `right ${padding / perRem}em center`,
+  backgroundPosition: `right ${padding / perRem}em top ${padding / perRem}em`,
   backgroundRepeat: 'no-repeat',
   backgroundSize: `auto ${indicatorHeight / perRem}em`,
 

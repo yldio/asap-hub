@@ -3,12 +3,13 @@ import got from 'got';
 import Intercept from 'apr-intercept';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyHandler } from 'aws-lambda';
+import { config as authConfig } from '@asap-hub/auth';
+
 import connection from '../utils/connection';
 import * as lambda from '../framework/lambda';
 import * as auth0 from '../entities/auth0';
 import Users from '../controllers/users';
 import { Db } from '../data';
-import { auth0BaseUrl } from '../config';
 
 const validateUser = async (headers: object): Promise<auth0.UserInfo> => {
   const headersSchema = Joi.object({
@@ -27,7 +28,7 @@ const validateUser = async (headers: object): Promise<auth0.UserInfo> => {
 
   const [, token] = value.authorization.split(' ');
   const [err, res] = await Intercept(
-    got(`${auth0BaseUrl}/userinfo`, {
+    got(`https://${authConfig.domain}/userinfo`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

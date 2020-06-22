@@ -26,7 +26,7 @@ type LabeledPasswordFieldProps = {
   forgotPasswordHref: string;
 } & Pick<
   ComponentProps<typeof TextField>,
-  'value' | 'onChange' | 'placeholder' | 'customValidationMessage'
+  'value' | 'onChange' | 'required' | 'placeholder' | 'customValidationMessage'
 >;
 const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
   title = 'Password',

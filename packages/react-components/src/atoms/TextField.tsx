@@ -163,7 +163,7 @@ const TextField: React.FC<TextFieldProps> = ({
     input.setCustomValidity(customValidationMessage);
 
     // If the invalidity has already been surfaced, make sure the message is updated
-    if (validationMessage) {
+    if (customValidationMessage) {
       input.reportValidity();
     }
 

@@ -101,6 +101,7 @@
     "jest-watch-select-projects": "^2.0.0",
     "jest-watch-suspend": "^1.1.2",
     "jest-watch-typeahead": "^0.6.0",
+    "nock": "^12.0.3",
     "node-fetch": "^3.0.0-beta.6",
     "param-case": "^3.0.3",
     "prettier": "^2.0.5",

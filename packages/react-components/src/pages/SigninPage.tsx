@@ -21,12 +21,14 @@ const SigninPage: React.FC<SigninPageProps> = ({
       <div css={{ width: 'max-content', maxWidth: '100%' }}>
         <Signin {...props} />
       </div>
-      <footer css={{ width: 0, minWidth: '100%' }}>
-        <AgreeToTerms
-          termsHref={termsHref}
-          privacyPolicyHref={privacyPolicyHref}
-        />
-      </footer>
+      {props.signup && (
+        <footer css={{ width: 0, minWidth: '100%' }}>
+          <AgreeToTerms
+            termsHref={termsHref}
+            privacyPolicyHref={privacyPolicyHref}
+          />
+        </footer>
+      )}
     </div>
   </Layout>
 );

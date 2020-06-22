@@ -19,7 +19,7 @@ module.exports = {
     require.resolve('jest-watch-typeahead/filename'),
     require.resolve('jest-watch-typeahead/testname'),
 
-    [require.resolve('jest-watch-suspend'), { 'suspend-on-start': true }],
+    require.resolve('jest-watch-suspend'),
     require.resolve('jest-runner-eslint/watch-fix'),
   ],
 };

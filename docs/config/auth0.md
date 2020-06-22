@@ -14,8 +14,8 @@ and configured as follows:
 - `domain` - pick any and copy to the frontend auth config
 - `Client ID` - generated, copy to the frontend auth config
 - `Application Type` - Single Page Application
-- `Allowed Callback URLs` - `http://localhost:3000, https://$PRODUCTION_DOMAIN_NAME`
-- `Allowed Web Origins` - `http://localhost:3000, https://$PRODUCTION_DOMAIN_NAME`
+- `Allowed Callback URLs` - `http://localhost:3000, https://$PRODUCTION_HOST`
+- `Allowed Web Origins` - `http://localhost:3000, https://$PRODUCTION_HOST`
 
 **Connections**
 
@@ -33,15 +33,15 @@ and configured as follows:
 **Login**
 
 - `Customize Login Page` - `true`
-- `HTML` - [here](auth0/login.html)
+- `HTML` - [build output index.html](../../apps/auth-frontend/build/index.html) of `@asap-hub/auth-frontend`
 
 ## ORCID application
 
 In account developer tools, create an application for the Hub and configure as follows:
 
-- `Your website URL` - `$PRODUCTION_DOMAIN_NAME`
+- `Your website URL` - `$PRODUCTION_HOST`
 - `Description of your application` - `The Hub by ASAP: Aligning Science Across Parkinson's`
-- `Redirect URIs` - `https://$AUTH0_DOMAIN/login/callback`
+- `Redirect URIs` - `https://$AUTH0_HOST/login/callback`
 
 ## Auth0 Extensions
 

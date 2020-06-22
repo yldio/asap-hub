@@ -83,6 +83,23 @@ it('renders a small button', () => {
   expect(smallHeight).toBeLessThan(normalHeight);
 });
 
+describe('the type', () => {
+  it('is button by default', () => {
+    const { getByRole } = render(<Button />);
+    expect(getByRole('button')).toHaveAttribute('type', 'button');
+  });
+
+  it('is submit for a primary button', () => {
+    const { getByRole } = render(<Button primary />);
+    expect(getByRole('button')).toHaveAttribute('type', 'submit');
+  });
+
+  it('is submit if set explicitly', () => {
+    const { getByRole } = render(<Button submit />);
+    expect(getByRole('button')).toHaveAttribute('type', 'submit');
+  });
+});
+
 it('renders a link-styled button', () => {
   const { getByRole } = render(<Button linkStyle />);
   const { color, padding } = getComputedStyle(getByRole('button'));

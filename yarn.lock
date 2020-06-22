@@ -15,12 +15,53 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@asap-hub/auth-frontend@workspace:apps/auth-frontend":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/auth-frontend@workspace:apps/auth-frontend"
+  dependencies:
+    "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/react-components": "workspace:packages/react-components"
+    "@babel/runtime-corejs3": ^7.9.6
+    "@testing-library/dom": ^7.10.0
+    "@testing-library/jest-dom": ^5.9.0
+    "@testing-library/react": ^10.2.0
+    "@testing-library/user-event": ^11.4.2
+    "@types/auth0-js": ^9
+    "@types/history": ^4.7.6
+    "@types/jest": ^26.0.0
+    "@types/jsdom": ^16
+    "@types/node": ^12.0.0
+    "@types/pify": ^3.0.0
+    "@types/react": ^16.9.0
+    "@types/react-dom": ^16.9.0
+    "@types/react-router-dom": ^5.1.5
+    "@types/testing-library__jest-dom": ^5.0.3
+    "@types/testing-library__react": ^10.0.1
+    auth0-js: ^9.13.2
+    camelcase: ^6.0.0
+    cross-env: ^7.0.2
+    history: ^4.10.1
+    identity-obj-proxy: ^3.0.0
+    jest-environment-jsdom-sixteen: ^1.0.3
+    jsdom: ^16.2.2
+    pify: ^5.0.0
+    react: ^16.13.1
+    react-app-polyfill: ^1.0.6
+    react-dom: ^16.13.1
+    react-router-dom: ^5.2.0
+    react-scripts: "patch:react-scripts@3.4.1#./patches/react-scripts.patch"
+    typescript: ~3.8.3
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/auth@workspace:packages/auth":
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth@workspace:packages/auth"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@auth0/auth0-spa-js": ^1.9.0
+    "@babel/runtime-corejs3": ^7.9.6
   languageName: unknown
   linkType: soft
 
@@ -180,6 +221,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/users-service@workspace:apps/users-service"
   dependencies:
+    "@asap-hub/auth": "workspace:packages/auth"
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0
     "@hapi/bourne": ^2.0.0
@@ -4193,6 +4235,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/auth0-js@npm:^9":
+  version: 9.13.1
+  resolution: "@types/auth0-js@npm:9.13.1"
+  checksum: ccf71133839ccb745affa3409caef16dabae33742ad1ab190be94bf049cbcff3ba82a979f3e5a5dfedc15cc19a0c287fb414a39cd425cb02aa1850591bf5e4be
+  languageName: node
+  linkType: hard
+
 "@types/aws-lambda@npm:^8.10.51":
   version: 8.10.53
   resolution: "@types/aws-lambda@npm:8.10.53"
@@ -4480,6 +4529,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jsdom@npm:^16":
+  version: 16.2.3
+  resolution: "@types/jsdom@npm:16.2.3"
+  dependencies:
+    "@types/node": "*"
+    "@types/parse5": "*"
+    "@types/tough-cookie": "*"
+  checksum: 4c8eec33160b14009f545a2515dfd40b020dd726bb4769755757a5e5e614b5a39d42dafdf574bdd360c96247757538228064208e40890907dd27a24d7d737a5d
+  languageName: node
+  linkType: hard
+
 "@types/json-schema@npm:^7.0.3":
   version: 7.0.4
   resolution: "@types/json-schema@npm:7.0.4"
@@ -4631,6 +4691,20 @@ __metadata:
   version: 4.0.0
   resolution: "@types/parse-json@npm:4.0.0"
   checksum: 4a8f720afac47b474d3f2eece312340e72bc31bc9561cda37b596ce2ed218c0099765d302625bb67d659a8452a1f93d514f4863c11c7ebaf65430428687dc426
+  languageName: node
+  linkType: hard
+
+"@types/parse5@npm:*":
+  version: 5.0.3
+  resolution: "@types/parse5@npm:5.0.3"
+  checksum: 62b6ad696aeee22dc26bba2039bfb55773caf7cd705cb1b226a7107c187422782e6759ca6de54f9d1a299f335c2b99973774c9436a378f57927f36619570dc1d
+  languageName: node
+  linkType: hard
+
+"@types/pify@npm:^3.0.0":
+  version: 3.0.2
+  resolution: "@types/pify@npm:3.0.2"
+  checksum: 999c73c2a0dbc3ddb7aa11b49a01b7b9ba3437974f876ca7af01950644baf33a321bb044ca121ccf5f06cfadfe89f803e6e5f272aefb0d1671e26929e3bd47a7
   languageName: node
   linkType: hard
 
@@ -4844,6 +4918,13 @@ __metadata:
     "@types/testing-library__dom": "*"
     pretty-format: ^25.1.0
   checksum: 20b6597fad68760af1590aa897abc0f75c19f747fc461ae81adf3405c43b37064903df02c38edce2c23c01194b17765feefb4f534cb12679a94b83e7e6240716
+  languageName: node
+  linkType: hard
+
+"@types/tough-cookie@npm:*":
+  version: 4.0.0
+  resolution: "@types/tough-cookie@npm:4.0.0"
+  checksum: 5a0cccc6d073b84dbb48d603e692b55ac30cea1653a7fc813e97a3bcaa9edd97c703c15727378d632e416a90178e6da657151eba8175cbb201a9a98de22ac3a8
   languageName: node
   linkType: hard
 
@@ -6070,6 +6151,7 @@ __metadata:
     jest-watch-select-projects: ^2.0.0
     jest-watch-suspend: ^1.1.2
     jest-watch-typeahead: ^0.6.0
+    nock: ^12.0.3
     node-fetch: ^3.0.0-beta.6
     param-case: ^3.0.3
     prettier: ^2.0.5
@@ -6270,6 +6352,21 @@ __metadata:
   bin:
     atob: bin/atob.js
   checksum: 597c0d1a740bb6522c98bea8fe362ae9420b4203af588d2bd470326d9abd4504264956b8355923d7019a21527ef5e6526a7b4455862ec5178ccd81e0ea289d5f
+  languageName: node
+  linkType: hard
+
+"auth0-js@npm:^9.13.2":
+  version: 9.13.2
+  resolution: "auth0-js@npm:9.13.2"
+  dependencies:
+    base64-js: ^1.3.0
+    idtoken-verifier: ^2.0.2
+    js-cookie: ^2.2.0
+    qs: ^6.7.0
+    superagent: ^3.8.3
+    url-join: ^4.0.1
+    winchan: ^0.2.2
+  checksum: b9c633708f9b1786fc2c0c9a4754733188625fffd3a7c3bc7a89a5270f597dbcc08b6c2c9f7564c47d8600356246c7a8b6ea95980ceee1a05cd1d45ed247af29
   languageName: node
   linkType: hard
 
@@ -7005,7 +7102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64-js@npm:^1.0.2":
+"base64-js@npm:^1.0.2, base64-js@npm:^1.3.0":
   version: 1.3.1
   resolution: "base64-js@npm:1.3.1"
   checksum: 8a0cc69d7c7c0ab75c164d3e2eccc3dd65fbaba17bcf440aab54636afd31255287ac3cd16a111e98d741c4a6e0b5631774b0c32818355089e645df3ae96a49bb
@@ -8963,6 +9060,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crypto-js@npm:^3.2.1":
+  version: 3.3.0
+  resolution: "crypto-js@npm:3.3.0"
+  checksum: 7cf8de489f9f25084a3b22cc6e944e2e11e03b6374777a7a554739ee27e3b35d5dfdac490e0a66bc191c9ecbbea13ad716f59345657335b39d95f9bc19c40ac5
+  languageName: node
+  linkType: hard
+
 "crypto-random-string@npm:^1.0.0":
   version: 1.0.0
   resolution: "crypto-random-string@npm:1.0.0"
@@ -10639,6 +10743,13 @@ __metadata:
     es5-ext: ^0.10.35
     es6-symbol: ^3.1.1
   checksum: 1880ce31210da874cbb92b404c3128bdf68f616f3a902b2ca1d12f268aaedb11c5e6a2d9d364cde762de0130652a0474ba91abc09fa35f4abf6a8f22a592265e
+  languageName: node
+  linkType: hard
+
+"es6-promise@npm:^4.2.8":
+  version: 4.2.8
+  resolution: "es6-promise@npm:4.2.8"
+  checksum: b85e5faab1b3785b8bf1a6c91b5f176cf3e5e4550359508ef54dd58b19ad2b831e04607e2a0a464f2a1407bf02897d5c88daf6e3d94c2ee4510e8191b44b64ef
   languageName: node
   linkType: hard
 
@@ -13385,6 +13496,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"idtoken-verifier@npm:^2.0.2":
+  version: 2.0.3
+  resolution: "idtoken-verifier@npm:2.0.3"
+  dependencies:
+    base64-js: ^1.3.0
+    crypto-js: ^3.2.1
+    es6-promise: ^4.2.8
+    jsbn: ^1.1.0
+    unfetch: ^4.1.0
+    url-join: ^4.0.1
+  checksum: c817bf939e66b15ffb651cf7105f7593923598a5110434b3fe50527543e9b58493ebb82df29f95cd1cf8589264dcf6f9cf8a0170306752668bb453d4fe86131e
+  languageName: node
+  linkType: hard
+
 "ieee754@npm:1.1.13, ieee754@npm:^1.1.4":
   version: 1.1.13
   resolution: "ieee754@npm:1.1.13"
@@ -15708,6 +15833,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"js-cookie@npm:^2.2.0":
+  version: 2.2.1
+  resolution: "js-cookie@npm:2.2.1"
+  checksum: c110f78427cb7715f67c69df0b3430f7cf9dafb5ddb13014df171d4fb61ccda0b1caf9767412cde63cab4bad697a5d4ce83b0c2e7ec650ec9929ed70750d20ae
+  languageName: node
+  linkType: hard
+
 "js-string-escape@npm:^1.0.1":
   version: 1.0.1
   resolution: "js-string-escape@npm:1.0.1"
@@ -15738,6 +15870,13 @@ fsevents@^1.2.7:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 277157fdf235757b71cfbf24f6bef57576a26d9b4cf89b63d89c9044da7b0f9d16c3629c8b5fd549ae343523727a0df1598794e9a4429763cee4e17056ff8523
+  languageName: node
+  linkType: hard
+
+"jsbn@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "jsbn@npm:1.1.0"
+  checksum: 1400c412cdb40a703be30ec4faaaba99cdc63cb61caf8b8d5898d968d3ec50c2154fca5a7e4b950d1f55ee50668221001cf4054da5f49f73a05616361ff0a1c1
   languageName: node
   linkType: hard
 
@@ -18911,6 +19050,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"pify@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "pify@npm:5.0.0"
+  checksum: 4c28d29597a49bbf320c0c6526fac7858d53b8398a46bfa6ed1a120a922773c7ef50bea166e27952bbc476bce1c72cf3e7d648462ac82e704e62431bdec95cec
+  languageName: node
+  linkType: hard
+
 "pinkie-promise@npm:^2.0.0":
   version: 2.0.1
   resolution: "pinkie-promise@npm:2.0.1"
@@ -20324,7 +20470,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.6.0":
+"qs@npm:^6.6.0, qs@npm:^6.7.0":
   version: 6.9.4
   resolution: "qs@npm:6.9.4"
   checksum: beba62d1e1c66e9888cc08a488eb95771c252a92289a96bff4b767a49e4e7afe9487d7ee3269b856292d8281b855ac5eac927c2e77f845e407ee4fe54743fea7
@@ -20819,6 +20965,77 @@ react-scripts@3.4.1:
   bin:
     react-scripts: ./bin/react-scripts.js
   checksum: 417fc7cfb3c7b632f8286e02febf2301ae4a4bc25299a9ef8662c777dcaef8de9d7f2320cd7491bf796674fa1de7d86fdb9e9a2852266167e19085dd78b15f79
+  languageName: node
+  linkType: hard
+
+"react-scripts@patch:react-scripts@3.4.1#./patches/react-scripts.patch::locator=%40asap-hub%2Fauth-frontend%40workspace%3Aapps%2Fauth-frontend":
+  version: 3.4.1
+  resolution: "react-scripts@patch:react-scripts@npm%3A3.4.1#./patches/react-scripts.patch::version=3.4.1&hash=4dc748&locator=%40asap-hub%2Fauth-frontend%40workspace%3Aapps%2Fauth-frontend"
+  dependencies:
+    "@babel/core": 7.9.0
+    "@svgr/webpack": 4.3.3
+    "@typescript-eslint/eslint-plugin": ^2.10.0
+    "@typescript-eslint/parser": ^2.10.0
+    babel-eslint: 10.1.0
+    babel-jest: ^24.9.0
+    babel-loader: 8.1.0
+    babel-plugin-named-asset-import: ^0.3.6
+    babel-preset-react-app: ^9.1.2
+    camelcase: ^5.3.1
+    case-sensitive-paths-webpack-plugin: 2.3.0
+    css-loader: 3.4.2
+    dotenv: 8.2.0
+    dotenv-expand: 5.1.0
+    eslint: ^6.6.0
+    eslint-config-react-app: ^5.2.1
+    eslint-loader: 3.0.3
+    eslint-plugin-flowtype: 4.6.0
+    eslint-plugin-import: 2.20.1
+    eslint-plugin-jsx-a11y: 6.2.3
+    eslint-plugin-react: 7.19.0
+    eslint-plugin-react-hooks: ^1.6.1
+    file-loader: 4.3.0
+    fs-extra: ^8.1.0
+    fsevents: 2.1.2
+    html-webpack-plugin: 4.0.0-beta.11
+    identity-obj-proxy: 3.0.0
+    jest: 24.9.0
+    jest-environment-jsdom-fourteen: 1.0.1
+    jest-resolve: 24.9.0
+    jest-watch-typeahead: 0.4.2
+    mini-css-extract-plugin: 0.9.0
+    optimize-css-assets-webpack-plugin: 5.0.3
+    pnp-webpack-plugin: 1.6.4
+    postcss-flexbugs-fixes: 4.1.0
+    postcss-loader: 3.0.0
+    postcss-normalize: 8.0.1
+    postcss-preset-env: 6.7.0
+    postcss-safe-parser: 4.0.1
+    react-app-polyfill: ^1.0.6
+    react-dev-utils: ^10.2.1
+    resolve: 1.15.0
+    resolve-url-loader: 3.1.1
+    sass-loader: 8.0.2
+    semver: 6.3.0
+    style-loader: 0.23.1
+    terser-webpack-plugin: 2.3.5
+    ts-pnp: 1.1.6
+    url-loader: 2.3.0
+    webpack: 4.42.0
+    webpack-dev-server: 3.10.3
+    webpack-manifest-plugin: 2.2.0
+    workbox-webpack-plugin: 4.3.1
+  peerDependencies:
+    typescript: ^3.2.1
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  bin:
+    react-scripts: ./bin/react-scripts.js
+  checksum: 3a35dff5791edc7be66ac1da642f607b7ff4c4814c86d5487d0b492b21fb94e92cdb61493b1a352cb13572e427a1fa325f33fd744fd8f08fb7b4bfabe9f15769
   languageName: node
   linkType: hard
 
@@ -24503,6 +24720,13 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
+"url-join@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "url-join@npm:4.0.1"
+  checksum: 278de41c66a739862dd3b0d8f01c18a72d1bdfbc1e1f0d3d72e68aeba54193c3c740c07cc9d32a81491d59cc1c09e38763ab7cc72c6f685549ec98e5c9cd9cc1
+  languageName: node
+  linkType: hard
+
 "url-loader@npm:2.3.0":
   version: 2.3.0
   resolution: "url-loader@npm:2.3.0"
@@ -25302,6 +25526,13 @@ resolve@^1.17.0:
   dependencies:
     string-width: ^4.0.0
   checksum: 729c30582e49bdcb1372216eedfd71d1640a1344a4b4e970bc9f33d575b56b130f530b383fbab2cf2bcffb76ea4357e6a66939778d8de91ca66037651d94e01a
+  languageName: node
+  linkType: hard
+
+"winchan@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "winchan@npm:0.2.2"
+  checksum: 81c4983f7e52e27e0dba7a7775bebdda449786abcb4c584ce13627e6d1bf29839d61e21fe9fe148cb5aeddd8d589608cb26611204a497c8974ec4ac32e6b36e1
   languageName: node
   linkType: hard
 

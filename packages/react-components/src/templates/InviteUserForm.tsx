@@ -53,7 +53,7 @@ const InviteUserForm: React.FC<InviteUserFormProps> = ({ onSubmit = noop }) => {
         value={adminPassword}
         onChange={setAdminPassword}
       />
-      <Button onClick={handleSubmit} primary>
+      <Button primary onClick={handleSubmit}>
         Invite
       </Button>
     </form>

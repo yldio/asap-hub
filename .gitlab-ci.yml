@@ -69,7 +69,7 @@ workflow:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 variables:
-  BASE_URL: asap.yld.io
+  BASE_HOSTNAME: asap.yld.io
 
 stages:
   - build
@@ -118,6 +118,7 @@ test:
 
 build:
   script:
+    - 'export AUTH_FRONTEND_BASE_URL=https://$BASE_HOSTNAME/.auth/'
     - yarn run build
   variables:
     <<: *tmpl_node_production_variables
@@ -143,6 +144,8 @@ prepare:sls:master:
   variables:
     <<: *tmpl_master_deploy_variables
   needs:
+    - build
+    - build:native-deps
     - test
 
 prepare:sls:branch:
@@ -159,14 +162,14 @@ prepare:sls:branch:
 #   <<: *tmpl_prepare_cert
 #   variables:
 #     <<: *tmpl_master_deploy_variables
-#     TF_VAR_domain: $BASE_URL
+#     TF_VAR_domain: $BASE_HOSTNAME
 
 # prepare:cert:branch:
 #   <<: *tmpl_branch_deploy_rules
 #   <<: *tmpl_prepare_cert
 #   variables:
 #     <<: *tmpl_branch_deploy_variables
-#     TF_VAR_domain: $BASE_URL
+#     TF_VAR_domain: $BASE_HOSTNAME
 #     TF_VAR_record: $CI_COMMIT_REF_SLUG
 
 # stage deploy
@@ -179,7 +182,7 @@ deploy:sls:master:
     <<: *tmpl_master_deploy_variables
   environment:
     name: production
-    url: https://$BASE_URL
+    url: https://$BASE_HOSTNAME
   needs:
     - build
     - build:native-deps
@@ -198,7 +201,7 @@ deploy:sls:branch:
     <<: *tmpl_branch_deploy_variables
   environment:
     name: review/$CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG.$BASE_URL
+    url: https://$CI_COMMIT_REF_SLUG.$BASE_HOSTNAME
     on_stop: deploy:sls:branch_remove
   needs:
     - build

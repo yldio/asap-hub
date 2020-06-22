@@ -1,10 +1,13 @@
 import Chance from 'chance';
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config as authConfig } from '@asap-hub/auth';
+
 import { handler } from '../../src/handlers/welcome';
 import { apiGatewayEvent } from '../helpers/events';
 import connection from '../../src/utils/connection';
-import { auth0BaseUrl } from '../../src/config';
+
+jest.mock('@asap-hub/auth');
 
 const chance = new Chance();
 describe('POST /users/{code}', () => {
@@ -33,7 +36,7 @@ describe('POST /users/{code}', () => {
   });
 
   test('returns 403 when auth0 return an error', async () => {
-    nock(auth0BaseUrl).get('/userinfo').reply(404);
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(404);
 
     const code = chance.string();
     const c = await connection();
@@ -76,7 +79,7 @@ describe('POST /users/{code}', () => {
     const response = {
       sub: `google-oauth2|${chance.string()}`,
     };
-    nock(auth0BaseUrl).get('/userinfo').reply(200, response);
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200, response);
 
     const code = chance.string();
     const c = await connection();
@@ -112,7 +115,7 @@ describe('POST /users/{code}', () => {
     const response = {
       sub: `google-oauth2|${chance.string()}`,
     };
-    nock(auth0BaseUrl).get('/userinfo').reply(200, response);
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200, response);
 
     const code = chance.string();
     const c = await connection();

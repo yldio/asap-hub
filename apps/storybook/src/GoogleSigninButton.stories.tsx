@@ -4,7 +4,7 @@ import { boolean } from '@storybook/addon-knobs';
 import { GoogleSigninButton } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Auth / Google Signin Button',
+  title: 'Molecules / Auth / Google Signin Button',
   component: GoogleSigninButton,
 };
 

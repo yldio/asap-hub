@@ -1,5 +1,7 @@
 export const perRem = 17;
 
+export const formTargetWidth = 354;
+
 export interface Screen {
   width: number;
   height: number;

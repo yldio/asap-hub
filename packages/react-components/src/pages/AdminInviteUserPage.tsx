@@ -3,6 +3,7 @@ import css from '@emotion/css';
 
 import { Paragraph, Display } from '../atoms';
 import { InviteUserForm } from '../templates';
+import { Layout } from '../organisms';
 
 const centerStyles = css({
   width: 'max-content',
@@ -27,7 +28,7 @@ const AdminInviteUserPage: React.FC<AdminInviteUserPageProps> = ({
   }
 
   return (
-    <main>
+    <Layout>
       <div css={centerStyles}>
         {state === 'success' && <Paragraph>User invited.</Paragraph>}
         {state instanceof Error && (
@@ -38,7 +39,7 @@ const AdminInviteUserPage: React.FC<AdminInviteUserPageProps> = ({
       <div css={centerStyles}>
         <InviteUserForm onSubmit={onInviteUser} />
       </div>
-    </main>
+    </Layout>
   );
 };
 

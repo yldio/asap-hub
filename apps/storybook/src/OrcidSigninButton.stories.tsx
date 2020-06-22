@@ -4,7 +4,7 @@ import { boolean } from '@storybook/addon-knobs';
 import { OrcidSigninButton } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Auth / ORCID Signin Button',
+  title: 'Molecules / Auth / ORCID Signin Button',
   component: OrcidSigninButton,
 };
 

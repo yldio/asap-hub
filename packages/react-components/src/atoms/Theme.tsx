@@ -18,6 +18,7 @@ interface ThemeProps {
   children: React.ReactNode;
   variant?: ThemeVariant;
 }
+
 const Theme: React.FC<ThemeProps> = ({ children, variant = 'light' }) => (
   <div
     css={{

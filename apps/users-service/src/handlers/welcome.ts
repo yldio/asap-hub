@@ -4,12 +4,9 @@ import Intercept from 'apr-intercept';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
-
-import connection from '../utils/connection';
 import * as lambda from '../framework/lambda';
 import * as auth0 from '../entities/auth0';
 import Users from '../controllers/users';
-import { Db } from '../data';
 
 const validateUser = async (headers: object): Promise<auth0.UserInfo> => {
   const headersSchema = Joi.object({
@@ -56,11 +53,9 @@ const connectByCode = async (
     code: string;
   };
 
-  const user = await validateUser(request.headers);
-
-  const c = await connection();
-  const users = new Users(new Db(c));
-  await users.connectByCode(params.code, user);
+  const profile = await validateUser(request.headers);
+  const users = new Users();
+  await users.connectByCode(params.code, profile);
 
   return {
     statusCode: 202,
@@ -78,8 +73,7 @@ const fetchByCode = async (
     code: string;
   };
 
-  const c = await connection();
-  const users = new Users(new Db(c));
+  const users = new Users();
   const res = await users.fetchByCode(params.code);
   return {
     payload: res,

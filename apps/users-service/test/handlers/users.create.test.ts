@@ -3,8 +3,8 @@ import aws from 'aws-sdk';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { handler } from '../../src/handlers/create';
 import { apiGatewayEvent } from '../helpers/events';
-import connection from '../../src/utils/connection';
 import { globalToken } from '../../src/config';
+import { CMS } from '../../src/cms';
 
 jest.mock('aws-sdk', () => {
   const m = {
@@ -16,14 +16,11 @@ jest.mock('aws-sdk', () => {
 });
 
 const chance = new Chance();
+const cms = new CMS();
+
 describe('POST /users', () => {
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  afterAll(async () => {
-    const c = await connection();
-    c.close();
   });
 
   test("returns 400 when body isn't parsable as JSON", async () => {
@@ -113,11 +110,9 @@ describe('POST /users', () => {
     const payload = {
       displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
-      connections: [chance.string()],
     };
 
-    const c = await connection();
-    await c.db().collection('users').insertMany([payload]);
+    await cms.users.create(payload);
 
     const res = (await handler(
       apiGatewayEvent({
@@ -158,12 +153,9 @@ describe('POST /users', () => {
 
     expect(res.statusCode).toStrictEqual(201);
 
-    const c = await connection();
-    const user = await c.db().collection('users').findOne({
-      email: payload.email,
-    });
+    const user = await cms.users.fetchByEmail(payload.email);
 
-    const [code] = user.connections;
+    const [{ code }] = user.data.connections.iv;
     expect(ses.sendEmail).toBeCalledTimes(1);
     expect(ses.sendEmail).toBeCalledWith({
       Source: 'no-reply@asap.yld.io',

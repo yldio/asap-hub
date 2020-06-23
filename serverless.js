@@ -50,7 +50,6 @@ module.exports = {
     environment: {
       APP_ORIGIN: `https://${origin}`,
       NODE_ENV: `\${env:NODE_ENV}`,
-      MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING, ""}`,
     },
   },
   package: {

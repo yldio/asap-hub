@@ -1,16 +1,13 @@
 import Chance from 'chance';
 import { handler } from '../../src/handlers/welcome';
 import { apiGatewayEvent } from '../helpers/events';
-import connection from '../../src/utils/connection';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { CMS } from '../../src/cms';
 
 const chance = new Chance();
-describe('GET /users/{code}', () => {
-  afterAll(async () => {
-    const c = await connection();
-    await c.close(true);
-  });
+const cms = new CMS();
 
+describe('GET /users/{code}', () => {
   test("return 400 when code isn't present", async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -39,15 +36,13 @@ describe('GET /users/{code}', () => {
   });
 
   test('returns 200 when code exists', async () => {
-    const c = await connection();
-    const code = chance.string();
     const user = {
       displayName: `${chance.first()} ${chance.last()}`,
       email: chance.email(),
-      connections: [code],
     };
+    const createdUser = await cms.users.create(user);
+    const [{ code }] = createdUser.data.connections.iv;
 
-    await c.db().collection('users').insertMany([user]);
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',

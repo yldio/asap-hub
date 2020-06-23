@@ -1,0 +1,100 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "users",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Users"
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "email",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Email",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "displayName",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Display Name",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "orcid",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "ORCID",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "connections",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Connections",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "code",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": true,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": true,
+              "editor": "Input",
+              "label": "Code",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          }
+        ]
+      }
+    ],
+    "previewUrls": {},
+    "isPublished": true
+  }
+}

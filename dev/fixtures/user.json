@@ -1,0 +1,22 @@
+{
+  "_id": { "$oid": "5eec9b8133e8330001a8aae9" },
+  "UserName": "admin@squidex.io",
+  "NormalizedUserName": "ADMIN@SQUIDEX.IO",
+  "Email": "admin@squidex.io",
+  "NormalizedEmail": "ADMIN@SQUIDEX.IO",
+  "PasswordHash": "AQAAAAEAACcQAAAAEJgHB3IH4bIE6Vqj1Ry9uGVwYpA0CcfjLWoQ2mRknX/9Fqq7trRF10xNTHCwkkPKXQ==",
+  "SecurityStamp": "BRUBOALKS7JXX4Q4SJLSDFWRPYU3EI45",
+  "ConcurrencyStamp": "aafb189c-baa0-4ced-99c8-ad87c59ef6df",
+  "LockoutEnabled": true,
+  "Claims": [
+    { "Type": "urn:squidex:name", "Value": "admin@squidex.io" },
+    { "Type": "urn:squidex:permissions", "Value": "squidex.admin.*" },
+    {
+      "Type": "urn:squidex:clientSecret",
+      "Value": "iwsrcubobxxxrnropuj5k0xe4gjxip42tflvx5pv1a8x"
+    }
+  ],
+  "Tokens": [],
+  "Logins": [],
+  "Roles": []
+}

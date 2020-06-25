@@ -31,7 +31,7 @@ const htmlTemplate = (
 </body>
 </html>`;
 
-const apply = async (stats) => {
+const apply = async (stats, origin) => {
   const outputDir = stats.compilation.outputOptions.path;
   const files = await fs.readdir(outputDir);
   const tasks = files
@@ -54,10 +54,8 @@ const apply = async (stats) => {
         const { html, css } = extractCritical(renderToStaticMarkup(element));
         const s3Html = Object.keys(stats.compilation.assets).reduce(
           (html, asset) => {
-            return html.replace(
-              asset,
-              `https://asap.yld.io/static/media/${asset}`,
-            );
+            const { base } = path.parse(asset);
+            return html.replace(asset, `${origin}/static/media/${base}`);
           },
           html,
         );
@@ -83,9 +81,13 @@ const apply = async (stats) => {
 };
 
 module.exports = class TemplatePlugin {
+  constructor(options = {}) {
+    this.origin = options.origin;
+  }
+
   apply(compiler) {
     compiler.hooks.done.tapAsync('TemplatePlugin', async (stats, callback) => {
-      return apply(stats)
+      return apply(stats, this.origin)
         .then((res) => callback(null, res))
         .catch((err) => callback(err));
     });

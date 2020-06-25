@@ -15,7 +15,7 @@
     "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@babel/runtime-corejs3": "^7.9.6",
-    "@types/jest": "^26.0.0",
+    "@types/jest": "^26.0.3",
     "@types/jsonwebtoken": "^8.5.0"
   }
 }

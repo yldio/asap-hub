@@ -11,8 +11,8 @@ const styles = css({
 });
 
 interface CaptionProps {
-  children: React.ReactNode;
-  accent?: AccentColorName;
+  readonly children: React.ReactNode;
+  readonly accent?: AccentColorName;
 }
 const Caption: React.FC<CaptionProps> = ({ children, accent }) => (
   <figcaption

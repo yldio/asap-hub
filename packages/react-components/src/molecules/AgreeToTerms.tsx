@@ -2,8 +2,8 @@ import React from 'react';
 import { Paragraph, Link } from '../atoms';
 
 interface AgreeToTermsProps {
-  termsHref: string;
-  privacyPolicyHref: string;
+  readonly termsHref: string;
+  readonly privacyPolicyHref: string;
 }
 const AgreeToTerms: React.FC<AgreeToTermsProps> = ({
   termsHref,

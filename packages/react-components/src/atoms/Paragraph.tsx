@@ -15,9 +15,9 @@ const primaryStyles = css({
 });
 
 interface ParagraphProps {
-  children: React.ReactNode;
-  primary?: boolean;
-  accent?: AccentColorName;
+  readonly children: React.ReactNode;
+  readonly primary?: boolean;
+  readonly accent?: AccentColorName;
 }
 const Paragraph: React.FC<ParagraphProps> = ({
   children,

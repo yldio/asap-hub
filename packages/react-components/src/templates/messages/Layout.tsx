@@ -5,7 +5,7 @@ import { silver } from '../../colors';
 import { logo } from '../../images';
 
 interface LayoutProps {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }
 
 const imageContainerStyle = css({

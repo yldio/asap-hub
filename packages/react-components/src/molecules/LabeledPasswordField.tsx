@@ -21,9 +21,9 @@ const showPasswordIndicatorStyles = css({
 });
 
 type LabeledPasswordFieldProps = {
-  title?: string;
+  readonly title?: string;
 
-  forgotPasswordHref: string;
+  readonly forgotPasswordHref: string;
 } & Pick<
   ComponentProps<typeof TextField>,
   'value' | 'onChange' | 'required' | 'placeholder' | 'customValidationMessage'

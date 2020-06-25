@@ -9,8 +9,8 @@ const styles = css({
 });
 
 interface SsoButtonsProps {
-  onGoogleSignin?: () => void;
-  onOrcidSignin?: () => void;
+  readonly onGoogleSignin?: () => void;
+  readonly onOrcidSignin?: () => void;
 }
 const SsoButtons: React.FC<SsoButtonsProps> = ({
   onGoogleSignin,

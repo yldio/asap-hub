@@ -11,7 +11,7 @@ const styles = css({
 });
 
 interface DisplayProps {
-  children: TextChildren;
+  readonly children: TextChildren;
 }
 const Display: React.FC<DisplayProps> = ({ children }) => (
   <h1 css={[layoutStyles, styles]}>{children}</h1>

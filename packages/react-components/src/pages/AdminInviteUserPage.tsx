@@ -16,8 +16,8 @@ const centerStyles = css({
 });
 
 interface AdminInviteUserPageProps {
-  state: 'initial' | 'loading' | 'success' | Error;
-  onInviteUser?: ComponentProps<typeof InviteUserForm>['onSubmit'];
+  readonly state: 'initial' | 'loading' | 'success' | Error;
+  readonly onInviteUser?: ComponentProps<typeof InviteUserForm>['onSubmit'];
 }
 const AdminInviteUserPage: React.FC<AdminInviteUserPageProps> = ({
   state,

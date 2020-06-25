@@ -18,7 +18,7 @@ const onRedirectCallback = (appState: RedirectLoginResult['appState']) => {
   );
 };
 
-const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+const AuthProvider: React.FC<{ readonly children: React.ReactNode }> = ({
   children,
 }) => {
   return (

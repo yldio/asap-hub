@@ -29,7 +29,7 @@ const contentStyles = css({
 });
 
 interface LayoutProps {
-  children: React.ReactNode | React.ReactNodeArray;
+  readonly children: React.ReactNode;
 }
 const Layout: React.FC<LayoutProps> = ({ children }) => (
   <article css={containerStyles}>

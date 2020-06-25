@@ -17,7 +17,7 @@ const styles = css({
 });
 
 interface Headline3Props {
-  children: TextChildren;
+  readonly children: TextChildren;
 }
 const Headline3: React.FC<Headline3Props> = ({ children }) => (
   <h3 css={[layoutStyles, styles]}>{children}</h3>

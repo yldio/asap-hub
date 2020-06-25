@@ -5,7 +5,7 @@ import { noop } from '../utils';
 import { LabeledTextField, LabeledPasswordField } from '../molecules';
 
 interface InviteUserFormProps {
-  onSubmit?: (
+  readonly onSubmit?: (
     invitee: { displayName: string; email: string },
     adminPassword: string,
   ) => void;

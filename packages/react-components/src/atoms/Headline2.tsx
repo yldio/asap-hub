@@ -11,7 +11,7 @@ const styles = css({
 });
 
 interface Headline2Props {
-  children: TextChildren;
+  readonly children: TextChildren;
 }
 const Headline2: React.FC<Headline2Props> = ({ children }) => (
   <h2 css={[layoutStyles, styles]}>{children}</h2>

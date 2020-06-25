@@ -9,7 +9,7 @@ import {
 
 import './Home.css';
 
-const Home = () => {
+const Home: React.FC<{}> = () => {
   return (
     <div className="App">
       <Theme variant="dark">

@@ -11,9 +11,9 @@ const notReady = (method: string) => () => {
   throw new Error(`Auth0 test fixture loading, not ready for ${method}`);
 };
 
-export const Auth0Provider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const Auth0Provider: React.FC<{
+  readonly children: React.ReactNode;
+}> = ({ children }) => {
   const [auth0Client, setAuth0] = useState<Auth0Client>();
   useEffect(() => {
     const initAuth0 = async () => {
@@ -55,10 +55,10 @@ export const Auth0Provider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export const LoggedIn: React.FC<{
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
   // undefined user should be explicit, this is for the intermediate state
   // where the getUser() promise is pending.
-  user: User | undefined;
+  readonly user: User | undefined;
 }> = ({ children, user }) => {
   const ctx = useAuth0();
   return (

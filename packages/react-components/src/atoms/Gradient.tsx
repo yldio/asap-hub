@@ -7,7 +7,7 @@ const commonStyles = css({
   background: `linear-gradient(90deg, ${cerulean.rgb} 0%,${fern.rgb} 100% )`,
 });
 
-const Display: React.FC<unknown> = () => (
+const Display: React.FC<{}> = () => (
   <div css={[commonStyles]} role="presentation"></div>
 );
 

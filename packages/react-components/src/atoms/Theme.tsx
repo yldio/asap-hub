@@ -15,8 +15,8 @@ const colors: Record<ThemeVariant, OpaqueColor> = {
 };
 
 interface ThemeProps {
-  children: React.ReactNode;
-  variant?: ThemeVariant;
+  readonly children: React.ReactNode;
+  readonly variant?: ThemeVariant;
 }
 
 const Theme: React.FC<ThemeProps> = ({ children, variant = 'light' }) => (

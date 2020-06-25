@@ -6,17 +6,15 @@ import { AuthProvider } from './auth';
 import Admin from './admin/Admin';
 import history from './history';
 
-function App() {
-  return (
-    <AuthProvider>
-      <Router history={history}>
-        <Switch>
-          <Route path="/admin/" component={Admin} />
-          <Route component={Home} />
-        </Switch>
-      </Router>
-    </AuthProvider>
-  );
-}
+const App: React.FC<{}> = () => (
+  <AuthProvider>
+    <Router history={history}>
+      <Switch>
+        <Route path="/admin/" component={Admin} />
+        <Route component={Home} />
+      </Switch>
+    </Router>
+  </AuthProvider>
+);
 
 export default App;

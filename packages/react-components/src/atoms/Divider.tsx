@@ -39,7 +39,7 @@ const textStyles = css({
 });
 
 interface DividerProps {
-  children?: ReactText | ReadonlyArray<ReactText>;
+  readonly children?: ReactText | ReadonlyArray<ReactText>;
 }
 const Divider: React.FC<DividerProps> = ({ children }) => (
   <div css={containerStyles}>

@@ -112,8 +112,8 @@ const validationMessageStyles = css({
 });
 
 type TextFieldProps = {
-  type?: 'text' | 'search' | 'email' | 'tel' | 'url' | 'password';
-  enabled?: boolean;
+  readonly type?: 'text' | 'search' | 'email' | 'tel' | 'url' | 'password';
+  readonly enabled?: boolean;
 
   /**
    * By default, a valid text field only shows an indicator
@@ -122,14 +122,14 @@ type TextFieldProps = {
    * However, if custom validity checking is used, this can be used
    * to show an indicator despite no validation attributes being set.
    */
-  indicateValid?: boolean;
-  customValidationMessage?: string;
+  readonly indicateValid?: boolean;
+  readonly customValidationMessage?: string;
 
-  loading?: boolean;
-  customIndicator?: React.ReactElement;
+  readonly loading?: boolean;
+  readonly customIndicator?: React.ReactElement;
 
-  value: string;
-  onChange?: (newValue: string) => void;
+  readonly value: string;
+  readonly onChange?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
   'placeholder' | 'required' | 'minLength' | 'maxLength' | 'pattern'

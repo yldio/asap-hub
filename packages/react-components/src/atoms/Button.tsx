@@ -161,23 +161,23 @@ const linkStyles = css({
 });
 
 interface NormalButtonProps {
-  enabled?: boolean;
-  primary?: boolean;
-  small?: boolean;
-  linkStyle?: undefined;
+  readonly enabled?: boolean;
+  readonly primary?: boolean;
+  readonly small?: boolean;
+  readonly linkStyle?: undefined;
 }
 interface LinkStyleButtonProps {
-  linkStyle: true;
-  enabled?: undefined;
-  primary?: undefined;
-  small?: undefined;
+  readonly linkStyle: true;
+  readonly enabled?: undefined;
+  readonly primary?: undefined;
+  readonly small?: undefined;
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
-  submit?: boolean;
+  readonly submit?: boolean;
 
-  children?: React.ReactNode;
+  readonly children?: React.ReactNode;
 
-  onClick?: () => void;
+  readonly onClick?: () => void;
 };
 const Button: React.FC<ButtonProps> = ({
   enabled = true,

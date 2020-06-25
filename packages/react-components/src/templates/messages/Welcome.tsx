@@ -4,8 +4,8 @@ import Layout from './Layout';
 import { Headline3, Paragraph, Button } from '../../atoms';
 
 interface WelcomeProps {
-  firstName: string;
-  link: string;
+  readonly firstName: string;
+  readonly link: string;
 }
 
 const listStyle = css({

@@ -4,7 +4,7 @@ import { AdminInviteUserPage } from '@asap-hub/react-components';
 
 import { API_BASE_URL } from '../config';
 
-const Admin = () => {
+const Admin: React.FC<{}> = () => {
   const [invitationState, setInvitationState] = useState<
     ComponentProps<typeof AdminInviteUserPage>['state']
   >('initial');

@@ -3,7 +3,7 @@ import React from 'react';
 import { perRem, formTargetWidth } from '../pixels';
 
 interface LabelProps {
-  children?: React.ReactNode;
+  readonly children?: React.ReactNode;
 }
 const Label: React.FC<LabelProps> = ({ children }) => (
   <label

@@ -18,8 +18,8 @@ const styles = css({
 });
 
 interface LinkProps {
-  children: TextChildren;
-  href: string;
+  readonly children: TextChildren;
+  readonly href: string;
 }
 const Link: React.FC<LinkProps> = ({ children, href }) => (
   <a href={href} css={[styles]} target="_blank" rel="noreferrer noopener">

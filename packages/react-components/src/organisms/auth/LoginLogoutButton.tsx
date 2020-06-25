@@ -3,7 +3,7 @@ import React from 'react';
 import { useAuth0 } from '@asap-hub/react-context';
 import { Button } from '../../atoms';
 
-const LoginLogoutButton = () => {
+const LoginLogoutButton: React.FC<{}> = () => {
   const { isAuthenticated, user, loginWithRedirect, logout } = useAuth0();
 
   return (

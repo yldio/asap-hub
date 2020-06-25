@@ -5,18 +5,18 @@ import * as config from './config';
 export { config };
 
 export interface User {
-  name?: string;
-  given_name?: string;
-  family_name?: string;
-  orcid?: string;
+  readonly name?: string;
+  readonly given_name?: string;
+  readonly family_name?: string;
+  readonly orcid?: string;
 }
 
 export type Auth0 = {
-  isAuthenticated?: boolean;
-  user?: User;
-  loading: boolean;
-  popupOpen: boolean;
-  handleRedirectCallback: () => Promise<void>;
+  readonly isAuthenticated?: boolean;
+  readonly user?: User;
+  readonly loading: boolean;
+  readonly popupOpen: boolean;
+  readonly handleRedirectCallback: () => Promise<void>;
 } & Pick<
   Auth0Client,
   | 'getIdTokenClaims'

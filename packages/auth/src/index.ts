@@ -1,5 +1,9 @@
 import type { Auth0Client } from '@auth0/auth0-spa-js';
 
+import * as config from './config';
+
+export { config };
+
 export interface User {
   name?: string;
   given_name?: string;

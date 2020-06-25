@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, useRef } from 'react';
 import css from '@emotion/css';
 
 import { LabeledPasswordField, LabeledTextField } from '../../molecules';
@@ -24,6 +24,7 @@ type EmailPasswordSigninProps = Pick<
   password: string;
   onChangePassword?: (newPassword: string) => void;
 
+  customValidationMessage?: string;
   onSignin?: () => void;
 };
 const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
@@ -35,21 +36,42 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
   email,
   onChangeEmail = noop,
 
+  customValidationMessage,
   onSignin = noop,
-}) => (
-  <div css={containerStyles}>
-    <div css={fieldsContainerStyles}>
-      <LabeledTextField title="Email" value={email} onChange={onChangeEmail} />
-      <LabeledPasswordField
-        forgotPasswordHref={forgotPasswordHref}
-        value={password}
-        onChange={onChangePassword}
-      />
-    </div>
-    <Button primary onClick={onSignin}>
-      Sign in
-    </Button>
-  </div>
-);
+}) => {
+  const formRef = useRef<HTMLFormElement>(null);
+  return (
+    <form autoComplete="on" ref={formRef} css={containerStyles}>
+      <div css={fieldsContainerStyles}>
+        <LabeledTextField
+          required
+          type="email"
+          title="Email"
+          value={email}
+          onChange={onChangeEmail}
+          customValidationMessage={customValidationMessage}
+        />
+        <LabeledPasswordField
+          required
+          forgotPasswordHref={forgotPasswordHref}
+          value={password}
+          onChange={onChangePassword}
+          customValidationMessage={customValidationMessage}
+        />
+      </div>
+      <Button
+        primary
+        onClick={() => {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          if (formRef.current!.reportValidity()) {
+            onSignin();
+          }
+        }}
+      >
+        Sign in
+      </Button>
+    </form>
+  );
+};
 
 export default EmailPasswordSignin;

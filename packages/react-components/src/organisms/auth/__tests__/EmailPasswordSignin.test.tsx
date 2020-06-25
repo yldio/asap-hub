@@ -55,11 +55,25 @@ it('renders a button that emits signin events', () => {
   const { getByText } = render(
     <EmailPasswordSignin
       forgotPasswordHref="#"
+      email="john.doe@example.com"
+      password="PW"
+      onSignin={handleSignin}
+    />,
+  );
+  userEvent.click(getByText(/sign.*in/i));
+  expect(handleSignin).toHaveBeenCalled();
+});
+
+it('does not emit a signin event without input', () => {
+  const handleSignin = jest.fn();
+  const { getByText } = render(
+    <EmailPasswordSignin
+      forgotPasswordHref="#"
       email=""
       password=""
       onSignin={handleSignin}
     />,
   );
   userEvent.click(getByText(/sign.*in/i));
-  expect(handleSignin).toHaveBeenCalled();
+  expect(handleSignin).not.toHaveBeenCalled();
 });

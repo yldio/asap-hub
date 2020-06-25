@@ -6,7 +6,7 @@ const pkg = require('./package.json');
 const {
   AWS_ACM_CERTIFICATE_ARN,
   AWS_REGION = 'us-east-1',
-  BASE_URL,
+  BASE_HOSTNAME,
   GLOBAL_TOKEN,
   NODE_ENV = 'development',
   SLS_STAGE = 'development',
@@ -14,7 +14,7 @@ const {
 
 if (NODE_ENV === 'production') {
   assert.ok(AWS_ACM_CERTIFICATE_ARN, 'AWS_ACM_CERTIFICATE_ARN not defined');
-  assert.ok(BASE_URL, 'BASE_URL not defined');
+  assert.ok(BASE_HOSTNAME, 'BASE_HOSTNAME not defined');
   assert.ok(GLOBAL_TOKEN, 'GLOBAL_TOKEN not defined');
 }
 
@@ -27,7 +27,7 @@ const plugins = [
     : ['serverless-offline']),
 ];
 
-const origin = [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_URL]
+const origin = [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_HOSTNAME]
   .filter(Boolean)
   .join('.');
 
@@ -48,7 +48,7 @@ module.exports = {
       },
     },
     environment: {
-      APP_BASE_URL: `https://${origin}`,
+      APP_ORIGIN: `https://${origin}`,
       NODE_ENV: `\${env:NODE_ENV}`,
       MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING, ""}`,
     },
@@ -63,6 +63,11 @@ module.exports = {
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
         localDir: 'apps/frontend/build',
+      },
+      {
+        bucketName: `\${self:service}-\${self:provider.stage}-auth-frontend`,
+        bucketPrefix: '.auth',
+        localDir: 'apps/auth-frontend/build',
       },
       {
         bucketName: `\${self:service}-\${self:provider.stage}-storybook`,
@@ -147,7 +152,7 @@ module.exports = {
       HttpApiRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_URL}.`,
+          HostedZoneName: `${BASE_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.apiOrigin}`,
@@ -169,6 +174,24 @@ module.exports = {
         DeletionPolicy: 'Delete',
         Properties: {
           BucketName: `\${self:service}-\${self:provider.stage}-frontend`,
+          AccessControl: 'PublicRead',
+          CorsConfiguration: {
+            CorsRules: [
+              {
+                AllowedMethods: ['GET', 'HEAD'],
+                AllowedHeaders: ['*'],
+                AllowedOrigins: ['*'],
+                MaxAge: 3000,
+              },
+            ],
+          },
+        },
+      },
+      AuthFrontendBucket: {
+        Type: 'AWS::S3::Bucket',
+        DeletionPolicy: 'Delete',
+        Properties: {
+          BucketName: `\${self:service}-\${self:provider.stage}-auth-frontend`,
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -224,6 +247,27 @@ module.exports = {
           },
         },
       },
+      BucketPolicyAuthFrontend: {
+        Type: 'AWS::S3::BucketPolicy',
+        Properties: {
+          Bucket: `\${self:service}-\${self:provider.stage}-auth-frontend`,
+          PolicyDocument: {
+            Statement: [
+              {
+                Action: ['s3:GetObject'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: {
+                  'Fn::Join': [
+                    '',
+                    [{ 'Fn::GetAtt': ['AuthFrontendBucket', 'Arn'] }, '/*'],
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
       BucketPolicyStorybook: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
@@ -253,6 +297,14 @@ module.exports = {
           },
         },
       },
+      CloudFrontOriginAccessIdentityAuthFrontend: {
+        Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
+        Properties: {
+          CloudFrontOriginAccessIdentityConfig: {
+            Comment: { Ref: 'AuthFrontendBucket' },
+          },
+        },
+      },
       CloudFrontOriginAccessIdentityStorybook: {
         Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         Properties: {
@@ -263,7 +315,7 @@ module.exports = {
       },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['FrontendBucket', 'StorybookBucket'],
+        DependsOn: ['FrontendBucket', 'AuthFrontendBucket', 'StorybookBucket'],
         Properties: {
           DistributionConfig: {
             Aliases: [`\${self:custom.origin}`],
@@ -287,6 +339,23 @@ module.exports = {
                       [
                         'origin-access-identity/cloudfront',
                         { Ref: 'CloudFrontOriginAccessIdentityFrontend' },
+                      ],
+                    ],
+                  },
+                },
+              },
+              {
+                DomainName: {
+                  'Fn::GetAtt': ['AuthFrontendBucket', 'RegionalDomainName'],
+                },
+                Id: 's3origin-auth-frontend',
+                S3OriginConfig: {
+                  OriginAccessIdentity: {
+                    'Fn::Join': [
+                      '/',
+                      [
+                        'origin-access-identity/cloudfront',
+                        { Ref: 'CloudFrontOriginAccessIdentityAuthFrontend' },
                       ],
                     ],
                   },
@@ -353,6 +422,21 @@ module.exports = {
                   Cookies: {
                     Forward: 'none',
                   },
+                  QueryString: false,
+                },
+                PathPattern: '.auth/*',
+                TargetOriginId: 's3origin-auth-frontend',
+                ViewerProtocolPolicy: 'redirect-to-https',
+              },
+              {
+                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                Compress: true,
+                DefaultTTL: 3600,
+                ForwardedValues: {
+                  Cookies: {
+                    Forward: 'none',
+                  },
                   QueryString: true,
                 },
                 PathPattern: '.storybook/*',
@@ -374,7 +458,7 @@ module.exports = {
       CloudFrontRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_URL}.`,
+          HostedZoneName: `${BASE_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.origin}`,

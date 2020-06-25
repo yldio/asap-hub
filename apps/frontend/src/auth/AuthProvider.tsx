@@ -1,9 +1,9 @@
 import React from 'react';
-
 import { RedirectLoginResult } from '@auth0/auth0-spa-js';
-import { Auth0Provider } from './react-auth0-spa';
-import { domain, clientId } from './config';
+import { config } from '@asap-hub/auth';
+
 import history from '../history';
+import { Auth0Provider } from './react-auth0-spa';
 
 // Copied from the Auth0 React quickstart
 /* istanbul ignore file */
@@ -23,8 +23,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   return (
     <Auth0Provider
-      domain={domain}
-      client_id={clientId}
+      domain={config.domain}
+      client_id={config.clientID}
       redirect_uri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
     >

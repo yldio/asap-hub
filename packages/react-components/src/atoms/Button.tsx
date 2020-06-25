@@ -173,6 +173,8 @@ interface LinkStyleButtonProps {
   small?: undefined;
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
+  submit?: boolean;
+
   children?: React.ReactNode;
 
   onClick?: () => void;
@@ -183,11 +185,14 @@ const Button: React.FC<ButtonProps> = ({
   small = false,
   linkStyle = false,
 
+  submit = primary,
+
   children,
 
   onClick = noop,
 }) => (
   <button
+    type={submit ? 'submit' : 'button'}
     disabled={!enabled}
     onClick={(event) => {
       onClick();

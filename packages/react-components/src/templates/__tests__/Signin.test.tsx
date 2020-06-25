@@ -3,12 +3,17 @@ import { render } from '@testing-library/react';
 
 import Signin from '../Signin';
 
-it('renders a headline', () => {
-  const { getByRole } = render(
+it('renders different headlines in signin and signup mode', () => {
+  const { getByRole, rerender } = render(
     <Signin email="" password="" forgotPasswordHref="#" />,
   );
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Sign in to ASAP Hub"`,
+  );
+
+  rerender(<Signin signup email="" password="" forgotPasswordHref="#" />);
+  expect(getByRole('heading').textContent).toMatchInlineSnapshot(
+    `"Create your account"`,
   );
 });
 

@@ -11,6 +11,9 @@
     "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
     "watch:babel": "yarn build:babel -w --verbose"
   },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.9.6"
+  },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@auth0/auth0-spa-js": "^1.9.0"

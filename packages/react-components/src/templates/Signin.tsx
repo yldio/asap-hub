@@ -21,14 +21,26 @@ const ignoreWidthStyles = css({
   minWidth: '100%',
 });
 
-type SigninProps = ComponentProps<typeof EmailPasswordSignin>;
-const Signin: React.FC<SigninProps> = ({ ...props }) => (
+type SigninProps = {
+  signup?: boolean;
+} & ComponentProps<typeof SsoButtons> &
+  ComponentProps<typeof EmailPasswordSignin>;
+const Signin: React.FC<SigninProps> = ({
+  signup = false,
+
+  onGoogleSignin,
+  onOrcidSignin,
+
+  ...props
+}) => (
   <article css={styles}>
     <header css={[headerStyles, ignoreWidthStyles]}>
-      <Display>Sign in to ASAP Hub</Display>
+      <Display>
+        {signup ? 'Create your account' : 'Sign in to ASAP Hub'}
+      </Display>
       <Paragraph primary>Save time and sign in via Google or ORCID</Paragraph>
     </header>
-    <SsoButtons />
+    <SsoButtons onGoogleSignin={onGoogleSignin} onOrcidSignin={onOrcidSignin} />
     <div css={ignoreWidthStyles}>
       <Divider>or</Divider>
     </div>

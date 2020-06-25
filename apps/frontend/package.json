@@ -13,6 +13,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/react-components": "workspace:packages/react-components",
     "@asap-hub/react-context": "workspace:packages/react-context",
     "@auth0/auth0-spa-js": "^1.9.0",
@@ -23,7 +24,6 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@testing-library/dom": "^7.10.0",
     "@testing-library/jest-dom": "^5.9.0",

@@ -55,10 +55,7 @@ export const Invalid = () => {
           'Validation Error Message',
           "Must not include special characters, such as '|' and '%'.",
         )}
-        hint={text(
-          'Hint',
-          'Hint: Will only indicate invalidity after losing focus the first time or pressing the "Validate Form" knob.',
-        )}
+        hint={text('Hint', 'Hint')}
       />
     </form>
   );

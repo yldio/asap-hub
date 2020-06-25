@@ -10,7 +10,7 @@ const LoginLogoutButton = () => {
     <div>
       {!isAuthenticated && (
         <Button primary onClick={() => loginWithRedirect()}>
-          Log in / Register
+          Log in
         </Button>
       )}
 
@@ -27,8 +27,6 @@ const LoginLogoutButton = () => {
           Log out{user && ` ${user.name}`}
         </Button>
       )}
-
-      {isAuthenticated && JSON.stringify(user, null, 2)}
     </div>
   );
 };

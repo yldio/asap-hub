@@ -53,6 +53,7 @@ module.exports = {
       files: testFiles,
       rules: {
         '@typescript-eslint/no-non-null-assertion': 'off',
+        'no-var': 'off',
         'no-new-func': 'off',
       },
     },

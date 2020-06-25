@@ -8,10 +8,17 @@ const styles = css({
   flexDirection: 'column',
 });
 
-const SsoButtons: React.FC<{}> = () => (
+interface SsoButtonsProps {
+  onGoogleSignin?: () => void;
+  onOrcidSignin?: () => void;
+}
+const SsoButtons: React.FC<SsoButtonsProps> = ({
+  onGoogleSignin,
+  onOrcidSignin,
+}) => (
   <div css={styles}>
-    <GoogleSigninButton />
-    <OrcidSigninButton />
+    <GoogleSigninButton onClick={onGoogleSignin} />
+    <OrcidSigninButton onClick={onOrcidSignin} />
   </div>
 );
 

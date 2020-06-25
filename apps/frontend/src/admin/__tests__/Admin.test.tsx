@@ -10,7 +10,7 @@ jest.mock('../../config');
 
 it('shows the user invitation form', () => {
   const { queryByText } = render(<Admin />);
-  expect(queryByText(/invite user/i)).toBeInTheDocument();
+  expect(queryByText(/invite user/i)).toBeVisible();
 });
 
 describe('when submitting the form', () => {
@@ -67,7 +67,7 @@ describe('when submitting the form', () => {
     it('shows a loading indicator', () => {
       const { getByText } = result;
 
-      expect(getByText(/inviting/i)).toBeInTheDocument();
+      expect(getByText(/inviting/i)).toBeVisible();
     });
   });
 
@@ -85,12 +85,12 @@ describe('when submitting the form', () => {
 
     it('shows the form again', async () => {
       const { findByText } = result;
-      await expect(findByText(/^invite user$/i)).resolves.toBeInTheDocument();
+      await expect(findByText(/^invite user$/i)).resolves.toBeVisible();
     });
 
     it('shows a success message', async () => {
       const { findByText } = result;
-      await expect(findByText(/invited/i)).resolves.toBeInTheDocument();
+      await expect(findByText(/invited/i)).resolves.toBeVisible();
     });
   });
 
@@ -108,7 +108,7 @@ describe('when submitting the form', () => {
 
     it('shows the form again', async () => {
       const { findByText } = result;
-      await expect(findByText(/^invite user$/i)).resolves.toBeInTheDocument();
+      await expect(findByText(/^invite user$/i)).resolves.toBeVisible();
     });
 
     it('shows a failure message', async () => {
@@ -133,7 +133,7 @@ describe('when submitting the form', () => {
 
     it('shows the form again', async () => {
       const { findByText } = result;
-      await expect(findByText(/^invite user$/i)).resolves.toBeInTheDocument();
+      await expect(findByText(/^invite user$/i)).resolves.toBeVisible();
     });
 
     it('shows an error message', async () => {

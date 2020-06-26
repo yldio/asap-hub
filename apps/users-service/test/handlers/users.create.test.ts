@@ -8,7 +8,7 @@ import { CMS } from '../../src/cms';
 
 jest.mock('aws-sdk', () => {
   const m = {
-    sendEmail: jest.fn(() => ({
+    sendTemplatedEmail: jest.fn(() => ({
       promise: jest.fn(() => Promise.resolve({})),
     })),
   };
@@ -154,30 +154,18 @@ describe('POST /users', () => {
     expect(res.statusCode).toStrictEqual(201);
 
     const user = await cms.users.fetchByEmail(payload.email);
-
-    const [{ code }] = user.data.connections.iv;
-    expect(ses.sendEmail).toBeCalledTimes(1);
-    expect(ses.sendEmail).toBeCalledWith({
+    const [code] = user.connections;
+    expect(ses.sendTemplatedEmail).toBeCalledTimes(1);
+    expect(ses.sendTemplatedEmail).toBeCalledWith({
       Source: 'no-reply@asap.yld.io',
       Destination: {
         ToAddresses: [payload.email],
       },
-      Message: {
-        Body: {
-          Html: {
-            Charset: 'UTF-8',
-            Data: `<div><p>Hey, ${payload.displayName}</p><a href=\"http://localhost:3000/welcome/${code}\">http://localhost:3000/welcome/${code}</a></div>`,
-          },
-          Text: {
-            Charset: 'UTF-8',
-            Data: `Hey, ${payload.displayName}\n\nhttp://localhost:3000/welcome/${code}`,
-          },
-        },
-        Subject: {
-          Charset: 'UTF-8',
-          Data: 'Welcome',
-        },
-      },
+      Template: 'Welcome',
+      TemplateData: JSON.stringify({
+        firstName: payload.displayName,
+        link: `http://localhost:3000/welcome/${code}`,
+      }),
     });
   });
 });

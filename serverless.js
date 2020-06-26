@@ -58,6 +58,7 @@ module.exports = {
   },
   package: {
     individually: true,
+    excludeDevDependencies: false,
   },
   custom: {
     apiOrigin: `${SLS_STAGE === 'production' ? 'api.' : 'api-'}${origin}`,

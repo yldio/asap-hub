@@ -1,0 +1,17 @@
+.tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+  variables: &tmpl_branch_deploy_variables
+    SLS_STAGE: $CI_COMMIT_REF_SLUG
+
+deploy:ses:branch:
+  <<: *tmpl_branch_deploy_rules
+  dependencies:
+    - build
+  script:
+    - yarn node packages/react-templates/src/deploy.js
+  stage: deploy
+  needs:
+    - build
+  variables:
+    ORIGIN: https://$BASE_URL

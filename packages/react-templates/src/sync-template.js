@@ -1,8 +1,7 @@
-const AWS = require('aws-sdk');
+const aws = require('aws-sdk');
 
-const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+const ses = new aws.SES({ apiVersion: '2010-12-01' });
 module.exports = async (src) => {
-  // eslint-disable-line global-require
   const template = require(src);
   const templateName = template.TemplateName;
 
@@ -12,18 +11,21 @@ module.exports = async (src) => {
         TemplateName: templateName,
       })
       .promise();
-    return ses
+
+    await ses
       .updateTemplate({
         Template: template,
       })
       .promise();
+    console.log(`Template "${templateName}" updated.`);
   } catch (err) {
     if (err.code === 'TemplateDoesNotExist') {
-      return ses
+      await ses
         .createTemplate({
           Template: template,
         })
         .promise();
+      console.log(`Template "${templateName}" created.`);
     }
     throw err;
   }

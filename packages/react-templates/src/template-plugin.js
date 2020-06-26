@@ -37,44 +37,37 @@ const apply = async (stats, origin) => {
   const tasks = files
     .filter((f) => f.endsWith('.js'))
     .map(async (f) => {
-      try {
-        const cache = createCache();
-        const { extractCritical } = createEmotionServer(cache);
-        const { default: Component, text } = require(path.resolve(
-          outputDir,
-          f,
-        ));
+      const cache = createCache();
+      const { extractCritical } = createEmotionServer(cache);
+      const { default: Component } = require(path.resolve(outputDir, f));
 
-        const element = React.createElement(
-          CacheProvider,
-          { value: cache },
-          React.createElement(Component),
-        );
+      const element = React.createElement(
+        CacheProvider,
+        { value: cache },
+        React.createElement(Component),
+      );
 
-        const { html, css } = extractCritical(renderToStaticMarkup(element));
-        const s3Html = Object.keys(stats.compilation.assets).reduce(
-          (html, asset) => {
-            const { base } = path.parse(asset);
-            return html.replace(asset, `${origin}/static/media/${base}`);
-          },
-          html,
-        );
+      const { html, css } = extractCritical(renderToStaticMarkup(element));
+      const s3Html = Object.keys(stats.compilation.assets).reduce(
+        (res, asset) => {
+          const { base } = path.parse(asset);
+          return res.replace(asset, `${origin}/static/media/${base}`);
+        },
+        html,
+      );
 
-        const content = juice(`<style>${css}</style>${s3Html}`);
-        const { name } = path.parse(f);
-        await fs.writeFile(
-          path.resolve(outputDir, `template-${name}.json`),
-          JSON.stringify({
-            TemplateName: titleCase(name),
-            SubjectPart: titleCase(name),
-            HtmlPart: htmlTemplate(content),
-            TextPart: '',
-          }),
-        );
-        return content;
-      } catch (err) {
-        console.error(err);
-      }
+      const content = juice(`<style>${css}</style>${s3Html}`);
+      const { name } = path.parse(f);
+      await fs.writeFile(
+        path.resolve(outputDir, `template-${name}.json`),
+        JSON.stringify({
+          TemplateName: titleCase(name),
+          SubjectPart: titleCase(name),
+          HtmlPart: htmlTemplate(content),
+          TextPart: '',
+        }),
+      );
+      return content;
     });
 
   return Promise.all(tasks);

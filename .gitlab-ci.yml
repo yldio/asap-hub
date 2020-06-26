@@ -33,11 +33,6 @@
 #   needs: []
 #   stage: prepare
 
-.tmpl:deploy: &tmpl_deploy
-  script:
-    - echo "CHANGEME"
-  stage: deploy
-
 .tmpl:prepare: &tmpl_prepare
   image:
     name: amazon/aws-cli
@@ -58,6 +53,11 @@
 
 .tmpl:node_production_variables: &tmpl_node_production_variables
   NODE_ENV: production
+
+.tmpl:cms_production_variables: &tmpl_cms_production_variables
+  CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
+  CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
+  CMS_APP_NAME: $PROD_CMS_APP_NAME
 
 image: node:12
 
@@ -169,10 +169,10 @@ prepare:sls:branch:
 # stage deploy
 
 deploy:sls:master:
-  <<: *tmpl_deploy
   <<: *tmpl_master_deploy_rules
   variables:
     <<: *tmpl_node_production_variables
+    <<: *tmpl_cms_production_variables
     <<: *tmpl_master_deploy_variables
   environment:
     name: production
@@ -188,7 +188,6 @@ deploy:sls:master:
     # - prepare:cert:master
 
 deploy:sls:branch:
-  <<: *tmpl_deploy
   <<: *tmpl_branch_deploy_rules
   variables:
     <<: *tmpl_node_production_variables

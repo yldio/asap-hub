@@ -10,6 +10,10 @@ const {
   GLOBAL_TOKEN,
   NODE_ENV = 'development',
   SLS_STAGE = 'development',
+  CMS_BASE_URL,
+  CMS_APP_NAME,
+  CMS_CLIENT_ID,
+  CMS_CLIENT_SECRET,
 } = process.env;
 
 if (NODE_ENV === 'production') {
@@ -50,6 +54,10 @@ module.exports = {
     environment: {
       APP_ORIGIN: `https://${origin}`,
       NODE_ENV: `\${env:NODE_ENV}`,
+      CMS_BASE_URL,
+      CMS_APP_NAME,
+      CMS_CLIENT_ID,
+      CMS_CLIENT_SECRET
     },
   },
   package: {

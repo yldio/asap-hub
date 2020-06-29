@@ -37,7 +37,7 @@
   script:
     # - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
     - yarn sls deploy --verbose
-  stage: deploy	
+  stage: deploy
 
 .tmpl:prepare: &tmpl_prepare
   image:

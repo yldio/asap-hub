@@ -33,6 +33,12 @@
 #   needs: []
 #   stage: prepare
 
+.tmpl:deploy: &tmpl_deploy
+  script:
+    # - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
+    - yarn sls deploy --verbose
+  stage: deploy	
+
 .tmpl:prepare: &tmpl_prepare
   image:
     name: amazon/aws-cli
@@ -169,6 +175,7 @@ prepare:sls:branch:
 # stage deploy
 
 deploy:sls:master:
+  <<: *tmpl_deploy
   <<: *tmpl_master_deploy_rules
   variables:
     <<: *tmpl_node_production_variables
@@ -188,6 +195,7 @@ deploy:sls:master:
     # - prepare:cert:master
 
 deploy:sls:branch:
+  <<: *tmpl_deploy
   <<: *tmpl_branch_deploy_rules
   variables:
     <<: *tmpl_node_production_variables

@@ -1,8 +1,8 @@
 .tmpl:master_deploy_rules: &tmpl_master_deploy_rules
   rules:
-    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == 'master'
   variables: &tmpl_master_deploy_variables
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
+    SLS_STAGE: production
 
 deploy:ses:master:
   <<: *tmpl_master_deploy_rules
@@ -14,4 +14,5 @@ deploy:ses:master:
   needs:
     - build
   variables:
+    <<: *tmpl_master_deploy_variables
     ORIGIN: https://$BASE_URL

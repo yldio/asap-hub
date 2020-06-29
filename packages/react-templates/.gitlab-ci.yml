@@ -1,11 +1,11 @@
-.tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
+.tmpl:master_deploy_rules: &tmpl_master_deploy_rules
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
-  variables: &tmpl_branch_deploy_variables
+  variables: &tmpl_master_deploy_variables
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
-deploy:ses:branch:
-  <<: *tmpl_branch_deploy_rules
+deploy:ses:master:
+  <<: *tmpl_master_deploy_rules
   dependencies:
     - build
   script:

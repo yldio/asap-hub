@@ -1,0 +1,35 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "page",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Page"
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Title",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      }
+    ],
+    "previewUrls": {},
+    "isPublished": true
+  }
+}

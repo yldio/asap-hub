@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "ContentsModel",
+  "type": "object",
+  "required": [
+    "contents"
+  ],
+  "properties": {
+    "contents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContentModel"
+      }
+    }
+  },
+  "definitions": {
+    "ContentModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "data"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data": {},
+        "filter": {
+          "oneOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "references": {
+          "type": [
+            "null",
+            "object"
+          ],
+          "additionalProperties": {
+            "$ref": "#/definitions/ContentReference"
+          }
+        }
+      }
+    },
+    "ContentReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "filter"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "filter": {}
+      }
+    }
+  }
+}

@@ -9,7 +9,7 @@ deploy:ses:branch:
   dependencies:
     - build
   script:
-    - yarn node packages/react-templates/src/deploy.js
+    - yarn node packages/react-templates/lib/deploy.js
   stage: deploy
   needs:
     - build

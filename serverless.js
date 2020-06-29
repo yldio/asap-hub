@@ -50,7 +50,10 @@ module.exports = {
     environment: {
       APP_ORIGIN: `https://${origin}`,
       NODE_ENV: `\${env:NODE_ENV}`,
-      MONGODB_CONNECTION_STRING: `\${env:MONGODB_CONNECTION_STRING, ""}`,
+      CMS_BASE_URL: `\${env:CMS_BASE_URL}`,
+      CMS_APP_NAME: `\${env:CMS_APP_NAME}`,
+      CMS_CLIENT_ID: `\${env:CMS_CLIENT_ID}`,
+      CMS_CLIENT_SECRET: `\${env:CMS_CLIENT_SECRET}`,
     },
   },
   package: {

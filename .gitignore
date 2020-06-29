@@ -21,6 +21,7 @@ node_modules
 /.serverless*
 dev/localstack
 dev/mongodb
+bin
 
 *.tsbuildinfo
 
@@ -38,3 +39,6 @@ yarn-error.log*
 # editors
 .vscode
 .vim
+
+# squidex
+.configuration

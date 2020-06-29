@@ -4,7 +4,6 @@ import Bourne from '@hapi/bourne';
 import Debug from 'debug';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
-import { MongoClient } from 'mongodb';
 import { origin } from '../config';
 
 export interface Request {
@@ -23,10 +22,6 @@ export interface Response {
         [header: string]: string | number | boolean;
       }
     | undefined;
-}
-
-export interface RequestContext {
-  connection: MongoClient;
 }
 
 export const response = (res: APIGatewayProxyResult): APIGatewayProxyResult => {

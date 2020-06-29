@@ -1,16 +1,12 @@
 import Joi from '@hapi/joi';
-import { Entity } from '../data/base';
 
-export interface Connection {
+export interface User {
   id: string;
-  raw: unknown;
-  source: string;
-}
-
-export interface User extends Entity {
-  connections: [Connection];
-  displayName: string;
-  email: string;
+  data: {
+    displayName: { iv: string };
+    email: { iv: string };
+    connections: { iv: [{ code: string }] };
+  };
 }
 
 export const createSchema = Joi.object({

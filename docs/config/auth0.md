@@ -14,8 +14,9 @@ and configured as follows:
 - `domain` - pick any and copy to the frontend auth config
 - `Client ID` - generated, copy to the frontend auth config
 - `Application Type` - Single Page Application
-- `Allowed Callback URLs` - `http://localhost:3000, https://$PRODUCTION_HOST`
-- `Allowed Web Origins` - `http://localhost:3000, https://$PRODUCTION_HOST`
+- `Allowed Callback URLs` - `http://localhost:3000, https://$PRODUCTION_HOST, https://*.$PRODUCTION_HOST`
+- `Allowed Logout URLs` - `http://localhost:3000, https://$PRODUCTION_HOST, https://*.$PRODUCTION_HOST`
+- `Allowed Web Origins` - `http://localhost:3000, https://$PRODUCTION_HOST, https://*.$PRODUCTION_HOST`
 
 **Connections**
 

@@ -5,16 +5,32 @@ import Home from './home/Home';
 import { AuthProvider } from './auth';
 import Admin from './admin/Admin';
 import history from './history';
+import Welcome from './onboarding/Welcome';
+import ContinueOnboarding from './onboarding/ContinueOnboarding';
+import CreateProfile from './onboarding/CreateProfile';
 
-const App: React.FC<{}> = () => (
-  <AuthProvider>
-    <Router history={history}>
-      <Switch>
-        <Route path="/admin/" component={Admin} />
-        <Route component={Home} />
-      </Switch>
-    </Router>
-  </AuthProvider>
+const AuthCallbackGuardedHome: React.FC<{}> = () => (
+  <ContinueOnboarding>
+    <Home />
+  </ContinueOnboarding>
 );
+
+const App: React.FC<{}> = () => {
+  return (
+    <AuthProvider>
+      <Router history={history}>
+        <Switch>
+          <Route exact path="/welcome/:code/" component={Welcome} />
+          <Route exact path="/create-profile" component={CreateProfile} />
+
+          <Route exact path="/admin/" component={Admin} />
+
+          <Route exact path="/" component={AuthCallbackGuardedHome} />
+          <Route render={() => 'Not found'} />
+        </Switch>
+      </Router>
+    </AuthProvider>
+  );
+};
 
 export default App;

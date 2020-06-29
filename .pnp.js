@@ -8008,6 +8008,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
+            ["regenerator-runtime", "npm:0.13.5"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:3.4.2"]
           ],
           "packagePeers": [
@@ -8050,6 +8051,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
+            ["regenerator-runtime", "npm:0.13.5"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:3.4.2"]
           ],
           "packagePeers": [
@@ -8092,6 +8094,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
+            ["regenerator-runtime", "npm:0.13.5"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:3.4.2"]
           ],
           "packagePeers": [
@@ -8133,6 +8136,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
+            ["regenerator-runtime", "npm:0.13.5"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:3.4.2"]
           ],
           "linkType": "SOFT",

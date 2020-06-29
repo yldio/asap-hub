@@ -1,5 +1,6 @@
 import React from 'react';
 import nock from 'nock';
+import { ClientRequest } from 'http';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -9,8 +10,8 @@ import { API_BASE_URL } from '../../config';
 jest.mock('../../config');
 
 it('shows the user invitation form', () => {
-  const { queryByText } = render(<Admin />);
-  expect(queryByText(/invite user/i)).toBeVisible();
+  const { getByText } = render(<Admin />);
+  expect(getByText(/invite user/i)).toBeVisible();
 });
 
 describe('when submitting the form', () => {
@@ -69,6 +70,21 @@ describe('when submitting the form', () => {
 
       expect(getByText(/inviting/i)).toBeVisible();
     });
+  });
+
+  it('cancels the request on unmount', async () => {
+    const { getByText, unmount } = result;
+    let req!: ClientRequest;
+
+    nockInterceptor.delay(1).reply(201, function handleRequest(url, body, cb) {
+      req = this.req;
+      cb(null, {});
+    });
+    userEvent.click(getByText(/invite/i, { selector: 'button *' }));
+
+    expect(req.aborted).toBe(undefined);
+    unmount();
+    await waitFor(() => expect(req.aborted).toEqual(expect.any(Number)));
   });
 
   describe('and the invitation succeeds', () => {

@@ -32,5 +32,5 @@ export const createRandomUser = async (): ReplyUser => {
   };
 
   const createdUser = await cms.users.create(user);
-  return transform(createdUser)
-}
+  return transform(createdUser);
+};

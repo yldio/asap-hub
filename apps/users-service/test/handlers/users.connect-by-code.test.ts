@@ -5,7 +5,7 @@ import { config as authConfig } from '@asap-hub/auth';
 import { handler } from '../../src/handlers/welcome';
 import { apiGatewayEvent } from '../helpers/events';
 import { auth0BaseUrl } from '../../src/config';
-import { createRandomUser } from '../helpers/create-user'
+import { createRandomUser } from '../helpers/create-user';
 import { CMS } from '../../src/cms';
 
 jest.mock('@asap-hub/auth');
@@ -35,7 +35,9 @@ describe('POST /users?code={code}', () => {
   test('returns 403 when auth0 return an error', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(404);
 
-    const { connections: [{code}] } = await createRandomUser();
+    const {
+      connections: [{ code }],
+    } = await createRandomUser();
 
     const res = (await handler(
       apiGatewayEvent({
@@ -90,7 +92,9 @@ describe('POST /users?code={code}', () => {
     };
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200, response);
 
-    const { connections: [{code}] } = await createRandomUser();
+    const {
+      connections: [{ code }],
+    } = await createRandomUser();
 
     const res = (await handler(
       apiGatewayEvent({

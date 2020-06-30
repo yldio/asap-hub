@@ -21,7 +21,7 @@ export default class Users extends Base<User> {
         json: {
           displayName: { iv: user.displayName },
           email: { iv: user.email },
-          firstName: { iv: user.firstName  },
+          firstName: { iv: user.firstName },
           middleName: { iv: user.middleName },
           lastName: { iv: user.lastName },
           title: { iv: user.title },

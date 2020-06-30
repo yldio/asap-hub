@@ -8,9 +8,7 @@
   },
   "roles": {
     "custom": {
-      "permissions": [
-        "schemas.*"
-      ]
+      "permissions": ["schemas.*"]
     }
   },
   "languages": {

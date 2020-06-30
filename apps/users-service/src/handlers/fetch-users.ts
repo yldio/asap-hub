@@ -4,9 +4,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import * as lambda from '../framework/lambda';
 import Users from '../controllers/users';
 
-const fetchById = async (
-  request: lambda.Request,
-): Promise<lambda.Response> => {
+const fetchById = async (request: lambda.Request): Promise<lambda.Response> => {
   const paramsSchema = Joi.object({
     id: Joi.string().required(),
   }).required();

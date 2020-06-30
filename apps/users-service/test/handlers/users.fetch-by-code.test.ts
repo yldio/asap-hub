@@ -2,7 +2,7 @@ import Chance from 'chance';
 import { handler } from '../../src/handlers/welcome';
 import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { createRandomUser } from '../helpers/create-user'
+import { createRandomUser } from '../helpers/create-user';
 
 const chance = new Chance();
 
@@ -35,7 +35,9 @@ describe('GET /users/{code}', () => {
   });
 
   test('returns 200 when code exists', async () => {
-    const { connections: [{code}] } = await createRandomUser();
+    const {
+      connections: [{ code }],
+    } = await createRandomUser();
 
     const result = (await handler(
       apiGatewayEvent({

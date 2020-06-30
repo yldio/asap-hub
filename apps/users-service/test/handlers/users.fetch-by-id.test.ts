@@ -2,9 +2,9 @@ import Chance from 'chance';
 import { handler } from '../../src/handlers/fetch-users';
 import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { createRandomUser } from '../helpers/create-user'
+import { createRandomUser } from '../helpers/create-user';
 
-const chance = new Chance()
+const chance = new Chance();
 
 describe('GET /users/{id}', () => {
   test("return 400 when id isn't present", async () => {

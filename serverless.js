@@ -127,6 +127,18 @@ module.exports = {
         },
       ],
     },
+    'fetch-user': {
+      handler: 'apps/users-service/build/handlers/fetch-users.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/users/{id}`,
+          },
+        },
+      ],
+    },
   },
   resources: {
     Resources: {

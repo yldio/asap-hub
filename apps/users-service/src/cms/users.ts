@@ -21,6 +21,12 @@ export default class Users extends Base<User> {
         json: {
           displayName: { iv: user.displayName },
           email: { iv: user.email },
+          firstName: { iv: user.firstName  },
+          middleName: { iv: user.middleName },
+          lastName: { iv: user.lastName },
+          title: { iv: user.title },
+          orcid: { iv: user.orcid },
+          institution: { iv: user.institution },
           connections: { iv: [{ code }] },
         },
         searchParams: { publish: true },
@@ -36,6 +42,16 @@ export default class Users extends Base<User> {
       .json();
 
     return items[0] as User;
+  }
+
+  async fetchById(id: string): Promise<User | null> {
+    const { items } = await this.client
+      .get('users', {
+        searchParams: { $filter: `id eq '${id}'` },
+      })
+      .json();
+
+    return items.length ? (items[0] as User) : null;
   }
 
   async fetchByCode(code: string): Promise<User | null> {

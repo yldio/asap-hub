@@ -1,13 +1,13 @@
 import Chance from 'chance';
-import { handler } from '../../src/handlers/welcome';
+import { handler } from '../../src/handlers/fetch-users';
 import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createRandomUser } from '../helpers/create-user'
 
-const chance = new Chance();
+const chance = new Chance()
 
-describe('GET /users/{code}', () => {
-  test("return 400 when code isn't present", async () => {
+describe('GET /users/{id}', () => {
+  test("return 400 when id isn't present", async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
@@ -19,12 +19,12 @@ describe('GET /users/{code}', () => {
     expect(result.statusCode).toStrictEqual(400);
   });
 
-  test("returns 403 code doesn't exist", async () => {
+  test("returns 403 when id doesn't exist", async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
-        queryStringParameters: {
-          code: chance.string(),
+        pathParameters: {
+          id: chance.string(),
         },
       }),
       null,
@@ -34,14 +34,14 @@ describe('GET /users/{code}', () => {
     expect(result.statusCode).toStrictEqual(403);
   });
 
-  test('returns 200 when code exists', async () => {
-    const { connections: [{code}] } = await createRandomUser();
+  test('returns 200 when id exists', async () => {
+    const { id } = await createRandomUser();
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
-        queryStringParameters: {
-          code,
+        pathParameters: {
+          id,
         },
       }),
       null,

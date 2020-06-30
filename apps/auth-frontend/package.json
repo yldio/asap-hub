@@ -6,7 +6,7 @@
     "node": "12.x"
   },
   "scripts": {
-    "start": "cross-env TSC_COMPILE_ON_ERROR=true react-scripts start",
+    "start": "cross-env PORT=3002 TSC_COMPILE_ON_ERROR=true react-scripts start",
     "build": "node scripts/build.js",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",

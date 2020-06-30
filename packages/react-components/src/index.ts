@@ -25,6 +25,7 @@ export {
 } from './atoms';
 export {
   OrcidSigninButton,
+  Container,
   GoogleSigninButton,
   Header,
   LabeledTextField,
@@ -38,5 +39,5 @@ export {
   Layout,
 } from './organisms';
 
-export { InviteUserForm, Signin } from './templates';
+export { InviteUserForm, Signin, Profile } from './templates';
 export { AdminInviteUserPage, SigninPage } from './pages';

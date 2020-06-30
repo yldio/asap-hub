@@ -1,4 +1,5 @@
 export { default as AgreeToTerms } from './AgreeToTerms';
+export { default as Container } from './Container';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
 export { default as LabeledDropdown } from './LabeledDropdown';

@@ -3,7 +3,7 @@ import Joi from '@hapi/joi';
 export interface User {
   id: string;
   data: {
-    displayname: { iv: string };
+    displayName: { iv: string };
     email: { iv: string };
     firstName: { iv: string };
     middleName: { iv: string };

@@ -11,6 +11,12 @@ export interface Connection {
 export interface CreateUser {
   displayName: string;
   email: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  title: string;
+  orcid: string;
+  institution: string;
 }
 
 export default class Users extends Base<User> {

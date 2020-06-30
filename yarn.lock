@@ -196,9 +196,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/react-templates@workspace:packages/react-templates":
+"@asap-hub/react-templates@workspace:apps/react-templates":
   version: 0.0.0-use.local
-  resolution: "@asap-hub/react-templates@workspace:packages/react-templates"
+  resolution: "@asap-hub/react-templates@workspace:apps/react-templates"
   dependencies:
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@babel/core": ^7.9.0

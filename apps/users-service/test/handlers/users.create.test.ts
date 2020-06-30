@@ -154,7 +154,7 @@ describe('POST /users', () => {
     expect(res.statusCode).toStrictEqual(201);
 
     const user = await cms.users.fetchByEmail(payload.email);
-    const [code] = user.connections;
+    const [{ code }] = user.data.connections.iv;
     expect(ses.sendTemplatedEmail).toBeCalledTimes(1);
     expect(ses.sendTemplatedEmail).toBeCalledWith({
       Source: 'no-reply@asap.yld.io',

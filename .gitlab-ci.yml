@@ -1,5 +1,5 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
-include: 'packages/react-templates/.gitlab-ci.yml'
+include: 'apps/react-templates/.gitlab-ci.yml'
 
 .tmpl:master_deploy_rules: &tmpl_master_deploy_rules
   rules:

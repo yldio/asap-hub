@@ -12,7 +12,7 @@ jest.mock('@asap-hub/auth');
 const chance = new Chance();
 const cms = new CMS();
 
-describe('POST /users/{code}', () => {
+describe('POST /users?code={code}', () => {
   test("returns 403 when code doesn't exist", async () => {
     const res = (await handler(
       apiGatewayEvent({
@@ -20,7 +20,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code: chance.string(),
         },
       }),
@@ -47,7 +47,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code,
         },
       }),
@@ -82,7 +82,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code: chance.string(),
         },
       }),
@@ -113,7 +113,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code,
         },
       }),

@@ -24,7 +24,7 @@ describe('GET /users/{code}', () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
-        pathParameters: {
+        queryStringParameters: {
           code: chance.string(),
         },
       }),
@@ -46,7 +46,7 @@ describe('GET /users/{code}', () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
-        pathParameters: {
+        queryStringParameters: {
           code,
         },
       }),

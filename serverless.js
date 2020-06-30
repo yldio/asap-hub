@@ -115,7 +115,7 @@ module.exports = {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
-            path: `/users/{code}`,
+            path: `/users`,
           },
         },
         {

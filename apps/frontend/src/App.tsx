@@ -24,9 +24,7 @@ const App: React.FC<{}> = () => {
           <Route path="/members/:id" component={Profile} />
           <Route exact path="/welcome/:code/" component={Welcome} />
           <Route exact path="/create-profile" component={CreateProfile} />
-
           <Route exact path="/admin/" component={Admin} />
-
           <Route exact path="/" component={AuthCallbackGuardedHome} />
           <Route render={() => 'Not found'} />
         </Switch>

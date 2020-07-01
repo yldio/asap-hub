@@ -21,6 +21,7 @@ node_modules
 /.serverless*
 dev/localstack
 dev/mongodb
+dev/sync-squidex-schemas.sh
 bin
 
 *.tsbuildinfo

@@ -21,6 +21,12 @@ function transform(user: User): ReplyUser {
     id: user.id,
     displayName: user.data.displayName.iv,
     email: user.data.email.iv,
+    firstName: user.data.firstName && user.data.firstName.iv,
+    middleName: user.data.middleName && user.data.middleName.iv,
+    lastName: user.data.lastName && user.data.lastName.iv,
+    title: user.data.title && user.data.title.iv,
+    orcid: user.data.orcid && user.data.orcid.iv,
+    institution: user.data.institution && user.data.institution.iv,
   } as ReplyUser;
 }
 
@@ -60,6 +66,16 @@ export default class Users {
     }
 
     return transform(createdUser);
+  }
+
+  async fetchById(id: string): Promise<ReplyUser> {
+    let user;
+    try {
+      user = await this.cms.users.fetchById(id);
+    } catch (err) {
+      throw Boom.notFound();
+    }
+    return transform(user);
   }
 
   async fetchByCode(code: string): Promise<ReplyUser> {

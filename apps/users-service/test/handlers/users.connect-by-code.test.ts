@@ -5,6 +5,7 @@ import { config as authConfig } from '@asap-hub/auth';
 import { handler } from '../../src/handlers/welcome';
 import { apiGatewayEvent } from '../helpers/events';
 import { auth0BaseUrl } from '../../src/config';
+import { createRandomUser } from '../helpers/create-user';
 import { CMS } from '../../src/cms';
 
 jest.mock('@asap-hub/auth');
@@ -12,7 +13,7 @@ jest.mock('@asap-hub/auth');
 const chance = new Chance();
 const cms = new CMS();
 
-describe('POST /users/{code}', () => {
+describe('POST /users?code={code}', () => {
   test("returns 403 when code doesn't exist", async () => {
     const res = (await handler(
       apiGatewayEvent({
@@ -20,7 +21,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code: chance.string(),
         },
       }),
@@ -34,12 +35,9 @@ describe('POST /users/{code}', () => {
   test('returns 403 when auth0 return an error', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(404);
 
-    const user = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
-    const createdUser = await cms.users.create(user);
-    const [{ code }] = createdUser.data.connections.iv;
+    const {
+      connections: [{ code }],
+    } = await createRandomUser();
 
     const res = (await handler(
       apiGatewayEvent({
@@ -47,7 +45,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code,
         },
       }),
@@ -69,12 +67,7 @@ describe('POST /users/{code}', () => {
     };
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200, response);
 
-    const user = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
-
-    const createdUser = await cms.users.create(user);
+    await createRandomUser();
 
     const res = (await handler(
       apiGatewayEvent({
@@ -82,7 +75,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code: chance.string(),
         },
       }),
@@ -99,13 +92,9 @@ describe('POST /users/{code}', () => {
     };
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200, response);
 
-    const user = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
-
-    const createdUser = await cms.users.create(user);
-    const [{ code }] = createdUser.data.connections.iv;
+    const {
+      connections: [{ code }],
+    } = await createRandomUser();
 
     const res = (await handler(
       apiGatewayEvent({
@@ -113,7 +102,7 @@ describe('POST /users/{code}', () => {
         headers: {
           authorization: `Bearer ${chance.string()}`,
         },
-        pathParameters: {
+        queryStringParameters: {
           code,
         },
       }),

@@ -11,6 +11,12 @@ export interface Connection {
 export interface CreateUser {
   displayName: string;
   email: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  title: string;
+  orcid: string;
+  institution: string;
 }
 
 export default class Users extends Base<User> {
@@ -21,6 +27,12 @@ export default class Users extends Base<User> {
         json: {
           displayName: { iv: user.displayName },
           email: { iv: user.email },
+          firstName: { iv: user.firstName },
+          middleName: { iv: user.middleName },
+          lastName: { iv: user.lastName },
+          title: { iv: user.title },
+          orcid: { iv: user.orcid },
+          institution: { iv: user.institution },
           connections: { iv: [{ code }] },
         },
         searchParams: { publish: true },
@@ -36,6 +48,10 @@ export default class Users extends Base<User> {
       .json();
 
     return items[0] as User;
+  }
+
+  async fetchById(id: string): Promise<User> {
+    return this.client.get<User>(`users/${id}`).json();
   }
 
   async fetchByCode(code: string): Promise<User | null> {

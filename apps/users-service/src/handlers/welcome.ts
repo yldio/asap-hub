@@ -45,17 +45,17 @@ const validateUser = async (headers: object): Promise<auth0.UserInfo> => {
 const connectByCode = async (
   request: lambda.Request,
 ): Promise<lambda.Response> => {
-  const paramsSchema = Joi.object({
+  const querySchema = Joi.object({
     code: Joi.string().required(),
   }).required();
 
-  const params = lambda.validate('params', request.params, paramsSchema) as {
+  const query = lambda.validate('query', request.query, querySchema) as {
     code: string;
   };
 
   const profile = await validateUser(request.headers);
   const users = new Users();
-  await users.connectByCode(params.code, profile);
+  await users.connectByCode(query.code, profile);
 
   return {
     statusCode: 202,
@@ -65,16 +65,16 @@ const connectByCode = async (
 const fetchByCode = async (
   request: lambda.Request,
 ): Promise<lambda.Response> => {
-  const paramsSchema = Joi.object({
+  const querySchema = Joi.object({
     code: Joi.string().required(),
   }).required();
 
-  const params = lambda.validate('params', request.params, paramsSchema) as {
+  const query = lambda.validate('query', request.query, querySchema) as {
     code: string;
   };
 
   const users = new Users();
-  const res = await users.fetchByCode(params.code);
+  const res = await users.fetchByCode(query.code);
   return {
     payload: res,
   };

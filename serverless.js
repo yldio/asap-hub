@@ -116,7 +116,7 @@ module.exports = {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
-            path: `/users/{code}`,
+            path: `/users`,
           },
         },
         {
@@ -124,6 +124,18 @@ module.exports = {
           httpApi: {
             method: 'POST',
             path: `/users/{code}`,
+          },
+        },
+      ],
+    },
+    'fetch-user': {
+      handler: 'apps/users-service/build/handlers/fetch-users.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/users/{id}`,
           },
         },
       ],

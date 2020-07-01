@@ -66,17 +66,17 @@ module.exports = {
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
-        localDir: 'apps/frontend/build',
-      },
-      {
-        bucketName: `\${self:service}-\${self:provider.stage}-auth-frontend`,
         bucketPrefix: '.auth',
         localDir: 'apps/auth-frontend/build',
       },
       {
-        bucketName: `\${self:service}-\${self:provider.stage}-storybook`,
+        bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
         bucketPrefix: '.storybook',
         localDir: 'apps/storybook/build',
+      },
+      {
+        bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
+        localDir: 'apps/frontend/build',
       },
     ],
     webpack: {
@@ -203,45 +203,6 @@ module.exports = {
           },
         },
       },
-      AuthFrontendBucket: {
-        Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
-        Properties: {
-          BucketName: `\${self:service}-\${self:provider.stage}-auth-frontend`,
-          AccessControl: 'PublicRead',
-          CorsConfiguration: {
-            CorsRules: [
-              {
-                AllowedMethods: ['GET', 'HEAD'],
-                AllowedHeaders: ['*'],
-                AllowedOrigins: ['*'],
-                MaxAge: 3000,
-              },
-            ],
-          },
-        },
-      },
-      StorybookBucket: {
-        Type: 'AWS::S3::Bucket',
-        DeletionPolicy: 'Delete',
-        Properties: {
-          BucketName: `\${self:service}-\${self:provider.stage}-storybook`,
-          AccessControl: 'PublicRead',
-          CorsConfiguration: {
-            CorsRules: [
-              {
-                AllowedMethods: ['GET', 'HEAD'],
-                AllowedHeaders: ['*'],
-                AllowedOrigins: ['*'],
-                MaxAge: 3000,
-              },
-            ],
-          },
-          WebsiteConfiguration: {
-            IndexDocument: 'index.html',
-          },
-        },
-      },
       BucketPolicyFrontend: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
@@ -263,48 +224,6 @@ module.exports = {
           },
         },
       },
-      BucketPolicyAuthFrontend: {
-        Type: 'AWS::S3::BucketPolicy',
-        Properties: {
-          Bucket: `\${self:service}-\${self:provider.stage}-auth-frontend`,
-          PolicyDocument: {
-            Statement: [
-              {
-                Action: ['s3:GetObject'],
-                Effect: 'Allow',
-                Principal: '*',
-                Resource: {
-                  'Fn::Join': [
-                    '',
-                    [{ 'Fn::GetAtt': ['AuthFrontendBucket', 'Arn'] }, '/*'],
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
-      BucketPolicyStorybook: {
-        Type: 'AWS::S3::BucketPolicy',
-        Properties: {
-          Bucket: `\${self:service}-\${self:provider.stage}-storybook`,
-          PolicyDocument: {
-            Statement: [
-              {
-                Action: ['s3:GetObject'],
-                Effect: 'Allow',
-                Principal: '*',
-                Resource: {
-                  'Fn::Join': [
-                    '',
-                    [{ 'Fn::GetAtt': ['StorybookBucket', 'Arn'] }, '/*'],
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
       CloudFrontOriginAccessIdentityFrontend: {
         Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         Properties: {
@@ -313,25 +232,9 @@ module.exports = {
           },
         },
       },
-      CloudFrontOriginAccessIdentityAuthFrontend: {
-        Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
-        Properties: {
-          CloudFrontOriginAccessIdentityConfig: {
-            Comment: { Ref: 'AuthFrontendBucket' },
-          },
-        },
-      },
-      CloudFrontOriginAccessIdentityStorybook: {
-        Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
-        Properties: {
-          CloudFrontOriginAccessIdentityConfig: {
-            Comment: { Ref: 'StorybookBucket' },
-          },
-        },
-      },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['FrontendBucket', 'AuthFrontendBucket', 'StorybookBucket'],
+        DependsOn: ['FrontendBucket'],
         Properties: {
           DistributionConfig: {
             Aliases: [`\${self:custom.origin}`],
@@ -359,42 +262,6 @@ module.exports = {
                     ],
                   },
                 },
-              },
-              {
-                DomainName: {
-                  'Fn::GetAtt': ['AuthFrontendBucket', 'RegionalDomainName'],
-                },
-                Id: 's3origin-auth-frontend',
-                S3OriginConfig: {
-                  OriginAccessIdentity: {
-                    'Fn::Join': [
-                      '/',
-                      [
-                        'origin-access-identity/cloudfront',
-                        { Ref: 'CloudFrontOriginAccessIdentityAuthFrontend' },
-                      ],
-                    ],
-                  },
-                },
-              },
-              {
-                CustomOriginConfig: {
-                  OriginProtocolPolicy: 'http-only',
-                },
-                DomainName: {
-                  'Fn::Select': [
-                    '1',
-                    {
-                      'Fn::Split': [
-                        'http://',
-                        {
-                          'Fn::GetAtt': ['StorybookBucket', 'WebsiteURL'],
-                        },
-                      ],
-                    },
-                  ],
-                },
-                Id: 's3origin-storybook',
               },
               {
                 CustomOriginConfig: {
@@ -428,38 +295,6 @@ module.exports = {
               TargetOriginId: 's3origin-frontend',
               ViewerProtocolPolicy: 'redirect-to-https',
             },
-            CacheBehaviors: [
-              {
-                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
-                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
-                Compress: true,
-                DefaultTTL: 3600,
-                ForwardedValues: {
-                  Cookies: {
-                    Forward: 'none',
-                  },
-                  QueryString: false,
-                },
-                PathPattern: '.auth/*',
-                TargetOriginId: 's3origin-auth-frontend',
-                ViewerProtocolPolicy: 'redirect-to-https',
-              },
-              {
-                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
-                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
-                Compress: true,
-                DefaultTTL: 3600,
-                ForwardedValues: {
-                  Cookies: {
-                    Forward: 'none',
-                  },
-                  QueryString: true,
-                },
-                PathPattern: '.storybook/*',
-                TargetOriginId: 's3origin-storybook',
-                ViewerProtocolPolicy: 'redirect-to-https',
-              },
-            ],
             DefaultRootObject: 'index.html',
             Enabled: true,
             PriceClass: 'PriceClass_100',

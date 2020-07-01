@@ -9,7 +9,7 @@ deploy:ses:master:
   dependencies:
     - build
   script:
-    - yarn node packages/react-templates/lib/deploy.js
+    - yarn node apps/react-templates/lib/deploy.js
   stage: deploy
   needs:
     - build

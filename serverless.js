@@ -101,7 +101,7 @@ module.exports = {
       iamRoleStatements: [
         {
           Effect: 'Allow',
-          Action: ['ses:SendEmail'],
+          Action: ['ses:SendTemplatedEmail'],
           Resource: '*',
         },
       ],

@@ -1,16 +1,16 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
 include: 'apps/react-templates/.gitlab-ci.yml'
 
-.tmpl:master_deploy_rules: &tmpl_master_deploy_rules
+.tmpl:master_rules: &tmpl_master_rules
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
-  variables: &tmpl_master_deploy_variables
+  variables: &tmpl_master_variables
     SLS_STAGE: production
 
-.tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
+.tmpl:branch_rules: &tmpl_branch_rules
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
-  variables: &tmpl_branch_deploy_variables
+  variables: &tmpl_branch_variables
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
 .tmpl:branch_remove_rules: &tmpl_branch_remove_rules
@@ -22,41 +22,22 @@ include: 'apps/react-templates/.gitlab-ci.yml'
     GIT_CHECKOUT: 0
     SLS_STAGE: $CI_COMMIT_REF_SLUG
 
-# .tmpl:prepare:cert: &tmpl_prepare_cert
-#   artifacts:
-#     paths:
-#       - .env
-#   image:
-#     name: hashicorp/terraform:light
-#     entrypoint: ['/bin/sh', '-c']
-#   script:
-#     - ./ci/tf.sh
-#   needs: []
-#   stage: prepare
+.tmpl:build: &tmpl_build
+  script:
+    - yarn run build
+  artifacts:
+    paths:
+      - 'packages/*/build'
+      - 'apps/*/build'
+  needs: []
+  stage: build
+  variables: &tmpl_build_variables
+    AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
 
 .tmpl:deploy: &tmpl_deploy
   script:
-    # - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
     - yarn sls deploy --verbose
   stage: deploy
-
-.tmpl:prepare: &tmpl_prepare
-  image:
-    name: amazon/aws-cli
-    entrypoint: ['']
-  script:
-    - exit_code=0
-    - stack=$(aws cloudformation describe-stacks --stack-name $SLS_STAGE || exit_code=$?)
-    - |
-      if [[ "$exit_code" != 0 ]] && echo $stack | grep -nqe "UPDATE_IN_PROGRESS"; then
-        aws cloudformation cancel-update-stack --stack-name $SLS_STAGE
-        aws cloudformation wait stack-update-rollback-complete --stack-name $SLS_STAGE
-      fi;
-    - |
-      if [[ "$exit_code" != 0 ]] && echo $stack | grep -nqe "CREATE_IN_PROGRESS"; then
-        aws cloudformation wait stack-create-complete --stack-name $SLS_STAGE
-      fi;
-  stage: prepare
 
 .tmpl:node_production_variables: &tmpl_node_production_variables
   NODE_ENV: production
@@ -85,7 +66,6 @@ variables:
 stages:
   - build
   - test
-  - prepare
   - deploy
 
 # stage test
@@ -122,18 +102,16 @@ test:
 
 # stage build
 
-build:
-  script:
-    - 'export AUTH_FRONTEND_BASE_URL=https://$BASE_HOSTNAME/.auth/'
-    - yarn run build
+build:master:
+  <<: *tmpl_build
   variables:
-    <<: *tmpl_node_production_variables
-  artifacts:
-    paths:
-      - 'packages/*/build'
-      - 'apps/*/build'
-  needs: []
-  stage: build
+    <<: *tmpl_build_variables
+
+build:branch:
+  <<: *tmpl_build
+  variables:
+    <<: *tmpl_build_variables
+    REACT_APP_API_BASE_URL: https://api-$CI_COMMIT_REF_SLUG.$BASE_HOSTNAME
 
 build:native-deps:
   script:
@@ -144,82 +122,42 @@ build:native-deps:
   needs: []
   stage: build
 
-prepare:sls:master:
-  <<: *tmpl_prepare
-  <<: *tmpl_master_deploy_rules
-  variables:
-    <<: *tmpl_master_deploy_variables
-  needs:
-    - build
-    - build:native-deps
-    - test
-
-prepare:sls:branch:
-  <<: *tmpl_prepare
-  <<: *tmpl_branch_deploy_rules
-  variables:
-    <<: *tmpl_branch_deploy_variables
-  needs:
-    - build
-    - build:native-deps
-
-# prepare:cert:master:
-#   <<: *tmpl_master_deploy_rules
-#   <<: *tmpl_prepare_cert
-#   variables:
-#     <<: *tmpl_master_deploy_variables
-#     TF_VAR_domain: $BASE_HOSTNAME
-
-# prepare:cert:branch:
-#   <<: *tmpl_branch_deploy_rules
-#   <<: *tmpl_prepare_cert
-#   variables:
-#     <<: *tmpl_branch_deploy_variables
-#     TF_VAR_domain: $BASE_HOSTNAME
-#     TF_VAR_record: $CI_COMMIT_REF_SLUG
-
 # stage deploy
 
 deploy:sls:master:
   <<: *tmpl_deploy
-  <<: *tmpl_master_deploy_rules
+  <<: *tmpl_master_rules
   variables:
     <<: *tmpl_node_production_variables
     <<: *tmpl_cms_production_variables
-    <<: *tmpl_master_deploy_variables
+    <<: *tmpl_master_variables
   environment:
     name: production
     url: https://$BASE_HOSTNAME
   needs:
-    - build
+    - build:branch
     - build:native-deps
-    - prepare:sls:master
-    # - prepare:cert:master
   dependencies:
-    - build
+    - build:branch
     - build:native-deps
-    # - prepare:cert:master
 
 deploy:sls:branch:
   <<: *tmpl_deploy
-  <<: *tmpl_branch_deploy_rules
+  <<: *tmpl_branch_rules
   variables:
     <<: *tmpl_node_production_variables
     <<: *tmpl_cms_dev_variables
-    <<: *tmpl_branch_deploy_variables
+    <<: *tmpl_branch_variables
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     url: https://$CI_COMMIT_REF_SLUG.$BASE_HOSTNAME
     on_stop: deploy:sls:branch_remove
   needs:
-    - build
+    - build:master
     - build:native-deps
-    - prepare:sls:branch
-    # - prepare:cert:branch
   dependencies:
-    - build
+    - build:master
     - build:native-deps
-    # - prepare:cert:branch
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove_rules

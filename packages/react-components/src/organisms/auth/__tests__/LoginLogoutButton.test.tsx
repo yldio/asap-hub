@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, act, waitFor } from '@testing-library/react';
 
-import { LoggedIn, Auth0Provider } from '../test-utils';
+import { LoggedIn, Auth0Provider } from '../../../auth-test-utils';
 
 import LoginLogoutButton from '../LoginLogoutButton';
 

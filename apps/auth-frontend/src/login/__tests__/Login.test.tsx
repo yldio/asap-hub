@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
 import { createLocation } from 'history';
@@ -160,4 +160,32 @@ it('shows a generic authentication error', async () => {
 
   userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
   expect(await findAllByText(/unknown.+FetchError/i)).not.toHaveLength(0);
+});
+
+it('hides the authentication error message again when changing the credentials', async () => {
+  const location = createLocation(
+    '/login?response_type=code&screen_hint=signup',
+  );
+  const { getByText, getByLabelText, queryByText, findAllByText } = render(
+    <StaticRouter location={location}>
+      <Login />
+    </StaticRouter>,
+  );
+  await userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
+    allAtOnce: true,
+  });
+  await userEvent.type(getByLabelText(/password/i), 'PW', {
+    allAtOnce: true,
+  });
+
+  const error = new Error('FetchError');
+  mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
+
+  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  expect(await findAllByText(/unknown.+FetchError/i)).not.toHaveLength(0);
+
+  userEvent.clear(getByLabelText(/e-?mail/i));
+  userEvent.tab();
+  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  await waitFor(() => expect(queryByText(/error/i)).not.toBeInTheDocument());
 });

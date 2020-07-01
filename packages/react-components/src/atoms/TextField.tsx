@@ -162,8 +162,7 @@ const TextField: React.FC<TextFieldProps> = ({
     const input = inputRef.current!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
     input.setCustomValidity(customValidationMessage);
 
-    // If the invalidity has already been surfaced, make sure the message is updated
-    if (customValidationMessage) {
+    if (validationMessage || customValidationMessage) {
       input.reportValidity();
     }
 

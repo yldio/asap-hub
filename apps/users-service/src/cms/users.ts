@@ -51,13 +51,7 @@ export default class Users extends Base<User> {
   }
 
   async fetchById(id: string): Promise<User | null> {
-    const { items } = await this.client
-      .get('users', {
-        searchParams: { $filter: `id eq '${id}'` },
-      })
-      .json();
-
-    return items.length ? (items[0] as User) : null;
+    return this.client.get<User>(`users/${id}`).json();
   }
 
   async fetchByCode(code: string): Promise<User | null> {

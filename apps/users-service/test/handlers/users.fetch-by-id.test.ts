@@ -19,7 +19,7 @@ describe('GET /users/{id}', () => {
     expect(result.statusCode).toStrictEqual(400);
   });
 
-  test("returns 403 when id doesn't exist", async () => {
+  test("returns 404 when id doesn't exist", async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
@@ -31,7 +31,7 @@ describe('GET /users/{id}', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(403);
+    expect(result.statusCode).toStrictEqual(404);
   });
 
   test('returns 200 when id exists', async () => {

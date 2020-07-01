@@ -1,2 +1,3 @@
 *
 !dev/setup-cms.sh
+!dev/wait-for-url.sh

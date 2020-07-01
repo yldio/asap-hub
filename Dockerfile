@@ -12,11 +12,10 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v5.2/l
     unzip linux-x64.zip && \
     mv sq /bin
 
-RUN wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh && \
-    chmod +x wait-for-it.sh
-
 VOLUME ["/dev/fixtures"]
 
-COPY dev/setup-cms.sh .
+COPY dev/setup-cms.sh dev/wait-for-url.sh ./
+
+RUN cat wait-for-url.sh >> ~/.bashrc
 
 CMD ["./setup-cms.sh"]

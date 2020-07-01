@@ -46,9 +46,9 @@ export default class Users {
     const [err] = await Intercept(
       sendEmail({
         to: [user.email],
-        template: 'welcome',
+        template: 'Welcome',
         values: {
-          displayName: user.displayName,
+          firstName: user.displayName,
           link: link.toString(),
         },
       }),

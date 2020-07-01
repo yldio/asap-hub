@@ -1,0 +1,46 @@
+{
+  "name": "@asap-hub/react-templates",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "peerDependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "dependencies": {
+    "@asap-hub/react-components": "workspace:packages/react-components",
+    "@babel/core": "^7.9.0",
+    "@emotion/cache": "^10.0.29",
+    "@emotion/core": "^10.0.28",
+    "aws-sdk": "^2.704.0",
+    "core-js": "^3.6.5",
+    "create-emotion-server": "^10.0.27",
+    "juice": "^6.0.0",
+    "pnp-webpack-plugin": "^1.6.4",
+    "title-case": "^3.0.2",
+    "webpack": "^5.0.0-beta.16"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/plugin-transform-runtime": "^7.10.3",
+    "@babel/runtime-corejs3": "^7.9.6",
+    "@emotion/babel-preset-css-prop": "^10.0.27",
+    "@types/babel__core": "^7",
+    "@types/babel__plugin-transform-runtime": "^7",
+    "@types/babel__preset-env": "^7",
+    "@types/jest": "^26.0.3",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/testing-library__react-hooks": "^3.2.0",
+    "@types/webpack": "^4",
+    "@yarnpkg/pnpify": "^2.0.0-rc.20",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react-app": "^9.1.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-test-renderer": "^16.13.1",
+    "url-loader": "^4.1.0"
+  }
+}

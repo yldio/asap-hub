@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import Layout from './Layout';
-import { Headline3, Paragraph, Button } from '../../atoms';
+import { Headline3, Paragraph, Link } from '../../atoms';
 
 interface WelcomeProps {
   readonly firstName: string;
@@ -32,7 +32,7 @@ const Component: React.FC<WelcomeProps> = ({ firstName, link }) => (
       </ul>
       <Paragraph>Join the community and set up your profile.</Paragraph>
     </>
-    <Button primary>Create account</Button>
+    <Link href={link}>Create account</Link>
   </Layout>
 );
 

@@ -1,0 +1,18 @@
+.tmpl:master_deploy_rules: &tmpl_master_deploy_rules
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+  variables: &tmpl_master_deploy_variables
+    SLS_STAGE: production
+
+deploy:ses:master:
+  <<: *tmpl_master_deploy_rules
+  dependencies:
+    - build
+  script:
+    - yarn node packages/react-templates/lib/deploy.js
+  stage: deploy
+  needs:
+    - build
+  variables:
+    <<: *tmpl_master_deploy_variables
+    ORIGIN: https://$BASE_URL

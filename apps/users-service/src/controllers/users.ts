@@ -69,12 +69,13 @@ export default class Users {
   }
 
   async fetchById(id: string): Promise<ReplyUser> {
+    let user;
     try {
-      const user = await this.cms.users.fetchById(id);
-      return transform(user);
+      user = await this.cms.users.fetchById(id);
     } catch (err) {
-      if (err.response.statusCode === 404) throw Boom.notFound();
+      throw Boom.notFound();
     }
+    return transform(user);
   }
 
   async fetchByCode(code: string): Promise<ReplyUser> {

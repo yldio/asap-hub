@@ -50,7 +50,7 @@ export default class Users extends Base<User> {
     return items[0] as User;
   }
 
-  async fetchById(id: string): Promise<User | null> {
+  async fetchById(id: string): Promise<User> {
     return this.client.get<User>(`users/${id}`).json();
   }
 

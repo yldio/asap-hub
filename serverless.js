@@ -109,8 +109,8 @@ module.exports = {
         GLOBAL_TOKEN: `\${env:GLOBAL_TOKEN}`,
       },
     },
-    welcome: {
-      handler: 'apps/users-service/build/handlers/welcome.handler',
+    'fetch-users': {
+      handler: 'apps/users-service/build/handlers/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -119,23 +119,40 @@ module.exports = {
             path: `/users`,
           },
         },
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'POST',
-            path: `/users/{code}`,
-          },
-        },
       ],
     },
-    'fetch-user': {
-      handler: 'apps/users-service/build/handlers/fetch-users.handler',
+    'fetch-user-by-id': {
+      handler: 'apps/users-service/build/handlers/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/users/{id}`,
+          },
+        },
+      ],
+    },
+    'fetch-user-by-code': {
+      handler: 'apps/users-service/build/handlers/fetch-by-code.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/users/invites/{code}`,
+          },
+        },
+      ],
+    },
+    'connect-by-code': {
+      handler: 'apps/users-service/build/handlers/connect-by-code.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'POST',
+            path: `/users/connections`,
           },
         },
       ],

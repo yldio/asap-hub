@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import { handler } from '../../src/handlers/fetch-users';
+import { handler } from '../../src/handlers/fetch-by-id';
 import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createRandomUser } from '../helpers/create-user';

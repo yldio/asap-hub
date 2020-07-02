@@ -2,7 +2,7 @@ const path = require('path');
 const PnpWebpackPlugin = require('pnp-webpack-plugin');
 const TemplatePlugin = require('./template-plugin');
 
-const { ORIGIN = 'https://hub.asap.science' } = process.env;
+const { APP_ORIGIN = 'https://hub.asap.science' } = process.env;
 
 const outputDir = path.resolve(__dirname, '..', 'build');
 module.exports = {
@@ -39,7 +39,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [new TemplatePlugin({ origin: ORIGIN })],
+  plugins: [new TemplatePlugin({ origin: APP_ORIGIN })],
   resolve: { plugins: [PnpWebpackPlugin] },
   resolveLoader: {
     plugins: [PnpWebpackPlugin.moduleLoader(module)],

@@ -20,13 +20,13 @@ describe('POST /users/connections', () => {
     sub: `google-oauth2|${chance.string()}`,
   };
 
-  beforeAll( async () => {
-    const user = await createRandomUser()
-    id = user.id
-    code = user.connections[0].code
-  })
+  beforeAll(async () => {
+    const user = await createRandomUser();
+    id = user.id;
+    code = user.connections[0].code;
+  });
 
-  test("returns 400 when token is not defined", async () => {
+  test('returns 400 when token is not defined', async () => {
     const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
@@ -35,7 +35,7 @@ describe('POST /users/connections', () => {
         },
         body: {
           code,
-        }
+        },
       }),
       null,
       null,
@@ -44,7 +44,7 @@ describe('POST /users/connections', () => {
     expect(res.statusCode).toStrictEqual(400);
   });
 
-  test("returns 400 when code is not defined", async () => {
+  test('returns 400 when code is not defined', async () => {
     const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
@@ -52,8 +52,8 @@ describe('POST /users/connections', () => {
           authorization: `Bearer ${chance.string()}`,
         },
         body: {
-          token: chance.string()
-        }
+          token: chance.string(),
+        },
       }),
       null,
       null,
@@ -73,8 +73,8 @@ describe('POST /users/connections', () => {
         },
         body: {
           code,
-          token: chance.string()
-        }
+          token: chance.string(),
+        },
       }),
       null,
       null,
@@ -88,7 +88,9 @@ describe('POST /users/connections', () => {
   });
 
   test('returns 403 for invalid code', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200, auth0Response);
+    nock(`https://${authConfig.domain}`)
+      .get('/userinfo')
+      .reply(200, auth0Response);
 
     const res = (await handler(
       apiGatewayEvent({
@@ -98,7 +100,7 @@ describe('POST /users/connections', () => {
         },
         body: {
           code: chance.string(),
-          token: chance.string()
+          token: chance.string(),
         },
       }),
       null,
@@ -109,7 +111,9 @@ describe('POST /users/connections', () => {
   });
 
   test('returns 202 for valid code and updates the user', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200, auth0Response);
+    nock(`https://${authConfig.domain}`)
+      .get('/userinfo')
+      .reply(200, auth0Response);
 
     const res = (await handler(
       apiGatewayEvent({
@@ -119,7 +123,7 @@ describe('POST /users/connections', () => {
         },
         body: {
           code,
-          token: chance.string()
+          token: chance.string(),
         },
       }),
       null,
@@ -132,6 +136,8 @@ describe('POST /users/connections', () => {
 
     expect(userFound).toBeDefined();
     expect(userFound.data.connections.iv).toHaveLength(2);
-    expect(userFound.data.connections.iv[1].code).toStrictEqual(auth0Response.sub);
+    expect(userFound.data.connections.iv[1].code).toStrictEqual(
+      auth0Response.sub,
+    );
   });
 });

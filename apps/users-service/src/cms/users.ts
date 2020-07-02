@@ -41,7 +41,16 @@ export default class Users extends Base<User> {
   }
 
   async fetch(): Promise<User[]> {
-    const { items } = await this.client.get('users').json();
+    const { items } = await this.client
+      .get('users', {
+        searchParams: {
+          q: JSON.stringify({
+            take: 30,
+            sort: [{ path: 'data.displayName.iv' }],
+          }),
+        },
+      })
+      .json();
     return items;
   }
 

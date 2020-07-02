@@ -14,6 +14,12 @@ describe('GET /users', () => {
       .post('/identity-server/connect/token')
       .reply(200, { access_token: 'token' })
       .get(`/api/content/${cmsAppName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 30,
+          sort: [{ path: 'data.displayName.iv' }],
+        }),
+      })
       .reply(200, { total: 0, items: [] });
 
     const result = (await handler(

@@ -1,10 +1,10 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Button, Headline2, Link, Paragraph } from '../atoms';
+import { Avatar, Button, Headline2, Link, Paragraph } from '../atoms';
 import { Container } from '../molecules';
 
-const bottomContainer = css({
+const flexContainer = css({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -39,19 +39,26 @@ const Profile: React.FC<ProfileProps> = ({
 }) => {
   return (
     <Container>
-      <Headline2>{displayName}</Headline2>
-      <Paragraph>
-        {title} at {institution}, {department}
-        <br />
-        {role} on <Link href={'/'}>{team}</Link>
-      </Paragraph>
-      <Paragraph>{location}</Paragraph>
-      <div css={[bottomContainer]}>
+      <div css={[flexContainer]}>
+        <div>
+          <Headline2>{displayName}</Headline2>
+          <Paragraph>
+            {title} at {institution}, {department}
+            <br />
+            {role} on <Link href={'/'}>{team}</Link>
+          </Paragraph>
+          <Paragraph>{location}</Paragraph>
+        </div>
+        <div>
+          <Avatar border initials={`PM`} />
+        </div>
+      </div>
+      <div css={[flexContainer]}>
         <Button small primary>
           Contact
         </Button>
         <div css={[lastUpdatedContainer]}>
-          <p>Last updated {lastModified}</p>
+          <p>Updated {String(lastModified)}</p>
         </div>
       </div>
     </Container>

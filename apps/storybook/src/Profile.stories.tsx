@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { button, date, text } from '@storybook/addon-knobs';
+import { date, text } from '@storybook/addon-knobs';
 import { Profile } from '@asap-hub/react-components';
 
-export default { title: 'Templates / Profile' };
+export default { title: 'Templates / Profile / Details' };
 
 export const Normal = () => (
   <Profile

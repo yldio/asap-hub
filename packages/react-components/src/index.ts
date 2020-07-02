@@ -11,6 +11,7 @@ export * from './images';
 export * from './theme';
 
 export {
+  Avatar,
   Link,
   Theme,
   Button,

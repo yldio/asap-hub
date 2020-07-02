@@ -18,7 +18,7 @@ const Admin: React.FC<{}> = () => {
     setInvitationState('loading');
     const { signal } = (requestController.current = new AbortController());
 
-    fetch(`${API_BASE_URL}/users`, {
+    return fetch(`${API_BASE_URL}/users`, {
       method: 'POST',
       headers: {
         authorization: `Bearer ${adminPassword}`,

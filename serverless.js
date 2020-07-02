@@ -152,7 +152,7 @@ module.exports = {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
-            path: `/users/{id}/connections`,
+            path: `/users/connections`,
           },
         },
       ],

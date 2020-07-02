@@ -36,7 +36,7 @@ export const handler: APIGatewayProxyHandler = lambda.http(
 
     const { code, token } = lambda.validate(
       'body',
-      request.body,
+      request.payload,
       bodySchema,
     ) as {
       code: string;

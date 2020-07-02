@@ -1,12 +1,12 @@
 import Chance from 'chance';
-import { handler } from '../../src/handlers/welcome';
+import { handler } from '../../src/handlers/fetch-by-code';
 import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createRandomUser } from '../helpers/create-user';
 
 const chance = new Chance();
 
-describe('GET /users/{code}', () => {
+describe('GET /users/invites/{code}', () => {
   test("return 400 when code isn't present", async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -23,7 +23,7 @@ describe('GET /users/{code}', () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
-        queryStringParameters: {
+        pathParameters: {
           code: chance.string(),
         },
       }),
@@ -42,7 +42,7 @@ describe('GET /users/{code}', () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
-        queryStringParameters: {
+        pathParameters: {
           code,
         },
       }),

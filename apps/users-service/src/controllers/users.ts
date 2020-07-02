@@ -68,6 +68,11 @@ export default class Users {
     return transform(createdUser);
   }
 
+  async fetch(): Promise<ReplyUser[]> {
+    const users = await this.cms.users.fetch();
+    return users.length ? users.map(transform) : [];
+  }
+
   async fetchById(id: string): Promise<ReplyUser> {
     let user;
     try {

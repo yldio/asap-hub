@@ -40,6 +40,11 @@ export default class Users extends Base<User> {
       .json();
   }
 
+  async fetch(): Promise<User[]> {
+    const { items } = await this.client.get('users').json();
+    return items;
+  }
+
   async fetchByEmail(email: string): Promise<User | null> {
     const { items } = await this.client
       .get('users', {

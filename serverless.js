@@ -4,9 +4,11 @@ const { paramCase } = require('param-case');
 const pkg = require('./package.json');
 
 const {
+  APP_ORIGIN = 'asap.yld.io',
+  API_ORIGIN = 'api.asap.yld.io',
   AWS_ACM_CERTIFICATE_ARN,
   AWS_REGION = 'us-east-1',
-  BASE_HOSTNAME,
+  BASE_HOSTNAME = 'asap.yld.io',
   GLOBAL_TOKEN,
   NODE_ENV = 'development',
   SLS_STAGE = 'development',
@@ -27,10 +29,6 @@ const plugins = [
     : ['serverless-offline']),
 ];
 
-const origin = [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_HOSTNAME]
-  .filter(Boolean)
-  .join('.');
-
 module.exports = {
   service,
   plugins,
@@ -43,12 +41,12 @@ module.exports = {
     stage: SLS_STAGE,
     httpApi: {
       cors: {
-        allowedOrigins: [`https://${origin}`],
+        allowedOrigins: [`https://${APP_ORIGIN}`],
         allowCredentials: true,
       },
     },
     environment: {
-      APP_ORIGIN: `https://${origin}`,
+      APP_ORIGIN: `https://${APP_ORIGIN}`,
       NODE_ENV: `\${env:NODE_ENV}`,
       CMS_BASE_URL: `\${env:CMS_BASE_URL}`,
       CMS_APP_NAME: `\${env:CMS_APP_NAME}`,
@@ -61,8 +59,8 @@ module.exports = {
     excludeDevDependencies: false,
   },
   custom: {
-    apiOrigin: `${SLS_STAGE === 'production' ? 'api.' : 'api-'}${origin}`,
-    origin,
+    apiOrigin: API_ORIGIN,
+    appOrigin: APP_ORIGIN,
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
@@ -351,7 +349,7 @@ module.exports = {
         DependsOn: ['FrontendBucket', 'AuthFrontendBucket', 'StorybookBucket'],
         Properties: {
           DistributionConfig: {
-            Aliases: [`\${self:custom.origin}`],
+            Aliases: [`\${self:custom.appOrigin}`],
             CustomErrorResponses: [
               {
                 ErrorCode: 404,
@@ -494,7 +492,7 @@ module.exports = {
           HostedZoneName: `${BASE_HOSTNAME}.`,
           RecordSets: [
             {
-              Name: `\${self:custom.origin}`,
+              Name: `\${self:custom.appOrigin}`,
               Type: 'A',
               AliasTarget: {
                 DNSName: {

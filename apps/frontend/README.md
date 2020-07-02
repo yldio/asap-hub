@@ -14,6 +14,8 @@ You will also see any lint errors in the console.
 
 #### Environment Variables
 
+The frontend application uses the production API by default, to change this behavior you can set the `REACT_APP_API_BASE_URL` environment variable.
+
 - `REACT_APP_API_BASE_URL` - Set the api endpoint, default value is https://api.asap.yld.io.
 
 ### `yarn test`

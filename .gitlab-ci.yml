@@ -1,57 +1,33 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
 include: 'apps/react-templates/.gitlab-ci.yml'
 
-.tmpl:master_rules: &tmpl_master_rules
+.tmpl:master: &tmpl_master
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
   variables: &tmpl_master_variables
     SLS_STAGE: production
+    CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
+    CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
+    CMS_APP_NAME: $PROD_CMS_APP_NAME
 
-.tmpl:branch_rules: &tmpl_branch_rules
+.tmpl:branch: &tmpl_branch
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
   variables: &tmpl_branch_variables
     SLS_STAGE: $CI_COMMIT_REF_SLUG
+    CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
+    CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
+    CMS_BASE_URL: $DEV_CMS_BASE_URL
+    CMS_APP_NAME: $DEV_CMS_APP_NAME
 
-.tmpl:branch_remove_rules: &tmpl_branch_remove_rules
+.tmpl:branch_remove: &tmpl_branch_remove
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
       when: manual
       allow_failure: true
   variables: &tmpl_branch_remove_variables
+    <<: *tmpl_branch_variables
     GIT_CHECKOUT: 0
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
-
-.tmpl:build: &tmpl_build
-  script:
-    - yarn run build
-  artifacts:
-    paths:
-      - 'packages/*/build'
-      - 'apps/*/build'
-  needs: []
-  stage: build
-  variables: &tmpl_build_variables
-    AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
-
-.tmpl:deploy: &tmpl_deploy
-  script:
-    - yarn sls deploy --verbose
-  stage: deploy
-
-.tmpl:node_production_variables: &tmpl_node_production_variables
-  NODE_ENV: production
-
-.tmpl:cms_production_variables: &tmpl_cms_production_variables
-  CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
-  CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
-  CMS_APP_NAME: $PROD_CMS_APP_NAME
-
-.tmpl:cms_dev_variables: &tmpl_cms_dev_variables
-  CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
-  CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
-  CMS_BASE_URL: $DEV_CMS_BASE_URL
-  CMS_APP_NAME: $DEV_CMS_APP_NAME
 
 image: node:12
 
@@ -64,54 +40,36 @@ variables:
   BASE_HOSTNAME: asap.yld.io
 
 stages:
+  - setup
   - build
   - test
   - deploy
 
-# stage test
+# stage setup
 
-check:packages:
+setup:
   script:
-    - yarn install --immutable --immutable-cache
-  needs: []
-  stage: test
-
-check:constraints:
-  script:
-    - yarn constraints
-  needs: []
-  stage: test
-
-check:format:
-  script:
-    - yarn run lint:format
-  needs: []
-  stage: test
-
-test:
-  script:
-    - yarn run test --coverage
-  variables:
-    <<: *tmpl_cms_dev_variables
+    - ci/env-create.sh > deploy.env
   artifacts:
-    paths:
-      - coverage
-  needs:
-    - build
-  stage: test
+    reports:
+      dotenv: deploy.env
+  stage: setup
 
 # stage build
 
-build:master:
-  <<: *tmpl_build
+build:
+  script:
+    - yarn run build
+  artifacts:
+    paths:
+      - 'packages/*/build'
+      - 'apps/*/build'
+  needs:
+    - setup
+  stage: build
   variables:
-    <<: *tmpl_build_variables
-
-build:branch:
-  <<: *tmpl_build
-  variables:
-    <<: *tmpl_build_variables
-    REACT_APP_API_BASE_URL: https://api-$CI_COMMIT_REF_SLUG.$BASE_HOSTNAME
+    AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
+    REACT_APP_API_BASE_URL: https://$API_ORIGIN
 
 build:native-deps:
   script:
@@ -119,49 +77,87 @@ build:native-deps:
   artifacts:
     paths:
       - .yarn/unplugged
-  needs: []
+  needs:
+    - setup
   stage: build
+
+# stage test
+
+.tmpl:test: &tmpl_test
+  script:
+    - echo "no script proporty found"
+  needs: []
+  stage: test
+
+test:packages:
+  <<: *tmpl_test
+  script:
+    - yarn install --immutable --immutable-cache
+
+test:constraints:
+  <<: *tmpl_test
+  script:
+    - yarn constraints
+
+test:format:
+  <<: *tmpl_test
+  script:
+    - yarn run lint:format
+
+test:
+  <<: *tmpl_test
+  script:
+    - yarn run test --coverage
+  artifacts:
+    paths:
+      - coverage
+  needs:
+    - build
+  variables:
+    <<: *tmpl_branch_variables
 
 # stage deploy
 
+.tmpl:deploy: &tmpl_deploy
+  script:
+    - yarn sls deploy --verbose
+  stage: deploy
+  variables: &tmpl_deploy_variables
+    NODE_ENV: production
+  needs:
+    - setup
+    - build
+    - build:native-deps
+
 deploy:sls:master:
+  <<: *tmpl_master
   <<: *tmpl_deploy
-  <<: *tmpl_master_rules
-  variables:
-    <<: *tmpl_node_production_variables
-    <<: *tmpl_cms_production_variables
-    <<: *tmpl_master_variables
   environment:
     name: production
-    url: https://$BASE_HOSTNAME
+    url: https://$APP_ORIGIN
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
   needs:
-    - build:branch
+    - setup
+    - build
     - build:native-deps
-  dependencies:
-    - build:branch
-    - build:native-deps
+    - test
 
 deploy:sls:branch:
+  <<: *tmpl_branch
   <<: *tmpl_deploy
-  <<: *tmpl_branch_rules
-  variables:
-    <<: *tmpl_node_production_variables
-    <<: *tmpl_cms_dev_variables
-    <<: *tmpl_branch_variables
   environment:
     name: review/$CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG.$BASE_HOSTNAME
+    url: https://$APP_ORIGIN
     on_stop: deploy:sls:branch_remove
-  needs:
-    - build:master
-    - build:native-deps
-  dependencies:
-    - build:master
-    - build:native-deps
+  variables:
+    <<: *tmpl_branch_variables
+    <<: *tmpl_deploy_variables
 
 deploy:sls:branch_remove:
-  <<: *tmpl_branch_remove_rules
-  dependencies:
+  <<: *tmpl_branch_remove
+  needs:
     - build:native-deps
   environment:
     name: review/$CI_COMMIT_REF_SLUG

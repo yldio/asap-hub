@@ -10,7 +10,7 @@ import { API_BASE_URL, STORAGE_KEY_INVITATION_CODE } from '../../config';
 
 // fetch user by code request
 beforeEach(() => {
-  nock(API_BASE_URL).get('/users/42').reply(200, {});
+  nock(API_BASE_URL).get('/users/invites/42').reply(200, {});
 });
 afterEach(async () => {
   await waitFor(() => nock.isDone());
@@ -81,7 +81,7 @@ describe('when clicking the button', () => {
 describe('the get user by code request', () => {
   it('redirects to / for a 4xx status code', async () => {
     nock.cleanAll();
-    nock(API_BASE_URL).get('/users/42').reply(403, {});
+    nock(API_BASE_URL).get('/users/invites/42').reply(403, {});
 
     const { getByText } = await renderWelcome();
     await waitFor(() => nock.isDone());

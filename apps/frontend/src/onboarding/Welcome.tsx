@@ -15,7 +15,7 @@ const Welcome: React.FC<{}> = () => {
   // this is not security-critical, it's just nicer to fail now instead of after registration.
   useEffect(() => {
     const requestController = new AbortController();
-    fetch(`${API_BASE_URL}/users/${code}`, {
+    fetch(`${API_BASE_URL}/users/invites/${code}`, {
       headers: {
         accept: 'application/json',
       },

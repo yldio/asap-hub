@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import formatDistance from 'date-fns/formatDistance';
 
 import { Avatar, Button, Headline2, Link, Paragraph } from '../atoms';
 import { Container } from '../molecules';
@@ -47,7 +48,7 @@ const Profile: React.FC<ProfileProps> = ({
             <br />
             {role} on <Link href={'/'}>{team}</Link>
           </Paragraph>
-          <Paragraph>{location}</Paragraph>
+          {location && <Paragraph>{location}</Paragraph>}
         </div>
         <div>
           <Avatar border initials={`PM`} />
@@ -58,7 +59,7 @@ const Profile: React.FC<ProfileProps> = ({
           Contact
         </Button>
         <div css={[lastUpdatedContainer]}>
-          <p>Updated {String(lastModified)}</p>
+          <p>Last updated: {formatDistance(new Date(), lastModified)} ago</p>
         </div>
       </div>
     </Container>

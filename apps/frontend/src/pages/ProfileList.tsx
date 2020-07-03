@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import api from '../api';
 
 const Page: React.FC<{}> = () => {
-  const { id } = useParams();
-
   const [data, setData] = useState(null);
   useEffect(() => {
     const requestApi = async () => {
-      const resp = await api.users.fetchById(id);
+      const resp = await api.users.fetch();
 
       if (resp.ok) {
         const json = await resp.json();
@@ -16,13 +13,12 @@ const Page: React.FC<{}> = () => {
       }
     };
     requestApi();
-  }, [id, setData]);
+  }, [setData]);
 
   if (data) {
     return <pre>{JSON.stringify(data, null, 2)}</pre>;
   }
-
-  return data;
+  return null;
 };
 
 export default Page;

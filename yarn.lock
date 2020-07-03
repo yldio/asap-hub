@@ -212,6 +212,7 @@ __metadata:
     "@types/testing-library__react-hooks": ^3.2.0
     "@types/uuid": ^8.0.0
     core-js: ^3.6.5
+    date-fns: ^2.14.0
     emotion-normalize: ^10.1.0
     jest-emotion: ^10.0.32
     react: ^16.13.1
@@ -10190,6 +10191,13 @@ __metadata:
     image-size: ^0.7.3
     mimer: ^1.0.0
   checksum: 62e0a05165f5525ecc6e7055fdad074a99ba8125f402ffb4bd37f03bf1b46dca8efbe42f1b882cfa89eb93196631fe2b85aea603190d8db29b4b9b6aa35b98b4
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.14.0":
+  version: 2.14.0
+  resolution: "date-fns@npm:2.14.0"
+  checksum: 93fcb999dcad1dced7c7e658f6769032783760b3989f0035186d7134858a21faeb242c31c250db66037de312007c3a562b501b9880fc707421149070a4785bcd
   languageName: node
   linkType: hard
 

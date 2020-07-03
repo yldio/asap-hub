@@ -2954,6 +2954,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.0"
       ],
       [
+        "date-fns",
+        "npm:2.14.0"
+      ],
+      [
         "dayjs",
         "npm:1.8.28"
       ],
@@ -8260,6 +8264,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
+            ["date-fns", "npm:2.14.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["jest-emotion", "npm:10.0.32"],
             ["react", "npm:16.13.1"],
@@ -8308,6 +8313,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
+            ["date-fns", "npm:2.14.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["jest-emotion", "npm:10.0.32"],
             ["react", "npm:16.13.1"],
@@ -8356,6 +8362,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
+            ["date-fns", "npm:2.14.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["jest-emotion", "npm:10.0.32"],
             ["react", "npm:16.13.1"],
@@ -8403,6 +8410,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
+            ["date-fns", "npm:2.14.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["jest-emotion", "npm:10.0.32"],
             ["react", "npm:16.13.1"],
@@ -8450,6 +8458,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
+            ["date-fns", "npm:2.14.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["jest-emotion", "npm:10.0.32"],
             ["react", "npm:16.13.1"],
@@ -19786,6 +19795,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["datauri", "npm:2.0.0"],
             ["image-size", "npm:0.7.5"],
             ["mimer", "npm:1.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["date-fns", [
+        ["npm:2.14.0", {
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.14.0-dd7ec830f5-93fcb999dc.zip/node_modules/date-fns/",
+          "packageDependencies": [
+            ["date-fns", "npm:2.14.0"]
           ],
           "linkType": "HARD",
         }]

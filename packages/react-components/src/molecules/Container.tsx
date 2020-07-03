@@ -7,12 +7,6 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 
-console.log({
-  tabletScreen,
-  smallDesktopScreen,
-  largeDesktopScreen,
-});
-
 const styles = css({
   boxSizing: 'border-box',
   display: 'flex',

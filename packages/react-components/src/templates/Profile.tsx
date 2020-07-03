@@ -22,7 +22,7 @@ type ProfileProps = {
   readonly displayName: string;
   readonly institution: string;
   readonly lastModified: Date;
-  readonly location: string;
+  readonly location?: string;
   readonly role: string;
   readonly team: string;
   readonly title: string;

@@ -22,8 +22,8 @@ const App: React.FC<{}> = () => {
     <AuthProvider>
       <Router history={history}>
         <Switch>
-          <Route path="/members/" component={ProfileList} />
-          <Route path="/members/:id" component={Profile} />
+          <Route exact path="/members/:id" component={Profile} />
+          <Route exact path="/members/" component={ProfileList} />
           <Route exact path="/welcome/:code/" component={Welcome} />
           <Route exact path="/create-profile" component={CreateProfile} />
           <Route exact path="/admin/" component={Admin} />

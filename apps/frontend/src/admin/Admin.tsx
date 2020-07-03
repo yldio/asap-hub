@@ -14,27 +14,30 @@ const Admin: React.FC<{}> = () => {
 
   const inviteUser: ComponentProps<
     typeof AdminInviteUserPage
-  >['onInviteUser'] = (invitee, adminPassword) => {
+  >['onInviteUser'] = async (invitee, adminPassword) => {
     setInvitationState('loading');
     const { signal } = (requestController.current = new AbortController());
 
-    return fetch(`${API_BASE_URL}/users`, {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${adminPassword}`,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(invitee),
-      signal,
-    })
-      .then((resp) => {
-        if (resp.ok) setInvitationState('success');
-        else setInvitationState(new Error(`${resp.status} ${resp.statusText}`));
-      })
-      .catch((error) => {
-        if (error.name === 'AbortError') return;
-        setInvitationState(error);
+    try {
+      const resp = await fetch(`${API_BASE_URL}/users`, {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${adminPassword}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify(invitee),
+        signal,
       });
+
+      if (resp.ok) {
+        setInvitationState('success');
+      } else {
+        setInvitationState(new Error(`${resp.status} ${resp.statusText}`));
+      }
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      setInvitationState(err);
+    }
   };
 
   return (

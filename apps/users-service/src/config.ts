@@ -11,7 +11,9 @@ const {
 } = process.env;
 
 export const globalToken = GLOBAL_TOKEN || 'change_me_when_we_have_admins';
-export const origin = APP_ORIGIN || 'http://localhost:3000';
+export const origin = APP_ORIGIN
+  ? `https://${APP_ORIGIN}`
+  : 'http://localhost:3000';
 // Same as set on dev/fixtures/user.json
 export const cmsClientId = CMS_CLIENT_ID || '5eec9b8133e8330001a8aae9';
 export const cmsClientSecret =

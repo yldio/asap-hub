@@ -1,76 +1,33 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
 include: 'apps/react-templates/.gitlab-ci.yml'
 
-.tmpl:master_deploy_rules: &tmpl_master_deploy_rules
+.tmpl:master: &tmpl_master
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
-  variables: &tmpl_master_deploy_variables
+  variables: &tmpl_master_variables
     SLS_STAGE: production
+    CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
+    CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
+    CMS_APP_NAME: $PROD_CMS_APP_NAME
 
-.tmpl:branch_deploy_rules: &tmpl_branch_deploy_rules
+.tmpl:branch: &tmpl_branch
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
-  variables: &tmpl_branch_deploy_variables
+  variables: &tmpl_branch_variables
     SLS_STAGE: $CI_COMMIT_REF_SLUG
+    CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
+    CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
+    CMS_BASE_URL: $DEV_CMS_BASE_URL
+    CMS_APP_NAME: $DEV_CMS_APP_NAME
 
-.tmpl:branch_remove_rules: &tmpl_branch_remove_rules
+.tmpl:branch_remove: &tmpl_branch_remove
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
       when: manual
       allow_failure: true
   variables: &tmpl_branch_remove_variables
+    <<: *tmpl_branch_variables
     GIT_CHECKOUT: 0
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
-
-# .tmpl:prepare:cert: &tmpl_prepare_cert
-#   artifacts:
-#     paths:
-#       - .env
-#   image:
-#     name: hashicorp/terraform:light
-#     entrypoint: ['/bin/sh', '-c']
-#   script:
-#     - ./ci/tf.sh
-#   needs: []
-#   stage: prepare
-
-.tmpl:deploy: &tmpl_deploy
-  script:
-    # - "[ -f .env ] && export $(grep -v '^#' .env | xargs)"
-    - yarn sls deploy --verbose
-  stage: deploy
-
-.tmpl:prepare: &tmpl_prepare
-  image:
-    name: amazon/aws-cli
-    entrypoint: ['']
-  script:
-    - exit_code=0
-    - stack=$(aws cloudformation describe-stacks --stack-name $SLS_STAGE || exit_code=$?)
-    - |
-      if [[ "$exit_code" != 0 ]] && echo $stack | grep -nqe "UPDATE_IN_PROGRESS"; then
-        aws cloudformation cancel-update-stack --stack-name $SLS_STAGE
-        aws cloudformation wait stack-update-rollback-complete --stack-name $SLS_STAGE
-      fi;
-    - |
-      if [[ "$exit_code" != 0 ]] && echo $stack | grep -nqe "CREATE_IN_PROGRESS"; then
-        aws cloudformation wait stack-create-complete --stack-name $SLS_STAGE
-      fi;
-  stage: prepare
-
-.tmpl:node_production_variables: &tmpl_node_production_variables
-  NODE_ENV: production
-
-.tmpl:cms_production_variables: &tmpl_cms_production_variables
-  CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
-  CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
-  CMS_APP_NAME: $PROD_CMS_APP_NAME
-
-.tmpl:cms_dev_variables: &tmpl_cms_dev_variables
-  CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
-  CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
-  CMS_BASE_URL: $DEV_CMS_BASE_URL
-  CMS_APP_NAME: $DEV_CMS_APP_NAME
 
 image: node:12
 
@@ -83,57 +40,36 @@ variables:
   BASE_HOSTNAME: asap.yld.io
 
 stages:
+  - setup
   - build
   - test
-  - prepare
   - deploy
 
-# stage test
+# stage setup
 
-check:packages:
+setup:
   script:
-    - yarn install --immutable --immutable-cache
-  needs: []
-  stage: test
-
-check:constraints:
-  script:
-    - yarn constraints
-  needs: []
-  stage: test
-
-check:format:
-  script:
-    - yarn run lint:format
-  needs: []
-  stage: test
-
-test:
-  script:
-    - yarn run test --coverage
-  variables:
-    <<: *tmpl_cms_dev_variables
+    - ci/env-create.sh > deploy.env
   artifacts:
-    paths:
-      - coverage
-  needs:
-    - build
-  stage: test
+    reports:
+      dotenv: deploy.env
+  stage: setup
 
 # stage build
 
 build:
   script:
-    - 'export AUTH_FRONTEND_BASE_URL=https://$BASE_HOSTNAME/.auth/'
     - yarn run build
-  variables:
-    <<: *tmpl_node_production_variables
   artifacts:
     paths:
       - 'packages/*/build'
       - 'apps/*/build'
-  needs: []
+  needs:
+    - setup
   stage: build
+  variables:
+    AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
+    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
 
 build:native-deps:
   script:
@@ -141,89 +77,87 @@ build:native-deps:
   artifacts:
     paths:
       - .yarn/unplugged
-  needs: []
+  needs:
+    - setup
   stage: build
 
-prepare:sls:master:
-  <<: *tmpl_prepare
-  <<: *tmpl_master_deploy_rules
-  variables:
-    <<: *tmpl_master_deploy_variables
+# stage test
+
+.tmpl:test: &tmpl_test
+  script:
+    - echo "no script proporty found"
+  needs: []
+  stage: test
+
+test:packages:
+  <<: *tmpl_test
+  script:
+    - yarn install --immutable --immutable-cache
+
+test:constraints:
+  <<: *tmpl_test
+  script:
+    - yarn constraints
+
+test:format:
+  <<: *tmpl_test
+  script:
+    - yarn run lint:format
+
+test:
+  <<: *tmpl_test
+  script:
+    - yarn run test --coverage
+  artifacts:
+    paths:
+      - coverage
   needs:
+    - build
+  variables:
+    <<: *tmpl_branch_variables
+
+# stage deploy
+
+.tmpl:deploy: &tmpl_deploy
+  script:
+    - yarn sls deploy --verbose
+  stage: deploy
+  variables: &tmpl_deploy_variables
+    NODE_ENV: production
+  needs:
+    - setup
+    - build
+    - build:native-deps
+
+deploy:sls:master:
+  <<: *tmpl_master
+  <<: *tmpl_deploy
+  environment:
+    name: production
+    url: https://$APP_HOSTNAME
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
+  needs:
+    - setup
     - build
     - build:native-deps
     - test
 
-prepare:sls:branch:
-  <<: *tmpl_prepare
-  <<: *tmpl_branch_deploy_rules
-  variables:
-    <<: *tmpl_branch_deploy_variables
-  needs:
-    - build
-    - build:native-deps
-
-# prepare:cert:master:
-#   <<: *tmpl_master_deploy_rules
-#   <<: *tmpl_prepare_cert
-#   variables:
-#     <<: *tmpl_master_deploy_variables
-#     TF_VAR_domain: $BASE_HOSTNAME
-
-# prepare:cert:branch:
-#   <<: *tmpl_branch_deploy_rules
-#   <<: *tmpl_prepare_cert
-#   variables:
-#     <<: *tmpl_branch_deploy_variables
-#     TF_VAR_domain: $BASE_HOSTNAME
-#     TF_VAR_record: $CI_COMMIT_REF_SLUG
-
-# stage deploy
-
-deploy:sls:master:
-  <<: *tmpl_deploy
-  <<: *tmpl_master_deploy_rules
-  variables:
-    <<: *tmpl_node_production_variables
-    <<: *tmpl_cms_production_variables
-    <<: *tmpl_master_deploy_variables
-  environment:
-    name: production
-    url: https://$BASE_HOSTNAME
-  needs:
-    - build
-    - build:native-deps
-    - prepare:sls:master
-    # - prepare:cert:master
-  dependencies:
-    - build
-    - build:native-deps
-    # - prepare:cert:master
-
 deploy:sls:branch:
+  <<: *tmpl_branch
   <<: *tmpl_deploy
-  <<: *tmpl_branch_deploy_rules
-  variables:
-    <<: *tmpl_node_production_variables
-    <<: *tmpl_cms_dev_variables
-    <<: *tmpl_branch_deploy_variables
   environment:
     name: review/$CI_COMMIT_REF_SLUG
-    url: https://$CI_COMMIT_REF_SLUG.$BASE_HOSTNAME
+    url: https://$APP_HOSTNAME
     on_stop: deploy:sls:branch_remove
-  needs:
-    - build
-    - build:native-deps
-    - prepare:sls:branch
-    # - prepare:cert:branch
-  dependencies:
-    - build
-    - build:native-deps
-    # - prepare:cert:branch
+  variables:
+    <<: *tmpl_branch_variables
+    <<: *tmpl_deploy_variables
 
 deploy:sls:branch_remove:
-  <<: *tmpl_branch_remove_rules
-  dependencies:
+  <<: *tmpl_branch_remove
+  needs:
     - build:native-deps
   environment:
     name: review/$CI_COMMIT_REF_SLUG

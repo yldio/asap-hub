@@ -4,9 +4,11 @@ const { paramCase } = require('param-case');
 const pkg = require('./package.json');
 
 const {
+  APP_HOSTNAME = 'asap.yld.io',
+  API_HOSTNAME = 'api.asap.yld.io',
   AWS_ACM_CERTIFICATE_ARN,
   AWS_REGION = 'us-east-1',
-  BASE_HOSTNAME,
+  BASE_HOSTNAME = 'asap.yld.io',
   GLOBAL_TOKEN,
   NODE_ENV = 'development',
   SLS_STAGE = 'development',
@@ -27,10 +29,6 @@ const plugins = [
     : ['serverless-offline']),
 ];
 
-const origin = [SLS_STAGE !== 'production' ? SLS_STAGE : '', BASE_HOSTNAME]
-  .filter(Boolean)
-  .join('.');
-
 module.exports = {
   service,
   plugins,
@@ -43,12 +41,12 @@ module.exports = {
     stage: SLS_STAGE,
     httpApi: {
       cors: {
-        allowedOrigins: [`https://${origin}`],
+        allowedOrigins: [`https://${APP_HOSTNAME}`],
         allowCredentials: true,
       },
     },
     environment: {
-      APP_ORIGIN: `https://${origin}`,
+      APP_ORIGIN: `https://${APP_HOSTNAME}`,
       NODE_ENV: `\${env:NODE_ENV}`,
       CMS_BASE_URL: `\${env:CMS_BASE_URL}`,
       CMS_APP_NAME: `\${env:CMS_APP_NAME}`,
@@ -61,8 +59,8 @@ module.exports = {
     excludeDevDependencies: false,
   },
   custom: {
-    apiOrigin: `${SLS_STAGE === 'production' ? 'api.' : 'api-'}${origin}`,
-    origin,
+    apiHostname: API_HOSTNAME,
+    appHostname: APP_HOSTNAME,
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
@@ -163,7 +161,7 @@ module.exports = {
       HttpApiDomain: {
         Type: 'AWS::ApiGatewayV2::DomainName',
         Properties: {
-          DomainName: `\${self:custom.apiOrigin}`,
+          DomainName: `\${self:custom.apiHostname}`,
           DomainNameConfigurations: [
             {
               CertificateArn: AWS_ACM_CERTIFICATE_ARN,
@@ -178,7 +176,7 @@ module.exports = {
         Properties: {
           ApiId: { Ref: 'HttpApi' },
           ApiMappingKey: '',
-          DomainName: `\${self:custom.apiOrigin}`,
+          DomainName: `\${self:custom.apiHostname}`,
           Stage: { Ref: 'HttpApiStage' },
         },
       },
@@ -188,7 +186,7 @@ module.exports = {
           HostedZoneName: `${BASE_HOSTNAME}.`,
           RecordSets: [
             {
-              Name: `\${self:custom.apiOrigin}`,
+              Name: `\${self:custom.apiHostname}`,
               Type: 'A',
               AliasTarget: {
                 DNSName: {
@@ -351,7 +349,7 @@ module.exports = {
         DependsOn: ['FrontendBucket', 'AuthFrontendBucket', 'StorybookBucket'],
         Properties: {
           DistributionConfig: {
-            Aliases: [`\${self:custom.origin}`],
+            Aliases: [`\${self:custom.appHostname}`],
             CustomErrorResponses: [
               {
                 ErrorCode: 404,
@@ -494,7 +492,7 @@ module.exports = {
           HostedZoneName: `${BASE_HOSTNAME}.`,
           RecordSets: [
             {
-              Name: `\${self:custom.origin}`,
+              Name: `\${self:custom.appHostname}`,
               Type: 'A',
               AliasTarget: {
                 DNSName: {

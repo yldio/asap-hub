@@ -10,7 +10,7 @@ const styles = css({
   width: '100%',
   padding: '0 24px',
 
-  borderBottom: `2px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${steel.rgb}`,
 });
 
 const logoStyles = css({

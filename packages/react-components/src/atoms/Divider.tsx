@@ -16,7 +16,7 @@ const hrStyles = css({
   margin: 0,
 
   border: 'none',
-  borderTop: `2px solid ${steel.rgb}`,
+  borderTop: `1px solid ${steel.rgb}`,
 });
 const textStyles = css({
   ':empty': {
@@ -34,8 +34,10 @@ const textStyles = css({
 
   backgroundColor: paper.rgb,
   color: lead.rgb,
-  fontWeight: 'bold',
   textTransform: 'uppercase',
+  fontWeight: 'bold',
+  fontSize: `${13.6 / perRem}em`,
+  lineHeight: `${18 / 13.6}em`,
 });
 
 interface DividerProps {

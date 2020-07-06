@@ -69,7 +69,7 @@ build:
   stage: build
   variables:
     AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
-    REACT_APP_API_BASE_URL: https://$API_ORIGIN
+    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
 
 build:native-deps:
   script:
@@ -134,7 +134,7 @@ deploy:sls:master:
   <<: *tmpl_deploy
   environment:
     name: production
-    url: https://$APP_ORIGIN
+    url: https://$APP_HOSTNAME
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
@@ -149,7 +149,7 @@ deploy:sls:branch:
   <<: *tmpl_deploy
   environment:
     name: review/$CI_COMMIT_REF_SLUG
-    url: https://$APP_ORIGIN
+    url: https://$APP_HOSTNAME
     on_stop: deploy:sls:branch_remove
   variables:
     <<: *tmpl_branch_variables

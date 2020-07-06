@@ -1,20 +1,14 @@
 import React from 'react';
-import css from '@emotion/css';
 
-import { largeDesktopScreen, mobileScreen, vminLinearCalc } from '../pixels';
-import { TextChildren, layoutStyles } from '../text';
-
-const styles = css({
-  fontWeight: 'bold',
-  fontSize: vminLinearCalc(mobileScreen, 20.4, largeDesktopScreen, 21.25, 'px'),
-  lineHeight: vminLinearCalc(mobileScreen, 24, largeDesktopScreen, 30, 'px'),
-});
+import { TextChildren, layoutStyles, headlineStyles } from '../text';
 
 interface Headline4Props {
   readonly children: TextChildren;
+  readonly styleAsHeading?: keyof typeof headlineStyles;
 }
-const Headline4: React.FC<Headline4Props> = ({ children }) => (
-  <h4 css={[layoutStyles, styles]}>{children}</h4>
-);
+const Headline4: React.FC<Headline4Props> = ({
+  children,
+  styleAsHeading = 4,
+}) => <h4 css={[layoutStyles, headlineStyles[styleAsHeading]]}>{children}</h4>;
 
 export default Headline4;

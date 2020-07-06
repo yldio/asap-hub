@@ -7,6 +7,6 @@ export default { title: 'Templates / Email' };
 export const Welcome = () => (
   <Messages.Welcome
     firstName={text('First Name', 'Filipe')}
-    link={'https://asap.yld.io'}
+    link={'https://hub.asap.science'}
   />
 );

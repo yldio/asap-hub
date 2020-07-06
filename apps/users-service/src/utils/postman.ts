@@ -22,7 +22,7 @@ export const sendEmail = async ({
     },
     Template: template,
     TemplateData: JSON.stringify(values),
-    Source: 'no-reply@asap.yld.io',
+    Source: 'no-reply@hub.asap.science',
   };
 
   return ses.sendTemplatedEmail(params).promise();

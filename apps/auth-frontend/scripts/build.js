@@ -11,7 +11,8 @@ try {
     stdio: 'pipe',
     env: {
       ...env,
-      PUBLIC_URL: env.AUTH_FRONTEND_BASE_URL || 'https://asap.yld.io/.auth/',
+      PUBLIC_URL:
+        env.AUTH_FRONTEND_BASE_URL || 'https://hub.asap.science/.auth/',
     },
   });
 } catch (err) {

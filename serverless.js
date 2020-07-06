@@ -4,18 +4,21 @@ const { paramCase } = require('param-case');
 const pkg = require('./package.json');
 
 const {
-  APP_HOSTNAME = 'asap.yld.io',
-  API_HOSTNAME = 'api.asap.yld.io',
-  AWS_ACM_CERTIFICATE_ARN,
+  APP_HOSTNAME = 'hub.asap.science',
+  API_HOSTNAME = 'api.hub.asap.science',
+  AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
   AWS_REGION = 'us-east-1',
-  BASE_HOSTNAME = 'asap.yld.io',
+  BASE_HOSTNAME = 'hub.asap.science',
   GLOBAL_TOKEN,
   NODE_ENV = 'development',
   SLS_STAGE = 'development',
 } = process.env;
 
 if (NODE_ENV === 'production') {
-  assert.ok(AWS_ACM_CERTIFICATE_ARN, 'AWS_ACM_CERTIFICATE_ARN not defined');
+  assert.ok(
+    AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+    'AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN not defined',
+  );
   assert.ok(BASE_HOSTNAME, 'BASE_HOSTNAME not defined');
   assert.ok(GLOBAL_TOKEN, 'GLOBAL_TOKEN not defined');
 }
@@ -164,7 +167,7 @@ module.exports = {
           DomainName: `\${self:custom.apiHostname}`,
           DomainNameConfigurations: [
             {
-              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              CertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -479,7 +482,7 @@ module.exports = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              AcmCertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },

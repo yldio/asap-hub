@@ -27,9 +27,7 @@ and configured as follows:
 
 **Settings**
 
-- `Company Logo` - URL to the ASAP logo
-- `Primary Color` - pick any matching branding
-- `Background Color` - pick any matching branding
+- `Primary Color` - hex value of `fern` from our design guidelines
 
 **Login**
 
@@ -52,7 +50,7 @@ In account developer tools, create an application for the Hub and configure as f
 
 ## Auth0 Custom Social Connections
 
-Create a connection for ORCID and configure as follows:
+Create a connection named `ORCID` and configure as follows:
 
 **Settings**
 

@@ -8132,6 +8132,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/orcid-user-profile-script", "workspace:apps/orcid-user-profile-script"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/core", "npm:7.9.0"],
+            ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.9.5"],
+            ["@babel/preset-typescript", "virtual:dce39fa2e05942e1473f7ec40900aeec338e13b76d504e96abc4a8f72df79ed87ac2ba0e2983a4693c1eee2620617fc7d8af2f34ec4d65bf2fd45c746ba98652#npm:7.9.0"],
             ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/jsonwebtoken", "npm:8.5.0"],
@@ -8260,6 +8263,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
+            ["regenerator-runtime", "npm:0.13.5"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:3.4.2"]
           ],
           "packagePeers": [

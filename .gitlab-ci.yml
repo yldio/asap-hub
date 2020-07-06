@@ -37,7 +37,7 @@ workflow:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 variables:
-  BASE_HOSTNAME: asap.yld.io
+  BASE_HOSTNAME: hub.asap.science
 
 stages:
   - setup

@@ -25,7 +25,7 @@ const Login: React.FC<{}> = () => {
       privacyPolicyHref="#TODO"
       forgotPasswordHref="#TODO"
       onGoogleSignin={() => authorizeWithSso(location, 'google-oauth2')}
-      onOrcidSignin={() => authorizeWithSso(location, 'ORCID-Sandbox')}
+      onOrcidSignin={() => authorizeWithSso(location, 'ORCID')}
       email={email}
       onChangeEmail={(newEmail) => {
         setEmail(newEmail);

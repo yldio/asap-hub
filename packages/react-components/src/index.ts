@@ -1,9 +1,10 @@
+import * as messages from './messages';
 import * as pixels from './pixels';
 import * as text from './text';
 // TODO when LoginLogoutButton is removed, move this out of components into frontend
 import * as authTestUtils from './auth-test-utils';
 
-export { pixels, text, authTestUtils };
+export { messages, pixels, text, authTestUtils };
 
 export * from './icons';
 export * from './images';
@@ -36,5 +37,5 @@ export {
   Layout,
 } from './organisms';
 
-export { InviteUserForm, Signin, Messages } from './templates';
+export { InviteUserForm, Signin } from './templates';
 export { AdminInviteUserPage, SigninPage } from './pages';

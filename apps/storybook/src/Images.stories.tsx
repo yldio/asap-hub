@@ -4,10 +4,14 @@ import {
   loadingImage,
   validTickGreenImage,
   validTickWhiteImage,
+  asapImage,
+  asapPaddedImage,
 } from '@asap-hub/react-components';
 
 export default { title: 'Atoms / Images' };
 
+export const Asap = () => <img alt="ASAP" src={asapImage} />;
+export const AsapPadded = () => <img alt="ASAP" src={asapPaddedImage} />;
 export const Loading = () => <img alt="Loading" src={loadingImage} />;
 export const ValidTickGreen = () => (
   <img alt="Valid Tick" src={validTickGreenImage} />

@@ -143,13 +143,14 @@ const TextField: React.FC<TextFieldProps> = ({
   pattern,
 
   customValidationMessage = '',
-  indicateValid = required !== undefined ||
-    minLength !== undefined ||
-    maxLength !== undefined ||
-    pattern !== undefined,
 
-  loading = false,
   customIndicator,
+  loading = false,
+  indicateValid = customIndicator === undefined &&
+    (required !== undefined ||
+      minLength !== undefined ||
+      maxLength !== undefined ||
+      pattern !== undefined),
 
   value,
   onChange = noop,

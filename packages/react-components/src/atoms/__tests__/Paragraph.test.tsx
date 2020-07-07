@@ -9,10 +9,10 @@ it('renders the text in a <p>', () => {
   expect(getByText('text').tagName).toBe('P');
 });
 
-it('applies the text padding', () => {
+it('applies the text margin', () => {
   const { getByText } = render(<Paragraph>text</Paragraph>);
-  const { paddingTop } = getComputedStyle(getByText('text'));
-  expect(paddingTop).toMatchInlineSnapshot(`"12px"`);
+  const { marginTop } = getComputedStyle(getByText('text'));
+  expect(marginTop).toMatchInlineSnapshot(`"12px"`);
 });
 
 it('renders primary text in a larger font', () => {

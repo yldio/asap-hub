@@ -35,10 +35,12 @@ const Signin: React.FC<SigninProps> = ({
 }) => (
   <article css={styles}>
     <header css={[headerStyles, ignoreWidthStyles]}>
-      <Display>
+      <Display styleAsHeading={2}>
         {signup ? 'Create your account' : 'Sign in to ASAP Hub'}
       </Display>
-      <Paragraph primary>Save time and sign in via Google or ORCID</Paragraph>
+      <Paragraph primary accent="lead">
+        Save time and sign in via Google or ORCID
+      </Paragraph>
     </header>
     <SsoButtons onGoogleSignin={onGoogleSignin} onOrcidSignin={onOrcidSignin} />
     <div css={ignoreWidthStyles}>

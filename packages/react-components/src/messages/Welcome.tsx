@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import Layout from './Layout';
-import { Headline3, Paragraph, Link } from '../../atoms';
+import { Display, Paragraph, Link } from '../atoms';
 
 interface WelcomeProps {
   readonly firstName: string;
@@ -18,7 +18,7 @@ const listStyle = css({
 
 const Component: React.FC<WelcomeProps> = ({ firstName, link }) => (
   <Layout>
-    <Headline3>Dear {firstName}</Headline3>
+    <Display styleAsHeading={3}>Dear {firstName}</Display>
     <>
       <Paragraph>Congratulations on being awarded the ASAP Grant.</Paragraph>
       <Paragraph>

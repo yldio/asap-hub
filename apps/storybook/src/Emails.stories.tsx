@@ -1,12 +1,12 @@
 import React from 'react';
 import { text } from '@storybook/addon-knobs';
-import { Messages } from '@asap-hub/react-components';
+import { messages } from '@asap-hub/react-components';
 
-export default { title: 'Templates / Email' };
+export default { title: 'Pages / Emails' };
 
 export const Welcome = () => (
-  <Messages.Welcome
+  <messages.Welcome
     firstName={text('First Name', 'Filipe')}
-    link={'https://hub.asap.science'}
+    link="https://hub.asap.science/"
   />
 );

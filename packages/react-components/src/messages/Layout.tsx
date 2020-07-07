@@ -1,8 +1,8 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Gradient, Link } from '../../atoms';
-import { silver } from '../../colors';
-import { logo } from '../../images';
+import { Gradient, Link } from '../atoms';
+import { silver } from '../colors';
+import { asapImage } from '../images';
 
 interface LayoutProps {
   readonly children: React.ReactNode;
@@ -45,7 +45,7 @@ const Component: React.FC<LayoutProps> = ({ children }) => (
           paddingLeft: '24px',
         })}
       >
-        <img alt="ASAP Hub logo" css={imageContainerStyle} src={logo} />
+        <img alt="ASAP Hub logo" css={imageContainerStyle} src={asapImage} />
         <div css={contentContainerStyles}>{children}</div>
       </div>
     </div>

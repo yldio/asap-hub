@@ -1,26 +1,25 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { asapImage } from '../images';
+import { asapPaddedImage } from '../images';
 import { steel } from '../colors';
 
 const styles = css({
   boxSizing: 'border-box',
   display: 'flex',
   width: '100%',
-  padding: '18px 24px',
+  padding: '0 24px',
 
-  borderBottom: `2px solid ${steel.rgb}`,
+  borderBottom: `1px solid ${steel.rgb}`,
 });
 
 const logoStyles = css({
-  // TODO logo not aligned
-  height: '36px',
+  height: '72px',
 });
 
 const Header: React.FC<{}> = () => (
   <header css={styles}>
-    <img alt="ASAP logo" src={asapImage} css={logoStyles} />
+    <img alt="ASAP logo" src={asapPaddedImage} css={logoStyles} />
   </header>
 );
 

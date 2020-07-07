@@ -10,10 +10,10 @@ it('renders the text in an <h2>', () => {
   expect(getByText('text').tagName).toBe('H2');
 });
 
-it('applies the text padding', () => {
+it('applies the text margin', () => {
   const { getByText } = render(<Headline2>text</Headline2>);
-  const { paddingTop } = getComputedStyle(getByText('text'));
-  expect(paddingTop).toMatchInlineSnapshot(`"12px"`);
+  const { marginTop } = getComputedStyle(getByText('text'));
+  expect(marginTop).toMatchInlineSnapshot(`"12px"`);
 });
 
 it('renders the text in large font', () => {

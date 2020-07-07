@@ -19,10 +19,8 @@ export const fontStyles = {
   color: charcoal.rgb,
 } as const;
 export const layoutStyles = {
-  margin: 0,
-
-  paddingTop: '12px',
-  paddingBottom: '12px',
+  marginTop: '12px',
+  marginBottom: '12px',
 
   ':empty': {
     display: 'none',

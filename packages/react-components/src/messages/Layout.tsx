@@ -51,8 +51,8 @@ const Component: React.FC<LayoutProps> = ({ children }) => (
     </div>
     <div css={footerContainerStyles}>
       <ul css={[containerStyles, footerContentContainerStyles]}>
-        <Link href="https://asap.yld.io">Privacy policy</Link>
-        <Link href="https://asap.yld.io">Terms and conditions</Link>
+        <Link href="https://hub.asap.science">Privacy policy</Link>
+        <Link href="https://hub.asap.science">Terms and conditions</Link>
       </ul>
     </div>
   </>

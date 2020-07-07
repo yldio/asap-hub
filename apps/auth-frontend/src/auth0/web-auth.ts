@@ -14,7 +14,7 @@ const getOptionsFromLocation = (location: Location) =>
 
 const webAuth = new WebAuth(config);
 
-type SsoConnection = 'google-oauth2' | 'ORCID-Sandbox';
+type SsoConnection = 'google-oauth2' | 'ORCID';
 export const authorizeWithSso = (
   location: Location,
   connection: SsoConnection,

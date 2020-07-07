@@ -157,7 +157,7 @@ describe('POST /users', () => {
     const [{ code }] = user.data.connections.iv;
     expect(ses.sendTemplatedEmail).toBeCalledTimes(1);
     expect(ses.sendTemplatedEmail).toBeCalledWith({
-      Source: 'no-reply@asap.yld.io',
+      Source: 'no-reply@hub.asap.science',
       Destination: {
         ToAddresses: [payload.email],
       },

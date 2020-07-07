@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 
-EMAIL_ADDRESS=no-reply@asap.yld.io
+EMAIL_ADDRESS=no-reply@hub.asap.science
 
 # Wait for the SES service to be available before executing any post-run scripts
 while ! nc -z localhost 4566; do

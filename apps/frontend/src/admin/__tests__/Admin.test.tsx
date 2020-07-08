@@ -50,7 +50,10 @@ describe('when submitting the form', () => {
 
   describe('and the invitation is pending', () => {
     beforeEach(() => {
-      nockInterceptor.delay(1).reply(201);
+      nockInterceptor.delay(0).reply(201);
+    });
+    afterEach(async () => {
+      await waitFor(() => nock.isDone());
     });
 
     beforeEach(() => {
@@ -101,12 +104,12 @@ describe('when submitting the form', () => {
 
     it('shows the form again', async () => {
       const { findByText } = result;
-      await expect(findByText(/^invite user$/i)).resolves.toBeVisible();
+      expect(await findByText(/^invite user$/i)).toBeVisible();
     });
 
     it('shows a success message', async () => {
       const { findByText } = result;
-      await expect(findByText(/invited/i)).resolves.toBeVisible();
+      expect(await findByText(/invited/i)).toBeVisible();
     });
   });
 
@@ -124,7 +127,7 @@ describe('when submitting the form', () => {
 
     it('shows the form again', async () => {
       const { findByText } = result;
-      await expect(findByText(/^invite user$/i)).resolves.toBeVisible();
+      expect(await findByText(/^invite user$/i)).toBeVisible();
     });
 
     it('shows a failure message', async () => {
@@ -149,7 +152,7 @@ describe('when submitting the form', () => {
 
     it('shows the form again', async () => {
       const { findByText } = result;
-      await expect(findByText(/^invite user$/i)).resolves.toBeVisible();
+      expect(await findByText(/^invite user$/i)).toBeVisible();
     });
 
     it('shows an error message', async () => {

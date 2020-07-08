@@ -104,6 +104,19 @@ describe('when valid', () => {
       );
     });
 
+    describe('but also a custom indicator', () => {
+      it('does not show a valid indicator', () => {
+        const { getByRole } = render(
+          <TextField
+            value=""
+            pattern=".*"
+            customIndicator={<svg role="img" viewBox="0 0 2 1" />}
+          />,
+        );
+        expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
+      });
+    });
+
     it('removes the indicator while the value is changing', () => {
       const { getByRole, rerender } = render(
         <TextField value="val" pattern=".*" />,

@@ -36,6 +36,8 @@ describe('GET /users/invites/{code}', () => {
 
   test('returns 200 when code exists', async () => {
     const {
+      id,
+      displayName,
       connections: [{ code }],
     } = await createRandomUser();
 
@@ -49,7 +51,10 @@ describe('GET /users/invites/{code}', () => {
       null,
       null,
     )) as APIGatewayProxyResult;
+    const body = JSON.parse(result.body);
 
     expect(result.statusCode).toStrictEqual(200);
+    expect(body.id).toStrictEqual(id);
+    expect(body.displayName).toStrictEqual(displayName);
   });
 });

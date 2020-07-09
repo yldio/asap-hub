@@ -4,7 +4,6 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
 import { handler } from '../../src/handlers/connect-by-code';
 import { apiGatewayEvent } from '../helpers/events';
-import { auth0BaseUrl } from '../../src/config';
 import { createRandomUser } from '../helpers/create-user';
 import { CMS } from '../../src/cms';
 

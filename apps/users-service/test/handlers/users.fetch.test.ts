@@ -1,7 +1,7 @@
 import nock from 'nock';
 
 import { handler } from '../../src/handlers/fetch';
-import { cmsBaseUrl, cmsAppName } from '../../src/config';
+import { cms } from '../../src/config';
 import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createRandomUser } from '../helpers/create-user';
@@ -10,10 +10,10 @@ describe('GET /users', () => {
   afterEach(() => nock.cleanAll());
 
   test('returns 200 when no users exist', async () => {
-    nock(cmsBaseUrl)
+    nock(cms.baseUrl)
       .post('/identity-server/connect/token')
       .reply(200, { access_token: 'token' })
-      .get(`/api/content/${cmsAppName}/users`)
+      .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({
           take: 30,

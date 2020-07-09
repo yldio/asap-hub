@@ -2,15 +2,19 @@ module.exports = {
   testRunner: require.resolve('jest-circus/runner'),
   testEnvironment: 'node',
 
-  modulePathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/coverage/'],
+  modulePathIgnorePatterns: [
+    '<rootDir>/build/',
+    '<rootDir>/coverage/',
+    'packages/services-common/src/cms/*',
+  ],
 
   collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
   coverageThreshold: {
     global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
+      branches: 98,
+      functions: 99,
+      lines: 99,
+      statements: 99,
     },
   },
 

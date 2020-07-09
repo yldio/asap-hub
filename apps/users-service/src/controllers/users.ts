@@ -7,7 +7,7 @@ import { CMS } from '../cms';
 import * as auth0 from '../entities/auth0';
 import { CreateUser } from '../cms/users';
 import { User } from '../entities/user';
-import { sendEmail } from '../utils/postman';
+import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 
 export interface ReplyUser {
@@ -91,15 +91,20 @@ export default class Users {
     return transform(user);
   }
 
-  async connectByCode(code: string, profile: auth0.UserInfo): Promise<User> {
+  async connectByCode(
+    code: string,
+    profile: auth0.UserInfo,
+  ): Promise<ReplyUser> {
     const user = await this.cms.users.fetchByCode(code);
     if (!user) {
       throw Boom.forbidden();
     }
-    return this.cms.users.connectByCode(user, {
-      id: profile.sub,
-      source: 'auth0',
-      raw: profile,
-    });
+    return transform(
+      await this.cms.users.connectByCode(user, {
+        id: profile.sub,
+        source: 'auth0',
+        raw: profile,
+      }),
+    );
   }
 }

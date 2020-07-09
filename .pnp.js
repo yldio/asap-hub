@@ -27,6 +27,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/auth-frontend"
       },
       {
+        "name": "@asap-hub/content-service",
+        "reference": "workspace:apps/content-service"
+      },
+      {
         "name": "@asap-hub/frontend",
         "reference": "workspace:apps/frontend"
       },
@@ -63,6 +67,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/react-context"
       },
       {
+        "name": "@asap-hub/services-common",
+        "reference": "workspace:packages/services-common"
+      },
+      {
         "name": "@types/apr-intercept",
         "reference": "workspace:@types/apr-intercept"
       },
@@ -80,12 +88,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "fallbackExclusionList": [
       ["@asap-hub/auth", ["workspace:packages/auth"]],
       ["@asap-hub/auth-frontend", ["workspace:apps/auth-frontend"]],
+      ["@asap-hub/content-service", ["workspace:apps/content-service"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/frontend", ["workspace:apps/frontend"]],
       ["@asap-hub/orcid-user-profile-script", ["workspace:apps/orcid-user-profile-script"]],
       ["@asap-hub/react-components", ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#workspace:packages/react-components", "virtual:47ef3b468a9cf9b468cf4060be548fa4f43cf9c990dce724955cd4126cd83fa7b9b2d9ac110a41a294de5631e132465e9338ccb2f109592f7c35266207fa9a37#workspace:packages/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components", "workspace:packages/react-components"]],
       ["@asap-hub/react-context", ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context", "workspace:packages/react-context"]],
       ["@asap-hub/react-templates", ["workspace:apps/react-templates"]],
+      ["@asap-hub/services-common", ["workspace:packages/services-common"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
       ["@asap-hub/users-service", ["workspace:apps/users-service"]],
       ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
@@ -105,6 +115,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/auth-frontend",
         "workspace:apps/auth-frontend"
+      ],
+      [
+        "@asap-hub/content-service",
+        "workspace:apps/content-service"
       ],
       [
         "@asap-hub/eslint-config-asap-hub",
@@ -129,6 +143,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/react-templates",
         "workspace:apps/react-templates"
+      ],
+      [
+        "@asap-hub/services-common",
+        "workspace:packages/services-common"
       ],
       [
         "@asap-hub/storybook",
@@ -700,7 +718,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@hapi/bourne",
-        "npm:1.3.2"
+        "npm:2.0.0"
       ],
       [
         "@hapi/call",
@@ -3924,7 +3942,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "got",
-        "npm:9.6.0"
+        "npm:11.3.0"
       ],
       [
         "graceful-fs",
@@ -8066,6 +8084,43 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@asap-hub/content-service", [
+        ["workspace:apps/content-service", {
+          "packageLocation": "./apps/content-service/",
+          "packageDependencies": [
+            ["@asap-hub/content-service", "workspace:apps/content-service"],
+            ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/services-common", "workspace:packages/services-common"],
+            ["@babel/runtime-corejs3", "npm:7.9.6"],
+            ["@hapi/boom", "npm:9.1.0"],
+            ["@hapi/bourne", "npm:2.0.0"],
+            ["@hapi/joi", "npm:17.1.1"],
+            ["@types/apr-intercept", "workspace:@types/apr-intercept"],
+            ["@types/aws-lambda", "npm:8.10.53"],
+            ["@types/chance", "npm:1.1.0"],
+            ["@types/debug", "npm:4.1.5"],
+            ["@types/hapi", "npm:18.0.3"],
+            ["@types/hapi__boom", "npm:9.0.1"],
+            ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
+            ["@types/hapi__joi", "npm:17.1.2"],
+            ["@types/jest", "npm:26.0.3"],
+            ["@types/jsonwebtoken", "npm:8.5.0"],
+            ["@types/jwt-decode", "npm:2.2.1"],
+            ["@types/uuid", "npm:8.0.0"],
+            ["apr-intercept", "npm:3.0.4"],
+            ["aws-lambda", "npm:1.0.6"],
+            ["aws-sdk", "npm:2.704.0"],
+            ["chance", "npm:1.1.5"],
+            ["debug", "virtual:22f562d986a179c134348e2f9a34c16e7aac83723b52994f6cd838d1e1bdc151316b5a5b757f52d4a71ffe2a5b2aea9b0dc0bf8f24d573669717b6ff6df418b2#npm:4.1.1"],
+            ["got", "npm:11.3.0"],
+            ["jsonwebtoken", "npm:8.5.1"],
+            ["jwt-decode", "npm:2.2.0"],
+            ["nock", "npm:12.0.3"],
+            ["uuid", "npm:8.1.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@asap-hub/eslint-config-asap-hub", [
         ["workspace:packages/eslint-config-asap-hub", {
           "packageLocation": "./packages/eslint-config-asap-hub/",
@@ -8433,6 +8488,35 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@asap-hub/services-common", [
+        ["workspace:packages/services-common", {
+          "packageLocation": "./packages/services-common/",
+          "packageDependencies": [
+            ["@asap-hub/services-common", "workspace:packages/services-common"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.9.6"],
+            ["@hapi/boom", "npm:9.1.0"],
+            ["@hapi/bourne", "npm:2.0.0"],
+            ["@hapi/joi", "npm:17.1.1"],
+            ["@types/apr-intercept", "workspace:@types/apr-intercept"],
+            ["@types/aws-lambda", "npm:8.10.53"],
+            ["@types/debug", "npm:4.1.5"],
+            ["@types/hapi", "npm:18.0.3"],
+            ["@types/hapi__boom", "npm:9.0.1"],
+            ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
+            ["@types/hapi__joi", "npm:17.1.2"],
+            ["@types/jest", "npm:26.0.3"],
+            ["@types/jwt-decode", "npm:2.2.1"],
+            ["apr-intercept", "npm:3.0.4"],
+            ["aws-lambda", "npm:1.0.6"],
+            ["chance", "npm:1.1.5"],
+            ["debug", "virtual:22f562d986a179c134348e2f9a34c16e7aac83723b52994f6cd838d1e1bdc151316b5a5b757f52d4a71ffe2a5b2aea9b0dc0bf8f24d573669717b6ff6df418b2#npm:4.1.1"],
+            ["got", "npm:11.3.0"],
+            ["jwt-decode", "npm:2.2.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@asap-hub/storybook", [
         ["workspace:apps/storybook", {
           "packageLocation": "./apps/storybook/",
@@ -8462,6 +8546,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/users-service", "workspace:apps/users-service"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/services-common", "workspace:packages/services-common"],
             ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],

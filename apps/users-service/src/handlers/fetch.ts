@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import * as lambda from '../framework/lambda';
+import { framework as lambda } from '@asap-hub/services-common';
 import Users from '../controllers/users';
 
 export const handler: APIGatewayProxyHandler = lambda.http(

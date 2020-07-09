@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import * as lambda from '../framework/lambda';
+import { framework as lambda } from '@asap-hub/services-common';
 import Users from '../controllers/users';
 import { globalToken } from '../config';
 import { createSchema } from '../entities/user';

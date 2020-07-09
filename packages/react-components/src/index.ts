@@ -29,6 +29,7 @@ export {
   Header,
   LabeledTextField,
   LabeledPasswordField,
+  LabeledDropdown,
 } from './molecules';
 export {
   EmailPasswordSignin,

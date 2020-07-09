@@ -39,28 +39,37 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Label>
-      <Paragraph>
-        <strong>{title}</strong>
-      </Paragraph>
-      <TextField
-        {...props}
-        value={value}
-        type={showPassword ? 'text' : 'password'}
-        customIndicator={
-          value ? (
-            <div css={showPasswordIndicatorStyles}>
-              <Button linkStyle onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? hidePasswordIcon : showPasswordIcon}
-              </Button>
-            </div>
-          ) : undefined
-        }
-      />
+    <>
+      <Label
+        forContent={(id) => (
+          <TextField
+            {...props}
+            id={id}
+            value={value}
+            type={showPassword ? 'text' : 'password'}
+            customIndicator={
+              value ? (
+                <div css={showPasswordIndicatorStyles}>
+                  <Button
+                    linkStyle
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? hidePasswordIcon : showPasswordIcon}
+                  </Button>
+                </div>
+              ) : undefined
+            }
+          />
+        )}
+      >
+        <Paragraph>
+          <strong>{title}</strong>
+        </Paragraph>
+      </Label>
       <div css={forgotPasswordStyles}>
         <Link href={forgotPasswordHref}>Forgot Password?</Link>
       </div>
-    </Label>
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import {
+  dropdownChevronIcon,
   googleIcon,
   googleSigninLightNormalIcon,
   hidePasswordIcon,
@@ -9,6 +10,7 @@ import {
 
 export default { title: 'Atoms / Icons' };
 
+export const DropdownChevron = () => dropdownChevronIcon;
 export const Google = () => googleIcon;
 export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;
 export const HidePassword = () => hidePasswordIcon;

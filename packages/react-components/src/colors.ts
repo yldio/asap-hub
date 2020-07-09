@@ -39,7 +39,7 @@ export const apricot = color(240, 201, 148);
 
 export const fern = color(52, 162, 112);
 export const pine = color(40, 121, 83);
-export const mint = color(122, 210, 169);
+export const mint = color(228, 245, 238);
 
 export const cerulean = color(0, 140, 198);
 export const denim = color(0, 106, 146);

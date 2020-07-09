@@ -198,18 +198,22 @@ __metadata:
     "@types/jest": ^26.0.3
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
+    "@types/react-select": ^3.0.0
     "@types/react-test-renderer": 16.9.2
     "@types/testing-library__jest-dom": ^5.0.3
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.2.0
+    "@types/uuid": ^8.0.0
     core-js: ^3.6.5
     emotion-normalize: ^10.1.0
     jest-emotion: ^10.0.32
     react: ^16.13.1
     react-dom: ^16.13.1
+    react-select: ^3.1.0
     react-test-renderer: ^16.13.1
     regenerator-runtime: ^0.13.5
     use-debounce: ^3.4.2
+    uuid: ^8.1.0
   peerDependencies:
     "@asap-hub/react-context": "*"
     react: ^16.13.1
@@ -5328,6 +5332,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-select@npm:^3.0.0":
+  version: 3.0.14
+  resolution: "@types/react-select@npm:3.0.14"
+  dependencies:
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    "@types/react-transition-group": "*"
+  checksum: a02e4050444922dbf697d4e94b6e4ed26ba53273ecb420c4f4d6c3c71b1cbc48da553f26fc38070dcf4bb2da939b50ec67dee618df2b6b76a10eba74e2d58f0a
+  languageName: node
+  linkType: hard
+
 "@types/react-syntax-highlighter@npm:11.0.4":
   version: 11.0.4
   resolution: "@types/react-syntax-highlighter@npm:11.0.4"
@@ -5352,6 +5367,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 84818571e491aa508235c5523940f4322af63c39727df7a7513821100929f90f2f76d7cc40a1522c5ff0bd7fc8083baac1c517675be7ca83fc1dc7b25bdfc421
+  languageName: node
+  linkType: hard
+
+"@types/react-transition-group@npm:*":
+  version: 4.4.0
+  resolution: "@types/react-transition-group@npm:4.4.0"
+  dependencies:
+    "@types/react": "*"
+  checksum: b761f70623ca2a386a310536886e7ceed15087e59a3b6c68478c9965d38edd819c5b29e3fb79a5d911ee4b1db5ab397ae0ebb5a5ddf98f08708a6d592cb7c256
   languageName: node
   linkType: hard
 
@@ -22048,7 +22072,7 @@ react-scripts@3.4.1:
   languageName: node
   linkType: hard
 
-"react-select@npm:^3.0.8":
+"react-select@npm:^3.0.8, react-select@npm:^3.1.0":
   version: 3.1.0
   resolution: "react-select@npm:3.1.0"
   dependencies:

@@ -23,19 +23,19 @@ describe('GET /users/invites/{code}', () => {
     expect(result.statusCode).toStrictEqual(401);
   });
 
-  test('returns 401 when method is not bearer', async () => {
+  test('returns 403 when method is not bearer', async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authentication: chance.string(),
+          Authorization: `Basic ${chance.string()}`,
         },
       }),
       null,
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(401);
+    expect(result.statusCode).toStrictEqual(403);
   });
 
   test('returns 403 when Auth0 fails to verify token', async () => {

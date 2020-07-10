@@ -22,7 +22,7 @@ const validateUser = async (
   const [type, token] = headers.authorization.split(' ');
 
   if (type.toLowerCase() !== 'bearer') {
-    throw Boom.forbidden();
+    throw Boom.unauthorized();
   }
 
   const [err, res] = await Intercept(
@@ -35,10 +35,14 @@ const validateUser = async (
   );
 
   if (err) {
-    throw Boom.forbidden('Forbidden', {
-      error: err,
-    });
-  }
+    if (err.response.statusCode < 500) {
+      throw Boom.forbidden('Forbidden', {
+        error: err,
+      });
+    }
+
+    throw Boom.internal('Authentication Service Unavailable');
+  } 
 
   return res;
 };

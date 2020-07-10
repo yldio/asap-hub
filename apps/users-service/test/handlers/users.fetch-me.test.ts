@@ -23,7 +23,7 @@ describe('GET /users/invites/{code}', () => {
     expect(result.statusCode).toStrictEqual(401);
   });
 
-  test('returns 403 when method is not bearer', async () => {
+  test('returns 401 when method is not bearer', async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
@@ -35,7 +35,7 @@ describe('GET /users/invites/{code}', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(403);
+    expect(result.statusCode).toStrictEqual(401);
   });
 
   test('returns 403 when Auth0 fails to verify token', async () => {
@@ -53,6 +53,23 @@ describe('GET /users/invites/{code}', () => {
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
+  });
+
+  test('returns 500 when Auth0 is unavailable', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(500);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: `Bearer ${chance.string()}`,
+        },
+      }),
+      null,
+      null,
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(500);
   });
 
   test('returns 200 when code exists', async () => {

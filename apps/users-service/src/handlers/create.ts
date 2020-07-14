@@ -1,10 +1,12 @@
 import Boom from '@hapi/boom';
 import { APIGatewayProxyHandler } from 'aws-lambda';
+
+import { Invitee } from '@asap-hub/model';
 import { framework as lambda } from '@asap-hub/services-common';
+
 import Users from '../controllers/users';
 import { globalToken } from '../config';
 import { createSchema } from '../entities/user';
-import { CreateUser } from '../cms/users';
 
 const validateUser = async (request: lambda.Request): Promise<void> => {
   const headers = request.headers as {
@@ -32,7 +34,7 @@ export const handler: APIGatewayProxyHandler = lambda.http(
       'payload',
       request.payload,
       createSchema.required(),
-    ) as CreateUser;
+    ) as Invitee;
 
     // validate user
     await validateUser(request);

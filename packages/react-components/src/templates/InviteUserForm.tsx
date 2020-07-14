@@ -1,14 +1,12 @@
 import React, { useRef, useState } from 'react';
+import { Invitee } from '@asap-hub/model';
 
 import { Button } from '../atoms';
 import { noop } from '../utils';
 import { LabeledTextField, LabeledPasswordField } from '../molecules';
 
 interface InviteUserFormProps {
-  readonly onSubmit?: (
-    invitee: { displayName: string; email: string },
-    adminPassword: string,
-  ) => void;
+  readonly onSubmit?: (invitee: Invitee, adminPassword: string) => void;
 }
 const InviteUserForm: React.FC<InviteUserFormProps> = ({ onSubmit = noop }) => {
   const [displayName, setDisplayName] = useState('');

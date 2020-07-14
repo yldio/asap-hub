@@ -3,9 +3,11 @@ import Debug from 'debug';
 import path from 'path';
 import url from 'url';
 import Intercept from 'apr-intercept';
+
+import { Invitee } from '@asap-hub/model';
+
 import { CMS } from '../cms';
 import * as auth0 from '../entities/auth0';
-import { CreateUser } from '../cms/users';
 import { User } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
@@ -38,7 +40,7 @@ export default class Users {
     this.cms = new CMS();
   }
 
-  async create(user: CreateUser): Promise<ReplyUser> {
+  async create(user: Invitee): Promise<ReplyUser> {
     let createdUser;
     try {
       createdUser = await this.cms.users.create(user);

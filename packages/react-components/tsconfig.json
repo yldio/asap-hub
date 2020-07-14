@@ -8,5 +8,9 @@
     "jsx": "react"
   },
   "include": ["src"],
-  "references": [{ "path": "../auth" }, { "path": "../react-context" }]
+  "references": [
+    { "path": "../auth" },
+    { "path": "../model" },
+    { "path": "../react-context" }
+  ]
 }

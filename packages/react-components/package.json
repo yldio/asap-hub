@@ -17,6 +17,7 @@
     "react-dom": "^16.13.1"
   },
   "dependencies": {
+    "@asap-hub/model": "workspace:packages/model",
     "@babel/runtime-corejs3": "^7.9.6",
     "@emotion/core": "^10.0.28",
     "@emotion/css": "^10.0.27",

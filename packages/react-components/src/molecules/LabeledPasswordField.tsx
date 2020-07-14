@@ -6,6 +6,10 @@ import { perRem } from '../pixels';
 import { showPasswordIcon, hidePasswordIcon } from '../icons';
 import { fern } from '../colors';
 
+const containerStyles = css({
+  paddingBottom: `${18 / perRem}em`,
+});
+
 const forgotPasswordStyles = css({
   paddingTop: `${6 / perRem}em`,
 });
@@ -39,7 +43,7 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <>
+    <div css={containerStyles}>
       <Label
         forContent={(id) => (
           <TextField
@@ -69,7 +73,7 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
       <div css={forgotPasswordStyles}>
         <Link href={forgotPasswordHref}>Forgot Password?</Link>
       </div>
-    </>
+    </div>
   );
 };
 

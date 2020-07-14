@@ -79,6 +79,7 @@ const textFieldStyles = css({
   },
 });
 const containerStyles = css({
+  flexBasis: '100%',
   position: 'relative',
 });
 const customIndicatorStyles = (aspectRatio: number) =>

@@ -5,6 +5,10 @@ import { Label, TextField, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
 
+const containerStyles = css({
+  paddingBottom: `${18 / perRem}em`,
+});
+
 const subtitleStyles = css({
   color: lead.rgb,
 });
@@ -25,7 +29,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   hint,
   ...textFieldProps
 }) => (
-  <>
+  <div css={containerStyles}>
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
@@ -34,7 +38,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
       </Paragraph>
     </Label>
     <div css={hintStyles}>{hint}</div>
-  </>
+  </div>
 );
 
 export default LabeledTextField;

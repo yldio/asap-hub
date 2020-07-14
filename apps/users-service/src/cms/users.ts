@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
 import { Base, BaseOptions } from '@asap-hub/services-common';
+import { Invitee } from '@asap-hub/model';
 import { User } from '../entities/user';
 
 export interface Connection {
@@ -8,23 +9,12 @@ export interface Connection {
   source: string;
 }
 
-export interface CreateUser {
-  displayName: string;
-  email: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  title: string;
-  orcid: string;
-  institution: string;
-}
-
 export default class Users extends Base {
   constructor(CMSConfig: BaseOptions) {
     super(CMSConfig);
   }
 
-  create(user: CreateUser): Promise<User> {
+  create(user: Invitee): Promise<User> {
     const code = uuidV4();
     return this.client
       .post<User>('users', {

@@ -159,6 +159,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/model@workspace:packages/model":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/model@workspace:packages/model"
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/orcid-user-profile-script@workspace:apps/orcid-user-profile-script":
   version: 0.0.0-use.local
   resolution: "@asap-hub/orcid-user-profile-script@workspace:apps/orcid-user-profile-script"
@@ -181,6 +187,7 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/react-context": "workspace:packages/react-context"
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/core": ^7.9.0
@@ -328,6 +335,7 @@ __metadata:
   resolution: "@asap-hub/users-service@workspace:apps/users-service"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/services-common": "workspace:packages/services-common"
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0

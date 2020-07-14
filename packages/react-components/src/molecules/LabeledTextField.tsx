@@ -18,22 +18,23 @@ type LabeledTextFieldProps = {
   readonly title: React.ReactText | ReadonlyArray<React.ReactText>;
   readonly subtitle?: React.ReactText | ReadonlyArray<React.ReactText>;
   readonly hint?: React.ReactText | ReadonlyArray<React.ReactText>;
-} & ComponentProps<typeof TextField>;
+} & Exclude<ComponentProps<typeof TextField>, 'id'>;
 const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   title,
   subtitle,
   hint,
   ...textFieldProps
 }) => (
-  <Label>
-    <Paragraph>
-      <strong>{title}</strong>
-      <br />
-      <span css={subtitleStyles}>{subtitle}</span>
-    </Paragraph>
-    <TextField {...textFieldProps} />
+  <>
+    <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
+      <Paragraph>
+        <strong>{title}</strong>
+        <br />
+        <span css={subtitleStyles}>{subtitle}</span>
+      </Paragraph>
+    </Label>
     <div css={hintStyles}>{hint}</div>
-  </Label>
+  </>
 );
 
 export default LabeledTextField;

@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { text, button } from '@storybook/addon-knobs';
+import React from 'react';
+import { text } from '@storybook/addon-knobs';
 
 import { LabeledPasswordField } from '@asap-hub/react-components';
 
@@ -29,25 +29,18 @@ export const Empty = () => (
   />
 );
 export const Invalid = () => {
-  const form = useRef<HTMLFormElement>(null);
-  button('Validate Form', () => {
-    form.current?.reportValidity();
-  });
-
   return (
-    <form ref={form}>
-      <LabeledPasswordField
-        title='Password - will only indicate invalidity after losing focus the first time or pressing the "Validate Form" knob.'
-        value={text('Value', "_%6.o*fGR75)':7,")}
-        forgotPasswordHref={text(
-          'Forgot Password Link',
-          'https://en.wikipedia.org/wiki/Password',
-        )}
-        customValidationMessage={text(
-          'Validation Error Message',
-          'This does not look correct.',
-        )}
-      />
-    </form>
+    <LabeledPasswordField
+      title='Password - will only indicate invalidity after losing focus the first time or pressing the "Validate Form" knob.'
+      value={text('Value', "_%6.o*fGR75)':7,")}
+      forgotPasswordHref={text(
+        'Forgot Password Link',
+        'https://en.wikipedia.org/wiki/Password',
+      )}
+      customValidationMessage={text(
+        'Validation Error Message',
+        'This does not look correct.',
+      )}
+    />
   );
 };

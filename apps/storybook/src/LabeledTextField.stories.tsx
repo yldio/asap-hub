@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { text, button } from '@storybook/addon-knobs';
+import React from 'react';
+import { text } from '@storybook/addon-knobs';
 
 import { LabeledTextField } from '@asap-hub/react-components';
 
@@ -41,23 +41,16 @@ export const Valid = () => (
   />
 );
 export const Invalid = () => {
-  const form = useRef<HTMLFormElement>(null);
-  button('Validate Form', () => {
-    form.current?.reportValidity();
-  });
-
   return (
-    <form ref={form}>
-      <LabeledTextField
-        title={text('Title', 'Full Name')}
-        value={text('Value', 'John|Doe')}
-        customValidationMessage={text(
-          'Validation Error Message',
-          "Must not include special characters, such as '|' and '%'.",
-        )}
-        hint={text('Hint', 'Hint')}
-      />
-    </form>
+    <LabeledTextField
+      title={text('Title', 'Full Name')}
+      value={text('Value', 'John|Doe')}
+      customValidationMessage={text(
+        'Validation Error Message',
+        "Must not include special characters, such as '|' and '%'.",
+      )}
+      hint={text('Hint', 'Hint')}
+    />
   );
 };
 export const Loading = () => (

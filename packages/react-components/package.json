@@ -23,8 +23,10 @@
     "@emotion/css": "^10.0.27",
     "core-js": "^3.6.5",
     "emotion-normalize": "^10.1.0",
+    "react-select": "^3.1.0",
     "regenerator-runtime": "^0.13.5",
-    "use-debounce": "^3.4.2"
+    "use-debounce": "^3.4.2",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:packages/auth",
@@ -43,10 +45,12 @@
     "@types/jest": "^26.0.3",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/react-select": "^3.0.0",
     "@types/react-test-renderer": "16.9.2",
     "@types/testing-library__jest-dom": "^5.0.3",
     "@types/testing-library__react": "^10.0.1",
     "@types/testing-library__react-hooks": "^3.2.0",
+    "@types/uuid": "^8.0.0",
     "jest-emotion": "^10.0.32",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

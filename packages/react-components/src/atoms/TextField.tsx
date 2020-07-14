@@ -1,23 +1,21 @@
-import React, { InputHTMLAttributes, useState, useEffect, useRef } from 'react';
+import React, { InputHTMLAttributes } from 'react';
 import css from '@emotion/css';
 import { useDebounce } from 'use-debounce';
 
 import { perRem } from '../pixels';
-import { steel, fern, lead, silver, ember, rose, tin } from '../colors';
+import { lead, silver, ember, rose, tin } from '../colors';
 import { noop, getSvgAspectRatio } from '../utils';
 import { loadingImage, validTickGreenImage } from '../images';
 import { useGifReplay } from '../hooks';
-
-const borderWidth = 1;
-
-const padding = 15;
-const indicatorPadding = padding;
-
-const textPaddingTop = padding + 1;
-const textPaddingBottom = padding - 1;
-
-const lineHeight = 24;
-const indicatorHeight = lineHeight;
+import {
+  useValidation,
+  styles,
+  paddingTopBottom,
+  paddingLeftRight,
+  indicatorSize,
+  indicatorPadding,
+  validationMessageStyles,
+} from '../form';
 
 const disabledStyles = css({
   color: lead.rgb,
@@ -27,18 +25,21 @@ const disabledStyles = css({
 const customIndicatorPadding = (aspectRatio: number) =>
   css({
     paddingRight: `${
-      (padding + indicatorHeight * aspectRatio + indicatorPadding) / perRem
+      (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) /
+      perRem
     }em`,
   });
 const loadingStyles = css({
-  paddingRight: `${(padding + indicatorHeight + indicatorPadding) / perRem}em`,
+  paddingRight: `${
+    (paddingLeftRight + indicatorSize + indicatorPadding) / perRem
+  }em`,
   backgroundImage: `url(${loadingImage})`,
 });
 const validStyles = (gifUrl: string) =>
   css({
     ':valid': {
       paddingRight: `${
-        (padding + indicatorHeight + indicatorPadding) / perRem
+        (paddingLeftRight + indicatorSize + indicatorPadding) / perRem
       }em`,
       backgroundImage: `url(${gifUrl})`,
     },
@@ -61,38 +62,22 @@ const invalidStyles = css({
   },
 });
 
-const styles = css({
-  boxSizing: 'border-box',
-  width: '100%',
-  paddingLeft: `${padding / perRem}em`,
-  paddingRight: `${padding / perRem}em`,
-  paddingTop: `${textPaddingTop / perRem}em`,
-  paddingBottom: `${textPaddingBottom / perRem}em`,
-
-  lineHeight: `${lineHeight / perRem}em`,
+const textFieldStyles = css({
+  backgroundPosition: `right ${paddingLeftRight / perRem}em top ${
+    paddingTopBottom / perRem
+  }em`,
+  backgroundRepeat: 'no-repeat',
+  backgroundSize: `auto ${indicatorSize / perRem}em`,
 
   '::placeholder': {
     color: tin.rgb,
   },
 
-  outline: 'none',
-
-  borderStyle: 'solid',
-  borderWidth: `${borderWidth / perRem}em`,
-  borderColor: steel.rgb,
-  ':focus': {
-    borderColor: fern.rgb,
-  },
-
-  backgroundPosition: `right ${padding / perRem}em top ${padding / perRem}em`,
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: `auto ${indicatorHeight / perRem}em`,
-
+  // see invalid
   '~ div:last-of-type': {
     display: 'none',
   },
 });
-
 const containerStyles = css({
   position: 'relative',
 });
@@ -100,16 +85,12 @@ const customIndicatorStyles = (aspectRatio: number) =>
   css({
     position: 'absolute',
 
-    top: `${padding / perRem}em`,
-    right: `${padding / perRem}em`,
+    top: `${paddingTopBottom / perRem}em`,
+    right: `${paddingLeftRight / perRem}em`,
 
-    height: `${indicatorHeight / perRem}em`,
-    width: `${(indicatorHeight * aspectRatio) / perRem}em`,
+    height: `${indicatorSize / perRem}em`,
+    width: `${(indicatorSize * aspectRatio) / perRem}em`,
   });
-const validationMessageStyles = css({
-  paddingTop: `${6 / perRem}em`,
-  paddingBottom: `${6 / perRem}em`,
-});
 
 type TextFieldProps = {
   readonly type?: 'text' | 'search' | 'email' | 'tel' | 'url' | 'password';
@@ -132,7 +113,7 @@ type TextFieldProps = {
   readonly onChange?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'placeholder' | 'required' | 'minLength' | 'maxLength' | 'pattern'
+  'id' | 'placeholder' | 'required' | 'minLength' | 'maxLength' | 'pattern'
 >;
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',
@@ -157,18 +138,9 @@ const TextField: React.FC<TextFieldProps> = ({
 
   ...props
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [validationMessage, setValidationMessage] = useState('');
-  useEffect(() => {
-    const input = inputRef.current!; // eslint-disable-line @typescript-eslint/no-non-null-assertion
-    input.setCustomValidity(customValidationMessage);
-
-    if (validationMessage || customValidationMessage) {
-      input.reportValidity();
-    }
-
-    return () => input.setCustomValidity('');
-  }, [customValidationMessage, validationMessage]);
+  const { validationMessage, validationTargetProps } = useValidation<
+    HTMLInputElement
+  >(customValidationMessage);
 
   const validGifUrl = useGifReplay(validTickGreenImage, [indicateValid, value]);
   const [debouncedValue] = useDebounce(value, 500);
@@ -178,7 +150,7 @@ const TextField: React.FC<TextFieldProps> = ({
     <div css={containerStyles}>
       <input
         {...props}
-        ref={inputRef}
+        {...validationTargetProps}
         type={type}
         disabled={!enabled}
         required={required}
@@ -189,15 +161,9 @@ const TextField: React.FC<TextFieldProps> = ({
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
-        onBlur={(event) =>
-          setValidationMessage(event.currentTarget.validationMessage)
-        }
-        onInvalid={(event) => {
-          setValidationMessage(event.currentTarget.validationMessage);
-          event.preventDefault();
-        }}
         css={[
           styles,
+          textFieldStyles,
           enabled || disabledStyles,
 
           debouncedIndicateValid && validStyles(validGifUrl),

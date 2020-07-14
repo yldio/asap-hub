@@ -156,11 +156,6 @@ describe('when valid', () => {
 });
 
 describe('when invalid', () => {
-  it('does not immediately show a validation error message ', () => {
-    const { queryByText } = render(<TextField value="wrong" pattern="^val$" />);
-    expect(queryByText(/match/i)).not.toBeInTheDocument();
-  });
-
   it('shows a validation error message after losing focus', () => {
     const { getByRole, getByText } = render(
       <TextField value="wrong" pattern="^val$" />,
@@ -170,16 +165,6 @@ describe('when invalid', () => {
     expect(getComputedStyle(getByText(/match/i)).color).toBe(ember.rgb);
   });
 
-  it('shows a validation error message when the form is validated', () => {
-    const { getByRole, getByText } = render(
-      <form>
-        <TextField value="wrong" pattern="^val$" />
-      </form>,
-    );
-    (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
-    expect(getByText(/match/i)).toBeVisible();
-  });
-
   it('shows a custom validation message', () => {
     const { getByRole, getByText } = render(
       <TextField value="wrong" customValidationMessage="Wrong!" />,
@@ -187,14 +172,5 @@ describe('when invalid', () => {
     fireEvent.blur(getByRole('textbox'));
     expect(getByText('Wrong!')).toBeVisible();
     expect(getComputedStyle(getByText('Wrong!')).color).toBe(ember.rgb);
-  });
-
-  it('updates the custom validation message without a revalidation', () => {
-    const { getByRole, getByText, rerender } = render(
-      <TextField value="wrong" customValidationMessage="Wrong!" />,
-    );
-    fireEvent.blur(getByRole('textbox'));
-    rerender(<TextField value="wrong" customValidationMessage="Almost!" />);
-    expect(getByText('Almost!')).toBeVisible();
   });
 });

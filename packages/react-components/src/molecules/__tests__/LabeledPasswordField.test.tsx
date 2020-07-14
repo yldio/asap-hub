@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 
 import LabeledPasswordField from '../LabeledPasswordField';
 import { ember } from '../../colors';
+import { findParentWithStyle } from '../../test-utils';
 
 it('renderes a labeled password field', () => {
   const { getByLabelText } = render(
@@ -55,20 +56,10 @@ it('changes the show password button color to red when invalid', () => {
   const { getByTitle, getByLabelText, rerender } = render(
     <LabeledPasswordField title="PW" forgotPasswordHref="#" value="val" />,
   );
-  const getFillColor = () => {
-    let elem = getByTitle(/show/i);
-    let { fill } = getComputedStyle(elem);
-    while (!fill) {
-      expect(elem.parentElement).not.toBe(null);
-      elem = elem.parentElement!;
-      ({ fill } = getComputedStyle(elem));
-    }
-    return fill;
-  };
 
-  expect(getFillColor().replace(/ /g, '')).not.toBe(
-    ember.rgb.replace(/ /g, ''),
-  );
+  expect(
+    findParentWithStyle(getByTitle(/show/i), 'fill')?.fill.replace(/ /g, ''),
+  ).not.toBe(ember.rgb.replace(/ /g, ''));
 
   rerender(
     <LabeledPasswordField
@@ -80,7 +71,9 @@ it('changes the show password button color to red when invalid', () => {
   );
   fireEvent.blur(getByLabelText(/^PW/));
 
-  expect(getFillColor().replace(/ /g, '')).toBe(ember.rgb.replace(/ /g, ''));
+  expect(
+    findParentWithStyle(getByTitle(/show/i), 'fill')?.fill.replace(/ /g, ''),
+  ).toBe(ember.rgb.replace(/ /g, ''));
 });
 
 describe('when showing the password', () => {

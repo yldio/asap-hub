@@ -10,8 +10,8 @@ jest.mock('@asap-hub/auth');
 
 const chance = new Chance();
 
-describe('GET /users/invites/{code}', () => {
-  test('return 401 when Authentication is not set', async () => {
+describe('GET /me', () => {
+  test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',

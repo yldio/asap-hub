@@ -5,6 +5,7 @@ import { cms } from '../config';
 
 export class CMS {
   users: Users;
+
   romps: Romps;
 
   constructor() {

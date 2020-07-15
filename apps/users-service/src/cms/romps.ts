@@ -15,8 +15,7 @@ export interface CreateRomp {
       id: string;
     },
   ];
-  publishingDate: string;
-  creator: string;
+  publishDate: string;
 }
 
 export default class Users extends Base {
@@ -34,8 +33,8 @@ export default class Users extends Base {
           title: { iv: romp.title },
           description: { iv: romp.description },
           outputType: { iv: romp.outputType },
-          publishingDate: { iv: romp.publishingDate },
-          creator: { iv: id },
+          publishDate: { iv: romp.publishDate },
+          createdBy: { iv: id },
         },
         searchParams: { publish: true },
       })

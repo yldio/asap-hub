@@ -11,11 +11,10 @@ import { createSchema } from '../entities/romps';
 
 export const handler: APIGatewayProxyHandler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
-    const users = new Users();
-
     const { sub } = await validateUser(request);
-    const { id } = await users.fetchByCode(sub);
 
+    const users = new Users();
+    const { id } = await users.fetchByCode(sub);
 
     const paramsSchema = Joi.object({
       id: Joi.string().required(),

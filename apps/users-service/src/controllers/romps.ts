@@ -2,34 +2,22 @@ import { CMS } from '../cms';
 import { CreateRomp } from '../cms/romps';
 import { Romp } from '../entities/romps';
 
-export interface ReplyRomp {
-  id: string;
-  created: string;
-  url: string;
-  doi: string;
-  outputType: string;
-  title: string;
-  description: string;
-  authors: [
-    {
-      name: string;
-      id: string;
-    },
-  ];
-  publishingDate: string;
-  creator: string;
+interface ReplyRomp extends CreateRomp {
+  createdBy: string;
 }
 
 function transform(romp: Romp): ReplyRomp {
-  const data = Object.keys(romp.data).reduce((flat, key) => {
-    flat[key] = romp.data[key].iv;
-    return flat;
-  }, {});
-
   return {
     id: romp.id,
     created: romp.created,
-    ...data,
+    url: romp.data.url && romp.data.url.iv,
+    doi: romp.data.doi && romp.data.doi.iv,
+    outputType: romp.data.outputType && romp.data.outputType.iv,
+    title: romp.data.title && romp.data.title.iv,
+    description: romp.data.description && romp.data.description.iv,
+    authors: romp.data.authors && romp.data.authors.iv,
+    publishDate: romp.data.publishDate && romp.data.publishDate.iv,
+    createdBy: romp.data.createdBy && romp.data.createdBy.iv,
   } as ReplyRomp;
 }
 

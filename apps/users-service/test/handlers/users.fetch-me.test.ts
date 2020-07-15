@@ -55,7 +55,7 @@ describe('GET /me', () => {
     expect(result.statusCode).toStrictEqual(403);
   });
 
-  test('returns 500 when Auth0 is unavailable', async () => {
+  test('returns 403 when Auth0 is unavailable', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(500);
 
     const result = (await handler(
@@ -69,7 +69,7 @@ describe('GET /me', () => {
       null,
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(500);
+    expect(result.statusCode).toStrictEqual(403);
   });
 
   test('returns 200 when code exists', async () => {

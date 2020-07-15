@@ -23,7 +23,7 @@ export default async function validateUser(
     throw Boom.unauthorized();
   }
 
-  const [err, res] = await Intercept(
+  const [error, res] = await Intercept(
     got(`https://${authConfig.domain}/userinfo`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -32,8 +32,8 @@ export default async function validateUser(
     }).json<auth0.UserInfo>(),
   );
 
-  if (err) {
-    throw Boom.boomify(err, {statusCode: err.response.statusCode})
+  if (error) {
+    throw Boom.forbidden('Forbidden', {error})
   } 
 
   return res;

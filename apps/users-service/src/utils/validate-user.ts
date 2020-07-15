@@ -33,8 +33,8 @@ export default async function validateUser(
   );
 
   if (error) {
-    throw Boom.forbidden('Forbidden', {error})
-  } 
+    throw Boom.forbidden('Forbidden', { error });
+  }
 
   return res;
 }

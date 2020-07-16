@@ -94,7 +94,14 @@ const customIndicatorStyles = (aspectRatio: number) =>
   });
 
 type TextFieldProps = {
-  readonly type?: 'text' | 'search' | 'email' | 'tel' | 'url' | 'password';
+  readonly type?:
+    | 'text'
+    | 'search'
+    | 'email'
+    | 'tel'
+    | 'url'
+    | 'password'
+    | 'date';
   readonly enabled?: boolean;
 
   /**

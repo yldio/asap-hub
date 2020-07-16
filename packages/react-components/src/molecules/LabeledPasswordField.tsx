@@ -25,7 +25,7 @@ const showPasswordIndicatorStyles = css({
 });
 
 type LabeledPasswordFieldProps = {
-  readonly title?: string;
+  readonly title?: React.ReactNode;
 
   readonly forgotPasswordHref: string;
 } & Pick<

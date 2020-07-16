@@ -31,7 +31,6 @@ export const Empty = () => (
 export const Invalid = () => {
   return (
     <LabeledPasswordField
-      title='Password - will only indicate invalidity after losing focus the first time or pressing the "Validate Form" knob.'
       value={text('Value', "_%6.o*fGR75)':7,")}
       forgotPasswordHref={text(
         'Forgot Password Link',

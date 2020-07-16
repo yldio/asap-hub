@@ -27,6 +27,7 @@ export {
   OrcidSigninButton,
   GoogleSigninButton,
   Header,
+  LabeledDateField,
   LabeledTextField,
   LabeledPasswordField,
   LabeledDropdown,

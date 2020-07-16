@@ -7,8 +7,8 @@ const containerStyle = css({
   borderRadius: '50%',
   boxSizing: 'border-box',
   display: 'flex',
-  height: '48px',
-  width: '48px',
+  height: '64px',
+  width: '64px',
 });
 
 const innerContainerStyle = css({
@@ -28,6 +28,7 @@ const borderStyle = css({
 });
 
 const initialsStyle = css({
+  paddingTop: '2px',
   color: pine.rgb,
 });
 

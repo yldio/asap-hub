@@ -22,6 +22,7 @@ type ProfileProps = {
   readonly displayName: string;
   readonly institution: string;
   readonly lastModified: Date;
+  readonly initials: string;
   readonly location?: string;
   readonly role: string;
   readonly team: string;
@@ -32,6 +33,7 @@ const Profile: React.FC<ProfileProps> = ({
   department,
   displayName,
   institution,
+  initials,
   lastModified,
   location,
   role,
@@ -51,16 +53,18 @@ const Profile: React.FC<ProfileProps> = ({
           {location && <Paragraph>{location}</Paragraph>}
         </div>
         <div>
-          <Avatar border initials={`PM`} />
+          <Avatar border initials={initials} />
         </div>
       </div>
       <div css={[flexContainer]}>
         <Button small primary>
           Contact
         </Button>
-        <div css={[lastUpdatedContainer]}>
-          <p>Last updated: {formatDistance(new Date(), lastModified)} ago</p>
-        </div>
+        {lastModified && (
+          <div css={[lastUpdatedContainer]}>
+            <p>Last updated: {formatDistance(new Date(), lastModified)} ago</p>
+          </div>
+        )}
       </div>
     </Container>
   );

@@ -6,8 +6,9 @@ import Profile from '../Profile';
 it('renders profile information', () => {
   const { debug, getByRole } = render(
     <Profile
-      displayName="John Doe"
       department=""
+      displayName="John Doe"
+      initials="JD"
       institution=""
       lastModified={new Date()}
       location="New Haven, Connecticut"
@@ -24,8 +25,9 @@ it('renders profile information', () => {
 it('renders profile without location', () => {
   const { debug, getByRole } = render(
     <Profile
-      displayName="John Doe"
       department=""
+      displayName="John Doe"
+      initials="JD"
       institution=""
       lastModified={new Date()}
       role=""

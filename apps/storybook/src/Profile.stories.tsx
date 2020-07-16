@@ -14,8 +14,9 @@ export const Normal = () => (
   <Profile
     department={text('Department', 'Biology Department')}
     displayName={text('Display Name', 'Phillip Mars, PhD')}
+    initials={text('Initials', 'PM')}
     institution={text('Institution', 'Yale University')}
-    lastModified={timestamp('lastModified', new Date())}
+    lastModified={timestamp('lastModified', new Date(2020, 6, 12, 14, 32))}
     location={text('Location', 'New Haven, Connecticut')}
     role={text('Role', 'Researcher')}
     team={text('Team', 'Team A')}

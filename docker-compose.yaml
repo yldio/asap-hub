@@ -42,4 +42,4 @@ services:
     depends_on:
       - mongo
       - squidex
-    command: wait_for_url http://squidex:80/readiness && ./setup-cms.sh
+    command: ./setup-cms.sh

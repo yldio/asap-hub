@@ -25,16 +25,16 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   hint,
   ...textFieldProps
 }) => (
-    <>
-      <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
-        <Paragraph>
-          <strong>{title}</strong>
-          <br />
-          <span css={subtitleStyles}>{subtitle}</span>
-        </Paragraph>
-      </Label>
-      <div css={hintStyles}>{hint}</div>
-    </>
-  );
+  <>
+    <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
+      <Paragraph>
+        <strong>{title}</strong>
+        <br />
+        <span css={subtitleStyles}>{subtitle}</span>
+      </Paragraph>
+    </Label>
+    <div css={hintStyles}>{hint}</div>
+  </>
+);
 
 export default LabeledTextField;

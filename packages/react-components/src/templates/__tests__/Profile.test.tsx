@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import Profile from '../Profile';
 
 it('renders profile information', () => {
-  const { debug, getByRole } = render(
+  const { getByRole } = render(
     <Profile
       department=""
       displayName="John Doe"
@@ -18,12 +18,11 @@ it('renders profile information', () => {
     />,
   );
 
-  debug();
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(`"John Doe"`);
 });
 
 it('renders profile without location', () => {
-  const { debug, getByRole } = render(
+  const { getByRole } = render(
     <Profile
       department=""
       displayName="John Doe"
@@ -36,6 +35,5 @@ it('renders profile without location', () => {
     />,
   );
 
-  debug();
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(`"John Doe"`);
 });

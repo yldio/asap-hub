@@ -1,5 +1,5 @@
 import React from 'react';
-import css from '@emotion/css';
+import css, { SerializedStyles } from '@emotion/css';
 
 import {
   tabletScreen,
@@ -27,10 +27,11 @@ const styles = css({
 
 type ContainerProps = {
   readonly children: React.ReactNode;
+  readonly css?: SerializedStyles[];
 };
 
-const Container: React.FC<ContainerProps> = ({ children }) => (
-  <div css={styles}>{children}</div>
-);
+const Container: React.FC<ContainerProps> = ({ children }) => {
+  return <div css={styles}>{children}</div>;
+};
 
 export default Container;

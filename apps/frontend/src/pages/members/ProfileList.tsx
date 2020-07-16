@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Header } from '@asap-hub/react-components';
-import api from '../api';
+import api from '../../api';
 
 type ProfileProps = {
   readonly id: string;

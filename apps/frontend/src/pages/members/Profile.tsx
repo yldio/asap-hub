@@ -1,19 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Header, Container, Profile } from '@asap-hub/react-components';
-import api from '../api';
+import api from '../../api';
 
 const Page: React.FC<{}> = () => {
   const { id } = useParams();
-
   const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
-    api.users.fetchById(id).then(async (resp) => {
-      if (resp.ok) {
-        const json = await resp.json();
-        setData(json);
-      }
-    });
+    const requestController = new AbortController();
+    api.users
+      .fetchById(id, {
+        signal: requestController.signal,
+      })
+      .then(async (resp) => {
+        const { ok, status } = resp;
+        if (ok) {
+          const json = await resp.json();
+          setData(json);
+        } else if (status >= 400 && status < 500) {
+          const json = await resp.json();
+          setError(json);
+        }
+      })
+      .catch((err) => {
+        if (err.name === 'AbortError') {
+          return;
+        }
+        setError(err.message);
+      });
+
+    return () => requestController.abort();
   }, [id]);
 
   if (data) {
@@ -28,6 +46,7 @@ const Page: React.FC<{}> = () => {
     const initials = `${(profile.firstName && profile.firstName[0]) || ''}${
       (profile.lastName && profile.lastName[0]) || ''
     }`;
+
     return (
       <>
         <Header />
@@ -51,7 +70,7 @@ const Page: React.FC<{}> = () => {
     <>
       <Header />
       <Container>
-        <p>Loading</p>
+        <p>{error || 'Loading'}</p>
       </Container>
     </>
   );

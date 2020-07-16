@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import Select from 'react-select';
+import css from '@emotion/css';
 
 import { noop } from '../utils';
 import {
@@ -13,6 +14,12 @@ import {
 import { dropdownChevronIcon } from '../icons';
 import { perRem } from '../pixels';
 import { ember, steel, mint, pine, tin } from '../colors';
+import { Option } from '../select';
+
+const containerStyles = css({
+  flexBasis: '100%',
+  paddingBottom: `${18 / perRem}em`,
+});
 
 const { ':focus': focusStyles, ...baseStyles } = styles;
 
@@ -44,9 +51,7 @@ const reactSelectStyles = (
   singleValue: (provided, { getValue }) => ({
     ...provided,
     margin: 0,
-    color: getValue().some(
-      (option: DropdownOption<string>) => option.value !== '',
-    )
+    color: getValue().some((option: Option<string>) => option.value !== '')
       ? 'unset'
       : tin.rgb,
   }),
@@ -93,15 +98,11 @@ const reactSelectStyles = (
   }),
 });
 
-export interface DropdownOption<V extends string> {
-  value: V;
-  label: string;
-}
 export interface DropdownProps<V extends string> {
   readonly customValidationMessage?: string;
 
   readonly id?: string;
-  readonly options: ReadonlyArray<DropdownOption<V>>;
+  readonly options: ReadonlyArray<Option<V>>;
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
@@ -116,12 +117,12 @@ export default function Dropdown<V extends string>({
   onChange = noop,
 }: DropdownProps<V>): ReturnType<React.FC> {
   return (
-    <div>
-      <Select<DropdownOption<V>>
+    <div css={containerStyles}>
+      <Select<Option<V>>
         options={options.filter((option) => option.value !== '')}
         value={options.find((option) => option.value === value)}
         onChange={(option) => {
-          onChange((option as DropdownOption<V>).value);
+          onChange((option as Option<V>).value);
         }}
         components={{
           DropdownIndicator: () => dropdownChevronIcon,

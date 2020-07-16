@@ -11,7 +11,8 @@ export { default as Headline4 } from './Headline4';
 export { default as Label } from './Label';
 export { default as Link } from './Link';
 export { default as Paragraph } from './Paragraph';
+export { default as RadioButton } from './RadioButton';
 export { default as TextField } from './TextField';
 export { default as Theme } from './Theme';
 
-export type { DropdownProps, DropdownOption } from './Dropdown';
+export type { DropdownProps } from './Dropdown';

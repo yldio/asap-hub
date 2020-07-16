@@ -26,3 +26,28 @@ it('generates different ids for each label', () => {
   );
   expect(getByLabelText('text1')).not.toBe(getByLabelText('text2'));
 });
+
+it('reverses the order with the trailing prop', () => {
+  const { getByText, getByLabelText, rerender } = render(
+    <Label
+      forContent={(id) => (
+        <input id={id} type="text" value="val" onChange={noop} />
+      )}
+    >
+      before
+    </Label>,
+  );
+  expect(getByText('before').nextSibling).toHaveValue('val');
+
+  rerender(
+    <Label
+      trailing
+      forContent={(id) => (
+        <input id={id} type="text" value="val" onChange={noop} />
+      )}
+    >
+      before
+    </Label>,
+  );
+  expect(getByLabelText('before').nextSibling).toHaveTextContent('before');
+});

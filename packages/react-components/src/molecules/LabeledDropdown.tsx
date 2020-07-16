@@ -4,7 +4,7 @@ import { Dropdown, Paragraph, Label, DropdownProps } from '../atoms';
 import { perRem } from '../pixels';
 
 type LabeledDropdownProps<V extends string> = {
-  readonly title: React.ReactText | ReadonlyArray<React.ReactText>;
+  readonly title: React.ReactNode;
 } & Exclude<DropdownProps<V>, 'id'>;
 export default function LabeledDropdown<V extends string>({
   title,

@@ -19,9 +19,9 @@ const hintStyles = css({
 });
 
 type LabeledTextFieldProps = {
-  readonly title: React.ReactText | ReadonlyArray<React.ReactText>;
-  readonly subtitle?: React.ReactText | ReadonlyArray<React.ReactText>;
-  readonly hint?: React.ReactText | ReadonlyArray<React.ReactText>;
+  readonly title: React.ReactNode;
+  readonly subtitle?: React.ReactNode;
+  readonly hint?: React.ReactNode;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
 const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   title,

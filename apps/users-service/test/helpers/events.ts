@@ -5,6 +5,7 @@ export const apiGatewayEvent = (event: any): APIGatewayEvent => {
     headers: {
       'Content-Type': 'application/json',
       Accept: '*/*',
+      ...event.headers,
     },
     httpMethod: 'GET',
     path: '/api',

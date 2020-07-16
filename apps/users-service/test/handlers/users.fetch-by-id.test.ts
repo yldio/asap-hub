@@ -35,7 +35,7 @@ describe('GET /users/{id}', () => {
   });
 
   test('returns 200 when id exists', async () => {
-    const { id } = await createRandomUser();
+    const { id, displayName } = await createRandomUser();
 
     const result = (await handler(
       apiGatewayEvent({
@@ -47,7 +47,10 @@ describe('GET /users/{id}', () => {
       null,
       null,
     )) as APIGatewayProxyResult;
+    const body = JSON.parse(result.body);
 
     expect(result.statusCode).toStrictEqual(200);
+    expect(body.id).toStrictEqual(id);
+    expect(body.displayName).toStrictEqual(displayName);
   });
 });

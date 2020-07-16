@@ -1,5 +1,7 @@
 FROM debian:latest
 
+WORKDIR /src
+
 RUN apt-get update && \
     apt-get install -y wget unzip libicu63 dirmngr gnupg apt-transport-https software-properties-common ca-certificates curl
 
@@ -14,8 +16,6 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v5.2/l
 
 VOLUME ["/dev/fixtures"]
 
-COPY dev/setup-cms.sh dev/wait-for-url.sh ./
-
-RUN cat wait-for-url.sh >> ~/.bashrc
+COPY dev/setup-cms.sh ./
 
 CMD ["./setup-cms.sh"]

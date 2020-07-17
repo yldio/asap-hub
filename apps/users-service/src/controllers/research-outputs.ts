@@ -28,4 +28,9 @@ export default class ResearchOutputs {
     const createdOutput = await this.cms.researchOutputs.create(id, output);
     return transform(createdOutput);
   }
+
+  async fetchUserResearchOutputs(id: string): Promise<ResearchOutput[]> {
+    const outputs = await this.cms.researchOutputs.fetchUserResearchOutputs(id);
+    return outputs.length ? outputs.map(transform) : [];
+  }
 }

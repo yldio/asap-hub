@@ -1,5 +1,6 @@
 import Chance from 'chance';
 import { CMS } from '../../src/cms';
+import { ResearchOutput } from '@asap-hub/model';
 
 const chance = new Chance();
 const cms = new CMS();
@@ -33,4 +34,29 @@ export const createRandomUser = async (): ReplyUser => {
 
   const createdUser = await cms.users.create(user);
   return transform(createdUser);
+};
+
+export const createRandomOutput = async (user: String): ReplyUser => {
+  const output: ResearchOutput = {
+    url: chance.url(),
+    doi: chance.string(),
+    outputType: chance.pickone([
+      'dataset',
+      'code',
+      'protocol',
+      'resource',
+      'preprint',
+      'other',
+    ]),
+    title: chance.sentence(),
+    description: chance.paragraph(),
+    authors: [
+      {
+        name: chance.name(),
+      },
+    ],
+    publishDate: '2020-02-02T12:00:00Z',
+  };
+
+  await cms.researchOutputs.create(user, output);
 };

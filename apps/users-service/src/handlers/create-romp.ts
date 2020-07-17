@@ -2,12 +2,12 @@ import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { framework as lambda } from '@asap-hub/services-common';
+import { Romp } from '@asap-hub/model';
 
 import validateUser from '../utils/validate-user';
 import Users from '../controllers/users';
 import Romps from '../controllers/romps';
 import { createSchema } from '../entities/romps';
-import { Romp } from '@asap-hub/model';
 
 export const handler: APIGatewayProxyHandler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {

@@ -11,6 +11,7 @@ export * from './images';
 export * from './theme';
 
 export {
+  Avatar,
   Link,
   Theme,
   Button,
@@ -25,6 +26,7 @@ export {
 } from './atoms';
 export {
   OrcidSigninButton,
+  Container,
   GoogleSigninButton,
   Header,
   LabeledDateField,
@@ -40,5 +42,5 @@ export {
   RadioButtonGroup,
 } from './organisms';
 
-export { InviteUserForm, Signin } from './templates';
+export { InviteUserForm, Signin, Profile } from './templates';
 export { AdminInviteUserPage, SigninPage } from './pages';

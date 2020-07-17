@@ -14,6 +14,7 @@ export const screen = (width: number, height: number): Screen => ({
   min: Math.min(width, height),
   max: Math.max(width, height),
 });
+
 export const mobileScreen = screen(375, 667);
 export const tabletScreen = screen(768, (768 * 3) / 4);
 export const smallDesktopScreen = screen(1024, (1024 * 3) / 4);

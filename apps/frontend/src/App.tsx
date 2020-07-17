@@ -4,6 +4,8 @@ import { Router, Switch, Route } from 'react-router-dom';
 import Home from './home/Home';
 import { AuthProvider } from './auth';
 import Admin from './admin/Admin';
+import Profile from './pages/members/Profile';
+import ProfileList from './pages/members/ProfileList';
 import history from './history';
 import Welcome from './onboarding/Welcome';
 import ContinueOnboarding from './onboarding/ContinueOnboarding';
@@ -20,11 +22,11 @@ const App: React.FC<{}> = () => {
     <AuthProvider>
       <Router history={history}>
         <Switch>
+          <Route exact path="/members/:id" component={Profile} />
+          <Route exact path="/members/" component={ProfileList} />
           <Route exact path="/welcome/:code/" component={Welcome} />
           <Route exact path="/create-profile" component={CreateProfile} />
-
           <Route exact path="/admin/" component={Admin} />
-
           <Route exact path="/" component={AuthCallbackGuardedHome} />
           <Route render={() => 'Not found'} />
         </Switch>

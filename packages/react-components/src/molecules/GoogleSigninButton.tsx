@@ -7,6 +7,7 @@ type GoogleSigninButtonProps = Pick<
   ComponentProps<typeof Button>,
   'enabled' | 'onClick'
 >;
+
 const GoogleSigninButton: React.FC<GoogleSigninButtonProps> = (props) => (
   <Button {...props}>{googleIcon}Continue with Google</Button>
 );

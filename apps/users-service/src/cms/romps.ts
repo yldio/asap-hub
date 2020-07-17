@@ -1,6 +1,6 @@
 import { Base, BaseOptions } from '@asap-hub/services-common';
-import { CMSRomp } from '../entities/romps';
 import { Romp } from '@asap-hub/model';
+import { CMSRomp } from '../entities/romps';
 
 export default class Users extends Base {
   constructor(CMSConfig: BaseOptions) {

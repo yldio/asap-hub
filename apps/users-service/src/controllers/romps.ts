@@ -1,12 +1,8 @@
 import { CMS } from '../cms';
-import { CreateRomp } from '../cms/romps';
-import { Romp } from '../entities/romps';
+import { Romp } from '@asap-hub/model';
+import { CMSRomp } from '../entities/romps';
 
-interface ReplyRomp extends CreateRomp {
-  createdBy: string;
-}
-
-function transform(romp: Romp): ReplyRomp {
+function transform(romp: CMSRomp): Romp {
   return {
     id: romp.id,
     created: romp.created,
@@ -18,7 +14,7 @@ function transform(romp: Romp): ReplyRomp {
     authors: romp.data.authors && romp.data.authors.iv,
     publishDate: romp.data.publishDate && romp.data.publishDate.iv,
     createdBy: romp.data.createdBy && romp.data.createdBy.iv,
-  } as ReplyRomp;
+  } as Romp;
 }
 
 export default class Romps {
@@ -28,7 +24,7 @@ export default class Romps {
     this.cms = new CMS();
   }
 
-  async create(id: string, romp: CreateRomp): Promise<ReplyRomp> {
+  async create(id: string, romp: Romp): Promise<Romp> {
     const createdRomp = await this.cms.romps.create(id, romp);
     return transform(createdRomp);
   }

@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 
-export interface Romp {
+export interface CMSRomp {
   id: string;
   created: string;
   data: {

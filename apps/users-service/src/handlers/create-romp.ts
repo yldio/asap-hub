@@ -6,8 +6,8 @@ import { framework as lambda } from '@asap-hub/services-common';
 import validateUser from '../utils/validate-user';
 import Users from '../controllers/users';
 import Romps from '../controllers/romps';
-import { CreateRomp } from '../cms/romps';
 import { createSchema } from '../entities/romps';
+import { Romp } from '@asap-hub/model';
 
 export const handler: APIGatewayProxyHandler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
@@ -33,7 +33,7 @@ export const handler: APIGatewayProxyHandler = lambda.http(
       'payload',
       request.payload,
       createSchema.required(),
-    ) as CreateRomp;
+    ) as Romp;
 
     const romps = new Romps();
     const romp = await romps.create(params.id, payload);

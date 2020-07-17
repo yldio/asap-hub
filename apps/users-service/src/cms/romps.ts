@@ -1,31 +1,15 @@
 import { Base, BaseOptions } from '@asap-hub/services-common';
-import { Romp } from '../entities/romps';
-
-export interface CreateRomp {
-  id: string;
-  created: string;
-  url: string;
-  doi: string;
-  outputType: string;
-  title: string;
-  description: string;
-  authors: [
-    {
-      name: string;
-      id: string;
-    },
-  ];
-  publishDate: string;
-}
+import { CMSRomp } from '../entities/romps';
+import { Romp } from '@asap-hub/model';
 
 export default class Users extends Base {
   constructor(CMSConfig: BaseOptions) {
     super(CMSConfig);
   }
 
-  create(id: string, romp: CreateRomp): Promise<Romp> {
+  create(id: string, romp: Romp): Promise<CMSRomp> {
     return this.client
-      .post<Romp>('romp', {
+      .post<CMSRomp>('romp', {
         json: {
           url: { iv: romp.url },
           doi: { iv: romp.doi },

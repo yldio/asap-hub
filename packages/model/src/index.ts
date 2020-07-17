@@ -3,4 +3,5 @@ export type {
   ResearchOutputAccessLevel,
   ResearchOutputType,
   ResearchOutputFormData,
+  Romp 
 } from './romp';

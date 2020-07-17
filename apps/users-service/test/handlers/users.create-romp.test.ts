@@ -5,6 +5,7 @@ import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createRandomUser } from '../helpers/create-user';
 import { config as authConfig } from '@asap-hub/auth';
+import { Romp } from '@asap-hub/model';
 
 jest.mock('@asap-hub/auth');
 
@@ -13,7 +14,7 @@ const chance = new Chance();
 describe('GET /users/{id}/romp', () => {
   let id, code;
 
-  const romp = {
+  const romp: Romp = {
     url: chance.url(),
     doi: chance.string(),
     outputType: chance.pickone([

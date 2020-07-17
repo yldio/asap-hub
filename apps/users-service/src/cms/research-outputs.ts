@@ -9,7 +9,7 @@ export default class Users extends Base {
 
   create(id: string, output: ResearchOutput): Promise<CMSResearchOutput> {
     return this.client
-      .post<CMSResearchOutput>('output', {
+      .post<CMSResearchOutput>('research-outputs', {
         json: {
           url: { iv: output.url },
           doi: { iv: output.doi },
@@ -24,4 +24,14 @@ export default class Users extends Base {
       })
       .json();
   }
+
+ async fetchUserResearchOutputs(id: string): Promise<CMSResearchOutput[]> {
+   const { items } = await this.client
+     .get('research-outputs', {
+       searchParams: { $filter: `data/createdBy/iv eq '${id}'` },
+     })
+     .json();
+
+   return items;
+ }
 }

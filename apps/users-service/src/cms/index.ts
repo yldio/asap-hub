@@ -1,15 +1,15 @@
 import Users from './users';
-import Romps from './romps';
+import ResearchOutputs from './research-outputs';
 
 import { cms } from '../config';
 
 export class CMS {
   users: Users;
 
-  romps: Romps;
+  researchOutputs: ResearchOutputs;
 
   constructor() {
     this.users = new Users(cms);
-    this.romps = new Romps(cms);
+    this.researchOutputs = new ResearchOutputs(cms);
   }
 }

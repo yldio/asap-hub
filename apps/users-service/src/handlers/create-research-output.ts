@@ -2,12 +2,12 @@ import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { framework as lambda } from '@asap-hub/services-common';
-import { Romp } from '@asap-hub/model';
+import { ResearchOutput } from '@asap-hub/model';
 
 import validateUser from '../utils/validate-user';
 import Users from '../controllers/users';
-import Romps from '../controllers/romps';
-import { createSchema } from '../entities/romps';
+import ResearchOutputs from '../controllers/research-outputs';
+import { createSchema } from '../entities/research-outputs';
 
 export const handler: APIGatewayProxyHandler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
@@ -33,14 +33,14 @@ export const handler: APIGatewayProxyHandler = lambda.http(
       'payload',
       request.payload,
       createSchema.required(),
-    ) as Romp;
+    ) as ResearchOutput;
 
-    const romps = new Romps();
-    const romp = await romps.create(params.id, payload);
+    const researchOutput = new ResearchOutputs();
+    const output = await researchOutput.create(params.id, payload);
 
     return {
       statusCode: 201,
-      payload: romp,
+      payload: output,
     };
   },
 );

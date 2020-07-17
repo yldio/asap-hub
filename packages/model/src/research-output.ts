@@ -1,4 +1,4 @@
-export interface Romp {
+export interface ResearchOutput {
   id: string;
   created: string;
   url: string;

@@ -1,2 +1,2 @@
 export type { Invitee } from './user';
-export type { Romp } from './romp';
+export type { ResearchOutput } from './research-output';

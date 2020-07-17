@@ -158,14 +158,15 @@ module.exports = {
         },
       ],
     },
-    'create-romp': {
-      handler: 'apps/users-service/build/handlers/create-romp.handler',
+    'create-research-output': {
+      handler:
+        'apps/users-service/build/handlers/create-research-output.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
-            path: `/users/{id}/romp`,
+            path: `/users/{id}/research-outputs`,
           },
         },
       ],

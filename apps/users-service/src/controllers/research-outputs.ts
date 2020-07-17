@@ -1,0 +1,31 @@
+import { ResearchOutput } from '@asap-hub/model';
+import { CMS } from '../cms';
+import { CMSResearchOutput } from '../entities/research-outputs';
+
+function transform(output: CMSResearchOutput): ResearchOutput {
+  return {
+    id: output.id,
+    created: output.created,
+    url: output.data.url && output.data.url.iv,
+    doi: output.data.doi && output.data.doi.iv,
+    outputType: output.data.outputType && output.data.outputType.iv,
+    title: output.data.title && output.data.title.iv,
+    description: output.data.description && output.data.description.iv,
+    authors: output.data.authors && output.data.authors.iv,
+    publishDate: output.data.publishDate && output.data.publishDate.iv,
+    createdBy: output.data.createdBy && output.data.createdBy.iv,
+  } as ResearchOutput;
+}
+
+export default class ResearchOutputs {
+  cms: CMS;
+
+  constructor() {
+    this.cms = new CMS();
+  }
+
+  async create(id: string, output: ResearchOutput): Promise<ResearchOutput> {
+    const createdOutput = await this.cms.researchOutputs.create(id, output);
+    return transform(createdOutput);
+  }
+}

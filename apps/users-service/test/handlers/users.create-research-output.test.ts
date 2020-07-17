@@ -1,20 +1,20 @@
 import Chance from 'chance';
 import nock from 'nock';
-import { handler } from '../../src/handlers/create-romp';
+import { handler } from '../../src/handlers/create-research-output';
 import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createRandomUser } from '../helpers/create-user';
 import { config as authConfig } from '@asap-hub/auth';
-import { Romp } from '@asap-hub/model';
+import { ResearchOutput } from '@asap-hub/model';
 
 jest.mock('@asap-hub/auth');
 
 const chance = new Chance();
 
-describe('GET /users/{id}/romp', () => {
+describe('GET /users/{id}/research-outputs', () => {
   let id, code;
 
-  const romp: Romp = {
+  const output: ResearchOutput = {
     url: chance.url(),
     doi: chance.string(),
     outputType: chance.pickone([
@@ -45,7 +45,7 @@ describe('GET /users/{id}/romp', () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
-        body: romp,
+        body: output,
         pathParameters: {
           id,
         },
@@ -67,7 +67,7 @@ describe('GET /users/{id}/romp', () => {
         pathParameters: {
           id,
         },
-        body: romp,
+        body: output,
       }),
       null,
       null,
@@ -88,7 +88,7 @@ describe('GET /users/{id}/romp', () => {
         pathParameters: {
           id,
         },
-        body: romp,
+        body: output,
       }),
       null,
       null,
@@ -109,7 +109,7 @@ describe('GET /users/{id}/romp', () => {
         pathParameters: {
           id,
         },
-        body: romp,
+        body: output,
       }),
       null,
       null,
@@ -132,7 +132,7 @@ describe('GET /users/{id}/romp', () => {
         pathParameters: {
           id: 'NotTheUser',
         },
-        body: romp,
+        body: output,
       }),
       null,
       null,
@@ -178,7 +178,7 @@ describe('GET /users/{id}/romp', () => {
           id,
         },
         body: {
-          ...romp,
+          ...output,
           outputType: 'invalid',
         },
       }),
@@ -203,7 +203,7 @@ describe('GET /users/{id}/romp', () => {
         pathParameters: {
           id,
         },
-        body: romp,
+        body: output,
       }),
       null,
       null,
@@ -211,7 +211,7 @@ describe('GET /users/{id}/romp', () => {
     const body = JSON.parse(result.body);
 
     expect(result.statusCode).toStrictEqual(201);
-    expect(body.url).toStrictEqual(romp.url);
-    expect(body.title).toStrictEqual(romp.title);
+    expect(body.url).toStrictEqual(output.url);
+    expect(body.title).toStrictEqual(output.title);
   });
 });

@@ -13,7 +13,10 @@ function transform(output: CMSResearchOutput): ResearchOutput {
     description: output.data.description && output.data.description.iv,
     authors: output.data.authors && output.data.authors.iv,
     publishDate: output.data.publishDate && output.data.publishDate.iv,
-    createdBy: output.data.createdBy && output.data.createdBy.iv,
+    createdBy: {
+      id: output.data.createdBy && output.data.createdBy.iv.id,
+      name: output.data.createdBy && output.data.createdBy.iv.name,
+    },
   } as ResearchOutput;
 }
 
@@ -24,8 +27,16 @@ export default class ResearchOutputs {
     this.cms = new CMS();
   }
 
-  async create(id: string, output: ResearchOutput): Promise<ResearchOutput> {
-    const createdOutput = await this.cms.researchOutputs.create(id, output);
+  async create(
+    id: string,
+    name: string,
+    output: ResearchOutput,
+  ): Promise<ResearchOutput> {
+    const createdOutput = await this.cms.researchOutputs.create(
+      id,
+      name,
+      output,
+    );
     return transform(createdOutput);
   }
 

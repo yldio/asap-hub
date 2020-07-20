@@ -18,7 +18,12 @@ export interface CMSResearchOutput {
       ];
     };
     publishDate: { iv: string };
-    createdBy: { iv: string };
+    createdBy: {
+      iv: {
+        id: string;
+        name: string;
+      };
+    };
   };
 }
 

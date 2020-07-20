@@ -14,7 +14,7 @@ export const handler: APIGatewayProxyHandler = lambda.http(
     const { sub } = await validateUser(request);
 
     const users = new Users();
-    const { id } = await users.fetchByCode(sub);
+    const { id, displayName } = await users.fetchByCode(sub);
 
     const paramsSchema = Joi.object({
       id: Joi.string().required(),
@@ -36,7 +36,7 @@ export const handler: APIGatewayProxyHandler = lambda.http(
     ) as ResearchOutput;
 
     const researchOutput = new ResearchOutputs();
-    const output = await researchOutput.create(params.id, payload);
+    const output = await researchOutput.create(id, displayName, payload);
 
     return {
       statusCode: 201,

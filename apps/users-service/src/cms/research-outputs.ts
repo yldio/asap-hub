@@ -7,28 +7,44 @@ export default class Users extends Base {
     super(CMSConfig);
   }
 
-  create(id: string, output: ResearchOutput): Promise<CMSResearchOutput> {
-    return this.client
-      .post<CMSResearchOutput>('research-outputs', {
-        json: {
-          url: { iv: output.url },
-          doi: { iv: output.doi },
-          authors: { iv: output.authors },
-          title: { iv: output.title },
-          description: { iv: output.description },
-          outputType: { iv: output.outputType },
-          publishDate: { iv: output.publishDate },
-          createdBy: { iv: id },
-        },
-        searchParams: { publish: true },
-      })
-      .json();
+  create(
+    id: string,
+    name: string,
+    output: ResearchOutput,
+  ): Promise<CMSResearchOutput> {
+    let obj;
+    try {
+      obj = this.client
+        .post<CMSResearchOutput>('research-outputs', {
+          json: {
+            url: { iv: output.url },
+            doi: { iv: output.doi },
+            authors: { iv: output.authors },
+            title: { iv: output.title },
+            description: { iv: output.description },
+            outputType: { iv: output.outputType },
+            publishDate: { iv: output.publishDate },
+            createdBy: {
+              iv: {
+                name,
+                id,
+              },
+            },
+          },
+          searchParams: { publish: true },
+        })
+        .json();
+    } catch (e) {
+      console.log(e);
+    }
+
+    return obj;
   }
 
   async fetchUserResearchOutputs(id: string): Promise<CMSResearchOutput[]> {
     const { items } = await this.client
       .get('research-outputs', {
-        searchParams: { $filter: `data/createdBy/iv eq '${id}'` },
+        searchParams: { $filter: `data/createdBy/iv/id eq '${id}'` },
       })
       .json();
 

@@ -58,5 +58,5 @@ export const createRandomOutput = async (user: String): ReplyUser => {
     publishDate: '2020-02-02T12:00:00Z',
   };
 
-  await cms.researchOutputs.create(user, output);
+  await cms.researchOutputs.create(user, 'test', output);
 };

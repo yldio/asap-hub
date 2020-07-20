@@ -13,5 +13,8 @@ export interface ResearchOutput {
     },
   ];
   publishDate: string;
-  createdBy: string;
+  createdBy: {
+    id: string;
+    name: string;
+  };
 }

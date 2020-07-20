@@ -6,5 +6,6 @@ export { default as LabeledDateField } from './LabeledDateField';
 export { default as LabeledDropdown } from './LabeledDropdown';
 export { default as LabeledPasswordField } from './LabeledPasswordField';
 export { default as LabeledRadioButton } from './LabeledRadioButton';
+export { default as LabeledTextArea } from './LabeledTextArea';
 export { default as LabeledTextField } from './LabeledTextField';
 export { default as OrcidSigninButton } from './OrcidSigninButton';

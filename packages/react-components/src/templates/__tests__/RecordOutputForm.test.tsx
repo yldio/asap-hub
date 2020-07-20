@@ -21,7 +21,7 @@ const fillOut = async (getByLabelText: RenderResult['getByLabelText']) => {
   await userEvent.type(getByLabelText(/description/i), 'My dataset', {
     allAtOnce: true,
   });
-  await userEvent.type(getByLabelText(/author/i), 'Me, Myself, I', {
+  await userEvent.type(getByLabelText(/author/i), 'Me\nMyself, I', {
     allAtOnce: true,
   });
 };
@@ -69,7 +69,7 @@ it('does not trigger the publish when invalid', async () => {
   expect(handlePublish).not.toHaveBeenCalled();
 });
 
-it('parses comma-separated authors', async () => {
+it('parses authors separated by commas or newlines', async () => {
   const handlePreview = jest.fn();
   const { getByText, getByLabelText } = render(
     <RecordOutputForm onPreview={handlePreview} />,

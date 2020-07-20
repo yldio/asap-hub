@@ -11,6 +11,7 @@ import {
   LabeledTextField,
   LabeledDropdown,
   LabeledDateField,
+  LabeledTextArea,
 } from '../molecules';
 import { RadioButtonGroup } from '../organisms';
 import { perRem } from '../pixels';
@@ -65,8 +66,7 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
     type,
     title,
     description,
-    // TODO multiline => also split by \n
-    authors: authors.split(',').map((author) => author.trim()),
+    authors: authors.split(/,|\n/m).map((author) => author.trim()),
     publishDate,
     accessLevel,
   };
@@ -106,18 +106,14 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
         value={title}
         onChange={setTitle}
       />
-      <LabeledTextField
-        // TODO multiline
+      <LabeledTextArea
         required
-        indicateValid={false}
         title="Description"
         value={description}
         onChange={setDescription}
       />
-      <LabeledTextField
-        // TODO multiline
+      <LabeledTextArea
         required
-        indicateValid={false}
         title="Authors"
         value={authors}
         onChange={setAuthors}

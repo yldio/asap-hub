@@ -30,6 +30,7 @@ export {
   GoogleSigninButton,
   Header,
   LabeledDateField,
+  LabeledTextArea,
   LabeledTextField,
   LabeledPasswordField,
   LabeledDropdown,

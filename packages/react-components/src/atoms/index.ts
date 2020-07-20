@@ -13,6 +13,7 @@ export { default as Label } from './Label';
 export { default as Link } from './Link';
 export { default as Paragraph } from './Paragraph';
 export { default as RadioButton } from './RadioButton';
+export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
 export { default as Theme } from './Theme';
 

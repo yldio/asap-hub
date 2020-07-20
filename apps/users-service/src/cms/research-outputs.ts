@@ -25,13 +25,13 @@ export default class Users extends Base {
       .json();
   }
 
- async fetchUserResearchOutputs(id: string): Promise<CMSResearchOutput[]> {
-   const { items } = await this.client
-     .get('research-outputs', {
-       searchParams: { $filter: `data/createdBy/iv eq '${id}'` },
-     })
-     .json();
+  async fetchUserResearchOutputs(id: string): Promise<CMSResearchOutput[]> {
+    const { items } = await this.client
+      .get('research-outputs', {
+        searchParams: { $filter: `data/createdBy/iv eq '${id}'` },
+      })
+      .json();
 
-   return items;
- }
+    return items;
+  }
 }

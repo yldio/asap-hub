@@ -172,7 +172,8 @@ module.exports = {
       ],
     },
     'fetch-research-outputs': {
-      handler: 'apps/users-service/build/handlers/fetch-research-outputs.handler',
+      handler:
+        'apps/users-service/build/handlers/fetch-research-outputs.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/

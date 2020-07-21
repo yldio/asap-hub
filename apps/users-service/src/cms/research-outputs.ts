@@ -12,33 +12,26 @@ export default class Users extends Base {
     name: string,
     output: ResearchOutput,
   ): Promise<CMSResearchOutput> {
-    let obj;
-    try {
-      obj = this.client
-        .post<CMSResearchOutput>('research-outputs', {
-          json: {
-            url: { iv: output.url },
-            doi: { iv: output.doi },
-            authors: { iv: output.authors },
-            title: { iv: output.title },
-            description: { iv: output.description },
-            outputType: { iv: output.outputType },
-            publishDate: { iv: output.publishDate },
-            createdBy: {
-              iv: {
-                name,
-                id,
-              },
+    return this.client
+      .post<CMSResearchOutput>('research-outputs', {
+        json: {
+          url: { iv: output.url },
+          doi: { iv: output.doi },
+          authors: { iv: output.authors },
+          title: { iv: output.title },
+          description: { iv: output.description },
+          outputType: { iv: output.outputType },
+          publishDate: { iv: output.publishDate },
+          createdBy: {
+            iv: {
+              name,
+              id,
             },
           },
-          searchParams: { publish: true },
-        })
-        .json();
-    } catch (e) {
-      console.log(e);
-    }
-
-    return obj;
+        },
+        searchParams: { publish: true },
+      })
+      .json();
   }
 
   async fetchUserResearchOutputs(id: string): Promise<CMSResearchOutput[]> {

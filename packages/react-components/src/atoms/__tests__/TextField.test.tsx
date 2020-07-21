@@ -156,10 +156,12 @@ describe('when valid', () => {
 });
 
 describe('when invalid', () => {
-  it('shows a validation error message after losing focus', () => {
-    const { getByRole, getByText } = render(
+  it('shows a validation error message only after losing focus', () => {
+    const { getByRole, getByText, queryByText } = render(
       <TextField value="wrong" pattern="^val$" />,
     );
+    expect(queryByText(/match/i)).not.toBeInTheDocument();
+
     fireEvent.blur(getByRole('textbox'));
     expect(getByText(/match/i)).toBeVisible();
     expect(getComputedStyle(getByText(/match/i)).color).toBe(ember.rgb);

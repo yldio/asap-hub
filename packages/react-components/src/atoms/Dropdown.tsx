@@ -13,7 +13,7 @@ import {
 } from '../form';
 import { dropdownChevronIcon } from '../icons';
 import { perRem } from '../pixels';
-import { ember, steel, mint, pine, tin } from '../colors';
+import { ember, steel, mint, pine, tin, rose } from '../colors';
 import { Option } from '../select';
 
 const containerStyles = css({
@@ -26,6 +26,7 @@ const { ':focus': focusStyles, ...baseStyles } = styles;
 const invalidStyles = {
   color: ember.rgb,
   borderColor: ember.rgb,
+  backgroundColor: rose.rgb,
 };
 
 const reactSelectStyles = (

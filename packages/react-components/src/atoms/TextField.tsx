@@ -126,6 +126,7 @@ type TextFieldProps = {
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',
   enabled = true,
+
   required,
   minLength,
   maxLength,

@@ -50,7 +50,10 @@ export const validationMessageStyles = {
   borderColor: ember.rgb,
 } as const;
 
-type ValidationTarget = HTMLInputElement | HTMLSelectElement;
+type ValidationTarget =
+  | HTMLInputElement
+  | HTMLTextAreaElement
+  | HTMLSelectElement;
 export function useValidation<T extends ValidationTarget>(
   customValidationMessage: string,
 ): {

@@ -20,6 +20,7 @@ export default class Users extends Base {
           authors: { iv: output.authors },
           title: { iv: output.title },
           description: { iv: output.description },
+          accessLevel: { iv: output.accessLevel },
           outputType: { iv: output.outputType },
           publishDate: { iv: output.publishDate },
           createdBy: {

@@ -27,6 +27,7 @@ describe('GET /users/{id}/research-outputs', () => {
     ]),
     title: chance.sentence(),
     description: chance.paragraph(),
+    accessLevel: chance.pickone(['private', 'team', 'public']),
     authors: [
       {
         displayName: chance.name(),

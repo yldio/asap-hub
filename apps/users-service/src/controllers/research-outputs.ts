@@ -13,6 +13,7 @@ function transform(output: CMSResearchOutput): ResearchOutput {
     outputType: get(output, 'data.outputType.iv', null),
     title: get(output, 'data.title.iv', null),
     description: get(output, 'data.description.iv', null),
+    accessLevel: get(output, 'data.accessLevel.iv', null),
     authors: get(output, 'data.authors.iv', []).map(
       (author: { id: string[]; displayName: string }) => ({
         id: get(author, 'id[0]', null),

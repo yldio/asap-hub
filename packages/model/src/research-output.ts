@@ -6,6 +6,7 @@ export interface ResearchOutput {
   outputType: string;
   title: string;
   description: string;
+  accessLevel: string;
   authors: [
     {
       displayName: string;

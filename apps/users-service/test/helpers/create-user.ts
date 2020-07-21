@@ -50,6 +50,7 @@ export const createRandomOutput = async (user: String): ReplyUser => {
     ]),
     title: chance.sentence(),
     description: chance.paragraph(),
+    accessLevel: chance.pickone(['private', 'team', 'public']),
     authors: [
       {
         displayName: chance.name(),

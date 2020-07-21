@@ -357,6 +357,7 @@ __metadata:
     "@types/jest": ^26.0.3
     "@types/jsonwebtoken": ^8.5.0
     "@types/jwt-decode": ^2.2.1
+    "@types/lodash.get": ^4
     "@types/uuid": ^8.0.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
@@ -366,6 +367,7 @@ __metadata:
     got: ^11.3.0
     jsonwebtoken: ^8.5.1
     jwt-decode: ^2.2.0
+    lodash.get: ^4.4.2
     nock: ^12.0.3
     uuid: ^8.1.0
   languageName: unknown
@@ -5126,6 +5128,22 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 3aaf557d5b82e733d5a17b7f55af5d6be953363c3a594f006d64265790fe87c301c6e1400c0b6b1cf72add50a0ceddc25afb8231ab8302a2e5b6ebfbfac30e5d
+  languageName: node
+  linkType: hard
+
+"@types/lodash.get@npm:^4":
+  version: 4.4.6
+  resolution: "@types/lodash.get@npm:4.4.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: f08237e3d45e7883cf2cfe202475db6a2bd1a53576c0e66b2e89e0ca0c6f36e700ecc9926ad28b3b9ff6d348074f8c82b393f9fc2cf523fa26a86c95304f7a02
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.157
+  resolution: "@types/lodash@npm:4.14.157"
+  checksum: ea8d890a4d78f4690f9d8e5cb03f3581e8ea59047696e2c2114087ec471e891b3ce683e5344c9c15ea7bd9730b79e5fd808b3eff80a01741503ea59922c2bb83
   languageName: node
   linkType: hard
 
@@ -17536,6 +17554,13 @@ fsevents@^1.2.7:
   version: 4.5.0
   resolution: "lodash.foreach@npm:4.5.0"
   checksum: aa177589a923db147831937b2b74746276247a4c0870c8dfe14bcebb009e9a89b33287589ba0af90a6fa2355b0759cea03ab6d0a25219a25d0d96222de4a831f
+  languageName: node
+  linkType: hard
+
+"lodash.get@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "lodash.get@npm:4.4.2"
+  checksum: 447e575e3caa5131ef44e5a0c135b1614f3c937d86b3be0568f9da7b0fd015010af3b6b4e41edf6e2698c9ce2dcc061ca71b31f274f799c991dceb018be16e4f
   languageName: node
   linkType: hard
 

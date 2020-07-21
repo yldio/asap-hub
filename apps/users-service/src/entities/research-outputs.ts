@@ -12,17 +12,19 @@ export interface CMSResearchOutput {
     authors: {
       iv: [
         {
-          name: string;
+          displayName: string;
           id: string;
         },
       ];
     };
     publishDate: { iv: string };
     createdBy: {
-      iv: {
-        id: string;
-        name: string;
-      };
+      iv: [
+        {
+          id: string;
+          displayName: string;
+        },
+      ];
     };
   };
 }
@@ -36,7 +38,7 @@ export const createSchema = Joi.object({
   title: Joi.string().required(),
   description: Joi.string().required(),
   authors: Joi.array()
-    .items(Joi.object({ name: Joi.string(), id: Joi.string() }))
+    .items(Joi.object({ displayName: Joi.string(), id: Joi.string() }))
     .required(),
   publishDate: Joi.date().iso(),
 });

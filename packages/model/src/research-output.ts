@@ -8,13 +8,13 @@ export interface ResearchOutput {
   description: string;
   authors: [
     {
-      name: string;
+      displayName: string;
       id: string;
     },
   ];
   publishDate: string;
   createdBy: {
     id: string;
-    name: string;
+    displayName: string;
   };
 }

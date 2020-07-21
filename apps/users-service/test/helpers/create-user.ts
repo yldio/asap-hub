@@ -52,7 +52,7 @@ export const createRandomOutput = async (user: String): ReplyUser => {
     description: chance.paragraph(),
     authors: [
       {
-        name: chance.name(),
+        displayName: chance.name(),
       },
     ],
     publishDate: '2020-02-02T12:00:00Z',

@@ -1,21 +1,27 @@
 import { ResearchOutput } from '@asap-hub/model';
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
+import get from 'lodash.get';
 
 function transform(output: CMSResearchOutput): ResearchOutput {
   return {
     id: output.id,
     created: output.created,
-    url: output.data.url && output.data.url.iv,
-    doi: output.data.doi && output.data.doi.iv,
-    outputType: output.data.outputType && output.data.outputType.iv,
-    title: output.data.title && output.data.title.iv,
-    description: output.data.description && output.data.description.iv,
-    authors: output.data.authors && output.data.authors.iv,
-    publishDate: output.data.publishDate && output.data.publishDate.iv,
+    url: get(output, 'data.url.iv', null),
+    doi: get(output, 'data.doi.iv', null),
+    outputType: get(output, 'data.outputType.iv', null),
+    title: get(output, 'data.title.iv', null),
+    description: get(output, 'data.description.iv', null),
+    authors: get(output, 'data.authors.iv', []).map(
+      (author: { id: string[]; displayName: string }) => ({
+        id: get(author, 'id[0]', null),
+        displayName: get(author, 'displayName', null),
+      }),
+    ),
+    publishDate: get(output, 'data.publishDate.iv', null),
     createdBy: {
-      id: output.data.createdBy && output.data.createdBy.iv.id,
-      name: output.data.createdBy && output.data.createdBy.iv.name,
+      id: get(output, 'data.createdBy.iv[0].id[0]', null),
+      displayName: get(output, 'data.createdBy.iv[0].displayName', null),
     },
   } as ResearchOutput;
 }

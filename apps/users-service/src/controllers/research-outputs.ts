@@ -1,7 +1,8 @@
 import { ResearchOutput } from '@asap-hub/model';
+import get from 'lodash.get';
+
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
-import get from 'lodash.get';
 
 function transform(output: CMSResearchOutput): ResearchOutput {
   return {

@@ -129,12 +129,14 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@asap-hub/react-context": "workspace:packages/react-context"
     "@auth0/auth0-spa-js": ^1.9.0
     "@testing-library/dom": ^7.10.0
     "@testing-library/jest-dom": ^5.9.0
     "@testing-library/react": ^10.2.0
+    "@testing-library/react-hooks": ^3.4.1
     "@testing-library/user-event": ^11.4.2
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.3
@@ -143,8 +145,10 @@ __metadata:
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
     "@types/react-router-dom": ^5.1.5
+    "@types/react-test-renderer": 16.9.2
     "@types/testing-library__jest-dom": ^5.0.3
     "@types/testing-library__react": ^10.0.1
+    "@types/testing-library__react-hooks": ^3.2.0
     cross-env: ^7.0.2
     history: ^4.10.1
     identity-obj-proxy: ^3.0.0
@@ -155,7 +159,9 @@ __metadata:
     react-dom: ^16.13.1
     react-router-dom: ^5.2.0
     react-scripts: "patch:react-scripts@3.4.1#./patches/react-scripts.patch"
+    react-test-renderer: ^16.13.1
     typescript: ~3.8.3
+    use-http: ^1.0.13
   languageName: unknown
   linkType: soft
 
@@ -199,7 +205,7 @@ __metadata:
     "@testing-library/dom": ^7.10.0
     "@testing-library/jest-dom": ^5.9.0
     "@testing-library/react": ^10.2.0
-    "@testing-library/react-hooks": ^3.3.0
+    "@testing-library/react-hooks": ^3.4.1
     "@testing-library/user-event": ^11.4.2
     "@types/asap-hub__assets": "workspace:@types/asap-hub__assets"
     "@types/jest": ^26.0.3
@@ -235,7 +241,7 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
     "@babel/runtime-corejs3": ^7.9.6
-    "@testing-library/react-hooks": ^3.3.0
+    "@testing-library/react-hooks": ^3.4.1
     "@types/jest": ^26.0.3
     "@types/react": ^16.9.0
     "@types/testing-library__react-hooks": ^3.2.0
@@ -4688,16 +4694,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-hooks@npm:^3.3.0":
-  version: 3.3.0
-  resolution: "@testing-library/react-hooks@npm:3.3.0"
+"@testing-library/react-hooks@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@testing-library/react-hooks@npm:3.4.1"
   dependencies:
     "@babel/runtime": ^7.5.4
-    "@types/testing-library__react-hooks": ^3.0.0
+    "@types/testing-library__react-hooks": ^3.3.0
   peerDependencies:
     react: ">=16.9.0"
     react-test-renderer: ">=16.9.0"
-  checksum: d3b857d34ec565f71c5baa8c07966834daef574e719c89e335fc60cd2220f70c63945238737d42c1fe425a1cb9c0a28919c175b19bb3157c8e575f14593468b1
+  checksum: e1fd838173f5b879cde8a5c91c78f8e6b0b5dc85e083d037b95e9da8ae553524645d3913630163ded11ac82ec357290bcb92fb0ce97d1fe5245c91ff8d32a05b
   languageName: node
   linkType: hard
 
@@ -5508,13 +5514,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__react-hooks@npm:^3.0.0, @types/testing-library__react-hooks@npm:^3.2.0":
+"@types/testing-library__react-hooks@npm:^3.2.0":
   version: 3.2.0
   resolution: "@types/testing-library__react-hooks@npm:3.2.0"
   dependencies:
     "@types/react": "*"
     "@types/react-test-renderer": "*"
   checksum: 13af79e150039e8b43f3ba2a2bb4f6dd0f1b60bc6fea8b4552047ff6962bef15b5ad579316ea94f7bb8750dd3e7149d0da8b9344a803d50ae2f156701da9ad0e
+  languageName: node
+  linkType: hard
+
+"@types/testing-library__react-hooks@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@types/testing-library__react-hooks@npm:3.3.0"
+  dependencies:
+    "@types/react": "*"
+    "@types/react-test-renderer": "*"
+  checksum: e6651dd3bbb58ae3529d5d9bfb66ba832f7c079ea716390467efa8954898aa62ce09c6905de81b77213668c131b8cc1f394f823b3236a6bb05646e4fd54c029b
   languageName: node
   linkType: hard
 
@@ -25863,12 +25879,46 @@ resolve@^1.17.0:
   languageName: node
   linkType: hard
 
+"urs@npm:^0.0.7":
+  version: 0.0.7
+  resolution: "urs@npm:0.0.7"
+  peerDependencies:
+    react: ^16.13.1
+    react-dom: ^16.13.1
+  checksum: 2bb0c7c825d65a65e5249896764252cafbce15aa6fce83cde4b9f01a2b0d22ce885e509d07d258bec24056de7e52750d004dc9d2ae4148f2fed82a538286fce6
+  languageName: node
+  linkType: hard
+
 "use-debounce@npm:^3.4.2":
   version: 3.4.2
   resolution: "use-debounce@npm:3.4.2"
   peerDependencies:
     react: ">=16.8.0"
   checksum: b6003596ba6fa60f45334ad4efbd9ecb3dcf205bd378e7090722477fc05f90d93c857afc3f8f003f2a3c0723e367f9ad1e66fb52a33d85a8bf37940166672dca
+  languageName: node
+  linkType: hard
+
+"use-http@npm:^1.0.13":
+  version: 1.0.13
+  resolution: "use-http@npm:1.0.13"
+  dependencies:
+    urs: ^0.0.7
+    use-ssr: ^1.0.22
+    utility-types: ^3.10.0
+  peerDependencies:
+    react: ^16.13.1
+    react-dom: ^16.13.1
+  checksum: 534f1a01c7f44c0c02a9f15b5cc4b8131977ca23bc79a120aa6300f0677ed182a4ba678fb16a9a2da6b763fec27307edd4b90200ade9d0bdab0cbdaca5fded3f
+  languageName: node
+  linkType: hard
+
+"use-ssr@npm:^1.0.22":
+  version: 1.0.23
+  resolution: "use-ssr@npm:1.0.23"
+  peerDependencies:
+    react: ^16.13.1
+    react-dom: ^16.13.1
+  checksum: 017883c7bf3f1ef9555642c11c488c9ff07d3fe1e6620ef88ed186cc942d6a518fd32de592b5cedbd8f72a50496b65515aae723487984ea6f5579e1b8c5c58ca
   languageName: node
   linkType: hard
 
@@ -25930,6 +25980,13 @@ resolve@^1.17.0:
   version: 0.4.0
   resolution: "utila@npm:0.4.0"
   checksum: 6799b0a5666ac26fb547068e6967e51b534e290174b10ae26e500c216197b0faed9be8a12108bc408ce475ce1002c866aac2d1d4e1453dc72b441d8900f2063a
+  languageName: node
+  linkType: hard
+
+"utility-types@npm:^3.10.0":
+  version: 3.10.0
+  resolution: "utility-types@npm:3.10.0"
+  checksum: 0d2add8ad7057883548a328076dd5eaa8ccb3660df053645fec332253f047fa0882da766dfa676c6a530f6a80023f1f519e1bc3f90088c4fcede303c33de0e4a
   languageName: node
   linkType: hard
 

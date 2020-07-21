@@ -1,11 +1,12 @@
 import Chance from 'chance';
+import { UserResponse, ResearchOutputCreationRequest } from '@asap-hub/model';
 import { CMS } from '../../src/cms';
-import { ResearchOutputCreationRequest } from '@asap-hub/model';
+import { User } from '../../src/entities/user';
 
 const chance = new Chance();
 const cms = new CMS();
 
-function transform(user: User): ReplyUser {
+function transform(user: User): UserResponse {
   return {
     id: user.id,
     displayName: user.data.displayName.iv,
@@ -17,10 +18,10 @@ function transform(user: User): ReplyUser {
     title: user.data.title && user.data.title.iv,
     orcid: user.data.orcid && user.data.orcid.iv,
     institution: user.data.institution && user.data.institution.iv,
-  } as ReplyUser;
+  };
 }
 
-export const createRandomUser = async (): ReplyUser => {
+export const createRandomUser = async (): Promise<UserResponse> => {
   const user = {
     displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),

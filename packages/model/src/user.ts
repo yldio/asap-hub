@@ -8,3 +8,7 @@ export interface Invitee {
   orcid?: string;
   institution?: string;
 }
+
+export interface UserResponse extends Invitee {
+  id: string;
+}

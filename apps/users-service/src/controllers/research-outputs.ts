@@ -1,16 +1,19 @@
-import { ResearchOutput } from '@asap-hub/model';
+import {
+  ResearchOutputResponse,
+  ResearchOutputCreationRequest,
+} from '@asap-hub/model';
 import get from 'lodash.get';
 
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
 
-function transform(output: CMSResearchOutput): ResearchOutput {
+function transform(output: CMSResearchOutput): ResearchOutputResponse {
   return {
     id: output.id,
     created: output.created,
     url: get(output, 'data.url.iv', null),
     doi: get(output, 'data.doi.iv', null),
-    outputType: get(output, 'data.outputType.iv', null),
+    type: get(output, 'data.type.iv', null),
     title: get(output, 'data.title.iv', null),
     description: get(output, 'data.description.iv', null),
     accessLevel: get(output, 'data.accessLevel.iv', null),
@@ -25,7 +28,7 @@ function transform(output: CMSResearchOutput): ResearchOutput {
       id: get(output, 'data.createdBy.iv[0].id[0]', null),
       displayName: get(output, 'data.createdBy.iv[0].displayName', null),
     },
-  } as ResearchOutput;
+  } as ResearchOutputResponse;
 }
 
 export default class ResearchOutputs {
@@ -38,8 +41,8 @@ export default class ResearchOutputs {
   async create(
     id: string,
     name: string,
-    output: ResearchOutput,
-  ): Promise<ResearchOutput> {
+    output: ResearchOutputCreationRequest,
+  ): Promise<ResearchOutputResponse> {
     const createdOutput = await this.cms.researchOutputs.create(
       id,
       name,
@@ -48,7 +51,9 @@ export default class ResearchOutputs {
     return transform(createdOutput);
   }
 
-  async fetchUserResearchOutputs(id: string): Promise<ResearchOutput[]> {
+  async fetchUserResearchOutputs(
+    id: string,
+  ): Promise<ResearchOutputResponse[]> {
     const outputs = await this.cms.researchOutputs.fetchUserResearchOutputs(id);
     return outputs.length ? outputs.map(transform) : [];
   }

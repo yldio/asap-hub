@@ -2,7 +2,7 @@ import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { framework as lambda } from '@asap-hub/services-common';
-import { ResearchOutput } from '@asap-hub/model';
+import { ResearchOutputCreationRequest } from '@asap-hub/model';
 
 import validateUser from '../utils/validate-user';
 import Users from '../controllers/users';
@@ -33,7 +33,7 @@ export const handler: APIGatewayProxyHandler = lambda.http(
       'payload',
       request.payload,
       createSchema.required(),
-    ) as ResearchOutput;
+    ) as ResearchOutputCreationRequest;
 
     const researchOutput = new ResearchOutputs();
     const output = await researchOutput.create(id, displayName, payload);

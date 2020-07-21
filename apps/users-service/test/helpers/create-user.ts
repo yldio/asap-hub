@@ -1,6 +1,6 @@
 import Chance from 'chance';
 import { CMS } from '../../src/cms';
-import { ResearchOutput } from '@asap-hub/model';
+import { ResearchOutputCreationRequest } from '@asap-hub/model';
 
 const chance = new Chance();
 const cms = new CMS();
@@ -37,10 +37,10 @@ export const createRandomUser = async (): ReplyUser => {
 };
 
 export const createRandomOutput = async (user: String): ReplyUser => {
-  const output: ResearchOutput = {
+  const output: ResearchOutputCreationRequest = {
     url: chance.url(),
     doi: chance.string(),
-    outputType: chance.pickone([
+    type: chance.pickone([
       'dataset',
       'code',
       'protocol',

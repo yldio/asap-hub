@@ -1,5 +1,5 @@
 import { Base, BaseOptions } from '@asap-hub/services-common';
-import { ResearchOutput } from '@asap-hub/model';
+import { ResearchOutputCreationRequest } from '@asap-hub/model';
 import { CMSResearchOutput } from '../entities/research-outputs';
 
 export default class Users extends Base {
@@ -10,7 +10,7 @@ export default class Users extends Base {
   create(
     id: string,
     displayName: string,
-    output: ResearchOutput,
+    output: ResearchOutputCreationRequest,
   ): Promise<CMSResearchOutput> {
     return this.client
       .post<CMSResearchOutput>('research-outputs', {
@@ -21,7 +21,7 @@ export default class Users extends Base {
           title: { iv: output.title },
           description: { iv: output.description },
           accessLevel: { iv: output.accessLevel },
-          outputType: { iv: output.outputType },
+          type: { iv: output.type },
           publishDate: { iv: output.publishDate },
           createdBy: {
             iv: [

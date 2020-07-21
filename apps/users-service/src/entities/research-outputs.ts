@@ -6,7 +6,7 @@ export interface CMSResearchOutput {
   data: {
     url: { iv: string };
     doi: { iv: string };
-    outputType: { iv: string };
+    type: { iv: string };
     title: { iv: string };
     description: { iv: string };
     accessLevel: { iv: string };
@@ -33,7 +33,7 @@ export interface CMSResearchOutput {
 export const createSchema = Joi.object({
   url: Joi.string().required(),
   doi: Joi.string(),
-  outputType: Joi.string()
+  type: Joi.string()
     .required()
     .valid('dataset', 'code', 'protocol', 'resource', 'preprint', 'other'),
   accessLevel: Joi.string().required().valid('private', 'team', 'public'),

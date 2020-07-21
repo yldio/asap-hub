@@ -5,7 +5,7 @@ import { apiGatewayEvent } from '../helpers/events';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { createRandomUser } from '../helpers/create-user';
 import { config as authConfig } from '@asap-hub/auth';
-import { ResearchOutput } from '@asap-hub/model';
+import { ResearchOutputCreationRequest } from '@asap-hub/model';
 
 jest.mock('@asap-hub/auth');
 
@@ -14,10 +14,10 @@ const chance = new Chance();
 describe('GET /users/{id}/research-outputs', () => {
   let id, code;
 
-  const output: ResearchOutput = {
+  const output: ResearchOutputCreationRequest = {
     url: chance.url(),
     doi: chance.string(),
-    outputType: chance.pickone([
+    type: chance.pickone([
       'dataset',
       'code',
       'protocol',
@@ -180,7 +180,7 @@ describe('GET /users/{id}/research-outputs', () => {
         },
         body: {
           ...output,
-          outputType: 'invalid',
+          type: 'invalid',
         },
       }),
       null,

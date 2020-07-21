@@ -6,8 +6,9 @@ export type ResearchOutputType =
   | 'preprint'
   | 'other';
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
+export type ResearchOutputAuthor = { displayName: string } | { id: string };
 
-export interface ResearchOutputFormData {
+export type ResearchOutputFormData = {
   readonly url: string;
   readonly doi: string;
 
@@ -18,4 +19,17 @@ export interface ResearchOutputFormData {
   readonly publishDate?: Date;
 
   readonly accessLevel: ResearchOutputAccessLevel;
-}
+};
+
+export type ResearchOutputCreationRequest = Exclude<
+  ResearchOutputFormData,
+  'publishDate' | 'authors'
+> & {
+  publishDate?: string;
+  authors: ReadonlyArray<ResearchOutputAuthor>;
+};
+export type ResearchOutputResponse = ResearchOutputCreationRequest & {
+  id: string;
+  created: string;
+  createdBy: ResearchOutputAuthor;
+};

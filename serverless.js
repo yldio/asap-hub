@@ -158,6 +158,32 @@ module.exports = {
         },
       ],
     },
+    'create-research-output': {
+      handler:
+        'apps/users-service/build/handlers/create-research-output.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'POST',
+            path: `/users/{id}/research-outputs`,
+          },
+        },
+      ],
+    },
+    'fetch-research-outputs': {
+      handler:
+        'apps/users-service/build/handlers/fetch-research-outputs.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/users/{id}/research-output`,
+          },
+        },
+      ],
+    },
     'fetch-content-by-slug': {
       handler: 'apps/content-service/build/handlers/fetch-by-slug.handler',
       events: [

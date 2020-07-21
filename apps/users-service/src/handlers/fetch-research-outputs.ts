@@ -7,9 +7,7 @@ import ResearchOutputs from '../controllers/research-outputs';
 
 export const handler: APIGatewayProxyHandler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
-    console.log('entrou');
     await validateUser(request);
-    console.log('saiu');
 
     const paramsSchema = Joi.object({
       id: Joi.string().required(),

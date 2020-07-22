@@ -196,6 +196,18 @@ module.exports = {
         },
       ],
     },
+    'fetch-team-by-id': {
+      handler: 'apps/teams-service/build/handlers/fetch-by-id.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/teams/{id}`,
+          },
+        },
+      ],
+    },
   },
   resources: {
     Resources: {

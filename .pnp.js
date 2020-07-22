@@ -8663,7 +8663,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jsonwebtoken", "npm:8.5.0"],
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/lodash.get", "npm:4.4.6"],
-            ["@types/uuid", "npm:8.0.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["aws-sdk", "npm:2.704.0"],
@@ -8673,8 +8672,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:8.5.1"],
             ["jwt-decode", "npm:2.2.0"],
             ["lodash.get", "npm:4.4.2"],
-            ["nock", "npm:12.0.3"],
-            ["uuid", "npm:8.1.0"]
+            ["nock", "npm:12.0.3"]
           ],
           "linkType": "SOFT",
         }]

@@ -364,7 +364,6 @@ __metadata:
     "@types/jsonwebtoken": ^8.5.0
     "@types/jwt-decode": ^2.2.1
     "@types/lodash.get": ^4
-    "@types/uuid": ^8.0.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     aws-sdk: ^2.704.0
@@ -375,7 +374,6 @@ __metadata:
     jwt-decode: ^2.2.0
     lodash.get: ^4.4.2
     nock: ^12.0.3
-    uuid: ^8.1.0
   languageName: unknown
   linkType: soft
 

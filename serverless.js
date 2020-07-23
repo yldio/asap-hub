@@ -89,7 +89,7 @@ module.exports = {
   },
   functions: {
     'create-user': {
-      handler: 'apps/users-service/build/handlers/create.handler',
+      handler: 'apps/asap-server/build/handlers/users/create.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -111,7 +111,7 @@ module.exports = {
       },
     },
     'fetch-users': {
-      handler: 'apps/users-service/build/handlers/fetch.handler',
+      handler: 'apps/asap-server/build/handlers/users/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -123,7 +123,7 @@ module.exports = {
       ],
     },
     'fetch-user-by-id': {
-      handler: 'apps/users-service/build/handlers/fetch-by-id.handler',
+      handler: 'apps/asap-server/build/handlers/users/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -135,7 +135,7 @@ module.exports = {
       ],
     },
     'fetch-user-by-code': {
-      handler: 'apps/users-service/build/handlers/fetch-by-code.handler',
+      handler: 'apps/asap-server/build/handlers/users/fetch-by-code.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -147,7 +147,7 @@ module.exports = {
       ],
     },
     'connect-by-code': {
-      handler: 'apps/users-service/build/handlers/connect-by-code.handler',
+      handler: 'apps/asap-server/build/handlers/users/connect-by-code.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -160,7 +160,7 @@ module.exports = {
     },
     'create-research-output': {
       handler:
-        'apps/users-service/build/handlers/create-research-output.handler',
+        'apps/asap-server/build/handlers/research-outputs/create.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -173,19 +173,19 @@ module.exports = {
     },
     'fetch-research-outputs': {
       handler:
-        'apps/users-service/build/handlers/fetch-research-outputs.handler',
+        'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
-            path: `/users/{id}/research-output`,
+            path: `/users/{id}/research-outputs`,
           },
         },
       ],
     },
     'fetch-content-by-slug': {
-      handler: 'apps/content-service/build/handlers/fetch-by-slug.handler',
+      handler: 'apps/asap-server/build/handlers/content/fetch-by-slug.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -197,7 +197,7 @@ module.exports = {
       ],
     },
     'fetch-team-by-id': {
-      handler: 'apps/teams-service/build/handlers/fetch-by-id.handler',
+      handler: 'apps/asap-server/build/handlers/teams/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/

@@ -1,11 +1,12 @@
 export interface CMSTeam {
   id: string;
   data: {
-    id: string;
-    displayName: string;
-    applicationNumber: string;
-    projectTitle: string;
-    projectSummary: string;
-    tags: string[];
+    displayName: { iv: string };
+    applicationNumber: { iv: string };
+    projectTitle: { iv: string };
+    projectSummary: { iv: string };
+    tags: {
+      iv: string[];
+    };
   };
 }

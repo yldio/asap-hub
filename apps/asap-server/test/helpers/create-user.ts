@@ -1,6 +1,7 @@
 import Chance from 'chance';
 import { UserResponse, ResearchOutputCreationRequest } from '@asap-hub/model';
 import { CMS } from '../../src/cms';
+import { CMSTeam } from '../../src/entities/team';
 import { CMSUser } from '../../src/entities/user';
 
 const chance = new Chance();
@@ -23,7 +24,7 @@ function transform(user: CMSUser): TestUserResponse {
   };
 }
 
-export const createRandomUser = async (): Promise<UserResponse> => {
+export const createUser = (): Promise<CMSUser> => {
   const user = {
     displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),
@@ -35,7 +36,11 @@ export const createRandomUser = async (): Promise<UserResponse> => {
     email: chance.email(),
   };
 
-  const createdUser = await cms.users.create(user);
+  return cms.users.create(user);
+};
+
+export const createRandomUser = async (): Promise<UserResponse> => {
+  const createdUser = await createUser();
   return transform(createdUser);
 };
 
@@ -63,4 +68,12 @@ export const createRandomOutput = async (user: string): Promise<void> => {
   };
 
   await cms.researchOutputs.create(user, 'test', output);
+};
+
+export const createUserOnTeam = async (
+  team: CMSTeam,
+): Promise<UserResponse> => {
+  const createdUser = await createUser();
+  const user = await cms.users.addToTeam(createdUser, chance.string(), team);
+  return transform(user);
 };

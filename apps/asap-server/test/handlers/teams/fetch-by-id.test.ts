@@ -5,13 +5,21 @@ import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
+import { createRandomTeam } from '../../helpers/teams';
+import { createUserOnTeam } from '../../helpers/create-user';
 
 jest.mock('@asap-hub/auth');
 
 const chance = new Chance();
 
 describe('GET /teams/{id}', () => {
-  const id = '53411d87-5cfe-40c9-946e-1eda0086a4cb';
+  let id;
+
+  beforeAll(async () => {
+    const team = await createRandomTeam();
+    const user = await createUserOnTeam(team);
+    id = team.id;
+  });
 
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(

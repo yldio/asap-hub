@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import { TeamMember } from '@asap-hub/model';
 
 export interface CMSUser {
   id: string;
@@ -12,6 +13,7 @@ export interface CMSUser {
     orcid: { iv: string };
     institution: { iv: string };
     connections: { iv: [{ code: string }] };
+    teams: TeamMember[];
   };
 }
 

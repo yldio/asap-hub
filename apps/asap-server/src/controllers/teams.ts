@@ -18,7 +18,7 @@ function transform(team: CMSTeam, members: TeamMember[]): TeamResponse {
   } as TeamResponse;
 }
 
-export default class ResearchOutputs {
+export default class Teams {
   cms: CMS;
 
   constructor() {

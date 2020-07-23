@@ -1,7 +1,10 @@
 import { v4 as uuidV4 } from 'uuid';
 import { Base, BaseOptions } from '@asap-hub/services-common';
 import { Invitee } from '@asap-hub/model';
+import get from 'lodash.get';
+
 import { CMSUser } from '../entities/user';
+import { CMSTeam } from '../entities/team';
 
 export interface Connection {
   id: string;
@@ -58,7 +61,7 @@ export default class Users extends Base {
     return items[0] as CMSUser;
   }
 
-  async fetchById(id: string): Promise<CMSUser> {
+  fetchById(id: string): Promise<CMSUser> {
     return this.client.get<CMSUser>(`users/${id}`).json();
   }
 
@@ -79,6 +82,25 @@ export default class Users extends Base {
       })
       .json();
     return items;
+  }
+
+  addToTeam(user: CMSUser, role: string, team: CMSTeam): Promise<CMSUser> {
+    const teams = get(user, 'data.teams.iv', []).concat([
+      {
+        role,
+        displayName: team.data.displayName.iv,
+        id: [team.id],
+      },
+    ]);
+
+    return this.client
+      .patch<CMSUser>(`users/${user.id}`, {
+        json: {
+          email: { iv: user.data.email.iv },
+          teams: { iv: teams },
+        },
+      })
+      .json();
   }
 
   connectByCode(user: CMSUser, profile: Connection): Promise<CMSUser> {

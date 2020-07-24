@@ -196,6 +196,18 @@ module.exports = {
         },
       ],
     },
+    'fetch-teams': {
+      handler: 'apps/asap-server/build/handlers/teams/fetch.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/teams`,
+          },
+        },
+      ],
+    },
     'fetch-team-by-id': {
       handler: 'apps/asap-server/build/handlers/teams/fetch-by-id.handler',
       events: [

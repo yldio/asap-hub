@@ -6,7 +6,7 @@ import { CMS } from '../cms';
 import { CMSTeam } from '../entities/team';
 import { CMSUser } from '../entities/user';
 
-function transform(team: CMSTeam, members: TeamMember[]): TeamResponse {
+function transform(team: CMSTeam, members?: TeamMember[]): TeamResponse {
   return {
     id: team.id,
     displayName: get(team, 'data.displayName.iv', null),
@@ -23,6 +23,11 @@ export default class Teams {
 
   constructor() {
     this.cms = new CMS();
+  }
+
+  async fetch(): Promise<TeamResponse[]> {
+    const teams = await this.cms.teams.fetch();
+    return teams.length ? teams.map((team) => transform(team)) : [];
   }
 
   async fetchById(teamId: string): Promise<TeamResponse> {

@@ -7,7 +7,7 @@ import { CMSTeam } from '../../src/entities/team';
 const chance = new Chance();
 const cms = new CMS();
 
-export const createRandomTeam = (): CMSTeam => {
+export const createRandomTeam = (): Promise<CMSTeam> => {
   const team = {
     displayName: chance.string(),
     applicationNumber: chance.string(),

@@ -39,7 +39,21 @@ export default class Teams extends Base {
       .json();
   }
 
-  async fetchById(id: string): Promise<CMSTeam> {
+  fetchById(id: string): Promise<CMSTeam> {
     return this.client.get<CMSTeam>(`teams/${id}`).json();
+  }
+
+  async fetch(): Promise<CMSTeam[]> {
+    const { items } = await this.client
+      .get('teams', {
+        searchParams: {
+          q: JSON.stringify({
+            take: 30,
+            sort: [{ path: 'data.displayName.iv' }],
+          }),
+        },
+      })
+      .json();
+    return items;
   }
 }

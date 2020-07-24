@@ -38,6 +38,10 @@ const linkStyles = css({
   display: 'flex',
   justifyContent: 'center',
 });
+const titleOptionalStyles = css({
+  color: lead.rgb,
+  fontWeight: 'lighter',
+});
 
 interface RecordOutputFormProps {
   onPreview?: (formData: ResearchOutputFormData) => void;
@@ -82,7 +86,16 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
         value={url}
         onChange={setUrl}
       />
-      <LabeledTextField title="Add a DOI" value={doi} onChange={setDoi} />
+      <LabeledTextField
+        title={
+          <>
+            Add a DOI
+            <span css={titleOptionalStyles}> (Optional)</span>
+          </>
+        }
+        value={doi}
+        onChange={setDoi}
+      />
       <div css={sectionHeadingPaddingStyles}>
         <Headline2 styleAsHeading={3}>About the output</Headline2>
       </div>
@@ -122,7 +135,7 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
         title={
           <>
             Original publishing date
-            <span css={{ color: lead.rgb }}> (Optional)</span>
+            <span css={titleOptionalStyles}> (Optional)</span>
           </>
         }
         value={publishDate}

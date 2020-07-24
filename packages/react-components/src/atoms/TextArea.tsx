@@ -5,6 +5,10 @@ import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import { ember, rose } from '../colors';
 
+const textareaStyles = css({
+  display: 'block',
+  resize: 'vertical',
+});
 const containerStyles = css({
   flexBasis: '100%',
 
@@ -65,7 +69,7 @@ const TextArea: React.FC<TextAreaProps> = ({
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
-        css={[styles, validationMessage && invalidStyles]}
+        css={[styles, textareaStyles, validationMessage && invalidStyles]}
       />
       <div css={validationMessageStyles}>{validationMessage}</div>
     </div>

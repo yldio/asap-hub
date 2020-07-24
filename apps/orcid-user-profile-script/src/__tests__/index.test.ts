@@ -29,6 +29,7 @@ it('calls back with the user profile object', () => {
   const [err, profile] = cb.mock.calls[0];
   expect(err).toBeFalsy();
   expect(profile).toStrictEqual({
+    sub: '0000-0002-7164-1580',
     given_name: 'Tim',
     family_name: 'Seckinger',
     name: 'Tim Seckinger',

@@ -5,6 +5,7 @@ import * as config from './config';
 export { config };
 
 export interface User {
+  readonly sub: string;
   readonly name?: string;
   readonly given_name?: string;
   readonly family_name?: string;

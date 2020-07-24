@@ -20,7 +20,7 @@ it('throws if the user is not authenticated', async () => {
 });
 
 const wrapper: React.FC<{}> = ({ children }) => (
-  <authTestUtils.LoggedIn user={{}}>{children}</authTestUtils.LoggedIn>
+  <authTestUtils.LoggedIn user={undefined}>{children}</authTestUtils.LoggedIn>
 );
 
 it('sets the default headers', async () => {

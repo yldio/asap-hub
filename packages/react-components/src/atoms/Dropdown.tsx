@@ -18,7 +18,6 @@ import { Option } from '../select';
 
 const containerStyles = css({
   flexBasis: '100%',
-  paddingBottom: `${18 / perRem}em`,
 });
 
 const { ':focus': focusStyles, ...baseStyles } = styles;
@@ -131,9 +130,7 @@ export default function Dropdown<V extends string>({
         inputId={id}
         styles={reactSelectStyles(!!customValidationMessage)}
       />
-      <div css={validationMessageStyles} hidden={!customValidationMessage}>
-        {customValidationMessage}
-      </div>
+      <div css={validationMessageStyles}>{customValidationMessage}</div>
     </div>
   );
 }

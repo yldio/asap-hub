@@ -6,11 +6,13 @@ export type ResearchOutputType =
   | 'preprint'
   | 'other';
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
-export type ResearchOutputAuthor = { displayName: string } | { id: string };
+export type ResearchOutputAuthor =
+  | { readonly displayName: string }
+  | { readonly id: string };
 
 export type ResearchOutputFormData = {
   readonly url: string;
-  readonly doi: string;
+  readonly doi?: string;
 
   readonly type: ResearchOutputType;
   readonly title: string;
@@ -21,15 +23,15 @@ export type ResearchOutputFormData = {
   readonly accessLevel: ResearchOutputAccessLevel;
 };
 
-export type ResearchOutputCreationRequest = Exclude<
+export type ResearchOutputCreationRequest = Omit<
   ResearchOutputFormData,
   'publishDate' | 'authors'
 > & {
-  publishDate?: string;
-  authors: ReadonlyArray<ResearchOutputAuthor>;
+  readonly publishDate?: string;
+  readonly authors: ReadonlyArray<ResearchOutputAuthor>;
 };
 export type ResearchOutputResponse = ResearchOutputCreationRequest & {
-  id: string;
-  created: string;
-  createdBy: ResearchOutputAuthor;
+  readonly id: string;
+  readonly created: string;
+  readonly createdBy: ResearchOutputAuthor;
 };

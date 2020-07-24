@@ -43,6 +43,9 @@ export const styles = {
   },
 } as const;
 export const validationMessageStyles = {
+  ':empty': {
+    display: 'none',
+  },
   paddingTop: `${6 / perRem}em`,
   paddingBottom: `${6 / perRem}em`,
 

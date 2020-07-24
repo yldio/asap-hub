@@ -33,7 +33,7 @@ export const Auth0Provider: React.FC<{
   return (
     <Auth0Context.Provider
       value={{
-        loading: !!auth0Client,
+        loading: !auth0Client,
         popupOpen: false,
         isAuthenticated: false,
         getIdTokenClaims: notImplemented('getIdTokenClaims'),
@@ -54,6 +54,13 @@ export const Auth0Provider: React.FC<{
   );
 };
 
+export const WhenReady: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const { loading } = useAuth0();
+  return loading ? <p>Initializing Auth0</p> : <>{children}</>;
+};
+
 export const LoggedIn: React.FC<{
   readonly children: React.ReactNode;
   // undefined user should be explicit, this is for the intermediate state
@@ -62,7 +69,14 @@ export const LoggedIn: React.FC<{
 }> = ({ children, user }) => {
   const ctx = useAuth0();
   return (
-    <Auth0Context.Provider value={{ ...ctx, isAuthenticated: true, user }}>
+    <Auth0Context.Provider
+      value={{
+        ...ctx,
+        isAuthenticated: true,
+        user,
+        getTokenSilently: async () => 'token',
+      }}
+    >
       {children}
     </Auth0Context.Provider>
   );

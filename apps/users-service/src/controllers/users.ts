@@ -4,7 +4,7 @@ import path from 'path';
 import url from 'url';
 import Intercept from 'apr-intercept';
 
-import { Invitee } from '@asap-hub/model';
+import { Invitee, UserResponse } from '@asap-hub/model';
 
 import { CMS } from '../cms';
 import * as auth0 from '../entities/auth0';
@@ -12,13 +12,7 @@ import { User } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 
-export interface ReplyUser {
-  id: string;
-  displayName: string;
-  email: string;
-}
-
-function transform(user: User): ReplyUser {
+function transform(user: User): UserResponse {
   return {
     id: user.id,
     displayName: user.data.displayName.iv,
@@ -29,7 +23,7 @@ function transform(user: User): ReplyUser {
     title: user.data.title && user.data.title.iv,
     orcid: user.data.orcid && user.data.orcid.iv,
     institution: user.data.institution && user.data.institution.iv,
-  } as ReplyUser;
+  };
 }
 
 const debug = Debug('users.create');
@@ -40,7 +34,7 @@ export default class Users {
     this.cms = new CMS();
   }
 
-  async create(user: Invitee): Promise<ReplyUser> {
+  async create(user: Invitee): Promise<UserResponse> {
     let createdUser;
     try {
       createdUser = await this.cms.users.create(user);
@@ -70,12 +64,12 @@ export default class Users {
     return transform(createdUser);
   }
 
-  async fetch(): Promise<ReplyUser[]> {
+  async fetch(): Promise<UserResponse[]> {
     const users = await this.cms.users.fetch();
     return users.length ? users.map(transform) : [];
   }
 
-  async fetchById(id: string): Promise<ReplyUser> {
+  async fetchById(id: string): Promise<UserResponse> {
     let user;
     try {
       user = await this.cms.users.fetchById(id);
@@ -85,7 +79,7 @@ export default class Users {
     return transform(user);
   }
 
-  async fetchByCode(code: string): Promise<ReplyUser> {
+  async fetchByCode(code: string): Promise<UserResponse> {
     const user = await this.cms.users.fetchByCode(code);
     if (!user) {
       throw Boom.forbidden();
@@ -96,7 +90,7 @@ export default class Users {
   async connectByCode(
     code: string,
     profile: auth0.UserInfo,
-  ): Promise<ReplyUser> {
+  ): Promise<UserResponse> {
     const user = await this.cms.users.fetchByCode(code);
     if (!user) {
       throw Boom.forbidden();

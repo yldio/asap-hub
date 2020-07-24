@@ -16,7 +16,7 @@ type ProfileProps = {
 const Profile: React.FC<ProfileProps> = ({ id, displayName }) => {
   return (
     <>
-      <Link to={`/members/${id}`}>{displayName}</Link>
+      <Link to={`/users/${id}`}>{displayName}</Link>
       {/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
     </>
   );

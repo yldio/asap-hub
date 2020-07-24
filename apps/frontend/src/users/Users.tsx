@@ -5,7 +5,7 @@ import ProfileList from './ProfileList';
 import Profile from './Profile';
 import CheckAuth from '../auth/CheckAuth';
 
-const Members: React.FC<{}> = () => {
+const Users: React.FC<{}> = () => {
   const { path } = useRouteMatch();
 
   return (
@@ -18,4 +18,4 @@ const Members: React.FC<{}> = () => {
   );
 };
 
-export default Members;
+export default Users;

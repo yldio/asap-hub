@@ -8,7 +8,8 @@ import history from './history';
 import Welcome from './onboarding/Welcome';
 import ContinueOnboarding from './onboarding/ContinueOnboarding';
 import CreateProfile from './onboarding/CreateProfile';
-import Users from './users/Users';
+import Users from './users/Routes';
+import Teams from './teams/Routes';
 
 const AuthCallbackGuardedHome: React.FC<{}> = () => (
   <ContinueOnboarding>
@@ -23,6 +24,7 @@ const App: React.FC<{}> = () => {
         <Switch>
           <Route exact path="/" component={AuthCallbackGuardedHome} />
           <Route path="/users" component={Users} />
+          <Route path="/teams" component={Teams} />
 
           <Route exact path="/welcome/:code" component={Welcome} />
           <Route exact path="/create-profile" component={CreateProfile} />

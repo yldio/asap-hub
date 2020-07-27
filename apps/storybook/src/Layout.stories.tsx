@@ -10,3 +10,4 @@ export default {
 };
 
 export const Normal = () => <Layout>Content</Layout>;
+export const Navigation = () => <Layout navigation>Content</Layout>;

@@ -1,10 +1,16 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Header } from '../molecules';
-import { vminLinearCalc, mobileScreen, largeDesktopScreen } from '../pixels';
+import { Header, Navigation } from '../molecules';
+import {
+  vminLinearCalc,
+  mobileScreen,
+  largeDesktopScreen,
+  perRem,
+} from '../pixels';
 
 const containerStyles = css({
+  position: 'relative',
   width: '100%',
   height: '100%',
 
@@ -28,13 +34,29 @@ const contentStyles = css({
   alignItems: 'center',
 });
 
+const navigationStyles = css({
+  position: 'absolute',
+});
+
+const navigationContentStyles = css({
+  marginLeft: `${256 / perRem}em`,
+});
+
 interface LayoutProps {
   readonly children: React.ReactNode;
+  readonly navigation?: boolean;
 }
-const Layout: React.FC<LayoutProps> = ({ children }) => (
+const Layout: React.FC<LayoutProps> = ({ children, navigation = false }) => (
   <article css={containerStyles}>
     <Header />
-    <main css={contentStyles}>{children}</main>
+    {navigation && (
+      <div css={navigationStyles}>
+        <Navigation />
+      </div>
+    )}
+    <main css={[contentStyles, navigation && navigationContentStyles]}>
+      {children}
+    </main>
   </article>
 );
 

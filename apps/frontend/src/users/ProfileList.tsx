@@ -1,11 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Container,
-  Header,
-  Layout,
-  Paragraph,
-} from '@asap-hub/react-components';
+import { Container, Paragraph } from '@asap-hub/react-components';
 import { useUsers } from '../api';
 
 type ProfileProps = {
@@ -26,34 +21,25 @@ const Page: React.FC<{}> = () => {
   const { loading, data: users, error } = useUsers();
 
   if (loading) {
-    return (
-      <Layout>
-        <Paragraph>Loading...</Paragraph>
-      </Layout>
-    );
+    return <Paragraph>Loading...</Paragraph>;
   }
 
   if (users) {
     return (
-      <>
-        <Header />
-        <Container>
-          {users.map((profile: ProfileProps) => {
-            return <Profile key={profile.id} {...profile} />;
-          })}
-        </Container>
-      </>
+      <Container>
+        {users.map((profile: ProfileProps) => {
+          return <Profile key={profile.id} {...profile} />;
+        })}
+      </Container>
     );
   }
 
   return (
-    <Layout>
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    </Layout>
+    <Paragraph>
+      {error.name}
+      {': '}
+      {error.message}
+    </Paragraph>
   );
 };
 

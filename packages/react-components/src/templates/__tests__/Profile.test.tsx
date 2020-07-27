@@ -1,39 +1,35 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-
+import { MemoryRouter, Route } from 'react-router-dom';
 import Profile from '../Profile';
 
-it('renders profile information', () => {
-  const { getByRole } = render(
-    <Profile
-      department=""
-      displayName="John Doe"
-      initials="JD"
-      institution=""
-      lastModified={new Date()}
-      location="New Haven, Connecticut"
-      role=""
-      team=""
-      title=""
-    />,
-  );
+const Component = (props: ComponentProps<typeof Profile>) => (
+  <MemoryRouter initialEntries={['/']}>
+    <Route exact path="/" component={() => <Profile {...props} />} />
+  </MemoryRouter>
+);
 
+it('renders profile', () => {
+  const user = {
+    department: 'Unkown department',
+    displayName: 'John Doe',
+    initials: 'JD',
+    institution: 'Unknown institution',
+    lastModified: new Date(),
+    role: 'Unknown role',
+    team: 'Unkown team',
+    title: 'Unknown title',
+  };
+
+  const { rerender, getByRole } = render(<Component {...user} />);
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(`"John Doe"`);
-});
 
-it('renders profile without location', () => {
-  const { getByRole } = render(
-    <Profile
-      department=""
-      displayName="John Doe"
-      initials="JD"
-      institution=""
-      lastModified={new Date()}
-      role=""
-      team=""
-      title=""
-    />,
-  );
+  const userWithLocation = {
+    ...user,
+    location: 'Unknown location',
+  };
+
+  rerender(<Component {...userWithLocation} />);
 
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(`"John Doe"`);
 });

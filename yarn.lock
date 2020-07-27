@@ -176,6 +176,7 @@ __metadata:
     "@types/jest": ^26.0.3
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
+    "@types/react-router-dom": ^5.1.5
     "@types/react-select": ^3.0.0
     "@types/react-test-renderer": 16.9.2
     "@types/testing-library__jest-dom": ^5.0.3
@@ -300,6 +301,7 @@ __metadata:
     "@storybook/addon-viewport": ^6.0.0-beta.12
     "@storybook/react": ^6.0.0-beta.12
     "@types/react": ^16.9.0
+    "@types/react-router-dom": ^5.1.5
     babel-preset-react-app: ^9.1.2
     core-js: ^3.6.5
     react: ^16.13.1

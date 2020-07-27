@@ -8,4 +8,5 @@ export { default as LabeledPasswordField } from './LabeledPasswordField';
 export { default as LabeledRadioButton } from './LabeledRadioButton';
 export { default as LabeledTextArea } from './LabeledTextArea';
 export { default as LabeledTextField } from './LabeledTextField';
+export { default as Navigation } from './Navigation';
 export { default as OrcidSigninButton } from './OrcidSigninButton';

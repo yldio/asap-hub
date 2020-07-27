@@ -188,6 +188,7 @@ __metadata:
     jest-emotion: ^10.0.32
     react: ^16.13.1
     react-dom: ^16.13.1
+    react-router-dom: ^5.2.0
     react-select: ^3.1.0
     react-test-renderer: ^16.13.1
     regenerator-runtime: ^0.13.5
@@ -197,6 +198,7 @@ __metadata:
     "@asap-hub/react-context": "*"
     react: ^16.13.1
     react-dom: ^16.13.1
+    react-router-dom: ^5.2.0
   languageName: unknown
   linkType: soft
 
@@ -302,6 +304,7 @@ __metadata:
     core-js: ^3.6.5
     react: ^16.13.1
     react-dom: ^16.13.1
+    react-router-dom: ^5.2.0
     typescript: ~3.8.3
   languageName: unknown
   linkType: soft

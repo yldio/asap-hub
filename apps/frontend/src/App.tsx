@@ -1,5 +1,11 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
+import { useAuth0 } from '@asap-hub/react-context';
+import {
+  LoginLogoutButton,
+  Paragraph,
+  Layout,
+} from '@asap-hub/react-components';
 
 import Home from './home/Home';
 import { AuthProvider } from './auth';
@@ -11,11 +17,32 @@ import CreateProfile from './onboarding/CreateProfile';
 import Users from './users/Routes';
 import Teams from './teams/Routes';
 
-const AuthCallbackGuardedHome: React.FC<{}> = () => (
-  <ContinueOnboarding>
-    <Home />
-  </ContinueOnboarding>
-);
+const AuthCallbackGuardedHome: React.FC<{}> = () => {
+  const { isAuthenticated, loading } = useAuth0();
+
+  if (loading) {
+    // TODO proper loading page here and everywhere else
+    return (
+      <Layout>
+        <Paragraph>Loading...</Paragraph>;
+      </Layout>
+    );
+  }
+
+  if (isAuthenticated) {
+    return (
+      <ContinueOnboarding>
+        <Home />
+      </ContinueOnboarding>
+    );
+  }
+
+  return (
+    <Layout>
+      <LoginLogoutButton />
+    </Layout>
+  );
+};
 
 const App: React.FC<{}> = () => {
   return (

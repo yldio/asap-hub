@@ -4,21 +4,19 @@ import { Layout } from '@asap-hub/react-components';
 
 import Team from './Team';
 import TeamList from './TeamList';
-import CheckAuth from '../auth/CheckAuth';
+import { withUser } from '../auth';
 
 const Users: React.FC<{}> = () => {
   const { path } = useRouteMatch();
 
   return (
-    <CheckAuth>
-      <Layout navigation>
-        <Switch>
-          <Route exact path={path} component={TeamList} />
-          <Route exact path={`${path}/:id`} component={Team} />
-        </Switch>
-      </Layout>
-    </CheckAuth>
+    <Layout navigation>
+      <Switch>
+        <Route exact path={path} component={TeamList} />
+        <Route exact path={`${path}/:id`} component={Team} />
+      </Switch>
+    </Layout>
   );
 };
 
-export default Users;
+export default withUser(Users);

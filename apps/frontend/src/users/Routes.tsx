@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Layout } from '@asap-hub/react-components';
 
 import ProfileList from './ProfileList';
 import Profile from './Profile';
@@ -10,10 +11,12 @@ const Users: React.FC<{}> = () => {
 
   return (
     <CheckAuth>
-      <Switch>
-        <Route exact path={path} component={ProfileList} />
-        <Route exact path={`${path}/:id`} component={Profile} />
-      </Switch>
+      <Layout navigation>
+        <Switch>
+          <Route exact path={path} component={ProfileList} />
+          <Route exact path={`${path}/:id`} component={Profile} />
+        </Switch>
+      </Layout>
     </CheckAuth>
   );
 };

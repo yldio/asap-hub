@@ -1,12 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import {
-  Header,
-  Container,
-  Profile,
-  Layout,
-  Paragraph,
-} from '@asap-hub/react-components';
+import { Container, Profile, Paragraph } from '@asap-hub/react-components';
 import { useUserById } from '../api';
 
 const Page: React.FC<{}> = () => {
@@ -15,11 +9,7 @@ const Page: React.FC<{}> = () => {
   const { loading, data: profile, error } = useUserById(id);
 
   if (loading) {
-    return (
-      <Layout>
-        <Paragraph>Loading...</Paragraph>
-      </Layout>
-    );
+    return <Paragraph>Loading...</Paragraph>;
   }
 
   if (profile) {
@@ -28,32 +18,27 @@ const Page: React.FC<{}> = () => {
     }`;
 
     return (
-      <>
-        <Header />
-        <Container>
-          <Profile
-            department={'Unknown Department'}
-            displayName={profile.displayName}
-            initials={initials}
-            institution={profile.institution || 'Unknown Institution'}
-            lastModified={new Date()}
-            team={'Team Unknown'}
-            title={'Unknown Title'}
-            role={'Unknown Role'}
-          />
-        </Container>
-      </>
+      <Container>
+        <Profile
+          department={'Unknown Department'}
+          displayName={profile.displayName}
+          initials={initials}
+          institution={profile.institution || 'Unknown Institution'}
+          lastModified={new Date()}
+          team={'Team Unknown'}
+          title={'Unknown Title'}
+          role={'Unknown Role'}
+        />
+      </Container>
     );
   }
 
   return (
-    <Layout>
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    </Layout>
+    <Paragraph>
+      {error.name}
+      {': '}
+      {error.message}
+    </Paragraph>
   );
 };
 

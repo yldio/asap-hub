@@ -48,7 +48,6 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
 
       if (isAuthenticated) {
         const user = await auth0FromHook.getUser();
-        console.log(user);
         setUser(user);
       }
 

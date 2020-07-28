@@ -2,31 +2,58 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useAuth0 } from '@asap-hub/react-context';
 
-import { STORAGE_KEY_INVITATION_CODE } from '../config';
+import { STORAGE_KEY_INVITATION_CODE, API_BASE_URL } from '../config';
 
 const ContinueOnboarding: React.FC<{
   readonly children: React.ReactNode;
 }> = ({ children }) => {
-  const { isAuthenticated, loading: auth0Loading } = useAuth0();
+  const {
+    isAuthenticated,
+    loading: auth0Loading,
+    getTokenSilently,
+  } = useAuth0();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const requestController = new AbortController();
+    const connect = async (code: string): Promise<void> => {
+      const token = await getTokenSilently();
+      try {
+        const { status } = await fetch(`${API_BASE_URL}/users/connections`, {
+          headers: {
+            accept: 'application/json',
+          },
+          body: JSON.stringify({
+            code,
+            token,
+          }),
+          method: 'POST',
+          signal: requestController.signal,
+        });
+
+        if (status >= 300) {
+          // TODO: handle error
+        }
+      } catch (error) {
+        // TODO: handle error
+      }
+    };
+
     if (auth0Loading) {
-      return;
+      return undefined;
     }
 
-    if (
-      isAuthenticated &&
-      window.sessionStorage.getItem(STORAGE_KEY_INVITATION_CODE) !== null
-    ) {
+    const code = window.sessionStorage.getItem(STORAGE_KEY_INVITATION_CODE);
+    if (isAuthenticated && code !== null) {
       window.sessionStorage.removeItem(STORAGE_KEY_INVITATION_CODE);
-      // TODO connect authentication method to user
-      history.replace('/create-profile');
+      connect(code).then(() => {
+        history.replace('/create-profile');
+      });
     }
-
     setLoading(false);
-  }, [auth0Loading, isAuthenticated, history]);
+    return () => requestController.abort();
+  }, [auth0Loading, isAuthenticated, history, getTokenSilently]);
 
   return loading ? null : <>{children}</>;
 };

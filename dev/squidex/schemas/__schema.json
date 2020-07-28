@@ -1,18 +1,15 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "page",
+  "name": "my-schema",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Page"
+      "label": "My Schema"
     },
-    "scripts": {},
-    "fieldsInReferences": [],
-    "fieldsInLists": [],
     "fields": [
       {
-        "name": "title",
+        "name": "my-string",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -22,14 +19,10 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "label": "Title",
-          "hints": "",
-          "placeholder": "",
           "isRequired": true
         }
       }
     ],
-    "previewUrls": {},
     "isPublished": true
   }
 }

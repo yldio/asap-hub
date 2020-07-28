@@ -2,7 +2,11 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "RuleModel",
   "type": "object",
-  "required": ["name", "trigger", "action"],
+  "required": [
+    "name",
+    "trigger",
+    "action"
+  ],
   "properties": {
     "isEnabled": {
       "type": "boolean"
@@ -22,7 +26,9 @@
     "RuleTriggerDto": {
       "type": "object",
       "x-abstract": true,
-      "required": ["triggerType"],
+      "required": [
+        "triggerType"
+      ],
       "properties": {
         "triggerType": {
           "type": "string"
@@ -31,10 +37,15 @@
     },
     "AssetChangedRuleTriggerDto": {
       "type": "object",
-      "required": ["triggerType"],
+      "required": [
+        "triggerType"
+      ],
       "properties": {
         "condition": {
-          "type": ["null", "string"]
+          "type": [
+            "null",
+            "string"
+          ]
         },
         "triggerType": {
           "type": "string"
@@ -43,10 +54,15 @@
     },
     "CommentRuleTriggerDto": {
       "type": "object",
-      "required": ["triggerType"],
+      "required": [
+        "triggerType"
+      ],
       "properties": {
         "condition": {
-          "type": ["null", "string"]
+          "type": [
+            "null",
+            "string"
+          ]
         },
         "triggerType": {
           "type": "string"
@@ -55,7 +71,10 @@
     },
     "ContentChangedRuleTriggerDto": {
       "type": "object",
-      "required": ["schemas", "triggerType"],
+      "required": [
+        "schemas",
+        "triggerType"
+      ],
       "properties": {
         "schemas": {
           "type": "array",
@@ -79,13 +98,18 @@
           "type": "string"
         },
         "condition": {
-          "type": ["null", "string"]
+          "type": [
+            "null",
+            "string"
+          ]
         }
       }
     },
     "ManualRuleTriggerDto": {
       "type": "object",
-      "required": ["triggerType"],
+      "required": [
+        "triggerType"
+      ],
       "properties": {
         "triggerType": {
           "type": "string"
@@ -94,10 +118,15 @@
     },
     "SchemaChangedRuleTriggerDto": {
       "type": "object",
-      "required": ["triggerType"],
+      "required": [
+        "triggerType"
+      ],
       "properties": {
         "condition": {
-          "type": ["null", "string"]
+          "type": [
+            "null",
+            "string"
+          ]
         },
         "triggerType": {
           "type": "string"
@@ -106,14 +135,19 @@
     },
     "UsageRuleTriggerDto": {
       "type": "object",
-      "required": ["triggerType"],
+      "required": [
+        "triggerType"
+      ],
       "properties": {
         "limit": {
           "type": "integer",
           "format": "int32"
         },
         "numDays": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "format": "int32",
           "maximum": 30.0,
           "minimum": 1.0
@@ -125,7 +159,9 @@
     },
     "DynamicRuleAction": {
       "type": "object",
-      "required": ["actionType"],
+      "required": [
+        "actionType"
+      ],
       "properties": {
         "actionType": {
           "type": "string"

@@ -1,0 +1,232 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "research-outputs",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Research Outputs"
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "doi",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "DOI",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "url",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "URL",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Title",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "type",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Type",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "description",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Description",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "authors",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Authors",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "displayName",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Display Name",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 0,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "editor": "List",
+              "schemaIds": [
+                "users"
+              ],
+              "label": "Id",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "publishDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Publish Date",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "createdBy",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Created By",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": true,
+              "editor": "List",
+              "schemaIds": [
+                "users"
+              ],
+              "label": "Id",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "displayName",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Display Name",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "accessLevel",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Access Level",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Database",
+    "isPublished": true
+  }
+}

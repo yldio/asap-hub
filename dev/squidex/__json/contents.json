@@ -2,7 +2,9 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "ContentsModel",
   "type": "object",
-  "required": ["contents"],
+  "required": [
+    "contents"
+  ],
   "properties": {
     "contents": {
       "type": "array",
@@ -15,7 +17,10 @@
     "ContentModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["schema", "data"],
+      "required": [
+        "schema",
+        "data"
+      ],
       "properties": {
         "schema": {
           "type": "string",
@@ -31,7 +36,10 @@
           ]
         },
         "references": {
-          "type": ["null", "object"],
+          "type": [
+            "null",
+            "object"
+          ],
           "additionalProperties": {
             "$ref": "#/definitions/ContentReference"
           }
@@ -41,7 +49,10 @@
     "ContentReference": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["schema", "filter"],
+      "required": [
+        "schema",
+        "filter"
+      ],
       "properties": {
         "schema": {
           "type": "string",

@@ -1,32 +1,16 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "users",
+  "name": "teams",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Users"
+      "label": "Teams"
     },
     "scripts": {},
     "fieldsInReferences": [],
     "fieldsInLists": [],
     "fields": [
-      {
-        "name": "email",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-          "isUnique": true,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Email",
-          "isRequired": true
-        }
-      },
       {
         "name": "displayName",
         "isHidden": false,
@@ -41,11 +25,26 @@
           "label": "Display Name",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": true
         }
       },
       {
-        "name": "orcid",
+        "name": "applicationNumber",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Application Number",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "projectTitle",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -55,46 +54,47 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "label": "ORCID",
+          "label": "Project Title",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "projectSummary",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Project Summary",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "tags",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Tags",
           "hints": "",
           "placeholder": "",
           "isRequired": false
         }
-      },
-      {
-        "name": "connections",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "label": "Connections",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        },
-        "nested": [
-          {
-            "name": "code",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": true,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "editor": "Input",
-              "label": "Code",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": true
-            }
-          }
-        ]
       }
     ],
     "previewUrls": {},
+    "category": "Database",
     "isPublished": true
   }
 }

@@ -20,13 +20,23 @@
       ]
     },
     "Editor": {
-      "permissions": ["assets", "contents.*", "roles.read", "workflows.read"]
+      "permissions": [
+        "assets",
+        "contents.*",
+        "roles.read",
+        "workflows.read"
+      ]
     },
     "Owner": {
-      "permissions": ["*"]
+      "permissions": [
+        "*"
+      ]
     },
     "Reader": {
-      "permissions": ["assets.read", "contents.*.read"]
+      "permissions": [
+        "assets.read",
+        "contents.*.read"
+      ]
     }
   },
   "languages": {

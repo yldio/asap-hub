@@ -1,4 +1,3 @@
-import Boom from '@hapi/boom';
 import { Base, BaseOptions } from '@asap-hub/services-common';
 import { CMSContent } from '../entities/content';
 
@@ -7,7 +6,7 @@ export default class ContentCMS extends Base {
     super(CMSConfig);
   }
 
-  async fetchBySlug(contentType: string, slug: string): Promise<CMSContent> {
+  async fetchBySlug(contentType: string, slug: string): Promise<CMSContent[]> {
     const { items } = await this.client
       .get(contentType, {
         searchParams: {
@@ -22,10 +21,6 @@ export default class ContentCMS extends Base {
       })
       .json();
 
-    if (items.length === 0) {
-      throw Boom.notFound();
-    }
-
-    return items[0];
+    return items;
   }
 }

@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom';
 import { CMS } from '../cms';
 import { CMSContent } from '../entities/content';
 
@@ -22,6 +23,11 @@ export default class ContentController {
   }
 
   async fetchBySlug(contentType: string, slug: string): Promise<ReplyContent> {
-    return transform(await this.cms.content.fetchBySlug(contentType, slug));
+    const res = await this.cms.content.fetchBySlug(contentType, slug);
+    if (res.length === 0) {
+      throw Boom.notFound();
+    }
+
+    return transform(res[0]);
   }
 }

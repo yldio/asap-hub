@@ -1,15 +1,18 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "my-schema",
+  "name": "news",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "My Schema"
+      "label": "News"
     },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
     "fields": [
       {
-        "name": "my-string",
+        "name": "slug",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -19,10 +22,15 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "isRequired": true
+          "label": "Slug",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
         }
       }
     ],
+    "previewUrls": {},
+    "category": "Static",
     "isPublished": true
   }
 }

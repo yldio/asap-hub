@@ -2,7 +2,12 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "AppModel",
   "type": "object",
-  "required": ["clients", "roles", "languages", "contributors"],
+  "required": [
+    "clients",
+    "roles",
+    "languages",
+    "contributors"
+  ],
   "properties": {
     "clients": {
       "type": "object",
@@ -33,21 +38,28 @@
     "AppClientModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["role"],
+      "required": [
+        "role"
+      ],
       "properties": {
         "role": {
           "type": "string",
           "minLength": 1
         },
         "name": {
-          "type": ["null", "string"]
+          "type": [
+            "null",
+            "string"
+          ]
         }
       }
     },
     "AppRoleModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["permissions"],
+      "required": [
+        "permissions"
+      ],
       "properties": {
         "permissions": {
           "type": "array",
@@ -62,13 +74,19 @@
       "additionalProperties": false,
       "properties": {
         "isMaster": {
-          "type": ["boolean", "null"]
+          "type": [
+            "boolean",
+            "null"
+          ]
         },
         "isOptional": {
           "type": "boolean"
         },
         "fallback": {
-          "type": ["array", "null"],
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "type": "string"
           }
@@ -78,7 +96,9 @@
     "AppContributorModel": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["role"],
+      "required": [
+        "role"
+      ],
       "properties": {
         "role": {
           "type": "string",

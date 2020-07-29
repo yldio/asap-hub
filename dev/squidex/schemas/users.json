@@ -9,7 +9,10 @@
     },
     "scripts": {},
     "fieldsInReferences": [],
-    "fieldsInLists": [],
+    "fieldsInLists": [
+      "email",
+      "meta.id"
+    ],
     "fields": [
       {
         "name": "email",
@@ -25,6 +28,23 @@
           "editor": "Input",
           "label": "Email",
           "isRequired": true
+        }
+      },
+      {
+        "name": "displayName",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Display Name",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
         }
       },
       {
@@ -96,7 +116,7 @@
         }
       },
       {
-        "name": "displayName",
+        "name": "department",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -106,7 +126,41 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "label": "Display Name",
+          "label": "Department",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "institution",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Institution",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "location",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Location",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -130,21 +184,85 @@
         }
       },
       {
-        "name": "institution",
+        "name": "teams",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Institution",
+          "fieldType": "Array",
+          "label": "Teams",
           "hints": "",
           "placeholder": "",
           "isRequired": false
-        }
+        },
+        "nested": [
+          {
+            "name": "name",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Name",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "displayName",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Display Name",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "role",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Role",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "editor": "List",
+              "schemaIds": [
+                "teams"
+              ],
+              "label": "Id",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          }
+        ]
       },
       {
         "name": "connections",
@@ -179,7 +297,10 @@
         ]
       }
     ],
-    "previewUrls": {},
+    "previewUrls": {
+      "Web": "http://hub.asap.science/members/${id}"
+    },
+    "category": "Database",
     "isPublished": true
   }
 }

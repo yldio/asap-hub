@@ -1,5 +1,8 @@
 import { Base, BaseOptions } from '@asap-hub/services-common';
 import { CMSTeam } from '../entities/team';
+import Intercept from 'apr-intercept';
+import Boom from '@hapi/boom';
+import { HTTPError } from 'got';
 
 interface TeamCreationRequest {
   displayName: string;
@@ -44,16 +47,32 @@ export default class Teams extends Base {
   }
 
   async fetch(): Promise<CMSTeam[]> {
-    const { items } = await this.client
-      .get('teams', {
-        searchParams: {
-          q: JSON.stringify({
-            take: 30,
-            sort: [{ path: 'data.displayName.iv' }],
-          }),
-        },
-      })
-      .json();
-    return items;
+    const [error, res] = await Intercept<{
+      items: CMSTeam[];
+    }>(
+      this.client
+        .get('teams', {
+          searchParams: {
+            q: JSON.stringify({
+              take: 30,
+              sort: [{ path: 'data.displayName.iv' }],
+            }),
+          },
+        })
+        .json(),
+    );
+
+    if (error) {
+      const e = error as HTTPError;
+      if (e.response.statusCode === 404) {
+        return [];
+      }
+
+      throw Boom.badImplementation('internal', {
+        error,
+      });
+    }
+
+    return res.items;
   }
 }

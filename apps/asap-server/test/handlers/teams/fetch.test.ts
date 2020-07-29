@@ -73,7 +73,7 @@ describe('GET /teams', () => {
 
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
-    expect(result.body.length).toEqual(0);
+    expect(JSON.parse(result.body).length).toEqual(0);
   });
 
   test('returns 200 when teams exist', async () => {
@@ -94,6 +94,6 @@ describe('GET /teams', () => {
 
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
-    expect(result.body.length).toBeGreaterThan(0);
+    expect(JSON.parse(result.body).length).toBeGreaterThan(0);
   });
 });

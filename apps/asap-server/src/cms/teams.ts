@@ -1,8 +1,9 @@
 import { Base, BaseOptions } from '@asap-hub/services-common';
-import { CMSTeam } from '../entities/team';
 import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import { HTTPError } from 'got';
+
+import { CMSTeam } from '../entities/team';
 
 interface TeamCreationRequest {
   displayName: string;

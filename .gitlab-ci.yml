@@ -151,6 +151,7 @@ deploy:sls:branch:
     name: review/$CI_COMMIT_REF_SLUG
     url: https://$APP_HOSTNAME
     on_stop: deploy:sls:branch_remove
+    auto_stop_in: 1 week
   variables:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables

@@ -1,14 +1,14 @@
 import Boom from '@hapi/boom';
+import { ContentResponse } from '@asap-hub/model';
 import { CMS } from '../cms';
 import { CMSContent } from '../entities/content';
 
-interface ReplyContent {
-  slug: string;
-}
-function transform(content: CMSContent): ReplyContent {
+function transform(content: CMSContent): ContentResponse {
   return {
-    slug: content.data.slug && content.data.slug.iv,
-  } as ReplyContent;
+    slug: content.data?.slug?.iv,
+    title: content.data?.title?.iv,
+    content: content.data?.content?.iv,
+  } as ContentResponse;
 }
 
 export default class ContentController {
@@ -21,9 +21,12 @@ export default class ContentController {
   async fetchBySlug(
     contentType: string,
     slug: string,
-  ): Promise<ReplyContent[]> {
-    const content = await this.cms.content.fetchBySlug(contentType, slug);
-    if (!content.length) throw Boom.notFound();
-    return content.map(transform);
+  ): Promise<ContentResponse> {
+    const res = await this.cms.content.fetchBySlug(contentType, slug);
+    if (res.length === 0) {
+      throw Boom.notFound();
+    }
+
+    return transform(res[0]);
   }
 }

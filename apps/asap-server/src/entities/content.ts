@@ -5,6 +5,8 @@ export interface CMSContent {
   created: string;
   data: {
     slug: { iv: string };
+    title: { iv: string };
+    content: { iv: string };
   };
 }
 

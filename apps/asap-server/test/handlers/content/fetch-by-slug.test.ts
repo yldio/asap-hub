@@ -127,5 +127,6 @@ describe('GET /content/{content}/{slug}', () => {
     );
 
     expect(result.statusCode).toStrictEqual(200);
+    expect(JSON.parse(result.body).slug).toStrictEqual('exists-in-dev');
   });
 });

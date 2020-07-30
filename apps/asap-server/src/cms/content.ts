@@ -20,6 +20,7 @@ export default class ContentCMS extends Base {
         },
       })
       .json();
+
     return items;
   }
 }

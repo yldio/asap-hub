@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "SchemeModel",
   "type": "object",
   "properties": {
@@ -14,9 +13,7 @@
         {
           "type": "null"
         },
-        {
-          "$ref": "#/definitions/SynchronizeSchemaDto"
-        }
+        {}
       ]
     }
   },
@@ -30,9 +27,7 @@
             {
               "type": "null"
             },
-            {
-              "$ref": "#/definitions/SchemaPropertiesDto"
-            }
+            {}
           ]
         },
         "scripts": {
@@ -40,9 +35,7 @@
             {
               "type": "null"
             },
-            {
-              "$ref": "#/definitions/SchemaScriptsDto"
-            }
+            {}
           ]
         },
         "fieldsInReferences": {
@@ -68,9 +61,7 @@
             "array",
             "null"
           ],
-          "items": {
-            "$ref": "#/definitions/UpsertSchemaFieldDto"
-          }
+          "items": {}
         },
         "previewUrls": {
           "type": [
@@ -193,17 +184,13 @@
             "string"
           ]
         },
-        "properties": {
-          "$ref": "#/definitions/FieldPropertiesDto"
-        },
+        "properties": {},
         "nested": {
           "type": [
             "array",
             "null"
           ],
-          "items": {
-            "$ref": "#/definitions/UpsertSchemaNestedFieldDto"
-          }
+          "items": {}
         }
       }
     },
@@ -529,9 +516,7 @@
         "inlineEditable": {
           "type": "boolean"
         },
-        "editor": {
-          "$ref": "#/definitions/BooleanFieldEditor"
-        },
+        "editor": {},
         "fieldType": {
           "type": "string"
         }
@@ -618,17 +603,13 @@
           ],
           "format": "date-time"
         },
-        "editor": {
-          "$ref": "#/definitions/DateTimeFieldEditor"
-        },
+        "editor": {},
         "calculatedDefaultValue": {
           "oneOf": [
             {
               "type": "null"
             },
-            {
-              "$ref": "#/definitions/DateTimeCalculatedDefaultValue"
-            }
+            {}
           ]
         },
         "fieldType": {
@@ -714,9 +695,7 @@
             "null"
           ]
         },
-        "editor": {
-          "$ref": "#/definitions/GeolocationFieldEditor"
-        },
+        "editor": {},
         "fieldType": {
           "type": "string"
         }
@@ -870,9 +849,7 @@
         "inlineEditable": {
           "type": "boolean"
         },
-        "editor": {
-          "$ref": "#/definitions/NumberFieldEditor"
-        },
+        "editor": {},
         "fieldType": {
           "type": "string"
         }
@@ -962,9 +939,7 @@
         "resolveReference": {
           "type": "boolean"
         },
-        "editor": {
-          "$ref": "#/definitions/ReferencesFieldEditor"
-        },
+        "editor": {},
         "schemaIds": {
           "type": [
             "array",
@@ -1088,9 +1063,7 @@
         "inlineEditable": {
           "type": "boolean"
         },
-        "editor": {
-          "$ref": "#/definitions/StringFieldEditor"
-        },
+        "editor": {},
         "fieldType": {
           "type": "string"
         }
@@ -1195,9 +1168,7 @@
             "type": "string"
           }
         },
-        "editor": {
-          "$ref": "#/definitions/TagsFieldEditor"
-        },
+        "editor": {},
         "fieldType": {
           "type": "string"
         }
@@ -1265,9 +1236,7 @@
             "type": "string"
           }
         },
-        "editor": {
-          "$ref": "#/definitions/UIFieldEditor"
-        },
+        "editor": {},
         "fieldType": {
           "type": "string"
         }
@@ -1305,9 +1274,7 @@
         "isDisabled": {
           "type": "boolean"
         },
-        "properties": {
-          "$ref": "#/definitions/FieldPropertiesDto"
-        }
+        "properties": {}
       }
     }
   }

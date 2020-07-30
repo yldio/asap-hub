@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "UpdateWorkflowDto",
   "type": "object",
   "required": [
@@ -15,9 +14,7 @@
     },
     "steps": {
       "type": "object",
-      "additionalProperties": {
-        "$ref": "#/definitions/WorkflowStepDto"
-      }
+      "additionalProperties": {}
     },
     "schemaIds": {
       "type": [
@@ -43,9 +40,7 @@
       "properties": {
         "transitions": {
           "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/WorkflowTransitionDto"
-          }
+          "additionalProperties": {}
         },
         "color": {
           "type": [

@@ -19,7 +19,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "isUnique": false,
+          "isUnique": true,
           "inlineEditable": false,
           "editor": "Input",
           "label": "Slug",
@@ -27,10 +27,42 @@
           "placeholder": "",
           "isRequired": false
         }
+      },
+      {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Title",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "content",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "TextArea",
+          "label": "Content",
+          "isRequired": false
+        }
       }
     ],
-    "previewUrls": {},
-    "category": "Static",
+    "previewUrls": {
+      "Web": "http://hub.asap.science/news/${slug}"
+    },
+    "category": "Content",
     "isPublished": true
   }
 }

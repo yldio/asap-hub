@@ -99,7 +99,7 @@
         }
       },
       {
-        "name": "title",
+        "name": "jobTitle",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -109,7 +109,7 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "label": "Title",
+          "label": "Job Title",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -167,23 +167,6 @@
         }
       },
       {
-        "name": "orcid",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "ORCID",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
         "name": "teams",
         "isHidden": false,
         "isLocked": false,
@@ -198,33 +181,24 @@
         },
         "nested": [
           {
-            "name": "name",
+            "name": "id",
             "isHidden": false,
             "isLocked": false,
             "isDisabled": false,
             "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Name",
-              "isRequired": false
-            }
-          },
-          {
-            "name": "displayName",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Display Name",
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "editor": "List",
+              "schemaIds": [
+                "teams"
+              ],
+              "label": "ID",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": true
             }
           },
           {
@@ -242,24 +216,19 @@
             }
           },
           {
-            "name": "id",
+            "name": "displayName",
             "isHidden": false,
             "isLocked": false,
             "isDisabled": false,
             "properties": {
-              "fieldType": "References",
-              "minItems": 1,
-              "maxItems": 1,
-              "allowDuplicates": false,
-              "resolveReference": false,
-              "editor": "List",
-              "schemaIds": [
-                "teams"
-              ],
-              "label": "Id",
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Display Name",
               "hints": "",
               "placeholder": "",
-              "isRequired": true
+              "isRequired": false
             }
           }
         ]
@@ -295,12 +264,29 @@
             }
           }
         ]
+      },
+      {
+        "name": "orcid",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "ORCID",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
       }
     ],
     "previewUrls": {
-      "Web": "http://hub.asap.science/members/${id}"
+      "Web": "http://hub.asap.science/users/${id}"
     },
-    "category": "Database",
+    "category": "Storage",
     "isPublished": true
   }
 }

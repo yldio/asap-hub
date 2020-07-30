@@ -20,9 +20,10 @@ function transform(user: CMSUser): UserResponse {
     firstName: user.data.firstName?.iv,
     middleName: user.data.middleName?.iv,
     lastName: user.data.lastName?.iv,
-    jobTitle: user.data.title?.iv,
-    orcid: user.data.orcid?.iv,
+    jobTitle: user.data.jobTitle?.iv,
     institution: user.data.institution?.iv,
+    orcid: user.data.orcid?.iv,
+    teams: user.data.teams,
   };
 }
 

@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "ContentsModel",
   "type": "object",
   "required": [
@@ -8,9 +7,7 @@
   "properties": {
     "contents": {
       "type": "array",
-      "items": {
-        "$ref": "#/definitions/ContentModel"
-      }
+      "items": {}
     }
   },
   "definitions": {
@@ -40,9 +37,7 @@
             "null",
             "object"
           ],
-          "additionalProperties": {
-            "$ref": "#/definitions/ContentReference"
-          }
+          "additionalProperties": {}
         }
       }
     },

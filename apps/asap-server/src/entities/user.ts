@@ -9,7 +9,7 @@ export interface CMSUser {
     firstName: { iv: string };
     middleName: { iv: string };
     lastName: { iv: string };
-    title: { iv: string };
+    jobTitle: { iv: string };
     orcid: { iv: string };
     institution: { iv: string };
     connections: { iv: [{ code: string }] };

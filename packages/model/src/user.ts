@@ -6,9 +6,16 @@ export interface Invitee {
   lastName?: string;
   jobTitle?: string;
   orcid?: string;
+  department?: string;
   institution?: string;
+  location?: string;
 }
 
 export interface UserResponse extends Invitee {
   id: string;
+  teams: {
+    id: string;
+    displayName: string;
+    role: string;
+  }[];
 }

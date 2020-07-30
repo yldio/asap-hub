@@ -18,6 +18,7 @@ const user: UserResponse = {
   email: 'john.doe@example.com',
   institution: 'Unknown Institution',
   jobTitle: 'Unknown Title',
+  teams: [],
 };
 // fetch user by code request
 beforeEach(() => {

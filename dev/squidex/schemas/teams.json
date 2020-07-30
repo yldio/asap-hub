@@ -93,8 +93,10 @@
         }
       }
     ],
-    "previewUrls": {},
-    "category": "Database",
+    "previewUrls": {
+      "Web": "http://hub.asap.science/teams/${id}"
+    },
+    "category": "Storage",
     "isPublished": true
   }
 }

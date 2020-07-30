@@ -24,7 +24,7 @@ it('redirects to the root if the user is not authenticated', async () => {
         <CheckAuth>
           <Route exact path="/secure" render={() => 'secure'} />
         </CheckAuth>
-        <Route exact path="/" render={() => 'root'} />
+        <Route exact path="/welcome" render={() => 'root'} />
       </MemoryRouter>
     </authTestUtils.Auth0Provider>,
   );

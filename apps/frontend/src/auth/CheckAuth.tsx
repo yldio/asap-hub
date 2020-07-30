@@ -19,7 +19,7 @@ const CheckAuth: React.FC<CheckAuthProps> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <Redirect to="/" />;
+    return <Redirect to="/welcome" />;
   }
 
   return <>{children}</>;

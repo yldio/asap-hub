@@ -27,7 +27,7 @@ export default class Users extends Base {
           firstName: { iv: user.firstName },
           middleName: { iv: user.middleName },
           lastName: { iv: user.lastName },
-          title: { iv: user.title },
+          jobTitle: { iv: user.jobTitle },
           orcid: { iv: user.orcid },
           institution: { iv: user.institution },
           connections: { iv: [{ code }] },

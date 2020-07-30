@@ -17,12 +17,12 @@ function transform(user: CMSUser): UserResponse {
     id: user.id,
     displayName: user.data.displayName.iv,
     email: user.data.email.iv,
-    firstName: user.data.firstName && user.data.firstName.iv,
-    middleName: user.data.middleName && user.data.middleName.iv,
-    lastName: user.data.lastName && user.data.lastName.iv,
-    title: user.data.title && user.data.title.iv,
-    orcid: user.data.orcid && user.data.orcid.iv,
-    institution: user.data.institution && user.data.institution.iv,
+    firstName: user.data.firstName?.iv,
+    middleName: user.data.middleName?.iv,
+    lastName: user.data.lastName?.iv,
+    jobTitle: user.data.title?.iv,
+    orcid: user.data.orcid?.iv,
+    institution: user.data.institution?.iv,
   };
 }
 

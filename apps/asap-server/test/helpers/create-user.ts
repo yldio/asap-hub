@@ -1,5 +1,9 @@
 import Chance from 'chance';
-import { UserResponse, ResearchOutputCreationRequest } from '@asap-hub/model';
+import {
+  UserResponse,
+  ResearchOutputCreationRequest,
+  Invitee,
+} from '@asap-hub/model';
 import { CMS } from '../../src/cms';
 import { CMSTeam } from '../../src/entities/team';
 import { CMSUser } from '../../src/entities/user';
@@ -25,12 +29,12 @@ function transform(user: CMSUser): TestUserResponse {
 }
 
 export const createUser = (): Promise<CMSUser> => {
-  const user = {
+  const user: Invitee = {
     displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),
     middleName: chance.last(),
     lastName: chance.last(),
-    title: chance.suffix({ full: true }),
+    jobTitle: chance.suffix({ full: true }),
     orcid: chance.ssn(),
     institution: chance.company(),
     email: chance.email(),

@@ -4,7 +4,7 @@ export interface Invitee {
   firstName?: string;
   middleName?: string;
   lastName?: string;
-  title?: string;
+  jobTitle?: string;
   orcid?: string;
   institution?: string;
 }

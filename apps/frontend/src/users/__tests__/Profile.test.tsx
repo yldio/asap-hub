@@ -17,7 +17,7 @@ const user: UserResponse = {
   displayName: 'John Doe',
   email: 'john.doe@example.com',
   institution: 'Unknown Institution',
-  title: 'Unknown Title',
+  jobTitle: 'Unknown Title',
 };
 // fetch user by code request
 beforeEach(() => {

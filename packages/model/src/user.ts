@@ -11,6 +11,18 @@ export interface Invitee {
   location?: string;
 }
 
+export interface OrcidWork {
+  id: string;
+  doi?: string;
+  title?: string;
+  type: string;
+  publicationDate: {
+    year: string;
+    month?: string;
+    day?: string;
+  };
+}
+
 export interface UserResponse extends Invitee {
   id: string;
   teams: ReadonlyArray<{
@@ -18,4 +30,6 @@ export interface UserResponse extends Invitee {
     displayName: string;
     role: string;
   }>;
+  orcidLastModifiedDate?: string;
+  orcidWorks?: OrcidWork[];
 }

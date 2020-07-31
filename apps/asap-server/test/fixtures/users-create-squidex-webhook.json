@@ -1,0 +1,26 @@
+{
+  "type": "UsersCreated",
+  "payload": {
+    "$type": "EnrichedContentEvent",
+    "type": "Created",
+    "id": "d13e7a52-68e8-4b1f-bd18-ca15c9c1c54f",
+    "created": "2020-07-31T15:52:33Z",
+    "lastModified": "2020-07-31T15:52:33Z",
+    "createdBy": "subject:5ef5d2fe75c5460001445b65",
+    "lastModifiedBy": "subject:5ef5d2fe75c5460001445b65",
+    "data": {
+      "email": {
+        "iv": "webhokk@ola.io"
+      }
+    },
+    "status": "Draft",
+    "partition": -1070674994,
+    "schemaId": "daeb0b60-eb25-49c5-85c5-8b880377a5c2,users",
+    "actor": "subject:5ef5d2fe75c5460001445b65",
+    "appId": "187f4f17-b81a-49e0-99e0-2ca0991a65d9,asap-dev",
+    "timestamp": "2020-07-31T15:52:33Z",
+    "name": "UsersCreated",
+    "version": 0
+  },
+  "timestamp": "2020-07-31T15:52:33Z"
+}

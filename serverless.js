@@ -170,6 +170,18 @@ module.exports = {
         },
       ],
     },
+    'sync-user-orcid': {
+      handler: 'apps/asap-server/build/handlers/users/sync-orcid.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'POST',
+            path: `/webhook/users`,
+          },
+        },
+      ],
+    },
     'create-research-output': {
       handler:
         'apps/asap-server/build/handlers/research-outputs/create.handler',

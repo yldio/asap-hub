@@ -16,6 +16,7 @@ export {
   Theme,
   Button,
   Caption,
+  Card,
   Display,
   Divider,
   Headline2,

@@ -45,5 +45,16 @@ export {
   RadioButtonGroup,
 } from './organisms';
 
-export { InviteUserForm, RecordOutputForm, Signin, Profile } from './templates';
-export { AdminInviteUserPage, SigninPage, RecordOutputPage } from './pages';
+export {
+  InviteUserForm,
+  RecordOutputForm,
+  Signin,
+  Profile,
+  Welcome,
+} from './templates';
+export {
+  AdminInviteUserPage,
+  SigninPage,
+  RecordOutputPage,
+  WelcomePage,
+} from './pages';

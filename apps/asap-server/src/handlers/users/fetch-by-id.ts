@@ -1,10 +1,10 @@
 import Joi from '@hapi/joi';
-import { APIGatewayProxyHandler } from 'aws-lambda';
 import { framework as lambda } from '@asap-hub/services-common';
 import Users from '../../controllers/users';
 import validateUser from '../../utils/validate-user';
+import { Handler } from '../../utils/types';
 
-export const handler: APIGatewayProxyHandler = lambda.http(
+export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     const paramsSchema = Joi.object({
       id: Joi.string().required(),

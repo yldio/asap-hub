@@ -29,8 +29,6 @@ describe('POST /users', () => {
       apiGatewayEvent({
         body: 'invalid json',
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(400);
@@ -43,8 +41,6 @@ describe('POST /users', () => {
           Authorization: `Bearer ${globalToken}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(400);
@@ -60,8 +56,6 @@ describe('POST /users', () => {
       apiGatewayEvent({
         body: payload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -80,8 +74,6 @@ describe('POST /users', () => {
         },
         body: payload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -100,8 +92,6 @@ describe('POST /users', () => {
         },
         body: payload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -126,8 +116,6 @@ describe('POST /users', () => {
           email: payload.email,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(409);
@@ -148,14 +136,12 @@ describe('POST /users', () => {
         httpMethod: 'post',
         body: payload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(201);
 
     const user = await cms.users.fetchByEmail(payload.email);
-    const [{ code }] = user.data.connections.iv;
+    const [{ code }] = user!.data.connections.iv;
     expect(ses.sendTemplatedEmail).toBeCalledTimes(1);
     expect(ses.sendTemplatedEmail).toBeCalledWith({
       Source: 'no-reply@hub.asap.science',

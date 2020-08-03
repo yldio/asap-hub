@@ -17,8 +17,6 @@ describe('GET /users/me', () => {
       apiGatewayEvent({
         httpMethod: 'get',
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -32,8 +30,6 @@ describe('GET /users/me', () => {
           Authorization: `Basic ${chance.string()}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -49,8 +45,6 @@ describe('GET /users/me', () => {
           Authorization: `Bearer ${chance.string()}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -66,8 +60,6 @@ describe('GET /users/me', () => {
           Authorization: `Bearer ${chance.string()}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -91,8 +83,6 @@ describe('GET /users/me', () => {
           Authorization: `Bearer ${chance.string()}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
     const body = JSON.parse(result.body);
 

@@ -11,7 +11,9 @@ import { CMSUser } from '../../src/entities/user';
 const chance = new Chance();
 const cms = new CMS();
 
-type TestUserResponse = UserResponse & { connections: { code: string }[] };
+type TestUserResponse = UserResponse & {
+  connections: ReadonlyArray<{ code: string }>;
+};
 
 function transform(user: CMSUser): TestUserResponse {
   return {
@@ -21,9 +23,10 @@ function transform(user: CMSUser): TestUserResponse {
     firstName: user.data.firstName && user.data.firstName.iv,
     middleName: user.data.middleName && user.data.middleName.iv,
     lastName: user.data.lastName && user.data.lastName.iv,
-    title: user.data.title && user.data.title.iv,
+    jobTitle: user.data.jobTitle && user.data.jobTitle.iv,
     orcid: user.data.orcid && user.data.orcid.iv,
     institution: user.data.institution && user.data.institution.iv,
+    teams: user.data.teams,
     connections: user.data.connections.iv,
   };
 }
@@ -43,7 +46,7 @@ export const createUser = (): Promise<CMSUser> => {
   return cms.users.create(user);
 };
 
-export const createRandomUser = async (): Promise<UserResponse> => {
+export const createRandomUser = async (): Promise<TestUserResponse> => {
   const createdUser = await createUser();
   return transform(createdUser);
 };

@@ -13,8 +13,6 @@ describe('GET /users/invites/{code}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(400);
@@ -28,8 +26,6 @@ describe('GET /users/invites/{code}', () => {
           code: chance.string(),
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -49,8 +45,6 @@ describe('GET /users/invites/{code}', () => {
           code,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
     const body = JSON.parse(result.body);
 

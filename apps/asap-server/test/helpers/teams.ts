@@ -1,5 +1,4 @@
 import Chance from 'chance';
-import { ResearchOutputCreationRequest } from '@asap-hub/model';
 
 import { CMS } from '../../src/cms';
 import { CMSTeam } from '../../src/entities/team';

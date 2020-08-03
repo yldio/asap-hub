@@ -14,7 +14,7 @@ const chance = new Chance();
 const cms = new CMS();
 
 describe('POST /users/connections', () => {
-  let id, code;
+  let code: string;
 
   const auth0Response = {
     sub: `google-oauth2|${chance.string()}`,
@@ -22,7 +22,6 @@ describe('POST /users/connections', () => {
 
   beforeAll(async () => {
     const user = await createRandomUser();
-    id = user.id;
     code = user.connections[0].code;
   });
 
@@ -37,8 +36,6 @@ describe('POST /users/connections', () => {
           code,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(400);
@@ -55,8 +52,6 @@ describe('POST /users/connections', () => {
           token: chance.string(),
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(400);
@@ -76,14 +71,12 @@ describe('POST /users/connections', () => {
           token: chance.string(),
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     const userFound = await cms.users.fetchByCode(code);
 
-    expect(userFound).toBeDefined();
-    expect(userFound.data.connections.iv).toHaveLength(1);
+    expect(userFound).not.toBeNull();
+    expect(userFound!.data.connections.iv).toHaveLength(1);
     expect(res.statusCode).toStrictEqual(403);
   });
 
@@ -103,8 +96,6 @@ describe('POST /users/connections', () => {
           token: chance.string(),
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(403);
@@ -126,17 +117,15 @@ describe('POST /users/connections', () => {
           token: chance.string(),
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(202);
 
     const userFound = await cms.users.fetchByCode(code);
 
-    expect(userFound).toBeDefined();
-    expect(userFound.data.connections.iv).toHaveLength(2);
-    expect(userFound.data.connections.iv[1].code).toStrictEqual(
+    expect(userFound).not.toBe(null);
+    expect(userFound!.data.connections.iv).toHaveLength(2);
+    expect(userFound!.data.connections.iv[1]!.code).toStrictEqual(
       auth0Response.sub,
     );
   });

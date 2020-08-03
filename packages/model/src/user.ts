@@ -13,9 +13,9 @@ export interface Invitee {
 
 export interface UserResponse extends Invitee {
   id: string;
-  teams: {
+  teams: ReadonlyArray<{
     id: string;
     displayName: string;
     role: string;
-  }[];
+  }>;
 }

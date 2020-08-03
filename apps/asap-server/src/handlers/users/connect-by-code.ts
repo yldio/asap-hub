@@ -2,12 +2,12 @@ import Boom from '@hapi/boom';
 import got from 'got';
 import Intercept from 'apr-intercept';
 import Joi from '@hapi/joi';
-import { APIGatewayProxyHandler } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
 import { framework as lambda } from '@asap-hub/services-common';
 
 import * as auth0 from '../../entities/auth0';
 import Users from '../../controllers/users';
+import { Handler } from '../../utils/types';
 
 const validateUser = async (token: string): Promise<auth0.UserInfo> => {
   const [err, res] = await Intercept(
@@ -28,7 +28,7 @@ const validateUser = async (token: string): Promise<auth0.UserInfo> => {
   return res;
 };
 
-export const handler: APIGatewayProxyHandler = lambda.http(
+export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     const bodySchema = Joi.object({
       code: Joi.string().required(),

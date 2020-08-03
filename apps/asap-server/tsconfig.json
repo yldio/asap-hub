@@ -1,10 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "build"
   },
-  "include": ["src", "types"],
+  "include": ["src", "test"],
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/model" },

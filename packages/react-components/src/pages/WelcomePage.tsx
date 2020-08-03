@@ -1,8 +1,9 @@
 import React, { ComponentProps } from 'react';
+import asapBackground from '../images/asapbg.png';
 
 import { Welcome } from '../templates';
-import { Layout } from '../organisms';
 import { Paragraph } from '..';
+import css from '@emotion/css';
 
 const values = {
   signup: {
@@ -27,6 +28,27 @@ const values = {
   },
 };
 
+const backgroundStyles = css({
+  alignItems: 'center',
+  backgroundImage: `url(${asapBackground})`,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  bottom: 0,
+  display: 'flex',
+  justifyContent: 'center',
+  left: 0,
+  position: 'absolute',
+  right: 0,
+  top: 0,
+});
+
+type BackgroundProps = {
+  readonly children: React.ReactNode;
+};
+const Background: React.FC<BackgroundProps> = ({ children }) => {
+  return <div css={backgroundStyles}>{children}</div>;
+};
+
 type WelcomePageProps = Pick<ComponentProps<typeof Welcome>, 'onClick'> & {
   readonly signup?: boolean;
 };
@@ -36,23 +58,16 @@ const SigninPage: React.FC<WelcomePageProps> = ({
 }) => {
   const copy = signup ? values.signup : values.welcome;
   return (
-    <Layout>
-      <div
-        css={{
-          width: 'max-content',
-          maxWidth: '100%',
-        }}
+    <Background>
+      <Welcome
+        title={copy.title}
+        content={copy.content}
+        buttonText={copy.buttonText}
+        {...props}
       >
-        <Welcome
-          title={copy.title}
-          content={copy.content}
-          buttonText={copy.buttonText}
-          {...props}
-        >
-          {copy.footer && copy.footer()}
-        </Welcome>
-      </div>
-    </Layout>
+        {copy.footer && copy.footer()}
+      </Welcome>
+    </Background>
   );
 };
 

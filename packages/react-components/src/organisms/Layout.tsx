@@ -41,11 +41,20 @@ const navigationContentStyles = css({
   marginLeft: `${256 / perRem}em`,
 });
 
+const centerStyles = css({
+  justifyContent: 'center',
+});
+
 interface LayoutProps {
+  readonly center?: boolean;
   readonly children: React.ReactNode;
   readonly navigation?: boolean;
 }
-const Layout: React.FC<LayoutProps> = ({ children, navigation = false }) => (
+const Layout: React.FC<LayoutProps> = ({
+  center,
+  children,
+  navigation = false,
+}) => (
   <article css={containerStyles}>
     <Header />
     {navigation && (
@@ -53,7 +62,13 @@ const Layout: React.FC<LayoutProps> = ({ children, navigation = false }) => (
         <Navigation />
       </div>
     )}
-    <main css={[contentStyles, navigation && navigationContentStyles]}>
+    <main
+      css={[
+        contentStyles,
+        navigation && navigationContentStyles,
+        center && centerStyles,
+      ]}
+    >
       {children}
     </main>
   </article>

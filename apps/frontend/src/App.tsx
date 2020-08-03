@@ -12,10 +12,13 @@ import Welcome from './welcome/Routes';
 import { AuthProvider } from './auth';
 import ResearchOutputRoutes from './research-outputs/Routes';
 import CheckAuth from './auth/CheckAuth';
+import ContinueOnboarding from './onboarding/ContinueOnboarding';
 
 const AuthCallbackGuardedHome: React.FC<{}> = () => (
   <CheckAuth>
-    <Home />
+    <ContinueOnboarding>
+      <Home />
+    </ContinueOnboarding>
   </CheckAuth>
 );
 

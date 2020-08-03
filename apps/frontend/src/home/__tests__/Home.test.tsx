@@ -8,7 +8,7 @@ const renderHome = async () => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={{}}>
+        <authTestUtils.LoggedIn user={{ sub: '42', name: 'John Doe' }}>
           <MemoryRouter initialEntries={['/']}>
             <Route exact path="/" component={Home} />
           </MemoryRouter>

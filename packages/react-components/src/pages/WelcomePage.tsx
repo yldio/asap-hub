@@ -1,9 +1,9 @@
+import css from '@emotion/css';
 import React, { ComponentProps } from 'react';
-import asapBackground from '../images/asapbg.png';
 
+import asapBackground from '../images/asapbg.png';
 import { Welcome } from '../templates';
 import { Paragraph } from '..';
-import css from '@emotion/css';
 
 const values = {
   signup: {

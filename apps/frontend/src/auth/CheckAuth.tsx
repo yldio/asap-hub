@@ -1,7 +1,7 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 import { useAuth0 } from '@asap-hub/react-context';
 import { Layout, Paragraph } from '@asap-hub/react-components';
+import Signin from './Signin';
 
 interface CheckAuthProps {
   children: React.ReactNode;
@@ -19,7 +19,8 @@ const CheckAuth: React.FC<CheckAuthProps> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <Redirect to="/welcome" />;
+    // TODO store current page
+    return <Signin />;
   }
 
   return <>{children}</>;

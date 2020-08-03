@@ -24,11 +24,10 @@ it('redirects to the root if the user is not authenticated', async () => {
         <CheckAuth>
           <Route exact path="/secure" render={() => 'secure'} />
         </CheckAuth>
-        <Route exact path="/welcome" render={() => 'root'} />
       </MemoryRouter>
     </authTestUtils.Auth0Provider>,
   );
-  expect(await findByText('root')).toBeVisible();
+  expect(await findByText('Log in')).toBeVisible();
 });
 
 it('renders the children if the user is authenticated', async () => {

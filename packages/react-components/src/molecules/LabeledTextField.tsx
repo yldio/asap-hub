@@ -13,6 +13,9 @@ const subtitleStyles = css({
   color: lead.rgb,
 });
 const hintStyles = css({
+  ':empty': {
+    display: 'none',
+  },
   paddingTop: `${6 / perRem}em`,
 
   color: lead.rgb,

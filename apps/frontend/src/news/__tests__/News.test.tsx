@@ -31,7 +31,7 @@ const renderNews = async () => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={{}}>
+        <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/single-news-slug/']}>
             <Route exact path="/:slug/" component={News} />
           </MemoryRouter>

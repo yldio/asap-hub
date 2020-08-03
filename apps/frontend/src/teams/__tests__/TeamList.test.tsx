@@ -40,7 +40,7 @@ const renderProfile = async () => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={{}}>
+        <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/']}>
             <Route exact path="/" component={Teams} />
           </MemoryRouter>

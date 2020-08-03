@@ -10,8 +10,8 @@ import News from './news/Routes';
 import Teams from './teams/Routes';
 import Users from './users/Routes';
 import Welcome from './onboarding/Welcome';
-
 import { AuthProvider } from './auth';
+import ResearchOutputRoutes from './research-outputs/Routes';
 
 const AuthCallbackGuardedHome: React.FC<{}> = () => (
   <ContinueOnboarding>
@@ -28,6 +28,7 @@ const App: React.FC<{}> = () => {
           <Route path="/news" component={News} />
           <Route path="/teams" component={Teams} />
           <Route path="/users" component={Users} />
+          <Route path="/research-outputs" component={ResearchOutputRoutes} />
 
           <Route exact path="/welcome/:code" component={Welcome} />
           <Route exact path="/create-profile" component={CreateProfile} />

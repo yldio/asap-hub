@@ -35,7 +35,7 @@ describe('when logged in and an invitation code is in the storage', () => {
   beforeEach(async () => {
     result = render(
       <authTestUtils.Auth0Provider>
-        <authTestUtils.LoggedIn user={{ name: 'John Doe' }}>
+        <authTestUtils.LoggedIn user={{ sub: '42', name: 'John Doe' }}>
           <MemoryRouter initialEntries={['/']}>
             <Route
               exact

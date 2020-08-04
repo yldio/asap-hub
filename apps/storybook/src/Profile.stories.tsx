@@ -1,15 +1,9 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { date, text } from '@storybook/addon-knobs';
 import { Profile } from '@asap-hub/react-components';
 
 export default {
   title: 'Templates / Profile / Details',
-  decorators: [
-    (story: () => {}) => (
-      <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>
-    ),
-  ],
 };
 
 const timestamp = (name: string, defaultValue?: Date): Date => {

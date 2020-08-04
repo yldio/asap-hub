@@ -1,12 +1,9 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
 import Profile from '../Profile';
 
 const Component = (props: ComponentProps<typeof Profile>) => (
-  <MemoryRouter initialEntries={['/']}>
-    <Route exact path="/" component={() => <Profile {...props} />} />
-  </MemoryRouter>
+  <Profile {...props} />
 );
 
 it('renders profile', () => {

@@ -1,12 +1,9 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
 import Layout from '../Layout';
 
 const Component = (props: ComponentProps<typeof Layout>) => (
-  <MemoryRouter initialEntries={['/']}>
-    <Route exact path="/" component={() => <Layout {...props} />} />
-  </MemoryRouter>
+  <Layout {...props} />
 );
 
 it('renders an ASAP logo', () => {

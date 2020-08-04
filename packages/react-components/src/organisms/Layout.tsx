@@ -2,6 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { Header, Navigation } from '../molecules';
+import { steel } from '../colors';
 import {
   vminLinearCalc,
   mobileScreen,
@@ -34,6 +35,7 @@ const contentStyles = css({
 });
 
 const navigationStyles = css({
+  top: 0,
   position: 'absolute',
 });
 
@@ -43,6 +45,11 @@ const navigationContentStyles = css({
 
 const centerStyles = css({
   justifyContent: 'center',
+});
+
+const headerStyles = css({
+  position: "relative",
+  borderBottom: `1px solid ${steel.rgb}`,
 });
 
 interface LayoutProps {
@@ -56,12 +63,14 @@ const Layout: React.FC<LayoutProps> = ({
   navigation = false,
 }) => (
   <article css={containerStyles}>
-    <Header />
-    {navigation && (
-      <div css={navigationStyles}>
-        <Navigation />
-      </div>
-    )}
+    <div css={headerStyles}>
+      <Header />
+      {navigation && (
+        <div css={navigationStyles}>
+          <Navigation />
+        </div>
+      )}
+    </div>
     <main
       css={[
         contentStyles,

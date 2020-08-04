@@ -3,7 +3,9 @@ import React, { ComponentProps } from 'react';
 
 import asapBackground from '../images/asapbg.png';
 import { Welcome } from '../templates';
-import { Paragraph } from '..';
+import { Header } from '../molecules';
+import { Link, Paragraph } from '../atoms';
+import { perRem, mobileScreen, tabletScreen } from '../pixels';
 
 const values = {
   signup: {
@@ -35,11 +37,25 @@ const backgroundStyles = css({
   backgroundSize: 'cover',
   bottom: 0,
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
   left: 0,
   position: 'absolute',
   right: 0,
   top: 0,
+});
+
+const mobileVisibleStyles = css({
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    display: 'none',
+  },
+});
+
+const mobileHiddenStyles = css({
+  display: 'none',
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    display: 'block',
+  },
 });
 
 type BackgroundProps = {
@@ -57,16 +73,39 @@ const SigninPage: React.FC<WelcomePageProps> = ({
   ...props
 }) => {
   const copy = signup ? values.signup : values.welcome;
+  const linksComponent = (
+    <>
+      <Link href="/terms-and-conditions">Terms and conditions</Link>
+      <Link href="/privacy-policy">Privacy policy</Link>
+    </>
+  );
+
   return (
     <Background>
-      <Welcome
-        title={copy.title}
-        content={copy.content}
-        buttonText={copy.buttonText}
-        {...props}
+      <div css={{ position: 'absolute', top: 0, width: '100%' }}>
+        <Header light>
+          <div css={mobileHiddenStyles}>{linksComponent}</div>
+        </Header>
+      </div>
+      <div
+        css={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          display: 'flex',
+          margin: `${12 / perRem}em`,
+        }}
       >
-        {copy.footer && copy.footer()}
-      </Welcome>
+        <Welcome
+          title={copy.title}
+          content={copy.content}
+          buttonText={copy.buttonText}
+          {...props}
+        >
+          {copy.footer && copy.footer()}
+        </Welcome>
+      </div>
+      <div css={mobileVisibleStyles}>{linksComponent}</div>
     </Background>
   );
 };

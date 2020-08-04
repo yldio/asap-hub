@@ -1,5 +1,6 @@
 import React from 'react';
 import { Layout } from '@asap-hub/react-components';
+
 import { NoPaddingDecorator } from './padding';
 
 export default {

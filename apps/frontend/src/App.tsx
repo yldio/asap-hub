@@ -2,21 +2,24 @@ import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 
 import Admin from './admin/Admin';
-import ContinueOnboarding from './onboarding/ContinueOnboarding';
 import CreateProfile from './onboarding/CreateProfile';
 import history from './history';
 import Home from './home/Home';
 import News from './news/Routes';
 import Teams from './teams/Routes';
 import Users from './users/Routes';
-import Welcome from './onboarding/Welcome';
+import Welcome from './welcome/Routes';
 import { AuthProvider } from './auth';
 import ResearchOutputRoutes from './research-outputs/Routes';
+import CheckAuth from './auth/CheckAuth';
+import ContinueOnboarding from './onboarding/ContinueOnboarding';
 
 const AuthCallbackGuardedHome: React.FC<{}> = () => (
-  <ContinueOnboarding>
-    <Home />
-  </ContinueOnboarding>
+  <CheckAuth>
+    <ContinueOnboarding>
+      <Home />
+    </ContinueOnboarding>
+  </CheckAuth>
 );
 
 const App: React.FC<{}> = () => {
@@ -25,14 +28,14 @@ const App: React.FC<{}> = () => {
       <Router history={history}>
         <Switch>
           <Route exact path="/" component={AuthCallbackGuardedHome} />
+
           <Route path="/news" component={News} />
           <Route path="/teams" component={Teams} />
           <Route path="/users" component={Users} />
           <Route path="/research-outputs" component={ResearchOutputRoutes} />
+          <Route path="/welcome" component={Welcome} />
 
-          <Route exact path="/welcome/:code" component={Welcome} />
           <Route exact path="/create-profile" component={CreateProfile} />
-
           <Route exact path="/admin" component={Admin} />
 
           <Route render={() => 'Not found'} />

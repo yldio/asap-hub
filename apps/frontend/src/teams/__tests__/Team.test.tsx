@@ -34,7 +34,7 @@ afterEach(async () => {
   nock.cleanAll();
 });
 
-const renderProfile = async () => {
+const renderTeam = async () => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
@@ -53,7 +53,7 @@ const renderProfile = async () => {
 };
 
 it('renders a loading indicator', async () => {
-  const { getByText } = await renderProfile();
+  const { getByText } = await renderTeam();
 
   const loadingIndicator = getByText(/loading/i);
   expect(loadingIndicator).toBeVisible();
@@ -62,6 +62,6 @@ it('renders a loading indicator', async () => {
 });
 
 it('renders a team information', async () => {
-  const { container } = await renderProfile();
+  const { container } = await renderTeam();
   expect(container.textContent).toContain(JSON.stringify(team, null, 2));
 });

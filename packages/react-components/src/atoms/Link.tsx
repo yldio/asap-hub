@@ -25,7 +25,11 @@ interface LinkProps {
 const Link: React.FC<LinkProps> = ({ children, href }) => {
   const internal = /^\/(?!\/)/.test(href);
   if (internal) {
-    return <ReactRouterLink to={href}>{children}</ReactRouterLink>;
+    return (
+      <ReactRouterLink css={[styles]} to={href}>
+        {children}
+      </ReactRouterLink>
+    );
   }
   return (
     <a href={href} css={[styles]} target="_blank" rel="noreferrer noopener">

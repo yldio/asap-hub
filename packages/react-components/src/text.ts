@@ -12,6 +12,9 @@ export type TextChildren = TextChild | ReadonlyArray<TextChild>;
 
 export const fontStyles = {
   fontFamily: "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",
+  WebkitFontSmoothing: 'antialiased',
+  MozOsxFontSmoothing: 'auto',
+
   fontSize: `${perRem}px`,
   lineHeight: `${24 / 17}em`,
 

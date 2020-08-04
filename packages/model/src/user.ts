@@ -25,7 +25,7 @@ export interface OrcidWork {
 
 export interface UserResponse extends Invitee {
   id: string;
-  teams: ReadonlyArray<{
+  teams?: ReadonlyArray<{
     id: string;
     displayName: string;
     role: string;

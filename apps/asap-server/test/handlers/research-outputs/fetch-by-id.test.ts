@@ -18,7 +18,7 @@ describe('GET /users/{id}/research-outputs', () => {
   let id: string, code: string;
 
   beforeAll(async () => {
-    const user = await createRandomUser();
+    const user = await createRandomUser({});
     id = user.id;
     code = user.connections[0].code;
     await createRandomOutput(id);
@@ -113,7 +113,7 @@ describe('GET /users/{id}/research-outputs', () => {
   });
 
   test('returns 200 when user has no Outputs', async () => {
-    const { id } = await createRandomUser();
+    const { id } = await createRandomUser({});
 
     nock(`https://${authConfig.domain}`)
       .get('/userinfo')

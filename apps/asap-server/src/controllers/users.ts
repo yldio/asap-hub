@@ -147,7 +147,9 @@ export default class Users {
       throw Boom.notFound();
     }
 
-    const [error, res] = await Intercept(fetchOrcidProfile(user.data.orcid.iv));
+    const [error, res] = await Intercept(
+      fetchOrcidProfile(user!.data.orcid!.iv),
+    );
 
     if (error) {
       throw Boom.badGateway();

@@ -2,9 +2,10 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": ".",
+    "resolveJsonModule": true,
     "outDir": "build"
   },
-  "include": ["src", "test"],
+  "include": ["src", "test", "test/fixtures/**/*.json"],
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/model" },

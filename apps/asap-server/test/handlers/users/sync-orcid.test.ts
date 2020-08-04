@@ -1,26 +1,23 @@
-import Chance from 'chance';
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
-import { handler } from '../../../src/handlers/users/sync-orcid';
+import {
+  handler,
+  WebHookPayload,
+} from '../../../src/handlers/users/sync-orcid';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createRandomUser } from '../../helpers/create-user';
+import { TestUserResponse, createRandomUser } from '../../helpers/create-user';
 import orcidWorksResponse from '../../fixtures/fetch-orcid-works-0000-0002-9079-593X.json';
 import createPayloadTemplate from '../../fixtures/users-create-squidex-webhook.json';
 import updatePayloadTemplate from '../../fixtures/users-update-squidex-webhook.json';
-import { CMS } from '../../../src/cms';
 
 jest.mock('@asap-hub/auth');
 
-const chance = new Chance();
-const cms = new CMS();
-
 describe('POST /webhook/users', () => {
   const orcid = '0000-0002-9079-593X';
-  let code, user;
-  let createPayload = createPayloadTemplate;
-  let updatePayload = updatePayloadTemplate;
+  let user: TestUserResponse;
+  let createPayload: WebHookPayload = createPayloadTemplate;
+  let updatePayload: WebHookPayload = updatePayloadTemplate;
 
   beforeAll(async () => {
     user = await createRandomUser({ orcid });
@@ -43,8 +40,6 @@ describe('POST /webhook/users', () => {
         httpMethod: 'post',
         body: invalidPayload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(501);
@@ -58,8 +53,6 @@ describe('POST /webhook/users', () => {
         httpMethod: 'post',
         body: createPayload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(502);
@@ -73,8 +66,6 @@ describe('POST /webhook/users', () => {
         httpMethod: 'post',
         body: createPayload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(404);
@@ -88,8 +79,6 @@ describe('POST /webhook/users', () => {
         httpMethod: 'post',
         body: createPayload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);
@@ -101,8 +90,6 @@ describe('POST /webhook/users', () => {
         httpMethod: 'post',
         body: updatePayload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);
@@ -118,8 +105,6 @@ describe('POST /webhook/users', () => {
         httpMethod: 'post',
         body: createPayload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
     const body = JSON.parse(res.body);
 
@@ -150,8 +135,6 @@ describe('POST /webhook/users', () => {
         httpMethod: 'post',
         body: updatePayload,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
     const body = JSON.parse(res.body);
 

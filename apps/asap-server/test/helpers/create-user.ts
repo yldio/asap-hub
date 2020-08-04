@@ -11,7 +11,7 @@ import { CMSUser } from '../../src/entities/user';
 const chance = new Chance();
 const cms = new CMS();
 
-type TestUserResponse = UserResponse & {
+export type TestUserResponse = UserResponse & {
   connections: ReadonlyArray<{ code: string }>;
 };
 
@@ -26,12 +26,12 @@ function transform(user: CMSUser): TestUserResponse {
     jobTitle: user.data.jobTitle && user.data.jobTitle.iv,
     orcid: user.data.orcid && user.data.orcid.iv,
     institution: user.data.institution && user.data.institution.iv,
-    teams: user.data.teams,
+    teams: user.data.teams?.iv,
     connections: user.data.connections.iv,
   };
 }
 
-export const createUser = (overwrites: Invitee): Promise<CMSUser> => {
+export const createUser = (overwrites: Invitee | {}): Promise<CMSUser> => {
   const user: Invitee = {
     displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),
@@ -47,7 +47,9 @@ export const createUser = (overwrites: Invitee): Promise<CMSUser> => {
   return cms.users.create(user);
 };
 
-export const createRandomUser = async ( overwrites: Invitee): Promise<TestUserResponse> => {
+export const createRandomUser = async (
+  overwrites: Invitee | {},
+): Promise<TestUserResponse> => {
   const createdUser = await createUser(overwrites);
   return transform(createdUser);
 };
@@ -81,7 +83,7 @@ export const createRandomOutput = async (user: string): Promise<void> => {
 export const createUserOnTeam = async (
   team: CMSTeam,
 ): Promise<UserResponse> => {
-  const createdUser = await createUser();
+  const createdUser = await createUser({});
   const user = await cms.users.addToTeam(createdUser, chance.string(), team);
   return transform(user);
 };

@@ -70,7 +70,7 @@ describe('GET /users/me', () => {
       id,
       displayName,
       connections: [{ code }],
-    } = await createRandomUser();
+    } = await createRandomUser({});
 
     nock(`https://${authConfig.domain}`)
       .get('/userinfo')

@@ -9,6 +9,16 @@
     "createdBy": "subject:5ef5d2fe75c5460001445b65",
     "lastModifiedBy": "subject:5ef5d2fe75c5460001445b65",
     "data": {
+      "displayName": {
+        "iv": "Test User"
+      },
+      "connections": {
+        "iv": [
+          {
+            "code": "c6fdb21b-32f3-4549-ac17-d0c83dc5335b"
+          }
+        ]
+      },
       "email": {
         "iv": "ti@sief.tg"
       },
@@ -17,6 +27,16 @@
       }
     },
     "dataOld": {
+      "displayName": {
+        "iv": "Test User"
+      },
+      "connections": {
+        "iv": [
+          {
+            "code": "c6fdb21b-32f3-4549-ac17-d0c83dc5335b"
+          }
+        ]
+      },
       "email": {
         "iv": "ti@sief.tg"
       },

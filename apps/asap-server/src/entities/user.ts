@@ -6,16 +6,16 @@ export interface CMSUser {
   data: {
     displayName: { iv: string };
     email: { iv: string };
-    firstName: { iv: string };
-    middleName: { iv: string };
-    lastName: { iv: string };
-    jobTitle: { iv: string };
-    institution: { iv: string };
-    connections: { iv: [{ code: string }] };
-    teams: { iv: TeamMember[] };
-    orcid: { iv: string };
-    orcidLastModifiedDate: { iv: string };
-    orcidWorks: { iv: CMSOrcidWork[] };
+    firstName?: { iv: string };
+    middleName?: { iv: string };
+    lastName?: { iv: string };
+    jobTitle?: { iv: string };
+    institution?: { iv: string };
+    connections: { iv: { code: string }[] };
+    teams?: { iv: TeamMember[] };
+    orcid?: { iv: string };
+    orcidLastModifiedDate?: { iv: string };
+    orcidWorks?: { iv: CMSOrcidWork[] };
   };
 }
 

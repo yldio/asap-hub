@@ -21,7 +21,7 @@ describe('POST /users/connections', () => {
   };
 
   beforeAll(async () => {
-    const user = await createRandomUser();
+    const user = await createRandomUser({});
     code = user.connections[0].code;
   });
 

@@ -31,20 +31,6 @@ describe('POST /webhook/users', () => {
 
   afterEach(() => nock.cleanAll());
 
-  test('returns 501 when event type is not implemented', async () => {
-    const invalidPayload = Object.assign({}, createPayload);
-    invalidPayload.type = 'notImplemented';
-
-    const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: invalidPayload,
-      }),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(501);
-  });
-
   test('returns 502 when ORCID returns an error', async () => {
     nock('https://pub.orcid.org').get(`/v2.1/${orcid}/works`).reply(500);
 
@@ -69,6 +55,20 @@ describe('POST /webhook/users', () => {
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(404);
+  });
+
+  test('returns 204 when event type is not implemented', async () => {
+    const invalidPayload = Object.assign({}, createPayload);
+    invalidPayload.type = 'notImplemented';
+
+    const res = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'post',
+        body: invalidPayload,
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(204);
   });
 
   test('returns 204 when create doesnt include orcid', async () => {

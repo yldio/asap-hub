@@ -43,7 +43,6 @@ export const handler: Handler = lambda.http(
           payload: await users.syncOrcidProfile(id),
         };
       }
-      return { statusCode: 204 };
     }
 
     if (event === 'UsersUpdated') {
@@ -53,9 +52,8 @@ export const handler: Handler = lambda.http(
           payload: await users.syncOrcidProfile(id),
         };
       }
-      return { statusCode: 204 };
     }
 
-    throw Boom.notImplemented();
+    return { statusCode: 204 };
   },
 );

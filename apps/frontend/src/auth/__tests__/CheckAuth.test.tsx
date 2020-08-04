@@ -23,7 +23,7 @@ it('redirects to the root if the user is not authenticated', async () => {
       </CheckAuth>
     </authTestUtils.Auth0Provider>,
   );
-  expect(await findByText('Log in')).toBeVisible();
+  expect(await findByText('Sign in')).toBeVisible();
 });
 
 it('renders the children if the user is authenticated', async () => {

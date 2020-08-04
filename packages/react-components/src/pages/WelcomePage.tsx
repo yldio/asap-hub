@@ -5,7 +5,7 @@ import asapBackground from '../images/asapbg.png';
 import { Welcome } from '../templates';
 import { Header } from '../molecules';
 import { Link, Paragraph } from '../atoms';
-import { perRem, mobileScreen, tabletScreen } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 
 const values = {
   signup: {
@@ -14,7 +14,9 @@ const values = {
       'Create your account to start sharing, discussing and collaborating instantly.',
     buttonText: 'Create account',
     footer: () => (
-      <Paragraph accent="lead">Already have an ASAP Hub account?</Paragraph>
+      <Paragraph accent="lead">
+        Already have an account? <Link href="/">Sign in</Link>
+      </Paragraph>
     ),
   },
   welcome: {
@@ -24,7 +26,8 @@ const values = {
     buttonText: 'Sign in',
     footer: () => (
       <Paragraph accent="lead">
-        Don't have an account? Keep an eye on ASAP's website for updates.
+        Don't have an account? Keep an eye on ASAP's{' '}
+        <Link href="/">website</Link> for updates.
       </Paragraph>
     ),
   },
@@ -45,6 +48,16 @@ const backgroundStyles = css({
   top: 0,
 });
 
+const linksContainerStyle = css({
+  display: 'flex',
+  listStyleType: 'none',
+  padding: 0,
+  margin: `0 -12px 0`,
+});
+
+const linkItemStyle = css({
+  padding: `12px`,
+});
 const mobileVisibleStyles = css({
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     display: 'none',
@@ -74,10 +87,14 @@ const SigninPage: React.FC<WelcomePageProps> = ({
 }) => {
   const copy = signup ? values.signup : values.welcome;
   const linksComponent = (
-    <>
-      <Link href="/terms-and-conditions">Terms and conditions</Link>
-      <Link href="/privacy-policy">Privacy policy</Link>
-    </>
+    <ul css={linksContainerStyle}>
+      <li css={linkItemStyle}>
+        <Link href="/terms-and-conditions">Terms and conditions</Link>
+      </li>
+      <li css={linkItemStyle}>
+        <Link href="/privacy-policy">Privacy policy</Link>
+      </li>
+    </ul>
   );
 
   return (

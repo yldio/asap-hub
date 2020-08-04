@@ -48,7 +48,7 @@ const centerStyles = css({
 });
 
 const headerStyles = css({
-  position: "relative",
+  position: 'relative',
   borderBottom: `1px solid ${steel.rgb}`,
 });
 

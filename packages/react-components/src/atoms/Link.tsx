@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
 
 import { TextChildren } from '../text';
 import { fern, pine } from '../colors';
@@ -23,8 +23,17 @@ interface LinkProps {
   readonly href: string;
 }
 const Link: React.FC<LinkProps> = ({ children, href }) => {
-  const internal = /^\/(?!\/)/.test(href);
-  if (internal) {
+  const internal =
+    new URL(href, window.location.href).origin === window.location.origin;
+
+  let canUseRouter = true;
+  try {
+    useLocation();
+  } catch {
+    canUseRouter = false;
+  }
+
+  if (canUseRouter) {
     return (
       <ReactRouterLink css={[styles]} to={href}>
         {children}
@@ -32,7 +41,12 @@ const Link: React.FC<LinkProps> = ({ children, href }) => {
     );
   }
   return (
-    <a href={href} css={[styles]} target="_blank" rel="noreferrer noopener">
+    <a
+      href={href}
+      css={[styles]}
+      target={internal ? undefined : '_blank'}
+      rel={internal ? undefined : 'noreferrer noopener'}
+    >
       {children}
     </a>
   );

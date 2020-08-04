@@ -10,7 +10,6 @@ import {
   Link as LinkText,
   Paragraph as ParagraphText,
 } from '@asap-hub/react-components';
-import { MemoryRouter } from 'react-router-dom';
 import { ThemeDecorator } from './theme';
 import { accentColor } from './text';
 
@@ -52,13 +51,9 @@ export const Caption = () => {
   );
 };
 export const Link = () => (
-  <MemoryRouter initialEntries={['/']}>
-    <ParagraphText>
-      <LinkText
-        href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
-      >
-        {text('Text', "Aligning Science Across Parkinson's")}
-      </LinkText>
-    </ParagraphText>
-  </MemoryRouter>
+  <ParagraphText>
+    <LinkText href={text('Destination', 'https://www.parkinsonsroadmap.org/')}>
+      {text('Text', "Aligning Science Across Parkinson's")}
+    </LinkText>
+  </ParagraphText>
 );

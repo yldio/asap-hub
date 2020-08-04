@@ -1,16 +1,11 @@
 import React from 'react';
-import { MemoryRouter, Route } from 'react-router-dom';
 
 import { render } from '@testing-library/react';
 
 import Navigation from '../Navigation';
 
 it('renders the navigation sidebar', () => {
-  const { getByAltText, getAllByRole } = render(
-    <MemoryRouter initialEntries={['/']}>
-      <Route exact path="/" component={() => <Navigation />} />
-    </MemoryRouter>,
-  );
+  const { getByAltText, getAllByRole } = render(<Navigation />);
 
   expect(getByAltText(/asap.+logo/i)).toHaveAttribute(
     'src',

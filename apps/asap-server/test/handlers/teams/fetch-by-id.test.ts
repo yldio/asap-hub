@@ -6,18 +6,16 @@ import { config as authConfig } from '@asap-hub/auth';
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomTeam } from '../../helpers/teams';
-import { createUserOnTeam } from '../../helpers/create-user';
 
 jest.mock('@asap-hub/auth');
 
 const chance = new Chance();
 
 describe('GET /teams/{id}', () => {
-  let id;
+  let id: string;
 
   beforeAll(async () => {
     const team = await createRandomTeam();
-    const user = await createUserOnTeam(team);
     id = team.id;
   });
 
@@ -29,8 +27,6 @@ describe('GET /teams/{id}', () => {
           id,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -47,8 +43,6 @@ describe('GET /teams/{id}', () => {
           id,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -67,8 +61,6 @@ describe('GET /teams/{id}', () => {
           id,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -87,8 +79,6 @@ describe('GET /teams/{id}', () => {
           id,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -107,11 +97,7 @@ describe('GET /teams/{id}', () => {
           id: 'NotTheUser',
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
-
-    const body = JSON.parse(result.body);
 
     expect(result.statusCode).toStrictEqual(404);
   });
@@ -129,10 +115,7 @@ describe('GET /teams/{id}', () => {
           id,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
-    const body = JSON.parse(result.body);
 
     expect(result.statusCode).toStrictEqual(200);
   });

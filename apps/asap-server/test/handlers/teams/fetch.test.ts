@@ -36,8 +36,6 @@ describe('GET /teams', () => {
           Authorization: `Bearer ${chance.string()}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(200);
@@ -67,8 +65,6 @@ describe('GET /teams', () => {
           Authorization: `Bearer ${chance.string()}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(200);
@@ -88,8 +84,6 @@ describe('GET /teams', () => {
           Authorization: `Bearer ${chance.string()}`,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(200);

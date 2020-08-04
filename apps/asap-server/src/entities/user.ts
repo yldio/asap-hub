@@ -12,7 +12,7 @@ export interface CMSUser {
     jobTitle: { iv: string };
     orcid: { iv: string };
     institution: { iv: string };
-    connections: { iv: [{ code: string }] };
+    connections: { iv: { code: string }[] };
     teams: TeamMember[];
   };
 }

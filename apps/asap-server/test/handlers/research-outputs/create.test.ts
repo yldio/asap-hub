@@ -13,7 +13,7 @@ jest.mock('@asap-hub/auth');
 const chance = new Chance();
 
 describe('GET /users/{id}/research-outputs', () => {
-  let id, code;
+  let id: string, code: string;
 
   const output: ResearchOutputCreationRequest = {
     url: chance.url(),
@@ -52,8 +52,6 @@ describe('GET /users/{id}/research-outputs', () => {
           id,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -71,8 +69,6 @@ describe('GET /users/{id}/research-outputs', () => {
         },
         body: output,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -92,8 +88,6 @@ describe('GET /users/{id}/research-outputs', () => {
         },
         body: output,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -113,8 +107,6 @@ describe('GET /users/{id}/research-outputs', () => {
         },
         body: output,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -136,8 +128,6 @@ describe('GET /users/{id}/research-outputs', () => {
         },
         body: output,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -158,8 +148,6 @@ describe('GET /users/{id}/research-outputs', () => {
           id,
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(400);
@@ -184,8 +172,6 @@ describe('GET /users/{id}/research-outputs', () => {
           type: 'invalid',
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(400);
@@ -207,8 +193,6 @@ describe('GET /users/{id}/research-outputs', () => {
         },
         body: output,
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
     const body = JSON.parse(result.body);
 

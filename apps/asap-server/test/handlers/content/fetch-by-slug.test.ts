@@ -20,8 +20,6 @@ describe('GET /content/{content}/{slug}', () => {
           slug: 'exists-in-dev',
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -39,8 +37,6 @@ describe('GET /content/{content}/{slug}', () => {
           slug: 'exists-in-dev',
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -60,8 +56,6 @@ describe('GET /content/{content}/{slug}', () => {
           slug: 'exists-in-dev',
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -81,8 +75,6 @@ describe('GET /content/{content}/{slug}', () => {
           slug: 'exists-in-dev',
         },
       }),
-      null,
-      null,
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
@@ -90,7 +82,7 @@ describe('GET /content/{content}/{slug}', () => {
   test('returns 404 when no content is found', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
-    const result = await handler(
+    const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
@@ -101,9 +93,7 @@ describe('GET /content/{content}/{slug}', () => {
           slug: 'not-found-slug',
         },
       }),
-      null,
-      null,
-    );
+    )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(404);
   });
@@ -111,7 +101,7 @@ describe('GET /content/{content}/{slug}', () => {
   test('returns 200 when content is found', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
-    const result = await handler(
+    const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
@@ -122,9 +112,7 @@ describe('GET /content/{content}/{slug}', () => {
           slug: 'exists-in-dev',
         },
       }),
-      null,
-      null,
-    );
+    )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(200);
     expect(JSON.parse(result.body).slug).toStrictEqual('exists-in-dev');

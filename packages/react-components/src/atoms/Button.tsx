@@ -37,6 +37,8 @@ const styles = css({
   '+ button': {
     marginTop: 0,
   },
+
+  transition: '200ms',
 });
 
 const largeStyles = css({

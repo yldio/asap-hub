@@ -1,4 +1,3 @@
-import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 

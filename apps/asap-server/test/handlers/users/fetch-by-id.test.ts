@@ -42,7 +42,7 @@ describe('GET /users/{id}', () => {
   test('returns 200 when id exists', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
-    const { id, displayName } = await createRandomUser({});
+    const { id, displayName } = await createRandomUser();
 
     const result = (await handler(
       apiGatewayEvent({

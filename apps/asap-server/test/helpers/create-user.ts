@@ -31,7 +31,7 @@ function transform(user: CMSUser): TestUserResponse {
   };
 }
 
-export const createUser = (overwrites: Invitee | {}): Promise<CMSUser> => {
+export const createUser = (overwrites: Invitee | object = {}): Promise<CMSUser> => {
   const user: Invitee = {
     displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),
@@ -48,7 +48,7 @@ export const createUser = (overwrites: Invitee | {}): Promise<CMSUser> => {
 };
 
 export const createRandomUser = async (
-  overwrites: Invitee | {},
+  overwrites: Invitee | object = {},
 ): Promise<TestUserResponse> => {
   const createdUser = await createUser(overwrites);
   return transform(createdUser);

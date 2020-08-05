@@ -38,7 +38,7 @@ describe('GET /users/{id}/research-outputs', () => {
   };
 
   beforeAll(async () => {
-    const user = await createRandomUser({});
+    const user = await createRandomUser();
     id = user.id;
     code = user.connections[0].code;
   });

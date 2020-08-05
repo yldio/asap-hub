@@ -36,7 +36,7 @@ describe('GET /users/invites/{code}', () => {
       id,
       displayName,
       connections: [{ code }],
-    } = await createRandomUser({});
+    } = await createRandomUser();
 
     const result = (await handler(
       apiGatewayEvent({

@@ -2,6 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { Header, Navigation } from '../molecules';
+import { steel } from '../colors';
 import {
   vminLinearCalc,
   mobileScreen,
@@ -11,8 +12,8 @@ import {
 
 const containerStyles = css({
   position: 'relative',
-  width: '100%',
-  height: '100%',
+  minWidth: '100vw',
+  minHeight: '100vh',
 
   display: 'flex',
   flexDirection: 'column',
@@ -30,11 +31,11 @@ const contentStyles = css({
 
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
   alignItems: 'center',
 });
 
 const navigationStyles = css({
+  top: 0,
   position: 'absolute',
 });
 
@@ -42,19 +43,41 @@ const navigationContentStyles = css({
   marginLeft: `${256 / perRem}em`,
 });
 
+const centerStyles = css({
+  justifyContent: 'center',
+});
+
+const headerStyles = css({
+  position: 'relative',
+  borderBottom: `1px solid ${steel.rgb}`,
+});
+
 interface LayoutProps {
+  readonly center?: boolean;
   readonly children: React.ReactNode;
   readonly navigation?: boolean;
 }
-const Layout: React.FC<LayoutProps> = ({ children, navigation = false }) => (
+const Layout: React.FC<LayoutProps> = ({
+  center,
+  children,
+  navigation = false,
+}) => (
   <article css={containerStyles}>
-    <Header />
-    {navigation && (
-      <div css={navigationStyles}>
-        <Navigation />
-      </div>
-    )}
-    <main css={[contentStyles, navigation && navigationContentStyles]}>
+    <div css={headerStyles}>
+      <Header />
+      {navigation && (
+        <div css={navigationStyles}>
+          <Navigation />
+        </div>
+      )}
+    </div>
+    <main
+      css={[
+        contentStyles,
+        navigation && navigationContentStyles,
+        center && centerStyles,
+      ]}
+    >
       {children}
     </main>
   </article>

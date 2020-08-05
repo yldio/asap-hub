@@ -10,3 +10,8 @@ export default {
 };
 
 export const Normal = () => <Header />;
+export const Light = () => (
+  <div style={{ backgroundColor: '#00222c' }}>
+    <Header light />
+  </div>
+);

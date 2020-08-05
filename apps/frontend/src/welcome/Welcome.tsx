@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Display, Button } from '@asap-hub/react-components';
+import { WelcomePage } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
 
 import { API_BASE_URL, STORAGE_KEY_INVITATION_CODE } from '../config';
@@ -37,14 +37,7 @@ const Welcome: React.FC<{}> = () => {
     loginWithRedirect({ prompt: 'login', screen_hint: 'signup' });
   };
 
-  return (
-    <main>
-      <Display>Join the ASAP Hub</Display>
-      <Button primary onClick={createAccount}>
-        Create account
-      </Button>
-    </main>
-  );
+  return <WelcomePage signup onClick={createAccount} />;
 };
 
 export default Welcome;

@@ -3,7 +3,7 @@ import { Base, BaseOptions } from '@asap-hub/services-common';
 import { Invitee } from '@asap-hub/model';
 import get from 'lodash.get';
 
-import { CMSUser } from '../entities/user';
+import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { CMSTeam } from '../entities/team';
 
 export interface Connection {
@@ -110,6 +110,22 @@ export default class Users extends Base {
         json: {
           email: { iv: user.data.email.iv },
           connections: { iv: connections },
+        },
+      })
+      .json();
+  }
+
+  updateOrcidWorks(
+    user: CMSUser,
+    lastModifiedDate: string,
+    works: CMSOrcidWork[],
+  ): Promise<CMSUser> {
+    return this.client
+      .patch<CMSUser>(`users/${user.id}`, {
+        json: {
+          email: { iv: user.data.email.iv },
+          orcidLastModifiedDate: { iv: lastModifiedDate },
+          orcidWorks: { iv: works },
         },
       })
       .json();

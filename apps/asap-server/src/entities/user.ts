@@ -6,15 +6,30 @@ export interface CMSUser {
   data: {
     displayName: { iv: string };
     email: { iv: string };
-    firstName: { iv: string };
-    middleName: { iv: string };
-    lastName: { iv: string };
-    jobTitle: { iv: string };
-    orcid: { iv: string };
-    institution: { iv: string };
+    firstName?: { iv: string };
+    middleName?: { iv: string };
+    lastName?: { iv: string };
+    jobTitle?: { iv: string };
+    institution?: { iv: string };
     connections: { iv: { code: string }[] };
-    teams: TeamMember[];
+    teams?: { iv: TeamMember[] };
+    orcid?: { iv: string };
+    orcidLastModifiedDate?: { iv: string };
+    orcidWorks?: { iv: CMSOrcidWork[] };
   };
+}
+
+export interface CMSOrcidWork {
+  id: string;
+  doi?: string;
+  title?: string;
+  type: string;
+  publicationDate: {
+    year: string;
+    month?: string;
+    day?: string;
+  };
+  lastModifiedDate: string;
 }
 
 export const createSchema = Joi.object({

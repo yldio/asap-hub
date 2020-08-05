@@ -281,6 +281,132 @@
           "placeholder": "",
           "isRequired": false
         }
+      },
+      {
+        "name": "orcidLastModifiedDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "ORCID Last Modified Date",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "orcidWorks",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "ORCID Works",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "ID",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "doi",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "DOI",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "title",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Title",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "type",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Type",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "lastModifiedDate",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Last Modified Date",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "publicationDate",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "Json",
+              "label": "Publication Date",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          }
+        ]
       }
     ],
     "previewUrls": {

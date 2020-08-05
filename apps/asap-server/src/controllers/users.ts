@@ -148,6 +148,7 @@ export default class Users {
     }
 
     const [error, res] = await Intercept(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       fetchOrcidProfile(user!.data.orcid!.iv),
     );
 

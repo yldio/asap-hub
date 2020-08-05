@@ -45,9 +45,7 @@ describe('GET /users', () => {
 
   test('returns 200 when users exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    await Promise.all(
-      new Array(3).fill(async () => await createRandomUser()),
-    );
+    await Promise.all(new Array(3).fill(async () => await createRandomUser()));
 
     const result = (await handler(
       apiGatewayEvent({

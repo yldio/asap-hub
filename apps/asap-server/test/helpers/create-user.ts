@@ -31,7 +31,9 @@ function transform(user: CMSUser): TestUserResponse {
   };
 }
 
-export const createUser = (overwrites: Invitee | object = {}): Promise<CMSUser> => {
+export const createUser = (
+  overwrites: Invitee | object = {},
+): Promise<CMSUser> => {
   const user: Invitee = {
     displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),

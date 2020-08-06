@@ -43,6 +43,7 @@ export const createUser = (
     orcid: chance.ssn(),
     institution: chance.company(),
     email: chance.email(),
+    biography: chance.paragraph({ sentence: 3 }),
     ...overwrites,
   };
 

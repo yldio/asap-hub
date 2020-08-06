@@ -1,10 +1,20 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Profile, Paragraph } from '@asap-hub/react-components';
+import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+import { join } from 'path';
+import {
+  Container,
+  ProfileHeader,
+  Paragraph,
+} from '@asap-hub/react-components';
+
 import { useUserById } from '../api';
 
-const Page: React.FC<{}> = () => {
-  const { id } = useParams();
+const ProfilePage: React.FC<{}> = () => {
+  const {
+    url,
+    path,
+    params: { id },
+  } = useRouteMatch();
 
   const { loading, data: profile, error } = useUserById(id);
 
@@ -19,7 +29,7 @@ const Page: React.FC<{}> = () => {
 
     return (
       <Container>
-        <Profile
+        <ProfileHeader
           department={'Unknown Department'}
           displayName={profile.displayName}
           initials={initials}
@@ -28,7 +38,19 @@ const Page: React.FC<{}> = () => {
           team={'Team Unknown'}
           title={'Unknown Title'}
           role={'Unknown Role'}
+          aboutHref={join(url, 'about')}
+          researchInterestsHref={join(url, './research-interests')}
+          outputsHref={join(url, 'outputs')}
         />
+        <Switch>
+          <Route path={`${path}/about`} render={() => 'About'} />
+          <Route
+            path={`${path}/research-interests`}
+            render={() => 'Research interests'}
+          />
+          <Route path={`${path}/outputs`} render={() => 'Outputs'} />
+          <Redirect to={join(url, 'about')} />
+        </Switch>
       </Container>
     );
   }
@@ -42,4 +64,4 @@ const Page: React.FC<{}> = () => {
   );
 };
 
-export default Page;
+export default ProfilePage;

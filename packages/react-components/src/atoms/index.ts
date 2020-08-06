@@ -17,5 +17,6 @@ export { default as RadioButton } from './RadioButton';
 export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
 export { default as Theme } from './Theme';
+export { default as TabLink } from './TabLink';
 
 export type { DropdownProps } from './Dropdown';

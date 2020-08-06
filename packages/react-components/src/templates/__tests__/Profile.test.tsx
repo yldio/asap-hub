@@ -1,10 +1,12 @@
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { render } from '@testing-library/react';
-import Profile from '../Profile';
+import ProfileHeader from '../ProfileHeader';
 
-const Component = (props: ComponentProps<typeof Profile>) => (
-  <Profile {...props} />
-);
+const tabLinks = {
+  aboutHref: './about',
+  researchInterestsHref: './research-interests',
+  outputsHref: './outputs',
+};
 
 it('renders profile', () => {
   const user = {
@@ -18,7 +20,9 @@ it('renders profile', () => {
     title: 'Unknown title',
   };
 
-  const { rerender, getByRole } = render(<Component {...user} />);
+  const { rerender, getByRole } = render(
+    <ProfileHeader {...user} {...tabLinks} />,
+  );
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(`"John Doe"`);
 
   const userWithLocation = {
@@ -26,7 +30,7 @@ it('renders profile', () => {
     location: 'Unknown location',
   };
 
-  rerender(<Component {...userWithLocation} />);
+  rerender(<ProfileHeader {...userWithLocation} {...tabLinks} />);
 
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(`"John Doe"`);
 });

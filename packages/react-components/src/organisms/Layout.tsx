@@ -12,8 +12,8 @@ import {
 
 const containerStyles = css({
   position: 'relative',
-  minWidth: '100vw',
-  minHeight: '100vh',
+  minWidth: '100%',
+  minHeight: '100%',
 
   display: 'flex',
   flexDirection: 'column',

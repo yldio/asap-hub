@@ -52,6 +52,7 @@ export {
   RecordOutputForm,
   Signin,
   ProfileHeader,
+  ProfileBiography,
   Welcome,
 } from './templates';
 export {

@@ -3,8 +3,8 @@ import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 
 import { perRem } from '../pixels';
-import { Avatar, Button, Headline2, Link, Paragraph } from '../atoms';
-import { Container } from '../molecules';
+import { Avatar, Button, Headline2, Link, Paragraph, TabLink } from '../atoms';
+import { Container, TabNav } from '../molecules';
 
 const paddingContainer = css({
   paddingTop: `${36 / perRem}em`,
@@ -33,9 +33,13 @@ type ProfileProps = {
   readonly role: string;
   readonly team: string;
   readonly title: string;
+
+  readonly aboutHref: string;
+  readonly researchInterestsHref: string;
+  readonly outputsHref: string;
 };
 
-const Profile: React.FC<ProfileProps> = ({
+const ProfileHeader: React.FC<ProfileProps> = ({
   department,
   displayName,
   institution,
@@ -45,6 +49,10 @@ const Profile: React.FC<ProfileProps> = ({
   role,
   team,
   title,
+
+  aboutHref,
+  researchInterestsHref,
+  outputsHref,
 }) => {
   return (
     <Container>
@@ -76,8 +84,13 @@ const Profile: React.FC<ProfileProps> = ({
           )}
         </div>
       </div>
+      <TabNav>
+        <TabLink href={aboutHref}>About</TabLink>
+        <TabLink href={researchInterestsHref}>Research Interests</TabLink>
+        <TabLink href={outputsHref}>Shared Outputs</TabLink>
+      </TabNav>
     </Container>
   );
 };
 
-export default Profile;
+export default ProfileHeader;

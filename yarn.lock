@@ -173,6 +173,7 @@ __metadata:
     "@testing-library/react-hooks": ^3.4.1
     "@testing-library/user-event": ^11.4.2
     "@types/asap-hub__assets": "workspace:@types/asap-hub__assets"
+    "@types/history": ^4.7.6
     "@types/jest": ^26.0.3
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
@@ -186,6 +187,7 @@ __metadata:
     core-js: ^3.6.5
     date-fns: ^2.14.0
     emotion-normalize: ^10.1.0
+    history: ^4.10.1
     jest-emotion: ^10.0.32
     react: ^16.13.1
     react-dom: ^16.13.1
@@ -197,6 +199,7 @@ __metadata:
     uuid: ^8.1.0
   peerDependencies:
     "@asap-hub/react-context": "*"
+    history: ^4.10.1
     react: ^16.13.1
     react-dom: ^16.13.1
     react-router-dom: ^5.2.0
@@ -300,10 +303,12 @@ __metadata:
     "@storybook/addon-knobs": ^6.0.0-beta.12
     "@storybook/addon-viewport": ^6.0.0-beta.12
     "@storybook/react": ^6.0.0-beta.12
+    "@types/history": ^4.7.6
     "@types/react": ^16.9.0
     "@types/react-router-dom": ^5.1.5
     babel-preset-react-app: ^9.1.2
     core-js: ^3.6.5
+    history: ^4.10.1
     react: ^16.13.1
     react-dom: ^16.13.1
     react-router-dom: ^5.2.0

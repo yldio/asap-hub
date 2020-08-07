@@ -14,7 +14,7 @@ const Users: React.FC<{}> = () => {
       <Layout navigation>
         <Switch>
           <Route exact path={path} component={ProfileList} />
-          <Route exact path={`${path}/:id`} component={Profile} />
+          <Route path={`${path}/:id`} component={Profile} />
         </Switch>
       </Layout>
     </CheckAuth>

@@ -24,6 +24,7 @@ export {
   Headline4,
   Paragraph,
   GlobalStyles,
+  TabLink,
 } from './atoms';
 export {
   OrcidSigninButton,
@@ -36,6 +37,7 @@ export {
   LabeledPasswordField,
   LabeledDropdown,
   Navigation,
+  TabNav,
 } from './molecules';
 export {
   EmailPasswordSignin,
@@ -49,7 +51,7 @@ export {
   InviteUserForm,
   RecordOutputForm,
   Signin,
-  Profile,
+  ProfileHeader,
   Welcome,
 } from './templates';
 export {

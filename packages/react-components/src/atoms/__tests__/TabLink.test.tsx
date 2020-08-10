@@ -3,6 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import { StaticRouter } from 'react-router-dom';
 
 import TabLink from '../TabLink';
+import { findParentWithStyle } from '../../test-utils';
 
 describe.each`
   description           | wrapper
@@ -31,8 +32,12 @@ describe.each`
       </>,
       { wrapper },
     );
-    expect(getComputedStyle(getByText('Target')).fontWeight).toBe('bold');
-    expect(getComputedStyle(getByText('Other')).fontWeight).not.toBe('bold');
+    expect(
+      findParentWithStyle(getByText('Target'), 'fontWeight')?.fontWeight,
+    ).toBe('bold');
+    expect(
+      findParentWithStyle(getByText('Other'), 'fontWeight')?.fontWeight,
+    ).not.toBe('bold');
   });
 });
 

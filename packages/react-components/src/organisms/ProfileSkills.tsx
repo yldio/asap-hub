@@ -2,7 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import { Tag, Card, Headline2 } from '../atoms';
 
-type SkillsProps = {
+type ProfileSkillsProps = {
   readonly skills: string[];
 };
 
@@ -20,14 +20,14 @@ const elementStyle = css({
   flexShrink: 0,
 });
 
-const Skills: React.FC<SkillsProps> = ({ skills = [] }) => {
+const ProfileSkills: React.FC<ProfileSkillsProps> = ({ skills = [] }) => {
   return (
     <Card>
       <Headline2>Skills and Expertise</Headline2>
       <div css={containerStyles}>
-        {skills.map((s) => (
-          <div css={elementStyle}>
-            <Tag>{s}</Tag>
+        {skills.map((skill, index) => (
+          <div key={index} css={elementStyle}>
+            <Tag>{skill}</Tag>
           </div>
         ))}
       </div>
@@ -35,4 +35,4 @@ const Skills: React.FC<SkillsProps> = ({ skills = [] }) => {
   );
 };
 
-export default Skills;
+export default ProfileSkills;

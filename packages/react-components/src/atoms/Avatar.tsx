@@ -1,49 +1,62 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { fern, pine, silver, mint } from '../colors';
+import { pine, silver, mint } from '../colors';
+import { perRem } from '../pixels';
 
-const containerStyle = css({
-  borderRadius: '50%',
-  boxSizing: 'border-box',
+const ringStyle = css({
   display: 'flex',
-  height: '64px',
-  width: '64px',
-});
+  height: `${86 / perRem}em`,
+  width: `${86 / perRem}em`,
 
-const innerContainerStyle = css({
-  alignItems: 'center',
-  backgroundColor: mint.rgb,
-  borderRadius: '50%',
-  display: 'flex',
-  flex: 1,
-  justifyContent: 'center',
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${6 / perRem}em`,
 });
+const ringBorderStyle = css({
+  padding: `${4 / perRem}em`,
 
-const borderStyle = css({
-  padding: '4px',
   borderWidth: '1px',
   borderStyle: 'solid',
+  borderRadius: '50%',
   borderColor: silver.rgb,
 });
 
+const circleStyle = css({
+  flex: 1,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  backgroundColor: mint.rgb,
+  borderRadius: '50%',
+});
+
 const initialsStyle = css({
-  paddingTop: '2px',
+  paddingTop: `${2 / perRem}em`,
   color: pine.rgb,
 });
 
 type ButtonProps = {
   readonly border?: boolean;
-  readonly highlight?: boolean;
-  readonly initials: string;
+
+  readonly firstName?: string;
+  readonly lastName?: string;
 };
 
-const Avatar: React.FC<ButtonProps> = ({ border, initials }) => (
-  <div css={[border && borderStyle, containerStyle, { borderColor: fern.rgb }]}>
-    <div css={[innerContainerStyle]}>
-      <p css={[initialsStyle]}>{initials}</p>
+const Avatar: React.FC<ButtonProps> = ({
+  border = false,
+  firstName,
+  lastName,
+}) => {
+  const initials = (firstName?.[0] ?? '') + (lastName?.[0] ?? '');
+
+  return (
+    <div css={[ringStyle, border && ringBorderStyle]}>
+      <div css={[circleStyle]}>
+        <p css={[initialsStyle]}>{initials}</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Avatar;

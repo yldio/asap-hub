@@ -3,7 +3,7 @@ import { text } from '@storybook/addon-knobs';
 import { ProfileBiography } from '@asap-hub/react-components';
 
 export default {
-  title: 'Templates / Profile / Biography',
+  title: 'Organisms / Profile / Biography',
 };
 
 export const Normal = () => (

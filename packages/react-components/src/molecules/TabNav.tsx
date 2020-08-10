@@ -5,6 +5,7 @@ import { perRem } from '../pixels';
 
 const styles = css({
   display: 'flex',
+  flexWrap: 'wrap',
   margin: 0,
   padding: 0,
   listStyle: 'none',

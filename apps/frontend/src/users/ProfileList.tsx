@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Paragraph } from '@asap-hub/react-components';
+import { Paragraph, Layout } from '@asap-hub/react-components';
 import { useUsers } from '../api';
 
 type ProfileProps = {
@@ -9,33 +9,38 @@ type ProfileProps = {
 };
 
 const Profile: React.FC<ProfileProps> = ({ id, displayName }) => {
-  return (
-    <>
-      <Link to={`/users/${id}`}>{displayName}</Link>
-      {/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
-    </>
-  );
+  return <Link to={`/users/${id}`}>{displayName}</Link>;
 };
 
 const Page: React.FC<{}> = () => {
   const { loading, data: users, error } = useUsers();
 
   if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return (
+      <Layout navigation>
+        <Paragraph>Loading...</Paragraph>
+      </Layout>
+    );
   }
 
   if (users) {
-    return users.map((profile: ProfileProps) => {
-      return <Profile key={profile.id} {...profile} />;
-    });
+    return (
+      <Layout navigation>
+        {users.map((profile: ProfileProps) => {
+          return <Profile key={profile.id} {...profile} />;
+        })}
+      </Layout>
+    );
   }
 
   return (
-    <Paragraph>
-      {error.name}
-      {': '}
-      {error.message}
-    </Paragraph>
+    <Layout navigation>
+      <Paragraph>
+        {error.name}
+        {': '}
+        {error.message}
+      </Paragraph>
+    </Layout>
   );
 };
 

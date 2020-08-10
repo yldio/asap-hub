@@ -3,7 +3,7 @@ import { array } from '@storybook/addon-knobs';
 import { ProfileSkills } from '@asap-hub/react-components';
 
 export default {
-  title: 'Templates / Profile / Skills',
+  title: 'Organisms / Profile / Skills',
 };
 
 export const Normal = () => (
@@ -21,5 +21,3 @@ export const Normal = () => (
     ])}
   />
 );
-
-export const NoSkills = () => <ProfileSkills skills={array('Skills', [])} />;

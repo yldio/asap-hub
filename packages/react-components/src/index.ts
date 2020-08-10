@@ -45,13 +45,13 @@ export {
   SsoButtons,
   Layout,
   RadioButtonGroup,
+  ProfileBiography,
+  ProfileSkills,
 } from './organisms';
 
 export {
   InviteUserForm,
-  ProfileBiography,
   ProfileHeader,
-  ProfileSkills,
   RecordOutputForm,
   Signin,
   Welcome,
@@ -61,4 +61,5 @@ export {
   SigninPage,
   RecordOutputPage,
   WelcomePage,
+  ProfilePage,
 } from './pages';

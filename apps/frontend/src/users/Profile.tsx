@@ -5,6 +5,7 @@ import {
   Container,
   ProfileHeader,
   Paragraph,
+  ProfileBiography,
 } from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
@@ -43,7 +44,16 @@ const ProfilePage: React.FC<{}> = () => {
           outputsHref={join(url, 'outputs')}
         />
         <Switch>
-          <Route path={`${path}/about`} render={() => 'About'} />
+          <Route
+            path={`${path}/about`}
+            render={() => (
+              <>
+                {profile.biography && (
+                  <ProfileBiography biography={profile.biography} />
+                )}
+              </>
+            )}
+          />
           <Route
             path={`${path}/research-interests`}
             render={() => 'Research interests'}

@@ -2,23 +2,24 @@
 include: 'apps/react-templates/.gitlab-ci.yml'
 
 .tmpl:master: &tmpl_master
-  rules:
+  rules: &tmpl_master_rules
     - if: $CI_COMMIT_BRANCH == 'master'
   variables: &tmpl_master_variables
     SLS_STAGE: production
+    CMS_APP_NAME: $PROD_CMS_APP_NAME
+    CMS_BASE_URL: https://cloud.squidex.io/
     CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
     CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
-    CMS_APP_NAME: $PROD_CMS_APP_NAME
 
 .tmpl:branch: &tmpl_branch
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
   variables: &tmpl_branch_variables
     SLS_STAGE: $CI_COMMIT_REF_SLUG
+    CMS_APP_NAME: $DEV_CMS_APP_NAME
+    CMS_BASE_URL: $DEV_CMS_BASE_URL
     CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
     CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
-    CMS_BASE_URL: $DEV_CMS_BASE_URL
-    CMS_APP_NAME: $DEV_CMS_APP_NAME
 
 .tmpl:branch_remove: &tmpl_branch_remove
   rules:
@@ -169,17 +170,14 @@ deploy:sls:branch_remove:
   stage: deploy
 
 deploy:sync-cms:
+  <<: *tmpl_master
   image: johnytiago/setup-cms
   script:
-    - sq config add $DEV_CMS_APP_NAME $DEV_CMS_CLIENT_ID $DEV_CMS_CLIENT_SECRET -u $DEV_CMS_BASE_URL
-    - sq config use $DEV_CMS_APP_NAME
-    - sq sync in dev/squidex
-    - sq config add asap-hub $PROD_CMS_CLIENT_ID $PROD_CMS_CLIENT_SECRET -u https://cloud.squidex.io/
+    - sq config add asap-hub $CMS_CLIENT_ID $CMS_CLIENT_SECRET -u $CMS_BASE_URL
     - sq config use asap-hub
     - sq sync in dev/squidex
   stage: deploy
-  only:
-    refs:
-      - master
-    changes:
-      - dev/squidex/*
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      changes:
+        - dev/squidex/*

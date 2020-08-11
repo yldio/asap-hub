@@ -167,6 +167,23 @@
         }
       },
       {
+        "name": "biography",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "TextArea",
+          "label": "Biography",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
         "name": "teams",
         "isHidden": false,
         "isLocked": false,
@@ -410,7 +427,7 @@
       }
     ],
     "previewUrls": {
-      "Web": "http://hub.asap.science/users/${id}"
+      "Web": "https://hub.asap.science/users/${id}"
     },
     "category": "Storage",
     "isPublished": true

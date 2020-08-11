@@ -10,6 +10,13 @@ const styles = css`
   html {
     ${fontStyles}
   }
+  html,
+  body,
+  #root {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const GlobalStyles: React.FC<{}> = () => <Global styles={styles} />;

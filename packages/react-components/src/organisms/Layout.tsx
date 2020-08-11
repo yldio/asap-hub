@@ -2,84 +2,63 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { Header, Navigation } from '../molecules';
-import { steel } from '../colors';
-import {
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-  perRem,
-} from '../pixels';
+import { smallDesktopScreen } from '../pixels';
 
-const containerStyles = css({
-  position: 'relative',
-  minWidth: '100%',
-  minHeight: '100%',
+const showNavigationQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
 
-  display: 'flex',
-  flexDirection: 'column',
+const styles = css({
+  height: '100%',
+  display: 'grid',
+  grid: `
+    "header  header " max-content
+    "content content" auto
+  `,
 });
 
+const withNavigationStyles = css({
+  [showNavigationQuery]: {
+    grid: `
+      "header header " max-content
+      "nav    content" auto / max-content auto
+    `,
+  },
+});
+
+const headerStyles = css({
+  gridArea: 'header',
+});
+const navigationStyles = css({
+  display: 'none',
+  [showNavigationQuery]: {
+    gridArea: 'nav',
+    display: 'unset',
+  },
+});
 const contentStyles = css({
-  flexGrow: 1,
-  padding: `${vminLinearCalc(
-    mobileScreen,
-    36,
-    largeDesktopScreen,
-    72,
-    'px',
-  )} ${vminLinearCalc(mobileScreen, 24, largeDesktopScreen, 159, 'px')}`,
+  gridArea: 'content',
+  overflowX: 'hidden', // prevent grid blowout
 
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
 });
 
-const navigationStyles = css({
-  top: 0,
-  position: 'absolute',
-});
-
-const navigationContentStyles = css({
-  marginLeft: `${256 / perRem}em`,
-});
-
-const centerStyles = css({
-  justifyContent: 'center',
-});
-
-const headerStyles = css({
-  position: 'relative',
-  borderBottom: `1px solid ${steel.rgb}`,
-});
-
 interface LayoutProps {
-  readonly center?: boolean;
   readonly children: React.ReactNode;
   readonly navigation?: boolean;
 }
-const Layout: React.FC<LayoutProps> = ({
-  center,
-  children,
-  navigation = false,
-}) => (
-  <article css={containerStyles}>
+const Layout: React.FC<LayoutProps> = ({ children, navigation = false }) => (
+  <article css={[styles, navigation && withNavigationStyles]}>
+    {/* order relevant for overlap */}
+    <main css={contentStyles}>{children}</main>
     <div css={headerStyles}>
       <Header />
-      {navigation && (
-        <div css={navigationStyles}>
-          <Navigation />
-        </div>
-      )}
     </div>
-    <main
-      css={[
-        contentStyles,
-        navigation && navigationContentStyles,
-        center && centerStyles,
-      ]}
-    >
-      {children}
-    </main>
+    {navigation && (
+      <div css={navigationStyles}>
+        <Navigation />
+      </div>
+    )}
   </article>
 );
 

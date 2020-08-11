@@ -100,7 +100,7 @@ const SigninPage: React.FC<WelcomePageProps> = ({
   return (
     <Background>
       <div css={{ position: 'absolute', top: 0, width: '100%' }}>
-        <Header>
+        <Header transparent>
           <div css={mobileHiddenStyles}>{linksComponent}</div>
         </Header>
       </div>

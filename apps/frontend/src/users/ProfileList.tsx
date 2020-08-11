@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Paragraph } from '@asap-hub/react-components';
+import { Paragraph } from '@asap-hub/react-components';
 import { useUsers } from '../api';
 
 type ProfileProps = {
@@ -25,13 +25,9 @@ const Page: React.FC<{}> = () => {
   }
 
   if (users) {
-    return (
-      <Container>
-        {users.map((profile: ProfileProps) => {
-          return <Profile key={profile.id} {...profile} />;
-        })}
-      </Container>
-    );
+    return users.map((profile: ProfileProps) => {
+      return <Profile key={profile.id} {...profile} />;
+    });
   }
 
   return (

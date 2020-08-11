@@ -2,9 +2,14 @@ import React from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 
-import { perRem } from '../pixels';
+import { perRem, contentSidePaddingWithNavigation } from '../pixels';
 import { Avatar, Button, Headline2, Link, Paragraph, TabLink } from '../atoms';
-import { Container, TabNav } from '../molecules';
+import { TabNav } from '../molecules';
+
+const containerStyles = css({
+  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
+  alignSelf: 'stretch',
+});
 
 const paddingContainer = css({
   paddingTop: `${36 / perRem}em`,
@@ -55,7 +60,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   outputsHref,
 }) => {
   return (
-    <Container>
+    <div css={containerStyles}>
       <div css={[paddingContainer]}>
         <div css={[flexContainer]}>
           <div>
@@ -89,7 +94,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
         <TabLink href={researchInterestsHref}>Research Interests</TabLink>
         <TabLink href={outputsHref}>Shared Outputs</TabLink>
       </TabNav>
-    </Container>
+    </div>
   );
 };
 

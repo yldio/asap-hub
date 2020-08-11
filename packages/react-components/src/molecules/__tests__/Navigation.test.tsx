@@ -5,12 +5,7 @@ import { render } from '@testing-library/react';
 import Navigation from '../Navigation';
 
 it('renders the navigation sidebar', () => {
-  const { getByAltText, getAllByRole } = render(<Navigation />);
-
-  expect(getByAltText(/asap.+logo/i)).toHaveAttribute(
-    'src',
-    expect.stringMatching(/asap/i),
-  );
+  const { getAllByRole } = render(<Navigation />);
 
   const links = getAllByRole('link');
   expect(links.map((link) => link.getAttribute('href'))).toEqual([

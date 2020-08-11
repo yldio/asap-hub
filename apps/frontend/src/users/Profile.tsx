@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { join } from 'path';
 import {
-  Container,
   ProfileHeader,
   Paragraph,
   ProfileBiography,
@@ -29,7 +28,7 @@ const ProfilePage: React.FC<{}> = () => {
     }`;
 
     return (
-      <Container>
+      <>
         <ProfileHeader
           department={'Unknown Department'}
           displayName={profile.displayName}
@@ -61,7 +60,7 @@ const ProfilePage: React.FC<{}> = () => {
           <Route path={`${path}/outputs`} render={() => 'Outputs'} />
           <Redirect to={join(url, 'about')} />
         </Switch>
-      </Container>
+      </>
     );
   }
 

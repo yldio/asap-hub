@@ -39,6 +39,7 @@ services:
     build: .
     volumes:
       - ./dev/fixtures:/dev/fixtures
+      - ./dev/squidex:/dev/squidex
     depends_on:
       - mongo
       - squidex

@@ -12,29 +12,46 @@ export interface Connection {
   source: string;
 }
 
+interface createUserData {
+  displayName: { iv: string };
+  email: { iv: string };
+  firstName: { iv?: string };
+  middleName: { iv?: string };
+  lastName: { iv?: string };
+  jobTitle: { iv?: string };
+  orcid: { iv?: string };
+  institution: { iv?: string };
+  connections?: { iv: { code: string }[] };
+}
+
 export default class Users extends Base {
   constructor(CMSConfig: BaseOptions) {
     super(CMSConfig);
   }
 
-  create(user: Invitee): Promise<CMSUser> {
-    const code = uuidV4();
+  create(user: Invitee, options: { raw?: boolean } = {}): Promise<CMSUser> {
+    const json: createUserData = {
+      displayName: { iv: user.displayName },
+      email: { iv: user.email },
+      firstName: { iv: user.firstName },
+      middleName: { iv: user.middleName },
+      lastName: { iv: user.lastName },
+      jobTitle: { iv: user.jobTitle },
+      orcid: { iv: user.orcid },
+      institution: { iv: user.institution },
+    };
+
+    if (!options?.raw) {
+      json.connections = { iv: [{ code: uuidV4() }] };
+    }
+
     return this.client
-      .post<CMSUser>('users', {
-        json: {
-          displayName: { iv: user.displayName },
-          email: { iv: user.email },
-          firstName: { iv: user.firstName },
-          middleName: { iv: user.middleName },
-          lastName: { iv: user.lastName },
-          jobTitle: { iv: user.jobTitle },
-          orcid: { iv: user.orcid },
-          institution: { iv: user.institution },
-          connections: { iv: [{ code }] },
-        },
-        searchParams: { publish: true },
-      })
+      .post<CMSUser>('users', { json, searchParams: { publish: true } })
       .json();
+  }
+
+  delete(id: string): Promise<void> {
+    return this.client.delete(`users/${id}`).json();
   }
 
   async fetch(): Promise<CMSUser[]> {

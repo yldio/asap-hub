@@ -5,12 +5,12 @@ import { HTTPError } from 'got';
 
 import { CMSTeam } from '../entities/team';
 
-interface TeamCreationRequest {
+export interface TeamCreationRequest {
   displayName: string;
   applicationNumber: string;
   projectTitle: string;
-  projectSummary: string;
-  tags: string[];
+  projectSummary?: string;
+  tags?: string[];
 }
 
 export default class Teams extends Base {
@@ -45,6 +45,22 @@ export default class Teams extends Base {
 
   fetchById(id: string): Promise<CMSTeam> {
     return this.client.get<CMSTeam>(`teams/${id}`).json();
+  }
+
+  delete(id: string): Promise<void> {
+    return this.client.delete(`teams/${id}`).json();
+  }
+
+  async fetchByApplicationNumber(appNumber: string): Promise<CMSTeam> {
+    const { items } = await this.client
+      .get('teams', {
+        searchParams: {
+          $filter: `data/applicationNumber/iv eq '${appNumber}'`,
+        },
+      })
+      .json();
+
+    return items[0] as CMSTeam;
   }
 
   async fetch(): Promise<CMSTeam[]> {

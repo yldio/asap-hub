@@ -13,6 +13,7 @@ import { AuthProvider } from './auth';
 import ResearchOutputRoutes from './research-outputs/Routes';
 import CheckAuth from './auth/CheckAuth';
 import ContinueOnboarding from './onboarding/ContinueOnboarding';
+import Page from './pages/page';
 
 const AuthCallbackGuardedHome: React.FC<{}> = () => (
   <CheckAuth>
@@ -34,6 +35,8 @@ const App: React.FC<{}> = () => {
           <Route path="/users" component={Users} />
           <Route path="/research-outputs" component={ResearchOutputRoutes} />
           <Route path="/welcome" component={Welcome} />
+          <Route exact path="/terms-and-conditions" component={Page} />
+          <Route exact path="/privacy-policy" component={Page} />
 
           <Route exact path="/create-profile" component={CreateProfile} />
           <Route exact path="/admin" component={Admin} />

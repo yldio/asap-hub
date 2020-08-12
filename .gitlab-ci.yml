@@ -7,7 +7,7 @@ include: 'apps/react-templates/.gitlab-ci.yml'
   variables: &tmpl_master_variables
     SLS_STAGE: production
     CMS_APP_NAME: $PROD_CMS_APP_NAME
-    CMS_BASE_URL: https://cloud.squidex.io/
+    CMS_BASE_URL: https://cloud.squidex.io
     CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
     CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
 

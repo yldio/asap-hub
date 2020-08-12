@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { steel, charcoal, mint } from '../colors';
+import { tabletScreen } from '../pixels';
 
 const borderWidth = 1;
 const styles = css({
@@ -28,9 +29,13 @@ const containerStyles = css({
   cursor: 'default',
   justifyContent: 'center',
   alignItems: 'center',
-  whiteSpace: 'pre',
-  marginTop: '12px',
+
+  marginTop: '6px',
   marginBottom: '6px',
+
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    marginTop: '12px',
+  },
 });
 
 const highlightStyles = css({

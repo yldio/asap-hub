@@ -8,7 +8,7 @@ describe('Parse MJFF CSV file', () => {
   let teams: CMSTeam[] = [];
   let users: Array<CMSUser | null> = [];
 
-  beforeAll(async () => await parseCSV());
+  beforeAll(async () => await parseCSV(), 10000);
 
   afterAll(async () => {
     await Promise.all(teams.map(({ id }) => cms.teams.delete(id)));
@@ -35,8 +35,8 @@ describe('Parse MJFF CSV file', () => {
         'ronaldo@ucl.ac.uk',
       ].map((email) => cms.users.fetchByEmail(email)),
     );
-    expect(users[0].id).toBeDefined();
-    expect(users[1].id).toBeDefined();
-    expect(users[2].id).toBeDefined();
+    expect(users[0]?.id).toBeDefined();
+    expect(users[1]?.id).toBeDefined();
+    expect(users[2]?.id).toBeDefined();
   });
-}, 10000);
+});

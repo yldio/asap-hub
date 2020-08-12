@@ -4,6 +4,20 @@ import { steel, charcoal, mint } from '../colors';
 import { tabletScreen } from '../pixels';
 
 const borderWidth = 1;
+const containerStyles = css({
+  display: 'flex',
+  cursor: 'default',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  marginTop: '6px',
+  marginBottom: '6px',
+
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    marginTop: '12px',
+  },
+});
+
 const styles = css({
   display: 'flex',
   justifyContent: 'center',
@@ -21,20 +35,6 @@ const styles = css({
 
   ':hover': {
     borderColor: charcoal.rgb,
-  },
-});
-
-const containerStyles = css({
-  display: 'flex',
-  cursor: 'default',
-  justifyContent: 'center',
-  alignItems: 'center',
-
-  marginTop: '6px',
-  marginBottom: '6px',
-
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    marginTop: '12px',
   },
 });
 

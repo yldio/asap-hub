@@ -17,4 +17,4 @@ export const ErrorState = () => (
     state={new Error(text('Error Message', 'Unauthorized'))}
   />
 );
-ErrorState.story = { name: 'Error' };
+ErrorState.storyName = 'Error';

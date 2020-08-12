@@ -15,6 +15,7 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v5.2/l
     mv sq /bin
 
 VOLUME ["/dev/fixtures"]
+VOLUME ["/dev/squidex"]
 
 COPY dev/setup-cms.sh ./
 

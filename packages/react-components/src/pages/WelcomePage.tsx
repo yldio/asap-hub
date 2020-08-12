@@ -81,7 +81,7 @@ const Background: React.FC<BackgroundProps> = ({ children }) => {
 type WelcomePageProps = Pick<ComponentProps<typeof Welcome>, 'onClick'> & {
   readonly signup?: boolean;
 };
-const SigninPage: React.FC<WelcomePageProps> = ({
+const WelcomePage: React.FC<WelcomePageProps> = ({
   signup = false,
   ...props
 }) => {
@@ -127,4 +127,4 @@ const SigninPage: React.FC<WelcomePageProps> = ({
   );
 };
 
-export default SigninPage;
+export default WelcomePage;

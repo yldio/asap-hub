@@ -2,9 +2,10 @@ import React from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { join } from 'path';
 import {
-  ProfileHeader,
   Paragraph,
   ProfileBiography,
+  ProfileHeader,
+  ProfileSkills,
 } from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
@@ -50,6 +51,7 @@ const ProfilePage: React.FC<{}> = () => {
                 {profile.biography && (
                   <ProfileBiography biography={profile.biography} />
                 )}
+                {profile.skills && <ProfileSkills skills={profile.skills} />}
               </>
             )}
           />

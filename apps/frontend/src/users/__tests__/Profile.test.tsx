@@ -19,6 +19,7 @@ const user: UserResponse = {
   institution: 'Unknown Institution',
   jobTitle: 'Unknown Title',
   teams: [],
+  skills: [],
 };
 // fetch user by code request
 beforeEach(() => {

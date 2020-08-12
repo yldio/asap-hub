@@ -25,6 +25,7 @@ export {
   Paragraph,
   GlobalStyles,
   TabLink,
+  Tag,
 } from './atoms';
 export {
   OrcidSigninButton,
@@ -48,10 +49,11 @@ export {
 
 export {
   InviteUserForm,
+  ProfileBiography,
+  ProfileHeader,
+  ProfileSkills,
   RecordOutputForm,
   Signin,
-  ProfileHeader,
-  ProfileBiography,
   Welcome,
 } from './templates';
 export {

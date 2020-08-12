@@ -184,103 +184,17 @@
         }
       },
       {
-        "name": "teams",
+        "name": "skills",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "Array",
-          "label": "Teams",
-          "hints": "",
-          "placeholder": "",
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Skills",
           "isRequired": false
-        },
-        "nested": [
-          {
-            "name": "id",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "References",
-              "minItems": 1,
-              "maxItems": 1,
-              "allowDuplicates": false,
-              "resolveReference": false,
-              "editor": "List",
-              "schemaIds": [
-                "teams"
-              ],
-              "label": "ID",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": true
-            }
-          },
-          {
-            "name": "role",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Role",
-              "isRequired": true
-            }
-          },
-          {
-            "name": "displayName",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Display Name",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false
-            }
-          }
-        ]
-      },
-      {
-        "name": "connections",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "label": "Connections",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        },
-        "nested": [
-          {
-            "name": "code",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": true,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "editor": "Input",
-              "label": "Code",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": true
-            }
-          }
-        ]
+        }
       },
       {
         "name": "orcid",
@@ -421,6 +335,105 @@
               "hints": "",
               "placeholder": "",
               "isRequired": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "teams",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Teams",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "editor": "List",
+              "schemaIds": [
+                "teams"
+              ],
+              "label": "ID",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "role",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Role",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "displayName",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Display Name",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "connections",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Connections",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "code",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": true,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": true,
+              "editor": "Input",
+              "label": "Code",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
             }
           }
         ]

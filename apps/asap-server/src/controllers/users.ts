@@ -25,10 +25,11 @@ function transform(user: CMSUser): UserResponse {
     biography: user.data.biography?.iv,
     jobTitle: user.data.jobTitle?.iv,
     institution: user.data.institution?.iv,
-    teams: user.data.teams?.iv,
+    teams: user.data.teams?.iv || [],
     orcid: user.data.orcid?.iv,
     orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
     orcidWorks: user.data.orcidWorks?.iv,
+    skills: user.data.skills?.iv || [],
   };
 }
 

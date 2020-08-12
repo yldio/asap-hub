@@ -26,8 +26,9 @@ function transform(user: CMSUser): TestUserResponse {
     jobTitle: user.data.jobTitle && user.data.jobTitle.iv,
     orcid: user.data.orcid && user.data.orcid.iv,
     institution: user.data.institution && user.data.institution.iv,
-    teams: user.data.teams?.iv,
+    teams: user.data.teams?.iv || [],
     connections: user.data.connections.iv,
+    skills: user.data.skills?.iv || [],
   };
 }
 

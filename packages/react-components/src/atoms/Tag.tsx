@@ -1,0 +1,51 @@
+import React from 'react';
+import css from '@emotion/css';
+import { steel, charcoal, mint } from '../colors';
+
+const borderWidth = 1;
+const styles = css({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+
+  borderStyle: 'solid',
+  borderWidth: `${borderWidth}px`,
+  borderColor: steel.rgb,
+  borderRadius: '18px',
+
+  height: '36px',
+  transition: '200ms',
+  paddingLeft: '12px',
+  paddingRight: '12px',
+
+  ':hover': {
+    borderColor: charcoal.rgb,
+  },
+});
+
+const containerStyles = css({
+  display: 'flex',
+  cursor: 'default',
+  justifyContent: 'center',
+  alignItems: 'center',
+  whiteSpace: 'pre',
+  marginTop: '12px',
+  marginBottom: '6px',
+});
+
+const highlightStyles = css({
+  backgroundColor: mint.rgb,
+});
+
+type ButtonProps = {
+  readonly highlight?: boolean;
+  readonly children?: React.ReactNode;
+};
+
+const Tag: React.FC<ButtonProps> = ({ children, highlight = false }) => (
+  <div css={containerStyles}>
+    <div css={[styles, highlight && highlightStyles]}>{children}</div>
+  </div>
+);
+
+export default Tag;

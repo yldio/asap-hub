@@ -6,7 +6,7 @@ export default {
   title: 'Templates / Profile / Biography',
 };
 
-export const Biography = () => (
+export const Normal = () => (
   <ProfileBiography
     biography={text(
       'Biography',

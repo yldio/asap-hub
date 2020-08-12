@@ -28,7 +28,6 @@ export {
 } from './atoms';
 export {
   OrcidSigninButton,
-  Container,
   GoogleSigninButton,
   Header,
   LabeledDateField,

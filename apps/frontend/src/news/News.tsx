@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Paragraph } from '@asap-hub/react-components';
+import { Paragraph } from '@asap-hub/react-components';
 import { useNewsBySlug } from '../api';
 
 const Page: React.FC<{}> = () => {
@@ -13,11 +13,7 @@ const Page: React.FC<{}> = () => {
   }
 
   if (news) {
-    return (
-      <Container>
-        <pre>{JSON.stringify(news, null, 2)}</pre>
-      </Container>
-    );
+    return <pre>{JSON.stringify(news, null, 2)}</pre>;
   }
 
   return (

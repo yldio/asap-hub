@@ -1,15 +1,20 @@
 import React from 'react';
+import css from '@emotion/css';
+
 import { Card, Headline2, Button, Paragraph } from '../atoms';
-import { Container } from '../molecules';
 import { docsIcon } from '../icons';
+import { contentSidePaddingWithNavigation } from '../pixels';
+
+const containerStyles = css({
+  padding: `24px ${contentSidePaddingWithNavigation(8)}`,
+});
 
 type ProfileProps = {
   readonly biography: string;
 };
-
 const Profile: React.FC<ProfileProps> = ({ biography }) => {
   return (
-    <Container>
+    <section css={containerStyles}>
       <Card>
         <Headline2>Biography</Headline2>
         <Paragraph>{biography}</Paragraph>
@@ -18,7 +23,7 @@ const Profile: React.FC<ProfileProps> = ({ biography }) => {
           View Biosketch
         </Button>
       </Card>
-    </Container>
+    </section>
   );
 };
 

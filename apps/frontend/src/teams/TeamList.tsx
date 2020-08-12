@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Paragraph } from '@asap-hub/react-components';
+import { Paragraph } from '@asap-hub/react-components';
 import { useTeams } from '../api';
 
 const Page: React.FC = () => {
@@ -22,18 +22,18 @@ const Page: React.FC = () => {
 
   if (teams) {
     return (
-      <Container>
+      <>
         {teams.map((team) => {
           const { id } = team;
           return (
-            <div key="id">
+            <div key={id}>
               <Link to={`/teams/${id}`}>
                 <pre>{JSON.stringify(team, null, 2)}</pre>
               </Link>
             </div>
           );
         })}
-      </Container>
+      </>
     );
   }
 

@@ -23,8 +23,8 @@ describe('Parse MJFF CSV file', () => {
         cms.teams.fetchByApplicationNumber(app),
       ),
     );
-    expect(teams[0].id).toBeDefined();
-    expect(teams[1].id).toBeDefined();
+    expect(teams[0]?.id).toBeDefined();
+    expect(teams[1]?.id).toBeDefined();
   });
 
   test('Should create 3 users', async () => {

@@ -12,7 +12,7 @@ export interface Connection {
   source: string;
 }
 
-interface createUserData {
+interface CreateUserData {
   displayName: { iv: string };
   email: { iv: string };
   firstName: { iv?: string };
@@ -30,7 +30,7 @@ export default class Users extends Base {
   }
 
   create(user: Invitee, options: { raw?: boolean } = {}): Promise<CMSUser> {
-    const json: createUserData = {
+    const json: CreateUserData = {
       displayName: { iv: user.displayName },
       email: { iv: user.email },
       firstName: { iv: user.firstName },

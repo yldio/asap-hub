@@ -1,4 +1,6 @@
 /* istanbul ignore file */
+/* eslint-disable no-console, no-continue, no-restricted-syntax */
+
 import parse from 'csv-parse';
 import Intercept from 'apr-intercept';
 import { createReadStream } from 'fs';
@@ -11,6 +13,43 @@ import { CMSTeam } from '../entities/team';
 
 const cache: { [key: string]: CMSTeam | string } = {};
 const cms = new CMS();
+
+const createTeam = async (
+  piFirstName: string,
+  piLastName: string,
+  applicationNumber: string,
+  projectTitle: string,
+): Promise<CMSTeam | undefined> => {
+  if (!cache[applicationNumber]) {
+    const newTeam: TeamCreationRequest = {
+      displayName: `${piLastName}, ${piFirstName[0]}.`,
+      applicationNumber,
+      projectTitle,
+    };
+
+    const [error, team] = await Intercept(cms.teams.create(newTeam));
+
+    if (error) {
+      // error might be due to duplicate, attempt to fetch team
+      const [fetchError, fetchTeam] = await Intercept(
+        cms.teams.fetchByApplicationNumber(applicationNumber),
+      );
+
+      if (fetchError) {
+        console.log('Error creating Team:', newTeam);
+        cache[applicationNumber] = 'FAILED';
+        return undefined;
+      }
+
+      cache[applicationNumber] = fetchTeam;
+    }
+
+    cache[applicationNumber] = team;
+  }
+  return cache[applicationNumber] === 'FAILED'
+    ? undefined
+    : (cache[applicationNumber] as CMSTeam);
+};
 
 export const parseCSV = async (): Promise<void> => {
   const filePath = path.resolve(
@@ -87,39 +126,3 @@ export const parseCSV = async (): Promise<void> => {
   }
 };
 
-const createTeam = async (
-  piFirstName: string,
-  piLastName: string,
-  applicationNumber: string,
-  projectTitle: string,
-): Promise<CMSTeam | undefined> => {
-  if (!cache[applicationNumber]) {
-    const newTeam: TeamCreationRequest = {
-      displayName: `${piLastName}, ${piFirstName[0]}.`,
-      applicationNumber,
-      projectTitle,
-    };
-
-    const [error, team] = await Intercept(cms.teams.create(newTeam));
-
-    if (error) {
-      // error might be due to duplicate, attempt to fetch team
-      const [error, team] = await Intercept(
-        cms.teams.fetchByApplicationNumber(applicationNumber),
-      );
-
-      if (error) {
-        console.log('Error creating Team:', newTeam);
-        cache[applicationNumber] = 'FAILED';
-        return;
-      }
-
-      cache[applicationNumber] = team;
-    }
-
-    cache[applicationNumber] = team;
-  }
-  return cache[applicationNumber] === 'FAILED'
-    ? undefined
-    : (cache[applicationNumber] as CMSTeam);
-};

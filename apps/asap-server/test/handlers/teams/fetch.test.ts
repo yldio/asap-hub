@@ -72,7 +72,7 @@ describe('GET /teams', () => {
     expect(JSON.parse(result.body).length).toEqual(0);
   });
 
-  test.only('returns 200 when teams exist', async () => {
+  test('returns 200 when teams exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
     await Promise.all(new Array(3).fill(async () => await createRandomTeam()));

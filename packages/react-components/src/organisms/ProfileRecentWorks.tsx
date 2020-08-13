@@ -2,9 +2,8 @@ import React from 'react';
 import css from '@emotion/css';
 import { format } from 'date-fns';
 import { Card, Headline2, Headline3 } from '../atoms';
-import { contentSidePaddingWithNavigation } from '../pixels';
 
-type WorksProps = {
+type RecentWorksProps = {
   readonly works: {
     readonly id: string;
     readonly doi: string;
@@ -17,10 +16,6 @@ type WorksProps = {
     };
   }[];
 };
-
-const sectionStyles = css({
-  padding: `17.5px ${contentSidePaddingWithNavigation(8)}`,
-});
 
 const containerStyles = css({
   display: 'flex',
@@ -35,40 +30,38 @@ const elementStyle = css({
   paddingRight: '8px',
 });
 
-const Skills: React.FC<WorksProps> = ({ works = [] }) => {
+const RecentWorks: React.FC<RecentWorksProps> = ({ works = [] }) => {
   return (
-    <section css={sectionStyles}>
-      <Card>
-        <Headline2>Recent Publications ({works.length})</Headline2>
-        <div css={containerStyles}>
-          {works.map(({ doi, title, type, publicationDate, ...props }) => {
-            const { year, month = '0', day = '1' } = publicationDate;
-            const date = new Date(
-              parseInt(year, 10),
-              parseInt(month, 10),
-              parseInt(day, 10),
-            );
+    <Card>
+      <Headline2>Recent Publications ({works.length})</Headline2>
+      <div css={containerStyles}>
+        {works.map(({ doi, title, type, publicationDate, ...props }) => {
+          const { year, month = '0', day = '1' } = publicationDate;
+          const date = new Date(
+            parseInt(year, 10),
+            parseInt(month, 10),
+            parseInt(day, 10),
+          );
 
-            return (
-              <div css={elementStyle}>
-                {type}
-                <Headline3>{title}</Headline3>
-                <p>
-                  Originally Published:{' '}
-                  {format(
-                    date,
-                    `${publicationDate.day ? 'Do ' : ''}${
-                      publicationDate.month ? 'MMMM ' : ''
-                    }${publicationDate.year ? 'yyyy' : ''}`,
-                  )}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-    </section>
+          return (
+            <div css={elementStyle}>
+              {type}
+              <Headline3>{title}</Headline3>
+              <p>
+                Originally Published:{' '}
+                {format(
+                  date,
+                  `${publicationDate.day ? 'Do ' : ''}${
+                    publicationDate.month ? 'MMMM ' : ''
+                  }${publicationDate.year ? 'yyyy' : ''}`,
+                )}
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </Card>
   );
 };
 
-export default Skills;
+export default RecentWorks;

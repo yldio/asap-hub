@@ -180,4 +180,4 @@ deploy:sync-cms:
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       changes:
-        - dev/squidex/*
+        - dev/squidex/**

@@ -39,7 +39,7 @@ const renderProfile = async () => {
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/42/']}>
-            <Route path="/:id/" component={Profile} />
+            <Route path="/:id" component={Profile} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>

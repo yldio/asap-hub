@@ -15,7 +15,7 @@ interface CardProps {
   readonly children: React.ReactNode;
 }
 const Card: React.FC<CardProps> = ({ children }) => (
-  <div css={[containerStyles]}>{children}</div>
+  <section css={[containerStyles]}>{children}</section>
 );
 
 export default Card;

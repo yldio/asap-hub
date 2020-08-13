@@ -110,17 +110,15 @@
         }
       },
       {
-        "name": "proposalURL",
+        "name": "skills",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Proposal URL",
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Skills",
           "hints": "",
           "placeholder": "",
           "isRequired": false

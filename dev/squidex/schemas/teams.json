@@ -91,6 +91,23 @@
           "placeholder": "",
           "isRequired": false
         }
+      },
+      {
+        "name": "proposalURL",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Proposal URL",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
       }
     ],
     "previewUrls": {

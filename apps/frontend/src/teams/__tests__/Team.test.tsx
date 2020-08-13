@@ -19,7 +19,7 @@ const team: TeamResponse = {
   projectTitle: 'Unkown Project Title',
   projectSummary: 'Unkown Project Summary',
   members: [],
-  tags: [],
+  skills: [],
 };
 
 // fetch user by code request

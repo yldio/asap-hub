@@ -20,7 +20,7 @@ const teams: ReadonlyArray<TeamResponse> = [
     projectTitle: 'Unkown Project Title',
     projectSummary: 'Unkown Project Summary',
     members: [],
-    tags: [],
+    skills: [],
   },
 ];
 

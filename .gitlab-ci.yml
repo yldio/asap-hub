@@ -1,5 +1,5 @@
-# https://gitlab.com/yldio/asap-hub/-/ci/lint
-include: 'apps/react-templates/.gitlab-ci.yml'
+# # https://gitlab.com/yldio/asap-hub/-/ci/lint
+# include: 'apps/react-templates/.gitlab-ci.yml'
 
 .tmpl:master: &tmpl_master
   rules: &tmpl_master_rules
@@ -11,24 +11,24 @@ include: 'apps/react-templates/.gitlab-ci.yml'
     CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
     CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
 
-.tmpl:branch: &tmpl_branch
-  rules:
-    - if: $CI_EXTERNAL_PULL_REQUEST_IID
-  variables: &tmpl_branch_variables
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
-    CMS_APP_NAME: $DEV_CMS_APP_NAME
-    CMS_BASE_URL: $DEV_CMS_BASE_URL
-    CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
-    CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
+# .tmpl:branch: &tmpl_branch
+#   rules:
+#     - if: $CI_EXTERNAL_PULL_REQUEST_IID
+#   variables: &tmpl_branch_variables
+#     SLS_STAGE: $CI_COMMIT_REF_SLUG
+#     CMS_APP_NAME: $DEV_CMS_APP_NAME
+#     CMS_BASE_URL: $DEV_CMS_BASE_URL
+#     CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
+#     CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
 
-.tmpl:branch_remove: &tmpl_branch_remove
-  rules:
-    - if: $CI_EXTERNAL_PULL_REQUEST_IID
-      when: manual
-      allow_failure: true
-  variables: &tmpl_branch_remove_variables
-    <<: *tmpl_branch_variables
-    GIT_CHECKOUT: 0
+# .tmpl:branch_remove: &tmpl_branch_remove
+#   rules:
+#     - if: $CI_EXTERNAL_PULL_REQUEST_IID
+#       when: manual
+#       allow_failure: true
+#   variables: &tmpl_branch_remove_variables
+#     <<: *tmpl_branch_variables
+#     GIT_CHECKOUT: 0
 
 image: node:12
 
@@ -37,147 +37,179 @@ workflow:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
-variables:
-  BASE_HOSTNAME: hub.asap.science
+# variables:
+#   BASE_HOSTNAME: hub.asap.science
 
 stages:
-  - setup
-  - build
-  - test
+  #   - setup
+  #   - build
+  #   - test
   - deploy
 
-# stage setup
+# # stage setup
 
-setup:
+# setup:
+#   script:
+#     - ci/env-create.sh > deploy.env
+#   artifacts:
+#     reports:
+#       dotenv: deploy.env
+#   stage: setup
+
+# # stage build
+
+# build:
+#   script:
+#     - yarn run build
+#   artifacts:
+#     paths:
+#       - 'packages/*/build'
+#       - 'apps/*/build'
+#   needs:
+#     - setup
+#   stage: build
+#   variables:
+#     AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
+#     REACT_APP_API_BASE_URL: https://$API_HOSTNAME
+
+# build:native-deps:
+#   script:
+#     - yarn rebuild
+#   artifacts:
+#     paths:
+#       - .yarn/unplugged
+#   needs:
+#     - setup
+#   stage: build
+
+# # stage test
+
+# .tmpl:test: &tmpl_test
+#   script:
+#     - echo "no script proporty found"
+#   needs: []
+#   stage: test
+
+# test:packages:
+#   <<: *tmpl_test
+#   script:
+#     - yarn install --immutable --immutable-cache
+
+# test:constraints:
+#   <<: *tmpl_test
+#   script:
+#     - yarn constraints
+
+# test:format:
+#   <<: *tmpl_test
+#   script:
+#     - yarn run lint:format
+
+# test:
+#   <<: *tmpl_test
+#   script:
+#     - yarn run test --coverage
+#   artifacts:
+#     paths:
+#       - coverage
+#   needs:
+#     - build
+#   variables:
+#     <<: *tmpl_branch_variables
+
+# # stage deploy
+
+# .tmpl:deploy: &tmpl_deploy
+#   script:
+#     - yarn sls deploy --verbose
+#   stage: deploy
+#   variables: &tmpl_deploy_variables
+#     NODE_ENV: production
+#   needs:
+#     - setup
+#     - build
+#     - build:native-deps
+
+# deploy:sls:master:
+#   <<: *tmpl_master
+#   <<: *tmpl_deploy
+#   environment:
+#     name: production
+#     url: https://$APP_HOSTNAME
+#   variables:
+#     <<: *tmpl_master_variables
+#     <<: *tmpl_deploy_variables
+#   needs:
+#     - setup
+#     - build
+#     - build:native-deps
+#     - test
+
+# deploy:sls:branch:
+#   <<: *tmpl_branch
+#   <<: *tmpl_deploy
+#   environment:
+#     name: review/$CI_COMMIT_REF_SLUG
+#     url: https://$APP_HOSTNAME
+#     on_stop: deploy:sls:branch_remove
+#     auto_stop_in: 1 week
+#   variables:
+#     <<: *tmpl_branch_variables
+#     <<: *tmpl_deploy_variables
+
+# deploy:sls:branch_remove:
+#   <<: *tmpl_branch_remove
+#   needs:
+#     - build:native-deps
+#   environment:
+#     name: review/$CI_COMMIT_REF_SLUG
+#     action: stop
+#   script:
+#     - git checkout $CI_COMMIT_SHA # the branch may not exist
+#     - yarn sls remove --verbose
+#   stage: deploy
+
+deploy:dummy:
   script:
-    - ci/env-create.sh > deploy.env
-  artifacts:
-    reports:
-      dotenv: deploy.env
-  stage: setup
-
-# stage build
-
-build:
-  script:
-    - yarn run build
-  artifacts:
-    paths:
-      - 'packages/*/build'
-      - 'apps/*/build'
-  needs:
-    - setup
-  stage: build
-  variables:
-    AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
-    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
-
-build:native-deps:
-  script:
-    - yarn rebuild
-  artifacts:
-    paths:
-      - .yarn/unplugged
-  needs:
-    - setup
-  stage: build
-
-# stage test
-
-.tmpl:test: &tmpl_test
-  script:
-    - echo "no script proporty found"
-  needs: []
-  stage: test
-
-test:packages:
-  <<: *tmpl_test
-  script:
-    - yarn install --immutable --immutable-cache
-
-test:constraints:
-  <<: *tmpl_test
-  script:
-    - yarn constraints
-
-test:format:
-  <<: *tmpl_test
-  script:
-    - yarn run lint:format
-
-test:
-  <<: *tmpl_test
-  script:
-    - yarn run test --coverage
-  artifacts:
-    paths:
-      - coverage
-  needs:
-    - build
-  variables:
-    <<: *tmpl_branch_variables
-
-# stage deploy
-
-.tmpl:deploy: &tmpl_deploy
-  script:
-    - yarn sls deploy --verbose
+    - echo dummy
   stage: deploy
-  variables: &tmpl_deploy_variables
-    NODE_ENV: production
-  needs:
-    - setup
-    - build
-    - build:native-deps
 
-deploy:sls:master:
+deploy:dev-squidex:
   <<: *tmpl_master
-  <<: *tmpl_deploy
-  environment:
-    name: production
-    url: https://$APP_HOSTNAME
-  variables:
-    <<: *tmpl_master_variables
-    <<: *tmpl_deploy_variables
-  needs:
-    - setup
-    - build
-    - build:native-deps
-    - test
-
-deploy:sls:branch:
-  <<: *tmpl_branch
-  <<: *tmpl_deploy
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    url: https://$APP_HOSTNAME
-    on_stop: deploy:sls:branch_remove
-    auto_stop_in: 1 week
-  variables:
-    <<: *tmpl_branch_variables
-    <<: *tmpl_deploy_variables
-
-deploy:sls:branch_remove:
-  <<: *tmpl_branch_remove
-  needs:
-    - build:native-deps
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG
-    action: stop
   script:
-    - git checkout $CI_COMMIT_SHA # the branch may not exist
-    - yarn sls remove --verbose
-  stage: deploy
-
-deploy:sync-cms:
-  <<: *tmpl_master
-  image: johnytiago/setup-cms
-  script:
-    - sq config add asap-hub $CMS_CLIENT_ID $CMS_CLIENT_SECRET -u $CMS_BASE_URL
-    - sq config use asap-hub
-    - sq sync in dev/squidex
+    - echo 'dev/squidex'
   stage: deploy
   rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+      changes:
+        - dev/squidex
+
+deploy:dev-squidex-wilcard:
+  <<: *tmpl_master
+  script:
+    - echo 'dev/squidex/*'
+  stage: deploy
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
       changes:
         - dev/squidex/*
+
+deploy:dev-squidex-deep-wilcard:
+  <<: *tmpl_master
+  script:
+    - echo 'dev/squidex/**'
+  stage: deploy
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+      changes:
+        - dev/squidex/**
+
+deploy:dev-squidex-deep-wilcard-wildcard:
+  <<: *tmpl_master
+  script:
+    - echo 'dev/squidex/**/*'
+  stage: deploy
+  rules:
+    - if: $CI_EXTERNAL_PULL_REQUEST_IID
+      changes:
+        - dev/squidex/**/*

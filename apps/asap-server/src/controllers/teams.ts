@@ -45,10 +45,11 @@ export default class Teams {
     if (users.length) {
       teamUsers = users.map((user) => ({
         id: user.id,
-        displayName: get(user, 'data.displayName.iv', null),
+        displayName: user.data.displayName.iv,
         role: get(user, 'data.teams.iv', []).find(
           (t: { id: string[] }) => t.id[0] === teamId,
         ).role,
+        avatarURL: user.data.avatarURL?.iv
       }));
     }
 

@@ -123,6 +123,21 @@
           "placeholder": "",
           "isRequired": false
         }
+      },
+      {
+        "name": "tags",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
       }
     ],
     "previewUrls": {

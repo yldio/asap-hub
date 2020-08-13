@@ -30,6 +30,7 @@ export const transform = (user: CMSUser): UserResponse => {
     orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
     orcidWorks: user.data.orcidWorks?.iv,
     skills: user.data.skills?.iv || [],
+    avatarURL: user.data.avatarURL?.iv,
   };
 };
 

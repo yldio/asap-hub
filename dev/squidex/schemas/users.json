@@ -437,6 +437,23 @@
             }
           }
         ]
+      },
+      {
+        "name": "avatarURL",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Avatar URL",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
       }
     ],
     "previewUrls": {

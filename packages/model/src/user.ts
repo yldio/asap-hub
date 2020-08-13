@@ -34,4 +34,5 @@ export interface UserResponse extends Invitee {
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
   skills: string[];
+  avatarURL?: string;
 }

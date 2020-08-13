@@ -11,6 +11,7 @@ export interface TeamMember {
   id: string;
   displayName: string;
   role: string;
+  avatarURL?: string;
 }
 
 export interface TeamResponse extends TeamCreateRequest {

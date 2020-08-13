@@ -78,21 +78,6 @@
         }
       },
       {
-        "name": "tags",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Tags",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
         "name": "proposalURL",
         "isHidden": false,
         "isLocked": false,
@@ -104,6 +89,21 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Proposal URL",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "skills",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Skills",
           "hints": "",
           "placeholder": "",
           "isRequired": false

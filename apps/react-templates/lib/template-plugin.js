@@ -44,7 +44,7 @@ const apply = async (stats, origin) => {
       const Component = pkg.default;
 
       const { name } = path.parse(f);
-      let subject = pkg.subject ? pkg.subject : titleCase(name);
+      const subject = pkg.subject ? pkg.subject : titleCase(name);
 
       const element = React.createElement(
         CacheProvider,

@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { format } from 'date-fns';
-import { Card, Headline2, Headline3, Link } from '../atoms';
+import { Card, Headline2, Headline3 } from '../atoms';
 import { contentSidePaddingWithNavigation } from '../pixels';
 
 type WorksProps = {
@@ -52,9 +52,7 @@ const Skills: React.FC<WorksProps> = ({ works = [] }) => {
             return (
               <div css={elementStyle}>
                 {type}
-                <Link href={doi}>
-                  <Headline3>{title}</Headline3>
-                </Link>
+                <Headline3>{title}</Headline3>
                 <p>
                   Originally Published:{' '}
                   {format(

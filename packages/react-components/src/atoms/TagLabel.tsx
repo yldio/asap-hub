@@ -1,7 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { steel, charcoal, mint } from '../colors';
-import { tabletScreen } from '../pixels';
+import { steel, lead } from '../colors';
 
 const borderWidth = 1;
 const containerStyles = css({
@@ -12,10 +11,6 @@ const containerStyles = css({
 
   marginTop: '6px',
   marginBottom: '6px',
-
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    marginTop: '12px',
-  },
 });
 
 const styles = css({
@@ -26,30 +21,24 @@ const styles = css({
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
-  borderRadius: '18px',
+  borderRadius: '6px',
 
-  height: '36px',
   transition: '200ms',
-  paddingLeft: '12px',
-  paddingRight: '12px',
+  paddingLeft: '6px',
+  paddingRight: '6px',
 
-  ':hover': {
-    borderColor: charcoal.rgb,
-  },
+  color: lead.rgb,
+  fontSize: '0.8em',
 });
 
-const highlightStyles = css({
-  backgroundColor: mint.rgb,
-});
-
-type TagProps = {
+type TagLabelProps = {
   readonly highlight?: boolean;
   readonly children?: React.ReactNode;
 };
 
-const Tag: React.FC<TagProps> = ({ children, highlight = false }) => (
+const Tag: React.FC<TagLabelProps> = ({ children }) => (
   <div css={containerStyles}>
-    <div css={[styles, highlight && highlightStyles]}>{children}</div>
+    <div css={[styles]}>{children}</div>
   </div>
 );
 

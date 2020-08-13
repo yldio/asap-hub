@@ -26,6 +26,7 @@ export {
   GlobalStyles,
   TabLink,
   Tag,
+  TagLabel,
 } from './atoms';
 export {
   OrcidSigninButton,

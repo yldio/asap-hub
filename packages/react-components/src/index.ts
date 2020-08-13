@@ -48,6 +48,7 @@ export {
   RadioButtonGroup,
   ProfileBiography,
   ProfileSkills,
+  ProfileRecentWorks,
 } from './organisms';
 
 export {

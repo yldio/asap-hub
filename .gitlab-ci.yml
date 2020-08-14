@@ -89,13 +89,12 @@ build:cms-image:
   services:
     - docker:19.03.12-dind
   script:
-    - env
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CMS_UTILS_DOCKER_IMAGE
+    - docker build -t $CMS_UTILS_DOCKER_IMAGE .
     - docker push $CMS_UTILS_DOCKER_IMAGE
   only:
     #refs:
-      #- master
+    #- master
     changes:
       - Dockerfile
 

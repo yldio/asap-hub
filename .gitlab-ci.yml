@@ -39,6 +39,7 @@ workflow:
 
 variables:
   BASE_HOSTNAME: hub.asap.science
+  CMS_UTILS_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/cms-utils:latest
 
 stages:
   - setup
@@ -81,6 +82,21 @@ build:native-deps:
   needs:
     - setup
   stage: build
+
+build:cms-image:
+  image: docker:19.03.12
+  stage: build
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $CMS_UTILS_DOCKER_IMAGE
+    - docker push $CMS_UTILS_DOCKER_IMAGE
+  only:
+    #refs:
+      #- master
+    changes:
+      - Dockerfile
 
 # stage test
 
@@ -171,7 +187,7 @@ deploy:sls:branch_remove:
 
 deploy:sync-cms:
   <<: *tmpl_master
-  image: johnytiago/setup-cms
+  image: $CMS_UTILS_DOCKER_IMAGE
   script:
     - sq config add asap-hub $CMS_CLIENT_ID $CMS_CLIENT_SECRET -u $CMS_BASE_URL
     - sq config use asap-hub

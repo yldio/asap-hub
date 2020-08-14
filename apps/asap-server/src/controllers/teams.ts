@@ -1,4 +1,5 @@
 import { TeamResponse, TeamMember } from '@asap-hub/model';
+import Intercept from 'apr-intercept';
 import get from 'lodash.get';
 import Boom from '@hapi/boom';
 
@@ -9,11 +10,12 @@ import { CMSUser } from '../entities/user';
 function transform(team: CMSTeam, members?: TeamMember[]): TeamResponse {
   return {
     id: team.id,
-    displayName: get(team, 'data.displayName.iv', null),
-    applicationNumber: get(team, 'data.applicationNumber.iv', null),
-    projectTitle: get(team, 'data.projectTitle.iv', null),
-    projectSummary: get(team, 'data.projectSummary.iv', null),
-    tags: get(team, 'data.tags.iv', null),
+    displayName: team.data.displayName.iv,
+    applicationNumber: team.data.applicationNumber.iv,
+    projectTitle: team.data.projectTitle.iv,
+    projectSummary: team.data.projectSummary?.iv,
+    proposalURL: team.data.proposalURL?.iv,
+    skills: team.data.skills?.iv || [],
     members,
   } as TeamResponse;
 }
@@ -31,10 +33,8 @@ export default class Teams {
   }
 
   async fetchById(teamId: string): Promise<TeamResponse> {
-    let team;
-    try {
-      team = await this.cms.teams.fetchById(teamId);
-    } catch (e) {
+    const [notFound, team] = await Intercept(this.cms.teams.fetchById(teamId));
+    if (notFound) {
       throw Boom.notFound();
     }
 
@@ -42,7 +42,6 @@ export default class Teams {
     let teamUsers: TeamMember[] = [];
 
     /* istanbul ignore else */
-
     if (users.length) {
       teamUsers = users.map((user) => ({
         id: user.id,

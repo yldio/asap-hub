@@ -14,7 +14,7 @@ import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 import { fetchOrcidProfile, ORCIDWorksResponse } from '../utils/fetch-orcid';
 
-function transform(user: CMSUser): UserResponse {
+export const transform = (user: CMSUser): UserResponse => {
   return {
     id: user.id,
     displayName: user.data.displayName.iv,
@@ -31,7 +31,7 @@ function transform(user: CMSUser): UserResponse {
     orcidWorks: user.data.orcidWorks?.iv,
     skills: user.data.skills?.iv || [],
   };
-}
+};
 
 function transformOrcidWorks(
   orcidWorks: ORCIDWorksResponse,
@@ -73,10 +73,10 @@ export default class Users {
   }
 
   async create(user: Invitee): Promise<UserResponse> {
-    let createdUser;
-    try {
-      createdUser = await this.cms.users.create(user);
-    } catch (e) {
+    const [conflict, createdUser] = await Intercept(
+      this.cms.users.create(user),
+    );
+    if (conflict) {
       throw Boom.conflict('Duplicate');
     }
 
@@ -108,10 +108,8 @@ export default class Users {
   }
 
   async fetchById(id: string): Promise<UserResponse> {
-    let user;
-    try {
-      user = await this.cms.users.fetchById(id);
-    } catch (err) {
+    const [notFound, user] = await Intercept(this.cms.users.fetchById(id));
+    if (notFound) {
       throw Boom.notFound();
     }
     return transform(user);

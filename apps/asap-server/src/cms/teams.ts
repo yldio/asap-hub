@@ -2,23 +2,16 @@ import { Base, BaseOptions } from '@asap-hub/services-common';
 import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import { HTTPError } from 'got';
+import { TeamCreateRequest } from '@asap-hub/model';
 
 import { CMSTeam } from '../entities/team';
-
-export interface TeamCreationRequest {
-  displayName: string;
-  applicationNumber: string;
-  projectTitle: string;
-  projectSummary?: string;
-  tags?: string[];
-}
 
 export default class Teams extends Base {
   constructor(CMSConfig: BaseOptions) {
     super(CMSConfig);
   }
 
-  create(team: TeamCreationRequest): Promise<CMSTeam> {
+  create(team: TeamCreateRequest): Promise<CMSTeam> {
     return this.client
       .post<CMSTeam>('teams', {
         json: {
@@ -34,8 +27,11 @@ export default class Teams extends Base {
           projectSummary: {
             iv: team.projectSummary,
           },
-          tags: {
-            iv: team.tags,
+          proposalURL: {
+            iv: team.proposalURL,
+          },
+          skills: {
+            iv: team.skills,
           },
         },
         searchParams: { publish: true },

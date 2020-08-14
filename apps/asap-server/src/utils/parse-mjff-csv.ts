@@ -6,9 +6,9 @@ import Intercept from 'apr-intercept';
 import { createReadStream } from 'fs';
 import path from 'path';
 import { HTTPError } from 'got';
+import { TeamCreateRequest } from '@asap-hub/model';
 
 import { CMS } from '../cms';
-import { TeamCreationRequest } from '../cms/teams';
 import { CMSTeam } from '../entities/team';
 
 const cache: { [key: string]: CMSTeam | string } = {};
@@ -21,7 +21,7 @@ const createTeam = async (
   projectTitle: string,
 ): Promise<CMSTeam | undefined> => {
   if (!cache[applicationNumber]) {
-    const newTeam: TeamCreationRequest = {
+    const newTeam: TeamCreateRequest = {
       displayName: `${piLastName}, ${piFirstName[0]}.`,
       applicationNumber,
       projectTitle,

@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "AppModel",
   "type": "object",
   "required": [
@@ -10,19 +11,27 @@
   "properties": {
     "clients": {
       "type": "object",
-      "additionalProperties": {}
+      "additionalProperties": {
+        "$ref": "#/definitions/AppClientModel"
+      }
     },
     "roles": {
       "type": "object",
-      "additionalProperties": {}
+      "additionalProperties": {
+        "$ref": "#/definitions/AppRoleModel"
+      }
     },
     "languages": {
       "type": "object",
-      "additionalProperties": {}
+      "additionalProperties": {
+        "$ref": "#/definitions/UpdateLanguageDto"
+      }
     },
     "contributors": {
       "type": "object",
-      "additionalProperties": {}
+      "additionalProperties": {
+        "$ref": "#/definitions/AppContributorModel"
+      }
     }
   },
   "definitions": {

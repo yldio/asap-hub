@@ -116,7 +116,6 @@ describe('GET /teams/{id}', () => {
         },
       }),
     )) as APIGatewayProxyResult;
-    const body = JSON.parse(result.body);
 
     expect(result.statusCode).toStrictEqual(200);
   });

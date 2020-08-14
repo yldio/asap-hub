@@ -27,6 +27,7 @@ export const transform = (user: CMSUser): UserResponse => {
       jobTitle: user.data.jobTitle?.iv,
       institution: user.data.institution?.iv,
       teams: user.data.teams?.iv || [],
+      location: user.data.location?.iv,
       orcid: user.data.orcid?.iv,
       orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
       orcidWorks: user.data.orcidWorks?.iv,

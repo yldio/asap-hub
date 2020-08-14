@@ -13,6 +13,7 @@ export interface CMSUser {
     institution?: { iv: string };
     connections: { iv: { code: string }[] };
     biography?: { iv: string };
+    location?: { iv: string };
     teams?: { iv: TeamMember[] };
     orcid?: { iv: string };
     orcidLastModifiedDate?: { iv: string };

@@ -36,6 +36,7 @@ export const createUser = (
     institution: chance.company(),
     email: chance.email(),
     biography: chance.paragraph({ sentence: 3 }),
+    location: chance.city(),
     avatarURL: chance.url(),
     skills: [chance.word()],
     ...overwrites,

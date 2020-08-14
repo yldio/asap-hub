@@ -1,5 +1,4 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "RuleModel",
   "type": "object",
   "required": [
@@ -15,12 +14,8 @@
       "type": "string",
       "minLength": 1
     },
-    "trigger": {
-      "$ref": "#/definitions/RuleTriggerDto"
-    },
-    "action": {
-      "$ref": "#/definitions/DynamicRuleAction"
-    }
+    "trigger": {},
+    "action": {}
   },
   "definitions": {
     "RuleTriggerDto": {
@@ -78,9 +73,7 @@
       "properties": {
         "schemas": {
           "type": "array",
-          "items": {
-            "$ref": "#/definitions/ContentChangedRuleTriggerSchemaDto"
-          }
+          "items": {}
         },
         "handleAll": {
           "type": "boolean"

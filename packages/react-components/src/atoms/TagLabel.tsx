@@ -5,7 +5,6 @@ import { steel, lead } from '../colors';
 const borderWidth = 1;
 const containerStyles = css({
   display: 'flex',
-  cursor: 'default',
   justifyContent: 'center',
   alignItems: 'center',
 
@@ -32,7 +31,6 @@ const styles = css({
 });
 
 type TagLabelProps = {
-  readonly highlight?: boolean;
   readonly children?: React.ReactNode;
 };
 

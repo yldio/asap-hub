@@ -19,5 +19,6 @@ export { default as TextField } from './TextField';
 export { default as Theme } from './Theme';
 export { default as TabLink } from './TabLink';
 export { default as Tag } from './Tag';
+export { default as TagLabel } from './TagLabel';
 
 export type { DropdownProps } from './Dropdown';

@@ -42,12 +42,12 @@ const highlightStyles = css({
   backgroundColor: mint.rgb,
 });
 
-type ButtonProps = {
+type TagProps = {
   readonly highlight?: boolean;
   readonly children?: React.ReactNode;
 };
 
-const Tag: React.FC<ButtonProps> = ({ children, highlight = false }) => (
+const Tag: React.FC<TagProps> = ({ children, highlight = false }) => (
   <div css={containerStyles}>
     <div css={[styles, highlight && highlightStyles]}>{children}</div>
   </div>

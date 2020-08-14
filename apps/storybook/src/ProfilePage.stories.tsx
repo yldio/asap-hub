@@ -31,10 +31,10 @@ const commonProps = () => ({
   orcidWorks: [
     {
       id: '42',
-      doi: './',
+      doi: 'https://doi.org/10.7554/elife.07083',
       title:
         'Recognizing the importance of new tools and resources for research',
-      type: 'JOURNAL_ARTICLE',
+      type: 'UNDEFINED' as const,
       publicationDate: {
         year: '2015',
         month: '05',

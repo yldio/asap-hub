@@ -9,13 +9,13 @@ export default {
 
 export const Normal = () => (
   <ProfileRecentWorks
-    works={[
+    orcidWorks={[
       {
         id: '42',
         doi: 'https://doi.org/10.7554/elife.07083',
         title:
           'Recognizing the importance of new tools and resources for research',
-        type: 'publication',
+        type: 'WEBSITE',
         publicationDate: {
           year: '2015',
           month: '3',

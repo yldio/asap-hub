@@ -1,23 +1,14 @@
 import React from 'react';
 import css from '@emotion/css';
+import { OrcidWork } from '@asap-hub/model';
 import { format } from 'date-fns';
-import { Card, Headline2, Headline3 } from '../atoms';
+import { Card, Headline2, Headline3, TagLabel } from '../atoms';
 
 type RecentWorksProps = {
-  readonly orcidWorks?: {
-    readonly id: string;
-    readonly doi: string;
-    readonly title?: string;
-    readonly type: string;
-    readonly publicationDate: {
-      readonly year: string;
-      readonly month?: string;
-      readonly day?: string;
-    };
-  }[];
+  readonly orcidWorks?: OrcidWork[];
 };
 
-const typeMap: { [key: string]: string } = {
+const typeMap: { [key in OrcidWork['type']]: string } = {
   ANNOTATION: 'Other',
   ARTISTIC_PERFORMANCE: 'Other',
   BOOK_CHAPTER: 'Publication',
@@ -91,7 +82,7 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
 
           return (
             <div css={elementStyle}>
-              {typeMap[type] || typeMap['UNDEFINED']}
+              <TagLabel>{typeMap[type] || typeMap.UNDEFINED}</TagLabel>
               <Headline3>{title}</Headline3>
               <p>
                 Originally Published:{' '}
@@ -99,7 +90,7 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
                   date,
                   `${publicationDate.day ? 'Do ' : ''}${
                     publicationDate.month ? 'MMMM ' : ''
-                  }${publicationDate.year ? 'yyyy' : ''}`,
+                  }YYYY`,
                 )}
               </p>
             </div>

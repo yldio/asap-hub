@@ -23,6 +23,7 @@ interface ProfileAboutProps {
   skills: ComponentProps<typeof ProfileSkills>['skills'];
   orcidWorks?: ComponentProps<typeof ProfileRecentWorks>['orcidWorks'];
 }
+
 const ProfileAbout: React.FC<ProfileAboutProps> = ({
   biography,
   skills,

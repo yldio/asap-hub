@@ -15,23 +15,25 @@ import { origin } from '../config';
 import { fetchOrcidProfile, ORCIDWorksResponse } from '../utils/fetch-orcid';
 
 export const transform = (user: CMSUser): UserResponse => {
-  return {
-    id: user.id,
-    displayName: user.data.displayName.iv,
-    email: user.data.email.iv,
-    firstName: user.data.firstName?.iv,
-    middleName: user.data.middleName?.iv,
-    lastName: user.data.lastName?.iv,
-    biography: user.data.biography?.iv,
-    jobTitle: user.data.jobTitle?.iv,
-    institution: user.data.institution?.iv,
-    teams: user.data.teams?.iv || [],
-    orcid: user.data.orcid?.iv,
-    orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
-    orcidWorks: user.data.orcidWorks?.iv,
-    skills: user.data.skills?.iv || [],
-    avatarURL: user.data.avatarURL?.iv,
-  };
+  return JSON.parse(
+    JSON.stringify({
+      id: user.id,
+      displayName: user.data.displayName.iv,
+      email: user.data.email.iv,
+      firstName: user.data.firstName?.iv,
+      middleName: user.data.middleName?.iv,
+      lastName: user.data.lastName?.iv,
+      biography: user.data.biography?.iv,
+      jobTitle: user.data.jobTitle?.iv,
+      institution: user.data.institution?.iv,
+      teams: user.data.teams?.iv || [],
+      orcid: user.data.orcid?.iv,
+      orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
+      orcidWorks: user.data.orcidWorks?.iv,
+      skills: user.data.skills?.iv || [],
+      avatarURL: user.data.avatarURL?.iv,
+    }),
+  );
 };
 
 function transformOrcidWorks(

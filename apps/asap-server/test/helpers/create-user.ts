@@ -36,6 +36,8 @@ export const createUser = (
     institution: chance.company(),
     email: chance.email(),
     biography: chance.paragraph({ sentence: 3 }),
+    avatarURL: chance.url(),
+    skills: [chance.word()],
     ...overwrites,
   };
 
@@ -79,6 +81,6 @@ export const createUserOnTeam = async (
   team: CMSTeam,
 ): Promise<UserResponse> => {
   const createdUser = await createUser({});
-  const user = await cms.users.addToTeam(createdUser, chance.string(), team);
+  const user = await cms.users.addToTeam(createdUser, chance.word(), team);
   return transform(user);
 };

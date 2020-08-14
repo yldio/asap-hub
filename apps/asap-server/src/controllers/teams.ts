@@ -49,7 +49,7 @@ export default class Teams {
         role: get(user, 'data.teams.iv', []).find(
           (t: { id: string[] }) => t.id[0] === teamId,
         ).role,
-        avatarURL: user.data.avatarURL?.iv
+        avatarURL: user.data.avatarURL?.iv,
       }));
     }
 

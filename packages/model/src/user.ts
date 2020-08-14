@@ -10,6 +10,8 @@ export interface Invitee {
   department?: string;
   institution?: string;
   location?: string;
+  avatarURL?: string;
+  skills?: string[];
 }
 
 export interface OrcidWork {
@@ -33,6 +35,4 @@ export interface UserResponse extends Invitee {
   }>;
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
-  skills: string[];
-  avatarURL?: string;
 }

@@ -22,6 +22,9 @@ interface CreateUserData {
   orcid: { iv?: string };
   institution: { iv?: string };
   connections?: { iv: { code: string }[] };
+  location: { iv?: string };
+  avatarURL: { iv?: string };
+  skills: { iv?: string[] };
 }
 
 export default class Users extends Base {
@@ -39,6 +42,9 @@ export default class Users extends Base {
       jobTitle: { iv: user.jobTitle },
       orcid: { iv: user.orcid },
       institution: { iv: user.institution },
+      location: { iv: user.location },
+      avatarURL: { iv: user.avatarURL },
+      skills: { iv: user.skills },
     };
 
     if (!options?.raw) {

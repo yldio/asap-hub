@@ -1,7 +1,11 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { ProfileBiography, ProfileSkills } from '../organisms';
+import {
+  ProfileBiography,
+  ProfileSkills,
+  ProfileRecentWorks,
+} from '../organisms';
 import { perRem, contentSidePaddingWithNavigation } from '../pixels';
 import { pearl, steel } from '../colors';
 
@@ -17,11 +21,19 @@ const styles = css({
 interface ProfileAboutProps {
   biography?: ComponentProps<typeof ProfileBiography>['biography'];
   skills: ComponentProps<typeof ProfileSkills>['skills'];
+  orcidWorks?: ComponentProps<typeof ProfileRecentWorks>['orcidWorks'];
 }
-const ProfileAbout: React.FC<ProfileAboutProps> = ({ biography, skills }) => (
+const ProfileAbout: React.FC<ProfileAboutProps> = ({
+  biography,
+  skills,
+  orcidWorks,
+}) => (
   <main css={styles}>
     {biography && <ProfileBiography biography={biography} />}
     {skills.length ? <ProfileSkills skills={skills} /> : null}
+    {orcidWorks && orcidWorks.length ? (
+      <ProfileRecentWorks orcidWorks={orcidWorks} />
+    ) : null}
   </main>
 );
 

@@ -20,6 +20,7 @@ type ProfilePageProps = ComponentProps<typeof ProfileHeader> &
   ComponentProps<typeof ProfileAbout> & {
     tab: 'about' | 'researchInterests' | 'outputs';
   };
+
 const ProfilePage: React.FC<ProfilePageProps> = ({ tab, ...profile }) => {
   const TabTemplate = tabTemplates[tab];
   return (

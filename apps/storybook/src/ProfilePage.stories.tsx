@@ -28,6 +28,19 @@ const commonProps = () => ({
   ],
   jobTitle: text('Job Title', 'Assistant Professor'),
   skills: [],
+  orcidWorks: [
+    {
+      id: '42',
+      doi: './',
+      title:
+        'Recognizing the importance of new tools and resources for research',
+      type: 'JOURNAL_ARTICLE',
+      publicationDate: {
+        year: '2015',
+        month: '05',
+      },
+    },
+  ],
   aboutHref: '/wrong',
   researchInterestsHref: '/wrong',
   outputsHref: '/wrong',

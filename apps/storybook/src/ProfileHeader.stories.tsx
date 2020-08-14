@@ -27,6 +27,10 @@ export const Normal = () => (
       },
     ]}
     jobTitle={text('Job Title', 'Assistant Professor')}
+    avatarURL={text(
+      'Avatar URL',
+      'https://upload.wikimedia.org/wikipedia/commons/b/b4/Wikipe-tan_avatar.png',
+    )}
     aboutHref="/other"
     researchInterestsHref="/other"
     outputsHref="/other"

@@ -3,11 +3,12 @@ import css from '@emotion/css';
 
 import { pine, silver, mint } from '../colors';
 import { perRem } from '../pixels';
+import { headlineStyles } from '../text';
 
 const ringStyle = css({
-  display: 'flex',
-  height: `${86 / perRem}em`,
-  width: `${86 / perRem}em`,
+  boxSizing: 'border-box',
+  height: `${84 / perRem}em`,
+  width: `${84 / perRem}em`,
 
   marginTop: `${12 / perRem}em`,
   marginBottom: `${6 / perRem}em`,
@@ -22,7 +23,9 @@ const ringBorderStyle = css({
 });
 
 const circleStyle = css({
-  flex: 1,
+  width: '100%',
+  height: '100%',
+  margin: 0,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -30,31 +33,46 @@ const circleStyle = css({
   backgroundColor: mint.rgb,
   borderRadius: '50%',
 });
-
-const initialsStyle = css({
-  paddingTop: `${2 / perRem}em`,
-  color: pine.rgb,
+const imageStyle = css({
+  objectFit: 'contain',
 });
+const initialsStyle = css(
+  {
+    color: pine.rgb,
+  },
+  headlineStyles[2],
+);
 
 type ButtonProps = {
-  readonly border?: boolean;
-
+  readonly imageUrl?: string;
   readonly firstName?: string;
   readonly lastName?: string;
+
+  readonly border?: boolean;
 };
 
 const Avatar: React.FC<ButtonProps> = ({
+  imageUrl,
+  firstName = '',
+  lastName = '',
+
   border = false,
-  firstName,
-  lastName,
 }) => {
+  const name = `${firstName}${firstName && lastName ? ' ' : ''}${lastName}`;
   const initials = (firstName?.[0] ?? '') + (lastName?.[0] ?? '');
 
   return (
     <div css={[ringStyle, border && ringBorderStyle]}>
-      <div css={[circleStyle]}>
-        <p css={[initialsStyle]}>{initials}</p>
-      </div>
+      {imageUrl ? (
+        // eslint-disable-next-line jsx-a11y/img-redundant-alt
+        <img
+          alt={`Profile picture${name ? ` of ${name}` : ''}`}
+          src={imageUrl}
+          css={[circleStyle, imageStyle]}
+        />
+      ) : (
+        <p css={[circleStyle, initialsStyle]}>{initials}</p>
+      )}
     </div>
   );
 };

@@ -63,6 +63,7 @@ type ProfileProps = Pick<
   | 'location'
   | 'teams'
   | 'jobTitle'
+  | 'avatarURL'
 > & {
   readonly aboutHref: string;
   readonly researchInterestsHref: string;
@@ -79,6 +80,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   location,
   teams,
   jobTitle,
+  avatarURL,
 
   aboutHref,
   researchInterestsHref,
@@ -108,7 +110,12 @@ const ProfileHeader: React.FC<ProfileProps> = ({
             <Paragraph>{location}</Paragraph>
           </div>
         </div>
-        <Avatar border firstName={firstName} lastName={lastName} />
+        <Avatar
+          border
+          imageUrl={avatarURL}
+          firstName={firstName}
+          lastName={lastName}
+        />
       </section>
       <section css={actionsStyles}>
         <div css={contactStyles}>

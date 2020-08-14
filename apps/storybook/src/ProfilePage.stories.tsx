@@ -27,6 +27,10 @@ const commonProps = () => ({
     },
   ],
   jobTitle: text('Job Title', 'Assistant Professor'),
+  avatarURL: text(
+    'Avatar URL',
+    'https://upload.wikimedia.org/wikipedia/commons/b/b4/Wikipe-tan_avatar.png',
+  ),
   skills: [],
   orcidWorks: [
     {

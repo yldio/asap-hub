@@ -4,3 +4,5 @@ import { messages } from '@asap-hub/react-components';
 export default () => (
   <messages.Welcome firstName="{{ firstName }}" link="{{ link }}" />
 );
+
+export const subject = 'Welcome {{ firstName }}!';

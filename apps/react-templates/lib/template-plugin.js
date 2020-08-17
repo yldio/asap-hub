@@ -9,6 +9,7 @@ const { renderToStaticMarkup } = require('react-dom/server');
 const { titleCase } = require('title-case');
 
 const htmlTemplate = (
+  title,
   content,
 ) => `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="https://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
@@ -20,7 +21,7 @@ const htmlTemplate = (
 <o:PixelsPerInch>96</o:PixelsPerInch>
 </o:OfficeDocumentSettings>
 </xml><![endif]-->
-    <title>Christmas Email template</title>
+    <title>${title}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0 ">
@@ -39,7 +40,11 @@ const apply = async (stats, origin) => {
     .map(async (f) => {
       const cache = createCache();
       const { extractCritical } = createEmotionServer(cache);
-      const { default: Component } = require(path.resolve(outputDir, f));
+      const pkg = require(path.resolve(outputDir, f));
+      const Component = pkg.default;
+
+      const { name } = path.parse(f);
+      const subject = pkg.subject ? pkg.subject : titleCase(name);
 
       const element = React.createElement(
         CacheProvider,
@@ -57,13 +62,13 @@ const apply = async (stats, origin) => {
       );
 
       const content = juice(`<style>${css}</style>${s3Html}`);
-      const { name } = path.parse(f);
+
       await fs.writeFile(
         path.resolve(outputDir, `template-${name}.json`),
         JSON.stringify({
+          HtmlPart: htmlTemplate(subject, content),
+          SubjectPart: subject,
           TemplateName: titleCase(name),
-          SubjectPart: titleCase(name),
-          HtmlPart: htmlTemplate(content),
           TextPart: '',
         }),
       );

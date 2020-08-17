@@ -125,6 +125,8 @@ test:
   <<: *tmpl_test
   script:
     - yarn run test --coverage
+  after_script:
+    - yarn dlx codecov@3.7.2
   artifacts:
     paths:
       - coverage

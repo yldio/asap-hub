@@ -7,6 +7,7 @@ const boilerplateProps = {
   displayName: 'John Doe',
   teams: [],
   skills: [],
+  orcidWorks: [],
   aboutHref: '#',
   outputsHref: '#',
   researchInterestsHref: '#',

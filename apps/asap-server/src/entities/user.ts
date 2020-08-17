@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { TeamMember } from '@asap-hub/model';
+import { OrcidWork, TeamMember } from '@asap-hub/model';
 
 export interface CMSUser {
   id: string;
@@ -21,19 +21,7 @@ export interface CMSUser {
   };
 }
 
-export interface CMSOrcidWork {
-  id: string;
-  doi?: string;
-  title?: string;
-  type: string;
-  publicationDate: {
-    year: string;
-    month?: string;
-    day?: string;
-  };
-  lastModifiedDate: string;
-}
-
+export type CMSOrcidWork = OrcidWork;
 export const createSchema = Joi.object({
   displayName: Joi.string().required(),
   email: Joi.string().required(),

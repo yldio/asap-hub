@@ -2,6 +2,9 @@ FROM debian:latest
 
 WORKDIR /src
 
+VOLUME ["/dev/fixtures"]
+VOLUME ["/dev/squidex"]
+
 RUN apt-get update && \
     apt-get install -y wget unzip libicu63 dirmngr gnupg apt-transport-https software-properties-common ca-certificates curl
 
@@ -14,8 +17,6 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v5.2/l
     unzip linux-x64.zip && \
     mv sq /bin
 
-VOLUME ["/dev/fixtures"]
-VOLUME ["/dev/squidex"]
 
 COPY dev/setup-cms.sh ./
 

@@ -24,7 +24,6 @@ interface CreateUserData {
   connections?: { iv: { code: string }[] };
   location: { iv?: string };
   avatarURL: { iv?: string };
-  skills: { iv?: string[] };
 }
 
 export default class Users extends Base {
@@ -44,7 +43,6 @@ export default class Users extends Base {
       institution: { iv: user.institution },
       location: { iv: user.location },
       avatarURL: { iv: user.avatarURL },
-      skills: { iv: user.skills },
     };
 
     if (!options?.raw) {

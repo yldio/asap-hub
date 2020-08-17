@@ -11,7 +11,6 @@ export interface Invitee {
   institution?: string;
   location?: string;
   avatarURL?: string;
-  skills?: string[];
 }
 
 export interface OrcidWork {
@@ -33,6 +32,7 @@ export interface UserResponse extends Invitee {
     displayName: string;
     role: string;
   }>;
+  skills: string[];
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
 }

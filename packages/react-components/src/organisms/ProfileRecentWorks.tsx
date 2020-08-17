@@ -72,7 +72,7 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
     <Card>
       <Headline2>Recent Publications ({orcidWorks.length})</Headline2>
       <div css={containerStyles}>
-        {orcidWorks.map(({ title, type, publicationDate }) => {
+        {orcidWorks.map(({ title, type, publicationDate }, index) => {
           const { year, month = '0', day = '1' } = publicationDate;
           const date = new Date(
             parseInt(year, 10),
@@ -81,7 +81,7 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
           );
 
           return (
-            <div css={elementStyle}>
+            <div key={index} css={elementStyle}>
               <TagLabel>{typeMap[type] || typeMap.UNDEFINED}</TagLabel>
               <Headline3>{title}</Headline3>
               <p>
@@ -90,7 +90,7 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
                   date,
                   `${publicationDate.day ? 'Do ' : ''}${
                     publicationDate.month ? 'MMMM ' : ''
-                  }YYYY`,
+                  }yyyy`,
                 )}
               </p>
             </div>

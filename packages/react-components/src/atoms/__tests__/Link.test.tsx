@@ -3,7 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { render, fireEvent } from '@testing-library/react';
 
 import Link from '../Link';
-import { fern } from '../../colors';
+import { fern, paper } from '../../colors';
 
 describe.each`
   description                         | href                                | wrapper
@@ -24,6 +24,17 @@ describe.each`
     });
     const { color } = getComputedStyle(getByRole('link'));
     expect(color).toBe(fern.rgb);
+  });
+
+  it('respects the white prop', () => {
+    const { getByRole } = render(
+      <Link white href={href}>
+        text
+      </Link>,
+      { wrapper },
+    );
+    const { color } = getComputedStyle(getByRole('link'));
+    expect(color).toBe(paper.rgb);
   });
 
   it('applies the href to the anchor', () => {

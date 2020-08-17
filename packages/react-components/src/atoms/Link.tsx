@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { Link as ReactRouterLink } from 'react-router-dom';
 
 import { TextChildren } from '../text';
-import { fern, pine } from '../colors';
+import { fern, pine, paper } from '../colors';
 import { useHasRouter } from '../hooks';
 
 const styles = css({
@@ -19,14 +19,23 @@ const styles = css({
   },
 });
 
+const whiteStyles = css({
+  color: paper.rgb,
+  ':active': {
+    color: paper.rgb,
+  },
+});
+
 interface LinkProps {
   readonly children: TextChildren;
   readonly href: string;
+
+  readonly white?: boolean;
 }
-const Link: React.FC<LinkProps> = ({ children, href }) => {
+const Link: React.FC<LinkProps> = ({ children, href, white = false }) => {
   if (useHasRouter()) {
     return (
-      <ReactRouterLink css={[styles]} to={href}>
+      <ReactRouterLink css={[styles, white && whiteStyles]} to={href}>
         {children}
       </ReactRouterLink>
     );
@@ -37,7 +46,7 @@ const Link: React.FC<LinkProps> = ({ children, href }) => {
   return (
     <a
       href={href}
-      css={[styles]}
+      css={[styles, white && whiteStyles]}
       target={internal ? undefined : '_blank'}
       rel={internal ? undefined : 'noreferrer noopener'}
     >

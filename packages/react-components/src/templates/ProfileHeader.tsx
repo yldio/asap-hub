@@ -25,7 +25,7 @@ const personalInfoStyles = css({
   alignItems: 'start',
 });
 const mainTextStyles = css({
-  padding: `${6 / perRem}em 0`,
+  paddingBottom: `${6 / perRem}em`,
 });
 
 const actionsStyles = css({

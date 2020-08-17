@@ -1,10 +1,8 @@
 import React from 'react';
 import { ProfileRecentWorks } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './padding';
 
 export default {
   title: 'Templates / Profile / Recent Works',
-  decorators: [NoPaddingDecorator],
 };
 
 export const Normal = () => (

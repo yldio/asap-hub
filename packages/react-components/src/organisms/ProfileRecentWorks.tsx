@@ -70,7 +70,9 @@ const elementStyle = css({
 const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
   return (
     <Card>
-      <Headline2>Recent Publications ({orcidWorks.length})</Headline2>
+      <Headline2 styleAsHeading={3}>
+        Recent Publications ({orcidWorks.length})
+      </Headline2>
       <div css={containerStyles}>
         {orcidWorks.map(({ title, type, publicationDate }, index) => {
           const { year, month = '0', day = '1' } = publicationDate;

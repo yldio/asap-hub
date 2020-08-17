@@ -10,8 +10,7 @@ const ringStyle = css({
   height: `${84 / perRem}em`,
   width: `${84 / perRem}em`,
 
-  marginTop: `${12 / perRem}em`,
-  marginBottom: `${6 / perRem}em`,
+  margin: `${12 / perRem}em 0`,
 });
 const ringBorderStyle = css({
   padding: `${4 / perRem}em`,

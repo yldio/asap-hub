@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { perRem } from '../pixels';
+import { vminLinearCalc, mobileScreen, largeDesktopScreen } from '../pixels';
 
 const styles = css({
   display: 'flex',
@@ -11,7 +11,13 @@ const styles = css({
   listStyle: 'none',
 
   '> li:not(:last-of-type)': {
-    paddingRight: `${18 / perRem}em`,
+    paddingRight: vminLinearCalc(
+      mobileScreen,
+      18,
+      largeDesktopScreen,
+      30,
+      'em',
+    ),
   },
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { steel, charcoal, mint } from '../colors';
-import { tabletScreen } from '../pixels';
+import { perRem } from '../pixels';
 
 const borderWidth = 1;
 const containerStyles = css({
@@ -10,15 +10,13 @@ const containerStyles = css({
   justifyContent: 'center',
   alignItems: 'center',
 
-  marginTop: '6px',
-  marginBottom: '6px',
-
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    marginTop: '12px',
-  },
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${6 / perRem}em`,
 });
 
 const styles = css({
+  padding: `${7 / perRem}em ${15 / perRem}em ${5 / perRem}em`,
+
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -26,13 +24,9 @@ const styles = css({
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
-  borderRadius: '18px',
+  borderRadius: `${18 / perRem}em`,
 
-  height: '36px',
   transition: '200ms',
-  paddingLeft: '12px',
-  paddingRight: '12px',
-
   ':hover': {
     borderColor: charcoal.rgb,
   },

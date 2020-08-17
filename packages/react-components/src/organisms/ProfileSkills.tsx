@@ -1,36 +1,37 @@
 import React from 'react';
 import css from '@emotion/css';
+
 import { Tag, Card, Headline2 } from '../atoms';
+import { perRem } from '../pixels';
 
 type ProfileSkillsProps = {
   readonly skills: string[];
 };
 
-const containerStyles = css({
+const listStyles = css({
+  padding: 0,
+  listStyle: 'none',
+
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
-  marginLeft: '-8px',
-  marginRight: '-8px',
-});
 
-const elementStyle = css({
-  paddingLeft: '8px',
-  paddingRight: '8px',
-  flexShrink: 0,
+  '> li:not(:last-of-type)': {
+    paddingRight: `${12 / perRem}em`,
+  },
 });
 
 const ProfileSkills: React.FC<ProfileSkillsProps> = ({ skills = [] }) => {
   return (
     <Card>
-      <Headline2>Skills and Expertise</Headline2>
-      <div css={containerStyles}>
+      <Headline2 styleAsHeading={3}>Skills and Expertise</Headline2>
+      <ul css={listStyles}>
         {skills.map((skill, index) => (
-          <div key={index} css={elementStyle}>
+          <li key={index}>
             <Tag>{skill}</Tag>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </Card>
   );
 };

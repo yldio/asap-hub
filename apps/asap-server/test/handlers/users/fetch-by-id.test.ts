@@ -42,13 +42,13 @@ describe('GET /users/{id}', () => {
   test('returns 200 when id exists', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
-    const { id, displayName } = await createRandomUser();
+    const { connections, ...newUser } = await createRandomUser();
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         pathParameters: {
-          id,
+          id: newUser.id,
         },
         headers: {
           Authorization: `Bearer ${chance.string()}`,
@@ -56,9 +56,8 @@ describe('GET /users/{id}', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    const body = JSON.parse(result.body);
+    const user = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body.id).toStrictEqual(id);
-    expect(body.displayName).toStrictEqual(displayName);
+    expect(user).toStrictEqual(newUser);
   });
 });

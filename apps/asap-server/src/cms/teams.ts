@@ -30,9 +30,6 @@ export default class Teams extends Base {
           proposalURL: {
             iv: team.proposalURL,
           },
-          skills: {
-            iv: team.skills,
-          },
         },
         searchParams: { publish: true },
       })

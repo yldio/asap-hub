@@ -8,12 +8,11 @@ const cms = new CMS();
 
 export const createRandomTeam = (): Promise<CMSTeam> => {
   const team = {
-    displayName: chance.string(),
-    applicationNumber: chance.string(),
+    displayName: `${chance.first()} ${chance.last()}`,
+    applicationNumber: chance.word(),
     projectTitle: chance.sentence(),
     projectSummary: chance.paragraph(),
     proposalURL: chance.url(),
-    skills: [chance.string()],
   };
 
   return cms.teams.create(team);

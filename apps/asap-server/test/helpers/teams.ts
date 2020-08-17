@@ -13,7 +13,6 @@ export const createRandomTeam = (): Promise<CMSTeam> => {
     projectTitle: chance.sentence(),
     projectSummary: chance.paragraph(),
     proposalURL: chance.url(),
-    skills: [chance.word()],
   };
 
   return cms.teams.create(team);

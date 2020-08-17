@@ -4,7 +4,6 @@ export interface TeamCreateRequest {
   projectTitle: string;
   projectSummary?: string;
   proposalURL?: string;
-  skills?: string[];
 }
 
 export interface TeamMember {
@@ -16,5 +15,6 @@ export interface TeamMember {
 
 export interface TeamResponse extends TeamCreateRequest {
   id: string;
+  skills: string[];
   members: TeamMember[];
 }

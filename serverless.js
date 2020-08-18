@@ -67,6 +67,7 @@ module.exports = {
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
+        deleteRemoved: false,
         localDir: 'apps/frontend/build',
       },
       {

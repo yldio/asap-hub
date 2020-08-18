@@ -11,7 +11,7 @@ export const Normal = () => (
     border={boolean('Border', false)}
     imageUrl={text(
       'Image URL',
-      'https://upload.wikimedia.org/wikipedia/commons/b/b4/Wikipe-tan_avatar.png',
+      'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     )}
   />
 );

@@ -3239,7 +3239,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "del",
-        "npm:5.1.0"
+        "npm:6.0.0"
       ],
       [
         "delayed-stream",
@@ -4103,7 +4103,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "globby",
-        "npm:10.0.2"
+        "npm:11.0.1"
       ],
       [
         "good-listener",
@@ -5867,7 +5867,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "p-map",
-        "npm:3.0.0"
+        "npm:4.0.0"
       ],
       [
         "p-memoize",
@@ -6574,10 +6574,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:1e0c3a0b24b955c827461632d45e54b9ca6f6cbd7548a3aa48699dac30d31b05df616c096c06d2b04ae872a4a55b5570ce8e3b520acfe5135d6776d6c2446450#npm:3.7.2"
       ],
       [
-        "react-docgen-typescript-plugin",
-        "virtual:8d7768f46944f15a0233d958b626bdc5c5d18bf84c16c2c8eb1347b59b54f5580a989836a418c13bf96e70f3927add91a99008e183c572d762128be4b1ab9f04#npm:0.5.2"
-      ],
-      [
         "react-dom",
         "virtual:d50ac7368993f0a9dd58cc178b3704f8b40d77f29826f420984fde30d82e4103201bdc8a3c9ba01ac9e0533b276f0a5cc2389865df48aa4a309a4b84860d3aba#npm:16.13.1"
       ],
@@ -6632,10 +6628,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "react-router-dom",
         "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"
-      ],
-      [
-        "react-scripts",
-        "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#patch:react-scripts@npm%3A3.4.3#./patches/react-scripts.patch::version=3.4.3&hash=4dc748&locator=%40asap-hub%2Fauth-frontend%40workspace%3Aapps%2Fauth-frontend"
       ],
       [
         "react-select",
@@ -7031,7 +7023,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "serverless-plugin-tree-shake",
-        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0"
+        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.1"
       ],
       [
         "serverless-s3-sync",
@@ -7451,7 +7443,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "tempy",
-        "npm:0.7.0"
+        "npm:0.7.1"
       ],
       [
         "term-size",
@@ -7695,7 +7687,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "typescript",
-        "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"
+        "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2"
       ],
       [
         "unbzip2-stream",
@@ -8276,9 +8268,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless", "npm:1.81.1"],
             ["serverless-iam-roles-per-function", "npm:2.0.2"],
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.7.0"],
-            ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0"],
+            ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.1"],
             ["serverless-s3-sync", "npm:1.14.4"],
-            ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"],
+            ["typescript", "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2"],
             ["webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.0.0-beta.29"]
           ],
           "linkType": "SOFT",
@@ -16003,7 +15995,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["comment-json", "npm:2.4.2"],
             ["cross-spawn", "npm:6.0.5"],
             ["eslint", "npm:6.8.0"],
-            ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
+            ["typescript", "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -16982,9 +16974,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless", "npm:1.81.1"],
             ["serverless-iam-roles-per-function", "npm:2.0.2"],
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:6.7.0"],
-            ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0"],
+            ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.1"],
             ["serverless-s3-sync", "npm:1.14.4"],
-            ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"],
+            ["typescript", "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2"],
             ["webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.0.0-beta.29"]
           ],
           "linkType": "SOFT",
@@ -21071,16 +21063,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:5.1.0", {
-          "packageLocation": "./.yarn/cache/del-npm-5.1.0-eb4ac07f4c-e9de3180b2.zip/node_modules/del/",
+        ["npm:6.0.0", {
+          "packageLocation": "./.yarn/cache/del-npm-6.0.0-fb1f14b406-da72707c92.zip/node_modules/del/",
           "packageDependencies": [
-            ["del", "npm:5.1.0"],
-            ["globby", "npm:10.0.2"],
+            ["del", "npm:6.0.0"],
+            ["globby", "npm:11.0.1"],
             ["graceful-fs", "npm:4.2.4"],
             ["is-glob", "npm:4.0.1"],
             ["is-path-cwd", "npm:2.2.0"],
             ["is-path-inside", "npm:3.0.2"],
-            ["p-map", "npm:3.0.0"],
+            ["p-map", "npm:4.0.0"],
             ["rimraf", "npm:3.0.2"],
             ["slash", "npm:3.0.0"]
           ],
@@ -35383,10 +35375,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["serverless-plugin-tree-shake", [
-        ["virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0", {
-          "packageLocation": "./.yarn/unplugged/serverless-plugin-tree-shake-virtual-f7d75e2434/node_modules/serverless-plugin-tree-shake/",
+        ["virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.1", {
+          "packageLocation": "./.yarn/unplugged/serverless-plugin-tree-shake-virtual-68b3cf337d/node_modules/serverless-plugin-tree-shake/",
           "packageDependencies": [
-            ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.0"],
+            ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.1"],
             ["@types/serverless", null],
             ["@types/typescript", null],
             ["@vercel/nft", "npm:0.9.3"],
@@ -35402,9 +35394,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mz", "npm:2.7.0"],
             ["nanomatch", "npm:1.2.13"],
             ["path-is-inside", "npm:1.0.2"],
+            ["pkg-up", "npm:3.1.0"],
             ["serverless", "npm:1.81.1"],
-            ["tempy", "npm:0.7.0"],
-            ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"]
+            ["tempy", "npm:0.7.1"],
+            ["typescript", "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2"]
           ],
           "packagePeers": [
             "@types/serverless",
@@ -36856,11 +36849,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["tempy", [
-        ["npm:0.7.0", {
-          "packageLocation": "./.yarn/cache/tempy-npm-0.7.0-c06b5736e7-1683650c95.zip/node_modules/tempy/",
+        ["npm:0.7.1", {
+          "packageLocation": "./.yarn/cache/tempy-npm-0.7.1-b8f9223957-ec106bd42e.zip/node_modules/tempy/",
           "packageDependencies": [
-            ["tempy", "npm:0.7.0"],
-            ["del", "npm:5.1.0"],
+            ["tempy", "npm:0.7.1"],
+            ["del", "npm:6.0.0"],
             ["is-stream", "npm:2.0.0"],
             ["temp-dir", "npm:2.0.0"],
             ["type-fest", "npm:0.16.0"],
@@ -37713,6 +37706,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["typescript", [
+        ["patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2", {
+          "packageLocation": "./.yarn/cache/typescript-patch-d77c20b31d-dcadfa6d7c.zip/node_modules/typescript/",
+          "packageDependencies": [
+            ["typescript", "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2"]
+          ],
+          "linkType": "HARD",
+        }],
         ["patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2", {
           "packageLocation": "./.yarn/cache/typescript-patch-ba0dbfd217-f0d3d9c987.zip/node_modules/typescript/",
           "packageDependencies": [

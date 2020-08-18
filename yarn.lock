@@ -6690,9 +6690,9 @@ __metadata:
     serverless: ^1.81.1
     serverless-iam-roles-per-function: ^2.0.2
     serverless-offline: ^6.1.5
-    serverless-plugin-tree-shake: ^1.1.0
+    serverless-plugin-tree-shake: ^1.1.1
     serverless-s3-sync: ^1.14.4
-    typescript: ~3.9.7
+    typescript: ~3.8.3
     webpack: ^5.0.0-beta.16
   dependenciesMeta:
     browser-tabs-lock:
@@ -10313,19 +10313,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"del@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "del@npm:5.1.0"
+"del@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "del@npm:6.0.0"
   dependencies:
-    globby: ^10.0.1
-    graceful-fs: ^4.2.2
+    globby: ^11.0.1
+    graceful-fs: ^4.2.4
     is-glob: ^4.0.1
     is-path-cwd: ^2.2.0
-    is-path-inside: ^3.0.1
-    p-map: ^3.0.0
-    rimraf: ^3.0.0
+    is-path-inside: ^3.0.2
+    p-map: ^4.0.0
+    rimraf: ^3.0.2
     slash: ^3.0.0
-  checksum: e9de3180b2a5742adf877d1acdf1721fe42a27ea86890a9f19e949697ac4d972ba505e912df023a8b5ef04c1b5989a02e8451fd52fa6d3487b8745c21456efc6
+  checksum: da72707c9221154db6d6b05890ac1ae771d1b4ffc2759a6b8fca58e8a8289e07d22b68f68666a6c540dd99f1021b29ef77918dcaf4dbfeb9f99f49bd7fcc6fb5
   languageName: node
   linkType: hard
 
@@ -13272,7 +13272,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"globby@npm:^10.0.1, globby@npm:^10.0.2":
+"globby@npm:^10.0.2":
   version: 10.0.2
   resolution: "globby@npm:10.0.2"
   dependencies:
@@ -14976,7 +14976,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"is-path-inside@npm:^3.0.1":
+"is-path-inside@npm:^3.0.1, is-path-inside@npm:^3.0.2":
   version: 3.0.2
   resolution: "is-path-inside@npm:3.0.2"
   checksum: 709ba85a713d25fb058a4c2f62e9e7160bcc1a3e48af2f201045cde027fc1efe61a6e1b5c1cf21b8329f764e3649e160976fde14317c1b848caa9c1f31d5beec
@@ -23078,9 +23078,9 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"serverless-plugin-tree-shake@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "serverless-plugin-tree-shake@npm:1.1.0"
+"serverless-plugin-tree-shake@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "serverless-plugin-tree-shake@npm:1.1.1"
   dependencies:
     "@vercel/nft": ^0.9.3
     apr-find: ^3.0.3
@@ -23095,11 +23095,12 @@ resolve@1.15.0:
     mz: ^2.7.0
     nanomatch: ^1.2.13
     path-is-inside: ^1.0.2
+    pkg-up: ^3.1.0
     tempy: ^0.7.0
   peerDependencies:
     serverless: ^1.71.3
     typescript: ^3.9.3
-  checksum: 8f5d38dc199a8daac6fb2ceab8d4c636a896c4ef31d77e284f53c71edb575bdaead5b846182353c0ea7e23d0663890a1399c8b933c70a658c415bf747f42e302
+  checksum: 06ddd647441e749b5d062e95dc2c98ccca734d63c84e149a4f9389e68e49db0096d81d43f12b94f70d06f03904880296fe8e2f8644cc450fc695886a66ebc234
   languageName: node
   linkType: hard
 
@@ -24498,15 +24499,15 @@ resolve@1.15.0:
   linkType: hard
 
 "tempy@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "tempy@npm:0.7.0"
+  version: 0.7.1
+  resolution: "tempy@npm:0.7.1"
   dependencies:
-    del: ^5.1.0
+    del: ^6.0.0
     is-stream: ^2.0.0
     temp-dir: ^2.0.0
     type-fest: ^0.16.0
     unique-string: ^2.0.0
-  checksum: 1683650c95e556eb4565fac01a82536d570b97f73da645afc64d7352a572713353ca2b86e1b9f3e98b9e8195d58af723d60a3bbeaf2904ffd032a007f8639615
+  checksum: ec106bd42e8800106b98bd3ad5740ac34c2a1136c118e23ab79d24a44e510c086c2849aed6201b4718615fa06a168b5045255f5f23dfb6737899e900fec6bee7
   languageName: node
   linkType: hard
 
@@ -25199,6 +25200,16 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
+"typescript@patch:typescript@~3.8.3#builtin<compat/typescript>":
+  version: 3.8.3
+  resolution: "typescript@patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=5b02a2"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: dcadfa6d7c90af4ac23181cccda22bdc7270f23a2c8773ab0b6047e2b9b86bcd885da5c5acc020addc1a0df042940ab8e9bbfb33aedcf884bea554fe60fccd32
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@~3.9.7#builtin<compat/typescript>":
   version: 3.9.7
   resolution: "typescript@patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"
@@ -25206,6 +25217,16 @@ resolve@1.15.0:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: f0d3d9c987860c7c458229ab6dd7e3d322405db36b70abccba610b5efd9f9451e4e67a3fc7983c0d3741033c1f1a8d7aa859a1510caa8f20fad762fc39648bfa
+  languageName: node
+  linkType: hard
+
+typescript@~3.8.3:
+  version: 3.8.3
+  resolution: "typescript@npm:3.8.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 519b11576247fe3570d89a2aa757d8f666aafc0cb9465a6cdd4df09c1dc6bf7285f0c6008d2ac7a55ea26457e767aaab819f58439d80af2cce1d9805b2be1034
   languageName: node
   linkType: hard
 

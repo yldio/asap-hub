@@ -72,17 +72,17 @@ module.exports = {
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
         deleteRemoved: false,
-        localDir: 'apps/frontend/build',
+        localDir: 'apps/frontend/src',
       },
       {
         bucketName: `\${self:service}-\${self:provider.stage}-auth-frontend`,
         bucketPrefix: '.auth',
-        localDir: 'apps/auth-frontend/build',
+        localDir: 'apps/auth-frontend/src',
       },
       {
         bucketName: `\${self:service}-\${self:provider.stage}-storybook`,
         bucketPrefix: '.storybook',
-        localDir: 'apps/storybook/build',
+        localDir: 'apps/storybook/src',
       },
     ],
     'serverless-offline': {

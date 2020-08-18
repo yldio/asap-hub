@@ -118,9 +118,9 @@
     "serverless": "^1.81.1",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-offline": "^6.1.5",
-    "serverless-plugin-tree-shake": "^1.1.0",
+    "serverless-plugin-tree-shake": "^1.1.1",
     "serverless-s3-sync": "^1.14.4",
-    "typescript": "~3.9.7",
+    "typescript": "~3.8.3",
     "webpack": "^5.0.0-beta.16"
   }
 }

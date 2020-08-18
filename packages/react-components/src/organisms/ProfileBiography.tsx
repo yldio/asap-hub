@@ -18,13 +18,20 @@ type ProfileBiographyProps = {
 const ProfileBiography: React.FC<ProfileBiographyProps> = ({ biography }) => {
   return (
     <Card>
-      <Headline2 styleAsHeading={3}>Biography</Headline2>
-      <Paragraph accent="lead">{biography}</Paragraph>
-      <div css={stretchOnMobile}>
-        <Button>
-          {docsIcon}
-          View Biosketch
-        </Button>
+      <div
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Headline2 styleAsHeading={3}>Biography</Headline2>
+        <Paragraph accent="lead">{biography}</Paragraph>
+        <div css={stretchOnMobile}>
+          <Button>
+            {docsIcon}
+            View Biosketch
+          </Button>
+        </div>
       </div>
     </Card>
   );

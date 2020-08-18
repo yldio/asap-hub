@@ -16,7 +16,7 @@ const styles = css({
       18,
       largeDesktopScreen,
       30,
-      'em',
+      'px',
     ),
   },
 });

@@ -3,6 +3,7 @@ import {
   googleIcon,
   googleSigninLightNormalIcon,
   hidePasswordIcon,
+  locationIcon,
   orcidIcon,
   showPasswordIcon,
   validTickIcon,
@@ -14,6 +15,7 @@ export const DropdownChevron = () => dropdownChevronIcon;
 export const Google = () => googleIcon;
 export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;
 export const HidePassword = () => hidePasswordIcon;
+export const Location = () => locationIcon;
 export const Orcid = () => orcidIcon;
 export const ShowPassword = () => showPasswordIcon;
 export const ValidTick = () => validTickIcon;

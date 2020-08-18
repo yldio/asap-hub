@@ -7,9 +7,11 @@ import {
   perRem,
   contentSidePaddingWithNavigation,
   tabletScreen,
+  lineHeight,
 } from '../pixels';
 import { Avatar, Button, Link, Paragraph, TabLink, Display } from '../atoms';
 import { TabNav } from '../molecules';
+import { locationIcon } from '../icons';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -50,6 +52,17 @@ const lastModifiedStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'unset',
   },
+});
+
+const locationStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+});
+const iconStyles = css({
+  display: 'inline-block',
+  width: `${lineHeight / perRem}em`,
+  height: `${lineHeight / perRem}em`,
+  paddingRight: `${6 / perRem}em`,
 });
 
 type ProfileProps = Pick<
@@ -107,7 +120,14 @@ const ProfileHeader: React.FC<ProfileProps> = ({
                 </>
               )}
             </Paragraph>
-            <Paragraph>{location}</Paragraph>
+            {location && (
+              <Paragraph>
+                <span css={locationStyles}>
+                  <span css={iconStyles}>{locationIcon}</span>
+                  {location}
+                </span>
+              </Paragraph>
+            )}
           </div>
         </div>
         <Avatar

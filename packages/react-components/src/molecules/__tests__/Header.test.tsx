@@ -1,5 +1,7 @@
 import React from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Header from '../Header';
 import { findParentWithStyle } from '../../test-utils';
@@ -10,6 +12,18 @@ it('renders an ASAP logo', () => {
     'src',
     expect.stringMatching(/asap/i),
   );
+});
+
+it('links back to the home page', () => {
+  const { getByAltText, container } = render(
+    <MemoryRouter initialEntries={['/page']}>
+      <Route exact path="/page" component={Header} />
+      <Route exact path="/" render={() => 'home'} />
+    </MemoryRouter>,
+  );
+
+  userEvent.click(getByAltText(/asap.+logo/i));
+  expect(container).toHaveTextContent('home');
 });
 
 it('does not render an opaque background when set to transparent', () => {

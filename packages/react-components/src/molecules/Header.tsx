@@ -3,6 +3,7 @@ import css from '@emotion/css';
 
 import { asapPaddedImage, asapPaddedWhiteImage } from '../images';
 import { steel, paper } from '../colors';
+import { Link } from '../atoms';
 
 const height = '72px';
 
@@ -41,11 +42,13 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ transparent = false }) => (
   <div css={[containerStyles, transparent || containerOpaqueStyles]}>
     <header css={[styles, transparent || opaqueStyles]}>
-      <img
-        alt="ASAP logo"
-        src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
-        css={logoStyles}
-      />
+      <Link href="/">
+        <img
+          alt="ASAP logo"
+          src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
+          css={logoStyles}
+        />
+      </Link>
     </header>
   </div>
 );

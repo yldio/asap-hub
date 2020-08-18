@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from '@emotion/css';
 import { Link as ReactRouterLink } from 'react-router-dom';
 
-import { TextChildren } from '../text';
 import { fern, pine, paper } from '../colors';
 import { useHasRouter } from '../hooks';
 
@@ -27,7 +26,7 @@ const whiteStyles = css({
 });
 
 interface LinkProps {
-  readonly children: TextChildren;
+  readonly children: ReactNode;
   readonly href: string;
 
   readonly white?: boolean;

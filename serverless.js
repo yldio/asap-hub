@@ -171,7 +171,8 @@ module.exports = {
       ],
     },
     'webhook-connect-by-code': {
-      handler: 'apps/asap-server/build/handlers/users/webhook-connect-by-code.handler',
+      handler:
+        'apps/asap-server/build/handlers/users/webhook-connect-by-code.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/

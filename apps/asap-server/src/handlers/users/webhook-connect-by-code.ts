@@ -26,7 +26,7 @@ export const handler: Handler = lambda.http(
 
     // TODO: address variable sharing
     if (secret !== auth0SharedSecret) {
-      throw Boom.forbidden()
+      throw Boom.forbidden();
     }
 
     const users = new Users();

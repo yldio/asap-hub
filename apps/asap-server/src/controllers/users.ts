@@ -126,17 +126,12 @@ export default class Users {
     return transform(user);
   }
 
-  async connectByCode(
-    code: string,
-    userId: string
-  ): Promise<UserResponse> {
+  async connectByCode(code: string, userId: string): Promise<UserResponse> {
     const user = await this.cms.users.fetchByCode(code);
     if (!user) {
       throw Boom.forbidden();
     }
-    return transform(
-      await this.cms.users.connectByCode(user, userId),
-    );
+    return transform(await this.cms.users.connectByCode(user, userId));
   }
 
   async syncOrcidProfile(id: string): Promise<UserResponse> {

@@ -34,7 +34,11 @@ const Welcome: React.FC<{}> = () => {
   const createAccount = () => {
     window.sessionStorage.setItem(STORAGE_KEY_INVITATION_CODE, code);
     // eslint-disable-next-line @typescript-eslint/camelcase
-    loginWithRedirect({ prompt: 'login', screen_hint: 'signup', invitationCode: code });
+    loginWithRedirect({
+      prompt: 'login',
+      screen_hint: 'signup',
+      invitationCode: code,
+    });
   };
 
   return <WelcomePage signup onClick={createAccount} />;

@@ -24,7 +24,7 @@ describe('POST /users/connections', () => {
         httpMethod: 'post',
         body: {
           userId: chance.string(),
-          secret: chance.string()
+          secret: chance.string(),
         },
       }),
     )) as APIGatewayProxyResult;
@@ -39,7 +39,7 @@ describe('POST /users/connections', () => {
         body: {
           code: chance.string(),
           userId: chance.string(),
-          secret
+          secret,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -48,7 +48,7 @@ describe('POST /users/connections', () => {
   });
 
   test('returns 202 for valid code and updates the user', async () => {
-    const userId = `google-oauth2|${chance.string()}`
+    const userId = `google-oauth2|${chance.string()}`;
 
     const res = (await handler(
       apiGatewayEvent({
@@ -56,7 +56,7 @@ describe('POST /users/connections', () => {
         body: {
           code,
           userId,
-          secret
+          secret,
         },
       }),
     )) as APIGatewayProxyResult;

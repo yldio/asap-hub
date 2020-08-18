@@ -124,6 +124,8 @@ describe('POST /users/connections', () => {
     expect(res.statusCode).toStrictEqual(202);
     expect(userFound).not.toBe(null);
     expect(userFound!.data.connections.iv).toHaveLength(2);
-    expect(userFound!.data.connections.iv).toContainEqual({ code: auth0Response.sub });
+    expect(userFound!.data.connections.iv).toContainEqual({
+      code: auth0Response.sub,
+    });
   });
 });

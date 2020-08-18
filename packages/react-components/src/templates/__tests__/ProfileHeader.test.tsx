@@ -34,6 +34,20 @@ it.each`
   expect(container).toHaveTextContent(text);
 });
 
+it('shows the location', async () => {
+  const { getByText, getByTitle } = render(
+    <ProfileHeader {...boilerplateProps} location="New York" />,
+  );
+  expect(getByText('New York')).toBeVisible();
+  expect(getByTitle(/location/i)).toBeInTheDocument();
+});
+it('does not show the location icon if no location is available', () => {
+  const { queryByTitle } = render(
+    <ProfileHeader {...boilerplateProps} location={undefined} />,
+  );
+  expect(queryByTitle(/location/i)).toBe(null);
+});
+
 it("generates information about the user's first team", async () => {
   const { container } = render(
     <ProfileHeader

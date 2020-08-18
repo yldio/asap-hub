@@ -1,3 +1,4 @@
+export const lineHeight = 24;
 export const perRem = 17;
 
 export interface Screen {

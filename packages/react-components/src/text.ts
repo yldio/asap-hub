@@ -5,6 +5,7 @@ import {
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
+  lineHeight,
 } from './pixels';
 
 type TextChild = React.ReactText | boolean | null | undefined;
@@ -16,7 +17,7 @@ export const fontStyles = {
   MozOsxFontSmoothing: 'auto',
 
   fontSize: `${perRem}px`,
-  lineHeight: `${24 / 17}em`,
+  lineHeight: `${lineHeight / perRem}em`,
 
   backgroundColor: paper.rgb,
   color: charcoal.rgb,

@@ -37,7 +37,6 @@ const Welcome: React.FC<{}> = () => {
     loginWithRedirect({
       prompt: 'login',
       screen_hint: 'signup',
-      invitationCode: code,
     });
   };
 

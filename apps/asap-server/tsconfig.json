@@ -1,14 +1,21 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "module": "commonjs",
     "rootDir": ".",
     "resolveJsonModule": true,
     "outDir": "build"
   },
   "include": ["src", "test", "test/**/*.json"],
   "references": [
-    { "path": "../../packages/auth" },
-    { "path": "../../packages/model" },
-    { "path": "../../packages/services-common" }
+    {
+      "path": "../../packages/auth"
+    },
+    {
+      "path": "../../packages/model"
+    },
+    {
+      "path": "../../packages/services-common"
+    }
   ]
 }

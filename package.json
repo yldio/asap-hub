@@ -53,13 +53,13 @@
     "serverless-offline": {
       "unplugged": true
     },
+    "serverless-plugin-tree-shake": {
+      "unplugged": true
+    },
     "serverless-plugin-typescript": {
       "unplugged": true
     },
     "serverless-s3-sync": {
-      "unplugged": true
-    },
-    "serverless-webpack": {
       "unplugged": true
     },
     "term-size": {
@@ -117,10 +117,10 @@
     "rimraf": "^3.0.2",
     "serverless": "^1.81.1",
     "serverless-iam-roles-per-function": "^2.0.2",
-    "serverless-offline": "^6.7.0",
-    "serverless-s3-sync": "^1.14.4",
-    "serverless-webpack": "^5.3.4",
-    "typescript": "~3.9.7",
+    "serverless-offline": "^6.1.5",
+    "serverless-plugin-tree-shake": "^1.1.0",
+    "serverless-s3-sync": "^1.12.0",
+    "typescript": "~3.8.3",
     "webpack": "^5.0.0-beta.16"
   }
 }

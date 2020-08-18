@@ -119,14 +119,11 @@ describe('POST /users/connections', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(res.statusCode).toStrictEqual(202);
-
     const userFound = await cms.users.fetchByCode(code);
 
+    expect(res.statusCode).toStrictEqual(202);
     expect(userFound).not.toBe(null);
     expect(userFound!.data.connections.iv).toHaveLength(2);
-    expect(userFound!.data.connections.iv[1]!.code).toStrictEqual(
-      auth0Response.sub,
-    );
+    expect(userFound!.data.connections.iv).toContainEqual({ code: auth0Response.sub });
   });
 });

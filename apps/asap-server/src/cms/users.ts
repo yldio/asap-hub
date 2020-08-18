@@ -6,12 +6,6 @@ import get from 'lodash.get';
 import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { CMSTeam } from '../entities/team';
 
-export interface Connection {
-  id: string;
-  raw: unknown;
-  source: string;
-}
-
 interface CreateUserData {
   displayName: { iv: string };
   email: { iv: string };
@@ -124,8 +118,8 @@ export default class Users extends Base {
       .json();
   }
 
-  connectByCode(user: CMSUser, profile: Connection): Promise<CMSUser> {
-    const connections = user.data.connections.iv.concat([{ code: profile.id }]);
+  connectByCode(user: CMSUser, id: string): Promise<CMSUser> {
+    const connections = user.data.connections.iv.concat([{ code: id }]);
     return this.client
       .patch<CMSUser>(`users/${user.id}`, {
         json: {

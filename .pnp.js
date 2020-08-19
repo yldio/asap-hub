@@ -31,6 +31,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/auth-frontend"
       },
       {
+        "name": "@asap-hub/auth0-connect-user",
+        "reference": "workspace:apps/auth0-connect-user"
+      },
+      {
         "name": "@asap-hub/frontend",
         "reference": "workspace:apps/frontend"
       },
@@ -49,10 +53,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@asap-hub/auth",
         "reference": "workspace:packages/auth"
-      },
-      {
-        "name": "@asap-hub/auth0-functions",
-        "reference": "workspace:packages/auth0-functions"
       },
       {
         "name": "@asap-hub/eslint-config-asap-hub",
@@ -93,7 +93,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/asap-server", ["workspace:apps/asap-server"]],
       ["@asap-hub/auth", ["workspace:packages/auth"]],
       ["@asap-hub/auth-frontend", ["workspace:apps/auth-frontend"]],
-      ["@asap-hub/auth0-functions", ["workspace:packages/auth0-functions"]],
+      ["@asap-hub/auth0-connect-user", ["workspace:apps/auth0-connect-user"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/frontend", ["workspace:apps/frontend"]],
       ["@asap-hub/model", ["workspace:packages/model"]],
@@ -126,8 +126,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "workspace:apps/auth-frontend"
       ],
       [
-        "@asap-hub/auth0-functions",
-        "workspace:packages/auth0-functions"
+        "@asap-hub/auth0-connect-user",
+        "workspace:apps/auth0-connect-user"
       ],
       [
         "@asap-hub/eslint-config-asap-hub",
@@ -8218,11 +8218,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
-      ["@asap-hub/auth0-functions", [
-        ["workspace:packages/auth0-functions", {
-          "packageLocation": "./packages/auth0-functions/",
+      ["@asap-hub/auth0-connect-user", [
+        ["workspace:apps/auth0-connect-user", {
+          "packageLocation": "./apps/auth0-connect-user/",
           "packageDependencies": [
-            ["@asap-hub/auth0-functions", "workspace:packages/auth0-functions"]
+            ["@asap-hub/auth0-connect-user", "workspace:apps/auth0-connect-user"]
           ],
           "linkType": "SOFT",
         }]

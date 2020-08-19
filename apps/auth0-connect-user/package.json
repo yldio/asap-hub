@@ -1,0 +1,11 @@
+{
+  "name": "@asap-hub/auth0-connect-user",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline"
+  }
+}

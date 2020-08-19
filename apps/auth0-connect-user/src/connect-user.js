@@ -1,4 +1,4 @@
-function aspnetWebApi(user, context, callback) {
+function connectUser(user, context, callback) {
   if (!context.invitationCode) {
     return callback(null, user, context);
   }

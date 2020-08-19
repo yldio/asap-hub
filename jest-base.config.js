@@ -6,7 +6,7 @@ module.exports = {
     '<rootDir>/build/',
     '<rootDir>/coverage/',
     'packages/services-common/src/cms/*',
-    'packages/auth0-functions/*',
+    'apps/auth0-connect-user/*',
   ],
 
   collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],

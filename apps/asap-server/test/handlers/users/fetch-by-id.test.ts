@@ -6,7 +6,8 @@ import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/users/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createRandomUser } from '../../helpers/create-user';
+import { createUserOnTeam } from '../../helpers/create-user';
+import { createRandomTeam } from '../../helpers/teams';
 
 const chance = new Chance();
 
@@ -42,7 +43,8 @@ describe('GET /users/{id}', () => {
   test('returns 200 when id exists', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
-    const { connections, ...newUser } = await createRandomUser();
+    const team = await createRandomTeam();
+    const { connections, ...newUser } = await createUserOnTeam(team);
 
     const result = (await handler(
       apiGatewayEvent({

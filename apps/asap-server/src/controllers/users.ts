@@ -18,6 +18,7 @@ export const transform = (user: CMSUser): UserResponse => {
   return JSON.parse(
     JSON.stringify({
       id: user.id,
+      lastModifiedDate: user.lastModified,
       displayName: user.data.displayName.iv,
       email: user.data.email.iv,
       firstName: user.data.firstName?.iv,
@@ -26,7 +27,8 @@ export const transform = (user: CMSUser): UserResponse => {
       biography: user.data.biography?.iv,
       jobTitle: user.data.jobTitle?.iv,
       institution: user.data.institution?.iv,
-      teams: user.data.teams?.iv || [],
+      teams:
+        user.data.teams?.iv.map(({ id, ...t }) => ({ id: id[0], ...t })) || [],
       location: user.data.location?.iv,
       orcid: user.data.orcid?.iv,
       orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,

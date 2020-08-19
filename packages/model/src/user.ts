@@ -70,6 +70,7 @@ export interface OrcidWork {
 
 export interface UserResponse extends Invitee {
   id: string;
+  lastModifiedDate: string;
   teams: ReadonlyArray<{
     id: string;
     displayName: string;

@@ -4,4 +4,4 @@ export { default as Layout } from './Layout';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as ProfileBiography } from './ProfileBiography';
 export { default as ProfileRecentWorks } from './ProfileRecentWorks';
-export { default as ProfileSkills } from './ProfileSkills';
+export { default as SkillsSection } from './SkillsSection';

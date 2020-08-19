@@ -1,12 +1,14 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Link, Card, Headline2, Avatar, Paragraph, Headline4 } from '../atoms';
+import { Link, Card, Headline2, Avatar, Paragraph } from '../atoms';
 import { perRem, mobileScreen } from '../pixels';
 
 type MembersSectionProps = {
   readonly members: {
     readonly id: string;
+    readonly firstName?: string;
+    readonly lastName?: string;
     readonly displayName: string;
     readonly role: string;
     readonly avatarURL?: string;
@@ -45,21 +47,30 @@ const MembersSection: React.FC<MembersSectionProps> = ({ members = [] }) => {
     <Card>
       <Headline2 styleAsHeading={3}>Team Members ({members.length})</Headline2>
       <ul css={containerStyles}>
-        {members.map(({ id, displayName, avatarURL, role }) => (
-          <li key={id} css={memberContainerStyles}>
-            <Link href={`/users/${id}`} underline={false}>
-              <div css={{ display: 'flex', alignItems: 'center' }}>
-                <div css={avatarContainer}>
-                  <Avatar imageUrl={avatarURL} border />
+        {members.map(
+          ({ id, displayName, firstName, lastName, avatarURL, role }) => (
+            <li key={id} css={memberContainerStyles}>
+              <Link href={`/users/${id}`} underline={false}>
+                <div css={{ display: 'flex', alignItems: 'center' }}>
+                  <div css={avatarContainer}>
+                    <Avatar
+                      imageUrl={avatarURL}
+                      border
+                      firstName={firstName}
+                      lastName={lastName}
+                    />
+                  </div>
+                  <div css={detailsContainer}>
+                    <Paragraph primary accent="charcoal">
+                      {displayName}
+                    </Paragraph>
+                    <Paragraph accent="lead">{role}</Paragraph>
+                  </div>
                 </div>
-                <div css={detailsContainer}>
-                  <Paragraph accent="charcoal">{displayName}</Paragraph>
-                  <Paragraph accent="lead">{role}</Paragraph>
-                </div>
-              </div>
-            </Link>
-          </li>
-        ))}
+              </Link>
+            </li>
+          ),
+        )}
       </ul>
     </Card>
   );

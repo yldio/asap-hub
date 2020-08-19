@@ -32,6 +32,21 @@ describe('POST /users/connections', () => {
     expect(res.statusCode).toStrictEqual(400);
   });
 
+  test('returns 403 when secret doesnt match', async () => {
+    const res = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'post',
+        body: {
+          code,
+          userId: chance.string(),
+          secret: chance.string(),
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(403);
+  });
+
   test('returns 403 for invalid code', async () => {
     const res = (await handler(
       apiGatewayEvent({

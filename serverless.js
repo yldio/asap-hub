@@ -62,7 +62,7 @@ module.exports = {
     },
   },
   package: {
-    individually: false,
+    individually: true,
     excludeDevDependencies: false,
   },
   custom: {

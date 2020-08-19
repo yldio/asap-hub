@@ -45,6 +45,7 @@ module.exports = {
     region: AWS_REGION,
     stage: SLS_STAGE,
     httpApi: {
+      payload: '2.0',
       cors: {
         allowedOrigins: [ASAP_APP_URL],
         allowCredentials: true,
@@ -190,7 +191,7 @@ module.exports = {
     // },
     fetchResearchOutputs: {
       handler:
-        'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
+        'apps/asap-server/src/handlers/research-outputs/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -202,7 +203,7 @@ module.exports = {
       ],
     },
     fetchResearchOutputsById: {
-      handler: 'apps/asap-server/build/handlers/research-outputs/fetch.handler',
+      handler: 'apps/asap-server/src/handlers/research-outputs/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/

@@ -5,9 +5,15 @@
     "incremental": false,
     "emitDeclarationOnly": false,
     "noEmit": true,
-
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react"
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "jsx": "react",
+    "module": "esnext"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

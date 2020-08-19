@@ -94,7 +94,7 @@
     "@testing-library/jest-dom": "^5.9.0",
     "@types/jest": "^26.0.3",
     "@types/webpack": "^4",
-    "@yarnpkg/pnpify": "^2.0.0-rc.20",
+    "@yarnpkg/pnpify": "^2.2.1",
     "babel-eslint": "^10.1.0",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "babel-preset-react-app": "^9.1.2",

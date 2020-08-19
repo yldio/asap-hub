@@ -14,6 +14,7 @@ import { API_BASE_URL } from '../../config';
 
 const user: UserResponse = {
   id: '42',
+  lastModifiedDate: '2020-08-19T11:11:06.989Z',
   displayName: 'John Doe',
   email: 'john.doe@example.com',
   institution: 'Unknown Institution',

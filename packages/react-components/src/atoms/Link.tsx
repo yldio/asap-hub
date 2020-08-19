@@ -44,7 +44,7 @@ const Link: React.FC<LinkProps> = ({
   if (useHasRouter()) {
     return (
       <ReactRouterLink
-        css={[styles, white && whiteStyles, undeline && underlineStyles]}
+        css={[styles, white && whiteStyles, underline && underlineStyles]}
         to={href}
       >
         {children}

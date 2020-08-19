@@ -46,7 +46,6 @@ export {
   MembersSection,
   ProfileBiography,
   ProfileRecentWorks,
-  ProfileSkills,
   RadioButtonGroup,
   RadioButtonGroup,
   SkillsSection,

@@ -7,7 +7,7 @@ import { useHasRouter } from '../hooks';
 
 const styles = css({
   outline: 'none',
-  textDecoration: 'underline',
+  textDecoration: 'none',
   ':hover, :focus': {
     textDecoration: 'none',
   },
@@ -25,16 +25,28 @@ const whiteStyles = css({
   },
 });
 
+const underlineStyles = css({
+  textDecoration: 'underline',
+});
+
 interface LinkProps {
   readonly children: ReactNode;
   readonly href: string;
-
+  readonly underline?: boolean;
   readonly white?: boolean;
 }
-const Link: React.FC<LinkProps> = ({ children, href, white = false }) => {
+const Link: React.FC<LinkProps> = ({
+  children,
+  href,
+  white = false,
+  underline = true,
+}) => {
   if (useHasRouter()) {
     return (
-      <ReactRouterLink css={[styles, white && whiteStyles]} to={href}>
+      <ReactRouterLink
+        css={[styles, white && whiteStyles, undeline && underlineStyles]}
+        to={href}
+      >
         {children}
       </ReactRouterLink>
     );

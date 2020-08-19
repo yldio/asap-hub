@@ -55,6 +55,7 @@ module.exports = {
       CMS_APP_NAME: `\${env:CMS_APP_NAME}`,
       CMS_CLIENT_ID: `\${env:CMS_CLIENT_ID}`,
       CMS_CLIENT_SECRET: `\${env:CMS_CLIENT_SECRET}`,
+      AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
     },
   },
   package: {

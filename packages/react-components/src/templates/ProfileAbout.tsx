@@ -3,8 +3,8 @@ import css from '@emotion/css';
 
 import {
   ProfileBiography,
-  ProfileSkills,
   ProfileRecentWorks,
+  SkillsSection,
 } from '../organisms';
 import { perRem, contentSidePaddingWithNavigation } from '../pixels';
 import { pearl, steel } from '../colors';
@@ -20,7 +20,7 @@ const styles = css({
 
 interface ProfileAboutProps {
   biography?: ComponentProps<typeof ProfileBiography>['biography'];
-  skills: ComponentProps<typeof ProfileSkills>['skills'];
+  skills: ComponentProps<typeof SkillsSection>['skills'];
   orcidWorks?: ComponentProps<typeof ProfileRecentWorks>['orcidWorks'];
 }
 
@@ -31,7 +31,7 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({
 }) => (
   <main css={styles}>
     {biography && <ProfileBiography biography={biography} />}
-    {skills.length ? <ProfileSkills skills={skills} /> : null}
+    {skills.length ? <SkillsSection skills={skills} /> : null}
     {orcidWorks && orcidWorks.length ? (
       <ProfileRecentWorks orcidWorks={orcidWorks} />
     ) : null}

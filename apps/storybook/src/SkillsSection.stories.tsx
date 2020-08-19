@@ -1,13 +1,13 @@
 import React from 'react';
 import { array } from '@storybook/addon-knobs';
-import { ProfileSkills } from '@asap-hub/react-components';
+import { SkillsSection } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Profile / Skills',
+  title: 'Organisms / Skills',
 };
 
 export const Normal = () => (
-  <ProfileSkills
+  <SkillsSection
     skills={array('Skills', [
       'Neurological Diseases',
       'Clinical Neurology',

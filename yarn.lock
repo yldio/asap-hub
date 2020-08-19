@@ -94,6 +94,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/auth0-functions@workspace:packages/auth0-functions":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/auth0-functions@workspace:packages/auth0-functions"
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/auth@workspace:packages/auth":
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth@workspace:packages/auth"

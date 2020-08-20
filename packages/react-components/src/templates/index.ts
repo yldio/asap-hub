@@ -9,5 +9,8 @@ export { default as RecordOutputForm } from './RecordOutputForm';
 export { default as RecordOutputPage } from './RecordOutputPage';
 export { default as SigninForm } from './SigninForm';
 export { default as SigninPage } from './SigninPage';
+export { default as TeamAbout } from './TeamAbout';
+export { default as TeamHeader } from './TeamHeader';
+export { default as TeamPage } from './TeamPage';
 export { default as WelcomeCard } from './WelcomeCard';
 export { default as WelcomePage } from './WelcomePage';

@@ -55,10 +55,11 @@ module.exports = {
       CMS_APP_NAME: `\${env:CMS_APP_NAME}`,
       CMS_CLIENT_ID: `\${env:CMS_CLIENT_ID}`,
       CMS_CLIENT_SECRET: `\${env:CMS_CLIENT_SECRET}`,
+      AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
     },
   },
   package: {
-    individually: true,
+    individually: false,
     excludeDevDependencies: false,
   },
   custom: {
@@ -167,6 +168,19 @@ module.exports = {
           httpApi: {
             method: 'POST',
             path: `/users/connections`,
+          },
+        },
+      ],
+    },
+    'webhook-connect-by-code': {
+      handler:
+        'apps/asap-server/build/handlers/users/webhook-connect-by-code.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'POST',
+            path: `/webhook/users/connections`,
           },
         },
       ],

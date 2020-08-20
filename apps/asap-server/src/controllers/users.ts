@@ -8,7 +8,6 @@ import get from 'lodash.get';
 import { Invitee, UserResponse } from '@asap-hub/model';
 
 import { CMS } from '../cms';
-import * as auth0 from '../entities/auth0';
 import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
@@ -129,21 +128,12 @@ export default class Users {
     return transform(user);
   }
 
-  async connectByCode(
-    code: string,
-    profile: auth0.UserInfo,
-  ): Promise<UserResponse> {
+  async connectByCode(code: string, userId: string): Promise<UserResponse> {
     const user = await this.cms.users.fetchByCode(code);
     if (!user) {
       throw Boom.forbidden();
     }
-    return transform(
-      await this.cms.users.connectByCode(user, {
-        id: profile.sub,
-        source: 'auth0',
-        raw: profile,
-      }),
-    );
+    return transform(await this.cms.users.connectByCode(user, userId));
   }
 
   async syncOrcidProfile(id: string): Promise<UserResponse> {

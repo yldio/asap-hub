@@ -44,10 +44,10 @@ export const handler: Handler = lambda.http(
       token: string;
     };
 
-    const profile = await validateUser(token);
+    const { sub } = await validateUser(token);
 
     const users = new Users();
-    await users.connectByCode(code, profile);
+    await users.connectByCode(code, sub);
 
     return {
       statusCode: 202,

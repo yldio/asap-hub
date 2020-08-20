@@ -8,6 +8,7 @@ const {
   CMS_APP_NAME,
   CMS_CLIENT_ID,
   CMS_CLIENT_SECRET,
+  AUTH0_SHARED_SECRET,
 } = process.env;
 
 export const globalToken = GLOBAL_TOKEN || 'change_me_when_we_have_admins';
@@ -24,3 +25,5 @@ export const cms = {
 };
 export const sesEndpoint =
   NODE_ENV !== 'production' ? 'http://localhost:4566' : undefined;
+export const auth0SharedSecret =
+  NODE_ENV === 'production' ? AUTH0_SHARED_SECRET : 'auth0_shared_secret';

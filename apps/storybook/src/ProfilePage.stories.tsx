@@ -26,7 +26,15 @@ const commonProps = () => ({
     {
       id: '42',
       role: text('Role', 'Researcher'),
-      displayName: text('Team Name', 'Team A'),
+      displayName: text('Team Name', 'Ferguson, M'),
+      approach: text(
+        'Approach',
+        'As an expert in MRI scans, Tess will leverage past experience to lead the team to define the next big thing in MRI scans and keep the budget on track. We will first quantify the motor function of A53T human α-synuclein Tg mice and age-matched non-transgenic littermates using a modified open field test. To evaluate whether changes of dynein were related to α-synuclein aggregation, double immunostaining for α-synuclein and dynein will be performed. Finally, an analysis of the correlation between motor behaviors and the protein level of dynein in the striatum will be conducted.',
+      ),
+      responsabilities: text(
+        'Responsabilities',
+        "Phillip's team wants to understand how A53T-alpha-synuclein affects synapse structure/ function and identify possible correlation between its neurotoxicity and specific neuronal subtypes.",
+      ),
     },
   ],
   jobTitle: text('Job Title', 'Assistant Professor'),

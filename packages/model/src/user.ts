@@ -75,6 +75,8 @@ export interface UserResponse extends Invitee {
     id: string;
     displayName: string;
     role: string;
+    approach?: string;
+    responsabilities?: string;
   }>;
   skills: string[];
   orcidLastModifiedDate?: string;

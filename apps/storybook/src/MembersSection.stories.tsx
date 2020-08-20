@@ -5,6 +5,8 @@ export default {
   title: 'Organisms / Team / Members',
 };
 
+export const Empty = () => <MembersSection members={[]} />;
+
 export const Normal = () => (
   <MembersSection
     members={[

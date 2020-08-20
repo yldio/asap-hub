@@ -2,13 +2,15 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import MembersSection from '../MembersSection';
 
-it('renders an an header with number of members', () => {
-  const { getByText } = render(<MembersSection members={[]} />);
-  expect(getByText(/members/i)).toBeVisible();
+it('renders an header with number of members', () => {
+  const { getByRole } = render(<MembersSection members={[]} />);
+  expect(getByRole('heading').textContent).toMatchInlineSnapshot(
+    `"Team Members (0)"`,
+  );
 });
 
 it('renders the content', async () => {
-  const { getByText } = render(
+  const { getByRole } = render(
     <MembersSection
       members={[
         {
@@ -21,7 +23,7 @@ it('renders the content', async () => {
       ]}
     />,
   );
-  const heading = getByText(/members/i);
+  const heading = getByRole('heading');
 
   expect(heading).toBeVisible();
   expect(heading.textContent).toMatchInlineSnapshot(`"Team Members (1)"`);

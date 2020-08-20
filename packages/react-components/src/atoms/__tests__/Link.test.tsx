@@ -38,14 +38,21 @@ describe.each`
   });
 
   it('respects the underline prop', () => {
-    const { getByRole } = render(
+    const { getByRole, rerender } = render(<Link href={href}>text</Link>, {
+      wrapper,
+    });
+
+    expect(getComputedStyle(getByRole('link')).textDecoration).toEqual(
+      'underline',
+    );
+
+    rerender(
       <Link underline={false} href={href}>
         text
       </Link>,
-      { wrapper },
     );
-    const { textDecoration } = getComputedStyle(getByRole('link'));
-    expect(textDecoration).toBe('none');
+
+    expect(getComputedStyle(getByRole('link')).textDecoration).toEqual('none');
   });
 
   it('applies the href to the anchor', () => {

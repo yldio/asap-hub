@@ -45,7 +45,7 @@ describe.each`
     const { textDecoration: textDecorationUnderline } = getComputedStyle(
       getByRole('link'),
     );
-    expect(textDecorationUnderline).toEqual('underline');
+    expect(textDecorationUnderline).toMatchInlineSnapshot();
 
     rerender(
       <Link underline={false} href={href}>

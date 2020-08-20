@@ -1,0 +1,8 @@
+{
+  "name": "@asap-hub/auth0-add-user-metadata",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.x"
+  }
+}

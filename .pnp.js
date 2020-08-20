@@ -31,6 +31,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/auth-frontend"
       },
       {
+        "name": "@asap-hub/auth0-add-user-metadata",
+        "reference": "workspace:apps/auth0-add-user-metadata"
+      },
+      {
         "name": "@asap-hub/auth0-connect-user",
         "reference": "workspace:apps/auth0-connect-user"
       },
@@ -93,6 +97,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/asap-server", ["workspace:apps/asap-server"]],
       ["@asap-hub/auth", ["workspace:packages/auth"]],
       ["@asap-hub/auth-frontend", ["workspace:apps/auth-frontend"]],
+      ["@asap-hub/auth0-add-user-metadata", ["workspace:apps/auth0-add-user-metadata"]],
       ["@asap-hub/auth0-connect-user", ["workspace:apps/auth0-connect-user"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/frontend", ["workspace:apps/frontend"]],
@@ -124,6 +129,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/auth-frontend",
         "workspace:apps/auth-frontend"
+      ],
+      [
+        "@asap-hub/auth0-add-user-metadata",
+        "workspace:apps/auth0-add-user-metadata"
       ],
       [
         "@asap-hub/auth0-connect-user",
@@ -8214,6 +8223,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
             ["react-scripts", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#patch:react-scripts@npm%3A3.4.1#./patches/react-scripts.patch::version=3.4.1&hash=4dc748&locator=%40asap-hub%2Fauth-frontend%40workspace%3Aapps%2Fauth-frontend"],
             ["typescript", "patch:typescript@npm%3A3.8.3#builtin<compat/typescript>::version=3.8.3&hash=64df9d"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/auth0-add-user-metadata", [
+        ["workspace:apps/auth0-add-user-metadata", {
+          "packageLocation": "./apps/auth0-add-user-metadata/",
+          "packageDependencies": [
+            ["@asap-hub/auth0-add-user-metadata", "workspace:apps/auth0-add-user-metadata"]
           ],
           "linkType": "SOFT",
         }]

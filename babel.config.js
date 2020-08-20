@@ -7,4 +7,5 @@ module.exports = {
     [require.resolve('@babel/plugin-transform-runtime'), { corejs: 3 }],
   ],
   babelrcRoots: ['.', 'apps/*', 'packages/*'],
+  ignore: ['apps/auth0-add-user-metadata/*', 'apps/auth0-connect-user/*'],
 };

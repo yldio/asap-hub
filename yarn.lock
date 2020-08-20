@@ -94,6 +94,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/auth0-add-user-metadata@workspace:apps/auth0-add-user-metadata":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/auth0-add-user-metadata@workspace:apps/auth0-add-user-metadata"
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/auth0-connect-user@workspace:apps/auth0-connect-user":
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth0-connect-user@workspace:apps/auth0-connect-user"

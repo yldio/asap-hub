@@ -84,7 +84,7 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
 
           return (
             <div key={index} css={elementStyle}>
-              <TagLabel>{typeMap[type] || typeMap.UNDEFINED}</TagLabel>
+              <TagLabel>{typeMap[type]}</TagLabel>
               <Headline3>{title}</Headline3>
               <p>
                 Originally Published:{' '}

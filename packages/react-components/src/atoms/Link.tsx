@@ -41,12 +41,14 @@ const Link: React.FC<LinkProps> = ({
   white = false,
   underline = true,
 }) => {
+  const linkStyles = [
+    styles,
+    white && whiteStyles,
+    underline && underlineStyles,
+  ];
   if (useHasRouter()) {
     return (
-      <ReactRouterLink
-        css={[styles, white && whiteStyles, underline && underlineStyles]}
-        to={href}
-      >
+      <ReactRouterLink css={linkStyles} to={href}>
         {children}
       </ReactRouterLink>
     );
@@ -57,7 +59,7 @@ const Link: React.FC<LinkProps> = ({
   return (
     <a
       href={href}
-      css={[styles, white && whiteStyles]}
+      css={linkStyles}
       target={internal ? undefined : '_blank'}
       rel={internal ? undefined : 'noreferrer noopener'}
     >

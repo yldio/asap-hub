@@ -42,7 +42,7 @@ const memberContainerStyles = css({
   display: 'flex',
 });
 
-const MembersSection: React.FC<MembersSectionProps> = ({ members = [] }) => {
+const MembersSection: React.FC<MembersSectionProps> = ({ members }) => {
   return (
     <Card>
       <Headline2 styleAsHeading={3}>Team Members ({members.length})</Headline2>

@@ -2,11 +2,11 @@ import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
 import { AdminInviteUserPage } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './padding';
+import { LayoutDecorator } from './decorators';
 
 export default {
   title: 'Pages / Admin / Invite User',
-  decorators: [NoPaddingDecorator],
+  decorators: [LayoutDecorator],
 };
 
 export const Initial = () => <AdminInviteUserPage state="initial" />;

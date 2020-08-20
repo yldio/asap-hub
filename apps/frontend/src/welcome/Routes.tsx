@@ -9,6 +9,7 @@ const Users: React.FC<{}> = () => {
   return (
     <Switch>
       <Route exact path={`${path}/:code`} component={Welcome} />
+      <Route>Not Found</Route>
     </Switch>
   );
 };

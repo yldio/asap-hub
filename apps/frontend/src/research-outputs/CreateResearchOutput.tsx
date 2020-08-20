@@ -1,11 +1,7 @@
 import React from 'react';
 import { Redirect, useRouteMatch } from 'react-router-dom';
 import { join } from 'path';
-import {
-  RecordOutputPage,
-  Paragraph,
-  Layout,
-} from '@asap-hub/react-components';
+import { RecordOutputPage, Paragraph } from '@asap-hub/react-components';
 import { ResearchOutputFormData } from '@asap-hub/model';
 
 import { useCreateResearchOutput } from '../api';
@@ -29,11 +25,9 @@ const CreateResearchOutput: React.FC<{}> = () => {
   };
 
   return error ? (
-    <Layout>
-      <Paragraph>
-        {error.name}: {error.message}
-      </Paragraph>
-    </Layout>
+    <Paragraph>
+      {error.name}: {error.message}
+    </Paragraph>
   ) : data ? (
     <Redirect push to={join(url, '..', data.id)} />
   ) : (

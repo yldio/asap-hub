@@ -1,5 +1,6 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
+import { Layout } from '@asap-hub/react-components';
 
 import Admin from './admin/Admin';
 import CreateProfile from './onboarding/CreateProfile';
@@ -10,38 +11,43 @@ import Teams from './teams/Routes';
 import Users from './users/Routes';
 import Welcome from './welcome/Routes';
 import { AuthProvider } from './auth';
-import ResearchOutputRoutes from './research-outputs/Routes';
+import ResearchOutputs from './research-outputs/Routes';
 import CheckAuth from './auth/CheckAuth';
 import ContinueOnboarding from './onboarding/ContinueOnboarding';
-import Page from './pages/page';
-
-const AuthCallbackGuardedHome: React.FC<{}> = () => (
-  <CheckAuth>
-    <ContinueOnboarding>
-      <Home />
-    </ContinueOnboarding>
-  </CheckAuth>
-);
+import Page from './pages/stub';
 
 const App: React.FC<{}> = () => {
   return (
     <AuthProvider>
       <Router history={history}>
         <Switch>
-          <Route exact path="/" component={AuthCallbackGuardedHome} />
-
-          <Route path="/news" component={News} />
-          <Route path="/teams" component={Teams} />
-          <Route path="/users" component={Users} />
-          <Route path="/research-outputs" component={ResearchOutputRoutes} />
           <Route path="/welcome" component={Welcome} />
           <Route exact path="/terms-and-conditions" component={Page} />
           <Route exact path="/privacy-policy" component={Page} />
-
-          <Route exact path="/create-profile" component={CreateProfile} />
           <Route exact path="/admin" component={Admin} />
 
-          <Route render={() => 'Not found'} />
+          <Route>
+            <CheckAuth>
+              <Layout navigation>
+                <Switch>
+                  <Route exact path="/">
+                    <ContinueOnboarding>
+                      <Home />
+                    </ContinueOnboarding>
+                  </Route>
+
+                  <Route path="/create-profile" component={CreateProfile} />
+
+                  <Route path="/news" component={News} />
+                  <Route path="/teams" component={Teams} />
+                  <Route path="/users" component={Users} />
+                  <Route path="/research-outputs" component={ResearchOutputs} />
+
+                  <Route>Not Found</Route>
+                </Switch>
+              </Layout>
+            </CheckAuth>
+          </Route>
         </Switch>
       </Router>
     </AuthProvider>

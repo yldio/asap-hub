@@ -3,8 +3,8 @@ import { render } from '@testing-library/react';
 
 import SigninPage from '../SigninPage';
 
-it('renders the signin form as the main content', () => {
-  const { getByText, getByRole } = render(
+it('renders the signin form', () => {
+  const { getByText } = render(
     <SigninPage
       email=""
       password=""
@@ -13,9 +13,7 @@ it('renders the signin form as the main content', () => {
       forgotPasswordHref="#"
     />,
   );
-  expect(getByRole('main')).toContainElement(
-    getByText(/sign in/i, { selector: 'h1' }),
-  );
+  expect(getByText(/sign in/i, { selector: 'h1' })).toBeVisible();
 });
 
 it('does not render a terms link by default', () => {

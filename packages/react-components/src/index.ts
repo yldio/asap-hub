@@ -44,7 +44,6 @@ export {
   EmailPasswordSignin,
   LoginLogoutButton,
   SsoButtons,
-  Layout,
   RadioButtonGroup,
   ProfileBiography,
   SkillsSection,
@@ -52,16 +51,16 @@ export {
 } from './organisms';
 
 export {
-  InviteUserForm,
-  ProfileHeader,
-  RecordOutputForm,
-  Signin,
-  Welcome,
-} from './templates';
-export {
   AdminInviteUserPage,
-  SigninPage,
-  RecordOutputPage,
-  WelcomePage,
+  InviteUserForm,
+  Layout,
+  ProfileAbout,
+  ProfileHeader,
   ProfilePage,
-} from './pages';
+  RecordOutputForm,
+  RecordOutputPage,
+  SigninForm,
+  SigninPage,
+  WelcomeCard,
+  WelcomePage,
+} from './templates';

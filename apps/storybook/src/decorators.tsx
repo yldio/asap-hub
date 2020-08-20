@@ -1,5 +1,6 @@
 import React from 'react';
 import { DecoratorFn } from '@storybook/react';
+import { Layout } from '@asap-hub/react-components';
 
 const noPaddingStyles = `
 body {
@@ -12,3 +13,6 @@ export const NoPaddingDecorator: DecoratorFn = (storyFn) => (
     {storyFn()}
   </>
 );
+
+export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
+  NoPaddingDecorator(() => <Layout navigation>{storyFn()}</Layout>, context);

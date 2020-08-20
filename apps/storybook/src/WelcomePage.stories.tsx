@@ -2,7 +2,7 @@ import React from 'react';
 import { WelcomePage } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 
-import { NoPaddingDecorator } from './padding';
+import { NoPaddingDecorator } from './decorators';
 
 export default {
   title: 'Pages / Auth / Welcome',

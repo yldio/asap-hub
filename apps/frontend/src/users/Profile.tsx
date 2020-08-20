@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { join } from 'path';
-import { Paragraph, ProfilePage, Layout } from '@asap-hub/react-components';
+import { Paragraph, ProfilePage } from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
 
@@ -15,11 +15,7 @@ const Profile: React.FC<{}> = () => {
   const { loading, data: profile, error } = useUserById(id);
 
   if (loading) {
-    return (
-      <Layout navigation>
-        <Paragraph>Loading...</Paragraph>
-      </Layout>
-    );
+    return <Paragraph>Loading...</Paragraph>;
   }
 
   if (profile) {
@@ -52,13 +48,11 @@ const Profile: React.FC<{}> = () => {
   }
 
   return (
-    <Layout navigation>
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    </Layout>
+    <Paragraph>
+      {error.name}
+      {': '}
+      {error.message}
+    </Paragraph>
   );
 };
 

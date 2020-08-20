@@ -1,15 +1,15 @@
 import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
-import { Signin } from '@asap-hub/react-components';
+import { SigninForm } from '@asap-hub/react-components';
 
 export default {
   title: 'Templates / Auth / Sign in',
-  component: Signin,
+  component: SigninForm,
 };
 
 export const Normal = () => (
-  <Signin
+  <SigninForm
     forgotPasswordHref={text(
       'Forgot Password Link',
       'https://en.wikipedia.org/wiki/Password',
@@ -20,7 +20,7 @@ export const Normal = () => (
 );
 
 export const Signup = () => (
-  <Signin
+  <SigninForm
     signup
     forgotPasswordHref={text(
       'Forgot Password Link',

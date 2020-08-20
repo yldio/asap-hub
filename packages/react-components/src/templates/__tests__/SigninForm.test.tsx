@@ -1,17 +1,17 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import Signin from '../Signin';
+import SigninForm from '../SigninForm';
 
 it('renders different headlines in signin and signup mode', () => {
   const { getByRole, rerender } = render(
-    <Signin email="" password="" forgotPasswordHref="#" />,
+    <SigninForm email="" password="" forgotPasswordHref="#" />,
   );
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Sign in to ASAP Hub"`,
   );
 
-  rerender(<Signin signup email="" password="" forgotPasswordHref="#" />);
+  rerender(<SigninForm signup email="" password="" forgotPasswordHref="#" />);
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Create your account"`,
   );
@@ -19,7 +19,7 @@ it('renders different headlines in signin and signup mode', () => {
 
 it('renders the SSO buttons', () => {
   const { getByText } = render(
-    <Signin email="" password="" forgotPasswordHref="#" />,
+    <SigninForm email="" password="" forgotPasswordHref="#" />,
   );
   expect(getByText(/Google/i, { selector: 'button > *' })).toBeVisible();
   expect(getByText(/ORCID/i, { selector: 'button > *' })).toBeVisible();
@@ -27,7 +27,7 @@ it('renders the SSO buttons', () => {
 
 it('renders username and password fields with the given values', () => {
   const { getByLabelText } = render(
-    <Signin
+    <SigninForm
       email="john.doe@example.com"
       password="PW"
       forgotPasswordHref="#"

@@ -3,7 +3,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { Layout, Paragraph } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
 
-const Users: React.FC<{}> = () => {
+const StubPage: React.FC<{}> = () => {
   const { path } = useRouteMatch();
   const { isAuthenticated, loading } = useAuth0();
   const [, slug] = path.split('/');
@@ -19,4 +19,4 @@ const Users: React.FC<{}> = () => {
   );
 };
 
-export default Users;
+export default StubPage;

@@ -12,10 +12,10 @@ export const Normal = () => (
   <ProfileHeader
     department={text('Department', 'Biology Department')}
     displayName={text('Display Name', 'Phillip Mars, PhD')}
-    institution={text('Institution', 'Yale University')}
-    orcidLastModifiedDate={new Date(
+    lastModifiedDate={new Date(
       date('Last modified', new Date(2020, 6, 12, 14, 32)),
     ).toISOString()}
+    institution={text('Institution', 'Yale University')}
     firstName={text('First Name', 'Phillip')}
     lastName={text('Last Name', 'Mars')}
     location={text('Location', 'New Haven, Connecticut')}

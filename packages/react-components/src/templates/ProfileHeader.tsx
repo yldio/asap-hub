@@ -67,16 +67,16 @@ const iconStyles = css({
 
 type ProfileProps = Pick<
   UserResponse,
+  | 'avatarURL'
   | 'department'
   | 'displayName'
-  | 'institution'
-  | 'orcidLastModifiedDate'
   | 'firstName'
+  | 'institution'
+  | 'jobTitle'
+  | 'lastModifiedDate'
   | 'lastName'
   | 'location'
   | 'teams'
-  | 'jobTitle'
-  | 'avatarURL'
 > & {
   readonly aboutHref: string;
   readonly researchInterestsHref: string;
@@ -87,7 +87,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   department,
   displayName,
   institution,
-  orcidLastModifiedDate,
+  lastModifiedDate,
   firstName,
   lastName,
   location,
@@ -143,13 +143,12 @@ const ProfileHeader: React.FC<ProfileProps> = ({
             Contact
           </Button>
         </div>
-        {orcidLastModifiedDate && (
+        {lastModifiedDate && (
           <div css={lastModifiedStyles}>
             <Paragraph accent="lead">
               <small>
                 Last updated:{' '}
-                {formatDistance(new Date(), new Date(orcidLastModifiedDate))}{' '}
-                ago
+                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
               </small>
             </Paragraph>
           </div>

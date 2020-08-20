@@ -22,6 +22,35 @@ describe('POST /webhook/users/{id}', () => {
     expect(result.statusCode).toStrictEqual(400);
   });
 
+  test('returns 401 when request is not authorized', async () => {
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        pathParameters: {
+          id: chance.string(),
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(401);
+  });
+
+  test('returns 401 when request is not using Basic Auth', async () => {
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        pathParameters: {
+          id: chance.string(),
+        },
+        headers: {
+          Authorization: `Bearer ${secret}`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(401);
+  });
+
   test('returns 403 when secret doesnt match', async () => {
     const result = (await handler(
       apiGatewayEvent({

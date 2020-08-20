@@ -1,9 +1,14 @@
-async function connectUser(user, context, callback) {
+import type { Rule } from '@asap-hub/auth0-rule';
+import got from 'got';
+
+const connectUser: Rule<{ invitationCode: string }> = async (
+  user,
+  context,
+  callback,
+) => {
   if (!context.invitationCode) {
     return callback(null, user, context);
   }
-
-  const got = require('got');
 
   try {
     await got
@@ -22,4 +27,6 @@ async function connectUser(user, context, callback) {
   } catch (err) {
     return callback(new Error(err));
   }
-}
+};
+
+export default connectUser;

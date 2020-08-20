@@ -19,6 +19,7 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-typescript": "^7.9.0",
     "@babel/runtime-corejs3": "^7.9.6",
+    "@types/asap-hub__auth0-rule": "workspace:@types/asap-hub__auth0-rule",
     "@types/jest": "^26.0.3"
   }
 }

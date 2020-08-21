@@ -10,15 +10,19 @@ export const handler: Handler = lambda.http(
     await validateRequest(request);
 
     const paramsSchema = Joi.object({
-      id: Joi.string().required(),
+      code: Joi.string().required(),
     }).required();
 
-    const { id } = lambda.validate('params', request.params, paramsSchema) as {
-      id: string;
+    const { code } = lambda.validate(
+      'params',
+      request.params,
+      paramsSchema,
+    ) as {
+      code: string;
     };
 
     const users = new Users();
-    const user = await users.fetchById(id);
+    const user = await users.fetchByCode(code);
 
     return {
       payload: user,

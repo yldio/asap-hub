@@ -62,16 +62,16 @@ const apiUser: UserResponse = {
 };
 
 describe('Auth0 Rule - Add User Metadata', () => {
-  const apiURL ='https://api.hub.asap.science'
-  const apiSharedSecret = 'auth0_shared_secret'
+  const apiURL = 'https://api.hub.asap.science';
+  const apiSharedSecret = 'auth0_shared_secret';
 
   beforeEach(() => {
     global.configuration = {
       APP_ORIGIN: apiURL,
-      API_SHARED_SECRET: apiSharedSecret 
-    }
-    nock.cleanAll()
-  })
+      API_SHARED_SECRET: apiSharedSecret,
+    };
+    nock.cleanAll();
+  });
 
   it('should return an error if fails to fetch the user', async () => {
     nock(apiURL, {
@@ -79,10 +79,12 @@ describe('Auth0 Rule - Add User Metadata', () => {
         authorization: `Basic ${apiSharedSecret}`,
       },
     })
-    .get(`/webhook/users/${user.user_id}`)
-    .reply(404);
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(404);
 
-    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> = jest.fn();
+    const cb: jest.MockedFunction<
+      Parameters<typeof addUserMetadata>[2]
+    > = jest.fn();
 
     await addUserMetadata(user, context, cb);
 
@@ -99,10 +101,12 @@ describe('Auth0 Rule - Add User Metadata', () => {
         authorization: `Basic ${apiSharedSecret}`,
       },
     })
-    .get(`/webhook/users/${user.user_id}`)
-    .reply(200, apiUser);
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, apiUser);
 
-    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> = jest.fn();
+    const cb: jest.MockedFunction<
+      Parameters<typeof addUserMetadata>[2]
+    > = jest.fn();
 
     await addUserMetadata(user, context, cb);
 
@@ -120,4 +124,4 @@ describe('Auth0 Rule - Add User Metadata', () => {
       avatarURL: undefined,
     });
   });
-})
+});

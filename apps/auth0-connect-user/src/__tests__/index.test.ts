@@ -52,20 +52,22 @@ const context: RuleContext = {
 };
 
 describe('Auth0 Rule - Connect User', () => {
-  const apiURL ='https://api.hub.asap.science'
-  const apiSharedSecret = 'auth0_shared_secret'
+  const apiURL = 'https://api.hub.asap.science';
+  const apiSharedSecret = 'auth0_shared_secret';
   const invitationCode = 'sampleInvitationCode';
 
   beforeEach(() => {
     global.configuration = {
       APP_ORIGIN: apiURL,
-      API_SHARED_SECRET: apiSharedSecret 
-    }
-    nock.cleanAll()
-  })
+      API_SHARED_SECRET: apiSharedSecret,
+    };
+    nock.cleanAll();
+  });
 
   it('should callback with same user + context if receives no invitationCode', () => {
-    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> = jest.fn();
+    const cb: jest.MockedFunction<
+      Parameters<typeof connectUser>[2]
+    > = jest.fn();
 
     connectUser(user, context, cb);
     expect(cb).toHaveBeenCalled();
@@ -76,19 +78,20 @@ describe('Auth0 Rule - Connect User', () => {
   });
 
   it('should return an error if fails to connect the user', async () => {
-
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
       },
     })
-    .post('/webhook/users/connections', {
-      code: invitationCode,
-      userId: user.user_id,
-    })
-    .reply(404);
+      .post('/webhook/users/connections', {
+        code: invitationCode,
+        userId: user.user_id,
+      })
+      .reply(404);
 
-    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> = jest.fn();
+    const cb: jest.MockedFunction<
+      Parameters<typeof connectUser>[2]
+    > = jest.fn();
 
     await connectUser(user, { ...context, invitationCode }, cb);
 
@@ -105,13 +108,15 @@ describe('Auth0 Rule - Connect User', () => {
         authorization: `Basic ${apiSharedSecret}`,
       },
     })
-    .post('/webhook/users/connections', {
-      code: invitationCode,
-      userId: user.user_id,
-    })
-    .reply(202);
+      .post('/webhook/users/connections', {
+        code: invitationCode,
+        userId: user.user_id,
+      })
+      .reply(202);
 
-    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> = jest.fn();
+    const cb: jest.MockedFunction<
+      Parameters<typeof connectUser>[2]
+    > = jest.fn();
 
     await connectUser(user, { ...context, invitationCode }, cb);
 
@@ -121,4 +126,4 @@ describe('Auth0 Rule - Connect User', () => {
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
   });
-})
+});

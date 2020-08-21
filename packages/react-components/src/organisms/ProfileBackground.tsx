@@ -26,7 +26,7 @@ const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
   displayName,
   role,
   approach = '',
-  responsabilities = '',
+  responsibilities = '',
 }) => {
   return (
     <Card>
@@ -42,12 +42,12 @@ const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
             <Paragraph>{role}</Paragraph>
           </div>
         </div>
-        {responsabilities && (
+        {responsibilities && (
           <div>
             <Headline3 styleAsHeading={4}>
-              {firstName}'s Responsabilities
+              {firstName}'s Responsibilities
             </Headline3>
-            <Paragraph>{responsabilities}</Paragraph>
+            <Paragraph>{responsibilities}</Paragraph>
           </div>
         )}
         {approach && (

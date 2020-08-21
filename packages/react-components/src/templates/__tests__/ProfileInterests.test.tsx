@@ -13,7 +13,7 @@ it('renders research interests', () => {
           displayName: 'Phillip',
           role: 'Researcher',
           approach: '',
-          responsabilities: '',
+          responsibilities: '',
         },
       ]}
     />,

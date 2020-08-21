@@ -43,11 +43,12 @@ export {
 export {
   EmailPasswordSignin,
   LoginLogoutButton,
-  SsoButtons,
-  RadioButtonGroup,
+  MembersSection,
   ProfileBiography,
-  SkillsSection,
   ProfileRecentWorks,
+  RadioButtonGroup,
+  SkillsSection,
+  SsoButtons,
 } from './organisms';
 
 export {

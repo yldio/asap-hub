@@ -37,6 +37,24 @@ describe.each`
     expect(color).toBe(paper.rgb);
   });
 
+  it('respects the underline prop', () => {
+    const { getByRole, rerender } = render(<Link href={href}>text</Link>, {
+      wrapper,
+    });
+
+    expect(getComputedStyle(getByRole('link')).textDecoration).toEqual(
+      'underline',
+    );
+
+    rerender(
+      <Link underline={false} href={href}>
+        text
+      </Link>,
+    );
+
+    expect(getComputedStyle(getByRole('link')).textDecoration).toEqual('none');
+  });
+
   it('applies the href to the anchor', () => {
     const { getByRole } = render(<Link href={href}>text</Link>, {
       wrapper,

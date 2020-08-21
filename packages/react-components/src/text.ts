@@ -78,18 +78,19 @@ export const headlineStyles = {
 } as const;
 
 export type AccentColorName =
-  | 'lead'
-  | 'ember'
-  | 'pepper'
-  | 'sandstone'
-  | 'clay'
-  | 'pine'
-  | 'fern'
-  | 'cerulean'
-  | 'denim'
-  | 'prussian'
-  | 'space'
   | 'berry'
-  | 'magenta'
+  | 'cerulean'
+  | 'charcoal'
+  | 'clay'
+  | 'denim'
+  | 'ember'
+  | 'fern'
   | 'iris'
-  | 'mauve';
+  | 'lead'
+  | 'magenta'
+  | 'mauve'
+  | 'pepper'
+  | 'pine'
+  | 'prussian'
+  | 'sandstone'
+  | 'space';

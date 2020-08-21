@@ -1,7 +1,11 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { join } from 'path';
-import { Paragraph, ProfilePage } from '@asap-hub/react-components';
+import {
+  Paragraph,
+  ProfilePage,
+  ProfileAbout,
+} from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
 
@@ -27,23 +31,19 @@ const Profile: React.FC<{}> = () => {
     };
 
     return (
-      <Switch>
-        <Route
-          path={`${path}/about`}
-          render={() => <ProfilePage {...profilePageProps} tab="about" />}
-        />
-        <Route
-          path={`${path}/research-interests`}
-          render={() => (
-            <ProfilePage {...profilePageProps} tab="researchInterests" />
-          )}
-        />
-        <Route
-          path={`${path}/outputs`}
-          render={() => <ProfilePage {...profilePageProps} tab="outputs" />}
-        />
-        <Redirect to={join(url, 'about')} />
-      </Switch>
+      <ProfilePage {...profilePageProps}>
+        <Switch>
+          <Route path={`${path}/about`}>
+            <ProfileAbout {...profile} />
+          </Route>
+          <Route path={`${path}/research-interests`}>
+            TODO Research Interests here
+          </Route>
+          <Route path={`${path}/outputs`}>TODO Outputs here</Route>
+
+          <Redirect to={join(url, 'about')} />
+        </Switch>
+      </ProfilePage>
     );
   }
 

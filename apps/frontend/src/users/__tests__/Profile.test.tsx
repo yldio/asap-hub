@@ -20,6 +20,7 @@ const user: UserResponse = {
   institution: 'Unknown Institution',
   jobTitle: 'Unknown Title',
   teams: [],
+  biography: 'Biography Text',
   skills: [],
 };
 // fetch user by code request
@@ -62,6 +63,11 @@ it('renders a loading indicator', async () => {
 });
 
 it('renders a member information', async () => {
-  const { findByRole } = await renderProfile();
-  expect(await findByRole('heading')).toHaveTextContent(user.displayName);
+  const { findByText } = await renderProfile();
+  expect((await findByText(user.displayName)).tagName).toBe('H1');
+});
+
+it('renders the about member content', async () => {
+  const { findByText } = await renderProfile();
+  expect(await findByText(user.biography!)).toBeVisible();
 });

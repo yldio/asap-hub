@@ -14,28 +14,16 @@ const boilerplateProps = {
 };
 it('renders the header', () => {
   const { getByText } = render(
-    <ProfilePage {...boilerplateProps} tab="about" displayName="John Doe" />,
+    <ProfilePage {...boilerplateProps} displayName="John Doe">
+      Tab Content
+    </ProfilePage>,
   );
   expect(getByText('John Doe')).toBeVisible();
 });
 
-it('renders the about tab', () => {
+it('renders the children', () => {
   const { getByText } = render(
-    <ProfilePage {...boilerplateProps} tab="about" biography="Bio text" />,
+    <ProfilePage {...boilerplateProps}>Tab Content</ProfilePage>,
   );
-  expect(getByText('Bio text')).toBeVisible();
-});
-
-it('renders the research interests tab', () => {
-  const { getByText } = render(
-    <ProfilePage {...boilerplateProps} tab="researchInterests" />,
-  );
-  expect(getByText(/Research Interests here/)).toBeVisible();
-});
-
-it('renders the outputs tab', () => {
-  const { getByText } = render(
-    <ProfilePage {...boilerplateProps} tab="outputs" />,
-  );
-  expect(getByText(/Outputs here/)).toBeVisible();
+  expect(getByText('Tab Content')).toBeVisible();
 });

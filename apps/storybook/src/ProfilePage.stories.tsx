@@ -1,6 +1,6 @@
 import React from 'react';
 import { date, text, array } from '@storybook/addon-knobs';
-import { ProfilePage } from '@asap-hub/react-components';
+import { ProfilePage, ProfileAbout } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
@@ -54,36 +54,48 @@ const commonProps = () => ({
 });
 
 export const AboutTab = () => (
-  <ProfilePage
-    {...commonProps()}
-    tab="about"
-    aboutHref="#"
-    biography={text(
-      'Biography',
-      'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
-    )}
-    skills={array('Skills', [
-      'Neurological Diseases',
-      'Clinical Neurology',
-      'Adult Neurology',
-      'Neuroimaging',
-      'Neurologic Examination',
-      'Neuroprotection',
-      'Movement Disorders',
-      'Neurodegenerative Diseases',
-      'Neurological Diseases',
-    ])}
-  />
+  <ProfilePage {...commonProps()} aboutHref="#">
+    <ProfileAbout
+      biography={text(
+        'Biography',
+        'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
+      )}
+      skills={array('Skills', [
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
+        'Neurologic Examination',
+        'Neuroprotection',
+        'Movement Disorders',
+        'Neurodegenerative Diseases',
+        'Neurological Diseases',
+      ])}
+      orcidWorks={[
+        {
+          id: '42',
+          doi: 'https://doi.org/10.7554/elife.07083',
+          title:
+            'Recognizing the importance of new tools and resources for research',
+          type: 'WEBSITE',
+          publicationDate: {
+            year: '2015',
+            month: '3',
+          },
+        },
+      ]}
+    />
+  </ProfilePage>
 );
 
 export const ResearchInterestsTab = () => (
-  <ProfilePage
-    {...commonProps()}
-    tab="researchInterests"
-    researchInterestsHref="#"
-  />
+  <ProfilePage {...commonProps()} researchInterestsHref="#">
+    Research Interests Tab
+  </ProfilePage>
 );
 
 export const OutputsTab = () => (
-  <ProfilePage {...commonProps()} tab="outputs" outputsHref="#" />
+  <ProfilePage {...commonProps()} outputsHref="#">
+    Outputs Tab
+  </ProfilePage>
 );

@@ -10,7 +10,7 @@ it('renders an header with number of members', () => {
 });
 
 it('renders the content', async () => {
-  const { getByRole } = render(
+  const { getByText } = render(
     <MembersSection
       members={[
         {
@@ -23,8 +23,6 @@ it('renders the content', async () => {
       ]}
     />,
   );
-  const heading = getByRole('heading');
-
-  expect(heading).toBeVisible();
-  expect(heading.textContent).toMatchInlineSnapshot(`"Team Members (1)"`);
+  expect(getByText('Phillip Mars, PhD')).toBeVisible();
+  expect(getByText('Collaborator')).toBeVisible();
 });

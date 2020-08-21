@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import ProfilePage from '../ProfilePage';
 
 const boilerplateProps = {
+  firstName: 'John',
   displayName: 'John Doe',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   teams: [],
@@ -13,6 +14,7 @@ const boilerplateProps = {
   outputsHref: '#',
   researchInterestsHref: '#',
 };
+
 it('renders the header', () => {
   const { getByText } = render(
     <ProfilePage {...boilerplateProps} displayName="John Doe">

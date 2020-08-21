@@ -3,6 +3,7 @@ export { default as InviteUserForm } from './InviteUserForm';
 export { default as Layout } from './Layout';
 export { default as ProfileAbout } from './ProfileAbout';
 export { default as ProfileHeader } from './ProfileHeader';
+export { default as ProfileInterests } from './ProfileInterests';
 export { default as ProfilePage } from './ProfilePage';
 export { default as RecordOutputForm } from './RecordOutputForm';
 export { default as RecordOutputPage } from './RecordOutputPage';

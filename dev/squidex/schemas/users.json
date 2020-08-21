@@ -403,6 +403,36 @@
               "placeholder": "",
               "isRequired": false
             }
+          },
+          {
+            "name": "approach",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Approach",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "responsabilities",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Responsabilities",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
           }
         ]
       },

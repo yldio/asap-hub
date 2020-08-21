@@ -5,6 +5,7 @@ import ProfilePage from '../ProfilePage';
 
 const boilerplateProps = {
   displayName: 'John Doe',
+  lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   teams: [],
   skills: [],
   orcidWorks: [],

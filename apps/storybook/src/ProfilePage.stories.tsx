@@ -13,8 +13,11 @@ const commonProps = () => ({
   department: text('Department', 'Biology Department'),
   displayName: text('Display Name', 'Phillip Mars, PhD'),
   institution: text('Institution', 'Yale University'),
-  orcidLastModifiedDate: new Date(
+  lastModifiedDate: new Date(
     date('Last modified', new Date(2020, 6, 12, 14, 32)),
+  ).toISOString(),
+  orcidLastModifiedDate: new Date(
+    date('Orcid last modified', new Date(2020, 6, 12, 14, 32)),
   ).toISOString(),
   firstName: text('First Name', 'Phillip'),
   lastName: text('Last Name', 'Mars'),

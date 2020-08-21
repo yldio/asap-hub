@@ -7,7 +7,7 @@ import ProfileHeader from '../ProfileHeader';
 const boilerplateProps = {
   displayName: 'John Doe',
   teams: [],
-
+  lastModifiedDate: formatISO(new Date()),
   aboutHref: './about',
   researchInterestsHref: './research-interests',
   outputsHref: './outputs',
@@ -71,7 +71,7 @@ it('generates the last updated text', () => {
   const { container } = render(
     <ProfileHeader
       {...boilerplateProps}
-      orcidLastModifiedDate={formatISO(subYears(new Date(), 2))}
+      lastModifiedDate={formatISO(subYears(new Date(), 2))}
     />,
   );
   expect(container).toHaveTextContent(/update.* 2 years ago/);

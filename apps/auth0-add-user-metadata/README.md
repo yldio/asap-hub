@@ -1,6 +1,6 @@
-# Auth0 connect user rule
+# Auth0 add user metadata rule
 
-> Connects user's auth0 profile to a CMS user based on invitationCode
+> Adds user metadata to the idToken on successfull login
 
 See [Auth0 docs](../../docs/config/auth0) for how this script is supposed to be used.
 

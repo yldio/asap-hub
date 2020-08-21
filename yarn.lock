@@ -97,6 +97,18 @@ __metadata:
 "@asap-hub/auth0-add-user-metadata@workspace:apps/auth0-add-user-metadata":
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth0-add-user-metadata@workspace:apps/auth0-add-user-metadata"
+  dependencies:
+    "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/model": "workspace:packages/model"
+    "@babel/core": ^7.9.0
+    "@babel/preset-env": ^7.9.5
+    "@babel/preset-typescript": ^7.9.0
+    "@babel/runtime-corejs3": ^7.9.6
+    "@types/asap-hub__auth0-rule": "workspace:@types/asap-hub__auth0-rule"
+    "@types/jest": ^26.0.3
+    got: ^11.3.0
+    nock: ^12.0.3
   languageName: unknown
   linkType: soft
 

@@ -11,10 +11,8 @@ const connectUser: Rule<{ invitationCode: string }> = async (
   }
 
   try {
-    const apiURL: string =
-      configuration.APP_ORIGIN || 'https://hub.asap.science';
-    const apiSharedSecret: string =
-      configuration.API_SHARED_SECRET || 'auth0_shared_secret';
+    const apiURL: string = global.configuration?.APP_ORIGIN;
+    const apiSharedSecret: string = global.configuration?.API_SHARED_SECRET;
     await got
       .post(`${apiURL}/webhook/users/connections`, {
         json: {

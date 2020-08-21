@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import type { Rule } from '@asap-hub/auth0-rule';
 import got from 'got';
 

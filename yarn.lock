@@ -114,6 +114,7 @@ __metadata:
     "@types/asap-hub__auth0-rule": "workspace:@types/asap-hub__auth0-rule"
     "@types/jest": ^26.0.3
     got: ^11.3.0
+    nock: ^12.0.3
   languageName: unknown
   linkType: soft
 

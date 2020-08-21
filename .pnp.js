@@ -8259,7 +8259,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.9.6"],
             ["@types/asap-hub__auth0-rule", "workspace:@types/asap-hub__auth0-rule"],
             ["@types/jest", "npm:26.0.3"],
-            ["got", "npm:11.3.0"]
+            ["got", "npm:11.3.0"],
+            ["nock", "npm:12.0.3"]
           ],
           "linkType": "SOFT",
         }]

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import type { Rule } from '@asap-hub/auth0-rule';
 import got from 'got';
 
@@ -11,14 +12,18 @@ const connectUser: Rule<{ invitationCode: string }> = async (
   }
 
   try {
+    const apiURL: string =
+      configuration.APP_ORIGIN || 'https://hub.asap.science';
+    const apiSharedSecret: string =
+      configuration.API_SHARED_SECRET || 'auth0_shared_secret';
     await got
-      .post(`${configuration.APP_ORIGIN}/webhook/users/connections`, {
+      .post(`${apiURL}/webhook/users/connections`, {
         json: {
           code: context.invitationCode,
           userId: user.user_id,
         },
         headers: {
-          Authorization: `Basic ${configuration.API_SHARED_SECRET}`,
+          Authorization: `Basic ${apiSharedSecret}`,
         },
         timeout: 10000,
       })

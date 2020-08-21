@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@asap-hub/model": "workspace:packages/model",
-    "got": "^11.3.0"
+    "got": "^11.3.0",
+    "nock": "^12.0.3"
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:packages/auth",

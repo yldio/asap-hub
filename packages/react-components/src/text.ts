@@ -87,7 +87,6 @@ export type AccentColorName =
   | 'fern'
   | 'iris'
   | 'lead'
-  | 'lead'
   | 'magenta'
   | 'mauve'
   | 'pepper'

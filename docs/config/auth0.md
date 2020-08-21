@@ -71,3 +71,41 @@ Create a connection named `ORCID` and configure as follows:
 **Apps**
 
 Enable for all
+
+## Auth0 Connect User Rule
+
+Create a new rule and configure as follows:
+
+**Settings**
+
+- `APP_ORIGIN`: The API's endpoint base URL (including `https://`)
+- `API_SHARED_SECRET`: The same secret defined on the CI that is injected to the API
+
+**Script**
+
+```js
+function() {
+  $CONNECT_USER_PROFILE
+  exports.default(...arguments);
+}
+```
+Where `$CONNECT_USER_PROFILE` is the [build output](../../apps/auth0-connect-user/build/index.js) of `@asap-hub/auth0-connect-user`.
+
+## Auth0 Add User Metadata
+
+Create a new rule and configure as follows:
+
+**Settings**
+
+- `APP_ORIGIN`: The API's endpoint base URL (including `https://`)
+- `API_SHARED_SECRET`: The same secret defined on the CI that is injected to the API
+
+**Script**
+
+```js
+function() {
+  $ADD_USER_METADATA
+  exports.default(...arguments);
+}
+```
+Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0-add-user-metadata/build/index.js) of `@asap-hub/auth0-add-user-metadata`.

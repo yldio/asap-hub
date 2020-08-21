@@ -42,16 +42,20 @@ const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
             <Paragraph>{role}</Paragraph>
           </div>
         </div>
-        <div>
-          <Headline3 styleAsHeading={4}>
-            {firstName && `${firstName}'s `}Responsabilities
-          </Headline3>
-          <Paragraph>{responsabilities}</Paragraph>
-        </div>
-        <div>
-          <Headline3 styleAsHeading={4}>Approach</Headline3>
-          <Paragraph>{approach}</Paragraph>
-        </div>
+        {responsabilities && (
+          <div>
+            <Headline3 styleAsHeading={4}>
+              {firstName && `${firstName}'s `}Responsabilities
+            </Headline3>
+            <Paragraph>{responsabilities}</Paragraph>
+          </div>
+        )}
+        {approach && (
+          <div>
+            <Headline3 styleAsHeading={4}>Approach</Headline3>
+            <Paragraph>{approach}</Paragraph>
+          </div>
+        )}
       </div>
       <div css={dynamicContainerStyles}>
         <Link href={`/teams/${id}`}>Meet the Team</Link>

@@ -1,7 +1,7 @@
 import css from '@emotion/css';
 import React, { ComponentProps } from 'react';
 
-import { Welcome } from '../templates';
+import WelcomeCard from './WelcomeCard';
 import { Header } from '../molecules';
 import { Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
@@ -84,7 +84,7 @@ const placeholderStyles = css({
   order: 4,
 });
 
-type WelcomePageProps = Pick<ComponentProps<typeof Welcome>, 'onClick'> & {
+type WelcomePageProps = Pick<ComponentProps<typeof WelcomeCard>, 'onClick'> & {
   readonly signup?: boolean;
 };
 const WelcomePage: React.FC<WelcomePageProps> = ({
@@ -99,14 +99,14 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
         <Header transparent />
       </div>
       <main css={welcomeStyles}>
-        <Welcome
+        <WelcomeCard
           title={copy.title}
           content={copy.content}
           buttonText={copy.buttonText}
           {...props}
         >
           {copy.footer && copy.footer()}
-        </Welcome>
+        </WelcomeCard>
       </main>
       <ul css={linksContainerStyles}>
         <li css={linkItemStyles}>

@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { RecordOutputPage } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './padding';
+import { LayoutDecorator } from './decorators';
 
 export default {
   title: 'Pages / Record Output Page',
-  decorators: [NoPaddingDecorator],
+  decorators: [LayoutDecorator],
 };
 
 export const Normal = () => <RecordOutputPage />;

@@ -2,11 +2,11 @@ import React from 'react';
 import { date, text, array } from '@storybook/addon-knobs';
 import { ProfilePage } from '@asap-hub/react-components';
 
-import { NoPaddingDecorator } from './padding';
+import { LayoutDecorator } from './decorators';
 
 export default {
   title: 'Pages / Profile',
-  decorators: [NoPaddingDecorator],
+  decorators: [LayoutDecorator],
 };
 
 const commonProps = () => ({

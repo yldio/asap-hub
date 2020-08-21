@@ -1,6 +1,12 @@
+export { default as AdminInviteUserPage } from './AdminInviteUserPage';
 export { default as InviteUserForm } from './InviteUserForm';
-export { default as ProfileHeader } from './ProfileHeader';
-export { default as RecordOutputForm } from './RecordOutputForm';
-export { default as Signin } from './Signin';
-export { default as Welcome } from './Welcome';
+export { default as Layout } from './Layout';
 export { default as ProfileAbout } from './ProfileAbout';
+export { default as ProfileHeader } from './ProfileHeader';
+export { default as ProfilePage } from './ProfilePage';
+export { default as RecordOutputForm } from './RecordOutputForm';
+export { default as RecordOutputPage } from './RecordOutputPage';
+export { default as SigninForm } from './SigninForm';
+export { default as SigninPage } from './SigninPage';
+export { default as WelcomeCard } from './WelcomeCard';
+export { default as WelcomePage } from './WelcomePage';

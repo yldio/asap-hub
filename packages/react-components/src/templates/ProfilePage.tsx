@@ -1,8 +1,8 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { ProfileHeader, ProfileAbout } from '../templates';
-import { Layout } from '../organisms';
+import ProfileAbout from './ProfileAbout';
+import ProfileHeader from './ProfileHeader';
 import { perRem } from '../pixels';
 
 const styles = css({
@@ -24,12 +24,10 @@ type ProfilePageProps = ComponentProps<typeof ProfileHeader> &
 const ProfilePage: React.FC<ProfilePageProps> = ({ tab, ...profile }) => {
   const TabTemplate = tabTemplates[tab];
   return (
-    <Layout navigation>
-      <article css={styles}>
-        <ProfileHeader {...profile} />
-        <TabTemplate {...profile} />
-      </article>
-    </Layout>
+    <article css={styles}>
+      <ProfileHeader {...profile} />
+      <TabTemplate {...profile} />
+    </article>
   );
 };
 

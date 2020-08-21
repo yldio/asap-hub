@@ -1,7 +1,7 @@
 import React from 'react';
 import { date, text } from '@storybook/addon-knobs';
 import { ProfileHeader } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './padding';
+import { NoPaddingDecorator } from './decorators';
 
 export default {
   title: 'Templates / Profile / Header',

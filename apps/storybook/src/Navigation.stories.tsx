@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Navigation } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './padding';
+import { NoPaddingDecorator } from './decorators';
 
 export default {
   title: 'Molecules / Navigation / Main Nav',

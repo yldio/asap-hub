@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Paragraph, Layout } from '@asap-hub/react-components';
+import { Paragraph } from '@asap-hub/react-components';
 import { useUsers } from '../api';
 
 type ProfileProps = {
@@ -16,31 +16,21 @@ const Page: React.FC<{}> = () => {
   const { loading, data: users, error } = useUsers();
 
   if (loading) {
-    return (
-      <Layout navigation>
-        <Paragraph>Loading...</Paragraph>
-      </Layout>
-    );
+    return <Paragraph>Loading...</Paragraph>;
   }
 
   if (users) {
-    return (
-      <Layout navigation>
-        {users.map((profile: ProfileProps) => {
-          return <Profile key={profile.id} {...profile} />;
-        })}
-      </Layout>
-    );
+    return users.map((profile: ProfileProps) => {
+      return <Profile key={profile.id} {...profile} />;
+    });
   }
 
   return (
-    <Layout navigation>
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    </Layout>
+    <Paragraph>
+      {error.name}
+      {': '}
+      {error.message}
+    </Paragraph>
   );
 };
 

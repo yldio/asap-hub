@@ -2,12 +2,12 @@ import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
 import { SigninPage } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './padding';
+import { LayoutDecorator } from './decorators';
 
 export default {
   title: 'Pages / Auth / Sign in',
   component: SigninPage,
-  decorators: [NoPaddingDecorator],
+  decorators: [LayoutDecorator],
 };
 
 export const Normal = () => (

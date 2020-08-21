@@ -47,7 +47,6 @@ export {
   ProfileBiography,
   ProfileRecentWorks,
   RadioButtonGroup,
-  RadioButtonGroup,
   SkillsSection,
   SsoButtons,
 } from './organisms';

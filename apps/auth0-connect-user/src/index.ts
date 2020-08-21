@@ -11,8 +11,9 @@ const connectUser: Rule<{ invitationCode: string }> = async (
   }
 
   try {
-    const apiURL: string = global.configuration?.APP_ORIGIN;
-    const apiSharedSecret: string = global.configuration?.API_SHARED_SECRET;
+    const apiURL: string = (<any>global).configuration?.APP_ORIGIN;
+    const apiSharedSecret: string = (<any>global).configuration
+      ?.API_SHARED_SECRET;
     await got
       .post(`${apiURL}/webhook/users/connections`, {
         json: {

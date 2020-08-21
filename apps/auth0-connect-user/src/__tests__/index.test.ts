@@ -57,7 +57,7 @@ describe('Auth0 Rule - Connect User', () => {
   const invitationCode = 'sampleInvitationCode';
 
   beforeEach(() => {
-    global.configuration = {
+    (<any>global).configuration = {
       APP_ORIGIN: apiURL,
       API_SHARED_SECRET: apiSharedSecret,
     };

@@ -89,6 +89,7 @@ function() {
   exports.default(...arguments);
 }
 ```
+
 Where `$CONNECT_USER_PROFILE` is the [build output](../../apps/auth0-connect-user/build/index.js) of `@asap-hub/auth0-connect-user`.
 
 ## Auth0 Add User Metadata
@@ -108,4 +109,5 @@ function() {
   exports.default(...arguments);
 }
 ```
+
 Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0-add-user-metadata/build/index.js) of `@asap-hub/auth0-add-user-metadata`.

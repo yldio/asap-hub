@@ -66,7 +66,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
   const apiSharedSecret = 'auth0_shared_secret';
 
   beforeEach(() => {
-    global.configuration = {
+    (<any>global).configuration = {
       APP_ORIGIN: apiURL,
       API_SHARED_SECRET: apiSharedSecret,
     };

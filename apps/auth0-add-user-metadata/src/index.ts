@@ -7,8 +7,9 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
   context,
   callback,
 ) => {
-  const apiURL: string = global.configuration?.APP_ORIGIN;
-  const apiSharedSecret: string = global.configuration?.API_SHARED_SECRET;
+  const apiURL: string = (<any>global).configuration?.APP_ORIGIN;
+  const apiSharedSecret: string = (<any>global).configuration
+    ?.API_SHARED_SECRET;
   try {
     const {
       id,

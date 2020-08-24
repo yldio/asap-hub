@@ -5,8 +5,10 @@ import { handler } from '../../../src/handlers/users/webhook-fetch-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/create-user';
 import { auth0SharedSecret as secret } from '../../../src/config';
+import Users from '../../../src/controllers/users';
 
 const chance = new Chance();
+const users = new Users();
 
 describe('POST /webhook/users/{code}', () => {
   test("return 400 when code isn't present", async () => {
@@ -67,7 +69,7 @@ describe('POST /webhook/users/{code}', () => {
     expect(result.statusCode).toStrictEqual(403);
   });
 
-  test("returns 404 when code doesn't exist", async () => {
+  test("returns 403 when code doesn't exist", async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
@@ -80,11 +82,15 @@ describe('POST /webhook/users/{code}', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(404);
+    expect(result.statusCode).toStrictEqual(403);
   });
 
   test('returns 200 when user exists', async () => {
     const { connections, ...newUser } = await createRandomUser();
+    const connectedUser = await users.connectByCode(
+      connections[0]?.code,
+      newUser.id,
+    );
 
     const result = (await handler(
       apiGatewayEvent({
@@ -100,6 +106,6 @@ describe('POST /webhook/users/{code}', () => {
 
     const user = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(user).toStrictEqual(newUser);
+    expect(user).toStrictEqual(connectedUser);
   });
 });

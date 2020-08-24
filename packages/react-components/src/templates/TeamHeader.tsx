@@ -14,7 +14,6 @@ const containerStyles = css({
 
 type TeamProps = TeamResponse & {
   readonly aboutHref: string;
-  readonly outputsHref: string;
 };
 
 const memberStyle = css({});
@@ -31,7 +30,6 @@ const ProfileHeader: React.FC<TeamProps> = ({
   aboutHref,
   displayName,
   lastModifiedDate,
-  outputsHref,
 }) => {
   return (
     <header css={containerStyles}>
@@ -71,7 +69,6 @@ const ProfileHeader: React.FC<TeamProps> = ({
       </section>
       <TabNav>
         <TabLink href={aboutHref}>About</TabLink>
-        <TabLink href={outputsHref}>Shared Outputs</TabLink>
       </TabNav>
     </header>
   );

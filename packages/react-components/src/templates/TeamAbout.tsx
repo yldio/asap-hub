@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { perRem, contentSidePaddingWithNavigation } from '../pixels';
 import { pearl, steel } from '../colors';
-import { Headline2, Headline3 } from '../atoms';
+import { MembersSection, SkillsSection, TeamOverview } from '../organisms';
 
 const styles = css({
   backgroundColor: pearl.rgb,
@@ -14,14 +14,25 @@ const styles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-interface TeamAboutProps {
-  readonly projectTitle: string;
-}
+type TeamAboutProps = ComponentProps<typeof TeamOverview> &
+  ComponentProps<typeof SkillsSection> &
+  ComponentProps<typeof MembersSection>;
 
-const TeamAbout: React.FC<TeamAboutProps> = ({ projectTitle }) => (
+const TeamAbout: React.FC<TeamAboutProps> = ({
+  projectTitle,
+  projectSummary,
+  skills,
+  members,
+}) => (
   <main css={styles}>
-    <Headline2 styleAsHeading={3}>Project Overview</Headline2>
-    <Headline3 styleAsHeading={4}>{projectTitle}</Headline3>
+    {projectTitle ? (
+      <TeamOverview
+        projectTitle={projectTitle}
+        projectSummary={projectSummary}
+      />
+    ) : null}
+    {skills.length ? <SkillsSection skills={skills} /> : null}
+    {members.length ? <MembersSection members={members} /> : null}
   </main>
 );
 

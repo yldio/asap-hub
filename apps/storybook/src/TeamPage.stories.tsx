@@ -78,8 +78,4 @@ export const AboutTab = () => (
   </TeamPage>
 );
 
-export const OutputsTab = () => (
-  <TeamPage {...commonProps()} outputsHref="#">
-    Outputs
-  </TeamPage>
-);
+export const OutputsTab = () => <TeamPage {...commonProps()}>Outputs</TeamPage>;

@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { TeamHeader } from '../templates';
+import TeamHeader from './TeamHeader';
 import { perRem } from '../pixels';
 
 const styles = css({

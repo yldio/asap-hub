@@ -18,6 +18,7 @@ const team: TeamResponse = {
   applicationNumber: 'Unknow Number',
   projectTitle: 'Unkown Project Title',
   projectSummary: 'Unkown Project Summary',
+  lastModifiedDate: new Date().toISOString(),
   members: [],
   skills: [],
 };

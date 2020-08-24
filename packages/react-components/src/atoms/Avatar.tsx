@@ -12,6 +12,13 @@ const ringStyle = css({
 
   margin: `${12 / perRem}em 0`,
 });
+
+const smallRingStyle = css({
+  boxSizing: 'border-box',
+  height: `${48 / perRem}em`,
+  width: `${48 / perRem}em`,
+});
+
 const ringBorderStyle = css({
   padding: `${4 / perRem}em`,
 
@@ -35,18 +42,19 @@ const circleStyle = css({
 const imageStyle = css({
   objectFit: 'contain',
 });
+
 const initialsStyle = css(
   {
     color: pine.rgb,
   },
-  headlineStyles[2],
+  headlineStyles[3],
 );
 
 type ButtonProps = {
   readonly imageUrl?: string;
   readonly firstName?: string;
   readonly lastName?: string;
-
+  readonly small?: boolean;
   readonly border?: boolean;
 };
 
@@ -54,14 +62,14 @@ const Avatar: React.FC<ButtonProps> = ({
   imageUrl,
   firstName = '',
   lastName = '',
-
+  small = false,
   border = false,
 }) => {
   const name = `${firstName}${firstName && lastName ? ' ' : ''}${lastName}`;
   const initials = (firstName?.[0] ?? '') + (lastName?.[0] ?? '');
 
   return (
-    <div css={[ringStyle, border && ringBorderStyle]}>
+    <div css={[small ? smallRingStyle : ringStyle, border && ringBorderStyle]}>
       {imageUrl ? (
         // eslint-disable-next-line jsx-a11y/img-redundant-alt
         <img

@@ -3,6 +3,7 @@ import css from '@emotion/css';
 
 import { perRem, contentSidePaddingWithNavigation } from '../pixels';
 import { pearl, steel } from '../colors';
+import { Headline2, Headline3 } from '../atoms';
 
 const styles = css({
   backgroundColor: pearl.rgb,
@@ -13,10 +14,15 @@ const styles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-interface TeamAboutProps {}
+interface TeamAboutProps {
+  readonly projectTitle: string;
+}
 
-const TeamAbout: React.FC<TeamAboutProps> = ({}) => (
-  <main css={styles}>About</main>
+const TeamAbout: React.FC<TeamAboutProps> = ({ projectTitle }) => (
+  <main css={styles}>
+    <Headline2 styleAsHeading={3}>Project Overview</Headline2>
+    <Headline3 styleAsHeading={4}>{projectTitle}</Headline3>
+  </main>
 );
 
 export default TeamAbout;

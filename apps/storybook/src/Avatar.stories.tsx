@@ -22,3 +22,14 @@ export const InitialsFallback = () => (
     lastName={text('Last Name', 'Doe')}
   />
 );
+
+export const Small = () => (
+  <Avatar
+    border={boolean('Border', false)}
+    small={boolean('Small', true)}
+    imageUrl={text(
+      'Image URL',
+      'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
+    )}
+  />
+);

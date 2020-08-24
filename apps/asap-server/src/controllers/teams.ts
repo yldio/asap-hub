@@ -45,6 +45,8 @@ export default class Teams {
     if (users.length) {
       teamUsers = users.map((user) => ({
         id: user.id,
+        firstName: user.data.firstName?.iv,
+        lastName: user.data.lastName?.iv,
         displayName: user.data.displayName.iv,
         role: get(user, 'data.teams.iv', []).find(
           (t: { id: string[] }) => t.id[0] === teamId,

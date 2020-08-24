@@ -62,6 +62,8 @@ export {
   RecordOutputPage,
   SigninForm,
   SigninPage,
+  TeamAbout,
+  TeamPage,
   WelcomeCard,
   WelcomePage,
 } from './templates';

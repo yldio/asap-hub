@@ -2983,7 +2983,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "date-fns",
-        "npm:2.14.0"
+        "npm:2.15.0"
       ],
       [
         "dayjs",
@@ -8357,7 +8357,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
-            ["date-fns", "npm:2.14.0"],
+            ["date-fns", "npm:2.15.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
@@ -8412,7 +8412,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
-            ["date-fns", "npm:2.14.0"],
+            ["date-fns", "npm:2.15.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
@@ -8467,7 +8467,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
-            ["date-fns", "npm:2.14.0"],
+            ["date-fns", "npm:2.15.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
@@ -8519,7 +8519,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
-            ["date-fns", "npm:2.14.0"],
+            ["date-fns", "npm:2.15.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
@@ -8573,7 +8573,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react-hooks", "npm:3.2.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["core-js", "npm:3.6.5"],
-            ["date-fns", "npm:2.14.0"],
+            ["date-fns", "npm:2.15.0"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
@@ -8712,6 +8712,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.5"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["core-js", "npm:3.6.5"],
+            ["date-fns", "npm:2.15.0"],
             ["history", "npm:4.10.1"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
@@ -20160,10 +20161,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["date-fns", [
-        ["npm:2.14.0", {
-          "packageLocation": "./.yarn/cache/date-fns-npm-2.14.0-dd7ec830f5-93fcb999dc.zip/node_modules/date-fns/",
+        ["npm:2.15.0", {
+          "packageLocation": "./.yarn/cache/date-fns-npm-2.15.0-ba92ce79d8-045c172823.zip/node_modules/date-fns/",
           "packageDependencies": [
-            ["date-fns", "npm:2.14.0"]
+            ["date-fns", "npm:2.15.0"]
           ],
           "linkType": "HARD",
         }]

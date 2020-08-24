@@ -48,3 +48,20 @@ it('respects the border prop', () => {
     findParentWithStyle(getByRole('img'), 'borderStyle')?.borderStyle,
   ).toMatchInlineSnapshot(`"solid"`);
 });
+
+it('respects the small prop', () => {
+  const { getByRole, rerender } = render(<Avatar imageUrl="/avatar.png" />);
+  const el = getByRole('img').parentNode as Element;
+  expect(el).toBeTruthy();
+
+  const { height, width } = getComputedStyle(el);
+
+  rerender(<Avatar imageUrl="/avatar.png" small />);
+  const el2 = getByRole('img').parentNode as Element;
+  expect(el2).toBeTruthy();
+
+  const { height: heightEl, width: widthEl } = getComputedStyle(el2);
+
+  expect(parseFloat(heightEl)).toBeLessThan(parseFloat(height));
+  expect(parseFloat(widthEl)).toBeLessThan(parseFloat(width));
+});

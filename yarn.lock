@@ -230,7 +230,7 @@ __metadata:
     "@types/testing-library__react-hooks": ^3.2.0
     "@types/uuid": ^8.0.0
     core-js: ^3.6.5
-    date-fns: ^2.14.0
+    date-fns: ^2.15.0
     emotion-normalize: ^10.1.0
     history: ^4.10.1
     jest-emotion: ^10.0.32
@@ -353,6 +353,7 @@ __metadata:
     "@types/react-router-dom": ^5.1.5
     babel-preset-react-app: ^9.1.2
     core-js: ^3.6.5
+    date-fns: ^2.15.0
     history: ^4.10.1
     react: ^16.13.1
     react-dom: ^16.13.1
@@ -10452,10 +10453,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.14.0":
-  version: 2.14.0
-  resolution: "date-fns@npm:2.14.0"
-  checksum: 93fcb999dcad1dced7c7e658f6769032783760b3989f0035186d7134858a21faeb242c31c250db66037de312007c3a562b501b9880fc707421149070a4785bcd
+"date-fns@npm:^2.15.0":
+  version: 2.15.0
+  resolution: "date-fns@npm:2.15.0"
+  checksum: 045c172823f361aa466338a2d2670629b2639ad33da22d5f4012d97e2726e92d8fc617a0d6c815a11086a0e6d2226192c2191c4d5c0d898c5a978794f21007cb
   languageName: node
   linkType: hard
 

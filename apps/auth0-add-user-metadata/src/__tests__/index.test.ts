@@ -3,6 +3,17 @@ import type { User, RuleContext } from '@asap-hub/auth0-rule';
 import { UserResponse } from '@asap-hub/model';
 import addUserMetadata from '..';
 
+declare global {
+  namespace NodeJS {
+    interface Global {
+      configuration: {
+        APP_ORIGIN: string;
+        API_SHARED_SECRET: string;
+      };
+    }
+  }
+}
+
 const user: User = {
   created_at: '2020-08-17T14:01:53.691Z',
   email: 'joao.tiago@yld.io',
@@ -66,7 +77,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
   const apiSharedSecret = 'auth0_shared_secret';
 
   beforeEach(() => {
-    (<any>global).configuration = {
+    global.configuration = {
       APP_ORIGIN: apiURL,
       API_SHARED_SECRET: apiSharedSecret,
     };

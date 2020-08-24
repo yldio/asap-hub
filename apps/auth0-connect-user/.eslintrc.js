@@ -4,5 +4,6 @@ module.exports = {
     'no-undef': 'off',
     camelcase: 'off',
     '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/no-namespace': 'off',
   },
 };

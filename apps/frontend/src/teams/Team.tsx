@@ -1,10 +1,15 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Paragraph } from '@asap-hub/react-components';
+import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
+import { Paragraph, TeamPage, TeamAbout } from '@asap-hub/react-components';
+import { join } from 'path';
 import { useTeamById } from '../api';
 
 const Page: React.FC<{}> = () => {
-  const { id } = useParams();
+  const {
+    url,
+    path,
+    params: { id },
+  } = useRouteMatch();
 
   const { loading, data: team, error } = useTeamById(id);
 
@@ -13,7 +18,21 @@ const Page: React.FC<{}> = () => {
   }
 
   if (team) {
-    return <pre>{JSON.stringify(team, null, 2)}</pre>;
+    const teamPageProps = {
+      ...team,
+      aboutHref: join(url, 'about'),
+    };
+
+    return (
+      <TeamPage {...teamPageProps}>
+        <Switch>
+          <Route path={`${path}/about`}>
+            <TeamAbout {...team} />
+          </Route>
+          <Redirect to={join(url, 'about')} />
+        </Switch>
+      </TeamPage>
+    );
   }
 
   return (

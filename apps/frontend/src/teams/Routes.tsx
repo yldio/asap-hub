@@ -10,7 +10,7 @@ const Users: React.FC<{}> = () => {
   return (
     <Switch>
       <Route exact path={path} component={TeamList} />
-      <Route exact path={`${path}/:id`} component={Team} />
+      <Route path={`${path}/:id`} component={Team} />
       <Route>Not Found</Route>
     </Switch>
   );

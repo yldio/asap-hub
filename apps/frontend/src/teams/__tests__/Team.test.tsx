@@ -41,7 +41,7 @@ const renderTeam = async () => {
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/42/']}>
-            <Route exact path="/:id/" component={Team} />
+            <Route path="/:id" component={Team} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>
@@ -63,6 +63,6 @@ it('renders a loading indicator', async () => {
 });
 
 it('renders a team information', async () => {
-  const { container } = await renderTeam();
-  expect(container.textContent).toContain(JSON.stringify(team, null, 2));
+  const { getByText } = await renderTeam();
+  expect(getByText('Team Unknown')).toBeVisible();
 });

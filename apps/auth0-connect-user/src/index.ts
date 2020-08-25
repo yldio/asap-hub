@@ -1,12 +1,12 @@
 import type { Rule } from '@asap-hub/auth0-rule';
 import got from 'got';
 
-const connectUser: Rule<{ invitationCode: string }> = async (
+const connectUser: Rule<{ invitation_code: string }> = async (
   user,
   context,
   callback,
 ) => {
-  if (!context.invitationCode) {
+  if (!context.invitation_code) {
     return callback(null, user, context);
   }
 
@@ -16,7 +16,7 @@ const connectUser: Rule<{ invitationCode: string }> = async (
     await got
       .post(`${apiURL}/webhook/users/connections`, {
         json: {
-          code: context.invitationCode,
+          code: context.invitation_code,
           userId: user.user_id,
         },
         headers: {

@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { WelcomePage } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
 
-import { API_BASE_URL, STORAGE_KEY_INVITATION_CODE } from '../config';
+import { API_BASE_URL } from '../config';
 
 const Welcome: React.FC<{}> = () => {
   const history = useHistory();
@@ -32,9 +32,12 @@ const Welcome: React.FC<{}> = () => {
   }, [history, code]);
 
   const createAccount = () => {
-    window.sessionStorage.setItem(STORAGE_KEY_INVITATION_CODE, code);
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    loginWithRedirect({ prompt: 'login', screen_hint: 'signup' });
+    /* eslint-disable @typescript-eslint/camelcase */
+    loginWithRedirect({
+      prompt: 'login',
+      screen_hint: 'signup',
+      invitation_code: code,
+    });
   };
 
   return <WelcomePage signup onClick={createAccount} />;

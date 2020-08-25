@@ -6,7 +6,9 @@ const connectUser: Rule<{ invitation_code: string }> = async (
   context,
   callback,
 ) => {
-  if (!context.invitation_code) {
+  const invitationCode: string = context.request.query?.invitation_code;
+
+  if (!invitationCode) {
     return callback(null, user, context);
   }
 
@@ -16,7 +18,7 @@ const connectUser: Rule<{ invitation_code: string }> = async (
     await got
       .post(`${apiURL}/webhook/users/connections`, {
         json: {
-          code: context.invitation_code,
+          code: invitationCode,
           userId: user.user_id,
         },
         headers: {

@@ -6,7 +6,7 @@ import nock from 'nock';
 import { authTestUtils } from '@asap-hub/react-components';
 
 import Welcome from '../Welcome';
-import { API_BASE_URL, STORAGE_KEY_INVITATION_CODE } from '../../config';
+import { API_BASE_URL } from '../../config';
 
 // fetch user by code request
 beforeEach(() => {
@@ -59,14 +59,6 @@ it('renders one button', async () => {
 });
 
 describe('when clicking the button', () => {
-  it('sets the invitation code into the storage', async () => {
-    const { getByRole } = await renderWelcome();
-    userEvent.click(getByRole('button'));
-    expect(window.sessionStorage.getItem(STORAGE_KEY_INVITATION_CODE)).toBe(
-      '42',
-    );
-  });
-
   it('redirects to the signup page', async () => {
     const { getByRole } = await renderWelcome();
     userEvent.click(getByRole('button'));

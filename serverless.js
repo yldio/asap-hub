@@ -179,7 +179,7 @@ module.exports = {
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
-            method: 'POST',
+            method: 'GET',
             path: `/webhook/users/{code}`,
           },
         },

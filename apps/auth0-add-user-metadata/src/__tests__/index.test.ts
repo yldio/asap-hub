@@ -52,6 +52,7 @@ const context: RuleContext = {
   samlConfiguration: {},
   protocol: 'oidc-basic-profile',
   stats: { loginsCount: 14 },
+  request: { query: {} },
   sso: {
     with_auth0: false,
     with_dbconn: false,

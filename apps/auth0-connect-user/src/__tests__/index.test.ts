@@ -51,6 +51,9 @@ const context: RuleContext = {
   samlConfiguration: {},
   protocol: 'oidc-basic-profile',
   stats: { loginsCount: 14 },
+  request: {
+    query: {},
+  },
   sso: {
     with_auth0: false,
     with_dbconn: false,
@@ -104,7 +107,11 @@ describe('Auth0 Rule - Connect User', () => {
       Parameters<typeof connectUser>[2]
     > = jest.fn();
 
-    await connectUser(user, { ...context, invitation_code }, cb);
+    await connectUser(
+      user,
+      { ...context, request: { query: { invitation_code } } },
+      cb,
+    );
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];
@@ -129,7 +136,11 @@ describe('Auth0 Rule - Connect User', () => {
       Parameters<typeof connectUser>[2]
     > = jest.fn();
 
-    await connectUser(user, { ...context, invitation_code }, cb);
+    await connectUser(
+      user,
+      { ...context, request: { query: { invitation_code } } },
+      cb,
+    );
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];

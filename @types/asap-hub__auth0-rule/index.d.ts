@@ -36,6 +36,9 @@ export type RuleContext<CustomContext extends object = {}> = Partial<
   };
   connectionMetadata: Record<string, string>;
   samlConfiguration?: object;
+  request: {
+    query: Record<string, string>;
+  };
   protocol:
     | 'oidc-basic-profile'
     | 'oidc-implicit-profile'

@@ -65,7 +65,7 @@ const context: RuleContext = {
 describe('Auth0 Rule - Connect User', () => {
   const apiURL = 'https://api.hub.asap.science';
   const apiSharedSecret = 'auth0_shared_secret';
-  const invitationCode = 'sampleInvitationCode';
+  const invitation_code = 'sampleInvitationCode';
 
   beforeEach(() => {
     global.configuration = {
@@ -75,7 +75,7 @@ describe('Auth0 Rule - Connect User', () => {
     nock.cleanAll();
   });
 
-  it('should callback with same user + context if receives no invitationCode', () => {
+  it('should callback with same user + context if receives no invitation_code', () => {
     const cb: jest.MockedFunction<
       Parameters<typeof connectUser>[2]
     > = jest.fn();
@@ -95,7 +95,7 @@ describe('Auth0 Rule - Connect User', () => {
       },
     })
       .post('/webhook/users/connections', {
-        code: invitationCode,
+        code: invitation_code,
         userId: user.user_id,
       })
       .reply(404);
@@ -104,7 +104,7 @@ describe('Auth0 Rule - Connect User', () => {
       Parameters<typeof connectUser>[2]
     > = jest.fn();
 
-    await connectUser(user, { ...context, invitationCode }, cb);
+    await connectUser(user, { ...context, invitation_code }, cb);
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];
@@ -113,14 +113,14 @@ describe('Auth0 Rule - Connect User', () => {
     expect(resContext).toBeUndefined();
   });
 
-  it('should connect user if receives an invitationCode', async () => {
+  it('should connect user if receives an invitation_code', async () => {
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
       },
     })
       .post('/webhook/users/connections', {
-        code: invitationCode,
+        code: invitation_code,
         userId: user.user_id,
       })
       .reply(202);
@@ -129,7 +129,7 @@ describe('Auth0 Rule - Connect User', () => {
       Parameters<typeof connectUser>[2]
     > = jest.fn();
 
-    await connectUser(user, { ...context, invitationCode }, cb);
+    await connectUser(user, { ...context, invitation_code }, cb);
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];

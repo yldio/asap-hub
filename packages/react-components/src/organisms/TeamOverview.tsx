@@ -2,8 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import { TeamResponse } from '@asap-hub/model';
 
-import { Card, Button, Paragraph, Headline2 } from '../atoms';
-import { docsIcon } from '../icons';
+import { Display, Card, Link, Paragraph, Headline2 } from '../atoms';
 import { mobileScreen } from '../pixels';
 
 const stretchOnMobile = css({
@@ -13,24 +12,27 @@ const stretchOnMobile = css({
   },
 });
 
-type TeamOverviewProps = Pick<TeamResponse, 'projectTitle' | 'projectSummary'>;
+type TeamOverviewProps = Pick<
+  TeamResponse,
+  'projectTitle' | 'projectSummary' | 'proposalURL'
+>;
 
 const TeamOverview: React.FC<TeamOverviewProps> = ({
   projectSummary,
+  proposalURL,
   projectTitle,
 }) => {
   return (
     <Card>
       <div>
-        <Headline2 styleAsHeading={3}>Project Overview</Headline2>
+        <Display styleAsHeading={2}>Project Overview</Display>
         <Headline2 styleAsHeading={3}>{projectTitle}</Headline2>
         <Paragraph>{projectSummary}</Paragraph>
-        <div css={stretchOnMobile}>
-          <Button>
-            {docsIcon}
-            Read Proposal
-          </Button>
-        </div>
+        {proposalURL ? (
+          <div css={stretchOnMobile}>
+            <Link href={proposalURL}>Read Proposal</Link>
+          </div>
+        ) : null}
       </div>
     </Card>
   );

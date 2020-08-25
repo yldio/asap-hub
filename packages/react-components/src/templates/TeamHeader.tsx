@@ -36,25 +36,28 @@ const ProfileHeader: React.FC<TeamProps> = ({
       <Display styleAsHeading={2}>{displayName}</Display>
       <section>
         <div>
+          <ul css={membersContainerStyle}>
+            {members
+              .slice(0, 5)
+              .map(({ id, avatarURL, firstName, lastName }) => {
+                return (
+                  <li key={id} css={memberStyle}>
+                    <Link underline={false} href={`/users/${id}`}>
+                      <Avatar
+                        small
+                        firstName={firstName}
+                        lastName={lastName}
+                        imageUrl={avatarURL}
+                      />
+                    </Link>
+                  </li>
+                );
+              })}
+            {members.length > 5 ? <li>{`+${members.length - 5}`}</li> : null}
+          </ul>
           <Button small primary>
             Contact
           </Button>
-          <ul css={membersContainerStyle}>
-            {members.map(({ id, avatarURL, firstName, lastName }) => {
-              return (
-                <li key={id} css={memberStyle}>
-                  <Link underline={false} href={`/users/${id}`}>
-                    <Avatar
-                      small
-                      firstName={firstName}
-                      lastName={lastName}
-                      imageUrl={avatarURL}
-                    />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
         </div>
         {lastModifiedDate && (
           <div>

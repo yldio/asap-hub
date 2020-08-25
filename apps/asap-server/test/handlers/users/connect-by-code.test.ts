@@ -128,4 +128,32 @@ describe('POST /users/connections', () => {
       code: auth0Response.sub,
     });
   });
+
+  test('returns 202 for valid code but doenst add same code again', async () => {
+    nock(`https://${authConfig.domain}`)
+      .get('/userinfo')
+      .reply(200, auth0Response);
+
+    const res = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'post',
+        headers: {
+          authorization: `Bearer ${chance.string()}`,
+        },
+        body: {
+          code,
+          token: chance.string(),
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const userFound = await cms.users.fetchByCode(code);
+
+    expect(res.statusCode).toStrictEqual(202);
+    expect(userFound).not.toBe(null);
+    expect(userFound!.data.connections.iv).toHaveLength(2);
+    expect(userFound!.data.connections.iv).toContainEqual({
+      code: auth0Response.sub,
+    });
+  });
 });

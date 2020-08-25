@@ -92,6 +92,8 @@ function() {
 
 Where `$CONNECT_USER_PROFILE` is the [build output](../../apps/auth0-connect-user/build/index.js) of `@asap-hub/auth0-connect-user`.
 
+**You'll need to force the import of a specific `got` version. On the Auth0 editor, where you find `require('got')` replace by `require('got@11.5.2')`.**
+
 ## Auth0 Add User Metadata
 
 Create a new rule and configure as follows:
@@ -111,3 +113,5 @@ function() {
 ```
 
 Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0-add-user-metadata/build/index.js) of `@asap-hub/auth0-add-user-metadata`.
+
+**You'll need to force the import of a specific `got` version. On the Auth0 editor, where you find `require('got')` replace by `require('got@11.5.2')`.**

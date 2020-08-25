@@ -118,9 +118,9 @@ export default class Users extends Base {
       .json();
   }
 
-  connectByCode(user: CMSUser, id: string): Promise<CMSUser> | CMSUser {
+  connectByCode(user: CMSUser, id: string): Promise<CMSUser> {
     if (user.data.connections.iv.find(({ code }) => code === id)) {
-      return user;
+      return Promise.resolve(user);
     }
 
     const connections = user.data.connections.iv.concat([{ code: id }]);

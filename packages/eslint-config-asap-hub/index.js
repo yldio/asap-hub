@@ -7,8 +7,9 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   settings: {
     'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+      typescript: {
+        alwaysTryTypes: true,
+        project: ['packages/*/tsconfig.json', 'apps/*/tsconfig.json'],
       },
     },
   },

@@ -10,7 +10,7 @@ import { auth0SharedSecret as secret } from '../../../src/config';
 const chance = new Chance();
 const cms = new CMS();
 
-describe('POST /users/connections', () => {
+describe('POST /webhook/users/connections', () => {
   let code: string;
 
   beforeAll(async () => {
@@ -24,7 +24,9 @@ describe('POST /users/connections', () => {
         httpMethod: 'post',
         body: {
           userId: chance.string(),
-          secret: chance.string(),
+        },
+        headers: {
+          Authorization: `Basic ${secret}`,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -39,7 +41,9 @@ describe('POST /users/connections', () => {
         body: {
           code,
           userId: chance.string(),
-          secret: chance.string(),
+        },
+        headers: {
+          Authorization: `Basic ${chance.string()}`,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -54,7 +58,9 @@ describe('POST /users/connections', () => {
         body: {
           code: chance.string(),
           userId: chance.string(),
-          secret,
+        },
+        headers: {
+          Authorization: `Basic ${secret}`,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -71,7 +77,9 @@ describe('POST /users/connections', () => {
         body: {
           code,
           userId,
-          secret,
+        },
+        headers: {
+          Authorization: `Basic ${secret}`,
         },
       }),
     )) as APIGatewayProxyResult;

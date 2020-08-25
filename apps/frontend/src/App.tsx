@@ -13,7 +13,6 @@ import Welcome from './welcome/Routes';
 import { AuthProvider } from './auth';
 import ResearchOutputs from './research-outputs/Routes';
 import CheckAuth from './auth/CheckAuth';
-import ContinueOnboarding from './onboarding/ContinueOnboarding';
 import Page from './pages/stub';
 
 const App: React.FC<{}> = () => {
@@ -31,9 +30,7 @@ const App: React.FC<{}> = () => {
               <Layout navigation>
                 <Switch>
                   <Route exact path="/">
-                    <ContinueOnboarding>
-                      <Home />
-                    </ContinueOnboarding>
+                    <Home />
                   </Route>
 
                   <Route path="/create-profile" component={CreateProfile} />

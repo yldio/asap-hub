@@ -419,7 +419,7 @@
             }
           },
           {
-            "name": "responsabilities",
+            "name": "responsibilities",
             "isHidden": false,
             "isLocked": false,
             "isDisabled": false,
@@ -428,7 +428,7 @@
               "isUnique": false,
               "inlineEditable": false,
               "editor": "Input",
-              "label": "Responsabilities",
+              "label": "Responsibilities",
               "hints": "",
               "placeholder": "",
               "isRequired": false

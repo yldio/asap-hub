@@ -51,3 +51,50 @@ it('renders a list of members', () => {
   );
   expect(getAllByRole('img')).toHaveLength(1);
 });
+
+it('renders no more than 5 members', () => {
+  const { getAllByRole } = render(
+    <TeamHeader
+      {...boilerplateProps}
+      members={[
+        {
+          id: '42',
+          displayName: 'Unknown',
+          avatarURL: 'https://example.com',
+          role: 'Colaborator',
+        },
+        {
+          id: '42',
+          displayName: 'Unknown',
+          avatarURL: 'https://example.com',
+          role: 'Colaborator',
+        },
+        {
+          id: '42',
+          displayName: 'Unknown',
+          avatarURL: 'https://example.com',
+          role: 'Colaborator',
+        },
+        {
+          id: '42',
+          displayName: 'Unknown',
+          avatarURL: 'https://example.com',
+          role: 'Colaborator',
+        },
+        {
+          id: '42',
+          displayName: 'Unknown',
+          avatarURL: 'https://example.com',
+          role: 'Colaborator',
+        },
+        {
+          id: '42',
+          displayName: 'Unknown',
+          avatarURL: 'https://example.com',
+          role: 'Colaborator',
+        },
+      ]}
+    />,
+  );
+  expect(getAllByRole('img')).toHaveLength(5);
+});

@@ -118,7 +118,11 @@ export default class Users extends Base {
       .json();
   }
 
-  connectByCode(user: CMSUser, id: string): Promise<CMSUser> {
+  connectByCode(user: CMSUser, id: string): Promise<CMSUser> | CMSUser {
+    if (user.data.connections.iv.find(({ code }) => code === id)) {
+      return user;
+    }
+
     const connections = user.data.connections.iv.concat([{ code: id }]);
     return this.client
       .patch<CMSUser>(`users/${user.id}`, {

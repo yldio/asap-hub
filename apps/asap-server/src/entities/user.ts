@@ -5,6 +5,7 @@ export interface CMSUser {
   id: string;
   lastModified: string;
   data: {
+    lastModifiedDate: { iv: string };
     displayName: { iv: string };
     email: { iv: string };
     firstName?: { iv: string };
@@ -18,6 +19,7 @@ export interface CMSUser {
     teams?: { iv: TeamMember[] };
     orcid?: { iv: string };
     orcidLastModifiedDate?: { iv: string };
+    orcidLastSyncDate?: { iv: string };
     orcidWorks?: { iv: CMSOrcidWork[] };
     skills?: { iv: string[] };
     avatarURL?: { iv: string };

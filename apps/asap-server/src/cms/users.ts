@@ -7,6 +7,7 @@ import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { CMSTeam } from '../entities/team';
 
 interface CreateUserData {
+  lastModified: { iv: string };
   displayName: { iv: string };
   email: { iv: string };
   firstName: { iv?: string };
@@ -27,6 +28,7 @@ export default class Users extends Base {
 
   create(user: Invitee, options: { raw?: boolean } = {}): Promise<CMSUser> {
     const json: CreateUserData = {
+      lastModified: { iv: `${new Date()}` },
       displayName: { iv: user.displayName },
       email: { iv: user.email },
       firstName: { iv: user.firstName },

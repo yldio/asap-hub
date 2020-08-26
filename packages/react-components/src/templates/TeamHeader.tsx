@@ -23,9 +23,10 @@ const membersContainerStyle = css({
 
   display: 'flex',
   flexDirection: 'row',
+  alignItems: 'center',
 });
 
-const ProfileHeader: React.FC<TeamProps> = ({
+const TeamHeader: React.FC<TeamProps> = ({
   members,
   aboutHref,
   displayName,
@@ -77,4 +78,4 @@ const ProfileHeader: React.FC<TeamProps> = ({
   );
 };
 
-export default ProfileHeader;
+export default TeamHeader;

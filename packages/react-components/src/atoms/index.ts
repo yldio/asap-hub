@@ -14,10 +14,11 @@ export { default as Label } from './Label';
 export { default as Link } from './Link';
 export { default as Paragraph } from './Paragraph';
 export { default as RadioButton } from './RadioButton';
-export { default as TextArea } from './TextArea';
-export { default as TextField } from './TextField';
+export { default as RichText } from './RichText';
 export { default as TabLink } from './TabLink';
 export { default as Tag } from './Tag';
 export { default as TagLabel } from './TagLabel';
+export { default as TextArea } from './TextArea';
+export { default as TextField } from './TextField';
 
 export type { DropdownProps } from './Dropdown';

@@ -9,6 +9,11 @@ interface Headline2Props {
 const Headline2: React.FC<Headline2Props> = ({
   children,
   styleAsHeading = 2,
-}) => <h2 css={[layoutStyles, headlineStyles[styleAsHeading]]}>{children}</h2>;
+  ...props
+}) => (
+  <h2 css={[layoutStyles, headlineStyles[styleAsHeading]]} {...props}>
+    {children}
+  </h2>
+);
 
 export default Headline2;

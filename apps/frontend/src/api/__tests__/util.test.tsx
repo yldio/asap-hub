@@ -10,15 +10,6 @@ const interceptorArgs = {
   route: '/',
 };
 
-it('throws if the user is not authenticated', async () => {
-  const {
-    result: { current },
-  } = renderHook(useFetchOptions);
-  await expect(() =>
-    current.interceptors!.request!({ options: current, ...interceptorArgs }),
-  ).rejects.toThrow(/auth/i);
-});
-
 const wrapper: React.FC<{}> = ({ children }) => (
   <authTestUtils.LoggedIn user={undefined}>{children}</authTestUtils.LoggedIn>
 );
@@ -43,6 +34,18 @@ it('fetches and sets the authorization header', async () => {
     ...interceptorArgs,
   });
   expect(new Headers(headers).get('authorization')).toBe('Bearer token');
+});
+
+it("fetches and don't sets authorization header when user isn't logged", async () => {
+  const {
+    result: { current },
+  } = renderHook(useFetchOptions);
+  const { headers } = await current.interceptors!.request!({
+    options: current,
+    ...interceptorArgs,
+  });
+
+  expect(new Headers(headers).get('authorization')).toBeNull();
 });
 
 it('allows overriding headers', async () => {

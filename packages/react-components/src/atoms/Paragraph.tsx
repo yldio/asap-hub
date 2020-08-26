@@ -17,26 +17,31 @@ const primaryStyles = css({
   lineHeight: `${24 / 18}em`,
 });
 
-interface ParagraphProps {
+type ParagraphProps = {
   readonly children: React.ReactNode;
   readonly primary?: boolean;
   readonly accent?: AccentColorName;
-}
+};
+
 const Paragraph: React.FC<ParagraphProps> = ({
   children,
   primary = false,
   accent,
-}) => (
-  <p
-    css={[
-      layoutStyles,
-      styles,
-      primary ? primaryStyles : secondaryStyles,
-      accent ? { color: colors[accent].rgb } : null,
-    ]}
-  >
-    {children}
-  </p>
-);
+  ...props
+}) => {
+  return (
+    <p
+      css={[
+        layoutStyles,
+        styles,
+        primary ? primaryStyles : secondaryStyles,
+        accent ? { color: colors[accent].rgb } : null,
+      ]}
+      {...props}
+    >
+      {children}
+    </p>
+  );
+};
 
 export default Paragraph;

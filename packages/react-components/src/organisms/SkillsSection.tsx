@@ -24,7 +24,7 @@ const listStyles = css({
 const ProfileSkills: React.FC<ProfileSkillsProps> = ({ skills = [] }) => {
   return (
     <Card>
-      <Headline2 styleAsHeading={3}>Skills and Expertise</Headline2>
+      <Headline2 styleAsHeading={3}>Expertise and Resources</Headline2>
       <ul css={listStyles}>
         {skills.map((skill, index) => (
           <li key={index}>

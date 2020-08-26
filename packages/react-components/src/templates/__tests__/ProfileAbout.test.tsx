@@ -19,11 +19,11 @@ it('renders the skills', () => {
   const { getByText } = render(
     <ProfileAbout skills={['Neurological Diseases']} orcidWorks={[]} />,
   );
-  expect(getByText(/skills/i)).toBeVisible();
+  expect(getByText('Expertise and Resources')).toBeVisible();
   expect(getByText('Neurological Diseases')).toBeVisible();
 });
 it('does not render an empty skills list', () => {
   const { queryByText } = render(<ProfileAbout skills={[]} orcidWorks={[]} />);
-  expect(queryByText(/skills/i)).not.toBeInTheDocument();
+  expect(queryByText('Expertise and Resources')).not.toBeInTheDocument();
   expect(queryByText('Neurological Diseases')).not.toBeInTheDocument();
 });

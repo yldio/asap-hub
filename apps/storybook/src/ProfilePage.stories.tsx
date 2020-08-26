@@ -57,7 +57,7 @@ const commonProps = () => ({
     },
   ],
   aboutHref: '/wrong',
-  researchInterestsHref: '/wrong',
+  researchHref: '/wrong',
   outputsHref: '/wrong',
 });
 
@@ -97,7 +97,7 @@ export const AboutTab = () => (
 );
 
 export const ResearchInterestsTab = () => (
-  <ProfilePage {...commonProps()} researchInterestsHref="#">
+  <ProfilePage {...commonProps()} researchHref="#">
     Research Interests Tab
   </ProfilePage>
 );

@@ -12,7 +12,7 @@ const boilerplateProps = {
   orcidWorks: [],
   aboutHref: '#',
   outputsHref: '#',
-  researchInterestsHref: '#',
+  researchHref: '#',
 };
 
 it('renders the header', () => {

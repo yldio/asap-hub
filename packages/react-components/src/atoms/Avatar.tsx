@@ -1,9 +1,34 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { pine, silver, mint } from '../colors';
+import {
+  pine,
+  silver,
+  mint,
+  apricot,
+  clay,
+  sky,
+  denim,
+  azure,
+  space,
+  lilac,
+  berry,
+  lavender,
+  mauve,
+} from '../colors';
 import { perRem } from '../pixels';
 import { headlineStyles } from '../text';
+
+const hash = (str: string) => {
+  let h = 0;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < str.length; i++) {
+    const chr = str.charCodeAt(i);
+    h = (h << 5) - h + chr; // eslint-disable-line no-bitwise
+    h |= 0; // eslint-disable-line no-bitwise
+  }
+  return h;
+};
 
 const ringStyle = css({
   boxSizing: 'border-box',
@@ -35,20 +60,13 @@ const circleStyle = css({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-
-  backgroundColor: mint.rgb,
   borderRadius: '50%',
 });
 const imageStyle = css({
   objectFit: 'contain',
 });
 
-const initialsStyle = css(
-  {
-    color: pine.rgb,
-  },
-  headlineStyles[3],
-);
+const initialsStyle = css(headlineStyles[3]);
 
 type ButtonProps = {
   readonly imageUrl?: string;
@@ -57,6 +75,15 @@ type ButtonProps = {
   readonly small?: boolean;
   readonly border?: boolean;
 };
+
+const colors = [
+  css({ backgroundColor: mint.rgb, color: pine.rgb }),
+  css({ backgroundColor: apricot.rgb, color: clay.rgb }),
+  css({ backgroundColor: sky.rgb, color: denim.rgb }),
+  css({ backgroundColor: azure.rgb, color: space.rgb }),
+  css({ backgroundColor: lilac.rgb, color: berry.rgb }),
+  css({ backgroundColor: lavender.rgb, color: mauve.rgb }),
+];
 
 const Avatar: React.FC<ButtonProps> = ({
   imageUrl,
@@ -78,7 +105,15 @@ const Avatar: React.FC<ButtonProps> = ({
           css={[circleStyle, imageStyle]}
         />
       ) : (
-        <p css={[circleStyle, initialsStyle]}>{initials}</p>
+        <p
+          css={[
+            circleStyle,
+            initialsStyle,
+            colors[hash(initials) % colors.length],
+          ]}
+        >
+          {initials}
+        </p>
       )}
     </div>
   );

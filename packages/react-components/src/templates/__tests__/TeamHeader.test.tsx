@@ -58,37 +58,37 @@ it('renders no more than 5 members', () => {
       {...boilerplateProps}
       members={[
         {
-          id: '42',
+          id: '1',
           displayName: 'Unknown',
           avatarURL: 'https://example.com',
           role: 'Colaborator',
         },
         {
-          id: '42',
+          id: '2',
           displayName: 'Unknown',
           avatarURL: 'https://example.com',
           role: 'Colaborator',
         },
         {
-          id: '42',
+          id: '3',
           displayName: 'Unknown',
           avatarURL: 'https://example.com',
           role: 'Colaborator',
         },
         {
-          id: '42',
+          id: '4',
           displayName: 'Unknown',
           avatarURL: 'https://example.com',
           role: 'Colaborator',
         },
         {
-          id: '42',
+          id: '5',
           displayName: 'Unknown',
           avatarURL: 'https://example.com',
           role: 'Colaborator',
         },
         {
-          id: '42',
+          id: '6',
           displayName: 'Unknown',
           avatarURL: 'https://example.com',
           role: 'Colaborator',

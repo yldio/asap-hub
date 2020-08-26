@@ -35,7 +35,7 @@ export const rose = color(247, 232, 234);
 
 export const sandstone = color(233, 166, 76);
 export const clay = color(206, 128, 26);
-export const apricot = color(240, 201, 148);
+export const apricot = color(248, 237, 222);
 
 export const fern = color(52, 162, 112);
 export const pine = color(40, 121, 83);
@@ -43,16 +43,16 @@ export const mint = color(228, 245, 238);
 
 export const cerulean = color(0, 140, 198);
 export const denim = color(0, 106, 146);
-export const sky = color(66, 202, 254);
+export const sky = color(230, 243, 249);
 
 export const prussian = color(0, 93, 129);
 export const space = color(0, 69, 97);
-export const azure = color(26, 190, 255);
+export const azure = color(231, 247, 254);
 
 export const magenta = color(207, 47, 179);
 export const berry = color(154, 35, 134);
-export const lilac = color(226, 129, 210);
+export const lilac = color(248, 234, 247);
 
 export const iris = color(140, 78, 159);
 export const mauve = color(105, 59, 119);
-export const lavender = color(189, 145, 201);
+export const lavender = color(242, 237, 245);

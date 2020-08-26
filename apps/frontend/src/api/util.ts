@@ -16,15 +16,18 @@ export const useFetchOptions = ({
     options: { headers, ...options },
     ...args
   }) => {
-    if (!isAuthenticated) {
-      throw new Error('No authorization bearer token available');
-    }
+    const authHeaders = isAuthenticated
+      ? {
+          authorization: `Bearer ${await getTokenSilently()}`,
+        }
+      : null;
+
     return overrideRequestInterceptor({
       ...args,
       options: {
         ...options,
         headers: {
-          authorization: `Bearer ${await getTokenSilently()}`,
+          ...authHeaders,
           ...headers,
         },
       },

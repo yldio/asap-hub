@@ -12,21 +12,22 @@ export * from './theme';
 
 export {
   Avatar,
-  Link,
-  Theme,
   Button,
   Caption,
   Card,
   Display,
   Divider,
+  GlobalStyles,
   Headline2,
   Headline3,
   Headline4,
+  Link,
   Paragraph,
-  GlobalStyles,
+  RichText,
   TabLink,
   Tag,
   TagLabel,
+  Theme,
 } from './atoms';
 export {
   OrcidSigninButton,

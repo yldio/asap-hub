@@ -145,6 +145,7 @@ export default class Users extends Base {
       .patch<CMSUser>(`users/${user.id}`, {
         json: {
           email: { iv: user.data.email.iv },
+          orcidLastSyncDate: { iv: `${new Date()}` },
           orcidLastModifiedDate: { iv: lastModifiedDate },
           orcidWorks: { iv: works },
         },

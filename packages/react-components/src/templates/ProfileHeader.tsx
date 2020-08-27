@@ -79,7 +79,7 @@ type ProfileProps = Pick<
   | 'teams'
 > & {
   readonly aboutHref: string;
-  readonly researchInterestsHref: string;
+  readonly researchHref: string;
   readonly outputsHref: string;
 };
 
@@ -96,7 +96,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   avatarURL,
 
   aboutHref,
-  researchInterestsHref,
+  researchHref,
   outputsHref,
 }) => {
   const team = teams?.[0];
@@ -155,8 +155,8 @@ const ProfileHeader: React.FC<ProfileProps> = ({
         )}
       </section>
       <TabNav>
-        <TabLink href={aboutHref}>About</TabLink>
-        <TabLink href={researchInterestsHref}>Research Interests</TabLink>
+        <TabLink href={researchHref}>Research</TabLink>
+        <TabLink href={aboutHref}>Background</TabLink>
         <TabLink href={outputsHref}>Shared Outputs</TabLink>
       </TabNav>
     </header>

@@ -9,7 +9,7 @@ const boilerplateProps = {
   teams: [],
   lastModifiedDate: formatISO(new Date()),
   aboutHref: './about',
-  researchInterestsHref: './research-interests',
+  researchHref: './research-interests',
   outputsHref: './outputs',
 };
 

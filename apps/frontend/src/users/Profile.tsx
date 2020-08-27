@@ -27,7 +27,7 @@ const Profile: React.FC<{}> = () => {
     const profilePageProps = {
       ...profile,
       aboutHref: join(url, 'about'),
-      researchInterestsHref: join(url, './research-interests'),
+      researchHref: join(url, './research-interests'),
       outputsHref: join(url, 'outputs'),
     };
 

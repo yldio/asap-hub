@@ -3,7 +3,8 @@ import css from '@emotion/css';
 
 import { perRem, contentSidePaddingWithNavigation } from '../pixels';
 import { pearl, steel } from '../colors';
-import { ProfileBackground } from '../organisms';
+import { ProfileBackground, SkillsSection } from '../organisms';
+import { UserResponse } from '../../../model/src';
 
 const styles = css({
   backgroundColor: pearl.rgb,
@@ -21,13 +22,19 @@ type ProfileInterestProps = Pick<
   readonly teams: ReadonlyArray<
     Omit<ComponentProps<typeof ProfileBackground>, 'firstName'>
   >;
+  readonly skills: UserResponse['skills'];
 };
 
-const ProfileAbout: React.FC<ProfileInterestProps> = ({ firstName, teams }) => {
+const ProfileAbout: React.FC<ProfileInterestProps> = ({
+  firstName,
+  teams,
+  skills,
+}) => {
   const team = teams[0];
   return (
     <main css={styles}>
       <ProfileBackground {...team} firstName={firstName} />
+      {skills.length ? <SkillsSection skills={skills} /> : null}
     </main>
   );
 };

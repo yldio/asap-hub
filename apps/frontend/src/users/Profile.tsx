@@ -5,10 +5,10 @@ import {
   Paragraph,
   ProfilePage,
   ProfileAbout,
+  ProfileResearch,
 } from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
-import { ProfileInterests } from '../../../../.yarn/$$virtual/@asap-hub-react-components-virtual-b3384deb0a/1/packages/react-components/build/templates';
 
 const Profile: React.FC<{}> = () => {
   const {
@@ -27,7 +27,7 @@ const Profile: React.FC<{}> = () => {
     const profilePageProps = {
       ...profile,
       aboutHref: join(url, 'about'),
-      researchHref: join(url, './research-interests'),
+      researchHref: join(url, 'research'),
       outputsHref: join(url, 'outputs'),
     };
 
@@ -37,8 +37,8 @@ const Profile: React.FC<{}> = () => {
           <Route path={`${path}/about`}>
             <ProfileAbout {...profile} />
           </Route>
-          <Route path={`${path}/research-interests`}>
-            <ProfileInterests {...profile} />
+          <Route path={`${path}/research`}>
+            <ProfileResearch {...profile} />
           </Route>
           <Route path={`${path}/outputs`}>TODO Outputs here</Route>
 

@@ -58,6 +58,7 @@ export {
   ProfileAbout,
   ProfileHeader,
   ProfilePage,
+  ProfileResearch,
   RecordOutputForm,
   RecordOutputPage,
   SigninForm,

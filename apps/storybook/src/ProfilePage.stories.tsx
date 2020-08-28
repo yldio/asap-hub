@@ -1,6 +1,10 @@
 import React from 'react';
 import { date, text, array } from '@storybook/addon-knobs';
-import { ProfilePage, ProfileAbout } from '@asap-hub/react-components';
+import {
+  ProfilePage,
+  ProfileAbout,
+  ProfileResearch,
+} from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
@@ -68,17 +72,6 @@ export const AboutTab = () => (
         'Biography',
         'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
       )}
-      skills={array('Skills', [
-        'Neurological Diseases',
-        'Clinical Neurology',
-        'Adult Neurology',
-        'Neuroimaging',
-        'Neurologic Examination',
-        'Neuroprotection',
-        'Movement Disorders',
-        'Neurodegenerative Diseases',
-        'Neurological Diseases',
-      ])}
       orcidWorks={[
         {
           id: '42',
@@ -96,9 +89,22 @@ export const AboutTab = () => (
   </ProfilePage>
 );
 
-export const ResearchInterestsTab = () => (
+export const ResearchTab = () => (
   <ProfilePage {...commonProps()} researchHref="#">
-    Research Interests Tab
+    <ProfileResearch
+      {...commonProps()}
+      skills={array('Skills', [
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
+        'Neurologic Examination',
+        'Neuroprotection',
+        'Movement Disorders',
+        'Neurodegenerative Diseases',
+        'Neurological Diseases',
+      ])}
+    />
   </ProfilePage>
 );
 

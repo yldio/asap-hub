@@ -236,6 +236,18 @@ module.exports = {
         },
       ],
     },
+    'fetch-page': {
+      handler: 'apps/asap-server/build/handlers/pages/fetch.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/pages/{path+}`,
+          },
+        },
+      ],
+    },
     'fetch-content-by-slug': {
       handler: 'apps/asap-server/build/handlers/content/fetch-by-slug.handler',
       events: [

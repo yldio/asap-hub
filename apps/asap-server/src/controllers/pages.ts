@@ -10,7 +10,7 @@ const deserialize = (obj: CMSPage): PageResponse => {
   };
 };
 
-export default class Users {
+export default class Pages {
   pages: Squidex<CMSPage>;
 
   constructor() {

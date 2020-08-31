@@ -9,7 +9,7 @@ interface JwtToken {
 export default function create(): typeof Got {
   let token: Promise<string> | null;
   const refresh = (): void => {
-    // eslint-disable @typescript-eslint/camelcase
+    /* eslint-disable @typescript-eslint/camelcase */
     const url = `${squidex.baseUrl}/identity-server/connect/token`;
     const res = Got.post(url, {
       form: {
@@ -19,9 +19,13 @@ export default function create(): typeof Got {
         client_secret: squidex.clientSecret,
       },
     }).json();
+    /* eslint-enable @typescript-eslint/camelcase */
 
-    token = res.then((r) => (r as { access_token: string }).access_token);
-    // eslint-enable @typescript-eslint/camelcase
+    token = res.then((r) => {
+      /* eslint-disable-next-line @typescript-eslint/camelcase */
+      const { access_token: accessToken } = r as { access_token: string };
+      return accessToken;
+    });
   };
 
   return Got.extend({

@@ -3,10 +3,6 @@ import { handler } from '../../../src/handlers/pages/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 
 describe('Get /pages/{path+}', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test('returns 200 when page is found', async () => {
     const res = (await handler(
       apiGatewayEvent({

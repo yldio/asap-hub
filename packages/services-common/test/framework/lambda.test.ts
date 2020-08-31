@@ -9,6 +9,7 @@ test('http returns 400 on invalid body', async () => {
       statusCode: 200,
     };
   });
+
   const result = await handler(
     apiGatewayEvent({
       body: 'invalid',

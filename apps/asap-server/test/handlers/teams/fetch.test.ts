@@ -12,7 +12,7 @@ import { createRandomTeam } from '../../helpers/teams';
 const chance = new Chance();
 
 describe('GET /teams', () => {
-  afterEach(() => nock.cleanAll());
+  beforeEach(() => nock.cleanAll());
 
   test('returns 200 when no teams exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);

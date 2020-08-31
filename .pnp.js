@@ -4956,6 +4956,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.2.0"
       ],
       [
+        "jwt-encode",
+        "npm:1.0.1"
+      ],
+      [
         "keyv",
         "npm:3.0.0"
       ],
@@ -7532,6 +7536,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:b144b9c91ff8b2c3e8127a3f0cb57306eecf794ddcb0b2b480b66fcfc35f3d935dce8b6091429db68d04a71c2f123952255cc6637a13a5b9e5b33efa9f0a20b2#npm:1.2.0"
       ],
       [
+        "ts.cryptojs256",
+        "npm:1.0.1"
+      ],
+      [
         "tsconfig-paths",
         "npm:3.9.0"
       ],
@@ -8752,7 +8760,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chance", "npm:1.1.5"],
             ["debug", "virtual:22f562d986a179c134348e2f9a34c16e7aac83723b52994f6cd838d1e1bdc151316b5a5b757f52d4a71ffe2a5b2aea9b0dc0bf8f24d573669717b6ff6df418b2#npm:4.1.1"],
             ["got", "npm:11.3.0"],
-            ["jwt-decode", "npm:2.2.0"]
+            ["jwt-decode", "npm:2.2.0"],
+            ["jwt-encode", "npm:1.0.1"],
+            ["nock", "npm:12.0.3"]
           ],
           "linkType": "SOFT",
         }]
@@ -27899,6 +27909,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["jwt-encode", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/jwt-encode-npm-1.0.1-c74bd4ea40-53d7e29ab3.zip/node_modules/jwt-encode/",
+          "packageDependencies": [
+            ["jwt-encode", "npm:1.0.1"],
+            ["ts.cryptojs256", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["keyv", [
         ["npm:3.0.0", {
           "packageLocation": "./.yarn/cache/keyv-npm-3.0.0-31c4735a55-b3e5f5eee0.zip/node_modules/keyv/",
@@ -36802,6 +36822,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "packagePeers": [
             "typescript"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["ts.cryptojs256", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/ts.cryptojs256-npm-1.0.1-c974834740-39cc969ec2.zip/node_modules/ts.cryptojs256/",
+          "packageDependencies": [
+            ["ts.cryptojs256", "npm:1.0.1"]
           ],
           "linkType": "HARD",
         }]

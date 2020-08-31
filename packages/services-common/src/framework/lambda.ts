@@ -9,7 +9,7 @@ import { origin } from '../config';
 export interface Request {
   method: 'get' | 'post';
   headers: object;
-  params?: object;
+  params?: { [key: string]: string };
   payload?: object;
   query?: object;
 }

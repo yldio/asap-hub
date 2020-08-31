@@ -12,7 +12,7 @@ import { createRandomUser } from '../../helpers/create-user';
 const chance = new Chance();
 
 describe('GET /users', () => {
-  afterEach(() => nock.cleanAll());
+  beforeEach(() => nock.cleanAll());
 
   test('returns 200 when no users exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);

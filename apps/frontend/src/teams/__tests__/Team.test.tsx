@@ -25,14 +25,12 @@ const team: TeamResponse = {
 
 // fetch user by code request
 beforeEach(() => {
+  nock.cleanAll();
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/teams/42')
     .reply(200, team);
-});
-afterEach(async () => {
-  nock.cleanAll();
 });
 
 const renderTeam = async () => {

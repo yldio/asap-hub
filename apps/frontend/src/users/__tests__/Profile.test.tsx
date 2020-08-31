@@ -25,14 +25,12 @@ const user: UserResponse = {
 };
 // fetch user by code request
 beforeEach(() => {
+  nock.cleanAll();
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/users/42')
     .reply(200, user);
-});
-afterEach(async () => {
-  nock.cleanAll();
 });
 
 const renderProfile = async () => {

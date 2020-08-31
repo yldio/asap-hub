@@ -27,14 +27,12 @@ const teams: ReadonlyArray<TeamResponse> = [
 
 // fetch user by code request
 beforeEach(() => {
+  nock.cleanAll();
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/teams')
     .reply(200, teams);
-});
-afterEach(async () => {
-  nock.cleanAll();
 });
 
 const renderTeamList = async () => {

@@ -38,6 +38,10 @@ describe('squidex wrapper', () => {
     nock.cleanAll();
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   it('returns a list of documents', async () => {
     identity()
       .get(

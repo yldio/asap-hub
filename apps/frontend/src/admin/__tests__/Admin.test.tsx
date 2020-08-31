@@ -19,6 +19,7 @@ describe('when submitting the form', () => {
   let result: RenderResult;
 
   beforeEach(() => {
+    nock.cleanAll();
     nockInterceptor = nock(API_BASE_URL, {
       reqheaders: {
         authorization: 'Bearer Pw123',
@@ -28,9 +29,6 @@ describe('when submitting the form', () => {
       displayName: 'John Doe',
       email: 'john.doe@example.com',
     });
-  });
-  afterEach(() => {
-    nock.cleanAll();
   });
 
   beforeEach(async () => {

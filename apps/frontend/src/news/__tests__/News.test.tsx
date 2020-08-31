@@ -17,14 +17,12 @@ const news: unknown = {
 
 // fetch user by code request
 beforeEach(() => {
+  nock.cleanAll();
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/content/news/single-news-slug')
     .reply(200, [news]);
-});
-afterEach(async () => {
-  nock.cleanAll();
 });
 
 const renderNews = async () => {

@@ -55,18 +55,10 @@ export class Squidex<T extends { id: string; data: object }> {
   }
 
   async fetchOne(query: object): Promise<T> {
-    const q = {
-      take: 1,
+    const { items } = await this.fetch({
       ...query,
-    };
-
-    const { items } = await this.client
-      .get(this.collection, {
-        searchParams: {
-          q: JSON.stringify(q),
-        },
-      })
-      .json();
+      take: 1,
+    });
 
     if (items.length === 0) {
       throw Boom.notFound();

@@ -49,20 +49,22 @@ describe('squidex wrapper', () => {
           take: 30,
         })}`,
       )
-      .reply(200, [
-        {
-          id: '42',
-          data: {
-            string: {
-              iv: 'value',
+      .reply(200, {
+        items: [
+          {
+            id: '42',
+            data: {
+              string: {
+                iv: 'value',
+              },
             },
           },
-        },
-      ]);
+        ],
+      });
 
     const client = new Squidex<Content>(collection);
     const result = await client.fetch();
-    expect(result).toEqual([
+    expect(result.items).toEqual([
       {
         id: '42',
         data: {
@@ -75,11 +77,48 @@ describe('squidex wrapper', () => {
     expect(nock.isDone()).toBeTruthy();
   });
 
+  it("returns an empty list of documents if collection doesn't exist", async () => {
+    identity()
+      .get(
+        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+          take: 30,
+        })}`,
+      )
+      .reply(404);
+
+    const client = new Squidex<Content>(collection);
+    const result = await client.fetch();
+    expect(result).toEqual({ items: [] });
+    expect(nock.isDone()).toBeTruthy();
+  });
+
+  it('propagates squidex error when fetching a collection', async () => {
+    identity()
+      .get(
+        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+          take: 30,
+        })}`,
+      )
+      .reply(500);
+    const client = new Squidex<Content>(collection);
+
+    await expect(() => client.fetch()).rejects.toThrow('squidex');
+    expect(nock.isDone()).toBeTruthy();
+  });
+
   it("return 404 when document doesn't exist", async () => {
     identity().get(`/api/content/${cms.appName}/${collection}/42`).reply(404);
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('Not Found');
+    expect(nock.isDone()).toBeTruthy();
+  });
+
+  it('propagates squidex error when fetching a document', async () => {
+    identity().get(`/api/content/${cms.appName}/${collection}/42`).reply(500);
+    const client = new Squidex<Content>(collection);
+
+    await expect(() => client.fetchById('42')).rejects.toThrow('squidex');
     expect(nock.isDone()).toBeTruthy();
   });
 
@@ -105,6 +144,80 @@ describe('squidex wrapper', () => {
         },
       },
     });
+    expect(nock.isDone()).toBeTruthy();
+  });
+
+  it('returns a single document based on filter', async () => {
+    identity()
+      .get(
+        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.string.iv',
+            op: 'eq',
+            value: 'value',
+          },
+        })}`,
+      )
+      .reply(200, {
+        items: [
+          {
+            id: '42',
+            data: {
+              string: {
+                iv: 'value',
+              },
+            },
+          },
+        ],
+      });
+
+    const client = new Squidex<Content>(collection);
+    const result = await client.fetchOne({
+      filter: {
+        path: 'data.string.iv',
+        op: 'eq',
+        value: 'value',
+      },
+    });
+
+    expect(result).toEqual({
+      id: '42',
+      data: {
+        string: {
+          iv: 'value',
+        },
+      },
+    });
+    expect(nock.isDone()).toBeTruthy();
+  });
+
+  it('returns not found if no document exists based on filter', async () => {
+    identity()
+      .get(
+        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.string.iv',
+            op: 'eq',
+            value: 'value',
+          },
+        })}`,
+      )
+      .reply(200, {
+        items: [],
+      });
+
+    const client = new Squidex<Content>(collection);
+    await expect(() =>
+      client.fetchOne({
+        filter: {
+          path: 'data.string.iv',
+          op: 'eq',
+          value: 'value',
+        },
+      }),
+    ).rejects.toThrow('Not Found');
     expect(nock.isDone()).toBeTruthy();
   });
 

@@ -21,6 +21,7 @@ export default class Pages {
     const page = await this.pages.fetchOne({
       filter: { path: 'data.path.iv', op: 'eq', value: path },
     });
+
     return deserialize(page);
   }
 }

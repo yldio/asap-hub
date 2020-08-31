@@ -22,7 +22,7 @@ export default function create(): typeof Got {
     /* eslint-enable @typescript-eslint/camelcase */
 
     token = res.then((r) => {
-      /* eslint-disable-next-line @typescript-eslint/camelcase */
+      /* eslint-disable-next-line camelcase */
       const { access_token: accessToken } = r as { access_token: string };
       return accessToken;
     });

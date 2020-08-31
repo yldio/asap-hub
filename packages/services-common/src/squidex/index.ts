@@ -27,13 +27,13 @@ export class Squidex<T extends { id: string; data: object }> {
         .json();
       return res as { items: T[] };
     } catch (err) {
-      if (err.response.statusCode === 404) {
+      if (err.response?.statusCode === 404) {
         return {
           items: [],
         };
       }
 
-      throw Boom.badImplementation('Squidex', {
+      throw Boom.badImplementation('squidex', {
         data: err,
       });
     }
@@ -44,7 +44,13 @@ export class Squidex<T extends { id: string; data: object }> {
       const res = await this.client.get(`${this.collection}/${id}`).json();
       return res as T;
     } catch (err) {
-      throw Boom.notFound();
+      if (err.response?.statusCode === 404) {
+        throw Boom.notFound();
+      }
+
+      throw Boom.badImplementation('squidex', {
+        data: err,
+      });
     }
   }
 

@@ -101,7 +101,7 @@ export default class Users extends Base {
     return items;
   }
 
-  async fetchWithOrcidSorted(take: number = 30): Promise<CMSUser[]> {
+  async fetchWithOrcidSorted(take = 30): Promise<CMSUser[]> {
     const { items } = await this.client
       .get('users', {
         searchParams: {

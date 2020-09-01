@@ -2,15 +2,15 @@
 
 CURPATH=`dirname "$0"`
 
-STAGE=${CI_EXTERNAL_PULL_REQUEST_IID:-${SLS_STAGE:-"dev"}}
+SLS_STAGE=${SLS_STAGE:-"dev"}
 HOSTNAME=${BASE_HOSTNAME:-"hub.asap.science"}
 
 APP_HOSTNAME=$HOSTNAME
 API_HOSTNAME="api.$HOSTNAME"
 
-if [ $STAGE != "master" ]; then
-    API_HOSTNAME="api-${STAGE}.${APP_HOSTNAME}"
-    APP_HOSTNAME="${STAGE}.${APP_HOSTNAME}"
+if [ $SLS_STAGE != "production" ]; then
+    API_HOSTNAME="api-${SLS_STAGE}.${APP_HOSTNAME}"
+    APP_HOSTNAME="${SLS_STAGE}.${APP_HOSTNAME}"
 fi
 
 echo "APP_HOSTNAME=${APP_HOSTNAME}"

@@ -17,7 +17,7 @@ export const transform = (user: CMSUser): UserResponse => {
   return JSON.parse(
     JSON.stringify({
       id: user.id,
-      lastModifiedDate: user.data.lastModifiedDate.iv,
+      lastModifiedDate: user.data.lastModifiedDate?.iv,
       displayName: user.data.displayName.iv,
       email: user.data.email.iv,
       firstName: user.data.firstName?.iv,

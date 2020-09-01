@@ -54,6 +54,7 @@ export {
 
 export {
   AdminInviteUserPage,
+  ContentPage,
   InviteUserForm,
   Layout,
   ProfileAbout,

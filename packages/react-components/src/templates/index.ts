@@ -1,10 +1,11 @@
 export { default as AdminInviteUserPage } from './AdminInviteUserPage';
+export { default as ContentPage } from './ContentPage';
 export { default as InviteUserForm } from './InviteUserForm';
 export { default as Layout } from './Layout';
 export { default as ProfileAbout } from './ProfileAbout';
 export { default as ProfileHeader } from './ProfileHeader';
-export { default as ProfileResearch } from './ProfileResearch';
 export { default as ProfilePage } from './ProfilePage';
+export { default as ProfileResearch } from './ProfileResearch';
 export { default as RecordOutputForm } from './RecordOutputForm';
 export { default as RecordOutputPage } from './RecordOutputPage';
 export { default as SigninForm } from './SigninForm';

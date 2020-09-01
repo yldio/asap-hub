@@ -99,6 +99,23 @@
         }
       },
       {
+        "name": "avatarURL",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Avatar URL",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
         "name": "jobTitle",
         "isHidden": false,
         "isLocked": false,
@@ -197,6 +214,23 @@
         }
       },
       {
+        "name": "lastModifiedDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Last Modified Date",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
         "name": "orcid",
         "isHidden": false,
         "isLocked": false,
@@ -208,6 +242,23 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "ORCID",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "orcidLastSyncDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "ORCID Last Sync Date",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -467,23 +518,6 @@
             }
           }
         ]
-      },
-      {
-        "name": "avatarURL",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Avatar URL",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
       }
     ],
     "previewUrls": {

@@ -110,21 +110,6 @@
         }
       },
       {
-        "name": "skills",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Skills",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
         "name": "tags",
         "isHidden": false,
         "isLocked": false,

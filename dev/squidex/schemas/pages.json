@@ -12,6 +12,23 @@
     "fieldsInLists": [],
     "fields": [
       {
+        "name": "path",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Path",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
         "name": "title",
         "isHidden": false,
         "isLocked": false,
@@ -27,24 +44,7 @@
         }
       },
       {
-        "name": "slug",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": true,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Slug",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": true
-        }
-      },
-      {
-        "name": "content",
+        "name": "text",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -54,23 +54,7 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "RichText",
-          "label": "Content",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "public",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "inlineEditable": false,
-          "editor": "Checkbox",
-          "label": "Public",
+          "label": "Text",
           "hints": "",
           "placeholder": "",
           "isRequired": false

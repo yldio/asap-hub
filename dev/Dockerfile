@@ -18,6 +18,6 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v5.2/l
     mv sq /bin
 
 
-COPY dev/setup-cms.sh ./
+COPY ./setup-squidex.sh ./
 
-CMD ["./setup-cms.sh"]
+CMD ["./setup-squidex.sh"]

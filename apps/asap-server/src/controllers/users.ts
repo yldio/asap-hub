@@ -137,12 +137,21 @@ export default class Users {
     return transform(await this.cms.users.connectByCode(user, userId));
   }
 
-  async syncOrcidProfile(id: string): Promise<UserResponse> {
-    const [notFound, user] = await Intercept(this.cms.users.fetchById(id));
+  async syncOrcidProfile(
+    id: string,
+    cachedUser: CMSUser | undefined = undefined,
+  ): Promise<UserResponse> {
+    let fetchedUser;
+    if (!cachedUser) {
+      let notFound;
+      [notFound, fetchedUser] = await Intercept(this.cms.users.fetchById(id));
 
-    if (notFound) {
-      throw Boom.notFound();
+      if (notFound) {
+        throw Boom.notFound();
+      }
     }
+
+    const user = cachedUser || (fetchedUser as CMSUser);
 
     const [error, res] = await Intercept(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

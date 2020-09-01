@@ -199,13 +199,14 @@ module.exports = {
       ],
     },
     'sync-user-orcid': {
-      handler: 'apps/asap-server/build/handlers/users/sync-orcid.handler',
+      handler:
+        'apps/asap-server/build/handlers/users/webhook-sync-orcid.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
-            path: `/webhook/users`,
+            path: `/webhook/users/orcid`,
           },
         },
       ],
@@ -284,6 +285,22 @@ module.exports = {
         },
       ],
     },
+    ...(NODE_ENV === 'production'
+      ? {
+          'cronjob-sync-orcid': {
+            handler:
+              'apps/asap-server/build/handlers/users/cronjob-sync-orcid.handler',
+            events: [
+              {
+                // https://www.serverless.com/framework/docs/providers/knative/events/cron/#cronjob/
+                cron: {
+                  schedule: 'rate(1 hour)', // run every hour
+                },
+              },
+            ],
+          },
+        }
+      : {}),
   },
   resources: {
     Resources: {

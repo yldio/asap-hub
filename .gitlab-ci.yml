@@ -124,6 +124,8 @@ test:
   artifacts:
     paths:
       - coverage
+  environment:
+    name: test
   needs:
     - build
   variables:

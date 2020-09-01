@@ -6,20 +6,12 @@ include: 'apps/react-templates/.gitlab-ci.yml'
     - if: $CI_COMMIT_BRANCH == 'master'
   variables: &tmpl_master_variables
     SLS_STAGE: production
-    CMS_APP_NAME: $PROD_CMS_APP_NAME
-    CMS_BASE_URL: https://cloud.squidex.io
-    CMS_CLIENT_ID: $PROD_CMS_CLIENT_ID
-    CMS_CLIENT_SECRET: $PROD_CMS_CLIENT_SECRET
 
 .tmpl:branch: &tmpl_branch
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
   variables: &tmpl_branch_variables
     SLS_STAGE: $CI_EXTERNAL_PULL_REQUEST_IID
-    CMS_APP_NAME: $DEV_CMS_APP_NAME
-    CMS_BASE_URL: $DEV_CMS_BASE_URL
-    CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
-    CMS_CLIENT_SECRET: $DEV_CMS_CLIENT_SECRET
 
 .tmpl:branch_remove: &tmpl_branch_remove
   rules:
@@ -39,7 +31,7 @@ workflow:
 
 variables:
   BASE_HOSTNAME: hub.asap.science
-  CMS_UTILS_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/cms-utils:latest
+  SQUIDEX_SYNC_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
 
 stages:
   - setup
@@ -51,6 +43,7 @@ stages:
 
 setup:
   script:
+    # stage is the number of the pr or the name of the branch
     - ci/env-create.sh > deploy.env
   artifacts:
     reports:
@@ -83,26 +76,27 @@ build:native-deps:
     - setup
   stage: build
 
-build:cms-image:
+setup:squidex-image:
   image: docker:19.03.12
-  stage: build
+  stage: setup
   services:
     - docker:19.03.12-dind
   script:
+    - cd dev
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $CMS_UTILS_DOCKER_IMAGE .
-    - docker push $CMS_UTILS_DOCKER_IMAGE
+    - docker build -t $SQUIDEX_SYNC_DOCKER_IMAGE .
+    - docker push $SQUIDEX_SYNC_DOCKER_IMAGE
   only:
     refs:
       - master
     changes:
-      - Dockerfile
+      - dev/Dockerfile
 
 # stage test
 
 .tmpl:test: &tmpl_test
   script:
-    - echo "no script proporty found"
+    - echo "no script property found"
   needs: []
   stage: test
 
@@ -187,11 +181,11 @@ deploy:sls:branch_remove:
     - yarn sls remove --verbose
   stage: deploy
 
-deploy:sync-cms:
+deploy:sync-squidex:
   <<: *tmpl_master
-  image: $CMS_UTILS_DOCKER_IMAGE
+  image: $SQUIDEX_SYNC_DOCKER_IMAGE
   script:
-    - sq config add asap-hub $CMS_CLIENT_ID $CMS_CLIENT_SECRET -u $CMS_BASE_URL
+    - sq config add asap-hub $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
     - sq config use asap-hub
     - sq sync in dev/squidex
   stage: deploy

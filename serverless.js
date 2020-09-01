@@ -50,12 +50,12 @@ module.exports = {
     },
     environment: {
       APP_ORIGIN: `https://${APP_HOSTNAME}`,
-      NODE_ENV: `\${env:NODE_ENV}`,
-      CMS_BASE_URL: `\${env:CMS_BASE_URL}`,
-      CMS_APP_NAME: `\${env:CMS_APP_NAME}`,
-      CMS_CLIENT_ID: `\${env:CMS_CLIENT_ID}`,
-      CMS_CLIENT_SECRET: `\${env:CMS_CLIENT_SECRET}`,
       AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
+      NODE_ENV: `\${env:NODE_ENV}`,
+      SQUIDEX_APP_NAME: `\${env:SQUIDEX_APP_NAME}`,
+      SQUIDEX_BASE_URL: `\${env:SQUIDEX_BASE_URL}`,
+      SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,
+      SQUIDEX_CLIENT_SECRET: `\${env:SQUIDEX_CLIENT_SECRET}`,
     },
   },
   package: {

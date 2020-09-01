@@ -16,7 +16,7 @@ To verify the email on AWS SES you can run the following script:
 
 When running in production, you'll have to set this variables:
 
-- `CMS_CLIENT_ID`
-- `CMS_CLIENT_SECRET`
-- `CMS_APP_NAME`
-- `CMS_BASE_URL`
+- `SQUIDEX_CLIENT_ID`
+- `SQUIDEX_CLIENT_SECRET`
+- `SQUIDEX_APP_NAME`
+- `SQUIDEX_BASE_URL`

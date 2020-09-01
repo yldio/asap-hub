@@ -2,7 +2,7 @@
 
 CURPATH=`dirname "$0"`
 
-STAGE=${CI_COMMIT_REF_SLUG:-"development"}
+STAGE=${CI_COMMIT_REF_SLUG:-${SLS_STAGE:-"dev"}}
 HOSTNAME=${BASE_HOSTNAME:-"hub.asap.science"}
 
 APP_HOSTNAME=$HOSTNAME

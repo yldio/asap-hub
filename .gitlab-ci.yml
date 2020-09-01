@@ -57,6 +57,11 @@ setup:
       dotenv: deploy.env
   stage: setup
 
+setup:env:
+  script:
+    - env | grep CI
+  stage: setup
+
 # stage build
 
 build:

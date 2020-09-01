@@ -10,8 +10,6 @@ import {
   createRandomOutput,
 } from '../../helpers/create-user';
 
-jest.mock('@asap-hub/auth');
-
 const chance = new Chance();
 
 describe('GET /users/{id}/research-outputs', () => {

@@ -7,8 +7,6 @@ import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomTeam } from '../../helpers/teams';
 
-jest.mock('@asap-hub/auth');
-
 const chance = new Chance();
 
 describe('GET /teams/{id}', () => {

@@ -19,7 +19,7 @@ it('renders <a> as a link', () => {
 it('renders <h1> as an heading', () => {
   const { getByText } = render(<RichText text={'<h1>heading</h1>'} />);
   const heading = getByText('heading');
-  expect(heading.tagName).toBe('H1');
+  expect(heading.tagName).toBe('H2');
 });
 
 it('renders table of contents based on headings', () => {
@@ -29,9 +29,9 @@ it('renders table of contents based on headings', () => {
 
   expect(getByRole('navigation')).toBeDefined();
 
-  const heading1 = getByText('heading 1', { selector: 'h1' });
+  const heading1 = getByText('heading 1', { selector: 'h2' });
   expect(heading1).toHaveAttribute('id', 'heading-1');
 
-  const heading2 = getByText('heading 2', { selector: 'h2' });
+  const heading2 = getByText('heading 2', { selector: 'h3' });
   expect(heading2).toHaveAttribute('id', 'heading-2');
 });

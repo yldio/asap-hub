@@ -13,7 +13,7 @@ import Welcome from './welcome/Routes';
 import { AuthProvider } from './auth';
 import ResearchOutputs from './research-outputs/Routes';
 import CheckAuth from './auth/CheckAuth';
-import Page from './pages/stub';
+import Page from './pages/Content';
 
 const App: React.FC<{}> = () => {
   return (

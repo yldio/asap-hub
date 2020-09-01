@@ -9,6 +9,11 @@ interface Headline4Props {
 const Headline4: React.FC<Headline4Props> = ({
   children,
   styleAsHeading = 4,
-}) => <h4 css={[layoutStyles, headlineStyles[styleAsHeading]]}>{children}</h4>;
+  ...props
+}) => (
+  <h4 css={[layoutStyles, headlineStyles[styleAsHeading]]} {...props}>
+    {children}
+  </h4>
+);
 
 export default Headline4;

@@ -8,8 +8,8 @@ import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
 
 import Paragraph from './Paragraph';
-import Display from './Display';
 import Headline2 from './Headline2';
+import Headline3 from './Headline3';
 import Link from './Link';
 
 interface RichTextProps {
@@ -20,8 +20,8 @@ interface RichTextProps {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const components = ({
   p: Paragraph,
-  h1: Display,
-  h2: Headline2,
+  h1: Headline2,
+  h2: Headline3,
   a: Link,
 } as unknown) as {
   [element: string]: ComponentLike<

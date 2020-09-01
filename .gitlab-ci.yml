@@ -15,7 +15,7 @@ include: 'apps/react-templates/.gitlab-ci.yml'
   rules:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
   variables: &tmpl_branch_variables
-    SLS_STAGE: $CI_COMMIT_REF_SLUG
+    SLS_STAGE: $CI_EXTERNAL_PULL_REQUEST_IID
     CMS_APP_NAME: $DEV_CMS_APP_NAME
     CMS_BASE_URL: $DEV_CMS_BASE_URL
     CMS_CLIENT_ID: $DEV_CMS_CLIENT_ID
@@ -55,11 +55,6 @@ setup:
   artifacts:
     reports:
       dotenv: deploy.env
-  stage: setup
-
-setup:env:
-  script:
-    - env | grep CI
   stage: setup
 
 # stage build
@@ -172,7 +167,7 @@ deploy:sls:branch:
   <<: *tmpl_branch
   <<: *tmpl_deploy
   environment:
-    name: review/$CI_COMMIT_REF_SLUG
+    name: review/$CI_EXTERNAL_PULL_REQUEST_IID
     url: https://$APP_HOSTNAME
     on_stop: deploy:sls:branch_remove
     auto_stop_in: 1 week
@@ -185,7 +180,7 @@ deploy:sls:branch_remove:
   needs:
     - build:native-deps
   environment:
-    name: review/$CI_COMMIT_REF_SLUG
+    name: review/$CI_EXTERNAL_PULL_REQUEST_IID
     action: stop
   script:
     - git checkout $CI_COMMIT_SHA # the branch may not exist

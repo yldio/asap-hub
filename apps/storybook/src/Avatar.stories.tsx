@@ -9,6 +9,7 @@ export default {
 export const Normal = () => (
   <Avatar
     border={boolean('Border', false)}
+    small={boolean('Small', false)}
     imageUrl={text(
       'Image URL',
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
@@ -18,18 +19,8 @@ export const Normal = () => (
 export const InitialsFallback = () => (
   <Avatar
     border={boolean('Border', false)}
+    small={boolean('Small', false)}
     firstName={text('First Name', 'John')}
     lastName={text('Last Name', 'Doe')}
-  />
-);
-
-export const Small = () => (
-  <Avatar
-    border={boolean('Border', false)}
-    small={boolean('Small', true)}
-    imageUrl={text(
-      'Image URL',
-      'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
-    )}
   />
 );

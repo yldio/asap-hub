@@ -17,7 +17,6 @@ RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v5.2/l
     unzip linux-x64.zip && \
     mv sq /bin
 
-
-COPY ./setup-squidex.sh ./
+COPY dev/setup-squidex.sh ./
 
 CMD ["./setup-squidex.sh"]

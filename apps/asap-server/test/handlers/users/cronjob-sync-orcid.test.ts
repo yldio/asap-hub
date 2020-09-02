@@ -19,6 +19,11 @@ jest.mock('../../../src/cms/users', () => {
 describe('Cronjob - Sync Users ORCID', () => {
   const orcid = '0000-0002-9079-593X';
 
+  beforeAll(() => {
+    // Add recently synced user
+    fetchUsersResponse[1].data.orcidLastSyncDate = new Date().toISOString() 
+  })
+
   test('finds users without orcid last modified date', async () => {
     nock('https://pub.orcid.org')
       .get(`/v2.1/${orcid}/works`)

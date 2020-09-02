@@ -45,7 +45,6 @@ stages:
 
 setup:
   script:
-    # stage is the number of the pr or the name of the branch
     - ci/env-create.sh > deploy.env
   artifacts:
     reports:
@@ -129,41 +128,6 @@ test:
     - build
     - build:native-deps
 
-deploy:sls:production:
-  <<: *tmpl_master
-  <<: *tmpl_deploy
-  environment:
-    name: production
-    url: https://$APP_HOSTNAME
-  variables:
-    <<: *tmpl_master_variables
-    <<: *tmpl_deploy_variables
-  needs:
-    - build
-    - build:native-deps
-    - test
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-      when: manual
-
-deploy:sls:dev:
-  <<: *tmpl_branch
-  <<: *tmpl_deploy
-  before_script:
-    - (cd apps/frontend && yarn build)
-  environment:
-    name: dev
-    url: https://$APP_HOSTNAME
-  variables:
-    <<: *tmpl_master_variables
-    <<: *tmpl_deploy_variables
-    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
-    SLS_STAGE: 'dev'
-  needs:
-    - build
-    - build:native-deps
-    - test
-
 deploy:sls:branch:
   <<: *tmpl_branch
   <<: *tmpl_deploy
@@ -191,3 +155,38 @@ deploy:sls:branch_remove:
     - git checkout $CI_COMMIT_SHA # the branch may not exist
     - yarn sls remove --verbose
   stage: deploy
+
+deploy:sls:dev:
+  <<: *tmpl_master
+  <<: *tmpl_deploy
+  before_script:
+    - (cd apps/frontend && yarn build)
+  environment:
+    name: dev
+    url: https://$APP_HOSTNAME
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
+    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
+    SLS_STAGE: 'dev'
+  needs:
+    - build
+    - build:native-deps
+    - test
+
+deploy:sls:production:
+  <<: *tmpl_master
+  <<: *tmpl_deploy
+  environment:
+    name: production
+    url: https://$APP_HOSTNAME
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
+  needs:
+    - build
+    - build:native-deps
+    - test
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      when: manual

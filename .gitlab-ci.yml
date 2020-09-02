@@ -144,6 +144,23 @@ test:
     - build
     - build:native-deps
 
+deploy:sls:dev:
+  <<: *tmpl_master
+  <<: *tmpl_deploy
+  environment:
+    name: dev
+    url: https://dev.$BASE_HOSTNAME
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
+    API_HOSTNAME: api-dev.$BASE_HOSTNAME
+    APP_HOSTNAME: dev.$BASE_HOSTNAME
+    SLS_STAGE: 'dev'
+  needs:
+    - build
+    - build:native-deps
+    - test
+
 deploy:sls:master:
   <<: *tmpl_master
   <<: *tmpl_deploy

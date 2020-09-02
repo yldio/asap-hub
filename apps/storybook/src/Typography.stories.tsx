@@ -7,11 +7,10 @@ import {
   Headline2 as Headline2Text,
   Headline3 as Headline3Text,
   Headline4 as Headline4Text,
-  Link as LinkText,
   Paragraph as ParagraphText,
 } from '@asap-hub/react-components';
-import { ThemeDecorator } from './theme';
 import { accentColor } from './text';
+import { ThemeDecorator } from './decorators';
 
 export default {
   title: 'Atoms / Typography',
@@ -50,10 +49,3 @@ export const Caption = () => {
     </figure>
   );
 };
-export const Link = () => (
-  <ParagraphText>
-    <LinkText href={text('Destination', 'https://www.parkinsonsroadmap.org/')}>
-      {text('Text', "Aligning Science Across Parkinson's")}
-    </LinkText>
-  </ParagraphText>
-);

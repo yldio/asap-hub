@@ -13,7 +13,6 @@ export * from './theme';
 export {
   Avatar,
   Link,
-  Theme,
   Button,
   Caption,
   Card,

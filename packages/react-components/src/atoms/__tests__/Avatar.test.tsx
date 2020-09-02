@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import Avatar from '../Avatar';
-import { findParentWithStyle } from '../../test-utils';
+import { findParentWithStyle, viewportCalc } from '../../test-utils';
 
 it('renders the profile picture', () => {
   const { getByRole } = render(<Avatar imageUrl="/avatar.png" />);
@@ -50,18 +50,17 @@ it('respects the border prop', () => {
 });
 
 it('respects the small prop', () => {
-  const { getByRole, rerender } = render(<Avatar imageUrl="/avatar.png" />);
-  const el = getByRole('img').parentNode as Element;
-  expect(el).toBeTruthy();
+  const { getByText, rerender } = render(<Avatar firstName="J" lastName="D" />);
+  const normalFontSize = Number(
+    viewportCalc(
+      findParentWithStyle(getByText(/[A-Z]/), 'fontSize')!.fontSize,
+    ).replace(/px$/, ''),
+  );
 
-  const { height, width } = getComputedStyle(el);
+  rerender(<Avatar firstName="J" lastName="D" small />);
+  const smallFontSize = Number(
+    getComputedStyle(getByText(/[A-Z]/)).fontSize.replace(/em$/, ''),
+  );
 
-  rerender(<Avatar imageUrl="/avatar.png" small />);
-  const el2 = getByRole('img').parentNode as Element;
-  expect(el2).toBeTruthy();
-
-  const { height: heightEl, width: widthEl } = getComputedStyle(el2);
-
-  expect(parseFloat(heightEl)).toBeLessThan(parseFloat(height));
-  expect(parseFloat(widthEl)).toBeLessThan(parseFloat(width));
+  expect(smallFontSize).toBeLessThan(normalFontSize);
 });

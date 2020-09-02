@@ -1,47 +1,52 @@
 import React from 'react';
 import css from '@emotion/css';
+import { TeamMember } from '@asap-hub/model';
 
-import { Link, Card, Headline2, Avatar, Paragraph } from '../atoms';
-import { perRem, mobileScreen } from '../pixels';
-
-type MembersSectionProps = {
-  readonly members: {
-    readonly id: string;
-    readonly firstName?: string;
-    readonly lastName?: string;
-    readonly displayName: string;
-    readonly role: string;
-    readonly avatarURL?: string;
-  }[];
-};
+import { Link, Card, Headline2, Avatar } from '../atoms';
+import { lead } from '../colors';
+import { perRem, tabletScreen } from '../pixels';
 
 const containerStyles = css({
+  margin: 0,
   padding: 0,
-  listStyle: 'none',
+  display: 'grid',
 
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-});
-
-const avatarContainer = css({
-  flexBasis: 1,
-});
-
-const detailsContainer = css({
-  paddingLeft: `${12 / perRem}em`,
-});
-
-const memberContainerStyles = css({
-  flexBasis: '50%',
-  [`@media (max-width: ${mobileScreen.width}px)`]: {
-    flexBasis: '100%',
-    flexDirection: 'column',
+  gridColumnGap: `${18 / perRem}em`,
+  gridTemplateColumns: 'min-content 1fr',
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gridTemplateColumns: 'min-content 1fr min-content 1fr',
   },
 
-  display: 'flex',
+  alignItems: 'center',
+  gridAutoRows: '1fr',
+  gridAutoFlow: 'row dense',
 });
 
+const avatarStyles = css({
+  gridRowEnd: 'span 2',
+});
+const nameStyles = css({
+  alignSelf: 'end',
+  marginTop: `${12 / perRem}em`,
+
+  fontWeight: 'bold',
+});
+const roleStyles = css({
+  gridColumn: 2,
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    'li:nth-of-type(2n) &': {
+      gridColumn: 4,
+    },
+  },
+  alignSelf: 'start',
+  marginBottom: `${24 / perRem}em`,
+
+  color: lead.rgb,
+});
+
+type MembersSectionProps = {
+  readonly members: TeamMember[];
+};
 const MembersSection: React.FC<MembersSectionProps> = ({ members }) => {
   return (
     <Card>
@@ -49,24 +54,19 @@ const MembersSection: React.FC<MembersSectionProps> = ({ members }) => {
       <ul css={containerStyles}>
         {members.map(
           ({ id, displayName, firstName, lastName, avatarURL, role }) => (
-            <li key={id} css={memberContainerStyles}>
-              <Link href={`/users/${id}`} underline={false}>
-                <div css={{ display: 'flex', alignItems: 'center' }}>
-                  <div css={avatarContainer}>
-                    <Avatar
-                      imageUrl={avatarURL}
-                      border
-                      firstName={firstName}
-                      lastName={lastName}
-                    />
-                  </div>
-                  <div css={detailsContainer}>
-                    <Paragraph primary accent="charcoal">
-                      {displayName}
-                    </Paragraph>
-                    <Paragraph accent="lead">{role}</Paragraph>
-                  </div>
+            <li key={id} css={{ display: 'contents' }}>
+              <Link href={`/users/${id}`} theme={null} display="contents">
+                <div css={avatarStyles}>
+                  <Avatar
+                    imageUrl={avatarURL}
+                    small
+                    border
+                    firstName={firstName}
+                    lastName={lastName}
+                  />
                 </div>
+                <div css={nameStyles}>{displayName}</div>
+                <div css={roleStyles}>{role}</div>
               </Link>
             </li>
           ),

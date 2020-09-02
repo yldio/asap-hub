@@ -5,56 +5,75 @@ import { render, fireEvent } from '@testing-library/react';
 import Link from '../Link';
 import { fern, paper } from '../../colors';
 
+it('renders the text in an anchor', () => {
+  const { getByText } = render(<Link href="/">text</Link>);
+  expect(getByText('text').tagName).toBe('A');
+});
+
+describe('the default theme', () => {
+  it('applies the default link color', () => {
+    const { getByRole } = render(<Link href="/">text</Link>);
+    const { color } = getComputedStyle(getByRole('link'));
+    expect(color).toBe(fern.rgb);
+  });
+
+  it('applies an underline', () => {
+    const { getByRole } = render(<Link href="/">text</Link>);
+    const { textDecoration } = getComputedStyle(getByRole('link'));
+    expect(textDecoration).toBe('underline');
+  });
+});
+
+describe('the dark theme', () => {
+  it('applies the white color', () => {
+    const { getByRole } = render(
+      <Link href="/" theme="dark">
+        text
+      </Link>,
+    );
+    const { color } = getComputedStyle(getByRole('link'));
+    expect(color).toBe(paper.rgb);
+  });
+
+  it('applies an underline', () => {
+    const { getByRole } = render(
+      <Link href="/" theme="dark">
+        text
+      </Link>,
+    );
+    const { textDecoration } = getComputedStyle(getByRole('link'));
+    expect(textDecoration).toBe('underline');
+  });
+});
+
+describe('no theme', () => {
+  it('applies no color', () => {
+    const { getByRole } = render(
+      <Link href="/" theme={null}>
+        text
+      </Link>,
+    );
+    const { color } = getComputedStyle(getByRole('link'));
+    expect(color).toBe('');
+  });
+
+  it('does not apply an underline', () => {
+    const { getByRole } = render(
+      <Link href="/" theme={null}>
+        text
+      </Link>,
+    );
+    const { textDecoration } = getComputedStyle(getByRole('link'));
+    expect(textDecoration).toBe('none');
+  });
+});
+
 describe.each`
   description                         | href                                | wrapper
   ${'external link'}                  | ${'https://parkinsonsroadmap.org/'} | ${undefined}
   ${'internal link with a router'}    | ${'/'}                              | ${StaticRouter}
   ${'internal link without a router'} | ${'/'}                              | ${undefined}
 `('for an $description to $href', ({ href, wrapper }) => {
-  it('renders the text in an anchor', () => {
-    const { getByText } = render(<Link href={href}>text</Link>, {
-      wrapper,
-    });
-    expect(getByText('text').tagName).toBe('A');
-  });
-
-  it('applies the default link color', () => {
-    const { getByRole } = render(<Link href={href}>text</Link>, {
-      wrapper,
-    });
-    const { color } = getComputedStyle(getByRole('link'));
-    expect(color).toBe(fern.rgb);
-  });
-
-  it('respects the white prop', () => {
-    const { getByRole } = render(
-      <Link white href={href}>
-        text
-      </Link>,
-      { wrapper },
-    );
-    const { color } = getComputedStyle(getByRole('link'));
-    expect(color).toBe(paper.rgb);
-  });
-
-  it('respects the underline prop', () => {
-    const { getByRole, rerender } = render(<Link href={href}>text</Link>, {
-      wrapper,
-    });
-
-    expect(getComputedStyle(getByRole('link')).textDecoration).toEqual(
-      'underline',
-    );
-
-    rerender(
-      <Link underline={false} href={href}>
-        text
-      </Link>,
-    );
-
-    expect(getComputedStyle(getByRole('link')).textDecoration).toEqual('none');
-  });
-
   it('applies the href to the anchor', () => {
     const { getByRole } = render(<Link href={href}>text</Link>, {
       wrapper,

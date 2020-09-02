@@ -67,6 +67,9 @@ const imageStyle = css({
 });
 
 const initialsStyle = css(headlineStyles[3]);
+const smallInitialsStyle = css({
+  fontWeight: 'bold',
+});
 
 type ButtonProps = {
   readonly imageUrl?: string;
@@ -108,7 +111,7 @@ const Avatar: React.FC<ButtonProps> = ({
         <p
           css={[
             circleStyle,
-            initialsStyle,
+            small ? smallInitialsStyle : initialsStyle,
             colors[hash(initials) % colors.length],
           ]}
         >

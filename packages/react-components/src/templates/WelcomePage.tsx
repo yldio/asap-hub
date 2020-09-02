@@ -110,12 +110,12 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
       </main>
       <ul css={linksContainerStyles}>
         <li css={linkItemStyles}>
-          <Link white href="/terms-and-conditions">
+          <Link href="/terms-and-conditions" theme="dark">
             Terms and conditions
           </Link>
         </li>
         <li css={linkItemStyles}>
-          <Link white href="/privacy-policy">
+          <Link href="/privacy-policy" theme="dark">
             Privacy policy
           </Link>
         </li>

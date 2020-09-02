@@ -35,7 +35,7 @@ services:
       - ./dev/squidex/assets:/app/Assets
     restart: unless-stopped
 
-  setup_cms:
+  setup_squidex:
     build: .
     volumes:
       - ./dev/fixtures:/dev/fixtures
@@ -43,4 +43,3 @@ services:
     depends_on:
       - mongo
       - squidex
-    command: ./setup-cms.sh

@@ -1,3 +1,3 @@
 *
-!dev/setup-cms.sh
+!dev/setup-squidex.sh
 !dev/wait-for-url.sh

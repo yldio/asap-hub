@@ -1,6 +1,7 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
-include: 'apps/react-templates/.gitlab-ci.yml'
-include: 'ci/.gitlab-ci.squidex.yml'
+include:
+  - 'apps/react-templates/.gitlab-ci.yml'
+  - 'ci/.gitlab-ci.squidex.yml'
 
 .tmpl:master: &tmpl_master
   rules: &tmpl_master_rules
@@ -146,11 +147,10 @@ deploy:sls:production:
       when: manual
 
 deploy:sls:dev:
-  <<: *tmpl_master
+  <<: *tmpl_branch
   <<: *tmpl_deploy
   before_script:
-    - cd apps/frontend
-    - yarn build
+    - (cd apps/frontend && yarn build)
   environment:
     name: dev
     url: https://$APP_HOSTNAME

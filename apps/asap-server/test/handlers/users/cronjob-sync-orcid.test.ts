@@ -21,8 +21,8 @@ describe('Cronjob - Sync Users ORCID', () => {
 
   beforeAll(() => {
     // Add recently synced user
-    fetchUsersResponse[1].data.orcidLastSyncDate = new Date().toISOString() 
-  })
+    fetchUsersResponse[1]!.data.orcidLastSyncDate!.iv = new Date().toISOString();
+  });
 
   test('finds users without orcid last modified date', async () => {
     nock('https://pub.orcid.org')

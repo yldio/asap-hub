@@ -30,6 +30,9 @@ export default function create(): typeof Got {
 
   return Got.extend({
     prefixUrl: `${squidex.baseUrl}/api/content/${squidex.appName}/`,
+    headers: {
+      'content-type': 'application/json',
+    },
     hooks: {
       beforeRequest: [
         async (options): Promise<void> => {

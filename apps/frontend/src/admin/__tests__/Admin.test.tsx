@@ -1,7 +1,12 @@
 import React from 'react';
 import nock from 'nock';
 import { ClientRequest } from 'http';
-import { render, RenderResult, waitFor } from '@testing-library/react';
+import {
+  render,
+  RenderResult,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Admin from '../Admin';
@@ -52,6 +57,7 @@ describe('when submitting the form', () => {
     });
     afterEach(async () => {
       await waitFor(() => nock.isDone());
+      await waitForElementToBeRemoved(result.getByText(/inviting/i));
     });
 
     beforeEach(() => {
@@ -77,15 +83,15 @@ describe('when submitting the form', () => {
     const { getByText, unmount } = result;
     let req!: ClientRequest;
 
-    nockInterceptor.delay(1).reply(201, function handleRequest(url, body, cb) {
+    nockInterceptor.reply(201, function handleRequest(url, body, cb) {
       req = this.req;
-      cb(null, {});
     });
     userEvent.click(getByText(/invite/i, { selector: 'button *' }));
 
+    await waitFor(() => expect(req).toBeDefined());
     expect(req.aborted).toBe(undefined);
     unmount();
-    await waitFor(() => expect(req.aborted).toEqual(expect.any(Number)));
+    await waitFor(() => expect(req.aborted).toBe(true));
   });
 
   describe('and the invitation succeeds', () => {

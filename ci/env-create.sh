@@ -1,17 +1,8 @@
 #!/usr/bin/env sh
 
-CURPATH=`dirname "$0"`
-
-ENV=${CI_EXTERNAL_PULL_REQUEST_IID:-${CI_COMMIT_REF_SLUG:-"dev"}}
 HOSTNAME=${BASE_HOSTNAME:-"hub.asap.science"}
-
-APP_HOSTNAME=$HOSTNAME
-API_HOSTNAME="api.$HOSTNAME"
-
-if [ $ENV != "master" ]; then
-    API_HOSTNAME="api-${ENV}.${APP_HOSTNAME}"
-    APP_HOSTNAME="${ENV}.${APP_HOSTNAME}"
+if [ ! -z $CI_EXTERNAL_PULL_REQUEST_IID ]; then
+    ENV=${CI_EXTERNAL_PULL_REQUEST_IID}
+    echo API_HOSTNAME="api-${ENV}.${HOSTNAME}"
+    echo APP_HOSTNAME="${ENV}.${HOSTNAME}"
 fi
-
-echo "APP_HOSTNAME=${APP_HOSTNAME}"
-echo "API_HOSTNAME=${API_HOSTNAME}"

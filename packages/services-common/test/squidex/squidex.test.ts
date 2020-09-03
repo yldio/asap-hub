@@ -1,7 +1,7 @@
 import nock from 'nock';
 import encode from 'jwt-encode';
 import { Squidex } from '../../src/squidex';
-import { cms } from '../../src/config';
+import { cms as squidex } from '../../src/config';
 
 interface Content {
   id: string;
@@ -14,12 +14,12 @@ interface Content {
 
 const collection = 'contents';
 const identity = () => {
-  return nock(cms.baseUrl)
+  return nock(squidex.baseUrl)
     .post(
       '/identity-server/connect/token',
       `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-        cms.clientId,
-      )}&client_secret=${cms.clientSecret}`,
+        squidex.clientId,
+      )}&client_secret=${squidex.clientSecret}`,
     )
     .reply(200, {
       access_token: encode(
@@ -47,7 +47,7 @@ describe('squidex wrapper', () => {
   it('returns a list of documents', async () => {
     identity()
       .get(
-        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 30,
         })}`,
       )
@@ -82,7 +82,7 @@ describe('squidex wrapper', () => {
   it("returns an empty list of documents if collection doesn't exist", async () => {
     identity()
       .get(
-        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 30,
         })}`,
       )
@@ -97,7 +97,7 @@ describe('squidex wrapper', () => {
   it('propagates squidex error when fetching a collection', async () => {
     identity()
       .get(
-        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 30,
         })}`,
       )
@@ -109,7 +109,9 @@ describe('squidex wrapper', () => {
   });
 
   it("return 404 when document doesn't exist", async () => {
-    identity().get(`/api/content/${cms.appName}/${collection}/42`).reply(404);
+    identity()
+      .get(`/api/content/${squidex.appName}/${collection}/42`)
+      .reply(404);
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('Not Found');
@@ -117,7 +119,9 @@ describe('squidex wrapper', () => {
   });
 
   it('propagates squidex error when fetching a document', async () => {
-    identity().get(`/api/content/${cms.appName}/${collection}/42`).reply(500);
+    identity()
+      .get(`/api/content/${squidex.appName}/${collection}/42`)
+      .reply(500);
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('squidex');
@@ -126,7 +130,7 @@ describe('squidex wrapper', () => {
 
   it('returns a single document using id', async () => {
     identity()
-      .get(`/api/content/${cms.appName}/${collection}/42`)
+      .get(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(200, {
         id: '42',
         data: {
@@ -152,7 +156,7 @@ describe('squidex wrapper', () => {
   it('returns a single document based on filter', async () => {
     identity()
       .get(
-        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 1,
           filter: {
             path: 'data.string.iv',
@@ -197,7 +201,7 @@ describe('squidex wrapper', () => {
   it('returns not found if no document exists based on filter', async () => {
     identity()
       .get(
-        `/api/content/${cms.appName}/${collection}?q=${JSON.stringify({
+        `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 1,
           filter: {
             path: 'data.string.iv',
@@ -225,7 +229,7 @@ describe('squidex wrapper', () => {
 
   it('creates a specific document as published', async () => {
     identity()
-      .post(`/api/content/${cms.appName}/${collection}?publish=true`, {
+      .post(`/api/content/${squidex.appName}/${collection}?publish=true`, {
         string: {
           iv: 'value',
         },
@@ -260,7 +264,7 @@ describe('squidex wrapper', () => {
 
   it('creates a specific document as draft', async () => {
     identity()
-      .post(`/api/content/${cms.appName}/${collection}?publish=false`, {
+      .post(`/api/content/${squidex.appName}/${collection}?publish=false`, {
         string: {
           iv: 'value',
         },
@@ -298,7 +302,7 @@ describe('squidex wrapper', () => {
 
   it('deletes a specific document', async () => {
     identity()
-      .delete(`/api/content/${cms.appName}/${collection}/42`)
+      .delete(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(204);
 
     const client = new Squidex<Content>(collection);

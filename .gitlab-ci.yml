@@ -1,5 +1,7 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
-include: 'apps/react-templates/.gitlab-ci.yml'
+include:
+  - 'apps/react-templates/.gitlab-ci.yml'
+  - 'ci/.gitlab-ci.squidex.yml'
 
 .tmpl:master: &tmpl_master
   rules: &tmpl_master_rules
@@ -31,19 +33,18 @@ workflow:
 
 variables:
   BASE_HOSTNAME: hub.asap.science
-  SQUIDEX_SYNC_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
 
 stages:
   - setup
   - build
   - test
+  - prepare
   - deploy
 
 # stage setup
 
 setup:
   script:
-    # stage is the number of the pr or the name of the branch
     - ci/env-create.sh > deploy.env
   artifacts:
     reports:
@@ -75,22 +76,6 @@ build:native-deps:
   needs:
     - setup
   stage: build
-
-setup:squidex-image:
-  image: docker:19.03.12
-  stage: setup
-  services:
-    - docker:19.03.12-dind
-  script:
-    - cd dev
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $SQUIDEX_SYNC_DOCKER_IMAGE .
-    - docker push $SQUIDEX_SYNC_DOCKER_IMAGE
-  only:
-    refs:
-      - master
-    changes:
-      - dev/Dockerfile
 
 # stage test
 
@@ -140,24 +125,8 @@ test:
   variables: &tmpl_deploy_variables
     NODE_ENV: production
   needs:
-    - setup
     - build
     - build:native-deps
-
-deploy:sls:master:
-  <<: *tmpl_master
-  <<: *tmpl_deploy
-  environment:
-    name: production
-    url: https://$APP_HOSTNAME
-  variables:
-    <<: *tmpl_master_variables
-    <<: *tmpl_deploy_variables
-  needs:
-    - setup
-    - build
-    - build:native-deps
-    - test
 
 deploy:sls:branch:
   <<: *tmpl_branch
@@ -166,10 +135,14 @@ deploy:sls:branch:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
     url: https://$APP_HOSTNAME
     on_stop: deploy:sls:branch_remove
-    auto_stop_in: 1 week
+    auto_stop_in: 3 days
   variables:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables
+  needs:
+    - setup
+    - build
+    - build:native-deps
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove
@@ -183,15 +156,37 @@ deploy:sls:branch_remove:
     - yarn sls remove --verbose
   stage: deploy
 
-deploy:sync-squidex:
+deploy:sls:dev:
   <<: *tmpl_master
-  image: $SQUIDEX_SYNC_DOCKER_IMAGE
-  script:
-    - sq config add asap-hub $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
-    - sq config use asap-hub
-    - sq sync in dev/squidex
-  stage: deploy
+  <<: *tmpl_deploy
+  before_script:
+    - (cd apps/frontend && yarn build)
+  environment:
+    name: dev
+    url: https://$APP_HOSTNAME
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
+    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
+    SLS_STAGE: 'dev'
+  needs:
+    - build
+    - build:native-deps
+    - test
+
+deploy:sls:production:
+  <<: *tmpl_master
+  <<: *tmpl_deploy
+  environment:
+    name: production
+    url: https://$APP_HOSTNAME
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
+  needs:
+    - build
+    - build:native-deps
+    - test
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
-      changes:
-        - dev/squidex/**/*
+      when: manual

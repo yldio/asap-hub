@@ -9,6 +9,7 @@ const {
   SQUIDEX_BASE_URL,
   SQUIDEX_CLIENT_ID,
   SQUIDEX_CLIENT_SECRET,
+  SQUIDEX_SHARED_SECRET,
 } = process.env;
 
 export const globalToken = GLOBAL_TOKEN || 'change_me_when_we_have_admins';
@@ -22,3 +23,5 @@ export const cms = {
 };
 export const sesEndpoint = AWS_SES_ENDPOINT;
 export const auth0SharedSecret = AUTH0_SHARED_SECRET || 'auth0_shared_secret';
+export const squidexSharedSecret =
+  SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';

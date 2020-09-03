@@ -4,6 +4,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { Handler } from '../../utils/types';
 import Users from '../../controllers/users';
 import { CMSUser } from '../../entities/user';
+import validateRequest from '../../utils/validate-squidex-request';
 
 export interface WebHookPayload {
   type: string;
@@ -12,6 +13,8 @@ export interface WebHookPayload {
 
 export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
+    await validateRequest(request);
+
     const bodySchema = Joi.object({
       type: Joi.string().required(),
       payload: Joi.object({

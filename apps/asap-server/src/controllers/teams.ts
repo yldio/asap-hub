@@ -7,7 +7,7 @@ import { CMS } from '../cms';
 import { CMSTeam } from '../entities/team';
 import { CMSUser } from '../entities/user';
 
-function transform(team: CMSTeam, members?: TeamMember[]): TeamResponse {
+function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
   return {
     id: team.id,
     displayName: team.data.displayName.iv,
@@ -17,8 +17,21 @@ function transform(team: CMSTeam, members?: TeamMember[]): TeamResponse {
     proposalURL: team.data.proposalURL?.iv,
     skills: team.data.skills?.iv || [],
     members,
-  } as TeamResponse;
+    lastModifiedDate: team.lastModified,
+  };
 }
+
+const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
+  users.map((user) => ({
+    id: user.id,
+    firstName: user.data.firstName?.iv,
+    lastName: user.data.lastName?.iv,
+    displayName: user.data.displayName.iv,
+    role: get(user, 'data.teams.iv', []).find(
+      (t: { id: string[] }) => t.id[0] === teamId,
+    ).role,
+    avatarURL: user.data.avatarURL?.iv,
+  }));
 
 export default class Teams {
   cms: CMS;
@@ -29,7 +42,13 @@ export default class Teams {
 
   async fetch(): Promise<TeamResponse[]> {
     const teams = await this.cms.teams.fetch();
-    return teams.length ? teams.map((team) => transform(team)) : [];
+    const teamUsers = await Promise.all(
+      teams.map((team) => this.cms.users.fetchByTeam(team.id)),
+    );
+
+    return teams.map((team, index) =>
+      transformTeam(team, transformUser(teamUsers[index], team.id)),
+    );
   }
 
   async fetchById(teamId: string): Promise<TeamResponse> {
@@ -39,22 +58,6 @@ export default class Teams {
     }
 
     const users: CMSUser[] = await this.cms.users.fetchByTeam(teamId);
-    let teamUsers: TeamMember[] = [];
-
-    /* istanbul ignore else */
-    if (users.length) {
-      teamUsers = users.map((user) => ({
-        id: user.id,
-        firstName: user.data.firstName?.iv,
-        lastName: user.data.lastName?.iv,
-        displayName: user.data.displayName.iv,
-        role: get(user, 'data.teams.iv', []).find(
-          (t: { id: string[] }) => t.id[0] === teamId,
-        ).role,
-        avatarURL: user.data.avatarURL?.iv,
-      }));
-    }
-
-    return transform(team, teamUsers);
+    return transformTeam(team, transformUser(users, team.id));
   }
 }

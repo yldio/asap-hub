@@ -1,4 +1,3 @@
-import { createLocation } from 'history';
 import type { WebAuth, AuthOptions, Auth0Error } from 'auth0-js';
 
 import { authorizeWithSso, authorizeWithEmailPassword } from '../web-auth';
@@ -52,7 +51,7 @@ describe('authorizeWithSso', () => {
 
   it('redirects, specifying the connection and current query params', async () => {
     authorizeWithSso(
-      createLocation('/login?response_type=code'),
+      new URL('/login?response_type=code', globalThis.location.href),
       'google-oauth2',
     );
     expect(setLocation).toHaveBeenCalled();
@@ -71,7 +70,7 @@ describe('authorizeWithEmailPassword', () => {
   it('logs in with the credentials and current query params', async () => {
     mockLogin.mockImplementation((options, cb) => cb(null, {}));
     await authorizeWithEmailPassword(
-      createLocation('/login?response_type=code'),
+      new URL('/login?response_type=code', globalThis.location.href),
       'john.doe@example.com',
       'PW',
       false,
@@ -91,7 +90,10 @@ describe('authorizeWithEmailPassword', () => {
       mockLogin.mockImplementation((options, cb) => cb(null, {}));
 
       await authorizeWithEmailPassword(
-        createLocation('/login?response_type=code&screen_hint=signup'),
+        new URL(
+          '/login?response_type=code&screen_hint=signup',
+          globalThis.location.href,
+        ),
         'john.doe@example.com',
         'PW',
         true,
@@ -111,7 +113,10 @@ describe('authorizeWithEmailPassword', () => {
       mockLogin.mockImplementation((options, cb) => cb(null, {}));
 
       await authorizeWithEmailPassword(
-        createLocation('/login?response_type=code&screen_hint=signup'),
+        new URL(
+          '/login?response_type=code&screen_hint=signup',
+          globalThis.location.href,
+        ),
         'john.doe@example.com',
         'PW',
         true,
@@ -131,7 +136,10 @@ describe('authorizeWithEmailPassword', () => {
 
       await expect(
         authorizeWithEmailPassword(
-          createLocation('/login?response_type=code&screen_hint=signup'),
+          new URL(
+            '/login?response_type=code&screen_hint=signup',
+            globalThis.location.href,
+          ),
           'john.doe@example.com',
           'PW',
           true,

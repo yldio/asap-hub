@@ -19,17 +19,17 @@
     "@hapi/joi": "^17.1.1",
     "apr-intercept": "^3.0.4",
     "aws-lambda": "^1.0.6",
-    "aws-sdk": "^2.704.0",
-    "chance": "^1.1.5",
-    "csv-parse": "^4.11.1",
+    "aws-sdk": "^2.745.0",
+    "chance": "^1.1.7",
+    "csv-parse": "^4.12.0",
     "debug": "^4.1.1",
-    "got": "^11.3.0",
+    "got": "^11.6.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "lodash.get": "^4.4.2",
-    "nock": "^12.0.3",
+    "nock": "^13.0.4",
     "p-limit": "^3.0.2",
-    "uuid": "^8.1.0"
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@types/apr-intercept": "workspace:@types/apr-intercept",

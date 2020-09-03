@@ -2,7 +2,6 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { StaticRouter } from 'react-router-dom';
-import { createLocation } from 'history';
 
 import Login from '../Login';
 import {
@@ -25,7 +24,7 @@ beforeEach(() => {
 
 it('renders a signin form', () => {
   const { getByText } = render(
-    <StaticRouter location={createLocation('/login?response_type=code')}>
+    <StaticRouter location="/login?response_type=code">
       <Login />
     </StaticRouter>,
   );
@@ -34,9 +33,7 @@ it('renders a signin form', () => {
 
 it('renders the form in signup mode', () => {
   const { getByText } = render(
-    <StaticRouter
-      location={createLocation('/login?response_type=code&screen_hint=signup')}
-    >
+    <StaticRouter location="/login?response_type=code&screen_hint=signup">
       <Login />
     </StaticRouter>,
   );
@@ -44,9 +41,8 @@ it('renders the form in signup mode', () => {
 });
 
 it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
-  const location = createLocation('/login?response_type=code');
   const { getByText } = render(
-    <StaticRouter location={location}>
+    <StaticRouter location="/login?response_type=code">
       <Login />
     </StaticRouter>,
   );
@@ -57,14 +53,13 @@ it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
   expect(authorizeWithSso).toHaveBeenCalledTimes(1);
 
   const [{ search }, connection] = mockAuthorizeWithSso.mock.calls[0];
-  expect(search).toBe(location.search);
+  expect(new URLSearchParams(search).get('response_type')).toBe('code');
   expect(connection).toMatch(new RegExp(provider, 'i'));
 });
 
 it('initiates a signin with email and password', async () => {
-  const location = createLocation('/login?response_type=code');
   const { getByText, getByLabelText } = render(
-    <StaticRouter location={location}>
+    <StaticRouter location="/login?response_type=code">
       <Login />
     </StaticRouter>,
   );
@@ -77,7 +72,9 @@ it('initiates a signin with email and password', async () => {
 
   userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
-    expect.objectContaining({ search: location.search }),
+    expect.objectContaining({
+      search: expect.stringContaining('response_type=code'),
+    }),
     'john.doe@example.com',
     'PW',
     false,
@@ -85,11 +82,8 @@ it('initiates a signin with email and password', async () => {
 });
 
 it('initiates a signup with email and password', async () => {
-  const location = createLocation(
-    '/login?response_type=code&screen_hint=signup',
-  );
   const { getByText, getByLabelText } = render(
-    <StaticRouter location={location}>
+    <StaticRouter location="/login?response_type=code&screen_hint=signup">
       <Login />
     </StaticRouter>,
   );
@@ -102,7 +96,9 @@ it('initiates a signup with email and password', async () => {
 
   userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
-    expect.objectContaining({ search: location.search }),
+    expect.objectContaining({
+      search: expect.stringContaining('response_type=code&screen_hint=signup'),
+    }),
     'john.doe@example.com',
     'PW',
     true,
@@ -112,11 +108,8 @@ it('initiates a signup with email and password', async () => {
 it.each(['error_description', 'errorDescription', 'description'])(
   'shows an Auth0 error with its %s',
   async (errorProperty) => {
-    const location = createLocation(
-      '/login?response_type=code&screen_hint=signup',
-    );
     const { getByText, getByLabelText, findAllByText } = render(
-      <StaticRouter location={location}>
+      <StaticRouter location="/login?response_type=code&screen_hint=signup">
         <Login />
       </StaticRouter>,
     );
@@ -140,11 +133,8 @@ it.each(['error_description', 'errorDescription', 'description'])(
 );
 
 it('shows a generic authentication error', async () => {
-  const location = createLocation(
-    '/login?response_type=code&screen_hint=signup',
-  );
   const { getByText, getByLabelText, findAllByText } = render(
-    <StaticRouter location={location}>
+    <StaticRouter location="/login?response_type=code&screen_hint=signup">
       <Login />
     </StaticRouter>,
   );
@@ -163,11 +153,8 @@ it('shows a generic authentication error', async () => {
 });
 
 it('hides the authentication error message again when changing the credentials', async () => {
-  const location = createLocation(
-    '/login?response_type=code&screen_hint=signup',
-  );
   const { getByText, getByLabelText, queryByText, findAllByText } = render(
-    <StaticRouter location={location}>
+    <StaticRouter location="/login?response_type=code&screen_hint=signup">
       <Login />
     </StaticRouter>,
   );

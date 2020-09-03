@@ -16,9 +16,9 @@
     "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/react-components": "workspace:packages/react-components",
     "@babel/runtime-corejs3": "^7.9.6",
-    "auth0-js": "^9.13.2",
+    "auth0-js": "^9.13.4",
     "camelcase": "^6.0.0",
-    "history": "^4.10.1",
+    "history": "^4",
     "pify": "^5.0.0",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
@@ -45,7 +45,7 @@
     "cross-env": "^7.0.2",
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
-    "jsdom": "^16.2.2",
+    "jsdom": "^16.4.0",
     "react-scripts": "patch:react-scripts@3.4.3#./patches/react-scripts.patch",
     "typescript": "~3.9.7"
   }

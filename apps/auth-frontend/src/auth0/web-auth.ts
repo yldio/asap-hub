@@ -4,7 +4,7 @@ import camelCase from 'camelcase';
 import { config } from '@asap-hub/auth';
 import { Location } from 'history';
 
-const getOptionsFromLocation = (location: Location) =>
+const getOptionsFromLocation = (location: Location | URL) =>
   Object.fromEntries(
     [...new URLSearchParams(location.search).entries()].map(([key, value]) => [
       camelCase(key),
@@ -16,7 +16,7 @@ const webAuth = new WebAuth(config);
 
 type SsoConnection = 'google-oauth2' | 'ORCID';
 export const authorizeWithSso = (
-  location: Location,
+  location: Location | URL,
   connection: SsoConnection,
 ) =>
   webAuth.authorize({
@@ -25,7 +25,7 @@ export const authorizeWithSso = (
   });
 
 export const authorizeWithEmailPassword = async (
-  location: Location,
+  location: Location | URL,
   email: string,
   password: string,
   signup: boolean,

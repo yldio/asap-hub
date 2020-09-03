@@ -77,8 +77,7 @@ describe('the get user by code request', () => {
     nock.cleanAll();
     nock(API_BASE_URL).get('/users/invites/42').reply(403, {});
 
-    const { getByText } = await renderWelcome();
-    await waitFor(() => nock.isDone());
-    expect(getByText('root route')).toBeVisible();
+    const { findByText } = await renderWelcome();
+    expect(await findByText('root route')).toBeVisible();
   });
 });

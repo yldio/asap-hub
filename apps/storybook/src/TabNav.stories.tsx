@@ -1,7 +1,6 @@
 import React from 'react';
 import { TabNav, TabLink } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
-import { createLocation } from 'history';
 import { select } from '@storybook/addon-knobs';
 
 export default {
@@ -15,7 +14,7 @@ export const Normal = () => {
     'overview',
   )}`;
   return (
-    <StaticRouter key={path} location={createLocation(path)}>
+    <StaticRouter key={path} location={path}>
       <TabNav>
         <TabLink href="/overview">Overview</TabLink>
         <TabLink href="/details">Details</TabLink>

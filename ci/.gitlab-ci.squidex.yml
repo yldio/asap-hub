@@ -21,6 +21,8 @@ setup:squidex-image:
 
 .tmpl:sync: &tmpl_sync
   image: $SQUIDEX_SYNC_DOCKER_IMAGE
+  before_script:
+    - ./ci/config-squidex-rules.sh
   script:
     - sq config add asap-hub $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
     - sq config use asap-hub

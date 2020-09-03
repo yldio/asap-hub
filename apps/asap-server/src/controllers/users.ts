@@ -17,7 +17,7 @@ export const transform = (user: CMSUser): UserResponse => {
   return JSON.parse(
     JSON.stringify({
       id: user.id,
-      lastModifiedDate: user.lastModified,
+      lastModifiedDate: user.data.lastModifiedDate?.iv,
       displayName: user.data.displayName.iv,
       email: user.data.email.iv,
       firstName: user.data.firstName?.iv,
@@ -30,6 +30,7 @@ export const transform = (user: CMSUser): UserResponse => {
         user.data.teams?.iv.map(({ id, ...t }) => ({ id: id[0], ...t })) || [],
       location: user.data.location?.iv,
       orcid: user.data.orcid?.iv,
+      orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
       orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
       orcidWorks: user.data.orcidWorks?.iv,
       skills: user.data.skills?.iv || [],
@@ -136,12 +137,21 @@ export default class Users {
     return transform(await this.cms.users.connectByCode(user, userId));
   }
 
-  async syncOrcidProfile(id: string): Promise<UserResponse> {
-    const [notFound, user] = await Intercept(this.cms.users.fetchById(id));
+  async syncOrcidProfile(
+    id: string,
+    cachedUser: CMSUser | undefined = undefined,
+  ): Promise<UserResponse> {
+    let fetchedUser;
+    if (!cachedUser) {
+      let notFound;
+      [notFound, fetchedUser] = await Intercept(this.cms.users.fetchById(id));
 
-    if (notFound) {
-      throw Boom.notFound();
+      if (notFound) {
+        throw Boom.notFound();
+      }
     }
+
+    const user = cachedUser || (fetchedUser as CMSUser);
 
     const [error, res] = await Intercept(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -6,8 +6,6 @@ import { config as authConfig } from '@asap-hub/auth';
 import { handler } from '../../../src/handlers/content/fetch-by-slug';
 import { apiGatewayEvent } from '../../helpers/events';
 
-jest.mock('@asap-hub/auth');
-
 const chance = new Chance();
 
 describe('GET /content/{content}/{slug}', () => {

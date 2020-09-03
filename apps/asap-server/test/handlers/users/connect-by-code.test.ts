@@ -8,8 +8,6 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/create-user';
 import { CMS } from '../../../src/cms';
 
-jest.mock('@asap-hub/auth');
-
 const chance = new Chance();
 const cms = new CMS();
 

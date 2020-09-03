@@ -7,6 +7,7 @@ import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { CMSTeam } from '../entities/team';
 
 interface CreateUserData {
+  lastModifiedDate: { iv: string };
   displayName: { iv: string };
   email: { iv: string };
   firstName: { iv?: string };
@@ -27,6 +28,7 @@ export default class Users extends Base {
 
   create(user: Invitee, options: { raw?: boolean } = {}): Promise<CMSUser> {
     const json: CreateUserData = {
+      lastModifiedDate: { iv: `${new Date().toISOString()}` },
       displayName: { iv: user.displayName },
       email: { iv: user.email },
       firstName: { iv: user.firstName },
@@ -99,6 +101,30 @@ export default class Users extends Base {
     return items;
   }
 
+  async fetchWithOrcidSorted(take = 30): Promise<CMSUser[]> {
+    const { items } = await this.client
+      .get('users', {
+        searchParams: {
+          q: JSON.stringify({
+            take,
+            filter: {
+              path: 'data.orcid.iv',
+              op: 'contains',
+              value: '-',
+            },
+            sort: [
+              {
+                path: 'data.orcidLastSyncDate.iv',
+                order: 'ascending',
+              },
+            ],
+          }),
+        },
+      })
+      .json();
+    return items;
+  }
+
   addToTeam(user: CMSUser, role: string, team: CMSTeam): Promise<CMSUser> {
     const teams = get(user, 'data.teams.iv', []).concat([
       {
@@ -143,6 +169,7 @@ export default class Users extends Base {
       .patch<CMSUser>(`users/${user.id}`, {
         json: {
           email: { iv: user.data.email.iv },
+          orcidLastSyncDate: { iv: `${new Date().toISOString()}` },
           orcidLastModifiedDate: { iv: lastModifiedDate },
           orcidWorks: { iv: works },
         },

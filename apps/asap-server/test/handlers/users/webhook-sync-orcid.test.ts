@@ -4,16 +4,14 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import {
   handler,
   WebHookPayload,
-} from '../../../src/handlers/users/sync-orcid';
+} from '../../../src/handlers/users/webhook-sync-orcid';
 import { apiGatewayEvent } from '../../helpers/events';
 import { TestUserResponse, createRandomUser } from '../../helpers/create-user';
 import orcidWorksResponse from '../../fixtures/fetch-orcid-works-0000-0002-9079-593X.json';
 import createPayloadTemplate from '../../fixtures/users-create-squidex-webhook.json';
 import updatePayloadTemplate from '../../fixtures/users-update-squidex-webhook.json';
 
-jest.mock('@asap-hub/auth');
-
-describe('POST /webhook/users', () => {
+describe('POST /webhook/users/orcid', () => {
   const orcid = '0000-0002-9079-593X';
   let user: TestUserResponse;
   let createPayload: WebHookPayload = createPayloadTemplate;

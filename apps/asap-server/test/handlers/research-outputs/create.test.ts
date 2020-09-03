@@ -8,8 +8,6 @@ import { handler } from '../../../src/handlers/research-outputs/create';
 import { createRandomUser } from '../../helpers/create-user';
 import { apiGatewayEvent } from '../../helpers/events';
 
-jest.mock('@asap-hub/auth');
-
 const chance = new Chance();
 
 describe('GET /users/{id}/research-outputs', () => {

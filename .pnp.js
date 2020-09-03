@@ -8324,6 +8324,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-decode", "npm:2.2.0"],
             ["lodash.get", "npm:4.4.2"],
             ["nock", "npm:12.0.3"],
+            ["p-limit", "npm:3.0.2"],
             ["uuid", "npm:8.1.0"]
           ],
           "linkType": "SOFT",
@@ -30857,6 +30858,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/p-limit-npm-3.0.1-dabadbec51-54c5bf187d.zip/node_modules/p-limit/",
           "packageDependencies": [
             ["p-limit", "npm:3.0.1"],
+            ["p-try", "npm:2.2.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.0.2", {
+          "packageLocation": "./.yarn/cache/p-limit-npm-3.0.2-cf6c70eb96-1eb23d6ea7.zip/node_modules/p-limit/",
+          "packageDependencies": [
+            ["p-limit", "npm:3.0.2"],
             ["p-try", "npm:2.2.0"]
           ],
           "linkType": "HARD",

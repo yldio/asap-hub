@@ -4,6 +4,22 @@ import { screen } from './pixels';
 // For TypeScript to understand the extended matcher
 import 'jest-emotion';
 
+/* eslint-disable no-console */
+export const mockConsoleError = <P extends unknown[], R>(
+  fn: (...args: P) => R,
+) => {
+  return (...args: P) => {
+    const originalConsoleError = console.error;
+    console.error = jest.fn();
+    try {
+      return fn(...args);
+    } finally {
+      console.error = originalConsoleError;
+    }
+  };
+};
+/* eslint-enable no-console */
+
 export const findParentWithStyle = <P extends keyof CSSStyleDeclaration>(
   element: Element | null,
   propertyName: P,

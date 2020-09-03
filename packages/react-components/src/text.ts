@@ -1,4 +1,5 @@
 import type { Interpolation } from '@emotion/css';
+
 import { charcoal, paper } from './colors';
 import {
   perRem,
@@ -8,8 +9,28 @@ import {
   lineHeight,
 } from './pixels';
 
-type TextChild = React.ReactText | boolean | null | undefined;
+export type TextChild = React.ReactText | boolean | null | undefined;
 export type TextChildren = TextChild | ReadonlyArray<TextChild>;
+
+const isTextChild = (child: unknown): child is TextChild => {
+  return (
+    child === null ||
+    ['string', 'number', 'boolean', 'undefined'].includes(typeof child)
+  );
+};
+export const isTextChildren = (children: unknown): children is TextChildren => {
+  if (isTextChild(children)) return true;
+  if (Array.isArray(children))
+    return children.every((child) => isTextChildren(child));
+  return false;
+};
+export function assertIsTextChildren(
+  children: unknown,
+): asserts children is TextChildren {
+  if (!isTextChildren(children)) {
+    throw new Error(`Expected text children, got ${String(children)}`);
+  }
+}
 
 export const fontStyles = {
   fontFamily: "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",

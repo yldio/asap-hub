@@ -1,5 +1,5 @@
 import type { Rule } from '@asap-hub/auth0-rule';
-import { UserResponse } from '@asap-hub/model';
+import type { UserResponse } from '@asap-hub/model';
 import got from 'got';
 
 const addUserMetadata: Rule<{ invitationCode: string }> = async (

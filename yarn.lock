@@ -119,7 +119,6 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@asap-hub/model": "workspace:packages/model"
     "@babel/core": ^7.9.0
     "@babel/preset-env": ^7.9.5
     "@babel/preset-typescript": ^7.9.0

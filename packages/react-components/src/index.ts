@@ -12,17 +12,18 @@ export * from './theme';
 
 export {
   Avatar,
-  Link,
   Button,
   Caption,
   Card,
   Display,
   Divider,
+  GlobalStyles,
   Headline2,
   Headline3,
   Headline4,
+  Link,
   Paragraph,
-  GlobalStyles,
+  RichText,
   TabLink,
   Tag,
   TagLabel,
@@ -52,6 +53,7 @@ export {
 
 export {
   AdminInviteUserPage,
+  ContentPage,
   InviteUserForm,
   Layout,
   ProfileAbout,

@@ -10,7 +10,7 @@ export const useFetchOptions = ({
   } = {},
   headers: overrideHeaders,
   ...overrideOptions
-}: UseFetchOptions = {}): UseFetchOptions => {
+}: UseFetchOptions & RequestInit = {}): UseFetchOptions & RequestInit => {
   const { isAuthenticated, getTokenSilently } = useAuth0();
   const requestInterceptor: Interceptors['request'] = async ({
     options: { headers, ...options },

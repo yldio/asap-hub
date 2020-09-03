@@ -47,8 +47,8 @@
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "nock": "^12.0.3",
-    "react-scripts": "patch:react-scripts@3.4.1#./patches/react-scripts.patch",
+    "react-scripts": "patch:react-scripts@3.4.3#./patches/react-scripts.patch",
     "react-test-renderer": "^16.13.1",
-    "typescript": "~3.8.3"
+    "typescript": "~3.9.7"
   }
 }

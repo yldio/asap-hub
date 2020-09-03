@@ -17,7 +17,9 @@ const identity = () => {
   return nock(cms.baseUrl)
     .post(
       '/identity-server/connect/token',
-      `grant_type=client_credentials&scope=squidex-api&client_id=${cms.clientId}&client_secret=${cms.clientSecret}`,
+      `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
+        cms.clientId,
+      )}&client_secret=${cms.clientSecret}`,
     )
     .reply(200, {
       access_token: encode(

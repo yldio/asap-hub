@@ -27,7 +27,6 @@ const Paragraph: React.FC<ParagraphProps> = ({
   children,
   primary = false,
   accent,
-  ...props
 }) => {
   return (
     <p
@@ -37,7 +36,6 @@ const Paragraph: React.FC<ParagraphProps> = ({
         primary ? primaryStyles : secondaryStyles,
         accent ? { color: colors[accent].rgb } : null,
       ]}
-      {...props}
     >
       {children}
     </p>

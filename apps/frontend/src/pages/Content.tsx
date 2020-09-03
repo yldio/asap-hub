@@ -3,7 +3,6 @@ import { useRouteMatch } from 'react-router-dom';
 import { Layout, ContentPage, Paragraph } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
 import { usePagesByPath } from '../api';
-import './content.css';
 
 const StubPage: React.FC<{}> = () => {
   const { path } = useRouteMatch();

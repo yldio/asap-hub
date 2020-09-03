@@ -18,44 +18,46 @@ const page: PageResponse = {
   path: '/path',
 };
 
-// fetch user by code request
-beforeEach(() => {
-  nock.cleanAll();
-  nock(API_BASE_URL).get('/pages/privacy-policy').reply(200, page);
-});
+describe('content page', () => {
+  // fetch user by code request
+  beforeEach(() => {
+    nock.cleanAll();
+    nock(API_BASE_URL).get('/pages/privacy-policy').reply(200, page);
+  });
 
-const renderPage = async () => {
-  const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <MemoryRouter initialEntries={['/privacy-policy']}>
-          <Route path="/privacy-policy" component={ContentPage} />
-        </MemoryRouter>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
-  );
+  const renderPage = async () => {
+    const result = render(
+      <authTestUtils.Auth0Provider>
+        <authTestUtils.WhenReady>
+          <MemoryRouter initialEntries={['/privacy-policy']}>
+            <Route path="/privacy-policy" component={ContentPage} />
+          </MemoryRouter>
+        </authTestUtils.WhenReady>
+      </authTestUtils.Auth0Provider>,
+    );
 
-  await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
-  );
+    await waitFor(() =>
+      expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+    );
 
-  return result;
-};
+    return result;
+  };
 
-it('renders a loading indicator', async () => {
-  const { getByText } = await renderPage();
+  it('renders a loading indicator', async () => {
+    const { getByText } = await renderPage();
 
-  const loadingIndicator = getByText(/loading/i);
-  expect(loadingIndicator).toBeVisible();
+    const loadingIndicator = getByText(/loading/i);
+    expect(loadingIndicator).toBeVisible();
 
-  await waitForElementToBeRemoved(loadingIndicator);
-});
+    await waitForElementToBeRemoved(loadingIndicator);
+  });
 
-it('renders a page information', async () => {
-  const { findByText } = await renderPage();
-  expect(
-    await findByText(/heading/i, {
-      selector: 'h2',
-    }),
-  ).toBeVisible();
+  it('renders a page information', async () => {
+    const { findByText } = await renderPage();
+    expect(
+      await findByText(/heading/i, {
+        selector: 'h2',
+      }),
+    ).toBeVisible();
+  });
 });

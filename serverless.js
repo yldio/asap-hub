@@ -56,6 +56,7 @@ module.exports = {
       SQUIDEX_BASE_URL: `\${env:SQUIDEX_BASE_URL}`,
       SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,
       SQUIDEX_CLIENT_SECRET: `\${env:SQUIDEX_CLIENT_SECRET}`,
+      SQUIDEX_SHARED_SECRET: `\${env:SQUIDEX_SHARED_SECRET}`,
     },
   },
   package: {

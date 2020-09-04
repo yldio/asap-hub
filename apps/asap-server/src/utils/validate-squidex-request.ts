@@ -16,7 +16,7 @@ export default function validateRequest(request: lambda.Request): boolean {
   const computedSignature = crypto
     .createHash('SHA256')
     .update(
-      new Buffer(JSON.stringify(request.payload) + squidexSharedSecret, 'utf8'),
+      Buffer.from(JSON.stringify(request.payload) + squidexSharedSecret, 'utf8'),
     )
     .digest('base64');
 

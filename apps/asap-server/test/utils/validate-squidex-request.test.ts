@@ -44,7 +44,7 @@ describe('Verifies Squidex webhook payload signature', () => {
       validateRequest({
         method: 'post',
         headers: {
-          'X-Signature': 'invalidSignature',
+          'x-signature': 'invalidSignature',
         },
         payload: webhookPayload,
       }),
@@ -55,7 +55,7 @@ describe('Verifies Squidex webhook payload signature', () => {
     const res = validateRequest({
       method: 'post',
       headers: {
-        'X-Signature': 'JXApQoo8MlxD0FAV6+gZRMulLll9HnjDLgZN41wLEH4=',
+        'x-signature': 'JXApQoo8MlxD0FAV6+gZRMulLll9HnjDLgZN41wLEH4=',
       },
       payload: webhookPayload,
     });

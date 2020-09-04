@@ -16,7 +16,7 @@ const createSignedPayload = (payload: WebHookPayload) =>
   apiGatewayEvent({
     httpMethod: 'post',
     headers: {
-      'X-Signature': signPayload(payload),
+      'x-signature': signPayload(payload),
     },
     body: payload,
   });

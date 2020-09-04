@@ -1,6 +1,5 @@
 import type { Interpolation } from '@emotion/css';
 
-import { charcoal, paper } from './colors';
 import {
   perRem,
   vminLinearCalc,
@@ -39,9 +38,6 @@ export const fontStyles = {
 
   fontSize: `${perRem}px`,
   lineHeight: `${lineHeight / perRem}em`,
-
-  backgroundColor: paper.rgb,
-  color: charcoal.rgb,
 } as const;
 export const layoutStyles = {
   marginTop: '12px',

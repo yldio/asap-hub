@@ -4,11 +4,13 @@ import css from '@emotion/css';
 import emotionNormalize from 'emotion-normalize';
 
 import { fontStyles } from '../text';
+import { themes } from '../theme';
 
 const styles = css`
   ${emotionNormalize}
   html {
     ${fontStyles}
+    ${themes.light}
   }
   html,
   body,

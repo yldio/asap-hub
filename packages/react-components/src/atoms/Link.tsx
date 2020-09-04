@@ -45,16 +45,16 @@ const Link: React.FC<LinkProps> = ({
     theme && underlineStyles,
     { display },
   ];
-  if (useHasRouter()) {
+
+  const internal =
+    new URL(href, window.location.href).origin === window.location.origin;
+  if (useHasRouter() && internal) {
     return (
       <ReactRouterLink css={linkStyles} to={href}>
         {children}
       </ReactRouterLink>
     );
   }
-
-  const internal =
-    new URL(href, window.location.href).origin === window.location.origin;
   return (
     <a
       href={href}

@@ -70,7 +70,8 @@ describe('no theme', () => {
 
 describe.each`
   description                         | href                                | wrapper
-  ${'external link'}                  | ${'https://parkinsonsroadmap.org/'} | ${undefined}
+  ${'external link with a router'}    | ${'https://parkinsonsroadmap.org/'} | ${StaticRouter}
+  ${'external link without a router'} | ${'https://parkinsonsroadmap.org/'} | ${undefined}
   ${'internal link with a router'}    | ${'/'}                              | ${StaticRouter}
   ${'internal link without a router'} | ${'/'}                              | ${undefined}
 `('for an $description to $href', ({ href, wrapper }) => {

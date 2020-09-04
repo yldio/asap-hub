@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "12.x"
+    "node": "12.18.x"
   },
   "types": "index.d.ts"
 }

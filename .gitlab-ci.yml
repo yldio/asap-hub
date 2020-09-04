@@ -24,7 +24,7 @@ include:
     <<: *tmpl_branch_variables
     GIT_CHECKOUT: 0
 
-image: node:12
+image: node:12.18
 
 workflow:
   rules:

@@ -71,7 +71,7 @@ __metadata:
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.3
     "@types/jsdom": ^16
-    "@types/node": ^12.0.0
+    "@types/node": ^12.12.0
     "@types/pify": ^3.0.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
@@ -181,7 +181,7 @@ __metadata:
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.3
     "@types/nock": ^11.1.0
-    "@types/node": ^12.0.0
+    "@types/node": ^12.12.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
     "@types/react-router-dom": ^5.1.5
@@ -4874,10 +4874,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^12.0.0":
-  version: 12.12.35
-  resolution: "@types/node@npm:12.12.35"
-  checksum: ecd9d3a49ff8ab51b343b7d75c222c9db6255266e9c9be6076c8c1b27581b6d36b9a02eb8c979d52ee0f8cef78525f5d718efb409c8a6be2f4cd141970232c04
+"@types/node@npm:^12.12.0":
+  version: 12.12.55
+  resolution: "@types/node@npm:12.12.55"
+  checksum: 2ebf7e2ae6726975f96b27f17ce666b61478862c95e8b35f3e891582e4230e63ddc3c369dcb9625776a51359ee14ba6004222908af7720f3356311a302d4fbdb
   languageName: node
   linkType: hard
 

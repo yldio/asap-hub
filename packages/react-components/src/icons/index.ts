@@ -1,5 +1,6 @@
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';
+export { default as filterIcon } from './filter-icon';
 export { default as googleIcon } from './google';
 export { default as googleSigninLightNormalIcon } from './google-signin-light-normal';
 export { default as hidePasswordIcon } from './hide-password';

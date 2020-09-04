@@ -63,6 +63,8 @@ export {
   InviteUserForm,
   BasicLayout,
   Layout,
+  NetworkListPage,
+  NetworkPageHeader,
   ProfileAbout,
   ProfileHeader,
   ProfilePage,

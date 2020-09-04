@@ -5,9 +5,9 @@ import { squidexSharedSecret } from '../config';
 
 export default function validateRequest(request: lambda.Request): boolean {
   const headers = request.headers as {
-    'X-Signature': string;
+    'x-signature': string;
   };
-  const signature = headers['X-Signature'];
+  const signature = headers['x-signature'];
 
   if (!signature) {
     throw Boom.unauthorized();

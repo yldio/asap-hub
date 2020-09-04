@@ -293,10 +293,7 @@ module.exports = {
               'apps/asap-server/build/handlers/users/cronjob-sync-orcid.handler',
             events: [
               {
-                // https://www.serverless.com/framework/docs/providers/knative/events/cron/#cronjob/
-                cron: {
-                  schedule: 'rate(1 hour)', // run every hour
-                },
+                schedule: 'rate(1 hour)', // run every hour
               },
             ],
           },

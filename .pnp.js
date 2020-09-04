@@ -2209,6 +2209,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.4.3"
       ],
       [
+        "babel-plugin-transform-inline-environment-variables",
+        "npm:0.4.3"
+      ],
+      [
         "babel-plugin-transform-member-expression-literals",
         "npm:6.9.4"
       ],
@@ -8097,6 +8101,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/webpack", "npm:4.41.17"],
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.0.0-rc.20"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["eslint", "npm:6.8.0"],
             ["eslint-import-resolver-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
@@ -8185,7 +8190,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
-            ["@babel/runtime-corejs3", "npm:7.11.2"]
+            ["@babel/runtime-corejs3", "npm:7.11.2"],
+            ["@types/node", "npm:12.12.55"]
           ],
           "linkType": "SOFT",
         }]
@@ -16492,6 +16498,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/webpack", "npm:4.41.17"],
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.0.0-rc.20"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["eslint", "npm:6.8.0"],
             ["eslint-import-resolver-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
@@ -17266,6 +17273,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-consecutive-adds-npm-0.4.3-1ed470a8dc-55e452cbd1.zip/node_modules/babel-plugin-transform-inline-consecutive-adds/",
           "packageDependencies": [
             ["babel-plugin-transform-inline-consecutive-adds", "npm:0.4.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["babel-plugin-transform-inline-environment-variables", [
+        ["npm:0.4.3", {
+          "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-environment-variables-npm-0.4.3-9cd9e4345d-c25cf1190d.zip/node_modules/babel-plugin-transform-inline-environment-variables/",
+          "packageDependencies": [
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"]
           ],
           "linkType": "HARD",
         }]

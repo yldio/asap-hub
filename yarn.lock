@@ -137,6 +137,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/runtime-corejs3": ^7.9.6
+    "@types/node": ^12.12.0
   languageName: unknown
   linkType: soft
 
@@ -6415,6 +6416,7 @@ __metadata:
     "@types/webpack": ^4
     "@yarnpkg/pnpify": ^2.0.0-rc.20
     babel-eslint: ^10.1.0
+    babel-plugin-transform-inline-environment-variables: ^0.4.3
     babel-preset-react-app: ^9.1.2
     eslint: ^6
     eslint-import-resolver-typescript: ^2.3.0
@@ -7080,6 +7082,13 @@ __metadata:
   version: 0.4.3
   resolution: "babel-plugin-transform-inline-consecutive-adds@npm:0.4.3"
   checksum: 55e452cbd1ff932172e4715ee5b376ff487c6d0e4f49dd4d4c70fb1dcff8e8ea14a64546d2dc2d9f4ce343203ce9c992f27b744f35b1cc90f3f6d5f71c44f30e
+  languageName: node
+  linkType: hard
+
+"babel-plugin-transform-inline-environment-variables@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "babel-plugin-transform-inline-environment-variables@npm:0.4.3"
+  checksum: c25cf1190d7466895f98115d9681d449ba7bd6a0a8e56ee1722adca6947a844ce0214bb965414c5eb3ae5f4fda6b1f7cc4974e609e538dae4d8e5947b3c71c0f
   languageName: node
   linkType: hard
 

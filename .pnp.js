@@ -8403,6 +8403,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:16.9.2"],
+            ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.0.3"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
@@ -8470,6 +8471,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:16.9.2"],
+            ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.0.3"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
@@ -8532,6 +8534,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:16.9.2"],
+            ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.0.3"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
@@ -8597,6 +8600,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:16.9.2"],
+            ["@types/rehype-slug", "workspace:@types/rehype-slug"],
             ["@types/testing-library__jest-dom", "npm:5.0.3"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
@@ -14906,7 +14910,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:@types/rehype-slug", {
           "packageLocation": "./@types/rehype-slug/",
           "packageDependencies": [
-            ["@types/rehype-slug", "workspace:@types/rehype-slug"]
+            ["@types/rehype-slug", "workspace:@types/rehype-slug"],
+            ["unified", "npm:9.2.0"]
           ],
           "linkType": "SOFT",
         }]

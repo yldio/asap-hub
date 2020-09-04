@@ -1,4 +1,8 @@
-import React, { ReactElement, Component } from 'react';
+import React, {
+  createElement,
+  HTMLAttributes,
+  AnchorHTMLAttributes,
+} from 'react';
 import css from '@emotion/css';
 
 import unified from 'unified';
@@ -12,35 +16,33 @@ import Paragraph from './Paragraph';
 import Headline2 from './Headline2';
 import Headline3 from './Headline3';
 import Link from './Link';
+import { assertIsTextChildren } from '../text';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const components = ({
-  p: Paragraph,
-  h1: Headline2,
-  h2: Headline3,
-  a: Link,
-} as unknown) as {
-  [element: string]: ComponentLike<
-    ReactElement<
-      {},
-      | string
-      | ((
-          props: any,
-        ) => ReactElement<
-          any,
-          string | any | (new (props: any) => Component<any, any, any>)
-        > | null)
-      | (new (props: any) => Component<any, any, any>)
-    >
-  >;
-};
+const components = {
+  p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
+    return <Paragraph>{children}</Paragraph>;
+  },
+  h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) => {
+    assertIsTextChildren(children);
+    return <Headline2 id={id}>{children}</Headline2>;
+  },
+  h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) => {
+    assertIsTextChildren(children);
+    return <Headline3 id={id}>{children}</Headline3>;
+  },
+  a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
+    assertIsTextChildren(children);
+    if (typeof href === 'undefined')
+      throw new Error(`Anchor with children ${children} is missing href`);
+    return <Link href={href}>{children}</Link>;
+  },
+} as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 
 const processor = unified()
   .use(rehypeHtml, { fragment: true })
   .use(rehypeReact, {
     components,
-    createElement: React.createElement,
-    passNode: true,
+    createElement,
   });
 
 const tocProcessor = unified()
@@ -50,8 +52,7 @@ const tocProcessor = unified()
   .use(rehypeToc)
   .use(rehypeReact, {
     components,
-    createElement: React.createElement,
-    passNode: true,
+    createElement,
   });
 
 interface RichTextProps {

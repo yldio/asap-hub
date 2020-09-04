@@ -160,6 +160,9 @@ deploy:sls:branch_remove:
 deploy:sls:dev:
   <<: *tmpl_master
   <<: *tmpl_deploy
+  artifacts:
+    paths:
+      - 'apps/auth-frontend/build'
   before_script:
     - yarn build
   environment:

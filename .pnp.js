@@ -8207,7 +8207,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/jsdom", "npm:16.2.3"],
-            ["@types/node", "npm:12.12.35"],
+            ["@types/node", "npm:12.12.55"],
             ["@types/pify", "npm:3.0.2"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
@@ -8315,7 +8315,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/nock", "npm:11.1.0"],
-            ["@types/node", "npm:12.12.35"],
+            ["@types/node", "npm:12.12.55"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
             ["@types/react-router-dom", "npm:5.1.5"],
@@ -14646,10 +14646,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/node", [
-        ["npm:12.12.35", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-12.12.35-ecc40ca3ed-ecd9d3a49f.zip/node_modules/@types/node/",
+        ["npm:12.12.55", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-12.12.55-f768389375-2ebf7e2ae6.zip/node_modules/@types/node/",
           "packageDependencies": [
-            ["@types/node", "npm:12.12.35"]
+            ["@types/node", "npm:12.12.55"]
           ],
           "linkType": "HARD",
         }],

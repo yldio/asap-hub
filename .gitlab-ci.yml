@@ -74,7 +74,7 @@ build:native-deps:
     paths:
       - .yarn/unplugged
   needs:
-    - setup
+    - []
   stage: build
 
 # stage test
@@ -103,6 +103,7 @@ test:format:
 test:
   <<: *tmpl_test
   script:
+    - echo $SQUIDEX_APP_NAME
     - yarn run test --coverage
   after_script:
     - yarn dlx codecov@3.7.2
@@ -110,8 +111,8 @@ test:
     paths:
       - coverage
   environment:
-    name: test/$CI_JOB_ID
-    auto_stop_in: 2 hours
+    name: test/$CI_COMMIT_REF_SLUG
+    auto_stop_in: 1 minute
   needs:
     - build
   variables:
@@ -171,6 +172,7 @@ deploy:sls:dev:
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
+    AUTH_FRONTEND_BASE_URL: https://$APP_HOSTNAME/.auth/
     REACT_APP_API_BASE_URL: https://$API_HOSTNAME
     SLS_STAGE: 'dev'
   needs:
@@ -187,10 +189,9 @@ deploy:sls:production:
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
-  needs:
+  dependencies:
     - build
     - build:native-deps
-    - test
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: manual

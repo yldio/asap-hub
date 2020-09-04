@@ -35,6 +35,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:@types/asap-hub__auth0-rule"
       },
       {
+        "name": "@types/asap-hub__inline-environment",
+        "reference": "workspace:@types/asap-hub__inline-environment"
+      },
+      {
         "name": "@types/hapi__bourne",
         "reference": "workspace:@types/hapi__bourne"
       },
@@ -119,6 +123,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
       ["@types/asap-hub__assets", ["workspace:@types/asap-hub__assets"]],
       ["@types/asap-hub__auth0-rule", ["workspace:@types/asap-hub__auth0-rule"]],
+      ["@types/asap-hub__inline-environment", ["workspace:@types/asap-hub__inline-environment"]],
       ["@types/hapi__bourne", ["workspace:@types/hapi__bourne"]],
       ["@types/rehype-slug", ["workspace:@types/rehype-slug"]],
       ["asap-hub", ["workspace:."]]
@@ -1243,6 +1248,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/asap-hub__auth0-rule",
         "workspace:@types/asap-hub__auth0-rule"
+      ],
+      [
+        "@types/asap-hub__inline-environment",
+        "workspace:@types/asap-hub__inline-environment"
       ],
       [
         "@types/asn1js",
@@ -8165,6 +8174,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jsonwebtoken", "npm:8.5.0"],
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/lodash.get", "npm:4.4.6"],
+            ["@types/node", "npm:12.12.55"],
             ["@types/uuid", "npm:8.0.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -8191,7 +8201,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
-            ["@types/node", "npm:12.12.55"]
+            ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"]
           ],
           "linkType": "SOFT",
         }]
@@ -8209,11 +8219,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.9.0"],
             ["@testing-library/react", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:10.2.0"],
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:11.4.2"],
+            ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"],
             ["@types/auth0-js", "npm:9.13.1"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/jsdom", "npm:16.2.3"],
-            ["@types/node", "npm:12.12.55"],
             ["@types/pify", "npm:3.0.2"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
@@ -8318,10 +8328,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:10.2.0"],
             ["@testing-library/react-hooks", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:3.4.1"],
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:11.4.2"],
+            ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/nock", "npm:11.1.0"],
-            ["@types/node", "npm:12.12.55"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
             ["@types/react-router-dom", "npm:5.1.5"],
@@ -8720,6 +8730,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__joi", "npm:17.1.2"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/jwt-decode", "npm:2.2.1"],
+            ["@types/node", "npm:12.12.55"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["chance", "npm:1.1.7"],
@@ -14080,6 +14091,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./@types/asap-hub__auth0-rule/",
           "packageDependencies": [
             ["@types/asap-hub__auth0-rule", "workspace:@types/asap-hub__auth0-rule"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@types/asap-hub__inline-environment", [
+        ["workspace:@types/asap-hub__inline-environment", {
+          "packageLocation": "./@types/asap-hub__inline-environment/",
+          "packageDependencies": [
+            ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"]
           ],
           "linkType": "SOFT",
         }]

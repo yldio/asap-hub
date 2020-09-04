@@ -38,6 +38,7 @@ __metadata:
     "@types/jsonwebtoken": ^8.5.0
     "@types/jwt-decode": ^2.2.1
     "@types/lodash.get": ^4
+    "@types/node": ^12.12.0
     "@types/uuid": ^8.0.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
@@ -67,11 +68,11 @@ __metadata:
     "@testing-library/jest-dom": ^5.9.0
     "@testing-library/react": ^10.2.0
     "@testing-library/user-event": ^11.4.2
+    "@types/asap-hub__inline-environment": "workspace:@types/asap-hub__inline-environment"
     "@types/auth0-js": ^9
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.3
     "@types/jsdom": ^16
-    "@types/node": ^12.12.0
     "@types/pify": ^3.0.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
@@ -137,7 +138,7 @@ __metadata:
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/runtime-corejs3": ^7.9.6
-    "@types/node": ^12.12.0
+    "@types/asap-hub__inline-environment": "workspace:@types/asap-hub__inline-environment"
   languageName: unknown
   linkType: soft
 
@@ -179,10 +180,10 @@ __metadata:
     "@testing-library/react": ^10.2.0
     "@testing-library/react-hooks": ^3.4.1
     "@testing-library/user-event": ^11.4.2
+    "@types/asap-hub__inline-environment": "workspace:@types/asap-hub__inline-environment"
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.3
     "@types/nock": ^11.1.0
-    "@types/node": ^12.12.0
     "@types/react": ^16.9.0
     "@types/react-dom": ^16.9.0
     "@types/react-router-dom": ^5.1.5
@@ -364,6 +365,7 @@ __metadata:
     "@types/hapi__joi": ^17.1.0
     "@types/jest": ^26.0.3
     "@types/jwt-decode": ^2.2.1
+    "@types/node": ^12.12.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     chance: ^1.1.7
@@ -4375,6 +4377,12 @@ __metadata:
 "@types/asap-hub__auth0-rule@workspace:@types/asap-hub__auth0-rule":
   version: 0.0.0-use.local
   resolution: "@types/asap-hub__auth0-rule@workspace:@types/asap-hub__auth0-rule"
+  languageName: unknown
+  linkType: soft
+
+"@types/asap-hub__inline-environment@workspace:@types/asap-hub__inline-environment":
+  version: 0.0.0-use.local
+  resolution: "@types/asap-hub__inline-environment@workspace:@types/asap-hub__inline-environment"
   languageName: unknown
   linkType: soft
 

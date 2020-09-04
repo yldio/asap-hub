@@ -110,7 +110,8 @@ test:
     paths:
       - coverage
   environment:
-    name: test
+    name: test/$CI_JOB_ID
+    auto_stop_in: 2 hours
   needs:
     - build
   variables:

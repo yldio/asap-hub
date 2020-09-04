@@ -5,7 +5,7 @@ import { CMSPage } from '../entities/page';
 const deserialize = (obj: CMSPage): PageResponse => {
   return {
     path: obj.data.path.iv,
-    text: obj.data.text.iv,
+    text: obj.data.text?.iv || '',
     title: obj.data.title.iv,
   };
 };

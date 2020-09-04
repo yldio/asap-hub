@@ -110,7 +110,7 @@ test:
     paths:
       - coverage
   environment:
-    name: test/$CI_PIPELINE_ID
+    name: test/$CI_JOB_ID
     auto_stop_in: 2 hours
   needs:
     - build

@@ -10,3 +10,4 @@ export { default as LabeledTextField } from './LabeledTextField';
 export { default as Navigation } from './Navigation';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as TabNav } from './TabNav';
+export { default as TeamCard } from './TeamCard';

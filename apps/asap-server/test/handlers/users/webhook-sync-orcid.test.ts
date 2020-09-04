@@ -7,9 +7,19 @@ import {
 } from '../../../src/handlers/users/webhook-sync-orcid';
 import { apiGatewayEvent } from '../../helpers/events';
 import { TestUserResponse, createRandomUser } from '../../helpers/create-user';
+import signPayload from '../../helpers/create-squidex-signature';
 import orcidWorksResponse from '../../fixtures/fetch-orcid-works-0000-0002-9079-593X.json';
 import createPayloadTemplate from '../../fixtures/users-create-squidex-webhook.json';
 import updatePayloadTemplate from '../../fixtures/users-update-squidex-webhook.json';
+
+const createSignedPayload = (payload: WebHookPayload) =>
+  apiGatewayEvent({
+    httpMethod: 'post',
+    headers: {
+      'x-signature': signPayload(payload),
+    },
+    body: payload,
+  });
 
 describe('POST /webhook/users/orcid', () => {
   const orcid = '0000-0002-9079-593X';
@@ -32,10 +42,7 @@ describe('POST /webhook/users/orcid', () => {
     nock('https://pub.orcid.org').get(`/v2.1/${orcid}/works`).reply(500);
 
     const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: createPayload,
-      }),
+      createSignedPayload(createPayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(502);
@@ -45,10 +52,7 @@ describe('POST /webhook/users/orcid', () => {
     createPayload.payload.id = 'user-does-not-exist';
 
     const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: createPayload,
-      }),
+      createSignedPayload(createPayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(404);
@@ -59,10 +63,7 @@ describe('POST /webhook/users/orcid', () => {
     invalidPayload.type = 'notImplemented';
 
     const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: invalidPayload,
-      }),
+      createSignedPayload(invalidPayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);
@@ -72,10 +73,7 @@ describe('POST /webhook/users/orcid', () => {
     delete createPayload.payload.data.orcid;
 
     const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: createPayload,
-      }),
+      createSignedPayload(createPayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);
@@ -83,10 +81,7 @@ describe('POST /webhook/users/orcid', () => {
 
   test('returns 204 when update doesnt change orcid', async () => {
     const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: updatePayload,
-      }),
+      createSignedPayload(updatePayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(204);
@@ -98,11 +93,9 @@ describe('POST /webhook/users/orcid', () => {
       .reply(200, orcidWorksResponse);
 
     const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: createPayload,
-      }),
+      createSignedPayload(createPayload),
     )) as APIGatewayProxyResult;
+
     const body = JSON.parse(res.body);
 
     expect(res.statusCode).toStrictEqual(200);
@@ -128,10 +121,7 @@ describe('POST /webhook/users/orcid', () => {
       .reply(200, orcidWorksResponse);
 
     const res = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'post',
-        body: updatePayload,
-      }),
+      createSignedPayload(updatePayloadTemplate),
     )) as APIGatewayProxyResult;
     const body = JSON.parse(res.body);
 

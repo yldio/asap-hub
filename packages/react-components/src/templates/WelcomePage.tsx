@@ -6,6 +6,7 @@ import { Header } from '../molecules';
 import { Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { backgroundBrains } from '../images';
+import { themes } from '../theme';
 
 const values = {
   signup: {
@@ -94,7 +95,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
   const copy = signup ? values.signup : values.welcome;
 
   return (
-    <div css={containerStyles}>
+    <div css={[themes.dark, containerStyles]}>
       <div css={headerStyles}>
         <Header transparent />
       </div>

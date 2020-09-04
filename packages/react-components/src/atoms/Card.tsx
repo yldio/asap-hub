@@ -8,6 +8,7 @@ import {
   mobileScreen,
   largeDesktopScreen,
 } from '../pixels';
+import { themes } from '../theme';
 
 const containerStyles = css({
   padding: `24px ${vminLinearCalc(
@@ -18,7 +19,6 @@ const containerStyles = css({
     'px',
   )}`,
 
-  backgroundColor: colors.paper.rgb,
   borderRadius: `${10 / perRem}em`,
   border: `1px solid ${colors.silver.rgb}`,
 });
@@ -27,7 +27,7 @@ interface CardProps {
   readonly children: React.ReactNode;
 }
 const Card: React.FC<CardProps> = ({ children }) => (
-  <section css={[containerStyles]}>{children}</section>
+  <section css={[themes.light, containerStyles]}>{children}</section>
 );
 
 export default Card;

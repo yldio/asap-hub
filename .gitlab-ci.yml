@@ -18,6 +18,8 @@ include:
 .tmpl:deploy: &tmpl_deploy
   script:
     - ulimit -n 32768 -u 32768
+    - ulimit -Sn
+    - ulimit -Hn
     - yarn sls deploy --verbose
   stage: deploy
   variables: &tmpl_deploy_variables

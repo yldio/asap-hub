@@ -9,7 +9,7 @@ if (NODE_ENV === 'production') {
   [
     'ASAP_API_URL',
     'ASAP_APP_URL',
-    'AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN',
+    'AWS_ACM_CERTIFICATE_ARN',
     'GLOBAL_TOKEN',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
@@ -19,9 +19,9 @@ if (NODE_ENV === 'production') {
 const {
   ASAP_APP_URL = 'http://localhost:3000',
   ASAP_API_URL = 'http://localhost:3333',
-  AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+  ASAP_HOSTNAME = 'hub.asap.science',
+  AWS_ACM_CERTIFICATE_ARN,
   AWS_REGION = 'us-east-1',
-  BASE_HOSTNAME = 'hub.asap.science',
   SLS_STAGE = 'development',
 } = process.env;
 
@@ -66,8 +66,8 @@ module.exports = {
     excludeDevDependencies: false,
   },
   custom: {
-    appHostname: new URL(ASAP_APP_URL).hostname,
     apiHostname: new URL(ASAP_API_URL).hostname,
+    appHostname: new URL(ASAP_APP_URL).hostname,
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
@@ -310,7 +310,7 @@ module.exports = {
           DomainName: `\${self:custom.apiHostname}`,
           DomainNameConfigurations: [
             {
-              CertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -329,7 +329,7 @@ module.exports = {
       HttpApiRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_HOSTNAME}.`,
+          HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.apiHostname}`,
@@ -625,7 +625,7 @@ module.exports = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },
@@ -635,7 +635,7 @@ module.exports = {
       CloudFrontRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_HOSTNAME}.`,
+          HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.appHostname}`,

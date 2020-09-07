@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-HOSTNAME=${BASE_HOSTNAME:-"hub.asap.science"}
-if [ ! -z $CI_EXTERNAL_PULL_REQUEST_IID ]; then
-    echo ASAP_API_URL="api-${CI_EXTERNAL_PULL_REQUEST_IID}.${BASE_HOSTNAME}"
-    echo ASAP_APP_URL="${CI_EXTERNAL_PULL_REQUEST_IID}.${BASE_HOSTNAME}"
-fi

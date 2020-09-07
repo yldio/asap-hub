@@ -93,7 +93,7 @@ module.exports = {
     },
   },
   functions: {
-    'create-user': {
+    createUser: {
       handler: 'apps/asap-server/build/handlers/users/create.handler',
       events: [
         {
@@ -115,7 +115,7 @@ module.exports = {
         GLOBAL_TOKEN: `\${env:GLOBAL_TOKEN}`,
       },
     },
-    'fetch-users': {
+    fetchUsers: {
       handler: 'apps/asap-server/build/handlers/users/fetch.handler',
       events: [
         {
@@ -127,7 +127,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-user-by-id': {
+    fetchUserById: {
       handler: 'apps/asap-server/build/handlers/users/fetch-by-id.handler',
       events: [
         {
@@ -139,43 +139,43 @@ module.exports = {
         },
       ],
     },
-    'fetch-user-by-code': {
-      handler: 'apps/asap-server/build/handlers/users/fetch-by-code.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/users/invites/{code}`,
-          },
-        },
-      ],
-    },
-    'fetch-me': {
-      handler: 'apps/asap-server/build/handlers/users/fetch-me.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/users/me`,
-          },
-        },
-      ],
-    },
-    'connect-by-code': {
-      handler: 'apps/asap-server/build/handlers/users/connect-by-code.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'POST',
-            path: `/users/connections`,
-          },
-        },
-      ],
-    },
-    'webhook-fetch-by-code': {
+    // 'fetch-user-by-code': {
+    //   handler: 'apps/asap-server/build/handlers/users/fetch-by-code.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'GET',
+    //         path: `/users/invites/{code}`,
+    //       },
+    //     },
+    //   ],
+    // },
+    // 'fetch-me': {
+    //   handler: 'apps/asap-server/build/handlers/users/fetch-me.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'GET',
+    //         path: `/users/me`,
+    //       },
+    //     },
+    //   ],
+    // },
+    // 'connect-by-code': {
+    //   handler: 'apps/asap-server/build/handlers/users/connect-by-code.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'POST',
+    //         path: `/users/connections`,
+    //       },
+    //     },
+    //   ],
+    // },
+    auth0FetchByCode: {
       handler:
         'apps/asap-server/build/handlers/users/webhook-fetch-by-code.handler',
       events: [
@@ -188,7 +188,7 @@ module.exports = {
         },
       ],
     },
-    'webhook-connect-by-code': {
+    auth0ConnectByCode: {
       handler:
         'apps/asap-server/build/handlers/users/webhook-connect-by-code.handler',
       events: [
@@ -201,7 +201,7 @@ module.exports = {
         },
       ],
     },
-    'sync-user-orcid': {
+    syncUserOrcid: {
       handler:
         'apps/asap-server/build/handlers/users/webhook-sync-orcid.handler',
       events: [
@@ -214,33 +214,33 @@ module.exports = {
         },
       ],
     },
-    'create-research-output': {
-      handler:
-        'apps/asap-server/build/handlers/research-outputs/create.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'POST',
-            path: `/users/{id}/research-outputs`,
-          },
-        },
-      ],
-    },
-    'fetch-research-outputs': {
-      handler:
-        'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/users/{id}/research-outputs`,
-          },
-        },
-      ],
-    },
-    'fetch-page': {
+    // 'create-research-output': {
+    //   handler:
+    //     'apps/asap-server/build/handlers/research-outputs/create.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'POST',
+    //         path: `/users/{id}/research-outputs`,
+    //       },
+    //     },
+    //   ],
+    // },
+    // 'fetch-research-outputs': {
+    //   handler:
+    //     'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'GET',
+    //         path: `/users/{id}/research-outputs`,
+    //       },
+    //     },
+    //   ],
+    // },
+    fetchPage: {
       handler: 'apps/asap-server/build/handlers/pages/fetch.handler',
       events: [
         {
@@ -252,7 +252,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-content-by-slug': {
+    fetchContentBySlug: {
       handler: 'apps/asap-server/build/handlers/content/fetch-by-slug.handler',
       events: [
         {
@@ -264,7 +264,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-teams': {
+    fetchTeams: {
       handler: 'apps/asap-server/build/handlers/teams/fetch.handler',
       events: [
         {
@@ -276,7 +276,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-team-by-id': {
+    fetchTeamById: {
       handler: 'apps/asap-server/build/handlers/teams/fetch-by-id.handler',
       events: [
         {
@@ -290,7 +290,7 @@ module.exports = {
     },
     ...(NODE_ENV === 'production'
       ? {
-          'cronjob-sync-orcid': {
+          cronjobSyncOrcid: {
             handler:
               'apps/asap-server/build/handlers/users/cronjob-sync-orcid.handler',
             events: [

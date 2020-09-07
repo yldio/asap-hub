@@ -59,7 +59,7 @@ build:ts:
       - 'packages/*/build'
       - 'apps/*/build'
   script:
-    - source ci/env-create.sh
+    - source ci/env-setup.sh
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - yarn run build
   needs:
@@ -107,9 +107,9 @@ test:jest:
     paths:
       - coverage
   script:
-    - SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
-    - SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
-    - SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - yarn run test --coverage
   after_script:
     - yarn dlx codecov@3.7.2
@@ -125,7 +125,7 @@ deploy:sls:branch:
     - source ci/env-setup.sh
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
-    url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$BASE_HOSTNAME
+    url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
     on_stop: deploy:sls:branch_remove
     auto_stop_in: 3 days
   variables:

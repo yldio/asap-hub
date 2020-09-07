@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import parse from 'csv-parse';
 import pump from 'pump';
 import through from 'through2-concurrent';

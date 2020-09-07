@@ -1,5 +1,5 @@
 {
-  "name": "@asap-hub/auth0-add-user-metadata",
+  "name": "@asap-hub/auth0-rules",
   "private": true,
   "version": "0.1.0",
   "engines": {

@@ -1,6 +1,6 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
 include:
-  - 'apps/react-templates/.gitlab-ci.yml'
+  - 'ci/.gitlab-ci.ses.yml'
   - 'ci/.gitlab-ci.squidex.yml'
 
 .tmpl:master: &tmpl_master
@@ -14,6 +14,17 @@ include:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
   variables: &tmpl_branch_variables
     SLS_STAGE: $CI_EXTERNAL_PULL_REQUEST_IID
+
+.tmpl:deploy: &tmpl_deploy
+  script:
+    - ulimit -n 32768 -u 32768
+    - yarn sls deploy --verbose
+  stage: deploy
+  variables: &tmpl_deploy_variables
+    NODE_ENV: production
+  dependencies:
+    - build:ts
+    - build:native
 
 .tmpl:branch_remove: &tmpl_branch_remove
   rules:
@@ -32,47 +43,35 @@ workflow:
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
 
 variables:
-  BASE_HOSTNAME: hub.asap.science
+  ASAP_HOSTNAME: hub.asap.science
 
 stages:
-  - setup
   - build
   - test
   - prepare
   - deploy
 
-# stage setup
-
-setup:
-  script:
-    - ci/env-create.sh > deploy.env
+build:ts:
   artifacts:
-    reports:
-      dotenv: deploy.env
-  stage: setup
-
-# stage build
-
-build:
-  script:
-    - yarn run build
-  artifacts:
+    expire_in: 1 day
     paths:
       - 'packages/*/build'
       - 'apps/*/build'
+  script:
+    - source ci/env-create.sh
+    - export REACT_APP_API_BASE_URL=$ASAP_API_URL
+    - yarn run build
   needs:
-    - setup
+    - []
   stage: build
-  variables:
-    AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
-    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
 
-build:native-deps:
+build:native:
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - '.yarn/unplugged'
   script:
     - yarn rebuild
-  artifacts:
-    paths:
-      - .yarn/unplugged
   needs:
     - []
   stage: build
@@ -100,98 +99,81 @@ test:format:
   script:
     - yarn run lint:format
 
-test:
+test:jest:
   <<: *tmpl_test
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - coverage
   script:
-    - echo $SQUIDEX_APP_NAME
+    - SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
+    - SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - yarn run test --coverage
   after_script:
     - yarn dlx codecov@3.7.2
-  artifacts:
-    paths:
-      - coverage
-  environment:
-    name: test/$CI_COMMIT_REF_SLUG
-    auto_stop_in: 1 minute
   needs:
-    - build
+    - build:ts
   variables:
     <<: *tmpl_branch_variables
-
-# stage deploy
-
-.tmpl:deploy: &tmpl_deploy
-  script:
-    - yarn sls deploy --verbose
-  stage: deploy
-  variables: &tmpl_deploy_variables
-    NODE_ENV: production
-  needs:
-    - build
-    - build:native-deps
 
 deploy:sls:branch:
   <<: *tmpl_branch
   <<: *tmpl_deploy
+  before_script:
+    - source ci/env-create.sh
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
-    url: https://$APP_HOSTNAME
+    url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
     on_stop: deploy:sls:branch_remove
     auto_stop_in: 3 days
   variables:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables
   needs:
-    - setup
-    - build
-    - build:native-deps
+    - build:ts
+    - build:native
 
 deploy:sls:branch_remove:
+  <<: *tmpl_branch
   <<: *tmpl_branch_remove
-  needs:
-    - build:native-deps
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
     action: stop
   script:
     - git checkout $CI_COMMIT_SHA # the branch may not exist
     - yarn sls remove --verbose
+  needs:
+    - build:native
   stage: deploy
 
-deploy:sls:dev:
+deploy:sls:development:
+  <<: *tmpl_master
+  <<: *tmpl_deploy
+  environment:
+    name: development
+    url: $ASAP_APP_URL
+  variables:
+    <<: *tmpl_master_variables
+    <<: *tmpl_deploy_variables
+    SLS_STAGE: 'dev'
+  needs:
+    - build:ts
+    - build:native
+
+deploy:sls:production:
   <<: *tmpl_master
   <<: *tmpl_deploy
   artifacts:
     paths:
       - 'apps/auth-frontend/build'
   before_script:
-    - yarn build
-  environment:
-    name: dev
-    url: https://$APP_HOSTNAME
-  variables:
-    <<: *tmpl_master_variables
-    <<: *tmpl_deploy_variables
-    AUTH_FRONTEND_BASE_URL: https://$APP_HOSTNAME/.auth/
-    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
-    SLS_STAGE: 'dev'
-  needs:
-    - build
-    - build:native-deps
-    - test
-
-deploy:sls:production:
-  <<: *tmpl_master
-  <<: *tmpl_deploy
+    - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
+    - export REACT_APP_API_BASE_URL=$ASAP_API_URL
+    - yarn run build # create a build for production
   environment:
     name: production
-    url: https://$APP_HOSTNAME
+    url: $ASAP_APP_URL
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
-  dependencies:
-    - build
-    - build:native-deps
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-      when: manual

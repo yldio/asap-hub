@@ -3,25 +3,27 @@ const { paramCase } = require('param-case');
 
 const pkg = require('./package.json');
 
-const {
-  APP_HOSTNAME = 'hub.asap.science',
-  API_HOSTNAME = 'api.hub.asap.science',
-  AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
-  AWS_REGION = 'us-east-1',
-  BASE_HOSTNAME = 'hub.asap.science',
-  GLOBAL_TOKEN,
-  NODE_ENV = 'development',
-  SLS_STAGE = 'development',
-} = process.env;
+const { NODE_ENV = 'development' } = process.env.NODE_ENV;
 
 if (NODE_ENV === 'production') {
-  assert.ok(
-    AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
-    'AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN not defined',
-  );
-  assert.ok(BASE_HOSTNAME, 'BASE_HOSTNAME not defined');
-  assert.ok(GLOBAL_TOKEN, 'GLOBAL_TOKEN not defined');
+  [
+    'ASAP_API_URL',
+    'ASAP_APP_URL',
+    'AWS_ACM_CERTIFICATE_ARN',
+    'GLOBAL_TOKEN',
+  ].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
 }
+
+const {
+  ASAP_APP_URL = 'http://localhost:3000',
+  ASAP_API_URL = 'http://localhost:3333',
+  ASAP_HOSTNAME = 'hub.asap.science',
+  AWS_ACM_CERTIFICATE_ARN,
+  AWS_REGION = 'us-east-1',
+  SLS_STAGE = 'development',
+} = process.env;
 
 const service = paramCase(pkg.name);
 const plugins = [
@@ -44,12 +46,12 @@ module.exports = {
     stage: SLS_STAGE,
     httpApi: {
       cors: {
-        allowedOrigins: [`https://${APP_HOSTNAME}`],
+        allowedOrigins: [ASAP_APP_URL],
         allowCredentials: true,
       },
     },
     environment: {
-      APP_ORIGIN: `https://${APP_HOSTNAME}`,
+      APP_ORIGIN: ASAP_APP_URL,
       AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
       NODE_ENV: `\${env:NODE_ENV}`,
       SQUIDEX_APP_NAME: `\${env:SQUIDEX_APP_NAME}`,
@@ -64,8 +66,8 @@ module.exports = {
     excludeDevDependencies: false,
   },
   custom: {
-    apiHostname: API_HOSTNAME,
-    appHostname: APP_HOSTNAME,
+    apiHostname: new URL(ASAP_API_URL).hostname,
+    appHostname: new URL(ASAP_APP_URL).hostname,
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
@@ -308,7 +310,7 @@ module.exports = {
           DomainName: `\${self:custom.apiHostname}`,
           DomainNameConfigurations: [
             {
-              CertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -327,7 +329,7 @@ module.exports = {
       HttpApiRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_HOSTNAME}.`,
+          HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.apiHostname}`,
@@ -623,7 +625,7 @@ module.exports = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },
@@ -633,7 +635,7 @@ module.exports = {
       CloudFrontRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_HOSTNAME}.`,
+          HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.appHostname}`,

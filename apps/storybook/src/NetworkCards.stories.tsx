@@ -1,11 +1,10 @@
 import React from 'react';
-import { number, text, withKnobs } from '@storybook/addon-knobs';
+import { number, text } from '@storybook/addon-knobs';
 
 import { TeamCard } from '@asap-hub/react-components';
 
 export default {
   title: 'Organisms / Team / Team Card',
-  decorators: [withKnobs],
 };
 const member = {
   id: 'ff0e04ac-4769-44ed-8d3b-245c1bfe17b3',

@@ -39,6 +39,7 @@ export {
   LabeledDropdown,
   Navigation,
   TabNav,
+  TeamCard,
 } from './molecules';
 export {
   EmailPasswordSignin,

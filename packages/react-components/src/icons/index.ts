@@ -6,4 +6,5 @@ export { default as hidePasswordIcon } from './hide-password';
 export { default as locationIcon } from './location';
 export { default as orcidIcon } from './orcid';
 export { default as showPasswordIcon } from './show-password';
+export { default as teamMembersIcon } from './team-members-icon';
 export { default as validTickIcon } from './valid-tick-icon';

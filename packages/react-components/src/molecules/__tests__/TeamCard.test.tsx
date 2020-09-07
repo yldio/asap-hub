@@ -30,12 +30,10 @@ const teamCardProps = {
   lastModifiedDate: '2020-07-31T11:45:14Z',
 };
 
-it('renders the content', () => {
-  const { getByText } = render(<TeamCard {...teamCardProps} />);
-  expect(getByText('!AX54pQ$Jgih7svEaA')).toBeVisible();
-  expect(getByText(teamCardProps.projectSummary)).toBeVisible();
-  expect(getByText('1 Team Member')).toBeVisible();
-  expect(getByText('Neurological Diseases')).toBeVisible();
+it('renders the title', () => {
+  const { getByRole } = render(<TeamCard {...teamCardProps} />);
+  expect(getByRole('heading').textContent).toEqual('!AX54pQ$Jgih7svEaA');
+  expect(getByRole('heading').tagName).toEqual('H2');
 });
 
 it('Hides more than two team skills the content', () => {
@@ -56,7 +54,12 @@ it('Shows just 2 skills when appropriate', () => {
 it('Hides skills when there are none', () => {
   const props = { ...teamCardProps, skills: [] };
   const { queryAllByRole } = render(<TeamCard {...props} />);
-  expect(queryAllByRole('listitem')).toEqual([]);
+  expect(queryAllByRole('list')).toEqual([]);
+});
+
+it('Singular when more one team member', () => {
+  const { getByText } = render(<TeamCard {...teamCardProps} />);
+  expect(getByText('1 Team Member')).toBeVisible();
 });
 
 it('Pluralises when more than one team member', () => {

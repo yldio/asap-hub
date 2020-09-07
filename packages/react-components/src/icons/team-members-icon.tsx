@@ -3,8 +3,8 @@ import React from 'react';
 /* istanbul ignore file */
 
 const teamMembersIcon = (
-  <svg width={24} height={24} viewBox="0 -5 24 24">
-    <title>{'Teams'}</title>
+  <svg width={24} height={24} viewBox="0 0 24 24">
+    <title>Team members</title>
     <g
       stroke="#4D646B"
       strokeWidth={1.3}

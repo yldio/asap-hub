@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Card, Headline4, Link, Tag, Paragraph } from '../atoms';
+
+import { Card, Link, Tag, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
 import { TeamMember } from '../../../model/src';
 import { teamMembersIcon } from '../icons';
@@ -18,10 +19,21 @@ const listStyles = css({
   },
 });
 
+const teamMemberStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+});
+const iconStyles = css({
+  display: 'inline-block',
+  width: `${24 / perRem}em`,
+  height: `${24 / perRem}em`,
+  paddingRight: `${6 / perRem}em`,
+});
+
 interface TeamCardProps {
   id: string;
   displayName: string;
-  projectSummary?: string; // Should this be optional?
+  projectSummary?: string;
   skills: string[];
   members: TeamMember[];
 }
@@ -38,7 +50,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
   return (
     <Link theme={null} href={`/teams/${id}`}>
       <Card>
-        <Headline4>{displayName}</Headline4>
+        <Headline2 styleAsHeading={4}>{displayName}</Headline2>
         <Paragraph>{projectSummary}</Paragraph>
         {!!shownSkills.length && (
           <ul css={listStyles}>
@@ -54,9 +66,8 @@ const TeamCard: React.FC<TeamCardProps> = ({
             )}
           </ul>
         )}
-        {teamMembersIcon}
-        <span>
-          {' '}
+        <span css={teamMemberStyles}>
+          <span css={iconStyles}>{teamMembersIcon} </span>
           {members.length} Team Member
           {members.length !== 1 ? 's' : ''}
         </span>

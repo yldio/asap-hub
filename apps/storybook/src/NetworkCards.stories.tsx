@@ -36,4 +36,4 @@ const teamCardProps = () => {
   };
 };
 
-export const TeamCardNormal = () => <TeamCard {...teamCardProps()} />;
+export const Normal = () => <TeamCard {...teamCardProps()} />;

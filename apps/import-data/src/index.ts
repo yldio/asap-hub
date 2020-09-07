@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import parse from 'csv-parse';
 import path from 'path';
 import pump from 'pump';
@@ -8,8 +10,8 @@ import parseData, { Data } from './parse-data';
 
 const parseAndTransform = (transform: (data: Data) => Promise<void>) => (
   src: string,
-) => {
-  return new Promise((reject, resolve) => {
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
     pump(
       createReadStream(src),
       parse(),

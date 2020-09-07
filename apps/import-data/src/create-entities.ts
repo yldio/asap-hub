@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import Intercept from 'apr-intercept';
 import { Squidex } from '@asap-hub/services-common';
 import { Data } from './parse-data';
@@ -38,7 +40,7 @@ interface User {
   ];
 }
 
-const createUser = (user: User) => {
+const createUser = (user: User): Promise<object> => {
   return users.create({
     email: {
       iv: user.email,
@@ -80,19 +82,19 @@ const updateUserTeams = (
     displayName: string;
     role: string;
   },
-) => {
+): Promise<object> => {
   return users.patch(user.id, {
     ...user.data,
     teams: {
       iv: [...user.data.teams.iv, team].filter(
-        (team, index, self) =>
-          self.findIndex((t) => t.id[0] === team.id[0]) === index,
+        (value, index, self) =>
+          self.findIndex((v) => v.id[0] === value.id[0]) === index,
       ),
     },
   });
 };
 
-export default () => {
+export default (): ((data: Data) => Promise<void>) => {
   const promises: {
     [key: string]: Promise<{
       id: string;
@@ -100,7 +102,7 @@ export default () => {
     }>;
   } = {};
 
-  return async (data: Data) => {
+  return async (data: Data): Promise<void> => {
     const {
       applicationNumber,
       projectTitle,

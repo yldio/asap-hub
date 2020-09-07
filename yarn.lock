@@ -214,18 +214,22 @@ __metadata:
   dependencies:
     "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/services-common": "workspace:packages/services-common"
+    "@babel/core": ^7.9.0
     "@babel/plugin-transform-modules-commonjs": ^7.10.1
     "@babel/plugin-transform-runtime": ^7.10.3
     "@babel/runtime-corejs3": ^7.9.6
     "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/babel__core": ^7
     "@types/pump": ^1.1.0
     "@types/through2-concurrent": ^2
     "@yarnpkg/pnpify": ^2.0.0-rc.20
     apr-intercept: ^3.0.4
-    babel-loader: ^8.1.0
+    commander: ^6.1.0
     csv-parse: ^4.12.0
     pump: ^3.0.0
     through2-concurrent: ^2.0.0
+  bin:
+    asap-import: build/import.js
   languageName: unknown
   linkType: soft
 
@@ -8759,6 +8763,13 @@ __metadata:
   version: 5.1.0
   resolution: "commander@npm:5.1.0"
   checksum: d16141ea7f580945156fb8a06de2834c4647c7d9d3732ebd4534ab8e0b7c64747db301e18f2b840f28ea8fef51f7a8d6178e674b45a21931f0b65ff1c7f476b3
+  languageName: node
+  linkType: hard
+
+"commander@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "commander@npm:6.1.0"
+  checksum: ef1e310c3f430b84f8818ec9c6e5ce1b84909616eb2c1b1a79f646bc25fbca156eccf2ecf19f07e77a08dc519728d53d1300f94f3b2ad93de65add66044dfce6
   languageName: node
   linkType: hard
 

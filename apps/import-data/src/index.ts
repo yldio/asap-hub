@@ -1,7 +1,4 @@
-/* eslint-disable no-console */
-
 import parse from 'csv-parse';
-import path from 'path';
 import pump from 'pump';
 import through from 'through2-concurrent';
 import { createReadStream } from 'fs';
@@ -34,6 +31,3 @@ const parseAndTransform = (transform: (data: Data) => Promise<void>) => (
 };
 
 export const parseAndCreateEntities = parseAndTransform(createEntities());
-
-const src = path.join(__dirname, '../../../asap_grantees_information.csv');
-parseAndCreateEntities(src).catch(console.error);

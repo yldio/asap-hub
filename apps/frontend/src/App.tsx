@@ -27,7 +27,7 @@ const App: React.FC<{}> = () => {
 
           <Route>
             <CheckAuth>
-              <Layout navigation>
+              <Layout>
                 <Switch>
                   <Route exact path="/">
                     <Home />

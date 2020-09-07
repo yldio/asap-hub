@@ -7,3 +7,6 @@ export { default as ProfileRecentWorks } from './ProfileRecentWorks';
 export { default as SkillsSection } from './SkillsSection';
 export { default as MembersSection } from './MembersSection';
 export { default as TeamOverview } from './TeamOverview';
+export { default as MenuHeader } from './MenuHeader';
+export { default as MainNavigation } from './MainNavigation';
+export { default as UserNavigation } from './UserNavigation';

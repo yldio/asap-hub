@@ -2,12 +2,12 @@ import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
 import { SigninPage } from '@asap-hub/react-components';
-import { LayoutDecorator } from './decorators';
+import { BasicLayoutDecorator } from './decorators';
 
 export default {
   title: 'Pages / Auth / Sign in',
   component: SigninPage,
-  decorators: [LayoutDecorator],
+  decorators: [BasicLayoutDecorator],
 };
 
 export const Normal = () => (

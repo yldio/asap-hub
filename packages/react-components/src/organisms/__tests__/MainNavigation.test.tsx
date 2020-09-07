@@ -2,10 +2,10 @@ import React from 'react';
 
 import { render } from '@testing-library/react';
 
-import Navigation from '../Navigation';
+import MainNavigation from '../MainNavigation';
 
 it('renders the navigation sidebar', () => {
-  const { getAllByRole } = render(<Navigation />);
+  const { getAllByRole } = render(<MainNavigation />);
 
   const links = getAllByRole('link');
   expect(links.map((link) => link.getAttribute('href'))).toEqual([

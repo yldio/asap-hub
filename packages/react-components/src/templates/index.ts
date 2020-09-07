@@ -1,6 +1,7 @@
 export { default as AdminInviteUserPage } from './AdminInviteUserPage';
 export { default as ContentPage } from './ContentPage';
 export { default as InviteUserForm } from './InviteUserForm';
+export { default as BasicLayout } from './BasicLayout';
 export { default as Layout } from './Layout';
 export { default as ProfileAbout } from './ProfileAbout';
 export { default as ProfileHeader } from './ProfileHeader';

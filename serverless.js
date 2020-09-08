@@ -3,25 +3,27 @@ const { paramCase } = require('param-case');
 
 const pkg = require('./package.json');
 
+const { NODE_ENV = 'development' } = process.env;
+
+if (NODE_ENV === 'production') {
+  [
+    'ASAP_API_URL',
+    'ASAP_APP_URL',
+    'AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN',
+    'GLOBAL_TOKEN',
+  ].forEach((env) => {
+    assert.ok(process.env[env], `${env} not defined`);
+  });
+}
+
 const {
-  APP_HOSTNAME = 'hub.asap.science',
-  API_HOSTNAME = 'api.hub.asap.science',
+  ASAP_APP_URL = 'http://localhost:3000',
+  ASAP_API_URL = 'http://localhost:3333',
   AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
   AWS_REGION = 'us-east-1',
   BASE_HOSTNAME = 'hub.asap.science',
-  GLOBAL_TOKEN,
-  NODE_ENV = 'development',
   SLS_STAGE = 'development',
 } = process.env;
-
-if (NODE_ENV === 'production') {
-  assert.ok(
-    AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
-    'AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN not defined',
-  );
-  assert.ok(BASE_HOSTNAME, 'BASE_HOSTNAME not defined');
-  assert.ok(GLOBAL_TOKEN, 'GLOBAL_TOKEN not defined');
-}
 
 const service = paramCase(pkg.name);
 const plugins = [
@@ -44,12 +46,12 @@ module.exports = {
     stage: SLS_STAGE,
     httpApi: {
       cors: {
-        allowedOrigins: [`https://${APP_HOSTNAME}`],
+        allowedOrigins: [ASAP_APP_URL],
         allowCredentials: true,
       },
     },
     environment: {
-      APP_ORIGIN: `https://${APP_HOSTNAME}`,
+      APP_ORIGIN: ASAP_APP_URL,
       AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
       NODE_ENV: `\${env:NODE_ENV}`,
       SQUIDEX_APP_NAME: `\${env:SQUIDEX_APP_NAME}`,
@@ -64,8 +66,8 @@ module.exports = {
     excludeDevDependencies: false,
   },
   custom: {
-    apiHostname: API_HOSTNAME,
-    appHostname: APP_HOSTNAME,
+    appHostname: new URL(ASAP_APP_URL).hostname,
+    apiHostname: new URL(ASAP_API_URL).hostname,
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,

@@ -23,6 +23,7 @@ dev/localstack
 dev/mongodb
 dev/sync-squidex-schemas.sh
 bin
+apps/asap-server/.env
 
 *.tsbuildinfo
 

@@ -27,6 +27,7 @@ const {
 
 const service = paramCase(pkg.name);
 const plugins = [
+  'serverless-dotenv-plugin',
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'
@@ -90,6 +91,9 @@ module.exports = {
     },
     'serverless-offline': {
       useChildProcesses: true, // needed for hot reloading to work https://github.com/dherault/serverless-offline/issues/931
+    },
+    dotenv: {
+      path: 'apps/asap-server/.env',
     },
   },
   functions: {

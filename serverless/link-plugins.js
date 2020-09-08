@@ -10,7 +10,6 @@ mkdirSync(pluginsDir, { recursive: true });
 plugins.forEach((plugin) => {
   const symlinkPath = join(pluginsDir, plugin);
   const pluginDirectory = dirname(require.resolve(`${plugin}/package.json`));
-
   try {
     unlinkSync(symlinkPath);
   } catch {}

@@ -47,6 +47,9 @@
     "serverless": {
       "built": false
     },
+    "serverless-dotenv-plugin": {
+      "unplugged": true
+    },
     "serverless-iam-roles-per-function": {
       "unplugged": true
     },
@@ -115,6 +118,7 @@
     "prettier": "^2.1.1",
     "rimraf": "^3.0.2",
     "serverless": "^1.81.1",
+    "serverless-dotenv-plugin": "^3.0.0",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-offline": "^6.7.0",
     "serverless-s3-sync": "^1.14.4",

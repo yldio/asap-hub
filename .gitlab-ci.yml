@@ -103,16 +103,15 @@ test:format:
 test:
   <<: *tmpl_test
   script:
-    - echo $SQUIDEX_APP_NAME
+    - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - yarn run test --coverage
   after_script:
     - yarn dlx codecov@3.7.2
   artifacts:
     paths:
       - coverage
-  environment:
-    name: test/$CI_COMMIT_REF_SLUG
-    auto_stop_in: 1 minute
   needs:
     - build
   variables:

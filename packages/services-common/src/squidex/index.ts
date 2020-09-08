@@ -27,12 +27,18 @@ export class Squidex<T extends { id: string; data: object }> {
         .json();
       return res as { items: T[] };
     } catch (err) {
+      if (
+        err.response?.statusCode === 400 &&
+        err.response?.body.includes('invalid_client')
+      ) {
+        throw Boom.unauthorized();
+      }
+
       if (err.response?.statusCode === 404) {
         return {
           items: [],
         };
       }
-
       throw Boom.badImplementation('squidex', {
         data: err,
       });

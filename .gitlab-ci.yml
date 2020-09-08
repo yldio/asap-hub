@@ -64,8 +64,8 @@ build:
     - setup
   stage: build
   variables:
-    AUTH_FRONTEND_BASE_URL: https://$BASE_HOSTNAME/.auth/
-    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
+    AUTH_FRONTEND_BASE_URL: $ASAP_APP_URL/.auth/
+    REACT_APP_API_BASE_URL: $ASAP_API_URL
 
 build:native-deps:
   script:
@@ -132,9 +132,12 @@ test:
 deploy:sls:branch:
   <<: *tmpl_branch
   <<: *tmpl_deploy
+  before_script:
+    - env | grep ASAP_
+    - echo $SLS_STAGE
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
-    url: https://$APP_HOSTNAME
+    url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$BASE_HOSTNAME
     on_stop: deploy:sls:branch_remove
     auto_stop_in: 3 days
   variables:
@@ -148,6 +151,7 @@ deploy:sls:branch:
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove
   needs:
+    - setup
     - build:native-deps
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
@@ -160,19 +164,12 @@ deploy:sls:branch_remove:
 deploy:sls:dev:
   <<: *tmpl_master
   <<: *tmpl_deploy
-  artifacts:
-    paths:
-      - 'apps/auth-frontend/build'
-  before_script:
-    - yarn build
   environment:
     name: dev
-    url: https://$APP_HOSTNAME
+    url: $ASAP_APP_URL
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
-    AUTH_FRONTEND_BASE_URL: https://$APP_HOSTNAME/.auth/
-    REACT_APP_API_BASE_URL: https://$API_HOSTNAME
     SLS_STAGE: 'dev'
   needs:
     - build
@@ -182,9 +179,17 @@ deploy:sls:dev:
 deploy:sls:production:
   <<: *tmpl_master
   <<: *tmpl_deploy
+  artifacts:
+    paths:
+      - 'apps/auth-frontend/build'
+    expire_in: 1 day
+  before_script:
+    - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
+    - export REACT_APP_API_BASE_URL=$ASAP_API_URL
+    - yarn build
   environment:
     name: production
-    url: https://$APP_HOSTNAME
+    url: $ASAP_APP_URL
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables

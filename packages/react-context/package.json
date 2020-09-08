@@ -15,11 +15,12 @@
     "react": "^16.13.1"
   },
   "dependencies": {
+    "@asap-hub/auth": "workspace:packages/auth",
     "@babel/runtime-corejs3": "^7.9.6",
     "core-js": "^3.6.5"
   },
   "devDependencies": {
-    "@asap-hub/auth": "workspace:packages/auth",
+    
     "@testing-library/react-hooks": "^3.4.1",
     "@types/jest": "^26.0.3",
     "@types/react": "^16.9.0",

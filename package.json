@@ -23,7 +23,7 @@
     "watch:typecheck": "yarn build:typecheck -w",
     "start": "yarn workspaces foreach -vpi -j 1000 run start",
     "start:backend": "docker-compose up -d && yarn sls offline --http-port=3333",
-    "sls": "node serverless/link-plugins.js && yarn pnpify serverless",
+    "sls": "node serverless/link-plugins.js && serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "test": "jest"

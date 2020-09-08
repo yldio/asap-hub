@@ -15,9 +15,15 @@ include:
   variables: &tmpl_branch_variables
     SLS_STAGE: $CI_EXTERNAL_PULL_REQUEST_IID
 
+.tmpl:test: &tmpl_test
+  script:
+    - echo "no script property found"
+  needs:
+    - build:ts
+  stage: test
+
 .tmpl:deploy: &tmpl_deploy
   script:
-    - ulimit -n 32768 -u 32768
     - yarn sls deploy --verbose
   stage: deploy
   variables: &tmpl_deploy_variables
@@ -76,12 +82,6 @@ build:ts:
 #   stage: build
 
 # stage test
-
-.tmpl:test: &tmpl_test
-  script:
-    - echo "no script property found"
-  needs: []
-  stage: test
 
 test:packages:
   <<: *tmpl_test

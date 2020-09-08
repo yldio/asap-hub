@@ -3,7 +3,7 @@ import { TeamResponse } from '../../../model/src';
 import { TeamCard } from '../molecules';
 
 interface NetworkTeamProps {
-  teams: TeamResponse[];
+  teams: ReadonlyArray<TeamResponse>;
 }
 
 const NetworkTeam: React.FC<NetworkTeamProps> = ({ teams }) => (

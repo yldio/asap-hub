@@ -31,11 +31,11 @@ const iconStyles = css({
 });
 
 interface TeamCardProps {
-  id: string;
-  displayName: string;
-  projectSummary?: string;
-  skills: string[];
-  members: TeamMember[];
+  readonly id: string;
+  readonly displayName: string;
+  readonly projectSummary?: string;
+  readonly skills: string[];
+  readonly members: TeamMember[];
 }
 const TeamCard: React.FC<TeamCardProps> = ({
   id,

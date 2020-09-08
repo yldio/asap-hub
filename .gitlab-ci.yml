@@ -35,33 +35,22 @@ variables:
   BASE_HOSTNAME: hub.asap.science
 
 stages:
-  - setup
   - build
   - test
   - prepare
   - deploy
 
-# stage setup
-
-setup:
-  script:
-    - ci/env-create.sh > deploy.env
-  artifacts:
-    reports:
-      dotenv: deploy.env
-  stage: setup
-
 # stage build
 
 build:
+  before_script:
+    - source ci/env-setup.sh
   script:
     - yarn run build
   artifacts:
     paths:
       - 'packages/*/build'
       - 'apps/*/build'
-  needs:
-    - setup
   stage: build
   variables:
     AUTH_FRONTEND_BASE_URL: $ASAP_APP_URL/.auth/
@@ -133,8 +122,7 @@ deploy:sls:branch:
   <<: *tmpl_branch
   <<: *tmpl_deploy
   before_script:
-    - env | grep ASAP_
-    - echo $SLS_STAGE
+    - source ci/env-setup.sh
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
     url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$BASE_HOSTNAME
@@ -144,14 +132,12 @@ deploy:sls:branch:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables
   needs:
-    - setup
     - build
     - build:native-deps
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch_remove
   needs:
-    - setup
     - build:native-deps
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID

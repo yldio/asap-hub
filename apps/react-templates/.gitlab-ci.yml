@@ -5,11 +5,7 @@ deploy:ses:master:
     - yarn node apps/react-templates/lib/deploy.js
   stage: deploy
   dependencies:
-    - setup
-    - build
-  needs:
-    - setup
     - build
   variables:
     SLS_STAGE: production
-    APP_ORIGIN: https://$APP_HOSTNAME
+    APP_ORIGIN: $ASAP_APP_URL

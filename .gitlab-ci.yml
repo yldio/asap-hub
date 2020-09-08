@@ -24,7 +24,7 @@ include:
     NODE_ENV: production
   dependencies:
     - build:ts
-    - build:native
+    # - build:native
 
 .tmpl:branch_remove: &tmpl_branch_remove
   rules:
@@ -54,10 +54,9 @@ stages:
 build:ts:
   artifacts:
     expire_in: 1 day
-    paths:
-      - 'packages/*/build'
-      - 'apps/*/build'
+    untracked: true
   script:
+    - yarn install
     - source ci/env-create.sh
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - yarn run build
@@ -65,16 +64,16 @@ build:ts:
     - []
   stage: build
 
-build:native:
-  artifacts:
-    expire_in: 1 day
-    paths:
-      - '.yarn/unplugged'
-  script:
-    - yarn rebuild
-  needs:
-    - []
-  stage: build
+# build:native:
+#   artifacts:
+#     expire_in: 1 day
+#     paths:
+#       - '.yarn/unplugged'
+#   script:
+#     - yarn rebuild
+#   needs:
+#     - []
+#   stage: build
 
 # stage test
 
@@ -132,7 +131,7 @@ deploy:sls:branch:
     <<: *tmpl_deploy_variables
   needs:
     - build:ts
-    - build:native
+    # - build:native
 
 deploy:sls:branch_remove:
   <<: *tmpl_branch
@@ -144,7 +143,7 @@ deploy:sls:branch_remove:
     - git checkout $CI_COMMIT_SHA # the branch may not exist
     - yarn sls remove --verbose
   needs:
-    - build:native
+    - build:ts
   stage: deploy
 
 deploy:sls:development:
@@ -159,7 +158,7 @@ deploy:sls:development:
     SLS_STAGE: 'dev'
   needs:
     - build:ts
-    - build:native
+    # - build:native
 
 deploy:sls:production:
   <<: *tmpl_master

@@ -9,7 +9,7 @@ if (NODE_ENV === 'production') {
   [
     'ASAP_API_URL',
     'ASAP_APP_URL',
-    'AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN',
+    'AWS_ACM_CERTIFICATE_ARN',
     'GLOBAL_TOKEN',
   ].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
@@ -19,9 +19,9 @@ if (NODE_ENV === 'production') {
 const {
   ASAP_APP_URL = 'http://localhost:3000',
   ASAP_API_URL = 'http://localhost:3333',
-  AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+  ASAP_HOSTNAME = 'hub.asap.science',
+  AWS_ACM_CERTIFICATE_ARN,
   AWS_REGION = 'us-east-1',
-  BASE_HOSTNAME = 'hub.asap.science',
   SLS_STAGE = 'development',
 } = process.env;
 
@@ -66,8 +66,8 @@ module.exports = {
     excludeDevDependencies: false,
   },
   custom: {
-    appHostname: new URL(ASAP_APP_URL).hostname,
     apiHostname: new URL(ASAP_API_URL).hostname,
+    appHostname: new URL(ASAP_APP_URL).hostname,
     s3Sync: [
       {
         bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
@@ -93,7 +93,7 @@ module.exports = {
     },
   },
   functions: {
-    'create-user': {
+    createUser: {
       handler: 'apps/asap-server/build/handlers/users/create.handler',
       events: [
         {
@@ -115,7 +115,7 @@ module.exports = {
         GLOBAL_TOKEN: `\${env:GLOBAL_TOKEN}`,
       },
     },
-    'fetch-users': {
+    fetchUsers: {
       handler: 'apps/asap-server/build/handlers/users/fetch.handler',
       events: [
         {
@@ -127,7 +127,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-user-by-id': {
+    fetchUserById: {
       handler: 'apps/asap-server/build/handlers/users/fetch-by-id.handler',
       events: [
         {
@@ -139,43 +139,43 @@ module.exports = {
         },
       ],
     },
-    'fetch-user-by-code': {
-      handler: 'apps/asap-server/build/handlers/users/fetch-by-code.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/users/invites/{code}`,
-          },
-        },
-      ],
-    },
-    'fetch-me': {
-      handler: 'apps/asap-server/build/handlers/users/fetch-me.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/users/me`,
-          },
-        },
-      ],
-    },
-    'connect-by-code': {
-      handler: 'apps/asap-server/build/handlers/users/connect-by-code.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'POST',
-            path: `/users/connections`,
-          },
-        },
-      ],
-    },
-    'webhook-fetch-by-code': {
+    // 'fetch-user-by-code': {
+    //   handler: 'apps/asap-server/build/handlers/users/fetch-by-code.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'GET',
+    //         path: `/users/invites/{code}`,
+    //       },
+    //     },
+    //   ],
+    // },
+    // 'fetch-me': {
+    //   handler: 'apps/asap-server/build/handlers/users/fetch-me.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'GET',
+    //         path: `/users/me`,
+    //       },
+    //     },
+    //   ],
+    // },
+    // 'connect-by-code': {
+    //   handler: 'apps/asap-server/build/handlers/users/connect-by-code.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'POST',
+    //         path: `/users/connections`,
+    //       },
+    //     },
+    //   ],
+    // },
+    auth0FetchByCode: {
       handler:
         'apps/asap-server/build/handlers/users/webhook-fetch-by-code.handler',
       events: [
@@ -188,7 +188,7 @@ module.exports = {
         },
       ],
     },
-    'webhook-connect-by-code': {
+    auth0ConnectByCode: {
       handler:
         'apps/asap-server/build/handlers/users/webhook-connect-by-code.handler',
       events: [
@@ -201,7 +201,7 @@ module.exports = {
         },
       ],
     },
-    'sync-user-orcid': {
+    syncUserOrcid: {
       handler:
         'apps/asap-server/build/handlers/users/webhook-sync-orcid.handler',
       events: [
@@ -214,33 +214,33 @@ module.exports = {
         },
       ],
     },
-    'create-research-output': {
-      handler:
-        'apps/asap-server/build/handlers/research-outputs/create.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'POST',
-            path: `/users/{id}/research-outputs`,
-          },
-        },
-      ],
-    },
-    'fetch-research-outputs': {
-      handler:
-        'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/users/{id}/research-outputs`,
-          },
-        },
-      ],
-    },
-    'fetch-page': {
+    // 'create-research-output': {
+    //   handler:
+    //     'apps/asap-server/build/handlers/research-outputs/create.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'POST',
+    //         path: `/users/{id}/research-outputs`,
+    //       },
+    //     },
+    //   ],
+    // },
+    // 'fetch-research-outputs': {
+    //   handler:
+    //     'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
+    //   events: [
+    //     {
+    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+    //       httpApi: {
+    //         method: 'GET',
+    //         path: `/users/{id}/research-outputs`,
+    //       },
+    //     },
+    //   ],
+    // },
+    fetchPage: {
       handler: 'apps/asap-server/build/handlers/pages/fetch.handler',
       events: [
         {
@@ -252,7 +252,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-content-by-slug': {
+    fetchContentBySlug: {
       handler: 'apps/asap-server/build/handlers/content/fetch-by-slug.handler',
       events: [
         {
@@ -264,7 +264,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-teams': {
+    fetchTeams: {
       handler: 'apps/asap-server/build/handlers/teams/fetch.handler',
       events: [
         {
@@ -276,7 +276,7 @@ module.exports = {
         },
       ],
     },
-    'fetch-team-by-id': {
+    fetchTeamById: {
       handler: 'apps/asap-server/build/handlers/teams/fetch-by-id.handler',
       events: [
         {
@@ -290,7 +290,7 @@ module.exports = {
     },
     ...(NODE_ENV === 'production'
       ? {
-          'cronjob-sync-orcid': {
+          cronjobSyncOrcid: {
             handler:
               'apps/asap-server/build/handlers/users/cronjob-sync-orcid.handler',
             events: [
@@ -310,7 +310,7 @@ module.exports = {
           DomainName: `\${self:custom.apiHostname}`,
           DomainNameConfigurations: [
             {
-              CertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
               EndpointType: 'REGIONAL',
             },
           ],
@@ -329,7 +329,7 @@ module.exports = {
       HttpApiRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_HOSTNAME}.`,
+          HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.apiHostname}`,
@@ -625,7 +625,7 @@ module.exports = {
             Enabled: true,
             PriceClass: 'PriceClass_100',
             ViewerCertificate: {
-              AcmCertificateArn: AWS_ACM_ASAP_SCIENCE_CERTIFICATE_ARN,
+              AcmCertificateArn: AWS_ACM_CERTIFICATE_ARN,
               MinimumProtocolVersion: 'TLSv1.2_2018',
               SslSupportMethod: 'sni-only',
             },
@@ -635,7 +635,7 @@ module.exports = {
       CloudFrontRecordSetGroup: {
         Type: 'AWS::Route53::RecordSetGroup',
         Properties: {
-          HostedZoneName: `${BASE_HOSTNAME}.`,
+          HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
               Name: `\${self:custom.appHostname}`,

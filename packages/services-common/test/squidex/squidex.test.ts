@@ -300,6 +300,40 @@ describe('squidex wrapper', () => {
     expect(nock.isDone()).toBeTruthy();
   });
 
+  it('patch a specific document based on filter', async () => {
+    identity()
+      .patch(`/api/content/${squidex.appName}/${collection}/42`, {
+        string: {
+          iv: 'value',
+        },
+      })
+      .reply(200, {
+        id: '42',
+        data: {
+          string: {
+            iv: 'newValue',
+          },
+        },
+      });
+
+    const client = new Squidex<Content>(collection);
+    const result = await client.patch('42', {
+      string: {
+        iv: 'value',
+      },
+    });
+
+    expect(result).toEqual({
+      id: '42',
+      data: {
+        string: {
+          iv: 'newValue',
+        },
+      },
+    });
+    expect(nock.isDone()).toBeTruthy();
+  });
+
   it('deletes a specific document', async () => {
     identity()
       .delete(`/api/content/${squidex.appName}/${collection}/42`)

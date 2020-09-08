@@ -38,6 +38,7 @@ __metadata:
     "@types/jsonwebtoken": ^8.5.0
     "@types/jwt-decode": ^2.2.1
     "@types/lodash.get": ^4
+    "@types/pump": ^1.1.0
     "@types/uuid": ^8.0.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
@@ -51,6 +52,7 @@ __metadata:
     lodash.get: ^4.4.2
     nock: ^13.0.4
     p-limit: ^3.0.2
+    pump: ^3.0.0
     uuid: ^8.3.0
   languageName: unknown
   linkType: soft
@@ -203,6 +205,31 @@ __metadata:
     react-test-renderer: ^16.13.1
     typescript: ~3.9.7
     use-http: ^1.0.13
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/import-data@workspace:apps/import-data":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/import-data@workspace:apps/import-data"
+  dependencies:
+    "@asap-hub/model": "workspace:packages/model"
+    "@asap-hub/services-common": "workspace:packages/services-common"
+    "@babel/core": ^7.9.0
+    "@babel/plugin-transform-modules-commonjs": ^7.10.1
+    "@babel/plugin-transform-runtime": ^7.10.3
+    "@babel/runtime-corejs3": ^7.9.6
+    "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/babel__core": ^7
+    "@types/pump": ^1.1.0
+    "@types/through2-concurrent": ^2
+    "@yarnpkg/pnpify": ^2.0.0-rc.20
+    apr-intercept: ^3.0.4
+    commander: ^6.1.0
+    csv-parse: ^4.12.0
+    pump: ^3.0.0
+    through2-concurrent: ^2.0.0
+  bin:
+    asap-import: build/import.js
   languageName: unknown
   linkType: soft
 
@@ -4953,6 +4980,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/pump@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@types/pump@npm:1.1.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: 67d7756996edc3309e1dbfb6d1e30f683584db48f31045880826ec4160ff1b1224ee5a954c5caf35d950b42aa58aff2fd95c23fd1e804361415f2a94a2316d5b
+  languageName: node
+  linkType: hard
+
 "@types/pvutils@npm:*":
   version: 0.0.1
   resolution: "@types/pvutils@npm:0.0.1"
@@ -5182,6 +5218,25 @@ __metadata:
     "@types/testing-library__dom": "*"
     pretty-format: ^25.1.0
   checksum: 20b6597fad68760af1590aa897abc0f75c19f747fc461ae81adf3405c43b37064903df02c38edce2c23c01194b17765feefb4f534cb12679a94b83e7e6240716
+  languageName: node
+  linkType: hard
+
+"@types/through2-concurrent@npm:^2":
+  version: 2.0.0
+  resolution: "@types/through2-concurrent@npm:2.0.0"
+  dependencies:
+    "@types/node": "*"
+    "@types/through2": "*"
+  checksum: d05e72d357cd93534a3b8fc04cac87a9bbaa1f28f8b1a3d7229b380aad21f33d83e136ebeb04d0446ff74d761c22f43fb2044674fc756c186dd4b6f729666cfa
+  languageName: node
+  linkType: hard
+
+"@types/through2@npm:*":
+  version: 2.0.36
+  resolution: "@types/through2@npm:2.0.36"
+  dependencies:
+    "@types/node": "*"
+  checksum: 62b47565966bf35a4bbb5553dd4bcdabc932a57fb2222734ae2c266e120f135f2a5e84f5876ebbadba8b43a9355f9f8cfcd2f8591636388b1e6d4a5c097a0ee6
   languageName: node
   linkType: hard
 
@@ -8708,6 +8763,13 @@ __metadata:
   version: 5.1.0
   resolution: "commander@npm:5.1.0"
   checksum: d16141ea7f580945156fb8a06de2834c4647c7d9d3732ebd4534ab8e0b7c64747db301e18f2b840f28ea8fef51f7a8d6178e674b45a21931f0b65ff1c7f476b3
+  languageName: node
+  linkType: hard
+
+"commander@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "commander@npm:6.1.0"
+  checksum: ef1e310c3f430b84f8818ec9c6e5ce1b84909616eb2c1b1a79f646bc25fbca156eccf2ecf19f07e77a08dc519728d53d1300f94f3b2ad93de65add66044dfce6
   languageName: node
   linkType: hard
 
@@ -24186,6 +24248,15 @@ resolve@1.15.0:
   version: 2.1.0
   resolution: "throttle-debounce@npm:2.1.0"
   checksum: 6a1a5fb669ceeb1499bb1ea31e28e68b09d9126fd99fa79f559bd1826e9eaafbef177e0fe335f0fe45b49431b63b2cfeff864d7fadf639e795b234077768ce28
+  languageName: node
+  linkType: hard
+
+"through2-concurrent@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "through2-concurrent@npm:2.0.0"
+  dependencies:
+    through2: ^2.0.0
+  checksum: d59892c4bc7aeb879742caddb5ff8f14abb34b8015e61f1082e4d015ad50a6919d4b0a2556cafcbfbad3464b3b9522b854932a8017547ef9cfd4348619eccd52
   languageName: node
   linkType: hard
 

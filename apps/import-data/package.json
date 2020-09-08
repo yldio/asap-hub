@@ -1,0 +1,35 @@
+{
+  "name": "@asap-hub/import-data",
+  "private": true,
+  "version": "0.1.0",
+  "bin": {
+    "asap-import": "build/import.js"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "scripts": {
+    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
+    "watch:babel": "yarn build:babel -w --verbose"
+  },
+  "dependencies": {
+    "@asap-hub/model": "workspace:packages/model",
+    "@asap-hub/services-common": "workspace:packages/services-common",
+    "apr-intercept": "^3.0.4",
+    "commander": "^6.1.0",
+    "csv-parse": "^4.12.0",
+    "pump": "^3.0.0",
+    "through2-concurrent": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
+    "@babel/plugin-transform-runtime": "^7.10.3",
+    "@babel/runtime-corejs3": "^7.9.6",
+    "@types/apr-intercept": "workspace:@types/apr-intercept",
+    "@types/babel__core": "^7",
+    "@types/pump": "^1.1.0",
+    "@types/through2-concurrent": "^2",
+    "@yarnpkg/pnpify": "^2.0.0-rc.20"
+  }
+}

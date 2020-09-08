@@ -79,7 +79,7 @@ export class Squidex<T extends { id: string; data: object }> {
   }
 
   patch(id: string, json: Partial<T['data']>): Promise<T> {
-    return this.client.patch(`${this.collection}/${id}`, json).json();
+    return this.client.patch(`${this.collection}/${id}`, { json }).json();
   }
 
   delete(id: string): Promise<void> {

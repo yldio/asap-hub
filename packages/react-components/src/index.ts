@@ -27,6 +27,7 @@ export {
   TabLink,
   Tag,
   TagLabel,
+  Overlay,
 } from './atoms';
 export {
   OrcidSigninButton,
@@ -37,9 +38,10 @@ export {
   LabeledTextField,
   LabeledPasswordField,
   LabeledDropdown,
-  Navigation,
   TabNav,
   TeamCard,
+  MenuButton,
+  UserMenuButton,
 } from './molecules';
 export {
   EmailPasswordSignin,
@@ -50,12 +52,16 @@ export {
   RadioButtonGroup,
   SkillsSection,
   SsoButtons,
+  MainNavigation,
+  UserNavigation,
+  MenuHeader,
 } from './organisms';
 
 export {
   AdminInviteUserPage,
   ContentPage,
   InviteUserForm,
+  BasicLayout,
   Layout,
   ProfileAbout,
   ProfileHeader,

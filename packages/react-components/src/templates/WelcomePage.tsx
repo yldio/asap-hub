@@ -50,7 +50,7 @@ const containerStyles = css({
 });
 
 const headerStyles = css({
-  flexGrow: 9999,
+  flexGrow: 1,
   order: 0,
 });
 
@@ -64,10 +64,11 @@ const welcomeStyles = css({
 });
 
 const linksContainerStyles = css({
-  flexGrow: 1,
+  flexGrow: 9999,
   order: 3,
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     order: 1,
+    justifyContent: 'flex-end',
   },
 
   display: 'flex',

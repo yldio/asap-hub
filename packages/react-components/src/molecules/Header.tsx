@@ -2,37 +2,26 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { asapPaddedImage, asapPaddedWhiteImage } from '../images';
-import { steel, paper } from '../colors';
+import { paper } from '../colors';
 import { Link } from '../atoms';
 
 const height = '72px';
 
-const styles = css({
-  boxSizing: 'border-box',
-  flexBasis: '100%',
-  flexShrink: 1,
+const containerStyles = css({
   height,
+  flexGrow: 1,
+  boxSizing: 'border-box',
   padding: '0 24px',
 
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  justifyContent: 'center',
 });
-
-const containerStyles = css({
-  height,
-});
-const logoStyles = css({
-  height,
-});
-
 const containerOpaqueStyles = css({
   backgroundColor: paper.rgb,
-  borderBottom: `1px solid ${steel.rgb}`,
 });
-const opaqueStyles = css({
-  // if transparent, fixed does not make sense because things could scroll visually through the header
-  position: 'fixed',
+
+const logoStyles = css({
+  height,
 });
 
 type HeaderProps = {
@@ -40,17 +29,15 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ transparent = false }) => (
-  <div css={[containerStyles, transparent || containerOpaqueStyles]}>
-    <header css={[styles, transparent || opaqueStyles]}>
-      <Link href="/">
-        <img
-          alt="ASAP logo"
-          src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
-          css={logoStyles}
-        />
-      </Link>
-    </header>
-  </div>
+  <header css={[containerStyles, transparent || containerOpaqueStyles]}>
+    <Link href="/">
+      <img
+        alt="ASAP logo"
+        src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
+        css={logoStyles}
+      />
+    </Link>
+  </header>
 );
 
 export default Header;

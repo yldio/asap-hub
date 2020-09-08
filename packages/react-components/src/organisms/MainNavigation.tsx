@@ -7,7 +7,6 @@ import {
   smallDesktopScreen,
   largeDesktopScreen,
 } from '../pixels';
-import { steel } from '../colors';
 import { Link } from '../atoms';
 
 const width = vminLinearCalc(
@@ -19,31 +18,18 @@ const width = vminLinearCalc(
 );
 
 const containerStyles = css({
-  position: 'relative',
   width,
-  height: '100%',
 });
 
 const listStyles = css({
   listStyle: 'none',
-
-  position: 'fixed',
-  boxSizing: 'border-box',
-  width,
   margin: 0,
+  boxSizing: 'border-box',
   padding: `${24 / perRem}em`,
+  width,
 });
 
-const borderStyles = css({
-  position: 'fixed',
-  height: '100vh',
-  top: 0,
-  left: width,
-
-  borderRight: `1px solid ${steel.rgb}`,
-});
-
-const Navigation: React.FC = () => (
+const MainNavigation: React.FC<{}> = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
@@ -53,8 +39,7 @@ const Navigation: React.FC = () => (
         <Link href="/teams">Teams</Link>
       </li>
     </ul>
-    <div role="presentation" css={borderStyles} />
   </nav>
 );
 
-export default Navigation;
+export default MainNavigation;

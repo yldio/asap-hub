@@ -20,5 +20,6 @@ export { default as Tag } from './Tag';
 export { default as TagLabel } from './TagLabel';
 export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
+export { default as Overlay } from './Overlay';
 
 export type { DropdownProps } from './Dropdown';

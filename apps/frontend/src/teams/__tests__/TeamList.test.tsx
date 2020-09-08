@@ -31,7 +31,7 @@ beforeEach(() => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
-    .get('/teams/teams')
+    .get('/teams')
     .reply(200, teams);
 });
 
@@ -40,8 +40,8 @@ const renderTeamList = async () => {
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/']}>
-            <Route exact path="/" component={Teams} />
+          <MemoryRouter initialEntries={['/teams/teams']}>
+            <Route path="/teams" component={Teams} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>

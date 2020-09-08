@@ -5,6 +5,8 @@ import {
   perRem,
   contentSidePaddingWithNavigation,
   tabletScreen,
+  mobileScreen,
+  vminLinearCalc,
 } from '../pixels';
 import { pearl } from '../colors';
 import NetworkPageHeader from './NetworkPageHeader';
@@ -13,19 +15,13 @@ const styles = css({
   alignSelf: 'stretch',
   background: pearl.rgb,
   display: 'grid',
-  gridRowGap: `${24 / perRem}em`,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    36 / perRem
-  }em `,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridRowGap: `${36 / perRem}em`,
-    padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-      72 / perRem
-    }em `,
-  },
+  gridRowGap: `${vminLinearCalc(mobileScreen, 24, tabletScreen, 36, 'px')}`,
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(
+    8,
+  )} ${vminLinearCalc(mobileScreen, 36, tabletScreen, 72, 'px')}`,
 });
 
-const TeamListPage: React.FC = ({ children }) => {
+const NetworkPage: React.FC = ({ children }) => {
   return (
     <>
       <NetworkPageHeader />
@@ -34,4 +30,4 @@ const TeamListPage: React.FC = ({ children }) => {
   );
 };
 
-export default TeamListPage;
+export default NetworkPage;

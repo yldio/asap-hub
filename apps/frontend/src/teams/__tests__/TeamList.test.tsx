@@ -31,7 +31,7 @@ beforeEach(() => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
-    .get('/teams')
+    .get('/teams/teams')
     .reply(200, teams);
 });
 

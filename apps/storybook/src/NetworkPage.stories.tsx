@@ -1,5 +1,5 @@
 import React from 'react';
-import { NetworkListPage, TeamCard } from '@asap-hub/react-components';
+import { NetworkPage, NetworkTeam } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
@@ -52,14 +52,7 @@ const commonProps = () => ({
   ],
 });
 export const TeamList = () => (
-  <NetworkListPage>
-    {commonProps().teams.map((team) => {
-      const { id } = team;
-      return (
-        <div key={id}>
-          <TeamCard {...team} />
-        </div>
-      );
-    })}
-  </NetworkListPage>
+  <NetworkPage>
+    <NetworkTeam teams={commonProps().teams} />{' '}
+  </NetworkPage>
 );

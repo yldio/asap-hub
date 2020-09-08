@@ -27,12 +27,11 @@ const {
 
 const service = paramCase(pkg.name);
 const plugins = [
-  'serverless-dotenv-plugin',
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'
     ? ['serverless-webpack']
-    : ['serverless-offline']),
+    : ['serverless-offline', 'serverless-dotenv-plugin']),
 ];
 
 module.exports = {

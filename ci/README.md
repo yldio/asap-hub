@@ -1,3 +1,5 @@
+# GitLab CI Variables
+
 | NAME                       | feature\*                        | production                   | default                          |
 | -------------------------- | -------------------------------- | ---------------------------- | -------------------------------- |
 | ASAP_API_URL               | https://#mr-api.hub.asap.science | https://api.hub.asap.science | https://dev-api.hub.asap.science |
@@ -21,3 +23,7 @@
 | SQUIDEX_TEST_CLIENT_SECRET |                                  |                              | \*                               |
 
 \* Variables set by `ci/env-create.sh` script.
+
+# Environments
+
+![](./static/environments.jpg)

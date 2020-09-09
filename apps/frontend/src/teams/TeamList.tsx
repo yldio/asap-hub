@@ -1,6 +1,5 @@
 import React from 'react';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
-import { join } from 'path';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import {
   Paragraph,
   NetworkPage,
@@ -9,7 +8,7 @@ import {
 import { useTeams } from '../api';
 
 const Page: React.FC = () => {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   const { loading, data: teams, error } = useTeams();
 
   if (loading) {
@@ -29,11 +28,9 @@ const Page: React.FC = () => {
     return (
       <NetworkPage>
         <Switch>
-          <Route path={`${path}/teams`}>
+          <Route exact path={path}>
             <NetworkTeam teams={teams} />
           </Route>
-          <Route path={`${path}/users`}>@todo: Users</Route>
-          <Redirect to={join(url, 'teams')} />
         </Switch>
       </NetworkPage>
     );

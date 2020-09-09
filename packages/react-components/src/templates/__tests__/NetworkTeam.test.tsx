@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { TeamResponse } from '@asap-hub/model';
 
 import NetworkTeam from '../NetworkTeam';
-import { TeamResponse } from '../../../../model/src';
 
 const team: TeamResponse = {
   id: '42',

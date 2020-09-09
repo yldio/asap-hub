@@ -1,9 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Paragraph } from '@asap-hub/react-components';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import {
+  Paragraph,
+  NetworkPage,
+  NetworkTeam,
+} from '@asap-hub/react-components';
 import { useTeams } from '../api';
 
 const Page: React.FC = () => {
+  const { path } = useRouteMatch();
   const { loading, data: teams, error } = useTeams();
 
   if (loading) {
@@ -19,21 +24,15 @@ const Page: React.FC = () => {
       </Paragraph>
     );
   }
-
   if (teams) {
     return (
-      <>
-        {teams.map((team) => {
-          const { id } = team;
-          return (
-            <div key={id}>
-              <Link to={`/teams/${id}`}>
-                <pre>{JSON.stringify(team, null, 2)}</pre>
-              </Link>
-            </div>
-          );
-        })}
-      </>
+      <NetworkPage>
+        <Switch>
+          <Route exact path={path}>
+            <NetworkTeam teams={teams} />
+          </Route>
+        </Switch>
+      </NetworkPage>
     );
   }
 

@@ -15,10 +15,10 @@ import { API_BASE_URL } from '../../config';
 const teams: ReadonlyArray<TeamResponse> = [
   {
     id: '42',
-    displayName: 'Team Unknown',
-    applicationNumber: 'Unknow Number',
-    projectTitle: 'Unkown Project Title',
-    projectSummary: 'Unkown Project Summary',
+    displayName: 'Unknown Team',
+    applicationNumber: 'Unknown Number',
+    projectTitle: 'Unknown Project Title',
+    projectSummary: 'Unknown Project Summary',
     lastModifiedDate: new Date().toISOString(),
     members: [],
     skills: [],
@@ -40,8 +40,8 @@ const renderTeamList = async () => {
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/']}>
-            <Route exact path="/" component={Teams} />
+          <MemoryRouter initialEntries={['/teams']}>
+            <Route path="/teams" component={Teams} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>
@@ -64,7 +64,6 @@ it('renders a loading indicator', async () => {
 
 it('renders a list of teams information', async () => {
   const { container } = await renderTeamList();
-  teams.map((team) =>
-    expect(container.textContent).toContain(JSON.stringify(team, null, 2)),
-  );
+  expect(container.textContent).toContain('Unknown Team');
+  expect(container.textContent).toContain('Unknown Project Summary');
 });

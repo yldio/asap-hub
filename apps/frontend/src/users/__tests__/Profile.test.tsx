@@ -15,6 +15,7 @@ import { API_BASE_URL } from '../../config';
 const user: UserResponse = {
   id: '42',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
+  createdDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   displayName: 'John Doe',
   email: 'john.doe@example.com',
   institution: 'Unknown Institution',

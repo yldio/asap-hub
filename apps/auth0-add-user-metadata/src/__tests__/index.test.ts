@@ -69,6 +69,7 @@ const apiUser: UserResponse = {
   email: 'joao.tiago@yld.io',
   id: 'myRandomId123',
   lastModifiedDate: '2020-08-21T14:23:31.924Z',
+  createdDate: '2020-08-21T14:23:31.924Z',
   teams: [],
   skills: [],
 };

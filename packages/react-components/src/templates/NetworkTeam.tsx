@@ -1,9 +1,9 @@
 import React from 'react';
-import { TeamResponse } from '../../../model/src';
+import { TeamResponse } from '@asap-hub/model';
 import { TeamCard } from '../molecules';
 
 interface NetworkTeamProps {
-  teams: ReadonlyArray<TeamResponse>;
+  readonly teams: ReadonlyArray<TeamResponse>;
 }
 
 const NetworkTeam: React.FC<NetworkTeamProps> = ({ teams }) => (

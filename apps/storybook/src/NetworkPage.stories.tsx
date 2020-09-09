@@ -53,6 +53,6 @@ const commonProps = () => ({
 });
 export const TeamList = () => (
   <NetworkPage>
-    <NetworkTeam teams={commonProps().teams} />{' '}
+    <NetworkTeam teams={commonProps().teams} />
   </NetworkPage>
 );

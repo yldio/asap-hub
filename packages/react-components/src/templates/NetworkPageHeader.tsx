@@ -41,7 +41,7 @@ const NetworkPageHeader: React.FC = () => {
         Network.
       </Paragraph>
       <div css={controlsStyles}>
-        <Button enabled={false} primary={false}>
+        <Button enabled={false}>
           {filterIcon}
           <span css={buttonTextStyles}>Filters</span>
         </Button>

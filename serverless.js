@@ -31,7 +31,7 @@ const plugins = [
   'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'
     ? ['serverless-webpack']
-    : ['serverless-offline']),
+    : ['serverless-offline', 'serverless-dotenv-plugin']),
 ];
 
 module.exports = {
@@ -90,6 +90,9 @@ module.exports = {
     },
     'serverless-offline': {
       useChildProcesses: true, // needed for hot reloading to work https://github.com/dherault/serverless-offline/issues/931
+    },
+    dotenv: {
+      path: 'apps/asap-server/.env',
     },
   },
   functions: {

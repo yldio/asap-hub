@@ -5,19 +5,48 @@ export interface OpaqueColor {
   rgb: string;
   hex: string;
 }
+export interface TransparentColor {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+  rgba: string;
+}
 
-export const color = (r: number, g: number, b: number): OpaqueColor => ({
-  r,
-  g,
-  b,
-  rgb: `rgb(${r}, ${g}, ${b})`,
-  hex:
-    // eslint-disable-next-line prefer-template
-    '#' +
-    r.toString(16).padStart(2, '0') +
-    g.toString(16).padStart(2, '0') +
-    b.toString(16).padStart(2, '0'),
-});
+export function color(r: number, g: number, b: number): OpaqueColor;
+export function color(
+  r: number,
+  g: number,
+  b: number,
+  a: number,
+): TransparentColor;
+export function color(
+  r: number,
+  g: number,
+  b: number,
+  a?: number,
+): OpaqueColor | TransparentColor {
+  return typeof a === 'number'
+    ? {
+        r,
+        g,
+        b,
+        a,
+        rgba: `rgba(${r}, ${g}, ${b}, ${a})`,
+      }
+    : {
+        r,
+        g,
+        b,
+        rgb: `rgb(${r}, ${g}, ${b})`,
+        hex:
+          // eslint-disable-next-line prefer-template
+          '#' +
+          r.toString(16).padStart(2, '0') +
+          g.toString(16).padStart(2, '0') +
+          b.toString(16).padStart(2, '0'),
+      };
+}
 
 // Monochrome
 export const paper = color(255, 255, 255);

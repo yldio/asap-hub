@@ -1,16 +1,36 @@
 import React from 'react';
-
 import { render } from '@testing-library/react';
 
 import MainNavigation from '../MainNavigation';
 
-it('renders the navigation sidebar', () => {
-  const { getAllByRole } = render(<MainNavigation />);
-
-  const links = getAllByRole('link');
-  expect(links.map((link) => link.getAttribute('href'))).toEqual([
-    '/users',
-    '/teams',
+it('renders the navigation items', () => {
+  const { getAllByRole } = render(
+    <MainNavigation
+      networkHref="/network"
+      libraryHref="/library"
+      newsAndEventsHref="/news-and-events"
+    />,
+  );
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual([
+    expect.stringMatching(/network/i),
+    expect.stringMatching(/library/i),
+    expect.stringMatching(/news/i),
   ]);
-  expect(links.map((link) => link.textContent)).toEqual(['Users', 'Teams']);
+});
+
+it('applies the passed hrefs', () => {
+  const { getAllByRole } = render(
+    <MainNavigation
+      networkHref="/network"
+      libraryHref="/library"
+      newsAndEventsHref="/news-and-events"
+    />,
+  );
+  expect(
+    getAllByRole('link').find(({ textContent }) =>
+      /network/i.test(textContent ?? ''),
+    ),
+  ).toHaveAttribute('href', '/network');
 });

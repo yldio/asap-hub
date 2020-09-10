@@ -30,7 +30,9 @@ describe('content page', () => {
       <authTestUtils.Auth0Provider>
         <authTestUtils.WhenReady>
           <MemoryRouter initialEntries={['/privacy-policy']}>
-            <Route path="/privacy-policy" component={ContentPage} />
+            <Route path="/privacy-policy">
+              <ContentPage layoutComponent={React.Fragment} />
+            </Route>
           </MemoryRouter>
         </authTestUtils.WhenReady>
       </authTestUtils.Auth0Provider>,

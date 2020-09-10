@@ -9,4 +9,12 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-export const Normal = () => <Layout>Content</Layout>;
+export const Normal = () => (
+  <Layout
+    networkHref="/network"
+    libraryHref="/library"
+    newsAndEventsHref="/news-and-events"
+  >
+    Content
+  </Layout>
+);

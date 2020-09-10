@@ -1,6 +1,7 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
-import { Layout } from '@asap-hub/react-components';
+import { Layout, BasicLayout } from '@asap-hub/react-components';
+import { useAuth0 } from '@asap-hub/react-context';
 
 import Admin from './admin/Admin';
 import CreateProfile from './onboarding/CreateProfile';
@@ -15,19 +16,40 @@ import ResearchOutputs from './research-outputs/Routes';
 import CheckAuth from './auth/CheckAuth';
 import Page from './pages/Content';
 
+const ConfiguredLayout: React.FC = ({ children }) => {
+  const { isAuthenticated } = useAuth0();
+  return isAuthenticated ? (
+    <Layout
+      libraryHref="/library"
+      networkHref="/users"
+      newsAndEventsHref="/news-and-events"
+    >
+      {children}
+    </Layout>
+  ) : (
+    <BasicLayout>{children}</BasicLayout>
+  );
+};
+
 const App: React.FC<{}> = () => {
   return (
     <AuthProvider>
       <Router history={history}>
         <Switch>
           <Route path="/welcome" component={Welcome} />
-          <Route exact path="/terms-and-conditions" component={Page} />
-          <Route exact path="/privacy-policy" component={Page} />
+
+          <Route exact path="/terms-and-conditions">
+            <Page layoutComponent={ConfiguredLayout} />
+          </Route>
+          <Route exact path="/privacy-policy">
+            <Page layoutComponent={ConfiguredLayout} />
+          </Route>
+
           <Route exact path="/admin" component={Admin} />
 
           <Route>
             <CheckAuth>
-              <Layout>
+              <ConfiguredLayout>
                 <Switch>
                   <Route exact path="/">
                     <Home />
@@ -42,7 +64,7 @@ const App: React.FC<{}> = () => {
 
                   <Route>Not Found</Route>
                 </Switch>
-              </Layout>
+              </ConfiguredLayout>
             </CheckAuth>
           </Route>
         </Switch>

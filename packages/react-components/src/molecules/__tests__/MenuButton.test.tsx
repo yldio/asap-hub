@@ -5,8 +5,8 @@ import userEvent from '@testing-library/user-event';
 import MenuButton from '../MenuButton';
 
 it('renders a button to toggle the menu', () => {
-  const { getByLabelText } = render(<MenuButton />);
-  expect(getByLabelText(/toggle menu/i)).toHaveTextContent(/menu/i);
+  const { getByLabelText, getByTitle } = render(<MenuButton />);
+  expect(getByLabelText(/toggle menu/i)).toContainElement(getByTitle(/menu/i));
 });
 
 it('triggers the click event', () => {

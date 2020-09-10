@@ -7,7 +7,7 @@ import {
   HTMLProps,
 } from 'react';
 import { fern, steel, ember } from './colors';
-import { perRem } from './pixels';
+import { perRem, lineHeight } from './pixels';
 
 export const borderWidth = 1;
 
@@ -18,7 +18,6 @@ export const indicatorPadding = paddingLeftRight;
 export const textPaddingTop = paddingTopBottom + 1;
 export const textPaddingBottom = paddingTopBottom - 1;
 
-export const lineHeight = 24;
 export const indicatorSize = lineHeight;
 
 export const styles = {

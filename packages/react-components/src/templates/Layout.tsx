@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ComponentProps } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import css from '@emotion/css';
@@ -19,14 +19,12 @@ const styles = css({
   grid: `
     "header     header"  max-content
     "main-menu  content" max-content
-    "user-menu  content" max-content
-    "menu-space content" 1fr         / max-content 1fr`,
+    "user-menu  content" 1fr         / max-content 1fr`,
 
   [crossQuery]: {
     grid: `
       "header     user-button" max-content
-      "main-menu  content"     max-content
-      "menu-space content"     1fr         / max-content 1fr`,
+      "main-menu  content"     1fr         / max-content 1fr`,
   },
 });
 
@@ -124,14 +122,16 @@ const userMenuShownStyles = css({
     display: 'unset',
   },
 });
-const menuSpaceStyles = css({
-  gridArea: 'menu-space',
-});
 
-interface LayoutProps {
+type LayoutProps = {
   readonly children: React.ReactNode;
-}
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+} & ComponentProps<typeof MainNavigation>;
+const Layout: React.FC<LayoutProps> = ({
+  children,
+  libraryHref,
+  networkHref,
+  newsAndEventsHref,
+}) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -162,7 +162,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
       </div>
       <div css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}>
-        <MainNavigation />
+        <MainNavigation
+          libraryHref={libraryHref}
+          networkHref={networkHref}
+          newsAndEventsHref={newsAndEventsHref}
+        />
       </div>
       <div
         css={[
@@ -174,10 +178,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         <UserNavigation />
       </div>
-      <div
-        role="presentation"
-        css={[menuStyles, menuShown && menuMenuShownStyles, menuSpaceStyles]}
-      />
     </article>
   );
 };

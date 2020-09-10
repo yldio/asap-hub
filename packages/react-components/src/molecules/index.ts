@@ -9,8 +9,6 @@ export { default as LabeledTextArea } from './LabeledTextArea';
 export { default as LabeledTextField } from './LabeledTextField';
 export { default as MenuButton } from './MenuButton';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
-export { default as PeopleCard } from './PeopleCard';
 export { default as ProfilePersonalText } from './ProfilePersonalText';
 export { default as TabNav } from './TabNav';
-export { default as TeamCard } from './TeamCard';
 export { default as UserMenuButton } from './UserMenuButton';

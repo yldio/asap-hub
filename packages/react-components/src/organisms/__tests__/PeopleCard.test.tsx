@@ -4,11 +4,11 @@ import { render } from '@testing-library/react';
 import PeopleCard from '../PeopleCard';
 
 const props = {
-  id: '123',
   displayName: 'John Doe',
   teams: [],
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   createdDate: new Date(2020, 6, 12, 14, 32).toISOString(),
+  profileHref: 'http://localhost/users/123',
 };
 
 it('renders the display name', () => {

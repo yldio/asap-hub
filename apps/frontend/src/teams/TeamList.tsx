@@ -5,11 +5,13 @@ import {
   NetworkPage,
   NetworkTeam,
 } from '@asap-hub/react-components';
+import { join } from 'path';
+
 import { useTeams } from '../api';
 
 const Page: React.FC = () => {
-  const { path } = useRouteMatch();
-  const { loading, data: teams, error } = useTeams();
+  const { path, url } = useRouteMatch();
+  const { loading, data: teamsData, error } = useTeams();
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -24,7 +26,11 @@ const Page: React.FC = () => {
       </Paragraph>
     );
   }
-  if (teams) {
+  if (teamsData) {
+    const teams = teamsData.map((team) => ({
+      ...team,
+      teamProfileHref: join(url, team.id),
+    }));
     return (
       <NetworkPage>
         <Switch>

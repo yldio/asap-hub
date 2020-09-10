@@ -36,6 +36,7 @@ const commonProps = () => ({
       ],
       members: [member, member],
       lastModifiedDate: '2020-09-03T10:59:26Z',
+      teamProfileHref: 'wrong',
     },
     {
       id: 'ee98d044-79a7-4028-915d-7f88793e3190',
@@ -48,11 +49,12 @@ const commonProps = () => ({
       skills: ['Neurological Diseases'],
       members: [member],
       lastModifiedDate: '2020-09-03T10:59:26Z',
+      teamProfileHref: 'wrong',
     },
   ],
 });
 export const TeamList = () => (
   <NetworkPage>
-    <NetworkTeam teams={commonProps().teams} />
+    <NetworkTeam {...commonProps()} />
   </NetworkPage>
 );

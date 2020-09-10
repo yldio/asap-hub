@@ -9,7 +9,6 @@ export default {
 
 export const Normal = () => (
   <PeopleCard
-    id={'ff0e04ac-4769-44ed-8d3b-245c1bfe17b3'}
     displayName={text('Display Name', 'Phillip Mars, PhD')}
     createdDate={new Date(
       date('Created Date', new Date(2020, 6, 12, 14, 32)),
@@ -30,5 +29,6 @@ export const Normal = () => (
       'Avatar URL',
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     )}
+    profileHref={'wrong'}
   />
 );

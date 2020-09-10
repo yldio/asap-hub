@@ -4,12 +4,16 @@ import format from 'date-fns/format';
 import { UserResponse } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Avatar, Caption } from '../atoms';
-import ProfilePersonalText from './ProfilePersonalText';
+import { ProfilePersonalText } from '../molecules';
 import { tabletScreen } from '../pixels';
 
 const containerStyles = css({
   display: 'grid',
-  gridTemplateColumns: 'min-content auto',
+  columnGap: '25px',
+  rowGap: '12px',
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gridTemplateColumns: 'min-content auto',
+  },
 });
 
 const textContainerStyles = css({
@@ -18,12 +22,10 @@ const textContainerStyles = css({
   flexWrap: 'wrap',
   justifyContent: 'space-between',
   alignItems: 'start',
-  '> *': {
-    flexBasis: '100%',
-  },
-  [`@media (max-width: ${tabletScreen.min}px)`]: {
-    paddingTop: '12px',
-  },
+});
+
+const profileTextStyles = css({
+  flexBasis: '100%',
 });
 
 const moveStyles = css({
@@ -33,13 +35,8 @@ const moveStyles = css({
   },
 });
 
-const avatarContainerStyles = css({
-  paddingRight: '25px',
-});
-
 type PeopleCardProps = Pick<
   UserResponse,
-  | 'id'
   | 'avatarURL'
   | 'department'
   | 'displayName'
@@ -50,9 +47,10 @@ type PeopleCardProps = Pick<
   | 'lastName'
   | 'location'
   | 'teams'
->;
+> & {
+  readonly profileHref: string;
+};
 const PeopleCard: React.FC<PeopleCardProps> = ({
-  id,
   department,
   displayName,
   institution,
@@ -63,29 +61,30 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   teams,
   jobTitle,
   avatarURL,
+  profileHref,
 }) => {
   return (
-    <Link theme={null} href={`/users/${id}`}>
+    <Link theme={null} href={profileHref}>
       <Card>
         <section css={containerStyles}>
-          <div css={avatarContainerStyles}>
-            <Avatar
-              imageUrl={avatarURL}
-              firstName={firstName}
-              lastName={lastName}
-            />
-          </div>
+          <Avatar
+            imageUrl={avatarURL}
+            firstName={firstName}
+            lastName={lastName}
+          />
           <div css={textContainerStyles}>
             <div css={moveStyles}>
               <Headline2 styleAsHeading={4}>{displayName}</Headline2>
             </div>
-            <ProfilePersonalText
-              department={department}
-              institution={institution}
-              location={location}
-              jobTitle={jobTitle}
-              teams={teams}
-            />
+            <div css={profileTextStyles}>
+              <ProfilePersonalText
+                department={department}
+                institution={institution}
+                location={location}
+                jobTitle={jobTitle}
+                teams={teams}
+              />
+            </div>
             <div css={moveStyles}>
               <Caption>
                 Joined: {format(new Date(createdDate), 'Mo MMMM yyyy')}

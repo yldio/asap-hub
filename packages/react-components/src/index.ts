@@ -39,24 +39,23 @@ export {
   LabeledTextField,
   MenuButton,
   OrcidSigninButton,
-  PeopleCard,
-  ProfilePersonalText,
   TabNav,
-  TeamCard,
   UserMenuButton,
 } from './molecules';
 export {
   EmailPasswordSignin,
   LoginLogoutButton,
+  MainNavigation,
   MembersSection,
+  MenuHeader,
   ProfileBiography,
   ProfileRecentWorks,
   RadioButtonGroup,
   SkillsSection,
   SsoButtons,
-  MainNavigation,
+  PeopleCard,
+  TeamCard,
   UserNavigation,
-  MenuHeader,
 } from './organisms';
 
 export {

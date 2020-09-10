@@ -5,27 +5,31 @@ import { noop } from '../utils';
 import { MenuButton, Header } from '../molecules';
 import { tabletScreen } from '../pixels';
 
-const styles = css({
-  display: 'flex',
-});
-
 const menuButtonWidth = 72;
 const hideButtonQuery = `@media (min-width: ${tabletScreen.width}px)`;
 
+const styles = css({
+  display: 'flex',
+  [hideButtonQuery]: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+});
+
 const menuButtonStyles = css({
+  width: `${menuButtonWidth}px`,
   [hideButtonQuery]: {
     display: 'none',
   },
-  width: `${menuButtonWidth}px`,
 
   display: 'flex',
   alignItems: 'center',
 });
 const headerSpaceStyles = css({
+  width: `${menuButtonWidth}px`,
   [hideButtonQuery]: {
     display: 'none',
   },
-  width: `${menuButtonWidth}px`,
 });
 
 interface MenuHeaderProps {

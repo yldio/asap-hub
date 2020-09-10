@@ -59,9 +59,14 @@ const contentStyles = css({
 const overlayStyles = css({
   gridRow: 'main-menu / -1',
   gridColumn: '1 / -1',
+
+  visibility: 'hidden',
   [crossQuery]: {
     display: 'none',
   },
+});
+const overlayMenuShownStyles = css({
+  visibility: 'visible',
 });
 
 const userButtonStyles = css({
@@ -153,7 +158,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <UserMenuButton onClick={() => setMenuShown(!menuShown)} />
       </div>
       <main css={contentStyles}>{children}</main>
-      <div css={[overlayStyles]}>
+      <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
         <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
       </div>
       <div css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}>

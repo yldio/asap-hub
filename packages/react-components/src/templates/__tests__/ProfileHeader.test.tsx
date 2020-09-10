@@ -10,6 +10,7 @@ const boilerplateProps = {
   aboutHref: './about',
   researchHref: './research-interests',
   outputsHref: './outputs',
+  teamProfileHref: '/teams/123',
 };
 
 it('renders the name as the top-level heading', () => {

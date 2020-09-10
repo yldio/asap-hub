@@ -61,6 +61,7 @@ type ProfileProps = Pick<
   readonly aboutHref: string;
   readonly researchHref: string;
   readonly outputsHref: string;
+  readonly teamProfileHref: string;
 };
 
 const ProfileHeader: React.FC<ProfileProps> = ({
@@ -78,6 +79,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   aboutHref,
   researchHref,
   outputsHref,
+  teamProfileHref,
 }) => {
   return (
     <header css={containerStyles}>
@@ -90,6 +92,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
             location={location}
             jobTitle={jobTitle}
             teams={teams}
+            teamProfileHref={teamProfileHref}
           />
         </div>
         <Avatar

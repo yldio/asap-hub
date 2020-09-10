@@ -49,6 +49,7 @@ type PeopleCardProps = Pick<
   | 'teams'
 > & {
   readonly profileHref: string;
+  readonly teamProfileHref: string;
 };
 const PeopleCard: React.FC<PeopleCardProps> = ({
   department,
@@ -62,6 +63,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   jobTitle,
   avatarURL,
   profileHref,
+  teamProfileHref,
 }) => {
   return (
     <Link theme={null} href={profileHref}>
@@ -83,6 +85,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
                 location={location}
                 jobTitle={jobTitle}
                 teams={teams}
+                teamProfileHref={teamProfileHref}
               />
             </div>
             <div css={moveStyles}>

@@ -23,7 +23,9 @@ const iconStyles = css({
 type ProfilePersonalTextProps = Pick<
   UserResponse,
   'department' | 'institution' | 'jobTitle' | 'location' | 'teams'
->;
+> & {
+  readonly teamProfileHref: string;
+};
 
 const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
   department,
@@ -31,6 +33,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
   location,
   jobTitle,
   teams,
+  teamProfileHref,
 }) => {
   const team = teams?.[0];
   return (
@@ -44,7 +47,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
           <>
             <br />
             {team.role} on{' '}
-            <Link href={`/teams/${team.id}`}>{team.displayName}</Link>
+            <Link href={teamProfileHref}>{team.displayName}</Link>
           </>
         )}
       </Paragraph>

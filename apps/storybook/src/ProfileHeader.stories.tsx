@@ -26,6 +26,7 @@ export const Normal = () => (
         displayName: text('Team Name', 'Team A'),
       },
     ]}
+    teamProfileHref={'#'}
     jobTitle={text('Job Title', 'Assistant Professor')}
     avatarURL={text(
       'Avatar URL',

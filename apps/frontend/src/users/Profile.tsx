@@ -29,6 +29,7 @@ const Profile: React.FC<{}> = () => {
       aboutHref: join(url, 'about'),
       researchHref: join(url, 'research'),
       outputsHref: join(url, 'outputs'),
+      teamProfileHref: `/teams/${profile.teams[0].id}`,
     };
 
     return (

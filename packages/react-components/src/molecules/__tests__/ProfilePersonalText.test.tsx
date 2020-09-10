@@ -5,6 +5,7 @@ import ProfilePersonalText from '../ProfilePersonalText';
 const boilerplateProps = {
   displayName: 'John Doe',
   teams: [],
+  teamProfileHref: 'wrong',
 };
 
 it.each`

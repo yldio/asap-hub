@@ -1,29 +1,38 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Paragraph } from '@asap-hub/react-components';
+
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import {
+  Paragraph,
+  NetworkPage,
+  NetworkPeople,
+} from '@asap-hub/react-components';
+import { join } from 'path';
+import { UserResponse } from '@asap-hub/model';
 
 import { useUsers } from '../api';
 
-type ProfileProps = {
-  readonly id: string;
-  readonly displayName: string;
-};
-
-const Profile: React.FC<ProfileProps> = ({ id, displayName }) => {
-  return <Link to={`/users/${id}`}>{displayName}</Link>;
-};
-
 const Page: React.FC<{}> = () => {
-  const { loading, data: users, error } = useUsers();
+  const { path, url } = useRouteMatch();
+  const { loading, data: usersData, error } = useUsers();
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
   }
 
-  if (users) {
-    return users.map((profile: ProfileProps) => {
-      return <Profile key={profile.id} {...profile} />;
-    });
+  if (usersData) {
+    const users = usersData.map((user: UserResponse) => ({
+      ...user,
+      profileHref: join(url, user.id),
+    }));
+    return (
+      <NetworkPage>
+        <Switch>
+          <Route exact path={path}>
+            <NetworkPeople people={users} />
+          </Route>
+        </Switch>
+      </NetworkPage>
+    );
   }
 
   return (

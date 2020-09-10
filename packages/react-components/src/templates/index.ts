@@ -1,10 +1,11 @@
 export { default as AdminInviteUserPage } from './AdminInviteUserPage';
+export { default as BasicLayout } from './BasicLayout';
 export { default as ContentPage } from './ContentPage';
 export { default as InviteUserForm } from './InviteUserForm';
-export { default as BasicLayout } from './BasicLayout';
 export { default as Layout } from './Layout';
 export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';
+export { default as NetworkPeople } from './NetworkPeople';
 export { default as NetworkTeam } from './NetworkTeam';
 export { default as ProfileAbout } from './ProfileAbout';
 export { default as ProfileHeader } from './ProfileHeader';

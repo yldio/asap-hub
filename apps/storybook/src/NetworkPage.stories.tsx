@@ -1,5 +1,9 @@
 import React from 'react';
-import { NetworkPage, NetworkTeam } from '@asap-hub/react-components';
+import {
+  NetworkPage,
+  NetworkTeam,
+  NetworkPeople,
+} from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
@@ -16,7 +20,7 @@ const member = {
   role: 'VrrPdl',
 };
 
-const commonProps = () => ({
+const teamProps = {
   teams: [
     {
       id: 'ee98d044-79a7-4028-915d-7f88793e3190',
@@ -52,9 +56,66 @@ const commonProps = () => ({
       teamProfileHref: 'wrong',
     },
   ],
-});
+};
+const peopleProps = {
+  people: [
+    {
+      id: '55724942-3408-4ad6-9a73-14b92226ffb6',
+      createdDate: '2020-09-07T17:36:54Z',
+      lastModifiedDate: '2020-09-07T17:36:54Z',
+      displayName: 'Agnete Kirkeby',
+      email: 'agnete.kirkeby@sund.ku.dk',
+      firstName: 'Agnete',
+      middleName: '',
+      lastName: 'Kirkeby',
+      jobTitle: 'Assistant Professor',
+      institution: 'University of Copenhagen',
+      teams: [
+        {
+          id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
+          displayName: 'Jakobsson, J',
+          role: 'Core Leadership - Co-Investigator',
+        },
+      ],
+      orcid: '0000-0001-8203-6901',
+      orcidWorks: [],
+      skills: [],
+      profileHref: 'wrong',
+    },
+    {
+      id: '55724942-3408-4ad6-9a73-14b92226ffb6',
+      createdDate: '2020-09-07T17:36:54Z',
+      lastModifiedDate: '2020-09-07T17:36:54Z',
+      displayName: 'Agnete Kirkeby',
+      email: 'agnete.kirkeby@sund.ku.dk',
+      firstName: 'Agnete',
+      middleName: '',
+      lastName: 'Kirkeby',
+      jobTitle: 'Assistant Professor',
+      institution: 'University of Copenhagen',
+      teams: [
+        {
+          id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
+          displayName: 'Jakobsson, J',
+          role: 'Core Leadership - Co-Investigator',
+        },
+      ],
+      orcid: '0000-0001-8203-6901',
+      orcidWorks: [],
+      skills: [],
+      profileHref: 'wrong',
+    },
+  ],
+};
+
 export const TeamList = () => (
   <NetworkPage>
-    <NetworkTeam {...commonProps()} />
+    <NetworkTeam {...teamProps} />
+  </NetworkPage>
+);
+
+export const PeopleList = () => (
+  <NetworkPage>
+    <NetworkPeople {...peopleProps} />
   </NetworkPage>
 );

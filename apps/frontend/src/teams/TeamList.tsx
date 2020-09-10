@@ -5,6 +5,7 @@ import {
   NetworkPage,
   NetworkTeam,
 } from '@asap-hub/react-components';
+import { TeamResponse } from '@asap-hub/model';
 import { join } from 'path';
 
 import { useTeams } from '../api';
@@ -27,7 +28,7 @@ const Page: React.FC = () => {
     );
   }
   if (teamsData) {
-    const teams = teamsData.map((team) => ({
+    const teams = teamsData.map((team: TeamResponse) => ({
       ...team,
       teamProfileHref: join(url, team.id),
     }));

@@ -14,9 +14,13 @@ and configured as follows:
 - `domain` - pick any and copy to the frontend auth config
 - `Client ID` - generated, copy to the frontend auth config
 - `Application Type` - Single Page Application
-- `Allowed Callback URLs` - `http://localhost:3000, https://$PRODUCTION_HOST, https://*.$PRODUCTION_HOST`
-- `Allowed Logout URLs` - `http://localhost:3000, https://$PRODUCTION_HOST, https://*.$PRODUCTION_HOST`
-- `Allowed Web Origins` - `http://localhost:3000, https://$PRODUCTION_HOST, https://*.$PRODUCTION_HOST`
+- `Allowed Callback URLs` - `http://localhost:3000, https://*.$HOST` (omit `*.` for production)
+- `Allowed Logout URLs` - `http://localhost:3000, https://*.$HOST` (omit `*.` for production)
+- `Allowed Web Origins` - `http://localhost:3000, https://*.$HOST` (omit `*.` for production)
+- `Allowed Origins (CORS)` - `http://localhost:3000, https://*.$HOST` (omit `*.` for production)
+- `Refresh Token Behavior` - `Rotating`
+- `Refresh Token Lifetime (Absolute)` - `2592000` (1 month)
+- `Refresh Token Reuse Interval` - `10` (10 seconds, in case of a race between open tabs)
 
 **Connections**
 

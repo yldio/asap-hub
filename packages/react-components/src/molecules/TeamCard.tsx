@@ -2,7 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { Card, Link, Tag, Paragraph, Headline2 } from '../atoms';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { TeamMember } from '../../../model/src';
 import { teamMembersIcon } from '../icons';
 
@@ -13,9 +13,40 @@ const listStyles = css({
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
+  alignItems: 'center',
 
-  '> li:not(:last-of-type)': {
+  '> .overflow': {
+    display: 'none', // can later be activated by previous list items
+  },
+});
+
+const normalListItemStyles = css({
+  counterIncrement: 'skills -1',
+
+  ':not(:nth-last-of-type(2))': {
     paddingRight: `${12 / perRem}em`,
+  },
+
+  ':nth-of-type(n + 4)': {
+    display: 'none',
+    '~ .overflow': {
+      display: 'unset',
+    },
+  },
+
+  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+    ':nth-of-type(n + 3)': {
+      display: 'none',
+      '~ .overflow': {
+        display: 'unset',
+      },
+    },
+  },
+});
+
+const overflowContentStyles = css({
+  '::after': {
+    content: '"+" counter(skills)',
   },
 });
 
@@ -44,26 +75,23 @@ const TeamCard: React.FC<TeamCardProps> = ({
   skills,
   members,
 }) => {
-  const shownSkills = skills.slice(0, 2);
-  const hiddenSkillsCount = skills.slice(2).length;
-
   return (
     <Link theme={null} href={`/teams/${id}`}>
       <Card>
         <Headline2 styleAsHeading={4}>{displayName}</Headline2>
         <Paragraph>{projectSummary}</Paragraph>
-        {!!shownSkills.length && (
-          <ul css={listStyles}>
-            {shownSkills.map((skill, index) => (
-              <li key={index}>
+        {!!skills.length && (
+          <ul css={[listStyles, { counterReset: `skills ${skills.length}` }]}>
+            {skills.map((skill, index) => (
+              <li key={index} css={normalListItemStyles}>
                 <Tag>{skill}</Tag>
               </li>
             ))}
-            {!!hiddenSkillsCount && (
-              <li>
-                <Tag>+{hiddenSkillsCount}</Tag>
-              </li>
-            )}
+            <li key="overflow" className="overflow">
+              <Tag>
+                <span css={overflowContentStyles}></span>
+              </Tag>
+            </li>
           </ul>
         )}
         <span css={teamMemberStyles}>

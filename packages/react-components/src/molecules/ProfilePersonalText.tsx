@@ -24,7 +24,7 @@ type ProfilePersonalTextProps = Pick<
   UserResponse,
   'department' | 'institution' | 'jobTitle' | 'location' | 'teams'
 > & {
-  readonly teamProfileHref: string;
+  readonly teamProfileHref?: string;
 };
 
 const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
@@ -43,7 +43,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
         {jobTitle && institution && ' at '}
         {institution}
         {institution && department && `, ${department}`}
-        {team && (
+        {team && teamProfileHref && (
           <>
             <br />
             {team.role} on{' '}

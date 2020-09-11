@@ -61,7 +61,7 @@ type ProfileProps = Pick<
   readonly aboutHref: string;
   readonly researchHref: string;
   readonly outputsHref: string;
-  readonly teamProfileHref: string;
+  readonly teamProfileHref?: string;
 };
 
 const ProfileHeader: React.FC<ProfileProps> = ({

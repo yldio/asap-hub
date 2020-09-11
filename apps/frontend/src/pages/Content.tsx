@@ -1,18 +1,12 @@
 import React from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import {
-  Layout as LoggedInLayout,
-  BasicLayout as LoggedOutLayout,
-  ContentPage,
-  Paragraph,
-} from '@asap-hub/react-components';
-import { useAuth0 } from '@asap-hub/react-context';
+import { ContentPage, Paragraph } from '@asap-hub/react-components';
 import { usePagesByPath } from '../api';
 
-const StubPage: React.FC<{}> = () => {
-  const { isAuthenticated = false } = useAuth0();
-  const Layout = isAuthenticated ? LoggedInLayout : LoggedOutLayout;
-
+interface StubPageProps {
+  layoutComponent: React.FC;
+}
+const StubPage: React.FC<StubPageProps> = ({ layoutComponent: Layout }) => {
   const { path } = useRouteMatch();
   const { loading, data: page, error } = usePagesByPath(path);
 

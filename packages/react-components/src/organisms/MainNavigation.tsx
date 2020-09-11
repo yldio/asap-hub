@@ -4,18 +4,19 @@ import css from '@emotion/css';
 import {
   perRem,
   vminLinearCalc,
-  smallDesktopScreen,
   largeDesktopScreen,
+  mobileScreen,
 } from '../pixels';
-import { Link } from '../atoms';
+import { NavigationLink } from '../atoms';
+import { networkIcon, libraryIcon, newsIcon } from '../icons';
 
-const width = vminLinearCalc(
-  smallDesktopScreen,
-  226,
+const width = `max(258px, ${vminLinearCalc(
+  mobileScreen,
+  312,
   largeDesktopScreen,
-  256,
+  258,
   'px',
-);
+)})`;
 
 const containerStyles = css({
   width,
@@ -24,19 +25,50 @@ const containerStyles = css({
 const listStyles = css({
   listStyle: 'none',
   margin: 0,
-  boxSizing: 'border-box',
-  padding: `${24 / perRem}em`,
+
   width,
+
+  boxSizing: 'border-box',
+  paddingTop: `max(${12 / perRem}em, ${vminLinearCalc(
+    mobileScreen,
+    18 / perRem,
+    largeDesktopScreen,
+    12 / perRem,
+    'em',
+  )})`,
+  paddingBottom: `${12 / perRem}em`,
+  paddingLeft: `${24 / perRem}em`,
+  paddingRight: `${28 / perRem}em`,
 });
 
-const MainNavigation: React.FC<{}> = () => (
+const listItemStyles = css({});
+
+interface MainNavigationProps {
+  networkHref: string;
+  libraryHref: string;
+  newsAndEventsHref: string;
+}
+const MainNavigation: React.FC<MainNavigationProps> = ({
+  networkHref,
+  libraryHref,
+  newsAndEventsHref,
+}) => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
-      <li>
-        <Link href="/users">Users</Link>
+      <li css={listItemStyles}>
+        <NavigationLink href={networkHref} icon={networkIcon}>
+          Network
+        </NavigationLink>
       </li>
-      <li>
-        <Link href="/teams">Teams</Link>
+      <li css={listItemStyles}>
+        <NavigationLink href={libraryHref} icon={libraryIcon}>
+          Library
+        </NavigationLink>
+      </li>
+      <li css={listItemStyles}>
+        <NavigationLink href={newsAndEventsHref} icon={newsIcon}>
+          News and Events
+        </NavigationLink>
       </li>
     </ul>
   </nav>

@@ -4,6 +4,7 @@ import css from '@emotion/css';
 import { noop } from '../utils';
 import { MenuButton, Header } from '../molecules';
 import { tabletScreen } from '../pixels';
+import { steel } from '../colors';
 
 const menuButtonWidth = 72;
 const hideButtonQuery = `@media (min-width: ${tabletScreen.width}px)`;
@@ -17,13 +18,17 @@ const styles = css({
 });
 
 const menuButtonStyles = css({
-  width: `${menuButtonWidth}px`,
   [hideButtonQuery]: {
     display: 'none',
   },
 
+  width: `${menuButtonWidth}px`,
+  boxSizing: 'content-box',
+  borderRight: `1px solid ${steel.rgb}`,
+
   display: 'flex',
-  alignItems: 'center',
+  justifyContent: 'stretch',
+  alignItems: 'stretch',
 });
 const headerSpaceStyles = css({
   width: `${menuButtonWidth}px`,

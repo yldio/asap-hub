@@ -21,5 +21,6 @@ export { default as TagLabel } from './TagLabel';
 export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
 export { default as Overlay } from './Overlay';
+export { default as NavigationLink } from './NavigationLink';
 
 export type { DropdownProps } from './Dropdown';

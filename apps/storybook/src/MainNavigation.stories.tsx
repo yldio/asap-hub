@@ -1,5 +1,6 @@
 import React from 'react';
-
+import { StaticRouter } from 'react-router-dom';
+import { select } from '@storybook/addon-knobs';
 import { MainNavigation } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './decorators';
 
@@ -9,4 +10,23 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-export const Normal = () => <MainNavigation />;
+export const Normal = () => {
+  const path = `/${select(
+    'Active Section',
+    {
+      Network: 'network',
+      Library: 'library',
+      'News and Events': 'news-and-events',
+    },
+    'network',
+  )}`;
+  return (
+    <StaticRouter key={path} location={path}>
+      <MainNavigation
+        networkHref="/network"
+        libraryHref="/library"
+        newsAndEventsHref="/news-and-events"
+      />
+    </StaticRouter>
+  );
+};

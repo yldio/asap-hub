@@ -23,7 +23,18 @@ export const NoPaddingDecorator: DecoratorFn = (storyFn) => (
 export const BasicLayoutDecorator: DecoratorFn = (storyFn, context) =>
   NoPaddingDecorator(() => <BasicLayout>{storyFn()}</BasicLayout>, context);
 export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
-  NoPaddingDecorator(() => <Layout>{storyFn()}</Layout>, context);
+  NoPaddingDecorator(
+    () => (
+      <Layout
+        networkHref="/network"
+        libraryHref="/library"
+        newsAndEventsHref="/news-and-events"
+      >
+        {storyFn()}
+      </Layout>
+    ),
+    context,
+  );
 
 const themeVariant = () =>
   select<ThemeVariant>(

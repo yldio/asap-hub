@@ -7,12 +7,11 @@ import {
   styles,
   validationMessageStyles,
   indicatorPadding,
-  lineHeight,
   paddingLeftRight,
   borderWidth,
 } from '../form';
 import { dropdownChevronIcon } from '../icons';
-import { perRem } from '../pixels';
+import { perRem, lineHeight } from '../pixels';
 import { ember, steel, mint, pine, tin, rose } from '../colors';
 import { Option } from '../select';
 

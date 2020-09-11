@@ -66,6 +66,7 @@ export {
   Layout,
   NetworkPage,
   NetworkPageHeader,
+  NetworkPeople,
   NetworkTeam,
   ProfileAbout,
   ProfileHeader,

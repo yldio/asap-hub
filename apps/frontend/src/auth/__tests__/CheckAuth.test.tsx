@@ -29,7 +29,7 @@ it('redirects to the root if the user is not authenticated', async () => {
 it('renders the children if the user is authenticated', async () => {
   const { findByText } = render(
     <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn user={{ sub: '42', name: 'John Doe' }}>
+      <authTestUtils.LoggedIn user={{}}>
         <CheckAuth>
           <p>secure</p>
         </CheckAuth>

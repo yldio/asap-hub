@@ -1,4 +1,6 @@
 import {
+  chevronDownIcon,
+  chevronUpIcon,
   dropdownChevronIcon,
   filterIcon,
   googleIcon,
@@ -18,6 +20,8 @@ import {
 
 export default { title: 'Atoms / Icons' };
 
+export const ChevronDown = () => chevronDownIcon;
+export const ChevronUp = () => chevronUpIcon;
 export const Docs = () => docsIcon;
 export const DropdownChevron = () => dropdownChevronIcon;
 export const FilterIcon = () => filterIcon;

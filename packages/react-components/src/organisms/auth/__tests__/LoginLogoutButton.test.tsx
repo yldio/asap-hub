@@ -78,7 +78,7 @@ describe('when logged in', () => {
     await act(async () => {
       const { findByRole } = render(
         <Auth0Provider>
-          <LoggedIn user={{ sub: '42', name: 'John Doe' }}>
+          <LoggedIn user={{ displayName: 'John Doe' }}>
             <LoginLogoutButton />
           </LoggedIn>
         </Auth0Provider>,

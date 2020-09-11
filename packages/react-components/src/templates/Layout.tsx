@@ -155,7 +155,10 @@ const Layout: React.FC<LayoutProps> = ({
         <MenuHeader onToggleMenu={() => setMenuShown(!menuShown)} />
       </div>
       <div css={userButtonStyles}>
-        <UserMenuButton onClick={() => setMenuShown(!menuShown)} />
+        <UserMenuButton
+          onClick={() => setMenuShown(!menuShown)}
+          open={menuShown}
+        />
       </div>
       <main css={contentStyles}>{children}</main>
       <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>

@@ -8692,6 +8692,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/core", "npm:7.9.0"],
+            ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.9.4"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
             ["@testing-library/react-hooks", "virtual:29ace9acdaadce7142e9cbe0626982c73f9edb599b8a5b07f8f0dd53c96e05f3e9296e3fe42e557d88318610e043449d3c20483f0baea89da3757c97f3a61367#npm:3.4.1"],
             ["@types/jest", "npm:26.0.3"],
@@ -8712,6 +8715,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-context", "workspace:packages/react-context"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/core", "npm:7.9.0"],
+            ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.9.4"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
             ["@testing-library/react-hooks", "virtual:29ace9acdaadce7142e9cbe0626982c73f9edb599b8a5b07f8f0dd53c96e05f3e9296e3fe42e557d88318610e043449d3c20483f0baea89da3757c97f3a61367#npm:3.4.1"],
             ["@types/jest", "npm:26.0.3"],

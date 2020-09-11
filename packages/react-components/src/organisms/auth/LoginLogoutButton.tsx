@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { useAuth0 } from '@asap-hub/react-context';
+import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { Button } from '../../atoms';
 
 const LoginLogoutButton: React.FC<{}> = () => {
-  const { isAuthenticated, user, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const user = useCurrentUser();
 
   return (
     <div>
@@ -24,7 +25,7 @@ const LoginLogoutButton: React.FC<{}> = () => {
             })
           }
         >
-          Log out{user && ` ${user.name}`}
+          Log out{user && ` ${user.displayName}`}
         </Button>
       )}
     </div>

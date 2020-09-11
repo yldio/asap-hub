@@ -322,6 +322,9 @@ __metadata:
   resolution: "@asap-hub/react-context@workspace:packages/react-context"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@babel/core": ^7.9.0
+    "@babel/preset-react": ^7.9.0
     "@babel/runtime-corejs3": ^7.9.6
     "@testing-library/react-hooks": ^3.4.1
     "@types/jest": ^26.0.3

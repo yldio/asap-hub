@@ -1,8 +1,14 @@
 /* istanbul ignore file */
+/* eslint-disable @typescript-eslint/camelcase */
+
 import React, { useState, useEffect } from 'react';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import type { Auth0User } from '@asap-hub/auth';
-import { useAuth0, Auth0Context } from '@asap-hub/react-context';
+import type { User, Auth0User } from '@asap-hub/auth';
+import {
+  useAuth0,
+  Auth0Context,
+  getUserClaimKey,
+} from '@asap-hub/react-context';
 
 const notImplemented = (method: string) => () => {
   throw new Error(`${method} not implemented by the Auth0 test fixture`);
@@ -19,11 +25,9 @@ export const Auth0Provider: React.FC<{
     const initAuth0 = async () => {
       setAuth0(
         await createAuth0Client({
-          /* eslint-disable @typescript-eslint/camelcase */
           domain: 'auth.example.com',
           client_id: 'client_id',
           redirect_uri: 'http://localhost',
-          /* eslint-enable @typescript-eslint/camelcase */
         }),
       );
     };
@@ -65,15 +69,35 @@ export const LoggedIn: React.FC<{
   readonly children: React.ReactNode;
   // undefined user should be explicit, this is for the intermediate state
   // where the getUser() promise is pending.
-  readonly user: Auth0User | undefined;
+  readonly user: Partial<User> | undefined;
 }> = ({ children, user }) => {
   const ctx = useAuth0();
+
+  let auth0User: Auth0User | undefined;
+  if (user) {
+    const completeUser: User = {
+      id: 'testuserid',
+      email: 'john.doe@example.com',
+      displayName: 'John Doe',
+      firstName: 'John',
+      lastName: 'Doe',
+      ...user,
+    };
+    auth0User = {
+      sub: 'testuser',
+      name: completeUser.displayName,
+      given_name: completeUser.firstName,
+      family_name: completeUser.lastName,
+      [getUserClaimKey()]: completeUser,
+    };
+  }
+
   return (
     <Auth0Context.Provider
       value={{
         ...ctx,
         isAuthenticated: true,
-        user,
+        user: auth0User,
         getTokenSilently: async () => 'token',
       }}
     >

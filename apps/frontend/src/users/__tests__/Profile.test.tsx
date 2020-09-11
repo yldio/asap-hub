@@ -24,22 +24,19 @@ const user: UserResponse = {
   biography: 'Biography Text',
   skills: [],
 };
-// fetch user by code request
-beforeEach(() => {
-  nock.cleanAll();
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/users/42')
-    .reply(200, user);
-});
 
-const renderProfile = async () => {
+const team = {
+  id: '100',
+  displayName: 'Team Unknown',
+  role: 'Unknown role',
+};
+
+const renderProfile = async (profileId = '42', waitForLoad = true) => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/42/']}>
+          <MemoryRouter initialEntries={[`/${profileId}/`]}>
             <Route path="/:id" component={Profile} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
@@ -51,22 +48,60 @@ const renderProfile = async () => {
   );
   return result;
 };
+describe('without team', () => {
+  // fetch user by code request
+  beforeEach(() => {
+    nock.cleanAll();
+    nock(API_BASE_URL, {
+      reqheaders: { authorization: 'Bearer token' },
+    })
+      .get('/users/42')
+      .reply(200, user);
+  });
 
-it('renders a loading indicator', async () => {
-  const { getByText } = await renderProfile();
+  it('renders a loading indicator', async () => {
+    const { getByText } = await renderProfile('42', false);
 
-  const loadingIndicator = getByText(/loading/i);
-  expect(loadingIndicator).toBeVisible();
+    const loadingIndicator = getByText(/loading/i);
+    expect(loadingIndicator).toBeVisible();
 
-  await waitForElementToBeRemoved(loadingIndicator);
+    await waitForElementToBeRemoved(loadingIndicator);
+  });
+
+  it('renders a member information', async () => {
+    const { findByText } = await renderProfile();
+    expect((await findByText(user.displayName)).tagName).toBe('H1');
+  });
+
+  it('renders the about member content', async () => {
+    const { findByText } = await renderProfile();
+    expect(await findByText(user.biography!)).toBeVisible();
+  });
 });
 
-it('renders a member information', async () => {
-  const { findByText } = await renderProfile();
-  expect((await findByText(user.displayName)).tagName).toBe('H1');
-});
-
-it('renders the about member content', async () => {
-  const { findByText } = await renderProfile();
-  expect(await findByText(user.biography!)).toBeVisible();
+describe('with team', () => {
+  it('Calculates links', async () => {
+    nock.cleanAll();
+    nock(API_BASE_URL, {
+      reqheaders: { authorization: 'Bearer token' },
+    })
+      .get('/users/43')
+      .reply(200, {
+        ...user,
+        id: '43',
+        teams: [team],
+      });
+    const { queryAllByRole, getByText } = await renderProfile('43');
+    const loadingIndicator = getByText(/loading/i);
+    await waitForElementToBeRemoved(loadingIndicator);
+    const links = (await queryAllByRole('link')) as HTMLAnchorElement[];
+    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
+      Array [
+        "http://localhost/teams/100",
+        "http://localhost/43/research",
+        "http://localhost/43/about",
+        "http://localhost/43/outputs",
+      ]
+    `);
+  });
 });

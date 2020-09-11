@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 import React, { useState, useEffect } from 'react';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
-import type { User } from '@asap-hub/auth';
+import type { Auth0User } from '@asap-hub/auth';
 import { useAuth0, Auth0Context } from '@asap-hub/react-context';
 
 const notImplemented = (method: string) => () => {
@@ -65,7 +65,7 @@ export const LoggedIn: React.FC<{
   readonly children: React.ReactNode;
   // undefined user should be explicit, this is for the intermediate state
   // where the getUser() promise is pending.
-  readonly user: User | undefined;
+  readonly user: Auth0User | undefined;
 }> = ({ children, user }) => {
   const ctx = useAuth0();
   return (

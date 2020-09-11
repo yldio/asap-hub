@@ -100,7 +100,7 @@ Create a new rule and configure as follows:
 
 **Settings**
 
-- `APP_ORIGIN`: The API's endpoint base URL (including `https://`)
+- `AUTH0_DOMAIN`: The API's endpoint base URL (including `https://`)
 - `API_SHARED_SECRET`: The same secret defined on the CI that is injected to the API
 
 **Script**

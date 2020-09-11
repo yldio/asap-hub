@@ -1,4 +1,4 @@
-import { User } from '@asap-hub/auth';
+import { Auth0User } from '@asap-hub/auth';
 import { sign } from 'jsonwebtoken';
 
 import fetchOrcidUserProfile, { OrcidIdToken } from '..';
@@ -34,5 +34,5 @@ it('calls back with the user profile object', () => {
     family_name: 'Seckinger',
     name: 'Tim Seckinger',
     orcid: '0000-0002-7164-1580',
-  } as User);
+  } as Auth0User);
 });

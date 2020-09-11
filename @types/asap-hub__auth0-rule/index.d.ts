@@ -18,6 +18,7 @@ export type User = {
   updated_at: unknown;
   user_id: string;
   locale: string;
+  [customClaimName: string]: unknown;
 };
 
 export type RuleContext<CustomContext extends object = {}> = Partial<
@@ -55,7 +56,7 @@ export type RuleContext<CustomContext extends object = {}> = Partial<
   stats: Record<string, number>;
   sso?: object;
   accessToken: Record<string, any>;
-  idToken: Record<string, any>;
+  idToken: User;
   sessionID: string;
   authorization: {
     roles: string[];
@@ -71,4 +72,4 @@ export type Rule<CustomContext extends object = {}> = (
   user: User,
   context: RuleContext<CustomContext>,
   callback: RuleCallback<CustomContext>,
-) => void;
+) => void | Promise<void>;

@@ -3,7 +3,7 @@
 /* eslint-disable no-shadow */
 
 import React, { useState, useEffect } from 'react';
-import { User, Auth0 } from '@asap-hub/auth';
+import { Auth0User, Auth0 } from '@asap-hub/auth';
 import { Auth0Context } from '@asap-hub/react-context';
 import createAuth0Client, {
   Auth0ClientOptions,
@@ -24,7 +24,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   ...initOptions
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>();
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<Auth0User>();
   const [auth0Client, setAuth0] = useState<Auth0Client>();
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);

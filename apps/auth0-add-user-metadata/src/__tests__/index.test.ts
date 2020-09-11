@@ -52,14 +52,27 @@ const context: RuleContext = {
   samlConfiguration: {},
   protocol: 'oidc-basic-profile',
   stats: { loginsCount: 14 },
-  request: { query: {} },
+  request: { query: { redirect_uri: 'https://hub.asap.science/' } },
   sso: {
     with_auth0: false,
     with_dbconn: false,
     current_clients: ['Av2psgVspAN00Kez9v1vR2c496a9zCW3'],
   },
   accessToken: {},
-  idToken: {},
+  idToken: {
+    created_at: '2020',
+    user_id: '42',
+    updated_at: '2020',
+    picture: 'google.com/x.jpg',
+    nickname: 'Nick',
+    name: 'Name',
+    locale: 'en',
+    identities: [],
+    given_name: 'Given',
+    family_name: 'Family',
+    email: 'me@example.com',
+    email_verified: true,
+  },
   sessionID: 'gTOtfayMuGzFRmyOllSKHuH7Ci1',
   authorization: { roles: [] },
 };
@@ -86,7 +99,19 @@ describe('Auth0 Rule - Add User Metadata', () => {
     nock.cleanAll();
   });
 
-  it('should return an error if fails to fetch the user', async () => {
+  it('errors if the redirect_uri is missing', async () => {
+    const cb: jest.MockedFunction<
+      Parameters<typeof addUserMetadata>[2]
+    > = jest.fn();
+
+    await addUserMetadata(user, { ...context, request: { query: {} } }, cb);
+
+    expect(cb).toHaveBeenCalledWith(expect.any(Error));
+    const [err] = cb.mock.calls[0];
+    expect(String(err)).toMatch(/redirect/i);
+  });
+
+  it('errors if it fails to fetch the user', async () => {
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
@@ -103,12 +128,12 @@ describe('Auth0 Rule - Add User Metadata', () => {
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];
-    expect(err).toBeDefined();
+    expect(String(err)).toMatch(/(^|\D)404(\D|$)/i);
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
   });
 
-  it('should add the user metadata on successfull fetch', async () => {
+  it('adds the user metadata on successful fetch', async () => {
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
@@ -128,7 +153,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
-    expect(resContext.idToken[`${apiURL}/user`]).toStrictEqual({
+    expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual({
       displayName: 'JT',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',

@@ -1,5 +1,5 @@
 import { decode } from 'jsonwebtoken';
-import type { User } from '@asap-hub/auth';
+import type { Auth0User } from '@asap-hub/auth';
 
 interface UserProfileFetcherContext<IDT> {
   id_token: IDT;
@@ -7,7 +7,7 @@ interface UserProfileFetcherContext<IDT> {
 type UserProfileFetcher<AT = {}, IDT extends string | undefined = undefined> = (
   accessToken: AT,
   ctx: UserProfileFetcherContext<IDT>,
-  cb: (err: Error | null | undefined, profile: User) => void,
+  cb: (err: Error | null | undefined, profile: Auth0User) => void,
 ) => void;
 
 // inspected the ID token we get from ORCID to write this interface
@@ -30,7 +30,7 @@ const fetchOrcidUserProfile: UserProfileFetcher<{}, string> = (
   cb,
 ) => {
   const idToken = decode(id_token) as OrcidIdToken;
-  const profile: User = {
+  const profile: Auth0User = {
     sub: idToken.sub,
     given_name: idToken.given_name,
     family_name: idToken.family_name,

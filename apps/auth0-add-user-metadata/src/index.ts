@@ -1,14 +1,24 @@
 import type { Rule } from '@asap-hub/auth0-rule';
+import type { User } from '@asap-hub/auth';
 import type { UserResponse } from '@asap-hub/model';
+import { URL, URLSearchParams } from 'url';
 import got from 'got';
 
 const addUserMetadata: Rule<{ invitationCode: string }> = async (
-  user,
+  auth0User,
   context,
   callback,
 ) => {
   const apiURL = configuration?.APP_ORIGIN;
   const apiSharedSecret = configuration?.API_SHARED_SECRET;
+
+  const redirect_uri = new URLSearchParams(context.request.query).get(
+    'redirect_uri',
+  );
+  if (!redirect_uri) {
+    return callback(new Error('Missing redirect_uri'));
+  }
+
   try {
     const {
       id,
@@ -17,14 +27,14 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       firstName,
       lastName,
       avatarURL,
-    } = await got<UserResponse>(`${apiURL}/webhook/users/${user.user_id}`, {
+    } = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
       headers: {
         Authorization: `Basic ${apiSharedSecret}`,
       },
       timeout: 10000,
-    }).json();
+    }).json<UserResponse>();
 
-    context.idToken[`${apiURL}/user`] = {
+    const user: User = {
       id,
       displayName,
       email,
@@ -32,8 +42,9 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       lastName,
       avatarURL,
     };
+    context.idToken[new URL('/user', redirect_uri).toString()] = user;
 
-    return callback(null, user, context);
+    return callback(null, auth0User, context);
   } catch (err) {
     return callback(new Error(err));
   }

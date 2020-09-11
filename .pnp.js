@@ -8221,6 +8221,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/model", "workspace:packages/model"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
             ["@types/node", "npm:12.12.55"]

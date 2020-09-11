@@ -6,6 +6,7 @@ interface NetworkPeopleProps {
   readonly people: ReadonlyArray<
     UserResponse & {
       readonly profileHref: string;
+      readonly teamProfileHref?: string;
     }
   >;
 }

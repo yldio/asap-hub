@@ -49,7 +49,7 @@ type PeopleCardProps = Pick<
   | 'teams'
 > & {
   readonly profileHref: string;
-  readonly teamProfileHref: string;
+  readonly teamProfileHref?: string;
 };
 const PeopleCard: React.FC<PeopleCardProps> = ({
   department,

@@ -62,21 +62,21 @@ const iconStyles = css({
 });
 
 interface TeamCardProps {
-  readonly id: string;
   readonly displayName: string;
   readonly projectSummary?: string;
   readonly skills: string[];
   readonly members: TeamMember[];
+  readonly teamProfileHref: string;
 }
 const TeamCard: React.FC<TeamCardProps> = ({
-  id,
   displayName,
   projectSummary,
   skills,
   members,
+  teamProfileHref,
 }) => {
   return (
-    <Link theme={null} href={`/teams/${id}`}>
+    <Link theme={null} href={teamProfileHref}>
       <Card>
         <Headline2 styleAsHeading={4}>{displayName}</Headline2>
         <Paragraph>{projectSummary}</Paragraph>

@@ -28,6 +28,8 @@ const teamCardProps = {
   ],
   members: [member],
   lastModifiedDate: '2020-07-31T11:45:14Z',
+  teamProfileHref:
+    'http://localhost/teams/ee98d044-79a7-4028-915d-7f88793e3190',
 };
 
 it('renders the title', () => {

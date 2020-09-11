@@ -63,6 +63,7 @@ const commonProps = () => ({
   aboutHref: '/wrong',
   researchHref: '/wrong',
   outputsHref: '/wrong',
+  teamProfileHref: 'wrong',
 });
 
 export const AboutTab = () => (

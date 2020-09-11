@@ -13,6 +13,7 @@ const boilerplateProps = {
   aboutHref: '#',
   outputsHref: '#',
   researchHref: '#',
+  teamProfileHref: '#',
 };
 
 it('renders the header', () => {

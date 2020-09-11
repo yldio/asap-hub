@@ -3,15 +3,9 @@ import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse } from '@asap-hub/model';
 
-import {
-  perRem,
-  contentSidePaddingWithNavigation,
-  tabletScreen,
-  lineHeight,
-} from '../pixels';
-import { Avatar, Button, Link, Paragraph, TabLink, Display } from '../atoms';
-import { TabNav } from '../molecules';
-import { locationIcon } from '../icons';
+import { contentSidePaddingWithNavigation, tabletScreen } from '../pixels';
+import { Avatar, Button, Paragraph, TabLink, Display } from '../atoms';
+import { ProfilePersonalText, TabNav } from '../molecules';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -25,9 +19,6 @@ const personalInfoStyles = css({
   flexWrap: 'wrap-reverse',
   justifyContent: 'space-between',
   alignItems: 'start',
-});
-const mainTextStyles = css({
-  paddingBottom: `${6 / perRem}em`,
 });
 
 const actionsStyles = css({
@@ -54,17 +45,6 @@ const lastModifiedStyles = css({
   },
 });
 
-const locationStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-});
-const iconStyles = css({
-  display: 'inline-block',
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
-});
-
 type ProfileProps = Pick<
   UserResponse,
   | 'avatarURL'
@@ -81,6 +61,7 @@ type ProfileProps = Pick<
   readonly aboutHref: string;
   readonly researchHref: string;
   readonly outputsHref: string;
+  readonly teamProfileHref?: string;
 };
 
 const ProfileHeader: React.FC<ProfileProps> = ({
@@ -98,37 +79,21 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   aboutHref,
   researchHref,
   outputsHref,
+  teamProfileHref,
 }) => {
-  const team = teams?.[0];
-
   return (
     <header css={containerStyles}>
       <section css={personalInfoStyles}>
         <div>
           <Display styleAsHeading={2}>{displayName}</Display>
-          <div css={mainTextStyles}>
-            <Paragraph>
-              {jobTitle}
-              {jobTitle && institution && ' at '}
-              {institution}
-              {institution && department && `, ${department}`}
-              {team && (
-                <>
-                  <br />
-                  {team.role} on{' '}
-                  <Link href={`/teams/${team.id}`}>{team.displayName}</Link>
-                </>
-              )}
-            </Paragraph>
-            {location && (
-              <Paragraph>
-                <span css={locationStyles}>
-                  <span css={iconStyles}>{locationIcon}</span>
-                  {location}
-                </span>
-              </Paragraph>
-            )}
-          </div>
+          <ProfilePersonalText
+            department={department}
+            institution={institution}
+            location={location}
+            jobTitle={jobTitle}
+            teams={teams}
+            teamProfileHref={teamProfileHref}
+          />
         </div>
         <Avatar
           border

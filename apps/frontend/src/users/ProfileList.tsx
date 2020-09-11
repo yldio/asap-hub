@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Paragraph } from '@asap-hub/react-components';
+
 import { useUsers } from '../api';
 
 type ProfileProps = {

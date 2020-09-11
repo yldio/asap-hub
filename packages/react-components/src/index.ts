@@ -30,31 +30,32 @@ export {
   Overlay,
 } from './atoms';
 export {
-  OrcidSigninButton,
   GoogleSigninButton,
   Header,
   LabeledDateField,
+  LabeledDropdown,
+  LabeledPasswordField,
   LabeledTextArea,
   LabeledTextField,
-  LabeledPasswordField,
-  LabeledDropdown,
-  TabNav,
-  TeamCard,
   MenuButton,
+  OrcidSigninButton,
+  TabNav,
   UserMenuButton,
 } from './molecules';
 export {
   EmailPasswordSignin,
   LoginLogoutButton,
+  MainNavigation,
   MembersSection,
+  MenuHeader,
   ProfileBiography,
   ProfileRecentWorks,
   RadioButtonGroup,
   SkillsSection,
   SsoButtons,
-  MainNavigation,
+  PeopleCard,
+  TeamCard,
   UserNavigation,
-  MenuHeader,
 } from './organisms';
 
 export {

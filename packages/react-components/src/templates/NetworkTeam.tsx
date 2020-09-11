@@ -1,14 +1,18 @@
 import React from 'react';
 import { TeamResponse } from '@asap-hub/model';
-import { TeamCard } from '../molecules';
+import { TeamCard } from '../organisms';
 
 interface NetworkTeamProps {
-  readonly teams: ReadonlyArray<TeamResponse>;
+  readonly teams: ReadonlyArray<
+    TeamResponse & {
+      readonly teamProfileHref: string;
+    }
+  >;
 }
 
 const NetworkTeam: React.FC<NetworkTeamProps> = ({ teams }) => (
   <>
-    {teams.map((team: TeamResponse) => {
+    {teams.map((team) => {
       const { id } = team;
       return (
         <div key={id}>

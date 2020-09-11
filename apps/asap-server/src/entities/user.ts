@@ -4,6 +4,7 @@ import { OrcidWork, TeamMember } from '@asap-hub/model';
 export interface CMSUser {
   id: string;
   lastModified: string;
+  created: string;
   data: {
     lastModifiedDate: { iv: string };
     displayName: { iv: string };

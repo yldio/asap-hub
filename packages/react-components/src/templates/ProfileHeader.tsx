@@ -3,9 +3,10 @@ import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse } from '@asap-hub/model';
 
-import { contentSidePaddingWithNavigation, tabletScreen } from '../pixels';
+import { tabletScreen } from '../pixels';
 import { Avatar, Button, Paragraph, TabLink, Display } from '../atoms';
 import { ProfilePersonalText, TabNav } from '../molecules';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const containerStyles = css({
   alignSelf: 'stretch',

@@ -12,9 +12,9 @@ import {
   largeDesktopScreen,
   vminLinearCalc,
 } from '../pixels';
+import { navigationGrey } from '../layout';
 
 const activeClassName = 'active-link';
-const hoverBackgroundColor = color(242, 245, 247);
 const activeBackgroundColor = color(122, 210, 169, 0.18);
 
 const styles = css({
@@ -42,7 +42,7 @@ const styles = css({
 
   borderRadius: `${6 / perRem}em`,
   ':hover, :focus': {
-    backgroundColor: hoverBackgroundColor.rgb,
+    backgroundColor: navigationGrey.rgb,
   },
 });
 const activeStyles = css({

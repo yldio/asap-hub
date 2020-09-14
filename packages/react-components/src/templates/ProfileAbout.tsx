@@ -2,8 +2,9 @@ import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { ProfileBiography, ProfileRecentWorks } from '../organisms';
-import { perRem, contentSidePaddingWithNavigation } from '../pixels';
+import { perRem } from '../pixels';
 import { pearl, steel } from '../colors';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({
   backgroundColor: pearl.rgb,

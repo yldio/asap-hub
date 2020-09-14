@@ -1,15 +1,10 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import {
-  perRem,
-  contentSidePaddingWithNavigation,
-  tabletScreen,
-  mobileScreen,
-  vminLinearCalc,
-} from '../pixels';
+import { perRem, tabletScreen, mobileScreen, vminLinearCalc } from '../pixels';
 import { pearl } from '../colors';
 import NetworkPageHeader from './NetworkPageHeader';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
   alignSelf: 'stretch',

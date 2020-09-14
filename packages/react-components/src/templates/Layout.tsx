@@ -7,7 +7,7 @@ import { steel, paper } from '../colors';
 import { MenuHeader, MainNavigation, UserNavigation } from '../organisms';
 import { UserMenuButton } from '../molecules';
 import { Overlay } from '../atoms';
-import { layoutCrossQuery, layoutDrawerQuery } from '../pixels';
+import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 
 const styles = css({
   position: 'relative',
@@ -18,7 +18,7 @@ const styles = css({
     "main-menu  content" max-content
     "user-menu  content" 1fr         / max-content 1fr`,
 
-  [layoutCrossQuery]: {
+  [crossQuery]: {
     grid: `
       "header     user-button" max-content
       "main-menu  content"     1fr         / max-content 1fr`,
@@ -32,7 +32,7 @@ const headerStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
 });
 const headerMenuShownStyles = css({
-  [layoutDrawerQuery]: {
+  [drawerQuery]: {
     borderBottom: '1px solid transparent', // box shadow only above drawer instead
   },
 });
@@ -40,7 +40,7 @@ const headerMenuShownStyles = css({
 const contentStyles = css({
   gridRow: 'header-end / -1',
   gridColumn: '1 / -1',
-  [layoutCrossQuery]: {
+  [crossQuery]: {
     gridColumn: 'content',
     borderLeft: `1px solid ${steel.rgb}`,
   },
@@ -56,7 +56,7 @@ const overlayStyles = css({
   gridColumn: '1 / -1',
 
   visibility: 'hidden',
-  [layoutCrossQuery]: {
+  [crossQuery]: {
     display: 'none',
   },
 });
@@ -65,7 +65,7 @@ const overlayMenuShownStyles = css({
 });
 
 const userButtonStyles = css({
-  [layoutDrawerQuery]: {
+  [drawerQuery]: {
     display: 'none',
   },
 
@@ -80,14 +80,14 @@ const userButtonStyles = css({
 const menuStyles = css({
   backgroundColor: paper.rgb,
 
-  [layoutDrawerQuery]: {
+  [drawerQuery]: {
     visibility: 'hidden',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,
   },
 });
 const menuMenuShownStyles = css({
-  [layoutDrawerQuery]: {
+  [drawerQuery]: {
     visibility: 'visible',
     transform: 'translateX(0)',
     transition: `transform 250ms ease`,
@@ -97,14 +97,14 @@ const menuMenuShownStyles = css({
 const mainMenuStyles = css({
   gridArea: 'main-menu',
 
-  [layoutDrawerQuery]: {
+  [drawerQuery]: {
     boxShadow: `0 -1px 0 ${steel.rgb}`, // instead of header border bottom
   },
 });
 const userMenuStyles = css({
   gridArea: 'user-menu',
 
-  [layoutCrossQuery]: {
+  [crossQuery]: {
     gridArea: 'content',
 
     position: 'absolute',
@@ -115,7 +115,10 @@ const userMenuStyles = css({
   },
 });
 const userMenuShownStyles = css({
-  [layoutCrossQuery]: {
+  [drawerQuery]: {
+    backgroundColor: navigationGrey.rgb,
+  },
+  [crossQuery]: {
     display: 'unset',
   },
 });

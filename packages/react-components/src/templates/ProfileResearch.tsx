@@ -1,10 +1,11 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { perRem, contentSidePaddingWithNavigation } from '../pixels';
+import { perRem } from '../pixels';
 import { pearl, steel } from '../colors';
 import { ProfileBackground, SkillsSection } from '../organisms';
 import { UserResponse } from '../../../model/src';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({
   backgroundColor: pearl.rgb,

@@ -35,6 +35,22 @@ export const vminLinearCalc = (
   return `calc(${minValue}${unit} + ${valuePerVmin}vmin)`;
 };
 
+export const vminLinearCalcCapped = (
+  smallScreen: Screen,
+  smallValue: number,
+  largeScreen: Screen,
+  largeValue: number,
+  unit: string,
+  maxValue: number,
+): string =>
+  `min(${maxValue}${unit}, ${vminLinearCalc(
+    smallScreen,
+    smallValue,
+    largeScreen,
+    largeValue,
+    unit,
+  )})`;
+
 export const formTargetWidth = 354;
 
 const largeDesktopColWidth = 66;

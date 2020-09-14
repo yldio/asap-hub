@@ -40,6 +40,7 @@ export {
   MenuButton,
   OrcidSigninButton,
   TabNav,
+  TagList,
   UserMenuButton,
 } from './molecules';
 export {

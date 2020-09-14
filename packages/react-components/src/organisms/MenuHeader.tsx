@@ -3,21 +3,21 @@ import css from '@emotion/css';
 
 import { noop } from '../utils';
 import { MenuButton, Header } from '../molecules';
-import { layoutCrossQuery } from '../pixels';
+import { crossQuery } from '../layout';
 import { steel } from '../colors';
 
 const menuButtonWidth = 72;
 
 const styles = css({
   display: 'flex',
-  [layoutCrossQuery]: {
+  [crossQuery]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
 });
 
 const menuButtonStyles = css({
-  [layoutCrossQuery]: {
+  [crossQuery]: {
     display: 'none',
   },
 
@@ -31,7 +31,7 @@ const menuButtonStyles = css({
 });
 const headerSpaceStyles = css({
   width: `${menuButtonWidth}px`,
-  [layoutCrossQuery]: {
+  [crossQuery]: {
     display: 'none',
   },
 });

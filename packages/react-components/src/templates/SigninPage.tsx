@@ -2,12 +2,8 @@ import React, { ComponentProps } from 'react';
 
 import SigninForm from './SigninForm';
 import { AgreeToTerms } from '../molecules';
-import {
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-  contentSidePaddingWithNavigation,
-} from '../pixels';
+import { vminLinearCalc, mobileScreen, largeDesktopScreen } from '../pixels';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 type SigninPageProps = ComponentProps<typeof SigninForm> &
   ComponentProps<typeof AgreeToTerms>;

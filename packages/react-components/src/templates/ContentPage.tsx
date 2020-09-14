@@ -2,8 +2,9 @@ import React from 'react';
 import css from '@emotion/css';
 import { PageResponse } from '@asap-hub/model';
 
-import { perRem, contentSidePaddingWithNavigation } from '../pixels';
+import { perRem } from '../pixels';
 import { Display, RichText } from '../atoms';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({
   alignSelf: 'stretch',

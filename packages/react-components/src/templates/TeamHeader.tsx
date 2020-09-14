@@ -1,10 +1,10 @@
 import React from 'react';
 import css from '@emotion/css';
 import { formatDistance } from 'date-fns';
-import { contentSidePaddingWithNavigation } from '../pixels';
 import { Link, TabLink, Display, Button, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
 import { TeamResponse } from '../../../model/src';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const containerStyles = css({
   alignSelf: 'stretch',

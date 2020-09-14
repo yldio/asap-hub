@@ -3,12 +3,8 @@ import { ResearchOutputFormData } from '@asap-hub/model';
 
 import RecordOutputForm from './RecordOutputForm';
 import { Display, Paragraph } from '../atoms';
-import {
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-  contentSidePaddingWithNavigation,
-} from '../pixels';
+import { vminLinearCalc, mobileScreen, largeDesktopScreen } from '../pixels';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 interface RecordOutputPageProps {
   onPreview?: (formData: ResearchOutputFormData) => void;

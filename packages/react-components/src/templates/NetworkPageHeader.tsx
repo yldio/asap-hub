@@ -1,13 +1,10 @@
 import React from 'react';
 import css from '@emotion/css';
 import { Display, Paragraph, Button } from '../atoms';
-import {
-  perRem,
-  contentSidePaddingWithNavigation,
-  tabletScreen,
-} from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { paper, steel } from '../colors';
 import { filterIcon } from '../icons';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const containerStyles = css({
   alignSelf: 'stretch',

@@ -38,7 +38,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
   const team = teams?.[0];
   return (
     <div css={mainTextStyles}>
-      <Paragraph>
+      <Paragraph accent="lead">
         {jobTitle}
         {jobTitle && institution && ' at '}
         {institution}
@@ -52,7 +52,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
         )}
       </Paragraph>
       {location && (
-        <Paragraph>
+        <Paragraph accent="lead">
           <span css={locationStyles}>
             <span css={iconStyles}>{locationIcon}</span>
             {location}

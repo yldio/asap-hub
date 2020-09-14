@@ -49,3 +49,11 @@ export const Caption = () => {
     </figure>
   );
 };
+
+export const CaptionAsParagraph = () => {
+  return (
+    <CaptionText asParagraph={true} accent={accentColor()}>
+      {text('Text', 'Caption')}
+    </CaptionText>
+  );
+};

@@ -5,21 +5,35 @@ import * as colors from '../colors';
 import { perRem } from '../pixels';
 import { layoutStyles, AccentColorName } from '../text';
 
-const styles = css({
+const captionStyles = css({
   fontSize: `${13.6 / perRem}em`,
+});
+
+const figStyles = css({
   lineHeight: `${18 / 13.6}em`,
 });
 
 interface CaptionProps {
   readonly children: React.ReactNode;
   readonly accent?: AccentColorName;
+  readonly asParagraph?: boolean;
 }
-const Caption: React.FC<CaptionProps> = ({ children, accent }) => (
-  <figcaption
-    css={[layoutStyles, styles, accent ? { color: colors[accent].rgb } : null]}
-  >
-    {children}
-  </figcaption>
-);
+const Caption: React.FC<CaptionProps> = ({
+  children,
+  accent,
+  asParagraph = false,
+}) => {
+  const styles = [
+    layoutStyles,
+    captionStyles,
+    accent ? { color: colors[accent].rgb } : null,
+  ];
+
+  return asParagraph ? (
+    <p css={styles}>{children}</p>
+  ) : (
+    <figcaption css={[...styles, figStyles]}>{children}</figcaption>
+  );
+};
 
 export default Caption;

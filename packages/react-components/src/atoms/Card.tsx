@@ -7,11 +7,21 @@ import {
   vminLinearCalc,
   mobileScreen,
   largeDesktopScreen,
+  tabletScreen,
 } from '../pixels';
 import { themes } from '../theme';
 
 const containerStyles = css({
-  padding: `24px ${vminLinearCalc(
+  paddingTop: `${vminLinearCalc(mobileScreen, 18, tabletScreen, 24, 'px')}`,
+  paddingRight: `${vminLinearCalc(
+    mobileScreen,
+    24,
+    largeDesktopScreen,
+    36,
+    'px',
+  )}`,
+  paddingBottom: `${vminLinearCalc(mobileScreen, 30, tabletScreen, 36, 'px')}`,
+  paddingLeft: `${vminLinearCalc(
     mobileScreen,
     24,
     largeDesktopScreen,

@@ -5,9 +5,11 @@ import { Card, Link, Tag, Paragraph, Headline2 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { TeamMember } from '../../../model/src';
 import { teamMembersIcon } from '../icons';
+import { lead } from '../colors';
 
 const listStyles = css({
   padding: 0,
+  marginBlockStart: 0,
   listStyle: 'none',
 
   display: 'flex',
@@ -51,6 +53,7 @@ const overflowContentStyles = css({
 });
 
 const teamMemberStyles = css({
+  color: lead.rgb,
   display: 'flex',
   alignItems: 'center',
 });
@@ -79,7 +82,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
     <Link theme={null} href={teamProfileHref}>
       <Card>
         <Headline2 styleAsHeading={4}>{displayName}</Headline2>
-        <Paragraph>{projectSummary}</Paragraph>
+        <Paragraph accent="lead">{projectSummary}</Paragraph>
         {!!skills.length && (
           <ul css={[listStyles, { counterReset: `skills ${skills.length}` }]}>
             {skills.map((skill, index) => (

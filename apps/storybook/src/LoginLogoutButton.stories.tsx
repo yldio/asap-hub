@@ -10,8 +10,7 @@ export const LoggedIn = () => {
   return (
     <authTestUtils.LoggedIn
       user={{
-        sub: '42',
-        name: text('Name of the current user', 'John Doe'),
+        displayName: text('Name of the current user', 'John Doe'),
       }}
     >
       <LoginLogoutButton />

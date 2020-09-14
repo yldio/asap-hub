@@ -3,10 +3,53 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import UserMenuButton from '../UserMenuButton';
+import { authTestUtils } from '../..';
 
-it('renders a button to toggle the user menu', () => {
-  const { getByLabelText } = render(<UserMenuButton />);
-  expect(getByLabelText(/toggle.+user menu/i)).toHaveTextContent(/user menu/i);
+it('renders a button', () => {
+  const { getByRole } = render(<UserMenuButton />);
+  expect(getByRole('button')).toBeVisible();
+});
+
+it('renders the display name', async () => {
+  const { findByText } = render(
+    <authTestUtils.Auth0Provider>
+      <authTestUtils.LoggedIn user={{ displayName: 'John Doe' }}>
+        <UserMenuButton />
+      </authTestUtils.LoggedIn>
+    </authTestUtils.Auth0Provider>,
+  );
+  expect(await findByText('John Doe')).toBeVisible();
+});
+it('renders a fallback instead of the display name', async () => {
+  const { findByText } = render(<UserMenuButton />);
+  expect(await findByText(/unknown/i)).toBeVisible();
+});
+
+it('renders the user avatar', async () => {
+  const { findByAltText } = render(
+    <authTestUtils.Auth0Provider>
+      <authTestUtils.LoggedIn
+        user={{ avatarURL: '/pic.jpg', firstName: 'John', lastName: 'Doe' }}
+      >
+        <UserMenuButton />
+      </authTestUtils.LoggedIn>
+    </authTestUtils.Auth0Provider>,
+  );
+  expect(await findByAltText(/pic.+John Doe/i)).toBeVisible();
+});
+it('renders a fallback for the user avatar', async () => {
+  const { findByText } = render(<UserMenuButton />);
+  expect((await findByText(/^[A-Z]{2}$/)).textContent).toMatchInlineSnapshot(
+    `"UU"`,
+  );
+});
+
+it('changes the chevron direction based on open state', () => {
+  const { getByTitle, rerender } = render(<UserMenuButton />);
+  expect(getByTitle(/chevron/i).title).toMatchInlineSnapshot(`undefined`);
+
+  rerender(<UserMenuButton open />);
+  expect(getByTitle(/chevron/i).title).toMatchInlineSnapshot(`undefined`);
 });
 
 it('triggers the click event', () => {

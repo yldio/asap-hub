@@ -71,7 +71,7 @@ const smallInitialsStyle = css({
   fontWeight: 'bold',
 });
 
-type ButtonProps = {
+type AvatarProps = {
   readonly imageUrl?: string;
   readonly firstName?: string;
   readonly lastName?: string;
@@ -88,7 +88,7 @@ const colors = [
   css({ backgroundColor: lavender.rgb, color: mauve.rgb }),
 ];
 
-const Avatar: React.FC<ButtonProps> = ({
+const Avatar: React.FC<AvatarProps> = ({
   imageUrl,
   firstName = '',
   lastName = '',

@@ -2,7 +2,10 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "build"
+    "outDir": "build",
+
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "jsx": "react"
   },
   "include": ["src"],
   "references": [{ "path": "../auth" }]

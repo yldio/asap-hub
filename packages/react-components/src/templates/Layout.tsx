@@ -4,13 +4,10 @@ import { Location } from 'history';
 import css from '@emotion/css';
 
 import { steel, paper } from '../colors';
-import { tabletScreen } from '../pixels';
 import { MenuHeader, MainNavigation, UserNavigation } from '../organisms';
 import { UserMenuButton } from '../molecules';
 import { Overlay } from '../atoms';
-
-const drawerQuery = `@media (max-width: ${tabletScreen.width - 1}px)`;
-const crossQuery = `@media (min-width: ${tabletScreen.width}px)`;
+import { layoutCrossQuery, layoutDrawerQuery } from '../pixels';
 
 const styles = css({
   position: 'relative',
@@ -21,7 +18,7 @@ const styles = css({
     "main-menu  content" max-content
     "user-menu  content" 1fr         / max-content 1fr`,
 
-  [crossQuery]: {
+  [layoutCrossQuery]: {
     grid: `
       "header     user-button" max-content
       "main-menu  content"     1fr         / max-content 1fr`,
@@ -35,7 +32,7 @@ const headerStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
 });
 const headerMenuShownStyles = css({
-  [drawerQuery]: {
+  [layoutDrawerQuery]: {
     borderBottom: '1px solid transparent', // box shadow only above drawer instead
   },
 });
@@ -43,7 +40,7 @@ const headerMenuShownStyles = css({
 const contentStyles = css({
   gridRow: 'header-end / -1',
   gridColumn: '1 / -1',
-  [crossQuery]: {
+  [layoutCrossQuery]: {
     gridColumn: 'content',
     borderLeft: `1px solid ${steel.rgb}`,
   },
@@ -59,7 +56,7 @@ const overlayStyles = css({
   gridColumn: '1 / -1',
 
   visibility: 'hidden',
-  [crossQuery]: {
+  [layoutCrossQuery]: {
     display: 'none',
   },
 });
@@ -68,7 +65,7 @@ const overlayMenuShownStyles = css({
 });
 
 const userButtonStyles = css({
-  [drawerQuery]: {
+  [layoutDrawerQuery]: {
     display: 'none',
   },
 
@@ -83,14 +80,14 @@ const userButtonStyles = css({
 const menuStyles = css({
   backgroundColor: paper.rgb,
 
-  [drawerQuery]: {
+  [layoutDrawerQuery]: {
     visibility: 'hidden',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,
   },
 });
 const menuMenuShownStyles = css({
-  [drawerQuery]: {
+  [layoutDrawerQuery]: {
     visibility: 'visible',
     transform: 'translateX(0)',
     transition: `transform 250ms ease`,
@@ -100,14 +97,14 @@ const menuMenuShownStyles = css({
 const mainMenuStyles = css({
   gridArea: 'main-menu',
 
-  [drawerQuery]: {
+  [layoutDrawerQuery]: {
     boxShadow: `0 -1px 0 ${steel.rgb}`, // instead of header border bottom
   },
 });
 const userMenuStyles = css({
   gridArea: 'user-menu',
 
-  [crossQuery]: {
+  [layoutCrossQuery]: {
     gridArea: 'content',
 
     position: 'absolute',
@@ -118,7 +115,7 @@ const userMenuStyles = css({
   },
 });
 const userMenuShownStyles = css({
-  [crossQuery]: {
+  [layoutCrossQuery]: {
     display: 'unset',
   },
 });

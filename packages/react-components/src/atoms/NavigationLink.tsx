@@ -5,7 +5,13 @@ import css from '@emotion/css';
 import { TextChildren } from '../text';
 import { useHasRouter } from '../hooks';
 import { color } from '../colors';
-import { perRem, lineHeight } from '../pixels';
+import {
+  perRem,
+  lineHeight,
+  mobileScreen,
+  largeDesktopScreen,
+  vminLinearCalc,
+} from '../pixels';
 
 const activeClassName = 'active-link';
 const hoverBackgroundColor = color(242, 245, 247);
@@ -13,8 +19,22 @@ const activeBackgroundColor = color(122, 210, 169, 0.18);
 
 const styles = css({
   display: 'block',
-  paddingTop: `${(12 + 1) / perRem}em`,
-  paddingBottom: `${(12 - 1) / perRem}em`,
+  paddingLeft: `${12 / perRem}em`,
+  paddingRight: `${12 / perRem}em`,
+  paddingTop: vminLinearCalc(
+    mobileScreen,
+    12 + 1,
+    largeDesktopScreen,
+    15 + 1,
+    'px',
+  ),
+  paddingBottom: vminLinearCalc(
+    mobileScreen,
+    12 - 1,
+    largeDesktopScreen,
+    15 - 1,
+    'px',
+  ),
 
   color: 'unset',
   textDecoration: 'none',
@@ -36,12 +56,13 @@ const textStyles = css({
   margin: 0,
   display: 'flex',
   alignItems: 'center',
+
+  fontSize: `${18 / perRem}em`,
 });
 const iconStyles = css({
   display: 'inline-block',
   width: `${lineHeight / perRem}em`,
   height: `${lineHeight / perRem}em`,
-  paddingLeft: `${12 / perRem}em`,
   paddingRight: `${14 / perRem}em`,
 });
 

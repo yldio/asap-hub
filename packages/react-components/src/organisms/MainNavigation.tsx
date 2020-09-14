@@ -29,6 +29,7 @@ const listStyles = css({
   width,
 
   boxSizing: 'border-box',
+  padding: `${12 / perRem}em`,
   paddingTop: `max(${12 / perRem}em, ${vminLinearCalc(
     mobileScreen,
     18 / perRem,
@@ -36,9 +37,6 @@ const listStyles = css({
     12 / perRem,
     'em',
   )})`,
-  paddingBottom: `${12 / perRem}em`,
-  paddingLeft: `${24 / perRem}em`,
-  paddingRight: `${28 / perRem}em`,
 });
 
 const listItemStyles = css({});

@@ -37,6 +37,11 @@ export const vminLinearCalc = (
 
 export const formTargetWidth = 354;
 
+export const layoutDrawerQuery = `@media (max-width: ${
+  smallDesktopScreen.width - 1
+}px)`;
+export const layoutCrossQuery = `@media (min-width: ${smallDesktopScreen.width}px)`;
+
 const largeDesktopColWidth = 66;
 const largeDesktopColGap = 30;
 export const contentSidePaddingWithoutNavigation = (

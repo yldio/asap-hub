@@ -3,22 +3,21 @@ import css from '@emotion/css';
 
 import { noop } from '../utils';
 import { MenuButton, Header } from '../molecules';
-import { tabletScreen } from '../pixels';
+import { layoutCrossQuery } from '../pixels';
 import { steel } from '../colors';
 
 const menuButtonWidth = 72;
-const hideButtonQuery = `@media (min-width: ${tabletScreen.width}px)`;
 
 const styles = css({
   display: 'flex',
-  [hideButtonQuery]: {
+  [layoutCrossQuery]: {
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
 });
 
 const menuButtonStyles = css({
-  [hideButtonQuery]: {
+  [layoutCrossQuery]: {
     display: 'none',
   },
 
@@ -32,7 +31,7 @@ const menuButtonStyles = css({
 });
 const headerSpaceStyles = css({
   width: `${menuButtonWidth}px`,
-  [hideButtonQuery]: {
+  [layoutCrossQuery]: {
     display: 'none',
   },
 });

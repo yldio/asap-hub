@@ -28,15 +28,21 @@ const buttonTextStyles = css({
   },
 });
 
+const textStyles = css({
+  maxWidth: `${610 / perRem}em`,
+});
+
 const NetworkPageHeader: React.FC = () => {
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Network</Display>
-      <Paragraph>
-        Explore the ASAP Network where the collaboration begins! Search and
-        browse and then connect with individuals and teams across the ASAP
-        Network.
-      </Paragraph>
+      <div css={textStyles}>
+        <Paragraph accent="lead">
+          Explore the ASAP Network where the collaboration begins! Search and
+          browse and then connect with individuals and teams across the ASAP
+          Network.
+        </Paragraph>
+      </div>
       <div css={controlsStyles}>
         <Button enabled={false}>
           {filterIcon}

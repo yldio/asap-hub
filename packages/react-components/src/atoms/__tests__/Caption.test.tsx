@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import Caption from '../Caption';
 import { ember } from '../../colors';
 
-it('renders the text in a <p>', () => {
+it('renders the text in a FigCaption', () => {
   const { getByText } = render(
     <figure>
       the figure
@@ -12,6 +12,11 @@ it('renders the text in a <p>', () => {
     </figure>,
   );
   expect(getByText('text').tagName).toBe('FIGCAPTION');
+});
+
+it('renders text in a <p>', () => {
+  const { getByText } = render(<Caption asParagraph>text</Caption>);
+  expect(getByText('text').tagName).toBe('P');
 });
 
 it('applies the text margin', () => {

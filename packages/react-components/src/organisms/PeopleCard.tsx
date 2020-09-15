@@ -89,7 +89,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
               />
             </div>
             <div css={moveStyles}>
-              <Caption>
+              <Caption accent={'lead'} asParagraph>
                 Joined: {format(new Date(createdDate), 'Mo MMMM yyyy')}
               </Caption>
             </div>

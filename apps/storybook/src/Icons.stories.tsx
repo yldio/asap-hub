@@ -16,7 +16,11 @@ import {
   networkIcon,
   newsIcon,
   orcidIcon,
+<<<<<<< HEAD
   searchIcon,
+=======
+  profileIcon,
+>>>>>>> Initial comit of the toggle button
   settingsIcon,
   showPasswordIcon,
   teamIcon,
@@ -49,3 +53,4 @@ export const Search = () => searchIcon;
 export const TeamMembersIcon = () => teamIcon;
 export const ValidTick = () => validTickIcon;
 export const VerticalDivider = () => verticalDividerIcon;
+export const ProfileIcon = () => profileIcon;

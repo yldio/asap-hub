@@ -12,6 +12,8 @@ export { default as Headline3 } from './Headline3';
 export { default as Headline4 } from './Headline4';
 export { default as Label } from './Label';
 export { default as Link } from './Link';
+export { default as NavigationLink } from './NavigationLink';
+export { default as Overlay } from './Overlay';
 export { default as Paragraph } from './Paragraph';
 export { default as RadioButton } from './RadioButton';
 export { default as RichText } from './RichText';
@@ -20,7 +22,6 @@ export { default as Tag } from './Tag';
 export { default as TagLabel } from './TagLabel';
 export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
-export { default as Overlay } from './Overlay';
-export { default as NavigationLink } from './NavigationLink';
+export { default as Toggle } from './Toggle';
 
 export type { DropdownProps } from './Dropdown';

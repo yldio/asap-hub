@@ -4,7 +4,7 @@ import css from '@emotion/css';
 import { Card, Link, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
 import { TeamMember } from '../../../model/src';
-import { teamMembersIcon } from '../icons';
+import { teamIcon } from '../icons';
 import { TagList } from '../molecules';
 import { lead } from '../colors';
 
@@ -41,7 +41,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
         <Paragraph accent="lead">{projectSummary}</Paragraph>
         <TagList summarize tags={skills} />
         <span css={teamMemberStyles}>
-          <span css={iconStyles}>{teamMembersIcon} </span>
+          <span css={iconStyles}>{teamIcon} </span>
           {members.length} Team Member
           {members.length !== 1 ? 's' : ''}
         </span>

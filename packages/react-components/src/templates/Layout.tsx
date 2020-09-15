@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import css from '@emotion/css';
 
-import { steel, paper } from '../colors';
+import { steel, paper, color, tin } from '../colors';
 import { MenuHeader, MainNavigation, UserNavigation } from '../organisms';
 import { UserMenuButton } from '../molecules';
 import { Overlay } from '../atoms';
@@ -107,11 +107,14 @@ const userMenuStyles = css({
   [crossQuery]: {
     gridArea: 'content',
 
+    display: 'none',
+
     position: 'absolute',
     top: '6px',
     right: '24px',
 
-    display: 'none',
+    border: `1px solid ${steel.rgb}`,
+    boxShadow: `0 2px 6px 0 ${color(tin.r, tin.g, tin.b, 0.34).rgba}`,
   },
 });
 const userMenuShownStyles = css({
@@ -125,12 +128,14 @@ const userMenuShownStyles = css({
 
 type LayoutProps = {
   readonly children: React.ReactNode;
-} & ComponentProps<typeof MainNavigation>;
+} & ComponentProps<typeof MainNavigation> &
+  ComponentProps<typeof UserNavigation>;
 const Layout: React.FC<LayoutProps> = ({
   children,
   libraryHref,
   networkHref,
   newsAndEventsHref,
+  ...userNavProps
 }) => {
   const [menuShown, setMenuShown] = useState(false);
 
@@ -179,7 +184,7 @@ const Layout: React.FC<LayoutProps> = ({
           menuShown && userMenuShownStyles,
         ]}
       >
-        <UserNavigation />
+        <UserNavigation {...userNavProps} />
       </div>
     </article>
   );

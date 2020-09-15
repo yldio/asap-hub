@@ -2,9 +2,9 @@ import React from 'react';
 
 /* istanbul ignore file */
 
-const teamMembersIcon = (
+const team = (
   <svg width={24} height={24} viewBox="0 0 24 24">
-    <title>Team members</title>
+    <title>Team</title>
     <g
       stroke="#4D646B"
       strokeWidth={1.3}
@@ -17,4 +17,4 @@ const teamMembersIcon = (
     </g>
   </svg>
 );
-export default teamMembersIcon;
+export default team;

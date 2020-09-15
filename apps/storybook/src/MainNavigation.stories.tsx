@@ -17,6 +17,7 @@ export const Normal = () => {
       Network: 'network',
       Library: 'library',
       'News and Events': 'news-and-events',
+      None: 'none',
     },
     'network',
   )}`;

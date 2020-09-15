@@ -3,12 +3,12 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Toggle from '../Toggle';
-import { profileIcon, teamMembersIcon } from '../../icons';
+import { profileIcon, teamIcon } from '../../icons';
 
 it('renders a toggle', () => {
   const { getByText } = render(
     <Toggle
-      leftButtonIcon={teamMembersIcon}
+      leftButtonIcon={teamIcon}
       leftButtonText="Left Text"
       rightButtonIcon={profileIcon}
       rightButtonText="Right Text"
@@ -23,7 +23,7 @@ it('toggle fires onChange', async () => {
   const stub = jest.fn();
   const { getByText } = render(
     <Toggle
-      leftButtonIcon={teamMembersIcon}
+      leftButtonIcon={teamIcon}
       leftButtonText="Left Text"
       rightButtonIcon={profileIcon}
       rightButtonText="Right Text"

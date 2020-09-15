@@ -16,11 +16,8 @@ import {
   networkIcon,
   newsIcon,
   orcidIcon,
-<<<<<<< HEAD
-  searchIcon,
-=======
   profileIcon,
->>>>>>> Initial comit of the toggle button
+  searchIcon,
   settingsIcon,
   showPasswordIcon,
   teamIcon,

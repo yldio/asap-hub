@@ -21,14 +21,15 @@ services:
   squidex:
     image: 'squidex/squidex:latest'
     ports:
-      - '${SQUIDEX_PORT}:80'
+      - '${SQUIDEX_PORT:-4004}:80'
     environment:
-      - URLS__BASEURL=${SQUIDEX_URL}
-      - URLS__ENFORCEHTTPS=${SQUIDEX_FORCE_HTTPS}
+      - SQUIDEX_PROTOCOL=${SQUIDEX_PROTOCOL:-http}
+      - URLS__BASEURL=${SQUIDEX_URL:-http://localhost:4004}
+      - URLS__ENFORCEHTTPS=${SQUIDEX_FORCE_HTTPS:-False}
       - EVENTSTORE__MONGODB__CONFIGURATION=mongodb://mongo
       - STORE__MONGODB__CONFIGURATION=mongodb://mongo
-      - IDENTITY__ADMINEMAIL=${SQUIDEX_ADMINEMAIL}
-      - IDENTITY__ADMINPASSWORD=${SQUIDEX_ADMINPASSWORD}
+      - IDENTITY__ADMINEMAIL=${SQUIDEX_ADMINEMAIL:-admin@squidex.io}
+      - IDENTITY__ADMINPASSWORD=${SQUIDEX_ADMINPASSWORD:-SuperS3cure123./.?sdf}
     depends_on:
       - mongo
     volumes:

@@ -11,4 +11,5 @@ export { default as MenuButton } from './MenuButton';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as ProfilePersonalText } from './ProfilePersonalText';
 export { default as TabNav } from './TabNav';
+export { default as TagList } from './TagList';
 export { default as UserMenuButton } from './UserMenuButton';

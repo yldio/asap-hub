@@ -38,42 +38,6 @@ it('renders the title', () => {
   expect(getByRole('heading').tagName).toEqual('H2');
 });
 
-it('shows all skills when there are few', () => {
-  const { getAllByRole } = render(
-    <TeamCard
-      {...teamCardProps}
-      skills={['Neurological Diseases', 'Clinical Neurology']}
-    />,
-  );
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Neurological Diseases', 'Clinical Neurology']);
-});
-
-it('shows only the first skills when there are many', () => {
-  const { getAllByRole } = render(
-    <TeamCard
-      {...teamCardProps}
-      skills={[
-        'Neurological Diseases',
-        'Clinical Neurology',
-        'Adult Neurology',
-        'Neuroimaging',
-      ]}
-    />,
-  );
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Neurological Diseases', 'Clinical Neurology', 'Adult Neurology']);
-});
-
-it('hides skills when there are none', () => {
-  const { queryAllByRole } = render(
-    <TeamCard {...teamCardProps} skills={[]} />,
-  );
-  expect(queryAllByRole('list')).toEqual([]);
-});
-
 it('uses singular for one team member', () => {
   const { getByText } = render(
     <TeamCard {...teamCardProps} members={[member]} />,

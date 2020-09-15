@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { Layout, BasicLayout } from '@asap-hub/react-components';
-import { useAuth0 } from '@asap-hub/react-context';
+import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
 import Admin from './admin/Admin';
 import CreateProfile from './onboarding/CreateProfile';
@@ -18,11 +18,20 @@ import Page from './pages/Content';
 
 const ConfiguredLayout: React.FC = ({ children }) => {
   const { isAuthenticated } = useAuth0();
-  return isAuthenticated ? (
+  const user = useCurrentUser();
+  return isAuthenticated && user ? (
     <Layout
       libraryHref="/library"
       networkHref="/users"
       newsAndEventsHref="/news-and-events"
+      profileHref={`/users/${user.id}`}
+      teams={[]} // TODO
+      settingsHref="/settings"
+      feedbackHref="/feedback"
+      logoutHref="/logout" // TODO
+      termsHref="/terms-and-conditions"
+      privacyPolicyHref="/privacy-policy"
+      aboutHref="https://www.parkinsonsroadmap.org/"
     >
       {children}
     </Layout>

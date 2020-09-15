@@ -11,6 +11,15 @@ const props: ComponentProps<typeof Layout> = {
   libraryHref: '/library',
   networkHref: '/network',
   newsAndEventsHref: '/news-and-events',
+
+  profileHref: '/profile',
+  teams: [],
+  settingsHref: '/settings',
+  feedbackHref: '/feedback',
+  logoutHref: '/logout',
+  termsHref: '/terms',
+  privacyPolicyHref: '/privacy-policy',
+  aboutHref: '/about',
 };
 
 it('renders an ASAP logo', () => {
@@ -25,7 +34,7 @@ it('renders the main navigation', async () => {
 
 it('renders the user navigation', async () => {
   const { getAllByText } = render(<Layout {...props} />);
-  expect(getAllByText(/user nav/i, { selector: 'nav *' })).not.toHaveLength(0);
+  expect(getAllByText(/profile/i, { selector: 'nav *' })).not.toHaveLength(0);
 });
 
 it('renders the content', async () => {

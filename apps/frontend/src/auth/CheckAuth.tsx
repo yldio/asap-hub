@@ -15,7 +15,6 @@ const CheckAuth: React.FC<CheckAuthProps> = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    // TODO store current page
     return <Signin />;
   }
 

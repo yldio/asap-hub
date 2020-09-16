@@ -27,6 +27,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       firstName,
       lastName,
       avatarURL,
+      teams,
     } = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
       headers: {
         Authorization: `Basic ${apiSharedSecret}`,
@@ -41,6 +42,10 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       firstName,
       lastName,
       avatarURL,
+      teams: teams.map((team) => ({
+        id: team.id,
+        displayName: team.displayName,
+      })),
     };
     context.idToken[new URL('/user', redirect_uri).toString()] = user;
 

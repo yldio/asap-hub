@@ -25,7 +25,10 @@ const ConfiguredLayout: React.FC = ({ children }) => {
       networkHref="/users"
       newsAndEventsHref="/news-and-events"
       profileHref={`/users/${user.id}`}
-      teams={[]} // TODO
+      teams={user.teams.map(({ id, displayName }) => ({
+        name: displayName,
+        href: `/teams/${id}`,
+      }))}
       settingsHref="/settings"
       feedbackHref="/feedback"
       logoutHref="/logout" // TODO

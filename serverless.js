@@ -142,42 +142,6 @@ module.exports = {
         },
       ],
     },
-    // 'fetch-user-by-code': {
-    //   handler: 'apps/asap-server/build/handlers/users/fetch-by-code.handler',
-    //   events: [
-    //     {
-    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-    //       httpApi: {
-    //         method: 'GET',
-    //         path: `/users/invites/{code}`,
-    //       },
-    //     },
-    //   ],
-    // },
-    // 'fetch-me': {
-    //   handler: 'apps/asap-server/build/handlers/users/fetch-me.handler',
-    //   events: [
-    //     {
-    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-    //       httpApi: {
-    //         method: 'GET',
-    //         path: `/users/me`,
-    //       },
-    //     },
-    //   ],
-    // },
-    // 'connect-by-code': {
-    //   handler: 'apps/asap-server/build/handlers/users/connect-by-code.handler',
-    //   events: [
-    //     {
-    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-    //       httpApi: {
-    //         method: 'POST',
-    //         path: `/users/connections`,
-    //       },
-    //     },
-    //   ],
-    // },
     auth0FetchByCode: {
       handler:
         'apps/asap-server/build/handlers/users/webhook-fetch-by-code.handler',

@@ -1,7 +1,6 @@
 import * as messages from './messages';
 import * as pixels from './pixels';
 import * as text from './text';
-// TODO when LoginLogoutButton is removed, move this out of components into frontend
 import * as authTestUtils from './auth-test-utils';
 
 export { messages, pixels, text, authTestUtils };
@@ -45,7 +44,6 @@ export {
 } from './molecules';
 export {
   EmailPasswordSignin,
-  LoginLogoutButton,
   MainNavigation,
   MembersSection,
   MenuHeader,

@@ -11,9 +11,8 @@ import News from './news/Routes';
 import Teams from './teams/Routes';
 import Users from './users/Routes';
 import Welcome from './welcome/Routes';
-import { AuthProvider } from './auth';
+import { AuthProvider, CheckAuth, Logout } from './auth';
 import ResearchOutputs from './research-outputs/Routes';
-import CheckAuth from './auth/CheckAuth';
 import Page from './pages/Content';
 
 const ConfiguredLayout: React.FC = ({ children }) => {
@@ -28,7 +27,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
       teams={[]} // TODO
       settingsHref="/settings"
       feedbackHref="/feedback"
-      logoutHref="/logout" // TODO
+      logoutHref="/logout"
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"
       aboutHref="https://www.parkinsonsroadmap.org/"
@@ -60,9 +59,8 @@ const App: React.FC<{}> = () => {
             <CheckAuth>
               <ConfiguredLayout>
                 <Switch>
-                  <Route exact path="/">
-                    <Home />
-                  </Route>
+                  <Route exact path="/" component={Home} />
+                  <Route path="/logout" component={Logout} />
 
                   <Route path="/create-profile" component={CreateProfile} />
 

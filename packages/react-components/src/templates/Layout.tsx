@@ -157,7 +157,10 @@ const Layout: React.FC<LayoutProps> = ({
     <article css={[styles]}>
       {/* order relevant for overlap */}
       <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
-        <MenuHeader onToggleMenu={() => setMenuShown(!menuShown)} />
+        <MenuHeader
+          menuOpen={menuShown}
+          onToggleMenu={() => setMenuShown(!menuShown)}
+        />
       </div>
       <div css={userButtonStyles}>
         <UserMenuButton

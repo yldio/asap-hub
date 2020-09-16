@@ -18,22 +18,33 @@ import {
 
 const containerStyles = css({
   minWidth: '312px',
+  height: '100%',
+
+  display: 'flex',
+  flexDirection: 'column',
+
   boxSizing: 'border-box',
-  padding: `0 ${12 / perRem}em`,
+  padding: `${12 / perRem}em ${12 / perRem}em ${vminLinearCalc(
+    mobileScreen,
+    8,
+    largeDesktopScreen,
+    12,
+    'px',
+  )}`,
 });
 
 const listStyles = css({
   listStyle: 'none',
   margin: 0,
-
-  boxSizing: 'border-box',
-  padding: `${12 / perRem}em 0`,
+  padding: 0,
 });
 
 const bottomLinksStyles = css({
-  paddingBottom: vminLinearCalc(mobileScreen, 8, largeDesktopScreen, 12, 'px'),
+  flexGrow: 1,
+
   display: 'flex',
-  justifyContent: 'center',
+  alignItems: 'flex-end',
+  padding: `${12 / perRem}em ${12 / perRem}em 0`,
 });
 
 interface UserNavigationProps {

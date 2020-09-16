@@ -37,12 +37,16 @@ const headerSpaceStyles = css({
 });
 
 interface MenuHeaderProps {
+  menuOpen?: boolean;
   onToggleMenu?: () => void;
 }
-const MenuHeader: React.FC<MenuHeaderProps> = ({ onToggleMenu = noop }) => (
+const MenuHeader: React.FC<MenuHeaderProps> = ({
+  menuOpen = false,
+  onToggleMenu = noop,
+}) => (
   <div css={styles}>
     <div css={[menuButtonStyles]}>
-      <MenuButton onClick={() => onToggleMenu()} />
+      <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
     </div>
     <Header />
     <div role="presentation" css={[headerSpaceStyles]} />

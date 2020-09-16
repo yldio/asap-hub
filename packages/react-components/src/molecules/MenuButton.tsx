@@ -2,7 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { noop } from '../utils';
-import { menuIcon } from '../icons';
+import { menuIcon, crossIcon } from '../icons';
 import { perRem } from '../pixels';
 
 const buttonResetStyles = css({
@@ -26,9 +26,13 @@ const iconStyles = css({
 });
 
 interface MenuButtonProps {
+  open?: boolean;
   onClick?: () => void;
 }
-const MenuButton: React.FC<MenuButtonProps> = ({ onClick = noop }) => (
+const MenuButton: React.FC<MenuButtonProps> = ({
+  open = false,
+  onClick = noop,
+}) => (
   <button
     aria-label="Toggle Menu"
     css={[buttonResetStyles, styles]}
@@ -37,7 +41,7 @@ const MenuButton: React.FC<MenuButtonProps> = ({ onClick = noop }) => (
       event.preventDefault();
     }}
   >
-    <div css={iconStyles}>{menuIcon}</div>
+    <div css={iconStyles}>{open ? crossIcon : menuIcon}</div>
   </button>
 );
 

@@ -4,9 +4,18 @@ import userEvent from '@testing-library/user-event';
 
 import MenuButton from '../MenuButton';
 
-it('renders a button to toggle the menu', () => {
+it('renders a button to open the menu', () => {
   const { getByLabelText, getByTitle } = render(<MenuButton />);
   expect(getByLabelText(/toggle menu/i)).toContainElement(getByTitle(/menu/i));
+});
+
+describe('when open', () => {
+  it('renders a button to close the menu', () => {
+    const { getByLabelText, getByTitle } = render(<MenuButton open />);
+    expect(getByLabelText(/toggle menu/i)).toContainElement(
+      getByTitle(/cross/i),
+    );
+  });
 });
 
 it('triggers the click event', () => {

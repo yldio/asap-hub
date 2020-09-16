@@ -1,5 +1,6 @@
 export { default as chevronDownIcon } from './chevron-down';
 export { default as chevronUpIcon } from './chevron-up';
+export { default as crossIcon } from './cross';
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';
 export { default as filterIcon } from './filter-icon';
@@ -19,3 +20,4 @@ export { default as validTickIcon } from './valid-tick-icon';
 export { default as settingsIcon } from './settings';
 export { default as logoutIcon } from './logout';
 export { default as feedbackIcon } from './feedback';
+export { default as verticalDividerIcon } from './vertical-divider';

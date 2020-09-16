@@ -67,6 +67,7 @@ describe('useCurrentUser', () => {
           id: 'testuser',
           email: 'john.doe@example.com',
           displayName: 'John Doe',
+          teams: [],
         },
       }),
     });

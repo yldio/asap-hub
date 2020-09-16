@@ -8,7 +8,9 @@ export { config };
 export type User = Pick<
   UserResponse,
   'id' | 'displayName' | 'email' | 'firstName' | 'lastName' | 'avatarURL'
->;
+> & {
+  teams: ReadonlyArray<Pick<UserResponse['teams'][0], 'id' | 'displayName'>>;
+};
 
 export interface Auth0User {
   readonly sub: string;

@@ -40,7 +40,7 @@ it('with the loading prop shows a loading indicator', () => {
   );
 });
 
-describe('with a custom indicator', () => {
+describe('with a custom indicator positioned right', () => {
   it('shows the indicator', () => {
     const { getByRole } = render(
       <TextField
@@ -79,6 +79,51 @@ describe('with a custom indicator', () => {
     expect(customIndicatorPaddingRight).toBeCloseTo(
       // times 2 because there is now padding on both sides of the indicator
       normalPaddingRight * 2 + indicatorWidth,
+    );
+  });
+});
+
+describe('with a custom indicator positioned left', () => {
+  it('shows the indicator', () => {
+    const { getByRole } = render(
+      <TextField
+        customIndicatorPosition="left"
+        value=""
+        customIndicator={<svg role="img" viewBox="0 0 2 1" />}
+      />,
+    );
+    const { width, height } = getComputedStyle(getByRole('img').parentElement!);
+    expect(
+      Number(width.replace(/em$/, '')) / Number(height.replace(/em$/, '')),
+    ).toBeCloseTo(2);
+  });
+
+  it('pads the field to make space for the indicator', () => {
+    const { getByRole, rerender } = render(<TextField value="" />);
+    const normalPaddingLeft = Number(
+      getComputedStyle(getByRole('textbox')).paddingLeft.replace(/em$/, ''),
+    );
+
+    rerender(
+      <TextField
+        customIndicatorPosition="left"
+        value=""
+        customIndicator={<svg role="img" viewBox="0 0 2 1" />}
+      />,
+    );
+    const customIndicatorPaddingLeft = Number(
+      getComputedStyle(getByRole('textbox')).paddingLeft.replace(/em$/, ''),
+    );
+    const indicatorWidth = Number(
+      getComputedStyle(getByRole('img').parentElement!).width.replace(
+        /em$/,
+        '',
+      ),
+    );
+
+    expect(customIndicatorPaddingLeft).toBeCloseTo(
+      // times 2 because there is now padding on both sides of the indicator
+      normalPaddingLeft * 2 + indicatorWidth,
     );
   });
 });

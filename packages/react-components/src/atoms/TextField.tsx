@@ -17,18 +17,26 @@ import {
   validationMessageStyles,
 } from '../form';
 
+type Position = 'left' | 'right';
+
 const disabledStyles = css({
   color: lead.rgb,
   backgroundColor: silver.rgb,
 });
 
-const customIndicatorPadding = (aspectRatio: number) =>
-  css({
-    paddingRight: `${
-      (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) /
-      perRem
-    }em`,
-  });
+const customIndicatorPadding = (aspectRatio: number, position: Position) => {
+  const padding = `${
+    (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) / perRem
+  }em`;
+  return position === 'right'
+    ? css({
+        paddingRight: padding,
+      })
+    : css({
+        paddingLeft: padding,
+      });
+};
+
 const loadingStyles = css({
   paddingRight: `${
     (paddingLeftRight + indicatorSize + indicatorPadding) / perRem
@@ -82,12 +90,12 @@ const containerStyles = css({
   flexBasis: '100%',
   position: 'relative',
 });
-const customIndicatorStyles = (aspectRatio: number) =>
+const customIndicatorStyles = (aspectRatio: number, position: Position) =>
   css({
     position: 'absolute',
 
     top: `${paddingTopBottom / perRem}em`,
-    right: `${paddingLeftRight / perRem}em`,
+    [position]: `${paddingLeftRight / perRem}em`,
 
     height: `${indicatorSize / perRem}em`,
     width: `${(indicatorSize * aspectRatio) / perRem}em`,
@@ -116,6 +124,7 @@ type TextFieldProps = {
 
   readonly loading?: boolean;
   readonly customIndicator?: React.ReactElement;
+  readonly customIndicatorPosition?: Position;
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
@@ -135,6 +144,7 @@ const TextField: React.FC<TextFieldProps> = ({
   customValidationMessage = '',
 
   customIndicator,
+  customIndicatorPosition = 'right',
   loading = false,
   indicateValid = customIndicator === undefined &&
     (required !== undefined ||
@@ -179,12 +189,20 @@ const TextField: React.FC<TextFieldProps> = ({
           validationMessage && invalidStyles,
 
           customIndicator &&
-            customIndicatorPadding(getSvgAspectRatio(customIndicator)),
+            customIndicatorPadding(
+              getSvgAspectRatio(customIndicator),
+              customIndicatorPosition,
+            ),
           loading && loadingStyles,
         ]}
       />
       {customIndicator && (
-        <div css={customIndicatorStyles(getSvgAspectRatio(customIndicator))}>
+        <div
+          css={customIndicatorStyles(
+            getSvgAspectRatio(customIndicator),
+            customIndicatorPosition,
+          )}
+        >
           {customIndicator}
         </div>
       )}

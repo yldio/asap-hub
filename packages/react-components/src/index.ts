@@ -38,6 +38,7 @@ export {
   LabeledTextField,
   MenuButton,
   OrcidSigninButton,
+  SearchField,
   TabNav,
   TagList,
   UserMenuButton,

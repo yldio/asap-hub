@@ -2,24 +2,25 @@ import {
   chevronDownIcon,
   chevronUpIcon,
   crossIcon,
+  docsIcon,
   dropdownChevronIcon,
+  feedbackIcon,
   filterIcon,
   googleIcon,
   googleSigninLightNormalIcon,
   hidePasswordIcon,
-  locationIcon,
   libraryIcon,
+  locationIcon,
+  logoutIcon,
   menuIcon,
   networkIcon,
   newsIcon,
   orcidIcon,
+  searchIcon,
+  settingsIcon,
   showPasswordIcon,
   teamIcon,
   validTickIcon,
-  docsIcon,
-  settingsIcon,
-  logoutIcon,
-  feedbackIcon,
   verticalDividerIcon,
 } from '@asap-hub/react-components';
 
@@ -44,6 +45,7 @@ export const News = () => newsIcon;
 export const Orcid = () => orcidIcon;
 export const ShowPassword = () => showPasswordIcon;
 export const Settings = () => settingsIcon;
+export const Search = () => searchIcon;
 export const TeamMembersIcon = () => teamIcon;
 export const ValidTick = () => validTickIcon;
 export const VerticalDivider = () => verticalDividerIcon;

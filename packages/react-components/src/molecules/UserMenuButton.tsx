@@ -5,7 +5,7 @@ import { useCurrentUser } from '@asap-hub/react-context';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 import { Paragraph, Avatar } from '../atoms';
-import { chevronDownIcon, chevronUpIcon } from '../icons';
+import { chevronDownIcon, chevronUpIcon, verticalDividerIcon } from '../icons';
 
 const buttonResetStyles = css({
   padding: 0,
@@ -17,9 +17,7 @@ const styles = css({
   padding: `${12 / perRem}em ${24 / perRem}em`,
   cursor: 'pointer',
 
-  display: 'grid',
-  gridTemplateColumns: 'auto auto auto',
-  gridColumnGap: `${15 / perRem}em`,
+  display: 'flex',
   alignItems: 'center',
 });
 
@@ -48,7 +46,9 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
       }}
     >
       <Paragraph>
-        <strong>{displayName}</strong>
+        <strong css={{ paddingRight: `${15 / perRem}em` }}>
+          {displayName}
+        </strong>
       </Paragraph>
       <Avatar
         small
@@ -56,6 +56,14 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
         firstName={firstName}
         lastName={lastName}
       />
+      <div
+        css={{
+          paddingLeft: `${12 / perRem}em`,
+          paddingRight: `${9 / perRem}em`,
+        }}
+      >
+        {verticalDividerIcon}
+      </div>
       {open ? chevronUpIcon : chevronDownIcon}
     </button>
   );

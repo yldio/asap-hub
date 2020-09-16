@@ -43,14 +43,14 @@ it('renders the content', async () => {
 });
 
 it('renders a menu button that toggles the drawer', async () => {
-  const { getByLabelText } = render(<Layout {...props} />);
-  expect(getByLabelText(/close/i)).not.toBeVisible();
+  const { getByLabelText, queryByTitle } = render(<Layout {...props} />);
+  expect(queryByTitle(/cross/i)).not.toBeInTheDocument();
 
   userEvent.click(getByLabelText(/toggle menu/i));
-  expect(getByLabelText(/close/i)).toBeVisible();
+  expect(queryByTitle(/cross/i)).toBeInTheDocument();
 
   userEvent.click(getByLabelText(/toggle menu/i));
-  expect(getByLabelText(/close/i)).not.toBeVisible();
+  expect(queryByTitle(/cross/i)).not.toBeInTheDocument();
 });
 
 it('renders a user menu button that toggles the drawer', async () => {

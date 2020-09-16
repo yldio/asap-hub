@@ -1,6 +1,7 @@
 import {
   chevronDownIcon,
   chevronUpIcon,
+  crossIcon,
   dropdownChevronIcon,
   filterIcon,
   googleIcon,
@@ -19,12 +20,14 @@ import {
   settingsIcon,
   logoutIcon,
   feedbackIcon,
+  verticalDividerIcon,
 } from '@asap-hub/react-components';
 
 export default { title: 'Atoms / Icons' };
 
 export const ChevronDown = () => chevronDownIcon;
 export const ChevronUp = () => chevronUpIcon;
+export const Cross = () => crossIcon;
 export const Docs = () => docsIcon;
 export const DropdownChevron = () => dropdownChevronIcon;
 export const Feedback = () => feedbackIcon;
@@ -43,3 +46,4 @@ export const ShowPassword = () => showPasswordIcon;
 export const Settings = () => settingsIcon;
 export const TeamMembersIcon = () => teamIcon;
 export const ValidTick = () => validTickIcon;
+export const VerticalDivider = () => verticalDividerIcon;

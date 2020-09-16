@@ -51,12 +51,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/auth-frontend"
       },
       {
-        "name": "@asap-hub/auth0-add-user-metadata",
-        "reference": "workspace:apps/auth0-add-user-metadata"
-      },
-      {
-        "name": "@asap-hub/auth0-connect-user",
-        "reference": "workspace:apps/auth0-connect-user"
+        "name": "@asap-hub/auth0-rules",
+        "reference": "workspace:apps/auth0-rules"
       },
       {
         "name": "@asap-hub/frontend",
@@ -109,8 +105,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/asap-server", ["workspace:apps/asap-server"]],
       ["@asap-hub/auth", ["workspace:packages/auth"]],
       ["@asap-hub/auth-frontend", ["workspace:apps/auth-frontend"]],
-      ["@asap-hub/auth0-add-user-metadata", ["workspace:apps/auth0-add-user-metadata"]],
-      ["@asap-hub/auth0-connect-user", ["workspace:apps/auth0-connect-user"]],
+      ["@asap-hub/auth0-rules", ["workspace:apps/auth0-rules"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/frontend", ["workspace:apps/frontend"]],
       ["@asap-hub/import-data", ["workspace:apps/import-data"]],
@@ -146,12 +141,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "workspace:apps/auth-frontend"
       ],
       [
-        "@asap-hub/auth0-add-user-metadata",
-        "workspace:apps/auth0-add-user-metadata"
-      ],
-      [
-        "@asap-hub/auth0-connect-user",
-        "workspace:apps/auth0-connect-user"
+        "@asap-hub/auth0-rules",
+        "workspace:apps/auth0-rules"
       ],
       [
         "@asap-hub/eslint-config-asap-hub",
@@ -8271,33 +8262,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
-      ["@asap-hub/auth0-add-user-metadata", [
-        ["workspace:apps/auth0-add-user-metadata", {
-          "packageLocation": "./apps/auth0-add-user-metadata/",
+      ["@asap-hub/auth0-rules", [
+        ["workspace:apps/auth0-rules", {
+          "packageLocation": "./apps/auth0-rules/",
           "packageDependencies": [
-            ["@asap-hub/auth0-add-user-metadata", "workspace:apps/auth0-add-user-metadata"],
+            ["@asap-hub/auth0-rules", "workspace:apps/auth0-rules"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
-            ["@babel/core", "npm:7.9.0"],
-            ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.9.6"],
-            ["@babel/preset-typescript", "virtual:dce39fa2e05942e1473f7ec40900aeec338e13b76d504e96abc4a8f72df79ed87ac2ba0e2983a4693c1eee2620617fc7d8af2f34ec4d65bf2fd45c746ba98652#npm:7.9.0"],
-            ["@babel/runtime-corejs3", "npm:7.11.2"],
-            ["@types/asap-hub__auth0-rule", "workspace:@types/asap-hub__auth0-rule"],
-            ["@types/jest", "npm:26.0.3"],
-            ["got", "npm:11.6.0"],
-            ["nock", "npm:13.0.4"]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
-      ["@asap-hub/auth0-connect-user", [
-        ["workspace:apps/auth0-connect-user", {
-          "packageLocation": "./apps/auth0-connect-user/",
-          "packageDependencies": [
-            ["@asap-hub/auth0-connect-user", "workspace:apps/auth0-connect-user"],
-            ["@asap-hub/auth", "workspace:packages/auth"],
-            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@babel/core", "npm:7.9.0"],
             ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.9.6"],
             ["@babel/preset-typescript", "virtual:dce39fa2e05942e1473f7ec40900aeec338e13b76d504e96abc4a8f72df79ed87ac2ba0e2983a4693c1eee2620617fc7d8af2f34ec4d65bf2fd45c746ba98652#npm:7.9.0"],

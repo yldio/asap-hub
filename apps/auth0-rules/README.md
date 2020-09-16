@@ -1,6 +1,10 @@
-# Auth0 connect user rule
+# Auth0 Connect User Rule
 
-> Connects user's auth0 profile to a CMS user based on invitationCode
+> Connects user's auth0 profile to an ASAP user using invitationCode.
+
+# Auth0 Add User Metadata
+
+> Add User metadata to the idToken on successful login.
 
 See [Auth0 docs](../../docs/config/auth0) for how this role is supposed to be used.
 

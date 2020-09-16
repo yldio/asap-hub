@@ -1,6 +1,7 @@
 import nock from 'nock';
 import type { User, RuleContext } from '@asap-hub/auth0-rule';
-import connectUser from '..';
+import { UserResponse } from '@asap-hub/model';
+import addUserMetadata from '../add-user-metadata';
 
 declare global {
   namespace NodeJS {
@@ -51,9 +52,7 @@ const context: RuleContext = {
   samlConfiguration: {},
   protocol: 'oidc-basic-profile',
   stats: { loginsCount: 14 },
-  request: {
-    query: {},
-  },
+  request: { query: { redirect_uri: 'https://hub.asap.science/' } },
   sso: {
     with_auth0: false,
     with_dbconn: false,
@@ -78,10 +77,19 @@ const context: RuleContext = {
   authorization: { roles: [] },
 };
 
-describe('Auth0 Rule - Connect User', () => {
+const apiUser: UserResponse = {
+  displayName: 'JT',
+  email: 'joao.tiago@yld.io',
+  id: 'myRandomId123',
+  lastModifiedDate: '2020-08-21T14:23:31.924Z',
+  createdDate: '2020-08-21T14:23:31.924Z',
+  teams: [],
+  skills: [],
+};
+
+describe('Auth0 Rule - Add User Metadata', () => {
   const apiURL = 'https://api.hub.asap.science';
   const apiSharedSecret = 'auth0_shared_secret';
-  const invitation_code = 'sampleInvitationCode';
 
   beforeEach(() => {
     global.configuration = {
@@ -91,74 +99,67 @@ describe('Auth0 Rule - Connect User', () => {
     nock.cleanAll();
   });
 
-  it('should callback with same user + context if receives no invitation_code', () => {
+  it('errors if the redirect_uri is missing', async () => {
     const cb: jest.MockedFunction<
-      Parameters<typeof connectUser>[2]
+      Parameters<typeof addUserMetadata>[2]
     > = jest.fn();
 
-    connectUser(user, context, cb);
-    expect(cb).toHaveBeenCalled();
-    const [err, resUser, resContext] = cb.mock.calls[0];
-    expect(err).toBeFalsy();
-    expect(resUser).not.toBeNull();
-    expect(resContext).not.toBeNull();
+    await addUserMetadata(user, { ...context, request: { query: {} } }, cb);
+
+    expect(cb).toHaveBeenCalledWith(expect.any(Error));
+    const [err] = cb.mock.calls[0];
+    expect(String(err)).toMatch(/redirect/i);
   });
 
-  it('should return an error if fails to connect the user', async () => {
+  it('errors if it fails to fetch the user', async () => {
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
       },
     })
-      .post('/webhook/users/connections', {
-        code: invitation_code,
-        userId: user.user_id,
-      })
+      .get(`/webhook/users/${user.user_id}`)
       .reply(404);
 
     const cb: jest.MockedFunction<
-      Parameters<typeof connectUser>[2]
+      Parameters<typeof addUserMetadata>[2]
     > = jest.fn();
 
-    await connectUser(
-      user,
-      { ...context, request: { query: { invitation_code } } },
-      cb,
-    );
+    await addUserMetadata(user, context, cb);
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];
-    expect(err).not.toBeNull();
+    expect(String(err)).toMatch(/(^|\D)404(\D|$)/i);
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
   });
 
-  it('should connect user if receives an invitation_code', async () => {
+  it('adds the user metadata on successful fetch', async () => {
     nock(apiURL, {
       reqheaders: {
         authorization: `Basic ${apiSharedSecret}`,
       },
     })
-      .post('/webhook/users/connections', {
-        code: invitation_code,
-        userId: user.user_id,
-      })
-      .reply(202);
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, apiUser);
 
     const cb: jest.MockedFunction<
-      Parameters<typeof connectUser>[2]
+      Parameters<typeof addUserMetadata>[2]
     > = jest.fn();
 
-    await connectUser(
-      user,
-      { ...context, request: { query: { invitation_code } } },
-      cb,
-    );
+    await addUserMetadata(user, context, cb);
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
+    expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual({
+      displayName: 'JT',
+      email: 'joao.tiago@yld.io',
+      id: 'myRandomId123',
+      firstName: undefined,
+      lastName: undefined,
+      avatarURL: undefined,
+    });
   });
 });

@@ -94,9 +94,9 @@ function() {
 }
 ```
 
-Where `$CONNECT_USER` is the [build output](../../apps/auth0-connect-user/build/index.js) of `@asap-hub/auth0-connect-user`.
+Where `$CONNECT_USER` is the [build output](../../apps/auth0-rules/build/connect-user.js) of `@asap-hub/auth0-rules`.
 
-**You'll need to force the import of a specific `got` version. On the Auth0 editor, where you find `require('got')` replace by `require('got@$VERSION')`, where \$VERSION is the version that `yarn why got` shows for `@asap-hub/auth0-connect-user`.**
+**You'll need to force the import of a specific `got` version. On the Auth0 editor, where you find `require('got')` replace by `require('got@$VERSION')`, where \$VERSION is the version that `yarn why got` shows for `@asap-hub/auth0-rules`.**
 
 ## Auth0 Add User Metadata Rule
 
@@ -116,6 +116,6 @@ function() {
 }
 ```
 
-Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0-add-user-metadata/build/index.js) of `@asap-hub/auth0-add-user-metadata`.
+Where `$ADD_USER_METADATA` is the [build output](../../apps/auth0-rules/build/add-user-metadata.js) of `@asap-hub/auth0-rules`.
 
-**You'll need to force the import of a specific `got` version. On the Auth0 editor, where you find `require('got')` replace by `require('got@$VERSION')`, where \$VERSION is the version that `yarn why got` shows for `@asap-hub/auth0-add-user-metadata`.**
+**You'll need to force the import of a specific `got` version. On the Auth0 editor, where you find `require('got')` replace by `require('got@$VERSION')`, where \$VERSION is the version that `yarn why got` shows for `@asap-hub/auth0-rules`.**

@@ -95,7 +95,7 @@
           "label": "Last Name",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": true
         }
       },
       {
@@ -127,6 +127,23 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Job Title",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "degree",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Degree",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -238,7 +255,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "isUnique": false,
+          "isUnique": true,
           "inlineEditable": false,
           "editor": "Input",
           "label": "ORCID",
@@ -491,7 +508,7 @@
         "name": "connections",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Array",
@@ -505,7 +522,7 @@
             "name": "code",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
               "isUnique": false,

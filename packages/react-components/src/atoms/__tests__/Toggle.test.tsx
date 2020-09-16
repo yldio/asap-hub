@@ -3,14 +3,14 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import Toggle from '../Toggle';
-import { profileIcon, teamIcon } from '../../icons';
+import { userIcon, teamIcon } from '../../icons';
 
 it('renders a toggle', () => {
   const { getByText } = render(
     <Toggle
       leftButtonIcon={teamIcon}
       leftButtonText="Left Text"
-      rightButtonIcon={profileIcon}
+      rightButtonIcon={userIcon}
       rightButtonText="Right Text"
       onChange={() => undefined}
     />,
@@ -25,7 +25,7 @@ it('toggle fires onChange', async () => {
     <Toggle
       leftButtonIcon={teamIcon}
       leftButtonText="Left Text"
-      rightButtonIcon={profileIcon}
+      rightButtonIcon={userIcon}
       rightButtonText="Right Text"
       onChange={stub}
     />,

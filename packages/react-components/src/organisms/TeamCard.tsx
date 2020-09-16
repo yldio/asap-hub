@@ -18,7 +18,6 @@ const iconStyles = css({
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
   paddingRight: `${6 / perRem}em`,
-  stroke: lead.rgb,
 });
 
 interface TeamCardProps {

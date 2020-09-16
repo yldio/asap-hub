@@ -15,7 +15,6 @@ export { default as menuIcon } from './menu';
 export { default as networkIcon } from './network';
 export { default as newsIcon } from './news';
 export { default as orcidIcon } from './orcid';
-export { default as profileIcon } from './profile-icon';
 export { default as searchIcon } from './search-icon';
 export { default as settingsIcon } from './settings';
 export { default as showPasswordIcon } from './show-password';

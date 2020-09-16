@@ -48,7 +48,7 @@ const buttonLeft = css({
 });
 
 interface ToggleProps {
-  defaultChecked?: 'left' | 'right';
+  position?: 'left' | 'right';
   leftButtonText: string;
   leftButtonIcon: React.ReactElement<SVGElement>;
   rightButtonText: string;
@@ -57,7 +57,7 @@ interface ToggleProps {
 }
 
 const Toggle: React.FC<ToggleProps> = ({
-  defaultChecked = 'left',
+  position = 'left',
   leftButtonIcon,
   leftButtonText,
   rightButtonIcon,
@@ -67,7 +67,7 @@ const Toggle: React.FC<ToggleProps> = ({
   <label css={checkboxLabelStyles}>
     <input
       type="checkbox"
-      defaultChecked={defaultChecked === 'right'}
+      checked={position === 'left'}
       css={checkboxStyles}
       onChange={onChange}
     ></input>

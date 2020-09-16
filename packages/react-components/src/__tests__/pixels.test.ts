@@ -1,4 +1,9 @@
-import { screen, vminLinearCalc, Screen } from '../pixels';
+import {
+  screen,
+  vminLinearCalc,
+  Screen,
+  vminLinearCalcClamped,
+} from '../pixels';
 
 describe('screen', () => {
   it('sets the dimensions', () => {
@@ -18,5 +23,15 @@ describe('vminLinearCalc', () => {
     expect(vminLinearCalc(smallScreen, 10, largeScreen, 12, 'px')).toEqual(
       'calc(8px + 2vmin)',
     );
+  });
+});
+
+describe('vminLinearCalcClamped', () => {
+  it('creates a vminLinearCalc clamped to the value range', () => {
+    const smallScreen: Screen = { width: 125, height: 100, min: 100, max: 125 };
+    const largeScreen: Screen = { width: 250, height: 200, min: 200, max: 250 };
+    expect(
+      vminLinearCalcClamped(smallScreen, 10, largeScreen, 12, 'px'),
+    ).toEqual('clamp(10px, calc(8px + 2vmin), 12px)');
   });
 });

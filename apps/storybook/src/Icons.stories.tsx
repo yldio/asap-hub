@@ -20,6 +20,7 @@ import {
   settingsIcon,
   showPasswordIcon,
   teamIcon,
+  userIcon,
   validTickIcon,
   verticalDividerIcon,
 } from '@asap-hub/react-components';
@@ -43,9 +44,10 @@ export const Menu = () => menuIcon;
 export const Network = () => networkIcon;
 export const News = () => newsIcon;
 export const Orcid = () => orcidIcon;
-export const ShowPassword = () => showPasswordIcon;
-export const Settings = () => settingsIcon;
 export const Search = () => searchIcon;
+export const Settings = () => settingsIcon;
+export const ShowPassword = () => showPasswordIcon;
 export const TeamMembersIcon = () => teamIcon;
+export const UserIcon = () => userIcon;
 export const ValidTick = () => validTickIcon;
 export const VerticalDivider = () => verticalDividerIcon;

@@ -21,12 +21,13 @@ export {
   Headline3,
   Headline4,
   Link,
+  Overlay,
   Paragraph,
   RichText,
   TabLink,
   Tag,
   TagLabel,
-  Overlay,
+  Toggle,
 } from './atoms';
 export {
   GoogleSigninButton,

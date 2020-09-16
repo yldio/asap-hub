@@ -6,7 +6,6 @@ const team = (
   <svg width={24} height={24} viewBox="0 0 24 24">
     <title>Team</title>
     <g
-      stroke="#4D646B"
       strokeWidth={1.3}
       fill="none"
       fillRule="evenodd"

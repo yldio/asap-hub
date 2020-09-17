@@ -11,6 +11,7 @@ import News from './news/Routes';
 import Teams from './teams/Routes';
 import Users from './users/Routes';
 import Welcome from './welcome/Routes';
+import Network from './network/Routes';
 import { AuthProvider, CheckAuth, Logout } from './auth';
 import ResearchOutputs from './research-outputs/Routes';
 import Page from './pages/Content';
@@ -70,6 +71,7 @@ const App: React.FC<{}> = () => {
                   <Route path="/news" component={News} />
                   <Route path="/teams" component={Teams} />
                   <Route path="/users" component={Users} />
+                  <Route path="/network" component={Network} />
                   <Route path="/research-outputs" component={ResearchOutputs} />
 
                   <Route>Not Found</Route>

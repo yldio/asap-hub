@@ -10,7 +10,18 @@ const commonProps = {
 };
 
 it('renders research interests', () => {
-  const { getByText } = render(<ProfileResearch {...commonProps} />);
+  const { getByText } = render(
+    <ProfileResearch
+      {...commonProps}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Team',
+          role: 'Role',
+        },
+      ]}
+    />,
+  );
   expect(getByText(/background/i)).toBeVisible();
 });
 

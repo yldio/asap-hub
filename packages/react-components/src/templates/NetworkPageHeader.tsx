@@ -1,5 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
+import { useLocation, useHistory } from 'react-router-dom';
+
 import { Display, Paragraph, Button, Toggle } from '../atoms';
 import { SearchField } from '../molecules';
 import { perRem, tabletScreen, smallDesktopScreen } from '../pixels';
@@ -29,7 +31,7 @@ const controlsStyles = css({
   paddingTop: `${18 / perRem}em`,
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     paddingTop: `${2 / perRem}em`,
-    gridTemplateColumns: '250px auto',
+    gridTemplateColumns: '230px auto',
   },
 });
 
@@ -48,6 +50,17 @@ const buttonTextStyles = css({
 });
 
 const NetworkPageHeader: React.FC = () => {
+  const location = useLocation();
+  const history = useHistory();
+  const currentUrlParams = new URLSearchParams(location.search);
+  const handleSearchOnChange = (newQuery: string) => {
+    currentUrlParams.set('query', newQuery);
+    history.replace({ search: currentUrlParams.toString() });
+  };
+  const handleToggleOnChange = () => {
+    history.push({ pathname: 'teams', search: currentUrlParams.toString() });
+  };
+
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Network</Display>
@@ -64,10 +77,14 @@ const NetworkPageHeader: React.FC = () => {
           leftButtonIcon={teamIcon}
           rightButtonText="People"
           rightButtonIcon={userIcon}
-          onChange={() => undefined}
+          onChange={handleToggleOnChange}
         />
         <div css={searchContainerStyles}>
-          <SearchField value="" placeholder="Search..." />
+          <SearchField
+            value={currentUrlParams.get('query')}
+            placeholder="Search..."
+            onChange={handleSearchOnChange}
+          />
           <Button enabled={false}>
             {filterIcon}
             <span css={buttonTextStyles}>Filters</span>

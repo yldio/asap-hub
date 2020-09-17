@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import ProfilePage from '../ProfilePage';
 
-const boilerplateProps = {
+const boilerplateProps: Omit<ComponentProps<typeof ProfilePage>, 'children'> = {
   firstName: 'John',
   displayName: 'John Doe',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   teams: [],
-  skills: [],
-  orcidWorks: [],
   aboutHref: '#',
   outputsHref: '#',
   researchHref: '#',
-  teamProfileHref: '#',
 };
 
 it('renders the header', () => {

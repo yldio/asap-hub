@@ -1,5 +1,5 @@
 import React from 'react';
-import { date, text } from '@storybook/addon-knobs';
+import { date, text, number } from '@storybook/addon-knobs';
 import { ProfileHeader } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './decorators';
 
@@ -19,14 +19,12 @@ export const Normal = () => (
     firstName={text('First Name', 'Phillip')}
     lastName={text('Last Name', 'Mars')}
     location={text('Location', 'New Haven, Connecticut')}
-    teams={[
-      {
-        id: '42',
-        role: text('Role', 'Researcher'),
-        displayName: text('Team Name', 'Team A'),
-      },
-    ]}
-    teamProfileHref={'#'}
+    teams={Array(number('Number of Teams', 1)).fill({
+      id: '42',
+      href: '#42',
+      role: text('Role', 'Researcher'),
+      displayName: text('Team Name', 'Team A'),
+    })}
     jobTitle={text('Job Title', 'Assistant Professor')}
     avatarURL={text(
       'Avatar URL',

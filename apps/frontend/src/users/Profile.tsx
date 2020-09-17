@@ -26,12 +26,15 @@ const Profile: React.FC<{}> = () => {
   if (profile) {
     const profilePageProps = {
       ...profile,
+
+      teams: profile.teams.map((team) => ({
+        ...team,
+        href: `/teams/${team.id}`,
+      })),
+
       aboutHref: join(url, 'about'),
       researchHref: join(url, 'research'),
       outputsHref: join(url, 'outputs'),
-      teamProfileHref: profile.teams[0]
-        ? `/teams/${profile.teams[0].id}`
-        : undefined,
     };
 
     return (

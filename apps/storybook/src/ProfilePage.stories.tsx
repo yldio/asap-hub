@@ -29,6 +29,7 @@ const commonProps = () => ({
   teams: [
     {
       id: '42',
+      href: '#42',
       role: text('Role', 'Researcher'),
       displayName: text('Team Name', 'Ferguson, M'),
       approach: text(
@@ -63,7 +64,6 @@ const commonProps = () => ({
   aboutHref: '/wrong',
   researchHref: '/wrong',
   outputsHref: '/wrong',
-  teamProfileHref: 'wrong',
 });
 
 export const AboutTab = () => (

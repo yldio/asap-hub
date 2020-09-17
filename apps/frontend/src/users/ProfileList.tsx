@@ -22,7 +22,8 @@ const Page: React.FC<{}> = () => {
   if (usersData) {
     const users = usersData.map((user: UserResponse) => ({
       ...user,
-      profileHref: join(url, user.id),
+      href: join(url, user.id),
+      teams: user.teams.map((team) => ({ ...team, href: `/teams/${team.id}` })),
     }));
     return (
       <NetworkPage>

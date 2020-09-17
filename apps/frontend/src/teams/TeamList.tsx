@@ -30,7 +30,7 @@ const Page: React.FC = () => {
   if (teamsData) {
     const teams = teamsData.map((team: TeamResponse) => ({
       ...team,
-      teamProfileHref: join(url, team.id),
+      href: join(url, team.id),
     }));
     return (
       <NetworkPage>

@@ -12,7 +12,7 @@ const team = {
   lastModifiedDate: new Date().toISOString(),
   members: [],
   skills: [],
-  teamProfileHref: 'http://localhost/teams/42',
+  href: 'http://localhost/teams/42',
 };
 const teams = [team, { ...team, id: '43', displayName: 'Unknown Team 2' }];
 

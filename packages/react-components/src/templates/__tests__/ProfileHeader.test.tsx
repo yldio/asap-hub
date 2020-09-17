@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
 import ProfileHeader from '../ProfileHeader';
 
-const boilerplateProps = {
+const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
   displayName: 'John Doe',
   teams: [],
   lastModifiedDate: formatISO(new Date()),
   aboutHref: './about',
   researchHref: './research-interests',
   outputsHref: './outputs',
-  teamProfileHref: '/teams/123',
 };
 
 it('renders the name as the top-level heading', () => {

@@ -68,17 +68,19 @@ export interface OrcidWork {
   };
 }
 
+export interface UserTeam {
+  id: string;
+  displayName: string;
+  role: string;
+  approach?: string;
+  responsibilities?: string;
+}
+
 export interface UserResponse extends Invitee {
   id: string;
   lastModifiedDate: string;
   createdDate: string;
-  teams: ReadonlyArray<{
-    id: string;
-    displayName: string;
-    role: string;
-    approach?: string;
-    responsibilities?: string;
-  }>;
+  teams: ReadonlyArray<UserTeam>;
   skills: string[];
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];

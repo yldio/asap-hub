@@ -1,13 +1,10 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { UserResponse } from '@asap-hub/model';
 import { PeopleCard } from '../organisms';
 
 interface NetworkPeopleProps {
   readonly people: ReadonlyArray<
-    UserResponse & {
-      readonly profileHref: string;
-      readonly teamProfileHref?: string;
-    }
+    UserResponse & ComponentProps<typeof PeopleCard>
   >;
 }
 

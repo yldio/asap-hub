@@ -5,7 +5,7 @@ import { TeamCard } from '../organisms';
 interface NetworkTeamProps {
   readonly teams: ReadonlyArray<
     TeamResponse & {
-      readonly teamProfileHref: string;
+      readonly href: string;
     }
   >;
 }

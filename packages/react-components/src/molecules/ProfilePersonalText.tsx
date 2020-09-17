@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { UserResponse } from '@asap-hub/model';
+import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { Link, Paragraph } from '../atoms';
 import { locationIcon } from '../icons';
@@ -22,9 +22,9 @@ const iconStyles = css({
 
 type ProfilePersonalTextProps = Pick<
   UserResponse,
-  'department' | 'institution' | 'jobTitle' | 'location' | 'teams'
+  'department' | 'institution' | 'jobTitle' | 'location'
 > & {
-  readonly teamProfileHref?: string;
+  readonly teams: ReadonlyArray<UserTeam & { href: string }>;
 };
 
 const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
@@ -33,9 +33,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
   location,
   jobTitle,
   teams,
-  teamProfileHref,
 }) => {
-  const team = teams?.[0];
   return (
     <div css={mainTextStyles}>
       <Paragraph accent="lead">
@@ -43,13 +41,12 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
         {jobTitle && institution && ' at '}
         {institution}
         {institution && department && `, ${department}`}
-        {team && teamProfileHref && (
-          <>
+        {teams.map(({ id, role, href, displayName }) => (
+          <React.Fragment key={id}>
             <br />
-            {team.role} on{' '}
-            <Link href={teamProfileHref}>{team.displayName}</Link>
-          </>
-        )}
+            {role} on <Link href={href}>{displayName}</Link>
+          </React.Fragment>
+        ))}
       </Paragraph>
       {location && (
         <Paragraph accent="lead">

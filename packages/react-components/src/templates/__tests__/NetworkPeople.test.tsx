@@ -19,12 +19,13 @@ const person = {
       id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
       displayName: 'Jakobsson, J',
       role: 'Core Leadership - Co-Investigator',
+      href: '/teams/somewhere',
     },
   ],
   orcid: '0000-0001-8203-6901',
   orcidWorks: [],
   skills: [],
-  profileHref: 'wrong',
+  href: '/users/somewhere',
 };
 const people = [person, { ...person, id: '43', displayName: 'Person B' }];
 

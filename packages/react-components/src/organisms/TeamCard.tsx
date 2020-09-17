@@ -25,28 +25,28 @@ interface TeamCardProps {
   readonly projectSummary?: string;
   readonly skills: string[];
   readonly members: TeamMember[];
-  readonly teamProfileHref: string;
+  readonly href: string;
 }
 const TeamCard: React.FC<TeamCardProps> = ({
   displayName,
   projectSummary,
   skills,
   members,
-  teamProfileHref,
+  href,
 }) => {
   return (
-    <Link theme={null} href={teamProfileHref}>
-      <Card>
+    <Card>
+      <Link theme={null} href={href}>
         <Headline2 styleAsHeading={4}>{displayName}</Headline2>
         <Paragraph accent="lead">{projectSummary}</Paragraph>
-        <TagList summarize tags={skills} />
-        <span css={teamMemberStyles}>
-          <span css={iconStyles}>{teamIcon} </span>
-          {members.length} Team Member
-          {members.length !== 1 ? 's' : ''}
-        </span>
-      </Card>
-    </Link>
+      </Link>
+      <TagList summarize tags={skills} />
+      <span css={teamMemberStyles}>
+        <span css={iconStyles}>{teamIcon} </span>
+        {members.length} Team Member
+        {members.length !== 1 ? 's' : ''}
+      </span>
+    </Card>
   );
 };
 

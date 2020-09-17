@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import format from 'date-fns/format';
-import { UserResponse } from '@asap-hub/model';
+import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Avatar, Caption } from '../atoms';
 import { ProfilePersonalText } from '../molecules';
@@ -46,10 +46,9 @@ type PeopleCardProps = Pick<
   | 'createdDate'
   | 'lastName'
   | 'location'
-  | 'teams'
 > & {
-  readonly profileHref: string;
-  readonly teamProfileHref?: string;
+  readonly href: string;
+  readonly teams: ReadonlyArray<UserTeam & { href: string }>;
 };
 const PeopleCard: React.FC<PeopleCardProps> = ({
   department,
@@ -62,41 +61,41 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   teams,
   jobTitle,
   avatarURL,
-  profileHref,
-  teamProfileHref,
+  href,
 }) => {
   return (
-    <Link theme={null} href={profileHref}>
-      <Card>
-        <section css={containerStyles}>
+    <Card>
+      <section css={containerStyles}>
+        <Link theme={null} href={href}>
           <Avatar
             imageUrl={avatarURL}
             firstName={firstName}
             lastName={lastName}
           />
-          <div css={textContainerStyles}>
-            <div css={moveStyles}>
+        </Link>
+        <div css={textContainerStyles}>
+          <div css={moveStyles}>
+            <Link theme={null} href={href}>
               <Headline2 styleAsHeading={4}>{displayName}</Headline2>
-            </div>
-            <div css={profileTextStyles}>
-              <ProfilePersonalText
-                department={department}
-                institution={institution}
-                location={location}
-                jobTitle={jobTitle}
-                teams={teams}
-                teamProfileHref={teamProfileHref}
-              />
-            </div>
-            <div css={moveStyles}>
-              <Caption accent={'lead'} asParagraph>
-                Joined: {format(new Date(createdDate), 'Mo MMMM yyyy')}
-              </Caption>
-            </div>
+            </Link>
           </div>
-        </section>
-      </Card>
-    </Link>
+          <div css={profileTextStyles}>
+            <ProfilePersonalText
+              department={department}
+              institution={institution}
+              location={location}
+              jobTitle={jobTitle}
+              teams={teams}
+            />
+          </div>
+          <div css={moveStyles}>
+            <Caption accent={'lead'} asParagraph>
+              Joined: {format(new Date(createdDate), 'Mo MMMM yyyy')}
+            </Caption>
+          </div>
+        </div>
+      </section>
+    </Card>
   );
 };
 

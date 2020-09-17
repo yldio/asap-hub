@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
-import { UserResponse } from '@asap-hub/model';
+import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { tabletScreen } from '../pixels';
 import { Avatar, Button, Paragraph, TabLink, Display } from '../atoms';
@@ -57,12 +57,12 @@ type ProfileProps = Pick<
   | 'lastModifiedDate'
   | 'lastName'
   | 'location'
-  | 'teams'
 > & {
   readonly aboutHref: string;
   readonly researchHref: string;
   readonly outputsHref: string;
-  readonly teamProfileHref?: string;
+
+  readonly teams: ReadonlyArray<UserTeam & { href: string }>;
 };
 
 const ProfileHeader: React.FC<ProfileProps> = ({
@@ -80,7 +80,6 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   aboutHref,
   researchHref,
   outputsHref,
-  teamProfileHref,
 }) => {
   return (
     <header css={containerStyles}>
@@ -93,7 +92,6 @@ const ProfileHeader: React.FC<ProfileProps> = ({
             location={location}
             jobTitle={jobTitle}
             teams={teams}
-            teamProfileHref={teamProfileHref}
           />
         </div>
         <Avatar

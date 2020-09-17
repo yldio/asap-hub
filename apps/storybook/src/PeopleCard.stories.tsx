@@ -1,5 +1,5 @@
 import React from 'react';
-import { text, date } from '@storybook/addon-knobs';
+import { text, date, number } from '@storybook/addon-knobs';
 
 import { PeopleCard } from '@asap-hub/react-components';
 
@@ -17,19 +17,17 @@ export const Normal = () => (
     firstName={text('First Name', 'Phillip')}
     lastName={text('Last Name', 'Mars')}
     location={text('Location', 'New Haven, Connecticut')}
-    teams={[
-      {
-        id: '42',
-        role: text('Role', 'Researcher'),
-        displayName: text('Team Name', 'Team A'),
-      },
-    ]}
+    teams={Array(number('Number of Teams', 1)).fill({
+      id: '42',
+      href: '#42',
+      role: text('Role', 'Researcher'),
+      displayName: text('Team Name', 'Team A'),
+    })}
     jobTitle={text('Job Title', 'Assistant Professor')}
     avatarURL={text(
       'Avatar URL',
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     )}
-    profileHref="#"
-    teamProfileHref="#"
+    href="#"
   />
 );

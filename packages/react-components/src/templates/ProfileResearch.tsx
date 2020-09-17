@@ -31,10 +31,13 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
   teams,
   skills,
 }) => {
-  const team = teams[0];
   return (
     <main css={styles}>
-      <ProfileBackground {...team} firstName={firstName} />
+      {teams.length
+        ? teams.map((team) => (
+            <ProfileBackground key={team.id} {...team} firstName={firstName} />
+          ))
+        : null}
       {skills.length ? <SkillsSection skills={skills} /> : null}
     </main>
   );

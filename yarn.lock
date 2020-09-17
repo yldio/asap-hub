@@ -6463,6 +6463,7 @@ __metadata:
     babel-eslint: ^10.1.0
     babel-plugin-transform-inline-environment-variables: ^0.4.3
     babel-preset-react-app: ^9.1.2
+    dotenv: ^8.2.0
     eslint: ^6
     eslint-import-resolver-typescript: ^2.3.0
     eslint-plugin-import: ^2.22.0
@@ -6480,7 +6481,6 @@ __metadata:
     prettier: ^2.1.1
     rimraf: ^3.0.2
     serverless: ^1.81.1
-    serverless-dotenv-plugin: ^3.0.0
     serverless-iam-roles-per-function: ^2.0.2
     serverless-offline: ^6.7.0
     serverless-s3-sync: ^1.14.4
@@ -6500,8 +6500,6 @@ __metadata:
       built: false
     serverless:
       built: false
-    serverless-dotenv-plugin:
-      unplugged: true
     serverless-iam-roles-per-function:
       unplugged: true
     serverless-offline:
@@ -8231,16 +8229,6 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: 4018b0c812880da595d0d7b8159939527b72f58d3370e2fdc1a24d9abd460bab851695d7eca014082f110d5702d1221b05493fec430ccce375de907d50cc48c1
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "chalk@npm:4.1.0"
-  dependencies:
-    ansi-styles: ^4.1.0
-    supports-color: ^7.1.0
-  checksum: f860285b419f9e925c2db0f45ffa88aa8794c14b80cc5d01ff30930bcfc384996606362706f0829cf557f6d36152a5fb2d227ad63c4bc90e2ec9e9dbed4a3c07
   languageName: node
   linkType: hard
 
@@ -22631,17 +22619,6 @@ resolve@1.15.0:
     parseurl: ~1.3.3
     send: 0.17.1
   checksum: 97e8c94ec02950d019000ca12a8e0b4fdeaaabb7ae965c1c05557b55b48114716ae92688972a8d9f06a5e2d5957c305253a859ec223bb39a1e0732366d0e2768
-  languageName: node
-  linkType: hard
-
-"serverless-dotenv-plugin@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "serverless-dotenv-plugin@npm:3.0.0"
-  dependencies:
-    chalk: ^4.1.0
-    dotenv: ^8.2.0
-    dotenv-expand: ^5.1.0
-  checksum: f5b8a20d057c81450e28311cd245fb82e9a8175dc4ff8a9aba2e627a5b2d99744a74cd6e1ca9c4f3a548710cc53921dcdb28699edf61a72866fe490a47e8ccb9
   languageName: node
   linkType: hard
 

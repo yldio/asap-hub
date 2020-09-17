@@ -2,17 +2,19 @@ import React from 'react';
 import css from '@emotion/css';
 import { lineHeight, perRem } from '../pixels';
 import { steel, paper, tin, charcoal } from '../colors';
+import { noop } from '../utils';
 
-const checkboxLabelStyles = css({
+const styles = css({
   display: 'grid',
   gridTemplateColumns: '1fr 40px 1fr',
   height: `${54 / perRem}em`,
+
   borderRadius: '27px',
   border: `1px solid ${steel.rgb}`,
-  overflow: 'hidden',
   backgroundColor: steel.rgb,
   color: tin.rgb,
   stroke: tin.rgb,
+  cursor: 'pointer',
 });
 
 const buttonStyle = css({
@@ -33,11 +35,6 @@ const activeStyles = css({
   color: charcoal.rgb,
   stroke: charcoal.rgb,
 });
-const checkboxStyles = css({
-  display: 'none',
-  '&:not(:checked) ~ .left': activeStyles,
-  '&:checked ~ .right': activeStyles,
-});
 const buttonRight = css({
   gridColumn: '2 / span 2',
   gridRow: 1,
@@ -53,7 +50,7 @@ interface ToggleProps {
   leftButtonIcon: React.ReactElement<SVGElement>;
   rightButtonText: string;
   rightButtonIcon: React.ReactElement<SVGElement>;
-  onChange: () => void;
+  onChange?: () => void;
 }
 
 const Toggle: React.FC<ToggleProps> = ({
@@ -62,24 +59,26 @@ const Toggle: React.FC<ToggleProps> = ({
   leftButtonText,
   rightButtonIcon,
   rightButtonText,
-  onChange,
+  onChange = noop,
 }) => (
-  <label css={checkboxLabelStyles}>
-    <input
-      type="checkbox"
-      checked={position === 'left'}
-      css={checkboxStyles}
-      onChange={onChange}
-    ></input>
-    <div className="left" css={[buttonStyle, buttonLeft]}>
+  <div css={styles} onClick={onChange} role="radiogroup">
+    <div
+      css={[buttonStyle, buttonLeft, position === 'left' && activeStyles]}
+      role="radio"
+      aria-checked={position === 'left'}
+    >
       <span css={iconStyles}>{leftButtonIcon}</span>
       {leftButtonText}
     </div>
-    <div className="right" css={[buttonStyle, buttonRight]}>
+    <div
+      css={[buttonStyle, buttonRight, position === 'right' && activeStyles]}
+      role="radio"
+      aria-checked={position === 'right'}
+    >
       <span css={iconStyles}>{rightButtonIcon}</span>
       {rightButtonText}
     </div>
-  </label>
+  </div>
 );
 
 export default Toggle;

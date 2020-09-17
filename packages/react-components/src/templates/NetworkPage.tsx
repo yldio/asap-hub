@@ -19,10 +19,18 @@ const articleStyles = css({
   padding: `0 0 ${vminLinearCalc(mobileScreen, 36, tabletScreen, 72, 'px')}`,
 });
 
-const NetworkPage: React.FC = ({ children }) => {
+type NetworkPageProps = {
+  toggleOnChange: () => undefined;
+  page: 'teams' | 'users';
+};
+const NetworkPage: React.FC<NetworkPageProps> = ({
+  children,
+  toggleOnChange,
+  page,
+}) => {
   return (
     <article css={articleStyles}>
-      <NetworkPageHeader />
+      <NetworkPageHeader toggleOnChange={toggleOnChange} page={page} />
       <main css={mainStyles}>{children}</main>
     </article>
   );

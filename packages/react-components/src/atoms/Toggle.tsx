@@ -43,9 +43,9 @@ const buttonLeft = css({
   gridColumn: '1 / span 2',
   gridRow: 1,
 });
-
+export type Position = 'left' | 'right';
 interface ToggleProps {
-  position?: 'left' | 'right';
+  position?: Position;
   leftButtonText: string;
   leftButtonIcon: React.ReactElement<SVGElement>;
   rightButtonText: string;

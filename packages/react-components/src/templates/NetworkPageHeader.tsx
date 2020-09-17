@@ -49,7 +49,15 @@ const buttonTextStyles = css({
   },
 });
 
-const NetworkPageHeader: React.FC = () => {
+type NetworkPageHeaderProps = {
+  toggleOnChange: () => undefined;
+  page: 'teams' | 'users';
+};
+
+const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
+  toggleOnChange,
+  page,
+}) => {
   const location = useLocation();
   const history = useHistory();
   const currentUrlParams = new URLSearchParams(location.search);
@@ -57,10 +65,6 @@ const NetworkPageHeader: React.FC = () => {
     currentUrlParams.set('query', newQuery);
     history.replace({ search: currentUrlParams.toString() });
   };
-  const handleToggleOnChange = () => {
-    history.push({ pathname: 'teams', search: currentUrlParams.toString() });
-  };
-
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Network</Display>
@@ -77,12 +81,15 @@ const NetworkPageHeader: React.FC = () => {
           leftButtonIcon={teamIcon}
           rightButtonText="People"
           rightButtonIcon={userIcon}
-          onChange={handleToggleOnChange}
+          onChange={toggleOnChange}
+          position={page === 'teams' ? 'left' : 'right'}
         />
         <div css={searchContainerStyles}>
           <SearchField
-            value={currentUrlParams.get('query')}
-            placeholder="Search..."
+            value={currentUrlParams.get('query') || ''}
+            placeholder={
+              page === 'users' ? 'Search for someone…' : 'Search for a team…'
+            }
             onChange={handleSearchOnChange}
           />
           <Button enabled={false}>

@@ -3,6 +3,7 @@ import { date, text, array } from '@storybook/addon-knobs';
 import {
   ProfilePage,
   ProfileAbout,
+  ProfileOutputs,
   ProfileResearch,
 } from '@asap-hub/react-components';
 
@@ -111,6 +112,6 @@ export const ResearchTab = () => (
 
 export const OutputsTab = () => (
   <ProfilePage {...commonProps()} outputsHref="#">
-    Outputs Tab
+    <ProfileOutputs />
   </ProfilePage>
 );

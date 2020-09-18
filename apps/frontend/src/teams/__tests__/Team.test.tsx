@@ -4,6 +4,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { TeamResponse } from '@asap-hub/model';
@@ -60,7 +61,19 @@ it('renders a loading indicator', async () => {
   await waitForElementToBeRemoved(loadingIndicator);
 });
 
-it('renders a team information', async () => {
+it('renders the header info', async () => {
   const { getByText } = await renderTeam();
   expect(getByText('Team Unknown')).toBeVisible();
+});
+
+it('renders the about info', async () => {
+  const { getByText } = await renderTeam();
+  expect(getByText(/project overview/i)).toBeVisible();
+});
+
+it('navigates to the outputs', async () => {
+  const { getByText } = await renderTeam();
+
+  userEvent.click(getByText(/outputs/i, { selector: 'nav *' }));
+  expect(getByText(/research outputs/i)).toBeVisible();
 });

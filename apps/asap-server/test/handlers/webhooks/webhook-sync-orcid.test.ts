@@ -4,7 +4,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import {
   handler,
   WebHookPayload,
-} from '../../../src/handlers/users/webhook-sync-orcid';
+} from '../../../src/handlers/webhooks/webhook-sync-orcid';
 import { apiGatewayEvent } from '../../helpers/events';
 import { TestUserResponse, createRandomUser } from '../../helpers/create-user';
 import signPayload from '../../helpers/create-squidex-signature';

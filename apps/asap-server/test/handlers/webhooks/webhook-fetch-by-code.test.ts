@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
-import { handler } from '../../../src/handlers/users/webhook-fetch-by-code';
+import { handler } from '../../../src/handlers/webhooks/webhook-fetch-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/create-user';
 import { auth0SharedSecret as secret } from '../../../src/config';

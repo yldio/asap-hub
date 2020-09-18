@@ -64,7 +64,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   href,
 }) => {
   return (
-    <Card>
+    <Card minPadding>
       <section css={containerStyles}>
         <Link theme={null} href={href}>
           <Avatar

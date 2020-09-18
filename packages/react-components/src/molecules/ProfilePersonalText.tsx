@@ -5,6 +5,7 @@ import { UserResponse, UserTeam } from '@asap-hub/model';
 import { Link, Paragraph } from '../atoms';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight } from '../pixels';
+import { lead } from '../colors';
 
 const locationStyles = css({
   padding: `${6 / perRem}em 0`,
@@ -12,11 +13,21 @@ const locationStyles = css({
   display: 'flex',
   alignItems: 'center',
 });
+
 const iconStyles = css({
   display: 'inline-block',
   width: `${lineHeight / perRem}em`,
   height: `${lineHeight / perRem}em`,
   paddingRight: `${6 / perRem}em`,
+});
+
+const paragraphStyles = css({
+  marginTop: 0,
+  marginBottom: `${18 / perRem}em`,
+  fontSize: `${17 / perRem}em`,
+  lineHeight: `${24 / 17}em`,
+  letterSpacing: `${0.1 / perRem}em`,
+  color: lead.rgb,
 });
 
 type ProfilePersonalTextProps = Pick<
@@ -35,7 +46,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
 }) => {
   return (
     <div>
-      <Paragraph accent="lead">
+      <p css={paragraphStyles}>
         {jobTitle}
         {jobTitle && institution && ' at '}
         {institution}
@@ -46,7 +57,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
             {role} on <Link href={href}>{displayName}</Link>
           </React.Fragment>
         ))}
-      </Paragraph>
+      </p>
       {location && (
         <Paragraph accent="lead">
           <span css={locationStyles}>

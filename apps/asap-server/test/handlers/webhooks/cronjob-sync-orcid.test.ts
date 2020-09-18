@@ -1,5 +1,5 @@
 import nock from 'nock';
-import cronjob from '../../../src/handlers/users/cronjob-sync-orcid';
+import cronjob from '../../../src/handlers/webhooks/cronjob-sync-orcid';
 import fetchUsersResponse from '../../fixtures/users.fetch-with-orcid-sorted.json';
 import orcidWorksResponse from '../../fixtures/fetch-orcid-works-0000-0002-9079-593X.json';
 import orcidWorksDeserialised from '../../fixtures/users.orcid-works-deserialised.json';

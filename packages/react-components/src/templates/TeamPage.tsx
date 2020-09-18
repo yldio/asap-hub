@@ -3,10 +3,18 @@ import css from '@emotion/css';
 
 import TeamHeader from './TeamHeader';
 import { perRem } from '../pixels';
+import { pearl, steel } from '../colors';
+import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({
   alignSelf: 'stretch',
   paddingTop: `${36 / perRem}em`,
+});
+const contentStyles = css({
+  backgroundColor: pearl.rgb,
+  borderTop: `1px solid ${steel.rgb}`,
+
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
 type TeamPageProps = ComponentProps<typeof TeamHeader> & {
@@ -17,7 +25,7 @@ const TeamPage: React.FC<TeamPageProps> = ({ children, ...profile }) => {
   return (
     <article css={styles}>
       <TeamHeader {...profile} />
-      {children}
+      <main css={contentStyles}>{children}</main>
     </article>
   );
 };

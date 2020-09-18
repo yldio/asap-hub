@@ -3,6 +3,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
 import nock from 'nock';
+import userEvent from '@testing-library/user-event';
 
 import Routes from '../Routes';
 import { API_BASE_URL } from '../../config';
@@ -123,4 +124,20 @@ describe('Test toggle to user', () => {
 
     expect(searchBox.value).toEqual('test123');
   });
+});
+
+it('Updates the URL with the query para ', async () => {
+  const { getByText, queryByText, getByRole } = await renderNetworkPage(
+    '/network/users',
+  );
+  const toggle = getByText('People');
+  const searchBox = getByRole('textbox') as HTMLInputElement;
+
+  await userEvent.type(searchBox, 'test123');
+  expect(searchBox.value).toEqual('test123');
+
+  fireEvent.click(toggle);
+  await waitFor(() => expect(queryByText(/Loading/i)).not.toBeInTheDocument());
+
+  expect(searchBox.value).toEqual('test123');
 });

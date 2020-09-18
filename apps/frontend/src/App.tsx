@@ -22,7 +22,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   return isAuthenticated && user ? (
     <Layout
       libraryHref="/library"
-      networkHref="/users"
+      networkHref="/network/users"
       newsAndEventsHref="/news-and-events"
       profileHref={`/users/${user.id}`}
       teams={user.teams.map(({ id, displayName }) => ({

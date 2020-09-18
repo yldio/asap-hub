@@ -1,0 +1,65 @@
+[
+  {
+    "id": "1aff1704-ec14-4448-bf25-7c34200aba20",
+    "createdDate": "2020-09-17T22:59:28Z",
+    "lastModifiedDate": "2020-09-17T22:59:28.333Z",
+    "displayName": "Abbie Chellini",
+    "email": "joggowim@uhuda.tr",
+    "firstName": "Cody",
+    "middleName": "Hashimoto",
+    "lastName": "Tarchi",
+    "jobTitle": "Master of Business Administration",
+    "institution": "WorldCom Inc",
+    "teams": [
+      {
+        "id": "3b6417eb-1559-4c66-b799-89d0ebe0766d",
+        "role": "cohijgag",
+        "displayName": "Fanny Frank"
+      }
+    ],
+    "location": "Eviecuoj",
+    "orcid": "482-29-1144",
+    "orcidWorks": [],
+    "skills": [],
+    "avatarURL": "http://rup.cy/kebmazus"
+  },
+  {
+    "id": "253d02fe-8af2-4ab9-b4e2-c864d3f3cc5c",
+    "createdDate": "2020-09-17T22:51:13Z",
+    "lastModifiedDate": "2020-09-17T22:51:12.895Z",
+    "displayName": "Adele Casini",
+    "email": "cazize@kimubapa.gw",
+    "firstName": "Bill",
+    "middleName": "Gonnelli",
+    "lastName": "Schreiber",
+    "jobTitle": "Senior",
+    "institution": "Hewlett-Packard Company",
+    "teams": [],
+    "location": "Uwmeew",
+    "orcid": "969-22-6462",
+    "orcidWorks": [],
+    "skills": [],
+    "avatarURL": "http://ehuvazsob.ie/ceteup"
+  },
+  {
+    "id": "55724942-3408-4ad6-9a73-14b92226ffb6",
+    "createdDate": "2020-09-07T17:36:54Z",
+    "displayName": "Agnete Kirkeby",
+    "email": "agnete.kirkeby@sund.ku.dk",
+    "firstName": "Agnete",
+    "middleName": "",
+    "lastName": "Kirkeby",
+    "jobTitle": "Assistant Professor",
+    "institution": "University of Copenhagen",
+    "teams": [
+      {
+        "id": "e12729e0-a244-471f-a554-7b58eae83a8d",
+        "displayName": "Jakobsson, J",
+        "role": "Core Leadership - Co-Investigator"
+      }
+    ],
+    "orcid": "0000-0001-8203-6901",
+    "orcidWorks": [],
+    "skills": []
+  }
+]

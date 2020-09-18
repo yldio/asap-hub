@@ -4,10 +4,10 @@ import {
   NetworkTeam,
   NetworkPeople,
 } from '@asap-hub/react-components';
+import { action } from '@storybook/addon-actions';
+import { text } from '@storybook/addon-knobs';
 
 import { LayoutDecorator } from './decorators';
-import { text } from '@storybook/addon-knobs';
-import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'Pages / Network',

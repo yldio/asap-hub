@@ -1,8 +1,9 @@
 import React from 'react';
 import { NetworkPageHeader } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './decorators';
 import { action } from '@storybook/addon-actions';
 import { text, select } from '@storybook/addon-knobs';
+
+import { NoPaddingDecorator } from './decorators';
 
 export default {
   title: 'Templates / Network / Header',

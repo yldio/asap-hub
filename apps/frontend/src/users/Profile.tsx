@@ -6,6 +6,7 @@ import {
   ProfilePage,
   ProfileAbout,
   ProfileResearch,
+  ProfileOutputs,
 } from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
@@ -46,7 +47,9 @@ const Profile: React.FC<{}> = () => {
           <Route path={`${path}/research`}>
             <ProfileResearch {...profile} />
           </Route>
-          <Route path={`${path}/outputs`}>TODO Outputs here</Route>
+          <Route path={`${path}/outputs`}>
+            <ProfileOutputs />
+          </Route>
 
           <Redirect to={join(url, 'about')} />
         </Switch>

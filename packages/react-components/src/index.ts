@@ -25,7 +25,6 @@ export {
   Paragraph,
   RichText,
   TabLink,
-  Tag,
   TagLabel,
   Toggle,
 } from './atoms';
@@ -45,6 +44,7 @@ export {
   UserMenuButton,
 } from './molecules';
 export {
+  ComingSoon,
   EmailPasswordSignin,
   MainNavigation,
   MembersSection,
@@ -71,6 +71,7 @@ export {
   NetworkTeam,
   ProfileAbout,
   ProfileHeader,
+  ProfileOutputs,
   ProfilePage,
   ProfileResearch,
   RecordOutputForm,
@@ -79,6 +80,7 @@ export {
   SigninPage,
   TeamAbout,
   TeamPage,
+  TeamOutputs,
   WelcomeCard,
   WelcomePage,
 } from './templates';

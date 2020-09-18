@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { formatISO, subDays } from 'date-fns';
-import { TeamPage, TeamAbout } from '@asap-hub/react-components';
+import { TeamPage, TeamAbout, TeamOutputs } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
@@ -9,7 +9,7 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-const commonProps = () => ({
+const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
   id: '42',
   displayName: 'Ramirez, T',
   projectTitle:
@@ -72,12 +72,16 @@ const commonProps = () => ({
   ],
   aboutHref: '/wrong',
   outputsHref: '/wrong',
-});
+};
 
 export const AboutTab = () => (
-  <TeamPage {...commonProps()} aboutHref="#">
-    <TeamAbout {...commonProps()}></TeamAbout>
+  <TeamPage {...commonProps} aboutHref="#">
+    <TeamAbout {...commonProps}></TeamAbout>
   </TeamPage>
 );
 
-export const OutputsTab = () => <TeamPage {...commonProps()}>Outputs</TeamPage>;
+export const OutputsTab = () => (
+  <TeamPage {...commonProps} outputsHref="#">
+    <TeamOutputs />
+  </TeamPage>
+);

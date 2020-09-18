@@ -2,15 +2,9 @@ import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
-import { pearl, steel } from '../colors';
 import { MembersSection, SkillsSection, TeamOverview } from '../organisms';
-import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({
-  backgroundColor: pearl.rgb,
-  borderTop: `1px solid ${steel.rgb}`,
-
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
 });
@@ -25,7 +19,7 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
   skills,
   members,
 }) => (
-  <main css={styles}>
+  <div css={styles}>
     {projectTitle ? (
       <TeamOverview
         projectTitle={projectTitle}
@@ -34,7 +28,7 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
     ) : null}
     {skills.length ? <SkillsSection skills={skills} /> : null}
     {members.length ? <MembersSection members={members} /> : null}
-  </main>
+  </div>
 );
 
 export default TeamAbout;

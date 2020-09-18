@@ -55,7 +55,11 @@ const MembersSection: React.FC<MembersSectionProps> = ({ members }) => {
         {members.map(
           ({ id, displayName, firstName, lastName, avatarURL, role }) => (
             <li key={id} css={{ display: 'contents' }}>
-              <Link href={`/users/${id}`} theme={null} display="contents">
+              <Link
+                href={`/network/users/${id}`}
+                theme={null}
+                display="contents"
+              >
                 <div css={avatarStyles}>
                   <Avatar
                     imageUrl={avatarURL}

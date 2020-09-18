@@ -2,11 +2,8 @@ import React, { ComponentProps } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
 import NetworkPageHeader from '../NetworkPageHeader';
-import { noop } from '../../utils';
 
 const props: ComponentProps<typeof NetworkPageHeader> = {
-  searchOnChange: noop,
-  toggleOnChange: noop,
   page: 'teams',
   query: '',
 };
@@ -33,14 +30,14 @@ it('Displays relevant page information', () => {
   ).toMatchInlineSnapshot(`"Search for someone…"`);
 });
 
-it('triggers toggleOnChange', async () => {
-  const toggleOnChange = jest.fn();
+it('triggers onChangeToggle', async () => {
+  const onChangeToggle = jest.fn();
 
   const { getByText } = render(
-    <NetworkPageHeader {...props} toggleOnChange={toggleOnChange} />,
+    <NetworkPageHeader {...props} onChangeToggle={onChangeToggle} />,
   );
   fireEvent.click(getByText('People'));
-  expect(toggleOnChange.mock.calls.length).toBe(1);
+  expect(onChangeToggle.mock.calls.length).toBe(1);
 });
 
 it('Passes query correctly', () => {

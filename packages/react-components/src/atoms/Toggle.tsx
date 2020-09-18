@@ -9,6 +9,7 @@ const styles = css({
   gridTemplateColumns: '1fr 20px 1fr',
   height: `${54 / perRem}em`,
 
+  minWidth: `${240 / perRem}em`,
   borderRadius: '27px',
   border: `1px solid ${steel.rgb}`,
   backgroundColor: steel.rgb,
@@ -43,9 +44,9 @@ const buttonLeft = css({
   gridColumn: '1 / span 2',
   gridRow: 1,
 });
-export type Position = 'left' | 'right';
+
 interface ToggleProps {
-  position?: Position;
+  position?: 'left' | 'right';
   leftButtonText: string;
   leftButtonIcon: React.ReactElement<SVGElement>;
   rightButtonText: string;

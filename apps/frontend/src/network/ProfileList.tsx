@@ -16,8 +16,11 @@ const Page: React.FC<{}> = () => {
   if (usersData) {
     const users = usersData.map((user: UserResponse) => ({
       ...user,
-      href: join('/users', user.id),
-      teams: user.teams.map((team) => ({ ...team, href: `/teams/${team.id}` })),
+      href: join('/network/users', user.id),
+      teams: user.teams.map((team) => ({
+        ...team,
+        href: `/network/teams/${team.id}`,
+      })),
     }));
     return <NetworkPeople people={users} />;
   }

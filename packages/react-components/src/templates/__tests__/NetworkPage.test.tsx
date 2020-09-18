@@ -2,11 +2,8 @@ import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import NetworkPage from '../NetworkPage';
-import { noop } from '../../utils';
 
 const props: ComponentProps<typeof NetworkPage> = {
-  searchOnChange: noop,
-  toggleOnChange: noop,
   page: 'teams',
   query: '',
 };

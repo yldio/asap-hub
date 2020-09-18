@@ -24,7 +24,7 @@ const Page: React.FC = () => {
   if (teamsData) {
     const teams = teamsData.map((team: TeamResponse) => ({
       ...team,
-      href: join('/teams', team.id),
+      href: join('/network/teams', team.id),
     }));
     return <NetworkTeam teams={teams} />;
   }

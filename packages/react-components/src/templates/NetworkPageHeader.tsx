@@ -7,6 +7,7 @@ import { perRem, tabletScreen, smallDesktopScreen } from '../pixels';
 import { paper, steel } from '../colors';
 import { filterIcon, userIcon, teamIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { noop } from '../utils';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -30,7 +31,7 @@ const controlsStyles = css({
   paddingTop: `${18 / perRem}em`,
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     paddingTop: `${2 / perRem}em`,
-    gridTemplateColumns: '230px auto',
+    gridTemplateColumns: 'min-content auto',
   },
 });
 
@@ -49,16 +50,16 @@ const buttonTextStyles = css({
 });
 
 type NetworkPageHeaderProps = {
-  toggleOnChange: () => void;
-  searchOnChange: (newQuery: string) => void;
+  onChangeToggle?: () => void;
+  onChangeSearch?: (newQuery: string) => void;
   query: string;
   page: 'teams' | 'users';
 };
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
-  searchOnChange,
+  onChangeSearch = noop,
   query,
-  toggleOnChange,
+  onChangeToggle = noop,
   page,
 }) => {
   return (
@@ -77,7 +78,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           leftButtonIcon={teamIcon}
           rightButtonText="People"
           rightButtonIcon={userIcon}
-          onChange={toggleOnChange}
+          onChange={onChangeToggle}
           position={page === 'teams' ? 'left' : 'right'}
         />
         <div css={searchContainerStyles}>
@@ -86,7 +87,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
             placeholder={
               page === 'users' ? 'Search for someone…' : 'Search for a team…'
             }
-            onChange={searchOnChange}
+            onChange={onChangeSearch}
           />
           <Button enabled={false}>
             {filterIcon}

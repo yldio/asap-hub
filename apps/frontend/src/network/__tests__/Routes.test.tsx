@@ -7,8 +7,8 @@ import userEvent from '@testing-library/user-event';
 
 import Routes from '../Routes';
 import { API_BASE_URL } from '../../config';
-import TeamsResponse from '../../fixtures/teams.json';
-import UsersResponse from '../../fixtures/users.json';
+import TeamsResponse from '../../fixtures/teams';
+import UsersResponse from '../../fixtures/users';
 
 const renderNetworkPage = async (pathname: string, query = '') => {
   const result = render(

@@ -116,8 +116,8 @@ export const TeamList = () => (
   <NetworkPage
     page="teams"
     query={text('Query', '')}
-    searchOnChange={() => action('search change')}
-    toggleOnChange={() => action('toggle')}
+    onChangeSearch={() => action('search change')}
+    onChangeToggle={() => action('toggle')}
   >
     <NetworkTeam {...teamProps} />
   </NetworkPage>
@@ -127,8 +127,8 @@ export const PeopleList = () => (
   <NetworkPage
     page="users"
     query={text('Query', '')}
-    searchOnChange={() => action('search change')}
-    toggleOnChange={() => action('toggle')}
+    onChangeSearch={() => action('search change')}
+    onChangeToggle={() => action('toggle')}
   >
     <NetworkPeople {...peopleProps} />
   </NetworkPage>

@@ -5,11 +5,14 @@ import {
   useRouteMatch,
   useHistory,
   useLocation,
+  Redirect,
 } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
 
 import ProfileList from './ProfileList';
+import Profile from './Profile';
 import TeamList from './TeamList';
+import Team from './Team';
 
 const Network: React.FC<{}> = () => {
   const { path } = useRouteMatch();
@@ -17,44 +20,38 @@ const Network: React.FC<{}> = () => {
   const history = useHistory();
   const currentUrlParams = new URLSearchParams(search);
 
-  const toggleOnChange = (pathname: string) => () => {
+  const onChangeToggle = (pathname: string) => () => {
     history.push({ pathname, search: currentUrlParams.toString() });
   };
-  const searchOnChange = (newQuery: string) => {
+  const onChangeSearch = (newQuery: string) => {
     currentUrlParams.set('query', newQuery);
     history.replace({ search: currentUrlParams.toString() });
   };
   return (
     <Switch>
-      <Route
-        exact
-        path={`${path}/users`}
-        render={() => (
-          <NetworkPage
-            page="users"
-            toggleOnChange={toggleOnChange('teams')}
-            searchOnChange={searchOnChange}
-            query={currentUrlParams.get('query') || ''}
-          >
-            <ProfileList />
-          </NetworkPage>
-        )}
-      />
-      <Route
-        exact
-        path={`${path}/teams`}
-        render={() => (
-          <NetworkPage
-            page="teams"
-            toggleOnChange={toggleOnChange('users')}
-            searchOnChange={searchOnChange}
-            query={currentUrlParams.get('query') || ''}
-          >
-            <TeamList />
-          </NetworkPage>
-        )}
-      />
-      <Route>Not Found</Route>
+      <Route exact path={`${path}/users`}>
+        <NetworkPage
+          page="users"
+          onChangeToggle={onChangeToggle('teams')}
+          onChangeSearch={onChangeSearch}
+          query={currentUrlParams.get('query') || ''}
+        >
+          <ProfileList />
+        </NetworkPage>
+      </Route>
+      <Route path={`${path}/users/:id`} component={Profile} />
+      <Route exact path={`${path}/teams`}>
+        <NetworkPage
+          page="teams"
+          onChangeToggle={onChangeToggle('users')}
+          onChangeSearch={onChangeSearch}
+          query={currentUrlParams.get('query') || ''}
+        >
+          <TeamList />
+        </NetworkPage>
+      </Route>
+      <Route path={`${path}/teams/:id`} component={Team} />
+      <Redirect to={'/network/users'} />
     </Switch>
   );
 };

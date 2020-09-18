@@ -30,7 +30,7 @@ const Profile: React.FC<{}> = () => {
 
       teams: profile.teams.map((team) => ({
         ...team,
-        href: `/teams/${team.id}`,
+        href: `/network/teams/${team.id}`,
       })),
 
       aboutHref: join(url, 'about'),

@@ -97,7 +97,7 @@ describe('with team', () => {
     const links = (await queryAllByRole('link')) as HTMLAnchorElement[];
     expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
       Array [
-        "http://localhost/teams/100",
+        "http://localhost/network/teams/100",
         "http://localhost/43/research",
         "http://localhost/43/about",
         "http://localhost/43/outputs",

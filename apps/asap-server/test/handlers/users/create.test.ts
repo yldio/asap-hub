@@ -1,5 +1,4 @@
 import nock from 'nock';
-import aws from 'aws-sdk';
 import matches from 'lodash.matches';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
@@ -9,19 +8,6 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { globalToken } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
 import { response } from './fetch.fixtures';
-
-jest.mock('aws-sdk', () => {
-  const m = {
-    sendTemplatedEmail: jest.fn(() => ({
-      promise: jest.fn(() => Promise.resolve({})),
-    })),
-  };
-  return { SES: jest.fn(() => m) };
-});
-
-jest.mock('uuid', () => {
-  return { v4: jest.fn(() => 'uuid') };
-});
 
 describe('POST /users', () => {
   test("returns 400 when body isn't parsable as JSON", async () => {
@@ -130,7 +116,7 @@ describe('POST /users', () => {
 
   test('returns 201 and sends email with code', async () => {
     const user = response.items[0];
-    user.data.connections.iv = [{ code: 'uuid' }];
+    user.data.connections!.iv = [{ code: 'uuid' }];
 
     nock(cms.baseUrl)
       .post(
@@ -155,19 +141,6 @@ describe('POST /users', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    const ses = new aws.SES();
     expect(res.statusCode).toStrictEqual(201);
-    expect(ses.sendTemplatedEmail).toBeCalledTimes(1);
-    expect(ses.sendTemplatedEmail).toBeCalledWith({
-      Source: 'no-reply@hub.asap.science',
-      Destination: {
-        ToAddresses: ['testuser@asap.science'],
-      },
-      Template: 'Welcome',
-      TemplateData: JSON.stringify({
-        firstName: 'test user',
-        link: `http://localhost:3000/welcome/uuid`,
-      }),
-    });
   });
 });

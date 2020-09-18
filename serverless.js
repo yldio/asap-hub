@@ -54,6 +54,7 @@ module.exports = {
       APP_ORIGIN: ASAP_APP_URL,
       AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
       NODE_ENV: `\${env:NODE_ENV}`,
+      ENVIRONMENT: `\${env:SLS_STAGE}`,
       SQUIDEX_APP_NAME: `\${env:SQUIDEX_APP_NAME}`,
       SQUIDEX_BASE_URL: `\${env:SQUIDEX_BASE_URL}`,
       SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,
@@ -178,6 +179,39 @@ module.exports = {
         },
       ],
     },
+    findUsersToMail: {
+      handler:
+        'apps/asap-server/build/handlers/webhooks/webhook-fill-mail-queue.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/webhook/users/mails`,
+          },
+        },
+      ],
+      environment: {
+        QUEUE_URL: {
+          Ref: 'UsersToMailQueue',
+        },
+      },
+    },
+    sendUserWelcomeEmails: {
+      handler:
+        'apps/asap-server/build/handlers/webhooks/webhook-send-mails.handler',
+      reservedConcurrency: 1,
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['UsersToMailQueue', 'Arn'],
+            },
+            batchSize: 1,
+          },
+        },
+      ],
+    },
     fetchResearchOutputs: {
       handler:
         'apps/asap-server/build-cjs/handlers/research-outputs/fetch.handler',
@@ -269,6 +303,13 @@ module.exports = {
   },
   resources: {
     Resources: {
+      UsersToMailQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'user-to-mail-queue',
+          VisibilityTimeout: 300, // 5min => lambda timeout
+        },
+      },
       HttpApiDomain: {
         Type: 'AWS::ApiGatewayV2::DomainName',
         Properties: {

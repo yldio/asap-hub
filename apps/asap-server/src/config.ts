@@ -5,6 +5,7 @@ const {
   AUTH0_SHARED_SECRET,
   AWS_SES_ENDPOINT,
   GLOBAL_TOKEN,
+  ENVIRONMENT,
   SQUIDEX_APP_NAME,
   SQUIDEX_BASE_URL,
   SQUIDEX_CLIENT_ID,
@@ -22,6 +23,7 @@ export const cms = {
   baseUrl: SQUIDEX_BASE_URL || 'http://localhost:4004',
 };
 export const sesEndpoint = AWS_SES_ENDPOINT;
+export const environment = (ENVIRONMENT || 'development').toLowerCase();
 export const auth0SharedSecret = AUTH0_SHARED_SECRET || 'auth0_shared_secret';
 export const squidexSharedSecret =
   SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';

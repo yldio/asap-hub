@@ -1,5 +1,4 @@
 import Boom from '@hapi/boom';
-import Debug from 'debug';
 import path from 'path';
 import url from 'url';
 import Intercept from 'apr-intercept';
@@ -11,7 +10,7 @@ import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
 import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
-import { origin } from '../config';
+import { origin, environment } from '../config';
 import { fetchOrcidProfile, ORCIDWorksResponse } from '../utils/fetch-orcid';
 import { createURL } from '../utils/squidex';
 
@@ -97,7 +96,6 @@ const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
   return res.items[0];
 };
 
-const debug = Debug('users.create');
 export default class Users {
   users: Squidex<CMSUser>;
 
@@ -106,8 +104,6 @@ export default class Users {
   }
 
   async create(user: Invitee): Promise<UserResponse> {
-    const code = uuidV4();
-
     // remove undefined(s)
     const userData: CMSUser['data'] = JSON.parse(
       JSON.stringify({
@@ -122,29 +118,10 @@ export default class Users {
         institution: { iv: user.institution },
         location: { iv: user.location },
         avatarURL: { iv: user.avatarURL },
-        connections: { iv: [{ code }] },
       }),
     );
 
     const createdUser = await this.users.create(userData);
-
-    const link = new url.URL(path.join(`/welcome/${code}`), origin);
-
-    const [err] = await Intercept(
-      sendEmail({
-        to: [user.email],
-        template: 'Welcome',
-        values: {
-          firstName: user.displayName,
-          link: link.toString(),
-        },
-      }),
-    );
-
-    // istanbul ignore if
-    if (err) {
-      debug(err);
-    }
 
     return transform(createdUser);
   }
@@ -190,26 +167,6 @@ export default class Users {
     return transform(user);
   }
 
-  async connectByCode(
-    welcomeCode: string,
-    userId: string,
-  ): Promise<UserResponse> {
-    const user = await fetchByCode(welcomeCode, this.users.client);
-
-    if (user.data.connections.iv.find(({ code }) => code === userId)) {
-      return Promise.resolve(transform(user));
-    }
-
-    const connections = user.data.connections.iv.concat([{ code: userId }]);
-
-    const res = await this.users.patch(user.id, {
-      email: { iv: user.data.email.iv },
-      connections: { iv: connections },
-    });
-
-    return transform(res);
-  }
-
   async syncOrcidProfile(
     id: string,
     cachedUser: CMSUser | undefined = undefined,
@@ -246,5 +203,69 @@ export default class Users {
     }
 
     return transform(user);
+  }
+
+  async connectByCode(user: CMSUser, userId: string): Promise<UserResponse> {
+    const connections = user.data.connections?.iv || [];
+
+    // dont add the same code twice
+    if (connections.find(({ code }) => code === userId)) {
+      return Promise.resolve(transform(user));
+    }
+
+    const res = await this.users.patch(user.id, {
+      email: { iv: user.data.email.iv },
+      connections: {
+        iv: connections
+          .filter(({ code }) => !code.startsWith('ASAP|')) // remove asap codes
+          .concat([{ code: userId }]),
+      },
+    });
+
+    return transform(res);
+  }
+
+  async sendWelcomeEmail(userId: CMSUser['id']): Promise<void | Error> {
+    const code = uuidV4();
+
+    const user = await this.users.fetchById(userId);
+    const connections = user.data.connections?.iv;
+
+    if (connections?.length) {
+      // user already received email, skip
+      return Promise.resolve();
+    }
+
+    await this.connectByCode(user, `ASAP|${code}`);
+
+    const email =
+      environment === 'production'
+        ? user.data.email.iv
+        : 'success@simulator.amazonses.com';
+
+    const link = new url.URL(path.join(`/welcome/${code}`), origin);
+
+    const [err2] = await Intercept(
+      sendEmail({
+        to: [email],
+        template: 'Welcome',
+        values: {
+          firstName: user.data.displayName.iv,
+          link: link.toString(),
+        },
+      }),
+    );
+
+    if (!err2) {
+      return Promise.resolve();
+    }
+
+    // error sending mail, remove inserted code
+    await this.users.patch(user.id, {
+      email: { iv: user.data.email.iv },
+      connections: { iv: [] },
+    });
+
+    return Promise.reject(err2);
   }
 }

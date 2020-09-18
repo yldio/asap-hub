@@ -18,7 +18,7 @@ export interface CMSUser {
     lastName?: { iv: string };
     jobTitle?: { iv: string };
     institution?: { iv: string };
-    connections: { iv: { code: string }[] };
+    connections?: { iv: { code: string }[] };
     biography?: { iv: string };
     location?: { iv: string };
     teams?: { iv: CMSTeamMember[] };
@@ -48,5 +48,4 @@ export const createSchema = Joi.object({
   orcid: Joi.string(),
   biography: Joi.string(),
   institution: Joi.string(),
-  connections: Joi.string(),
 });

@@ -2,22 +2,11 @@ import Chance from 'chance';
 import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
 import { CMSTeam } from '../../src/entities/team';
 import { CMSUser } from '../../src/entities/user';
-import { transform as defaultTransform } from '../../src/controllers/users';
+import { transform } from '../../src/controllers/users';
 import { Squidex } from '@asap-hub/services-common';
 
 const users = new Squidex<CMSUser>('users');
 const chance = new Chance();
-
-export type TestUserResponse = UserResponse & {
-  connections: ReadonlyArray<{ code: string }>;
-};
-
-function transform(user: CMSUser): TestUserResponse {
-  return {
-    ...defaultTransform(user),
-    connections: user.data.connections.iv,
-  };
-}
 
 export const createUser = (
   overwrites: Invitee | object = {},
@@ -61,9 +50,9 @@ export const createUser = (
   return users.create(user);
 };
 
-export const createRandomUser = async (
+export const createResponseUser = async (
   overwrites: Invitee | object = {},
-): Promise<TestUserResponse> => {
+): Promise<UserResponse> => {
   const createdUser = await createUser(overwrites);
   return transform(createdUser);
 };
@@ -71,7 +60,7 @@ export const createRandomUser = async (
 export const createUserOnTeam = async (
   team: CMSTeam,
   role: TeamRole | null = null,
-): Promise<TestUserResponse> => {
+): Promise<UserResponse> => {
   const createdUser = await createUser();
   const teams = [
     {

@@ -18,11 +18,7 @@ describe('GET /teams/{id}', () => {
 
   beforeAll(async () => {
     team = await createRandomTeam();
-    const { connections, ...res } = await createUserOnTeam(
-      team,
-      'Project Manager',
-    );
-    user = res;
+    user = await createUserOnTeam(team, 'Project Manager');
   });
 
   afterEach(() => {

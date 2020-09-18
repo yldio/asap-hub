@@ -1,6 +1,8 @@
 import Joi from '@hapi/joi';
-import { framework as lambda } from '@asap-hub/services-common';
+import Boom from '@hapi/boom';
+import { framework as lambda, Squidex } from '@asap-hub/services-common';
 
+import { CMSUser } from '../../entities/user';
 import Users from '../../controllers/users';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-auth0-request';
@@ -24,7 +26,20 @@ export const handler: Handler = lambda.http(
     };
 
     const users = new Users();
-    await users.connectByCode(code, userId);
+    const squidex: Squidex<CMSUser> = new Squidex('users');
+    const user = await squidex
+      .fetchOne({
+        filter: {
+          path: 'data.connections.iv.code',
+          op: 'eq',
+          value: `ASAP|${code}`,
+        },
+      })
+      .catch(() => {
+        throw Boom.forbidden();
+      });
+
+    await users.connectByCode(user, userId);
 
     return {
       statusCode: 202,

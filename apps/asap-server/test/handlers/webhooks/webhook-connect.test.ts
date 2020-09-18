@@ -19,7 +19,7 @@ const user: CMSUser = {
     lastName: { iv: 'Last' },
     jobTitle: { iv: 'Title' },
     institution: { iv: 'Institution' },
-    connections: { iv: [] },
+    connections: { iv: [{ code: 'ASAP|welcomeCode' }] },
     biography: { iv: 'Biography' },
     location: { iv: 'Lisbon, Portugal' },
   },
@@ -73,8 +73,14 @@ describe('POST /webhook/users/connections - success', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        $top: 1,
-        $filter: `data/connections/iv/code eq 'invalidConnectCode'`,
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.connections.iv.code',
+            op: 'eq',
+            value: 'ASAP|invalidConnectCode',
+          },
+        }),
       })
       .reply(404);
 
@@ -102,8 +108,14 @@ describe('POST /webhook/users/connections - success', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        $top: 1,
-        $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.connections.iv.code',
+            op: 'eq',
+            value: 'ASAP|asapWelcomeCode',
+          },
+        }),
       })
       .reply(200, { total: 1, items: [user] })
       .patch(`/api/content/${cms.appName}/users/${user.id}`, {

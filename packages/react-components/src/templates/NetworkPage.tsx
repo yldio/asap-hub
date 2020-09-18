@@ -20,17 +20,26 @@ const articleStyles = css({
 });
 
 type NetworkPageProps = {
-  toggleOnChange: () => undefined;
+  searchOnChange: (newQuery: string) => void;
+  query: string;
+  toggleOnChange: () => void;
   page: 'teams' | 'users';
 };
 const NetworkPage: React.FC<NetworkPageProps> = ({
   children,
+  searchOnChange,
+  query,
   toggleOnChange,
   page,
 }) => {
   return (
     <article css={articleStyles}>
-      <NetworkPageHeader toggleOnChange={toggleOnChange} page={page} />
+      <NetworkPageHeader
+        toggleOnChange={toggleOnChange}
+        page={page}
+        searchOnChange={searchOnChange}
+        query={query}
+      />
       <main css={mainStyles}>{children}</main>
     </article>
   );

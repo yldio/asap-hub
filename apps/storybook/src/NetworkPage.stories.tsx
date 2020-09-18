@@ -6,6 +6,8 @@ import {
 } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
+import { text } from '@storybook/addon-knobs';
+import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'Pages / Network',
@@ -111,13 +113,23 @@ const peopleProps = {
 };
 
 export const TeamList = () => (
-  <NetworkPage>
+  <NetworkPage
+    page="teams"
+    query={text('Query', '')}
+    searchOnChange={() => action('search change')}
+    toggleOnChange={() => action('toggle')}
+  >
     <NetworkTeam {...teamProps} />
   </NetworkPage>
 );
 
 export const PeopleList = () => (
-  <NetworkPage>
+  <NetworkPage
+    page="users"
+    query={text('Query', '')}
+    searchOnChange={() => action('search change')}
+    toggleOnChange={() => action('toggle')}
+  >
     <NetworkPeople {...peopleProps} />
   </NetworkPage>
 );

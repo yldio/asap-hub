@@ -1,18 +1,28 @@
 import React from 'react';
-import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  useHistory,
+  useLocation,
+} from 'react-router-dom';
+import { NetworkPage } from '@asap-hub/react-components';
 
 import ProfileList from './ProfileList';
 import TeamList from './TeamList';
-import { NetworkPage } from '@asap-hub/react-components';
 
 const Network: React.FC<{}> = () => {
-  const { path, params } = useRouteMatch();
+  const { path } = useRouteMatch();
+  const { search } = useLocation();
   const history = useHistory();
+  const currentUrlParams = new URLSearchParams(search);
 
-  const currentUrlParams = new URLSearchParams(params);
-
-  const toggleOnChange = (path: string) => () => {
-    history.push({ pathname: path, search: currentUrlParams.toString() });
+  const toggleOnChange = (pathname: string) => () => {
+    history.push({ pathname, search: currentUrlParams.toString() });
+  };
+  const searchOnChange = (newQuery: string) => {
+    currentUrlParams.set('query', newQuery);
+    history.replace({ search: currentUrlParams.toString() });
   };
   return (
     <Switch>
@@ -20,7 +30,12 @@ const Network: React.FC<{}> = () => {
         exact
         path={`${path}/users`}
         render={() => (
-          <NetworkPage page="users" toggleOnChange={toggleOnChange('teams')}>
+          <NetworkPage
+            page="users"
+            toggleOnChange={toggleOnChange('teams')}
+            searchOnChange={searchOnChange}
+            query={currentUrlParams.get('query') || ''}
+          >
             <ProfileList />
           </NetworkPage>
         )}
@@ -29,7 +44,12 @@ const Network: React.FC<{}> = () => {
         exact
         path={`${path}/teams`}
         render={() => (
-          <NetworkPage page="teams" toggleOnChange={toggleOnChange('users')}>
+          <NetworkPage
+            page="teams"
+            toggleOnChange={toggleOnChange('users')}
+            searchOnChange={searchOnChange}
+            query={currentUrlParams.get('query') || ''}
+          >
             <TeamList />
           </NetworkPage>
         )}

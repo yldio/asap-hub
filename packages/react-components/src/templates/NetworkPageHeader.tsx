@@ -1,6 +1,5 @@
 import React from 'react';
 import css from '@emotion/css';
-import { useLocation, useHistory } from 'react-router-dom';
 
 import { Display, Paragraph, Button, Toggle } from '../atoms';
 import { SearchField } from '../molecules';
@@ -50,21 +49,18 @@ const buttonTextStyles = css({
 });
 
 type NetworkPageHeaderProps = {
-  toggleOnChange: () => undefined;
+  toggleOnChange: () => void;
+  searchOnChange: (newQuery: string) => void;
+  query: string;
   page: 'teams' | 'users';
 };
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
+  searchOnChange,
+  query,
   toggleOnChange,
   page,
 }) => {
-  const location = useLocation();
-  const history = useHistory();
-  const currentUrlParams = new URLSearchParams(location.search);
-  const handleSearchOnChange = (newQuery: string) => {
-    currentUrlParams.set('query', newQuery);
-    history.replace({ search: currentUrlParams.toString() });
-  };
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Network</Display>
@@ -86,11 +82,11 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         />
         <div css={searchContainerStyles}>
           <SearchField
-            value={currentUrlParams.get('query') || ''}
+            value={query}
             placeholder={
               page === 'users' ? 'Search for someone…' : 'Search for a team…'
             }
-            onChange={handleSearchOnChange}
+            onChange={searchOnChange}
           />
           <Button enabled={false}>
             {filterIcon}

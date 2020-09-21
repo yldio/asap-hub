@@ -36,7 +36,7 @@ const users: ReadonlyArray<UserResponse> = [
     skills: [],
   },
   {
-    id: '55724942-3408-4ad6-9a73-14b92226ffb77',
+    id: '55724942-3408-4ad6-9a73-14b92226ffb7',
     createdDate: '2020-09-07T17:36:54Z',
     lastModifiedDate: '2020-09-07T17:36:54Z',
     displayName: 'Person B',

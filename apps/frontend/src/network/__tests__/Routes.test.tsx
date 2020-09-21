@@ -55,7 +55,7 @@ describe('Test toggle to team', () => {
       '/network/teams',
     );
     const toggle = getByText('People');
-    const searchBox = getByRole('textbox') as HTMLInputElement;
+    const searchBox = getByRole('textbox') as HTMLInputElement; // TODO 'search' role
 
     expect(searchBox.placeholder).toMatchInlineSnapshot(`"Search for a team…"`);
 

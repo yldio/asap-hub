@@ -67,6 +67,25 @@ const commonProps = () => ({
   outputsHref: '/wrong',
 });
 
+export const ResearchTab = () => (
+  <ProfilePage {...commonProps()} researchHref="#">
+    <ProfileResearch
+      {...commonProps()}
+      skills={array('Skills', [
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
+        'Neurologic Examination',
+        'Neuroprotection',
+        'Movement Disorders',
+        'Neurodegenerative Diseases',
+        'Neurological Diseases',
+      ])}
+    />
+  </ProfilePage>
+);
+
 export const AboutTab = () => (
   <ProfilePage {...commonProps()} aboutHref="#">
     <ProfileAbout
@@ -87,25 +106,6 @@ export const AboutTab = () => (
           },
         },
       ]}
-    />
-  </ProfilePage>
-);
-
-export const ResearchTab = () => (
-  <ProfilePage {...commonProps()} researchHref="#">
-    <ProfileResearch
-      {...commonProps()}
-      skills={array('Skills', [
-        'Neurological Diseases',
-        'Clinical Neurology',
-        'Adult Neurology',
-        'Neuroimaging',
-        'Neurologic Examination',
-        'Neuroprotection',
-        'Movement Disorders',
-        'Neurodegenerative Diseases',
-        'Neurological Diseases',
-      ])}
     />
   </ProfilePage>
 );

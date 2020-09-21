@@ -95,7 +95,6 @@ const ProfileHeader: React.FC<ProfileProps> = ({
           />
         </div>
         <Avatar
-          border
           imageUrl={avatarURL}
           firstName={firstName}
           lastName={lastName}

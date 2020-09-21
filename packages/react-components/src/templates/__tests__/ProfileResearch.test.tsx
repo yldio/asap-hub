@@ -9,7 +9,7 @@ const commonProps = {
   skills: [],
 };
 
-it('renders research interests', () => {
+it('renders research', () => {
   const { getByText } = render(
     <ProfileResearch
       {...commonProps}
@@ -22,7 +22,7 @@ it('renders research interests', () => {
       ]}
     />,
   );
-  expect(getByText(/background/i)).toBeVisible();
+  expect(getByText(/research/i)).toBeVisible();
 });
 
 it('renders the skills', () => {

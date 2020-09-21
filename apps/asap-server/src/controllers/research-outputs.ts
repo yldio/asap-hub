@@ -4,6 +4,7 @@ import {
 } from '@asap-hub/model';
 import { Squidex } from '@asap-hub/services-common';
 
+import { Squidex } from '@asap-hub/services-common';
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
 import { CMSTeam } from '../entities';

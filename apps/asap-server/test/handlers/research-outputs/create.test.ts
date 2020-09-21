@@ -16,16 +16,9 @@ describe('GET /users/{id}/research-outputs', () => {
   const output: ResearchOutputCreationRequest = {
     url: chance.url(),
     doi: chance.string(),
-    type: chance.pickone([
-      'dataset',
-      'code',
-      'protocol',
-      'resource',
-      'preprint',
-      'other',
-    ]),
+    type: chance.pickone(['proposal']),
     title: chance.sentence(),
-    description: chance.paragraph(),
+    text: chance.paragraph(),
     accessLevel: chance.pickone(['private', 'team', 'public']),
     authors: [
       {

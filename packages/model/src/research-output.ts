@@ -1,10 +1,5 @@
-export type ResearchOutputType =
-  | 'dataset'
-  | 'code'
-  | 'protocol'
-  | 'resource'
-  | 'preprint'
-  | 'other';
+export type ResearchOutputType = 'proposal';
+
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
 export type ResearchOutputAuthor =
   | { readonly displayName: string }
@@ -16,7 +11,7 @@ export type ResearchOutputFormData = {
 
   readonly type: ResearchOutputType;
   readonly title: string;
-  readonly description: string;
+  readonly text: string;
   readonly authors: ReadonlyArray<string>;
   readonly publishDate?: Date;
 
@@ -30,8 +25,11 @@ export type ResearchOutputCreationRequest = Omit<
   readonly publishDate?: string;
   readonly authors: ReadonlyArray<ResearchOutputAuthor>;
 };
-export type ResearchOutputResponse = ResearchOutputCreationRequest & {
+
+export type ResearchOutputResponse = Omit<
+  ResearchOutputCreationRequest,
+  'accessLevel' | 'authors'
+> & {
   readonly id: string;
   readonly created: string;
-  readonly createdBy: ResearchOutputAuthor;
 };

@@ -17,20 +17,10 @@ export default class Users extends Base {
         json: {
           url: { iv: output.url },
           doi: { iv: output.doi },
-          authors: { iv: output.authors },
           title: { iv: output.title },
-          description: { iv: output.description },
-          accessLevel: { iv: output.accessLevel },
+          text: { iv: output.text },
           type: { iv: output.type },
           publishDate: { iv: output.publishDate },
-          createdBy: {
-            iv: [
-              {
-                displayName,
-                id: [id],
-              },
-            ],
-          },
         },
         searchParams: { publish: true },
       })

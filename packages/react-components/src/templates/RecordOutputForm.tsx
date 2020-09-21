@@ -55,7 +55,7 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
 
   const [url, setUrl] = useState('');
   const [doi, setDoi] = useState('');
-  const [type, setType] = useState<ResearchOutputType>('dataset');
+  const [type, setType] = useState<ResearchOutputType>('proposal');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [authors, setAuthors] = useState('');
@@ -69,7 +69,7 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
     doi,
     type,
     title,
-    description,
+    text: description,
     authors: authors.split(/,|\n/m).map((author) => author.trim()),
     publishDate,
     accessLevel,
@@ -101,12 +101,13 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
       </div>
       <LabeledDropdown<ResearchOutputType>
         options={[
-          { value: 'dataset', label: 'Dataset' },
-          { value: 'code', label: 'Code' },
-          { value: 'protocol', label: 'Protocol' },
-          { value: 'resource', label: 'Resource' },
-          { value: 'preprint', label: 'Preprint' },
-          { value: 'other', label: 'Other' },
+          { value: 'proposal', label: 'Proposal' },
+          // { value: 'dataset', label: 'Dataset' },
+          // { value: 'code', label: 'Code' },
+          // { value: 'protocol', label: 'Protocol' },
+          // { value: 'resource', label: 'Resource' },
+          // { value: 'preprint', label: 'Preprint' },
+          // { value: 'other', label: 'Other' },
         ]}
         title="Type of output"
         value={type}

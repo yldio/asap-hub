@@ -4,6 +4,8 @@ import {
   NetworkTeam,
   NetworkPeople,
 } from '@asap-hub/react-components';
+import { action } from '@storybook/addon-actions';
+import { text } from '@storybook/addon-knobs';
 
 import { LayoutDecorator } from './decorators';
 
@@ -111,13 +113,23 @@ const peopleProps = {
 };
 
 export const TeamList = () => (
-  <NetworkPage>
+  <NetworkPage
+    page="teams"
+    query={text('Query', '')}
+    onChangeSearch={() => action('search change')}
+    onChangeToggle={() => action('toggle')}
+  >
     <NetworkTeam {...teamProps} />
   </NetworkPage>
 );
 
 export const PeopleList = () => (
-  <NetworkPage>
+  <NetworkPage
+    page="users"
+    query={text('Query', '')}
+    onChangeSearch={() => action('search change')}
+    onChangeToggle={() => action('toggle')}
+  >
     <NetworkPeople {...peopleProps} />
   </NetworkPage>
 );

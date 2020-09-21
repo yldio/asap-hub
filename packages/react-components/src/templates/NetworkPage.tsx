@@ -19,10 +19,27 @@ const articleStyles = css({
   padding: `0 0 ${vminLinearCalc(mobileScreen, 36, tabletScreen, 72, 'px')}`,
 });
 
-const NetworkPage: React.FC = ({ children }) => {
+type NetworkPageProps = {
+  onChangeSearch?: (newQuery: string) => void;
+  query: string;
+  onChangeToggle?: () => void;
+  page: 'teams' | 'users';
+};
+const NetworkPage: React.FC<NetworkPageProps> = ({
+  children,
+  onChangeSearch,
+  query,
+  onChangeToggle,
+  page,
+}) => {
   return (
     <article css={articleStyles}>
-      <NetworkPageHeader />
+      <NetworkPageHeader
+        onChangeToggle={onChangeToggle}
+        page={page}
+        onChangeSearch={onChangeSearch}
+        query={query}
+      />
       <main css={mainStyles}>{children}</main>
     </article>
   );

@@ -1,18 +1,12 @@
 import React from 'react';
 
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import {
-  Paragraph,
-  NetworkPage,
-  NetworkPeople,
-} from '@asap-hub/react-components';
+import { Paragraph, NetworkPeople } from '@asap-hub/react-components';
 import { join } from 'path';
 import { UserResponse } from '@asap-hub/model';
 
 import { useUsers } from '../api';
 
 const Page: React.FC<{}> = () => {
-  const { path, url } = useRouteMatch();
   const { loading, data: usersData, error } = useUsers();
 
   if (loading) {
@@ -22,18 +16,13 @@ const Page: React.FC<{}> = () => {
   if (usersData) {
     const users = usersData.map((user: UserResponse) => ({
       ...user,
-      href: join(url, user.id),
-      teams: user.teams.map((team) => ({ ...team, href: `/teams/${team.id}` })),
+      href: join('/network/users', user.id),
+      teams: user.teams.map((team) => ({
+        ...team,
+        href: `/network/teams/${team.id}`,
+      })),
     }));
-    return (
-      <NetworkPage>
-        <Switch>
-          <Route exact path={path}>
-            <NetworkPeople people={users} />
-          </Route>
-        </Switch>
-      </NetworkPage>
-    );
+    return <NetworkPeople people={users} />;
   }
 
   return (

@@ -18,8 +18,8 @@ it('renders links to team page twice', () => {
   );
   expect(links).toMatchInlineSnapshot(`
     Array [
-      "http://localhost/teams/42",
-      "http://localhost/teams/42",
+      "http://localhost/network/teams/42",
+      "http://localhost/network/teams/42",
     ]
   `);
 });

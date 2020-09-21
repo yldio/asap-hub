@@ -8,9 +8,8 @@ import CreateProfile from './onboarding/CreateProfile';
 import history from './history';
 import Home from './home/Home';
 import News from './news/Routes';
-import Teams from './teams/Routes';
-import Users from './users/Routes';
 import Welcome from './welcome/Routes';
+import Network from './network/Routes';
 import { AuthProvider, CheckAuth, Logout } from './auth';
 import ResearchOutputs from './research-outputs/Routes';
 import Page from './pages/Content';
@@ -21,12 +20,12 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   return isAuthenticated && user ? (
     <Layout
       libraryHref="/library"
-      networkHref="/users"
+      networkHref="/network"
       newsAndEventsHref="/news-and-events"
-      profileHref={`/users/${user.id}`}
+      profileHref={`/network/users/${user.id}`}
       teams={user.teams.map(({ id, displayName }) => ({
         name: displayName,
-        href: `/teams/${id}`,
+        href: `/network/teams/${id}`,
       }))}
       settingsHref="/settings"
       feedbackHref="/feedback"
@@ -68,8 +67,7 @@ const App: React.FC<{}> = () => {
                   <Route path="/create-profile" component={CreateProfile} />
 
                   <Route path="/news" component={News} />
-                  <Route path="/teams" component={Teams} />
-                  <Route path="/users" component={Users} />
+                  <Route path="/network" component={Network} />
                   <Route path="/research-outputs" component={ResearchOutputs} />
 
                   <Route>Not Found</Route>

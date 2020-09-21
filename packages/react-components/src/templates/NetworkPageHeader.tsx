@@ -1,10 +1,13 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Display, Paragraph, Button } from '../atoms';
-import { perRem, tabletScreen } from '../pixels';
+
+import { Display, Paragraph, Button, Toggle } from '../atoms';
+import { SearchField } from '../molecules';
+import { perRem, tabletScreen, smallDesktopScreen } from '../pixels';
 import { paper, steel } from '../colors';
-import { filterIcon } from '../icons';
+import { filterIcon, userIcon, teamIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { noop } from '../utils';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -16,9 +19,27 @@ const containerStyles = css({
   }em `,
 });
 
+const textStyles = css({
+  maxWidth: `${610 / perRem}em`,
+});
+
 const controlsStyles = css({
-  display: 'flex',
-  justifyContent: 'flex-end',
+  display: 'grid',
+  gridRowGap: `${8 / perRem}em`,
+  gridColumnGap: `${18 / perRem}em`,
+  alignItems: 'center',
+  paddingTop: `${18 / perRem}em`,
+  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+    paddingTop: `${2 / perRem}em`,
+    gridTemplateColumns: 'min-content auto',
+  },
+});
+
+const searchContainerStyles = css({
+  display: 'grid',
+  gridTemplateColumns: 'auto min-content',
+  gridColumnGap: `${18 / perRem}em`,
+  alignItems: 'center',
 });
 
 const buttonTextStyles = css({
@@ -28,11 +49,19 @@ const buttonTextStyles = css({
   },
 });
 
-const textStyles = css({
-  maxWidth: `${610 / perRem}em`,
-});
+type NetworkPageHeaderProps = {
+  onChangeToggle?: () => void;
+  onChangeSearch?: (newQuery: string) => void;
+  query: string;
+  page: 'teams' | 'users';
+};
 
-const NetworkPageHeader: React.FC = () => {
+const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
+  onChangeSearch = noop,
+  query,
+  onChangeToggle = noop,
+  page,
+}) => {
   return (
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Network</Display>
@@ -44,10 +73,27 @@ const NetworkPageHeader: React.FC = () => {
         </Paragraph>
       </div>
       <div css={controlsStyles}>
-        <Button enabled={false}>
-          {filterIcon}
-          <span css={buttonTextStyles}>Filters</span>
-        </Button>
+        <Toggle
+          leftButtonText="Teams"
+          leftButtonIcon={teamIcon}
+          rightButtonText="People"
+          rightButtonIcon={userIcon}
+          onChange={onChangeToggle}
+          position={page === 'teams' ? 'left' : 'right'}
+        />
+        <div css={searchContainerStyles}>
+          <SearchField
+            value={query}
+            placeholder={
+              page === 'users' ? 'Search for someone…' : 'Search for a team…'
+            }
+            onChange={onChangeSearch}
+          />
+          <Button enabled={false}>
+            {filterIcon}
+            <span css={buttonTextStyles}>Filters</span>
+          </Button>
+        </div>
       </div>
     </header>
   );

@@ -6,9 +6,10 @@ import { noop } from '../utils';
 
 const styles = css({
   display: 'grid',
-  gridTemplateColumns: '1fr 40px 1fr',
+  gridTemplateColumns: '1fr 20px 1fr',
   height: `${54 / perRem}em`,
 
+  minWidth: `${240 / perRem}em`,
   borderRadius: '27px',
   border: `1px solid ${steel.rgb}`,
   backgroundColor: steel.rgb,

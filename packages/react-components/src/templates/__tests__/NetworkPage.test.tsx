@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import NetworkPage from '../NetworkPage';
 
+const props: ComponentProps<typeof NetworkPage> = {
+  page: 'teams',
+  query: '',
+};
 it('renders the header', () => {
-  const { getByRole } = render(<NetworkPage>Content</NetworkPage>);
+  const { getByRole } = render(<NetworkPage {...props}>Content</NetworkPage>);
   expect(getByRole('heading')).toBeVisible();
 });
 
 it('renders the children', () => {
-  const { getByText } = render(<NetworkPage>Content</NetworkPage>);
+  const { getByText } = render(<NetworkPage {...props}>Content</NetworkPage>);
   expect(getByText('Content')).toBeVisible();
 });

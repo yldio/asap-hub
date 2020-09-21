@@ -1,17 +1,11 @@
 import React from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import {
-  Paragraph,
-  NetworkPage,
-  NetworkTeam,
-} from '@asap-hub/react-components';
+import { Paragraph, NetworkTeam } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
 import { join } from 'path';
 
 import { useTeams } from '../api';
 
 const Page: React.FC = () => {
-  const { path, url } = useRouteMatch();
   const { loading, data: teamsData, error } = useTeams();
 
   if (loading) {
@@ -30,17 +24,9 @@ const Page: React.FC = () => {
   if (teamsData) {
     const teams = teamsData.map((team: TeamResponse) => ({
       ...team,
-      href: join(url, team.id),
+      href: join('/network/teams', team.id),
     }));
-    return (
-      <NetworkPage>
-        <Switch>
-          <Route exact path={path}>
-            <NetworkTeam teams={teams} />
-          </Route>
-        </Switch>
-      </NetworkPage>
-    );
+    return <NetworkTeam teams={teams} />;
   }
 
   return <Paragraph>No results</Paragraph>;

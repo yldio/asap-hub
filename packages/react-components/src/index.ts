@@ -76,6 +76,7 @@ export {
   ProfileResearch,
   RecordOutputForm,
   RecordOutputPage,
+  ResearchOutputPage,
   SigninForm,
   SigninPage,
   TeamAbout,

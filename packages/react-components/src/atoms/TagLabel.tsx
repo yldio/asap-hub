@@ -1,11 +1,12 @@
 import React from 'react';
 import css from '@emotion/css';
-import { steel, lead } from '../colors';
+import { steel, lead, paper } from '../colors';
 import { perRem } from '../pixels';
 
 const borderWidth = 1;
 const styles = css({
   display: 'inline-block',
+  backgroundColor: paper.rgb,
 
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,

@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { lineHeight, perRem } from '../pixels';
-import { steel, paper, tin, charcoal } from '../colors';
+import { steel, paper, tin, charcoal, lead, silver } from '../colors';
 import { noop } from '../utils';
 
 const styles = css({
@@ -11,8 +11,7 @@ const styles = css({
 
   minWidth: `${240 / perRem}em`,
   borderRadius: '27px',
-  border: `1px solid ${steel.rgb}`,
-  backgroundColor: steel.rgb,
+  backgroundColor: silver.rgb,
   color: tin.rgb,
   stroke: tin.rgb,
   cursor: 'pointer',
@@ -33,8 +32,9 @@ const iconStyles = css({
 });
 const activeStyles = css({
   backgroundColor: paper.rgb,
+  border: `1px solid ${steel.rgb}`,
   color: charcoal.rgb,
-  stroke: charcoal.rgb,
+  stroke: lead.rgb,
 });
 const buttonRight = css({
   gridColumn: '2 / span 2',

@@ -6,14 +6,14 @@ import {
   FormEvent,
   HTMLProps,
 } from 'react';
-import { fern, steel, ember } from './colors';
+import { fern, steel, ember, pine, lead } from './colors';
 import { perRem, lineHeight } from './pixels';
 
 export const borderWidth = 1;
 
 export const paddingLeftRight = 18;
 export const paddingTopBottom = 15;
-export const indicatorPadding = paddingLeftRight;
+export const indicatorPadding = 8;
 
 export const textPaddingTop = paddingTopBottom + 1;
 export const textPaddingBottom = paddingTopBottom - 1;
@@ -39,6 +39,12 @@ export const styles = {
   borderColor: steel.rgb,
   ':focus': {
     borderColor: fern.rgb,
+  },
+  ' ~ div svg': {
+    stroke: lead.rgb,
+  },
+  ':focus ~ div svg': {
+    stroke: pine.rgb,
   },
 } as const;
 export const validationMessageStyles = {

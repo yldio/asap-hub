@@ -29,7 +29,7 @@ const controlsStyles = css({
   gridColumnGap: `${18 / perRem}em`,
   alignItems: 'center',
   paddingTop: `${18 / perRem}em`,
-  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+  [`@media (min-width: ${smallDesktopScreen.min + 1}px)`]: {
     paddingTop: `${2 / perRem}em`,
     gridTemplateColumns: 'min-content auto',
   },

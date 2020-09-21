@@ -54,7 +54,7 @@ stages:
 
 build:ts:
   artifacts:
-    expire_in: 1 day
+    expire_in: 2 weeks
     paths:
       - 'packages/*/build'
       - 'apps/*/build'
@@ -68,7 +68,7 @@ build:ts:
 
 build:native:
   artifacts:
-    expire_in: 1 day
+    expire_in: 2 weeks
     paths:
       - '.yarn/unplugged'
   script:
@@ -168,7 +168,6 @@ deploy:sls:production:
   artifacts:
     paths:
       - 'apps/auth-frontend/build'
-    expire_in: 1 day
   before_script:
     - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL

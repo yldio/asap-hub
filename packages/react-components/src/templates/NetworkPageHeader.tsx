@@ -3,7 +3,7 @@ import css from '@emotion/css';
 
 import { Display, Paragraph, Button, Toggle } from '../atoms';
 import { SearchField } from '../molecules';
-import { perRem, tabletScreen, smallDesktopScreen } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { paper, steel } from '../colors';
 import { filterIcon, userIcon, teamIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';

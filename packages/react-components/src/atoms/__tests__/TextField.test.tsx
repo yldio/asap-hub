@@ -123,7 +123,6 @@ describe('with a custom indicator positioned left', () => {
     );
 
     expect(customIndicatorPaddingLeft).toBeCloseTo(
-      // times 2 because there is now padding on both sides of the indicator
       normalPaddingLeft + indicatorWidth + indicatorPadding / perRem,
     );
   });

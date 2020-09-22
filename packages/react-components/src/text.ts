@@ -92,6 +92,10 @@ export const headlineStyles = {
     ),
     lineHeight: vminLinearCalc(mobileScreen, 24, largeDesktopScreen, 30, 'px'),
   } as Interpolation,
+  5: {
+    ...fontStyles,
+    fontWeight: 'bold',
+  } as Interpolation,
 } as const;
 
 export type AccentColorName =

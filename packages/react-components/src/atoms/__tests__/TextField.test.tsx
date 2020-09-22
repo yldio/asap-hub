@@ -3,6 +3,8 @@ import { render, act, fireEvent } from '@testing-library/react';
 
 import TextField from '../TextField';
 import { silver, ember } from '../../colors';
+import { perRem } from '../../pixels';
+import { indicatorPadding } from '../../form';
 
 it('renders an input field, passing through props', () => {
   const { getByRole } = render(<TextField value="val" />);
@@ -78,7 +80,7 @@ describe('with a custom indicator positioned right', () => {
 
     expect(customIndicatorPaddingRight).toBeCloseTo(
       // times 2 because there is now padding on both sides of the indicator
-      normalPaddingRight * 2 + indicatorWidth,
+      normalPaddingRight + indicatorWidth + indicatorPadding / perRem,
     );
   });
 });
@@ -123,7 +125,7 @@ describe('with a custom indicator positioned left', () => {
 
     expect(customIndicatorPaddingLeft).toBeCloseTo(
       // times 2 because there is now padding on both sides of the indicator
-      normalPaddingLeft * 2 + indicatorWidth,
+      normalPaddingLeft + indicatorWidth + indicatorPadding / perRem,
     );
   });
 });

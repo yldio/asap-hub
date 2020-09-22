@@ -6,7 +6,7 @@ import {
   FormEvent,
   HTMLProps,
 } from 'react';
-import { fern, steel, ember, pine, lead } from './colors';
+import { fern, steel, ember } from './colors';
 import { perRem, lineHeight } from './pixels';
 
 export const borderWidth = 1;
@@ -39,12 +39,6 @@ export const styles = {
   borderColor: steel.rgb,
   ':focus': {
     borderColor: fern.rgb,
-  },
-  ' ~ div svg': {
-    stroke: lead.rgb,
-  },
-  ':focus ~ div svg': {
-    stroke: pine.rgb,
   },
 } as const;
 export const validationMessageStyles = {

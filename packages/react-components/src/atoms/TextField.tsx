@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { useDebounce } from 'use-debounce';
 
 import { perRem } from '../pixels';
-import { lead, silver, ember, rose, tin } from '../colors';
+import { lead, silver, ember, rose, tin, pine } from '../colors';
 import { noop, getSvgAspectRatio } from '../utils';
 import { loadingImage, validTickGreenImage } from '../images';
 import { useGifReplay } from '../hooks';
@@ -84,6 +84,12 @@ const textFieldStyles = css({
   // see invalid
   '~ div:last-of-type': {
     display: 'none',
+  },
+  '~ div svg': {
+    stroke: lead.rgb,
+  },
+  ':focus ~ div svg': {
+    stroke: pine.rgb,
   },
 });
 const containerStyles = css({

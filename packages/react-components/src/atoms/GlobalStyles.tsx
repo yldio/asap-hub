@@ -5,6 +5,7 @@ import emotionNormalize from 'emotion-normalize';
 
 import { fontStyles } from '../text';
 import { themes } from '../theme';
+import { perRem } from '../pixels';
 
 const styles = css`
   ${emotionNormalize}
@@ -18,6 +19,9 @@ const styles = css`
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+  }
+  p {
+    letter-spacing: ${0.1 / perRem}em;
   }
 `;
 

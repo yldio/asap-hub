@@ -24,9 +24,6 @@ const iconStyles = css({
 const paragraphStyles = css({
   marginTop: 0,
   marginBottom: `${18 / perRem}em`,
-  fontSize: `${17 / perRem}em`,
-  lineHeight: `${24 / 17}em`,
-  letterSpacing: `${0.1 / perRem}em`,
   color: lead.rgb,
 });
 

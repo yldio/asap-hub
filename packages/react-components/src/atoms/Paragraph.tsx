@@ -5,9 +5,6 @@ import * as colors from '../colors';
 import { perRem } from '../pixels';
 import { layoutStyles, AccentColorName } from '../text';
 
-const styles = css({
-  letterSpacing: `${0.1 / perRem}em`,
-});
 const secondaryStyles = css({
   fontSize: `${17 / perRem}em`,
   lineHeight: `${24 / 17}em`,
@@ -32,7 +29,6 @@ const Paragraph: React.FC<ParagraphProps> = ({
     <p
       css={[
         layoutStyles,
-        styles,
         primary ? primaryStyles : secondaryStyles,
         accent ? { color: colors[accent].rgb } : null,
       ]}

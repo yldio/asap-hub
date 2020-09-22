@@ -13,7 +13,7 @@ export const borderWidth = 1;
 
 export const paddingLeftRight = 18;
 export const paddingTopBottom = 15;
-export const indicatorPadding = paddingLeftRight;
+export const indicatorPadding = 8;
 
 export const textPaddingTop = paddingTopBottom + 1;
 export const textPaddingBottom = paddingTopBottom - 1;

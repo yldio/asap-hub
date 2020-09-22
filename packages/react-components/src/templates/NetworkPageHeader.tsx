@@ -3,7 +3,7 @@ import css from '@emotion/css';
 
 import { Display, Paragraph, Button, Toggle } from '../atoms';
 import { SearchField } from '../molecules';
-import { perRem, tabletScreen, smallDesktopScreen } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { paper, steel } from '../colors';
 import { filterIcon, userIcon, teamIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -29,7 +29,7 @@ const controlsStyles = css({
   gridColumnGap: `${18 / perRem}em`,
   alignItems: 'center',
   paddingTop: `${18 / perRem}em`,
-  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+  [`@media (min-width: ${tabletScreen.max + 1}px)`]: {
     paddingTop: `${2 / perRem}em`,
     gridTemplateColumns: 'min-content auto',
   },

@@ -49,3 +49,10 @@ export const useResearchOutputById = (id: string) =>
     useFetchOptions(),
     [id],
   );
+
+export const useResearchOutputs = () =>
+  useFetch<ReadonlyArray<ResearchOutputResponse>>(
+    `${API_BASE_URL}/research-outputs`,
+    useFetchOptions(),
+    [],
+  );

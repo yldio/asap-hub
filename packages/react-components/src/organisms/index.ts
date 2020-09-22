@@ -1,6 +1,7 @@
 export * from './auth';
 
 export { default as ComingSoon } from './ComingSoon';
+export { default as LibraryCard } from './LibraryCard';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MembersSection } from './MembersSection';
 export { default as MenuHeader } from './MenuHeader';

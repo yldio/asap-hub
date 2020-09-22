@@ -19,3 +19,8 @@ it('applies a default border and paper background', () => {
   expect(borderColor).toMatchInlineSnapshot(`"rgb(237,241,243)"`);
   expect(backgroundColor).toMatchInlineSnapshot(`"rgb(255, 255, 255)"`);
 });
+
+it('Renders a div with min padding', () => {
+  const { container } = render(<Card minPadding>text</Card>);
+  expect(container.textContent).toBe('text');
+});

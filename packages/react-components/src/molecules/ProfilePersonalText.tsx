@@ -6,10 +6,9 @@ import { Link, Paragraph } from '../atoms';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight } from '../pixels';
 
-const mainTextStyles = css({
-  paddingBottom: `${6 / perRem}em`,
-});
 const locationStyles = css({
+  padding: `${6 / perRem}em 0`,
+
   display: 'flex',
   alignItems: 'center',
 });
@@ -35,7 +34,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
   teams,
 }) => {
   return (
-    <div css={mainTextStyles}>
+    <div>
       <Paragraph accent="lead">
         {jobTitle}
         {jobTitle && institution && ' at '}

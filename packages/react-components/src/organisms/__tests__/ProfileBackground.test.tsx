@@ -3,12 +3,24 @@ import { render } from '@testing-library/react';
 
 import ProfileBackground from '../ProfileBackground';
 
+it('generates a heading', () => {
+  const { getByText } = render(
+    <ProfileBackground
+      id="42"
+      firstName="Phillip"
+      displayName="Phillip, M"
+      role="Collaborator"
+    />,
+  );
+  expect(getByText(/research/i).tagName).toBe('H2');
+});
+
 it('renders links to team page twice', () => {
   const { getAllByRole } = render(
     <ProfileBackground
       id="42"
       firstName="Phillip"
-      displayName="Team Phillip, M"
+      displayName="Phillip, M"
       role="Collaborator"
     />,
   );
@@ -29,7 +41,7 @@ it('renders responsibilities if present', () => {
     <ProfileBackground
       id="42"
       firstName="Phillip"
-      displayName="Team Phillip, M"
+      displayName="Phillip, M"
       role="Collaborator"
     />,
   );
@@ -39,7 +51,7 @@ it('renders responsibilities if present', () => {
     <ProfileBackground
       id="42"
       firstName="Phillip"
-      displayName="Team Phillip, M"
+      displayName="Phillip, M"
       role="Collaborator"
       responsibilities="text"
     />,
@@ -53,7 +65,7 @@ it('renders approach if present', () => {
     <ProfileBackground
       id="42"
       firstName="Phillip"
-      displayName="Team Phillip, M"
+      displayName="Phillip, M"
       role="Collaborator"
     />,
   );
@@ -64,7 +76,7 @@ it('renders approach if present', () => {
     <ProfileBackground
       id="42"
       firstName="Phillip"
-      displayName="Team Phillip, M"
+      displayName="Phillip, M"
       role="Collaborator"
       approach="text"
     />,

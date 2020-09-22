@@ -32,8 +32,8 @@ const hash = (str: string) => {
 
 const ringStyle = css({
   boxSizing: 'border-box',
-  height: `${84 / perRem}em`,
-  width: `${84 / perRem}em`,
+  height: `${90 / perRem}em`,
+  width: `${90 / perRem}em`,
 
   margin: `${12 / perRem}em 0`,
 });

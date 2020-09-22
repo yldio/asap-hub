@@ -8,7 +8,7 @@ const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
   teams: [],
   lastModifiedDate: formatISO(new Date()),
   aboutHref: './about',
-  researchHref: './research-interests',
+  researchHref: './research',
   outputsHref: './outputs',
 };
 

@@ -12,9 +12,18 @@ import {
 } from '../pixels';
 import { themes } from '../theme';
 
+export type AccentVariant = 'default' | 'red' | 'green';
+
+export const accents: Record<AccentVariant, string> = {
+  default: `border-color: ${colors.silver.rgb};`,
+  red: `background-color: ${colors.rose.rgb}; color: ${colors.ember.rgb};  border-color: ${colors.ember.rgb};`,
+  green: `background-color: ${colors.mint.rgb}; color: ${colors.pine.rgb};  border-color: ${colors.pine.rgb};`,
+};
+
 const containerStyles = css({
   borderRadius: `${10 / perRem}em`,
-  border: `1px solid ${colors.silver.rgb}`,
+  borderStyle: 'solid',
+  borderWidth: 1,
 });
 
 const normalPadding = css({
@@ -81,13 +90,19 @@ const minimalPadding = css({
 
 interface CardProps {
   readonly minPadding?: boolean;
+  readonly accent?: AccentVariant;
   readonly children: React.ReactNode;
 }
-const Card: React.FC<CardProps> = ({ children, minPadding }) => (
+const Card: React.FC<CardProps> = ({
+  children,
+  minPadding,
+  accent = 'default',
+}) => (
   <section
     css={[
       themes.light,
       containerStyles,
+      accents[accent],
       minPadding ? minimalPadding : normalPadding,
     ]}
   >

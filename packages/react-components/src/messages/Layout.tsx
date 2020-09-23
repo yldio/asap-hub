@@ -1,24 +1,29 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Gradient, Link } from '../atoms';
+import { Link } from '../atoms';
 import { silver } from '../colors';
 import { asapImage } from '../images';
+import { gradientStyles } from '../appearance';
 
 interface LayoutProps {
   readonly children: React.ReactNode;
 }
 
-const imageContainerStyle = css({
-  height: '32px',
-  paddingTop: '6px',
-  marginTop: '24px',
-  marginBottom: '24 px',
-});
-
 const containerStyles = css({
   maxWidth: '600px',
   marginLeft: 'auto',
   marginRight: 'auto',
+});
+
+const coloredLineStyles = css({
+  height: '6px',
+});
+
+const imageContainerStyle = css({
+  height: '32px',
+  paddingTop: '6px',
+  marginTop: '24px',
+  marginBottom: '24px',
 });
 
 const contentContainerStyles = css({
@@ -39,7 +44,7 @@ const footerContentContainerStyles = css({
 const Component: React.FC<LayoutProps> = ({ children }) => (
   <>
     <div css={containerStyles}>
-      <Gradient />
+      <div role="presentation" css={[gradientStyles, coloredLineStyles]} />
       <div
         css={css({
           paddingLeft: '24px',

@@ -2,6 +2,28 @@ import Got from 'got';
 import Boom from '@hapi/boom';
 import createClient from './client';
 
+export interface Filter {
+  path: string;
+  op: 'eq' | 'in' | 'gt';
+  value: string[] | number[] | string | number | boolean;
+}
+
+export interface Query {
+  take?: number;
+  skip?: number;
+  filter?:
+    | {
+        and?: Filter[];
+        not?: Filter;
+        or?: Filter[];
+      }
+    | Filter;
+  sort?: {
+    path: string;
+    order: 'ascending' | 'descending';
+  }[];
+}
+
 export class Squidex<T extends { id: string; data: object }> {
   client: typeof Got;
   collection: string;
@@ -11,9 +33,9 @@ export class Squidex<T extends { id: string; data: object }> {
     this.client = createClient();
   }
 
-  async fetch(query?: object): Promise<{ items: T[] }> {
+  async fetch(query?: Query): Promise<{ items: T[] }> {
     const q = {
-      take: 30,
+      take: 8,
       ...query,
     };
 
@@ -60,7 +82,7 @@ export class Squidex<T extends { id: string; data: object }> {
     }
   }
 
-  async fetchOne(query: object): Promise<T> {
+  async fetchOne(query: Query): Promise<T> {
     const { items } = await this.fetch({
       ...query,
       take: 1,

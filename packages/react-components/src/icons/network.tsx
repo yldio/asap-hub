@@ -12,19 +12,12 @@ const network = (
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
     <title>Network</title>
-    <g
-      id="Network"
-      stroke="none"
-      strokeWidth="1"
-      fill="none"
-      fillRule="evenodd"
-    >
+    <g id="Network" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Group-12-Copy-2">
         <g id="Group-15"></g>
       </g>
       <g
         id="Group-22"
-        stroke="#4D646B"
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.3"

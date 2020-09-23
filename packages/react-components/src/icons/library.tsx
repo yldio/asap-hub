@@ -15,13 +15,7 @@ const library = (
     <defs>
       <polygon id="path-1" points="0 24 24 24 24 0 0 0"></polygon>
     </defs>
-    <g
-      id="Library"
-      stroke="none"
-      strokeWidth="1"
-      fill="none"
-      fillRule="evenodd"
-    >
+    <g id="Library" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Group-12-Copy-2">
         <g id="Group-15"></g>
       </g>
@@ -34,7 +28,6 @@ const library = (
             <g id="Clip-12"></g>
             <polygon
               id="Stroke-11"
-              stroke="#4D646B"
               strokeWidth="1.3"
               strokeLinecap="square"
               strokeLinejoin="round"
@@ -43,7 +36,6 @@ const library = (
             ></polygon>
             <polygon
               id="Stroke-13"
-              stroke="#4D646B"
               strokeWidth="1.3"
               strokeLinecap="square"
               strokeLinejoin="round"
@@ -57,7 +49,6 @@ const library = (
             x2="11.9308"
             y2="6.0443"
             id="Stroke-15"
-            stroke="#4D646B"
             strokeWidth="0.8"
             strokeLinecap="square"
             strokeLinejoin="round"
@@ -65,7 +56,6 @@ const library = (
           <g
             id="Group-20"
             transform="translate(4.000000, 5.000000)"
-            stroke="#4D646B"
             strokeLinecap="square"
             strokeLinejoin="round"
           >
@@ -86,7 +76,6 @@ const library = (
           <path
             d="M15.9387236,17.7142528 L19.734148,16.9074883 L15.9387236,17.7142528 Z"
             id="Stroke-21"
-            stroke="#4D646B"
             strokeWidth="0.8"
             strokeLinecap="square"
             strokeLinejoin="round"

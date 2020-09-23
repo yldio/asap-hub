@@ -4,7 +4,7 @@ import css from '@emotion/css';
 
 import { TextChildren } from '../text';
 import { useHasRouter } from '../hooks';
-import { color } from '../colors';
+import { color, lead, pine } from '../colors';
 import {
   perRem,
   lineHeight,
@@ -39,7 +39,7 @@ const styles = css({
   color: 'unset',
   textDecoration: 'none',
   outline: 'none',
-
+  stroke: lead.rgb,
   borderRadius: `${6 / perRem}em`,
   ':hover, :focus': {
     backgroundColor: navigationGrey.rgb,
@@ -47,8 +47,11 @@ const styles = css({
 });
 const activeStyles = css({
   backgroundColor: activeBackgroundColor.rgba,
+  color: pine.rgb,
+  stroke: pine.rgb,
   ':hover, :focus': {
     backgroundColor: activeBackgroundColor.rgba,
+    color: pine.rgb,
   },
 });
 

@@ -12,16 +12,11 @@ const news = (
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
     <title>News</title>
-    <g id="News" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+    <g id="News" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Group-12-Copy-2">
         <g id="Group-15"></g>
       </g>
-      <g
-        id="Group-23"
-        stroke="#4D646B"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <g id="Group-23" strokeLinecap="round" strokeLinejoin="round">
         <g id="Group-23-Copy-2">
           <path
             d="M7.4916,20.1401 L18.2646,20.1401 C19.2926,20.1401 20.1326,19.2991 20.1326,18.2731 L20.1326,5.6591 C20.1326,4.6321 19.2926,3.7921 18.2646,3.7921 L9.3586,3.7921 C8.3326,3.7921 7.4916,4.6321 7.4916,5.6591 L7.4916,20.1401 Z"

@@ -103,7 +103,7 @@
         "properties": {
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Skills",
+          "label": "Expertise and Resources",
           "hints": "",
           "placeholder": "",
           "isRequired": false

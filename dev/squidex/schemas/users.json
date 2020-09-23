@@ -226,7 +226,7 @@
         "properties": {
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Skills",
+          "label": "Expertise and Resources",
           "isRequired": false
         }
       },

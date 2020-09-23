@@ -39,6 +39,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:@types/hapi__bourne"
       },
       {
+        "name": "@types/jwt-encode",
+        "reference": "workspace:@types/jwt-encode"
+      },
+      {
         "name": "@types/rehype-slug",
         "reference": "workspace:@types/rehype-slug"
       },
@@ -120,6 +124,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@types/asap-hub__assets", ["workspace:@types/asap-hub__assets"]],
       ["@types/asap-hub__auth0-rule", ["workspace:@types/asap-hub__auth0-rule"]],
       ["@types/hapi__bourne", ["workspace:@types/hapi__bourne"]],
+      ["@types/jwt-encode", ["workspace:@types/jwt-encode"]],
       ["@types/rehype-slug", ["workspace:@types/rehype-slug"]],
       ["asap-hub", ["workspace:."]]
     ],
@@ -1427,6 +1432,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/jwt-decode",
         "npm:2.2.1"
+      ],
+      [
+        "@types/jwt-encode",
+        "workspace:@types/jwt-encode"
       ],
       [
         "@types/keyv",
@@ -8181,6 +8190,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jest", "npm:26.0.3"],
             ["@types/jsonwebtoken", "npm:8.5.0"],
             ["@types/jwt-decode", "npm:2.2.1"],
+            ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["@types/lodash.get", "npm:4.4.6"],
             ["@types/pump", "npm:1.1.0"],
             ["@types/uuid", "npm:8.0.0"],
@@ -8757,6 +8767,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/hapi__joi", "npm:17.1.2"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/jwt-decode", "npm:2.2.1"],
+            ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["chance", "npm:1.1.7"],
@@ -14590,6 +14601,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-decode", "npm:2.2.1"]
           ],
           "linkType": "HARD",
+        }]
+      ]],
+      ["@types/jwt-encode", [
+        ["workspace:@types/jwt-encode", {
+          "packageLocation": "./@types/jwt-encode/",
+          "packageDependencies": [
+            ["@types/jwt-encode", "workspace:@types/jwt-encode"]
+          ],
+          "linkType": "SOFT",
         }]
       ]],
       ["@types/keyv", [

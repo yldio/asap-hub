@@ -1,37 +1,25 @@
 import Chance from 'chance';
 import nock from 'nock';
-import encode from 'jwt-encode';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
-import { config } from "@asap-hub/services-common";
+import { config } from '@asap-hub/services-common';
 
+import { identity } from '../../helpers/squidex';
+import { CMSResearchOutput } from '../../../src/entities/research-outputs';
 import { handler } from '../../../src/handlers/research-outputs/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
+import { ResearchOutputResponse } from '@asap-hub/model';
+
 const chance = new Chance();
-
-const squidex = () => {
-  return nock(config.cms.baseUrl)
-    .post(
-      '/identity-server/connect/token',
-      `grant_type=client_credentials&scope=squidex-api&client_id=${encodeURIComponent(
-        config.cms.clientId,
-      )}&client_secret=${config.cms.clientSecret}`,
-    )
-    .reply(200, {
-      access_token: encode(
-        {
-          exp: Math.floor((new Date().getTime() + 1) / 1000),
-          nbf: Math.floor(new Date().getTime() / 1000),
-        },
-        'secret',
-      ),
-      expires_in: 2592000,
-      token_type: 'Bearer',
-      scope: 'squidex-api',
-    });
-};
-
 describe('GET /research-outputs', () => {
+  beforeEach(() => {
+    nock.cleanAll();
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -85,21 +73,74 @@ describe('GET /research-outputs', () => {
     expect(result.statusCode).toStrictEqual(403);
   });
 
-  test.only('returns 200 with a list of research outputs', async () => {
+  test('returns 200 with a list of empty research outputs', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    squidex();
+    identity()
+      .get(
+        `/api/content/${
+          config.cms.appName
+        }/research-outputs?q=${JSON.stringify({ take: 30 })}`,
+      )
+      .reply(200, { total: 0, items: [] });
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
       }),
     )) as APIGatewayProxyResult;
 
     const res = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(res.length).toBeGreaterThan(0);
+    expect(res).toStrictEqual([]);
+  });
+
+  test('returns 200 with a list of research outputs', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    identity()
+      .get(
+        `/api/content/${
+          config.cms.appName
+        }/research-outputs?q=${JSON.stringify({ take: 30 })}`,
+      )
+      .reply(200, {
+        total: 1,
+        items: [
+          {
+            id: 'uuid',
+            created: '2020-09-23T16:34:26.842Z',
+            data: {
+              type: { iv: 'proposal' },
+              title: { iv: 'Title' },
+              text: { iv: 'Text' },
+            },
+          },
+        ],
+      } as { total: number; items: CMSResearchOutput[] });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: `Bearer token`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const res = JSON.parse(result.body) as ResearchOutputResponse;
+    expect(result.statusCode).toStrictEqual(200);
+    expect(res).toStrictEqual([
+      {
+        created: '2020-09-23T16:34:26.842Z',
+        doi: '',
+        id: 'uuid',
+        text: 'Text',
+        title: 'Title',
+        type: 'proposal',
+        url: '',
+      },
+    ]);
   });
 });

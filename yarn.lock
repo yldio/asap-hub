@@ -37,6 +37,7 @@ __metadata:
     "@types/jest": ^26.0.3
     "@types/jsonwebtoken": ^8.5.0
     "@types/jwt-decode": ^2.2.1
+    "@types/jwt-encode": "workspace:@types/jwt-encode"
     "@types/lodash.get": ^4
     "@types/pump": ^1.1.0
     "@types/uuid": ^8.0.0
@@ -380,6 +381,7 @@ __metadata:
     "@types/hapi__joi": ^17.1.0
     "@types/jest": ^26.0.3
     "@types/jwt-decode": ^2.2.1
+    "@types/jwt-encode": "workspace:@types/jwt-encode"
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     chance: ^1.1.7
@@ -4791,6 +4793,12 @@ __metadata:
   checksum: 7d0cce0a1906b1e90a410af2786964dc76b3c9641a5eb11ed2e12e09e07874361a15efbb0e2f8ac7553f097481cb668b21c7ad60ce89961fea854f2c7cdef764
   languageName: node
   linkType: hard
+
+"@types/jwt-encode@workspace:@types/jwt-encode":
+  version: 0.0.0-use.local
+  resolution: "@types/jwt-encode@workspace:@types/jwt-encode"
+  languageName: unknown
+  linkType: soft
 
 "@types/keyv@npm:*, @types/keyv@npm:^3.1.1":
   version: 3.1.1

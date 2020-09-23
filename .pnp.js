@@ -8193,6 +8193,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["got", "npm:11.6.0"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["jwt-decode", "npm:2.2.0"],
+            ["jwt-encode", "npm:1.0.1"],
             ["lodash.get", "npm:4.4.2"],
             ["nock", "npm:13.0.4"],
             ["p-limit", "npm:3.0.2"],

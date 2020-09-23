@@ -49,6 +49,7 @@ __metadata:
     got: ^11.6.0
     jsonwebtoken: ^8.5.1
     jwt-decode: ^2.2.0
+    jwt-encode: ^1.0.1
     lodash.get: ^4.4.2
     nock: ^13.0.4
     p-limit: ^3.0.2

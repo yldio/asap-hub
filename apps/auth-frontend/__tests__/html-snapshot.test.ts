@@ -19,7 +19,7 @@ describe('the built index.html', () => {
             charset="utf-8"
           />
           <link
-            href="https://dev.hub.asap.science/.auth/favicon.ico"
+            href="https://dev.hub.asap.science/.auth/favicon.png"
             rel="icon"
           />
           <meta

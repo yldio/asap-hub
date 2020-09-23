@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Card } from '@asap-hub/react-components';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean, select } from '@storybook/addon-knobs';
 
 export default {
   title: 'Atoms / Card',
@@ -9,5 +9,10 @@ export default {
 };
 
 export const Normal = () => (
-  <Card minPadding={boolean('Minimal Padding', false)}>Content</Card>
+  <Card
+    minPadding={boolean('Minimal Padding', false)}
+    accent={select('Accent', ['default', 'red', 'green'], 'default')}
+  >
+    Content
+  </Card>
 );

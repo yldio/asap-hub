@@ -1,6 +1,4 @@
 deploy:ses:master:
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
   script:
     - yarn node apps/react-templates/lib/deploy.js
   stage: deploy
@@ -9,3 +7,7 @@ deploy:ses:master:
   variables:
     SLS_STAGE: production
     APP_ORIGIN: $ASAP_APP_URL
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      changes:
+        - apps/react-templates

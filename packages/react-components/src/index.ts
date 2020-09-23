@@ -83,4 +83,5 @@ export {
   TeamOutputs,
   WelcomeCard,
   WelcomePage,
+  ForgotPasswordPage,
 } from './templates';

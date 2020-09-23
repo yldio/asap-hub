@@ -22,3 +22,4 @@ export { default as TeamPage } from './TeamPage';
 export { default as TeamOutputs } from './TeamOutputs';
 export { default as WelcomeCard } from './WelcomeCard';
 export { default as WelcomePage } from './WelcomePage';
+export { default as ForgotPasswordPage } from './ForgotPasswordPage';

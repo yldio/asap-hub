@@ -217,6 +217,20 @@
           "isRequired": false
         }
       },
+      
+      {
+        "name": "skillsDescription",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "editor": "Input",
+          "label": "Expertise and Resources Description",
+          "isRequired": false
+        }
+      },
       {
         "name": "skills",
         "isHidden": false,
@@ -226,7 +240,7 @@
         "properties": {
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Skills",
+          "label": "Expertise and Resources",
           "isRequired": false
         }
       },
@@ -482,7 +496,7 @@
               "isUnique": false,
               "inlineEditable": false,
               "editor": "Input",
-              "label": "Approach",
+              "label": "Main research interests",
               "isRequired": false
             }
           },
@@ -538,7 +552,7 @@
       }
     ],
     "previewUrls": {
-      "Web": "https://hub.asap.science/users/${id}"
+      "Web": "https://hub.asap.science/network/users/${id}"
     },
     "category": "Storage",
     "isPublished": true

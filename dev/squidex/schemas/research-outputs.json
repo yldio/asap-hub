@@ -225,7 +225,9 @@
         }
       }
     ],
-    "previewUrls": {},
+    "previewUrls": {
+      "Web": "https://hub.asap.science/library/${id}"
+    },
     "category": "Storage",
     "isPublished": true
   }

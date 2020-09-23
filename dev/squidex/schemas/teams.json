@@ -76,7 +76,7 @@
           "placeholder": "",
           "isRequired": false
         }
-      },
+      },      
       {
         "name": "proposalURL",
         "isHidden": false,
@@ -103,22 +103,7 @@
         "properties": {
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Skills",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "tags",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "",
+          "label": "Expertise and Resources",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -126,7 +111,7 @@
       }
     ],
     "previewUrls": {
-      "Web": "https://hub.asap.science/teams/${id}"
+      "Web": "https://hub.asap.science/network/teams/${id}"
     },
     "category": "Storage",
     "isPublished": true

@@ -2,7 +2,7 @@ import { Base, BaseOptions } from '@asap-hub/services-common';
 import { ResearchOutputCreationRequest } from '@asap-hub/model';
 import { CMSResearchOutput } from '../entities/research-outputs';
 
-export default class Users extends Base {
+export default class ResearchOutput extends Base {
   constructor(CMSConfig: BaseOptions) {
     super(CMSConfig);
   }

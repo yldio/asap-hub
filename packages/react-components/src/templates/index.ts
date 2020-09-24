@@ -4,6 +4,7 @@ export { default as ContentPage } from './ContentPage';
 export { default as InviteUserForm } from './InviteUserForm';
 export { default as Layout } from './Layout';
 export { default as LibraryPage } from './LibraryPage';
+export { default as LibraryPageBody } from './LibraryPageBody';
 export { default as LibraryPageHeader } from './LibraryPageHeader';
 export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';

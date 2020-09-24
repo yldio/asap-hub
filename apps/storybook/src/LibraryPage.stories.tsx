@@ -1,5 +1,5 @@
-import React from 'react';
-import { LibraryPage } from '@asap-hub/react-components';
+import React, { ComponentProps } from 'react';
+import { LibraryPage, LibraryPageBody } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 
@@ -10,9 +10,37 @@ export default {
   decorators: [LayoutDecorator],
 };
 
+const props: ComponentProps<typeof LibraryPageBody> = {
+  researchOutput: [
+    {
+      id: '1',
+      type: 'proposal',
+      title:
+        'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
+      created: new Date().toISOString(),
+    },
+    {
+      id: '2',
+      type: 'proposal',
+      title:
+        'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
+      created: new Date().toISOString(),
+    },
+    {
+      id: '3',
+      type: 'proposal',
+      title:
+        'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
+      created: new Date().toISOString(),
+    },
+  ],
+};
+
 export const LibraryList = () => (
   <LibraryPage
     query={text('Query', '')}
     onChangeSearch={() => action('search change')}
-  />
+  >
+    <LibraryPageBody {...props} />
+  </LibraryPage>
 );

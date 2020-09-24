@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Paragraph, LibraryCard } from '@asap-hub/react-components';
+import { Paragraph, LibraryPageBody } from '@asap-hub/react-components';
 
 import { useResearchOutputs } from '../api';
 
@@ -11,14 +11,7 @@ const Page: React.FC<{}> = () => {
     return <Paragraph>Loading...</Paragraph>;
   }
   if (researchOutputData) {
-    return researchOutputData.map((output) => {
-      const { id } = output;
-      return (
-        <div key={id}>
-          <LibraryCard {...output} />
-        </div>
-      );
-    });
+    return <LibraryPageBody researchOutput={researchOutputData} />;
   }
 
   return (

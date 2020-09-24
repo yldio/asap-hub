@@ -1,12 +1,12 @@
 import React from 'react';
 import css from '@emotion/css';
 import format from 'date-fns/format';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Caption, TagLabel, Paragraph } from '../atoms';
 import { tabletScreen, perRem } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon } from '../icons';
-import { ResearchOutputResponse } from '@asap-hub/model';
 
 const containerStyles = css({
   display: 'flex',
@@ -38,10 +38,12 @@ const iconStyles = css({
   paddingRight: `${6 / perRem}em`,
 });
 
+const typeStyles = css({ width: 'fit-content', textTransform: 'capitalize' });
+
 type LibraryCardProps = Pick<
   ResearchOutputResponse,
   'publishDate' | 'title' | 'type' | 'created'
-> & {};
+>;
 const LibraryCard: React.FC<LibraryCardProps> = ({
   publishDate,
   title,
@@ -52,7 +54,7 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
     <Card>
       <section css={containerStyles}>
         <div css={moveStyles}>
-          <div css={{ width: 'fit-content' }}>
+          <div css={typeStyles}>
             <TagLabel>{type}</TagLabel>
           </div>
         </div>
@@ -68,10 +70,7 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
 
         <Caption accent={'lead'} asParagraph>
           Originally Published:
-          {format(
-            new Date(publishDate ? publishDate : created),
-            ' Mo MMMM yyyy',
-          )}
+          {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
         </Caption>
 
         <div css={moveStyles}>

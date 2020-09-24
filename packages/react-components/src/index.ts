@@ -67,6 +67,7 @@ export {
   InviteUserForm,
   Layout,
   LibraryPage,
+  LibraryPageBody,
   LibraryPageHeader,
   NetworkPage,
   NetworkPageHeader,

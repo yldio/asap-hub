@@ -99,10 +99,30 @@
         }
       },
       {
-        "name": "avatarURL",
+        "name": "avatar",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Assets",
+          "minItems": 0,
+          "maxItems": 1,
+          "mustBeImage": true,
+          "resolveFirst": false,
+          "resolveImage": false,
+          "allowDuplicates": false,
+          "label": "Avatar",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "avatarURL",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -217,7 +237,6 @@
           "isRequired": false
         }
       },
-      
       {
         "name": "skillsDescription",
         "isHidden": false,
@@ -226,6 +245,8 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
           "editor": "Input",
           "label": "Expertise and Resources Description",
           "isRequired": false

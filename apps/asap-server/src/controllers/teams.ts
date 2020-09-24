@@ -6,6 +6,7 @@ import Boom from '@hapi/boom';
 import { CMS } from '../cms';
 import { CMSTeam } from '../entities/team';
 import { CMSUser } from '../entities/user';
+import { createURL } from '../utils/assets';
 
 function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
   return {
@@ -30,7 +31,7 @@ const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
     role: get(user, 'data.teams.iv', []).find(
       (t: { id: string[] }) => t.id[0] === teamId,
     ).role,
-    avatarURL: user.data.avatarURL?.iv,
+    avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
   }));
 
 export default class Teams {

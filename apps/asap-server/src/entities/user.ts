@@ -24,6 +24,7 @@ export interface CMSUser {
     orcidWorks?: { iv: CMSOrcidWork[] };
     skills?: { iv: string[] };
     avatarURL?: { iv: string };
+    avatar?: { iv: string[] };
   };
 }
 

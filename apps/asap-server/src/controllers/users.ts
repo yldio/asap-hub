@@ -12,6 +12,7 @@ import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 import { fetchOrcidProfile, ORCIDWorksResponse } from '../utils/fetch-orcid';
+import { createURL } from '../utils/assets';
 
 export const transform = (user: CMSUser): UserResponse => {
   return JSON.parse(
@@ -35,7 +36,7 @@ export const transform = (user: CMSUser): UserResponse => {
       orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
       orcidWorks: user.data.orcidWorks?.iv,
       skills: user.data.skills?.iv || [],
-      avatarURL: user.data.avatarURL?.iv,
+      avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
     }),
   );
 };

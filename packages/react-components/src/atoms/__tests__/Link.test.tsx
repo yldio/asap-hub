@@ -68,6 +68,64 @@ describe('no theme', () => {
   });
 });
 
+describe('when button-styled', () => {
+  it('adds button styles', () => {
+    const { getByRole, rerender } = render(<Link href="/">text</Link>);
+    expect(getComputedStyle(getByRole('link')).paddingLeft).toBe('');
+
+    rerender(
+      <Link href="/" buttonStyle>
+        text
+      </Link>,
+    );
+    expect(
+      Number(
+        getComputedStyle(getByRole('link')).paddingLeft.replace(/em$/, ''),
+      ),
+    ).toBeGreaterThan(0);
+  });
+
+  it('supports primary button styles', () => {
+    const { getByRole, rerender } = render(
+      <Link href="/" buttonStyle>
+        text
+      </Link>,
+    );
+    expect(getComputedStyle(getByRole('link')).backgroundColor).not.toBe(
+      fern.rgb,
+    );
+
+    rerender(
+      <Link href="/" buttonStyle primary>
+        text
+      </Link>,
+    );
+    expect(getComputedStyle(getByRole('link')).backgroundColor).toBe(fern.rgb);
+  });
+
+  it('supports small button styles', () => {
+    const { getByRole, rerender } = render(
+      <Link href="/" buttonStyle>
+        text
+      </Link>,
+    );
+    const normalHeight = Number(
+      getComputedStyle(getByRole('link')).height.replace(/em$/, ''),
+    );
+
+    rerender(
+      <Link href="/" buttonStyle small>
+        text
+      </Link>,
+    );
+    const smallHeight = Number(
+      getComputedStyle(getByRole('link')).height.replace(/em$/, ''),
+    );
+
+    expect(smallHeight).toBeLessThan(normalHeight);
+  });
+});
+
 describe.each`
   description                         | href                                | wrapper
   ${'external link with a router'}    | ${'https://parkinsonsroadmap.org/'} | ${StaticRouter}

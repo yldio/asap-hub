@@ -58,7 +58,9 @@ const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
         )}
       </div>
       <div css={dynamicContainerStyles}>
-        <Link href={`/network/teams/${id}`}>Meet the Team</Link>
+        <Link buttonStyle href={`/network/teams/${id}`}>
+          Meet the Team
+        </Link>
       </div>
     </Card>
   );

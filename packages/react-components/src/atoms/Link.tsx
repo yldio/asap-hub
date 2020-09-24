@@ -5,6 +5,7 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 import { fern, paper, pine } from '../colors';
 import { useHasRouter } from '../hooks';
 import { ThemeVariant, defaultThemeVariant } from '../theme';
+import { getButtonStyles, getButtonChildren } from '../button';
 
 const styles = css({
   outline: 'none',
@@ -27,31 +28,55 @@ const underlineStyles = css({
   textDecoration: 'underline',
 });
 
-interface LinkProps {
-  readonly children: ReactNode;
-  readonly href: string;
+interface NormalLinkProps {
   readonly theme?: ThemeVariant | null;
   readonly display?: CSSObject['display'];
+
+  readonly buttonStyle?: undefined;
+
+  readonly primary?: undefined;
+  readonly small?: undefined;
 }
+interface ButtonStyleLinkProps {
+  readonly theme?: undefined;
+  readonly display?: undefined;
+
+  readonly buttonStyle: true;
+
+  readonly primary?: boolean;
+  readonly small?: boolean;
+}
+type LinkProps = {
+  readonly children: ReactNode;
+  readonly href: string;
+} & (NormalLinkProps | ButtonStyleLinkProps);
 const Link: React.FC<LinkProps> = ({
   children,
   href,
+
   theme = defaultThemeVariant,
   display,
+
+  buttonStyle = false,
+  primary = false,
+  small = false,
 }) => {
-  const linkStyles = [
-    styles,
-    theme && themeStyles[theme],
-    theme && underlineStyles,
-    { display },
-  ];
+  const linkStyles = buttonStyle
+    ? [styles, getButtonStyles({ primary, small, children })]
+    : [
+        styles,
+        theme && themeStyles[theme],
+        theme && underlineStyles,
+        { display },
+      ];
+  const linkChildren = buttonStyle ? getButtonChildren(children) : children;
 
   const internal =
     new URL(href, window.location.href).origin === window.location.origin;
   if (useHasRouter() && internal) {
     return (
       <ReactRouterLink css={linkStyles} to={href}>
-        {children}
+        {linkChildren}
       </ReactRouterLink>
     );
   }
@@ -62,7 +87,7 @@ const Link: React.FC<LinkProps> = ({
       target={internal ? undefined : '_blank'}
       rel={internal ? undefined : 'noreferrer noopener'}
     >
-      {children}
+      {linkChildren}
     </a>
   );
 };

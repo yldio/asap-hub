@@ -13,8 +13,10 @@ const styles = css({
   borderRadius: '27px',
   backgroundColor: silver.rgb,
   color: tin.rgb,
-  stroke: tin.rgb,
   cursor: 'pointer',
+  svg: {
+    stroke: tin.rgb,
+  },
 });
 
 const buttonStyle = css({
@@ -34,7 +36,9 @@ const activeStyles = css({
   backgroundColor: paper.rgb,
   border: `1px solid ${steel.rgb}`,
   color: charcoal.rgb,
-  stroke: lead.rgb,
+  svg: {
+    stroke: lead.rgb,
+  },
 });
 const buttonRight = css({
   gridColumn: '2 / span 2',

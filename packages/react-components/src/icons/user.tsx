@@ -3,7 +3,7 @@ import React from 'react';
 /* istanbul ignore file */
 
 const userIcon = (
-  <svg width={24} height={24} viewBox="0 0 24 24">
+  <svg width={24} height={24} viewBox="0 0 24 24" stroke="#4D646B">
     <title>Profile</title>
     <g fill="none" fillRule="evenodd" strokeWidth={1.3}>
       <g strokeLinecap="round" strokeLinejoin="round">

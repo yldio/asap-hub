@@ -12,6 +12,7 @@ const showPasswordIcon = (
     <text
       x="50%"
       y="50%"
+      stroke="none"
       style={{
         fontFamily,
         fontSize,

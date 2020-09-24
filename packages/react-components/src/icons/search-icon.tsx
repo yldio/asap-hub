@@ -3,7 +3,7 @@ import React from 'react';
 /* istanbul ignore file */
 
 const searchIcon = (
-  <svg width={24} height={24} viewBox="0 0 24 24">
+  <svg width={24} height={24} viewBox="0 0 24 24" stroke="#4D646B">
     <title>Search</title>
     <g
       strokeWidth={1.3}

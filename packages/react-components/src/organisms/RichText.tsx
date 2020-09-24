@@ -40,7 +40,7 @@ const components = {
     return isTextChildren(children) ? (
       <Link href={href}>{children}</Link>
     ) : (
-      <RichTextError>Invalid link styling with href ${href}</RichTextError>
+      <RichTextError>Invalid link styling with href {href}</RichTextError>
     );
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;

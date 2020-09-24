@@ -15,7 +15,6 @@ export { default as NavigationLink } from './NavigationLink';
 export { default as Overlay } from './Overlay';
 export { default as Paragraph } from './Paragraph';
 export { default as RadioButton } from './RadioButton';
-export { default as RichText } from './RichText';
 export { default as TabLink } from './TabLink';
 export { default as Tag } from './Tag';
 export { default as TagLabel } from './TagLabel';

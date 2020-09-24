@@ -1,9 +1,10 @@
 import React from 'react';
-import { text } from '@storybook/addon-knobs';
+import { text, boolean } from '@storybook/addon-knobs';
 import {
-  Link as LinkText,
-  Paragraph as ParagraphText,
+  Link,
+  Paragraph,
   ThemeVariant,
+  orcidIcon,
 } from '@asap-hub/react-components';
 import { Story } from '@storybook/react';
 
@@ -14,15 +15,45 @@ export default {
   decorators: [ThemeDecorator],
 };
 
-export const Link: Story<{ theme: ThemeVariant }> = (_, { theme }) => {
-  return (
-    <ParagraphText>
-      <LinkText
-        href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
-        theme={theme}
-      >
-        {text('Text', "Aligning Science Across Parkinson's")}
-      </LinkText>
-    </ParagraphText>
-  );
-};
+export const Normal: Story<{ theme: ThemeVariant }> = (_, { theme }) => (
+  <Paragraph>
+    <Link
+      href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
+      theme={theme}
+    >
+      {text('Text', "Aligning Science Across Parkinson's")}
+    </Link>
+  </Paragraph>
+);
+
+export const ButtonStyledText = () => (
+  <Link
+    href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
+    buttonStyle
+    primary={boolean('Primary', true)}
+    small={boolean('Small', false)}
+  >
+    {text('Text', 'Text')}
+  </Link>
+);
+export const ButtonStyledIcon = () => (
+  <Link
+    href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
+    buttonStyle
+    primary={boolean('Primary', true)}
+    small={boolean('Small', false)}
+  >
+    {orcidIcon}
+  </Link>
+);
+export const ButtonStyledIconAndText = () => (
+  <Link
+    href={text('Destination', 'https://www.parkinsonsroadmap.org/')}
+    buttonStyle
+    primary={boolean('Primary', true)}
+    small={boolean('Small', false)}
+  >
+    {orcidIcon}
+    {text('Text', 'Text')}
+  </Link>
+);

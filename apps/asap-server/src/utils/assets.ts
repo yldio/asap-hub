@@ -6,5 +6,5 @@ export const createURL = (assets: string[]): string | undefined => {
   }
 
   const asset = assets[0];
-  return `${cms.baseUrl}/api/assets/${cms.appName}/${asset}`;
+  return new URL(`/api/assets/${cms.appName}/${asset}`, cms.baseUrl);
 };

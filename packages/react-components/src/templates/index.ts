@@ -7,6 +7,7 @@ export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';
 export { default as NetworkPeople } from './NetworkPeople';
 export { default as NetworkTeam } from './NetworkTeam';
+export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
 export { default as ProfileAbout } from './ProfileAbout';
 export { default as ProfileHeader } from './ProfileHeader';
 export { default as ProfileOutputs } from './ProfileOutputs';

@@ -30,14 +30,14 @@ setup:squidex-image:
   stage: prepare
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
-      changes:
-        - dev/squidex/**/*
-      when: manual
 
 deploy:sync-squidex:dev:
   <<: *tmpl_sync
   environment:
     name: dev
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      when: manual
 
 deploy:sync-squidex:production:
   <<: *tmpl_sync

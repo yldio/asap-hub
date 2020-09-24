@@ -133,10 +133,12 @@ const secondaryStyles = css({
 });
 const disabledStyles = css({
   color: tin.rgb,
-  stroke: tin.rgb,
   backgroundColor: silver.rgb,
   borderColor: steel.rgb,
   boxShadow: 'none',
+  svg: {
+    stroke: tin.rgb,
+  },
 });
 
 export const getButtonStyles = ({

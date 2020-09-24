@@ -48,7 +48,9 @@ const styles = css({
 const activeStyles = css({
   backgroundColor: activeBackgroundColor.rgba,
   color: pine.rgb,
-  stroke: pine.rgb,
+  svg: {
+    stroke: pine.rgb,
+  },
   ':hover, :focus': {
     backgroundColor: activeBackgroundColor.rgba,
     color: pine.rgb,

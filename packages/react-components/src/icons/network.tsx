@@ -10,6 +10,7 @@ const network = (
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
+    stroke="#4D646B"
   >
     <title>Network</title>
     <g id="Network" strokeWidth="1" fill="none" fillRule="evenodd">

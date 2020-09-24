@@ -12,6 +12,26 @@
     "fieldsInLists": [],
     "fields": [
       {
+        "name": "type",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": [
+            "proposal"
+          ],
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Dropdown",
+          "label": "Type",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
         "name": "doi",
         "isHidden": false,
         "isLocked": false,
@@ -57,23 +77,6 @@
         }
       },
       {
-        "name": "type",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Type",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": true
-        }
-      },
-      {
         "name": "description",
         "isHidden": false,
         "isLocked": false,
@@ -89,55 +92,21 @@
         }
       },
       {
-        "name": "authors",
+        "name": "text",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "Array",
-          "label": "Authors",
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "RichText",
+          "label": "Text",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false
-        },
-        "nested": [
-          {
-            "name": "displayName",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Display Name",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false
-            }
-          },
-          {
-            "name": "id",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "References",
-              "minItems": 0,
-              "maxItems": 1,
-              "allowDuplicates": false,
-              "resolveReference": false,
-              "editor": "List",
-              "schemaIds": [
-                "users"
-              ],
-              "label": "Id",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false
-            }
-          }
-        ]
+        }
       },
       {
         "name": "publishDate",
@@ -206,23 +175,6 @@
             }
           }
         ]
-      },
-      {
-        "name": "accessLevel",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Access Level",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
       }
     ],
     "previewUrls": {

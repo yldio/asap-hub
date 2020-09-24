@@ -191,19 +191,31 @@ module.exports = {
     //     },
     //   ],
     // },
-    // 'fetch-research-outputs': {
-    //   handler:
-    //     'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
-    //   events: [
-    //     {
-    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-    //       httpApi: {
-    //         method: 'GET',
-    //         path: `/users/{id}/research-outputs`,
-    //       },
-    //     },
-    //   ],
-    // },
+    fetchResearchOutputs: {
+      handler:
+        'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/research-outputs`,
+          },
+        },
+      ],
+    },
+    fetchResearchOutputsById: {
+      handler: 'apps/asap-server/build/handlers/research-outputs/fetch.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/research-outputs/{id}`,
+          },
+        },
+      ],
+    },
     fetchPage: {
       handler: 'apps/asap-server/build/handlers/pages/fetch.handler',
       events: [

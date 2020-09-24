@@ -34,6 +34,7 @@
     "@types/hapi__joi": "^17.1.0",
     "@types/jest": "^26.0.3",
     "@types/jwt-decode": "^2.2.1",
+    "@types/jwt-encode": "workspace:@types/jwt-encode",
     "jwt-encode": "^1.0.1",
     "nock": "^13.0.4"
   }

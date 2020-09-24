@@ -36,7 +36,7 @@ export const transform = (user: CMSUser): UserResponse => {
       orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
       orcidWorks: user.data.orcidWorks?.iv,
       skills: user.data.skills?.iv || [],
-      avatarURL: user.data.avatar ? createURL(user.data.avatar?.iv) : undefined,
+      avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
     }),
   );
 };

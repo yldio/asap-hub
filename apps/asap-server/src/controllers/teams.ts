@@ -31,7 +31,7 @@ const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
     role: get(user, 'data.teams.iv', []).find(
       (t: { id: string[] }) => t.id[0] === teamId,
     ).role,
-    avatarURL: user.data.avatar ? createURL(user.data.avatar.iv) : undefined,
+    avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
   }));
 
 export default class Teams {

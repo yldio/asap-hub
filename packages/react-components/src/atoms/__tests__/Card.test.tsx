@@ -32,7 +32,10 @@ it('applies a ember border and rose background', () => {
   expect(backgroundColor).toMatchInlineSnapshot(`"rgb(247, 232, 234)"`);
 });
 
-it('Renders a div with min padding', () => {
-  const { container } = render(<Card minPadding>text</Card>);
-  expect(container.textContent).toBe('text');
+it('omits the padding if requested', () => {
+  const { getByText, rerender } = render(<Card>text</Card>);
+  expect(getByText('text')).toHaveStyleRule('padding-top', /px/);
+
+  rerender(<Card padding={false}>text</Card>);
+  expect(getByText('text')).not.toHaveStyleRule('padding-top', /.*/);
 });

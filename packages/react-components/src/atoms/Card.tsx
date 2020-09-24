@@ -2,15 +2,9 @@ import React from 'react';
 import css from '@emotion/css';
 
 import * as colors from '../colors';
-import {
-  perRem,
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-  tabletScreen,
-  vminLinearCalcClamped,
-} from '../pixels';
+import { perRem } from '../pixels';
 import { themes } from '../theme';
+import { paddingStyles } from '../card';
 
 export type AccentVariant = 'default' | 'red' | 'green';
 
@@ -26,84 +20,23 @@ const containerStyles = css({
   borderWidth: 1,
 });
 
-const normalPadding = css({
-  paddingTop: `${vminLinearCalcClamped(
-    mobileScreen,
-    18,
-    tabletScreen,
-    24,
-    'px',
-  )}`,
-  paddingRight: `${vminLinearCalc(
-    mobileScreen,
-    24,
-    largeDesktopScreen,
-    36,
-    'px',
-  )}`,
-  paddingBottom: `${vminLinearCalcClamped(
-    mobileScreen,
-    30,
-    tabletScreen,
-    36,
-    'px',
-  )}`,
-  paddingLeft: `${vminLinearCalc(
-    mobileScreen,
-    24,
-    largeDesktopScreen,
-    36,
-    'px',
-  )}`,
-});
-
-const minimalPadding = css({
-  paddingTop: `${vminLinearCalcClamped(
-    mobileScreen,
-    18,
-    tabletScreen,
-    24,
-    'px',
-  )}`,
-  paddingRight: `${vminLinearCalc(
-    mobileScreen,
-    24,
-    largeDesktopScreen,
-    36,
-    'px',
-  )}`,
-  paddingBottom: `${vminLinearCalcClamped(
-    mobileScreen,
-    12,
-    tabletScreen,
-    24,
-    'px',
-  )}`,
-  paddingLeft: `${vminLinearCalc(
-    mobileScreen,
-    24,
-    largeDesktopScreen,
-    36,
-    'px',
-  )}`,
-});
-
 interface CardProps {
-  readonly minPadding?: boolean;
   readonly accent?: AccentVariant;
+  readonly padding?: boolean;
+
   readonly children: React.ReactNode;
 }
 const Card: React.FC<CardProps> = ({
   children,
-  minPadding,
   accent = 'default',
+  padding = true,
 }) => (
   <section
     css={[
       themes.light,
       containerStyles,
+      padding && paddingStyles,
       accents[accent],
-      minPadding ? minimalPadding : normalPadding,
     ]}
   >
     {children}

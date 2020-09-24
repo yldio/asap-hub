@@ -120,6 +120,24 @@ describe('GET /research-outputs', () => {
         ],
       } as { total: number; items: CMSResearchOutput[] });
 
+    identity()
+      .get(`/api/content/${config.cms.appName}/teams`)
+      .query(() => true)
+      .reply(200, {
+        total: 1,
+        items: [
+          {
+            id: 'uuid',
+            created: '2020-09-23T16:34:26.842Z',
+            data: {
+              type: { iv: 'proposal' },
+              title: { iv: 'Title' },
+              text: { iv: 'Text' },
+            },
+          },
+        ],
+      } as { total: number; items: CMSResearchOutput[] });
+
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',

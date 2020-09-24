@@ -1,11 +1,11 @@
 import React from 'react';
 import css from '@emotion/css';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { Display, TagLabel, RichText } from '../atoms';
 import { pearl } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { ResearchOutputResponse } from '@asap-hub/model';
 
 const mainStyles = css({
   alignSelf: 'stretch',

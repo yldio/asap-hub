@@ -4,7 +4,6 @@ import {
 } from '@asap-hub/model';
 import { Squidex } from '@asap-hub/services-common';
 
-import { Squidex } from '@asap-hub/services-common';
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
 import { CMSTeam } from '../entities';
@@ -37,7 +36,9 @@ function transform(
 
 export default class ResearchOutputs {
   cms: CMS;
+
   teams: Squidex<CMSTeam>;
+
   researchOutputs: Squidex<CMSResearchOutput>;
 
   constructor() {
@@ -73,15 +74,17 @@ export default class ResearchOutputs {
 
   async fetch(): Promise<ResearchOutputResponse[]> {
     const res = await this.researchOutputs.fetch();
-    const teams = await this.teams.fetch({
-      filter: {
-        and: res.items.map((item) => ({
-          path: 'data.proposal.iv',
-          op: 'eq',
-          value: item.id,
-        })),
-      },
-    });
+    const teams = res.items.length
+      ? await this.teams.fetch({
+          filter: {
+            or: res.items.map((item) => ({
+              path: 'data.proposal.iv',
+              op: 'eq',
+              value: item.id,
+            })),
+          },
+        })
+      : { items: [] };
 
     return res.items.map((item) =>
       transform(

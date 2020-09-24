@@ -1,8 +1,8 @@
 import React from 'react';
-
-import { ResearchOutputPage } from '@asap-hub/react-components';
-import { LayoutDecorator } from './decorators';
 import { text } from '@storybook/addon-knobs';
+import { ResearchOutputPage } from '@asap-hub/react-components';
+
+import { LayoutDecorator } from './decorators';
 
 export default {
   title: 'Pages / Research Output Page',
@@ -11,6 +11,9 @@ export default {
 
 export const Normal = () => (
   <ResearchOutputPage
+    id="uuid"
+    created={'2020-09-24T17:01:05.599Z'}
+    type="proposal"
     title={text(
       'title',
       'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brains',

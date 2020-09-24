@@ -44,7 +44,7 @@ export const useCreateResearchOutput = () => {
 };
 
 export const useResearchOutputById = (id: string) =>
-  useFetch<UserResponse>(
+  useFetch<ResearchOutputResponse>(
     `${API_BASE_URL}/research-outputs/${id}`,
     useFetchOptions(),
     [id],

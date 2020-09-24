@@ -8,7 +8,7 @@ export type ResearchOutputAuthor =
   | { readonly id: string };
 
 export type ResearchOutputFormData = {
-  readonly url: string;
+  readonly url?: string;
   readonly doi?: string;
 
   readonly type: ResearchOutputType;

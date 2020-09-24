@@ -189,7 +189,8 @@ module.exports = {
     //   ],
     // },
     fetchResearchOutputs: {
-      handler: 'apps/asap-server/src/handlers/research-outputs/fetch.handler',
+      handler:
+        'apps/asap-server/build/handlers/research-outputs/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -201,8 +202,7 @@ module.exports = {
       ],
     },
     fetchResearchOutputsById: {
-      handler:
-        'apps/asap-server/src/handlers/research-outputs/fetch-by-id.handler',
+      handler: 'apps/asap-server/build/handlers/research-outputs/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/

@@ -7,14 +7,10 @@ import { pearl } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 
-const mainStyles = css({
+const containerStyles = css({
   alignSelf: 'stretch',
   background: pearl.rgb,
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
-});
-
-const articleStyles = css({
-  alignSelf: 'stretch',
 });
 
 const ResearchOutputPage: React.FC<ResearchOutputResponse> = ({
@@ -22,12 +18,10 @@ const ResearchOutputPage: React.FC<ResearchOutputResponse> = ({
   text,
 }) => {
   return (
-    <div css={articleStyles}>
-      <main css={[mainStyles]}>
-        <TagLabel>Proposal</TagLabel>
-        <Display>{title}</Display>
-        <RichText toc text={text} />
-      </main>
+    <div css={[containerStyles]}>
+      <TagLabel>Proposal</TagLabel>
+      <Display>{title}</Display>
+      <RichText toc text={text} />
     </div>
   );
 };

@@ -7,7 +7,6 @@ import { config } from '@asap-hub/services-common';
 import { identity } from '../../helpers/squidex';
 import { handler } from '../../../src/handlers/research-outputs/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
-import { CMSResearchOutput } from '../../../src/entities/research-outputs';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
 const chance = new Chance();
@@ -98,7 +97,29 @@ describe('GET /research-outputs/{id}', () => {
           title: { iv: 'Title' },
           text: { iv: 'Text' },
         },
-      } as CMSResearchOutput);
+      });
+    identity()
+      .get(
+        `/api/content/${config.cms.appName}/teams?q=${JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.proposal.iv',
+            op: 'eq',
+            value: 'uuid',
+          },
+        })}`,
+      )
+      .reply(200, {
+        items: [
+          {
+            id: 'uuid-team',
+            created: '2020-09-23T16:34:26.842Z',
+            data: {
+              displayName: { iv: 'team' },
+            },
+          },
+        ],
+      });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -122,6 +143,10 @@ describe('GET /research-outputs/{id}', () => {
       title: 'Title',
       type: 'proposal',
       url: '',
+      team: {
+        id: 'uuid-team',
+        displayName: 'team',
+      },
     });
   });
 });

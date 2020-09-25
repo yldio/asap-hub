@@ -15,7 +15,6 @@ function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
     applicationNumber: team.data.applicationNumber.iv,
     projectTitle: team.data.projectTitle.iv,
     projectSummary: team.data.projectSummary?.iv,
-    proposalURL: team.data.proposalURL?.iv,
     skills: team.data.skills?.iv || [],
     members,
     lastModifiedDate: team.lastModified,

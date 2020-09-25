@@ -6,9 +6,6 @@ import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/users/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createUserOnTeam } from '../../helpers/create-user';
-import { createRandomTeam } from '../../helpers/teams';
-
 const chance = new Chance();
 
 describe('GET /users/{id}', () => {
@@ -38,28 +35,5 @@ describe('GET /users/{id}', () => {
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(404);
-  });
-
-  test('returns 200 when id exists', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
-    const team = await createRandomTeam();
-    const { connections, ...newUser } = await createUserOnTeam(team);
-
-    const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-        pathParameters: {
-          id: newUser.id,
-        },
-        headers: {
-          Authorization: `Bearer ${chance.string()}`,
-        },
-      }),
-    )) as APIGatewayProxyResult;
-
-    const user = JSON.parse(result.body);
-    expect(result.statusCode).toStrictEqual(200);
-    expect(user).toStrictEqual(newUser);
   });
 });

@@ -1,3 +1,5 @@
+import { TeamResponse } from './team';
+
 export type ResearchOutputType = 'proposal';
 
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
@@ -28,8 +30,10 @@ export type ResearchOutputCreationRequest = Omit<
 
 export type ResearchOutputResponse = Omit<
   ResearchOutputCreationRequest,
-  'accessLevel' | 'authors'
+  'accessLevel' | 'authors' | 'url'
 > & {
   readonly id: string;
+  readonly url?: string;
   readonly created: string;
+  readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
 };

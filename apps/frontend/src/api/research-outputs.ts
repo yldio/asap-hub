@@ -42,3 +42,10 @@ export const useCreateResearchOutput = () => {
 
   return { loading, data, error, post: setOutputToCreate };
 };
+
+export const useResearchOutputById = (id: string) =>
+  useFetch<ResearchOutputResponse>(
+    `${API_BASE_URL}/research-outputs/${id}`,
+    useFetchOptions(),
+    [id],
+  );

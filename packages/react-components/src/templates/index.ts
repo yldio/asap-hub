@@ -14,6 +14,7 @@ export { default as ProfilePage } from './ProfilePage';
 export { default as ProfileResearch } from './ProfileResearch';
 export { default as RecordOutputForm } from './RecordOutputForm';
 export { default as RecordOutputPage } from './RecordOutputPage';
+export { default as ResearchOutputPage } from './ResearchOutputPage';
 export { default as SigninForm } from './SigninForm';
 export { default as SigninPage } from './SigninPage';
 export { default as TeamAbout } from './TeamAbout';

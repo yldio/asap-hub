@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { Paragraph, LibraryPageBody } from '@asap-hub/react-components';
+import { join } from 'path';
 
 import { useResearchOutputs } from '../api';
 
@@ -11,7 +11,12 @@ const Page: React.FC<{}> = () => {
     return <Paragraph>Loading...</Paragraph>;
   }
   if (researchOutputData) {
-    return <LibraryPageBody researchOutput={researchOutputData} />;
+    const researchOutput = researchOutputData.map((output) => ({
+      ...output,
+      href: join('/library', output.id),
+      teamHref: join('/network/team', 'teamid'),
+    }));
+    return <LibraryPageBody researchOutput={researchOutput} />;
   }
 
   return (

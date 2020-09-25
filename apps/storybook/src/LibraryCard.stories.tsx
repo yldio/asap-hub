@@ -20,5 +20,7 @@ export const Normal = () => (
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}
+    href="#"
+    teamHref="#"
   />
 );

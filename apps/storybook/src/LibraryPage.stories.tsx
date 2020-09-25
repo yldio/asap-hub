@@ -18,6 +18,8 @@ const props: ComponentProps<typeof LibraryPageBody> = {
       title:
         'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
       created: new Date().toISOString(),
+      href: '#',
+      teamHref: '#',
     },
     {
       id: '2',
@@ -25,6 +27,8 @@ const props: ComponentProps<typeof LibraryPageBody> = {
       title:
         'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
       created: new Date().toISOString(),
+      href: '#',
+      teamHref: '#',
     },
     {
       id: '3',
@@ -32,6 +36,8 @@ const props: ComponentProps<typeof LibraryPageBody> = {
       title:
         'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
       created: new Date().toISOString(),
+      href: '#',
+      teamHref: '#',
     },
   ],
 };

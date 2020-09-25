@@ -10,7 +10,7 @@ import { LibraryPage } from '@asap-hub/react-components';
 
 import List from './List';
 
-const Network: React.FC<{}> = () => {
+const Library: React.FC<{}> = () => {
   const { path } = useRouteMatch();
   const { search } = useLocation();
   const history = useHistory();
@@ -34,4 +34,4 @@ const Network: React.FC<{}> = () => {
   );
 };
 
-export default Network;
+export default Library;

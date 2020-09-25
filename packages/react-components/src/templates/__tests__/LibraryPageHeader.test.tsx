@@ -15,5 +15,5 @@ it('Passes query correctly', () => {
   const { getByRole } = render(
     <LibraryPageHeader {...props} query={'test123'} />,
   );
-  expect((getByRole('textbox') as HTMLInputElement).value).toEqual('test123');
+  expect(getByRole('textbox')).toHaveValue('test123');
 });

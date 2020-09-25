@@ -21,9 +21,9 @@ const props: ComponentProps<typeof LibraryPageBody> = {
       team: {
         id: '123',
         displayName: 'A Barnes',
+        href: '#',
       },
       href: '#',
-      teamHref: '#',
     },
     {
       id: '2',
@@ -34,9 +34,9 @@ const props: ComponentProps<typeof LibraryPageBody> = {
       team: {
         id: '123',
         displayName: 'B Barnes',
+        href: '#',
       },
       href: '#',
-      teamHref: '#',
     },
     {
       id: '3',
@@ -47,9 +47,9 @@ const props: ComponentProps<typeof LibraryPageBody> = {
       team: {
         id: '123',
         displayName: 'C Barnes',
+        href: '#',
       },
       href: '#',
-      teamHref: '#',
     },
   ],
 };

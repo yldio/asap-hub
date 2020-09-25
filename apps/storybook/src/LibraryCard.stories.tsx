@@ -23,8 +23,8 @@ export const Normal = () => (
     team={{
       id: text('Team Id', '123'),
       displayName: text('Team Name', 'Team Barnes, A.'),
+      href: '#',
     }}
     href="#"
-    teamHref="#"
   />
 );

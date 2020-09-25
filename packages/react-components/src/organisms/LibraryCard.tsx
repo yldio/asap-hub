@@ -19,34 +19,13 @@ const containerStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'space-between',
-  paddingTop: `${vminLinearCalcClamped(
+  padding: `${vminLinearCalcClamped(
     mobileScreen,
     12,
     tabletScreen,
     24,
     'px',
-  )}`,
-  paddingRight: `${vminLinearCalc(
-    mobileScreen,
-    24,
-    largeDesktopScreen,
-    36,
-    'px',
-  )}`,
-  paddingBottom: `${vminLinearCalcClamped(
-    mobileScreen,
-    12,
-    tabletScreen,
-    24,
-    'px',
-  )}`,
-  paddingLeft: `${vminLinearCalc(
-    mobileScreen,
-    24,
-    largeDesktopScreen,
-    36,
-    'px',
-  )}`,
+  )} ${vminLinearCalc(mobileScreen, 24, largeDesktopScreen, 36, 'px')}`,
 });
 
 const textStyles = css({
@@ -78,16 +57,19 @@ const iconStyles = css({
 const typeStyles = css({
   display: 'flex',
   alignItems: 'center',
-  width: 'fit-content',
   textTransform: 'capitalize',
 });
+
+const tagStyles = css({ padding: `0 ${2 / perRem}em` });
 
 type LibraryCardProps = Pick<
   ResearchOutputResponse,
   'publishDate' | 'title' | 'type' | 'created' | 'team'
 > & {
   href: string;
-  teamHref?: string;
+  team?: {
+    href: string;
+  };
 };
 const LibraryCard: React.FC<LibraryCardProps> = ({
   publishDate,
@@ -96,13 +78,14 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
   created,
   href,
   team,
-  teamHref,
 }) => {
   return (
     <Card padding={false}>
-      <section css={containerStyles}>
+      <div css={containerStyles}>
         <div css={typeStyles}>
-          <TagLabel>{type}</TagLabel>
+          <TagLabel>
+            <div css={tagStyles}>{type}</div>
+          </TagLabel>
         </div>
         <div css={moveStyles}>
           <Paragraph accent={'lead'}>via ASAP</Paragraph>
@@ -111,10 +94,10 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
           <Link theme={null} href={href}>
             <Headline2 styleAsHeading={4}>{title}</Headline2>
           </Link>
-          {team && teamHref && (
+          {team && (
             <span css={teamMemberStyles}>
               <span css={iconStyles}>{teamIcon} </span>
-              <Link href={teamHref}>{team.displayName}</Link>
+              <Link href={team.href}>{team.displayName}</Link>
             </span>
           )}
         </div>
@@ -122,7 +105,7 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
           Originally Published:
           {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
         </Caption>
-      </section>
+      </div>
     </Card>
   );
 };

@@ -49,13 +49,13 @@ it('displays team information when present', () => {
   const { getByText } = render(
     <LibraryCard
       {...libraryCardProps}
-      teamHref={'/network/teams/123'}
       team={{
         id: '123',
         displayName: 'Team A',
+        href: '/network/teams/123',
       }}
     />,
   );
-  const link = getByText('Team A') as HTMLAnchorElement;
+  const link = getByText('Team A', { selector: 'a' }) as HTMLAnchorElement;
   expect(link.href).toEqual('http://localhost/network/teams/123');
 });

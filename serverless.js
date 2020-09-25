@@ -141,7 +141,7 @@ module.exports = {
     },
     auth0FetchByCode: {
       handler:
-        'apps/asap-server/build/handlers/users/webhook-fetch-by-code.handler',
+        'apps/asap-server/build/handlers/webhooks/webhook-fetch-by-code.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -154,7 +154,7 @@ module.exports = {
     },
     auth0ConnectByCode: {
       handler:
-        'apps/asap-server/build/handlers/users/webhook-connect-by-code.handler',
+        'apps/asap-server/build/handlers/webhooks/webhook-connect-by-code.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -167,7 +167,7 @@ module.exports = {
     },
     syncUserOrcid: {
       handler:
-        'apps/asap-server/build/handlers/users/webhook-sync-orcid.handler',
+        'apps/asap-server/build/handlers/webhooks/webhook-sync-orcid.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -268,7 +268,7 @@ module.exports = {
       ? {
           cronjobSyncOrcid: {
             handler:
-              'apps/asap-server/build/handlers/users/cronjob-sync-orcid.handler',
+              'apps/asap-server/build/handlers/webhooks/cronjob-sync-orcid.handler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

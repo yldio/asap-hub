@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
-import { handler } from '../../../src/handlers/users/webhook-connect-by-code';
+import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/create-user';
 import { CMS } from '../../../src/cms';

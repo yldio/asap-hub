@@ -7,6 +7,7 @@ import { perRem, lineHeight } from '../pixels';
 import { ember } from '../colors';
 
 const errorStyles = css({
+  padding: `${10 / perRem}em`,
   display: 'flex',
   svg: {
     stroke: ember.rgb,
@@ -21,7 +22,7 @@ const iconStyles = css({
 });
 
 const RichTextError: React.FC = ({ children }) => (
-  <Card minPadding accent="red">
+  <Card padding={false} accent="red">
     <span css={errorStyles}>
       <span css={iconStyles}>{crossIcon}</span>
       {children}

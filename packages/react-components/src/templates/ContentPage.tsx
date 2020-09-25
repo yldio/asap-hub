@@ -3,7 +3,8 @@ import css from '@emotion/css';
 import { PageResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
-import { Display, RichText } from '../atoms';
+import { Display } from '../atoms';
+import { RichText } from '../organisms';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({

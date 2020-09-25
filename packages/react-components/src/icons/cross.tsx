@@ -7,6 +7,7 @@ const cross = (
     width="16px"
     height="16px"
     viewBox="0 0 16 16"
+    stroke="#00222C"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -14,7 +15,6 @@ const cross = (
     <title>Cross</title>
     <g
       id="Navigation"
-      stroke="none"
       strokeWidth="1"
       fill="none"
       fillRule="evenodd"
@@ -24,7 +24,6 @@ const cross = (
       <g
         id="2.Mobile_Navigation_Open"
         transform="translate(-27.000000, -27.000000)"
-        stroke="#00222C"
         strokeWidth="1.3"
       >
         <g id="Group-13" transform="translate(20.000000, 20.000000)">

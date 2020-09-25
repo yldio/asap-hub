@@ -12,29 +12,36 @@ import rehypeSlug from 'rehype-slug';
 import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
 
-import Paragraph from './Paragraph';
-import Headline2 from './Headline2';
-import Headline3 from './Headline3';
-import Link from './Link';
-import { assertIsTextChildren } from '../text';
+import { Paragraph, Headline2, Headline3, Link } from '../atoms';
+
+import { isTextChildren } from '../text';
+import { RichTextError } from '../molecules';
 
 const components = {
   p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
     return <Paragraph>{children}</Paragraph>;
   },
-  h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) => {
-    assertIsTextChildren(children);
-    return <Headline2 id={id}>{children}</Headline2>;
-  },
-  h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) => {
-    assertIsTextChildren(children);
-    return <Headline3 id={id}>{children}</Headline3>;
-  },
+  h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
+    isTextChildren(children) ? (
+      <Headline2 id={id}>{children}</Headline2>
+    ) : (
+      <RichTextError>Invalid h1 heading styling</RichTextError>
+    ),
+  h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
+    isTextChildren(children) ? (
+      <Headline3 id={id}>{children}</Headline3>
+    ) : (
+      <RichTextError>Invalid h2 heading styling</RichTextError>
+    ),
   a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    assertIsTextChildren(children);
-    if (typeof href === 'undefined')
-      throw new Error(`Anchor with children ${children} is missing href`);
-    return <Link href={href}>{children}</Link>;
+    if (typeof href === 'undefined') {
+      return <RichTextError>Link "{children}" is missing href</RichTextError>;
+    }
+    return isTextChildren(children) ? (
+      <Link href={href}>{children}</Link>
+    ) : (
+      <RichTextError>Invalid link styling with href {href}</RichTextError>
+    );
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 

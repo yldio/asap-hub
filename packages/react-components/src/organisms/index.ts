@@ -9,6 +9,7 @@ export { default as ProfileBackground } from './ProfileBackground';
 export { default as ProfileBiography } from './ProfileBiography';
 export { default as ProfileRecentWorks } from './ProfileRecentWorks';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
+export { default as RichText } from './RichText';
 export { default as SkillsSection } from './SkillsSection';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamOverview } from './TeamOverview';

@@ -1,4 +1,5 @@
 export { default as AgreeToTerms } from './AgreeToTerms';
+export { default as RichTextError } from './RichTextError';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
 export { default as LabeledDateField } from './LabeledDateField';

@@ -2,7 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import RichText from '../RichText';
-import { mockConsoleError } from '../../test-utils';
 
 it('renders <p> as a paragraph', () => {
   const { getByText } = render(<RichText text={'<p>text</p>'} />);
@@ -16,19 +15,41 @@ it('renders <a> as a link', () => {
   expect(getByText('anchor').tagName).toBe('A');
   expect(getByText('anchor')).toHaveAttribute('href', 'https://localhost/');
 });
-it(
-  'forbids <a> without an href',
-  mockConsoleError(() => {
-    expect(() => render(<RichText text={'<a>anchor</a>'} />)).toThrow(
-      /missing.+href/i,
-    );
-  }),
-);
+
+it('displays error when <a> without an href', () => {
+  const { container } = render(<RichText text={'<a>anchor</a>'} />);
+  expect(container.textContent).toContain('"anchor" is missing href');
+});
+
+it('Displays error when styling applied within <a>', () => {
+  const { container } = render(
+    <RichText
+      text={'<a href="https://localhost/"><strong>anchor</strong></a>'}
+    />,
+  );
+  expect(container.textContent).toContain(
+    'Invalid link styling with href https://localhost/',
+  );
+});
 
 it.each([1, 2])('renders <h$i> one heading level lower', (i) => {
   const { getByText } = render(<RichText text={`<h${i}>heading</h${i}>`} />);
   const heading = getByText('heading');
   expect(heading.tagName).toBe(`H${i + 1}`);
+});
+
+it('Displays error when styling applied to h1', () => {
+  const { container } = render(
+    <RichText text={'<h1><strong>anchor</strong></h1>'} />,
+  );
+  expect(container.textContent).toContain('Invalid h1 heading styling');
+});
+
+it('Displays error when styling applied to h2', () => {
+  const { container } = render(
+    <RichText text={'<h2><strong>anchor</strong></h2>'} />,
+  );
+  expect(container.textContent).toContain('Invalid h2 heading styling');
 });
 
 describe('with toc', () => {

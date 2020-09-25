@@ -1,15 +1,21 @@
 import type { WebAuth, AuthOptions, Auth0Error } from 'auth0-js';
 
-import { authorizeWithSso, authorizeWithEmailPassword } from '../web-auth';
+import {
+  authorizeWithSso,
+  authorizeWithEmailPassword,
+  sendPasswordResetLink,
+} from '../web-auth';
 
 var mockLogin: jest.MockedFunction<WebAuth['login']>;
 var mockSignup: jest.MockedFunction<WebAuth['signup']>;
+var mockChangePassword: jest.MockedFunction<WebAuth['changePassword']>;
 
 jest.mock('@asap-hub/auth');
 
 jest.mock('auth0-js', () => {
   mockLogin = jest.fn();
   mockSignup = jest.fn();
+  mockChangePassword = jest.fn();
   const { WebAuth: ActualWebAuth } = jest.requireActual<
     typeof import('auth0-js')
   >('auth0-js');
@@ -19,6 +25,7 @@ jest.mock('auth0-js', () => {
         super(options);
         this.login = mockLogin;
         this.signup = mockSignup;
+        this.changePassword = mockChangePassword;
       }
     },
   };
@@ -26,6 +33,7 @@ jest.mock('auth0-js', () => {
 afterEach(() => {
   mockLogin.mockReset();
   mockSignup.mockReset();
+  mockChangePassword.mockReset();
 });
 
 describe('authorizeWithSso', () => {
@@ -146,5 +154,28 @@ describe('authorizeWithEmailPassword', () => {
         ),
       ).rejects.toThrow('Signup failed.');
     });
+  });
+});
+
+describe('sendPasswordResetLink', () => {
+  it('asks Auth0 to send the password reset link to the email address', async () => {
+    mockChangePassword.mockImplementation((options, cb) => cb(null, undefined));
+    await sendPasswordResetLink('john.doe@example.com');
+    expect(mockChangePassword).toHaveBeenCalled();
+
+    const { email, connection } = mockChangePassword.mock.calls[0][0];
+    expect(email).toBe('john.doe@example.com');
+    expect(connection).toMatchInlineSnapshot(
+      `"Username-Password-Authentication"`,
+    );
+  });
+
+  it('rejects if the password reset fails', async () => {
+    mockChangePassword.mockImplementation((options, cb) =>
+      cb((new Error('Password reset failed.') as unknown) as Auth0Error, null),
+    );
+    await expect(sendPasswordResetLink('john.doe@example.com')).rejects.toThrow(
+      'Password reset failed.',
+    );
   });
 });

@@ -2,7 +2,6 @@ import pify from 'pify';
 import { WebAuth } from 'auth0-js';
 import camelCase from 'camelcase';
 import { config } from '@asap-hub/auth';
-import { Location } from 'history';
 
 const getOptionsFromLocation = (location: Location | URL) =>
   Object.fromEntries(
@@ -43,5 +42,12 @@ export const authorizeWithEmailPassword = async (
     realm: 'Username-Password-Authentication',
     email,
     password,
+  });
+};
+
+export const sendPasswordResetLink = async (email: string) => {
+  await pify(webAuth.changePassword.bind(webAuth))({
+    email,
+    connection: 'Username-Password-Authentication',
   });
 };

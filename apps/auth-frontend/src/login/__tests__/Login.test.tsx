@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { StaticRouter } from 'react-router-dom';
+import { Auth0Error } from 'auth0-js';
 
 import Login from '../Login';
 import {
@@ -16,36 +16,47 @@ const mockAuthorizeWithSso = authorizeWithSso as jest.MockedFunction<
 const mockAuthorizeWithEmailPassword = authorizeWithEmailPassword as jest.MockedFunction<
   typeof authorizeWithEmailPassword
 >;
-
 beforeEach(() => {
   mockAuthorizeWithSso.mockClear();
   mockAuthorizeWithEmailPassword.mockClear();
 });
 
+const originalLocation = globalThis.location;
+const mockLocation = jest.fn();
+beforeEach(() => {
+  mockLocation
+    .mockReset()
+    .mockReturnValue(new URL('http://localhost/login?response_type=code'));
+  delete globalThis.location;
+  Object.defineProperty(globalThis, 'location', {
+    configurable: true,
+    enumerable: true,
+    get: mockLocation,
+  });
+});
+afterEach(() => {
+  Object.defineProperty(globalThis, 'location', {
+    configurable: true,
+    enumerable: true,
+    value: originalLocation,
+  });
+});
+
 it('renders a signin form', () => {
-  const { getByText } = render(
-    <StaticRouter location="/login?response_type=code">
-      <Login />
-    </StaticRouter>,
-  );
+  const { getByText } = render(<Login email="" setEmail={() => {}} />);
   expect(getByText(/sign in/i, { selector: 'h1' })).toBeVisible();
 });
 
 it('renders the form in signup mode', () => {
-  const { getByText } = render(
-    <StaticRouter location="/login?response_type=code&screen_hint=signup">
-      <Login />
-    </StaticRouter>,
+  mockLocation.mockReturnValue(
+    new URL('?response_type=code&screen_hint=signup', mockLocation()),
   );
+  const { getByText } = render(<Login email="" setEmail={() => {}} />);
   expect(getByText(/create.+account/i, { selector: 'h1' })).toBeVisible();
 });
 
 it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
-  const { getByText } = render(
-    <StaticRouter location="/login?response_type=code">
-      <Login />
-    </StaticRouter>,
-  );
+  const { getByText } = render(<Login email="" setEmail={() => {}} />);
 
   userEvent.click(
     getByText(new RegExp(provider, 'i'), { selector: 'button > *' }),
@@ -59,13 +70,8 @@ it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
 
 it('initiates a signin with email and password', async () => {
   const { getByText, getByLabelText } = render(
-    <StaticRouter location="/login?response_type=code">
-      <Login />
-    </StaticRouter>,
+    <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
-    allAtOnce: true,
-  });
   await userEvent.type(getByLabelText(/password/i), 'PW', {
     allAtOnce: true,
   });
@@ -82,14 +88,12 @@ it('initiates a signin with email and password', async () => {
 });
 
 it('initiates a signup with email and password', async () => {
-  const { getByText, getByLabelText } = render(
-    <StaticRouter location="/login?response_type=code&screen_hint=signup">
-      <Login />
-    </StaticRouter>,
+  mockLocation.mockReturnValue(
+    new URL('?response_type=code&screen_hint=signup', mockLocation()),
   );
-  await userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
-    allAtOnce: true,
-  });
+  const { getByText, getByLabelText } = render(
+    <Login email="john.doe@example.com" setEmail={() => {}} />,
+  );
   await userEvent.type(getByLabelText(/password/i), 'PW', {
     allAtOnce: true,
   });
@@ -105,42 +109,35 @@ it('initiates a signup with email and password', async () => {
   );
 });
 
-it.each(['error_description', 'errorDescription', 'description'])(
-  'shows an Auth0 error with its %s',
-  async (errorProperty) => {
-    const { getByText, getByLabelText, findAllByText } = render(
-      <StaticRouter location="/login?response_type=code&screen_hint=signup">
-        <Login />
-      </StaticRouter>,
-    );
-    await userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
-      allAtOnce: true,
-    });
-    await userEvent.type(getByLabelText(/password/i), 'PW', {
-      allAtOnce: true,
-    });
-
-    const error = new Error('Authentication Error');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (error as any)[errorProperty] = 'An unknown authentication error occurred.';
-    mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
-
-    userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
-    expect(
-      await findAllByText('An unknown authentication error occurred.'),
-    ).not.toHaveLength(0);
-  },
-);
-
-it('shows a generic authentication error', async () => {
-  const { getByText, getByLabelText, findAllByText } = render(
-    <StaticRouter location="/login?response_type=code&screen_hint=signup">
-      <Login />
-    </StaticRouter>,
+it('shows an Auth0 error', async () => {
+  mockLocation.mockReturnValue(
+    new URL('?response_type=code&screen_hint=signup', mockLocation()),
   );
-  await userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
+  const { getByText, getByLabelText, findAllByText } = render(
+    <Login email="john.doe@example.com" setEmail={() => {}} />,
+  );
+  await userEvent.type(getByLabelText(/password/i), 'PW', {
     allAtOnce: true,
   });
+
+  const error = new Error('Authentication Error');
+  ((error as unknown) as Auth0Error).errorDescription =
+    'An unknown authentication error occurred.';
+  mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
+
+  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  expect(
+    await findAllByText('An unknown authentication error occurred.'),
+  ).not.toHaveLength(0);
+});
+
+it('shows a generic authentication error', async () => {
+  mockLocation.mockReturnValue(
+    new URL('?response_type=code&screen_hint=signup', mockLocation()),
+  );
+  const { getByText, getByLabelText, findAllByText } = render(
+    <Login email="john.doe@example.com" setEmail={() => {}} />,
+  );
   await userEvent.type(getByLabelText(/password/i), 'PW', {
     allAtOnce: true,
   });
@@ -153,14 +150,12 @@ it('shows a generic authentication error', async () => {
 });
 
 it('hides the authentication error message again when changing the credentials', async () => {
-  const { getByText, getByLabelText, queryByText, findAllByText } = render(
-    <StaticRouter location="/login?response_type=code&screen_hint=signup">
-      <Login />
-    </StaticRouter>,
+  mockLocation.mockReturnValue(
+    new URL('?response_type=code&screen_hint=signup', mockLocation()),
   );
-  await userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
-    allAtOnce: true,
-  });
+  const { getByText, getByLabelText, queryByText, findAllByText } = render(
+    <Login email="john.doe@example.com" setEmail={() => {}} />,
+  );
   await userEvent.type(getByLabelText(/password/i), 'PW', {
     allAtOnce: true,
   });

@@ -6,8 +6,21 @@ import { Squidex } from '@asap-hub/services-common';
 
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
+import { CMSTeam } from '../entities';
 
-function transform(output: CMSResearchOutput): ResearchOutputResponse {
+function transform(
+  output: CMSResearchOutput,
+  team?: CMSTeam,
+): ResearchOutputResponse {
+  const teamProps = team
+    ? {
+        team: {
+          id: team.id,
+          displayName: team.data.displayName.iv,
+        },
+      }
+    : {};
+
   return {
     id: output.id,
     created: output.created,
@@ -17,16 +30,18 @@ function transform(output: CMSResearchOutput): ResearchOutputResponse {
     title: output.data.title.iv,
     text: output.data.text?.iv || '',
     publishDate: output.data.publishDate?.iv,
+    ...teamProps,
   } as ResearchOutputResponse;
 }
 
 export default class ResearchOutputs {
   cms: CMS;
-
+  teams: Squidex<CMSTeam>;
   researchOutputs: Squidex<CMSResearchOutput>;
 
   constructor() {
     this.cms = new CMS();
+    this.teams = new Squidex('teams');
     this.researchOutputs = new Squidex('research-outputs');
   }
 
@@ -45,11 +60,33 @@ export default class ResearchOutputs {
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const res = await this.researchOutputs.fetchById(id);
-    return transform(res);
+    const team = await this.teams.fetchOne({
+      filter: {
+        path: 'data.proposal.iv',
+        op: 'eq',
+        value: res.id,
+      },
+    });
+    return transform(res, team);
   }
 
   async fetch(): Promise<ResearchOutputResponse[]> {
     const res = await this.researchOutputs.fetch();
-    return res.items.map(transform);
+    const teams = await this.teams.fetch({
+      filter: {
+        and: res.items.map((item) => ({
+          path: 'data.proposal.iv',
+          op: 'eq',
+          value: item.id,
+        })),
+      },
+    });
+
+    return res.items.map((item) =>
+      transform(
+        item,
+        teams.items.filter((t) => t.data.proposal?.iv[0] === item.id)[0],
+      ),
+    );
   }
 }

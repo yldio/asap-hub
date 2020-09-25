@@ -1,3 +1,5 @@
+import { TeamResponse } from './team';
+
 export type ResearchOutputType = 'proposal';
 
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
@@ -32,4 +34,5 @@ export type ResearchOutputResponse = Omit<
 > & {
   readonly id: string;
   readonly created: string;
+  readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
 };

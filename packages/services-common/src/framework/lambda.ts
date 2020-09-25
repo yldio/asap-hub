@@ -82,7 +82,7 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
     headers,
     params: event.pathParameters,
     payload: body,
-    query: event.queryStringParameters,
+    query: event.queryStringParameters || {},
   } as Request;
 
   const [err, res] = await Intercept(fn(request));

@@ -1,3 +1,5 @@
+import { ListResponse } from './common';
+
 export interface Invitee {
   displayName: string;
   email: string;
@@ -85,3 +87,5 @@ export interface UserResponse extends Invitee {
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
 }
+
+export type ListUserResponse = ListResponse<UserResponse>;

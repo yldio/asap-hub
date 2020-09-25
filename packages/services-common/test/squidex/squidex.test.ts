@@ -52,6 +52,7 @@ describe('squidex wrapper', () => {
         })}`,
       )
       .reply(200, {
+        total: 1,
         items: [
           {
             id: '42',
@@ -90,7 +91,7 @@ describe('squidex wrapper', () => {
 
     const client = new Squidex<Content>(collection);
     const result = await client.fetch();
-    expect(result).toEqual({ items: [] });
+    expect(result).toEqual({ total: 0, items: [] });
     expect(nock.isDone()).toBeTruthy();
   });
 
@@ -211,6 +212,7 @@ describe('squidex wrapper', () => {
         })}`,
       )
       .reply(200, {
+        total: 0,
         items: [],
       });
 

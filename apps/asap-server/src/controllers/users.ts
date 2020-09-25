@@ -4,8 +4,8 @@ import path from 'path';
 import url from 'url';
 import Intercept from 'apr-intercept';
 import get from 'lodash.get';
-
-import { Invitee, UserResponse } from '@asap-hub/model';
+import { Squidex } from '@asap-hub/services-common';
+import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
 import { CMS } from '../cms';
 import { CMSUser, CMSOrcidWork } from '../entities/user';
@@ -76,8 +76,11 @@ const debug = Debug('users.create');
 export default class Users {
   cms: CMS;
 
+  users: Squidex<CMSUser>;
+
   constructor() {
     this.cms = new CMS();
+    this.users = new Squidex('users');
   }
 
   async create(user: Invitee): Promise<UserResponse> {
@@ -110,9 +113,24 @@ export default class Users {
     return transform(createdUser);
   }
 
-  async fetch(): Promise<UserResponse[]> {
-    const users = await this.cms.users.fetch();
-    return users.length ? users.map(transform) : [];
+  async fetch({
+    page = 1,
+    pageSize = 8,
+  }: {
+    page: number;
+    pageSize: number;
+  }): Promise<ListUserResponse> {
+    const query = {
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+      sort: [{ path: 'data.displayName.iv' }],
+    };
+
+    const res = await this.users.fetch(query);
+    return {
+      total: res.total,
+      items: res.items.map(transform),
+    };
   }
 
   async fetchById(id: string): Promise<UserResponse> {

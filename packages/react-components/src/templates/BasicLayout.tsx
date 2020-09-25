@@ -5,14 +5,14 @@ import { Header } from '../molecules';
 import { steel } from '../colors';
 
 const styles = css({
-  maxHeight: '100%',
+  height: '100%',
 
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
+  display: 'grid',
+  gridTemplateRows: 'max-content auto',
+  justifyItems: 'start',
 });
 const contentStyles = css({
-  alignSelf: 'stretch',
+  justifySelf: 'stretch',
 
   borderTop: `1px solid ${steel.rgb}`,
 

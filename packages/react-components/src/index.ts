@@ -69,6 +69,7 @@ export {
   NetworkPageHeader,
   NetworkPeople,
   NetworkTeam,
+  PasswordResetEmailSentPage,
   ProfileAbout,
   ProfileHeader,
   ProfileOutputs,

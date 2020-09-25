@@ -15,9 +15,11 @@ export const accents: Record<AccentVariant, string> = {
 };
 
 const containerStyles = css({
-  borderRadius: `${10 / perRem}em`,
   borderStyle: 'solid',
   borderWidth: 1,
+
+  borderRadius: `${10 / perRem}em`,
+  overflow: 'hidden',
 });
 
 interface CardProps {

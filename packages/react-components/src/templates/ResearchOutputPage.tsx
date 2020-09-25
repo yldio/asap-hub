@@ -2,7 +2,8 @@ import React from 'react';
 import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-import { Display, TagLabel, RichText } from '../atoms';
+import { Display, TagLabel } from '../atoms';
+import { RichText } from '../organisms';
 import { pearl } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';

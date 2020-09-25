@@ -7,6 +7,7 @@ import { Squidex } from '@asap-hub/services-common';
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
 import { CMSTeam } from '../entities';
+import intercept from 'apr-intercept';
 
 function transform(
   output: CMSResearchOutput,
@@ -62,13 +63,16 @@ export default class ResearchOutputs {
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const res = await this.researchOutputs.fetchById(id);
-    const team = await this.teams.fetchOne({
-      filter: {
-        path: 'data.proposal.iv',
-        op: 'eq',
-        value: res.id,
-      },
-    });
+    const [, team] = await intercept(
+      this.teams.fetchOne({
+        filter: {
+          path: 'data.proposal.iv',
+          op: 'eq',
+          value: res.id,
+        },
+      }),
+    );
+
     return transform(res, team);
   }
 

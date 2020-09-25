@@ -149,4 +149,57 @@ describe('GET /research-outputs/{id}', () => {
       },
     });
   });
+
+  test('returns 200 and the research output without team', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    identity()
+      .get(`/api/content/${config.cms.appName}/research-outputs/${id}`)
+      .reply(200, {
+        id: 'uuid',
+        created: '2020-09-23T16:34:26.842Z',
+        data: {
+          type: { iv: 'proposal' },
+          title: { iv: 'Title' },
+          text: { iv: 'Text' },
+        },
+      });
+    identity()
+      .get(
+        `/api/content/${config.cms.appName}/teams?q=${JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.proposal.iv',
+            op: 'eq',
+            value: 'uuid',
+          },
+        })}`,
+      )
+      .reply(200, {
+        items: [],
+      });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: `Bearer token`,
+        },
+        pathParameters: {
+          id,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const res = JSON.parse(result.body) as ResearchOutputResponse;
+    expect(result.statusCode).toStrictEqual(200);
+    expect(res).toStrictEqual({
+      created: '2020-09-23T16:34:26.842Z',
+      doi: '',
+      id: 'uuid',
+      text: 'Text',
+      title: 'Title',
+      type: 'proposal',
+      url: '',
+    });
+  });
 });

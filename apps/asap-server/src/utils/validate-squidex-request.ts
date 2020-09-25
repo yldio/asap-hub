@@ -3,6 +3,13 @@ import crypto from 'crypto';
 import { framework as lambda } from '@asap-hub/services-common';
 import { squidexSharedSecret } from '../config';
 
+export const signPayload = (payload: object | undefined): string => {
+  return crypto
+    .createHash('SHA256')
+    .update(Buffer.from(JSON.stringify(payload) + squidexSharedSecret, 'utf8'))
+    .digest('base64');
+};
+
 export default function validateRequest(request: lambda.Request): boolean {
   const headers = request.headers as {
     'x-signature': string;
@@ -13,15 +20,7 @@ export default function validateRequest(request: lambda.Request): boolean {
     throw Boom.unauthorized();
   }
 
-  const computedSignature = crypto
-    .createHash('SHA256')
-    .update(
-      Buffer.from(
-        JSON.stringify(request.payload) + squidexSharedSecret,
-        'utf8',
-      ),
-    )
-    .digest('base64');
+  const computedSignature = signPayload(request.payload);
 
   if (signature !== computedSignature) {
     throw Boom.forbidden();

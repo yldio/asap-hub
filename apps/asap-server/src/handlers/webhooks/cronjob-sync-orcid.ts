@@ -23,4 +23,4 @@ export const handler = async (): Promise<lambda.Response> => {
   return {
     statusCode: 200,
   };
-}
+};

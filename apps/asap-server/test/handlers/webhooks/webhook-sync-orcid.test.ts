@@ -7,7 +7,7 @@ import {
 } from '../../../src/handlers/webhooks/webhook-sync-orcid';
 import { apiGatewayEvent } from '../../helpers/events';
 import { TestUserResponse, createRandomUser } from '../../helpers/create-user';
-import signPayload from '../../helpers/create-squidex-signature';
+import { signPayload } from '../../../src/utils/validate-squidex-request';
 import orcidWorksResponse from '../../fixtures/fetch-orcid-works-0000-0002-9079-593X.json';
 import createPayloadTemplate from '../../fixtures/users-create-squidex-webhook.json';
 import updatePayloadTemplate from '../../fixtures/users-update-squidex-webhook.json';

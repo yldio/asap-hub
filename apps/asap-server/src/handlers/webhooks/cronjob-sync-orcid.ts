@@ -4,7 +4,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 import { CMS } from '../../cms';
 import Users from '../../controllers/users';
 
-export default async function (): Promise<lambda.Response> {
+export const handler = async (): Promise<lambda.Response> => {
   const limit = pLimit(5);
   const cms = new CMS();
   const users = new Users();

@@ -1,5 +1,5 @@
 import nock from 'nock';
-import cronjob from '../../../src/handlers/webhooks/cronjob-sync-orcid';
+import { handler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
 import fetchUsersResponse from '../../fixtures/users.fetch-with-orcid-sorted.json';
 import orcidWorksResponse from '../../fixtures/fetch-orcid-works-0000-0002-9079-593X.json';
 import orcidWorksDeserialised from '../../fixtures/users.orcid-works-deserialised.json';
@@ -29,7 +29,7 @@ describe('Cronjob - Sync Users ORCID', () => {
       .get(`/v2.1/${orcid}/works`)
       .reply(200, orcidWorksResponse);
 
-    await cronjob();
+    await handler();
     const [receivedUser, , receivedWorks] = mockUpdateOrcidWorks.mock.calls[0];
     expect(receivedUser.id).toBeDefined();
     expect(receivedWorks).toStrictEqual(orcidWorksDeserialised);

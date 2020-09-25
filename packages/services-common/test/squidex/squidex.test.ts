@@ -48,7 +48,7 @@ describe('squidex wrapper', () => {
     identity()
       .get(
         `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
-          take: 30,
+          take: 8,
         })}`,
       )
       .reply(200, {
@@ -83,7 +83,7 @@ describe('squidex wrapper', () => {
     identity()
       .get(
         `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
-          take: 30,
+          take: 8,
         })}`,
       )
       .reply(404);
@@ -98,7 +98,7 @@ describe('squidex wrapper', () => {
     identity()
       .get(
         `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
-          take: 30,
+          take: 8,
         })}`,
       )
       .reply(500);

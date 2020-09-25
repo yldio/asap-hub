@@ -14,7 +14,9 @@ const Page: React.FC<{}> = () => {
     const researchOutput = researchOutputData.map((output) => ({
       ...output,
       href: join('/library', output.id),
-      teamHref: join('/network/team', 'teamid'),
+      teamHref: output.team
+        ? join('/network/teams', output.team.id)
+        : undefined,
     }));
     return <LibraryPageBody researchOutput={researchOutput} />;
   }

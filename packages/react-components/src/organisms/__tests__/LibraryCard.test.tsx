@@ -7,7 +7,6 @@ const libraryCardProps: ComponentProps<typeof LibraryCard> = {
   title: 'Output 1',
   type: 'proposal',
   href: '#',
-  teamHref: '#',
   publishDate: new Date().toISOString(),
   created: new Date().toISOString(),
 };
@@ -44,4 +43,19 @@ it('displays created date when published date is undefined', () => {
   expect(getByText(/Originally Published/i).textContent).toMatchInlineSnapshot(
     `"Originally Published: 7th July 2020"`,
   );
+});
+
+it('displays team information when present', () => {
+  const { getByText } = render(
+    <LibraryCard
+      {...libraryCardProps}
+      teamHref={'/network/teams/123'}
+      team={{
+        id: '123',
+        displayName: 'Team A',
+      }}
+    />,
+  );
+  const link = getByText('Team A') as HTMLAnchorElement;
+  expect(link.href).toEqual('http://localhost/network/teams/123');
 });

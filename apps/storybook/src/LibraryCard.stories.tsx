@@ -20,6 +20,10 @@ export const Normal = () => (
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}
+    team={{
+      id: text('Team Id', '123'),
+      displayName: text('Team Name', 'Team Barnes, A.'),
+    }}
     href="#"
     teamHref="#"
   />

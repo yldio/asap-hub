@@ -84,10 +84,10 @@ const typeStyles = css({
 
 type LibraryCardProps = Pick<
   ResearchOutputResponse,
-  'publishDate' | 'title' | 'type' | 'created'
+  'publishDate' | 'title' | 'type' | 'created' | 'team'
 > & {
   href: string;
-  teamHref: string;
+  teamHref?: string;
 };
 const LibraryCard: React.FC<LibraryCardProps> = ({
   publishDate,
@@ -95,6 +95,7 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
   type,
   created,
   href,
+  team,
   teamHref,
 }) => {
   return (
@@ -110,10 +111,12 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
           <Link theme={null} href={href}>
             <Headline2 styleAsHeading={4}>{title}</Headline2>
           </Link>
-          <span css={teamMemberStyles}>
-            <span css={iconStyles}>{teamIcon} </span>
-            <Link href={teamHref}>Team Name</Link>
-          </span>
+          {team && teamHref && (
+            <span css={teamMemberStyles}>
+              <span css={iconStyles}>{teamIcon} </span>
+              <Link href={teamHref}>{team.displayName}</Link>
+            </span>
+          )}
         </div>
         <Caption accent={'lead'} asParagraph>
           Originally Published:

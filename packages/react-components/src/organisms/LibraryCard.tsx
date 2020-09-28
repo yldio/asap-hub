@@ -60,8 +60,6 @@ const typeStyles = css({
   textTransform: 'capitalize',
 });
 
-const tagStyles = css({ padding: `0 ${2 / perRem}em` });
-
 type LibraryCardProps = Pick<
   ResearchOutputResponse,
   'publishDate' | 'title' | 'type' | 'created' | 'team'
@@ -83,9 +81,7 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
     <Card padding={false}>
       <div css={containerStyles}>
         <div css={typeStyles}>
-          <TagLabel>
-            <div css={tagStyles}>{type}</div>
-          </TagLabel>
+          <TagLabel>{type}</TagLabel>
         </div>
         <div css={moveStyles}>
           <Paragraph accent={'lead'}>via ASAP</Paragraph>

@@ -14,8 +14,9 @@ const styles = css({
   borderRadius: `${6 / perRem}em`,
 
   transition: '200ms',
-  paddingLeft: `${6 / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
+  paddingTop: `${1 / perRem}em`,
+  paddingLeft: `${8 / perRem}em`,
+  paddingRight: `${8 / perRem}em`,
 
   color: lead.rgb,
   fontSize: '0.8em',

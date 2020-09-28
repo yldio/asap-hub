@@ -31,7 +31,7 @@ setup:squidex-image:
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
 
-deploy:sync-squidex:dev:
+sync:squidex:dev:
   <<: *tmpl_sync
   environment:
     name: dev
@@ -39,7 +39,7 @@ deploy:sync-squidex:dev:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: manual
 
-deploy:sync-squidex:production:
+sync:squidex:production:
   <<: *tmpl_sync
   environment:
     name: production

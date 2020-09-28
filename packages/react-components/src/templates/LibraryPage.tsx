@@ -5,11 +5,10 @@ import {
   perRem,
   tabletScreen,
   mobileScreen,
-  vminLinearCalc,
   vminLinearCalcClamped,
 } from '../pixels';
 import { pearl } from '../colors';
-import NetworkPageHeader from './NetworkPageHeader';
+import LibraryPageHeader from './LibraryPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
@@ -28,33 +27,30 @@ const mainStyles = css({
 
 const articleStyles = css({
   alignSelf: 'stretch',
-  padding: `0 0 ${vminLinearCalc(mobileScreen, 36, tabletScreen, 72, 'px')}`,
+  padding: `0 0 ${vminLinearCalcClamped(
+    mobileScreen,
+    36,
+    tabletScreen,
+    72,
+    'px',
+  )}`,
 });
 
-type NetworkPageProps = {
+type LibraryPageProps = {
   onChangeSearch?: (newQuery: string) => void;
   query: string;
-  onChangeToggle?: () => void;
-  page: 'teams' | 'users';
 };
-const NetworkPage: React.FC<NetworkPageProps> = ({
-  children,
+const LibraryPage: React.FC<LibraryPageProps> = ({
   onChangeSearch,
   query,
-  onChangeToggle,
-  page,
+  children,
 }) => {
   return (
     <article css={articleStyles}>
-      <NetworkPageHeader
-        onChangeToggle={onChangeToggle}
-        page={page}
-        onChangeSearch={onChangeSearch}
-        query={query}
-      />
+      <LibraryPageHeader onChangeSearch={onChangeSearch} query={query} />
       <main css={mainStyles}>{children}</main>
     </article>
   );
 };
 
-export default NetworkPage;
+export default LibraryPage;

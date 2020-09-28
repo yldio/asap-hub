@@ -45,6 +45,7 @@ export {
 export {
   ComingSoon,
   EmailPasswordSignin,
+  LibraryCard,
   MainNavigation,
   MembersSection,
   MenuHeader,
@@ -61,10 +62,13 @@ export {
 
 export {
   AdminInviteUserPage,
+  BasicLayout,
   ContentPage,
   InviteUserForm,
-  BasicLayout,
   Layout,
+  LibraryPage,
+  LibraryPageBody,
+  LibraryPageHeader,
   NetworkPage,
   NetworkPageHeader,
   NetworkPeople,
@@ -81,8 +85,8 @@ export {
   SigninForm,
   SigninPage,
   TeamAbout,
-  TeamPage,
   TeamOutputs,
+  TeamPage,
   WelcomeCard,
   WelcomePage,
   ForgotPasswordPage,

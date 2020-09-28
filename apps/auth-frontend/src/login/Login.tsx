@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Auth0Error } from 'auth0-js';
 import { SigninPage } from '@asap-hub/react-components';
 
@@ -7,13 +6,18 @@ import {
   authorizeWithSso,
   authorizeWithEmailPassword,
 } from '../auth0/web-auth';
+import { extractErrorMessage } from '../auth0/errors';
 
-const Login: React.FC<{}> = () => {
-  const location = useLocation();
+interface LoginProps {
+  readonly email: string;
+  readonly setEmail: (newEmail: string) => void;
+}
+const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
+  // DO NOT use the react-router location for Auth0.
+  // In a HashRouter, it will not give us the actual query params.
   const signup =
-    new URLSearchParams(location.search).get('screen_hint') === 'signup';
+    new URLSearchParams(window.location.search).get('screen_hint') === 'signup';
 
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState<Auth0Error | Error>();
@@ -23,9 +27,9 @@ const Login: React.FC<{}> = () => {
       signup={signup}
       termsHref="#TODO"
       privacyPolicyHref="#TODO"
-      forgotPasswordHref="#TODO"
-      onGoogleSignin={() => authorizeWithSso(location, 'google-oauth2')}
-      onOrcidSignin={() => authorizeWithSso(location, 'ORCID')}
+      forgotPasswordHref="/forgot-password"
+      onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}
+      onOrcidSignin={() => authorizeWithSso(window.location, 'ORCID')}
       email={email}
       onChangeEmail={(newEmail) => {
         setEmail(newEmail);
@@ -37,21 +41,14 @@ const Login: React.FC<{}> = () => {
         setError(undefined);
       }}
       onSignin={() =>
-        authorizeWithEmailPassword(location, email, password, signup).catch(
-          setError,
-        )
+        authorizeWithEmailPassword(
+          window.location,
+          email,
+          password,
+          signup,
+        ).catch(setError)
       }
-      customValidationMessage={
-        error &&
-        // Auth0 API has very inconsistent error formats
-        ('error_description' in error
-          ? error.error_description
-          : 'errorDescription' in error
-          ? error.errorDescription
-          : 'description' in error
-          ? error.description
-          : `Unknown authentication error. ${error}`)
-      }
+      customValidationMessage={error && extractErrorMessage(error)}
     />
   );
 };

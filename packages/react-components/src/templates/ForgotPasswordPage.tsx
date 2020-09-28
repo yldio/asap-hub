@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import css from '@emotion/css';
 
 import { Display, Paragraph, Button } from '../atoms';
@@ -44,34 +44,51 @@ interface ForgotPasswordPageProps {
   onChangeEmail?: (newEmail: string) => void;
 
   onSubmit?: () => void;
+  customValidationMessage?: string;
+
   onGoBack?: () => void;
 }
 const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   email,
   onChangeEmail = noop,
+
   onSubmit = noop,
+  customValidationMessage,
+
   onGoBack = noop,
-}) => (
-  <div css={styles}>
-    <div>
-      <Display styleAsHeading={2}>Forgot Password</Display>
-      <Paragraph primary accent="lead">
-        We’ll send you a password reset link
-      </Paragraph>
+}) => {
+  const formRef = useRef<HTMLFormElement>(null);
+  return (
+    <div css={styles}>
+      <div>
+        <Display styleAsHeading={2}>Forgot Password</Display>
+        <Paragraph primary accent="lead">
+          We’ll send you a password reset link
+        </Paragraph>
+      </div>
+      <form autoComplete="on" ref={formRef} css={formStyles}>
+        <LabeledTextField
+          type="email"
+          title="Email"
+          value={email}
+          onChange={onChangeEmail}
+          customValidationMessage={customValidationMessage}
+        />
+        <Button
+          primary
+          onClick={() => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            if (formRef.current!.reportValidity()) {
+              onSubmit();
+            }
+          }}
+        >
+          Send reset link
+        </Button>
+        <Button onClick={onGoBack}>Back</Button>
+      </form>
     </div>
-    <form css={formStyles}>
-      <LabeledTextField
-        type="email"
-        title="Email"
-        value={email}
-        onChange={onChangeEmail}
-      />
-      <Button primary onClick={onSubmit}>
-        Send reset link
-      </Button>
-      <Button onClick={onGoBack}>Back</Button>
-    </form>
-  </div>
-);
+  );
+};
 
 export default ForgotPasswordPage;

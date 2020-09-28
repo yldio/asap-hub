@@ -32,7 +32,7 @@ const researchOutputs: ReadonlyArray<ResearchOutputResponse> = [
     url: 'test',
     team: {
       id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
-      displayName: 'Jakobsson, J',
+      displayName: 'Rickson, B',
     },
   },
 ];
@@ -74,15 +74,18 @@ it('renders a list of research outputs', async () => {
   expect(container.textContent).toContain('Output 2');
 });
 
-it('correctly generates links', async () => {
-  const { queryAllByRole } = await renderLibraryList();
-  const links = queryAllByRole('link') as HTMLAnchorElement[];
-  expect(links.map((link) => link.href)).toMatchInlineSnapshot(`
-    Array [
-      "http://localhost/library/55724942-3408-4ad6-9a73-14b92226ffb6",
-      "http://localhost/network/teams/e12729e0-a244-471f-a554-7b58eae83a8d",
-      "http://localhost/library/55724942-3408-4ad6-9a73-14b92226ffb77",
-      "http://localhost/network/teams/e12729e0-a244-471f-a554-7b58eae83a8d",
-    ]
-  `);
+it('correctly generates research output link', async () => {
+  const { getByText } = await renderLibraryList();
+  const link = getByText('Output 1').closest('a');
+  expect(link?.href).toEqual(
+    'http://localhost/library/55724942-3408-4ad6-9a73-14b92226ffb6',
+  );
+});
+
+it('correctly generates team link', async () => {
+  const { getByText } = await renderLibraryList();
+  const link = getByText('Jakobsson, J').closest('a');
+  expect(link?.href).toEqual(
+    'http://localhost/network/teams/e12729e0-a244-471f-a554-7b58eae83a8d',
+  );
 });

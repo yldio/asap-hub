@@ -1,7 +1,11 @@
 import React, { ComponentProps } from 'react';
-import { LibraryPage, LibraryPageBody } from '@asap-hub/react-components';
+import {
+  LibraryPage,
+  LibraryPageBody,
+  LibraryCard,
+} from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
-import { text } from '@storybook/addon-knobs';
+import { text, number } from '@storybook/addon-knobs';
 
 import { LayoutDecorator } from './decorators';
 
@@ -10,48 +14,30 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-const props: ComponentProps<typeof LibraryPageBody> = {
-  researchOutput: [
-    {
-      id: '1',
-      type: 'proposal',
-      title:
-        'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
-      created: new Date().toISOString(),
-      team: {
-        id: '123',
-        displayName: 'A Barnes',
-        href: '#',
-      },
-      href: '#',
-    },
-    {
-      id: '2',
-      type: 'proposal',
-      title:
-        'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
-      created: new Date().toISOString(),
-      team: {
-        id: '123',
-        displayName: 'B Barnes',
-        href: '#',
-      },
-      href: '#',
-    },
-    {
-      id: '3',
-      type: 'proposal',
-      title:
-        'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
-      created: new Date().toISOString(),
-      team: {
-        id: '123',
-        displayName: 'C Barnes',
-        href: '#',
-      },
-      href: '#',
-    },
-  ],
+const researchOutput: ComponentProps<typeof LibraryCard> & { id: string } = {
+  id: '1',
+  type: 'proposal',
+  title:
+    'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
+  created: new Date().toISOString(),
+  team: {
+    id: '123',
+    displayName: 'A Barnes',
+    href: '#',
+  },
+  href: '#',
+};
+
+const props: () => ComponentProps<typeof LibraryPageBody> = () => {
+  const outputCount = number('Output Count', 3, {
+    min: 0,
+  });
+  return {
+    researchOutput: [...Array(outputCount)].map((_, index) => ({
+      ...researchOutput,
+      id: index.toString(),
+    })),
+  };
 };
 
 export const LibraryList = () => (
@@ -59,6 +45,6 @@ export const LibraryList = () => (
     query={text('Query', '')}
     onChangeSearch={() => action('search change')}
   >
-    <LibraryPageBody {...props} />
+    <LibraryPageBody {...props()} />
   </LibraryPage>
 );

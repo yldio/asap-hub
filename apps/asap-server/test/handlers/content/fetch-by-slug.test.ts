@@ -9,6 +9,14 @@ import { apiGatewayEvent } from '../../helpers/events';
 const chance = new Chance();
 
 describe('GET /content/{content}/{slug}', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({

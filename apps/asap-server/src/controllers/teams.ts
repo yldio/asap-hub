@@ -1,7 +1,6 @@
-import { TeamResponse, TeamMember } from '@asap-hub/model';
-import Intercept from 'apr-intercept';
 import get from 'lodash.get';
-import Boom from '@hapi/boom';
+import { Squidex } from '@asap-hub/services-common';
+import { ListTeamResponse, TeamResponse, TeamMember } from '@asap-hub/model';
 
 import { CMS } from '../cms';
 import { CMSTeam } from '../entities/team';
@@ -36,28 +35,66 @@ const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
 export default class Teams {
   cms: CMS;
 
+  teams: Squidex<CMSTeam>;
+
+  users: Squidex<CMSUser>;
+
   constructor() {
     this.cms = new CMS();
+    this.teams = new Squidex('teams');
+    this.users = new Squidex('users');
   }
 
-  async fetch(): Promise<TeamResponse[]> {
-    const teams = await this.cms.teams.fetch();
+  async fetch({
+    page = 1,
+    pageSize = 8,
+  }: {
+    page: number;
+    pageSize: number;
+  }): Promise<ListTeamResponse> {
+    const { total, items: teams } = await this.teams.fetch({
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+      sort: [{ path: 'data.displayName.iv' }],
+    });
+
     const teamUsers = await Promise.all(
-      teams.map((team) => this.cms.users.fetchByTeam(team.id)),
+      teams.map((team) =>
+        this.users
+          .fetch({
+            take: undefined,
+            filter: {
+              path: 'data.teams.iv.id',
+              op: 'eq',
+              value: team.id,
+            },
+          })
+          .then(({ items }) => items),
+      ),
     );
 
-    return teams.map((team, index) =>
+    const teamItems = teams.map((team, index) =>
       transformTeam(team, transformUser(teamUsers[index], team.id)),
     );
+
+    return {
+      total,
+      items: teamItems,
+    };
   }
 
   async fetchById(teamId: string): Promise<TeamResponse> {
-    const [notFound, team] = await Intercept(this.cms.teams.fetchById(teamId));
-    if (notFound) {
-      throw Boom.notFound();
-    }
+    const team = await this.teams.fetchById(teamId);
 
-    const users: CMSUser[] = await this.cms.users.fetchByTeam(teamId);
+    const { items: users } = await this.users.fetch({
+      take: undefined,
+      filter: {
+        path: 'data.teams.iv.id',
+        op: 'eq',
+        value: team.id,
+      },
+    });
+
     return transformTeam(team, transformUser(users, team.id));
   }
 }

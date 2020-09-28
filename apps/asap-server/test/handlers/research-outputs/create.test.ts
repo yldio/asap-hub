@@ -34,6 +34,14 @@ describe('GET /users/{id}/research-outputs', () => {
     code = user.connections[0].code;
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({

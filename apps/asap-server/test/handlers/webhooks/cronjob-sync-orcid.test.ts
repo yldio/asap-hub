@@ -24,6 +24,14 @@ describe('Cronjob - Sync Users ORCID', () => {
     fetchUsersResponse[1]!.data.orcidLastSyncDate!.iv = new Date().toISOString();
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+
   test('should fetch ORCID works for users with orcid and lastSyncDate 1 month away', async () => {
     nock('https://pub.orcid.org')
       .get(`/v2.1/${orcid}/works`)

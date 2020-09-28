@@ -14,7 +14,13 @@ import * as fixtures from './fetch.fixtures';
 const chance = new Chance();
 
 describe('GET /users', () => {
-  afterEach(() => nock.cleanAll());
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test('returns 200 when no users exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);

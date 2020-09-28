@@ -2,12 +2,15 @@ import Chance from 'chance';
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
+import { Squidex } from '@asap-hub/services-common';
 
+import { CMSTeam } from '../../../src/entities/team';
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomTeam } from '../../helpers/teams';
 
 const chance = new Chance();
+const teams = new Squidex<CMSTeam>('teams');
 
 describe('GET /teams/{id}', () => {
   let id: string;
@@ -15,6 +18,15 @@ describe('GET /teams/{id}', () => {
   beforeAll(async () => {
     const team = await createRandomTeam();
     id = team.id;
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(async () => {
+    expect(nock.isDone()).toBe(true);
+    await teams.delete(id);
   });
 
   test('return 401 when Authentication header is not set', async () => {

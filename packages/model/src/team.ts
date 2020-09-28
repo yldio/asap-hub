@@ -1,3 +1,5 @@
+import { ListResponse } from './common';
+
 export interface TeamCreateRequest {
   displayName: string;
   applicationNumber: string;
@@ -21,3 +23,5 @@ export interface TeamResponse extends TeamCreateRequest {
   members: TeamMember[];
   lastModifiedDate: string;
 }
+
+export type ListTeamResponse = ListResponse<TeamResponse>;

@@ -4,6 +4,7 @@ import {
   UserResponse,
   ResearchOutputCreationRequest,
   ResearchOutputResponse,
+  ListResearchOutputResponse,
 } from '@asap-hub/model';
 import { useAuth0 } from '@asap-hub/react-context';
 
@@ -51,7 +52,7 @@ export const useResearchOutputById = (id: string) =>
   );
 
 export const useResearchOutputs = () =>
-  useFetch<ReadonlyArray<ResearchOutputResponse>>(
+  useFetch<ListResearchOutputResponse>(
     `${API_BASE_URL}/research-outputs`,
     useFetchOptions(),
     [],

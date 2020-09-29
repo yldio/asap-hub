@@ -11,7 +11,7 @@ const Page: React.FC<{}> = () => {
     return <Paragraph>Loading...</Paragraph>;
   }
   if (researchOutputData) {
-    const researchOutput = researchOutputData.map((output) => ({
+    const researchOutput = researchOutputData.items.map((output) => ({
       ...output,
       href: join('/library', output.id),
       team: output.team && {

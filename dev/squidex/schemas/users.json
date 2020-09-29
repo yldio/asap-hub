@@ -95,7 +95,7 @@
           "label": "Last Name",
           "hints": "",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": false
         }
       },
       {

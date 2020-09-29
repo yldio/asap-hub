@@ -1,6 +1,7 @@
 import {
   ResearchOutputResponse,
   ResearchOutputCreationRequest,
+  ListResearchOutputResponse,
 } from '@asap-hub/model';
 import { Squidex } from '@asap-hub/services-common';
 
@@ -37,14 +38,14 @@ function transform(
 export default class ResearchOutputs {
   cms: CMS;
 
-  teams: Squidex<CMSTeam>;
-
   researchOutputs: Squidex<CMSResearchOutput>;
+
+  teams: Squidex<CMSTeam>;
 
   constructor() {
     this.cms = new CMS();
-    this.teams = new Squidex('teams');
     this.researchOutputs = new Squidex('research-outputs');
+    this.teams = new Squidex('teams');
   }
 
   async create(
@@ -72,10 +73,16 @@ export default class ResearchOutputs {
     return transform(res, team);
   }
 
-  async fetch(): Promise<ResearchOutputResponse[]> {
-    const res = await this.researchOutputs.fetch();
+  async fetch({ page = 1, pageSize = 8 }): Promise<ListResearchOutputResponse> {
+    const query = {
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+    };
+
+    const res = await this.researchOutputs.fetch(query);
     const teams = res.items.length
       ? await this.teams.fetch({
+          take: res.items.length,
           filter: {
             or: res.items.map((item) => ({
               path: 'data.proposal.iv',
@@ -86,11 +93,14 @@ export default class ResearchOutputs {
         })
       : { items: [] };
 
-    return res.items.map((item) =>
-      transform(
-        item,
-        teams.items.filter((t) => t.data.proposal?.iv[0] === item.id)[0],
+    return {
+      total: res.total,
+      items: res.items.map((item) =>
+        transform(
+          item,
+          teams.items.filter((t) => t.data.proposal?.iv[0] === item.id)[0],
+        ),
       ),
-    );
+    };
   }
 }

@@ -79,7 +79,7 @@ describe('GET /research-outputs', () => {
       .get(
         `/api/content/${
           config.cms.appName
-        }/research-outputs?q=${JSON.stringify({ take: 8 })}`,
+        }/research-outputs?q=${JSON.stringify({ take: 8, skip: 0 })}`,
       )
       .reply(200, { total: 0, items: [] });
 
@@ -94,7 +94,7 @@ describe('GET /research-outputs', () => {
 
     const res = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(res).toStrictEqual([]);
+    expect(res).toStrictEqual({ total: 0, items: [] });
   });
 
   test('returns 200 with a list of research outputs', async () => {
@@ -103,7 +103,7 @@ describe('GET /research-outputs', () => {
       .get(
         `/api/content/${
           config.cms.appName
-        }/research-outputs?q=${JSON.stringify({ take: 8 })}`,
+        }/research-outputs?q=${JSON.stringify({ take: 8, skip: 0 })}`,
       )
       .reply(200, {
         total: 1,
@@ -149,16 +149,19 @@ describe('GET /research-outputs', () => {
 
     const res = JSON.parse(result.body) as ResearchOutputResponse;
     expect(result.statusCode).toStrictEqual(200);
-    expect(res).toStrictEqual([
-      {
-        created: '2020-09-23T16:34:26.842Z',
-        doi: '',
-        id: 'uuid',
-        text: 'Text',
-        title: 'Title',
-        type: 'proposal',
-        url: '',
-      },
-    ]);
+    expect(res).toStrictEqual({
+      total: 1,
+      items: [
+        {
+          created: '2020-09-23T16:34:26.842Z',
+          doi: '',
+          id: 'uuid',
+          text: 'Text',
+          title: 'Title',
+          type: 'proposal',
+          url: '',
+        },
+      ],
+    });
   });
 });

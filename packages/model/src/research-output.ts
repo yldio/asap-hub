@@ -1,4 +1,5 @@
 import { TeamResponse } from './team';
+import { ListResponse } from './common';
 
 export type ResearchOutputType = 'proposal';
 
@@ -37,3 +38,5 @@ export type ResearchOutputResponse = Omit<
   readonly created: string;
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
 };
+
+export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;

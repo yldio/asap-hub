@@ -11,7 +11,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 
 const chance = new Chance();
 describe('GET /research-outputs/{id}', () => {
-  beforeEach(() => {
+  afterEach(() => {
     nock.cleanAll();
   });
 

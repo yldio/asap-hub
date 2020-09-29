@@ -12,11 +12,21 @@ import { createRandomUser } from '../../helpers/create-user';
 const users = new Squidex<CMSUser>('users');
 describe('GET /users/{id}', () => {
   let user: UserResponse;
-  afterEach(() => nock.cleanAll());
 
   beforeAll(async () => {
     const { connections, ...res } = await createRandomUser();
     user = res;
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(async () => {
+    expect(nock.isDone()).toBe(true);
+    if (user) {
+      await users.delete(user.id);
+    }
   });
 
   test('returns 200 when users exist', async () => {
@@ -34,13 +44,7 @@ describe('GET /users/{id}', () => {
     )) as APIGatewayProxyResult;
 
     const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
     expect(body).toStrictEqual(user);
-  });
-
-  afterAll(async () => {
-    if (user) {
-      await users.delete(user.id);
-    }
-    nock.cleanAll();
   });
 });

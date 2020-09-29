@@ -21,5 +21,6 @@ export const identity = () => {
       expires_in: 2592000,
       token_type: 'Bearer',
       scope: 'squidex-api',
-    });
+    })
+    .persist();
 };

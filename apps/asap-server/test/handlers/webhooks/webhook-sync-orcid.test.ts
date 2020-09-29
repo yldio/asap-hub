@@ -35,7 +35,14 @@ describe('POST /webhook/users/orcid', () => {
     updatePayload.payload.id = user.id;
     createPayload.payload.id = user.id;
     createPayload.payload.data.orcid = { iv: orcid };
+  });
+
+  afterEach(() => {
     nock.cleanAll();
+  });
+
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
   });
 
   test('returns 502 when ORCID returns an error', async () => {

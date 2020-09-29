@@ -32,7 +32,7 @@ beforeEach(() => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/teams')
-    .reply(200, teams);
+    .reply(200, { total: 6, items: teams });
 });
 
 const renderTeamList = async () => {

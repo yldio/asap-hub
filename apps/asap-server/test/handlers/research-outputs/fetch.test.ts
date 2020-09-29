@@ -12,12 +12,12 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 
 const chance = new Chance();
 describe('GET /research-outputs', () => {
-  beforeEach(() => {
+  afterEach(() => {
     nock.cleanAll();
   });
 
-  afterEach(() => {
-    nock.cleanAll();
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
   });
 
   test('return 401 when Authentication header is not set', async () => {

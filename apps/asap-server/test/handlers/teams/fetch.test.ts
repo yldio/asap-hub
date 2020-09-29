@@ -7,23 +7,28 @@ import { config as authConfig } from '@asap-hub/auth';
 import { handler } from '../../../src/handlers/teams/fetch';
 import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createRandomTeam } from '../../helpers/teams';
+import { identity } from '../../helpers/squidex';
+import * as fixtures from './fetch.fixtures';
 
 const chance = new Chance();
 
 describe('GET /teams', () => {
-  beforeEach(() => nock.cleanAll());
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test('returns 200 when no teams exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
-    nock(cms.baseUrl)
-      .post('/identity-server/connect/token')
-      .reply(200, { access_token: 'token' })
+    identity()
       .get(`/api/content/${cms.appName}/teams`)
       .query({
         q: JSON.stringify({
-          take: 30,
+          take: 8,
+          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })
@@ -38,21 +43,23 @@ describe('GET /teams', () => {
       }),
     )) as APIGatewayProxyResult;
 
+    const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
-    expect(result.body).toStrictEqual('[]');
+    expect(body).toStrictEqual({
+      items: [],
+      total: 0,
+    });
   });
 
   test("returns empty response when resource doesn't exist", async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
-    nock(cms.baseUrl)
-      .post('/identity-server/connect/token')
-      .reply(200, { access_token: 'token' })
+    identity()
       .get(`/api/content/${cms.appName}/teams`)
       .query({
         q: JSON.stringify({
-          take: 30,
+          take: 8,
+          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })
@@ -67,15 +74,51 @@ describe('GET /teams', () => {
       }),
     )) as APIGatewayProxyResult;
 
+    const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
-    expect(JSON.parse(result.body).length).toEqual(0);
+    expect(body).toStrictEqual({
+      items: [],
+      total: 0,
+    });
   });
 
   test('returns 200 when teams exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
-    await Promise.all(new Array(3).fill(async () => await createRandomTeam()));
+    identity()
+      .get(`/api/content/${cms.appName}/teams`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          skip: 0,
+          sort: [{ path: 'data.displayName.iv' }],
+        }),
+      })
+      .reply(200, fixtures.teamsResponse)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 100,
+          filter: {
+            path: 'data.teams.iv.id',
+            op: 'eq',
+            value: 'team-id-1',
+          },
+        }),
+      })
+      .reply(200, fixtures.usersResponseTeam1)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 100,
+          filter: {
+            path: 'data.teams.iv.id',
+            op: 'eq',
+            value: 'team-id-2',
+          },
+        }),
+      })
+      .reply(200, fixtures.usersResponseTeam2);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -86,8 +129,8 @@ describe('GET /teams', () => {
       }),
     )) as APIGatewayProxyResult;
 
+    const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(result.body).toBeDefined();
-    expect(JSON.parse(result.body).length).toBeGreaterThan(0);
+    expect(body).toStrictEqual(fixtures.expectation);
   });
 });

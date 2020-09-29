@@ -1,6 +1,10 @@
 import Joi from '@hapi/joi';
 import { OrcidWork, TeamMember } from '@asap-hub/model';
 
+interface CMSTeamMember extends Omit<TeamMember, 'id'> {
+  id: string[];
+}
+
 export interface CMSUser {
   id: string;
   lastModified: string;
@@ -17,7 +21,7 @@ export interface CMSUser {
     connections: { iv: { code: string }[] };
     biography?: { iv: string };
     location?: { iv: string };
-    teams?: { iv: TeamMember[] };
+    teams?: { iv: CMSTeamMember[] };
     orcid?: { iv: string };
     orcidLastModifiedDate?: { iv: string };
     orcidLastSyncDate?: { iv: string };

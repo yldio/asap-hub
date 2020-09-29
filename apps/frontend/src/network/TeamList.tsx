@@ -22,7 +22,7 @@ const Page: React.FC = () => {
     );
   }
   if (teamsData) {
-    const teams = teamsData.map((team: TeamResponse) => ({
+    const teams = teamsData.items.map((team: TeamResponse) => ({
       ...team,
       href: join('/network/teams', team.id),
     }));

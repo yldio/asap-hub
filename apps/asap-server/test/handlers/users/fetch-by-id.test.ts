@@ -9,6 +9,14 @@ import { apiGatewayEvent } from '../../helpers/events';
 const chance = new Chance();
 
 describe('GET /users/{id}', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  afterAll(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+
   test("return 400 when id isn't present", async () => {
     const result = (await handler(
       apiGatewayEvent({

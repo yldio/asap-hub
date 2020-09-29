@@ -79,6 +79,13 @@ export class Squidex<T extends { id: string; data: object }> {
       const res = await this.client.get(`${this.collection}/${id}`).json();
       return res as T;
     } catch (err) {
+      if (
+        err.response?.statusCode === 400 &&
+        err.response?.body.includes('invalid_client')
+      ) {
+        throw Boom.unauthorized();
+      }
+
       if (err.response?.statusCode === 404) {
         throw Boom.notFound();
       }
@@ -102,22 +109,65 @@ export class Squidex<T extends { id: string; data: object }> {
     return items[0];
   }
 
-  create(json: T['data'], publish = true): Promise<T> {
-    return this.client
-      .post(`${this.collection}`, {
-        json,
-        searchParams: {
-          publish,
-        },
-      })
-      .json();
+  async create(json: T['data'], publish = true): Promise<T> {
+    try {
+      const res = await this.client
+        .post(`${this.collection}`, {
+          json,
+          searchParams: {
+            publish,
+          },
+        })
+        .json();
+      return res as T;
+    } catch (err) {
+      if (
+        err.response?.statusCode === 400 &&
+        err.response?.body.includes('invalid_client')
+      ) {
+        throw Boom.unauthorized();
+      }
+
+      throw Boom.badImplementation('squidex', {
+        data: err,
+      });
+    }
   }
 
-  patch(id: string, json: Partial<T['data']>): Promise<T> {
-    return this.client.patch(`${this.collection}/${id}`, { json }).json();
+  async patch(id: string, json: Partial<T['data']>): Promise<T> {
+    try {
+      const res = await this.client
+        .patch(`${this.collection}/${id}`, { json })
+        .json();
+      return res as T;
+    } catch (err) {
+      if (
+        err.response?.statusCode === 400 &&
+        err.response?.body.includes('invalid_client')
+      ) {
+        throw Boom.unauthorized();
+      }
+
+      throw Boom.badImplementation('squidex', {
+        data: err,
+      });
+    }
   }
 
-  delete(id: string): Promise<void> {
-    return this.client.delete(`${this.collection}/${id}`).json();
+  async delete(id: string): Promise<void> {
+    try {
+      await this.client.delete(`${this.collection}/${id}`).json();
+    } catch (err) {
+      if (
+        err.response?.statusCode === 400 &&
+        err.response?.body.includes('invalid_client')
+      ) {
+        throw Boom.unauthorized();
+      }
+
+      throw Boom.badImplementation('squidex', {
+        data: err,
+      });
+    }
   }
 }

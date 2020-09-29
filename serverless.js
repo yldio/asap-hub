@@ -45,6 +45,7 @@ module.exports = {
     region: AWS_REGION,
     stage: SLS_STAGE,
     httpApi: {
+      payload: '2.0',
       cors: {
         allowedOrigins: [ASAP_APP_URL],
         allowCredentials: true,

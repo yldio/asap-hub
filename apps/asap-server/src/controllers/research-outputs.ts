@@ -1,3 +1,4 @@
+import intercept from 'apr-intercept';
 import {
   ResearchOutputResponse,
   ResearchOutputCreationRequest,
@@ -63,13 +64,16 @@ export default class ResearchOutputs {
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const res = await this.researchOutputs.fetchById(id);
-    const team = await this.teams.fetchOne({
-      filter: {
-        path: 'data.proposal.iv',
-        op: 'eq',
-        value: res.id,
-      },
-    });
+    const [, team] = await intercept(
+      this.teams.fetchOne({
+        filter: {
+          path: 'data.proposal.iv',
+          op: 'eq',
+          value: res.id,
+        },
+      }),
+    );
+
     return transform(res, team);
   }
 

@@ -1,6 +1,10 @@
+const { join } = require('path');
+
 module.exports = {
   testRunner: require.resolve('jest-circus/runner'),
   testEnvironment: 'node',
+
+  cacheDirectory: join(__dirname, '.jest-cache'),
 
   modulePathIgnorePatterns: [
     '<rootDir>/build/',

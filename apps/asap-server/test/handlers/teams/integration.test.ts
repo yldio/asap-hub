@@ -5,7 +5,7 @@ import { config as authConfig } from '@asap-hub/auth';
 import { UserResponse } from '@asap-hub/model';
 
 import { CMSTeam, CMSUser } from '../../../src/entities';
-import { handler } from '../../../src/handlers/teams/fetch';
+import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createUserOnTeam } from '../../helpers/create-user';
 import { createRandomTeam } from '../../helpers/teams';
@@ -39,13 +39,15 @@ describe('GET /teams/{id}', () => {
         headers: {
           Authorization: `Bearer Token`,
         },
+        pathParameters: {
+          id: team.id,
+        },
       }),
     )) as APIGatewayProxyResult;
 
-    const { items } = JSON.parse(result.body);
+    const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(items.length).toBeGreaterThan(0);
-    expect(items[0]).toEqual(
+    expect(body).toEqual(
       expect.objectContaining({
         id: expect.any(String),
         displayName: expect.any(String),
@@ -54,7 +56,7 @@ describe('GET /teams/{id}', () => {
         projectSummary: expect.any(String),
       }),
     );
-    expect(items[0].members[0]).toEqual(
+    expect(body.members[0]).toEqual(
       expect.objectContaining({
         id: expect.any(String),
         firstName: expect.any(String),

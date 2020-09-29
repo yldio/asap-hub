@@ -342,9 +342,8 @@ describe('squidex wrapper', () => {
       .reply(204);
 
     const client = new Squidex<Content>(collection);
-    const result = await client.delete('42');
+    await client.delete('42');
 
-    expect(result).toEqual('');
     expect(nock.isDone()).toBeTruthy();
   });
 });

@@ -1,3 +1,4 @@
+import intercept from 'apr-intercept';
 import {
   ResearchOutputResponse,
   ResearchOutputCreationRequest,
@@ -7,7 +8,6 @@ import { Squidex } from '@asap-hub/services-common';
 import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
 import { CMSTeam } from '../entities';
-import intercept from 'apr-intercept';
 
 function transform(
   output: CMSResearchOutput,

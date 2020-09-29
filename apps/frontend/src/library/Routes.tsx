@@ -9,6 +9,7 @@ import {
 import { LibraryPage } from '@asap-hub/react-components';
 
 import List from './List';
+import ResearchOutput from './ResearchOutput';
 
 const Library: React.FC<{}> = () => {
   const { path } = useRouteMatch();
@@ -20,6 +21,7 @@ const Library: React.FC<{}> = () => {
     currentUrlParams.set('query', newQuery);
     history.replace({ search: currentUrlParams.toString() });
   };
+
   return (
     <Switch>
       <Route exact path={`${path}`}>
@@ -29,6 +31,9 @@ const Library: React.FC<{}> = () => {
         >
           <List />
         </LibraryPage>
+      </Route>
+      <Route path={`${path}/:id`}>
+        <ResearchOutput />
       </Route>
     </Switch>
   );

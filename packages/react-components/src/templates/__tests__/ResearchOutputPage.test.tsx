@@ -6,7 +6,8 @@ import ResearchOutputPage from '../ResearchOutputPage';
 it('renders a proposal title and content', () => {
   const { getByText } = render(
     <ResearchOutputPage
-      id="uuid"
+      onClickBack={() => undefined}
+      profileHref="#"
       title="title"
       type="proposal"
       created="2020-06-25T15:00:47.920Z"

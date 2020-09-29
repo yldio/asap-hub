@@ -178,3 +178,8 @@ deploy:sls:production:
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
+  needs:
+    - build:ts
+    - build:native
+    - test:jest
+    - sync:squidex:production

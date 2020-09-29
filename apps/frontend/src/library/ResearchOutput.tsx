@@ -23,10 +23,9 @@ const ResearchOutput: React.FC = () => {
           }
         : undefined,
       profileHref: '#',
+      libraryHref: '/library',
     };
-    return (
-      <ResearchOutputPage {...researchOutput} onClickBack={() => undefined} />
-    );
+    return <ResearchOutputPage {...researchOutput} />;
   }
 
   return (

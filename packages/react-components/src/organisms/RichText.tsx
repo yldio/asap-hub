@@ -13,17 +13,21 @@ import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
 
 import { Paragraph, Headline2, Headline3, Link } from '../atoms';
-
 import { isTextChildren } from '../text';
 import { RichTextError } from '../molecules';
+import { perRem } from '../pixels';
 
+const headline1Spacing = css({ height: `${24 / perRem}em` });
 const components = {
   p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
     return <Paragraph>{children}</Paragraph>;
   },
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isTextChildren(children) ? (
-      <Headline2 id={id}>{children}</Headline2>
+      <>
+        <div css={headline1Spacing} />
+        <Headline2 id={id}>{children}</Headline2>
+      </>
     ) : (
       <RichTextError>Invalid h1 heading styling</RichTextError>
     ),

@@ -3,15 +3,7 @@ import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
 
-import {
-  Display,
-  TagLabel,
-  Link,
-  Paragraph,
-  Button,
-  Card,
-  Caption,
-} from '../atoms';
+import { Display, TagLabel, Link, Paragraph, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { lead } from '../colors';
 import {
@@ -79,7 +71,7 @@ type ResearchOutputPageProps = Pick<
     href: string;
   };
   profileHref: string;
-  onClickBack: () => void;
+  libraryHref: string;
 };
 
 const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
@@ -89,15 +81,15 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   publishDate,
   created,
   profileHref,
-  onClickBack,
+  libraryHref,
 }) => (
   <div css={containerStyles}>
     <div css={backContainerStyles}>
-      <Button linkStyle onClick={onClickBack}>
+      <Link href={libraryHref}>
         <div css={backButtonStyles}>
           <span css={iconStyles}>{chevronCircleLeftIcon}</span> Back
         </div>
-      </Button>
+      </Link>
     </div>
     <Card padding={false}>
       <div css={cardPaddingStyles}>
@@ -117,13 +109,13 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
             Everyone in the ASAP Network
           </Paragraph>
         </div>
-        <Caption asParagraph>
-          <div css={postedStyles}>
+        <div css={postedStyles}>
+          <Caption asParagraph>
             Posted:
             {format(new Date(publishDate || created), ' Mo MMMM yyyy')} by{' '}
             <Link href={profileHref}> ASAP ADMIN</Link>
-          </div>
-        </Caption>
+          </Caption>
+        </div>
       </div>
     </Card>
   </div>

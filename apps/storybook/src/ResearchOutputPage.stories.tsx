@@ -1,7 +1,6 @@
 import React from 'react';
 import { text } from '@storybook/addon-knobs';
 import { ResearchOutputPage } from '@asap-hub/react-components';
-import { action } from '@storybook/addon-actions';
 
 import { LayoutDecorator } from './decorators';
 
@@ -45,6 +44,6 @@ export const Normal = () => (
       href: '#',
     }}
     profileHref="#"
-    onClickBack={() => action('Back button clicked')}
+    libraryHref="#"
   />
 );

@@ -152,7 +152,7 @@ deploy:sls:development:
   <<: *tmpl_master
   <<: *tmpl_deploy
   environment:
-    name: development
+    name: dev
     url: $ASAP_APP_URL
   variables:
     <<: *tmpl_master_variables

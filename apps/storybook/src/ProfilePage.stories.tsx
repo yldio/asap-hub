@@ -104,6 +104,7 @@ export const AboutTab = () => (
             year: '2015',
             month: '3',
           },
+          lastModifiedDate: '1478865224685',
         },
       ]}
     />

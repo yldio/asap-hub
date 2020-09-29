@@ -106,6 +106,9 @@ test:jest:
     expire_in: 1 day
     paths:
       - coverage
+  cache:
+    paths:
+      - '.jest-cache'
   script:
     - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID

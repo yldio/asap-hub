@@ -9,6 +9,8 @@ node_modules
 !.yarn/plugins
 
 # testing
+/.jest-cache
+
 /coverage
 /apps/*/coverage
 /packages/*/coverage

@@ -38,6 +38,7 @@ sync:squidex:dev:
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
       when: manual
+      allow_failure: true
 
 sync:squidex:production:
   <<: *tmpl_sync

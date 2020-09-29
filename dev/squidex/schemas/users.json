@@ -266,6 +266,40 @@
         }
       },
       {
+        "name": "questions",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "minItems": 0,
+          "maxItems": 4,
+          "label": "Questions",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "question",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Question",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          }
+        ]
+      },
+      {
         "name": "lastModifiedDate",
         "isHidden": false,
         "isLocked": false,

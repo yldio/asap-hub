@@ -9,8 +9,26 @@
     },
     "scripts": {},
     "fieldsInReferences": [],
-    "fieldsInLists": [],
+    "fieldsInLists": [
+      "title",
+      "type"
+    ],
     "fields": [
+      {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Title",
+          "isRequired": false
+        }
+      },
       {
         "name": "type",
         "isHidden": false,
@@ -58,21 +76,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "URL",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "title",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Title",
           "isRequired": false
         }
       },

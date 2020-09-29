@@ -4,26 +4,26 @@ import Chance from 'chance';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
 import { config as authConfig } from '@asap-hub/auth';
+
 import { handler } from '../../../src/handlers/users/fetch';
 import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createRandomUser } from '../../helpers/create-user';
+import { identity } from '../../helpers/squidex';
+import * as fixtures from './fetch.fixtures';
 
 const chance = new Chance();
 
 describe('GET /users', () => {
-  beforeEach(() => nock.cleanAll());
+  afterEach(() => nock.cleanAll());
 
   test('returns 200 when no users exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
-    nock(cms.baseUrl)
-      .post('/identity-server/connect/token')
-      .reply(200, { access_token: 'token' })
+    identity()
       .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({
-          take: 30,
+          take: 8,
+          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })
@@ -38,14 +38,61 @@ describe('GET /users', () => {
       }),
     )) as APIGatewayProxyResult;
 
+    const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
-    expect(result.body).toStrictEqual('[]');
+    expect(body).toStrictEqual({
+      items: [],
+      total: 0,
+    });
+  });
+
+  test('returns 200 with the results from the requested page', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    identity()
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          skip: 8,
+          sort: [{ path: 'data.displayName.iv' }],
+        }),
+      })
+      .reply(200, { total: 0, items: [] });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: `Bearer ${chance.string()}`,
+        },
+        queryStringParameters: {
+          page: 2,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(result.body).toBeDefined();
+    expect(body).toStrictEqual({
+      items: [],
+      total: 0,
+    });
   });
 
   test('returns 200 when users exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    await Promise.all(new Array(3).fill(async () => await createRandomUser()));
+    identity()
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          skip: 0,
+          sort: [{ path: 'data.displayName.iv' }],
+        }),
+      })
+      .reply(200, fixtures.response);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -56,8 +103,8 @@ describe('GET /users', () => {
       }),
     )) as APIGatewayProxyResult;
 
+    const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(result.body).toBeDefined();
-    expect(result.body.length).toBeGreaterThan(0);
+    expect(body).toStrictEqual(fixtures.expectation);
   });
 });

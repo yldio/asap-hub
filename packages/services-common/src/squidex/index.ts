@@ -2,6 +2,11 @@ import Got from 'got';
 import Boom from '@hapi/boom';
 import createClient from './client';
 
+export interface Results<T> {
+  total: number;
+  items: T[];
+}
+
 export interface Filter {
   path: string;
   op: 'eq' | 'in' | 'gt';
@@ -20,7 +25,7 @@ export interface Query {
     | Filter;
   sort?: {
     path: string;
-    order: 'ascending' | 'descending';
+    order?: 'ascending' | 'descending';
   }[];
 }
 
@@ -33,7 +38,7 @@ export class Squidex<T extends { id: string; data: object }> {
     this.client = createClient();
   }
 
-  async fetch(query?: Query): Promise<{ items: T[] }> {
+  async fetch(query?: Query): Promise<Results<T>> {
     const q = {
       take: 8,
       ...query,
@@ -47,7 +52,7 @@ export class Squidex<T extends { id: string; data: object }> {
           },
         })
         .json();
-      return res as { items: T[] };
+      return res as Results<T>;
     } catch (err) {
       if (
         err.response?.statusCode === 400 &&
@@ -58,9 +63,11 @@ export class Squidex<T extends { id: string; data: object }> {
 
       if (err.response?.statusCode === 404) {
         return {
+          total: 0,
           items: [],
         };
       }
+
       throw Boom.badImplementation('squidex', {
         data: err,
       });

@@ -11,6 +11,6 @@ export default {
 };
 
 export const Normal = () => <WelcomePage onClick={action('sign-in-click')} />;
-export const Signup = () => (
-  <WelcomePage signup onClick={action('create-account-click')} />
+export const AllowSignup = () => (
+  <WelcomePage allowSignup onClick={action('create-account-click')} />
 );

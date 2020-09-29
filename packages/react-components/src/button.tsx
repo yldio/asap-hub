@@ -17,6 +17,8 @@ import { fontStyles } from './text';
 
 const borderWidth = 1;
 const styles = css(fontStyles, {
+  flexGrow: 1,
+
   display: 'inline-flex',
   justifyContent: 'center',
   alignItems: 'center',

@@ -3,15 +3,16 @@ import css from '@emotion/css';
 
 import { Display, Paragraph, Button, Card } from '../atoms';
 
-const styles = css({
-  maxWidth: '323px',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
+const containerStyles = css({
+  maxWidth: '440px',
 });
-
-const headerStyles = css({
+const styles = css({
+  display: 'grid',
   textAlign: 'center',
+});
+const buttonContainerStyles = css({
+  display: 'flex',
+  justifyContent: 'center',
 });
 
 type WelcomeProps = {
@@ -30,21 +31,25 @@ const Welcome: React.FC<WelcomeProps> = ({
   children,
   onClick,
 }) => (
-  <Card>
-    <article css={styles}>
-      <header css={headerStyles}>
-        <Display styleAsHeading={4}>{title}</Display>
-        <Paragraph primary accent="lead">
-          {content}
-        </Paragraph>
-      </header>
+  <div css={containerStyles}>
+    <Card>
+      <article css={styles}>
+        <header>
+          <Display styleAsHeading={2}>{title}</Display>
+          <Paragraph primary accent="lead">
+            {content}
+          </Paragraph>
+        </header>
 
-      <Button primary onClick={onClick}>
-        {buttonText}
-      </Button>
-      <footer>{children}</footer>
-    </article>
-  </Card>
+        <section css={buttonContainerStyles}>
+          <Button primary onClick={onClick}>
+            {buttonText}
+          </Button>
+        </section>
+        <section>{children}</section>
+      </article>
+    </Card>
+  </div>
 );
 
 export default Welcome;

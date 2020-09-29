@@ -40,7 +40,7 @@ const Welcome: React.FC<{}> = () => {
     });
   };
 
-  return <WelcomePage signup onClick={createAccount} />;
+  return <WelcomePage allowSignup onClick={createAccount} />;
 };
 
 export default Welcome;

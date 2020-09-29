@@ -98,6 +98,7 @@ describe('GET /teams', () => {
       .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({
+          take: 100,
           filter: {
             path: 'data.teams.iv.id',
             op: 'eq',
@@ -109,6 +110,7 @@ describe('GET /teams', () => {
       .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({
+          take: 100,
           filter: {
             path: 'data.teams.iv.id',
             op: 'eq',

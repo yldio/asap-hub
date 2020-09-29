@@ -21,9 +21,6 @@ export const teamsResponse: { total: number; items: CMSTeam[] } = {
           iv:
             'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
         },
-        proposalURL: {
-          iv: 'http://dab.gy/ujza',
-        },
         skills: {
           iv: [],
         },
@@ -47,9 +44,6 @@ export const teamsResponse: { total: number; items: CMSTeam[] } = {
         projectSummary: {
           iv:
             'Opwounege epjav mevkop fuvjamal erejol ho su ri ropzuumu wumufi.',
-        },
-        proposalURL: {
-          iv: 'http://metvifi.dz/se',
         },
         skills: {
           iv: [],

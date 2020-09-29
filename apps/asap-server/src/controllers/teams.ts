@@ -62,7 +62,7 @@ export default class Teams {
       teams.map((team) =>
         this.users
           .fetch({
-            take: undefined,
+            take: 100,
             filter: {
               path: 'data.teams.iv.id',
               op: 'eq',
@@ -87,7 +87,7 @@ export default class Teams {
     const team = await this.teams.fetchById(teamId);
 
     const { items: users } = await this.users.fetch({
-      take: undefined,
+      take: 100,
       filter: {
         path: 'data.teams.iv.id',
         op: 'eq',

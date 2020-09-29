@@ -23,6 +23,7 @@ it('renders the content', async () => {
             month: '05',
             day: '12',
           },
+          lastModifiedDate: '1478865224685',
         },
       ]}
     />,

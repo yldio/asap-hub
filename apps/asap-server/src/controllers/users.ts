@@ -189,7 +189,11 @@ export default class Users {
       user.data.orcidLastModifiedDate.iv < lastModifiedDate
     ) {
       return transform(
-        await this.cms.users.updateOrcidWorks(user, lastModifiedDate, works),
+        await this.cms.users.updateOrcidWorks(
+          user,
+          lastModifiedDate,
+          works.slice(0, 10),
+        ),
       );
     }
 

@@ -97,26 +97,12 @@ describe('GET /teams', () => {
       .reply(200, fixtures.teamsResponse)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 100,
-          filter: {
-            path: 'data.teams.iv.id',
-            op: 'eq',
-            value: 'team-id-1',
-          },
-        }),
+        $filter: "data/teams/iv/id eq 'team-id-1'",
       })
       .reply(200, fixtures.usersResponseTeam1)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 100,
-          filter: {
-            path: 'data.teams.iv.id',
-            op: 'eq',
-            value: 'team-id-2',
-          },
-        }),
+        $filter: "data/teams/iv/id eq 'team-id-2'",
       })
       .reply(200, fixtures.usersResponseTeam2);
 

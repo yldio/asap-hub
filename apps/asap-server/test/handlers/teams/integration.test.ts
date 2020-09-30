@@ -27,8 +27,12 @@ describe('GET /teams/{id}', () => {
   });
 
   afterAll(async () => {
-    await users.delete(user.id);
-    await teams.delete(team.id);
+    if (user?.id) {
+      await users.delete(user.id);
+    }
+    if (team?.id) {
+      await teams.delete(team.id);
+    }
   });
 
   test('returns 200 when users exist', async () => {

@@ -1,8 +1,8 @@
 import Boom from '@hapi/boom';
 import { ContentResponse } from '@asap-hub/model';
+import { Squidex } from '@asap-hub/services-common';
 import { CMS } from '../cms';
 import { CMSContent } from '../entities/content';
-import { Squidex } from '@asap-hub/services-common';
 
 function transform(content: CMSContent): ContentResponse {
   return {

@@ -25,6 +25,7 @@ const response: ListUserResponse = {
       orcid: '482-29-1144',
       orcidWorks: [],
       skills: [],
+      questions: ['Question?'],
       avatarURL: 'http://rup.cy/kebmazus',
     },
     {
@@ -43,6 +44,7 @@ const response: ListUserResponse = {
       orcid: '969-22-6462',
       orcidWorks: [],
       skills: [],
+      questions: [],
       avatarURL: 'http://ehuvazsob.ie/ceteup',
     },
     {
@@ -66,6 +68,7 @@ const response: ListUserResponse = {
       orcid: '0000-0001-8203-6901',
       orcidWorks: [],
       skills: [],
+      questions: [],
     },
   ],
 };

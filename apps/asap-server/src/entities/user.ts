@@ -27,7 +27,11 @@ export interface CMSUser {
     orcidLastSyncDate?: { iv: string };
     orcidWorks?: { iv: CMSOrcidWork[] };
     skills?: { iv: string[] };
-    questions?: { iv: string[] };
+    questions?: {
+      iv: {
+        question: string;
+      }[];
+    };
     avatarURL?: { iv: string };
     avatar?: { iv: string[] };
   };

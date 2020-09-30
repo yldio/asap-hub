@@ -35,6 +35,7 @@ export const response: { total: number; items: CMSUser[] } = {
         institution: { iv: 'Institution' },
         connections: { iv: [] },
         biography: { iv: 'Biography' },
+        questions: { iv: [{ question: 'Question?' }] },
         location: { iv: 'OPorto, Portugal' },
       },
     },
@@ -74,7 +75,7 @@ export const expectation: ListUserResponse = {
       location: 'OPorto, Portugal',
       teams: [],
       skills: [],
-      questions: [],
+      questions: ['Question?'],
     },
   ],
 };

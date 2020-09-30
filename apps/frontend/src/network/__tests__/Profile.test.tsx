@@ -23,6 +23,7 @@ const user: UserResponse = {
   teams: [],
   biography: 'Biography Text',
   skills: [],
+  questions: ['Question?'],
 };
 
 const team = {

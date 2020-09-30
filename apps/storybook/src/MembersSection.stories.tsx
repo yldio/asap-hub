@@ -15,6 +15,7 @@ export const Normal = () => (
         displayName: 'Daniel Ramirez',
         firstName: 'Daniel',
         lastName: 'Ramirez',
+        email: 'd@niel.com',
         role: 'Principal Investigator',
       },
       {
@@ -22,6 +23,7 @@ export const Normal = () => (
         displayName: 'Peter Venkman',
         firstName: 'Peter',
         lastName: 'Venkman',
+        email: 'peter@venk.com',
         role: 'Project Manager',
       },
       {
@@ -29,6 +31,7 @@ export const Normal = () => (
         displayName: 'Tess W. B. Goetz',
         firstName: 'Tess',
         lastName: 'Goetz',
+        email: 'tess@go.com',
         role: 'Collaborator',
       },
       {
@@ -36,6 +39,7 @@ export const Normal = () => (
         displayName: 'Robin Peploe',
         firstName: 'Robin',
         lastName: 'Peploe',
+        email: 'robin@pep.com',
         role: 'Collaborator',
       },
       {
@@ -43,6 +47,7 @@ export const Normal = () => (
         displayName: 'Alice Lane',
         firstName: 'Alice',
         lastName: 'Lane',
+        email: 'alice@lane.com',
         role: 'Collaborator',
       },
       {
@@ -50,6 +55,7 @@ export const Normal = () => (
         displayName: 'Philip Mars',
         firstName: 'Philip',
         lastName: 'Mars',
+        email: 'philip@mars.com',
         role: 'Collaborator',
       },
       {
@@ -57,6 +63,7 @@ export const Normal = () => (
         displayName: 'Emmanuel Depay',
         firstName: 'Emanuel',
         lastName: 'Depay',
+        email: 'em@nuel.com',
         role: 'Collaborator',
       },
     ]}

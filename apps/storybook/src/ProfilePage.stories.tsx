@@ -48,7 +48,22 @@ const commonProps = () => ({
     'Avatar URL',
     'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
   ),
-  skills: [],
+  skills: array('Skills', [
+    'Neurological Diseases',
+    'Clinical Neurology',
+    'Adult Neurology',
+    'Neuroimaging',
+    'Neurologic Examination',
+    'Neuroprotection',
+    'Movement Disorders',
+    'Neurodegenerative Diseases',
+    'Neurological Diseases',
+  ]),
+  questions: array('Questions', [
+    'What is the meaning of life?',
+    'Are alpha-synuclein deposits the cause or consequence of somethign deeper wrong with neurons?',
+    'How much do we have to knock down extracellular alpha-synuclein to measurably slow cell to cell transmission?',
+  ]),
   orcidWorks: [
     {
       doi: 'https://doi.org/10.7554/elife.07083',

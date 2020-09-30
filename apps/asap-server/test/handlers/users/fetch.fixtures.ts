@@ -58,6 +58,7 @@ export const expectation: ListUserResponse = {
       location: 'Lisbon, Portugal',
       teams: [],
       skills: [],
+      questions: [],
     },
     {
       id: 'uuid-2',
@@ -73,6 +74,7 @@ export const expectation: ListUserResponse = {
       location: 'OPorto, Portugal',
       teams: [],
       skills: [],
+      questions: [],
     },
   ],
 };

@@ -85,6 +85,7 @@ const apiUser: UserResponse = {
   createdDate: '2020-08-21T14:23:31.924Z',
   teams: [{ id: 'team-1', displayName: 'Team 1', role: 'Team Role' }],
   skills: [],
+  questions: [],
 };
 
 describe('Auth0 Rule - Add User Metadata', () => {

@@ -9,6 +9,7 @@ export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileBackground } from './ProfileBackground';
 export { default as ProfileBiography } from './ProfileBiography';
 export { default as ProfileRecentWorks } from './ProfileRecentWorks';
+export { default as QuestionsSection } from './QuestionsSection';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as RichText } from './RichText';
 export { default as SkillsSection } from './SkillsSection';

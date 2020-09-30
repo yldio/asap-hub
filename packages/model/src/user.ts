@@ -85,6 +85,7 @@ export interface UserResponse extends Invitee {
   createdDate: string;
   teams: ReadonlyArray<UserTeam>;
   skills: string[];
+  questions: string[];
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
 }

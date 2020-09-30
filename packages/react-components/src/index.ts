@@ -52,6 +52,7 @@ export {
   PeopleCard,
   ProfileBiography,
   ProfileRecentWorks,
+  QuestionsSection,
   RadioButtonGroup,
   RichText,
   SkillsSection,

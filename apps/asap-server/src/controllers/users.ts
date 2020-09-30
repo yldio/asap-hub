@@ -36,6 +36,7 @@ export const transform = (user: CMSUser): UserResponse => {
       orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
       orcidWorks: user.data.orcidWorks?.iv,
       skills: user.data.skills?.iv || [],
+      questions: user.data.questions?.iv || [],
       avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
     }),
   );

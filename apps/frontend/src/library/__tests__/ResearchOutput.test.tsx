@@ -48,9 +48,12 @@ it('renders the proposal', async () => {
   })
     .get('/research-outputs/42')
     .once()
-    .reply(200, researchOutput);
+    .reply(200, {
+      ...researchOutput,
+      title: 'Proposal title!',
+    });
   const { getByRole } = await renderComponent('42');
-  expect(getByRole('heading').textContent).toEqual('Proposal title.');
+  expect(getByRole('heading').textContent).toEqual('Proposal title!');
 });
 
 it('renders the proposal with a team', async () => {
@@ -67,7 +70,12 @@ it('renders the proposal with a team', async () => {
       },
     });
   const { getByText } = await renderComponent('43');
-  expect(getByText('Sulzer, D')).toBeVisible();
+  const element = getByText('Sulzer, D');
+  expect(element).toBeVisible();
+  expect(getByText('Sulzer, D')).toHaveAttribute(
+    'href',
+    '/network/teams/0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
+  );
 });
 
 it('Renders the error page', async () => {

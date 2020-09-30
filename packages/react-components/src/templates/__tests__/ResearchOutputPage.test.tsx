@@ -21,7 +21,7 @@ it('renders a proposal title and content', () => {
     />,
   );
   expect(getByText(/proposal/i)).toBeVisible();
-  expect(getByText(/title/i, { selector: 'h3' })).toBeVisible();
+  expect(getByText(/title/i, { selector: 'h1' })).toBeVisible();
   expect(getByText(/content/i)).toBeVisible();
 });
 

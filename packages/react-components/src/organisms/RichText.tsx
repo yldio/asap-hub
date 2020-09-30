@@ -17,17 +17,16 @@ import { isTextChildren } from '../text';
 import { RichTextError } from '../molecules';
 import { perRem } from '../pixels';
 
-const headline1Spacing = css({ height: `${24 / perRem}em` });
+const headline1Spacing = css({ paddingTop: `${24 / perRem}em` });
 const components = {
   p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
     return <Paragraph>{children}</Paragraph>;
   },
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isTextChildren(children) ? (
-      <>
-        <div css={headline1Spacing} />
+      <div css={headline1Spacing}>
         <Headline2 id={id}>{children}</Headline2>
-      </>
+      </div>
     ) : (
       <RichTextError>Invalid h1 heading styling</RichTextError>
     ),

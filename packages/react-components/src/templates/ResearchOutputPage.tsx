@@ -3,9 +3,9 @@ import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
 
-import { TagLabel, Link, Paragraph, Card, Caption, Headline3 } from '../atoms';
+import { TagLabel, Display, Link, Paragraph, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
-import { lead } from '../colors';
+import { lead, pearl } from '../colors';
 import {
   perRem,
   mobileScreen,
@@ -32,6 +32,7 @@ const iconStyles = css({
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  backgroundColor: pearl.rgb,
 });
 
 const backContainerStyles = css({
@@ -94,7 +95,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
     <Card padding={false}>
       <div css={cardPaddingStyles}>
         <TagLabel>Proposal</TagLabel>
-        <Headline3 styleAsHeading={1}>{title}</Headline3>
+        <Display styleAsHeading={3}>{title}</Display>
         {team && (
           <span css={teamMemberStyles}>
             <span css={iconStyles}>{teamIcon} </span>

@@ -3,6 +3,8 @@ import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
 
+import { cms } from '../../../src/config';
+import { identity } from '../../helpers/squidex';
 import { handler } from '../../../src/handlers/content/fetch-by-slug';
 import { apiGatewayEvent } from '../../helpers/events';
 
@@ -106,6 +108,34 @@ describe('GET /content/{content}/{slug}', () => {
 
   test('returns 200 when content is found', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+
+    identity()
+      .get(`/api/content/${cms.appName}/news`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          filter: {
+            path: 'data.slug.iv',
+            op: 'eq',
+            value: 'exists-in-dev',
+          },
+        }),
+      })
+      .reply(200, {
+        total: 1,
+        items: [
+          {
+            data: {
+              slug: {
+                iv: 'exists-in-dev',
+              },
+              title: {
+                iv: 'Exists in Dev',
+              },
+            },
+          },
+        ],
+      });
 
     const result = (await handler(
       apiGatewayEvent({

@@ -18,7 +18,7 @@ const containerStyles = css({
   borderStyle: 'solid',
   borderWidth: 1,
 
-  borderRadius: `${10 / perRem}em`,
+  borderRadius: `${6 / perRem}em`,
   overflow: 'hidden',
 });
 

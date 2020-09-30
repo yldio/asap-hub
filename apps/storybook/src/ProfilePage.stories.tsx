@@ -26,6 +26,7 @@ const commonProps = () => ({
   ).toISOString(),
   firstName: text('First Name', 'Phillip'),
   lastName: text('Last Name', 'Mars'),
+  email: 'test@test.com',
   location: text('Location', 'New Haven, Connecticut'),
   teams: [
     {

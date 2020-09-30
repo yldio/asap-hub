@@ -99,6 +99,7 @@ describe('with team', () => {
     expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
       Array [
         "http://localhost/network/teams/100",
+        "mailto:john.doe@example.com",
         "http://localhost/43/research",
         "http://localhost/43/about",
         "http://localhost/43/outputs",

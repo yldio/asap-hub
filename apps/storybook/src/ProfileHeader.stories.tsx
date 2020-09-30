@@ -30,6 +30,7 @@ export const Normal = () => (
       'Avatar URL',
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     )}
+    email="test@test.com"
     aboutHref="/other"
     researchHref="/other"
     outputsHref="/other"

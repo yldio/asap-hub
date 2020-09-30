@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import ProfileResearch from '../ProfileResearch';
 
-const commonProps = {
+const commonProps: ComponentProps<typeof ProfileResearch> = {
   firstName: 'Phillip',
+  displayName: 'Phillip Winter',
+  email: 'test@test.com',
   teams: [],
   skills: [],
   questions: [],

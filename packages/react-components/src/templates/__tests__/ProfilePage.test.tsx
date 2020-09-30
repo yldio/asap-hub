@@ -8,6 +8,7 @@ const boilerplateProps: Omit<ComponentProps<typeof ProfilePage>, 'children'> = {
   displayName: 'John Doe',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   teams: [],
+  email: 'test@test.com',
   aboutHref: '#',
   outputsHref: '#',
   researchHref: '#',

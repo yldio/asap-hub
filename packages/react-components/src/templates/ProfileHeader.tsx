@@ -4,7 +4,7 @@ import formatDistance from 'date-fns/formatDistance';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { tabletScreen } from '../pixels';
-import { Avatar, Button, Paragraph, TabLink, Display } from '../atoms';
+import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
 import { ProfilePersonalText, TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 
@@ -50,6 +50,7 @@ type ProfileProps = Pick<
   UserResponse,
   | 'avatarURL'
   | 'department'
+  | 'email'
   | 'displayName'
   | 'firstName'
   | 'institution'
@@ -76,6 +77,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   teams,
   jobTitle,
   avatarURL,
+  email,
 
   aboutHref,
   researchHref,
@@ -102,9 +104,9 @@ const ProfileHeader: React.FC<ProfileProps> = ({
       </section>
       <section css={actionsStyles}>
         <div css={contactStyles}>
-          <Button small primary>
+          <Link small buttonStyle primary href={`mailto:${email}`}>
             Contact
-          </Button>
+          </Link>
         </div>
         {lastModifiedDate && (
           <div css={lastModifiedStyles}>

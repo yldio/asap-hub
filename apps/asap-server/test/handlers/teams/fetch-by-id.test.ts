@@ -25,7 +25,9 @@ describe('GET /teams/{id}', () => {
 
   afterAll(async () => {
     expect(nock.isDone()).toBe(true);
-    await teams.delete(team.id);
+    if (team?.id) {
+      await teams.delete(team.id);
+    }
   });
 
   test('return 401 when Authentication header is not set', async () => {

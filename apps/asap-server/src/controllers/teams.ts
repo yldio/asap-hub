@@ -1,4 +1,5 @@
 import get from 'lodash.get';
+import { Got } from 'got';
 import { Squidex } from '@asap-hub/services-common';
 import { ListTeamResponse, TeamResponse, TeamMember } from '@asap-hub/model';
 
@@ -32,6 +33,22 @@ const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
     avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
   }));
 
+const fetchUsers = async (id: string, client: Got): Promise<CMSUser[]> => {
+  try {
+    const { items } = await client
+      .get('users', {
+        searchParams: {
+          $filter: `data/teams/iv/id eq '${id}'`,
+        },
+      })
+      .json();
+
+    return items;
+  } catch (err) {
+    return [];
+  }
+};
+
 export default class Teams {
   cms: CMS;
 
@@ -59,18 +76,7 @@ export default class Teams {
     });
 
     const teamUsers = await Promise.all(
-      teams.map((team) =>
-        this.users
-          .fetch({
-            take: 100,
-            filter: {
-              path: 'data.teams.iv.id',
-              op: 'eq',
-              value: team.id,
-            },
-          })
-          .then(({ items }) => items),
-      ),
+      teams.map((team) => fetchUsers(team.id, this.users.client)),
     );
 
     const teamItems = teams.map((team, index) =>
@@ -85,16 +91,7 @@ export default class Teams {
 
   async fetchById(teamId: string): Promise<TeamResponse> {
     const team = await this.teams.fetchById(teamId);
-
-    const { items: users } = await this.users.fetch({
-      take: 100,
-      filter: {
-        path: 'data.teams.iv.id',
-        op: 'eq',
-        value: team.id,
-      },
-    });
-
+    const users = await fetchUsers(team.id, this.users.client);
     return transformTeam(team, transformUser(users, team.id));
   }
 }

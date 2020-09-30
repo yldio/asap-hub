@@ -56,6 +56,7 @@ describe('GET /teams/{id}', () => {
         id: expect.any(String),
         displayName: expect.any(String),
         applicationNumber: expect.any(String),
+        email: expect.any(String),
         projectTitle: expect.any(String),
         projectSummary: expect.any(String),
       }),

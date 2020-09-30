@@ -6,6 +6,7 @@ export interface TeamCreateRequest {
   projectTitle: string;
   projectSummary?: string;
   proposalURL?: string;
+  email?: string;
 }
 
 export interface TeamMember {

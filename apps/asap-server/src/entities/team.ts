@@ -7,6 +7,7 @@ export interface CMSTeam {
     applicationNumber: { iv: string };
     projectTitle: { iv: string };
     projectSummary?: { iv: string };
+    email?: { iv: string };
     proposal?: { iv: string[] };
     skills: {
       iv: string[];

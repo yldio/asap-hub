@@ -81,7 +81,7 @@
         "name": "proposalURL",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -89,27 +89,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Proposal URL",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "proposal",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "maxItems": 1,
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "editor": "Dropdown",
-          "schemaIds": [
-            "research-outputs"
-          ],
-          "label": "Proposal",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -124,7 +103,24 @@
         "properties": {
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Expertise and Resources",
+          "label": "Skills",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "email",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Email",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -132,7 +128,7 @@
       }
     ],
     "previewUrls": {
-      "Web": "https://hub.asap.science/network/teams/${id}"
+      "Web": "https://hub.asap.science/teams/${id}"
     },
     "category": "Storage",
     "isPublished": true

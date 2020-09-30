@@ -61,9 +61,7 @@
         }
       }
     ],
-    "previewUrls": {
-      "Web": "https://hub.asap.science${data.path.iv}"
-    },
+    "previewUrls": {},
     "category": "Content",
     "isPublished": true
   }

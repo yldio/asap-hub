@@ -17,27 +17,14 @@ const researchOutput: ResearchOutputResponse = {
   title: 'Proposal title.',
   text: 'Actual proposal?',
   publishDate: '2020-02-02T12:00:00.000Z',
-  team: {
-    id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
-    displayName: 'Sulzer, D',
-  },
 };
-// fetch user by code request
-beforeEach(() => {
-  nock.cleanAll();
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/research-outputs/42')
-    .reply(200, researchOutput);
-});
 
-const renderComponent = async () => {
+const renderComponent = async (id: string) => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/42/']}>
+          <MemoryRouter initialEntries={[`/${id}/`]}>
             <Route path="/:id" component={ResearchOutput} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
@@ -52,8 +39,46 @@ const renderComponent = async () => {
   );
   return result;
 };
-
+afterEach(() => {
+  nock.cleanAll();
+});
 it('renders the proposal', async () => {
-  const { getByRole } = await renderComponent();
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs/42')
+    .once()
+    .reply(200, researchOutput);
+  const { getByRole } = await renderComponent('42');
   expect(getByRole('heading').textContent).toEqual('Proposal title.');
+});
+
+it('renders the proposal with a team', async () => {
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs/43')
+    .once()
+    .reply(200, {
+      ...researchOutput,
+      team: {
+        id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
+        displayName: 'Sulzer, D',
+      },
+    });
+  const { getByText } = await renderComponent('43');
+  expect(getByText('Sulzer, D')).toBeVisible();
+});
+
+it('Renders the error page', async () => {
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs/44')
+    .once()
+    .replyWithError('Server Error');
+  const { container } = await renderComponent('44');
+  expect(container.textContent).toMatchInlineSnapshot(
+    `"FetchError: request to http://localhost:3333/development/research-outputs/44 failed, reason: Server Error"`,
+  );
 });

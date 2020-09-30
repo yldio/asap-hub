@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
 
-import { Display, TagLabel, Link, Paragraph, Card, Caption } from '../atoms';
+import { TagLabel, Link, Paragraph, Card, Caption, Headline3 } from '../atoms';
 import { RichText } from '../organisms';
 import { lead } from '../colors';
 import {
@@ -94,7 +94,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
     <Card padding={false}>
       <div css={cardPaddingStyles}>
         <TagLabel>Proposal</TagLabel>
-        <Display>{title}</Display>
+        <Headline3 styleAsHeading={1}>{title}</Headline3>
         {team && (
           <span css={teamMemberStyles}>
             <span css={iconStyles}>{teamIcon} </span>

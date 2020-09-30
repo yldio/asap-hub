@@ -99,30 +99,10 @@
         }
       },
       {
-        "name": "avatar",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Assets",
-          "minItems": 0,
-          "maxItems": 1,
-          "mustBeImage": true,
-          "resolveFirst": false,
-          "resolveImage": false,
-          "allowDuplicates": false,
-          "label": "Avatar",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
         "name": "avatarURL",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -147,23 +127,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Job Title",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "degree",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Degree",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -238,21 +201,6 @@
         }
       },
       {
-        "name": "skillsDescription",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Expertise and Resources Description",
-          "isRequired": false
-        }
-      },
-      {
         "name": "skills",
         "isHidden": false,
         "isLocked": false,
@@ -261,7 +209,7 @@
         "properties": {
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Expertise and Resources",
+          "label": "Skills",
           "isRequired": false
         }
       },
@@ -290,7 +238,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "isUnique": true,
+          "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
           "label": "ORCID",
@@ -517,7 +465,7 @@
               "isUnique": false,
               "inlineEditable": false,
               "editor": "Input",
-              "label": "Main research interests",
+              "label": "Approach",
               "isRequired": false
             }
           },
@@ -573,7 +521,7 @@
       }
     ],
     "previewUrls": {
-      "Web": "https://hub.asap.science/network/users/${id}"
+      "Web": "https://hub.asap.science/users/${id}"
     },
     "category": "Storage",
     "isPublished": true

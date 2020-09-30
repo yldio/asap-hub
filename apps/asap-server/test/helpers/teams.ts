@@ -10,7 +10,6 @@ export const createRandomTeam = (): Promise<CMSTeam> => {
   const team = {
     displayName: { iv: `${chance.first()} ${chance.last()}` },
     applicationNumber: { iv: chance.word() },
-    email: { iv: chance.email() },
     projectTitle: { iv: chance.sentence() },
     projectSummary: { iv: chance.paragraph() },
     proposalURL: { iv: chance.url() },

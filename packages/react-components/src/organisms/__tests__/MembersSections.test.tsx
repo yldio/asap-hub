@@ -17,6 +17,7 @@ it('renders the content', async () => {
           id: '42',
           firstName: 'Phillip',
           lastName: 'Mars',
+          email: 'foo@bar.com',
           displayName: 'Phillip Mars, PhD',
           role: 'Collaborator',
         },

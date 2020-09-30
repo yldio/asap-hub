@@ -87,13 +87,13 @@ const placeholderStyles = css({
 });
 
 type WelcomePageProps = Pick<ComponentProps<typeof WelcomeCard>, 'onClick'> & {
-  readonly signup?: boolean;
+  readonly allowSignup?: boolean;
 };
 const WelcomePage: React.FC<WelcomePageProps> = ({
-  signup = false,
+  allowSignup = false,
   ...props
 }) => {
-  const copy = signup ? values.signup : values.welcome;
+  const copy = allowSignup ? values.signup : values.welcome;
 
   return (
     <div css={[themes.dark, containerStyles]}>

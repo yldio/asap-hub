@@ -11,7 +11,9 @@ it('renders the signin page ', () => {
 
 it('renders the signup page', () => {
   const handleClick = jest.fn();
-  const { getByRole } = render(<WelcomePage signup onClick={handleClick} />);
+  const { getByRole } = render(
+    <WelcomePage allowSignup onClick={handleClick} />,
+  );
   expect(getByRole('button').textContent).toMatchInlineSnapshot(
     `"Create account"`,
   );

@@ -10,10 +10,9 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
-import { Auth0Error } from 'auth0-js';
 
 import { sendPasswordResetLink } from '../auth0/web-auth';
-import { extractErrorMessage } from '../auth0/errors';
+import { extractErrorMessage, WebAuthError } from '../auth0/errors';
 
 interface ForgotPasswordProps {
   readonly email: string;
@@ -23,7 +22,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
   const history = useHistory();
   const { path } = useRouteMatch();
 
-  const [error, setError] = useState<Auth0Error | Error>();
+  const [error, setError] = useState<WebAuthError | Error>();
 
   return (
     <Switch>

@@ -16,6 +16,7 @@ export const Normal = () => (
     )}
     email={text('Email', 'john.doe@example.com')}
     password={text('Password', "_%6.o*fGR75)':7,")}
+    customValidationMessage={text('Signin Error', '')}
   />
 );
 
@@ -28,5 +29,6 @@ export const Signup = () => (
     )}
     email={text('Email', 'john.doe@example.com')}
     password={text('Password', "_%6.o*fGR75)':7,")}
+    customValidationMessage={text('Signup Error', '')}
   />
 );

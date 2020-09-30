@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Auth0Error } from 'auth0-js';
 
 import Login from '../Login';
 import {
   authorizeWithSso,
   authorizeWithEmailPassword,
 } from '../../auth0/web-auth';
+import { WebAuthError } from '../../auth0/errors';
 
 jest.mock('../../auth0/web-auth');
 const mockAuthorizeWithSso = authorizeWithSso as jest.MockedFunction<
@@ -121,7 +121,7 @@ it('shows an Auth0 error', async () => {
   });
 
   const error = new Error('Authentication Error');
-  ((error as unknown) as Auth0Error).errorDescription =
+  ((error as unknown) as WebAuthError).errorDescription =
     'An unknown authentication error occurred.';
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 

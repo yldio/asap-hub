@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Auth0Error } from 'auth0-js';
 import { SigninPage } from '@asap-hub/react-components';
 
 import {
   authorizeWithSso,
   authorizeWithEmailPassword,
 } from '../auth0/web-auth';
-import { extractErrorMessage } from '../auth0/errors';
+import { extractErrorMessage, WebAuthError } from '../auth0/errors';
 
 interface LoginProps {
   readonly email: string;
@@ -20,7 +19,7 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
 
   const [password, setPassword] = useState('');
 
-  const [error, setError] = useState<Auth0Error | Error>();
+  const [error, setError] = useState<WebAuthError | Error>();
 
   return (
     <SigninPage

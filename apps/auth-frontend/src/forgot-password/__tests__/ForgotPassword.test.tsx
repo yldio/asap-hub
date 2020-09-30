@@ -6,11 +6,11 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { Auth0Error } from 'auth0-js';
 
 import ForgotPassword from '../ForgotPassword';
 
 import { sendPasswordResetLink } from '../../auth0/web-auth';
+import { WebAuthError } from '../../auth0/errors';
 
 jest.mock('../../auth0/web-auth');
 const mockSendPasswordResetLink = sendPasswordResetLink as jest.MockedFunction<
@@ -98,7 +98,7 @@ describe('when clicking the reset button', () => {
 
   describe('and sending a reset link fails', () => {
     it('shows an error message', async () => {
-      const error = (new Error() as unknown) as Auth0Error;
+      const error = (new Error() as unknown) as WebAuthError;
       error.errorDescription = 'Rate limit exceeded';
       mockSendPasswordResetLink.mockRejectedValue(error);
 

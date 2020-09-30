@@ -1,4 +1,3 @@
-import Boom from '@hapi/boom';
 import { ContentResponse } from '@asap-hub/model';
 import { Squidex } from '@asap-hub/services-common';
 import { CMSContent } from '../entities/content';
@@ -16,7 +15,7 @@ export async function fetchBySlug(
   slug: string,
 ): Promise<ContentResponse> {
   const content: Squidex<CMSContent> = new Squidex(contentType);
-  const { items } = await content.fetch({
+  const res = await content.fetchOne({
     filter: {
       path: 'data.slug.iv',
       op: 'eq',
@@ -24,9 +23,5 @@ export async function fetchBySlug(
     },
   });
 
-  if (items.length === 0) {
-    throw Boom.notFound();
-  }
-
-  return transform(items[0]);
+  return transform(res);
 }

@@ -113,7 +113,7 @@ describe('GET /content/{content}/{slug}', () => {
       .get(`/api/content/${cms.appName}/news`)
       .query({
         q: JSON.stringify({
-          take: 8,
+          take: 1,
           filter: {
             path: 'data.slug.iv',
             op: 'eq',

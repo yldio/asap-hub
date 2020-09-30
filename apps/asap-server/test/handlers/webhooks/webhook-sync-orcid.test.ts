@@ -8,9 +8,9 @@ import {
 import { apiGatewayEvent } from '../../helpers/events';
 import { TestUserResponse, createRandomUser } from '../../helpers/create-user';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
-import orcidWorksResponse from '../../fixtures/fetch-orcid-works-0000-0002-9079-593X.json';
-import createPayloadTemplate from '../../fixtures/users-create-squidex-webhook.json';
-import updatePayloadTemplate from '../../fixtures/users-update-squidex-webhook.json';
+import orcidWorksResponse from './fetch-orcid-works.fixtures.json';
+import createPayloadTemplate from './users-create-squidex-webhook.fixtures.json';
+import updatePayloadTemplate from './users-update-squidex-webhook.fixtures.json';
 
 const createSignedPayload = (payload: WebHookPayload) =>
   apiGatewayEvent({
@@ -109,15 +109,17 @@ describe('POST /webhook/users/orcid', () => {
     expect(body.orcidLastModifiedDate).toStrictEqual(
       `${orcidWorksResponse['last-modified-date']?.value}`,
     );
-    expect(body.orcidWorks).toContainEqual({
-      id: '28076238',
-      lastModifiedDate: '1547572516533',
-      publicationDate: {
-        year: '1965',
-      },
-      title: 'Properties Of Expanding Universes.',
-      type: 'DISSERTATION',
-    });
+    expect(body.orcidWorks[0]).toEqual(
+      expect.objectContaining({
+        id: expect.any(String),
+        lastModifiedDate: expect.any(String),
+        publicationDate: expect.objectContaining({
+          year: expect.any(String),
+        }),
+        title: expect.any(String),
+        type: expect.any(String),
+      }),
+    );
   });
 
   test('returns 200 when successfully updates user orcid', async () => {
@@ -136,14 +138,16 @@ describe('POST /webhook/users/orcid', () => {
     expect(body.orcidLastModifiedDate).toStrictEqual(
       `${orcidWorksResponse['last-modified-date']?.value}`,
     );
-    expect(body.orcidWorks).toContainEqual({
-      id: '28076238',
-      lastModifiedDate: '1547572516533',
-      publicationDate: {
-        year: '1965',
-      },
-      title: 'Properties Of Expanding Universes.',
-      type: 'DISSERTATION',
-    });
+    expect(body.orcidWorks[0]).toEqual(
+      expect.objectContaining({
+        id: expect.any(String),
+        lastModifiedDate: expect.any(String),
+        publicationDate: expect.objectContaining({
+          year: expect.any(String),
+        }),
+        title: expect.any(String),
+        type: expect.any(String),
+      }),
+    );
   });
 });

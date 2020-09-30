@@ -68,6 +68,7 @@ export interface OrcidWork {
     month?: string;
     day?: string;
   };
+  lastModifiedDate: string;
 }
 
 export interface UserTeam {

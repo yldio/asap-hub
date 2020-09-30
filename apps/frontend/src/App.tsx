@@ -12,7 +12,6 @@ import Welcome from './welcome/Routes';
 import Network from './network/Routes';
 import Library from './library/Routes';
 import { AuthProvider, CheckAuth, Logout } from './auth';
-import ResearchOutputs from './research-outputs/Routes';
 import Page from './pages/Content';
 
 const ConfiguredLayout: React.FC = ({ children }) => {
@@ -69,7 +68,6 @@ const App: React.FC<{}> = () => {
 
                   <Route path="/news" component={News} />
                   <Route path="/network" component={Network} />
-                  <Route path="/research-outputs" component={ResearchOutputs} />
                   <Route path="/library" component={Library} />
 
                   <Route>Not Found</Route>

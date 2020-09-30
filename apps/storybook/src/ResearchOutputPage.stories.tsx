@@ -11,7 +11,6 @@ export default {
 
 export const Normal = () => (
   <ResearchOutputPage
-    id="uuid"
     created={'2020-09-24T17:01:05.599Z'}
     type="proposal"
     title={text(
@@ -39,5 +38,12 @@ export const Normal = () => (
 <p>Completely synergize resource taxing relationships via premier niche markets. Professionally cultivate one-to-one customer service with robust ideas. Dynamically innovate resource-leveling customer service for state of the art customer service.</p>
         `,
     )}
+    team={{
+      id: '1',
+      displayName: text('Team Name', 'asdf'),
+      href: '#',
+    }}
+    profileHref="#"
+    libraryHref="#"
   />
 );

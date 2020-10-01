@@ -112,12 +112,12 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
         Recent Publications ({orcidWorks.length})
       </Headline2>
       <div css={containerStyles}>
-        {orcidWorks.reduce((acc, work, idx) => {
-          const notFirst = !!acc[0];
-          const component = <RecentWork key={`wrk-${idx}`} {...work} />;
-          const divider = notFirst ? <Divider key={`sep-${idx}`} /> : [];
-          return acc.concat(divider).concat(component);
-        }, [] as JSX.Element[])}
+        {orcidWorks
+          .flatMap((work, idx) => [
+            <Divider key={`sep-${idx}`} />,
+            <RecentWork key={`wrk-${idx}`} {...work} />,
+          ])
+          .slice(1)}
       </div>
     </Card>
   );

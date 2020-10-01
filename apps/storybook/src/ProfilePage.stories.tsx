@@ -51,7 +51,6 @@ const commonProps = () => ({
   skills: [],
   orcidWorks: [
     {
-      id: '42',
       doi: 'https://doi.org/10.7554/elife.07083',
       title:
         'Recognizing the importance of new tools and resources for research',
@@ -95,7 +94,6 @@ export const AboutTab = () => (
       )}
       orcidWorks={[
         {
-          id: '42',
           doi: 'https://doi.org/10.7554/elife.07083',
           title:
             'Recognizing the importance of new tools and resources for research',

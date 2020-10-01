@@ -15,7 +15,6 @@ it('renders the content', async () => {
     <ProfileRecentWorks
       orcidWorks={[
         {
-          id: '42',
           title: 'Title',
           type: 'BOOK' as const,
           publicationDate: {

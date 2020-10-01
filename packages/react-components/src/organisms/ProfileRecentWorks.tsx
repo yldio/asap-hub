@@ -2,11 +2,15 @@ import React from 'react';
 import css from '@emotion/css';
 import { OrcidWork } from '@asap-hub/model';
 import { format } from 'date-fns';
-import { Card, Headline2, Headline3, TagLabel } from '../atoms';
-
-type RecentWorksProps = {
-  readonly orcidWorks?: OrcidWork[];
-};
+import {
+  Card,
+  Headline2,
+  Headline3,
+  TagLabel,
+  Divider,
+  Paragraph,
+} from '../atoms';
+import { perRem } from '../pixels';
 
 const typeMap: { [key in OrcidWork['type']]: string } = {
   ANNOTATION: 'Other',
@@ -55,17 +59,52 @@ const typeMap: { [key in OrcidWork['type']]: string } = {
 };
 
 const containerStyles = css({
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginLeft: '-8px',
-  marginRight: '-8px',
+  display: 'grid',
+  gridRowGap: `${12 / perRem}em`,
 });
 
-const elementStyle = css({
-  paddingLeft: '8px',
-  paddingRight: '8px',
+const elementStyle = css({});
+
+const footerStyle = css({
+  textAlign: 'right',
 });
+
+type RecentWorkProps = Omit<OrcidWork, 'id'>;
+
+type RecentWorksProps = {
+  readonly orcidWorks?: RecentWorkProps[];
+};
+
+const RecentWork: React.FC<RecentWorkProps> = ({
+  title,
+  type,
+  publicationDate,
+}) => {
+  const { year, month = '01', day = '01' } = publicationDate;
+  const date = new Date(
+    parseInt(year, 10),
+    parseInt(month, 10) - 1,
+    parseInt(day, 10),
+  );
+
+  return (
+    <div css={elementStyle}>
+      <TagLabel>{typeMap[type]}</TagLabel>
+      <Headline3>{title}</Headline3>
+      <div css={footerStyle}>
+        <Paragraph accent="lead">
+          Originally Published:{' '}
+          {format(
+            date,
+            `${publicationDate.day ? 'do ' : ''}${
+              publicationDate.month ? 'MMMM ' : ''
+            }yyyy`,
+          )}
+        </Paragraph>
+      </div>
+    </div>
+  );
+};
 
 const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
   return (
@@ -74,30 +113,12 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
         Recent Publications ({orcidWorks.length})
       </Headline2>
       <div css={containerStyles}>
-        {orcidWorks.map(({ title, type, publicationDate }, index) => {
-          const { year, month = '0', day = '1' } = publicationDate;
-          const date = new Date(
-            parseInt(year, 10),
-            parseInt(month, 10),
-            parseInt(day, 10),
-          );
-
-          return (
-            <div key={index} css={elementStyle}>
-              <TagLabel>{typeMap[type]}</TagLabel>
-              <Headline3>{title}</Headline3>
-              <p>
-                Originally Published:{' '}
-                {format(
-                  date,
-                  `${publicationDate.day ? 'Do ' : ''}${
-                    publicationDate.month ? 'MMMM ' : ''
-                  }yyyy`,
-                )}
-              </p>
-            </div>
-          );
-        })}
+        {orcidWorks.reduce((acc, work, idx) => {
+          const notFirst = !!acc[0];
+          const component = <RecentWork key={`wrk-${idx}`} {...work} />;
+          const divider = notFirst ? <Divider key={`sep-${idx}`} /> : [];
+          return acc.concat(divider).concat(component);
+        }, [] as JSX.Element[])}
       </div>
     </Card>
   );

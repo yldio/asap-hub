@@ -14,12 +14,17 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
+  beforeAll(() => {
+    identity();
+  });
+
   afterEach(() => {
+    expect(nock.isDone()).toBe(true);
     nock.cleanAll();
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .post(`/api/content/${squidex.appName}/${collection}`)
       .query(() => true)
       .reply(400, {
@@ -36,11 +41,10 @@ describe('squidex wrapper', () => {
         },
       }),
     ).rejects.toThrow('Unauthorized');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns 500 when squidex returns error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .post(`/api/content/${squidex.appName}/${collection}`)
       .query(() => true)
       .reply(500);
@@ -53,11 +57,10 @@ describe('squidex wrapper', () => {
         },
       }),
     ).rejects.toThrow('squidex');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('creates a specific document as published', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .post(`/api/content/${squidex.appName}/${collection}?publish=true`, {
         string: {
           iv: 'value',
@@ -87,12 +90,10 @@ describe('squidex wrapper', () => {
         },
       },
     });
-
-    expect(nock.isDone()).toBe(true);
   });
 
   it('creates a specific document as draft', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .post(`/api/content/${squidex.appName}/${collection}?publish=false`, {
         string: {
           iv: 'value',
@@ -125,7 +126,5 @@ describe('squidex wrapper', () => {
         },
       },
     });
-
-    expect(nock.isDone()).toBe(true);
   });
 });

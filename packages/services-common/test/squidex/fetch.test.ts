@@ -14,12 +14,17 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
+  beforeAll(() => {
+    identity();
+  });
+
   afterEach(() => {
+    expect(nock.isDone()).toBe(true);
     nock.cleanAll();
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(`/api/content/${squidex.appName}/${collection}`)
       .query(() => true)
       .reply(400, {
@@ -30,22 +35,20 @@ describe('squidex wrapper', () => {
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetch()).rejects.toThrow('Unauthorized');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns 500 when squidex returns error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(`/api/content/${squidex.appName}/${collection}`)
       .query(() => true)
       .reply(500);
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetch()).rejects.toThrow('squidex');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns a list of documents', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(
         `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 8,
@@ -77,11 +80,10 @@ describe('squidex wrapper', () => {
         },
       },
     ]);
-    expect(nock.isDone()).toBe(true);
   });
 
   it("returns an empty list of documents if collection doesn't exist", async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(
         `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 8,
@@ -92,6 +94,5 @@ describe('squidex wrapper', () => {
     const client = new Squidex<Content>(collection);
     const result = await client.fetch();
     expect(result).toEqual({ total: 0, items: [] });
-    expect(nock.isDone()).toBe(true);
   });
 });

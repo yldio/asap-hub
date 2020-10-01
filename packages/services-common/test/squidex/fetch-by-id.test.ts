@@ -14,22 +14,26 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
+  beforeAll(() => {
+    identity();
+  });
+
   afterEach(() => {
+    expect(nock.isDone()).toBe(true);
     nock.cleanAll();
   });
 
   it("return 404 when document doesn't exist", async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(404);
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('Not Found');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(400, {
         details: 'invalid_client',
@@ -39,21 +43,19 @@ describe('squidex wrapper', () => {
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('Unauthorized');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns 500 when squidex returns error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(500);
     const client = new Squidex<Content>(collection);
 
     await expect(() => client.fetchById('42')).rejects.toThrow('squidex');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns a single document using id', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(200, {
         id: '42',
@@ -74,11 +76,10 @@ describe('squidex wrapper', () => {
         },
       },
     });
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns a single document based on filter', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(
         `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 1,
@@ -119,11 +120,10 @@ describe('squidex wrapper', () => {
         },
       },
     });
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns not found if no document exists based on filter', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .get(
         `/api/content/${squidex.appName}/${collection}?q=${JSON.stringify({
           take: 1,
@@ -149,6 +149,5 @@ describe('squidex wrapper', () => {
         },
       }),
     ).rejects.toThrow('Not Found');
-    expect(nock.isDone()).toBe(true);
   });
 });

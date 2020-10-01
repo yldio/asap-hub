@@ -1,10 +1,13 @@
 import { Auth0Error } from 'auth0-js';
+import { format } from 'util';
 
 export interface Auth0Rule {
   readonly message: string;
+  readonly format?: unknown[];
   readonly verified: boolean;
   readonly items?: ReadonlyArray<{
     readonly message: string;
+    readonly format?: unknown[];
     readonly verified: boolean;
   }>;
 }
@@ -19,12 +22,17 @@ export const extractRuleErrorMessage = (
 ): string =>
   rules
     .filter(({ verified }) => !verified)
-    .flatMap(({ message: ruleMessage, items = [] }) => [
-      ruleMessage,
-      ...items
-        .filter(({ verified }) => !verified)
-        .map(({ message: itemMessage }) => `  ${itemMessage}`),
-    ])
+    .flatMap(
+      ({ message: ruleMessage, format: ruleFormat = [], items = [] }) => [
+        format(ruleMessage, ...ruleFormat),
+        ...items
+          .filter(({ verified }) => !verified)
+          .map(
+            ({ message: itemMessage, format: itemFormat = [] }) =>
+              `  ${format(itemMessage, ...itemFormat)}`,
+          ),
+      ],
+    )
     .join('\n');
 export const extractErrorMessage = (error: WebAuthError | Error): string =>
   ('error_description' in error && error.error_description) ||

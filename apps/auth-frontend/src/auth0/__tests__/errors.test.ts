@@ -70,6 +70,14 @@ describe('extractErrorMessage', () => {
         ],
         'Not too many of the same characters:\n  At least three different characters',
       ],
+      [
+        'formats the message',
+        [
+          { message: 'At least %d characters', format: [4], verified: false },
+          { message: 'Not all the same characters', verified: false },
+        ],
+        'At least 4 characters\nNot all the same characters',
+      ],
     ])('%s', (name, rules, expected) => {
       const error = new Error() as any;
       error.description = { rules };

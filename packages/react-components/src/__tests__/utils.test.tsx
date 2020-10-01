@@ -18,12 +18,18 @@ describe('getSvgAspectRatio', () => {
 
 describe('Create MailTo link', () => {
   it('generates a mailto', () => {
-    expect(createMailTo('test@gmail.com')).toEqual('mailto:test@gmail.com');
+    expect(createMailTo('test@gmail.com')).toEqual('mailto:test%40gmail.com');
   });
 
   it('generates a mailto with + sign ', () => {
     expect(createMailTo('test+jajaja@gmail.com')).toEqual(
-      'mailto:test+jajaja@gmail.com',
+      'mailto:test%2Bjajaja%40gmail.com',
+    );
+  });
+
+  it('generates a mailto with ?', () => {
+    expect(createMailTo('tim?seckinger@yld.io')).toEqual(
+      'mailto:tim%3Fseckinger%40yld.io',
     );
   });
 });

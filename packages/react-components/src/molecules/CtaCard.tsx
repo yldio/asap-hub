@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Link, Card } from '../atoms';
+import { Link, Card, Paragraph } from '../atoms';
 import {
   mobileScreen,
   perRem,
@@ -14,11 +14,26 @@ const getInTouchStyles = css({
   display: 'grid',
   gridTemplateColumns: 'auto',
   alignItems: 'center',
-  padding: `${12 / perRem}em ${vminLinearCalcClamped(
+  paddingTop: `${12 / perRem}em`,
+  paddingLeft: `${vminLinearCalcClamped(
     mobileScreen,
     24,
     tabletScreen,
     36,
+    'px',
+  )}`,
+  paddingRight: `${vminLinearCalcClamped(
+    mobileScreen,
+    24,
+    tabletScreen,
+    36,
+    'px',
+  )}`,
+  paddingBottom: `${vminLinearCalcClamped(
+    mobileScreen,
+    18,
+    tabletScreen,
+    24,
     'px',
   )}`,
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
@@ -43,7 +58,7 @@ type CtaCardProps = {
 const CtaCard: React.FC<CtaCardProps> = ({ href, buttonText, children }) => (
   <Card padding={false} accent="green">
     <div css={getInTouchStyles}>
-      <div>{children}</div>
+      <Paragraph>{children}</Paragraph>
       <div css={buttonStyles}>
         <Link buttonStyle small primary href={href}>
           {buttonText}

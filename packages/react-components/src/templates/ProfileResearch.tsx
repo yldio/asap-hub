@@ -8,7 +8,6 @@ import {
   QuestionsSection,
 } from '../organisms';
 import { UserResponse } from '../../../model/src';
-import { Paragraph } from '../atoms';
 import { CtaCard } from '../molecules';
 
 const styles = css({
@@ -46,10 +45,8 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
         <QuestionsSection firstName={firstName} questions={questions} />
       ) : null}
       <CtaCard href={`mailto:${email}`} buttonText="Contact">
-        <Paragraph>
-          <strong>Interested in what you have seen?</strong> Why not get in
-          touch with {displayName}?
-        </Paragraph>
+        <strong>Interested in what you have seen?</strong> <br />
+        Why not get in touch with {displayName}?
       </CtaCard>
     </div>
   );

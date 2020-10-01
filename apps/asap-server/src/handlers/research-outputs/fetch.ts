@@ -6,8 +6,8 @@ import ResearchOutputs from '../../controllers/research-outputs';
 import { Handler } from '../../utils/types';
 
 const querySchema = Joi.object({
-  page: Joi.number(),
-  pageSize: Joi.number(),
+  take: Joi.number(),
+  skip: Joi.number(),
 }).required();
 
 export const handler: Handler = lambda.http(
@@ -15,8 +15,8 @@ export const handler: Handler = lambda.http(
     await validateUser(request);
 
     const query = lambda.validate('query', request.query, querySchema) as {
-      page: number;
-      pageSize: number;
+      take: number;
+      skip: number;
     };
 
     const researchOutputs = new ResearchOutputs();

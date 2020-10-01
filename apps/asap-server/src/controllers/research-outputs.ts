@@ -77,13 +77,11 @@ export default class ResearchOutputs {
     return transform(res, team);
   }
 
-  async fetch({ page = 1, pageSize = 8 }): Promise<ListResearchOutputResponse> {
-    const query = {
-      take: pageSize,
-      skip: (page - 1) * pageSize,
-    };
-
-    const res = await this.researchOutputs.fetch(query);
+  async fetch(options: {
+    take: number;
+    skip: number;
+  }): Promise<ListResearchOutputResponse> {
+    const res = await this.researchOutputs.fetch(options);
     const teams = res.items.length
       ? await this.teams.fetch({
           take: res.items.length,

@@ -113,16 +113,12 @@ export default class Users {
     return transform(createdUser);
   }
 
-  async fetch({
-    page = 1,
-    pageSize = 8,
-  }: {
-    page: number;
-    pageSize: number;
+  async fetch(options: {
+    take: number;
+    skip: number;
   }): Promise<ListUserResponse> {
     const query = {
-      take: pageSize,
-      skip: (page - 1) * pageSize,
+      ...options,
       sort: [{ path: 'data.displayName.iv' }],
     };
 

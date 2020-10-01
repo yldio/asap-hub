@@ -29,7 +29,6 @@ describe('GET /users', () => {
       .query({
         q: JSON.stringify({
           take: 8,
-          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })
@@ -73,7 +72,8 @@ describe('GET /users', () => {
           Authorization: `Bearer ${chance.string()}`,
         },
         queryStringParameters: {
-          page: 2,
+          take: 8,
+          skip: 8,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -94,7 +94,6 @@ describe('GET /users', () => {
       .query({
         q: JSON.stringify({
           take: 8,
-          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })

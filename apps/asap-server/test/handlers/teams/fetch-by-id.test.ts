@@ -1,41 +1,20 @@
-import Chance from 'chance';
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
-import { Squidex } from '@asap-hub/services-common';
 
-import { CMSTeam } from '../../../src/entities/team';
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
+import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createRandomTeam } from '../../helpers/teams';
+import { identity } from '../../helpers/squidex';
+import { teamsResponse } from './fetch.fixtures';
 
-const chance = new Chance();
-const teams = new Squidex<CMSTeam>('teams');
-
-describe('GET /teams/{id}', () => {
-  let team: CMSTeam;
-
-  beforeAll(async () => {
-    team = await createRandomTeam();
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
-  afterAll(async () => {
-    expect(nock.isDone()).toBe(true);
-    if (team?.id) {
-      await teams.delete(team.id);
-    }
-  });
-
+describe('GET /teams/{id} - validations', () => {
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         pathParameters: {
-          id: team.id,
+          id: 'teamId',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -48,10 +27,10 @@ describe('GET /teams/{id}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Basic ${chance.string()}`,
+          Authorization: `Basic token`,
         },
         pathParameters: {
-          id: team.id,
+          id: 'teamId',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -66,10 +45,10 @@ describe('GET /teams/{id}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
-          id: team.id,
+          id: 'teamId',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -84,28 +63,41 @@ describe('GET /teams/{id}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
-          id: team.id,
+          id: 'teamId',
         },
       }),
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
   });
+});
+
+describe('GET /teams/{id}', () => {
+  beforeAll(() => {
+    identity();
+  });
+
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test("returns 404 when team doesn't exist", async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/teams/NotFound`)
+      .reply(404);
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
-          id: 'NotTheUser',
+          id: 'NotFound',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -115,15 +107,18 @@ describe('GET /teams/{id}', () => {
 
   test('returns 200 when team exists', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/teams/teamId`)
+      .reply(200, teamsResponse.items[0]);
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
-          id: team.id,
+          id: 'teamId',
         },
       }),
     )) as APIGatewayProxyResult;

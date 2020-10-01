@@ -31,6 +31,7 @@ const TeamHeader: React.FC<TeamProps> = ({
   displayName,
   lastModifiedDate,
   members,
+  pointOfContact,
 
   aboutHref,
   outputsHref,
@@ -59,9 +60,11 @@ const TeamHeader: React.FC<TeamProps> = ({
               })}
             {members.length > 5 ? <li>{`+${members.length - 5}`}</li> : null}
           </ul>
-          <Button small primary>
-            Contact
-          </Button>
+          {pointOfContact && (
+            <Link buttonStyle small primary href={`mailto:${pointOfContact}`}>
+              Contact
+            </Link>
+          )}
         </div>
         {lastModifiedDate && (
           <div>

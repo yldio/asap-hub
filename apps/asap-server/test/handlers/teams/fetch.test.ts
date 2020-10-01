@@ -13,17 +13,17 @@ import * as fixtures from './fetch.fixtures';
 const chance = new Chance();
 
 describe('GET /teams', () => {
-  afterEach(() => {
-    nock.cleanAll();
+  beforeAll(() => {
+    identity();
   });
 
-  afterAll(() => {
+  afterEach(() => {
     expect(nock.isDone()).toBe(true);
   });
 
   test('returns 200 when no teams exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
         q: JSON.stringify({
@@ -54,7 +54,7 @@ describe('GET /teams', () => {
 
   test("returns empty response when resource doesn't exist", async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
         q: JSON.stringify({
@@ -85,7 +85,7 @@ describe('GET /teams', () => {
 
   test('returns 200 when teams exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
         q: JSON.stringify({

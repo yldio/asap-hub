@@ -14,12 +14,17 @@ interface Content {
 
 const collection = 'contents';
 describe('squidex wrapper', () => {
+  beforeAll(() => {
+    identity();
+  });
+
   afterEach(() => {
+    expect(nock.isDone()).toBe(true);
     nock.cleanAll();
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .patch(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(400, {
         details: 'invalid_client',
@@ -35,11 +40,10 @@ describe('squidex wrapper', () => {
         },
       }),
     ).rejects.toThrow('Unauthorized');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('returns 500 when squidex returns error', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .patch(`/api/content/${squidex.appName}/${collection}/42`)
       .reply(500);
     const client = new Squidex<Content>(collection);
@@ -51,11 +55,10 @@ describe('squidex wrapper', () => {
         },
       }),
     ).rejects.toThrow('squidex');
-    expect(nock.isDone()).toBe(true);
   });
 
   it('patch a specific document based on filter', async () => {
-    identity()
+    nock(squidex.baseUrl)
       .patch(`/api/content/${squidex.appName}/${collection}/42`, {
         string: {
           iv: 'value',
@@ -85,6 +88,5 @@ describe('squidex wrapper', () => {
         },
       },
     });
-    expect(nock.isDone()).toBe(true);
   });
 });

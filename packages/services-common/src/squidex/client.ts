@@ -6,8 +6,8 @@ interface JwtToken {
   exp: number;
 }
 
+let token: Promise<string> | null;
 export default function create(): typeof Got {
-  let token: Promise<string> | null;
   const refresh = (): void => {
     /* eslint-disable @typescript-eslint/camelcase */
     const url = `${squidex.baseUrl}/identity-server/connect/token`;

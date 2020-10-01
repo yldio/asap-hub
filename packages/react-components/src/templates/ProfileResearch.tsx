@@ -9,6 +9,7 @@ import {
 } from '../organisms';
 import { UserResponse } from '../../../model/src';
 import { CtaCard } from '../molecules';
+import { createMailTo } from '../utils';
 
 const styles = css({
   display: 'grid',

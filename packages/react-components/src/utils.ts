@@ -20,3 +20,6 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
   const { width, height } = svg.viewBox.baseVal;
   return width / height;
 };
+
+export const createMailTo = (email: string): string =>
+  `mailto:${encodeURI(email)}`;

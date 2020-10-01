@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from '@emotion/css';
 
 import { Link, Card, Paragraph } from '../atoms';
@@ -53,6 +53,7 @@ const buttonStyles = css({
 type CtaCardProps = {
   href: string;
   buttonText: string;
+  children: ReactNode;
 };
 
 const CtaCard: React.FC<CtaCardProps> = ({ href, buttonText, children }) => (

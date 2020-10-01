@@ -5,6 +5,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { perRem } from '../pixels';
 import { MembersSection, SkillsSection, TeamOverview } from '../organisms';
 import { CtaCard } from '../molecules';
+import { createMailTo } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -33,7 +34,7 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
     {skills.length ? <SkillsSection skills={skills} /> : null}
     {members.length ? <MembersSection members={members} /> : null}
     {pointOfContact && (
-      <CtaCard href={`mailto:${pointOfContact}`} buttonText="Contact PM">
+      <CtaCard href={createMailTo(pointOfContact)} buttonText="Contact PM">
         <strong>Interested in what you have seen?</strong>
         <br /> Reach out to this team and see how you can collaborate
       </CtaCard>

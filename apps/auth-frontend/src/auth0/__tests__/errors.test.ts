@@ -1,4 +1,4 @@
-import { extractErrorMessage } from '../errors';
+import { extractErrorMessage, Auth0Rule } from '../errors';
 
 describe('extractErrorMessage', () => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -21,6 +21,61 @@ describe('extractErrorMessage', () => {
     error[errorKey] = null;
 
     expect(extractErrorMessage(error)).toMatch(/unknown.+error/i);
+  });
+
+  describe('for a complex error description', () => {
+    it.each<[string, Auth0Rule[], string]>([
+      [
+        'concatenates rule messages',
+        [
+          { message: 'At least 4 characters', verified: false },
+          { message: 'Not all the same characters', verified: false },
+        ],
+        'At least 4 characters\nNot all the same characters',
+      ],
+      [
+        'leaves out a verified rule message',
+        [
+          { message: 'At least 4 characters', verified: true },
+          { message: 'Not all the same characters', verified: false },
+        ],
+        'Not all the same characters',
+      ],
+      [
+        'falls back to a generic message if there are no unverified rules',
+        [
+          { message: 'At least 4 characters', verified: true },
+          { message: 'Not all the same characters', verified: true },
+        ],
+        'Unknown',
+      ],
+      [
+        'includes rule item messages',
+        [
+          { message: 'At least 4 characters', verified: true },
+          {
+            message: 'Not too many of the same characters:',
+            verified: false,
+            items: [
+              {
+                message: 'Not more than half of the same character',
+                verified: true,
+              },
+              {
+                message: 'At least three different characters',
+                verified: false,
+              },
+            ],
+          },
+        ],
+        'Not too many of the same characters:\n  At least three different characters',
+      ],
+    ])('%s', (name, rules, expected) => {
+      const error = new Error() as any;
+      error.description = { rules };
+
+      expect(extractErrorMessage(error)).toContain(expected);
+    });
   });
   /* eslint-enable @typescript-eslint/no-explicit-any */
 });

@@ -1,10 +1,11 @@
-import type { WebAuth, AuthOptions, Auth0Error } from 'auth0-js';
+import type { WebAuth, AuthOptions } from 'auth0-js';
 
 import {
   authorizeWithSso,
   authorizeWithEmailPassword,
   sendPasswordResetLink,
 } from '../web-auth';
+import { WebAuthError } from '../errors';
 
 var mockLogin: jest.MockedFunction<WebAuth['login']>;
 var mockSignup: jest.MockedFunction<WebAuth['signup']>;
@@ -138,7 +139,7 @@ describe('authorizeWithEmailPassword', () => {
 
     it('rejects with an unsuccessful signup error', async () => {
       mockSignup.mockImplementation((options, cb) =>
-        cb((new Error('Signup failed.') as unknown) as Auth0Error, null),
+        cb((new Error('Signup failed.') as unknown) as WebAuthError, null),
       );
       mockLogin.mockImplementation((options, cb) => cb(null, {}));
 
@@ -172,7 +173,10 @@ describe('sendPasswordResetLink', () => {
 
   it('rejects if the password reset fails', async () => {
     mockChangePassword.mockImplementation((options, cb) =>
-      cb((new Error('Password reset failed.') as unknown) as Auth0Error, null),
+      cb(
+        (new Error('Password reset failed.') as unknown) as WebAuthError,
+        null,
+      ),
     );
     await expect(sendPasswordResetLink('john.doe@example.com')).rejects.toThrow(
       'Password reset failed.',

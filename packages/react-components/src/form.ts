@@ -41,10 +41,13 @@ export const styles = {
     borderColor: fern.rgb,
   },
 } as const;
+
 export const validationMessageStyles = {
   ':empty': {
     display: 'none',
   },
+  whiteSpace: 'pre-wrap',
+
   paddingTop: `${6 / perRem}em`,
   paddingBottom: `${6 / perRem}em`,
 

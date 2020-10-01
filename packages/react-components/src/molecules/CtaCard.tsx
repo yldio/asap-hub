@@ -42,7 +42,6 @@ const getInTouchStyles = css({
 });
 
 const buttonStyles = css({
-  flexGrow: 1,
   display: 'flex',
   justifyContent: 'center',
   [`@media (min-width: ${tabletScreen.min}px)`]: {

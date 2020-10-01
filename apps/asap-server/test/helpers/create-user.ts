@@ -95,8 +95,13 @@ export const createRandomOutput = async (user: string): Promise<void> => {
 
 export const createUserOnTeam = async (
   team: CMSTeam,
+  role: string | null = null,
 ): Promise<TestUserResponse> => {
   const createdUser = await createUser();
-  const user = await cms.users.addToTeam(createdUser, chance.word(), team);
+  const user = await cms.users.addToTeam(
+    createdUser,
+    role || chance.word(),
+    team,
+  );
   return transform(user);
 };

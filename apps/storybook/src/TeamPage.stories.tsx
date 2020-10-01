@@ -25,6 +25,7 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       displayName: 'Daniel Ramirez',
       firstName: 'Daniel',
       lastName: 'Ramirez',
+      email: 'd@niel.com',
       role: 'Principal Investigator',
     },
     {
@@ -32,6 +33,7 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       displayName: 'Peter Venkman',
       firstName: 'Peter',
       lastName: 'Venkman',
+      email: 'peter@ven.com',
       role: 'Project Manager',
     },
     {
@@ -39,6 +41,7 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       displayName: 'Tess W. B. Goetz',
       firstName: 'Tess',
       lastName: 'Goetz',
+      email: 'tess@goetz.com',
       role: 'Collaborator',
     },
     {
@@ -46,6 +49,7 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       displayName: 'Robin Peploe',
       firstName: 'Robin',
       lastName: 'Peploe',
+      email: 'r@bin.com',
       role: 'Collaborator',
     },
     {
@@ -53,6 +57,7 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       displayName: 'Alice Lane',
       firstName: 'Alice',
       lastName: 'Lane',
+      email: 'l@ne.com',
       role: 'Collaborator',
     },
     {
@@ -60,6 +65,7 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       displayName: 'Philip Mars',
       firstName: 'Philip',
       lastName: 'Mars',
+      email: 'm@rs.com',
       role: 'Collaborator',
     },
     {
@@ -67,6 +73,7 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       displayName: 'Emmanuel Depay',
       firstName: 'Emanuel',
       lastName: 'Depay',
+      email: 'em@nuel.com',
       role: 'Collaborator',
     },
   ],

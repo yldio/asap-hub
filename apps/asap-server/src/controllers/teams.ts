@@ -16,8 +16,12 @@ function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
     projectTitle: team.data.projectTitle.iv,
     projectSummary: team.data.projectSummary?.iv,
     skills: team.data.skills?.iv || [],
-    members,
     lastModifiedDate: team.lastModified,
+    pointOfContact: members.find(
+      ({ role }) =>
+        role.toLowerCase() === 'pm' || role.toLowerCase() === 'product manager',
+    )?.email,
+    members,
   };
 }
 
@@ -26,6 +30,7 @@ const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
     id: user.id,
     firstName: user.data.firstName?.iv,
     lastName: user.data.lastName?.iv,
+    email: user.data.email.iv,
     displayName: user.data.displayName.iv,
     role: get(user, 'data.teams.iv', []).find(
       (t: { id: string[] }) => t.id[0] === teamId,

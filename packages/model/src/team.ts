@@ -13,6 +13,7 @@ export interface TeamMember {
   firstName?: string;
   lastName?: string;
   displayName: string;
+  email: string;
   role: string;
   avatarURL?: string;
 }
@@ -22,6 +23,7 @@ export interface TeamResponse extends TeamCreateRequest {
   skills: string[];
   members: TeamMember[];
   lastModifiedDate: string;
+  pointOfContact?: string;
 }
 
 export type ListTeamResponse = ListResponse<TeamResponse>;

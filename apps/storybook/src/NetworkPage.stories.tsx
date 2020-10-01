@@ -18,6 +18,7 @@ const member = {
   id: 'ff0e04ac-4769-44ed-8d3b-245c1bfe17b3',
   firstName: 'Mason',
   lastName: 'Carpenter',
+  email: 'mason@car.com',
   displayName: 'Birdie Romeo',
   role: 'VrrPdl',
 };

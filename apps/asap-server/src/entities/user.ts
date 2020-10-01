@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import { OrcidWork, TeamMember } from '@asap-hub/model';
 
-interface CMSTeamMember extends Omit<TeamMember, 'id'> {
+interface CMSTeamMember extends Omit<TeamMember, 'id' | 'email'> {
   id: string[];
 }
 

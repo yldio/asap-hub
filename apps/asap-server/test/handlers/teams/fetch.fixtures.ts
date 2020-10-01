@@ -68,16 +68,16 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
           iv: 'Cristiano Ronaldo',
         },
         email: {
-          iv: 'simkop@ed.ma',
+          iv: 'cristiano@ronaldo.com',
         },
         firstName: {
-          iv: 'Edgar',
+          iv: 'Cristiano',
         },
         middleName: {
           iv: 'May',
         },
         lastName: {
-          iv: 'Cammilli',
+          iv: 'Ronaldo',
         },
         jobTitle: {
           iv: 'Junior',
@@ -256,8 +256,9 @@ export const expectation: ListTeamResponse = {
       members: [
         {
           id: 'user-id-1',
-          firstName: 'Edgar',
-          lastName: 'Cammilli',
+          firstName: 'Cristiano',
+          lastName: 'Ronaldo',
+          email: 'cristiano@ronaldo.com',
           displayName: 'Cristiano Ronaldo',
           role: 'PI',
         },
@@ -278,6 +279,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-2',
           firstName: 'John',
           lastName: 'Travista',
+          email: 'john@ed.ma',
           displayName: 'John Travista',
           role: 'PI',
         },
@@ -285,6 +287,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-3',
           firstName: 'Bill',
           lastName: 'Travista',
+          email: 'bill@ed.ma',
           displayName: 'Bill Travista',
           role: 'Intern',
         },

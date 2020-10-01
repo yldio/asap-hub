@@ -18,7 +18,10 @@ describe('GET /teams/{id}', () => {
 
   beforeAll(async () => {
     team = await createRandomTeam();
-    const { connections, ...res } = await createUserOnTeam(team);
+    const { connections, ...res } = await createUserOnTeam(
+      team,
+      'Product Manager',
+    );
     user = res;
   });
 
@@ -56,6 +59,7 @@ describe('GET /teams/{id}', () => {
         id: expect.any(String),
         displayName: expect.any(String),
         applicationNumber: expect.any(String),
+        pointOfContact: expect.any(String),
         projectTitle: expect.any(String),
         projectSummary: expect.any(String),
       }),

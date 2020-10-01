@@ -8,18 +8,12 @@ import {
   QuestionsSection,
 } from '../organisms';
 import { UserResponse } from '../../../model/src';
-import { Card, Paragraph, Link } from '../atoms';
+import { Paragraph } from '../atoms';
+import { CtaCard } from '../molecules';
 
 const styles = css({
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
-});
-
-const getInTouchStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: `${12 / perRem}em ${24 / perRem}em`,
 });
 
 type ProfileInterestProps = Pick<
@@ -51,17 +45,12 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
       {questions.length ? (
         <QuestionsSection firstName={firstName} questions={questions} />
       ) : null}
-      <Card padding={false} accent="green">
-        <div css={getInTouchStyles}>
-          <Paragraph>
-            <strong>Interested in what you have seen?</strong> Why not get in
-            touch with {displayName}?
-          </Paragraph>
-          <Link buttonStyle primary small href={`mailto:${email}`}>
-            Contact
-          </Link>
-        </div>
-      </Card>
+      <CtaCard href={`mailto:${email}`} buttonText="Contact">
+        <Paragraph>
+          <strong>Interested in what you have seen?</strong> Why not get in
+          touch with {displayName}?
+        </Paragraph>
+      </CtaCard>
     </div>
   );
 };

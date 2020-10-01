@@ -1,8 +1,10 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
+import { TeamResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
 import { MembersSection, SkillsSection, TeamOverview } from '../organisms';
+import { CtaCard } from '../molecules';
 
 const styles = css({
   display: 'grid',
@@ -11,12 +13,14 @@ const styles = css({
 
 type TeamAboutProps = ComponentProps<typeof TeamOverview> &
   ComponentProps<typeof SkillsSection> &
-  ComponentProps<typeof MembersSection>;
+  ComponentProps<typeof MembersSection> &
+  Pick<TeamResponse, 'pointOfContact'>;
 
 const TeamAbout: React.FC<TeamAboutProps> = ({
   projectTitle,
   projectSummary,
   skills,
+  pointOfContact,
   members,
 }) => (
   <div css={styles}>
@@ -28,6 +32,12 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
     ) : null}
     {skills.length ? <SkillsSection skills={skills} /> : null}
     {members.length ? <MembersSection members={members} /> : null}
+    {pointOfContact && (
+      <CtaCard href={`mailto:${pointOfContact}`} buttonText="Contact PM">
+        <strong>Interested in what you have seen?</strong>
+        <br /> Reach out to this team and see how you can collaborate
+      </CtaCard>
+    )}
   </div>
 );
 

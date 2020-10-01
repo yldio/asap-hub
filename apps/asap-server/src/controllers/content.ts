@@ -1,6 +1,5 @@
-import Boom from '@hapi/boom';
 import { ContentResponse } from '@asap-hub/model';
-import { CMS } from '../cms';
+import { Squidex } from '@asap-hub/services-common';
 import { CMSContent } from '../entities/content';
 
 function transform(content: CMSContent): ContentResponse {
@@ -11,22 +10,18 @@ function transform(content: CMSContent): ContentResponse {
   } as ContentResponse;
 }
 
-export default class ContentController {
-  cms: CMS;
+export async function fetchBySlug(
+  contentType: string,
+  slug: string,
+): Promise<ContentResponse> {
+  const content: Squidex<CMSContent> = new Squidex(contentType);
+  const res = await content.fetchOne({
+    filter: {
+      path: 'data.slug.iv',
+      op: 'eq',
+      value: slug,
+    },
+  });
 
-  constructor() {
-    this.cms = new CMS();
-  }
-
-  async fetchBySlug(
-    contentType: string,
-    slug: string,
-  ): Promise<ContentResponse> {
-    const res = await this.cms.content.fetchBySlug(contentType, slug);
-    if (res.length === 0) {
-      throw Boom.notFound();
-    }
-
-    return transform(res[0]);
-  }
+  return transform(res);
 }

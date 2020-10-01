@@ -1,6 +1,6 @@
 import { framework as lambda } from '@asap-hub/services-common';
 
-import Content from '../../controllers/content';
+import { fetchBySlug } from '../../controllers/content';
 import { CreateSchema } from '../../entities/content';
 import validateUser from '../../utils/validate-user';
 import { Handler } from '../../utils/types';
@@ -18,8 +18,7 @@ export const handler: Handler = lambda.http(
       slug: string;
     };
 
-    const contentClient = new Content();
-    const res = await contentClient.fetchBySlug(content, slug);
+    const res = await fetchBySlug(content, slug);
 
     return {
       payload: res,

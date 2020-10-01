@@ -28,7 +28,6 @@ describe('GET /teams', () => {
       .query({
         q: JSON.stringify({
           take: 8,
-          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })
@@ -59,7 +58,6 @@ describe('GET /teams', () => {
       .query({
         q: JSON.stringify({
           take: 8,
-          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })
@@ -90,7 +88,6 @@ describe('GET /teams', () => {
       .query({
         q: JSON.stringify({
           take: 8,
-          skip: 0,
           sort: [{ path: 'data.displayName.iv' }],
         }),
       })

@@ -79,7 +79,7 @@ describe('GET /research-outputs', () => {
       .get(
         `/api/content/${
           config.cms.appName
-        }/research-outputs?q=${JSON.stringify({ take: 8, skip: 0 })}`,
+        }/research-outputs?q=${JSON.stringify({ take: 8 })}`,
       )
       .reply(200, { total: 0, items: [] });
 
@@ -103,7 +103,7 @@ describe('GET /research-outputs', () => {
       .get(
         `/api/content/${
           config.cms.appName
-        }/research-outputs?q=${JSON.stringify({ take: 8, skip: 0 })}`,
+        }/research-outputs?q=${JSON.stringify({ take: 8 })}`,
       )
       .reply(200, {
         total: 1,

@@ -5,8 +5,8 @@ import validateUser from '../../utils/validate-user';
 import { Handler } from '../../utils/types';
 
 const querySchema = Joi.object({
-  page: Joi.number(),
-  pageSize: Joi.number(),
+  take: Joi.number(),
+  skip: Joi.number(),
 }).required();
 
 // /users?page=1&pageSize=8
@@ -15,8 +15,8 @@ export const handler: Handler = lambda.http(
     await validateUser(request);
 
     const query = lambda.validate('query', request.query, querySchema) as {
-      page: number;
-      pageSize: number;
+      take: number;
+      skip: number;
     };
 
     const users = new Users();

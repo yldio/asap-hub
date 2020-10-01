@@ -62,16 +62,12 @@ export default class Teams {
     this.users = new Squidex('users');
   }
 
-  async fetch({
-    page = 1,
-    pageSize = 8,
-  }: {
-    page: number;
-    pageSize: number;
+  async fetch(options: {
+    take: number;
+    skip: number;
   }): Promise<ListTeamResponse> {
     const { total, items: teams } = await this.teams.fetch({
-      take: pageSize,
-      skip: (page - 1) * pageSize,
+      ...options,
       sort: [{ path: 'data.displayName.iv' }],
     });
 

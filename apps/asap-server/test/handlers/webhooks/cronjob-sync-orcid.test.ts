@@ -1,32 +1,18 @@
 import nock from 'nock';
+import matches from 'lodash.matches';
+
 import { handler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
+import { identity } from '../../helpers/squidex';
+import { cms } from '../../../src/config';
 import * as fixtures from './cronjob-sync-orcid.fixtures';
-import orcidWorksResponse from './fetch-orcid-works.fixtures.json';
-
-const mockFetchWithOrcidSorted = jest
-  .fn()
-  .mockResolvedValue(fixtures.fetchUsersResponse);
-const mockUpdateOrcidWorks = jest
-  .fn()
-  .mockResolvedValue(fixtures.fetchUsersResponse[0]);
-
-jest.mock('../../../src/cms/users', () => {
-  return jest.fn(() => ({
-    fetchWithOrcidSorted: mockFetchWithOrcidSorted,
-    updateOrcidWorks: mockUpdateOrcidWorks,
-  }));
-});
 
 describe('Cronjob - Sync Users ORCID', () => {
   const orcid = '0000-0001-9884-1913';
 
   beforeAll(() => {
+    identity();
     // Add recently synced user
-    fixtures.fetchUsersResponse[1]!.data.orcidLastSyncDate!.iv = new Date().toISOString();
-  });
-
-  afterEach(() => {
-    nock.cleanAll();
+    fixtures.fetchUsersResponse.items[1]!.data.orcidLastSyncDate!.iv = new Date().toISOString();
   });
 
   afterAll(() => {
@@ -36,14 +22,42 @@ describe('Cronjob - Sync Users ORCID', () => {
   test('should fetch ORCID works for users with orcid and lastSyncDate 1 month away', async () => {
     nock('https://pub.orcid.org')
       .get(`/v2.1/${orcid}/works`)
-      .reply(200, orcidWorksResponse);
+      .reply(200, fixtures.orcidWorksResponse);
 
-    await handler();
-    const [receivedUser, , receivedWorks] = mockUpdateOrcidWorks.mock.calls[0];
-    expect(receivedUser.id).toBeDefined();
-    expect(receivedWorks.length).toBe(10);
-    expect(receivedWorks).toStrictEqual(
-      fixtures.ORCIDWorksDeserialisedExpectation,
+    const patchedUser = JSON.parse(
+      JSON.stringify(fixtures.fetchUsersResponse.items[0]),
     );
+    patchedUser.data.orcidWorks.iv = fixtures.ORCIDWorksDeserialisedExpectation;
+
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 30,
+          filter: {
+            path: 'data.orcid.iv',
+            op: 'contains',
+            value: '-',
+          },
+          sort: [
+            {
+              path: 'data.orcidLastSyncDate.iv',
+              order: 'ascending',
+            },
+          ],
+        }),
+      })
+      .reply(200, fixtures.fetchUsersResponse)
+      .patch(
+        `/api/content/${cms.appName}/users/57d80949-7a75-462d-b3b0-34173423c490`,
+        matches({
+          email: { iv: patchedUser.data.email.iv },
+          orcidWorks: { iv: fixtures.ORCIDWorksDeserialisedExpectation },
+        }),
+      )
+      .reply(200, patchedUser);
+
+    const res = await handler();
+    expect(res.statusCode).toBe(200);
   });
 });

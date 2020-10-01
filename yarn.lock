@@ -39,6 +39,7 @@ __metadata:
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:@types/jwt-encode"
     "@types/lodash.get": ^4
+    "@types/lodash.matches": ^4
     "@types/pump": ^1.1.0
     "@types/uuid": ^8.0.0
     apr-intercept: ^3.0.4
@@ -52,6 +53,7 @@ __metadata:
     jwt-decode: ^2.2.0
     jwt-encode: ^1.0.1
     lodash.get: ^4.4.2
+    lodash.matches: ^4.6.0
     nock: ^13.0.4
     p-limit: ^3.0.2
     pump: ^3.0.0
@@ -4855,6 +4857,15 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: f08237e3d45e7883cf2cfe202475db6a2bd1a53576c0e66b2e89e0ca0c6f36e700ecc9926ad28b3b9ff6d348074f8c82b393f9fc2cf523fa26a86c95304f7a02
+  languageName: node
+  linkType: hard
+
+"@types/lodash.matches@npm:^4":
+  version: 4.6.6
+  resolution: "@types/lodash.matches@npm:4.6.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 4416f3f0746b6f319d830bad0c0cdde1c0c731ced432c8e02fad2e93cf7b4b2722efa30b06949f08c7527f9064d0930acdf07c0f622dc51971ba416b9c13ccf0
   languageName: node
   linkType: hard
 
@@ -17125,6 +17136,13 @@ fsevents@^1.2.7:
   version: 4.0.1
   resolution: "lodash.isstring@npm:4.0.1"
   checksum: 20c46960b74fd63c27b534f1725cd4141ac19b35c7250affee37c8b7899b1a4c5e9820becfafe571a4d48cd4c86206ee03c2e93fe943dbeab82ddd5cab710540
+  languageName: node
+  linkType: hard
+
+"lodash.matches@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "lodash.matches@npm:4.6.0"
+  checksum: 234e5991ada1cb929c970057b6052b8c4a98050dc503901155287b405a15fa105c8a88a98af841c6453bc65471230b86dddd234894bd6cd3689d86d7dbc45579
   languageName: node
   linkType: hard
 

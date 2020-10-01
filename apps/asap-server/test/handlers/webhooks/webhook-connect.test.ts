@@ -1,29 +1,37 @@
-import Chance from 'chance';
+import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
 import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createRandomUser } from '../../helpers/create-user';
-import { CMS } from '../../../src/cms';
-import { auth0SharedSecret as secret } from '../../../src/config';
+import { identity } from '../../helpers/squidex';
+import { auth0SharedSecret as secret, cms } from '../../../src/config';
+import { CMSUser } from '../../../src/entities';
 
-const chance = new Chance();
-const cms = new CMS();
+const user: CMSUser = {
+  id: 'userId',
+  lastModified: '2020-09-25T11:06:27.164Z',
+  created: '2020-09-24T11:06:27.164Z',
+  data: {
+    lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
+    displayName: { iv: 'Name' },
+    email: { iv: 'me@example.com' },
+    firstName: { iv: 'First' },
+    lastName: { iv: 'Last' },
+    jobTitle: { iv: 'Title' },
+    institution: { iv: 'Institution' },
+    connections: { iv: [] },
+    biography: { iv: 'Biography' },
+    location: { iv: 'Lisbon, Portugal' },
+  },
+};
 
-describe('POST /webhook/users/connections', () => {
-  let code: string;
-
-  beforeAll(async () => {
-    const user = await createRandomUser();
-    code = user.connections[0].code;
-  });
-
+describe('POST /webhook/users/connections - validations', () => {
   test('returns 400 when code is not defined', async () => {
     const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
         body: {
-          userId: chance.string(),
+          userId: 'userId',
         },
         headers: {
           Authorization: `Basic ${secret}`,
@@ -39,25 +47,49 @@ describe('POST /webhook/users/connections', () => {
       apiGatewayEvent({
         httpMethod: 'post',
         body: {
-          code,
-          userId: chance.string(),
+          code: 'asap|token',
+          userId: 'userId',
         },
         headers: {
-          Authorization: `Basic ${chance.string()}`,
+          Authorization: 'Basic token',
         },
       }),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(403);
   });
+});
+
+describe('POST /webhook/users/connections - success', () => {
+  beforeAll(() => {
+    identity();
+  });
+
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test('returns 403 for invalid code', async () => {
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.connections.iv.code',
+            op: 'eq',
+            value: 'invalidConnectCode',
+          },
+        }),
+      })
+      .reply(404);
+
     const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
         body: {
-          code: chance.string(),
-          userId: chance.string(),
+          code: 'invalidConnectCode',
+          userId: 'userId',
         },
         headers: {
           Authorization: `Basic ${secret}`,
@@ -69,13 +101,34 @@ describe('POST /webhook/users/connections', () => {
   });
 
   test('returns 202 for valid code and updates the user', async () => {
-    const userId = `google-oauth2|${chance.string()}`;
+    const userId = `google-oauth2|token`;
+    const patchedUser = JSON.parse(JSON.stringify(user));
+    patchedUser.data.connections.iv = [{ code: userId }];
+
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.connections.iv.code',
+            op: 'eq',
+            value: 'asapWelcomeCode',
+          },
+        }),
+      })
+      .reply(200, { total: 1, items: [user] })
+      .patch(`/api/content/${cms.appName}/users/${user.id}`, {
+        email: { iv: user.data.email.iv },
+        connections: { iv: [{ code: userId }] },
+      })
+      .reply(200, patchedUser);
 
     const res = (await handler(
       apiGatewayEvent({
         httpMethod: 'post',
         body: {
-          code,
+          code: 'asapWelcomeCode',
           userId,
         },
         headers: {
@@ -84,11 +137,6 @@ describe('POST /webhook/users/connections', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    const userFound = await cms.users.fetchByCode(code);
-
     expect(res.statusCode).toStrictEqual(202);
-    expect(userFound).not.toBe(null);
-    expect(userFound!.data.connections.iv).toHaveLength(2);
-    expect(userFound!.data.connections.iv).toContainEqual({ code: userId });
   });
 });

@@ -7,7 +7,7 @@ import { UserResponse } from '@asap-hub/model';
 import { CMSTeam, CMSUser } from '../../../src/entities';
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createUserOnTeam } from '../../helpers/create-user';
+import { createUserOnTeam } from '../../helpers/users';
 import { createRandomTeam } from '../../helpers/teams';
 
 const teams = new Squidex<CMSTeam>('teams');

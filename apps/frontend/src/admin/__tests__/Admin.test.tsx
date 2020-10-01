@@ -24,7 +24,6 @@ describe('when submitting the form', () => {
   let result: RenderResult;
 
   beforeEach(() => {
-    nock.cleanAll();
     nockInterceptor = nock(API_BASE_URL, {
       reqheaders: {
         authorization: 'Bearer Pw123',
@@ -49,6 +48,10 @@ describe('when submitting the form', () => {
     await userEvent.type(getByLabelText(/password/i), 'Pw123', {
       allAtOnce: true,
     });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   describe('and the invitation is pending', () => {

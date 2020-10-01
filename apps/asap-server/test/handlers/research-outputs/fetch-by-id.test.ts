@@ -1,25 +1,17 @@
-import Chance from 'chance';
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
 import { config } from '@asap-hub/services-common';
 
+import { cms } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
 import { handler } from '../../../src/handlers/research-outputs/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-const chance = new Chance();
-describe('GET /research-outputs/{id}', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
+const id = 'uuid';
 
-  afterEach(() => {
-    nock.cleanAll();
-  });
-  const id = 'uuid';
-
+describe('GET /research-outputs/{id} - validations', () => {
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -38,7 +30,7 @@ describe('GET /research-outputs/{id}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Basic ${chance.string()}`,
+          Authorization: `Basic token`,
         },
         pathParameters: {
           id,
@@ -56,7 +48,7 @@ describe('GET /research-outputs/{id}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
           id,
@@ -74,7 +66,7 @@ describe('GET /research-outputs/{id}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
           id,
@@ -84,10 +76,20 @@ describe('GET /research-outputs/{id}', () => {
 
     expect(result.statusCode).toStrictEqual(403);
   });
+});
+
+describe('GET /research-outputs/{id}', () => {
+  beforeAll(() => {
+    identity();
+  });
+
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test('returns 200 and the research output content a list of research outputs', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs/${id}`)
       .reply(200, {
         id: 'uuid',
@@ -97,18 +99,18 @@ describe('GET /research-outputs/{id}', () => {
           title: { iv: 'Title' },
           text: { iv: 'Text' },
         },
-      });
-    identity()
-      .get(
-        `/api/content/${config.cms.appName}/teams?q=${JSON.stringify({
+      })
+      .get(`/api/content/${config.cms.appName}/teams`)
+      .query({
+        q: JSON.stringify({
           take: 1,
           filter: {
             path: 'data.proposal.iv',
             op: 'eq',
             value: 'uuid',
           },
-        })}`,
-      )
+        }),
+      })
       .reply(200, {
         items: [
           {
@@ -152,7 +154,7 @@ describe('GET /research-outputs/{id}', () => {
 
   test('returns 200 and the research output without team', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs/${id}`)
       .reply(200, {
         id: 'uuid',
@@ -162,18 +164,18 @@ describe('GET /research-outputs/{id}', () => {
           title: { iv: 'Title' },
           text: { iv: 'Text' },
         },
-      });
-    identity()
-      .get(
-        `/api/content/${config.cms.appName}/teams?q=${JSON.stringify({
+      })
+      .get(`/api/content/${config.cms.appName}/teams`)
+      .query({
+        q: JSON.stringify({
           take: 1,
           filter: {
             path: 'data.proposal.iv',
             op: 'eq',
             value: 'uuid',
           },
-        })}`,
-      )
+        }),
+      })
       .reply(200, {
         items: [],
       });

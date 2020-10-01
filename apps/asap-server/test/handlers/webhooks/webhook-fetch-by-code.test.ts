@@ -1,16 +1,13 @@
-import Chance from 'chance';
+import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
 import { handler } from '../../../src/handlers/webhooks/webhook-fetch-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
-import { createRandomUser } from '../../helpers/create-user';
-import { auth0SharedSecret as secret } from '../../../src/config';
-import Users from '../../../src/controllers/users';
+import { auth0SharedSecret as secret, cms } from '../../../src/config';
+import { identity } from '../../helpers/squidex';
+import fetchUserResponse from './webhook-fetch-by-code.fixtures';
 
-const chance = new Chance();
-const users = new Users();
-
-describe('POST /webhook/users/{code}', () => {
+describe('POST /webhook/users/{code} - validation', () => {
   test("return 400 when code isn't present", async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -29,7 +26,7 @@ describe('POST /webhook/users/{code}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         pathParameters: {
-          code: chance.string(),
+          code: 'welcomeCode',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -42,7 +39,7 @@ describe('POST /webhook/users/{code}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         pathParameters: {
-          code: chance.string(),
+          code: 'welcomeCode',
         },
         headers: {
           Authorization: `Bearer ${secret}`,
@@ -58,23 +55,47 @@ describe('POST /webhook/users/{code}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         pathParameters: {
-          code: chance.string(),
+          code: 'welcomeCode',
         },
         headers: {
-          Authorization: `Basic ${chance.string()}`,
+          Authorization: `Basic wrongSecret`,
         },
       }),
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
   });
+});
+
+describe('POST /webhook/users/{code}', () => {
+  beforeAll(() => {
+    identity();
+  });
+
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test("returns 403 when code doesn't exist", async () => {
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.connections.iv.code',
+            op: 'eq',
+            value: 'notFound',
+          },
+        }),
+      })
+      .reply(404);
+
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         pathParameters: {
-          code: chance.string(),
+          code: 'notFound',
         },
         headers: {
           Authorization: `Basic ${secret}`,
@@ -86,17 +107,25 @@ describe('POST /webhook/users/{code}', () => {
   });
 
   test('returns 200 when user exists', async () => {
-    const { connections, ...newUser } = await createRandomUser();
-    const connectedUser = await users.connectByCode(
-      connections[0]?.code,
-      newUser.id,
-    );
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.connections.iv.code',
+            op: 'eq',
+            value: 'welcomeCode',
+          },
+        }),
+      })
+      .reply(200, fetchUserResponse);
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         pathParameters: {
-          code: newUser.id,
+          code: 'welcomeCode',
         },
         headers: {
           Authorization: `Basic ${secret}`,
@@ -104,8 +133,6 @@ describe('POST /webhook/users/{code}', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    const user = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(user).toStrictEqual(connectedUser);
   });
 });

@@ -37,7 +37,7 @@ const getInTouchStyles = css({
     'px',
   )}`,
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
-    gridTemplateColumns: 'auto min-content',
+    gridTemplateColumns: 'auto max-content',
   },
 });
 

@@ -7,6 +7,7 @@ import { tabletScreen } from '../pixels';
 import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
 import { ProfilePersonalText, TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { createMailTo } from '../utils';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -104,7 +105,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
       </section>
       <section css={actionsStyles}>
         <div css={contactStyles}>
-          <Link small buttonStyle primary href={`mailto:${email}`}>
+          <Link small buttonStyle primary href={createMailTo(email)}>
             Contact
           </Link>
         </div>

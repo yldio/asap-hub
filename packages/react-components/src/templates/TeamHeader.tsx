@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { formatDistance } from 'date-fns';
-import { Link, TabLink, Display, Button, Paragraph, Avatar } from '../atoms';
+import { Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
 import { TeamResponse } from '../../../model/src';
 import { contentSidePaddingWithNavigation } from '../layout';

@@ -1,9 +1,9 @@
 import get from 'lodash.get';
 import { Got } from 'got';
+import Intercept from 'apr-intercept';
 import { Squidex } from '@asap-hub/services-common';
 import { ListTeamResponse, TeamResponse, TeamMember } from '@asap-hub/model';
 
-import { CMS } from '../cms';
 import { CMSTeam } from '../entities/team';
 import { CMSUser } from '../entities/user';
 import { createURL } from '../utils/assets';
@@ -39,30 +39,25 @@ const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
   }));
 
 const fetchUsers = async (id: string, client: Got): Promise<CMSUser[]> => {
-  try {
-    const { items } = await client
+  const [, res] = await Intercept(
+    client
       .get('users', {
         searchParams: {
           $filter: `data/teams/iv/id eq '${id}'`,
         },
       })
-      .json();
+      .json() as Promise<{ total: number; items: CMSUser[] }>,
+  );
 
-    return items;
-  } catch (err) {
-    return [];
-  }
+  return res ? res.items : [];
 };
 
 export default class Teams {
-  cms: CMS;
-
   teams: Squidex<CMSTeam>;
 
   users: Squidex<CMSUser>;
 
   constructor() {
-    this.cms = new CMS();
     this.teams = new Squidex('teams');
     this.users = new Squidex('users');
   }
@@ -70,9 +65,22 @@ export default class Teams {
   async fetch(options: {
     take: number;
     skip: number;
+    search: string;
   }): Promise<ListTeamResponse> {
+    const { search, ...opts } = options;
     const { total, items: teams } = await this.teams.fetch({
-      ...options,
+      ...opts,
+      ...(search
+        ? {
+            fullText: search,
+            filter: {
+              or: [
+                { path: 'data.displayName.iv', op: 'contains', value: search },
+                { path: 'data.projectTitle.iv', op: 'contains', value: search },
+              ],
+            },
+          }
+        : {}),
       sort: [{ path: 'data.displayName.iv' }],
     });
 

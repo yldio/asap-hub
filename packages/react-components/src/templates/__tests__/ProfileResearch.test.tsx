@@ -49,13 +49,13 @@ it('renders the questions list', () => {
       questions={['What is the meaning of life?']}
     />,
   );
-  expect(getByText(/open questions/i)).toBeVisible();
-  expect(getByText('Q: What is the meaning of life?')).toBeVisible();
+  expect(getByText(/open questions/i).tagName).toBe('H2');
+  expect(getByText('What is the meaning of life?', { exact: false })).toBeVisible();
 });
 
 it('does not render an empty questions list', () => {
   const { queryByText } = render(
-    <ProfileResearch {...commonProps} skills={[]} />,
+    <ProfileResearch {...commonProps} questions={[]} />,
   );
-  expect(queryByText('Open Questions')).not.toBeInTheDocument();
+  expect(queryByText(/open questions/i)).not.toBeInTheDocument();
 });

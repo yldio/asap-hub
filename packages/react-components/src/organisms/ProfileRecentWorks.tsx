@@ -93,13 +93,12 @@ const RecentWork: React.FC<RecentWorkProps> = ({
       <Headline3>{title}</Headline3>
       <div css={footerStyle}>
         <Paragraph accent="lead">
-          Originally Published:{' '}
-          {format(
+          {`Originally Published: ${format(
             date,
             `${publicationDate.day ? 'do ' : ''}${
               publicationDate.month ? 'MMMM ' : ''
             }yyyy`,
-          )}
+          )}`}
         </Paragraph>
       </div>
     </div>

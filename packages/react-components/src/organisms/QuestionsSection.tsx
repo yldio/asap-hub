@@ -21,16 +21,16 @@ const ProfileSkills: React.FC<ProfileSkillsProps> = ({
         {firstName ? `${firstName}'s Open Questions` : 'Open Questions'}
       </Headline2>
       <div css={containerStyles}>
-        {questions.reduce((acc, question, idx) => {
-          const notFirst = !!acc[0];
-          const component = (
-            <Headline3 key={`q-${idx}`} styleAsHeading={4}>
-              {`Q: ${question}`}
-            </Headline3>
-          );
-          const divider = notFirst ? <Divider key={`sep-${idx}`} /> : [];
-          return acc.concat(divider).concat(component);
-        }, [] as JSX.Element[])}
+        {questions
+          .flatMap((question, idx) => {
+            const component = (
+              <Headline3 key={`q-${idx}`} styleAsHeading={4}>
+                {`Q: ${question}`}
+              </Headline3>
+            );
+            return [<Divider key={`sep-${idx}`} />, component];
+          })
+          .slice(1)}
       </div>
     </Card>
   );

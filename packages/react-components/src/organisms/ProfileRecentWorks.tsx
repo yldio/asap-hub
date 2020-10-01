@@ -63,8 +63,6 @@ const containerStyles = css({
   gridRowGap: `${12 / perRem}em`,
 });
 
-const elementStyle = css({});
-
 const footerStyle = css({
   textAlign: 'right',
 });
@@ -88,7 +86,7 @@ const RecentWork: React.FC<RecentWorkProps> = ({
   );
 
   return (
-    <div css={elementStyle}>
+    <div>
       <TagLabel>{typeMap[type]}</TagLabel>
       <Headline3>{title}</Headline3>
       <div css={footerStyle}>

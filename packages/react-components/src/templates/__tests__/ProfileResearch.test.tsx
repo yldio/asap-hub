@@ -50,7 +50,9 @@ it('renders the questions list', () => {
     />,
   );
   expect(getByText(/open questions/i).tagName).toBe('H2');
-  expect(getByText('What is the meaning of life?', { exact: false })).toBeVisible();
+  expect(
+    getByText('What is the meaning of life?', { exact: false }),
+  ).toBeVisible();
 });
 
 it('does not render an empty questions list', () => {

@@ -2,21 +2,11 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { Display, Paragraph, Button, Card } from '../atoms';
-import { paddingStyles } from '../card';
-import { vminLinearCalcClamped, mobileScreen, tabletScreen } from '../pixels';
 
 const containerStyles = css({
   maxWidth: '440px',
 });
-const styles = css(paddingStyles, {
-  paddingBottom: `${vminLinearCalcClamped(
-    mobileScreen,
-    18,
-    tabletScreen,
-    24,
-    'px',
-  )}`,
-
+const styles = css({
   display: 'grid',
   textAlign: 'center',
 });
@@ -42,7 +32,7 @@ const Welcome: React.FC<WelcomeProps> = ({
   onClick,
 }) => (
   <div css={containerStyles}>
-    <Card padding={false}>
+    <Card>
       <article css={styles}>
         <header>
           <Display styleAsHeading={2}>{title}</Display>

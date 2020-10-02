@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Card, Headline2, Button, Paragraph } from '../atoms';
+import { Card, Headline2, Paragraph, Link } from '../atoms';
 import { docsIcon } from '../icons';
 import { mobileScreen } from '../pixels';
 
@@ -14,8 +14,12 @@ const stretchOnMobile = css({
 
 type ProfileBiographyProps = {
   readonly biography: string;
+  readonly biosketch?: string;
 };
-const ProfileBiography: React.FC<ProfileBiographyProps> = ({ biography }) => {
+const ProfileBiography: React.FC<ProfileBiographyProps> = ({
+  biography,
+  biosketch,
+}) => {
   return (
     <Card>
       <div
@@ -26,12 +30,14 @@ const ProfileBiography: React.FC<ProfileBiographyProps> = ({ biography }) => {
       >
         <Headline2 styleAsHeading={3}>Biography</Headline2>
         <Paragraph accent="lead">{biography}</Paragraph>
-        <div css={stretchOnMobile}>
-          <Button>
-            {docsIcon}
-            View Biosketch
-          </Button>
-        </div>
+        {biosketch && (
+          <div css={stretchOnMobile}>
+            <Link buttonStyle href={biosketch}>
+              {docsIcon}
+              View Biosketch
+            </Link>
+          </div>
+        )}
       </div>
     </Card>
   );

@@ -7,6 +7,16 @@ import {
 } from '../auth0/web-auth';
 import { extractErrorMessage, WebAuthError } from '../auth0/errors';
 
+const getAppUrl = () => {
+  const redirectUri = new URL(
+    new URLSearchParams(window.location.search).get('redirect_uri') ||
+      'https://hub.asap.science/',
+  );
+  return `${redirectUri.protocol}//${redirectUri.hostname}${
+    redirectUri.port ? `:${redirectUri.port}` : ''
+  }`;
+};
+
 interface LoginProps {
   readonly email: string;
   readonly setEmail: (newEmail: string) => void;
@@ -24,8 +34,8 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
   return (
     <SigninPage
       signup={signup}
-      termsHref="#TODO"
-      privacyPolicyHref="#TODO"
+      termsHref={`${getAppUrl()}/terms-and-conditions`}
+      privacyPolicyHref={`${getAppUrl()}/privacy-policy`}
       forgotPasswordHref="/forgot-password"
       onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}
       onOrcidSignin={() => authorizeWithSso(window.location, 'ORCID')}

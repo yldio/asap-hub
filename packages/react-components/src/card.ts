@@ -24,9 +24,9 @@ export const paddingStyles = css({
   )}`,
   paddingBottom: `${vminLinearCalcClamped(
     mobileScreen,
-    30,
+    18,
     tabletScreen,
-    36,
+    24,
     'px',
   )}`,
   paddingLeft: `${vminLinearCalc(

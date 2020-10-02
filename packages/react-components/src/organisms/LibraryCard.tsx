@@ -4,14 +4,7 @@ import format from 'date-fns/format';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Caption, TagLabel, Paragraph } from '../atoms';
-import {
-  tabletScreen,
-  perRem,
-  vminLinearCalcClamped,
-  vminLinearCalc,
-  mobileScreen,
-  largeDesktopScreen,
-} from '../pixels';
+import { tabletScreen, perRem } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon } from '../icons';
 
@@ -19,13 +12,6 @@ const containerStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'space-between',
-  padding: `${vminLinearCalcClamped(
-    mobileScreen,
-    12,
-    tabletScreen,
-    24,
-    'px',
-  )} ${vminLinearCalc(mobileScreen, 24, largeDesktopScreen, 36, 'px')}`,
 });
 
 const textStyles = css({
@@ -78,7 +64,7 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
   team,
 }) => {
   return (
-    <Card padding={false}>
+    <Card>
       <div css={containerStyles}>
         <div css={typeStyles}>
           <TagLabel>{type}</TagLabel>

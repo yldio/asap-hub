@@ -5,18 +5,9 @@ import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Avatar, Caption } from '../atoms';
 import { ProfilePersonalText } from '../molecules';
-import { tabletScreen, vminLinearCalcClamped, mobileScreen } from '../pixels';
-import { paddingStyles } from '../card';
+import { tabletScreen } from '../pixels';
 
 const containerStyles = css({
-  paddingBottom: `${vminLinearCalcClamped(
-    mobileScreen,
-    12,
-    tabletScreen,
-    24,
-    'px',
-  )}`,
-
   display: 'grid',
   columnGap: '25px',
   rowGap: '12px',
@@ -74,7 +65,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
 }) => {
   return (
     <Card>
-      <div css={[paddingStyles, containerStyles]}>
+      <div css={[containerStyles]}>
         <Link theme={null} href={href}>
           <Avatar
             imageUrl={avatarURL}

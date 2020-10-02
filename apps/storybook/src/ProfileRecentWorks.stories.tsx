@@ -2,7 +2,7 @@ import React from 'react';
 import { ProfileRecentWorks } from '@asap-hub/react-components';
 
 export default {
-  title: 'Templates / Profile / Recent Works',
+  title: 'Organisms / Profile / Recent Works',
 };
 
 export const Normal = () => (

@@ -12,7 +12,7 @@ export { default as ProfileRecentWorks } from './ProfileRecentWorks';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as RichText } from './RichText';
-export { default as SkillsSection } from './SkillsSection';
+export { default as ProfileSkills } from './ProfileSkills';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamOverview } from './TeamOverview';
 export { default as UserNavigation } from './UserNavigation';

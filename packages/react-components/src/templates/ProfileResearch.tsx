@@ -4,7 +4,7 @@ import css from '@emotion/css';
 import { perRem } from '../pixels';
 import {
   ProfileBackground,
-  SkillsSection,
+  ProfileSkills,
   QuestionsSection,
 } from '../organisms';
 import { UserResponse } from '../../../model/src';
@@ -41,7 +41,7 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
             <ProfileBackground key={team.id} {...team} firstName={firstName} />
           ))
         : null}
-      {skills.length ? <SkillsSection skills={skills} /> : null}
+      {skills.length ? <ProfileSkills skills={skills} /> : null}
       {questions.length ? (
         <QuestionsSection firstName={firstName} questions={questions} />
       ) : null}

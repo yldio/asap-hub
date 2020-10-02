@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { TeamResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
-import { MembersSection, SkillsSection, TeamOverview } from '../organisms';
+import { MembersSection, ProfileSkills, TeamOverview } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../utils';
 
@@ -13,7 +13,7 @@ const styles = css({
 });
 
 type TeamAboutProps = ComponentProps<typeof TeamOverview> &
-  ComponentProps<typeof SkillsSection> &
+  ComponentProps<typeof ProfileSkills> &
   ComponentProps<typeof MembersSection> &
   Pick<TeamResponse, 'pointOfContact'>;
 
@@ -31,7 +31,7 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
         projectSummary={projectSummary}
       />
     ) : null}
-    {skills.length ? <SkillsSection skills={skills} /> : null}
+    {skills.length ? <ProfileSkills skills={skills} /> : null}
     {members.length ? <MembersSection members={members} /> : null}
     {pointOfContact && (
       <CtaCard href={createMailTo(pointOfContact)} buttonText="Contact PM">

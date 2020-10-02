@@ -8268,7 +8268,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/jsdom", "npm:16.2.3"],
-            ["@types/node", "npm:12.12.55"],
             ["@types/pify", "npm:3.0.2"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],

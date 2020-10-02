@@ -9,7 +9,17 @@ export interface Results<T> {
 
 export interface Filter {
   path: string;
-  op: 'eq' | 'in' | 'gt';
+  op:
+    | 'eq'
+    | 'in'
+    | 'gt'
+    | 'lt'
+    | 'le'
+    | 'ge'
+    | 'ne'
+    | 'contains'
+    | 'startsWith'
+    | 'endsWith';
   value: string[] | number[] | string | number | boolean;
 }
 

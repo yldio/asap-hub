@@ -16,20 +16,15 @@ describe('getSvgAspectRatio', () => {
   });
 });
 
-describe('Create MailTo link', () => {
-  it('generates a mailto', () => {
-    expect(createMailTo('test@gmail.com')).toEqual('mailto:test%40gmail.com');
+describe('createMailTo', () => {
+  it('generates a mailto link', () => {
+    expect(createMailTo('test@example.com')).toMatch(/^mailto:/);
   });
 
-  it('generates a mailto with + sign ', () => {
-    expect(createMailTo('test+jajaja@gmail.com')).toEqual(
-      'mailto:test%2Bjajaja%40gmail.com',
-    );
-  });
-
-  it('generates a mailto with ?', () => {
-    expect(createMailTo('tim?seckinger@yld.io')).toEqual(
-      'mailto:tim%3Fseckinger%40yld.io',
-    );
+  it('escapes the email address', () => {
+    const [, address] = createMailTo('te?st@example.com').match(
+      /^mailto:(.*)$/,
+    )!;
+    expect(decodeURIComponent(address)).toBe('te?st@example.com');
   });
 });

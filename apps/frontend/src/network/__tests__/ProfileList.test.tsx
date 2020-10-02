@@ -36,6 +36,7 @@ const users: ListUserResponse = {
       orcid: '0000-0001-8203-6901',
       orcidWorks: [],
       skills: [],
+      questions: [],
     },
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb7',
@@ -58,6 +59,7 @@ const users: ListUserResponse = {
       orcid: '0000-0001-8203-6901',
       orcidWorks: [],
       skills: [],
+      questions: [],
     },
   ],
 };

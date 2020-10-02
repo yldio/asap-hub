@@ -4,7 +4,7 @@ import { PeopleCard } from '../organisms';
 
 interface NetworkPeopleProps {
   readonly people: ReadonlyArray<
-    UserResponse & ComponentProps<typeof PeopleCard>
+    Pick<UserResponse, 'id'> & ComponentProps<typeof PeopleCard>
   >;
 }
 

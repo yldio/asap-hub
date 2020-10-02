@@ -7,6 +7,7 @@ const commonProps = {
   firstName: 'Phillip',
   teams: [],
   skills: [],
+  questions: [],
 };
 
 it('renders research', () => {
@@ -32,10 +33,31 @@ it('renders the skills', () => {
   expect(getByText('Expertise and Resources')).toBeVisible();
   expect(getByText('Neurological Diseases')).toBeVisible();
 });
+
 it('does not render an empty skills list', () => {
   const { queryByText } = render(
     <ProfileResearch {...commonProps} skills={[]} />,
   );
   expect(queryByText('Expertise and Resources')).not.toBeInTheDocument();
   expect(queryByText('Neurological Diseases')).not.toBeInTheDocument();
+});
+
+it('renders the questions list', () => {
+  const { getByText } = render(
+    <ProfileResearch
+      {...commonProps}
+      questions={['What is the meaning of life?']}
+    />,
+  );
+  expect(getByText(/open questions/i).tagName).toBe('H2');
+  expect(
+    getByText('What is the meaning of life?', { exact: false }),
+  ).toBeVisible();
+});
+
+it('does not render an empty questions list', () => {
+  const { queryByText } = render(
+    <ProfileResearch {...commonProps} questions={[]} />,
+  );
+  expect(queryByText(/open questions/i)).not.toBeInTheDocument();
 });

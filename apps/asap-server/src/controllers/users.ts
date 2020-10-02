@@ -139,7 +139,7 @@ export default class Users {
     });
 
     return {
-      total: total,
+      total,
       items: users.map(transform),
     };
   }

@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import { SigninPage } from '@asap-hub/react-components';
+import { config } from '@asap-hub/auth';
 
 import {
   authorizeWithSso,
   authorizeWithEmailPassword,
 } from '../auth0/web-auth';
 import { extractErrorMessage, WebAuthError } from '../auth0/errors';
-
-const getAppUrl = () => {
-  const redirectUri = new URL(
-    new URLSearchParams(window.location.search).get('redirect_uri') ||
-      'https://hub.asap.science/',
-  );
-  return `${redirectUri.protocol}//${redirectUri.hostname}${
-    redirectUri.port ? `:${redirectUri.port}` : ''
-  }`;
-};
 
 interface LoginProps {
   readonly email: string;
@@ -34,8 +25,8 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
   return (
     <SigninPage
       signup={signup}
-      termsHref={`${getAppUrl()}/terms-and-conditions`}
-      privacyPolicyHref={`${getAppUrl()}/privacy-policy`}
+      termsHref={`${config.hubUrl}/terms-and-conditions`}
+      privacyPolicyHref={`${config.hubUrl}/privacy-policy`}
       forgotPasswordHref="/forgot-password"
       onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}
       onOrcidSignin={() => authorizeWithSso(window.location, 'ORCID')}

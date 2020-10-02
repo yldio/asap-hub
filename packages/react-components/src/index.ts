@@ -70,6 +70,7 @@ export {
   AdminInviteUserPage,
   BasicLayout,
   ContentPage,
+  ForgotPasswordPage,
   InviteUserForm,
   Layout,
   LibraryPage,
@@ -79,6 +80,8 @@ export {
   NetworkPageHeader,
   NetworkPeople,
   NetworkTeams,
+  NewsAndEventsPage,
+  NewsAndEventsPageHeader,
   PasswordResetEmailSentPage,
   ProfileAbout,
   ProfileHeader,
@@ -95,5 +98,4 @@ export {
   TeamPage,
   WelcomeCard,
   WelcomePage,
-  ForgotPasswordPage,
 } from './templates';

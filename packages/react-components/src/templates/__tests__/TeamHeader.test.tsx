@@ -113,6 +113,6 @@ it('renders a contact button when there is a pointOfContact', () => {
 
   expect(getByText('Contact').parentElement).toHaveAttribute(
     'href',
-    'mailto:test@test.com',
+    'mailto:test%40test.com',
   );
 });

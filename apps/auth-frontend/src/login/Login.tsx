@@ -6,6 +6,7 @@ import {
   authorizeWithEmailPassword,
 } from '../auth0/web-auth';
 import { extractErrorMessage, WebAuthError } from '../auth0/errors';
+import { getHubUrlFromRedirect } from '../utils';
 
 interface LoginProps {
   readonly email: string;
@@ -24,8 +25,8 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
   return (
     <SigninPage
       signup={signup}
-      termsHref="#TODO"
-      privacyPolicyHref="#TODO"
+      termsHref={`${getHubUrlFromRedirect()}/terms-and-conditions`}
+      privacyPolicyHref={`${getHubUrlFromRedirect()}/privacy-policy`}
       forgotPasswordHref="/forgot-password"
       onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}
       onOrcidSignin={() => authorizeWithSso(window.location, 'ORCID')}

@@ -26,11 +26,15 @@ const logoStyles = css({
 
 type HeaderProps = {
   readonly transparent?: boolean;
+  readonly logoHref?: string;
 };
 
-const Header: React.FC<HeaderProps> = ({ transparent = false }) => (
+const Header: React.FC<HeaderProps> = ({
+  transparent = false,
+  logoHref = '/',
+}) => (
   <header css={[containerStyles, transparent || containerOpaqueStyles]}>
-    <Link href="/">
+    <Link href={logoHref}>
       <img
         alt="ASAP logo"
         src={transparent ? asapPaddedWhiteImage : asapPaddedImage}

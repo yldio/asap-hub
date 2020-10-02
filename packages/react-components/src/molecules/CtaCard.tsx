@@ -14,30 +14,18 @@ const getInTouchStyles = css({
   display: 'grid',
   gridTemplateColumns: 'auto',
   alignItems: 'center',
-  paddingTop: `${12 / perRem}em`,
-  paddingLeft: `${vminLinearCalcClamped(
+  padding: `${12 / perRem}em ${vminLinearCalcClamped(
     mobileScreen,
     24,
     tabletScreen,
     36,
-    'px',
-  )}`,
-  paddingRight: `${vminLinearCalcClamped(
-    mobileScreen,
-    24,
-    tabletScreen,
-    36,
-    'px',
-  )}`,
-  paddingBottom: `${vminLinearCalcClamped(
-    mobileScreen,
-    18,
-    tabletScreen,
-    24,
     'px',
   )}`,
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     gridTemplateColumns: 'auto max-content',
+  },
+  [`@media (min-width: ${tabletScreen.min}px) and (max-width: ${smallDesktopScreen.min}px)`]: {
+    paddingBottom: `${14 / perRem}em`,
   },
 });
 

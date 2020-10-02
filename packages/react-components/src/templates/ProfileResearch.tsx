@@ -45,7 +45,7 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
       {questions.length ? (
         <QuestionsSection firstName={firstName} questions={questions} />
       ) : null}
-      <CtaCard href={`mailto:${email}`} buttonText="Contact">
+      <CtaCard href={createMailTo(email)} buttonText="Contact">
         <strong>Interested in what you have seen?</strong> <br />
         Why not get in touch with {displayName}?
       </CtaCard>

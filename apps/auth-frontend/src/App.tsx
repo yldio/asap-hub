@@ -4,13 +4,14 @@ import { BasicLayout } from '@asap-hub/react-components';
 
 import Login from './login/Login';
 import ForgotPassword from './forgot-password/ForgotPassword';
+import { getHubUrlFromRedirect } from './utils';
 
 const App: React.FC<{}> = () => {
   const [email, setEmail] = useState('');
-
+  const hubUrl = getHubUrlFromRedirect();
   return (
     <HashRouter>
-      <BasicLayout>
+      <BasicLayout logoHref={hubUrl}>
         <Switch>
           <Route path="/login">
             <Login email={email} setEmail={setEmail} />

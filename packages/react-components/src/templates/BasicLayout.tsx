@@ -24,10 +24,11 @@ const contentStyles = css({
 
 interface BasicLayoutProps {
   children: React.ReactNode;
+  logoHref?: string;
 }
-const BasicLayout: React.FC<BasicLayoutProps> = ({ children }) => (
+const BasicLayout: React.FC<BasicLayoutProps> = ({ children, logoHref }) => (
   <article css={styles}>
-    <Header />
+    <Header logoHref={logoHref} />
     <main css={contentStyles}>{children}</main>
   </article>
 );

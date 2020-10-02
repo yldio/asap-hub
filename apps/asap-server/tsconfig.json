@@ -3,7 +3,9 @@
   "compilerOptions": {
     "rootDir": ".",
     "resolveJsonModule": true,
-    "outDir": "build"
+    "outDir": "build",
+    "module": "commonjs",
+    "target": "es2019"
   },
   "include": ["src", "test", "test/**/*.json"],
   "references": [

@@ -30,6 +30,6 @@
     "@types/babel__core": "^7",
     "@types/pump": "^1.1.0",
     "@types/through2-concurrent": "^2",
-    "@yarnpkg/pnpify": "^2.0.0-rc.20"
+    "@yarnpkg/pnpify": "^2.2.1"
   }
 }

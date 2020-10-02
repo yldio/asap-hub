@@ -30,7 +30,7 @@ const plugins = [
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'
-    ? ['serverless-webpack']
+    ? ['serverless-plugin-tree-shake']
     : ['serverless-offline']),
 ];
 
@@ -62,7 +62,7 @@ module.exports = {
     },
   },
   package: {
-    individually: false,
+    individually: true,
     excludeDevDependencies: false,
   },
   custom: {
@@ -94,7 +94,7 @@ module.exports = {
   },
   functions: {
     createUser: {
-      handler: 'apps/asap-server/build-cjs/handlers/users/create.handler',
+      handler: 'apps/asap-server/src/handlers/users/create.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -116,7 +116,7 @@ module.exports = {
       },
     },
     fetchUsers: {
-      handler: 'apps/asap-server/build-cjs/handlers/users/fetch.handler',
+      handler: 'apps/asap-server/src/handlers/users/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -128,7 +128,7 @@ module.exports = {
       ],
     },
     fetchUserById: {
-      handler: 'apps/asap-server/build-cjs/handlers/users/fetch-by-id.handler',
+      handler: 'apps/asap-server/src/handlers/users/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -141,7 +141,7 @@ module.exports = {
     },
     auth0FetchByCode: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-fetch-by-code.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-fetch-by-code.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -154,7 +154,7 @@ module.exports = {
     },
     auth0ConnectByCode: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-connect-by-code.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-connect-by-code.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -167,7 +167,7 @@ module.exports = {
     },
     syncUserOrcid: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-orcid.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-sync-orcid.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -179,8 +179,7 @@ module.exports = {
       ],
     },
     fetchResearchOutputs: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/research-outputs/fetch.handler',
+      handler: 'apps/asap-server/src/handlers/research-outputs/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -193,7 +192,7 @@ module.exports = {
     },
     fetchResearchOutputsById: {
       handler:
-        'apps/asap-server/build-cjs/handlers/research-outputs/fetch-by-id.handler',
+        'apps/asap-server/src/handlers/research-outputs/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -205,7 +204,7 @@ module.exports = {
       ],
     },
     fetchPage: {
-      handler: 'apps/asap-server/build-cjs/handlers/pages/fetch.handler',
+      handler: 'apps/asap-server/src/handlers/pages/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -217,7 +216,7 @@ module.exports = {
       ],
     },
     fetchTeams: {
-      handler: 'apps/asap-server/build-cjs/handlers/teams/fetch.handler',
+      handler: 'apps/asap-server/src/handlers/teams/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -229,7 +228,7 @@ module.exports = {
       ],
     },
     fetchTeamById: {
-      handler: 'apps/asap-server/build-cjs/handlers/teams/fetch-by-id.handler',
+      handler: 'apps/asap-server/src/handlers/teams/fetch-by-id.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -241,8 +240,7 @@ module.exports = {
       ],
     },
     fetchNewsAndEvents: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/news-and-events/fetch.handler',
+      handler: 'apps/asap-server/src/handlers/news-and-events/fetch.handler',
       events: [
         {
           // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
@@ -257,7 +255,7 @@ module.exports = {
       ? {
           cronjobSyncOrcid: {
             handler:
-              'apps/asap-server/build-cjs/handlers/webhooks/cronjob-sync-orcid.handler',
+              'apps/asap-server/src/handlers/webhooks/cronjob-sync-orcid.handler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

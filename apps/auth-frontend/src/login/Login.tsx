@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { SigninPage } from '@asap-hub/react-components';
-import { config } from '@asap-hub/auth';
 
 import {
   authorizeWithSso,
   authorizeWithEmailPassword,
 } from '../auth0/web-auth';
 import { extractErrorMessage, WebAuthError } from '../auth0/errors';
+import { getHubUrlFromRedirect } from '../utils';
 
 interface LoginProps {
   readonly email: string;
@@ -25,8 +25,8 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
   return (
     <SigninPage
       signup={signup}
-      termsHref={`${config.hubUrl}/terms-and-conditions`}
-      privacyPolicyHref={`${config.hubUrl}/privacy-policy`}
+      termsHref={`${getHubUrlFromRedirect()}/terms-and-conditions`}
+      privacyPolicyHref={`${getHubUrlFromRedirect()}/privacy-policy`}
       forgotPasswordHref="/forgot-password"
       onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}
       onOrcidSignin={() => authorizeWithSso(window.location, 'ORCID')}

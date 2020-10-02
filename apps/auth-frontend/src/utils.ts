@@ -1,0 +1,11 @@
+import { URLSearchParams, URL } from 'url';
+
+export const getHubUrlFromRedirect = () => {
+  const redirectUri = new URLSearchParams(window.location.search).get(
+    'redirect_uri',
+  );
+  if (!redirectUri) {
+    throw new Error('Redirect uri must be provided');
+  }
+  return new URL(redirectUri).origin;
+};

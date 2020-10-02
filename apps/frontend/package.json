@@ -46,6 +46,7 @@
     "cross-env": "^7.0.2",
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
+    "jose": "^2.0.2",
     "nock": "^13.0.4",
     "react-scripts": "patch:react-scripts@3.4.3#./patches/react-scripts.patch",
     "react-test-renderer": "^16.13.1",

@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth0 } from '@asap-hub/react-context';
 import { WelcomePage } from '@asap-hub/react-components';
 
-const Home: React.FC<{}> = () => {
+const Signin: React.FC<{}> = () => {
   const { loginWithRedirect } = useAuth0();
 
   const signin = () => {
@@ -17,4 +17,4 @@ const Home: React.FC<{}> = () => {
   return <WelcomePage onClick={signin} />;
 };
 
-export default Home;
+export default Signin;

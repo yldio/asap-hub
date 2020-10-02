@@ -74,10 +74,10 @@ export default class Teams {
         ? {
             fullText: search,
             filter: {
-              or: [
-                { path: 'data.displayName.iv', op: 'contains', value: search },
-                { path: 'data.projectTitle.iv', op: 'contains', value: search },
-              ],
+              or: search.split(' ').flatMap((word) => [
+                { path: 'data.displayName.iv', op: 'contains', value: word },
+                { path: 'data.projectTitle.iv', op: 'contains', value: word },
+              ]),
             },
           }
         : {}),

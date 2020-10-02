@@ -64,12 +64,22 @@ describe('GET /teams', () => {
               {
                 path: 'data.displayName.iv',
                 op: 'contains',
-                value: 'Cristiano Ronaldo',
+                value: 'Cristiano',
               },
               {
                 path: 'data.projectTitle.iv',
                 op: 'contains',
-                value: 'Cristiano Ronaldo',
+                value: 'Cristiano',
+              },
+              {
+                path: 'data.displayName.iv',
+                op: 'contains',
+                value: 'Ronaldo',
+              },
+              {
+                path: 'data.projectTitle.iv',
+                op: 'contains',
+                value: 'Ronaldo',
               },
             ],
           },

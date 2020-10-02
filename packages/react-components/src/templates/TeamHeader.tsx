@@ -5,6 +5,7 @@ import { Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
 import { TeamResponse } from '../../../model/src';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { createMailTo } from '../utils';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -61,7 +62,12 @@ const TeamHeader: React.FC<TeamProps> = ({
             {members.length > 5 ? <li>{`+${members.length - 5}`}</li> : null}
           </ul>
           {pointOfContact && (
-            <Link buttonStyle small primary href={`mailto:${pointOfContact}`}>
+            <Link
+              buttonStyle
+              small
+              primary
+              href={`${createMailTo(pointOfContact)}`}
+            >
               Contact
             </Link>
           )}

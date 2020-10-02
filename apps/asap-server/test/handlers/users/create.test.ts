@@ -1,11 +1,13 @@
-import Chance from 'chance';
+import nock from 'nock';
 import aws from 'aws-sdk';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
+import { cms } from '../../../src/config';
 import { handler } from '../../../src/handlers/users/create';
 import { apiGatewayEvent } from '../../helpers/events';
 import { globalToken } from '../../../src/config';
-import { CMS } from '../../../src/cms';
+import { identity } from '../../helpers/squidex';
+import { response } from './fetch.fixtures';
 
 jest.mock('aws-sdk', () => {
   const m = {
@@ -16,14 +18,7 @@ jest.mock('aws-sdk', () => {
   return { SES: jest.fn(() => m) };
 });
 
-const chance = new Chance();
-const cms = new CMS();
-
 describe('POST /users', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("returns 400 when body isn't parsable as JSON", async () => {
     const res = (await handler(
       apiGatewayEvent({
@@ -47,14 +42,12 @@ describe('POST /users', () => {
   });
 
   test('return 401 when authorization header not present', async () => {
-    const payload = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
-
     const result = (await handler(
       apiGatewayEvent({
-        body: payload,
+        body: {
+          displayName: 'test user',
+          email: 'testuser@asap.science',
+        },
       }),
     )) as APIGatewayProxyResult;
 
@@ -62,17 +55,15 @@ describe('POST /users', () => {
   });
 
   test('return 403 when authorization header is not bearer', async () => {
-    const payload = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
-
     const result = (await handler(
       apiGatewayEvent({
         headers: {
           Authorization: `Basic invalid_token`,
         },
-        body: payload,
+        body: {
+          displayName: 'test user',
+          email: 'testuser@asap.science',
+        },
       }),
     )) as APIGatewayProxyResult;
 
@@ -80,30 +71,36 @@ describe('POST /users', () => {
   });
 
   test("return 403 when authorization header isn't valid", async () => {
-    const payload = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
-
     const result = (await handler(
       apiGatewayEvent({
         headers: {
           Authorization: `Bearer invalid_token`,
         },
-        body: payload,
+        body: {
+          displayName: 'test user',
+          email: 'testuser@asap.science',
+        },
       }),
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
   });
+});
+
+describe('POST /users', () => {
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test('returns 409 when email is a duplicate', async () => {
-    const payload = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
-
-    await cms.users.create(payload);
+    identity()
+      .post(
+        `/api/content/${cms.appName}/users?publish=true`,
+        ({ displayName, email }) =>
+          displayName?.iv === 'test user' &&
+          email?.iv === 'testuser@asap.science',
+      )
+      .reply(409);
 
     const res = (await handler(
       apiGatewayEvent({
@@ -112,8 +109,8 @@ describe('POST /users', () => {
         },
         httpMethod: 'post',
         body: {
-          displayName: payload.displayName,
-          email: payload.email,
+          displayName: 'test user',
+          email: 'testuser@asap.science',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -122,11 +119,17 @@ describe('POST /users', () => {
   });
 
   test('returns 201 and sends email with code', async () => {
-    const ses = new aws.SES();
-    const payload = {
-      displayName: `${chance.first()} ${chance.last()}`,
-      email: chance.email(),
-    };
+    const user = response.items[0];
+    user.data.connections.iv = [{ code: 'uuid' }];
+
+    identity()
+      .post(
+        `/api/content/${cms.appName}/users?publish=true`,
+        ({ displayName, email }) =>
+          displayName?.iv === 'test user' &&
+          email?.iv === 'testuser@asap.science',
+      )
+      .reply(201, user);
 
     const res = (await handler(
       apiGatewayEvent({
@@ -134,24 +137,25 @@ describe('POST /users', () => {
           Authorization: `Bearer ${globalToken}`,
         },
         httpMethod: 'post',
-        body: payload,
+        body: {
+          displayName: 'test user',
+          email: 'testuser@asap.science',
+        },
       }),
     )) as APIGatewayProxyResult;
 
+    const ses = new aws.SES();
     expect(res.statusCode).toStrictEqual(201);
-
-    const user = await cms.users.fetchByEmail(payload.email);
-    const [{ code }] = user!.data.connections.iv;
     expect(ses.sendTemplatedEmail).toBeCalledTimes(1);
     expect(ses.sendTemplatedEmail).toBeCalledWith({
       Source: 'no-reply@hub.asap.science',
       Destination: {
-        ToAddresses: [payload.email],
+        ToAddresses: ['testuser@asap.science'],
       },
       Template: 'Welcome',
       TemplateData: JSON.stringify({
-        firstName: payload.displayName,
-        link: `http://localhost:3000/welcome/${code}`,
+        firstName: 'test user',
+        link: `http://localhost:3000/welcome/uuid`,
       }),
     });
   });

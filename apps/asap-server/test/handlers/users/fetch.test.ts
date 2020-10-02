@@ -1,7 +1,5 @@
 import nock from 'nock';
-
 import { APIGatewayProxyResult } from 'aws-lambda';
-
 import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/users/fetch';
@@ -11,17 +9,17 @@ import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
 
 describe('GET /users', () => {
-  afterEach(() => {
-    nock.cleanAll();
+  beforeAll(() => {
+    identity();
   });
 
-  afterAll(() => {
+  afterEach(() => {
     expect(nock.isDone()).toBe(true);
   });
 
   test('returns 200 when no users exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({
@@ -115,7 +113,7 @@ describe('GET /users', () => {
 
   test('returns 200 with the results from the requested page', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({
@@ -150,7 +148,7 @@ describe('GET /users', () => {
 
   test('returns 200 when users exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({

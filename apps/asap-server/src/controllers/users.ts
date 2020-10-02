@@ -117,16 +117,30 @@ export default class Users {
   async fetch(options: {
     take: number;
     skip: number;
+    search: string;
   }): Promise<ListUserResponse> {
-    const query = {
-      ...options,
-      sort: [{ path: 'data.displayName.iv' }],
-    };
+    const { search, ...opts } = options;
 
-    const res = await this.users.fetch(query);
+    const { total, items: users } = await this.users.fetch({
+      ...opts,
+      ...(search
+        ? {
+            fullText: search,
+            filter: {
+              or: search.split(' ').flatMap((word) => [
+                { path: 'data.displayName.iv', op: 'contains', value: word },
+                { path: 'data.firstName.iv', op: 'contains', value: word },
+                { path: 'data.lastName.iv', op: 'contains', value: word },
+              ]),
+            },
+          }
+        : {}),
+      sort: [{ path: 'data.displayName.iv' }],
+    });
+
     return {
-      total: res.total,
-      items: res.items.map(transform),
+      total: total,
+      items: users.map(transform),
     };
   }
 

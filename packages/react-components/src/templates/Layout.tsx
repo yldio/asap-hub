@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import css from '@emotion/css';
 
-import { steel, paper, color, tin } from '../colors';
+import { steel, paper, color, tin, pearl } from '../colors';
 import { MenuHeader, MainNavigation, UserNavigation } from '../organisms';
 import { UserMenuButton } from '../molecules';
 import { Overlay } from '../atoms';
@@ -27,7 +27,7 @@ const styles = css({
 
 const headerStyles = css({
   gridArea: 'header',
-
+  backgroundColor: paper.rgb,
   boxSizing: 'border-box',
   borderBottom: `1px solid ${steel.rgb}`,
 });
@@ -38,6 +38,8 @@ const headerMenuShownStyles = css({
 });
 
 const contentStyles = css({
+  backgroundColor: pearl.rgb,
+
   gridRow: 'header-end / -1',
   gridColumn: '1 / -1',
   [crossQuery]: {
@@ -68,6 +70,8 @@ const userButtonStyles = css({
   [drawerQuery]: {
     display: 'none',
   },
+
+  backgroundColor: paper.rgb,
 
   borderBottom: `1px solid ${steel.rgb}`,
   borderLeft: `1px solid ${steel.rgb}`,

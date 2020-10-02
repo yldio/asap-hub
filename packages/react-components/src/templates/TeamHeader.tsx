@@ -6,11 +6,13 @@ import { TabNav } from '../molecules';
 import { TeamResponse } from '../../../model/src';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../utils';
+import { perRem } from '../pixels';
+import { paper } from '../colors';
 
 const containerStyles = css({
   alignSelf: 'stretch',
-
-  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
+  backgroundColor: paper.rgb,
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
 });
 
 type TeamProps = TeamResponse & {

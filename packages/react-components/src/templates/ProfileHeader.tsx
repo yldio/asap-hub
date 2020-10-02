@@ -3,16 +3,17 @@ import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 
-import { tabletScreen } from '../pixels';
+import { tabletScreen, perRem } from '../pixels';
 import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
 import { ProfilePersonalText, TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../utils';
+import { paper } from '../colors';
 
 const containerStyles = css({
   alignSelf: 'stretch',
-
-  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
+  backgroundColor: paper.rgb,
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
 });
 
 const personalInfoStyles = css({

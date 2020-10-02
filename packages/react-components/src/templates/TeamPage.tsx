@@ -3,17 +3,14 @@ import css from '@emotion/css';
 
 import TeamHeader from './TeamHeader';
 import { perRem } from '../pixels';
-import { pearl, steel } from '../colors';
+import { steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({
   alignSelf: 'stretch',
-  paddingTop: `${36 / perRem}em`,
 });
 const contentStyles = css({
-  backgroundColor: pearl.rgb,
   borderTop: `1px solid ${steel.rgb}`,
-
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 

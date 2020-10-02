@@ -1,5 +1,3 @@
-import { URLSearchParams, URL } from 'url';
-
 export const getHubUrlFromRedirect = () => {
   const redirectUri = new URLSearchParams(window.location.search).get(
     'redirect_uri',

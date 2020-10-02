@@ -26,6 +26,6 @@ const renderPage = async () => {
 };
 
 it('renders page title', async () => {
-  const { getByRole } = await renderPage();
-  expect(getByRole('heading').textContent).toEqual('News and Events');
+  const { getByText } = await renderPage();
+  expect(getByText(/content/)).toBeVisible();
 });

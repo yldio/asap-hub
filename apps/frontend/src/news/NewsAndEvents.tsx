@@ -1,7 +1,8 @@
 import React from 'react';
+import { Paragraph } from '@asap-hub/react-components';
 
-const Page: React.FC<{}> = () => {
-  return null;
+const NewsAndEvents: React.FC = () => {
+  return <Paragraph>content</Paragraph>;
 };
 
-export default Page;
+export default NewsAndEvents;

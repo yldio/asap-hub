@@ -51,6 +51,68 @@ describe('GET /teams', () => {
     });
   });
 
+  test('returns 200 when searching teams by name', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/teams`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          fullText: 'Cristiano Ronaldo',
+          filter: {
+            or: [
+              {
+                path: 'data.displayName.iv',
+                op: 'contains',
+                value: 'Cristiano',
+              },
+              {
+                path: 'data.projectTitle.iv',
+                op: 'contains',
+                value: 'Cristiano',
+              },
+              {
+                path: 'data.displayName.iv',
+                op: 'contains',
+                value: 'Ronaldo',
+              },
+              {
+                path: 'data.projectTitle.iv',
+                op: 'contains',
+                value: 'Ronaldo',
+              },
+            ],
+          },
+          sort: [{ path: 'data.displayName.iv' }],
+        }),
+      })
+      .reply(200, { total: 1, items: fixtures.teamsResponse.items.slice(0, 1) })
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        $filter: "data/teams/iv/id eq 'team-id-1'",
+      })
+      .reply(200, fixtures.usersResponseTeam1);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        queryStringParameters: {
+          search: 'Cristiano Ronaldo',
+        },
+        headers: {
+          Authorization: `Bearer ${chance.string()}`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual({
+      total: 1,
+      items: fixtures.expectation.items.slice(0, 1),
+    });
+  });
+
   test("returns empty response when resource doesn't exist", async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)

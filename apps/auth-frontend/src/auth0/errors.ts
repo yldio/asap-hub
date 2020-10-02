@@ -25,12 +25,10 @@ export const extractRuleErrorMessage = (
     .flatMap(
       ({ message: ruleMessage, format: ruleFormat = [], items = [] }) => [
         format(ruleMessage, ...ruleFormat),
-        ...items
-          .filter(({ verified }) => !verified)
-          .map(
-            ({ message: itemMessage, format: itemFormat = [] }) =>
-              `  ${format(itemMessage, ...itemFormat)}`,
-          ),
+        ...items.map(
+          ({ message: itemMessage, format: itemFormat = [], verified }) =>
+            `${verified ? '✔' : '✖'} ${format(itemMessage, ...itemFormat)}`,
+        ),
       ],
     )
     .join('\n');

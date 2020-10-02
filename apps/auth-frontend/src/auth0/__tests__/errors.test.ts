@@ -50,7 +50,7 @@ describe('extractErrorMessage', () => {
         'Unknown',
       ],
       [
-        'includes rule item messages',
+        'includes rule item messages with a tick/cross',
         [
           { message: 'At least 4 characters', verified: true },
           {
@@ -68,7 +68,7 @@ describe('extractErrorMessage', () => {
             ],
           },
         ],
-        'Not too many of the same characters:\n  At least three different characters',
+        'Not too many of the same characters:\n✔ Not more than half of the same character\n✖ At least three different characters',
       ],
       [
         'formats the message',

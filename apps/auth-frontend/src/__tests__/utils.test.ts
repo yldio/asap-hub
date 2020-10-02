@@ -21,7 +21,7 @@ afterEach(() => {
 it('to get origin from redirect URI', () => {
   mockLocation.mockReturnValue(
     new URL(
-      `?redirect_uri=${encodeURIComponent('http://google.com')}`,
+      `?redirect_uri=${encodeURIComponent('http://google.com/page')}`,
       mockLocation(),
     ),
   );

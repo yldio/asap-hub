@@ -28,6 +28,7 @@ export {
   Toggle,
 } from './atoms';
 export {
+  CtaCard,
   GoogleSigninButton,
   Header,
   LabeledDateField,

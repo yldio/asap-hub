@@ -1,5 +1,5 @@
 export { default as AgreeToTerms } from './AgreeToTerms';
-export { default as RichTextError } from './RichTextError';
+export { default as CtaCard } from './CtaCard';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
 export { default as LabeledDateField } from './LabeledDateField';
@@ -11,6 +11,7 @@ export { default as LabeledTextField } from './LabeledTextField';
 export { default as MenuButton } from './MenuButton';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as ProfilePersonalText } from './ProfilePersonalText';
+export { default as RichTextError } from './RichTextError';
 export { default as SearchField } from './SearchField';
 export { default as TabNav } from './TabNav';
 export { default as TagList } from './TagList';

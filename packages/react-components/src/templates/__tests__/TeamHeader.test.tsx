@@ -105,3 +105,14 @@ it('renders no more than 5 members', () => {
   );
   expect(getAllByRole('img')).toHaveLength(5);
 });
+
+it('renders a contact button when there is a pointOfContact', () => {
+  const { getByText } = render(
+    <TeamHeader {...boilerplateProps} pointOfContact="test@test.com" />,
+  );
+
+  expect(getByText('Contact').parentElement).toHaveAttribute(
+    'href',
+    'mailto:test%40test.com',
+  );
+});

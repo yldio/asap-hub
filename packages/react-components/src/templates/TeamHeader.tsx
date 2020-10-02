@@ -1,10 +1,11 @@
 import React from 'react';
 import css from '@emotion/css';
 import { formatDistance } from 'date-fns';
-import { Link, TabLink, Display, Button, Paragraph, Avatar } from '../atoms';
+import { Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
 import { TeamResponse } from '../../../model/src';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { createMailTo } from '../utils';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -31,6 +32,7 @@ const TeamHeader: React.FC<TeamProps> = ({
   displayName,
   lastModifiedDate,
   members,
+  pointOfContact,
 
   aboutHref,
   outputsHref,
@@ -59,9 +61,16 @@ const TeamHeader: React.FC<TeamProps> = ({
               })}
             {members.length > 5 ? <li>{`+${members.length - 5}`}</li> : null}
           </ul>
-          <Button small primary>
-            Contact
-          </Button>
+          {pointOfContact && (
+            <Link
+              buttonStyle
+              small
+              primary
+              href={`${createMailTo(pointOfContact)}`}
+            >
+              Contact
+            </Link>
+          )}
         </div>
         {lastModifiedDate && (
           <div>

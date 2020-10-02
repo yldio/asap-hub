@@ -8,6 +8,8 @@ import {
   QuestionsSection,
 } from '../organisms';
 import { UserResponse } from '../../../model/src';
+import { CtaCard } from '../molecules';
+import { createMailTo } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -16,9 +18,9 @@ const styles = css({
 
 type ProfileInterestProps = Pick<
   ComponentProps<typeof ProfileBackground>,
-  'firstName'
+  'firstName' | 'displayName'
 > &
-  Pick<UserResponse, 'skills' | 'questions'> & {
+  Pick<UserResponse, 'skills' | 'questions' | 'email'> & {
     readonly teams: ReadonlyArray<
       Omit<ComponentProps<typeof ProfileBackground>, 'firstName'>
     >;
@@ -26,6 +28,8 @@ type ProfileInterestProps = Pick<
 
 const ProfileAbout: React.FC<ProfileInterestProps> = ({
   firstName,
+  displayName,
+  email,
   teams,
   skills,
   questions,
@@ -41,6 +45,10 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
       {questions.length ? (
         <QuestionsSection firstName={firstName} questions={questions} />
       ) : null}
+      <CtaCard href={createMailTo(email)} buttonText="Contact">
+        <strong>Interested in what you have seen?</strong> <br />
+        Why not get in touch with {displayName}?
+      </CtaCard>
     </div>
   );
 };

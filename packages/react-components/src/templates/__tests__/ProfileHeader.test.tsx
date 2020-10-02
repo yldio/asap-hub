@@ -7,6 +7,7 @@ const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
   displayName: 'John Doe',
   teams: [],
   lastModifiedDate: formatISO(new Date()),
+  email: 'phillip@blah.com',
   aboutHref: './about',
   researchHref: './research',
   outputsHref: './outputs',
@@ -28,4 +29,14 @@ it('generates the last updated text', () => {
     />,
   );
   expect(container).toHaveTextContent(/update.* 2 years ago/);
+});
+
+it('generates the mailto link', () => {
+  const { getByText } = render(
+    <ProfileHeader {...boilerplateProps} email="test@test.com" />,
+  );
+  expect(getByText(/contact/i).parentElement).toHaveAttribute(
+    'href',
+    'mailto:test%40test.com',
+  );
 });

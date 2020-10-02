@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getSvgAspectRatio } from '../utils';
+import { getSvgAspectRatio, createMailTo } from '../utils';
 
 describe('getSvgAspectRatio', () => {
   it('throws if the element does not contain a svg', () => {
@@ -13,5 +13,18 @@ describe('getSvgAspectRatio', () => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" />,
       ),
     ).toBe(1.5);
+  });
+});
+
+describe('createMailTo', () => {
+  it('generates a mailto link', () => {
+    expect(createMailTo('test@example.com')).toMatch(/^mailto:/);
+  });
+
+  it('escapes the email address', () => {
+    const [, address] = createMailTo('te?st@example.com').match(
+      /^mailto:(.*)$/,
+    )!;
+    expect(decodeURIComponent(address)).toBe('te?st@example.com');
   });
 });

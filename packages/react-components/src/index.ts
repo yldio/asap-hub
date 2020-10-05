@@ -31,6 +31,7 @@ export {
   CtaCard,
   GoogleSigninButton,
   Header,
+  LabeledCheckbox,
   LabeledDateField,
   LabeledDropdown,
   LabeledPasswordField,

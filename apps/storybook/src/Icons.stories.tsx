@@ -1,6 +1,6 @@
 import {
-  chevronDownIcon,
   chevronCircleLeftIcon,
+  chevronDownIcon,
   chevronUpIcon,
   crossIcon,
   docsIcon,
@@ -25,6 +25,7 @@ import {
   settingsIcon,
   showPasswordIcon,
   teamIcon,
+  tickIcon,
   userIcon,
   validTickIcon,
   verticalDividerIcon,
@@ -32,8 +33,8 @@ import {
 
 export default { title: 'Atoms / Icons' };
 
-export const ChevronDown = () => chevronDownIcon;
 export const ChevronCircleLeft = () => chevronCircleLeftIcon;
+export const ChevronDown = () => chevronDownIcon;
 export const ChevronUp = () => chevronUpIcon;
 export const Cross = () => crossIcon;
 export const Docs = () => docsIcon;
@@ -58,6 +59,9 @@ export const Search = () => searchIcon;
 export const Settings = () => settingsIcon;
 export const ShowPassword = () => showPasswordIcon;
 export const TeamMembers = () => teamIcon;
+export const TeamMembersIcon = () => teamIcon;
+export const TickIcon = () => tickIcon;
 export const User = () => userIcon;
+export const UserIcon = () => userIcon;
 export const ValidTick = () => validTickIcon;
 export const VerticalDivider = () => verticalDividerIcon;

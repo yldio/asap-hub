@@ -2,6 +2,7 @@ export { default as AgreeToTerms } from './AgreeToTerms';
 export { default as CtaCard } from './CtaCard';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
+export { default as LabeledCheckbox } from './LabeledCheckbox';
 export { default as LabeledDateField } from './LabeledDateField';
 export { default as LabeledDropdown } from './LabeledDropdown';
 export { default as LabeledPasswordField } from './LabeledPasswordField';

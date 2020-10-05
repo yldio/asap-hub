@@ -23,6 +23,7 @@ export { default as previousPageIcon } from './previous-page';
 export { default as searchIcon } from './search-icon';
 export { default as settingsIcon } from './settings';
 export { default as showPasswordIcon } from './show-password';
+export { default as tickIcon } from './tick';
 export { default as teamIcon } from './team';
 export { default as userIcon } from './user';
 export { default as validTickIcon } from './valid-tick-icon';

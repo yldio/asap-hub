@@ -2,11 +2,9 @@ import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { Label, Paragraph, Checkbox } from '../atoms';
-import { perRem } from '../pixels';
 import { lead, tin } from '../colors';
 
 const containerStyles = css({
-  paddingBottom: `${18 / perRem}em`,
   color: lead.rgb,
 });
 

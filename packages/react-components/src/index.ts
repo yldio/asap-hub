@@ -45,6 +45,7 @@ export {
   UserMenuButton,
 } from './molecules';
 export {
+  CheckboxGroup,
   ComingSoon,
   EmailPasswordSignin,
   LibraryCard,

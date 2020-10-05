@@ -26,12 +26,12 @@ export type Auth0 = {
   readonly user?: Auth0User;
   readonly loading: boolean;
   readonly popupOpen: boolean;
-  readonly handleRedirectCallback: () => Promise<void>;
 } & Pick<
   Auth0Client,
   | 'getIdTokenClaims'
   | 'loginWithRedirect'
   | 'loginWithPopup'
+  | 'handleRedirectCallback'
   | 'getTokenSilently'
   | 'getTokenWithPopup'
   | 'logout'

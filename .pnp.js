@@ -954,6 +954,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.1"
       ],
       [
+        "@panva/asn1.js",
+        "npm:1.0.0"
+      ],
+      [
         "@peculiar/asn1-schema",
         "npm:2.0.3"
       ],
@@ -3198,10 +3202,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.4"
       ],
       [
-        "detect-libc",
-        "npm:1.0.3"
-      ],
-      [
         "detect-newline",
         "npm:3.1.0"
       ],
@@ -4322,10 +4322,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.0.6"
       ],
       [
-        "ignore-walk",
-        "npm:3.0.3"
-      ],
-      [
         "immediate",
         "npm:3.0.6"
       ],
@@ -4876,6 +4872,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "jmespath",
         "npm:0.15.0"
+      ],
+      [
+        "jose",
+        "npm:2.0.2"
       ],
       [
         "js-cookie",
@@ -5490,10 +5490,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.1.0"
       ],
       [
-        "needle",
-        "npm:2.4.1"
-      ],
-      [
         "negotiator",
         "npm:0.6.2"
       ],
@@ -5550,10 +5546,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:8.0.0"
       ],
       [
-        "node-pre-gyp",
-        "npm:0.14.0"
-      ],
-      [
         "node-releases",
         "npm:1.1.53"
       ],
@@ -5582,20 +5574,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.5.0"
       ],
       [
-        "npm-bundled",
-        "npm:1.1.1"
-      ],
-      [
         "npm-conf",
         "npm:1.1.3"
-      ],
-      [
-        "npm-normalize-package-bin",
-        "npm:1.0.1"
-      ],
-      [
-        "npm-packlist",
-        "npm:1.4.8"
       ],
       [
         "npm-run-path",
@@ -7927,7 +7907,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "whatwg-url",
-        "npm:8.0.0"
+        "npm:8.3.0"
       ],
       [
         "which",
@@ -8368,6 +8348,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["history", "npm:4.10.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest-environment-jsdom-sixteen", "npm:1.0.3"],
+            ["jose", "npm:2.0.2"],
             ["nock", "npm:13.0.4"],
             ["react", "npm:16.13.1"],
             ["react-app-polyfill", "npm:1.0.6"],
@@ -12325,6 +12306,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@npmcli/move-file", "npm:1.0.1"],
             ["mkdirp", "npm:1.0.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@panva/asn1.js", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/@panva-asn1.js-npm-1.0.0-2bf51df722-0563c1372d.zip/node_modules/@panva/asn1.js/",
+          "packageDependencies": [
+            ["@panva/asn1.js", "npm:1.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -18733,7 +18723,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["anymatch", "npm:2.0.0"],
             ["async-each", "npm:1.0.3"],
             ["braces", "npm:2.3.2"],
-            ["fsevents", "patch:fsevents@npm%3A1.2.12#builtin<compat/fsevents>::version=1.2.12&hash=87eb42"],
+            ["fsevents", "patch:fsevents@npm%3A1.2.13#builtin<compat/fsevents>::version=1.2.13&hash=87eb42"],
             ["glob-parent", "npm:3.1.0"],
             ["inherits", "npm:2.0.4"],
             ["is-binary-path", "npm:1.0.1"],
@@ -20324,7 +20314,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["data-urls", "npm:2.0.0"],
             ["abab", "npm:2.0.3"],
             ["whatwg-mimetype", "npm:2.3.0"],
-            ["whatwg-url", "npm:8.0.0"]
+            ["whatwg-url", "npm:8.3.0"]
           ],
           "linkType": "HARD",
         }]
@@ -20740,15 +20730,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/destroy-npm-1.0.4-a2203e01cb-5a516fc5a8.zip/node_modules/destroy/",
           "packageDependencies": [
             ["destroy", "npm:1.0.4"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["detect-libc", [
-        ["npm:1.0.3", {
-          "packageLocation": "./.yarn/cache/detect-libc-npm-1.0.3-c30ac344d4-6cec442139.zip/node_modules/detect-libc/",
-          "packageDependencies": [
-            ["detect-libc", "npm:1.0.3"]
           ],
           "linkType": "HARD",
         }]
@@ -23659,14 +23640,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["fsevents", [
-        ["patch:fsevents@npm%3A1.2.12#builtin<compat/fsevents>::version=1.2.12&hash=87eb42", {
-          "packageLocation": "./.yarn/unplugged/fsevents-patch-ad3c8baf21/node_modules/fsevents/",
+        ["patch:fsevents@npm%3A1.2.13#builtin<compat/fsevents>::version=1.2.13&hash=87eb42", {
+          "packageLocation": "./.yarn/unplugged/fsevents-patch-2564bef5e1/node_modules/fsevents/",
           "packageDependencies": [
-            ["fsevents", "patch:fsevents@npm%3A1.2.12#builtin<compat/fsevents>::version=1.2.12&hash=87eb42"],
+            ["fsevents", "patch:fsevents@npm%3A1.2.13#builtin<compat/fsevents>::version=1.2.13&hash=87eb42"],
             ["bindings", "npm:1.5.0"],
-            ["nan", "npm:2.14.0"],
-            ["node-gyp", "npm:6.1.0"],
-            ["node-pre-gyp", "npm:0.14.0"]
+            ["nan", "npm:2.14.0"]
           ],
           "linkType": "HARD",
         }],
@@ -25026,16 +25005,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ignore-npm-5.1.4-fd6cc2dff0-215721af97.zip/node_modules/ignore/",
           "packageDependencies": [
             ["ignore", "npm:5.1.4"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["ignore-walk", [
-        ["npm:3.0.3", {
-          "packageLocation": "./.yarn/cache/ignore-walk-npm-3.0.3-7d7a6bd656-08394ce8c4.zip/node_modules/ignore-walk/",
-          "packageDependencies": [
-            ["ignore-walk", "npm:3.0.3"],
-            ["minimatch", "npm:3.0.4"]
           ],
           "linkType": "HARD",
         }]
@@ -26780,7 +26749,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@jest/types", "npm:24.9.0"],
             ["anymatch", "npm:2.0.0"],
             ["fb-watchman", "npm:2.0.1"],
-            ["fsevents", "patch:fsevents@npm%3A1.2.12#builtin<compat/fsevents>::version=1.2.12&hash=87eb42"],
+            ["fsevents", "patch:fsevents@npm%3A1.2.13#builtin<compat/fsevents>::version=1.2.13&hash=87eb42"],
             ["graceful-fs", "npm:4.2.4"],
             ["invariant", "npm:2.2.4"],
             ["jest-serializer", "npm:24.9.0"],
@@ -27498,6 +27467,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["jose", [
+        ["npm:2.0.2", {
+          "packageLocation": "./.yarn/cache/jose-npm-2.0.2-ddd15e40f1-22ad6902c9.zip/node_modules/jose/",
+          "packageDependencies": [
+            ["jose", "npm:2.0.2"],
+            ["@panva/asn1.js", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["js-cookie", [
         ["npm:2.2.1", {
           "packageLocation": "./.yarn/cache/js-cookie-npm-2.2.1-e879cd2148-c110f78427.zip/node_modules/js-cookie/",
@@ -27655,7 +27634,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["webidl-conversions", "npm:6.1.0"],
             ["whatwg-encoding", "npm:1.0.5"],
             ["whatwg-mimetype", "npm:2.3.0"],
-            ["whatwg-url", "npm:8.0.0"],
+            ["whatwg-url", "npm:8.3.0"],
             ["ws", "virtual:04143de84d48e0290c46a8cdca349b95e44029737189afb4c6180c1751ed718bcc554eca60ffa788bfedeef0454a95b64b7aac48aefd7ae297b6105a5c813d5b#npm:7.3.1"],
             ["xml-name-validator", "npm:3.0.0"]
           ],
@@ -29523,18 +29502,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["needle", [
-        ["npm:2.4.1", {
-          "packageLocation": "./.yarn/cache/needle-npm-2.4.1-bae4bd7002-f96e393498.zip/node_modules/needle/",
-          "packageDependencies": [
-            ["needle", "npm:2.4.1"],
-            ["debug", "virtual:8bdf672d54f36156a0f721b1434bbc1348d0f0fc5e805c421e22316652d3adb4ab5ec9db167a289ec9115ad44ae048edb781152c06b39311b623662569c1a6c3#npm:3.2.6"],
-            ["iconv-lite", "npm:0.4.24"],
-            ["sax", "npm:1.2.4"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["negotiator", [
         ["npm:0.6.2", {
           "packageLocation": "./.yarn/cache/negotiator-npm-0.6.2-ba538e167a-4b230bd15f.zip/node_modules/negotiator/",
@@ -29746,25 +29713,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["node-pre-gyp", [
-        ["npm:0.14.0", {
-          "packageLocation": "./.yarn/unplugged/node-pre-gyp-npm-0.14.0-1190004aad/node_modules/node-pre-gyp/",
-          "packageDependencies": [
-            ["node-pre-gyp", "npm:0.14.0"],
-            ["detect-libc", "npm:1.0.3"],
-            ["mkdirp", "npm:0.5.5"],
-            ["needle", "npm:2.4.1"],
-            ["nopt", "npm:4.0.3"],
-            ["npm-packlist", "npm:1.4.8"],
-            ["npmlog", "npm:4.1.2"],
-            ["rc", "npm:1.2.8"],
-            ["rimraf", "npm:2.7.1"],
-            ["semver", "npm:5.7.1"],
-            ["tar", "npm:4.4.13"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["node-releases", [
         ["npm:1.1.53", {
           "packageLocation": "./.yarn/cache/node-releases-npm-1.1.53-faa0ef7637-744ff96626.zip/node_modules/node-releases/",
@@ -29873,16 +29821,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["npm-bundled", [
-        ["npm:1.1.1", {
-          "packageLocation": "./.yarn/cache/npm-bundled-npm-1.1.1-4e8c147002-f51ddba869.zip/node_modules/npm-bundled/",
-          "packageDependencies": [
-            ["npm-bundled", "npm:1.1.1"],
-            ["npm-normalize-package-bin", "npm:1.0.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["npm-conf", [
         ["npm:1.1.3", {
           "packageLocation": "./.yarn/cache/npm-conf-npm-1.1.3-e2833445bb-e9e092ed13.zip/node_modules/npm-conf/",
@@ -29890,27 +29828,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["npm-conf", "npm:1.1.3"],
             ["config-chain", "npm:1.1.12"],
             ["pify", "npm:3.0.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["npm-normalize-package-bin", [
-        ["npm:1.0.1", {
-          "packageLocation": "./.yarn/cache/npm-normalize-package-bin-npm-1.0.1-2cf38a5d95-495fae7615.zip/node_modules/npm-normalize-package-bin/",
-          "packageDependencies": [
-            ["npm-normalize-package-bin", "npm:1.0.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["npm-packlist", [
-        ["npm:1.4.8", {
-          "packageLocation": "./.yarn/cache/npm-packlist-npm-1.4.8-ddca195225-34c4bbd47d.zip/node_modules/npm-packlist/",
-          "packageDependencies": [
-            ["npm-packlist", "npm:1.4.8"],
-            ["ignore-walk", "npm:3.0.3"],
-            ["npm-bundled", "npm:1.1.1"],
-            ["npm-normalize-package-bin", "npm:1.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -38554,13 +38471,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:8.0.0", {
-          "packageLocation": "./.yarn/cache/whatwg-url-npm-8.0.0-bdd5fa9457-35caa91ed4.zip/node_modules/whatwg-url/",
+        ["npm:8.3.0", {
+          "packageLocation": "./.yarn/cache/whatwg-url-npm-8.3.0-76717c336b-f5735046ef.zip/node_modules/whatwg-url/",
           "packageDependencies": [
-            ["whatwg-url", "npm:8.0.0"],
+            ["whatwg-url", "npm:8.3.0"],
             ["lodash.sortby", "npm:4.7.0"],
             ["tr46", "npm:2.0.2"],
-            ["webidl-conversions", "npm:5.0.0"]
+            ["webidl-conversions", "npm:6.1.0"]
           ],
           "linkType": "HARD",
         }]

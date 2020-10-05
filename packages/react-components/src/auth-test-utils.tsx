@@ -43,7 +43,9 @@ export const Auth0Provider: React.FC<{
         getIdTokenClaims: notImplemented('getIdTokenClaims'),
         getTokenSilently: notImplemented('getTokenSilently'),
         getTokenWithPopup: notImplemented('getTokenWithPopup'),
-        handleRedirectCallback: notImplemented('handleRedirectCallback'),
+        handleRedirectCallback: auth0Client
+          ? (...args) => auth0Client.handleRedirectCallback(...args).then()
+          : notReady('handleRedirectCallback'),
         loginWithPopup: notImplemented('loginWithPopup'),
         loginWithRedirect: auth0Client
           ? (...args) => auth0Client.loginWithRedirect(...args)

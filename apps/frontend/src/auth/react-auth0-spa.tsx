@@ -79,11 +79,12 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
       throw new Error('Auth0 client not initialized');
     }
     setLoading(true);
-    await auth0Client.handleRedirectCallback();
+    const result = await auth0Client.handleRedirectCallback();
     const user = await auth0Client.getUser();
     setLoading(false);
     setIsAuthenticated(true);
     setUser(user);
+    return result;
   };
 
   const getSafeAuth0ClientProperty = <T extends keyof Auth0Client>(

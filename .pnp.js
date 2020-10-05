@@ -926,6 +926,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:26.3.0"
       ],
       [
+        "@jeysal/babel-plugin-ramda",
+        "npm:2.0.1"
+      ],
+      [
         "@jsdevtools/rehype-toc",
         "npm:3.0.2"
       ],
@@ -1544,6 +1548,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/qs",
         "npm:6.9.4"
+      ],
+      [
+        "@types/ramda",
+        "npm:0.27.20"
       ],
       [
         "@types/reach__router",
@@ -2172,6 +2180,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "babel-plugin-jest-hoist",
         "npm:26.2.0"
+      ],
+      [
+        "babel-plugin-lodash",
+        "npm:3.3.4"
       ],
       [
         "babel-plugin-macros",
@@ -6419,7 +6431,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "ramda",
-        "npm:0.26.1"
+        "npm:0.27.1"
       ],
       [
         "randombytes",
@@ -6720,6 +6732,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "require-main-filename",
         "npm:2.0.0"
+      ],
+      [
+        "require-package-name",
+        "npm:2.0.1"
       ],
       [
         "requires-port",
@@ -7506,6 +7522,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:89740c18c546eb958f81ea24915076464ec60967e518c1e0f7c95a98cb5b63eceb60e62ea5a59f9ce8afdcb3996e6f45d9c1ad2ed2115a49f67bf2625248f2ec#npm:1.2.0"
       ],
       [
+        "ts-toolbelt",
+        "npm:6.15.5"
+      ],
+      [
         "ts.cryptojs256",
         "npm:1.0.1"
       ],
@@ -8124,12 +8144,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.9.6"],
             ["@babel/preset-typescript", "virtual:dce39fa2e05942e1473f7ec40900aeec338e13b76d504e96abc4a8f72df79ed87ac2ba0e2983a4693c1eee2620617fc7d8af2f34ec4d65bf2fd45c746ba98652#npm:7.9.0"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
+            ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
             ["@testing-library/jest-dom", "npm:5.9.0"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/webpack", "npm:4.41.17"],
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.0.0-rc.20"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
+            ["babel-plugin-lodash", "npm:3.3.4"],
             ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["dotenv", "npm:8.2.0"],
@@ -8439,6 +8461,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__react-context", null],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
+            ["@types/ramda", "npm:0.27.20"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
             ["@types/react-router-dom", "npm:5.1.5"],
@@ -8454,6 +8477,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
+            ["ramda", "npm:0.27.1"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
@@ -8508,6 +8532,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__react-context", null],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
+            ["@types/ramda", "npm:0.27.20"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
             ["@types/react-router-dom", "npm:5.1.5"],
@@ -8523,6 +8548,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
+            ["ramda", "npm:0.27.1"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
@@ -8572,6 +8598,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__react-context", null],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
+            ["@types/ramda", "npm:0.27.20"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
             ["@types/react-router-dom", "npm:5.1.5"],
@@ -8587,6 +8614,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
+            ["ramda", "npm:0.27.1"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
@@ -8639,6 +8667,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.3"],
+            ["@types/ramda", "npm:0.27.20"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-dom", "npm:16.9.6"],
             ["@types/react-router-dom", "npm:5.1.5"],
@@ -8654,6 +8683,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
+            ["ramda", "npm:0.27.1"],
             ["react", "npm:16.13.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
@@ -9114,6 +9144,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@babel-helper-module-imports-npm-7.10.3-29c51cdb8f-831629d470.zip/node_modules/@babel/helper-module-imports/",
           "packageDependencies": [
             ["@babel/helper-module-imports", "npm:7.10.3"],
+            ["@babel/types", "npm:7.11.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:7.10.4", {
+          "packageLocation": "./.yarn/cache/@babel-helper-module-imports-npm-7.10.4-f55d85af2c-84d03b58e7.zip/node_modules/@babel/helper-module-imports/",
+          "packageDependencies": [
+            ["@babel/helper-module-imports", "npm:7.10.4"],
             ["@babel/types", "npm:7.11.0"]
           ],
           "linkType": "HARD",
@@ -11011,6 +11049,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["to-fast-properties", "npm:2.0.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:7.11.5", {
+          "packageLocation": "./.yarn/cache/@babel-types-npm-7.11.5-d0fc2e4f15-a1515b3ed1.zip/node_modules/@babel/types/",
+          "packageDependencies": [
+            ["@babel/types", "npm:7.11.5"],
+            ["@babel/helper-validator-identifier", "npm:7.10.4"],
+            ["lodash", "npm:4.17.20"],
+            ["to-fast-properties", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@bcoe/v8-coverage", [
@@ -12228,6 +12276,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:13.11.1"],
             ["@types/yargs", "npm:15.0.4"],
             ["chalk", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@jeysal/babel-plugin-ramda", [
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/@jeysal-babel-plugin-ramda-npm-2.0.1-1229a0eaae-97b8629296.zip/node_modules/@jeysal/babel-plugin-ramda/",
+          "packageDependencies": [
+            ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],
+            ["@babel/helper-module-imports", "npm:7.10.3"],
+            ["ramda", "npm:0.27.1"]
           ],
           "linkType": "HARD",
         }]
@@ -14879,6 +14938,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/ramda", [
+        ["npm:0.27.20", {
+          "packageLocation": "./.yarn/cache/@types-ramda-npm-0.27.20-b84fed1726-da9388a92c.zip/node_modules/@types/ramda/",
+          "packageDependencies": [
+            ["@types/ramda", "npm:0.27.20"],
+            ["ts-toolbelt", "npm:6.15.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/reach__router", [
         ["npm:1.3.5", {
           "packageLocation": "./.yarn/cache/@types-reach__router-npm-1.3.5-121b76b320-5823fb382d.zip/node_modules/@types/reach__router/",
@@ -16607,12 +16676,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.9.6"],
             ["@babel/preset-typescript", "virtual:dce39fa2e05942e1473f7ec40900aeec338e13b76d504e96abc4a8f72df79ed87ac2ba0e2983a4693c1eee2620617fc7d8af2f34ec4d65bf2fd45c746ba98652#npm:7.9.0"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
+            ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
             ["@testing-library/jest-dom", "npm:5.9.0"],
             ["@types/jest", "npm:26.0.3"],
             ["@types/webpack", "npm:4.41.17"],
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.0.0-rc.20"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
+            ["babel-plugin-lodash", "npm:3.3.4"],
             ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["dotenv", "npm:8.2.0"],
@@ -17220,6 +17291,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/types", "npm:7.11.0"],
             ["@types/babel__core", "npm:7.1.9"],
             ["@types/babel__traverse", "npm:7.0.10"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["babel-plugin-lodash", [
+        ["npm:3.3.4", {
+          "packageLocation": "./.yarn/cache/babel-plugin-lodash-npm-3.3.4-c7161075b6-219ed7b02a.zip/node_modules/babel-plugin-lodash/",
+          "packageDependencies": [
+            ["babel-plugin-lodash", "npm:3.3.4"],
+            ["@babel/helper-module-imports", "npm:7.10.4"],
+            ["@babel/types", "npm:7.11.5"],
+            ["glob", "npm:7.1.6"],
+            ["lodash", "npm:4.17.20"],
+            ["require-package-name", "npm:2.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -32543,6 +32628,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ramda", "npm:0.26.1"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:0.27.1", {
+          "packageLocation": "./.yarn/cache/ramda-npm-0.27.1-5818f2cb83-9aa4655dff.zip/node_modules/ramda/",
+          "packageDependencies": [
+            ["ramda", "npm:0.27.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["randombytes", [
@@ -34006,6 +34098,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/require-main-filename-npm-2.0.0-03eef65c84-8d3633149a.zip/node_modules/require-main-filename/",
           "packageDependencies": [
             ["require-main-filename", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["require-package-name", [
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/require-package-name-npm-2.0.1-ac9a206b63-bc1b42ecff.zip/node_modules/require-package-name/",
+          "packageDependencies": [
+            ["require-package-name", "npm:2.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -36856,6 +36957,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [
             "@types/typescript",
             "typescript"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["ts-toolbelt", [
+        ["npm:6.15.5", {
+          "packageLocation": "./.yarn/cache/ts-toolbelt-npm-6.15.5-e42f89942f-d2f585ee34.zip/node_modules/ts-toolbelt/",
+          "packageDependencies": [
+            ["ts-toolbelt", "npm:6.15.5"]
           ],
           "linkType": "HARD",
         }]

@@ -127,18 +127,32 @@ describe('when button-styled', () => {
 });
 
 describe.each`
-  description                         | href                                | wrapper
-  ${'external link with a router'}    | ${'https://parkinsonsroadmap.org/'} | ${StaticRouter}
-  ${'external link without a router'} | ${'https://parkinsonsroadmap.org/'} | ${undefined}
-  ${'internal link with a router'}    | ${'/'}                              | ${StaticRouter}
-  ${'internal link without a router'} | ${'/'}                              | ${undefined}
-`('for an $description to $href', ({ href, wrapper }) => {
-  it('applies the href to the anchor', () => {
-    const { getByRole } = render(<Link href={href}>text</Link>, {
+  contextDescription    | wrapper
+  ${'with a router'}    | ${StaticRouter}
+  ${'without a router'} | ${undefined}
+`('$contextDescription', ({ wrapper }) => {
+  describe.each`
+    linkDescription    | href
+    ${'external link'} | ${'https://parkinsonsroadmap.org/'}
+    ${'internal link'} | ${'/'}
+    ${'internal link'} | ${''}
+  `("for an $linkDescription to '$href'", ({ href }) => {
+    it('applies the href to the anchor', () => {
+      const { getByRole } = render(<Link href={href}>text</Link>, {
+        wrapper,
+      });
+      const anchor = getByRole('link') as HTMLAnchorElement;
+      expect(new URL(anchor.href, window.location.href).href).toBe(
+        new URL(href, window.location.href).href,
+      );
+    });
+  });
+
+  it('renders an inactive link without an href', () => {
+    const { getByText } = render(<Link href={undefined}>text</Link>, {
       wrapper,
     });
-    const anchor = getByRole('link') as HTMLAnchorElement;
-    expect(anchor).toHaveAttribute('href', href);
+    expect(getByText('text', { selector: 'a' })).not.toHaveAttribute('href');
   });
 });
 

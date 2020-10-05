@@ -1,9 +1,9 @@
 import React from 'react';
 import css from '@emotion/css';
+import { TeamMember } from '@asap-hub/model';
 
 import { Card, Link, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
-import { TeamMember } from '../../../model/src';
 import { teamIcon } from '../icons';
 import { TagList } from '../molecules';
 import { lead } from '../colors';

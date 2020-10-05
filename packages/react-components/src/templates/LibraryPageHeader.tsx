@@ -1,13 +1,12 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Display, Paragraph, Button } from '../atoms';
-import { SearchField } from '../molecules';
-import { perRem, tabletScreen } from '../pixels';
+import { Display, Paragraph } from '../atoms';
+import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
-import { filterIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { noop } from '../utils';
+import { SearchControls } from '../organisms';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -21,20 +20,6 @@ const containerStyles = css({
 
 const textStyles = css({
   maxWidth: `${610 / perRem}em`,
-});
-
-const searchContainerStyles = css({
-  display: 'grid',
-  gridTemplateColumns: 'auto min-content',
-  gridColumnGap: `${18 / perRem}em`,
-  alignItems: 'center',
-});
-
-const buttonTextStyles = css({
-  display: 'none',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'unset',
-  },
 });
 
 type LibraryPageHeaderProps = {
@@ -56,17 +41,11 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
           share more items, this library will grow.
         </Paragraph>
       </div>
-      <div css={searchContainerStyles}>
-        <SearchField
-          value={query}
-          placeholder="Search for a protein, a method…"
-          onChange={onChangeSearch}
-        />
-        <Button enabled={false}>
-          {filterIcon}
-          <span css={buttonTextStyles}>Filters</span>
-        </Button>
-      </div>
+      <SearchControls
+        placeholder="Search for a protein, a method…"
+        onChangeSearch={onChangeSearch}
+        query={query}
+      />
     </header>
   );
 };

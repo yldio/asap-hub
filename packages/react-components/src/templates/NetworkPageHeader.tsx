@@ -1,13 +1,12 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Display, Paragraph, Button, Toggle } from '../atoms';
-import { SearchField } from '../molecules';
+import { Display, Paragraph, Toggle } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { paper, steel } from '../colors';
-import { filterIcon, userIcon, teamIcon } from '../icons';
+import { userIcon, teamIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { noop } from '../utils';
+import { SearchControls } from '../organisms';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -35,20 +34,6 @@ const controlsStyles = css({
   },
 });
 
-const searchContainerStyles = css({
-  display: 'grid',
-  gridTemplateColumns: 'auto min-content',
-  gridColumnGap: `${18 / perRem}em`,
-  alignItems: 'center',
-});
-
-const buttonTextStyles = css({
-  display: 'none',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'unset',
-  },
-});
-
 type NetworkPageHeaderProps = {
   onChangeToggle?: () => void;
   onChangeSearch?: (newQuery: string) => void;
@@ -57,9 +42,9 @@ type NetworkPageHeaderProps = {
 };
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
-  onChangeSearch = noop,
+  onChangeSearch,
   query,
-  onChangeToggle = noop,
+  onChangeToggle,
   page,
 }) => {
   return (
@@ -81,19 +66,13 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           onChange={onChangeToggle}
           position={page === 'teams' ? 'left' : 'right'}
         />
-        <div css={searchContainerStyles}>
-          <SearchField
-            value={query}
-            placeholder={
-              page === 'users' ? 'Search for someone…' : 'Search for a team…'
-            }
-            onChange={onChangeSearch}
-          />
-          <Button enabled={false}>
-            {filterIcon}
-            <span css={buttonTextStyles}>Filters</span>
-          </Button>
-        </div>
+        <SearchControls
+          onChangeSearch={onChangeSearch}
+          placeholder={
+            page === 'users' ? 'Search for someone…' : 'Search for a team…'
+          }
+          query={query}
+        />
       </div>
     </header>
   );

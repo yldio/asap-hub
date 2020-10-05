@@ -60,10 +60,10 @@ export {
   PageControls,
   ProfileSkills,
   SsoButtons,
+  SearchControls,
   TeamCard,
   UserNavigation,
 } from './organisms';
-
 export {
   AdminInviteUserPage,
   BasicLayout,

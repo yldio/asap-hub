@@ -2,11 +2,24 @@ import get from 'lodash.get';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
 import { Squidex } from '@asap-hub/services-common';
-import { ListTeamResponse, TeamResponse, TeamMember } from '@asap-hub/model';
+import {
+  ListTeamResponse,
+  TeamResponse,
+  TeamMember,
+  TeamRole,
+} from '@asap-hub/model';
 
 import { CMSTeam } from '../entities/team';
 import { CMSUser } from '../entities/user';
 import { createURL } from '../utils/assets';
+
+const priorities: Record<TeamRole, number> = {
+  'Lead PI': 1,
+  'Co-Investigator': 2,
+  'Project Manager': 3,
+  Collaborator: 4,
+  'Key Personal': 5,
+};
 
 function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
   return {
@@ -21,7 +34,7 @@ function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
       ({ role }) =>
         role.toLowerCase() === 'pm' || role.toLowerCase() === 'product manager',
     )?.email,
-    members,
+    members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
   };
 }
 
@@ -72,14 +85,14 @@ export default class Teams {
       ...opts,
       ...(search
         ? {
-            fullText: search,
-            filter: {
-              or: search.split(' ').flatMap((word) => [
-                { path: 'data.displayName.iv', op: 'contains', value: word },
-                { path: 'data.projectTitle.iv', op: 'contains', value: word },
-              ]),
-            },
-          }
+          fullText: search,
+          filter: {
+            or: search.split(' ').flatMap((word) => [
+              { path: 'data.displayName.iv', op: 'contains', value: word },
+              { path: 'data.projectTitle.iv', op: 'contains', value: word },
+            ]),
+          },
+        }
         : {}),
       sort: [{ path: 'data.displayName.iv' }],
     });

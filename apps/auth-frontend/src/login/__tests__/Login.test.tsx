@@ -60,6 +60,7 @@ it('renders the form in signup mode', () => {
   );
   const { getByText } = render(<Login email="" setEmail={() => {}} />);
   expect(getByText(/create.+account/i, { selector: 'h1' })).toBeVisible();
+  expect(getByText(/continue$/i, { selector: 'button *' })).toBeVisible();
 });
 
 it.each(['Google', 'ORCID'])('initiates a SSO with %s', (provider) => {
@@ -108,7 +109,7 @@ it('initiates a signup with email and password', async () => {
     allAtOnce: true,
   });
 
-  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
     expect.objectContaining({
       search: expect.stringContaining(
@@ -140,7 +141,7 @@ it('shows an Auth0 error', async () => {
     'An unknown authentication error occurred.';
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
-  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(
     await findAllByText('An unknown authentication error occurred.'),
   ).not.toHaveLength(0);
@@ -163,7 +164,7 @@ it('shows a generic authentication error', async () => {
   const error = new Error('FetchError');
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
-  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(await findAllByText(/unknown.+FetchError/i)).not.toHaveLength(0);
 });
 
@@ -184,11 +185,11 @@ it('hides the authentication error message again when changing the credentials',
   const error = new Error('FetchError');
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
-  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(await findAllByText(/unknown.+FetchError/i)).not.toHaveLength(0);
 
   userEvent.clear(getByLabelText(/e-?mail/i));
   userEvent.tab();
-  userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
+  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   await waitFor(() => expect(queryByText(/error/i)).not.toBeInTheDocument());
 });

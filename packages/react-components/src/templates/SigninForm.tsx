@@ -46,7 +46,7 @@ const Signin: React.FC<SigninProps> = ({
     <div css={ignoreWidthStyles}>
       <Divider>or</Divider>
     </div>
-    <EmailPasswordSignin {...props} />
+    <EmailPasswordSignin signup={signup} {...props} />
   </article>
 );
 

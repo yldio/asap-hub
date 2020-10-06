@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import css from '@emotion/css';
 
 import { Button, Caption } from '../atoms';
@@ -78,6 +78,9 @@ const SearchControls: React.FC<SearchControlsProps> = ({
   filterEnabled = true,
 }) => {
   const [menuShown, setMenuShown] = useState(false);
+  useEffect(() => {
+    setMenuShown(false);
+  }, [filterOptions]);
 
   return (
     <div css={searchContainerStyles}>

@@ -18,20 +18,23 @@ export const Normal = () => (
       { value: 'LCY', label: 'City' },
       { value: 'SEN', label: 'Southend' },
     ]}
-    values={optionsKnob(
-      'Values',
-      {
-        Heathrow: 'LHR',
-        Gatwick: 'LGW',
-        Stansted: 'STN',
-        Luton: 'LTN',
-        City: 'LCY',
-        Southend: 'SEN',
-      },
-      ['LHR'],
-      {
-        display: 'inline-check',
-      },
-    )}
+    values={
+      optionsKnob(
+        'Values',
+        {
+          Heathrow: 'LHR',
+          Gatwick: 'LGW',
+          Stansted: 'STN',
+          Luton: 'LTN',
+          City: 'LCY',
+          Southend: 'SEN',
+        },
+        ['LHR'],
+        {
+          display: 'inline-check',
+        },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ) as any
+    }
   />
 );

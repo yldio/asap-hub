@@ -1,10 +1,10 @@
 import React from 'react';
 import css from '@emotion/css';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 import { perRem } from '../pixels';
 import { fern, lead, pine, steel } from '../colors';
 import { noop } from '../utils';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { tickIcon } from '../icons';
 
 const checkboxStyles = css({

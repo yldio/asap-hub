@@ -100,7 +100,8 @@ const smallIconOnlyStyles = css({
   paddingRight: `${9 / perRem}em`,
 });
 
-const boxShadow = (color: OpaqueColor) => `0px 2px 4px -2px ${color.rgb}`;
+const boxShadow = (opaqueColor: OpaqueColor) =>
+  `0px 2px 4px -2px ${opaqueColor.rgb}`;
 const primaryStyles = css({
   color: paper.rgb,
 

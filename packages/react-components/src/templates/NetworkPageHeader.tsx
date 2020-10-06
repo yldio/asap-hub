@@ -74,7 +74,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           query={query}
           filterEnabled={page === 'users'}
           filterOptions={
-            'users'
+            page === 'users'
               ? [
                   { label: 'Lead PI', value: '' },
                   { label: 'Co-investigator', value: '' },

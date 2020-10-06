@@ -1,7 +1,8 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Card, Datetime, Paragraph, Headline2, TagLabel } from '../atoms';
+import { Card, Paragraph, Headline2, TagLabel, Caption } from '../atoms';
 import { perRem } from '../pixels';
+import { formatDate } from '../utils';
 
 const imageStyle = css({
   borderRadius: `${12 / perRem}em`,
@@ -45,9 +46,9 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
           <TagLabel>{type}</TagLabel>
           <Headline2 styleAsHeading={4}>{title}</Headline2>
           <Paragraph accent="lead">{subtitle}</Paragraph>
-          <Paragraph accent="lead" small>
-            Posted: <Datetime date={new Date(created)} /> by ASAP
-          </Paragraph>
+          <Caption accent={'lead'} asParagraph>
+            Posted: {formatDate(new Date(created))} by ASAP
+          </Caption>
         </div>
       </div>
     </Card>

@@ -2,9 +2,10 @@ import React from 'react';
 import css from '@emotion/css';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 
-import { Card, Link, Headline2, Avatar, Caption, Datetime } from '../atoms';
+import { Card, Link, Headline2, Avatar, Caption } from '../atoms';
 import { ProfilePersonalText } from '../molecules';
 import { tabletScreen } from '../pixels';
+import { formatDate } from '../utils';
 
 const containerStyles = css({
   display: 'grid',
@@ -89,7 +90,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
           </div>
           <div css={moveStyles}>
             <Caption accent={'lead'} asParagraph>
-              Joined: <Datetime date={new Date(createdDate)} />
+              Joined: {formatDate(new Date(createdDate))}
             </Caption>
           </div>
         </div>

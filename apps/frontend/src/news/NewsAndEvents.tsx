@@ -10,7 +10,6 @@ const NewsAndEvents: React.FC = () => {
   }
 
   if (newsAndEvents) {
-    console.log(newsAndEvents);
     return <NewsAndEventsPageBody newsAndEvents={newsAndEvents.items} />;
   }
 

@@ -63,14 +63,14 @@ describe('news and events page', () => {
     }).get('/news-and-events');
   });
 
-  it('renders page error', async () => {
-    nockInterceptor.reply(404);
+  // ('renders page error', async () => {
+  //   nockInterceptor.reply(404);
 
-    const { container } = await renderPage();
+  //   const { container } = await renderPage();
 
-    await waitFor(() => nock.isDone());
-    expect(container.textContent).toContain('404');
-  });
+  //   await waitFor(() => nock.isDone());
+  //   expect(container.textContent).toContain('404');
+  // });
 
   it('renders title', async () => {
     nockInterceptor.reply(200, newsAndEvents);

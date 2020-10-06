@@ -1,9 +1,8 @@
 import React from 'react';
 import css from '@emotion/css';
-import format from 'date-fns/format';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 
-import { Card, Link, Headline2, Avatar, Caption } from '../atoms';
+import { Card, Link, Headline2, Avatar, Caption, Datetime } from '../atoms';
 import { ProfilePersonalText } from '../molecules';
 import { tabletScreen } from '../pixels';
 
@@ -90,7 +89,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
           </div>
           <div css={moveStyles}>
             <Caption accent={'lead'} asParagraph>
-              Joined: {format(new Date(createdDate), 'Mo MMMM yyyy')}
+              Joined: <Datetime date={new Date(createdDate)} />
             </Caption>
           </div>
         </div>

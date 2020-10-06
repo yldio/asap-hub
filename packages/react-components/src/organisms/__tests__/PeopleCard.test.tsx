@@ -30,7 +30,7 @@ it('renders the display name', () => {
 it('renders the date in the correct format', () => {
   const { getByText } = render(<PeopleCard {...props} />);
   expect(getByText(/joined/i).textContent).toMatchInlineSnapshot(
-    `"Joined: 7th July 2020"`,
+    `"Joined: 12th July 2020"`,
   );
 });
 

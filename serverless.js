@@ -253,16 +253,16 @@ module.exports = {
     },
     ...(NODE_ENV === 'production'
       ? {
-        cronjobSyncOrcid: {
-          handler:
-            'apps/asap-server/build/handlers/webhooks/cronjob-sync-orcid.handler',
-          events: [
-            {
-              schedule: 'rate(1 hour)', // run every hour
-            },
-          ],
-        },
-      }
+          cronjobSyncOrcid: {
+            handler:
+              'apps/asap-server/build/handlers/webhooks/cronjob-sync-orcid.handler',
+            events: [
+              {
+                schedule: 'rate(1 hour)', // run every hour
+              },
+            ],
+          },
+        }
       : {}),
   },
   resources: {

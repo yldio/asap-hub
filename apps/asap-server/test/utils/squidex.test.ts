@@ -12,7 +12,7 @@ describe('generate asset url from cms assets list', () => {
 
 describe('dates from squidex', () => {
   test('parse return Date type', async () => {
-    expect(parseDate('2020-09-08T03:05:08Z')).toStrictEqual(
+    expect(parseDate('2020-09-08T03:05:08Z')).toEqual(
       new Date('2020-09-08T03:05:08.000Z'),
     );
   });

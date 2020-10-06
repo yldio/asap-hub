@@ -1,5 +1,5 @@
 import React from 'react';
-import { select } from '@storybook/addon-knobs';
+import { optionsKnob } from '@storybook/addon-knobs';
 
 import { CheckboxGroup } from '@asap-hub/react-components';
 
@@ -18,8 +18,8 @@ export const Normal = () => (
       { value: 'LCY', label: 'City' },
       { value: 'SEN', label: 'Southend' },
     ]}
-    value={select(
-      'Value',
+    values={optionsKnob(
+      'Values',
       {
         Heathrow: 'LHR',
         Gatwick: 'LGW',
@@ -28,7 +28,10 @@ export const Normal = () => (
         City: 'LCY',
         Southend: 'SEN',
       },
-      'LHR',
+      ['LHR'],
+      {
+        display: 'inline-check',
+      },
     )}
   />
 );

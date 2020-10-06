@@ -1,13 +1,36 @@
 import React from 'react';
-import { NewsAndEventsPage } from '@asap-hub/react-components';
+import {
+  NewsAndEventsPage,
+  NewsAndEventsPageBody,
+} from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
 export default {
-  title: 'Pages / News and Events List',
+  title: 'Pages / News and Events',
   decorators: [LayoutDecorator],
 };
 
-export const NewsAndEvents = () => (
-  <NewsAndEventsPage>Content</NewsAndEventsPage>
+const props = () => ({
+  newsAndEvents: [
+    {
+      created: new Date(),
+      type: 'News' as const,
+      title: "Coordinating different approaches into Parkinson's",
+      subtitle:
+        'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
+    },
+    {
+      created: new Date(),
+      type: 'Event' as const,
+      title:
+        'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
+    },
+  ],
+});
+
+export const NewsAndEventsList = () => (
+  <NewsAndEventsPage>
+    <NewsAndEventsPageBody {...props()} />
+  </NewsAndEventsPage>
 );

@@ -1,33 +1,16 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "news",
+  "name": "news-and-events",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "News"
+      "label": "News and Events"
     },
     "scripts": {},
     "fieldsInReferences": [],
     "fieldsInLists": [],
     "fields": [
-      {
-        "name": "slug",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": true,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Slug",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
       {
         "name": "title",
         "isHidden": false,
@@ -44,7 +27,28 @@
         }
       },
       {
-        "name": "content",
+        "name": "type",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": [
+            "News",
+            "Event"
+          ],
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Dropdown",
+          "label": "Type",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "subtitle",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -53,14 +57,33 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
-          "editor": "TextArea",
-          "label": "Content",
+          "editor": "Input",
+          "label": "Subtitle",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "text",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "RichText",
+          "label": "Text",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false
         }
       }
     ],
     "previewUrls": {
-      "Web": "http://hub.asap.science/news/${slug}"
+      "Web": "http://hub.asap.science/news-and-events/${id}"
     },
     "category": "Content",
     "isPublished": true

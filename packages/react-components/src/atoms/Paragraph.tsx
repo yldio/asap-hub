@@ -14,16 +14,23 @@ const primaryStyles = css({
   lineHeight: `${24 / 18}em`,
 });
 
+const smallStyles = css({
+  fontSize: `${14 / perRem}em`,
+  lineHeight: `${24 / 12}em`,
+});
+
 type ParagraphProps = {
   readonly children: React.ReactNode;
   readonly primary?: boolean;
   readonly accent?: AccentColorName;
+  readonly small?: boolean;
 };
 
 const Paragraph: React.FC<ParagraphProps> = ({
   children,
   primary = false,
   accent,
+  small = false,
 }) => {
   return (
     <p
@@ -31,6 +38,7 @@ const Paragraph: React.FC<ParagraphProps> = ({
         layoutStyles,
         primary ? primaryStyles : secondaryStyles,
         accent ? { color: colors[accent].rgb } : null,
+        small ? smallStyles : null,
       ]}
     >
       {children}

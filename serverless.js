@@ -215,18 +215,6 @@ module.exports = {
         },
       ],
     },
-    fetchContentBySlug: {
-      handler: 'apps/asap-server/build/handlers/content/fetch-by-slug.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/content/{content}/{slug}`,
-          },
-        },
-      ],
-    },
     fetchTeams: {
       handler: 'apps/asap-server/build/handlers/teams/fetch.handler',
       events: [
@@ -251,18 +239,30 @@ module.exports = {
         },
       ],
     },
+    fetchNewsAndEvents: {
+      handler: 'apps/asap-server/build/handlers/news-and-events/fetch.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/news-and-events`,
+          },
+        },
+      ],
+    },
     ...(NODE_ENV === 'production'
       ? {
-          cronjobSyncOrcid: {
-            handler:
-              'apps/asap-server/build/handlers/webhooks/cronjob-sync-orcid.handler',
-            events: [
-              {
-                schedule: 'rate(1 hour)', // run every hour
-              },
-            ],
-          },
-        }
+        cronjobSyncOrcid: {
+          handler:
+            'apps/asap-server/build/handlers/webhooks/cronjob-sync-orcid.handler',
+          events: [
+            {
+              schedule: 'rate(1 hour)', // run every hour
+            },
+          ],
+        },
+      }
       : {}),
   },
   resources: {

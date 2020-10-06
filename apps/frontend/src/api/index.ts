@@ -1,4 +1,4 @@
-export * from './content';
+export * from './news-and-events';
 export * from './pages';
 export * from './research-outputs';
 export * from './teams';

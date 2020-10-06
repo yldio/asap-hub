@@ -62,6 +62,7 @@ const circleStyle = css({
   alignItems: 'center',
   borderRadius: '50%',
 });
+
 const imageStyle = css({
   objectFit: 'cover',
 });

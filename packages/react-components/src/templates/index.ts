@@ -12,6 +12,7 @@ export { default as NetworkPageHeader } from './NetworkPageHeader';
 export { default as NetworkPeople } from './NetworkPeople';
 export { default as NetworkTeams } from './NetworkTeams';
 export { default as NewsAndEventsPage } from './NewsAndEventsPage';
+export { default as NewsAndEventsPageBody } from './NewsAndEventsPageBody';
 export { default as NewsAndEventsPageHeader } from './NewsAndEventsPageHeader';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
 export { default as ProfileAbout } from './ProfileAbout';

@@ -12,7 +12,7 @@ import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 import { fetchOrcidProfile, ORCIDWorksResponse } from '../utils/fetch-orcid';
-import { createURL } from '../utils/assets';
+import { createURL } from '../utils/squidex';
 
 export const transform = (user: CMSUser): UserResponse => {
   return JSON.parse(

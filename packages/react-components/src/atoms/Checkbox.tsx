@@ -2,7 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
-import { fern, lead, pine, steel, paper } from '../colors';
+import { fern, lead, pine, steel } from '../colors';
 import { noop } from '../utils';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { tickIcon } from '../icons';
@@ -22,7 +22,7 @@ const checkboxStyles = css({
   borderWidth: `${1 / perRem}em`,
   borderColor: steel.rgb,
 
-  ':hover, :focus': {
+  ':enabled:hover, :focus': {
     borderColor: lead.rgb,
   },
   ':checked': {

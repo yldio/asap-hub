@@ -72,6 +72,21 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
             page === 'users' ? 'Search for someone…' : 'Search for a team…'
           }
           query={query}
+          filterEnabled={page === 'users'}
+          filterOptions={
+            'users'
+              ? [
+                  { label: 'Lead PI', value: '' },
+                  { label: 'Co-investigator', value: '' },
+                  { label: 'Key Personnel', value: '' },
+                  { label: 'Advisor', value: '' },
+                  { label: 'Staff', value: '' },
+                  { label: 'Staff', value: '' },
+                  { label: 'Guest', value: '' },
+                ]
+              : []
+          }
+          filterTitle={page === 'users' ? 'TEAM ROLES' : ''}
         />
       </div>
     </header>

@@ -4,7 +4,7 @@ import css from '@emotion/css';
 
 import { TextChildren } from '../text';
 import { useHasRouter } from '../hooks';
-import { color, lead, pine } from '../colors';
+import { lead } from '../colors';
 import {
   perRem,
   lineHeight,
@@ -13,9 +13,9 @@ import {
   vminLinearCalc,
 } from '../pixels';
 import { navigationGrey } from '../layout';
+import { activeStyles } from '../button';
 
 const activeClassName = 'active-link';
-const activeBackgroundColor = color(122, 210, 169, 0.18);
 
 const styles = css({
   display: 'block',
@@ -43,17 +43,6 @@ const styles = css({
   borderRadius: `${6 / perRem}em`,
   ':hover, :focus': {
     backgroundColor: navigationGrey.rgb,
-  },
-});
-const activeStyles = css({
-  backgroundColor: activeBackgroundColor.rgba,
-  color: pine.rgb,
-  svg: {
-    stroke: pine.rgb,
-  },
-  ':hover, :focus': {
-    backgroundColor: activeBackgroundColor.rgba,
-    color: pine.rgb,
   },
 });
 

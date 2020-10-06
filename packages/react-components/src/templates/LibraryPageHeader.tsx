@@ -45,6 +45,17 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
         placeholder="Search for a protein, a method…"
         onChangeSearch={onChangeSearch}
         query={query}
+        filterOptions={[
+          { label: 'Proposal', value: '' },
+          { label: 'Dataset', value: '', disabled: true },
+          { label: 'Software', value: '', disabled: true },
+          { label: 'Protocol', value: '', disabled: true },
+          { label: 'Lab Resource', value: '', disabled: true },
+          { label: 'Preprint', value: '', disabled: true },
+          { label: 'Article', value: '', disabled: true },
+          { label: 'Other', value: '', disabled: true },
+        ]}
+        filterTitle="TYPE OF OUTPUTS"
       />
     </header>
   );

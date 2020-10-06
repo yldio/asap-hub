@@ -8,6 +8,8 @@ const props: ComponentProps<typeof SearchControls> = {
   query: '',
   placeholder: '',
   onChangeSearch: noop,
+  filterOptions: [],
+  filterTitle: '',
 };
 it('renders the search controls', () => {
   const { getByRole } = render(<SearchControls {...props} />);

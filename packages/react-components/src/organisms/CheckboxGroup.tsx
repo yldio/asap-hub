@@ -13,13 +13,13 @@ export interface Option<V extends string> {
 interface CheckboxGroupProps<V extends string> {
   readonly options: ReadonlyArray<Option<V>>;
 
-  readonly values: V[];
+  readonly values?: V[];
   readonly onChange?: (newValue: V) => void;
 }
 export default function CheckboxGroup<V extends string>({
   options,
 
-  values,
+  values = [],
   onChange = noop,
 }: CheckboxGroupProps<V>): ReturnType<React.FC> {
   const groupName = useRef(uuidV4());
@@ -30,7 +30,7 @@ export default function CheckboxGroup<V extends string>({
           key={option.value}
           groupName={groupName.current}
           title={option.label}
-          disabled={option.disabled}
+          disabled={!!option.disabled}
           checked={values.includes(option.value)}
           onSelect={() => onChange(option.value)}
         />

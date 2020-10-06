@@ -27,7 +27,7 @@ const styles = css({
 
 const headerStyles = css({
   gridArea: 'header',
-  backgroundColor: paper.rgb,
+
   boxSizing: 'border-box',
   borderBottom: `1px solid ${steel.rgb}`,
 });
@@ -38,8 +38,6 @@ const headerMenuShownStyles = css({
 });
 
 const contentStyles = css({
-  backgroundColor: pearl.rgb,
-
   gridRow: 'header-end / -1',
   gridColumn: '1 / -1',
   [crossQuery]: {
@@ -51,6 +49,8 @@ const contentStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+
+  backgroundColor: pearl.rgb,
 });
 
 const overlayStyles = css({
@@ -70,8 +70,6 @@ const userButtonStyles = css({
   [drawerQuery]: {
     display: 'none',
   },
-
-  backgroundColor: paper.rgb,
 
   borderBottom: `1px solid ${steel.rgb}`,
   borderLeft: `1px solid ${steel.rgb}`,

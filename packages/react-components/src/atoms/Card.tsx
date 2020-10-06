@@ -9,7 +9,7 @@ import { paddingStyles } from '../card';
 export type AccentVariant = 'default' | 'red' | 'green';
 
 export const accents: Record<AccentVariant, string> = {
-  default: `background-color: ${colors.paper.rgb}; border-color: ${colors.silver.rgb};`,
+  default: `${themes.light} border-color: ${colors.silver.rgb};`,
   red: `background-color: ${colors.rose.rgb}; color: ${colors.ember.rgb};  border-color: ${colors.ember.rgb};`,
   green: `background-color: ${colors.mint.rgb}; color: ${colors.pine.rgb};  border-color: ${colors.pine.rgb};`,
 };

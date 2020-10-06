@@ -30,10 +30,8 @@ function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
     projectSummary: team.data.projectSummary?.iv,
     skills: team.data.skills?.iv || [],
     lastModifiedDate: team.lastModified,
-    pointOfContact: members.find(
-      ({ role }) =>
-        role.toLowerCase() === 'pm' || role.toLowerCase() === 'product manager',
-    )?.email,
+    pointOfContact: members.find(({ role }) => role === 'Project Manager')
+      ?.email,
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
   };
 }
@@ -85,14 +83,14 @@ export default class Teams {
       ...opts,
       ...(search
         ? {
-          fullText: search,
-          filter: {
-            or: search.split(' ').flatMap((word) => [
-              { path: 'data.displayName.iv', op: 'contains', value: word },
-              { path: 'data.projectTitle.iv', op: 'contains', value: word },
-            ]),
-          },
-        }
+            fullText: search,
+            filter: {
+              or: search.split(' ').flatMap((word) => [
+                { path: 'data.displayName.iv', op: 'contains', value: word },
+                { path: 'data.projectTitle.iv', op: 'contains', value: word },
+              ]),
+            },
+          }
         : {}),
       sort: [{ path: 'data.displayName.iv' }],
     });

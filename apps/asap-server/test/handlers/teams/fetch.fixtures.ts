@@ -225,7 +225,7 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         teams: {
           iv: [
             {
-              role: 'Lead PI',
+              role: 'Key Personal',
               displayName: 'John Travista',
               id: ['team-id-2'],
             },

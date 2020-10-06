@@ -18,7 +18,7 @@ export default function validateRequest(request: lambda.Request): boolean {
   }
 
   if (secret !== auth0SharedSecret) {
-    throw Boom.forbidden();
+    throw Boom.forbidden('basic');
   }
 
   return true;

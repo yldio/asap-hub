@@ -48,7 +48,7 @@ const TeamHeader: React.FC<TeamProps> = ({
               .map(({ id, avatarURL, firstName, lastName }) => {
                 return (
                   <li key={id} css={memberStyle}>
-                    <Link href={`/users/${id}`} theme={null}>
+                    <Link href={`/network/users/${id}`} theme={null}>
                       <Avatar
                         small
                         firstName={firstName}

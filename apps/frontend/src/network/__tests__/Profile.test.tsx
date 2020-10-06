@@ -74,9 +74,9 @@ describe('without team', () => {
     expect((await findByText(user.displayName)).tagName).toBe('H1');
   });
 
-  it('renders the about member content', async () => {
+  it('renders the research member content', async () => {
     const { findByText } = await renderProfile();
-    expect(await findByText(user.biography!)).toBeVisible();
+    expect(await findByText('Open Questions')).toBeVisible();
   });
 });
 
@@ -103,6 +103,9 @@ describe('with team', () => {
         "http://localhost/43/research",
         "http://localhost/43/about",
         "http://localhost/43/outputs",
+        "http://localhost/network/teams/100",
+        "http://localhost/network/teams/100",
+        "mailto:john.doe%40example.com",
       ]
     `);
   });

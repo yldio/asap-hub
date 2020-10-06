@@ -63,7 +63,7 @@ const circleStyle = css({
   borderRadius: '50%',
 });
 const imageStyle = css({
-  objectFit: 'contain',
+  objectFit: 'cover',
 });
 
 const initialsStyle = css(headlineStyles[3]);

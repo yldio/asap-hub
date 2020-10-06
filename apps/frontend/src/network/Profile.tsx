@@ -51,7 +51,7 @@ const Profile: React.FC<{}> = () => {
             <ProfileOutputs />
           </Route>
 
-          <Redirect to={join(url, 'about')} />
+          <Redirect to={join(url, 'research')} />
         </Switch>
       </ProfilePage>
     );

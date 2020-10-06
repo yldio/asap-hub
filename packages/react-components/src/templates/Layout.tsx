@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import css from '@emotion/css';
 
-import { steel, paper, color, tin } from '../colors';
+import { steel, paper, color, tin, pearl } from '../colors';
 import { MenuHeader, MainNavigation, UserNavigation } from '../organisms';
 import { UserMenuButton } from '../molecules';
 import { Overlay } from '../atoms';
@@ -49,6 +49,8 @@ const contentStyles = css({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+
+  backgroundColor: pearl.rgb,
 });
 
 const overlayStyles = css({

@@ -5,7 +5,7 @@ import format from 'date-fns/format';
 
 import { TagLabel, Display, Link, Paragraph, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
-import { lead, pearl } from '../colors';
+import { lead } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { teamIcon, chevronCircleLeftIcon } from '../icons';
@@ -27,7 +27,6 @@ const iconStyles = css({
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
-  backgroundColor: pearl.rgb,
 });
 
 const backContainerStyles = css({

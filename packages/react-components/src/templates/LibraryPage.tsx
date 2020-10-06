@@ -7,13 +7,12 @@ import {
   mobileScreen,
   vminLinearCalcClamped,
 } from '../pixels';
-import { pearl } from '../colors';
+
 import LibraryPageHeader from './LibraryPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
   alignSelf: 'stretch',
-  background: pearl.rgb,
   display: 'grid',
   gridRowGap: `${vminLinearCalcClamped(
     mobileScreen,

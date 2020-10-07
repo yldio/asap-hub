@@ -1,5 +1,12 @@
 import { ListResponse } from './common';
 
+export type TeamRole =
+  | 'Lead PI'
+  | 'Co-Investigator'
+  | 'Project Manager'
+  | 'Collaborator'
+  | 'Key Personal';
+
 export interface TeamCreateRequest {
   displayName: string;
   applicationNumber: string;
@@ -14,7 +21,7 @@ export interface TeamMember {
   lastName?: string;
   displayName: string;
   email: string;
-  role: string;
+  role: TeamRole;
   avatarURL?: string;
 }
 

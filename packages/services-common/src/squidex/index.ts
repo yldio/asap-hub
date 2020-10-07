@@ -101,7 +101,7 @@ export class Squidex<T extends { id: string; data: object }> {
       }
 
       throw Boom.badImplementation('squidex', {
-        data: err,
+        data: err.response?.body || err,
       });
     }
   }
@@ -139,7 +139,7 @@ export class Squidex<T extends { id: string; data: object }> {
       }
 
       throw Boom.badImplementation('squidex', {
-        data: err,
+        data: err.response?.body || err,
       });
     }
   }
@@ -147,7 +147,9 @@ export class Squidex<T extends { id: string; data: object }> {
   async patch(id: string, json: Partial<T['data']>): Promise<T> {
     try {
       const res = await this.client
-        .patch(`${this.collection}/${id}`, { json })
+        .patch(`${this.collection}/${id}`, {
+          json,
+        })
         .json();
       return res as T;
     } catch (err) {
@@ -159,7 +161,7 @@ export class Squidex<T extends { id: string; data: object }> {
       }
 
       throw Boom.badImplementation('squidex', {
-        data: err,
+        data: err.response?.body || err,
       });
     }
   }
@@ -176,7 +178,7 @@ export class Squidex<T extends { id: string; data: object }> {
       }
 
       throw Boom.badImplementation('squidex', {
-        data: err,
+        data: err.response?.body || err,
       });
     }
   }

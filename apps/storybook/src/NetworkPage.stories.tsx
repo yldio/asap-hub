@@ -20,7 +20,7 @@ const member = {
   lastName: 'Carpenter',
   email: 'mason@car.com',
   displayName: 'Birdie Romeo',
-  role: 'VrrPdl',
+  role: 'Lead PI' as const,
 };
 
 const teamProps = {
@@ -77,7 +77,7 @@ const peopleProps = {
         {
           id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
           displayName: 'Jakobsson, J',
-          role: 'Core Leadership - Co-Investigator',
+          role: 'Co-Investigator' as const,
           href: '#',
         },
       ],
@@ -101,7 +101,7 @@ const peopleProps = {
         {
           id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
           displayName: 'Jakobsson, J',
-          role: 'Core Leadership - Co-Investigator',
+          role: 'Co-Investigator' as const,
           href: '#',
         },
       ],

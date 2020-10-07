@@ -518,9 +518,16 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
+              "allowedValues": [
+                "Lead PI",
+                "Co-Investigator",
+                "Project Manager",
+                "Collaborator",
+                "Key Personal"
+              ],
               "isUnique": false,
               "inlineEditable": false,
-              "editor": "Input",
+              "editor": "Dropdown",
               "label": "Role",
               "isRequired": true
             }

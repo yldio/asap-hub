@@ -16,7 +16,7 @@ export const Normal = () => (
         firstName: 'Daniel',
         lastName: 'Ramirez',
         email: 'd@niel.com',
-        role: 'Principal Investigator',
+        role: 'Lead PI',
       },
       {
         id: '2',

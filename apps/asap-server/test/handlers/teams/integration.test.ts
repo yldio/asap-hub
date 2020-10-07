@@ -20,7 +20,7 @@ describe('GET /teams/{id}', () => {
     team = await createRandomTeam();
     const { connections, ...res } = await createUserOnTeam(
       team,
-      'Product Manager',
+      'Project Manager',
     );
     user = res;
   });

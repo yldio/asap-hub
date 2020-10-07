@@ -2,11 +2,24 @@ import get from 'lodash.get';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
 import { Squidex } from '@asap-hub/services-common';
-import { ListTeamResponse, TeamResponse, TeamMember } from '@asap-hub/model';
+import {
+  ListTeamResponse,
+  TeamResponse,
+  TeamMember,
+  TeamRole,
+} from '@asap-hub/model';
 
 import { CMSTeam } from '../entities/team';
 import { CMSUser } from '../entities/user';
 import { createURL } from '../utils/assets';
+
+const priorities: Record<TeamRole, number> = {
+  'Lead PI': 1,
+  'Co-Investigator': 2,
+  'Project Manager': 3,
+  Collaborator: 4,
+  'Key Personal': 5,
+};
 
 function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
   return {
@@ -17,11 +30,9 @@ function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
     projectSummary: team.data.projectSummary?.iv,
     skills: team.data.skills?.iv || [],
     lastModifiedDate: team.lastModified,
-    pointOfContact: members.find(
-      ({ role }) =>
-        role.toLowerCase() === 'pm' || role.toLowerCase() === 'product manager',
-    )?.email,
-    members,
+    pointOfContact: members.find(({ role }) => role === 'Project Manager')
+      ?.email,
+    members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
   };
 }
 

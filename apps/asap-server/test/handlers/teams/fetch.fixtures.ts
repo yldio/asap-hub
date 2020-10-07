@@ -103,7 +103,7 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
         teams: {
           iv: [
             {
-              role: 'PI',
+              role: 'Lead PI',
               displayName: 'Cristiano Ronaldo',
               id: ['team-id-1'],
             },
@@ -167,7 +167,7 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         teams: {
           iv: [
             {
-              role: 'PI',
+              role: 'Lead PI',
               displayName: 'John Travista',
               id: ['team-id-2'],
             },
@@ -225,7 +225,7 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         teams: {
           iv: [
             {
-              role: 'Intern',
+              role: 'Key Personal',
               displayName: 'John Travista',
               id: ['team-id-2'],
             },
@@ -260,7 +260,7 @@ export const expectation: ListTeamResponse = {
           lastName: 'Ronaldo',
           email: 'cristiano@ronaldo.com',
           displayName: 'Cristiano Ronaldo',
-          role: 'PI',
+          role: 'Lead PI',
         },
       ],
       lastModifiedDate: '2020-09-08T16:35:28Z',
@@ -281,7 +281,7 @@ export const expectation: ListTeamResponse = {
           lastName: 'Travista',
           email: 'john@ed.ma',
           displayName: 'John Travista',
-          role: 'PI',
+          role: 'Lead PI',
         },
         {
           id: 'user-id-3',
@@ -289,7 +289,7 @@ export const expectation: ListTeamResponse = {
           lastName: 'Travista',
           email: 'bill@ed.ma',
           displayName: 'Bill Travista',
-          role: 'Intern',
+          role: 'Key Personal',
         },
       ],
       lastModifiedDate: '2020-09-16T14:31:19Z',

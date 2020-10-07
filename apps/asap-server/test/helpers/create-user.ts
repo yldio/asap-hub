@@ -1,7 +1,6 @@
 import Chance from 'chance';
 import {
   UserResponse,
-  ResearchOutputCreationRequest,
   Invitee,
 } from '@asap-hub/model';
 import { CMS } from '../../src/cms';
@@ -72,25 +71,6 @@ export const createRandomUser = async (
 ): Promise<TestUserResponse> => {
   const createdUser = await createUser(overwrites);
   return transform(createdUser);
-};
-
-export const createRandomOutput = async (user: string): Promise<void> => {
-  const output: ResearchOutputCreationRequest = {
-    url: chance.url(),
-    doi: chance.string(),
-    type: chance.pickone(['proposal']),
-    title: chance.sentence(),
-    text: chance.paragraph(),
-    accessLevel: chance.pickone(['private', 'team', 'public']),
-    authors: [
-      {
-        displayName: chance.name(),
-      },
-    ],
-    publishDate: '2020-02-02T12:00:00Z',
-  };
-
-  await cms.researchOutputs.create(user, 'test', output);
 };
 
 export const createUserOnTeam = async (

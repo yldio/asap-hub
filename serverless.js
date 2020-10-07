@@ -178,19 +178,6 @@ module.exports = {
         },
       ],
     },
-    // 'create-research-output': {
-    //   handler:
-    //     'apps/asap-server/build/handlers/research-outputs/create.handler',
-    //   events: [
-    //     {
-    //       // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-    //       httpApi: {
-    //         method: 'POST',
-    //         path: `/users/{id}/research-outputs`,
-    //       },
-    //     },
-    //   ],
-    // },
     fetchResearchOutputs: {
       handler: 'apps/asap-server/build/handlers/research-outputs/fetch.handler',
       events: [

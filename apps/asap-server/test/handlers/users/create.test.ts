@@ -90,7 +90,6 @@ describe('POST /users', () => {
 
 describe('POST /users', () => {
   beforeEach(() => {
-    console.log(nock.pendingMocks())
     // TODO: beforeEach because create still uses old cms
     identity();
   });

@@ -23,12 +23,14 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
   skills,
   pointOfContact,
   members,
+  proposalHref,
 }) => (
   <div css={styles}>
     {projectTitle ? (
       <TeamOverview
         projectTitle={projectTitle}
         projectSummary={projectSummary}
+        proposalHref={proposalHref}
       />
     ) : null}
     {skills.length ? <ProfileSkills skills={skills} /> : null}

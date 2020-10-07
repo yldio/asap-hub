@@ -22,14 +22,14 @@ const iconStyles = css({
 
 interface TeamCardProps {
   readonly displayName: string;
-  readonly projectSummary?: string;
+  readonly projectTitle: string;
   readonly skills: string[];
   readonly members: TeamMember[];
   readonly href: string;
 }
 const TeamCard: React.FC<TeamCardProps> = ({
   displayName,
-  projectSummary,
+  projectTitle,
   skills,
   members,
   href,
@@ -38,7 +38,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
     <Card>
       <Link theme={null} href={href}>
         <Headline2 styleAsHeading={4}>{displayName}</Headline2>
-        <Paragraph accent="lead">{projectSummary}</Paragraph>
+        <Paragraph accent="lead">{projectTitle}</Paragraph>
       </Link>
       <TagList summarize tags={skills} />
       <span css={teamMemberStyles}>

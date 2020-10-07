@@ -65,5 +65,5 @@ it('renders a loading indicator', async () => {
 it('renders a list of teams information', async () => {
   const { container } = await renderTeamList();
   expect(container.textContent).toContain('Unknown Team');
-  expect(container.textContent).toContain('Unknown Project Summary');
+  expect(container.textContent).toContain('Unknown Project Title');
 });

@@ -6,21 +6,23 @@ import { Display, Card, Link, Paragraph, Headline2 } from '../atoms';
 import { mobileScreen } from '../pixels';
 
 const stretchOnMobile = css({
-  display: 'flex',
   [`@media (max-width: ${mobileScreen.width}px)`]: {
-    flexDirection: 'column',
+    display: 'flex',
+    justifyContent: 'stretch',
   },
 });
 
 type TeamOverviewProps = Pick<
   TeamResponse,
-  'projectTitle' | 'projectSummary' | 'proposalURL'
->;
+  'projectTitle' | 'projectSummary'
+> & {
+  readonly proposalHref?: string;
+};
 
 const TeamOverview: React.FC<TeamOverviewProps> = ({
   projectSummary,
-  proposalURL,
   projectTitle,
+  proposalHref,
 }) => {
   return (
     <Card>
@@ -28,9 +30,11 @@ const TeamOverview: React.FC<TeamOverviewProps> = ({
         <Display styleAsHeading={2}>Project Overview</Display>
         <Headline2 styleAsHeading={3}>{projectTitle}</Headline2>
         <Paragraph>{projectSummary}</Paragraph>
-        {proposalURL ? (
+        {proposalHref ? (
           <div css={stretchOnMobile}>
-            <Link href={proposalURL}>Read Proposal</Link>
+            <Link buttonStyle primary href={proposalHref}>
+              Read Full Proposal
+            </Link>
           </div>
         ) : null}
       </div>

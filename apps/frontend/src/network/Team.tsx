@@ -33,7 +33,14 @@ const Page: React.FC<{}> = () => {
       <TeamPage {...teamPageProps}>
         <Switch>
           <Route path={`${path}/about`}>
-            <TeamAbout {...team} />
+            <TeamAbout
+              {...team}
+              proposalHref={
+                team.proposalURL
+                  ? join('/library/', team.proposalURL)
+                  : undefined
+              }
+            />
           </Route>
           <Route path={`${path}/outputs`}>
             <TeamOutputs />

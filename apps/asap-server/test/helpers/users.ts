@@ -1,9 +1,5 @@
 import Chance from 'chance';
-import {
-  TeamRole,
-  UserResponse,
-  Invitee,
-} from '@asap-hub/model';
+import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
 import { CMSTeam } from '../../src/entities/team';
 import { CMSUser } from '../../src/entities/user';
 import { transform as defaultTransform } from '../../src/controllers/users';
@@ -77,16 +73,26 @@ export const createUserOnTeam = async (
   role: TeamRole | null = null,
 ): Promise<TestUserResponse> => {
   const createdUser = await createUser();
-  const teams = [{
-    role: role || chance.pickone([ 'Lead PI' , 'Co-Investigator' , 'Project Manager' , 'Collaborator' , 'Key Personnel' ]),
-    displayName: team.data.displayName.iv,
-    id: [team.id],
-  }]
+  const teams = [
+    {
+      role:
+        role ||
+        chance.pickone([
+          'Lead PI',
+          'Co-Investigator',
+          'Project Manager',
+          'Collaborator',
+          'Key Personnel',
+        ]),
+      displayName: team.data.displayName.iv,
+      id: [team.id],
+    },
+  ];
 
   const user = await users.patch(createdUser.id, {
     email: { iv: createdUser.data.email.iv },
     teams: { iv: teams },
-  })
+  });
 
   return transform(user);
 };

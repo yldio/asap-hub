@@ -132,7 +132,7 @@ export class Squidex<T extends { id: string; data: object }> {
       return res as T;
     } catch (err) {
       if (err.response?.statusCode === 409) {
-        throw Boom.conflict()
+        throw Boom.conflict();
       }
 
       if (

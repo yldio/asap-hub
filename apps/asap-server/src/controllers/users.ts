@@ -82,25 +82,27 @@ export default class Users {
   }
 
   async create(user: Invitee): Promise<UserResponse> {
-    const code = uuidV4()
+    const code = uuidV4();
 
     //remove undefined
-    const userData: CMSUser["data"] = JSON.parse(JSON.stringify({
-      lastModifiedDate: { iv: `${new Date().toISOString()}` },
-      displayName: { iv: user.displayName },
-      email: { iv: user.email },
-      firstName: { iv: user.firstName },
-      middleName: { iv: user.middleName },
-      lastName: { iv: user.lastName },
-      jobTitle: { iv: user.jobTitle },
-      orcid: { iv: user.orcid },
-      institution: { iv: user.institution },
-      location: { iv: user.location },
-      avatarURL: { iv: user.avatarURL },
-      connections: { iv: [{ code }] }
-    }))
+    const userData: CMSUser['data'] = JSON.parse(
+      JSON.stringify({
+        lastModifiedDate: { iv: `${new Date().toISOString()}` },
+        displayName: { iv: user.displayName },
+        email: { iv: user.email },
+        firstName: { iv: user.firstName },
+        middleName: { iv: user.middleName },
+        lastName: { iv: user.lastName },
+        jobTitle: { iv: user.jobTitle },
+        orcid: { iv: user.orcid },
+        institution: { iv: user.institution },
+        location: { iv: user.location },
+        avatarURL: { iv: user.avatarURL },
+        connections: { iv: [{ code }] },
+      }),
+    );
 
-    const createdUser = await this.users.create(userData)
+    const createdUser = await this.users.create(userData);
 
     const link = new url.URL(path.join(`/welcome/${code}`), origin);
 
@@ -168,10 +170,17 @@ export default class Users {
     return transform(user);
   }
 
-  async connectByCode(welcomeCode: string, userId: string): Promise<UserResponse> {
+  async connectByCode(
+    welcomeCode: string,
+    userId: string,
+  ): Promise<UserResponse> {
     const user = await this.users
       .fetchOne({
-        filter: { path: 'data.connections.iv.code', op: 'eq', value: welcomeCode },
+        filter: {
+          path: 'data.connections.iv.code',
+          op: 'eq',
+          value: welcomeCode,
+        },
       })
       .catch(() => {
         throw Boom.forbidden();
@@ -186,7 +195,7 @@ export default class Users {
     const res = await this.users.patch(user.id, {
       email: { iv: user.data.email.iv },
       connections: { iv: connections },
-    })
+    });
 
     return transform(res);
   }

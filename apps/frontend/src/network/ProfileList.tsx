@@ -22,7 +22,15 @@ const Page: React.FC<{}> = () => {
         href: `/network/teams/${team.id}`,
       })),
     }));
-    return <NetworkPeople people={users} />;
+    return (
+      <NetworkPeople
+        people={users}
+        numberOfItems={users.length}
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={() => ''}
+      />
+    );
   }
 
   return (

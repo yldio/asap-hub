@@ -13,8 +13,8 @@ it(
     expect(() =>
       render(
         <PageControls
-          numPages={1}
-          currentIndex={-1}
+          numberOfPages={1}
+          currentPageIndex={-1}
           renderPageHref={renderPageHref}
         />,
       ),
@@ -28,8 +28,8 @@ it(
     expect(() =>
       render(
         <PageControls
-          numPages={1}
-          currentIndex={1}
+          numberOfPages={1}
+          currentPageIndex={1}
           renderPageHref={renderPageHref}
         />,
       ),
@@ -41,8 +41,8 @@ describe('the arrow controls', () => {
   it('contain a link to the first page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={2}
+        numberOfPages={3}
+        currentPageIndex={2}
         renderPageHref={renderPageHref}
       />,
     );
@@ -60,8 +60,8 @@ describe('the arrow controls', () => {
   it('disable the link to the first page on the first page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={0}
+        numberOfPages={3}
+        currentPageIndex={0}
         renderPageHref={renderPageHref}
       />,
     );
@@ -77,8 +77,8 @@ describe('the arrow controls', () => {
   it('contain a link to the previous page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={2}
+        numberOfPages={3}
+        currentPageIndex={2}
         renderPageHref={renderPageHref}
       />,
     );
@@ -96,8 +96,8 @@ describe('the arrow controls', () => {
   it('disable the link to the previous page on the first page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={0}
+        numberOfPages={3}
+        currentPageIndex={0}
         renderPageHref={renderPageHref}
       />,
     );
@@ -115,8 +115,8 @@ describe('the arrow controls', () => {
   it('contain a link to the next page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={0}
+        numberOfPages={3}
+        currentPageIndex={0}
         renderPageHref={renderPageHref}
       />,
     );
@@ -131,8 +131,8 @@ describe('the arrow controls', () => {
   it('disable the link to the next page on the last page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={2}
+        numberOfPages={3}
+        currentPageIndex={2}
         renderPageHref={renderPageHref}
       />,
     );
@@ -148,8 +148,8 @@ describe('the arrow controls', () => {
   it('contain a link to the last page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={0}
+        numberOfPages={3}
+        currentPageIndex={0}
         renderPageHref={renderPageHref}
       />,
     );
@@ -164,8 +164,8 @@ describe('the arrow controls', () => {
   it('disable the link to the last page on the last page', () => {
     const { getByTitle } = render(
       <PageControls
-        numPages={3}
-        currentIndex={2}
+        numberOfPages={3}
+        currentPageIndex={2}
         renderPageHref={renderPageHref}
       />,
     );
@@ -180,17 +180,17 @@ describe('the arrow controls', () => {
 });
 
 it.each`
-  description                                                                 | currentPage | numPages | expected
-  ${'renders the first, previous, current, next, and last page numbers'}      | ${5}        | ${9}     | ${'1 4 5 6 9'}
-  ${'does not leave a gap of one page numbers'}                               | ${4}        | ${9}     | ${'1 2 3 4 5 9'}
-  ${'does not render duplicate page numbers when first and previous overlap'} | ${2}        | ${9}     | ${'1 2 3 9'}
-  ${'does not render negative page numbers on the first page'}                | ${1}        | ${9}     | ${'1 2 9'}
-  ${'deals with a single page'}                                               | ${1}        | ${1}     | ${'1'}
-`('$description', ({ numPages, currentPage, expected }) => {
+  description                                                                 | currentPage | numberOfPages | expected
+  ${'renders the first, previous, current, next, and last page numbers'}      | ${5}        | ${9}          | ${'1 4 5 6 9'}
+  ${'does not leave a gap of one page numbers'}                               | ${4}        | ${9}          | ${'1 2 3 4 5 9'}
+  ${'does not render duplicate page numbers when first and previous overlap'} | ${2}        | ${9}          | ${'1 2 3 9'}
+  ${'does not render negative page numbers on the first page'}                | ${1}        | ${9}          | ${'1 2 9'}
+  ${'deals with a single page'}                                               | ${1}        | ${1}          | ${'1'}
+`('$description', ({ numberOfPages, currentPage, expected }) => {
   const { getAllByText } = render(
     <PageControls
-      numPages={numPages}
-      currentIndex={currentPage - 1}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage - 1}
       renderPageHref={renderPageHref}
     />,
   );
@@ -204,8 +204,8 @@ it.each`
 it('highlights the active page number', () => {
   const { getByText } = render(
     <PageControls
-      numPages={9}
-      currentIndex={5 - 1}
+      numberOfPages={9}
+      currentPageIndex={5 - 1}
       renderPageHref={renderPageHref}
     />,
   );
@@ -216,8 +216,8 @@ it('highlights the active page number', () => {
 it('links page numbers to the respective pages', () => {
   const { getByText } = render(
     <PageControls
-      numPages={9}
-      currentIndex={5 - 1}
+      numberOfPages={9}
+      currentPageIndex={5 - 1}
       renderPageHref={renderPageHref}
     />,
   );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paragraph, NetworkTeam } from '@asap-hub/react-components';
+import { Paragraph, NetworkTeams } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
 import { join } from 'path';
 
@@ -26,7 +26,15 @@ const Page: React.FC = () => {
       ...team,
       href: join('/network/teams', team.id),
     }));
-    return <NetworkTeam teams={teams} />;
+    return (
+      <NetworkTeams
+        teams={teams}
+        numberOfItems={teams.length}
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={() => ''}
+      />
+    );
   }
 
   return <Paragraph>No results</Paragraph>;

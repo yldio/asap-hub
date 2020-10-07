@@ -1,23 +1,24 @@
 import React, { ComponentProps } from 'react';
-import { UserResponse } from '@asap-hub/model';
+
 import { PeopleCard } from '../organisms';
+import CardList from '../organisms/CardList';
 
-interface NetworkPeopleProps {
+type NetworkPeopleProps = Omit<ComponentProps<typeof CardList>, 'children'> & {
   readonly people: ReadonlyArray<
-    Pick<UserResponse, 'id'> & ComponentProps<typeof PeopleCard>
+    { readonly id: string } & ComponentProps<typeof PeopleCard>
   >;
-}
+};
 
-const NetworkPeople: React.FC<NetworkPeopleProps> = ({ people }) => (
-  <>
-    {people.map((person) => {
-      const { id } = person;
-      return (
-        <div key={id}>
-          <PeopleCard {...person} />
-        </div>
-      );
-    })}
-  </>
+const NetworkPeople: React.FC<NetworkPeopleProps> = ({
+  people,
+  ...cardListProps
+}) => (
+  <CardList {...cardListProps}>
+    {people.map(({ id, ...person }) => (
+      <React.Fragment key={id}>
+        <PeopleCard {...person} />
+      </React.Fragment>
+    ))}
+  </CardList>
 );
 export default NetworkPeople;

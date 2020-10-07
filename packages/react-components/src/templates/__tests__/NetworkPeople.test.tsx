@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import NetworkPeople from '../NetworkPeople';
 
-const person = {
+const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
   id: '55724942-3408-4ad6-9a73-14b92226ffb6',
   createdDate: '2020-09-07T17:36:54Z',
-  lastModifiedDate: '2020-09-07T17:36:54Z',
   displayName: 'Person A',
-  email: 'agnete.kirkeby@sund.ku.dk',
   firstName: 'Agnete',
-  middleName: '',
   lastName: 'Kirkeby',
   jobTitle: 'Assistant Professor',
   institution: 'University of Copenhagen',
@@ -22,15 +19,19 @@ const person = {
       href: '/teams/somewhere',
     },
   ],
-  orcid: '0000-0001-8203-6901',
-  orcidWorks: [],
-  skills: [],
   href: '/users/somewhere',
 };
 const people = [person, { ...person, id: '43', displayName: 'Person B' }];
+const props: ComponentProps<typeof NetworkPeople> = {
+  people,
+  numberOfItems: people.length,
+  numberOfPages: 1,
+  currentPageIndex: 0,
+  renderPageHref: (index) => `#${index}`,
+};
 
 it('renders multiple people cards', () => {
-  const { queryAllByRole } = render(<NetworkPeople people={people} />);
+  const { queryAllByRole } = render(<NetworkPeople {...props} />);
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Person A', 'Person B']);

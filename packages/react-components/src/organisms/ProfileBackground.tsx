@@ -1,8 +1,9 @@
 import React from 'react';
 import css from '@emotion/css';
+import { UserResponse } from '@asap-hub/model';
+
 import { Card, Headline2, Headline3, Link, Paragraph } from '../atoms';
 import { mobileScreen } from '../pixels';
-import { UserResponse } from '../../../model/src';
 
 type ProfileBackgroundProps = UserResponse['teams'][0] &
   Pick<UserResponse, 'firstName'>;

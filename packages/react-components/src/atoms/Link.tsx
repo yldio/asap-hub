@@ -48,7 +48,8 @@ interface ButtonStyleLinkProps {
 }
 type LinkProps = {
   readonly children: ReactNode;
-  readonly href: string;
+  // hrefs may conditionally be undefined, but the prop is mandatory so it cannot be forgotton
+  readonly href: string | undefined;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 const Link: React.FC<LinkProps> = ({
   children,
@@ -72,8 +73,8 @@ const Link: React.FC<LinkProps> = ({
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
 
   const internal =
-    new URL(href, window.location.href).origin === window.location.origin;
-  if (useHasRouter() && internal) {
+    new URL(href ?? '', window.location.href).origin === window.location.origin;
+  if (useHasRouter() && href !== undefined && internal) {
     return (
       <ReactRouterLink css={linkStyles} to={href}>
         {linkChildren}

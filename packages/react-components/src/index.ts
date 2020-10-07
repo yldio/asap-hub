@@ -57,6 +57,7 @@ export {
   QuestionsSection,
   RadioButtonGroup,
   RichText,
+  PageControls,
   ProfileSkills,
   SsoButtons,
   TeamCard,

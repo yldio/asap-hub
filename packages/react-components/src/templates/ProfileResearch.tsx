@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
+import { UserResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
 import {
@@ -7,7 +8,6 @@ import {
   ProfileSkills,
   QuestionsSection,
 } from '../organisms';
-import { UserResponse } from '../../../model/src';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../utils';
 

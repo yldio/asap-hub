@@ -5,7 +5,7 @@ import WelcomeCard from './WelcomeCard';
 import { Header } from '../molecules';
 import { Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
-import { backgroundBrains } from '../images';
+import { backgroundBrainsImage } from '../images';
 import { themes } from '../theme';
 
 const values = {
@@ -44,7 +44,7 @@ const containerStyles = css({
   alignContent: 'space-between',
   alignItems: 'center',
 
-  backgroundImage: `url(${backgroundBrains})`,
+  backgroundImage: `url(${backgroundBrainsImage})`,
   backgroundPosition: 'center',
   backgroundSize: 'cover',
 });

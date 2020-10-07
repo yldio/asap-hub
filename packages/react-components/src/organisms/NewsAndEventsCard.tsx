@@ -1,15 +1,25 @@
 import React from 'react';
 import css from '@emotion/css';
 import { Card, Paragraph, Headline2, TagLabel, Caption } from '../atoms';
-import { perRem } from '../pixels';
+import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
+import { newsPlaceholder, eventsPlaceholder } from '../icons';
 
 const imageStyle = css({
+  objectFit: 'cover',
+});
+
+const imageContainerStyle = css({
+  flexShrink: 0,
   borderRadius: `${12 / perRem}em`,
   height: `${200 / perRem}em`,
-  objectFit: 'cover',
   marginRight: `${24 / perRem}em`,
   width: `${200 / perRem}em`,
+  overflow: 'hidden',
+
+  [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
+    display: 'none',
+  },
 });
 
 const containerStyle = css({
@@ -35,13 +45,19 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   return (
     <Card>
       <div css={containerStyle}>
-        {thumbnail ? (
-          <img
-            alt={`"${title}"'s thumbnail`}
-            src={thumbnail}
-            css={[imageStyle]}
-          />
-        ) : null}
+        <div css={imageContainerStyle}>
+          {thumbnail ? (
+            <img
+              alt={`"${title}"'s thumbnail`}
+              src={thumbnail}
+              css={[imageStyle]}
+            />
+          ) : type === 'News' ? (
+            newsPlaceholder
+          ) : (
+            eventsPlaceholder
+          )}
+        </div>
         <div>
           <TagLabel>{type}</TagLabel>
           <Headline2 styleAsHeading={4}>{title}</Headline2>

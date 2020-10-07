@@ -5,6 +5,7 @@ import {
   crossIcon,
   docsIcon,
   dropdownChevronIcon,
+  eventsPlaceholder,
   feedbackIcon,
   filterIcon,
   firstPageIcon,
@@ -18,6 +19,7 @@ import {
   menuIcon,
   networkIcon,
   newsIcon,
+  newsPlaceholder,
   nextPageIcon,
   orcidIcon,
   previousPageIcon,
@@ -65,3 +67,5 @@ export const User = () => userIcon;
 export const UserIcon = () => userIcon;
 export const ValidTick = () => validTickIcon;
 export const VerticalDivider = () => verticalDividerIcon;
+export const NewsPlaceholder = () => newsPlaceholder;
+export const EventsPlaceholder = () => eventsPlaceholder;

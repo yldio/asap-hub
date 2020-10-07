@@ -1,14 +1,16 @@
 import Chance from 'chance';
-import { UserResponse, Invitee } from '@asap-hub/model';
-import { CMS } from '../../src/cms';
+import {
+  TeamRole,
+  UserResponse,
+  Invitee,
+} from '@asap-hub/model';
 import { CMSTeam } from '../../src/entities/team';
 import { CMSUser } from '../../src/entities/user';
 import { transform as defaultTransform } from '../../src/controllers/users';
 import { Squidex } from '@asap-hub/services-common';
 
-const chance = new Chance();
-const cms = new CMS();
 const users = new Squidex<CMSUser>('users');
+const chance = new Chance();
 
 export type TestUserResponse = UserResponse & {
   connections: ReadonlyArray<{ code: string }>;
@@ -72,13 +74,19 @@ export const createRandomUser = async (
 
 export const createUserOnTeam = async (
   team: CMSTeam,
-  role: string | null = null,
+  role: TeamRole | null = null,
 ): Promise<TestUserResponse> => {
   const createdUser = await createUser();
-  const user = await cms.users.addToTeam(
-    createdUser,
-    role || chance.word(),
-    team,
-  );
+  const teams = [{
+    role: role || chance.pickone([ 'Lead PI' , 'Co-Investigator' , 'Project Manager' , 'Collaborator' , 'Key Personnel' ]),
+    displayName: team.data.displayName.iv,
+    id: [team.id],
+  }]
+
+  const user = await users.patch(createdUser.id, {
+    email: { iv: createdUser.data.email.iv },
+    teams: { iv: teams },
+  })
+
   return transform(user);
 };

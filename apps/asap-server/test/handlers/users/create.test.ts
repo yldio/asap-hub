@@ -19,6 +19,10 @@ jest.mock('aws-sdk', () => {
   return { SES: jest.fn(() => m) };
 });
 
+jest.mock('uuid', () => {
+  return { v4: jest.fn(() => 'uuid') };
+});
+
 describe('POST /users', () => {
   test("returns 400 when body isn't parsable as JSON", async () => {
     const res = (await handler(
@@ -89,8 +93,7 @@ describe('POST /users', () => {
 });
 
 describe('POST /users', () => {
-  beforeEach(() => {
-    // TODO: beforeEach because create still uses old cms
+  beforeAll(() => {
     identity();
   });
 

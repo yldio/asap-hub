@@ -4,10 +4,10 @@ import path from 'path';
 import url from 'url';
 import Intercept from 'apr-intercept';
 import get from 'lodash.get';
+import { v4 as uuidV4 } from 'uuid';
 import { Squidex } from '@asap-hub/services-common';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
-import { CMS } from '../cms';
 import { CMSUser, CMSOrcidWork } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
@@ -75,24 +75,33 @@ function transformOrcidWorks(
 
 const debug = Debug('users.create');
 export default class Users {
-  cms: CMS;
-
   users: Squidex<CMSUser>;
 
   constructor() {
-    this.cms = new CMS();
     this.users = new Squidex('users');
   }
 
   async create(user: Invitee): Promise<UserResponse> {
-    const [conflict, createdUser] = await Intercept(
-      this.cms.users.create(user),
-    );
-    if (conflict) {
-      throw Boom.conflict('Duplicate');
-    }
+    const code = uuidV4()
 
-    const [{ code }] = createdUser.data.connections.iv;
+    //remove undefined
+    const userData: CMSUser["data"] = JSON.parse(JSON.stringify({
+      lastModifiedDate: { iv: `${new Date().toISOString()}` },
+      displayName: { iv: user.displayName },
+      email: { iv: user.email },
+      firstName: { iv: user.firstName },
+      middleName: { iv: user.middleName },
+      lastName: { iv: user.lastName },
+      jobTitle: { iv: user.jobTitle },
+      orcid: { iv: user.orcid },
+      institution: { iv: user.institution },
+      location: { iv: user.location },
+      avatarURL: { iv: user.avatarURL },
+      connections: { iv: [{ code }] }
+    }))
+
+    const createdUser = await this.users.create(userData)
+
     const link = new url.URL(path.join(`/welcome/${code}`), origin);
 
     const [err] = await Intercept(

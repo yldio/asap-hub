@@ -110,12 +110,24 @@ test:jest:
     paths:
       - '.jest-cache'
   script:
+    - yarn run test --testPathIgnorePatterns **/*/integration.test.ts --coverage
+  after_script:
+    - yarn dlx codecov@3.7.2
+  needs:
+    - build:ts
+  variables:
+    <<: *tmpl_branch_variables
+
+test:integration:
+  <<: *tmpl_test
+  cache:
+    paths:
+      - '.jest-cache'
+  script:
     - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
-    - yarn run test --coverage
-  after_script:
-    - yarn dlx codecov@3.7.2
+    - yarn run test **/*/integration.test.ts
   needs:
     - build:ts
   variables:

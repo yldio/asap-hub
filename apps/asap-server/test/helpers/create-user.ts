@@ -1,8 +1,5 @@
 import Chance from 'chance';
-import {
-  UserResponse,
-  Invitee,
-} from '@asap-hub/model';
+import { UserResponse, Invitee } from '@asap-hub/model';
 import { CMS } from '../../src/cms';
 import { CMSTeam } from '../../src/entities/team';
 import { CMSUser } from '../../src/entities/user';

@@ -18,6 +18,8 @@ type EmailPasswordSigninProps = Pick<
   ComponentProps<typeof LabeledPasswordField>,
   'forgotPasswordHref'
 > & {
+  readonly signup?: boolean;
+
   readonly email: string;
   readonly onChangeEmail?: (newEmail: string) => void;
 
@@ -27,7 +29,9 @@ type EmailPasswordSigninProps = Pick<
   readonly customValidationMessage?: string;
   readonly onSignin?: () => void;
 };
+
 const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
+  signup = false,
   forgotPasswordHref,
 
   password,
@@ -67,7 +71,7 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
           }
         }}
       >
-        Sign in
+        {signup ? 'Continue' : 'Sign in'}
       </Button>
     </form>
   );

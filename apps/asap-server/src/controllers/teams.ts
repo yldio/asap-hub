@@ -18,7 +18,7 @@ const priorities: Record<TeamRole, number> = {
   'Co-Investigator': 2,
   'Project Manager': 3,
   Collaborator: 4,
-  'Key Personal': 5,
+  'Key Personnel': 5,
 };
 
 function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {

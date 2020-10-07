@@ -5,7 +5,7 @@ export type TeamRole =
   | 'Co-Investigator'
   | 'Project Manager'
   | 'Collaborator'
-  | 'Key Personal';
+  | 'Key Personnel';
 
 export interface TeamCreateRequest {
   displayName: string;

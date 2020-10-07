@@ -225,7 +225,7 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         teams: {
           iv: [
             {
-              role: 'Key Personal',
+              role: 'Key Personnel',
               displayName: 'John Travista',
               id: ['team-id-2'],
             },
@@ -289,7 +289,7 @@ export const expectation: ListTeamResponse = {
           lastName: 'Travista',
           email: 'bill@ed.ma',
           displayName: 'Bill Travista',
-          role: 'Key Personal',
+          role: 'Key Personnel',
         },
       ],
       lastModifiedDate: '2020-09-16T14:31:19Z',

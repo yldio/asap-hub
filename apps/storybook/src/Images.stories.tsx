@@ -7,7 +7,7 @@ import {
   asapImage,
   asapPaddedImage,
   asapPaddedWhiteImage,
-  backgroundBrains,
+  backgroundBrainsImage,
 } from '@asap-hub/react-components';
 
 export default { title: 'Atoms / Images' };
@@ -17,7 +17,7 @@ export const AsapPadded = () => <img alt="ASAP" src={asapPaddedImage} />;
 export const AsapWhite = () => <img alt="ASAP" src={asapPaddedWhiteImage} />;
 export const Loading = () => <img alt="Loading" src={loadingImage} />;
 export const BackgroundBrains = () => (
-  <img alt="Background Brains" src={backgroundBrains} />
+  <img alt="Background Brains" src={backgroundBrainsImage} />
 );
 export const ValidTickGreen = () => (
   <img alt="Valid Tick" src={validTickGreenImage} />

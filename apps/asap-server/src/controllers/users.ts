@@ -145,27 +145,41 @@ export default class Users {
   }
 
   async fetchById(id: string): Promise<UserResponse> {
-    const [notFound, user] = await Intercept(this.cms.users.fetchById(id));
-    if (notFound) {
-      throw Boom.notFound();
-    }
-    return transform(user);
+    return transform(await this.users.fetchById(id));
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const user = await this.cms.users.fetchByCode(code);
-    if (!user) {
-      throw Boom.forbidden();
-    }
+    const user = await this.users
+      .fetchOne({
+        filter: { path: 'data.connections.iv.code', op: 'eq', value: code },
+      })
+      .catch(() => {
+        throw Boom.forbidden();
+      });
     return transform(user);
   }
 
-  async connectByCode(code: string, userId: string): Promise<UserResponse> {
-    const user = await this.cms.users.fetchByCode(code);
-    if (!user) {
-      throw Boom.forbidden();
+  async connectByCode(welcomeCode: string, userId: string): Promise<UserResponse> {
+    const user = await this.users
+      .fetchOne({
+        filter: { path: 'data.connections.iv.code', op: 'eq', value: welcomeCode },
+      })
+      .catch(() => {
+        throw Boom.forbidden();
+      });
+
+    if (user.data.connections.iv.find(({ code }) => code === userId)) {
+      return Promise.resolve(transform(user));
     }
-    return transform(await this.cms.users.connectByCode(user, userId));
+
+    const connections = user.data.connections.iv.concat([{ code: userId }]);
+
+    const res = await this.users.patch(user.id, {
+      email: { iv: user.data.email.iv },
+      connections: { iv: connections },
+    })
+
+    return transform(res);
   }
 
   async syncOrcidProfile(
@@ -174,12 +188,7 @@ export default class Users {
   ): Promise<UserResponse> {
     let fetchedUser;
     if (!cachedUser) {
-      let notFound;
-      [notFound, fetchedUser] = await Intercept(this.cms.users.fetchById(id));
-
-      if (notFound) {
-        throw Boom.notFound();
-      }
+      fetchedUser = await this.users.fetchById(id);
     }
 
     const user = cachedUser || (fetchedUser as CMSUser);
@@ -199,13 +208,13 @@ export default class Users {
       !user.data.orcidLastModifiedDate?.iv ||
       user.data.orcidLastModifiedDate.iv < lastModifiedDate
     ) {
-      return transform(
-        await this.cms.users.updateOrcidWorks(
-          user,
-          lastModifiedDate,
-          works.slice(0, 10),
-        ),
-      );
+      const updatedUser = await this.users.patch(user.id, {
+        email: { iv: user.data.email.iv },
+        orcidLastSyncDate: { iv: `${new Date().toISOString()}` },
+        orcidLastModifiedDate: { iv: lastModifiedDate },
+        orcidWorks: { iv: works.slice(0, 10) },
+      });
+      return transform(updatedUser);
     }
 
     return transform(user);

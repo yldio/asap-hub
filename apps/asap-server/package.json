@@ -27,6 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
     "lodash.get": "^4.4.2",
+    "lodash.matches": "^4.6.0",
     "nock": "^13.0.4",
     "p-limit": "^3.0.2",
     "pump": "^3.0.0",
@@ -46,6 +47,7 @@
     "@types/jwt-decode": "^2.2.1",
     "@types/jwt-encode": "workspace:@types/jwt-encode",
     "@types/lodash.get": "^4",
+    "@types/lodash.matches": "^4",
     "@types/pump": "^1.1.0",
     "@types/uuid": "^8.0.0",
     "jwt-encode": "^1.0.1"

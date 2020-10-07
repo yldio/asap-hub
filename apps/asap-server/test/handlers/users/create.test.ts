@@ -1,5 +1,6 @@
 import nock from 'nock';
 import aws from 'aws-sdk';
+import matches from 'lodash.matches';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
 import { cms } from '../../../src/config';
@@ -88,17 +89,24 @@ describe('POST /users', () => {
 });
 
 describe('POST /users', () => {
+  beforeEach(() => {
+    console.log(nock.pendingMocks())
+    // TODO: beforeEach because create still uses old cms
+    identity();
+  });
+
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
   });
 
   test('returns 409 when email is a duplicate', async () => {
-    identity()
+    nock(cms.baseUrl)
       .post(
         `/api/content/${cms.appName}/users?publish=true`,
-        ({ displayName, email }) =>
-          displayName?.iv === 'test user' &&
-          email?.iv === 'testuser@asap.science',
+        matches({
+          displayName: { iv: 'duplicated' },
+          email: { iv: 'testuser@asap.science' },
+        }),
       )
       .reply(409);
 
@@ -109,7 +117,7 @@ describe('POST /users', () => {
         },
         httpMethod: 'post',
         body: {
-          displayName: 'test user',
+          displayName: 'duplicated',
           email: 'testuser@asap.science',
         },
       }),
@@ -122,12 +130,13 @@ describe('POST /users', () => {
     const user = response.items[0];
     user.data.connections.iv = [{ code: 'uuid' }];
 
-    identity()
+    nock(cms.baseUrl)
       .post(
         `/api/content/${cms.appName}/users?publish=true`,
-        ({ displayName, email }) =>
-          displayName?.iv === 'test user' &&
-          email?.iv === 'testuser@asap.science',
+        matches({
+          displayName: { iv: 'test user' },
+          email: { iv: 'testuser@asap.science' },
+        }),
       )
       .reply(201, user);
 

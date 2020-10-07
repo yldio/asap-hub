@@ -49,7 +49,7 @@ describe('GET /users', () => {
 
   test('returns 200 when searching users by name', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
         q: JSON.stringify({

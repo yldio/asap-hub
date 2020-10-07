@@ -100,7 +100,7 @@ test:format:
   script:
     - yarn run lint:format
 
-test:jest:
+test:unit:
   <<: *tmpl_test
   artifacts:
     expire_in: 1 day
@@ -110,7 +110,7 @@ test:jest:
     paths:
       - '.jest-cache'
   script:
-    - yarn run test --testPathIgnorePatterns **/*/integration.test.ts --coverage
+    - yarn run test --testPathIgnorePatterns ./**/*/integration.test.ts --coverage
   after_script:
     - yarn dlx codecov@3.7.2
   needs:
@@ -127,7 +127,7 @@ test:integration:
     - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
-    - yarn run test **/*/integration.test.ts
+    - yarn run test ./**/*/integration.test.ts
   needs:
     - build:ts
   variables:
@@ -196,5 +196,6 @@ deploy:sls:production:
   needs:
     - build:ts
     - build:native
-    - test:jest
+    - test:unit
+    - test:integration
     - sync:squidex:production

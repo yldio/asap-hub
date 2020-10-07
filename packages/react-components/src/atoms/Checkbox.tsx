@@ -47,7 +47,7 @@ const checkboxStyles = css({
 interface CheckboxProps {
   readonly id?: string;
   readonly groupName: string;
-  readonly disabled: boolean;
+  readonly disabled?: boolean;
   readonly checked?: boolean;
   readonly onSelect?: () => void;
 }
@@ -55,7 +55,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
   id,
   groupName,
 
-  disabled,
+  disabled = false,
   checked = false,
   onSelect = noop,
 }) => (

@@ -25,9 +25,9 @@ export default function CheckboxGroup<V extends string>({
   const groupName = useRef(uuidV4());
   return (
     <>
-      {options.map((option) => (
+      {options.map((option, index) => (
         <LabeledCheckbox
-          key={option.value}
+          key={`${groupName}-${index}`}
           groupName={groupName.current}
           title={option.label}
           disabled={!!option.disabled}

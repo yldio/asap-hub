@@ -14,12 +14,10 @@ const disabledStyles = css({
 
 type LabeledCheckboxProps = {
   readonly title: React.ReactNode;
-  readonly groupName: string;
 } & Exclude<ComponentProps<typeof Checkbox>, 'id'>;
 
 const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
   title,
-  groupName,
   disabled = false,
   ...checkboxProps
 }) => (
@@ -27,12 +25,7 @@ const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
     <Label
       trailing
       forContent={(id) => (
-        <Checkbox
-          groupName={groupName}
-          {...checkboxProps}
-          disabled={disabled}
-          id={id}
-        />
+        <Checkbox {...checkboxProps} disabled={disabled} id={id} />
       )}
     >
       <Paragraph>{title}</Paragraph>

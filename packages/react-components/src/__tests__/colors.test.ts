@@ -1,4 +1,4 @@
-import { color } from '../colors';
+import { color, colorWithTransparency } from '../colors';
 
 describe('the color generator', () => {
   describe('for an opaque color', () => {
@@ -26,5 +26,13 @@ describe('the color generator', () => {
         `"rgba(1, 2, 3, 0.5)"`,
       );
     });
+  });
+});
+
+describe('the color to color with transparency', () => {
+  it('calculates the CSS rgba string', () => {
+    expect(
+      colorWithTransparency(color(1, 2, 3), 0.5).rgba,
+    ).toMatchInlineSnapshot(`"rgba(1, 2, 3, 0.5)"`);
   });
 });

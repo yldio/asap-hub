@@ -31,8 +31,8 @@ const buttonTextStyles = css({
 
 const dropdownContainer = css({
   position: 'absolute',
-  width: '222px',
-  right: '0px',
+  width: `${222 / perRem}em`,
+  right: 0,
   top: '-10px',
 
   backgroundColor: paper.rgb,

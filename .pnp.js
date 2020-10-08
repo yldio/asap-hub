@@ -83,6 +83,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/auth"
       },
       {
+        "name": "@asap-hub/dom-test-utils",
+        "reference": "workspace:packages/dom-test-utils"
+      },
+      {
         "name": "@asap-hub/eslint-config-asap-hub",
         "reference": "workspace:packages/eslint-config-asap-hub"
       },
@@ -110,6 +114,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/auth", ["workspace:packages/auth"]],
       ["@asap-hub/auth-frontend", ["workspace:apps/auth-frontend"]],
       ["@asap-hub/auth0-rules", ["workspace:apps/auth0-rules"]],
+      ["@asap-hub/dom-test-utils", ["workspace:packages/dom-test-utils"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/frontend", ["workspace:apps/frontend"]],
       ["@asap-hub/import-data", ["workspace:apps/import-data"]],
@@ -148,6 +153,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/auth0-rules",
         "workspace:apps/auth0-rules"
+      ],
+      [
+        "@asap-hub/dom-test-utils",
+        "workspace:packages/dom-test-utils"
       ],
       [
         "@asap-hub/eslint-config-asap-hub",
@@ -8275,6 +8284,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/auth-frontend", "workspace:apps/auth-frontend"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
@@ -8330,6 +8340,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@asap-hub/dom-test-utils", [
+        ["workspace:packages/dom-test-utils", {
+          "packageLocation": "./packages/dom-test-utils/",
+          "packageDependencies": [
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.11.2"],
+            ["@types/jest", "npm:26.0.3"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@asap-hub/eslint-config-asap-hub", [
         ["workspace:packages/eslint-config-asap-hub", {
           "packageLocation": "./packages/eslint-config-asap-hub/",
@@ -8361,6 +8383,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/frontend", "workspace:apps/frontend"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-components", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components"],
@@ -8458,6 +8481,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-components", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
@@ -8529,6 +8553,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-components", "virtual:47ef3b468a9cf9b468cf4060be548fa4f43cf9c990dce724955cd4126cd83fa7b9b2d9ac110a41a294de5631e132465e9338ccb2f109592f7c35266207fa9a37#workspace:packages/react-components"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
@@ -8595,6 +8620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
@@ -8665,6 +8691,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-components", "workspace:packages/react-components"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],

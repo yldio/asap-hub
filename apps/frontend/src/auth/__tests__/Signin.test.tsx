@@ -5,9 +5,10 @@ import { JWK, JWT } from 'jose';
 
 import nock from 'nock';
 
-import { authTestUtils } from '@asap-hub/react-components';
 import { Auth0 } from '@asap-hub/auth';
 import { useAuth0 } from '@asap-hub/react-context';
+import { authTestUtils } from '@asap-hub/react-components';
+import { mockLocation } from '@asap-hub/dom-test-utils';
 
 import Signin from '../Signin';
 
@@ -34,32 +35,7 @@ const renderSignin = async (): Promise<RenderResult> => {
   return result;
 };
 
-const originalLocation = globalThis.location;
-const mockLocation = jest.fn();
-const assign = jest.fn();
-beforeEach(() => {
-  mockLocation
-    .mockReset()
-    .mockReturnValue(new URL('http://localhost/page?search#hash'));
-  assign.mockClear();
-
-  delete globalThis.location;
-  class MockUrl extends URL {
-    assign = assign;
-  }
-  Object.defineProperty(globalThis, 'location', {
-    configurable: true,
-    enumerable: true,
-    get: () => new MockUrl(mockLocation()),
-  });
-});
-afterEach(() => {
-  Object.defineProperty(globalThis, 'location', {
-    configurable: true,
-    enumerable: true,
-    value: originalLocation,
-  });
-});
+const { mockGetLocation, mockAssign } = mockLocation();
 
 let nonce = '';
 beforeEach(() => {
@@ -99,9 +75,11 @@ describe('when clicking the button', () => {
   });
 
   it('redirects to the Auth0 signin page', async () => {
-    await waitFor(() => expect(assign).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(mockAssign).toHaveBeenCalledTimes(1));
 
-    const { origin, pathname, searchParams } = new URL(assign.mock.calls[0][0]);
+    const { origin, pathname, searchParams } = new URL(
+      mockAssign.mock.calls[0][0],
+    );
     expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
     expect(pathname).toMatchInlineSnapshot(`"/authorize"`);
     expect(searchParams.get('prompt')).toBe('login');
@@ -110,13 +88,13 @@ describe('when clicking the button', () => {
   describe('and returning from the flow', () => {
     beforeEach(async () => {
       await waitFor(() => {
-        if (assign.mock.calls.length !== 1) throw new Error();
+        if (mockAssign.mock.calls.length !== 1) throw new Error();
       });
-      const { searchParams } = new URL(assign.mock.calls[0][0]);
+      const { searchParams } = new URL(mockAssign.mock.calls[0][0]);
       nonce = searchParams.get('nonce')!;
-      assign.mockClear();
+      mockAssign.mockClear();
 
-      mockLocation.mockReturnValue(
+      mockGetLocation.mockReturnValue(
         new URL(
           `http://localhost/?code=code&state=${encodeURIComponent(
             searchParams.get('state')!,

@@ -26,6 +26,7 @@
     "use-http": "^1.0.13"
   },
   "devDependencies": {
+    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils",
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@testing-library/dom": "^7.10.0",
     "@testing-library/jest-dom": "^5.9.0",

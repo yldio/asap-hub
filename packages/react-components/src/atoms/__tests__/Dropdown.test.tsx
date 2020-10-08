@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Dropdown from '../Dropdown';
 import { ember, tin, fern, pine } from '../../colors';
-import { findParentWithStyle } from '../../test-utils';
 
 it('shows the selected value', () => {
   const { getByText } = render(

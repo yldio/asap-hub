@@ -2,9 +2,9 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Header from '../Header';
-import { findParentWithStyle } from '../../test-utils';
 
 it('renders an ASAP logo', () => {
   const { getByAltText } = render(<Header />);

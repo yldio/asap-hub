@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import ComingSoon from '../ComingSoon';
-import { findParentWithStyle } from '../../test-utils';
 
 it('renders the <strong> coming soon text', () => {
   const { getByText } = render(<ComingSoon>Text</ComingSoon>);

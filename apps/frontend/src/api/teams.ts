@@ -8,7 +8,7 @@ export const useTeams = ({ searchQuery, filters }: BasicOptions) =>
   useFetch<ListTeamResponse>(
     createApiListUrl('/teams', { searchQuery, filters }).toString(),
     useFetchOptions(),
-    [],
+    [searchQuery, filters],
   );
 
 export const useTeamById = (id: string) =>

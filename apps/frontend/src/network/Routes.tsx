@@ -20,7 +20,7 @@ const Network: React.FC<{}> = () => {
   const history = useHistory();
   const currentUrlParams = new URLSearchParams(search);
   let filters = currentUrlParams.getAll('filter');
-  const searchQuery = currentUrlParams.get('query') || '';
+  const searchQuery = currentUrlParams.get('searchQuery') || '';
 
   const onChangeToggle = (pathname: string) => () => {
     currentUrlParams.delete('filter');

@@ -58,5 +58,5 @@ export const useResearchOutputs = ({ searchQuery, filters }: BasicOptions) =>
       filters,
     }).toString(),
     useFetchOptions(),
-    [],
+    [searchQuery, filters],
   );

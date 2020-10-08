@@ -8,7 +8,7 @@ export const useUsers = ({ searchQuery, filters }: BasicOptions) =>
   useFetch<ListUserResponse>(
     createApiListUrl('/users', { searchQuery, filters }).toString(),
     useFetchOptions(),
-    [],
+    [searchQuery, filters],
   );
 
 export const useUserById = (id: string) =>

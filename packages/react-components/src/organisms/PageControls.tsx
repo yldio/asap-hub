@@ -1,5 +1,5 @@
 import React from 'react';
-import { aperture, filter, uniqBy, sortWith, pipe } from 'ramda';
+import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
 import css from '@emotion/css';
 
 import {
@@ -177,9 +177,9 @@ const PageControls: React.FC<PageControlsProps> = ({
     ],
     filter<PageNumber>(({ index }) => index >= 0 && index < numPages),
     sortWith([
-      ({ index }) => index,
+      ascend(({ index }) => index),
       // sort wideScreenOnly to the back so that uniq does not lose mandatory pages
-      ({ wideScreenOnly }) => (wideScreenOnly ? 1 : 0),
+      ascend(({ wideScreenOnly }) => (wideScreenOnly ? 1 : 0)),
     ]),
     uniqBy(({ index }) => index),
   )();

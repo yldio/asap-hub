@@ -31,6 +31,7 @@ export {
   CtaCard,
   GoogleSigninButton,
   Header,
+  LabeledCheckbox,
   LabeledDateField,
   LabeledDropdown,
   LabeledPasswordField,
@@ -44,6 +45,7 @@ export {
   UserMenuButton,
 } from './molecules';
 export {
+  CheckboxGroup,
   ComingSoon,
   EmailPasswordSignin,
   LibraryCard,
@@ -60,10 +62,10 @@ export {
   PageControls,
   ProfileSkills,
   SsoButtons,
+  SearchControls,
   TeamCard,
   UserNavigation,
 } from './organisms';
-
 export {
   AdminInviteUserPage,
   BasicLayout,

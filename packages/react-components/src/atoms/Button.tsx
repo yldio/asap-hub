@@ -33,6 +33,7 @@ const linkStyles = css({
 interface NormalButtonProps {
   readonly enabled?: boolean;
   readonly primary?: boolean;
+  readonly active?: boolean;
   readonly small?: boolean;
   readonly linkStyle?: undefined;
 }
@@ -40,6 +41,7 @@ interface LinkStyleButtonProps {
   readonly linkStyle: true;
   readonly enabled?: undefined;
   readonly primary?: undefined;
+  readonly active?: undefined;
   readonly small?: undefined;
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
@@ -54,6 +56,7 @@ const Button: React.FC<ButtonProps> = ({
   primary = false,
   small = false,
   linkStyle = false,
+  active = false,
 
   submit = primary,
 
@@ -71,7 +74,7 @@ const Button: React.FC<ButtonProps> = ({
     css={
       linkStyle
         ? linkStyles
-        : getButtonStyles({ primary, small, enabled, children })
+        : getButtonStyles({ primary, small, enabled, active, children })
     }
   >
     {getButtonChildren(children)}

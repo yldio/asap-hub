@@ -12,9 +12,11 @@ import {
   charcoal,
   tin,
   silver,
+  color,
 } from './colors';
 import { fontStyles } from './text';
 
+const activeBackgroundColor = color(122, 210, 169, 0.18);
 const borderWidth = 1;
 const styles = css(fontStyles, {
   flexGrow: 1,
@@ -98,14 +100,17 @@ const smallIconOnlyStyles = css({
   paddingRight: `${9 / perRem}em`,
 });
 
-const boxShadow = (color: OpaqueColor) => `0px 2px 4px -2px ${color.rgb}`;
+const boxShadow = (opaqueColor: OpaqueColor) =>
+  `0px 2px 4px -2px ${opaqueColor.rgb}`;
 const primaryStyles = css({
   color: paper.rgb,
 
   backgroundColor: fern.rgb,
   borderColor: pine.rgb,
   boxShadow: boxShadow(pine),
-
+  svg: {
+    stroke: paper.rgb,
+  },
   ':hover, :focus': {
     backgroundColor: pine.rgb,
     borderColor: pine.rgb,
@@ -143,16 +148,36 @@ const disabledStyles = css({
   },
 });
 
+export const activeStyles = css({
+  backgroundColor: activeBackgroundColor.rgba,
+  borderColor: 'transparent',
+  color: pine.rgb,
+  svg: {
+    stroke: pine.rgb,
+  },
+  ':hover, :focus': {
+    backgroundColor: activeBackgroundColor.rgba,
+    color: pine.rgb,
+  },
+});
+
 export const getButtonStyles = ({
   primary = false,
   small = false,
   enabled = true,
+  active = false,
   children = [] as React.ReactNode,
 }) =>
   css([
     styles,
     small ? smallStyles : largeStyles,
-    enabled ? (primary ? primaryStyles : secondaryStyles) : disabledStyles,
+    enabled
+      ? active
+        ? activeStyles
+        : primary
+        ? primaryStyles
+        : secondaryStyles
+      : disabledStyles,
     (Array.isArray(children)
       ? children.some((child) => child && typeof child === 'object')
       : children && typeof children === 'object') ||

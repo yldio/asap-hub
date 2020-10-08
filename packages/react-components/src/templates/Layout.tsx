@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import css from '@emotion/css';
 
-import { steel, paper, color, tin, pearl } from '../colors';
+import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, MainNavigation, UserNavigation } from '../organisms';
 import { UserMenuButton } from '../molecules';
 import { Overlay } from '../atoms';
@@ -116,7 +116,7 @@ const userMenuStyles = css({
     right: '24px',
 
     border: `1px solid ${steel.rgb}`,
-    boxShadow: `0 2px 6px 0 ${color(tin.r, tin.g, tin.b, 0.34).rgba}`,
+    boxShadow: `0 2px 6px 0 ${colorWithTransparency(tin, 0.34).rgba}`,
   },
 });
 const userMenuShownStyles = css({

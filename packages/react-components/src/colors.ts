@@ -48,6 +48,11 @@ export function color(
       };
 }
 
+export const colorWithTransparency = (
+  opaqueColor: OpaqueColor,
+  a: number,
+): TransparentColor => color(opaqueColor.r, opaqueColor.g, opaqueColor.b, a);
+
 // Monochrome
 export const paper = color(255, 255, 255);
 export const pearl = color(252, 253, 254);

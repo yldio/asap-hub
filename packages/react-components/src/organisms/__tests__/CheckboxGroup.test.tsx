@@ -39,9 +39,9 @@ it('Disables specified checkboxes', () => {
   const { getByLabelText } = render(
     <CheckboxGroup
       options={[
-        { value: 'red', label: 'Red', disabled: true },
+        { value: 'red', label: 'Red', enabled: false },
         { value: 'blue', label: 'Blue' },
-        { value: 'green', label: 'Green', disabled: true },
+        { value: 'green', label: 'Green', enabled: false },
       ]}
     />,
   );

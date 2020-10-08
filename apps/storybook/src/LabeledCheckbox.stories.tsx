@@ -12,7 +12,7 @@ export const Normal = () => (
   <LabeledCheckbox
     groupName="test1"
     checked={boolean('Checked', false)}
-    disabled={boolean('Disabled', false)}
+    enabled={boolean('Enabled', true)}
     title={text('Title', 'Option')}
   />
 );

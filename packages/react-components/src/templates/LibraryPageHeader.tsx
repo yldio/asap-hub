@@ -47,13 +47,13 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
         query={query}
         filterOptions={[
           { label: 'Proposal', value: '' },
-          { label: 'Dataset', value: '', disabled: true },
-          { label: 'Software', value: '', disabled: true },
-          { label: 'Protocol', value: '', disabled: true },
-          { label: 'Lab Resource', value: '', disabled: true },
-          { label: 'Preprint', value: '', disabled: true },
-          { label: 'Article', value: '', disabled: true },
-          { label: 'Other', value: '', disabled: true },
+          { label: 'Dataset', value: '', enabled: false },
+          { label: 'Software', value: '', enabled: false },
+          { label: 'Protocol', value: '', enabled: false },
+          { label: 'Lab Resource', value: '', enabled: false },
+          { label: 'Preprint', value: '', enabled: false },
+          { label: 'Article', value: '', enabled: false },
+          { label: 'Other', value: '', enabled: false },
         ]}
         filterTitle="TYPE OF OUTPUTS"
       />

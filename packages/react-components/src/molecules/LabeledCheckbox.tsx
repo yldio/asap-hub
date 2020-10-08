@@ -18,14 +18,14 @@ type LabeledCheckboxProps = {
 
 const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
   title,
-  disabled = false,
+  enabled = true,
   ...checkboxProps
 }) => (
-  <div css={[containerStyles, !disabled || disabledStyles]}>
+  <div css={[containerStyles, enabled || disabledStyles]}>
     <Label
       trailing
       forContent={(id) => (
-        <Checkbox {...checkboxProps} disabled={disabled} id={id} />
+        <Checkbox {...checkboxProps} enabled={enabled} id={id} />
       )}
     >
       <Paragraph>{title}</Paragraph>

@@ -17,13 +17,13 @@ export const Normal = () => (
     filterTitle={text('Filter Title', 'TYPE OF OUTPUTS')}
     filterOptions={[
       { label: 'Proposal', value: '1' },
-      { label: 'Dataset', value: '2', disabled: true },
-      { label: 'Software', value: '3', disabled: true },
-      { label: 'Protocol', value: '4', disabled: true },
-      { label: 'Lab Resource', value: '5', disabled: true },
-      { label: 'Preprint', value: '6', disabled: true },
-      { label: 'Article', value: '7', disabled: true },
-      { label: 'Other', value: '8', disabled: true },
+      { label: 'Dataset', value: '2', enabled: false },
+      { label: 'Software', value: '3', enabled: false },
+      { label: 'Protocol', value: '4', enabled: false },
+      { label: 'Lab Resource', value: '5', enabled: false },
+      { label: 'Preprint', value: '6', enabled: false },
+      { label: 'Article', value: '7', enabled: false },
+      { label: 'Other', value: '8', enabled: false },
     ]}
   />
 );

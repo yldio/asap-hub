@@ -7,13 +7,13 @@ import { LabeledCheckbox } from '../molecules';
 export interface Option<V extends string> {
   value: V;
   label: string;
-  disabled?: boolean;
+  enabled?: boolean;
 }
 
 interface CheckboxGroupProps<V extends string> {
   readonly options: ReadonlyArray<Option<V>>;
 
-  readonly values?: V[];
+  readonly values?: ReadonlyArray<V>;
   readonly onChange?: (newValue: V) => void;
 }
 export default function CheckboxGroup<V extends string>({
@@ -30,7 +30,7 @@ export default function CheckboxGroup<V extends string>({
           key={`${groupName}-${index}`}
           groupName={groupName.current}
           title={option.label}
-          disabled={!!option.disabled}
+          enabled={option.enabled}
           checked={values.includes(option.value)}
           onSelect={() => onChange(option.value)}
         />

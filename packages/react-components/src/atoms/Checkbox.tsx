@@ -22,13 +22,13 @@ const checkboxStyles = css({
   borderWidth: `${1 / perRem}em`,
   borderColor: steel.rgb,
 
-  ':enabled:hover, :focus': {
+  ':enabled:hover, :enabled:focus': {
     borderColor: lead.rgb,
   },
   ':checked': {
     borderColor: fern.rgb,
     backgroundColor: fern.rgb,
-    ':before': {
+    '::before': {
       content: `url(data:image/svg+xml;utf8,${encodeURIComponent(
         renderToStaticMarkup(tickIcon),
       )})`,
@@ -47,7 +47,7 @@ const checkboxStyles = css({
 interface CheckboxProps {
   readonly id?: string;
   readonly groupName: string;
-  readonly disabled?: boolean;
+  readonly enabled?: boolean;
   readonly checked?: boolean;
   readonly onSelect?: () => void;
 }
@@ -55,21 +55,19 @@ const Checkbox: React.FC<CheckboxProps> = ({
   id,
   groupName,
 
-  disabled = false,
+  enabled = true,
   checked = false,
   onSelect = noop,
 }) => (
-  <>
-    <input
-      id={id}
-      name={groupName}
-      checked={checked}
-      disabled={disabled}
-      onChange={() => onSelect()}
-      css={checkboxStyles}
-      type="checkbox"
-    />
-  </>
+  <input
+    id={id}
+    name={groupName}
+    checked={checked}
+    disabled={!enabled}
+    onChange={() => onSelect()}
+    css={checkboxStyles}
+    type="checkbox"
+  />
 );
 
 export default Checkbox;

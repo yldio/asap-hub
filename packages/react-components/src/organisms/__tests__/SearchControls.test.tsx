@@ -25,9 +25,11 @@ it('Passes query correctly', () => {
 
 it('shows and hides the dropdown menu', () => {
   const { getByRole, getByText } = render(
-    <SearchControls {...props} query="test123" filterTitle="Filter Dropdown" />,
+    <SearchControls {...props} filterTitle="Filter Dropdown" />,
   );
   const filterButton = getByRole('button');
   userEvent.click(filterButton);
   expect(getByText('Filter Dropdown')).toBeVisible();
+  userEvent.click(filterButton);
+  expect(getByText('Filter Dropdown')).not.toBeVisible();
 });

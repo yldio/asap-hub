@@ -13,6 +13,11 @@ it('renders a checkbox', () => {
   expect(getByRole('checkbox')).toBeVisible();
 });
 
+it('renders a disabled checkbox', () => {
+  const { getByRole } = render(<Checkbox {...props} enabled={false} />);
+  expect(getByRole('checkbox')).toBeDisabled();
+});
+
 it('fires the select event', async () => {
   const handleChange = jest.fn();
   const { getByRole } = render(<Checkbox {...props} onSelect={handleChange} />);

@@ -135,7 +135,6 @@ describe.each`
     linkDescription    | href
     ${'external link'} | ${'https://parkinsonsroadmap.org/'}
     ${'internal link'} | ${'/'}
-    ${'internal link'} | ${''}
   `("for an $linkDescription to '$href'", ({ href }) => {
     it('applies the href to the anchor', () => {
       const { getByRole } = render(<Link href={href}>text</Link>, {
@@ -150,6 +149,13 @@ describe.each`
 
   it('renders an inactive link without an href', () => {
     const { getByText } = render(<Link href={undefined}>text</Link>, {
+      wrapper,
+    });
+    expect(getByText('text', { selector: 'a' })).not.toHaveAttribute('href');
+  });
+
+  it('renders an inactive link with an empty href', () => {
+    const { getByText } = render(<Link href="">text</Link>, {
       wrapper,
     });
     expect(getByText('text', { selector: 'a' })).not.toHaveAttribute('href');

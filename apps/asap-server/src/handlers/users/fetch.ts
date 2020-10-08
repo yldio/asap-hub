@@ -8,6 +8,7 @@ const querySchema = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),
+  filter: Joi.array(),
 }).required();
 
 // /users?page=1&pageSize=8
@@ -19,6 +20,7 @@ export const handler: Handler = lambda.http(
       take: number;
       skip: number;
       search: string;
+      filter: string[];
     };
 
     const users = new Users();

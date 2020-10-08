@@ -2,7 +2,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { handler } from '../../../src/handlers/pages/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 
-describe('Get /pages/{path+}', () => {
+describe.skip('Get /pages/{path+}', () => {
   test('returns 200 when page is found', async () => {
     const res = (await handler(
       apiGatewayEvent({

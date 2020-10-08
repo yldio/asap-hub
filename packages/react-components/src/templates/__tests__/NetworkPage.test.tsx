@@ -5,7 +5,7 @@ import NetworkPage from '../NetworkPage';
 
 const props: ComponentProps<typeof NetworkPage> = {
   page: 'teams',
-  query: '',
+  searchQuery: '',
 };
 it('renders the header', () => {
   const { getByRole } = render(<NetworkPage {...props}>Content</NetworkPage>);

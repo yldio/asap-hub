@@ -1,5 +1,6 @@
 import { IncomingOptions as UseFetchOptions, Interceptors } from 'use-http';
 import { useAuth0 } from '@asap-hub/react-context';
+import { API_BASE_URL } from '../config';
 
 export const useFetchOptions = ({
   interceptors: {
@@ -42,4 +43,23 @@ export const useFetchOptions = ({
       ...overrideHeaders,
     },
   };
+};
+
+export interface BasicOptions {
+  searchQuery?: string;
+  filters?: string[];
+}
+
+export const createApiListUrl = (
+  endpoint: string,
+  { searchQuery, filters }: BasicOptions,
+): URL => {
+  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  if (searchQuery) {
+    url.searchParams.set('search', searchQuery);
+  }
+  if (filters && filters.length) {
+    filters.map((filter) => url.searchParams.append('filter', filter));
+  }
+  return url;
 };

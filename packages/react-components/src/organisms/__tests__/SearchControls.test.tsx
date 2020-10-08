@@ -6,7 +6,7 @@ import SearchControls from '../SearchControls';
 import { noop } from '../../utils';
 
 const props: ComponentProps<typeof SearchControls> = {
-  query: '',
+  searchQuery: '',
   placeholder: '',
   onChangeSearch: noop,
   filterOptions: [],
@@ -19,7 +19,9 @@ it('renders the search controls', () => {
 });
 
 it('Passes query correctly', () => {
-  const { getByRole } = render(<SearchControls {...props} query="test123" />);
+  const { getByRole } = render(
+    <SearchControls {...props} searchQuery="test123" />,
+  );
   expect(getByRole('textbox')).toHaveValue('test123');
 });
 

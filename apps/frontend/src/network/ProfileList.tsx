@@ -6,8 +6,16 @@ import { UserResponse } from '@asap-hub/model';
 
 import { useUsers } from '../api';
 
-const Page: React.FC<{}> = () => {
-  const { loading, data: usersData, error } = useUsers();
+interface ProfileListProps {
+  searchQuery: string;
+  filters: string[];
+}
+
+const ProfileList: React.FC<ProfileListProps> = ({ searchQuery, filters }) => {
+  const { loading, data: usersData, error } = useUsers({
+    searchQuery,
+    filters,
+  });
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -42,4 +50,4 @@ const Page: React.FC<{}> = () => {
   );
 };
 
-export default Page;
+export default ProfileList;

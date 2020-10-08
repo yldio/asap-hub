@@ -24,12 +24,16 @@ const textStyles = css({
 
 type LibraryPageHeaderProps = {
   onChangeSearch?: (newQuery: string) => void;
-  query: string;
+  searchQuery: string;
+  onChangeFilter?: (filters: string) => void;
+  filters: string[];
 };
 
 const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
   onChangeSearch = noop,
-  query,
+  searchQuery,
+  filters,
+  onChangeFilter,
 }) => {
   return (
     <header css={containerStyles}>
@@ -44,7 +48,7 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
       <SearchControls
         placeholder="Search for a protein, a method…"
         onChangeSearch={onChangeSearch}
-        query={query}
+        searchQuery={searchQuery}
         filterOptions={[
           { label: 'Proposal', value: '' },
           { label: 'Dataset', value: '', enabled: false },
@@ -56,6 +60,8 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
           { label: 'Other', value: '', enabled: false },
         ]}
         filterTitle="TYPE OF OUTPUTS"
+        onChangeFilter={onChangeFilter}
+        filters={filters}
       />
     </header>
   );

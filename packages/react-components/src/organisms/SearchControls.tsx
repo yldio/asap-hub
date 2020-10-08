@@ -57,22 +57,22 @@ const showMenuStyles = css({
 });
 
 interface SearchControlsProps {
-  query: string;
+  searchQuery: string;
   onChangeSearch?: (newQuery: string) => void;
-  onChangeFilter?: (value: string) => void;
+  onChangeFilter?: (filter: string) => void;
   filterTitle: string;
-  filterValues?: string[];
+  filters?: string[];
   filterOptions: Option<string>[];
   filterEnabled?: boolean;
   placeholder: string;
 }
 
 const SearchControls: React.FC<SearchControlsProps> = ({
-  query,
+  searchQuery,
   onChangeSearch = noop,
   onChangeFilter = noop,
   placeholder,
-  filterValues = [],
+  filters = [],
   filterOptions,
   filterTitle,
   filterEnabled = true,
@@ -80,12 +80,12 @@ const SearchControls: React.FC<SearchControlsProps> = ({
   const [menuShown, setMenuShown] = useState(false);
   useEffect(() => {
     setMenuShown(false);
-  }, [filterOptions]);
+  }, [filterTitle]);
 
   return (
     <div css={searchContainerStyles}>
       <SearchField
-        value={query}
+        value={searchQuery}
         placeholder={placeholder}
         onChange={onChangeSearch}
       />
@@ -111,7 +111,7 @@ const SearchControls: React.FC<SearchControlsProps> = ({
             <CheckboxGroup
               onChange={onChangeFilter}
               options={filterOptions}
-              values={filterValues}
+              values={filters}
             />
           </div>
         </div>

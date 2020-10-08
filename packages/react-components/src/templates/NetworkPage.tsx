@@ -15,16 +15,20 @@ const mainStyles = css({
 
 type NetworkPageProps = {
   onChangeSearch?: (newQuery: string) => void;
-  query: string;
+  onChangeFilter?: (filter: string) => void;
   onChangeToggle?: () => void;
+  searchQuery: string;
   page: 'teams' | 'users';
+  filters?: string[];
 };
 const NetworkPage: React.FC<NetworkPageProps> = ({
   children,
   onChangeSearch,
-  query,
+  searchQuery,
   onChangeToggle,
   page,
+  onChangeFilter,
+  filters,
 }) => {
   return (
     <article css={articleStyles}>
@@ -32,7 +36,9 @@ const NetworkPage: React.FC<NetworkPageProps> = ({
         onChangeToggle={onChangeToggle}
         page={page}
         onChangeSearch={onChangeSearch}
-        query={query}
+        searchQuery={searchQuery}
+        onChangeFilter={onChangeFilter}
+        filters={filters}
       />
       <main css={mainStyles}>{children}</main>
     </article>

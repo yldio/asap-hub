@@ -5,8 +5,19 @@ import { join } from 'path';
 
 import { useTeams } from '../api';
 
-const Page: React.FC = () => {
-  const { loading, data: teamsData, error } = useTeams();
+interface NetworkTeamListProps {
+  searchQuery: string;
+  filters: string[];
+}
+
+const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
+  searchQuery,
+  filters,
+}) => {
+  const { loading, data: teamsData, error } = useTeams({
+    searchQuery,
+    filters,
+  });
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -40,4 +51,4 @@ const Page: React.FC = () => {
   return <Paragraph>No results</Paragraph>;
 };
 
-export default Page;
+export default NetworkTeamList;

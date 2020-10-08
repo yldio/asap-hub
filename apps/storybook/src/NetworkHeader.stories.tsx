@@ -13,7 +13,7 @@ export default {
 export const Normal = () => (
   <NetworkPageHeader
     page={select('page', ['teams', 'users'], 'teams')}
-    query={text('Query', '')}
+    searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('search change')}
     onChangeToggle={() => action('toggle')}
   />

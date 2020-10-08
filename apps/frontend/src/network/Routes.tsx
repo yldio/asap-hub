@@ -19,12 +19,25 @@ const Network: React.FC<{}> = () => {
   const { search } = useLocation();
   const history = useHistory();
   const currentUrlParams = new URLSearchParams(search);
+  let filters = currentUrlParams.getAll('filter');
+  const searchQuery = currentUrlParams.get('query') || '';
 
   const onChangeToggle = (pathname: string) => () => {
+    currentUrlParams.delete('filter');
     history.push({ pathname, search: currentUrlParams.toString() });
   };
   const onChangeSearch = (newQuery: string) => {
-    currentUrlParams.set('query', newQuery);
+    currentUrlParams.set('searchQuery', newQuery);
+    history.replace({ search: currentUrlParams.toString() });
+  };
+  const onChangeFilter = (filter: string) => {
+    currentUrlParams.delete('filter');
+    if (filters.includes(filter)) {
+      filters = filters.filter((f) => f !== filter);
+    } else {
+      filters.push(filter);
+    }
+    filters.map((f) => currentUrlParams.append('filter', f));
     history.replace({ search: currentUrlParams.toString() });
   };
   return (
@@ -34,9 +47,11 @@ const Network: React.FC<{}> = () => {
           page="users"
           onChangeToggle={onChangeToggle('teams')}
           onChangeSearch={onChangeSearch}
-          query={currentUrlParams.get('query') || ''}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
+          searchQuery={searchQuery}
         >
-          <ProfileList />
+          <ProfileList filters={filters} searchQuery={searchQuery} />
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={Profile} />
@@ -45,9 +60,11 @@ const Network: React.FC<{}> = () => {
           page="teams"
           onChangeToggle={onChangeToggle('users')}
           onChangeSearch={onChangeSearch}
-          query={currentUrlParams.get('query') || ''}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
+          searchQuery={searchQuery}
         >
-          <TeamList />
+          <TeamList filters={filters} searchQuery={searchQuery} />
         </NetworkPage>
       </Route>
       <Route path={`${path}/teams/:id`} component={Team} />

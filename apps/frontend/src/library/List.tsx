@@ -4,8 +4,16 @@ import { join } from 'path';
 
 import { useResearchOutputs } from '../api';
 
-const Page: React.FC<{}> = () => {
-  const { loading, data: researchOutputData, error } = useResearchOutputs();
+interface LibraryListProps {
+  searchQuery: string;
+  filters: string[];
+}
+
+const LibraryList: React.FC<LibraryListProps> = ({ searchQuery, filters }) => {
+  const { loading, data: researchOutputData, error } = useResearchOutputs({
+    searchQuery,
+    filters,
+  });
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -39,4 +47,4 @@ const Page: React.FC<{}> = () => {
   );
 };
 
-export default Page;
+export default LibraryList;

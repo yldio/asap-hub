@@ -79,7 +79,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
 export const TeamList = () => (
   <NetworkPage
     page="teams"
-    query={text('Query', '')}
+    searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('search change')}
     onChangeToggle={() => action('toggle')}
   >
@@ -90,7 +90,7 @@ export const TeamList = () => (
 export const PeopleList = () => (
   <NetworkPage
     page="users"
-    query={text('Query', '')}
+    searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('search change')}
     onChangeToggle={() => action('toggle')}
   >

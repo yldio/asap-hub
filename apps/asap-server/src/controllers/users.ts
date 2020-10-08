@@ -84,7 +84,7 @@ export default class Users {
   async create(user: Invitee): Promise<UserResponse> {
     const code = uuidV4();
 
-    //remove undefined
+    // remove undefined(s)
     const userData: CMSUser['data'] = JSON.parse(
       JSON.stringify({
         lastModifiedDate: { iv: `${new Date().toISOString()}` },

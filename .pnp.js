@@ -8419,6 +8419,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-scripts", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:react-scripts@npm%3A3.4.3#./patches/react-scripts.patch::version=3.4.3&hash=4dc748&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5b02a2"],
+            ["use-debounce", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:5.0.1"],
             ["use-http", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.13"]
           ],
           "linkType": "SOFT",
@@ -37779,6 +37780,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["use-debounce", [
+        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:5.0.1", {
+          "packageLocation": "./.yarn/$$virtual/use-debounce-virtual-93bb8db214/0/cache/use-debounce-npm-5.0.1-e35e72aee4-2f8a23def1.zip/node_modules/use-debounce/",
+          "packageDependencies": [
+            ["use-debounce", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:5.0.1"],
+            ["@types/react", "npm:16.9.34"],
+            ["react", "npm:16.13.1"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
+        }],
         ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:4.0.0", {
           "packageLocation": "./.yarn/$$virtual/use-debounce-virtual-681cdc6071/0/cache/use-debounce-npm-4.0.0-efa9677584-0158efe439.zip/node_modules/use-debounce/",
           "packageDependencies": [

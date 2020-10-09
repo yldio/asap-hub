@@ -9,7 +9,7 @@ import {
 import { useAuth0 } from '@asap-hub/react-context';
 
 import { API_BASE_URL } from '../config';
-import { useFetchOptions, BasicOptions, createApiListUrl } from './util';
+import { useFetchOptions, BasicOptions, useApiGet } from './util';
 
 export const useCreateResearchOutput = () => {
   const { user } = useAuth0();
@@ -52,11 +52,7 @@ export const useResearchOutputById = (id: string) =>
   );
 
 export const useResearchOutputs = ({ searchQuery, filters }: BasicOptions) =>
-  useFetch<ListResearchOutputResponse>(
-    createApiListUrl('/research-outputs', {
-      searchQuery,
-      filters,
-    }).toString(),
-    useFetchOptions(),
-    [searchQuery, filters],
-  );
+  useApiGet<ListResearchOutputResponse>('/research-outputs', {
+    search: searchQuery,
+    filter: filters,
+  });

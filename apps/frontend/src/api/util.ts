@@ -1,4 +1,7 @@
-import { IncomingOptions as UseFetchOptions, Interceptors } from 'use-http';
+import useFetch, {
+  IncomingOptions as UseFetchOptions,
+  Interceptors,
+} from 'use-http';
 import { useAuth0 } from '@asap-hub/react-context';
 import { API_BASE_URL } from '../config';
 
@@ -50,16 +53,20 @@ export interface BasicOptions {
   filters?: string[];
 }
 
-export const createApiListUrl = (
+export const useApiGet = <T>(
   endpoint: string,
-  { searchQuery, filters }: BasicOptions,
-): URL => {
+  parameters: Record<string, string | string[] | undefined> = {},
+  options?: Parameters<typeof useFetchOptions>[0],
+) => {
   const url = new URL(`${API_BASE_URL}${endpoint}`);
-  if (searchQuery) {
-    url.searchParams.set('search', searchQuery);
-  }
-  if (filters && filters.length) {
-    filters.map((filter) => url.searchParams.append('filter', filter));
-  }
-  return url;
+  Object.entries(parameters).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item) => url.searchParams.append(key, item));
+    } else if (value) {
+      url.searchParams.set(key, value);
+    }
+  });
+  return useFetch<T>(url.toString(), useFetchOptions(options), [
+    url.toString(),
+  ]);
 };

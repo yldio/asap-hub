@@ -8,6 +8,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
+import { useDebounce } from 'use-debounce';
 
 import ProfileList from './ProfileList';
 import Profile from './Profile';
@@ -21,7 +22,7 @@ const Network: React.FC<{}> = () => {
   const currentUrlParams = new URLSearchParams(search);
   let filters = currentUrlParams.getAll('filter');
   const searchQuery = currentUrlParams.get('searchQuery') || '';
-
+  const [searchQueryDebounce] = useDebounce(searchQuery, 400);
   const onChangeToggle = (pathname: string) => () => {
     currentUrlParams.delete('filter');
     history.push({ pathname, search: currentUrlParams.toString() });
@@ -37,7 +38,7 @@ const Network: React.FC<{}> = () => {
     } else {
       filters.push(filter);
     }
-    filters.map((f) => currentUrlParams.append('filter', f));
+    filters.forEach((f) => currentUrlParams.append('filter', f));
     history.replace({ search: currentUrlParams.toString() });
   };
   return (
@@ -51,7 +52,7 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <ProfileList filters={filters} searchQuery={searchQuery} />
+          <ProfileList filters={filters} searchQuery={searchQueryDebounce} />
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={Profile} />
@@ -64,7 +65,7 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <TeamList filters={filters} searchQuery={searchQuery} />
+          <TeamList filters={filters} searchQuery={searchQueryDebounce} />
         </NetworkPage>
       </Route>
       <Route path={`${path}/teams/:id`} component={Team} />

@@ -1,12 +1,10 @@
 import intercept from 'apr-intercept';
 import {
   ResearchOutputResponse,
-  ResearchOutputCreationRequest,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
 import { Squidex } from '@asap-hub/services-common';
 
-import { CMS } from '../cms';
 import { CMSResearchOutput } from '../entities/research-outputs';
 import { CMSTeam } from '../entities';
 
@@ -37,29 +35,13 @@ function transform(
 }
 
 export default class ResearchOutputs {
-  cms: CMS;
-
   researchOutputs: Squidex<CMSResearchOutput>;
 
   teams: Squidex<CMSTeam>;
 
   constructor() {
-    this.cms = new CMS();
     this.researchOutputs = new Squidex('research-outputs');
     this.teams = new Squidex('teams');
-  }
-
-  async create(
-    id: string,
-    name: string,
-    output: ResearchOutputCreationRequest,
-  ): Promise<ResearchOutputResponse> {
-    const createdOutput = await this.cms.researchOutputs.create(
-      id,
-      name,
-      output,
-    );
-    return transform(createdOutput);
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {

@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../config';
 import { useFetchOptions, BasicOptions, useApiGet } from './util';
 
 export const useTeams = ({ searchQuery, filters }: BasicOptions) =>
-  useApiGet<ListTeamResponse>('/teams', {
+  useApiGet<ListTeamResponse>('teams', {
     search: searchQuery,
     filter: filters,
   });

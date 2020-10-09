@@ -5,14 +5,14 @@ import { join } from 'path';
 import { useResearchOutputs } from '../api';
 
 interface LibraryListProps {
-  searchQuery: string;
-  filters: string[];
+  searchQuery?: string;
+  filters: Set<string>;
 }
 
 const LibraryList: React.FC<LibraryListProps> = ({ searchQuery, filters }) => {
   const { loading, data: researchOutputData, error } = useResearchOutputs({
     searchQuery,
-    filters,
+    filters: [...filters],
   });
 
   if (loading) {

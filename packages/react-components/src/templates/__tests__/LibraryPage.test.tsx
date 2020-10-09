@@ -5,7 +5,7 @@ import LibraryPage from '../LibraryPage';
 
 const props: ComponentProps<typeof LibraryPage> = {
   searchQuery: '',
-  filters: [],
+  filters: new Set(),
 };
 it('renders the header', () => {
   const { getByRole } = render(<LibraryPage {...props}>Content</LibraryPage>);

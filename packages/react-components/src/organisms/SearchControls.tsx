@@ -57,11 +57,11 @@ const showMenuStyles = css({
 });
 
 interface SearchControlsProps {
-  searchQuery: string;
+  searchQuery?: string;
   onChangeSearch?: (newQuery: string) => void;
   onChangeFilter?: (filter: string) => void;
   filterTitle: string;
-  filters?: string[];
+  filters?: Set<string>;
   filterOptions: Option<string>[];
   filterEnabled?: boolean;
   placeholder: string;
@@ -72,7 +72,7 @@ const SearchControls: React.FC<SearchControlsProps> = ({
   onChangeSearch = noop,
   onChangeFilter = noop,
   placeholder,
-  filters = [],
+  filters = new Set(),
   filterOptions,
   filterTitle,
   filterEnabled = true,
@@ -85,7 +85,7 @@ const SearchControls: React.FC<SearchControlsProps> = ({
   return (
     <div css={searchContainerStyles}>
       <SearchField
-        value={searchQuery}
+        value={searchQuery || ''}
         placeholder={placeholder}
         onChange={onChangeSearch}
       />

@@ -14,7 +14,7 @@ export const Normal = () => (
   <LibraryPageHeader
     searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('Search change')}
-    filters={[]}
+    filters={new Set()}
     onChangeFilter={() => action('Filter change')}
   />
 );

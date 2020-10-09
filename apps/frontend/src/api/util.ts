@@ -58,11 +58,11 @@ export const useApiGet = <T>(
   parameters: Record<string, string | string[] | undefined> = {},
   options?: Parameters<typeof useFetchOptions>[0],
 ) => {
-  const url = new URL(`${API_BASE_URL}${endpoint}`);
+  const url = new URL(endpoint, `${API_BASE_URL}/`);
   Object.entries(parameters).forEach(([key, value]) => {
     if (Array.isArray(value)) {
       value.forEach((item) => url.searchParams.append(key, item));
-    } else if (value) {
+    } else if (typeof value === 'string') {
       url.searchParams.set(key, value);
     }
   });

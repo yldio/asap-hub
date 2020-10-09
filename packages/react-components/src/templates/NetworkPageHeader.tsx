@@ -38,9 +38,9 @@ type NetworkPageHeaderProps = {
   onChangeToggle?: () => void;
   onChangeSearch?: (newQuery: string) => void;
   onChangeFilter?: (filter: string) => void;
-  searchQuery: string;
+  searchQuery?: string;
   page: 'teams' | 'users';
-  filters?: string[];
+  filters?: Set<string>;
 };
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({

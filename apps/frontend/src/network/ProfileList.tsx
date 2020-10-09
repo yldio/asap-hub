@@ -7,14 +7,14 @@ import { UserResponse } from '@asap-hub/model';
 import { useUsers } from '../api';
 
 interface ProfileListProps {
-  searchQuery: string;
-  filters: string[];
+  searchQuery?: string;
+  filters: Set<string>;
 }
 
 const ProfileList: React.FC<ProfileListProps> = ({ searchQuery, filters }) => {
   const { loading, data: usersData, error } = useUsers({
     searchQuery,
-    filters,
+    filters: [...filters],
   });
 
   if (loading) {

@@ -17,9 +17,9 @@ type NetworkPageProps = {
   onChangeSearch?: (newQuery: string) => void;
   onChangeFilter?: (filter: string) => void;
   onChangeToggle?: () => void;
-  searchQuery: string;
+  searchQuery?: string;
   page: 'teams' | 'users';
-  filters?: string[];
+  filters?: Set<string>;
 };
 const NetworkPage: React.FC<NetworkPageProps> = ({
   children,

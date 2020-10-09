@@ -5,7 +5,7 @@ import { API_BASE_URL } from '../config';
 import { useFetchOptions, BasicOptions, useApiGet } from './util';
 
 export const useUsers = ({ searchQuery, filters }: BasicOptions) =>
-  useApiGet<ListUserResponse>('/users', {
+  useApiGet<ListUserResponse>('users', {
     search: searchQuery,
     filter: filters,
   });

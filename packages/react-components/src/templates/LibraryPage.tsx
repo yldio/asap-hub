@@ -16,9 +16,9 @@ const mainStyles = css({
 
 type LibraryPageProps = {
   onChangeSearch?: (newQuery: string) => void;
-  searchQuery: string;
+  searchQuery?: string;
   onChangeFilter?: (filter: string) => void;
-  filters: string[];
+  filters: Set<string>;
 };
 const LibraryPage: React.FC<LibraryPageProps> = ({
   onChangeSearch,

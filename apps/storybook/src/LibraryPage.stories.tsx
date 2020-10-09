@@ -45,7 +45,7 @@ export const LibraryList = () => (
   <LibraryPage
     searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('search change')}
-    filters={[]}
+    filters={new Set()}
   >
     <LibraryPageBody {...props()} />
   </LibraryPage>

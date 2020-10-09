@@ -17,21 +17,21 @@ const Library: React.FC<{}> = () => {
   const { search } = useLocation();
   const history = useHistory();
   const currentUrlParams = new URLSearchParams(search);
-  let filters = currentUrlParams.getAll('filter');
-  const searchQuery = currentUrlParams.get('searchQuery') || '';
+  const filters = new Set(currentUrlParams.getAll('filter'));
+  const searchQuery = currentUrlParams.get('searchQuery') || undefined;
   const [searchQueryDebounce] = useDebounce(searchQuery, 500);
 
   const onChangeSearch = (newQuery: string) => {
-    currentUrlParams.set('searchQuery', newQuery);
+    if (newQuery) {
+      currentUrlParams.set('searchQuery', newQuery);
+    } else {
+      currentUrlParams.delete('searchQuery');
+    }
     history.replace({ search: currentUrlParams.toString() });
   };
   const onChangeFilter = (filter: string) => {
     currentUrlParams.delete('filter');
-    if (filters.includes(filter)) {
-      filters = filters.filter((f) => f !== filter);
-    } else {
-      filters.push(filter);
-    }
+    filters.has(filter) ? filters.delete(filter) : filters.add(filter);
     filters.forEach((f) => currentUrlParams.append('filter', f));
     history.replace({ search: currentUrlParams.toString() });
   };

@@ -80,7 +80,9 @@ const renderProfileList = async () => {
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/users']}>
-            <Route path="/users" component={Profiles} />
+            <Route path="/users">
+              <Profiles filters={new Set()} />
+            </Route>
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>

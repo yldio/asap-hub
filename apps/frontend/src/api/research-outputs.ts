@@ -52,7 +52,7 @@ export const useResearchOutputById = (id: string) =>
   );
 
 export const useResearchOutputs = ({ searchQuery, filters }: BasicOptions) =>
-  useApiGet<ListResearchOutputResponse>('/research-outputs', {
+  useApiGet<ListResearchOutputResponse>('research-outputs', {
     search: searchQuery,
     filter: filters,
   });

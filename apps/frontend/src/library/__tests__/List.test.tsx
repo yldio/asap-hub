@@ -56,9 +56,7 @@ const renderLibraryList = async () => {
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/library']}>
-            <Route path="/library">
-              <List filters={new Set()} />
-            </Route>
+            <Route path="/library" component={List} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>

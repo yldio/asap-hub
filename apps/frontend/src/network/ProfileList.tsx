@@ -8,10 +8,13 @@ import { useUsers } from '../api';
 
 interface ProfileListProps {
   searchQuery?: string;
-  filters: Set<string>;
+  filters?: Set<string>;
 }
 
-const ProfileList: React.FC<ProfileListProps> = ({ searchQuery, filters }) => {
+const ProfileList: React.FC<ProfileListProps> = ({
+  searchQuery,
+  filters = new Set(),
+}) => {
   const { loading, data: usersData, error } = useUsers({
     searchQuery,
     filters: [...filters],

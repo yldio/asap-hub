@@ -2,7 +2,8 @@ import useFetch from 'use-http';
 import { ListTeamResponse, TeamResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../config';
-import { useFetchOptions, BasicOptions, useApiGet } from './util';
+import { useFetchOptions } from './util';
+import { BasicOptions, useApiGet } from './hooks';
 
 export const useTeams = ({ searchQuery, filters }: BasicOptions) =>
   useApiGet<ListTeamResponse>('teams', {

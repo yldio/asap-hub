@@ -7,12 +7,12 @@ import { useTeams } from '../api';
 
 interface NetworkTeamListProps {
   searchQuery?: string;
-  filters: Set<string>;
+  filters?: Set<string>;
 }
 
 const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   searchQuery,
-  filters,
+  filters = new Set(),
 }) => {
   const { loading, data: teamsData, error } = useTeams({
     searchQuery,

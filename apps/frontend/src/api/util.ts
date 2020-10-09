@@ -1,9 +1,5 @@
-import useFetch, {
-  IncomingOptions as UseFetchOptions,
-  Interceptors,
-} from 'use-http';
+import { IncomingOptions as UseFetchOptions, Interceptors } from 'use-http';
 import { useAuth0 } from '@asap-hub/react-context';
-import { API_BASE_URL } from '../config';
 
 export const useFetchOptions = ({
   interceptors: {
@@ -46,27 +42,4 @@ export const useFetchOptions = ({
       ...overrideHeaders,
     },
   };
-};
-
-export interface BasicOptions {
-  searchQuery?: string;
-  filters?: string[];
-}
-
-export const useApiGet = <T>(
-  endpoint: string,
-  parameters: Record<string, string | string[] | undefined> = {},
-  options?: Parameters<typeof useFetchOptions>[0],
-) => {
-  const url = new URL(endpoint, `${API_BASE_URL}/`);
-  Object.entries(parameters).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach((item) => url.searchParams.append(key, item));
-    } else if (typeof value === 'string') {
-      url.searchParams.set(key, value);
-    }
-  });
-  return useFetch<T>(url.toString(), useFetchOptions(options), [
-    url.toString(),
-  ]);
 };

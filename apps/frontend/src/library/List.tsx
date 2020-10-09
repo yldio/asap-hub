@@ -6,10 +6,13 @@ import { useResearchOutputs } from '../api';
 
 interface LibraryListProps {
   searchQuery?: string;
-  filters: Set<string>;
+  filters?: Set<string>;
 }
 
-const LibraryList: React.FC<LibraryListProps> = ({ searchQuery, filters }) => {
+const LibraryList: React.FC<LibraryListProps> = ({
+  searchQuery,
+  filters = new Set(),
+}) => {
   const { loading, data: researchOutputData, error } = useResearchOutputs({
     searchQuery,
     filters: [...filters],

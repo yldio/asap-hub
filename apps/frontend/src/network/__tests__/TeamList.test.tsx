@@ -41,9 +41,7 @@ const renderTeamList = async () => {
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/teams']}>
-            <Route path="/teams">
-              <Teams filters={new Set()} />
-            </Route>
+            <Route path="/teams" component={Teams} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>

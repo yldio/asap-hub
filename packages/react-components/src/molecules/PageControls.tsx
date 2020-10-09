@@ -136,46 +136,46 @@ function* makeFillersMandatory(pageNumbers: PageNumber[]) {
 }
 
 interface PageControlsProps {
-  numPages: number;
-  currentIndex: number;
+  numberOfPages: number;
+  currentPageIndex: number;
   renderPageHref: (index: number) => string;
 }
 const PageControls: React.FC<PageControlsProps> = ({
-  numPages,
-  currentIndex,
+  numberOfPages,
+  currentPageIndex,
   renderPageHref,
 }) => {
-  if (currentIndex < 0) {
+  if (currentPageIndex < 0) {
     throw new Error(
-      `Current index must not be negative. Received current index: ${currentIndex}.`,
+      `Current index must not be negative. Received current page index: ${currentPageIndex}.`,
     );
   }
-  if (currentIndex >= numPages) {
+  if (currentPageIndex >= numberOfPages) {
     throw new Error(
-      `Current index must be less than number of pages. Received number of pages: ${numPages}. Received current index: ${currentIndex}.`,
+      `Current index must be less than number of pages. Received number of pages: ${numberOfPages}. Received current page index: ${currentPageIndex}.`,
     );
   }
 
   const firstPageIndex = 0;
-  const lastPageIndex = numPages - 1;
+  const lastPageIndex = numberOfPages - 1;
   const [firstPageHref, previousPageHref] =
-    currentIndex === firstPageIndex
+    currentPageIndex === firstPageIndex
       ? []
-      : [renderPageHref(firstPageIndex), renderPageHref(currentIndex - 1)];
+      : [renderPageHref(firstPageIndex), renderPageHref(currentPageIndex - 1)];
   const [nextPageHref, lastPageHref] =
-    currentIndex === lastPageIndex
+    currentPageIndex === lastPageIndex
       ? []
-      : [renderPageHref(currentIndex + 1), renderPageHref(lastPageIndex)];
+      : [renderPageHref(currentPageIndex + 1), renderPageHref(lastPageIndex)];
 
   const desiredPages: PageNumber[] = pipe(
     () => [
       { index: firstPageIndex },
-      { index: currentIndex - 1, wideScreenOnly: true },
-      { index: currentIndex },
-      { index: currentIndex + 1, wideScreenOnly: true },
+      { index: currentPageIndex - 1, wideScreenOnly: true },
+      { index: currentPageIndex },
+      { index: currentPageIndex + 1, wideScreenOnly: true },
       { index: lastPageIndex },
     ],
-    filter<PageNumber>(({ index }) => index >= 0 && index < numPages),
+    filter<PageNumber>(({ index }) => index >= 0 && index < numberOfPages),
     sortWith([
       ascend(({ index }) => index),
       // sort wideScreenOnly to the back so that uniq does not lose mandatory pages
@@ -206,7 +206,7 @@ const PageControls: React.FC<PageControlsProps> = ({
           </Link>
         </li>
         {shownPages.map(({ index, followsGap, wideScreenOnly }) => {
-          const active = index === currentIndex;
+          const active = index === currentPageIndex;
           return (
             <li
               key={index}

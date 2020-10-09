@@ -11,6 +11,7 @@ export { default as LabeledTextArea } from './LabeledTextArea';
 export { default as LabeledTextField } from './LabeledTextField';
 export { default as MenuButton } from './MenuButton';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
+export { default as PageControls } from './PageControls';
 export { default as ProfilePersonalText } from './ProfilePersonalText';
 export { default as RichTextError } from './RichTextError';
 export { default as SearchField } from './SearchField';

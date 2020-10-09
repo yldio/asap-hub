@@ -11,7 +11,7 @@ const Page: React.FC<{}> = () => {
     return <Paragraph>Loading...</Paragraph>;
   }
   if (researchOutputData) {
-    const researchOutput = researchOutputData.items.map((output) => ({
+    const researchOutputs = researchOutputData.items.map((output) => ({
       ...output,
       href: join('/library', output.id),
       team: output.team && {
@@ -19,7 +19,15 @@ const Page: React.FC<{}> = () => {
         href: join('/network/teams', output.team.id),
       },
     }));
-    return <LibraryPageBody researchOutput={researchOutput} />;
+    return (
+      <LibraryPageBody
+        researchOutputs={researchOutputs}
+        numberOfItems={researchOutputs.length}
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={() => ''}
+      />
+    );
   }
 
   return (

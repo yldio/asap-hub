@@ -1,27 +1,28 @@
 import React, { ComponentProps } from 'react';
-import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { LibraryCard } from '../organisms';
+import CardList from '../organisms/CardList';
 
-interface LibraryPageBodyProps {
-  readonly researchOutput: ReadonlyArray<
-    ComponentProps<typeof LibraryCard> & Pick<ResearchOutputResponse, 'id'>
+type LibraryPageBodyProps = Omit<
+  ComponentProps<typeof CardList>,
+  'children'
+> & {
+  readonly researchOutputs: ReadonlyArray<
+    ComponentProps<typeof LibraryCard> & { id: string }
   >;
-}
+};
 
 const LibraryPageBody: React.FC<LibraryPageBodyProps> = ({
-  researchOutput,
+  researchOutputs,
+  ...cardListProps
 }) => (
-  <>
-    {researchOutput.map((output) => {
-      const { id } = output;
-      return (
-        <div key={id}>
-          <LibraryCard {...output} />
-        </div>
-      );
-    })}
-  </>
+  <CardList {...cardListProps}>
+    {researchOutputs.map(({ id, ...output }) => (
+      <div key={id}>
+        <LibraryCard {...output} />
+      </div>
+    ))}
+  </CardList>
 );
 
 export default LibraryPageBody;

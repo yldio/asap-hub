@@ -1,9 +1,5 @@
 import React, { ComponentProps } from 'react';
-import {
-  LibraryPage,
-  LibraryPageBody,
-  LibraryCard,
-} from '@asap-hub/react-components';
+import { LibraryPage, LibraryPageBody } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text, number } from '@storybook/addon-knobs';
 
@@ -14,8 +10,10 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-const researchOutput: ComponentProps<typeof LibraryCard> & { id: string } = {
-  id: '1',
+const researchOutput: Omit<
+  ComponentProps<typeof LibraryPageBody>['researchOutputs'][0],
+  'id'
+> = {
   type: 'proposal',
   title:
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
@@ -28,15 +26,18 @@ const researchOutput: ComponentProps<typeof LibraryCard> & { id: string } = {
   href: '#',
 };
 
-const props: () => ComponentProps<typeof LibraryPageBody> = () => {
-  const outputCount = number('Output Count', 3, {
-    min: 0,
-  });
+const props = (): ComponentProps<typeof LibraryPageBody> => {
+  const numberOfItems = number('Number of Outputs', 2, { min: 0 });
+  const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
   return {
-    researchOutput: [...Array(outputCount)].map((_, index) => ({
+    researchOutputs: Array.from({ length: numberOfItems }, (_, i) => ({
       ...researchOutput,
-      id: index.toString(),
-    })),
+      id: `ro${i}`,
+    })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
+    numberOfItems,
+    numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
+    currentPageIndex,
+    renderPageHref: (index) => `#${index}`,
   };
 };
 

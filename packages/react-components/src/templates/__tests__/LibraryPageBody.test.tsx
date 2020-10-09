@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import LibraryPageBody from '../LibraryPageBody';
 
 const props: Omit<ComponentProps<typeof LibraryPageBody>, 'children'> = {
-  researchOutput: [
+  researchOutputs: [
     {
       id: '1',
       title: 'Output 1',
@@ -22,6 +22,10 @@ const props: Omit<ComponentProps<typeof LibraryPageBody>, 'children'> = {
       created: new Date().toISOString(),
     },
   ],
+  numberOfItems: 2,
+  numberOfPages: 1,
+  currentPageIndex: 0,
+  renderPageHref: (index) => `#${index}`,
 };
 
 it('renders multiple library cards', () => {

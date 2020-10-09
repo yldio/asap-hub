@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import NetworkTeam from '../NetworkTeam';
+import NetworkTeams from '../NetworkTeams';
 
-const team = {
+const team: ComponentProps<typeof NetworkTeams>['teams'][0] = {
   id: '42',
   displayName: 'Unknown Team',
-  applicationNumber: 'Unknown Number',
   projectTitle: 'Unknown Project Title',
-  projectSummary: 'Unknown Project Summary',
-  lastModifiedDate: new Date().toISOString(),
   members: [],
   skills: [],
   href: 'http://localhost/teams/42',
 };
 const teams = [team, { ...team, id: '43', displayName: 'Unknown Team 2' }];
+const props: ComponentProps<typeof NetworkTeams> = {
+  teams,
+  numberOfItems: teams.length,
+  numberOfPages: 1,
+  currentPageIndex: 0,
+  renderPageHref: (index) => `#${index}`,
+};
 
 it('renders multiple team cards', () => {
-  const { queryAllByRole } = render(<NetworkTeam teams={teams} />);
+  const { queryAllByRole } = render(<NetworkTeams {...props} />);
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Unknown Team', 'Unknown Team 2']);

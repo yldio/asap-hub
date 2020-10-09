@@ -72,7 +72,7 @@ describe('Test toggle to team', () => {
   it('Preserves the query text', async () => {
     const { getByText, queryByText, getByRole } = await renderNetworkPage(
       '/network/teams',
-      '?query=321test',
+      '?searchQuery=321test',
     );
     const toggle = getByText('People');
     const searchBox = getByRole('textbox') as HTMLInputElement;
@@ -110,7 +110,7 @@ describe('Test toggle to user', () => {
   it('Preserves the query text', async () => {
     const { getByText, queryByText, getByRole } = await renderNetworkPage(
       '/network/users',
-      'query=test123',
+      'searchQuery=test123',
     );
     const toggle = getByText('People');
     const searchBox = getByRole('textbox') as HTMLInputElement;

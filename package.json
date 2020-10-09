@@ -26,9 +26,7 @@
     "sls": "node serverless/link-plugins.js && yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "test:unit": "jest --testPathIgnorePatterns=\"integration\"",
-    "test:integration": "jest --testPathPattern=\"integration\"",
-    "test": "yarn test:unit"
+    "test": "jest"
   },
   "dependenciesMeta": {
     "browser-tabs-lock": {

@@ -22,7 +22,6 @@ const createSignedPayload = (payload: WebHookPayload) =>
   });
 
 const orcid = '0000-0002-9079-593X';
-
 describe('POST /webhook/users/orcid - validation', () => {
   test('returns 204 when event type is not implemented', async () => {
     const res = (await handler(

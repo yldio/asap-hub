@@ -7,7 +7,7 @@ import Admin from './admin/Admin';
 import CreateProfile from './onboarding/CreateProfile';
 import history from './history';
 import Home from './home/Home';
-import News from './news/Routes';
+import NewsAndEvents from './news/Routes';
 import Welcome from './welcome/Routes';
 import Network from './network/Routes';
 import Library from './library/Routes';
@@ -66,7 +66,7 @@ const App: React.FC<{}> = () => {
 
                   <Route path="/create-profile" component={CreateProfile} />
 
-                  <Route path="/news" component={News} />
+                  <Route path="/news-and-events" component={NewsAndEvents} />
                   <Route path="/network" component={Network} />
                   <Route path="/library" component={Library} />
 

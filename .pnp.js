@@ -1326,6 +1326,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.1"
       ],
       [
+        "@types/date-fns",
+        "npm:2.6.0"
+      ],
+      [
         "@types/debug",
         "npm:4.1.5"
       ],
@@ -8216,6 +8220,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.53"],
             ["@types/chance", "npm:1.1.0"],
+            ["@types/date-fns", "npm:2.6.0"],
             ["@types/debug", "npm:4.1.5"],
             ["@types/hapi", "npm:18.0.3"],
             ["@types/hapi__boom", "npm:9.0.1"],
@@ -8234,6 +8239,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["aws-sdk", "npm:2.745.0"],
             ["chance", "npm:1.1.7"],
             ["csv-parse", "npm:4.12.0"],
+            ["date-fns", "npm:2.16.1"],
             ["debug", "virtual:d27045f313cae7cbc212b229738d5843f6d2265eba3ea36069f78075a79d301bc17e702a21a7b811ca9aa59de4cb7943fb27cda91a0e7d8a8ad547668124b185#npm:4.2.0"],
             ["got", "npm:11.6.0"],
             ["jsonwebtoken", "npm:8.5.1"],
@@ -14382,6 +14388,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-color-name-npm-1.1.1-00b0925070-8311db94a9.zip/node_modules/@types/color-name/",
           "packageDependencies": [
             ["@types/color-name", "npm:1.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/date-fns", [
+        ["npm:2.6.0", {
+          "packageLocation": "./.yarn/cache/@types-date-fns-npm-2.6.0-516bcda282-9b136620fa.zip/node_modules/@types/date-fns/",
+          "packageDependencies": [
+            ["@types/date-fns", "npm:2.6.0"],
+            ["date-fns", "npm:2.16.1"]
           ],
           "linkType": "HARD",
         }]

@@ -9,7 +9,7 @@ import {
   mobileScreen,
   largeDesktopScreen,
 } from '../pixels';
-import { steel, fern, tin, lead, mint } from '../colors';
+import { steel, fern, tin, lead, mint, paper } from '../colors';
 import {
   firstPageIcon,
   nextPageIcon,
@@ -33,6 +33,8 @@ const listStyles = css({
   gridTemplateRows: `${30 / perRem}em`,
   gridAutoColumns: `${30 / perRem}em`,
   gridGap: vminLinearCalc(mobileScreen, 6, largeDesktopScreen, 12, 'px'),
+
+  backgroundColor: paper.rgb,
 });
 
 const itemStyles = css({

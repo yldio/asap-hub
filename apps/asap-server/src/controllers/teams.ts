@@ -11,7 +11,7 @@ import {
 
 import { CMSTeam } from '../entities/team';
 import { CMSUser } from '../entities/user';
-import { createURL } from '../utils/assets';
+import { createURL } from '../utils/squidex';
 
 const priorities: Record<TeamRole, number> = {
   'Lead PI': 1,

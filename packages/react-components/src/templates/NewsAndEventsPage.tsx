@@ -2,8 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
-
-import LibraryPageHeader from './LibraryPageHeader';
+import NewsAndEventsPageHeader from './NewsAndEventsPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const articleStyles = css({
@@ -14,21 +13,13 @@ const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type LibraryPageProps = {
-  onChangeSearch?: (newQuery: string) => void;
-  query: string;
-};
-const LibraryPage: React.FC<LibraryPageProps> = ({
-  onChangeSearch,
-  query,
-  children,
-}) => {
+const NewsAndEventsPage: React.FC = ({ children }) => {
   return (
     <article css={articleStyles}>
-      <LibraryPageHeader onChangeSearch={onChangeSearch} query={query} />
+      <NewsAndEventsPageHeader />
       <main css={mainStyles}>{children}</main>
     </article>
   );
 };
 
-export default LibraryPage;
+export default NewsAndEventsPage;

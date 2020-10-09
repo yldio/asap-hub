@@ -215,18 +215,6 @@ module.exports = {
         },
       ],
     },
-    fetchContentBySlug: {
-      handler: 'apps/asap-server/build/handlers/content/fetch-by-slug.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'GET',
-            path: `/content/{content}/{slug}`,
-          },
-        },
-      ],
-    },
     fetchTeams: {
       handler: 'apps/asap-server/build/handlers/teams/fetch.handler',
       events: [
@@ -247,6 +235,18 @@ module.exports = {
           httpApi: {
             method: 'GET',
             path: `/teams/{id}`,
+          },
+        },
+      ],
+    },
+    fetchNewsAndEvents: {
+      handler: 'apps/asap-server/build/handlers/news-and-events/fetch.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/news-and-events`,
           },
         },
       ],

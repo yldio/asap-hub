@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import { format } from 'date-fns';
 
 /* istanbul ignore next */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -23,3 +24,5 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
 
 export const createMailTo = (email: string): string =>
   `mailto:${encodeURIComponent(email)}`;
+
+export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');

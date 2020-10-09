@@ -2,12 +2,14 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
-import { pearl } from '../colors';
 import NetworkPageHeader from './NetworkPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
+const articleStyles = css({
+  alignSelf: 'stretch',
+});
+
 const mainStyles = css({
-  background: pearl.rgb,
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
@@ -25,7 +27,7 @@ const NetworkPage: React.FC<NetworkPageProps> = ({
   page,
 }) => {
   return (
-    <article>
+    <article css={articleStyles}>
       <NetworkPageHeader
         onChangeToggle={onChangeToggle}
         page={page}

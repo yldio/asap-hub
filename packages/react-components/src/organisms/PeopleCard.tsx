@@ -1,11 +1,11 @@
 import React from 'react';
 import css from '@emotion/css';
-import format from 'date-fns/format';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Avatar, Caption } from '../atoms';
 import { ProfilePersonalText } from '../molecules';
 import { tabletScreen } from '../pixels';
+import { formatDate } from '../utils';
 
 const containerStyles = css({
   display: 'grid',
@@ -90,7 +90,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
           </div>
           <div css={moveStyles}>
             <Caption accent={'lead'} asParagraph>
-              Joined: {format(new Date(createdDate), 'Mo MMMM yyyy')}
+              Joined: {formatDate(new Date(createdDate))}
             </Caption>
           </div>
         </div>

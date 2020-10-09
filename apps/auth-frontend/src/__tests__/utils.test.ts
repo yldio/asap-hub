@@ -1,35 +1,21 @@
+import { mockLocation } from '@asap-hub/dom-test-utils';
+
 import { getHubUrlFromRedirect } from '../utils';
 
-const originalLocation = globalThis.location;
-const mockLocation = jest.fn();
-beforeEach(() => {
-  mockLocation.mockReset().mockReturnValue(new URL('http://localhost/test'));
-  delete globalThis.location;
-  Object.defineProperty(globalThis, 'location', {
-    configurable: true,
-    enumerable: true,
-    get: mockLocation,
-  });
-});
-afterEach(() => {
-  Object.defineProperty(globalThis, 'location', {
-    configurable: true,
-    enumerable: true,
-    value: originalLocation,
-  });
-});
+const { mockGetLocation } = mockLocation();
+
 it('to get origin from redirect URI', () => {
-  mockLocation.mockReturnValue(
+  mockGetLocation.mockReturnValue(
     new URL(
       `?redirect_uri=${encodeURIComponent('http://google.com/page')}`,
-      mockLocation(),
+      mockGetLocation(),
     ),
   );
   expect(getHubUrlFromRedirect()).toEqual('http://google.com');
 });
 
 it('to throw if redirect URI not present', () => {
-  mockLocation.mockReturnValue(new URL('', mockLocation()));
+  mockGetLocation.mockReturnValue(new URL('', mockGetLocation()));
   expect(getHubUrlFromRedirect).toThrowErrorMatchingInlineSnapshot(
     `"Redirect uri must be provided"`,
   );

@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { authTestUtils } from '@asap-hub/react-components';
+import { mockLocation } from '@asap-hub/dom-test-utils';
 
 import Welcome from '../Welcome';
 import { API_BASE_URL } from '../../config';
@@ -22,16 +23,7 @@ afterEach(() => {
 });
 
 // redirect
-const originalLocation = globalThis.location;
-let assign: jest.MockedFunction<typeof globalThis.location.assign>;
-beforeEach(() => {
-  assign = jest.fn();
-  delete globalThis.location;
-  globalThis.location = { ...originalLocation, assign };
-});
-afterEach(() => {
-  globalThis.location = originalLocation;
-});
+const { mockAssign } = mockLocation();
 
 const renderWelcome = async (): Promise<RenderResult> => {
   const result = render(
@@ -62,9 +54,11 @@ describe('when clicking the button', () => {
   it('redirects to the signup page', async () => {
     const { getByRole } = await renderWelcome();
     userEvent.click(getByRole('button'));
-    await waitFor(() => expect(assign).toHaveBeenCalled());
+    await waitFor(() => expect(mockAssign).toHaveBeenCalled());
 
-    const { origin, pathname, searchParams } = new URL(assign.mock.calls[0][0]);
+    const { origin, pathname, searchParams } = new URL(
+      mockAssign.mock.calls[0][0],
+    );
     expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
     expect(pathname).toMatchInlineSnapshot(`"/authorize"`);
     expect(searchParams.get('prompt')).toBe('login');

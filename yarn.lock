@@ -68,6 +68,7 @@ __metadata:
   resolution: "@asap-hub/auth-frontend@workspace:apps/auth-frontend"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@babel/runtime-corejs3": ^7.9.6
@@ -132,6 +133,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/dom-test-utils@workspace:packages/dom-test-utils":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/dom-test-utils@workspace:packages/dom-test-utils"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@babel/runtime-corejs3": ^7.9.6
+    "@types/jest": ^26.0.3
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub":
   version: 0.0.0-use.local
   resolution: "@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub"
@@ -160,6 +171,7 @@ __metadata:
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/react-components": "workspace:packages/react-components"
@@ -250,6 +262,7 @@ __metadata:
   resolution: "@asap-hub/react-components@workspace:packages/react-components"
   dependencies:
     "@asap-hub/auth": "workspace:packages/auth"
+    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
     "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/react-context": "workspace:packages/react-context"

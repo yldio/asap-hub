@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Tag from '../Tag';
 import { mint } from '../../colors';
-import { findParentWithStyle } from '../../test-utils';
 
 it('renders a tag with content', () => {
   const { container } = render(<Tag>Text</Tag>);

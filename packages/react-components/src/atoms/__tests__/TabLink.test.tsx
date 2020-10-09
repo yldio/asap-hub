@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { StaticRouter } from 'react-router-dom';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import TabLink from '../TabLink';
-import { findParentWithStyle } from '../../test-utils';
 
 describe.each`
   description           | wrapper

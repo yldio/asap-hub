@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { mockLocation } from '@asap-hub/dom-test-utils';
 
 import Login from '../Login';
 import {
@@ -8,6 +9,12 @@ import {
   authorizeWithEmailPassword,
 } from '../../auth0/web-auth';
 import { WebAuthError } from '../../auth0/errors';
+
+const { mockGetLocation } = mockLocation(
+  `http://localhost/login?response_type=code&redirect_uri=${encodeURIComponent(
+    'https://dev.hub.asap.science/',
+  )}`,
+);
 
 jest.mock('../../auth0/web-auth');
 const mockAuthorizeWithSso = authorizeWithSso as jest.MockedFunction<
@@ -21,41 +28,16 @@ beforeEach(() => {
   mockAuthorizeWithEmailPassword.mockClear();
 });
 
-const originalLocation = globalThis.location;
-const mockLocation = jest.fn();
-beforeEach(() => {
-  mockLocation
-    .mockReset()
-    .mockReturnValue(
-      new URL(
-        'http://localhost/login?response_type=code&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
-      ),
-    );
-  delete globalThis.location;
-  Object.defineProperty(globalThis, 'location', {
-    configurable: true,
-    enumerable: true,
-    get: mockLocation,
-  });
-});
-afterEach(() => {
-  Object.defineProperty(globalThis, 'location', {
-    configurable: true,
-    enumerable: true,
-    value: originalLocation,
-  });
-});
-
 it('renders a signin form', () => {
   const { getByText } = render(<Login email="" setEmail={() => {}} />);
   expect(getByText(/sign in/i, { selector: 'h1' })).toBeVisible();
 });
 
 it('renders the form in signup mode', () => {
-  mockLocation.mockReturnValue(
+  mockGetLocation.mockReturnValue(
     new URL(
       '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
-      mockLocation(),
+      mockGetLocation(),
     ),
   );
   const { getByText } = render(<Login email="" setEmail={() => {}} />);
@@ -96,10 +78,10 @@ it('initiates a signin with email and password', async () => {
 });
 
 it('initiates a signup with email and password', async () => {
-  mockLocation.mockReturnValue(
+  mockGetLocation.mockReturnValue(
     new URL(
       '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
-      mockLocation(),
+      mockGetLocation(),
     ),
   );
   const { getByText, getByLabelText } = render(
@@ -123,10 +105,10 @@ it('initiates a signup with email and password', async () => {
 });
 
 it('shows an Auth0 error', async () => {
-  mockLocation.mockReturnValue(
+  mockGetLocation.mockReturnValue(
     new URL(
       '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
-      mockLocation(),
+      mockGetLocation(),
     ),
   );
   const { getByText, getByLabelText, findAllByText } = render(
@@ -148,10 +130,10 @@ it('shows an Auth0 error', async () => {
 });
 
 it('shows a generic authentication error', async () => {
-  mockLocation.mockReturnValue(
+  mockGetLocation.mockReturnValue(
     new URL(
       '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
-      mockLocation(),
+      mockGetLocation(),
     ),
   );
   const { getByText, getByLabelText, findAllByText } = render(
@@ -169,10 +151,10 @@ it('shows a generic authentication error', async () => {
 });
 
 it('hides the authentication error message again when changing the credentials', async () => {
-  mockLocation.mockReturnValue(
+  mockGetLocation.mockReturnValue(
     new URL(
       '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
-      mockLocation(),
+      mockGetLocation(),
     ),
   );
   const { getByText, getByLabelText, queryByText, findAllByText } = render(

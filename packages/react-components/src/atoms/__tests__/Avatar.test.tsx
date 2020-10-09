@@ -1,8 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Avatar from '../Avatar';
-import { findParentWithStyle, viewportCalc } from '../../test-utils';
+import { viewportCalc } from '../../test-utils';
 
 it('renders the profile picture', () => {
   const { getByRole } = render(<Avatar imageUrl="/avatar.png" />);

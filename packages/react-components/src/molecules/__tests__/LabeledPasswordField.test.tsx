@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import LabeledPasswordField from '../LabeledPasswordField';
 import { ember } from '../../colors';
-import { findParentWithStyle } from '../../test-utils';
 
 it('renderes a labeled password field', () => {
   const { getByLabelText } = render(

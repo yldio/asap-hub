@@ -1,41 +1,40 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import {
+  mockConsoleError,
+  findParentWithStyle,
+} from '@asap-hub/dom-test-utils';
 
 import PageControls from '../PageControls';
-import { mockConsoleError, findParentWithStyle } from '../../test-utils';
 import { fern, tin } from '../../colors';
+
+mockConsoleError();
 
 const renderPageHref = (page: number) => `#${page}`;
 
-it(
-  'rejects a negative index',
-  mockConsoleError(() => {
-    expect(() =>
-      render(
-        <PageControls
-          numberOfPages={1}
-          currentPageIndex={-1}
-          renderPageHref={renderPageHref}
-        />,
-      ),
-    ).toThrow(/index.+-1/i);
-  }),
-);
+it('rejects a negative index', () => {
+  expect(() =>
+    render(
+      <PageControls
+        numberOfPages={1}
+        currentPageIndex={-1}
+        renderPageHref={renderPageHref}
+      />,
+    ),
+  ).toThrow(/index.+-1/i);
+});
 
-it(
-  'rejects an index beyond the existing pages',
-  mockConsoleError(() => {
-    expect(() =>
-      render(
-        <PageControls
-          numberOfPages={1}
-          currentPageIndex={1}
-          renderPageHref={renderPageHref}
-        />,
-      ),
-    ).toThrow(/index.+1/i);
-  }),
-);
+it('rejects an index beyond the existing pages', () => {
+  expect(() =>
+    render(
+      <PageControls
+        numberOfPages={1}
+        currentPageIndex={1}
+        renderPageHref={renderPageHref}
+      />,
+    ),
+  ).toThrow(/index.+1/i);
+});
 
 describe('the arrow controls', () => {
   it('contain a link to the first page', () => {

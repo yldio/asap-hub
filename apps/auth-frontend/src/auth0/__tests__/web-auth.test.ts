@@ -1,4 +1,5 @@
 import type { WebAuth, AuthOptions } from 'auth0-js';
+import { mockLocation } from '@asap-hub/dom-test-utils';
 
 import {
   authorizeWithSso,
@@ -38,35 +39,17 @@ afterEach(() => {
 });
 
 describe('authorizeWithSso', () => {
-  const originalLocation = globalThis.location;
-  let setLocation: jest.MockedFunction<typeof globalThis.location.assign>;
-  beforeEach(() => {
-    setLocation = jest.fn();
-    delete globalThis.location;
-    Object.defineProperty(globalThis, 'location', {
-      configurable: true,
-      enumerable: true,
-      get: () => originalLocation,
-      set: setLocation,
-    });
-  });
-  afterEach(() => {
-    Object.defineProperty(globalThis, 'location', {
-      configurable: true,
-      enumerable: true,
-      value: originalLocation,
-    });
-  });
+  const { mockSetLocation } = mockLocation();
 
   it('redirects, specifying the connection and current query params', async () => {
     authorizeWithSso(
       new URL('/login?response_type=code', globalThis.location.href),
       'google-oauth2',
     );
-    expect(setLocation).toHaveBeenCalled();
+    expect(mockSetLocation).toHaveBeenCalled();
 
     const { origin, pathname, searchParams } = new URL(
-      setLocation.mock.calls[0][0],
+      mockSetLocation.mock.calls[0][0],
     );
     expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
     expect(pathname).toMatchInlineSnapshot(`"/authorize"`);

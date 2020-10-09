@@ -8,6 +8,7 @@ export default {
 };
 
 const newsProps = () => ({
+  id: 'uuid-1',
   created: new Date(),
   type: 'News' as const,
   title: text('Title', "Coordinating different approaches into Parkinson's"),
@@ -19,6 +20,7 @@ const newsProps = () => ({
 });
 
 const eventProps = () => ({
+  id: 'uuid-2',
   created: new Date(),
   type: 'Event' as const,
   title: text(

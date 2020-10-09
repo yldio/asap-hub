@@ -5,6 +5,7 @@ import NewsAndEventsCard from '../NewsAndEventsCard';
 
 describe('News', () => {
   const newsCardProps: ComponentProps<typeof NewsAndEventsCard> = {
+    id: 'uuid',
     type: 'News',
     title: 'Not a Title',
     created: new Date(),

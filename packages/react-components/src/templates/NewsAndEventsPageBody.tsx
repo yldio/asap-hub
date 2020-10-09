@@ -18,9 +18,9 @@ const NewsAndEventsPageBody: React.FC<LibraryPageBodyProps> = ({
     currentPageIndex={0}
     renderPageHref={() => ''}
   >
-    {newsAndEvents.map((newsOrEvent, idx) => {
+    {newsAndEvents.map((newsOrEvent) => {
       return (
-        <div key={idx}>
+        <div key={newsOrEvent.id}>
           <NewsAndEventsCard {...newsOrEvent} />
         </div>
       );

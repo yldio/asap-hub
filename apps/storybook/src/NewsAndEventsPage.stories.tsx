@@ -14,6 +14,7 @@ export default {
 const props = () => ({
   newsAndEvents: [
     {
+      id: 'uuid-1',
       created: new Date(),
       type: 'News' as const,
       title: "Coordinating different approaches into Parkinson's",
@@ -21,6 +22,7 @@ const props = () => ({
         'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
     },
     {
+      id: 'uuid-2',
       created: new Date(),
       type: 'Event' as const,
       title:

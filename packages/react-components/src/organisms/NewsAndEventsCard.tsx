@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { NewsAndEventsResponse } from '@asap-hub/model';
 import { Card, Paragraph, Headline2, TagLabel, Caption } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
@@ -32,13 +33,7 @@ const placeholders: Record<'News' | 'Event', JSX.Element> = {
   Event: eventsPlaceholder,
 };
 
-interface NewsAndEventsCardProps {
-  readonly created: Date;
-  readonly type: 'News' | 'Event';
-  readonly title: string;
-  readonly subtitle?: string;
-  readonly thumbnail?: string;
-}
+type NewsAndEventsCardProps = NewsAndEventsResponse;
 
 const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   type,

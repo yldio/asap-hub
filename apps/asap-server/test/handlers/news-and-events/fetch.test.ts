@@ -1,5 +1,4 @@
 import nock from 'nock';
-import Chance from 'chance';
 
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
@@ -10,8 +9,6 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
 import { NewsAndEventsResponse } from '@asap-hub/model';
-
-const chance = new Chance();
 
 describe('GET /news-and-events', () => {
   beforeAll(() => {
@@ -38,7 +35,7 @@ describe('GET /news-and-events', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -68,7 +65,7 @@ describe('GET /news-and-events', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -98,7 +95,7 @@ describe('GET /news-and-events', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;

@@ -5,13 +5,17 @@ import { perRem } from '../pixels';
 import NewsAndEventsPageHeader from './NewsAndEventsPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
+const articleStyles = css({
+  alignSelf: 'stretch',
+});
+
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
 const NewsAndEventsPage: React.FC = ({ children }) => {
   return (
-    <article>
+    <article css={articleStyles}>
       <NewsAndEventsPageHeader />
       <main css={mainStyles}>{children}</main>
     </article>

@@ -6,6 +6,10 @@ import { perRem } from '../pixels';
 import LibraryPageHeader from './LibraryPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
+const articleStyles = css({
+  alignSelf: 'stretch',
+});
+
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
@@ -20,7 +24,7 @@ const LibraryPage: React.FC<LibraryPageProps> = ({
   children,
 }) => {
   return (
-    <article>
+    <article css={articleStyles}>
       <LibraryPageHeader onChangeSearch={onChangeSearch} query={query} />
       <main css={mainStyles}>{children}</main>
     </article>

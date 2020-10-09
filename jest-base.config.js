@@ -8,9 +8,9 @@ module.exports = {
   cacheDirectory: join(__dirname, '.jest-cache'),
 
   modulePathIgnorePatterns: [
-    '<rootDir>/build/',
+    '<rootDir>/build([^/]*)/',
     '<rootDir>/coverage/',
-    'packages/services-common/src/cms/*',
+    '<rootDir>/packages/services-common/src/cms/',
   ],
 
   collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],

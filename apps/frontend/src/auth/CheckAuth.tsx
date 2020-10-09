@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth0 } from '@asap-hub/react-context';
 import { Paragraph } from '@asap-hub/react-components';
-import Signin from './Signin';
+
+const Signin = React.lazy(() => import('./Signin'));
 
 interface CheckAuthProps {
   children: React.ReactNode;

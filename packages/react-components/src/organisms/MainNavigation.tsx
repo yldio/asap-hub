@@ -42,7 +42,7 @@ const listStyles = css({
   )})`,
 });
 
-interface MainNavigationProps {
+export interface MainNavigationProps {
   networkHref: string;
   libraryHref: string;
   newsAndEventsHref: string;

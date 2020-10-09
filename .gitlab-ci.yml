@@ -56,8 +56,8 @@ build:ts:
   artifacts:
     expire_in: 2 weeks
     paths:
-      - 'packages/*/build'
-      - 'apps/*/build'
+      - 'packages/*/build*'
+      - 'apps/*/build*'
   script:
     - source ci/env-setup.sh
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL

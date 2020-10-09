@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /*
 Collect all composite TypeScript projects and print them space-separated so that
 they can be passed to TSC via a `tsc -b` command line.

@@ -15,8 +15,8 @@
     "url": "https://github.com/yldio/asap-hub.git"
   },
   "scripts": {
-    "clean": "rimraf \"{apps,packages}/*/{build,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
-    "build:babel": "yarn workspaces foreach -vpt run build:babel",
+    "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
+    "build:babel": "yarn workspaces foreach -vp run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
     "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
@@ -88,6 +88,7 @@
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/plugin-transform-runtime": "^7.10.3",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-typescript": "^7.9.0",

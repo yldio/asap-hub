@@ -74,7 +74,7 @@ const Link: React.FC<LinkProps> = ({
 
   const internal =
     new URL(href ?? '', window.location.href).origin === window.location.origin;
-  if (useHasRouter() && href !== undefined && internal) {
+  if (useHasRouter() && href && internal) {
     return (
       <ReactRouterLink css={linkStyles} to={href}>
         {linkChildren}
@@ -83,7 +83,7 @@ const Link: React.FC<LinkProps> = ({
   }
   return (
     <a
-      href={href}
+      href={href || undefined}
       css={linkStyles}
       target={internal ? undefined : '_blank'}
       rel={internal ? undefined : 'noreferrer noopener'}

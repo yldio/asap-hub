@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 
 import { NewsAndEventsCard } from '../organisms';
+import CardList from '../organisms/CardList';
 
 interface LibraryPageBodyProps {
   readonly newsAndEvents: ReadonlyArray<
@@ -11,7 +12,12 @@ interface LibraryPageBodyProps {
 const NewsAndEventsPageBody: React.FC<LibraryPageBodyProps> = ({
   newsAndEvents,
 }) => (
-  <>
+  <CardList
+    numberOfPages={1}
+    numberOfItems={newsAndEvents.length}
+    currentPageIndex={0}
+    renderPageHref={() => ''}
+  >
     {newsAndEvents.map((newsOrEvent, idx) => {
       return (
         <div key={idx}>
@@ -19,7 +25,7 @@ const NewsAndEventsPageBody: React.FC<LibraryPageBodyProps> = ({
         </div>
       );
     })}
-  </>
+  </CardList>
 );
 
 export default NewsAndEventsPageBody;

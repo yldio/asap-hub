@@ -6,7 +6,6 @@ export { default as LibraryCard } from './LibraryCard';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MembersSection } from './MembersSection';
 export { default as MenuHeader } from './MenuHeader';
-export { default as PageControls } from './PageControls';
 export { default as NewsAndEventsCard } from './NewsAndEventsCard';
 export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileBackground } from './ProfileBackground';

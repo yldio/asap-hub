@@ -62,7 +62,7 @@ export const expectation: ListNewsAndEventsResponse = {
       type: 'News',
       subtitle: 'Subtitle of news 1',
       text: '<p>text</p>',
-      thumbnail: `${cms.baseUrl}/api/assets/asap-test/thumbnail-uuid1`,
+      thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/thumbnail-uuid1`,
       created: new Date('2020-09-08T16:35:28.000Z'),
     },
     {
@@ -71,7 +71,7 @@ export const expectation: ListNewsAndEventsResponse = {
       type: 'Event',
       subtitle: 'Subtitle of event 2',
       text: '<p>text</p>',
-      thumbnail: `${cms.baseUrl}/api/assets/asap-test/thumbnail-uuid2`,
+      thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/thumbnail-uuid2`,
       created: new Date('2020-09-16T14:31:19.000Z'),
     },
   ],

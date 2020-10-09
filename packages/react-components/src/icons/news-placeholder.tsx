@@ -23,7 +23,6 @@ const newsPlaceholder = (
         y="0"
         width="184"
         height="184"
-        rx="6"
       ></rect>
       <g
         id="Group-23-Copy-3"

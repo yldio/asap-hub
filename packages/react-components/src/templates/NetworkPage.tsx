@@ -2,12 +2,10 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
-import { pearl } from '../colors';
 import NetworkPageHeader from './NetworkPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
-  background: pearl.rgb,
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 

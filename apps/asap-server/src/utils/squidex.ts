@@ -1,5 +1,5 @@
 import { URL } from 'url';
-import { parse, format } from 'date-fns';
+import { format } from 'date-fns';
 import { cms } from '../config';
 
 export const createURL = (assets: string[]): string[] => {
@@ -9,7 +9,7 @@ export const createURL = (assets: string[]): string[] => {
 };
 
 export const parseDate = (date: string): Date => {
-  return parse(date, "yyyy-MM-dd'T'HH:mm:ssX", 0);
+  return new Date(date);
 };
 
 export const formatDate = (date: Date): string => {

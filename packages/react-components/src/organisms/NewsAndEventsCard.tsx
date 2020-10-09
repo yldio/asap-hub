@@ -12,9 +12,9 @@ const imageStyle = css({
 const imageContainerStyle = css({
   flexShrink: 0,
   borderRadius: `${12 / perRem}em`,
-  height: `${200 / perRem}em`,
+  height: `${184 / perRem}em`,
   marginRight: `${24 / perRem}em`,
-  width: `${200 / perRem}em`,
+  width: `${184 / perRem}em`,
   overflow: 'hidden',
 
   [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
@@ -26,6 +26,11 @@ const containerStyle = css({
   display: 'flex',
   flexDirection: 'row',
 });
+
+const placeholders: Record<'News' | 'Event', JSX.Element> = {
+  News: newsPlaceholder,
+  Event: eventsPlaceholder,
+};
 
 interface NewsAndEventsCardProps {
   readonly created: Date;
@@ -52,10 +57,8 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
               src={thumbnail}
               css={[imageStyle]}
             />
-          ) : type === 'News' ? (
-            newsPlaceholder
           ) : (
-            eventsPlaceholder
+            placeholders[type]
           )}
         </div>
         <div>

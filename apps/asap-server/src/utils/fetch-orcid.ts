@@ -1,27 +1,38 @@
 import Got from 'got';
 
 export interface ORCIDWorksResponse {
-  'last-modified-date': { value: string };
+  'last-modified-date': { value: number };
   group: ORCIDWork[];
+  path: string;
+}
+
+interface ORCIDExternalIds {
+  'external-id': [
+    {
+      'external-id-type': string;
+      'external-id-url': { value: string };
+      'external-id-value': string;
+      'external-id-relationship': string;
+    },
+  ];
 }
 
 interface ORCIDWork {
-  'last-modified-date': { value: string };
-  'external-ids': {
-    'external-id': [
-      {
-        'external-id-type': string;
-        'external-id-url': { value: string };
-      },
-    ];
-  };
+  'last-modified-date': { value: number };
+  'external-ids': ORCIDExternalIds;
   'work-summary': {
-    'put-code': string;
+    'put-code': number;
+    'created-date': { value: number };
+    'last-modified-date': { value: number };
+    source: object;
     title: {
       title: {
         value?: string;
       };
+      subtitle: string | null;
+      'translated-title': string | null;
     };
+    'external-ids': ORCIDExternalIds;
     type: string;
     'publication-date': {
       year: {
@@ -32,8 +43,12 @@ interface ORCIDWork {
       };
       day: {
         value?: string;
-      };
+      } | null;
+      'media-type': string | null;
     };
+    visibility: string;
+    path: string;
+    'display-index': string;
   }[];
 }
 

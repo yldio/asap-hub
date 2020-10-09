@@ -1,25 +1,16 @@
-import Chance from 'chance';
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
 import { config } from '@asap-hub/services-common';
 
 import { identity } from '../../helpers/squidex';
+import { cms } from '../../../src/config';
 import { CMSResearchOutput } from '../../../src/entities/research-outputs';
 import { handler } from '../../../src/handlers/research-outputs/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-const chance = new Chance();
-describe('GET /research-outputs', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
-  afterAll(() => {
-    expect(nock.isDone()).toBe(true);
-  });
-
+describe('GET /research-outputs - failure', () => {
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -35,7 +26,7 @@ describe('GET /research-outputs', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Basic ${chance.string()}`,
+          Authorization: `Basic token`,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -50,7 +41,7 @@ describe('GET /research-outputs', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -65,17 +56,27 @@ describe('GET /research-outputs', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
       }),
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(403);
   });
+});
+
+describe('GET /research-outputs/{id} - success', () => {
+  beforeAll(() => {
+    identity();
+  });
+
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
 
   test('returns 200 with a list of empty research outputs', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(
         `/api/content/${
           config.cms.appName
@@ -99,7 +100,7 @@ describe('GET /research-outputs', () => {
 
   test('returns 200 with a list of research outputs', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-    identity()
+    nock(cms.baseUrl)
       .get(
         `/api/content/${
           config.cms.appName
@@ -118,9 +119,7 @@ describe('GET /research-outputs', () => {
             },
           },
         ],
-      } as { total: number; items: CMSResearchOutput[] });
-
-    identity()
+      } as { total: number; items: CMSResearchOutput[] })
       .get(`/api/content/${config.cms.appName}/teams`)
       .query(() => true)
       .reply(200, {

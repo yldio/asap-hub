@@ -1,4 +1,3 @@
-import Chance from 'chance';
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
@@ -8,17 +7,7 @@ import { identity } from '../../helpers/squidex';
 import { handler } from '../../../src/handlers/content/fetch-by-slug';
 import { apiGatewayEvent } from '../../helpers/events';
 
-const chance = new Chance();
-
-describe('GET /content/{content}/{slug}', () => {
-  afterEach(() => {
-    nock.cleanAll();
-  });
-
-  afterAll(() => {
-    expect(nock.isDone()).toBe(true);
-  });
-
+describe('GET /content/{content}/{slug} - validation', () => {
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -38,7 +27,7 @@ describe('GET /content/{content}/{slug}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Basic ${chance.string()}`,
+          Authorization: `Basic token`,
         },
         pathParameters: {
           content: 'news',
@@ -57,7 +46,7 @@ describe('GET /content/{content}/{slug}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
           content: 'news',
@@ -76,7 +65,7 @@ describe('GET /content/{content}/{slug}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
           content: 'news',
@@ -87,18 +76,43 @@ describe('GET /content/{content}/{slug}', () => {
 
     expect(result.statusCode).toStrictEqual(403);
   });
+});
+
+describe('GET /content/{content}/{slug}', () => {
+  beforeAll(() => {
+    identity();
+  });
+
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+
   test('returns 404 when no content is found', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/news`)
+      .query({
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            path: 'data.slug.iv',
+            op: 'eq',
+            value: 'not-found',
+          },
+        }),
+      })
+      .reply(404);
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
           content: 'news',
-          slug: 'not-found-slug',
+          slug: 'not-found',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -108,8 +122,7 @@ describe('GET /content/{content}/{slug}', () => {
 
   test('returns 200 when content is found', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
-    identity()
+    nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/news`)
       .query({
         q: JSON.stringify({
@@ -141,7 +154,7 @@ describe('GET /content/{content}/{slug}', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: `Bearer token`,
         },
         pathParameters: {
           content: 'news',

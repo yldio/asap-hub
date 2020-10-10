@@ -80,14 +80,8 @@ describe('POST /webhook/users/{code}', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 1,
-          filter: {
-            path: 'data.connections.iv.code',
-            op: 'eq',
-            value: 'notFound',
-          },
-        }),
+        $top: 1,
+        $filter: `data/connections/iv/code eq 'notFound'`,
       })
       .reply(404);
 
@@ -110,14 +104,8 @@ describe('POST /webhook/users/{code}', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 1,
-          filter: {
-            path: 'data.connections.iv.code',
-            op: 'eq',
-            value: 'welcomeCode',
-          },
-        }),
+        $top: 1,
+        $filter: `data/connections/iv/code eq 'welcomeCode'`,
       })
       .reply(200, fetchUserResponse);
 

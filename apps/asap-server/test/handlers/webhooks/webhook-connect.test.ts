@@ -73,14 +73,8 @@ describe('POST /webhook/users/connections - success', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 1,
-          filter: {
-            path: 'data.connections.iv.code',
-            op: 'eq',
-            value: 'invalidConnectCode',
-          },
-        }),
+        $top: 1,
+        $filter: `data/connections/iv/code eq 'invalidConnectCode'`,
       })
       .reply(404);
 
@@ -108,14 +102,8 @@ describe('POST /webhook/users/connections - success', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 1,
-          filter: {
-            path: 'data.connections.iv.code',
-            op: 'eq',
-            value: 'asapWelcomeCode',
-          },
-        }),
+        $top: 1,
+        $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
       })
       .reply(200, { total: 1, items: [user] })
       .patch(`/api/content/${cms.appName}/users/${user.id}`, {

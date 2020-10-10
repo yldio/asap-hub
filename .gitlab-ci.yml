@@ -100,10 +100,10 @@ test:format:
   script:
     - yarn run lint:format
 
-test:jest:
+test:unit:
   <<: *tmpl_test
   artifacts:
-    expire_in: 1 day
+    expire_in: 5 day
     paths:
       - coverage
   cache:
@@ -113,7 +113,7 @@ test:jest:
     - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
-    - yarn run test --coverage
+    - yarn run test:unit --coverage
   after_script:
     - yarn dlx codecov@3.7.2
   needs:
@@ -184,5 +184,5 @@ deploy:sls:production:
   needs:
     - build:ts
     - build:native
-    - test:jest
+    - test:unit
     - sync:squidex:production

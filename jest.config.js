@@ -6,7 +6,12 @@ const makeDefaultConfig = (parentDir, packageName) => {
   const rootDir = resolve(parentDir, packageName);
   const displayName = `test-${packageName}`;
 
-  const transform = { '^.+\\.[jt]sx?$': 'babel-jest' };
+  const transform = {
+    '^.+\\.[jt]sx?$': [
+      'babel-jest',
+      { configFile: require.resolve('./babel-cjs.config.js') },
+    ],
+  };
 
   let testEnvironment = 'node';
   const setupFilesAfterEnv = [...(baseConfig.setupFilesAfterEnv || [])];
@@ -74,7 +79,7 @@ const lintConfigs = [
   runner: require.resolve('jest-runner-eslint'),
   testMatch: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
 
-  modulePathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/coverage/'],
+  modulePathIgnorePatterns: ['<rootDir>/build([^/]*)/', '<rootDir>/coverage/'],
 
   displayName: `lint-${packageOrApp}`,
 }));

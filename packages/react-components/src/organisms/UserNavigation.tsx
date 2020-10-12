@@ -47,7 +47,7 @@ const bottomLinksStyles = css({
   padding: `${12 / perRem}em ${12 / perRem}em 0`,
 });
 
-interface UserNavigationProps {
+export interface UserNavigationProps {
   readonly profileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
   readonly settingsHref: string;

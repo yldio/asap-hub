@@ -4,9 +4,6 @@ module.exports = {
   ...base,
   presets: [
     ...presets,
-    [
-      require.resolve('@babel/preset-env'),
-      { targets: { node: true }, modules: false },
-    ],
+    [require.resolve('@babel/preset-env'), { targets: { node: true } }],
   ],
 };

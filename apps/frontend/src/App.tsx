@@ -1,18 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { Layout, BasicLayout } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
-import Admin from './admin/Admin';
-import CreateProfile from './onboarding/CreateProfile';
 import history from './history';
-import Home from './home/Home';
-import NewsAndEvents from './news/Routes';
-import Welcome from './welcome/Routes';
-import Network from './network/Routes';
-import Library from './library/Routes';
 import { AuthProvider, CheckAuth, Logout } from './auth';
-import Page from './pages/Content';
+
+const loadNewsAndEvents = () =>
+  import(/* webpackChunkName: "news-and-events" */ './news/Routes');
+const loadNetwork = () =>
+  import(/* webpackChunkName: "network" */ './network/Routes');
+const loadLibrary = () =>
+  import(/* webpackChunkName: "library" */ './library/Routes');
+const loadHome = () => import(/* webpackChunkName: "home" */ './home/Home');
+const loadWelcome = () =>
+  import(/* webpackChunkName: "welcome" */ './welcome/Routes');
+const loadContent = () =>
+  import(/* webpackChunkName: "content" */ './pages/Content');
+const loadAdmin = () => import(/* webpackChunkName: "admin" */ './admin/Admin');
+const NewsAndEvents = React.lazy(loadNewsAndEvents);
+const Network = React.lazy(loadNetwork);
+const Library = React.lazy(loadLibrary);
+const Home = React.lazy(loadHome);
+const Welcome = React.lazy(loadWelcome);
+const Content = React.lazy(loadContent);
+const Admin = React.lazy(loadAdmin);
+
+const Prefetch: React.FC<{}> = () => {
+  useEffect(() => {
+    loadNetwork();
+    loadLibrary();
+    loadNewsAndEvents();
+  }, []);
+  return null;
+};
 
 const ConfiguredLayout: React.FC = ({ children }) => {
   const { isAuthenticated } = useAuth0();
@@ -45,37 +66,43 @@ const App: React.FC<{}> = () => {
   return (
     <AuthProvider>
       <Router history={history}>
-        <Switch>
-          <Route path="/welcome" component={Welcome} />
+        <React.Suspense fallback="Loading...">
+          <Switch>
+            <Route path="/welcome" component={Welcome} />
 
-          <Route exact path="/terms-and-conditions">
-            <Page layoutComponent={ConfiguredLayout} />
-          </Route>
-          <Route exact path="/privacy-policy">
-            <Page layoutComponent={ConfiguredLayout} />
-          </Route>
+            <Route exact path="/terms-and-conditions">
+              <Content layoutComponent={ConfiguredLayout} />
+            </Route>
+            <Route exact path="/privacy-policy">
+              <Content layoutComponent={ConfiguredLayout} />
+            </Route>
 
-          <Route exact path="/admin" component={Admin} />
+            <Route exact path="/admin" component={Admin} />
 
-          <Route>
-            <CheckAuth>
-              <ConfiguredLayout>
-                <Switch>
-                  <Route exact path="/" component={Home} />
-                  <Route path="/logout" component={Logout} />
+            <Route>
+              <CheckAuth>
+                <ConfiguredLayout>
+                  <React.Suspense fallback="Loading...">
+                    <Prefetch />
+                    <Switch>
+                      <Route exact path="/" component={Home} />
+                      <Route path="/logout" component={Logout} />
 
-                  <Route path="/create-profile" component={CreateProfile} />
+                      <Route
+                        path="/news-and-events"
+                        component={NewsAndEvents}
+                      />
+                      <Route path="/network" component={Network} />
+                      <Route path="/library" component={Library} />
 
-                  <Route path="/news-and-events" component={NewsAndEvents} />
-                  <Route path="/network" component={Network} />
-                  <Route path="/library" component={Library} />
-
-                  <Route>Not Found</Route>
-                </Switch>
-              </ConfiguredLayout>
-            </CheckAuth>
-          </Route>
-        </Switch>
+                      <Route>Not Found</Route>
+                    </Switch>
+                  </React.Suspense>
+                </ConfiguredLayout>
+              </CheckAuth>
+            </Route>
+          </Switch>
+        </React.Suspense>
       </Router>
     </AuthProvider>
   );

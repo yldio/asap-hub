@@ -6,16 +6,18 @@ import CheckAuth from '../CheckAuth';
 
 it('renders a loading indicator while Auth0 is initializing', async () => {
   const { getByText, queryByText } = render(
-    <authTestUtils.Auth0Provider>
-      <CheckAuth>content</CheckAuth>
-    </authTestUtils.Auth0Provider>,
+    <React.Suspense fallback="suspended">
+      <authTestUtils.Auth0Provider>
+        <CheckAuth>content</CheckAuth>
+      </authTestUtils.Auth0Provider>
+    </React.Suspense>,
   );
 
   expect(getByText(/loading/i)).toBeVisible();
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
 });
 
-it('redirects to the root if the user is not authenticated', async () => {
+it('renders a sign in page if the user is not authenticated', async () => {
   const { findByText } = render(
     <authTestUtils.Auth0Provider>
       <CheckAuth>

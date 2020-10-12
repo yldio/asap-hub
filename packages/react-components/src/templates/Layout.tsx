@@ -4,10 +4,28 @@ import { Location } from 'history';
 import css from '@emotion/css';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
-import { MenuHeader, MainNavigation, UserNavigation } from '../organisms';
-import { UserMenuButton } from '../molecules';
+import { MenuHeader } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
+
+const UserMenuButton = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "user-menu-button" */ '../molecules/UserMenuButton'
+    ),
+);
+const MainNavigation = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "main-navigation" */ '../organisms/MainNavigation'
+    ),
+);
+const UserNavigation = React.lazy(
+  () =>
+    import(
+      /* webpackChunkName: "user-navigation" */ '../organisms/UserNavigation'
+    ),
+);
 
 const styles = css({
   position: 'relative',
@@ -165,21 +183,25 @@ const Layout: React.FC<LayoutProps> = ({
         />
       </div>
       <div css={userButtonStyles}>
-        <UserMenuButton
-          onClick={() => setMenuShown(!menuShown)}
-          open={menuShown}
-        />
+        <React.Suspense fallback="Loading...">
+          <UserMenuButton
+            onClick={() => setMenuShown(!menuShown)}
+            open={menuShown}
+          />
+        </React.Suspense>
       </div>
       <main css={contentStyles}>{children}</main>
       <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
         <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
       </div>
       <div css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}>
-        <MainNavigation
-          libraryHref={libraryHref}
-          networkHref={networkHref}
-          newsAndEventsHref={newsAndEventsHref}
-        />
+        <React.Suspense fallback="Loading...">
+          <MainNavigation
+            libraryHref={libraryHref}
+            networkHref={networkHref}
+            newsAndEventsHref={newsAndEventsHref}
+          />
+        </React.Suspense>
       </div>
       <div
         css={[
@@ -189,7 +211,9 @@ const Layout: React.FC<LayoutProps> = ({
           menuShown && userMenuShownStyles,
         ]}
       >
-        <UserNavigation {...userNavProps} />
+        <React.Suspense fallback="Loading...">
+          <UserNavigation {...userNavProps} />
+        </React.Suspense>
       </div>
     </article>
   );

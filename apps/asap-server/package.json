@@ -6,8 +6,8 @@
     "node": "12.18.x"
   },
   "scripts": {
-    "build:babel": "babel src -Dd build -x .js,.jsx,.ts,.tsx --root-mode upward --source-maps inline",
-    "watch:babel": "yarn build:babel -w --verbose"
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:packages/auth",

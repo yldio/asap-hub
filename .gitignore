@@ -16,9 +16,8 @@ node_modules
 /packages/*/coverage
 
 # production
-/build
-/apps/*/build
-/packages/*/build
+/apps/*/build*
+/packages/*/build*
 
 /.serverless*
 dev/localstack

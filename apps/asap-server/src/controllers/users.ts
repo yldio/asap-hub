@@ -4,6 +4,7 @@ import path from 'path';
 import url from 'url';
 import Intercept from 'apr-intercept';
 import get from 'lodash.get';
+import { Got } from 'got';
 import { v4 as uuidV4 } from 'uuid';
 import { Squidex } from '@asap-hub/services-common';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
@@ -72,6 +73,29 @@ function transformOrcidWorks(
     ),
   };
 }
+
+const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
+  const [err, res] = await Intercept(
+    client
+      .get('users', {
+        searchParams: {
+          $top: 1,
+          $filter: `data/connections/iv/code eq '${code}'`,
+        },
+      })
+      .json() as Promise<{ items: CMSUser[] }>,
+  );
+
+  if (err) {
+    throw Boom.forbidden();
+  }
+
+  if (res.items.length === 0) {
+    throw Boom.forbidden();
+  }
+
+  return res.items[0];
+};
 
 const debug = Debug('users.create');
 export default class Users {
@@ -160,13 +184,7 @@ export default class Users {
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const user = await this.users
-      .fetchOne({
-        filter: { path: 'data.connections.iv.code', op: 'eq', value: code },
-      })
-      .catch(() => {
-        throw Boom.forbidden();
-      });
+    const user = await fetchByCode(code, this.users.client);
     return transform(user);
   }
 
@@ -174,17 +192,7 @@ export default class Users {
     welcomeCode: string,
     userId: string,
   ): Promise<UserResponse> {
-    const user = await this.users
-      .fetchOne({
-        filter: {
-          path: 'data.connections.iv.code',
-          op: 'eq',
-          value: welcomeCode,
-        },
-      })
-      .catch(() => {
-        throw Boom.forbidden();
-      });
+    const user = await fetchByCode(welcomeCode, this.users.client);
 
     if (user.data.connections.iv.find(({ code }) => code === userId)) {
       return Promise.resolve(transform(user));

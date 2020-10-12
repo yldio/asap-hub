@@ -1,9 +1,15 @@
 import React from 'react';
 
-import { Display } from '@asap-hub/react-components';
+import { DashboardPage, DashboardPageBody } from '@asap-hub/react-components';
+import { useCurrentUser } from '@asap-hub/react-context';
 
 const Home: React.FC<{}> = () => {
-  return <Display>Dashboard</Display>;
+  const { firstName = 'Unknown' } = useCurrentUser() ?? {};
+  return (
+    <DashboardPage firstName={firstName}>
+      <DashboardPageBody pages={[]} newsAndEvents={[]} />
+    </DashboardPage>
+  );
 };
 
 export default Home;

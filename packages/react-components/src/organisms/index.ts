@@ -2,6 +2,7 @@ export * from './auth';
 
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
+export { default as LatestNewsSection } from './LatestNewsSection';
 export { default as LibraryCard } from './LibraryCard';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MembersSection } from './MembersSection';
@@ -19,3 +20,4 @@ export { default as SearchControls } from './SearchControls';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamOverview } from './TeamOverview';
 export { default as UserNavigation } from './UserNavigation';
+export { default as WhereToStartSection } from './WhereToStartSection';

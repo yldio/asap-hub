@@ -2,13 +2,12 @@ import useFetch from 'use-http';
 import { UserResponse, ListUserResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../config';
-import { useFetchOptions } from './util';
-import { BasicOptions, useApiGet } from './hooks';
+import { useFetchOptions, useGetList, GetListOptions } from './util';
 
-export const useUsers = ({ searchQuery, filters }: BasicOptions) =>
-  useApiGet<ListUserResponse>('users', {
-    search: searchQuery,
-    filter: filters,
+export const useUsers = ({ searchQuery, filters }: GetListOptions) =>
+  useGetList<ListUserResponse>('users', {
+    searchQuery,
+    filters,
   });
 
 export const useUserById = (id: string) =>

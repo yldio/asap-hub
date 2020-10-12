@@ -22,11 +22,9 @@ const Library: React.FC<{}> = () => {
   const [searchQueryDebounce] = useDebounce(searchQuery, 500);
 
   const onChangeSearch = (newQuery: string) => {
-    if (newQuery) {
-      currentUrlParams.set('searchQuery', newQuery);
-    } else {
-      currentUrlParams.delete('searchQuery');
-    }
+    newQuery
+      ? currentUrlParams.set('searchQuery', newQuery)
+      : currentUrlParams.delete('searchQuery');
     history.replace({ search: currentUrlParams.toString() });
   };
   const onChangeFilter = (filter: string) => {

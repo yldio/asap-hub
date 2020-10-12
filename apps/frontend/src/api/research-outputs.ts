@@ -9,8 +9,7 @@ import {
 import { useAuth0 } from '@asap-hub/react-context';
 
 import { API_BASE_URL } from '../config';
-import { useFetchOptions } from './util';
-import { BasicOptions, useApiGet } from './hooks';
+import { useFetchOptions, GetListOptions, useGetList } from './util';
 
 export const useCreateResearchOutput = () => {
   const { user } = useAuth0();
@@ -52,8 +51,8 @@ export const useResearchOutputById = (id: string) =>
     [id],
   );
 
-export const useResearchOutputs = ({ searchQuery, filters }: BasicOptions) =>
-  useApiGet<ListResearchOutputResponse>('research-outputs', {
-    search: searchQuery,
-    filter: filters,
+export const useResearchOutputs = ({ searchQuery, filters }: GetListOptions) =>
+  useGetList<ListResearchOutputResponse>('research-outputs', {
+    searchQuery,
+    filters,
   });

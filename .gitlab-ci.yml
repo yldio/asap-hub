@@ -121,6 +121,21 @@ test:unit:
   variables:
     <<: *tmpl_branch_variables
 
+test:integration:
+  <<: *tmpl_test
+  cache:
+    paths:
+      - '.jest-cache'
+  script:
+    - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - yarn run test:integration
+  needs:
+    - build:ts
+  variables:
+    <<: *tmpl_branch_variables
+
 deploy:sls:branch:
   <<: *tmpl_branch
   <<: *tmpl_deploy
@@ -185,4 +200,5 @@ deploy:sls:production:
     - build:ts
     - build:native
     - test:unit
+    - test:integration
     - sync:squidex:production

@@ -51,7 +51,7 @@ it('displays team information when present', () => {
       {...libraryCardProps}
       team={{
         id: '123',
-        displayName: 'Team A',
+        displayName: 'A',
         href: '/network/teams/123',
       }}
     />,

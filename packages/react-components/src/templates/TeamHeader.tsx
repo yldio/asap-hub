@@ -42,7 +42,7 @@ const TeamHeader: React.FC<TeamProps> = ({
 }) => {
   return (
     <header css={containerStyles}>
-      <Display styleAsHeading={2}>{displayName}</Display>
+      <Display styleAsHeading={2}>Team {displayName}</Display>
       <section>
         <div>
           <ul css={membersContainerStyle}>

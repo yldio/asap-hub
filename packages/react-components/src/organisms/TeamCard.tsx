@@ -37,7 +37,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
   return (
     <Card>
       <Link theme={null} href={href}>
-        <Headline2 styleAsHeading={4}>{displayName}</Headline2>
+        <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
         <Paragraph accent="lead">{projectTitle}</Paragraph>
       </Link>
       <TagList summarize tags={skills} />

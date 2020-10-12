@@ -70,9 +70,9 @@ it('renders the proposal with a team', async () => {
       },
     });
   const { getByText } = await renderComponent('43');
-  const element = getByText('Sulzer, D');
+  const element = getByText('Team Sulzer, D');
   expect(element).toBeVisible();
-  expect(getByText('Sulzer, D')).toHaveAttribute(
+  expect(element).toHaveAttribute(
     'href',
     '/network/teams/0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
   );

@@ -22,7 +22,7 @@ export const Normal = () => (
     ).toISOString()}
     team={{
       id: text('Team Id', '123'),
-      displayName: text('Team Name', 'Team Barnes, A.'),
+      displayName: text('Team Name', 'Barnes, A.'),
       href: '#',
     }}
     href="#"

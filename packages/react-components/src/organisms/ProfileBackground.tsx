@@ -36,7 +36,7 @@ const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
         <div css={dynamicContainerStyles}>
           <div css={teamContentStyle}>
             <Headline3 styleAsHeading={5}>Team</Headline3>
-            <Link href={`/network/teams/${id}`}>{displayName}</Link>
+            <Link href={`/network/teams/${id}`}>Team {displayName}</Link>
           </div>
           <div css={teamContentStyle}>
             <Headline3 styleAsHeading={5}>Role</Headline3>

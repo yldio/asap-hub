@@ -78,8 +78,8 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
           </Link>
           {team && (
             <span css={teamMemberStyles}>
-              <span css={iconStyles}>{teamIcon} </span>
-              <Link href={team.href}>{team.displayName}</Link>
+              <span css={iconStyles}>{teamIcon}</span>
+              <Link href={team.href}>Team {team.displayName}</Link>
             </span>
           )}
         </div>

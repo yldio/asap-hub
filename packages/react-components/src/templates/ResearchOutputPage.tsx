@@ -82,7 +82,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
       {team && (
         <span css={teamMemberStyles}>
           <span css={iconStyles}>{teamIcon} </span>
-          <Link href={team.href}>{team.displayName}</Link>
+          <Link href={team.href}>Team {team.displayName}</Link>
         </span>
       )}
       <RichText toc text={text} />

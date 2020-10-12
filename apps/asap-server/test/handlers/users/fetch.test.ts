@@ -99,6 +99,7 @@ describe('GET /users', () => {
         httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
+          filter: 'Lead PI',
         },
         headers: {
           Authorization: `Bearer token`,

@@ -152,9 +152,11 @@ export default class Users {
   async fetch(options: {
     take: number;
     skip: number;
-    search: string;
+    search?: string;
+    filter?: string | string[];
   }): Promise<ListUserResponse> {
-    const { search, ...opts } = options;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { search, filter, ...opts } = options;
 
     const { total, items: users } = await this.users.fetch({
       ...opts,

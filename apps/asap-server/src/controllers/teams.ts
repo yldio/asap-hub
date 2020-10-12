@@ -77,9 +77,12 @@ export default class Teams {
   async fetch(options: {
     take: number;
     skip: number;
-    search: string;
+    search?: string;
+    filter?: string | string[];
   }): Promise<ListTeamResponse> {
-    const { search, ...opts } = options;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { search, filter, ...opts } = options;
+
     const { total, items: teams } = await this.teams.fetch({
       ...opts,
       ...(search

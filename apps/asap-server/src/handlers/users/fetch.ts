@@ -8,7 +8,7 @@ const querySchema = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),
-  filter: Joi.array(),
+  filter: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())),
 }).required();
 
 // /users?page=1&pageSize=8
@@ -19,8 +19,8 @@ export const handler: Handler = lambda.http(
     const query = lambda.validate('query', request.query, querySchema) as {
       take: number;
       skip: number;
-      search: string;
-      filter: string[];
+      search?: string;
+      filter?: string[] | string;
     };
 
     const users = new Users();

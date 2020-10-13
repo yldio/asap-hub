@@ -4,7 +4,8 @@ import { render } from '@testing-library/react';
 import LibraryPage from '../LibraryPage';
 
 const props: ComponentProps<typeof LibraryPage> = {
-  query: '',
+  searchQuery: '',
+  filters: new Set(),
 };
 it('renders the header', () => {
   const { getByRole } = render(<LibraryPage {...props}>Content</LibraryPage>);

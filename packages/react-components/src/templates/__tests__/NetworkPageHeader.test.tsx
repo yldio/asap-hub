@@ -5,7 +5,7 @@ import NetworkPageHeader from '../NetworkPageHeader';
 
 const props: ComponentProps<typeof NetworkPageHeader> = {
   page: 'teams',
-  query: '',
+  searchQuery: '',
 };
 it('renders the header', () => {
   const { getByRole } = render(<NetworkPageHeader {...props} />);
@@ -42,7 +42,7 @@ it('triggers onChangeToggle', async () => {
 
 it('Passes query correctly', () => {
   const { getByRole } = render(
-    <NetworkPageHeader {...props} query={'test123'} />,
+    <NetworkPageHeader {...props} searchQuery={'test123'} />,
   );
   expect((getByRole('textbox') as HTMLInputElement).value).toEqual('test123');
 });

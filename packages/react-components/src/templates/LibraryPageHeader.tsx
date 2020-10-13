@@ -24,12 +24,16 @@ const textStyles = css({
 
 type LibraryPageHeaderProps = {
   onChangeSearch?: (newQuery: string) => void;
-  query: string;
+  searchQuery?: string;
+  onChangeFilter?: (filters: string) => void;
+  filters: Set<string>;
 };
 
 const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
   onChangeSearch = noop,
-  query,
+  searchQuery,
+  filters,
+  onChangeFilter,
 }) => {
   return (
     <header css={containerStyles}>
@@ -44,18 +48,20 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
       <SearchControls
         placeholder="Search for a protein, a method…"
         onChangeSearch={onChangeSearch}
-        query={query}
+        searchQuery={searchQuery}
         filterOptions={[
-          { label: 'Proposal', value: '' },
-          { label: 'Dataset', value: '', enabled: false },
-          { label: 'Software', value: '', enabled: false },
-          { label: 'Protocol', value: '', enabled: false },
-          { label: 'Lab Resource', value: '', enabled: false },
-          { label: 'Preprint', value: '', enabled: false },
-          { label: 'Article', value: '', enabled: false },
-          { label: 'Other', value: '', enabled: false },
+          { label: 'Proposal', value: 'Proposal' },
+          { label: 'Dataset', value: 'Dataset', enabled: false },
+          { label: 'Software', value: 'Software', enabled: false },
+          { label: 'Protocol', value: 'Protocol', enabled: false },
+          { label: 'Lab Resource', value: 'Lab Resource', enabled: false },
+          { label: 'Preprint', value: 'Preprint', enabled: false },
+          { label: 'Article', value: 'Article', enabled: false },
+          { label: 'Other', value: 'Other', enabled: false },
         ]}
         filterTitle="TYPE OF OUTPUTS"
+        onChangeFilter={onChangeFilter}
+        filters={filters}
       />
     </header>
   );

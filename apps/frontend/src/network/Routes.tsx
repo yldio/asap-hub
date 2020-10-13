@@ -8,6 +8,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
+import { useDebounce } from 'use-debounce';
 
 import ProfileList from './ProfileList';
 import Profile from './Profile';
@@ -19,12 +20,23 @@ const Network: React.FC<{}> = () => {
   const { search } = useLocation();
   const history = useHistory();
   const currentUrlParams = new URLSearchParams(search);
-
+  const filters = new Set(currentUrlParams.getAll('filter'));
+  const searchQuery = currentUrlParams.get('searchQuery') || undefined;
+  const [searchQueryDebounce] = useDebounce(searchQuery, 400);
   const onChangeToggle = (pathname: string) => () => {
+    currentUrlParams.delete('filter');
     history.push({ pathname, search: currentUrlParams.toString() });
   };
   const onChangeSearch = (newQuery: string) => {
-    currentUrlParams.set('query', newQuery);
+    newQuery
+      ? currentUrlParams.set('searchQuery', newQuery)
+      : currentUrlParams.delete('searchQuery');
+    history.replace({ search: currentUrlParams.toString() });
+  };
+  const onChangeFilter = (filter: string) => {
+    currentUrlParams.delete('filter');
+    filters.has(filter) ? filters.delete(filter) : filters.add(filter);
+    filters.forEach((f) => currentUrlParams.append('filter', f));
     history.replace({ search: currentUrlParams.toString() });
   };
   return (
@@ -34,9 +46,11 @@ const Network: React.FC<{}> = () => {
           page="users"
           onChangeToggle={onChangeToggle('teams')}
           onChangeSearch={onChangeSearch}
-          query={currentUrlParams.get('query') || ''}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
+          searchQuery={searchQuery}
         >
-          <ProfileList />
+          <ProfileList filters={filters} searchQuery={searchQueryDebounce} />
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={Profile} />
@@ -45,9 +59,11 @@ const Network: React.FC<{}> = () => {
           page="teams"
           onChangeToggle={onChangeToggle('users')}
           onChangeSearch={onChangeSearch}
-          query={currentUrlParams.get('query') || ''}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
+          searchQuery={searchQuery}
         >
-          <TeamList />
+          <TeamList filters={filters} searchQuery={searchQueryDebounce} />
         </NetworkPage>
       </Route>
       <Route path={`${path}/teams/:id`} component={Team} />

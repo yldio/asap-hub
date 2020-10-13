@@ -43,8 +43,9 @@ const props = (): ComponentProps<typeof LibraryPageBody> => {
 
 export const LibraryList = () => (
   <LibraryPage
-    query={text('Query', '')}
+    searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('search change')}
+    filters={new Set()}
   >
     <LibraryPageBody {...props()} />
   </LibraryPage>

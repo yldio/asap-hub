@@ -12,7 +12,7 @@ it('renders a checkbox for each option', () => {
         { value: 'blue', label: 'Blue' },
         { value: 'green', label: 'Green' },
       ]}
-      values={['red']}
+      values={new Set('red')}
     />,
   );
   expect(getByLabelText('Red')).toBeVisible();
@@ -27,7 +27,7 @@ it('checks specified checkboxes', () => {
         { value: 'blue', label: 'Blue' },
         { value: 'green', label: 'Green' },
       ]}
-      values={['red', 'green']}
+      values={new Set(['red', 'green'])}
     />,
   );
   expect(getByLabelText('Red')).toBeChecked();

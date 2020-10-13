@@ -1,14 +1,15 @@
 import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, fireEvent } from '@testing-library/react';
-import { authTestUtils } from '@asap-hub/react-components';
-import nock from 'nock';
 import userEvent from '@testing-library/user-event';
+import nock from 'nock';
+import { ClientRequest } from 'http';
+import { authTestUtils } from '@asap-hub/react-components';
 
 import Routes from '../Routes';
 import { API_BASE_URL } from '../../config';
-import TeamsResponse from '../../fixtures/teams';
-import UsersResponse from '../../fixtures/users';
+import teamsResponse from '../../fixtures/teams';
+import usersResponse from '../../fixtures/users';
 
 const renderNetworkPage = async (pathname: string, query = '') => {
   const result = render(
@@ -34,110 +35,147 @@ const renderNetworkPage = async (pathname: string, query = '') => {
   return result;
 };
 
-beforeEach(() => {
-  nock.cleanAll();
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/teams')
-    .reply(200, TeamsResponse);
-
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/users')
-    .reply(200, UsersResponse);
-});
-
-describe('Test toggle to team', () => {
-  it('Changes the placeholder', async () => {
-    const { getByText, queryByText, getByRole } = await renderNetworkPage(
-      '/network/teams',
-    );
-    const toggle = getByText('People');
-    const searchBox = getByRole('textbox') as HTMLInputElement; // TODO 'search' role
-
-    expect(searchBox.placeholder).toMatchInlineSnapshot(`"Search for a team…"`);
-
-    fireEvent.click(toggle);
-    await waitFor(() =>
-      expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
-    );
-
-    expect(searchBox.placeholder).toMatchInlineSnapshot(
-      `"Search for someone…"`,
-    );
+describe('the network page', () => {
+  let teamsReq!: ClientRequest;
+  let usersReq!: ClientRequest;
+  beforeEach(() => {
+    nock.cleanAll();
+    nock(API_BASE_URL, {
+      reqheaders: { authorization: 'Bearer token' },
+    })
+      .get('/teams')
+      .query(true)
+      .reply(200, function handleRequest(url, body, cb) {
+        teamsReq = this.req;
+        cb(null, teamsResponse);
+      })
+      .get('/users')
+      .query(true)
+      .reply(200, function handleRequest(url, body, cb) {
+        usersReq = this.req;
+        cb(null, usersResponse);
+      })
+      .persist();
   });
 
-  it('Preserves the query text', async () => {
-    const { getByText, queryByText, getByRole } = await renderNetworkPage(
-      '/network/teams',
-      '?query=321test',
-    );
-    const toggle = getByText('People');
+  describe('when toggling from teams to users', () => {
+    it('changes the placeholder', async () => {
+      const { getByText, queryByText, getByRole } = await renderNetworkPage(
+        '/network/teams',
+      );
+      const toggle = getByText('People');
+      const searchBox = getByRole('textbox') as HTMLInputElement; // TODO 'search' role
+
+      expect(searchBox.placeholder).toMatchInlineSnapshot(
+        `"Search for a team…"`,
+      );
+
+      fireEvent.click(toggle);
+      await waitFor(() =>
+        expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
+      );
+
+      expect(searchBox.placeholder).toMatchInlineSnapshot(
+        `"Search for someone…"`,
+      );
+    });
+
+    it('preserves the query text', async () => {
+      const { getByText, getByRole } = await renderNetworkPage(
+        '/network/teams',
+        '?searchQuery=test123',
+      );
+      const toggle = getByText('People');
+      const searchBox = getByRole('textbox') as HTMLInputElement;
+
+      expect(searchBox.value).toEqual('test123');
+
+      fireEvent.click(toggle);
+      expect(searchBox.value).toEqual('test123');
+      await waitFor(() => {
+        const { searchParams } = new URL(usersReq!.path, 'http://api');
+        expect(searchParams.get('search')).toBe('test123');
+      });
+    });
+  });
+
+  describe('when toggling from users to teams', () => {
+    it('changes the placeholder', async () => {
+      const { getByText, queryByText, getByRole } = await renderNetworkPage(
+        '/network/users',
+      );
+      const toggle = getByText('People');
+      const searchBox = getByRole('textbox') as HTMLInputElement;
+
+      expect(searchBox.placeholder).toMatchInlineSnapshot(
+        `"Search for someone…"`,
+      );
+
+      fireEvent.click(toggle);
+      await waitFor(() =>
+        expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
+      );
+
+      expect(searchBox.placeholder).toMatchInlineSnapshot(
+        `"Search for a team…"`,
+      );
+    });
+    it('preserves the query text', async () => {
+      const { getByText, getByRole } = await renderNetworkPage(
+        '/network/users',
+        'searchQuery=test123',
+      );
+      const toggle = getByText('People');
+      const searchBox = getByRole('textbox') as HTMLInputElement;
+
+      expect(searchBox.value).toEqual('test123');
+
+      fireEvent.click(toggle);
+      expect(searchBox.value).toEqual('test123');
+      await waitFor(() => {
+        const { searchParams } = new URL(teamsReq!.path, 'http://api');
+        expect(searchParams.get('search')).toBe('test123');
+      });
+    });
+  });
+
+  it('allows typing in search queries', async () => {
+    const { getByRole } = await renderNetworkPage('/network/users');
     const searchBox = getByRole('textbox') as HTMLInputElement;
 
-    expect(searchBox.value).toEqual('321test');
-
-    fireEvent.click(toggle);
-    await waitFor(() =>
-      expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
-    );
-
-    expect(searchBox.value).toEqual('321test');
+    await userEvent.type(searchBox, 'test123');
+    expect(searchBox.value).toEqual('test123');
   });
-});
 
-describe('Test toggle to user', () => {
-  it('Changes the placeholder', async () => {
-    const { getByText, queryByText, getByRole } = await renderNetworkPage(
+  it('allows selection of filters', async () => {
+    const { getByText, getByLabelText } = await renderNetworkPage(
       '/network/users',
     );
-    const toggle = getByText('People');
-    const searchBox = getByRole('textbox') as HTMLInputElement;
 
-    expect(searchBox.placeholder).toMatchInlineSnapshot(
-      `"Search for someone…"`,
-    );
+    userEvent.click(getByText('Filters'));
+    const checkbox = getByLabelText('Lead PI');
+    expect(checkbox).not.toBeChecked();
 
-    fireEvent.click(toggle);
-    await waitFor(() =>
-      expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
-    );
-
-    expect(searchBox.placeholder).toMatchInlineSnapshot(`"Search for a team…"`);
+    userEvent.click(checkbox);
+    expect(checkbox).toBeChecked();
+    await waitFor(() => {
+      const { searchParams } = new URL(usersReq!.path, 'http://api');
+      expect(searchParams.get('filter')).toBe('Lead PI');
+    });
   });
-  it('Preserves the query text', async () => {
-    const { getByText, queryByText, getByRole } = await renderNetworkPage(
+
+  it('reads filters from url', async () => {
+    const { getByText, getByLabelText } = await renderNetworkPage(
       '/network/users',
-      'query=test123',
-    );
-    const toggle = getByText('People');
-    const searchBox = getByRole('textbox') as HTMLInputElement;
-
-    expect(searchBox.value).toEqual('test123');
-
-    fireEvent.click(toggle);
-    await waitFor(() =>
-      expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
+      '?filter=Lead+PI',
     );
 
-    expect(searchBox.value).toEqual('test123');
+    userEvent.click(getByText('Filters'));
+    const checkbox = getByLabelText('Lead PI');
+    expect(checkbox).toBeChecked();
+    await waitFor(() => {
+      const { searchParams } = new URL(usersReq!.path, 'http://api');
+      expect(searchParams.get('filter')).toBe('Lead PI');
+    });
   });
-});
-
-it('Updates the URL with the query para ', async () => {
-  const { getByText, queryByText, getByRole } = await renderNetworkPage(
-    '/network/users',
-  );
-  const toggle = getByText('People');
-  const searchBox = getByRole('textbox') as HTMLInputElement;
-
-  await userEvent.type(searchBox, 'test123');
-  expect(searchBox.value).toEqual('test123');
-
-  fireEvent.click(toggle);
-  await waitFor(() => expect(queryByText(/Loading/i)).not.toBeInTheDocument());
-
-  expect(searchBox.value).toEqual('test123');
 });

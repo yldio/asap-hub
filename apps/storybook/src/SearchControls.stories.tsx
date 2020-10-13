@@ -13,7 +13,7 @@ export const Normal = () => (
   <SearchControls
     placeholder={text('Placeholder', 'Search for a protein, a method…')}
     onChangeSearch={() => action('Search')}
-    query={text('Query', '')}
+    searchQuery={text('Search Query', '')}
     filterTitle={text('Filter Title', 'TYPE OF OUTPUTS')}
     filterOptions={[
       { label: 'Proposal', value: '1' },

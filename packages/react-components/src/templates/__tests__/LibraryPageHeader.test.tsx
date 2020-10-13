@@ -4,7 +4,8 @@ import { render } from '@testing-library/react';
 import LibraryPageHeader from '../LibraryPageHeader';
 
 const props: ComponentProps<typeof LibraryPageHeader> = {
-  query: '',
+  searchQuery: '',
+  filters: new Set(),
 };
 it('renders the header', () => {
   const { getByRole } = render(<LibraryPageHeader {...props} />);
@@ -13,7 +14,7 @@ it('renders the header', () => {
 
 it('Passes query correctly', () => {
   const { getByRole } = render(
-    <LibraryPageHeader {...props} query={'test123'} />,
+    <LibraryPageHeader {...props} searchQuery={'test123'} />,
   );
   expect(getByRole('textbox')).toHaveValue('test123');
 });

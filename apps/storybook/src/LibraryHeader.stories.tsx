@@ -12,7 +12,9 @@ export default {
 
 export const Normal = () => (
   <LibraryPageHeader
-    query={text('Query', '')}
-    onChangeSearch={() => action('search change')}
+    searchQuery={text('Search Query', '')}
+    onChangeSearch={() => action('Search change')}
+    filters={new Set()}
+    onChangeFilter={() => action('Filter change')}
   />
 );

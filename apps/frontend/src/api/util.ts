@@ -1,5 +1,10 @@
-import { IncomingOptions as UseFetchOptions, Interceptors } from 'use-http';
+import useFetch, {
+  IncomingOptions as UseFetchOptions,
+  Interceptors,
+  CachePolicies,
+} from 'use-http';
 import { useAuth0 } from '@asap-hub/react-context';
+import { API_BASE_URL } from '../config';
 
 export const useFetchOptions = ({
   interceptors: {
@@ -32,6 +37,10 @@ export const useFetchOptions = ({
   };
 
   return {
+    cachePolicy:
+      process.env.NODE_ENV === 'production'
+        ? CachePolicies.CACHE_FIRST
+        : CachePolicies.NO_CACHE,
     ...overrideOptions,
     interceptors: {
       ...interceptors,
@@ -42,4 +51,27 @@ export const useFetchOptions = ({
       ...overrideHeaders,
     },
   };
+};
+
+export interface GetListOptions {
+  searchQuery?: string;
+  filters?: string[];
+}
+
+export const createListApiUrl = (
+  endpoint: string,
+  { searchQuery, filters = [] }: GetListOptions = {},
+): URL => {
+  const url = new URL(endpoint, `${API_BASE_URL}/`);
+  if (searchQuery) url.searchParams.set('search', searchQuery);
+  filters.forEach((filter) => url.searchParams.append('filter', filter));
+  return url;
+};
+
+export const useGetList = <T>(
+  endpoint: string,
+  parameters?: GetListOptions,
+) => {
+  const url = createListApiUrl(endpoint, parameters).toString();
+  return useFetch<T>(url, useFetchOptions(), [url]);
 };

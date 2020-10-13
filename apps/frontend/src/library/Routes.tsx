@@ -7,6 +7,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { LibraryPage } from '@asap-hub/react-components';
+import { useDebounce } from 'use-debounce';
 
 import List from './List';
 import ResearchOutput from './ResearchOutput';
@@ -16,9 +17,20 @@ const Library: React.FC<{}> = () => {
   const { search } = useLocation();
   const history = useHistory();
   const currentUrlParams = new URLSearchParams(search);
+  const filters = new Set(currentUrlParams.getAll('filter'));
+  const searchQuery = currentUrlParams.get('searchQuery') || undefined;
+  const [searchQueryDebounce] = useDebounce(searchQuery, 500);
 
   const onChangeSearch = (newQuery: string) => {
-    currentUrlParams.set('query', newQuery);
+    newQuery
+      ? currentUrlParams.set('searchQuery', newQuery)
+      : currentUrlParams.delete('searchQuery');
+    history.replace({ search: currentUrlParams.toString() });
+  };
+  const onChangeFilter = (filter: string) => {
+    currentUrlParams.delete('filter');
+    filters.has(filter) ? filters.delete(filter) : filters.add(filter);
+    filters.forEach((f) => currentUrlParams.append('filter', f));
     history.replace({ search: currentUrlParams.toString() });
   };
 
@@ -27,9 +39,11 @@ const Library: React.FC<{}> = () => {
       <Route exact path={`${path}`}>
         <LibraryPage
           onChangeSearch={onChangeSearch}
-          query={currentUrlParams.get('query') || ''}
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
+          filters={filters}
         >
-          <List />
+          <List searchQuery={searchQueryDebounce} filters={filters} />
         </LibraryPage>
       </Route>
       <Route path={`${path}/:id`}>

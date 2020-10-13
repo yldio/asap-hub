@@ -23,6 +23,7 @@
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
+    "use-debounce": "^5.0.1",
     "use-http": "^1.0.13"
   },
   "devDependencies": {

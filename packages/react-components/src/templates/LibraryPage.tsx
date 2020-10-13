@@ -16,19 +16,26 @@ const mainStyles = css({
 
 type LibraryPageProps = {
   onChangeSearch?: (newQuery: string) => void;
-  query: string;
+  searchQuery?: string;
+  onChangeFilter?: (filter: string) => void;
+  filters: Set<string>;
 };
 const LibraryPage: React.FC<LibraryPageProps> = ({
   onChangeSearch,
-  query,
+  searchQuery,
   children,
-}) => {
-  return (
-    <article css={articleStyles}>
-      <LibraryPageHeader onChangeSearch={onChangeSearch} query={query} />
-      <main css={mainStyles}>{children}</main>
-    </article>
-  );
-};
+  onChangeFilter,
+  filters,
+}) => (
+  <article css={articleStyles}>
+    <LibraryPageHeader
+      onChangeSearch={onChangeSearch}
+      searchQuery={searchQuery}
+      onChangeFilter={onChangeFilter}
+      filters={filters}
+    />
+    <main css={mainStyles}>{children}</main>
+  </article>
+);
 
 export default LibraryPage;

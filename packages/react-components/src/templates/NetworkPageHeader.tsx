@@ -37,15 +37,19 @@ const controlsStyles = css({
 type NetworkPageHeaderProps = {
   onChangeToggle?: () => void;
   onChangeSearch?: (newQuery: string) => void;
-  query: string;
+  onChangeFilter?: (filter: string) => void;
+  searchQuery?: string;
   page: 'teams' | 'users';
+  filters?: Set<string>;
 };
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   onChangeSearch,
-  query,
+  onChangeFilter,
   onChangeToggle,
+  searchQuery,
   page,
+  filters,
 }) => {
   return (
     <header css={containerStyles}>
@@ -71,22 +75,23 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           placeholder={
             page === 'users' ? 'Search for someone…' : 'Search for a team…'
           }
-          query={query}
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
           filterEnabled={page === 'users'}
           filterOptions={
             page === 'users'
               ? [
-                  { label: 'Lead PI', value: '' },
-                  { label: 'Co-investigator', value: '' },
-                  { label: 'Key Personnel', value: '' },
-                  { label: 'Advisor', value: '' },
-                  { label: 'Staff', value: '' },
-                  { label: 'Staff', value: '' },
-                  { label: 'Guest', value: '' },
+                  { label: 'Lead PI', value: 'Lead PI' },
+                  { label: 'Co-investigator', value: 'Co-investigator' },
+                  { label: 'Key Personnel', value: 'Key Personnel' },
+                  { label: 'Advisor', value: 'Advisor' },
+                  { label: 'Staff', value: 'Staff' },
+                  { label: 'Guest', value: 'Guest' },
                 ]
               : []
           }
           filterTitle={page === 'users' ? 'TEAM ROLES' : ''}
+          filters={filters}
         />
       </div>
     </header>

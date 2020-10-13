@@ -10,6 +10,7 @@ type SearchProps = Pick<
 const SearchField: React.FC<SearchProps> = (searchProps) => (
   <TextField
     {...searchProps}
+    role="searchbox"
     customIndicator={searchIcon}
     customIndicatorPosition="left"
   />

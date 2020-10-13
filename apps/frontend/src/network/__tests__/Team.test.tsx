@@ -34,7 +34,7 @@ beforeEach(() => {
     .reply(200, team);
 });
 
-const renderTeam = async () => {
+const renderTeam = async (waitForLoading = true) => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
@@ -49,11 +49,15 @@ const renderTeam = async () => {
   await waitFor(() =>
     expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
   );
+  if (waitForLoading)
+    await waitFor(() =>
+      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
   return result;
 };
 
 it('renders a loading indicator', async () => {
-  const { getByText } = await renderTeam();
+  const { getByText } = await renderTeam(false);
 
   const loadingIndicator = getByText(/loading/i);
   expect(loadingIndicator).toBeVisible();

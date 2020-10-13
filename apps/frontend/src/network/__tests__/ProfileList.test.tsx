@@ -74,7 +74,7 @@ beforeEach(() => {
     .reply(200, users);
 });
 
-const renderProfileList = async () => {
+const renderProfileList = async (waitForLoading = true) => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
@@ -89,11 +89,15 @@ const renderProfileList = async () => {
   await waitFor(() =>
     expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
   );
+  if (waitForLoading)
+    await waitFor(() =>
+      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
   return result;
 };
 
 it('renders a loading indicator', async () => {
-  const { getByText } = await renderProfileList();
+  const { getByText } = await renderProfileList(false);
 
   const loadingIndicator = getByText(/loading/i);
   expect(loadingIndicator).toBeVisible();

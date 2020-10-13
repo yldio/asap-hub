@@ -82,6 +82,14 @@ describe('the library page', () => {
       .persist();
   });
 
+  it('allows typing in search queries', async () => {
+    const { getByRole } = await renderLibraryPage('/library');
+    const searchBox = getByRole('textbox') as HTMLInputElement;
+
+    await userEvent.type(searchBox, 'test123');
+    expect(searchBox.value).toEqual('test123');
+  });
+
   it('allows selection of filters', async () => {
     const { getByText, getByLabelText } = await renderLibraryPage('/library');
 

@@ -5,13 +5,13 @@ import NetworkTeams from '../NetworkTeams';
 
 const team: ComponentProps<typeof NetworkTeams>['teams'][0] = {
   id: '42',
-  displayName: 'Unknown Team',
+  displayName: 'Unknown',
   projectTitle: 'Unknown Project Title',
   members: [],
   skills: [],
   href: 'http://localhost/teams/42',
 };
-const teams = [team, { ...team, id: '43', displayName: 'Unknown Team 2' }];
+const teams = [team, { ...team, id: '43', displayName: 'Unknown 2' }];
 const props: ComponentProps<typeof NetworkTeams> = {
   teams,
   numberOfItems: teams.length,
@@ -24,5 +24,5 @@ it('renders multiple team cards', () => {
   const { queryAllByRole } = render(<NetworkTeams {...props} />);
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Unknown Team', 'Unknown Team 2']);
+  ).toEqual(['Team Unknown', 'Team Unknown 2']);
 });

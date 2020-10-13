@@ -51,7 +51,7 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
         {teams.map(({ id, role, href, displayName }) => (
           <React.Fragment key={id}>
             <br />
-            {role} on <Link href={href}>{displayName}</Link>
+            {role} on <Link href={href}>Team {displayName}</Link>
           </React.Fragment>
         ))}
       </p>

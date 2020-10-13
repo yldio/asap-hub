@@ -16,8 +16,8 @@ export const Normal = () => (
     newsAndEventsHref="/news-and-events"
     profileHref="/profile"
     teams={[
-      { name: 'Team 1', href: '/team-1' },
-      { name: 'Team 2', href: '/team-2' },
+      { name: '1', href: '/team-1' },
+      { name: '2', href: '/team-2' },
     ]}
     settingsHref="/settings"
     feedbackHref="/feedback"

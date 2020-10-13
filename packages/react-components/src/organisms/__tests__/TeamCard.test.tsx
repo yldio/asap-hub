@@ -13,7 +13,7 @@ const member = {
 };
 const teamCardProps = {
   id: 'ee98d044-79a7-4028-915d-7f88793e3190',
-  displayName: '!AX54pQ$Jgih7svEaA',
+  displayName: 'A Barnes',
   applicationNumber: 'P9gr6',
   projectTitle:
     'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
@@ -34,7 +34,7 @@ const teamCardProps = {
 
 it('renders the title', () => {
   const { getByRole } = render(<TeamCard {...teamCardProps} />);
-  expect(getByRole('heading').textContent).toEqual('!AX54pQ$Jgih7svEaA');
+  expect(getByRole('heading').textContent).toEqual('Team A Barnes');
   expect(getByRole('heading').tagName).toEqual('H2');
 });
 

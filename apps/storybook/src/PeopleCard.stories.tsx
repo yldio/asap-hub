@@ -21,7 +21,7 @@ export const Normal = () => (
       id: '42',
       href: '#42',
       role: text('Role', 'Researcher'),
-      displayName: text('Team Name', 'Team A'),
+      displayName: text('Team Name', 'A'),
     })}
     jobTitle={text('Job Title', 'Assistant Professor')}
     avatarURL={text(

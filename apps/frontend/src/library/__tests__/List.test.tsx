@@ -87,7 +87,7 @@ it('correctly generates research output link', async () => {
 
 it('correctly generates team link', async () => {
   const { getByText } = await renderLibraryList();
-  const link = getByText('Jakobsson, J').closest('a');
+  const link = getByText('Team Jakobsson, J').closest('a');
   expect(link?.href).toEqual(
     'http://localhost/network/teams/e12729e0-a244-471f-a554-7b58eae83a8d',
   );

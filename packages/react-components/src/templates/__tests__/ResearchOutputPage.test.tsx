@@ -31,12 +31,12 @@ it('renders a proposal with team information', () => {
       {...props}
       team={{
         id: '1',
-        displayName: 'Test Team',
+        displayName: 'Test',
         href: '#',
       }}
     />,
   );
-  const element = getByText('Test Team') as HTMLAnchorElement;
+  const element = getByText('Team Test') as HTMLAnchorElement;
   expect(element).toBeVisible();
   expect(element.href).toEqual('http://localhost/#');
 });

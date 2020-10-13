@@ -19,7 +19,7 @@ it('renders the header', () => {
   const { getByText } = render(
     <TeamPage {...boilerplateProps}>Tab Content</TeamPage>,
   );
-  expect(getByText('Doe, J')).toBeVisible();
+  expect(getByText('Team Doe, J')).toBeVisible();
 });
 
 it('renders the children', () => {

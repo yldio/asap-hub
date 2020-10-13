@@ -15,7 +15,7 @@ import { API_BASE_URL } from '../../config';
 
 const team: TeamResponse = {
   id: '42',
-  displayName: 'Team Unknown',
+  displayName: 'Unknown',
   applicationNumber: 'Unknow Number',
   projectTitle: 'Unkown Project Title',
   projectSummary: 'Unkown Project Summary',

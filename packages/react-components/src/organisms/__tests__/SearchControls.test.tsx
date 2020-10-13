@@ -14,7 +14,7 @@ const props: ComponentProps<typeof SearchControls> = {
 };
 it('renders the search controls', () => {
   const { getByRole } = render(<SearchControls {...props} />);
-  expect(getByRole('textbox')).toBeVisible();
+  expect(getByRole('searchbox')).toBeVisible();
   expect(getByRole('button')).toBeVisible();
 });
 
@@ -22,7 +22,7 @@ it('Passes query correctly', () => {
   const { getByRole } = render(
     <SearchControls {...props} searchQuery="test123" />,
   );
-  expect(getByRole('textbox')).toHaveValue('test123');
+  expect(getByRole('searchbox')).toHaveValue('test123');
 });
 
 it('shows and hides the dropdown menu', () => {

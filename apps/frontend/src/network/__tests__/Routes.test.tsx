@@ -64,7 +64,7 @@ describe('the network page', () => {
         '/network/teams',
       );
       const toggle = getByText('People');
-      const searchBox = getByRole('textbox') as HTMLInputElement; // TODO 'search' role
+      const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
         `"Search for a team…"`,
@@ -86,7 +86,7 @@ describe('the network page', () => {
         '?searchQuery=test123',
       );
       const toggle = getByText('People');
-      const searchBox = getByRole('textbox') as HTMLInputElement;
+      const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.value).toEqual('test123');
 
@@ -105,7 +105,7 @@ describe('the network page', () => {
         '/network/users',
       );
       const toggle = getByText('People');
-      const searchBox = getByRole('textbox') as HTMLInputElement;
+      const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
         `"Search for someone…"`,
@@ -126,7 +126,7 @@ describe('the network page', () => {
         'searchQuery=test123',
       );
       const toggle = getByText('People');
-      const searchBox = getByRole('textbox') as HTMLInputElement;
+      const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.value).toEqual('test123');
 
@@ -141,7 +141,7 @@ describe('the network page', () => {
 
   it('allows typing in search queries', async () => {
     const { getByRole } = await renderNetworkPage('/network/users');
-    const searchBox = getByRole('textbox') as HTMLInputElement;
+    const searchBox = getByRole('searchbox') as HTMLInputElement;
 
     await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');

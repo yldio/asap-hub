@@ -84,7 +84,7 @@ describe('the library page', () => {
 
   it('allows typing in search queries', async () => {
     const { getByRole } = await renderLibraryPage('/library');
-    const searchBox = getByRole('textbox') as HTMLInputElement;
+    const searchBox = getByRole('searchbox') as HTMLInputElement;
 
     await userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');

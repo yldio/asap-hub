@@ -111,7 +111,7 @@ it('renders a contact button when there is a pointOfContact', () => {
     <TeamHeader {...boilerplateProps} pointOfContact="test@test.com" />,
   );
 
-  expect(getByText('Contact').parentElement).toHaveAttribute(
+  expect(getByText('Contact PM').parentElement).toHaveAttribute(
     'href',
     'mailto:test%40test.com',
   );

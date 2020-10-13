@@ -55,6 +55,7 @@ export {
   MembersSection,
   MenuHeader,
   NewsAndEventsCard,
+  PageCard,
   PeopleCard,
   ProfileBackground,
   ProfileBiography,

@@ -8,7 +8,6 @@ import { contentSidePaddingWithNavigation } from '../layout';
 
 const containerStyles = css({
   alignSelf: 'stretch',
-  textAlign: 'center',
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
   marginBottom: '2px',
@@ -19,7 +18,6 @@ const containerStyles = css({
 
 const textStyles = css({
   maxWidth: `${610 / perRem}em`,
-  margin: 'auto',
 });
 
 type DashboardPageHeaderProps = {

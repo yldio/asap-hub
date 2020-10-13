@@ -3071,6 +3071,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:7.0.2"
       ],
       [
+        "cross-fetch",
+        "npm:3.0.6"
+      ],
+      [
         "cross-spawn",
         "npm:7.0.3"
       ],
@@ -3835,6 +3839,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.4"
       ],
       [
+        "extract-files",
+        "npm:9.0.0"
+      ],
+      [
         "extsprintf",
         "npm:1.3.0"
       ],
@@ -4201,6 +4209,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "graphlib",
         "npm:2.1.8"
+      ],
+      [
+        "graphql",
+        "npm:15.3.0"
+      ],
+      [
+        "graphql-request",
+        "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0"
       ],
       [
         "growly",
@@ -8490,6 +8506,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.16.1"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
             ["got", "npm:11.6.0"],
+            ["graphql", "npm:15.3.0"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["jwt-decode", "npm:2.2.0"],
             ["jwt-encode", "npm:1.0.1"],
@@ -9092,8 +9109,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["chance", "npm:1.1.7"],
+            ["cross-fetch", "npm:3.0.6"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
             ["got", "npm:11.6.0"],
+            ["graphql", "npm:15.3.0"],
+            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0"],
             ["jwt-decode", "npm:2.2.0"],
             ["jwt-encode", "npm:1.0.1"],
             ["nock", "npm:13.0.4"]
@@ -20606,6 +20626,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["cross-fetch", [
+        ["npm:3.0.6", {
+          "packageLocation": "./.yarn/cache/cross-fetch-npm-3.0.6-6e1e683a4e-a491ad1b89.zip/node_modules/cross-fetch/",
+          "packageDependencies": [
+            ["cross-fetch", "npm:3.0.6"],
+            ["node-fetch", "npm:2.6.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["cross-spawn", [
         ["npm:5.1.0", {
           "packageLocation": "./.yarn/cache/cross-spawn-npm-5.1.0-a3e220603e-96018c42a9.zip/node_modules/cross-spawn/",
@@ -23656,6 +23686,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["extract-files", [
+        ["npm:9.0.0", {
+          "packageLocation": "./.yarn/cache/extract-files-npm-9.0.0-6ee13e6aab-021b107877.zip/node_modules/extract-files/",
+          "packageDependencies": [
+            ["extract-files", "npm:9.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["extsprintf", [
         ["npm:1.3.0", {
           "packageLocation": "./.yarn/cache/extsprintf-npm-1.3.0-61a92b324c-892efd56aa.zip/node_modules/extsprintf/",
@@ -25108,6 +25147,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["graphlib", "npm:2.1.8"],
             ["lodash", "npm:4.17.20"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["graphql", [
+        ["npm:15.3.0", {
+          "packageLocation": "./.yarn/cache/graphql-npm-15.3.0-37caa96674-f01c05eb91.zip/node_modules/graphql/",
+          "packageDependencies": [
+            ["graphql", "npm:15.3.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["graphql-request", [
+        ["virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0", {
+          "packageLocation": "./.yarn/$$virtual/graphql-request-virtual-a435fbdf22/0/cache/graphql-request-npm-3.1.0-e6b473e2d5-4109ecd158.zip/node_modules/graphql-request/",
+          "packageDependencies": [
+            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0"],
+            ["@types/graphql", null],
+            ["cross-fetch", "npm:3.0.6"],
+            ["extract-files", "npm:9.0.0"],
+            ["form-data", "npm:3.0.0"],
+            ["graphql", "npm:15.3.0"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
           ],
           "linkType": "HARD",
         }]
@@ -30616,6 +30682,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/node-fetch-npm-2.6.0-29c7a53447-dd9f586a9f.zip/node_modules/node-fetch/",
           "packageDependencies": [
             ["node-fetch", "npm:2.6.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.6.1", {
+          "packageLocation": "./.yarn/cache/node-fetch-npm-2.6.1-46c670dbc1-cbb171635e.zip/node_modules/node-fetch/",
+          "packageDependencies": [
+            ["node-fetch", "npm:2.6.1"]
           ],
           "linkType": "HARD",
         }],

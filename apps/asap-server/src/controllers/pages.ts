@@ -1,14 +1,6 @@
 import { Squidex } from '@asap-hub/services-common';
 import { PageResponse } from '@asap-hub/model';
-import { CMSPage } from '../entities/page';
-
-const deserialize = (obj: CMSPage): PageResponse => {
-  return {
-    path: obj.data.path.iv,
-    text: obj.data.text?.iv || '',
-    title: obj.data.title.iv,
-  };
-};
+import { CMSPage, parse } from '../entities/page';
 
 export default class Pages {
   pages: Squidex<CMSPage>;
@@ -22,6 +14,6 @@ export default class Pages {
       filter: { path: 'data.path.iv', op: 'eq', value: path },
     });
 
-    return deserialize(page);
+    return parse(page);
   }
 }

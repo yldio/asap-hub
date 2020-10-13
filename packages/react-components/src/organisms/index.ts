@@ -8,6 +8,7 @@ export { default as MainNavigation } from './MainNavigation';
 export { default as MembersSection } from './MembersSection';
 export { default as MenuHeader } from './MenuHeader';
 export { default as NewsAndEventsCard } from './NewsAndEventsCard';
+export { default as PageCard } from './PageCard';
 export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileBackground } from './ProfileBackground';
 export { default as ProfileBiography } from './ProfileBiography';

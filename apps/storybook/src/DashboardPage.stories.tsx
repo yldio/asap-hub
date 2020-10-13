@@ -29,6 +29,8 @@ const commonProps = () => ({
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
     },
   ],
+  hrefProfile: text('Profile', '/network/users/1'),
+  hrefTeamWorkspace: text('Team Workspace', ''),
 });
 
 export const Default = () => (

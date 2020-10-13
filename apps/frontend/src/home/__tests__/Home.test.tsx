@@ -23,6 +23,6 @@ const renderHome = async () => {
 };
 
 test('renders asap link', async () => {
-  const { getByRole } = await renderHome();
-  expect(getByRole('heading').textContent).toEqual('Dashboard');
+  const { getByText } = await renderHome();
+  expect(getByText(/welcome to the hub/i, { selector: 'h1' })).toBeVisible();
 });

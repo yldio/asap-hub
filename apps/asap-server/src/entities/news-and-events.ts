@@ -1,3 +1,6 @@
+import { NewsAndEventsResponse } from '@asap-hub/model';
+import { parseDate, createURL } from '../utils/squidex';
+
 export interface CMSNewsAndEvents {
   id: string;
   created: string;
@@ -11,3 +14,15 @@ export interface CMSNewsAndEvents {
     text: { iv: string };
   };
 }
+
+export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
+  return {
+    id: item.id,
+    created: parseDate(item.created),
+    subtitle: item.data.subtitle?.iv,
+    text: item.data.text?.iv,
+    thumbnail: item.data.thumbnail && createURL(item.data.thumbnail?.iv)[0],
+    title: item.data.title.iv,
+    type: item.data.type.iv,
+  } as NewsAndEventsResponse;
+};

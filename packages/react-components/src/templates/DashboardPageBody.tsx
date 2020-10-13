@@ -4,6 +4,7 @@ import css from '@emotion/css';
 import { WhereToStartSection, LatestNewsSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card, Paragraph, Link } from '../atoms';
+import { CtaCard } from '../molecules';
 
 const styles = css({
   display: 'grid',
@@ -11,44 +12,90 @@ const styles = css({
   marginBottom: `${24 / perRem}em`,
 });
 
-type DashboardPageBodyProps = ComponentProps<typeof WhereToStartSection> &
-  ComponentProps<typeof LatestNewsSection>;
+const containerStyles = css({
+  marginTop: `${24 / perRem}em`,
+});
 
-const NewsAndEventsPageBody: React.FC<DashboardPageBodyProps> = ({
+const bottomStyles = css({
+  display: 'grid',
+  gridRowGap: `${36 / perRem}em`,
+});
+
+type DashboardPageBodyProps = ComponentProps<typeof WhereToStartSection> &
+  ComponentProps<typeof LatestNewsSection> & {
+    readonly hrefProfile: string;
+    readonly hrefTeamWorkspace: string | undefined;
+  };
+
+const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   pages,
   newsAndEvents,
+  hrefProfile,
+  hrefTeamWorkspace,
 }) => (
   <div css={styles}>
     {pages.length ? <WhereToStartSection pages={pages} /> : null}
     {newsAndEvents.length ? (
       <LatestNewsSection newsAndEvents={newsAndEvents} />
     ) : null}
-    <div>
+    <section>
       <Display styleAsHeading={2}>You may want to try</Display>
-      <Card>
-        <ul>
-          <li>
-            <Paragraph primary>
-              Check out grantee profiles on{' '}
-              <Link href="/network/users">Network</Link>
-            </Paragraph>
-          </li>
-          <li>
-            <Paragraph primary>
-              Read ASAP awarded proposals in the{' '}
-              <Link href="/library">Library</Link>
-            </Paragraph>
-          </li>
-          <li>
-            <Paragraph primary>
-              Find other teams based on keywords on{' '}
-              <Link href="/network/teams">Network</Link>
-            </Paragraph>
-          </li>
-        </ul>
-      </Card>
-    </div>
+      <div css={containerStyles}>
+        <Card>
+          <ul>
+            <li>
+              <Paragraph primary>
+                Check out grantee profiles on{' '}
+                <Link href="/network/users">Network</Link>
+              </Paragraph>
+            </li>
+            <li>
+              <Paragraph primary>
+                Read ASAP awarded proposals in the{' '}
+                <Link href="/library">Library</Link>
+              </Paragraph>
+            </li>
+            <li>
+              <Paragraph primary>
+                Find other teams based on keywords on{' '}
+                <Link href="/network/teams">Network</Link>
+              </Paragraph>
+            </li>
+            <li>
+              <Paragraph primary>
+                Stay up date with{' '}
+                <Link href="/news-and-events">News and Events</Link>
+              </Paragraph>
+            </li>
+            {hrefTeamWorkspace ? (
+              <li>
+                <Paragraph primary>
+                  Add important links to your{' '}
+                  <Link href={hrefTeamWorkspace}>Team Worspace</Link> (only your
+                  team has access to it)
+                </Paragraph>
+              </li>
+            ) : null}
+            <li>
+              <Paragraph primary>
+                Rejoice on your fabulous <Link href={hrefProfile}>Profile</Link>
+              </Paragraph>
+            </li>
+          </ul>
+        </Card>
+      </div>
+    </section>
+    <section css={bottomStyles}>
+      <CtaCard href={'#'} buttonText="Contact Us">
+        <strong>Need help with grant-related matter?</strong>
+        <br /> ASAP and the Michael J Fox Foundation are here to help
+      </CtaCard>
+      <Paragraph>
+        If you're facing a technical issue with the Hub, please{' '}
+        <Link href={'#'}>get in touch</Link>. Our support team is happy to help!
+      </Paragraph>
+    </section>
   </div>
 );
 
-export default NewsAndEventsPageBody;
+export default DashboardPageBody;

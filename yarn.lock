@@ -60,6 +60,7 @@ __metadata:
     date-fns: ^2.16.1
     debug: ^4.2.0
     got: ^11.6.0
+    graphql: ^15.3.0
     jsonwebtoken: ^8.5.1
     jwt-decode: ^2.2.0
     jwt-encode: ^1.0.1
@@ -415,8 +416,11 @@ __metadata:
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     chance: ^1.1.7
+    cross-fetch: ^3.0.6
     debug: ^4.2.0
     got: ^11.6.0
+    graphql: ^15.3.0
+    graphql-request: ^3.1.0
     jwt-decode: ^2.2.0
     jwt-encode: ^1.0.1
     nock: ^13.0.4
@@ -9758,6 +9762,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-fetch@npm:^3.0.5, cross-fetch@npm:^3.0.6":
+  version: 3.0.6
+  resolution: "cross-fetch@npm:3.0.6"
+  dependencies:
+    node-fetch: 2.6.1
+  checksum: a491ad1b89988a351f8b8b252b68a5e653636d911042648c43a806cf7575ff043379a80d6269102ca60ec633af0b49ca4c83536007793bb0e65e491769f70d9d
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:7.0.1":
   version: 7.0.1
   resolution: "cross-spawn@npm:7.0.1"
@@ -12381,6 +12394,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"extract-files@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "extract-files@npm:9.0.0"
+  checksum: 021b10787718a2f81847e58bd5eea3b09d636e8bb3cf281dad2aeeafc439c32f9e7d2353b2b4b30f6a7febf93be9d1edd76706ea56cff6850b3f39e1594e5bb3
+  languageName: node
+  linkType: hard
+
 "extsprintf@npm:1.3.0":
   version: 1.3.0
   resolution: "extsprintf@npm:1.3.0"
@@ -13736,6 +13756,26 @@ fsevents@^1.2.7:
   dependencies:
     lodash: ^4.17.15
   checksum: 86e4433af9cf450c414d8cc58481ac8b96321fc25ecbbf08d27f0694a5e3a72a5c7a973795683b5ed5bbced75af1b0706c2b6e964f44f27b9078b229b652abee
+  languageName: node
+  linkType: hard
+
+"graphql-request@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "graphql-request@npm:3.1.0"
+  dependencies:
+    cross-fetch: ^3.0.5
+    extract-files: ^9.0.0
+    form-data: ^3.0.0
+  peerDependencies:
+    graphql: 14.x || 15.x
+  checksum: 4109ecd15811316cecae0c46a04961ea6ddaefd93b11810f693ce490a0182966a4b0cff5299a28a2835baa83ed90233587cc798643f05c96c862eb728a3cac84
+  languageName: node
+  linkType: hard
+
+"graphql@npm:^15.3.0":
+  version: 15.3.0
+  resolution: "graphql@npm:15.3.0"
+  checksum: f01c05eb9102a88f33b4276b38399f066067d5be03c66c3bfec3e71e1793a91750e408f7abb001831bc2daf09746ab70ac0af16894d0ef1f1c1246fb0c2f4b0e
   languageName: node
   linkType: hard
 
@@ -18746,6 +18786,13 @@ fsevents@^1.2.7:
   dependencies:
     minimatch: ^3.0.2
   checksum: 80c61dbf8da20a8820fd9ab1e4d78d3973a247389f4667147a18ffce77adbc71b42520914064cc23b6a1c9a0b8efcf8c6a360b109e327ed93a3f52d944c1b314
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:2.6.1":
+  version: 2.6.1
+  resolution: "node-fetch@npm:2.6.1"
+  checksum: cbb171635e538162b977eac5dfe7a1e07a9a02e991924377a6435502291e2f823d306b95aabc455caebf4a118ccf836868462bc70ccc3095af02bb9da61fda37
   languageName: node
   linkType: hard
 

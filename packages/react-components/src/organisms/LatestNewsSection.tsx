@@ -10,7 +10,7 @@ const styles = css({
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
 
-  paddingTop: `${24 / perRem}em`,
+  marginTop: `${24 / perRem}em`,
 });
 
 type LatestNewsProps = {

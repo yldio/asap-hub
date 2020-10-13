@@ -1,26 +1,96 @@
-export const query = `{
+import { GraphQL } from '@asap-hub/services-common';
+import { DashboardResponse } from '@asap-hub/model';
+import {
+  CMSNewsAndEvents,
+  parse as parseNewsAndEvents,
+} from '../entities/news-and-events';
+import { CMSPage, parse as parsePage } from '../entities/page';
+
+export const query = `
+  {
     queryDashboardContents {
-      flatData {
+      data {
         news {
-          id
-          created
-          flatData {
-            title
-            subtitle
-            text
-            thumbnail {
-              thumbnailUrl
+          iv {
+            id
+            created
+            data {
+              title {
+                iv
+              }
+              subtitle {
+                iv
+              }
+              text {
+                iv
+              }
+              type {
+                iv
+              }
+              thumbnail {
+                iv {
+                  id
+                }
+              }
             }
           }
         }
         pages {
-          id
-          created
-          flatData {
-            title
-            text
+          iv {
+            id
+            created
+            data {
+              path {
+                iv
+              }
+              title {
+                iv
+              }
+              text {
+                iv
+              }
+            }
           }
         }
       }
     }
-  }`;
+  }
+`;
+
+interface Response {
+  queryDashboardContents: {
+    data: {
+      news: {
+        iv: CMSNewsAndEvents[];
+      };
+      pages: {
+        iv: CMSPage[];
+      };
+    };
+  }[];
+}
+
+export default class Dashboard {
+  client: GraphQL;
+
+  constructor() {
+    this.client = new GraphQL();
+  }
+
+  async fetch(): Promise<DashboardResponse> {
+    const res = await this.client.request<Response, unknown>(query);
+    if (res.queryDashboardContents.length === 0) {
+      return {
+        newsAndEvents: [],
+        pages: [],
+      };
+    }
+
+    return {
+      newsAndEvents: res.queryDashboardContents[0].data.news.iv.map(
+        parseNewsAndEvents,
+      ),
+      pages: res.queryDashboardContents[0].data.pages.iv.map(parsePage),
+    };
+  }
+}

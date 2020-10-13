@@ -83,7 +83,7 @@ const SearchControls: React.FC<SearchControlsProps> = ({
   }, [filterTitle]);
 
   return (
-    <div css={searchContainerStyles}>
+    <div role="search" css={searchContainerStyles}>
       <SearchField
         value={searchQuery || ''}
         placeholder={placeholder}

@@ -19,14 +19,14 @@ it('Displays relevant page information', () => {
   expect(getByText('Teams')).toBeChecked();
   expect(getByText('People')).not.toBeChecked();
   expect(
-    (getByRole('textbox') as HTMLInputElement).placeholder,
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Search for a team…"`);
 
   rerender(<NetworkPageHeader {...props} page={'users'} />);
   expect(getByText('Teams')).not.toBeChecked();
   expect(getByText('People')).toBeChecked();
   expect(
-    (getByRole('textbox') as HTMLInputElement).placeholder,
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Search for someone…"`);
 });
 
@@ -44,5 +44,5 @@ it('Passes query correctly', () => {
   const { getByRole } = render(
     <NetworkPageHeader {...props} searchQuery={'test123'} />,
   );
-  expect((getByRole('textbox') as HTMLInputElement).value).toEqual('test123');
+  expect((getByRole('searchbox') as HTMLInputElement).value).toEqual('test123');
 });

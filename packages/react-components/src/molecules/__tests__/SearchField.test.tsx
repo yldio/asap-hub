@@ -5,5 +5,5 @@ import SearchField from '../SearchField';
 
 it('renders a search field, passing through props', () => {
   const { getByRole } = render(<SearchField placeholder="test" value="" />);
-  expect(getByRole('textbox')).toHaveAttribute('placeholder', 'test');
+  expect(getByRole('searchbox')).toHaveAttribute('placeholder', 'test');
 });

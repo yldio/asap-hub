@@ -16,5 +16,5 @@ it('Passes query correctly', () => {
   const { getByRole } = render(
     <LibraryPageHeader {...props} searchQuery={'test123'} />,
   );
-  expect(getByRole('textbox')).toHaveValue('test123');
+  expect(getByRole('searchbox')).toHaveValue('test123');
 });

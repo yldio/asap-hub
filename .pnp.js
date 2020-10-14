@@ -1868,7 +1868,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "acorn",
-        "npm:7.4.0"
+        "npm:6.4.1"
       ],
       [
         "acorn-class-fields",
@@ -1885,10 +1885,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "acorn-import-meta",
         "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:1.1.0"
-      ],
-      [
-        "acorn-jsx",
-        "virtual:c3370c80228526bdc823c77589727bb12f010d7080bccc27a33a2dcce9848e6a7ca68b55a7a8ca98362554ae73296d381ef1ad94f002f07e2a08c76d959b5bbf#npm:5.2.0"
       ],
       [
         "acorn-numeric-separator",
@@ -15777,7 +15773,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@vercel-nft-npm-0.9.3-9d1afac24b-4900cb2da4.zip/node_modules/@vercel/nft/",
           "packageDependencies": [
             ["@vercel/nft", "npm:0.9.3"],
-            ["acorn", "npm:7.4.0"],
+            ["acorn", "npm:6.4.1"],
             ["acorn-class-fields", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:0.3.7"],
             ["acorn-export-ns-from", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:0.1.0"],
             ["acorn-import-meta", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:1.1.0"],
@@ -16451,7 +16447,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["acorn-class-fields", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:0.3.7"],
             ["@types/acorn", null],
-            ["acorn", "npm:7.4.0"],
+            ["acorn", "npm:6.4.1"],
             ["acorn-private-class-elements", "virtual:3344b67a969ce415d5ed18c224963fb1f051cb9f97200cd32e0fd1668f5a407a0e2ff1a261e567ae842a9d38f2fb871866e9e2caf369360df81c449381baa149#npm:0.2.7"]
           ],
           "packagePeers": [
@@ -16467,7 +16463,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["acorn-export-ns-from", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:0.1.0"],
             ["@types/acorn", null],
-            ["acorn", "npm:7.4.0"]
+            ["acorn", "npm:6.4.1"]
           ],
           "packagePeers": [
             "@types/acorn",
@@ -16502,7 +16498,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["acorn-import-meta", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:1.1.0"],
             ["@types/acorn", null],
-            ["acorn", "npm:7.4.0"]
+            ["acorn", "npm:6.4.1"]
           ],
           "packagePeers": [
             "@types/acorn",
@@ -16532,7 +16528,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["acorn-numeric-separator", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:0.3.6"],
             ["@types/acorn", null],
-            ["acorn", "npm:7.4.0"]
+            ["acorn", "npm:6.4.1"]
           ],
           "packagePeers": [
             "@types/acorn",
@@ -16547,7 +16543,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["acorn-private-class-elements", "virtual:3344b67a969ce415d5ed18c224963fb1f051cb9f97200cd32e0fd1668f5a407a0e2ff1a261e567ae842a9d38f2fb871866e9e2caf369360df81c449381baa149#npm:0.2.7"],
             ["@types/acorn", null],
-            ["acorn", "npm:7.4.0"]
+            ["acorn", "npm:6.4.1"]
           ],
           "packagePeers": [
             "@types/acorn",
@@ -16562,7 +16558,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["acorn-static-class-features", "virtual:9d1afac24b80799d15f6d38121afb4b08ca77253de99204b2e9d2f16acf01518dc2609a8932ac7423028eddaba53666771ca53056c6a11af5d77f7f78931a00c#npm:0.2.4"],
             ["@types/acorn", null],
-            ["acorn", "npm:7.4.0"],
+            ["acorn", "npm:6.4.1"],
             ["acorn-private-class-elements", "virtual:3344b67a969ce415d5ed18c224963fb1f051cb9f97200cd32e0fd1668f5a407a0e2ff1a261e567ae842a9d38f2fb871866e9e2caf369360df81c449381baa149#npm:0.2.7"]
           ],
           "packagePeers": [

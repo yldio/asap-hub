@@ -54,7 +54,6 @@ describe('GET /users', () => {
       .query({
         q: JSON.stringify({
           take: 8,
-          fullText: 'first last',
           filter: {
             or: [
               {

@@ -62,13 +62,34 @@ export default class ResearchOutputs {
   async fetch(options: {
     take: number;
     skip: number;
+    search?: string;
+    filter?: string | string[];
   }): Promise<ListResearchOutputResponse> {
-    const res = await this.researchOutputs.fetch(options);
-    const teams = res.items.length
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { search, filter, ...opts } = options;
+
+    const { total, items } = await this.researchOutputs.fetch({
+      ...opts,
+      ...(search
+        ? {
+            filter: {
+              or: search
+                .split(' ')
+                .filter(Boolean)
+                .flatMap((word) => [
+                  { path: 'data.title.iv', op: 'contains', value: word },
+                ]),
+            },
+          }
+        : {}),
+      sort: [{ path: 'created', order: 'descending' }],
+    });
+
+    const teams = items.length
       ? await this.teams.fetch({
-          take: res.items.length,
+          take: items.length,
           filter: {
-            or: res.items.map((item) => ({
+            or: items.map((item) => ({
               path: 'data.proposal.iv',
               op: 'eq',
               value: item.id,
@@ -78,8 +99,8 @@ export default class ResearchOutputs {
       : { items: [] };
 
     return {
-      total: res.total,
-      items: res.items.map((item) =>
+      total: total,
+      items: items.map((item) =>
         transform(
           item,
           teams.items.filter((t) => t.data.proposal?.iv[0] === item.id)[0],

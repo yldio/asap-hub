@@ -13,6 +13,7 @@
 /apps/*/build
 /packages/*/build
 /dev/squidex
+**/build-cjs
 
 # editors
 .vscode

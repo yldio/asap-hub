@@ -58,7 +58,6 @@ describe('GET /teams', () => {
       .query({
         q: JSON.stringify({
           take: 8,
-          fullText: 'Cristiano Ronaldo',
           filter: {
             or: [
               {

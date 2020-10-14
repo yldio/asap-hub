@@ -162,13 +162,15 @@ export default class Users {
       ...opts,
       ...(search
         ? {
-            fullText: search,
             filter: {
-              or: search.split(' ').flatMap((word) => [
-                { path: 'data.displayName.iv', op: 'contains', value: word },
-                { path: 'data.firstName.iv', op: 'contains', value: word },
-                { path: 'data.lastName.iv', op: 'contains', value: word },
-              ]),
+              or: search
+                .split(' ')
+                .filter(Boolean)
+                .flatMap((word) => [
+                  { path: 'data.displayName.iv', op: 'contains', value: word },
+                  { path: 'data.firstName.iv', op: 'contains', value: word },
+                  { path: 'data.lastName.iv', op: 'contains', value: word },
+                ]),
             },
           }
         : {}),

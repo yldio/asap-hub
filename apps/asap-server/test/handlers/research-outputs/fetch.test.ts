@@ -77,11 +77,13 @@ describe('GET /research-outputs/{id} - success', () => {
   test('returns 200 with a list of empty research outputs', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
-      .get(
-        `/api/content/${
-          config.cms.appName
-        }/research-outputs?q=${JSON.stringify({ take: 8 })}`,
-      )
+      .get(`/api/content/${config.cms.appName}/research-outputs`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          sort: [{ path: 'created', order: 'descending' }],
+        }),
+      })
       .reply(200, { total: 0, items: [] });
 
     const result = (await handler(
@@ -101,11 +103,13 @@ describe('GET /research-outputs/{id} - success', () => {
   test('returns 200 with a list of research outputs', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
-      .get(
-        `/api/content/${
-          config.cms.appName
-        }/research-outputs?q=${JSON.stringify({ take: 8 })}`,
-      )
+      .get(`/api/content/${config.cms.appName}/research-outputs`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          sort: [{ path: 'created', order: 'descending' }],
+        }),
+      })
       .reply(200, {
         total: 1,
         items: [
@@ -140,6 +144,86 @@ describe('GET /research-outputs/{id} - success', () => {
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
+        headers: {
+          Authorization: `Bearer token`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const res = JSON.parse(result.body) as ResearchOutputResponse;
+    expect(result.statusCode).toStrictEqual(200);
+    expect(res).toStrictEqual({
+      total: 1,
+      items: [
+        {
+          created: '2020-09-23T16:34:26.842Z',
+          doi: '',
+          id: 'uuid',
+          text: 'Text',
+          title: 'Title',
+          type: 'proposal',
+          url: '',
+        },
+      ],
+    });
+  });
+
+  test('returns 200 with a list of research outputs - when searching', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    nock(cms.baseUrl)
+      .get(`/api/content/${config.cms.appName}/research-outputs`)
+      .query({
+        q: JSON.stringify({
+          take: 8,
+          filter: {
+            or: [
+              {
+                path: 'data.title.iv',
+                op: 'contains',
+                value: 'Title',
+              },
+            ],
+          },
+          sort: [{ path: 'created', order: 'descending' }],
+        }),
+      })
+      .reply(200, {
+        total: 1,
+        items: [
+          {
+            id: 'uuid',
+            created: '2020-09-23T16:34:26.842Z',
+            data: {
+              type: { iv: 'proposal' },
+              title: { iv: 'Title' },
+              text: { iv: 'Text' },
+            },
+          },
+        ],
+      } as { total: number; items: CMSResearchOutput[] })
+      .get(`/api/content/${config.cms.appName}/teams`)
+      .query(() => true)
+      .reply(200, {
+        total: 1,
+        items: [
+          {
+            id: 'uuid',
+            created: '2020-09-23T16:34:26.842Z',
+            data: {
+              type: { iv: 'proposal' },
+              title: { iv: 'Title' },
+              text: { iv: 'Text' },
+            },
+          },
+        ],
+      } as { total: number; items: CMSResearchOutput[] });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        queryStringParameters: {
+          search: 'Title',
+        },
         headers: {
           Authorization: `Bearer token`,
         },

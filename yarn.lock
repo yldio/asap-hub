@@ -166,6 +166,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/fixtures@workspace:packages/fixtures":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/fixtures@workspace:packages/fixtures"
+  dependencies:
+    "@asap-hub/model": "workspace:packages/model"
+    "@babel/runtime-corejs3": ^7.9.6
+    core-js: ^3.6.5
+    date-fns: ^2.16.1
+    ramda: ^0.27.1
+    uuid: ^8.3.0
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/frontend@workspace:apps/frontend":
   version: 0.0.0-use.local
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
@@ -173,6 +186,7 @@ __metadata:
     "@asap-hub/auth": "workspace:packages/auth"
     "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/fixtures": "workspace:packages/fixtures"
     "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@asap-hub/react-context": "workspace:packages/react-context"

@@ -30,6 +30,9 @@
     "test:integration": "jest --testPathPattern=\"integration\"",
     "test": "jest"
   },
+  "resolutions": {
+    "encoding": "0.1.13"
+  },
   "dependenciesMeta": {
     "browser-tabs-lock": {
       "built": false

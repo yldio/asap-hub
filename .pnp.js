@@ -3540,7 +3540,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "encoding",
-        "npm:0.1.12"
+        "npm:0.1.13"
       ],
       [
         "end-of-stream",
@@ -22363,11 +22363,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["encoding", [
-        ["npm:0.1.12", {
-          "packageLocation": "./.yarn/cache/encoding-npm-0.1.12-1a16b5c5e9-d6c664f8bd.zip/node_modules/encoding/",
+        ["npm:0.1.13", {
+          "packageLocation": "./.yarn/cache/encoding-npm-0.1.13-82a1837d30-282d5696a4.zip/node_modules/encoding/",
           "packageDependencies": [
-            ["encoding", "npm:0.1.12"],
-            ["iconv-lite", "npm:0.4.24"]
+            ["encoding", "npm:0.1.13"],
+            ["iconv-lite", "npm:0.6.2"]
           ],
           "linkType": "HARD",
         }]
@@ -25924,6 +25924,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/iconv-lite-npm-0.4.24-c5c4ac6695-a9b9521066.zip/node_modules/iconv-lite/",
           "packageDependencies": [
             ["iconv-lite", "npm:0.4.24"],
+            ["safer-buffer", "npm:2.1.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.6.2", {
+          "packageLocation": "./.yarn/cache/iconv-lite-npm-0.6.2-13e85ec7dc-0785670120.zip/node_modules/iconv-lite/",
+          "packageDependencies": [
+            ["iconv-lite", "npm:0.6.2"],
             ["safer-buffer", "npm:2.1.2"]
           ],
           "linkType": "HARD",
@@ -30673,7 +30681,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/node-fetch-npm-1.7.3-eb8372f991-d04afb2e32.zip/node_modules/node-fetch/",
           "packageDependencies": [
             ["node-fetch", "npm:1.7.3"],
-            ["encoding", "npm:0.1.12"],
+            ["encoding", "npm:0.1.13"],
             ["is-stream", "npm:1.1.0"]
           ],
           "linkType": "HARD",

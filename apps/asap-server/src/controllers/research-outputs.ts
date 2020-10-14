@@ -99,7 +99,7 @@ export default class ResearchOutputs {
       : { items: [] };
 
     return {
-      total: total,
+      total,
       items: items.map((item) =>
         transform(
           item,

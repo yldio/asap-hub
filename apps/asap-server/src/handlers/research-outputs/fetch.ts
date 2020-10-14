@@ -8,6 +8,8 @@ import { Handler } from '../../utils/types';
 const querySchema = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
+  search: Joi.string(),
+  filter: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())),
 }).required();
 
 export const handler: Handler = lambda.http(
@@ -17,6 +19,8 @@ export const handler: Handler = lambda.http(
     const query = lambda.validate('query', request.query, querySchema) as {
       take: number;
       skip: number;
+      search?: string;
+      filter?: string[] | string;
     };
 
     const researchOutputs = new ResearchOutputs();

@@ -1,11 +1,8 @@
+import 'cross-fetch/polyfill';
 import { GraphQLClient } from 'graphql-request';
-import { Headers } from 'cross-fetch';
 
 import { cms as squidex } from '../config';
 import { getAccessToken } from './client';
-
-// @ts-ignore
-global.Headers = global.Headers || Headers;
 
 export class GraphQL {
   client: GraphQLClient;

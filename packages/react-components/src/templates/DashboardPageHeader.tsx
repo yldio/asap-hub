@@ -34,7 +34,7 @@ const DashboardPageHeader: React.FC<DashboardPageHeaderProps> = ({
       >{`Welcome to the Hub, ${firstName}!`}</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          The Hub is the beating hearth of the ASAP network, where all grantees
+          The Hub is the beating heart of the ASAP network, where all grantees
           link like neurons of the same brain. You can access grantee profiles,
           view other project proposals and hear the last news and events from
           ASAP.

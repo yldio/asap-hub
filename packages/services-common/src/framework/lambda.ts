@@ -97,7 +97,6 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
       : err;
 
     debug('Error caught on request', error);
-    console.log(error);
     const data = error.data as { details: unknown };
     const payload =
       data && data.details

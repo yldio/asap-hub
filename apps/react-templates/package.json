@@ -20,7 +20,7 @@
     "juice": "^7.0.0",
     "pnp-webpack-plugin": "^1.6.4",
     "title-case": "^3.0.2",
-    "webpack": "^5.0.0-beta.16"
+    "webpack": "^5.1.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
@@ -35,7 +35,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/testing-library__react-hooks": "^3.2.0",
     "@types/webpack": "^4",
-    "@yarnpkg/pnpify": "^2.0.0-rc.20",
+    "@yarnpkg/pnpify": "^2.2.1",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
     "react": "^16.13.1",

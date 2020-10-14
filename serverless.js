@@ -30,7 +30,7 @@ const plugins = [
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'
-    ? ['serverless-webpack']
+    ? ['serverless-plugin-tree-shake']
     : ['serverless-offline']),
 ];
 
@@ -62,7 +62,7 @@ module.exports = {
     },
   },
   package: {
-    individually: false,
+    individually: true,
     excludeDevDependencies: false,
   },
   custom: {

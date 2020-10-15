@@ -80,6 +80,72 @@
           "placeholder": "",
           "isRequired": false
         }
+      },
+      {
+        "name": "thumbnail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Assets",
+          "mustBeImage": true,
+          "resolveFirst": false,
+          "resolveImage": false,
+          "allowDuplicates": false,
+          "label": "Thumbnail",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "date",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Event Date",
+          "hints": "Property only used on Event type items",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "link",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "External Link",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "linkText",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "External Link Text",
+          "hints": "Leave this empty to show \"External Link\"",
+          "placeholder": "",
+          "isRequired": false
+        }
       }
     ],
     "previewUrls": {

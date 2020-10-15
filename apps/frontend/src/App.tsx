@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
-import { Layout, BasicLayout } from '@asap-hub/react-components';
+import { Layout, BasicLayout, NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
 import history from './history';
@@ -95,7 +95,7 @@ const App: React.FC<{}> = () => {
                       <Route path="/network" component={Network} />
                       <Route path="/library" component={Library} />
 
-                      <Route>Not Found</Route>
+                      <Route component={NotFoundPage} />
                     </Switch>
                   </React.Suspense>
                 </ConfiguredLayout>

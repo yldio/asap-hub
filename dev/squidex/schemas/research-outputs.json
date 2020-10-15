@@ -38,7 +38,7 @@
         "properties": {
           "fieldType": "String",
           "allowedValues": [
-            "proposal"
+            "Proposal"
           ],
           "isUnique": false,
           "inlineEditable": false,

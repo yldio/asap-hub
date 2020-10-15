@@ -24,5 +24,5 @@ it('renders the contact banner', () => {
 
   const link = getByRole('link');
   expect(link).toBeVisible();
-  expect(link).toHaveAttribute('href', 'mailto:test%40test.com');
+  expect(link).toHaveAttribute('href', 'mailto:test@test.com');
 });

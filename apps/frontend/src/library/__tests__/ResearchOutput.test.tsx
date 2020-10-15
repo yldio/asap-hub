@@ -47,7 +47,6 @@ it('renders the proposal', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/research-outputs/42')
-    .once()
     .reply(200, {
       ...researchOutput,
       title: 'Proposal title!',
@@ -61,7 +60,6 @@ it('renders the proposal with a team', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/research-outputs/43')
-    .once()
     .reply(200, {
       ...researchOutput,
       team: {
@@ -75,18 +73,5 @@ it('renders the proposal with a team', async () => {
   expect(element).toHaveAttribute(
     'href',
     '/network/teams/0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
-  );
-});
-
-it('Renders the error page', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/research-outputs/44')
-    .once()
-    .replyWithError('Server Error');
-  const { container } = await renderComponent('44');
-  expect(container.textContent).toMatchInlineSnapshot(
-    `"FetchError: request to http://localhost:3333/development/research-outputs/44 failed, reason: Server Error"`,
   );
 });

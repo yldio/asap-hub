@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { NotFoundPage } from '@asap-hub/react-components';
 
 import Welcome from './Welcome';
 
@@ -9,7 +10,7 @@ const Users: React.FC<{}> = () => {
   return (
     <Switch>
       <Route exact path={`${path}/:code`} component={Welcome} />
-      <Route>Not Found</Route>
+      <Route component={NotFoundPage} />
     </Switch>
   );
 };

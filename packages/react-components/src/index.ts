@@ -84,6 +84,7 @@ export {
   NewsAndEventsPage,
   NewsAndEventsPageHeader,
   NewsAndEventsPageBody,
+  NotFoundPage,
   PasswordResetEmailSentPage,
   ProfileAbout,
   ProfileHeader,

@@ -18,13 +18,16 @@ describe('getSvgAspectRatio', () => {
 
 describe('createMailTo', () => {
   it('generates a mailto link', () => {
-    expect(createMailTo('test@example.com')).toMatch(/^mailto:/);
+    expect(new URL(createMailTo('test@example.com')).protocol).toBe('mailto:');
   });
 
   it('escapes the email address', () => {
-    const [, address] = createMailTo('te?st@example.com').match(
-      /^mailto:(.*)$/,
-    )!;
-    expect(decodeURIComponent(address)).toBe('te?st@example.com');
+    expect(
+      decodeURIComponent(new URL(createMailTo('te?st@example.com')).pathname),
+    ).toBe('te?st@example.com');
+  });
+
+  it('does not escape the @ for email client compatibility', () => {
+    expect(createMailTo('test@example.com')).toContain('@');
   });
 });

@@ -37,6 +37,6 @@ it('generates the mailto link', () => {
   );
   expect(getByText(/contact/i).parentElement).toHaveAttribute(
     'href',
-    'mailto:test%40test.com',
+    'mailto:test@test.com',
   );
 });

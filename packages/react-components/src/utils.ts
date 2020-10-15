@@ -23,6 +23,6 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
 };
 
 export const createMailTo = (email: string): string =>
-  `mailto:${encodeURIComponent(email)}`;
+  `mailto:${email.split('@').map(encodeURIComponent).join('@')}`;
 
 export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');

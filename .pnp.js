@@ -3080,6 +3080,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:7.0.2"
       ],
       [
+        "cross-fetch",
+        "npm:3.0.6"
+      ],
+      [
         "cross-spawn",
         "npm:7.0.3"
       ],
@@ -3545,7 +3549,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "encoding",
-        "npm:0.1.12"
+        "npm:0.1.13"
       ],
       [
         "end-of-stream",
@@ -3842,6 +3846,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "extglob",
         "npm:2.0.4"
+      ],
+      [
+        "extract-files",
+        "npm:9.0.0"
       ],
       [
         "extsprintf",
@@ -4210,6 +4218,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "graphlib",
         "npm:2.1.8"
+      ],
+      [
+        "graphql",
+        "npm:15.3.0"
+      ],
+      [
+        "graphql-request",
+        "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"
       ],
       [
         "growly",
@@ -8499,6 +8515,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.16.1"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
             ["got", "npm:11.6.0"],
+            ["graphql", "npm:15.3.0"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["jwt-decode", "npm:2.2.0"],
             ["jwt-encode", "npm:1.0.1"],
@@ -9117,8 +9134,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
             ["chance", "npm:1.1.7"],
+            ["cross-fetch", "npm:3.0.6"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
             ["got", "npm:11.6.0"],
+            ["graphql", "npm:15.3.0"],
+            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"],
             ["jwt-decode", "npm:2.2.0"],
             ["jwt-encode", "npm:1.0.1"],
             ["nock", "npm:13.0.4"]
@@ -20631,6 +20651,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["cross-fetch", [
+        ["npm:3.0.6", {
+          "packageLocation": "./.yarn/cache/cross-fetch-npm-3.0.6-6e1e683a4e-a491ad1b89.zip/node_modules/cross-fetch/",
+          "packageDependencies": [
+            ["cross-fetch", "npm:3.0.6"],
+            ["node-fetch", "npm:2.6.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["cross-spawn", [
         ["npm:5.1.0", {
           "packageLocation": "./.yarn/cache/cross-spawn-npm-5.1.0-a3e220603e-96018c42a9.zip/node_modules/cross-spawn/",
@@ -22358,11 +22388,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["encoding", [
-        ["npm:0.1.12", {
-          "packageLocation": "./.yarn/cache/encoding-npm-0.1.12-1a16b5c5e9-d6c664f8bd.zip/node_modules/encoding/",
+        ["npm:0.1.13", {
+          "packageLocation": "./.yarn/cache/encoding-npm-0.1.13-82a1837d30-282d5696a4.zip/node_modules/encoding/",
           "packageDependencies": [
-            ["encoding", "npm:0.1.12"],
-            ["iconv-lite", "npm:0.4.24"]
+            ["encoding", "npm:0.1.13"],
+            ["iconv-lite", "npm:0.6.2"]
           ],
           "linkType": "HARD",
         }]
@@ -23677,6 +23707,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["regex-not", "npm:1.0.2"],
             ["snapdragon", "npm:0.8.2"],
             ["to-regex", "npm:3.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["extract-files", [
+        ["npm:9.0.0", {
+          "packageLocation": "./.yarn/cache/extract-files-npm-9.0.0-6ee13e6aab-021b107877.zip/node_modules/extract-files/",
+          "packageDependencies": [
+            ["extract-files", "npm:9.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -25137,6 +25176,33 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["graphql", [
+        ["npm:15.3.0", {
+          "packageLocation": "./.yarn/cache/graphql-npm-15.3.0-37caa96674-f01c05eb91.zip/node_modules/graphql/",
+          "packageDependencies": [
+            ["graphql", "npm:15.3.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["graphql-request", [
+        ["virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0", {
+          "packageLocation": "./.yarn/$$virtual/graphql-request-virtual-9608680e8e/0/cache/graphql-request-npm-3.2.0-88fa06c39a-70d3c22214.zip/node_modules/graphql-request/",
+          "packageDependencies": [
+            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"],
+            ["@types/graphql", null],
+            ["cross-fetch", "npm:3.0.6"],
+            ["extract-files", "npm:9.0.0"],
+            ["form-data", "npm:3.0.0"],
+            ["graphql", "npm:15.3.0"]
+          ],
+          "packagePeers": [
+            "@types/graphql",
+            "graphql"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["growly", [
         ["npm:1.3.0", {
           "packageLocation": "./.yarn/cache/growly-npm-1.3.0-b3a02d4d2a-c87f7e8c78.zip/node_modules/growly/",
@@ -25883,6 +25949,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/iconv-lite-npm-0.4.24-c5c4ac6695-a9b9521066.zip/node_modules/iconv-lite/",
           "packageDependencies": [
             ["iconv-lite", "npm:0.4.24"],
+            ["safer-buffer", "npm:2.1.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.6.2", {
+          "packageLocation": "./.yarn/cache/iconv-lite-npm-0.6.2-13e85ec7dc-0785670120.zip/node_modules/iconv-lite/",
+          "packageDependencies": [
+            ["iconv-lite", "npm:0.6.2"],
             ["safer-buffer", "npm:2.1.2"]
           ],
           "linkType": "HARD",
@@ -30632,7 +30706,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/node-fetch-npm-1.7.3-eb8372f991-d04afb2e32.zip/node_modules/node-fetch/",
           "packageDependencies": [
             ["node-fetch", "npm:1.7.3"],
-            ["encoding", "npm:0.1.12"],
+            ["encoding", "npm:0.1.13"],
             ["is-stream", "npm:1.1.0"]
           ],
           "linkType": "HARD",
@@ -30641,6 +30715,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/node-fetch-npm-2.6.0-29c7a53447-dd9f586a9f.zip/node_modules/node-fetch/",
           "packageDependencies": [
             ["node-fetch", "npm:2.6.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.6.1", {
+          "packageLocation": "./.yarn/cache/node-fetch-npm-2.6.1-46c670dbc1-cbb171635e.zip/node_modules/node-fetch/",
+          "packageDependencies": [
+            ["node-fetch", "npm:2.6.1"]
           ],
           "linkType": "HARD",
         }],

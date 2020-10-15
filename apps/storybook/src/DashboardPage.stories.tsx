@@ -1,17 +1,17 @@
 import React from 'react';
-import {
-  NewsAndEventsPage,
-  NewsAndEventsPageBody,
-} from '@asap-hub/react-components';
+import { text } from '@storybook/addon-knobs';
+import { DashboardPage, DashboardPageBody } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
 export default {
-  title: 'Pages / News and Events',
+  title: 'Pages / Dashboard',
   decorators: [LayoutDecorator],
 };
 
-const props = () => ({
+const commonProps = () => ({
+  firstName: text('First Name', 'Phillip'),
+  pages: [],
   newsAndEvents: [
     {
       id: 'uuid-1',
@@ -29,10 +29,16 @@ const props = () => ({
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
     },
   ],
+  hrefLibrary: '/library',
+  hrefNewsAndEvents: '/news-and-events',
+  hrefProfile: text('Profile', '/network/users/1'),
+  hrefTeamsNetwork: '/network/teams',
+  hrefTeamWorkspace: text('Team Workspace', ''),
+  hrefUsersNetwork: '/network/users',
 });
 
-export const NewsAndEventsList = () => (
-  <NewsAndEventsPage>
-    <NewsAndEventsPageBody {...props()} />
-  </NewsAndEventsPage>
+export const Default = () => (
+  <DashboardPage {...commonProps()}>
+    <DashboardPageBody {...commonProps()} />
+  </DashboardPage>
 );

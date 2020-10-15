@@ -1,6 +1,9 @@
 export { default as AdminInviteUserPage } from './AdminInviteUserPage';
 export { default as BasicLayout } from './BasicLayout';
 export { default as ContentPage } from './ContentPage';
+export { default as DashboardPage } from './DashboardPage';
+export { default as DashboardPageHeader } from './DashboardPageHeader';
+export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as ForgotPasswordPage } from './ForgotPasswordPage';
 export { default as InviteUserForm } from './InviteUserForm';
 export { default as Layout } from './Layout';

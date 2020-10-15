@@ -7,7 +7,7 @@ export interface NewsAndEventsResponse {
   subtitle?: string;
   thumbnail?: string;
   text?: string;
-  created: Date;
+  created: string;
 }
 
 export type ListNewsAndEventsResponse = ListResponse<NewsAndEventsResponse>;

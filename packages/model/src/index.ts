@@ -1,4 +1,5 @@
 export * from './common';
+export * from './dashboard';
 export * from './news-and-events';
 export * from './page';
 export * from './research-output';

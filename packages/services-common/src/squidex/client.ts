@@ -1,5 +1,6 @@
 import Got from 'got';
 import decode from 'jwt-decode';
+import Boom from '@hapi/boom';
 import { cms as squidex } from '../config';
 
 interface JwtToken {
@@ -7,27 +8,44 @@ interface JwtToken {
 }
 
 let token: Promise<string> | null;
-export default function create(): typeof Got {
-  const refresh = (): void => {
-    /* eslint-disable @typescript-eslint/camelcase */
-    const url = `${squidex.baseUrl}/identity-server/connect/token`;
-    const res = Got.post(url, {
-      form: {
-        grant_type: 'client_credentials',
-        scope: 'squidex-api',
-        client_id: squidex.clientId,
-        client_secret: squidex.clientSecret,
-      },
-    }).json();
-    /* eslint-enable @typescript-eslint/camelcase */
+export const getAccessToken = async (): Promise<string> => {
+  if (token) {
+    const tk1 = await token;
+    if (tk1) {
+      const jwt = decode<JwtToken>(tk1);
+      const currentTime = Date.now() / 1000;
 
-    token = res.then((r) => {
-      /* eslint-disable-next-line camelcase */
+      if (currentTime > jwt.exp) {
+        return tk1;
+      }
+    }
+  }
+
+  /* eslint-disable @typescript-eslint/camelcase, camelcase */
+  const url = `${squidex.baseUrl}/identity-server/connect/token`;
+  token = Got.post(url, {
+    form: {
+      grant_type: 'client_credentials',
+      scope: 'squidex-api',
+      client_id: squidex.clientId,
+      client_secret: squidex.clientSecret,
+    },
+  })
+    .json()
+    .then((r: unknown) => {
       const { access_token: accessToken } = r as { access_token: string };
       return accessToken;
     });
-  };
+  /* eslint-enable @typescript-eslint/camelcase, camelcase */
 
+  if (token) {
+    return token;
+  }
+
+  throw Boom.badImplementation();
+};
+
+export default function create(): typeof Got {
   return Got.extend({
     prefixUrl: `${squidex.baseUrl}/api/content/${squidex.appName}/`,
     headers: {
@@ -36,27 +54,13 @@ export default function create(): typeof Got {
     hooks: {
       beforeRequest: [
         async (options): Promise<void> => {
-          if (!token) {
-            // create token if not present
-            await refresh();
-          }
+          const tk = await getAccessToken();
 
-          const tk = await token;
-          if (tk) {
-            const jwt = decode<JwtToken>(tk);
-            const currentTime = Date.now() / 1000;
-
-            if (currentTime < jwt.exp) {
-              // recreate token if expired
-              await refresh();
-            }
-
-            /* eslint-disable no-param-reassign */
-            options.headers = {
-              ...options.headers,
-              Authorization: `Bearer ${await token}`,
-            };
-          }
+          /* eslint-disable no-param-reassign */
+          options.headers = {
+            ...options.headers,
+            Authorization: `Bearer ${tk}`,
+          };
         },
       ],
     },

@@ -3,13 +3,13 @@ import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
 
-import { handler } from '../../../src/handlers/news-and-events/fetch';
+import { handler } from '../../../src/handlers/dashboard/fetch';
 import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import * as fixtures from './fetch.fixtures';
+import * as fixtures from '../news-and-events/fetch.fixtures';
 
-describe('GET /news-and-events', () => {
+describe('GET /dashboard', () => {
   beforeAll(() => {
     identity();
   });
@@ -21,14 +21,14 @@ describe('GET /news-and-events', () => {
   test('returns 200 when no news and events exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/news-and-events`)
-      .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ order: 'descending', path: 'created' }],
-        }),
-      })
-      .reply(200, { total: 0, items: [] });
+      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+      .reply(200, {
+        data: {
+          queryDashboardContents: [
+            { data: { news: { iv: [] }, pages: { iv: [] } } },
+          ],
+        },
+      });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -43,22 +43,20 @@ describe('GET /news-and-events', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
     expect(body).toStrictEqual({
-      items: [],
-      total: 0,
+      newsAndEvents: [],
+      pages: [],
     });
   });
 
-  test("returns empty response when resource doesn't exist", async () => {
+  test('returns 200 when no news and events exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/news-and-events`)
-      .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ order: 'descending', path: 'created' }],
-        }),
-      })
-      .reply(404);
+      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+      .reply(200, {
+        data: {
+          queryDashboardContents: [{ data: { news: null, pages: null } }],
+        },
+      });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -73,22 +71,27 @@ describe('GET /news-and-events', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
     expect(body).toStrictEqual({
-      items: [],
-      total: 0,
+      newsAndEvents: [],
+      pages: [],
     });
   });
 
-  test('returns 200 when news and events exist', async () => {
+  test('returns 200 when no news and events exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/news-and-events`)
-      .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ order: 'descending', path: 'created' }],
-        }),
-      })
-      .reply(200, fixtures.newsAndEventsResponse);
+      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+      .reply(200, {
+        data: {
+          queryDashboardContents: [
+            {
+              data: {
+                news: { iv: fixtures.newsAndEventsResponse.items },
+                pages: null,
+              },
+            },
+          ],
+        },
+      });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -101,6 +104,10 @@ describe('GET /news-and-events', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(fixtures.expectation);
+    expect(result.body).toBeDefined();
+    expect(body).toStrictEqual({
+      newsAndEvents: fixtures.expectation.items,
+      pages: [],
+    });
   });
 });

@@ -26,8 +26,8 @@ const WhereToStart: React.FC<WhereToStartProps> = ({ pages }) => {
     <section>
       <Display styleAsHeading={2}>Not sure where to start?</Display>
       <div css={gridContainerStyles}>
-        {pages.map((page) => (
-          <PageCard {...page} href="#" />
+        {pages.map((page, idx) => (
+          <PageCard key={`page-${idx}`} {...page} href="#" />
         ))}
       </div>
     </section>

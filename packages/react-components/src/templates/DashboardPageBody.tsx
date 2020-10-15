@@ -23,8 +23,12 @@ const bottomStyles = css({
 
 type DashboardPageBodyProps = ComponentProps<typeof WhereToStartSection> &
   ComponentProps<typeof LatestNewsSection> & {
+    readonly hrefLibrary: string;
+    readonly hrefNewsAndEvents: string;
     readonly hrefProfile: string;
+    readonly hrefTeamsNetwork: string;
     readonly hrefTeamWorkspace: string | undefined;
+    readonly hrefUsersNetwork: string;
   };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
@@ -32,6 +36,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   newsAndEvents,
   hrefProfile,
   hrefTeamWorkspace,
+  hrefUsersNetwork,
+  hrefLibrary,
+  hrefTeamsNetwork,
+  hrefNewsAndEvents,
 }) => (
   <div css={styles}>
     {pages.length ? <WhereToStartSection pages={pages} /> : null}
@@ -46,25 +54,25 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <li>
               <Paragraph primary>
                 Check out grantee profiles on{' '}
-                <Link href="/network/users">Network</Link>
+                <Link href={hrefUsersNetwork}>Network</Link>
               </Paragraph>
             </li>
             <li>
               <Paragraph primary>
                 Read ASAP awarded proposals in the{' '}
-                <Link href="/library">Library</Link>
+                <Link href={hrefLibrary}>Library</Link>
               </Paragraph>
             </li>
             <li>
               <Paragraph primary>
                 Find other teams based on keywords on{' '}
-                <Link href="/network/teams">Network</Link>
+                <Link href={hrefTeamsNetwork}>Network</Link>
               </Paragraph>
             </li>
             <li>
               <Paragraph primary>
                 Stay up date with{' '}
-                <Link href="/news-and-events">News and Events</Link>
+                <Link href={hrefNewsAndEvents}>News and Events</Link>
               </Paragraph>
             </li>
             {hrefTeamWorkspace ? (

@@ -21,7 +21,7 @@ const textStyles = css({
 });
 
 type DashboardPageHeaderProps = {
-  readonly firstName: string;
+  readonly firstName?: string;
 };
 
 const DashboardPageHeader: React.FC<DashboardPageHeaderProps> = ({
@@ -29,9 +29,9 @@ const DashboardPageHeader: React.FC<DashboardPageHeaderProps> = ({
 }) => {
   return (
     <header css={containerStyles}>
-      <Display
-        styleAsHeading={2}
-      >{`Welcome to the Hub, ${firstName}!`}</Display>
+      <Display styleAsHeading={2}>{`Welcome to the Hub${
+        firstName ? `, ${firstName}` : ''
+      }!`}</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
           The Hub is the beating heart of the ASAP network, where all grantees

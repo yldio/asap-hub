@@ -1,4 +1,3 @@
-import 'cross-fetch/polyfill';
 import { GraphQLClient } from 'graphql-request';
 
 import { cms as squidex } from '../config';

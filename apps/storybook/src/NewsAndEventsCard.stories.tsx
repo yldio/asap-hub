@@ -9,7 +9,7 @@ export default {
 
 const newsProps = () => ({
   id: 'uuid-1',
-  created: new Date(),
+  created: new Date().toISOString(),
   type: 'News' as const,
   title: text('Title', "Coordinating different approaches into Parkinson's"),
   subtitle: text(
@@ -21,7 +21,7 @@ const newsProps = () => ({
 
 const eventProps = () => ({
   id: 'uuid-2',
-  created: new Date(),
+  created: new Date().toISOString(),
   type: 'Event' as const,
   title: text(
     'Title',

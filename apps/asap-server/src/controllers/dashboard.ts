@@ -87,10 +87,10 @@ export default class Dashboard {
     }
 
     return {
-      newsAndEvents: res.queryDashboardContents[0].data.news.iv.map(
-        parseNewsAndEvents,
-      ),
-      pages: res.queryDashboardContents[0].data.pages.iv.map(parsePage),
+      newsAndEvents:
+        res.queryDashboardContents[0].data.news?.iv.map(parseNewsAndEvents) ??
+        [],
+      pages: res.queryDashboardContents[0].data.pages?.iv.map(parsePage) ?? [],
     };
   }
 }

@@ -420,7 +420,7 @@ __metadata:
     debug: ^4.2.0
     got: ^11.6.0
     graphql: ^15.3.0
-    graphql-request: ^3.1.0
+    graphql-request: ^3.2.0
     jwt-decode: ^2.2.0
     jwt-encode: ^1.0.1
     nock: ^13.0.4
@@ -9762,7 +9762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.0.5, cross-fetch@npm:^3.0.6":
+"cross-fetch@npm:^3.0.6":
   version: 3.0.6
   resolution: "cross-fetch@npm:3.0.6"
   dependencies:
@@ -13759,16 +13759,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "graphql-request@npm:3.1.0"
+"graphql-request@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "graphql-request@npm:3.2.0"
   dependencies:
-    cross-fetch: ^3.0.5
+    cross-fetch: ^3.0.6
     extract-files: ^9.0.0
     form-data: ^3.0.0
   peerDependencies:
     graphql: 14.x || 15.x
-  checksum: 4109ecd15811316cecae0c46a04961ea6ddaefd93b11810f693ce490a0182966a4b0cff5299a28a2835baa83ed90233587cc798643f05c96c862eb728a3cac84
+  checksum: 70d3c222148abc862df5e3651ed0d71c57a550db2349fbb7c046b92acdd2fb4d073cfdef6cab7883297ffdb2d0cf809f4d118b07b54e9d6d13467864570bfc78
   languageName: node
   linkType: hard
 

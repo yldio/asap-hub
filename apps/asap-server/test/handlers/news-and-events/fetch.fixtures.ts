@@ -63,7 +63,7 @@ export const expectation: ListNewsAndEventsResponse = {
       subtitle: 'Subtitle of news 1',
       text: '<p>text</p>',
       thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/thumbnail-uuid1`,
-      created: new Date('2020-09-08T16:35:28.000Z'),
+      created: '2020-09-08T16:35:28.000Z',
     },
     {
       id: 'news-and-events-2',
@@ -72,7 +72,7 @@ export const expectation: ListNewsAndEventsResponse = {
       subtitle: 'Subtitle of event 2',
       text: '<p>text</p>',
       thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/thumbnail-uuid2`,
-      created: new Date('2020-09-16T14:31:19.000Z'),
+      created: '2020-09-16T14:31:19.000Z',
     },
   ],
 };

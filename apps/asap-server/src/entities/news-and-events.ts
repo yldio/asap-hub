@@ -18,7 +18,7 @@ export interface CMSNewsAndEvents {
 export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
   return {
     id: item.id,
-    created: parseDate(item.created),
+    created: parseDate(item.created).toISOString(),
     subtitle: item.data.subtitle?.iv,
     text: item.data.text?.iv,
     thumbnail: item.data.thumbnail && createURL(item.data.thumbnail?.iv)[0],

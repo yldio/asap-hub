@@ -4216,7 +4216,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "graphql-request",
-        "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0"
+        "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"
       ],
       [
         "growly",
@@ -9113,7 +9113,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
             ["got", "npm:11.6.0"],
             ["graphql", "npm:15.3.0"],
-            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0"],
+            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"],
             ["jwt-decode", "npm:2.2.0"],
             ["jwt-encode", "npm:1.0.1"],
             ["nock", "npm:13.0.4"]
@@ -25161,10 +25161,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["graphql-request", [
-        ["virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0", {
-          "packageLocation": "./.yarn/$$virtual/graphql-request-virtual-a435fbdf22/0/cache/graphql-request-npm-3.1.0-e6b473e2d5-4109ecd158.zip/node_modules/graphql-request/",
+        ["virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0", {
+          "packageLocation": "./.yarn/$$virtual/graphql-request-virtual-9608680e8e/0/cache/graphql-request-npm-3.2.0-88fa06c39a-70d3c22214.zip/node_modules/graphql-request/",
           "packageDependencies": [
-            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.1.0"],
+            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"],
             ["@types/graphql", null],
             ["cross-fetch", "npm:3.0.6"],
             ["extract-files", "npm:9.0.0"],

@@ -8,7 +8,7 @@ describe('News', () => {
     id: 'uuid',
     type: 'News',
     title: 'Not a Title',
-    created: new Date(),
+    created: new Date().toISOString(),
   };
 
   it('renders the title', () => {

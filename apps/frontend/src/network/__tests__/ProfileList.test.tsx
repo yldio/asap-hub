@@ -71,6 +71,7 @@ beforeEach(() => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/users')
+    .query({ take: 10, skip: 0 })
     .reply(200, users);
 });
 

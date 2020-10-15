@@ -100,7 +100,9 @@ describe('useFetchOptions', () => {
 
 describe('createListApiUrl', () => {
   it('handles requests without parameters ', async () => {
-    expect(createListApiUrl('test').toString()).toMatch(/\/test$/);
+    expect(createListApiUrl('test').toString()).toMatch(
+      /\/test\?take=10&skip=0$/,
+    );
   });
   it('handles requests with a search query ', async () => {
     expect(

@@ -44,6 +44,7 @@ it('renders a loading indicator', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/teams')
+    .query({ take: 10, skip: 0 })
     .reply(200, createTeamListResponse(1));
   const { getByText } = await renderTeamList(false);
 
@@ -59,6 +60,7 @@ it('renders a list of teams information', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/teams')
+    .query({ take: 10, skip: 0 })
     .reply(200, {
       ...response,
       items: response.items.map((item) => ({

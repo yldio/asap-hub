@@ -39,6 +39,14 @@ export interface Query {
   }[];
 }
 
+export interface ODataQuery {
+  $top?: number;
+  $skip?: number;
+  $filter?: string;
+  $orderby?: string;
+  $search?: string;
+}
+
 export class Squidex<T extends { id: string; data: object }> {
   client: typeof Got;
   collection: string;
@@ -48,18 +56,23 @@ export class Squidex<T extends { id: string; data: object }> {
     this.client = createClient();
   }
 
-  async fetch(query?: Query): Promise<Results<T>> {
-    const q = {
-      take: 8,
-      ...query,
-    };
+  async fetch(query: ODataQuery | Query = {}): Promise<Results<T>> {
+    const searchParams = Object.keys(query).includes('$orderby')
+      ? ({
+          $top: 8,
+          ...query,
+        } as { [key: string]: string | number | undefined })
+      : {
+          q: JSON.stringify({
+            take: 8,
+            ...query,
+          }) as string,
+        };
 
     try {
       const res = await this.client
         .get(this.collection, {
-          searchParams: {
-            q: JSON.stringify(q),
-          },
+          searchParams,
         })
         .json();
       return res as Results<T>;

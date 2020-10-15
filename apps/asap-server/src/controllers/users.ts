@@ -153,29 +153,44 @@ export default class Users {
     take: number;
     skip: number;
     search?: string;
-    filter?: string | string[];
+    filter?: string[];
   }): Promise<ListUserResponse> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { search, filter, ...opts } = options;
+    const { take, skip, search, filter } = options;
 
-    const { total, items: users } = await this.users.fetch({
-      ...opts,
-      ...(search
-        ? {
-            filter: {
-              or: search
-                .split(' ')
-                .filter(Boolean)
-                .flatMap((word) => [
-                  { path: 'data.displayName.iv', op: 'contains', value: word },
-                  { path: 'data.firstName.iv', op: 'contains', value: word },
-                  { path: 'data.lastName.iv', op: 'contains', value: word },
-                ]),
-            },
-          }
-        : {}),
-      sort: [{ path: 'data.displayName.iv' }],
-    });
+    const searchQ = (search || '')
+      .split(' ')
+      .filter(Boolean) // removes whitespaces
+      .reduce(
+        (acc: string, word: string) =>
+          acc.concat(
+            `contains(data/displayName/iv, '${word}') or contains(data/firstName/iv, '${word}') or `,
+          ),
+        '',
+      )
+      .slice(0, -4); // remove last ' or '
+
+    const filterQ = (filter || [])
+      .reduce(
+        (acc: string, word: string) =>
+          acc.concat(`data/teams/iv/role eq '${word}' and `),
+        '',
+      )
+      .slice(0, -5); // remove last ' and '
+
+    const and = filter && search ? ['and (', ')'] : ['', ''];
+
+    const $filter = {
+      $filter: `${filterQ} ${and[0] + searchQ + and[1]}`.trim(),
+    };
+
+    const query = {
+      $orderby: 'data/displayName/iv',
+      ...(search || filter ? $filter : {}),
+      ...(take ? { $top: take } : {}),
+      ...(skip ? { $skip: skip } : {}),
+    };
+
+    const { total, items: users } = await this.users.fetch(query);
 
     return {
       total,

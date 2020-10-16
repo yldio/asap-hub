@@ -53,7 +53,11 @@ describe('GET /users', () => {
         $top: 8,
         $orderby: 'data/displayName/iv',
         $filter:
-          "data/teams/iv/role eq 'Lead PI' and (contains(data/displayName/iv, 'first') or contains(data/firstName/iv, 'first') or contains(data/displayName/iv, 'last') or contains(data/firstName/iv, 'last'))",
+          "data/teams/iv/role eq 'Lead PI' and" +
+          " (contains(data/displayName/iv, 'first')" +
+          " or contains(data/firstName/iv, 'first')" +
+          " or contains(data/displayName/iv, 'last')" +
+          " or contains(data/firstName/iv, 'last'))",
       })
       .reply(200, fixtures.response);
 

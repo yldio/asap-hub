@@ -5,6 +5,7 @@ import {
   TeamPage,
   TeamAbout,
   TeamOutputs,
+  NotFoundPage,
 } from '@asap-hub/react-components';
 import { join } from 'path';
 import { useTeamById } from '../api';
@@ -16,7 +17,7 @@ const Page: React.FC<{}> = () => {
     params: { id },
   } = useRouteMatch();
 
-  const { loading, data: team, error } = useTeamById(id);
+  const { loading, data: team } = useTeamById(id);
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -51,13 +52,7 @@ const Page: React.FC<{}> = () => {
     );
   }
 
-  return (
-    <Paragraph>
-      {error.name}
-      {': '}
-      {error.message}
-    </Paragraph>
-  );
+  return <NotFoundPage />;
 };
 
 export default Page;

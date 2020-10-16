@@ -1,8 +1,7 @@
-import useFetch from 'use-http';
 import { UserResponse, ListUserResponse } from '@asap-hub/model';
 
-import { API_BASE_URL } from '../config';
-import { useFetchOptions, useGetList, GetListOptions } from './util';
+import { GetListOptions, useGetList } from './get-list';
+import { useGetOne } from './get-one';
 
 export const useUsers = ({ searchQuery, filters }: GetListOptions) =>
   useGetList<ListUserResponse>('users', {
@@ -11,6 +10,4 @@ export const useUsers = ({ searchQuery, filters }: GetListOptions) =>
   });
 
 export const useUserById = (id: string) =>
-  useFetch<UserResponse>(`${API_BASE_URL}/users/${id}`, useFetchOptions(), [
-    id,
-  ]);
+  useGetOne<UserResponse>(`users/${id}`);

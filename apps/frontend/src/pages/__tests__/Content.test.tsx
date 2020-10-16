@@ -7,7 +7,6 @@ import {
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { PageResponse } from '@asap-hub/model';
-import { authTestUtils } from '@asap-hub/react-components';
 
 import ContentPage from '../Content';
 import { API_BASE_URL } from '../../config';
@@ -27,15 +26,11 @@ describe('content page', () => {
 
   const renderPage = async () => {
     const result = render(
-      <authTestUtils.Auth0Provider>
-        <authTestUtils.WhenReady>
-          <MemoryRouter initialEntries={['/privacy-policy']}>
-            <Route path="/privacy-policy">
-              <ContentPage layoutComponent={React.Fragment} />
-            </Route>
-          </MemoryRouter>
-        </authTestUtils.WhenReady>
-      </authTestUtils.Auth0Provider>,
+      <MemoryRouter initialEntries={['/privacy-policy']}>
+        <Route path="/privacy-policy">
+          <ContentPage layoutComponent={React.Fragment} />
+        </Route>
+      </MemoryRouter>,
     );
 
     await waitFor(() =>
@@ -61,5 +56,13 @@ describe('content page', () => {
         selector: 'h2',
       }),
     ).toBeVisible();
+  });
+
+  it('renders the 404 page for missing content', async () => {
+    nock.cleanAll();
+    nock(API_BASE_URL).get('/pages/privacy-policy').reply(404);
+
+    const { findByText } = await renderPage();
+    expect(await findByText(/sorry.+page/i)).toBeVisible();
   });
 });

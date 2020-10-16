@@ -14,41 +14,28 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   searchQuery,
   filters = new Set(),
 }) => {
-  const { loading, data: teamsData, error } = useTeams({
+  const result = useTeams({
     searchQuery,
     filters: [...filters],
   });
 
-  if (loading) {
+  if (result.loading) {
     return <Paragraph>Loading...</Paragraph>;
   }
 
-  if (error) {
-    return (
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    );
-  }
-  if (teamsData) {
-    const teams = teamsData.items.map((team: TeamResponse) => ({
-      ...team,
-      href: join('/network/teams', team.id),
-    }));
-    return (
-      <NetworkTeams
-        teams={teams}
-        numberOfItems={teams.length}
-        numberOfPages={1}
-        currentPageIndex={0}
-        renderPageHref={() => ''}
-      />
-    );
-  }
-
-  return <Paragraph>No results</Paragraph>;
+  const teams = result.data.items.map((team: TeamResponse) => ({
+    ...team,
+    href: join('/network/teams', team.id),
+  }));
+  return (
+    <NetworkTeams
+      teams={teams}
+      numberOfItems={teams.length}
+      numberOfPages={1}
+      currentPageIndex={0}
+      renderPageHref={() => ''}
+    />
+  );
 };
 
 export default NetworkTeamList;

@@ -1,7 +1,7 @@
-import useFetch from 'use-http';
+import { join } from 'path';
 import { PageResponse } from '@asap-hub/model';
 
-import { API_BASE_URL } from '../config';
+import { useGetOne } from './get-one';
 
-export const usePagesByPath = (path: string) =>
-  useFetch<PageResponse>(`${API_BASE_URL}/pages${path}`, [path]);
+export const usePageByPath = (path: string) =>
+  useGetOne<PageResponse>(join('pages', path), { authenticated: false });

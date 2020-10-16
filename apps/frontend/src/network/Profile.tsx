@@ -7,6 +7,7 @@ import {
   ProfileAbout,
   ProfileResearch,
   ProfileOutputs,
+  NotFoundPage,
 } from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
@@ -18,7 +19,7 @@ const Profile: React.FC<{}> = () => {
     params: { id },
   } = useRouteMatch();
 
-  const { loading, data: profile, error } = useUserById(id);
+  const { loading, data: profile } = useUserById(id);
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -57,13 +58,7 @@ const Profile: React.FC<{}> = () => {
     );
   }
 
-  return (
-    <Paragraph>
-      {error.name}
-      {': '}
-      {error.message}
-    </Paragraph>
-  );
+  return <NotFoundPage />;
 };
 
 export default Profile;

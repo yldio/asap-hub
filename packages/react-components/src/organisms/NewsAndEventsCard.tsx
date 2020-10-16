@@ -1,10 +1,10 @@
 import React from 'react';
 import css from '@emotion/css';
 import { NewsAndEventsResponse } from '@asap-hub/model';
-import { Card, Paragraph, Headline2, TagLabel, Caption } from '../atoms';
+import { Card, Paragraph, Headline2, TagLabel, Caption, Link } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
-import { newsPlaceholder, eventsPlaceholder } from '../icons';
+import { newsPlaceholder, eventsPlaceholder, externalLinkIcon } from '../icons';
 
 const imageStyle = css({
   objectFit: 'cover',
@@ -23,9 +23,25 @@ const imageContainerStyle = css({
   },
 });
 
-const containerStyle = css({
+const headerStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+});
+
+const cardStyle = css({
   display: 'flex',
   flexDirection: 'row',
+});
+
+const containerStyle = css({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+});
+
+const footerStyles = css({
+  justifySelf: 'flex-end',
 });
 
 const placeholders: Record<'News' | 'Event', JSX.Element> = {
@@ -39,12 +55,13 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   type,
   title,
   thumbnail,
+  link,
   subtitle,
   created,
 }) => {
   return (
     <Card>
-      <div css={containerStyle}>
+      <div css={cardStyle}>
         <div css={imageContainerStyle}>
           {thumbnail ? (
             <img
@@ -56,13 +73,29 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
             placeholders[type]
           )}
         </div>
-        <div>
-          <TagLabel>{type}</TagLabel>
+        <div css={containerStyle}>
+          <div css={headerStyles}>
+            <TagLabel>{type}</TagLabel>
+            {link ? (
+              <div css={{ fontSize: `${13 / perRem}em` }}>
+                <Link buttonStyle small={true} href={link.href}>
+                  {externalLinkIcon}
+                  <span css={{ fontWeight: 'normal' }}>
+                    {link.name || 'External Link'}
+                  </span>
+                </Link>
+              </div>
+            ) : null}
+          </div>
           <Headline2 styleAsHeading={4}>{title}</Headline2>
-          <Paragraph accent="lead">{subtitle}</Paragraph>
-          <Caption accent={'lead'} asParagraph>
-            Posted: {formatDate(new Date(created))} by ASAP
-          </Caption>
+          <div css={{ flex: 1 }}>
+            <Paragraph accent="lead">{subtitle}</Paragraph>
+          </div>
+          <div css={footerStyles}>
+            <Caption accent={'lead'} asParagraph>
+              Posted: {formatDate(new Date(created))} by ASAP
+            </Caption>
+          </div>
         </div>
       </div>
     </Card>

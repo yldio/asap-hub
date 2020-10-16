@@ -14,11 +14,10 @@ import {
   silver,
   color,
 } from './colors';
-import { fontStyles } from './text';
 
 const activeBackgroundColor = color(122, 210, 169, 0.18);
 const borderWidth = 1;
-const styles = css(fontStyles, {
+const styles = css({
   flexGrow: 1,
 
   display: 'inline-flex',
@@ -37,6 +36,7 @@ const styles = css(fontStyles, {
 
   cursor: 'pointer',
 
+  lineHeight: 'unset',
   fontWeight: 'bold',
 
   '+ button': {

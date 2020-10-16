@@ -57,4 +57,12 @@ describe('content page', () => {
       }),
     ).toBeVisible();
   });
+
+  it('renders the 404 page for missing content', async () => {
+    nock.cleanAll();
+    nock(API_BASE_URL).get('/pages/privacy-policy').reply(404);
+
+    const { findByText } = await renderPage();
+    expect(await findByText(/sorry.+page/i)).toBeVisible();
+  });
 });

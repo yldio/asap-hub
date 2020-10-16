@@ -59,7 +59,7 @@ it('renders the proposal with a team', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
-    .get('/research-outputs/43')
+    .get('/research-outputs/42')
     .reply(200, {
       ...researchOutput,
       team: {
@@ -67,11 +67,21 @@ it('renders the proposal with a team', async () => {
         displayName: 'Sulzer, D',
       },
     });
-  const { getByText } = await renderComponent('43');
+  const { getByText } = await renderComponent('42');
   const element = getByText('Team Sulzer, D');
   expect(element).toBeVisible();
   expect(element).toHaveAttribute(
     'href',
     '/network/teams/0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
   );
+});
+
+it('renders the 404 page for a missing proposal', async () => {
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs/42')
+    .reply(404);
+  const { getByText } = await renderComponent('42');
+  expect(getByText(/sorry.+page/i)).toBeVisible();
 });

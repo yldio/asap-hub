@@ -62,6 +62,7 @@ describe('GET /users', () => {
         httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
+          filter: 'Lead PI',
         },
         multiValueQueryStringParameters: {
           filter: ['Lead PI'],

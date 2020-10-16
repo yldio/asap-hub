@@ -30,36 +30,36 @@ const LibraryList: React.FC<LibraryListProps> = ({
     researchOutputData.total,
     pageSize,
   );
+  const researchOutputs = researchOutputData.items.map((output) => ({
+    ...output,
+    href: join('/library', output.id),
+    team: output.team && {
+      ...output.team,
+      href: join('/network/teams', output.team.id),
+    },
+  }));
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
   }
-  if (researchOutputData) {
-    const researchOutputs = researchOutputData.items.map((output) => ({
-      ...output,
-      href: join('/library', output.id),
-      team: output.team && {
-        ...output.team,
-        href: join('/network/teams', output.team.id),
-      },
-    }));
+  if (error) {
     return (
-      <LibraryPageBody
-        researchOutputs={researchOutputs}
-        numberOfItems={researchOutputData.total}
-        numberOfPages={numberOfPages}
-        currentPageIndex={currentPage}
-        renderPageHref={renderPageHref}
-      />
+      <Paragraph>
+        {error.name}
+        {': '}
+        {error.message}
+      </Paragraph>
     );
   }
 
   return (
-    <Paragraph>
-      {error.name}
-      {': '}
-      {error.message}
-    </Paragraph>
+    <LibraryPageBody
+      researchOutputs={researchOutputs}
+      numberOfItems={researchOutputData.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
+    />
   );
 };
 

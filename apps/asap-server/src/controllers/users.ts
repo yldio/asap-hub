@@ -161,21 +161,22 @@ export default class Users {
       .split(' ')
       .filter(Boolean) // removes whitespaces
       .reduce(
-        (acc: string, word: string) =>
+        (acc: string[], word: string) =>
           acc.concat(
-            `contains(data/displayName/iv, '${word}') or contains(data/firstName/iv, '${word}') or `,
+            [`contains(data/displayName/iv, '${word}')`],
+            [`contains(data/firstName/iv, '${word}')`],
           ),
-        '',
+        [],
       )
-      .slice(0, -4); // remove last ' or '
+      .join(' or ');
 
     const filterQ = (filter || [])
       .reduce(
-        (acc: string, word: string) =>
-          acc.concat(`data/teams/iv/role eq '${word}' and `),
-        '',
+        (acc: string[], word: string) =>
+          acc.concat([`data/teams/iv/role eq '${word}'`]),
+        [],
       )
-      .slice(0, -5); // remove last ' and '
+      .join(' and ');
 
     const and = filter && search ? ['and (', ')'] : ['', ''];
 

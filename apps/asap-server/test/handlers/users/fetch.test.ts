@@ -22,10 +22,8 @@ describe('GET /users', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $top: 8,
+        $orderby: 'data/displayName/iv',
       })
       .reply(200, { total: 0, items: [] });
 
@@ -52,44 +50,14 @@ describe('GET /users', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          filter: {
-            or: [
-              {
-                path: 'data.displayName.iv',
-                op: 'contains',
-                value: 'first',
-              },
-              {
-                path: 'data.firstName.iv',
-                op: 'contains',
-                value: 'first',
-              },
-              {
-                path: 'data.lastName.iv',
-                op: 'contains',
-                value: 'first',
-              },
-              {
-                path: 'data.displayName.iv',
-                op: 'contains',
-                value: 'last',
-              },
-              {
-                path: 'data.firstName.iv',
-                op: 'contains',
-                value: 'last',
-              },
-              {
-                path: 'data.lastName.iv',
-                op: 'contains',
-                value: 'last',
-              },
-            ],
-          },
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $top: 8,
+        $orderby: 'data/displayName/iv',
+        $filter:
+          "data/teams/iv/role eq 'Lead PI' and" +
+          " (contains(data/displayName/iv, 'first')" +
+          " or contains(data/firstName/iv, 'first')" +
+          " or contains(data/displayName/iv, 'last')" +
+          " or contains(data/firstName/iv, 'last'))",
       })
       .reply(200, fixtures.response);
 
@@ -99,6 +67,9 @@ describe('GET /users', () => {
         queryStringParameters: {
           search: 'first last',
           filter: 'Lead PI',
+        },
+        multiValueQueryStringParameters: {
+          filter: ['Lead PI'],
         },
         headers: {
           Authorization: `Bearer token`,
@@ -116,11 +87,9 @@ describe('GET /users', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          skip: 8,
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $top: 8,
+        $skip: 8,
+        $orderby: 'data/displayName/iv',
       })
       .reply(200, { total: 0, items: [] });
 
@@ -151,10 +120,8 @@ describe('GET /users', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/users`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $top: 8,
+        $orderby: 'data/displayName/iv',
       })
       .reply(200, fixtures.response);
 

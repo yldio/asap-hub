@@ -79,10 +79,13 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
 
   const request = {
     method: event.httpMethod.toLocaleLowerCase(),
-    headers,
+    headers: { ...headers, ...event.multiValueHeaders },
     params: event.pathParameters,
     payload: body,
-    query: event.queryStringParameters || {},
+    query: {
+      ...event.queryStringParameters,
+      ...event.multiValueQueryStringParameters,
+    },
   } as Request;
 
   const [err, res] = await Intercept(fn(request));

@@ -79,7 +79,7 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
 
   const request = {
     method: event.httpMethod.toLocaleLowerCase(),
-    headers: { ...headers, ...event.multiValueHeaders },
+    headers,
     params: event.pathParameters,
     payload: body,
     query: {

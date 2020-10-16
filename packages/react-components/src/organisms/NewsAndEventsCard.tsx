@@ -77,7 +77,7 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
           <div css={headerStyles}>
             <TagLabel>{type}</TagLabel>
             {link ? (
-              <div>
+              <div css={{ fontSize: `${13 / perRem}em` }}>
                 <Link buttonStyle small={true} href={link.href}>
                   {externalLinkIcon}
                   <span css={{ fontWeight: 'normal' }}>

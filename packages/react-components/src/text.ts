@@ -39,6 +39,9 @@ export const fontStyles = {
   fontSize: `${perRem}px`,
   lineHeight: `${lineHeight / perRem}em`,
 } as const;
+export const captionStyles = {
+  fontSize: `${13.6 / perRem}em`,
+};
 export const layoutStyles = {
   marginTop: '12px',
   marginBottom: '12px',

@@ -2,12 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 
 import * as colors from '../colors';
-import { perRem } from '../pixels';
-import { layoutStyles, AccentColorName } from '../text';
-
-const captionStyles = css({
-  fontSize: `${13.6 / perRem}em`,
-});
+import { layoutStyles, AccentColorName, captionStyles } from '../text';
 
 const figStyles = css({
   lineHeight: `${18 / 13.6}em`,

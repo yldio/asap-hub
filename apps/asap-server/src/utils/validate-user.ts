@@ -10,14 +10,14 @@ export default async function validateUser(
   request: lambda.Request,
 ): Promise<auth0.UserInfo> {
   const headers = request.headers as {
-    authorization: string;
+    authorization: string[];
   };
 
   if (!headers.authorization) {
     throw Boom.unauthorized();
   }
 
-  const [type, token] = headers.authorization.split(' ');
+  const [type, token] = headers.authorization[0].split(' ');
 
   if (type.toLowerCase() !== 'bearer') {
     throw Boom.unauthorized();

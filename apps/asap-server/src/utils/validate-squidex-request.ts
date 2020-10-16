@@ -12,9 +12,9 @@ export const signPayload = (payload: object | undefined): string => {
 
 export default function validateRequest(request: lambda.Request): boolean {
   const headers = request.headers as {
-    'x-signature': string;
+    'x-signature': string[];
   };
-  const signature = headers['x-signature'];
+  const signature = headers['x-signature'][0];
 
   if (!signature) {
     throw Boom.unauthorized();

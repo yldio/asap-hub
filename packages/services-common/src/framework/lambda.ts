@@ -8,7 +8,7 @@ import { origin } from '../config';
 
 export interface Request {
   method: 'get' | 'post';
-  headers: object;
+  headers: Record<string, string[]>;
   params?: { [key: string]: string };
   payload?: object;
   query?: object;
@@ -69,8 +69,8 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
 
   // lowercase headers
   const headers =
-    event.headers &&
-    Object.entries(event.headers).reduce((res, [key, value]) => {
+    event.multiValueHeaders &&
+    Object.entries(event.multiValueHeaders).reduce((res, [key, value]) => {
       return {
         ...res,
         [key.toLowerCase()]: value,
@@ -79,7 +79,7 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
 
   const request = {
     method: event.httpMethod.toLocaleLowerCase(),
-    headers: { ...headers, ...event.multiValueHeaders },
+    headers: headers,
     params: event.pathParameters,
     payload: body,
     query: {

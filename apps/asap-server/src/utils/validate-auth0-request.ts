@@ -4,14 +4,14 @@ import { auth0SharedSecret } from '../config';
 
 export default function validateRequest(request: lambda.Request): boolean {
   const headers = request.headers as {
-    authorization: string;
+    authorization: string[];
   };
 
   if (!headers.authorization) {
     throw Boom.unauthorized();
   }
 
-  const [type, secret] = headers.authorization.split(' ');
+  const [type, secret] = headers.authorization[0].split(' ');
 
   if (type.toLowerCase() !== 'basic') {
     throw Boom.unauthorized();

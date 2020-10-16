@@ -9,14 +9,14 @@ import { Handler } from '../../utils/types';
 
 const validateUser = async (request: lambda.Request): Promise<void> => {
   const headers = request.headers as {
-    authorization: string;
+    authorization: string[];
   };
 
   if (!headers.authorization) {
     throw Boom.unauthorized();
   }
 
-  const [type, token] = headers.authorization.split(' ');
+  const [type, token] = headers.authorization[0].split(' ');
   if (type.toLowerCase() !== 'bearer') {
     throw Boom.forbidden();
   }

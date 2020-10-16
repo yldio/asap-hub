@@ -25,7 +25,6 @@ export const createUser = (
   const data = {
     displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),
-    middleName: chance.last(),
     lastName: chance.last(),
     jobTitle: chance.suffix({ full: true }),
     orcid: chance.ssn(),
@@ -33,7 +32,6 @@ export const createUser = (
     email: chance.email(),
     biography: chance.paragraph({ sentence: 3 }),
     location: chance.city(),
-    avatarURL: chance.url(),
     ...overwrites,
   };
 
@@ -42,13 +40,11 @@ export const createUser = (
     displayName: { iv: data.displayName },
     email: { iv: data.email },
     firstName: { iv: data.firstName },
-    middleName: { iv: data.middleName },
     lastName: { iv: data.lastName },
     jobTitle: { iv: data.jobTitle },
     orcid: { iv: data.orcid },
     institution: { iv: data.institution },
     location: { iv: data.location },
-    avatarURL: { iv: data.avatarURL },
     connections: {
       iv: [
         {

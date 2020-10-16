@@ -25,7 +25,6 @@ interface User {
   email: string;
   displayName: string;
   firstName: string;
-  middleName: string;
   lastName: string;
   institution: string;
   degree: string;
@@ -50,9 +49,6 @@ const createUser = (user: User): Promise<object> => {
     },
     firstName: {
       iv: user.firstName,
-    },
-    middleName: {
-      iv: user.middleName,
     },
     lastName: {
       iv: user.lastName,
@@ -107,7 +103,6 @@ export default (): ((data: Data) => Promise<void>) => {
       applicationNumber,
       projectTitle,
       firstName,
-      middleName,
       lastName,
       role,
       institution,
@@ -165,7 +160,6 @@ export default (): ((data: Data) => Promise<void>) => {
         email,
         displayName: `${firstName} ${lastName}`,
         firstName,
-        middleName,
         lastName,
         institution,
         degree,

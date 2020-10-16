@@ -6,9 +6,9 @@ The package purpose is to automate the process of inserting bulk user and team i
 
 The csv format needs to respect the following structure:
 
-| Application ID | Project Title | First Name | Middle Name | Last Name | Role   | Institution | Degree | Job Title | N/A    | Email  | ORCID                               |
-| -------------- | ------------- | ---------- | ----------- | --------- | ------ | ----------- | ------ | --------- | ------ | ------ | ----------------------------------- |
-| string         | string        | string     | string      | string    | string | string      | string | string    | string | string | \*\*\*\*-\*\*\*\*-\*\*\*\*-\*\*\*\* |
+| Application ID | Project Title | First Name | Last Name | Role   | Institution | Degree | Job Title | N/A    | Email  | ORCID                               |
+| -------------- | ------------- | ---------- | --------- | ------ | ----------- | ------ | --------- | ------ | ------ | ----------------------------------- |
+| string         | string        | string     | string    | string | string      | string | string    | string | string | \*\*\*\*-\*\*\*\*-\*\*\*\*-\*\*\*\* |
 
 The script relies on the first column to be named `Application ID`.
 

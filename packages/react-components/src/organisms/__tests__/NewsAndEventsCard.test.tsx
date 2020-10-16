@@ -53,7 +53,7 @@ describe('News', () => {
         }}
       />,
     );
-    expect(getByRole('link').textContent).toEqual('External Link');
+    expect(getByRole('link').textContent).toContain('External Link');
   });
 
   it('renders external link when present and custom name', () => {
@@ -71,6 +71,6 @@ describe('News', () => {
         }}
       />,
     );
-    expect(getByRole('link').textContent).toEqual('Name');
+    expect(getByRole('link').textContent).toContain('Name');
   });
 });

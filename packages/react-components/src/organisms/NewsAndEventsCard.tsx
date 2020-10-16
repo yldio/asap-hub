@@ -4,7 +4,7 @@ import { NewsAndEventsResponse } from '@asap-hub/model';
 import { Card, Paragraph, Headline2, TagLabel, Caption, Link } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
-import { newsPlaceholder, eventsPlaceholder } from '../icons';
+import { newsPlaceholder, eventsPlaceholder, externalLinkIcon } from '../icons';
 
 const imageStyle = css({
   objectFit: 'cover',
@@ -25,7 +25,7 @@ const imageContainerStyle = css({
 
 const headerStyles = css({
   display: 'flex',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   justifyContent: 'space-between',
 });
 
@@ -79,6 +79,7 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
             {link ? (
               <div>
                 <Link buttonStyle small={true} href={link.href}>
+                  {externalLinkIcon}
                   <span css={{ fontWeight: 'normal' }}>
                     {link.name || 'External Link'}
                   </span>

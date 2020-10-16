@@ -5,6 +5,7 @@ export { default as crossIcon } from './cross';
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';
 export { default as eventsPlaceholder } from './events-placeholder';
+export { default as externalLinkIcon } from './external-link';
 export { default as feedbackIcon } from './feedback';
 export { default as filterIcon } from './filter-icon';
 export { default as firstPageIcon } from './first-page';

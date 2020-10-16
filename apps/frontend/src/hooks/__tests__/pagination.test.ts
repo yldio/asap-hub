@@ -4,7 +4,7 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 import { usePaginationParams, usePagination } from '../pagination';
 
 describe('usePaginationParams', () => {
-  it('Returns default page and page size', () => {
+  it('returns default page and page size', () => {
     const { result } = renderHook(() => usePaginationParams(), {
       wrapper: MemoryRouter,
     });
@@ -12,7 +12,7 @@ describe('usePaginationParams', () => {
     expect(result.current.pageSize).toBe(10);
   });
 
-  it('Returns current page', () => {
+  it('returns current page', () => {
     const { result } = renderHook(() => usePaginationParams(), {
       wrapper: MemoryRouter,
       initialProps: {
@@ -22,7 +22,7 @@ describe('usePaginationParams', () => {
     expect(result.current.currentPage).toBe(1);
   });
 
-  it('Returns provided provided page size', () => {
+  it('returns provided page size', () => {
     const { result } = renderHook(() => usePaginationParams(12), {
       wrapper: MemoryRouter,
     });
@@ -37,6 +37,14 @@ describe('usePagination', () => {
     });
     expect(result.current.numberOfPages).toBe(4);
   });
+
+  it('handles no items', () => {
+    const { result } = renderHook(() => usePagination(0, 10), {
+      wrapper: MemoryRouter,
+    });
+    expect(result.current.numberOfPages).toBe(1);
+  });
+
   it('redirects if page is out of bounds', async () => {
     const {
       result: {
@@ -70,7 +78,7 @@ describe('usePagination', () => {
       },
     });
 
-    expect(renderPageHref(0)).toMatchInlineSnapshot(`"?"`);
+    expect(renderPageHref(0)).toEqual('.');
     expect(renderPageHref(1)).toMatchInlineSnapshot(`"?currentPage=1"`);
     expect(renderPageHref(9)).toMatchInlineSnapshot(`"?currentPage=9"`);
   });

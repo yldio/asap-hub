@@ -56,8 +56,8 @@ export const useFetchOptions = ({
 export interface GetListOptions {
   searchQuery?: string;
   filters?: string[];
-  currentPage?: number;
-  pageSize?: number;
+  currentPage?: number | null;
+  pageSize?: number | null;
 }
 
 export const createListApiUrl = (
@@ -74,9 +74,12 @@ export const createListApiUrl = (
   if (searchQuery) url.searchParams.set('search', searchQuery);
   filters.forEach((filter) => url.searchParams.append('filter', filter));
 
-  url.searchParams.set('take', String(pageSize));
-  url.searchParams.set('skip', String(currentPage * pageSize));
-
+  if (pageSize !== null) {
+    url.searchParams.set('take', String(pageSize));
+    if (currentPage !== null) {
+      url.searchParams.set('skip', String(currentPage * pageSize));
+    }
+  }
   return url;
 };
 

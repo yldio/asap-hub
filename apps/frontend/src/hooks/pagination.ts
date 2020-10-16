@@ -19,7 +19,8 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
     if (page === currentPage) return '';
     if (page === 0) searchParams.delete('currentPage');
     else searchParams.set('currentPage', String(page));
-    return `?${searchParams.toString()}`;
+    const newParams = searchParams.toString();
+    return `${newParams.length ? '?' : '.'}${newParams}`;
   };
   useEffect(() => {
     if (numberOfItems && currentPage > lastAllowedPage)

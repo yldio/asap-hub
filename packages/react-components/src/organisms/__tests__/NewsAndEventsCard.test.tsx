@@ -8,7 +8,7 @@ describe('News', () => {
     id: 'uuid',
     type: 'News',
     title: 'Not a Title',
-    created: new Date(),
+    created: new Date().toISOString(),
   };
 
   it('renders the title', () => {
@@ -37,5 +37,40 @@ describe('News', () => {
 
     rerender(<NewsAndEventsCard {...newsCardProps} thumbnail="/thumbnail" />);
     expect(getByRole('img')).toBeVisible();
+  });
+
+  it('renders external link when present', () => {
+    const { rerender, getByRole, queryByRole } = render(
+      <NewsAndEventsCard {...newsCardProps} />,
+    );
+    expect(queryByRole('link')).not.toBeInTheDocument();
+
+    rerender(
+      <NewsAndEventsCard
+        {...newsCardProps}
+        link={{
+          href: 'https://hub.asap.science',
+        }}
+      />,
+    );
+    expect(getByRole('link').textContent).toContain('External Link');
+  });
+
+  it('renders external link when present and custom name', () => {
+    const { rerender, getByRole, queryByRole } = render(
+      <NewsAndEventsCard {...newsCardProps} />,
+    );
+    expect(queryByRole('link')).not.toBeInTheDocument();
+
+    rerender(
+      <NewsAndEventsCard
+        {...newsCardProps}
+        link={{
+          href: 'https://hub.asap.science',
+          name: 'Name',
+        }}
+      />,
+    );
+    expect(getByRole('link').textContent).toContain('Name');
   });
 });

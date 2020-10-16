@@ -9,9 +9,13 @@ export default {
 
 const newsProps = () => ({
   id: 'uuid-1',
-  created: new Date(),
+  created: new Date().toISOString(),
   type: 'News' as const,
   title: text('Title', "Coordinating different approaches into Parkinson's"),
+  link: {
+    name: text('External Link Text', 'Read More'),
+    href: text('External Link', 'https://picsum.photos/200'),
+  },
   subtitle: text(
     'Subtitle',
     'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
@@ -21,7 +25,7 @@ const newsProps = () => ({
 
 const eventProps = () => ({
   id: 'uuid-2',
-  created: new Date(),
+  created: new Date().toISOString(),
   type: 'Event' as const,
   title: text(
     'Title',

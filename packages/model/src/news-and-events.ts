@@ -6,8 +6,12 @@ export interface NewsAndEventsResponse {
   type: 'News' | 'Event';
   subtitle?: string;
   thumbnail?: string;
+  link?: {
+    name?: string;
+    href: string;
+  };
   text?: string;
-  created: Date;
+  created: string;
 }
 
 export type ListNewsAndEventsResponse = ListResponse<NewsAndEventsResponse>;

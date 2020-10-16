@@ -6,6 +6,7 @@ import {
   docsIcon,
   dropdownChevronIcon,
   eventsPlaceholder,
+  externalLinkIcon,
   feedbackIcon,
   filterIcon,
   firstPageIcon,
@@ -41,6 +42,8 @@ export const ChevronUp = () => chevronUpIcon;
 export const Cross = () => crossIcon;
 export const Docs = () => docsIcon;
 export const DropdownChevron = () => dropdownChevronIcon;
+export const EventsPlaceholder = () => eventsPlaceholder;
+export const ExternalLink = () => externalLinkIcon;
 export const Feedback = () => feedbackIcon;
 export const Filter = () => filterIcon;
 export const FirstPage = () => firstPageIcon;
@@ -54,6 +57,7 @@ export const Logout = () => logoutIcon;
 export const Menu = () => menuIcon;
 export const Network = () => networkIcon;
 export const News = () => newsIcon;
+export const NewsPlaceholder = () => newsPlaceholder;
 export const NextPage = () => nextPageIcon;
 export const Orcid = () => orcidIcon;
 export const PreviousPage = () => previousPageIcon;
@@ -67,5 +71,3 @@ export const User = () => userIcon;
 export const UserIcon = () => userIcon;
 export const ValidTick = () => validTickIcon;
 export const VerticalDivider = () => verticalDividerIcon;
-export const NewsPlaceholder = () => newsPlaceholder;
-export const EventsPlaceholder = () => eventsPlaceholder;

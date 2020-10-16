@@ -253,6 +253,18 @@ module.exports = {
         },
       ],
     },
+    dashboard: {
+      handler: 'apps/asap-server/build-cjs/handlers/dashboard/fetch.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/dashboard`,
+          },
+        },
+      ],
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

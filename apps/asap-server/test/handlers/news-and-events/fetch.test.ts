@@ -8,7 +8,6 @@ import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
-import { NewsAndEventsResponse } from '@asap-hub/model';
 
 describe('GET /news-and-events', () => {
   beforeAll(() => {
@@ -102,12 +101,6 @@ describe('GET /news-and-events', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect({
-      ...body,
-      items: body.items.map((i: NewsAndEventsResponse) => ({
-        ...i,
-        created: new Date(i.created),
-      })),
-    }).toStrictEqual(fixtures.expectation);
+    expect(body).toStrictEqual(fixtures.expectation);
   });
 });

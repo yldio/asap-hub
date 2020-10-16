@@ -17,36 +17,22 @@ const ProfileList: React.FC<ProfileListProps> = ({
   filters = new Set(),
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const {
-    loading,
-    data: usersData = { total: 0, items: [] },
-    error,
-  } = useUsers({
+  const result = useUsers({
     searchQuery,
     filters: [...filters],
     currentPage,
     pageSize,
   });
   const { numberOfPages, renderPageHref } = usePagination(
-    usersData.total,
+    result.data?.total ?? 0,
     pageSize,
   );
 
-  if (error) {
-    return (
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    );
-  }
-
-  if (loading) {
+  if (result.loading) {
     return <Paragraph>Loading...</Paragraph>;
   }
 
-  const users = usersData.items.map((user: UserResponse) => ({
+  const users = result.data.items.map((user: UserResponse) => ({
     ...user,
     href: join('/network/users', user.id),
     teams: user.teams.map((team) => ({
@@ -57,7 +43,7 @@ const ProfileList: React.FC<ProfileListProps> = ({
   return (
     <NetworkPeople
       people={users}
-      numberOfItems={usersData.total}
+      numberOfItems={result.data.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

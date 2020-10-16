@@ -1,13 +1,15 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { ResearchOutputPage, Paragraph } from '@asap-hub/react-components';
+import {
+  ResearchOutputPage,
+  Paragraph,
+  NotFoundPage,
+} from '@asap-hub/react-components';
 import { useResearchOutputById } from '../api';
 
 const ResearchOutput: React.FC = () => {
   const { id } = useParams();
-  const { loading, data: researchOutputData, error } = useResearchOutputById(
-    id,
-  );
+  const { loading, data: researchOutputData } = useResearchOutputById(id);
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -28,12 +30,6 @@ const ResearchOutput: React.FC = () => {
     return <ResearchOutputPage {...researchOutput} />;
   }
 
-  return (
-    <Paragraph>
-      {error.name}
-      {': '}
-      {error.message}
-    </Paragraph>
-  );
+  return <NotFoundPage />;
 };
 export default ResearchOutput;

@@ -15,11 +15,7 @@ const LibraryList: React.FC<LibraryListProps> = ({
   filters = new Set(),
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const {
-    loading,
-    data: researchOutputData = { total: 0, items: [] },
-    error,
-  } = useResearchOutputs({
+  const result = useResearchOutputs({
     searchQuery,
     filters: [...filters],
     currentPage,
@@ -27,10 +23,14 @@ const LibraryList: React.FC<LibraryListProps> = ({
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
-    researchOutputData.total,
+    result.data?.total ?? 0,
     pageSize,
   );
-  const researchOutputs = researchOutputData.items.map((output) => ({
+
+  if (result.loading) {
+    return <Paragraph>Loading...</Paragraph>;
+  }
+  const researchOutputs = result.data.items.map((output) => ({
     ...output,
     href: join('/library', output.id),
     team: output.team && {
@@ -38,24 +38,10 @@ const LibraryList: React.FC<LibraryListProps> = ({
       href: join('/network/teams', output.team.id),
     },
   }));
-
-  if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
-  }
-  if (error) {
-    return (
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    );
-  }
-
   return (
     <LibraryPageBody
       researchOutputs={researchOutputs}
-      numberOfItems={researchOutputData.total}
+      numberOfItems={result.data.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

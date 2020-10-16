@@ -16,42 +16,31 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   filters = new Set(),
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const {
-    loading,
-    data: teamsData = { total: 0, items: [] },
-    error,
-  } = useTeams({
+
+  const result = useTeams({
     searchQuery,
     filters: [...filters],
     currentPage,
     pageSize,
   });
-  const { items, total: numberOfItems } = teamsData;
+
   const { numberOfPages, renderPageHref } = usePagination(
-    numberOfItems,
+    result.data?.total ?? 0,
     pageSize,
   );
-  const teams = items.map((team: TeamResponse) => ({
+
+  if (result.loading) {
+    return <Paragraph>Loading...</Paragraph>;
+  }
+
+  const teams = result.data.items.map((team: TeamResponse) => ({
     ...team,
     href: join('/network/teams', team.id),
   }));
-
-  if (error) {
-    return (
-      <Paragraph>
-        {error.name}
-        {': '}
-        {error.message}
-      </Paragraph>
-    );
-  }
-  if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
-  }
   return (
     <NetworkTeams
       teams={teams}
-      numberOfItems={numberOfItems}
+      numberOfItems={result.data.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

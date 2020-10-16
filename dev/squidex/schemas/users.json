@@ -160,9 +160,16 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
+          "allowedValues": [
+            "BSc",
+            "MSc",
+            "PhD",
+            "MD",
+            "PhD, MD"
+          ],
           "isUnique": false,
           "inlineEditable": false,
-          "editor": "Input",
+          "editor": "Dropdown",
           "label": "Degree",
           "hints": "",
           "placeholder": "",

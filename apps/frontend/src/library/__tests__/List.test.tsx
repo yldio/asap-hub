@@ -2,52 +2,15 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
-import { ListResearchOutputResponse } from '@asap-hub/model';
+import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { authTestUtils } from '@asap-hub/react-components';
 
 import List from '../List';
 import { API_BASE_URL } from '../../config';
 
-const researchOutputs: ListResearchOutputResponse = {
-  total: 2,
-  items: [
-    {
-      id: '55724942-3408-4ad6-9a73-14b92226ffb6',
-      created: '2020-09-07T17:36:54Z',
-      publishDate: '2020-09-07T17:36:54Z',
-      title: 'Output 1',
-      text: 'description',
-      type: 'proposal',
-      url: 'test',
-      team: {
-        id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
-        displayName: 'Jakobsson, J',
-      },
-    },
-    {
-      id: '55724942-3408-4ad6-9a73-14b92226ffb77',
-      created: '2020-09-07T17:36:54Z',
-      publishDate: '2020-09-07T17:36:54Z',
-      title: 'Output 2',
-      text: 'description',
-      type: 'proposal',
-      url: 'test',
-      team: {
-        id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
-        displayName: 'Rickson, B',
-      },
-    },
-  ],
-};
-
 // fetch user by code request
 beforeEach(() => {
   nock.cleanAll();
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/research-outputs')
-    .reply(200, researchOutputs);
 });
 
 const renderLibraryList = async () => {
@@ -72,23 +35,59 @@ const renderLibraryList = async () => {
 };
 
 it('renders a list of research outputs', async () => {
+  const researchOutputs = createListResearchOutputResponse(2);
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs')
+    .reply(200, {
+      ...researchOutputs,
+      items: researchOutputs.items.map((item, index) => ({
+        ...item,
+        title: `Test Output ${index}`,
+      })),
+    });
   const { container } = await renderLibraryList();
-  expect(container.textContent).toContain('Output 1');
-  expect(container.textContent).toContain('Output 2');
+  expect(container.textContent).toContain('Test Output 0');
+  expect(container.textContent).toContain('Test Output 1');
 });
 
 it('correctly generates research output link', async () => {
+  const researchOutputs = createListResearchOutputResponse(2);
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs')
+    .reply(200, {
+      ...researchOutputs,
+      items: researchOutputs.items.map((item, index) => ({
+        ...item,
+        title: `Test Output ${index}`,
+        id: `test-output-id-${index}`,
+      })),
+    });
   const { getByText } = await renderLibraryList();
-  const link = getByText('Output 1').closest('a');
-  expect(link?.href).toEqual(
-    'http://localhost/library/55724942-3408-4ad6-9a73-14b92226ffb6',
-  );
+  const link = getByText('Test Output 0').closest('a');
+  expect(link?.href).toEqual('http://localhost/library/test-output-id-0');
 });
 
 it('correctly generates team link', async () => {
+  const researchOutputs = createListResearchOutputResponse(2);
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs')
+    .reply(200, {
+      ...researchOutputs,
+      items: researchOutputs.items.map((item, index) => ({
+        ...item,
+        team: {
+          displayName: `Test Team ${index}`,
+          id: `test-team-${index}`,
+        },
+      })),
+    });
   const { getByText } = await renderLibraryList();
-  const link = getByText('Team Jakobsson, J').closest('a');
-  expect(link?.href).toEqual(
-    'http://localhost/network/teams/e12729e0-a244-471f-a554-7b58eae83a8d',
-  );
+  const link = getByText('Team Test Team 0').closest('a');
+  expect(link?.href).toEqual('http://localhost/network/teams/test-team-0');
 });

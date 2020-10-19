@@ -4,11 +4,12 @@ import {
   DiscoverPage,
   DiscoverPageBody,
   Paragraph,
+  NotFoundPage,
 } from '@asap-hub/react-components';
 import { useDiscover } from '../api';
 
 const Discover: React.FC<{}> = () => {
-  const { loading, data: discover, error } = useDiscover();
+  const { loading, data: discover } = useDiscover();
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -29,13 +30,7 @@ const Discover: React.FC<{}> = () => {
     );
   }
 
-  return (
-    <Paragraph>
-      {error.name}
-      {': '}
-      {error.message}
-    </Paragraph>
-  );
+  return <NotFoundPage />;
 };
 
 export default Discover;

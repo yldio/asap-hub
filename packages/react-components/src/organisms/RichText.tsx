@@ -14,7 +14,7 @@ import rehypeReact, { ComponentLike } from 'rehype-react';
 
 import { Paragraph, Headline2, Headline3, Link } from '../atoms';
 import { isTextChildren } from '../text';
-import { RichTextError } from '../molecules';
+import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
 
 const headline1Spacing = css({ paddingTop: `${24 / perRem}em` });
@@ -28,23 +28,22 @@ const components = {
         <Headline2 id={id}>{children}</Headline2>
       </div>
     ) : (
-      <RichTextError>Invalid h1 heading styling</RichTextError>
+      <ErrorCard>Invalid h1 heading styling</ErrorCard>
     ),
   h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isTextChildren(children) ? (
       <Headline3 id={id}>{children}</Headline3>
     ) : (
-      <RichTextError>Invalid h2 heading styling</RichTextError>
+      <ErrorCard>Invalid h2 heading styling</ErrorCard>
     ),
   a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
-    if (typeof href === 'undefined') {
-      return <RichTextError>Link "{children}" is missing href</RichTextError>;
+    if (!isTextChildren(children)) {
+      return <ErrorCard>Invalid link styling with href {href}</ErrorCard>;
     }
-    return isTextChildren(children) ? (
-      <Link href={href}>{children}</Link>
-    ) : (
-      <RichTextError>Invalid link styling with href {href}</RichTextError>
-    );
+    if (typeof href === 'undefined') {
+      return <ErrorCard>Link "{children}" is missing href</ErrorCard>;
+    }
+    return <Link href={href}>{children}</Link>;
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 

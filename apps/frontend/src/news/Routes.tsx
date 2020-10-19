@@ -1,6 +1,7 @@
 import React from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { NewsAndEventsPage } from '@asap-hub/react-components';
+import { NewsAndEventsPage, ErrorCard } from '@asap-hub/react-components';
 
 import NewsAndEvents from './NewsAndEvents';
 
@@ -11,7 +12,9 @@ const Users: React.FC<{}> = () => {
     <Switch>
       <Route exact path={`${path}`}>
         <NewsAndEventsPage>
-          <NewsAndEvents />
+          <ErrorBoundary FallbackComponent={ErrorCard}>
+            <NewsAndEvents />
+          </ErrorBoundary>
         </NewsAndEventsPage>
       </Route>
     </Switch>

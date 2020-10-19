@@ -7,6 +7,7 @@ import {
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { useDiscover } from '../api';
+import ErrorBoundary from '../errors/ErrorBoundary';
 
 const Discover: React.FC<{}> = () => {
   const { loading, data: discover } = useDiscover();
@@ -25,7 +26,9 @@ const Discover: React.FC<{}> = () => {
     };
     return (
       <DiscoverPage>
-        <DiscoverPageBody {...data} />
+        <ErrorBoundary>
+          <DiscoverPageBody {...data} />
+        </ErrorBoundary>
       </DiscoverPage>
     );
   }

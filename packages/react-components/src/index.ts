@@ -31,6 +31,7 @@ export {
 } from './atoms';
 export {
   CtaCard,
+  ErrorCard,
   GoogleSigninButton,
   Header,
   LabeledCheckbox,

@@ -199,43 +199,24 @@ describe.each`
     expect(relList).not.toContain('noopener');
   });
 });
-
-describe.each`
-  description                         | href
-  ${'external link'}                  | ${`https://parkinsonsroadmap.org/`}
-  ${'external link'}                  | ${`//parkinsonsroadmap.org/`}
-  ${'external link'}                  | ${`//${window.location.hostname}:${Number(window.location.port || 80) - 1}/`}
-  ${'internal link without a router'} | ${`/`}
-`('for an $description to $href', ({ href }) => {
-  it('triggers a full page navigation on click', () => {
-    const { getByRole } = render(<Link href={href}>text</Link>);
-    const anchor = getByRole('link') as HTMLAnchorElement;
-    expect(fireEvent.click(anchor)).toBe(true);
-  });
+it('triggers a full page navigation on click of external link', () => {
+  const { getByRole } = render(
+    <Link href="https://parkinsonsroadmap.org/">text</Link>,
+  );
+  const anchor = getByRole('link') as HTMLAnchorElement;
+  expect(fireEvent.click(anchor)).toBe(true);
 });
-
-describe.each([
-  `${window.location.protocol}//${window.location.host}`,
-  `${window.location.protocol}//${window.location.host}/page`,
-  `//${window.location.host}`,
-  `//${window.location.host}/page`,
-  `/`,
-  `/page`,
-  `.`,
-  `./page`,
-  `..`,
-  `../page`,
-  `page`,
-  `#`,
-  `#fragment`,
-  `?query`,
-  `${window.location.protocol}//${window.location.host}/page?query#fragment`,
-])('for an internal link with a router to %s', (href: string) => {
-  it('does not trigger a full page navigation on click', () => {
-    const { getByRole } = render(<Link href={href}>text</Link>, {
+it('does not trigger a full page navigation on click of internal link', () => {
+  const { getByRole } = render(
+    <Link
+      href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
+    >
+      text
+    </Link>,
+    {
       wrapper: StaticRouter,
-    });
-    const anchor = getByRole('link') as HTMLAnchorElement;
-    expect(fireEvent.click(anchor)).toBe(false);
-  });
+    },
+  );
+  const anchor = getByRole('link') as HTMLAnchorElement;
+  expect(fireEvent.click(anchor)).toBe(false);
 });

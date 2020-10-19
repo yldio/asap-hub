@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
 import Layout from '../Layout';
+import { createMailTo } from '../../utils';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
@@ -15,7 +16,7 @@ const props: ComponentProps<typeof Layout> = {
   profileHref: '/profile',
   teams: [],
   settingsHref: '/settings',
-  feedbackHref: '/feedback',
+  feedbackHref: createMailTo('test@test.science'),
   logoutHref: '/logout',
   termsHref: '/terms',
   privacyPolicyHref: '/privacy-policy',

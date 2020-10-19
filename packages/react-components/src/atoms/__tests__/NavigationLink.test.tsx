@@ -74,4 +74,15 @@ describe('with a router', () => {
     );
     expect(fireEvent.click(getByRole('link'))).toBe(false);
   });
+
+  it('triggers a full page navigation on click of an external link', () => {
+    const { getByRole } = render(
+      <StaticRouter>
+        <NavigationLink href="http://test.com/" icon={<svg />}>
+          Text
+        </NavigationLink>
+      </StaticRouter>,
+    );
+    expect(fireEvent.click(getByRole('link'))).toBe(true);
+  });
 });

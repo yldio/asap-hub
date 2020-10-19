@@ -6,6 +6,7 @@ import { fern, paper, pine } from '../colors';
 import { useHasRouter } from '../hooks';
 import { ThemeVariant, defaultThemeVariant } from '../theme';
 import { getButtonStyles, getButtonChildren } from '../button';
+import { isInternalLink } from '../utils';
 
 const styles = css({
   outline: 'none',
@@ -71,9 +72,7 @@ const Link: React.FC<LinkProps> = ({
         { display },
       ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
-
-  const internal =
-    new URL(href ?? '', window.location.href).origin === window.location.origin;
+  const internal = href ? isInternalLink(href) : false;
   if (useHasRouter() && href && internal) {
     return (
       <ReactRouterLink css={linkStyles} to={href}>

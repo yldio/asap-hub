@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, TeamMember } from '@asap-hub/model';
+import { OrcidWork, TeamMember, UserResponse } from '@asap-hub/model';
+import { parseDate } from '../utils/squidex';
 
 interface CMSTeamMember extends Omit<TeamMember, 'id' | 'email'> {
   id: string[];
@@ -37,6 +38,19 @@ export interface CMSUser {
   };
 }
 
+export interface CMSGraphQLUser {
+  id: string;
+  lastModified: string;
+  created: string;
+  flatData: {
+    displayName: string;
+    email: string;
+    firstName?: string;
+    lastModifiedDate: string;
+    lastName?: string;
+  };
+}
+
 export type CMSOrcidWork = OrcidWork;
 export const createSchema = Joi.object({
   displayName: Joi.string().required(),
@@ -50,3 +64,14 @@ export const createSchema = Joi.object({
   institution: Joi.string(),
   connections: Joi.string(),
 });
+
+export const parseGraphQL = (item: CMSGraphQLUser): UserResponse => {
+  return {
+    id: item.id,
+    createdDate: parseDate(item.created).toISOString(),
+    questions: [],
+    teams: [],
+    skills: [],
+    ...item.flatData,
+  };
+};

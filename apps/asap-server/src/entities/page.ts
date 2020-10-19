@@ -13,10 +13,23 @@ export interface CMSPage {
   };
 }
 
+export interface CMSGraphQLPage {
+  id: string;
+  flatData: {
+    title: string;
+    path: string;
+    text: string;
+  };
+}
+
 export const parse = (obj: CMSPage): PageResponse => {
   return {
     path: obj.data.path.iv,
     text: obj.data.text?.iv || '',
     title: obj.data.title.iv,
   };
+};
+
+export const parseGraphQL = (item: CMSGraphQLPage): PageResponse => {
+  return item.flatData;
 };

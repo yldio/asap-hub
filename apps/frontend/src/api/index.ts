@@ -1,4 +1,5 @@
 export * from './dashboard';
+export * from './discover';
 export * from './news-and-events';
 export * from './pages';
 export * from './research-outputs';

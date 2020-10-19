@@ -66,7 +66,7 @@ export default class Discover {
 
     const [content] = res.queryDiscoverContents;
     return {
-      aboutUs: content.flatData.aboutUs,
+      aboutUs: content.flatData.aboutUs || '',
       members: content.flatData.members?.map(parseGraphQLUser) ?? [],
       pages: content.flatData.guidance?.map(parseGraphQLPage) ?? [],
     };

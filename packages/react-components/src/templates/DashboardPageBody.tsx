@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { WhereToStartSection, LatestNewsSection } from '../organisms';
+import { PagesSection, LatestNewsSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card, Paragraph, Link } from '../atoms';
 import { CtaCard } from '../molecules';
@@ -21,7 +21,10 @@ const bottomStyles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-type DashboardPageBodyProps = ComponentProps<typeof WhereToStartSection> &
+type DashboardPageBodyProps = Omit<
+  ComponentProps<typeof PagesSection>,
+  'title'
+> &
   ComponentProps<typeof LatestNewsSection> & {
     readonly hrefLibrary: string;
     readonly hrefNewsAndEvents: string;
@@ -42,7 +45,9 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   hrefNewsAndEvents,
 }) => (
   <div css={styles}>
-    {pages.length ? <WhereToStartSection pages={pages} /> : null}
+    {pages.length ? (
+      <PagesSection title={'Not sure where to start?'} pages={pages} />
+    ) : null}
     {newsAndEvents.length ? (
       <LatestNewsSection newsAndEvents={newsAndEvents} />
     ) : null}

@@ -7,7 +7,7 @@ import Layout from '../Layout';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
-
+  discoverASAPHref: '/discover',
   libraryHref: '/library',
   networkHref: '/network',
   newsAndEventsHref: '/news-and-events',

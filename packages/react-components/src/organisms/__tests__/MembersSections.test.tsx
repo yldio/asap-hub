@@ -3,7 +3,9 @@ import { render } from '@testing-library/react';
 import MembersSection from '../MembersSection';
 
 it('renders an header with number of members', () => {
-  const { getByRole } = render(<MembersSection members={[]} />);
+  const { getByRole } = render(
+    <MembersSection title={'Team Members (0)'} members={[]} />,
+  );
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Team Members (0)"`,
   );
@@ -12,6 +14,7 @@ it('renders an header with number of members', () => {
 it('renders the content', async () => {
   const { getByText } = render(
     <MembersSection
+      title={'Title'}
       members={[
         {
           id: '42',
@@ -24,6 +27,8 @@ it('renders the content', async () => {
       ]}
     />,
   );
+
+  expect(getByText('Title')).toBeVisible();
   expect(getByText('Phillip Mars, PhD')).toBeVisible();
   expect(getByText('Collaborator')).toBeVisible();
 });

@@ -2,6 +2,7 @@ export { default as chevronCircleLeftIcon } from './chevron-circle-left';
 export { default as chevronDownIcon } from './chevron-down';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as crossIcon } from './cross';
+export { default as discoverIcon } from './discover';
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';
 export { default as eventsPlaceholder } from './events-placeholder';

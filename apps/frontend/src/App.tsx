@@ -17,6 +17,8 @@ const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
 const loadContent = () =>
   import(/* webpackChunkName: "content" */ './pages/Content');
+const loadDiscover = () =>
+  import(/* webpackChunkName: "discover" */ './discover/Discover');
 const loadAdmin = () => import(/* webpackChunkName: "admin" */ './admin/Admin');
 const NewsAndEvents = React.lazy(loadNewsAndEvents);
 const Network = React.lazy(loadNetwork);
@@ -25,6 +27,7 @@ const Home = React.lazy(loadHome);
 const Welcome = React.lazy(loadWelcome);
 const Content = React.lazy(loadContent);
 const Admin = React.lazy(loadAdmin);
+const Discover = React.lazy(loadDiscover);
 
 const Prefetch: React.FC<{}> = () => {
   useEffect(() => {
@@ -40,6 +43,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   const user = useCurrentUser();
   return isAuthenticated && user ? (
     <Layout
+      discoverASAPHref="/discover"
       libraryHref="/library"
       networkHref="/network"
       newsAndEventsHref="/news-and-events"
@@ -92,6 +96,7 @@ const App: React.FC<{}> = () => {
                         path="/news-and-events"
                         component={NewsAndEvents}
                       />
+                      <Route path="/discover" component={Discover} />
                       <Route path="/network" component={Network} />
                       <Route path="/library" component={Library} />
 

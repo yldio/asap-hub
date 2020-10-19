@@ -68,7 +68,7 @@ export {
   SsoButtons,
   TeamCard,
   UserNavigation,
-  WhereToStartSection,
+  PagesSection,
 } from './organisms';
 export {
   AdminInviteUserPage,
@@ -77,6 +77,9 @@ export {
   DashboardPage,
   DashboardPageBody,
   DashboardPageHeader,
+  DiscoverPage,
+  DiscoverPageBody,
+  DiscoverPageHeader,
   ForgotPasswordPage,
   InviteUserForm,
   Layout,

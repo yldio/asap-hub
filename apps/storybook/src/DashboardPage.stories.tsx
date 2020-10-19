@@ -11,7 +11,16 @@ export default {
 
 const commonProps = () => ({
   firstName: text('First Name', 'Phillip'),
-  pages: [],
+  pages: [
+    {
+      path: '/',
+      title: 'Welcome Package',
+      text: [
+        "Find your way around the grant, ASAP's ways of working, the deadlines and what is expected of grantees.",
+        'Open to read the Welcome Package',
+      ].join(''),
+    },
+  ],
   newsAndEvents: [
     {
       id: 'uuid-1',

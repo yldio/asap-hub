@@ -14,7 +14,7 @@ const styles = css({
 
 type TeamAboutProps = ComponentProps<typeof TeamOverview> &
   ComponentProps<typeof ProfileSkills> &
-  ComponentProps<typeof MembersSection> &
+  Omit<ComponentProps<typeof MembersSection>, 'title'> &
   Pick<TeamResponse, 'pointOfContact'>;
 
 const TeamAbout: React.FC<TeamAboutProps> = ({
@@ -34,7 +34,12 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
       />
     ) : null}
     {skills.length ? <ProfileSkills skills={skills} /> : null}
-    {members.length ? <MembersSection members={members} /> : null}
+    {members.length ? (
+      <MembersSection
+        title={`Team Members (${members.length})`}
+        members={members}
+      />
+    ) : null}
     {pointOfContact && (
       <CtaCard href={createMailTo(pointOfContact)} buttonText="Contact PM">
         <strong>Interested in what you have seen?</strong>

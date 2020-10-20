@@ -162,12 +162,14 @@ export default class Users {
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(
-            [`contains(data/displayName/iv, '${word}')`],
-            [`contains(data/firstName/iv, '${word}')`],
+            `(${[
+              [`contains(data/displayName/iv, '${word}')`],
+              [`contains(data/firstName/iv, '${word}')`],
+            ].join(' or ')})`,
           ),
         [],
       )
-      .join(' or ');
+      .join(' and ');
 
     const filterQ = (filter || [])
       .reduce(

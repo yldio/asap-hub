@@ -39,12 +39,23 @@ describe('createMailTo', () => {
     ).toEqual('T?est &123');
   });
 
-  it('it encodes body', () => {
+  it('encodes body', () => {
     expect(
       new URL(
         createMailTo('test@example.com', { body: 'T?est &123' }),
       ).searchParams.get('body'),
     ).toEqual('T?est &123');
+  });
+
+  it('encodes body & subject', () => {
+    const mailTo = new URL(
+      createMailTo('test@example.com', {
+        body: 'b?ody &123',
+        subject: 's?ubject &123',
+      }),
+    );
+    expect(mailTo.searchParams.get('body')).toEqual('b?ody &123');
+    expect(mailTo.searchParams.get('subject')).toEqual('s?ubject &123');
   });
 });
 
@@ -56,7 +67,7 @@ describe('isInternalLink', () => {
     ${'external link'}   | ${`//${window.location.hostname}:${Number(window.location.port || 80) - 1}/`}
     ${'external mailto'} | ${`mailto:test@${window.location.hostname}`}
   `('for an $href to be an $description', ({ href }) => {
-    it('triggers a full page navigation on click', () => {
+    it('returns false', () => {
       expect(isInternalLink(href)).toBe(false);
     });
   });
@@ -78,7 +89,7 @@ describe('isInternalLink', () => {
     `?query`,
     `${window.location.protocol}//${window.location.host}/page?query#fragment`,
   ])('for an internal link with a router to %s', (href: string) => {
-    it('does not trigger a full page navigation on click', () => {
+    it('returns true', () => {
       expect(isInternalLink(href)).toBe(true);
     });
   });

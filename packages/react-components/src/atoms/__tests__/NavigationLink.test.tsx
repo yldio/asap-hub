@@ -78,7 +78,7 @@ describe('with a router', () => {
   it('triggers a full page navigation on click of an external link', () => {
     const { getByRole } = render(
       <StaticRouter>
-        <NavigationLink href="http://test.com/" icon={<svg />}>
+        <NavigationLink href="http://example.com/" icon={<svg />}>
           Text
         </NavigationLink>
       </StaticRouter>,

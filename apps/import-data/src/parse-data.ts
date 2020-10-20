@@ -6,7 +6,6 @@ export interface Data {
   institution: string;
   jobTitle: string;
   lastName: string;
-  middleName: string;
   orcid: string;
   projectTitle: string;
   role: string;
@@ -17,7 +16,6 @@ export default (data: string[]): Data => {
     applicationNumber,
     projectTitle,
     firstName,
-    middleName,
     lastName,
     role,
     institution,
@@ -33,7 +31,6 @@ export default (data: string[]): Data => {
     applicationNumber,
     projectTitle,
     firstName,
-    middleName,
     lastName,
     role,
     institution,

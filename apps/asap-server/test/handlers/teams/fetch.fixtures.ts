@@ -73,9 +73,6 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
         firstName: {
           iv: 'Cristiano',
         },
-        middleName: {
-          iv: 'May',
-        },
         lastName: {
           iv: 'Ronaldo',
         },
@@ -91,8 +88,8 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
         location: {
           iv: 'Zofilte',
         },
-        avatarURL: {
-          iv: 'http://fildot.be/dehujguf',
+        avatar: {
+          iv: ['uuid-user-id-1'],
         },
         skills: {
           iv: [],
@@ -137,9 +134,6 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         firstName: {
           iv: 'John',
         },
-        middleName: {
-          iv: 'May',
-        },
         lastName: {
           iv: 'Travista',
         },
@@ -155,8 +149,8 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         location: {
           iv: 'Zofilte',
         },
-        avatarURL: {
-          iv: 'http://fildot.be/dehujguf',
+        avatar: {
+          iv: ['uuid-user-id-2'],
         },
         skills: {
           iv: [],
@@ -195,9 +189,6 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         firstName: {
           iv: 'Bill',
         },
-        middleName: {
-          iv: 'May',
-        },
         lastName: {
           iv: 'Travista',
         },
@@ -213,8 +204,8 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         location: {
           iv: 'Zofilte',
         },
-        avatarURL: {
-          iv: 'http://fildot.be/dehujguf',
+        avatar: {
+          iv: ['uuid-user-id-3'],
         },
         skills: {
           iv: [],
@@ -258,6 +249,8 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-1',
           firstName: 'Cristiano',
           lastName: 'Ronaldo',
+          avatarURL:
+            'https://data.hub.asap.science/api/assets/asap-test/uuid-user-id-1',
           email: 'cristiano@ronaldo.com',
           displayName: 'Cristiano Ronaldo',
           role: 'Lead PI',
@@ -279,6 +272,8 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-2',
           firstName: 'John',
           lastName: 'Travista',
+          avatarURL:
+            'https://data.hub.asap.science/api/assets/asap-test/uuid-user-id-2',
           email: 'john@ed.ma',
           displayName: 'John Travista',
           role: 'Lead PI',
@@ -287,6 +282,8 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-3',
           firstName: 'Bill',
           lastName: 'Travista',
+          avatarURL:
+            'https://data.hub.asap.science/api/assets/asap-test/uuid-user-id-3',
           email: 'bill@ed.ma',
           displayName: 'Bill Travista',
           role: 'Key Personnel',

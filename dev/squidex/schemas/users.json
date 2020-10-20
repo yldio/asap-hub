@@ -65,23 +65,6 @@
         }
       },
       {
-        "name": "middleName",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Middle Name",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
         "name": "lastName",
         "isHidden": false,
         "isLocked": false,
@@ -119,23 +102,6 @@
         }
       },
       {
-        "name": "avatarURL",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Avatar URL",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
         "name": "jobTitle",
         "isHidden": false,
         "isLocked": false,
@@ -161,11 +127,12 @@
         "properties": {
           "fieldType": "String",
           "allowedValues": [
+            "BA",
             "BSc",
-            "MSc",
-            "PhD",
             "MD",
-            "PhD, MD"
+            "MSc",
+            "PhD, MD",
+            "PhD"
           ],
           "isUnique": false,
           "inlineEditable": false,

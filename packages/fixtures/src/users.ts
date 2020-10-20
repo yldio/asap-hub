@@ -14,7 +14,6 @@ const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   displayName: 'Person A',
   email: 'agnete.kirkeby@sund.ku.dk',
   firstName: 'Agnete',
-  middleName: '',
   lastName: 'Kirkeby',
   jobTitle: 'Assistant Professor',
   institution: 'University of Copenhagen',

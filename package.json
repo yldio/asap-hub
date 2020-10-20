@@ -84,6 +84,12 @@
       "last 1 safari version"
     ]
   },
+  "bundlesize": [
+    {
+      "path": "apps/frontend/build/**/*.js",
+      "maxSize": "128 kB"
+    }
+  ],
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@babel/cli": "^7.8.4",

@@ -4,7 +4,6 @@ export interface Invitee {
   displayName: string;
   email: string;
   firstName?: string;
-  middleName?: string;
   lastName?: string;
   biography?: string;
   jobTitle?: string;
@@ -84,6 +83,7 @@ export interface UserResponse extends Invitee {
   lastModifiedDate: string;
   createdDate: string;
   teams: ReadonlyArray<UserTeam>;
+  degree?: string;
   skills: string[];
   questions: string[];
   biosketch?: string;

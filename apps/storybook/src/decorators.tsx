@@ -5,6 +5,7 @@ import {
   ThemeVariant,
   themes,
   BasicLayout,
+  createMailTo,
 } from '@asap-hub/react-components';
 import { select } from '@storybook/addon-knobs';
 
@@ -35,7 +36,7 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
           { name: '2', href: '/team-2' },
         ]}
         settingsHref="/settings"
-        feedbackHref="/feedback"
+        feedbackHref={createMailTo('test@test.science')}
         logoutHref="/layout"
         termsHref="/terms"
         privacyPolicyHref="/privacy-policy"

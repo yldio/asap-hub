@@ -53,7 +53,8 @@ describe('GET /users', () => {
         $top: 8,
         $orderby: 'data/displayName/iv',
         $filter:
-          "data/teams/iv/role eq 'Lead PI' and" +
+          "data/teams/iv/role eq 'Lead PI' and " +
+          "data/teams/iv/role eq 'anotherFilter' and" +
           " (contains(data/displayName/iv, 'first')" +
           " or contains(data/firstName/iv, 'first')" +
           " or contains(data/displayName/iv, 'last')" +
@@ -66,10 +67,7 @@ describe('GET /users', () => {
         httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
-          filter: 'Lead PI',
-        },
-        multiValueQueryStringParameters: {
-          filter: ['Lead PI'],
+          filter: 'Lead PI,anotherFilter',
         },
         headers: {
           Authorization: `Bearer token`,
@@ -100,8 +98,8 @@ describe('GET /users', () => {
           Authorization: `Bearer token`,
         },
         queryStringParameters: {
-          take: 8,
-          skip: 8,
+          take: '8',
+          skip: '8',
         },
       }),
     )) as APIGatewayProxyResult;

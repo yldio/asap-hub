@@ -5,6 +5,7 @@ import { WhereToStartSection, LatestNewsSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card, Paragraph, Link } from '../atoms';
 import { CtaCard } from '../molecules';
+import { createMailTo } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -94,13 +95,23 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       </div>
     </section>
     <section css={bottomStyles}>
-      <CtaCard href={'#'} buttonText="Contact Us">
+      <CtaCard
+        href={createMailTo('grants@parkinsonsroadmap.org', {
+          subject: 'Hub Grants',
+        })}
+        buttonText="Contact Us"
+      >
         <strong>Need help with grant-related matter?</strong>
         <br /> ASAP and the Michael J Fox Foundation are here to help
       </CtaCard>
       <Paragraph>
         If you're facing a technical issue with the Hub, please{' '}
-        <Link href={'#'}>get in touch</Link>. Our support team is happy to help!
+        <Link
+          href={createMailTo('info@asap.science', { subject: 'Hub Support' })}
+        >
+          get in touch
+        </Link>
+        . Our support team is happy to help!
       </Paragraph>
     </section>
   </div>

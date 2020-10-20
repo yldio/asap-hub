@@ -14,9 +14,9 @@ export interface CMSUser {
     displayName: { iv: string };
     email: { iv: string };
     firstName?: { iv: string };
-    middleName?: { iv: string };
     lastName?: { iv: string };
     jobTitle?: { iv: string };
+    degree?: { iv: 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD' };
     institution?: { iv: string };
     connections: { iv: { code: string }[] };
     biography?: { iv: string };
@@ -32,7 +32,6 @@ export interface CMSUser {
         question: string;
       }[];
     };
-    avatarURL?: { iv: string };
     avatar?: { iv: string[] };
   };
 }
@@ -42,7 +41,6 @@ export const createSchema = Joi.object({
   displayName: Joi.string().required(),
   email: Joi.string().required(),
   firstName: Joi.string(),
-  middleName: Joi.string(),
   lastName: Joi.string(),
   title: Joi.string(),
   orcid: Joi.string(),

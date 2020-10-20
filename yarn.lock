@@ -6913,7 +6913,7 @@ __metadata:
     rimraf: ^3.0.2
     serverless: ^1.81.1
     serverless-iam-roles-per-function: ^2.0.2
-    serverless-offline: ^6.8.0
+    serverless-offline: "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch"
     serverless-plugin-tree-shake: ^1.1.2
     serverless-s3-sync: ^1.15.0
     typescript: ~3.9.7
@@ -23497,7 +23497,7 @@ resolve@1.15.0:
   languageName: node
   linkType: hard
 
-"serverless-offline@npm:^6.8.0":
+serverless-offline@^6.8.0:
   version: 6.8.0
   resolution: "serverless-offline@npm:6.8.0"
   dependencies:
@@ -23533,6 +23533,45 @@ resolve@1.15.0:
   peerDependencies:
     serverless: ">=1.60.0"
   checksum: f8bf65049a03f2fdf0d001c6b20ae96e22d6b85cca43eb2b5dbed0174a2c8706c43adb3c7eeedd1b7ebecbdf3b7e687e4decf5298b3d43dac373831b9c366ba5
+  languageName: node
+  linkType: hard
+
+"serverless-offline@patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch::locator=asap-hub%40workspace%3A.":
+  version: 6.8.0
+  resolution: "serverless-offline@patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A."
+  dependencies:
+    "@hapi/boom": ^7.4.11
+    "@hapi/h2o2": ^8.3.2
+    "@hapi/hapi": ^18.4.1
+    aws-sdk: ^2.624.0
+    boxen: ^4.2.0
+    chalk: ^3.0.0
+    cuid: ^2.1.8
+    execa: ^4.0.0
+    extend: ^3.0.2
+    fs-extra: ^8.1.0
+    java-invoke-local: 0.0.6
+    js-string-escape: ^1.0.1
+    jsonpath-plus: ^3.0.0
+    jsonschema: ^1.2.6
+    jsonwebtoken: ^8.5.1
+    jszip: ^3.2.2
+    luxon: ^1.22.0
+    node-fetch: ^2.6.0
+    node-schedule: ^1.3.2
+    object.fromentries: ^2.0.2
+    p-memoize: ^4.0.0
+    p-queue: ^6.3.0
+    p-retry: ^4.2.0
+    please-upgrade-node: ^3.2.0
+    portfinder: ^1.0.25
+    semver: ^7.1.3
+    update-notifier: ^4.1.0
+    velocityjs: ^2.0.0
+    ws: ^7.2.1
+  peerDependencies:
+    serverless: ">=1.60.0"
+  checksum: 62811a9b3c02120bbeb3a2e8f485fd27ec235d16edab7d9a798d0839b4968d497e5b2ac02586ba47680e8875e4f897ae79011cd2ba0ca7829e2fe5223e20fe1b
   languageName: node
   linkType: hard
 

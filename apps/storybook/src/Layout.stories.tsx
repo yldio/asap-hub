@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout } from '@asap-hub/react-components';
+import { Layout, createMailTo } from '@asap-hub/react-components';
 
 import { NoPaddingDecorator } from './decorators';
 
@@ -20,7 +20,7 @@ export const Normal = () => (
       { name: '2', href: '/team-2' },
     ]}
     settingsHref="/settings"
-    feedbackHref="/feedback"
+    feedbackHref={createMailTo('test@test.science')}
     logoutHref="/layout"
     termsHref="/terms"
     privacyPolicyHref="/privacy-policy"

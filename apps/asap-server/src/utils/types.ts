@@ -1,6 +1,6 @@
-import type { APIGatewayProxyHandler } from 'aws-lambda';
+import type { APIGatewayProxyHandlerV2 } from 'aws-lambda';
 
-export type Handler = APIGatewayProxyHandler &
+export type Handler = APIGatewayProxyHandlerV2 &
   ((
-    event: Parameters<APIGatewayProxyHandler>[0],
-  ) => ReturnType<APIGatewayProxyHandler>);
+    event: Parameters<APIGatewayProxyHandlerV2>[0],
+  ) => ReturnType<APIGatewayProxyHandlerV2>);

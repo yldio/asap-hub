@@ -52,6 +52,18 @@ it('Displays error when styling applied to h2', () => {
   expect(container.textContent).toContain('Invalid h2 heading styling');
 });
 
+it('passes through image props', () => {
+  const { getByRole } = render(
+    <RichText text={'<img data-test="test123"></img>'} />,
+  );
+  expect(getByRole('img')).toHaveAttribute('data-test', 'test123');
+});
+
+it('sets images max-width to 100%', () => {
+  const { getByRole } = render(<RichText text={'<img></img>'} />);
+  expect(getByRole('img')).toHaveStyle({ maxWidth: '100%' });
+});
+
 describe('with toc', () => {
   it('renders a table of contents based on the headings', () => {
     const { getByText } = render(

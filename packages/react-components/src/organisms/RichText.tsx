@@ -2,6 +2,7 @@ import React, {
   createElement,
   HTMLAttributes,
   AnchorHTMLAttributes,
+  ImgHTMLAttributes,
 } from 'react';
 import css from '@emotion/css';
 
@@ -44,6 +45,9 @@ const components = {
       return <ErrorCard>Link "{children}" is missing href</ErrorCard>;
     }
     return <Link href={href}>{children}</Link>;
+  },
+  img: (props: ImgHTMLAttributes<HTMLImageElement>) => {
+    return <img {...props} css={{ height: 'auto', maxWidth: '100%' }} />;
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 

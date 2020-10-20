@@ -45,6 +45,40 @@ describe('GET /users', () => {
     });
   });
 
+  test('returns 200 when searching users by name - should allow filter as string', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    nock(cms.baseUrl)
+      .get(`/api/content/${cms.appName}/users`)
+      .query({
+        $top: 8,
+        $orderby: 'data/displayName/iv',
+        $filter:
+          "data/teams/iv/role eq 'Lead PI' and" +
+          " (contains(data/displayName/iv, 'first')" +
+          " or contains(data/firstName/iv, 'first')" +
+          " or contains(data/displayName/iv, 'last')" +
+          " or contains(data/firstName/iv, 'last'))",
+      })
+      .reply(200, fixtures.response);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        queryStringParameters: {
+          search: 'first last',
+          filter: 'Lead PI',
+        },
+        headers: {
+          Authorization: `Bearer token`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual(fixtures.expectation);
+  });
+
   test('returns 200 when searching users by name', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)

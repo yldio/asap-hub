@@ -9,7 +9,7 @@ const querySchema = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),
-  filter: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())),
+  filter: Joi.array().items(Joi.string()).single(),
 }).required();
 
 // /teams?page=1&pageSize=8

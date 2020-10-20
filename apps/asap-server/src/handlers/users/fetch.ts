@@ -8,7 +8,7 @@ const querySchema = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),
-  filter: Joi.array().items(Joi.string()),
+  filter: Joi.array().items(Joi.string()).single(),
 }).required();
 
 // /users?page=1&pageSize=8

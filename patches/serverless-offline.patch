@@ -1,0 +1,78 @@
+diff --git a/dist/events/http/lambda-events/LambdaProxyIntegrationEventV2.js b/dist/events/http/lambda-events/LambdaProxyIntegrationEventV2.js
+index 03085122497c146fbc411616010fccb994c9ea71..0a77c025d30bb946c570147e67078af3795a1c40 100644
+--- a/dist/events/http/lambda-events/LambdaProxyIntegrationEventV2.js
++++ b/dist/events/http/lambda-events/LambdaProxyIntegrationEventV2.js
+@@ -145,7 +145,7 @@ class LambdaProxyIntegrationEventV2 {
+       rawQueryString: new URL(url, _index2.BASE_URL_PLACEHOLDER).searchParams.toString(),
+       cookies,
+       headers,
+-      queryStringParameters: (0, _index.parseQueryStringParameters)(url),
++      queryStringParameters: (0, _index.parseQueryStringParametersV2)(url),
+       requestContext: {
+         accountId: 'offlineContext_accountId',
+         apiId: 'offlineContext_apiId',
+diff --git a/dist/utils/index.js b/dist/utils/index.js
+index a7091e486065c69e19a8110a744d15939bee9a45..a9e7417d0a476c8c09155d6c331137c4c3fc8755 100644
+--- a/dist/utils/index.js
++++ b/dist/utils/index.js
+@@ -61,6 +61,12 @@ Object.defineProperty(exports, "parseQueryStringParameters", {
+     return _parseQueryStringParameters.default;
+   }
+ });
++Object.defineProperty(exports, "parseQueryStringParametersV2", {
++  enumerable: true,
++  get: function () {
++    return _parseQueryStringParametersV2.default;
++  }
++});
+ Object.defineProperty(exports, "satisfiesVersionRange", {
+   enumerable: true,
+   get: function () {
+@@ -104,6 +110,8 @@ var _parseMultiValueQueryStringParameters = _interopRequireDefault(require("./pa
+ 
+ var _parseQueryStringParameters = _interopRequireDefault(require("./parseQueryStringParameters.js"));
+ 
++var _parseQueryStringParametersV2 = _interopRequireDefault(require("./parseQueryStringParametersV2.js"));
++
+ var _satisfiesVersionRange = _interopRequireDefault(require("./satisfiesVersionRange.js"));
+ 
+ var _splitHandlerPathAndName = _interopRequireDefault(require("./splitHandlerPathAndName.js"));
+diff --git a/dist/utils/parseQueryStringParametersV2.js b/dist/utils/parseQueryStringParametersV2.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..44a55afccedb704ba937b5ba15b4c9b4731ff61f
+--- /dev/null
++++ b/dist/utils/parseQueryStringParametersV2.js
+@@ -0,0 +1,33 @@
++"use strict";
++
++Object.defineProperty(exports, "__esModule", {
++  value: true
++});
++exports.default = parseQueryStringParametersV2;
++
++var _index = require("../config/index.js");
++
++const {
++  fromEntries
++} = Object; // https://aws.amazon.com/blogs/compute/support-for-multi-value-parameters-in-amazon-api-gateway/
++
++function parseQueryStringParametersV2(url) {
++  // dummy placeholder url for the WHATWG URL constructor
++  // https://github.com/nodejs/node/issues/12682
++  const {
++    searchParams
++  } = new URL(url, _index.BASE_URL_PLACEHOLDER);
++
++  if (Array.from(searchParams).length === 0) {
++    return null;
++  }
++
++  const map = new Map(); // eslint-disable-next-line no-restricted-syntax
++
++  // eslint-disable-next-line no-restricted-syntax
++  for (const [key, value] of searchParams) {
++    map.set(key, [map.get(key), value].filter(Boolean).join(','))
++  }
++
++  return fromEntries(map)
++}

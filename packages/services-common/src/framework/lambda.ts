@@ -3,7 +3,11 @@ import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Debug from 'debug';
 import Joi from '@hapi/joi';
-import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
+import {
+  APIGatewayProxyResultV2,
+  APIGatewayProxyEventV2,
+  APIGatewayProxyStructuredResultV2,
+} from 'aws-lambda';
 import { origin } from '../config';
 
 export interface Request {
@@ -24,7 +28,9 @@ export interface Response {
     | undefined;
 }
 
-export const response = (res: APIGatewayProxyResult): APIGatewayProxyResult => {
+export const response = (
+  res: APIGatewayProxyStructuredResultV2,
+): APIGatewayProxyResultV2 => {
   return {
     ...res,
     headers: {
@@ -53,8 +59,8 @@ export const validate = <T>(
 // ensure any thrown exception is handled and returned correctly
 const debug = Debug('http');
 export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
-  event: APIGatewayProxyEvent,
-): Promise<APIGatewayProxyResult> => {
+  event: APIGatewayProxyEventV2,
+): Promise<APIGatewayProxyResultV2> => {
   // we assume the body is json
   let body;
   try {
@@ -77,15 +83,23 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
       };
     }, {});
 
+  const query: { [key: string]: string[] | string | undefined } = {};
+
+  if (event.queryStringParameters) {
+    Object.keys(event.queryStringParameters).forEach((key) => {
+      const param = event.queryStringParameters![key];
+      query[key] = param?.includes(',')
+        ? event.queryStringParameters![key].split(',')
+        : param;
+    });
+  }
+
   const request = {
-    method: event.httpMethod.toLocaleLowerCase(),
+    method: event.requestContext.http.method.toLocaleLowerCase(),
     headers,
     params: event.pathParameters,
     payload: body,
-    query: {
-      ...event.queryStringParameters,
-      ...event.multiValueQueryStringParameters,
-    },
+    query,
   } as Request;
 
   const [err, res] = await Intercept(fn(request));

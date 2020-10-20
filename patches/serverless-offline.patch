@@ -11,6 +11,9 @@ index 03085122497c146fbc411616010fccb994c9ea71..0a77c025d30bb946c570147e67078af3
        requestContext: {
          accountId: 'offlineContext_accountId',
          apiId: 'offlineContext_apiId',
+diff --git a/dist/events/http/templates/offline-default.res.vm b/dist/events/http/templates/offline-default.res.vm
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/dist/utils/index.js b/dist/utils/index.js
 index a7091e486065c69e19a8110a744d15939bee9a45..a9e7417d0a476c8c09155d6c331137c4c3fc8755 100644
 --- a/dist/utils/index.js

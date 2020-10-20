@@ -7169,7 +7169,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "serverless-offline",
-        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=ad56bd&locator=asap-hub%40workspace%3A."
+        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A."
       ],
       [
         "serverless-plugin-tree-shake",
@@ -8444,7 +8444,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],
             ["serverless", "npm:1.81.1"],
             ["serverless-iam-roles-per-function", "npm:2.0.2"],
-            ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=ad56bd&locator=asap-hub%40workspace%3A."],
+            ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A."],
             ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["serverless-s3-sync", "npm:1.15.0"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5bf698"],
@@ -17430,7 +17430,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rimraf", "npm:3.0.2"],
             ["serverless", "npm:1.81.1"],
             ["serverless-iam-roles-per-function", "npm:2.0.2"],
-            ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=ad56bd&locator=asap-hub%40workspace%3A."],
+            ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A."],
             ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["serverless-s3-sync", "npm:1.15.0"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5bf698"],
@@ -36130,10 +36130,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["serverless-offline", [
-        ["virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=ad56bd&locator=asap-hub%40workspace%3A.", {
-          "packageLocation": "./.yarn/unplugged/serverless-offline-virtual-8094b0e05d/node_modules/serverless-offline/",
+        ["virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A.", {
+          "packageLocation": "./.yarn/unplugged/serverless-offline-virtual-62f86591b0/node_modules/serverless-offline/",
           "packageDependencies": [
-            ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=ad56bd&locator=asap-hub%40workspace%3A."],
+            ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A."],
             ["@hapi/boom", "npm:7.4.11"],
             ["@hapi/h2o2", "npm:8.3.2"],
             ["@hapi/hapi", "npm:18.4.1"],

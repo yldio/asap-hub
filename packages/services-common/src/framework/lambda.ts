@@ -83,16 +83,13 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
       };
     }, {});
 
-  const query: { [key: string]: string[] | string | undefined } = {};
-
-  if (event.queryStringParameters) {
-    Object.keys(event.queryStringParameters).forEach((key) => {
-      const param = event.queryStringParameters![key];
-      query[key] = param?.includes(',')
-        ? event.queryStringParameters![key].split(',')
-        : param;
-    });
-  }
+  const query: {
+    [key: string]: string[] | string | undefined;
+  } = Object.fromEntries(
+    Object.entries(event.queryStringParameters || {}).map(([key, value]) => {
+      return [key, value?.includes(',') ? value.split(',') : value];
+    }),
+  );
 
   const request = {
     method: event.requestContext.http.method.toLocaleLowerCase(),

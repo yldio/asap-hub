@@ -37,14 +37,12 @@ describe('createListApiUrl', () => {
   });
 
   it('handles requests with a search query ', async () => {
-    expect(
-      createListApiUrl('test', { searchQuery: 'test123' }).toString(),
-    ).toContain('search=test123');
+    const url = createListApiUrl('test', { searchQuery: 'test123' });
+    expect(url.searchParams.get('search')).toEqual('test123');
   });
   it('handles requests with filters ', async () => {
-    expect(
-      createListApiUrl('test', { filters: ['123', '456'] }).toString(),
-    ).toContain('filter=123&filter=456');
+    const url = createListApiUrl('test', { filters: ['123', '456'] });
+    expect(url.searchParams.getAll('filter')).toEqual(['123', '456']);
   });
 });
 

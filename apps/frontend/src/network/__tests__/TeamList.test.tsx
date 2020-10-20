@@ -44,12 +44,8 @@ it('renders a loading indicator', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/teams')
-<<<<<<< HEAD
     .query({ take: 10, skip: 0 })
-    .reply(200, createTeamListResponse(1));
-=======
     .reply(200, createListTeamResponse(1));
->>>>>>> origin/master
   const { getByText } = await renderTeamList(false);
 
   const loadingIndicator = getByText(/loading/i);

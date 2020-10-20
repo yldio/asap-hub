@@ -1,20 +1,16 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { APIGatewayEvent } from 'aws-lambda';
 
-export const apiGatewayEvent = (event: Object): APIGatewayProxyEventV2 => {
+export const apiGatewayEvent = (event: Object): APIGatewayEvent => {
   return {
     headers: {
       'Content-Type': 'application/json',
       Accept: '*/*',
-      ...event.headers,
     },
-    requestContext: {
-      http: {
-        method: 'GET',
-        path: '/api',
-      },
-    },
+    httpMethod: 'GET',
+    path: '/api',
     pathParameters: null,
-    rawQueryString: '',
+    queryStringParameters: null,
+    resource: '/api',
     ...event,
     body:
       typeof event.body === 'object'

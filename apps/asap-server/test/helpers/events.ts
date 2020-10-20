@@ -1,21 +1,17 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { URLSearchParams } from 'url';
+import { APIGatewayEvent } from 'aws-lambda';
 
-export const apiGatewayEvent = (event: any): APIGatewayProxyEventV2 => {
+export const apiGatewayEvent = (event: any): APIGatewayEvent => {
   return {
     headers: {
       'Content-Type': 'application/json',
       Accept: '*/*',
       ...event.headers,
     },
-    requestContext: {
-      http: {
-        method: 'GET',
-        path: '/api',
-      },
-    },
+    httpMethod: 'GET',
+    path: '/api',
     pathParameters: null,
-    rawQueryString: new URLSearchParams(event.queryStringParameters).toString(),
+    queryStringParameters: null,
+    resource: '/api',
     ...event,
     body:
       typeof event.body === 'object'

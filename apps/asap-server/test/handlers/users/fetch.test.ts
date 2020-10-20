@@ -53,8 +53,7 @@ describe('GET /users', () => {
         $top: 8,
         $orderby: 'data/displayName/iv',
         $filter:
-          "data/teams/iv/role eq 'Lead PI' and " +
-          "data/teams/iv/role eq 'anotherFilter' and" +
+          "data/teams/iv/role eq 'Lead PI' and" +
           " (contains(data/displayName/iv, 'first')" +
           " or contains(data/firstName/iv, 'first')" +
           " or contains(data/displayName/iv, 'last')" +
@@ -67,7 +66,10 @@ describe('GET /users', () => {
         httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
-          filter: 'Lead PI,anotherFilter',
+          filter: 'Lead PI',
+        },
+        multiValueQueryStringParameters: {
+          filter: ['Lead PI'],
         },
         headers: {
           Authorization: `Bearer token`,

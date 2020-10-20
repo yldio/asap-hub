@@ -3,12 +3,7 @@ import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Debug from 'debug';
 import Joi from '@hapi/joi';
-import { URLSearchParams } from 'url';
-import {
-  APIGatewayProxyResultV2,
-  APIGatewayProxyEventV2,
-  APIGatewayProxyStructuredResultV2,
-} from 'aws-lambda';
+import { APIGatewayProxyResult, APIGatewayProxyEvent } from 'aws-lambda';
 import { origin } from '../config';
 
 export interface Request {
@@ -29,9 +24,7 @@ export interface Response {
     | undefined;
 }
 
-export const response = (
-  res: APIGatewayProxyStructuredResultV2,
-): APIGatewayProxyResultV2 => {
+export const response = (res: APIGatewayProxyResult): APIGatewayProxyResult => {
   return {
     ...res,
     headers: {
@@ -57,22 +50,11 @@ export const validate = <T>(
   return res;
 };
 
-const parseQueryStringParameters = (params: string): object => {
-  const searchParams = new URLSearchParams(params);
-  const map = new Map();
-
-  for (const [key, value] of searchParams) {
-    map.set(key, [map.get(key), value].filter(Boolean).join(','));
-  }
-
-  return Object.fromEntries(map);
-};
-
 // ensure any thrown exception is handled and returned correctly
 const debug = Debug('http');
 export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
-  event: APIGatewayProxyEventV2,
-): Promise<APIGatewayProxyResultV2> => {
+  event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
   // we assume the body is json
   let body;
   try {
@@ -96,11 +78,14 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
     }, {});
 
   const request = {
-    method: event.requestContext.http.method.toLocaleLowerCase(),
+    method: event.httpMethod.toLocaleLowerCase(),
     headers,
     params: event.pathParameters,
     payload: body,
-    query: parseQueryStringParameters(event.rawQueryString),
+    query: {
+      ...event.queryStringParameters,
+      ...event.multiValueQueryStringParameters,
+    },
   } as Request;
 
   const [err, res] = await Intercept(fn(request));

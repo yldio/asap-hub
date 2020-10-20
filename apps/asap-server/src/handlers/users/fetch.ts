@@ -8,27 +8,23 @@ const querySchema = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),
-  filter: Joi.string(),
+  filter: Joi.array().items(Joi.string()),
 }).required();
 
-// /users?page=1&pageSize=8&filter=filter1,filter2
+// /users?page=1&pageSize=8
 export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     await validateUser(request);
 
-    const { filter, ...query } = lambda.validate(
-      'query',
-      request.query,
-      querySchema,
-    ) as {
+    const query = lambda.validate('query', request.query, querySchema) as {
       take: number;
       skip: number;
       search?: string;
-      filter?: string;
+      filter?: string[];
     };
 
     const users = new Users();
-    const res = await users.fetch({ ...query, filter: filter?.split(',') });
+    const res = await users.fetch(query);
 
     return {
       payload: res,

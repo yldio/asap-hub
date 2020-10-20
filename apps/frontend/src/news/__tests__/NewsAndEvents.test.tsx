@@ -60,7 +60,9 @@ describe('news and events page', () => {
         authorization: 'Bearer token',
         'content-type': 'application/json',
       },
-    }).get('/news-and-events');
+    })
+      .get('/news-and-events')
+      .query({ take: 10, skip: 0 });
   });
 
   it('renders title', async () => {

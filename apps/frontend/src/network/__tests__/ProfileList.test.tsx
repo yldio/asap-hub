@@ -44,6 +44,7 @@ it('renders a loading indicator', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/users')
+    .query({ take: 10, skip: 0 })
     .reply(200, createListUserResponse(2));
 
   const { getByText } = await renderProfileList(false);
@@ -60,6 +61,7 @@ it('renders a list of people', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/users')
+    .query({ take: 10, skip: 0 })
     .reply(200, {
       ...listUserResponse,
       items: listUserResponse.items.map((item, itemIndex) => ({

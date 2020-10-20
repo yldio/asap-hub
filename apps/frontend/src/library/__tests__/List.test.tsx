@@ -40,6 +40,8 @@ it('renders a list of research outputs', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/research-outputs')
+    .query({ take: 10, skip: 0 })
+
     .reply(200, {
       ...researchOutputs,
       items: researchOutputs.items.map((item, index) => ({
@@ -58,6 +60,7 @@ it('correctly generates research output link', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/research-outputs')
+    .query({ take: 10, skip: 0 })
     .reply(200, {
       ...researchOutputs,
       items: researchOutputs.items.map((item, index) => ({
@@ -77,6 +80,7 @@ it('correctly generates team link', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/research-outputs')
+    .query({ take: 10, skip: 0 })
     .reply(200, {
       ...researchOutputs,
       items: researchOutputs.items.map((item, index) => ({

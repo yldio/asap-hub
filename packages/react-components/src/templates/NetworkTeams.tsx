@@ -3,13 +3,13 @@ import React, { ComponentProps } from 'react';
 import { TeamCard } from '../organisms';
 import CardList from '../organisms/CardList';
 
-type NetworkTeamProps = Omit<ComponentProps<typeof CardList>, 'children'> & {
+type NetworkTeamsProps = Omit<ComponentProps<typeof CardList>, 'children'> & {
   readonly teams: ReadonlyArray<
     { readonly id: string } & ComponentProps<typeof TeamCard>
   >;
 };
 
-const NetworkTeam: React.FC<NetworkTeamProps> = ({
+const NetworkTeams: React.FC<NetworkTeamsProps> = ({
   teams,
   ...cardListProps
 }) => (
@@ -21,4 +21,4 @@ const NetworkTeam: React.FC<NetworkTeamProps> = ({
     ))}
   </CardList>
 );
-export default NetworkTeam;
+export default NetworkTeams;

@@ -3,6 +3,7 @@ import { Paragraph, LibraryPageBody } from '@asap-hub/react-components';
 import { join } from 'path';
 
 import { useResearchOutputs } from '../api';
+import { usePaginationParams, usePagination } from '../hooks';
 
 interface LibraryListProps {
   searchQuery?: string;
@@ -13,15 +14,22 @@ const LibraryList: React.FC<LibraryListProps> = ({
   searchQuery,
   filters = new Set(),
 }) => {
+  const { currentPage, pageSize } = usePaginationParams();
   const result = useResearchOutputs({
     searchQuery,
     filters: [...filters],
+    currentPage,
+    pageSize,
   });
+
+  const { numberOfPages, renderPageHref } = usePagination(
+    result.data?.total ?? 0,
+    pageSize,
+  );
 
   if (result.loading) {
     return <Paragraph>Loading...</Paragraph>;
   }
-
   const researchOutputs = result.data.items.map((output) => ({
     ...output,
     href: join('/library', output.id),
@@ -33,10 +41,10 @@ const LibraryList: React.FC<LibraryListProps> = ({
   return (
     <LibraryPageBody
       researchOutputs={researchOutputs}
-      numberOfItems={researchOutputs.length}
-      numberOfPages={1}
-      currentPageIndex={0}
-      renderPageHref={() => ''}
+      numberOfItems={result.data.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
     />
   );
 };

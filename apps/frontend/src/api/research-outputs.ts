@@ -49,8 +49,5 @@ export const useCreateResearchOutput = () => {
 export const useResearchOutputById = (id: string) =>
   useGetOne<ResearchOutputResponse>(`research-outputs/${id}`);
 
-export const useResearchOutputs = ({ searchQuery, filters }: GetListOptions) =>
-  useGetList<ListResearchOutputResponse>('research-outputs', {
-    searchQuery,
-    filters,
-  });
+export const useResearchOutputs = (options: GetListOptions) =>
+  useGetList<ListResearchOutputResponse>('research-outputs', options);

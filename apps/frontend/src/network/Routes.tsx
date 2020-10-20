@@ -24,8 +24,9 @@ const Network: React.FC<{}> = () => {
   const searchQuery = currentUrlParams.get('searchQuery') || undefined;
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
   const onChangeToggle = (pathname: string) => () => {
-    currentUrlParams.delete('filter');
-    history.push({ pathname, search: currentUrlParams.toString() });
+    const newUrlParams = new URLSearchParams();
+    searchQuery && newUrlParams.set('searchQuery', searchQuery);
+    history.push({ pathname, search: newUrlParams.toString() });
   };
   const onChangeSearch = (newQuery: string) => {
     newQuery

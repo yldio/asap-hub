@@ -4,6 +4,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { join } from 'path';
 
 import { useTeams } from '../api';
+import { usePaginationParams, usePagination } from '../hooks';
 
 interface NetworkTeamListProps {
   searchQuery?: string;
@@ -14,10 +15,19 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   searchQuery,
   filters = new Set(),
 }) => {
+  const { currentPage, pageSize } = usePaginationParams();
+
   const result = useTeams({
     searchQuery,
     filters: [...filters],
+    currentPage,
+    pageSize,
   });
+
+  const { numberOfPages, renderPageHref } = usePagination(
+    result.data?.total ?? 0,
+    pageSize,
+  );
 
   if (result.loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -30,10 +40,10 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   return (
     <NetworkTeams
       teams={teams}
-      numberOfItems={teams.length}
-      numberOfPages={1}
-      currentPageIndex={0}
-      renderPageHref={() => ''}
+      numberOfItems={result.data.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
     />
   );
 };

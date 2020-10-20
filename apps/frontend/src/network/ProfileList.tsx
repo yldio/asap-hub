@@ -5,6 +5,7 @@ import { join } from 'path';
 import { UserResponse } from '@asap-hub/model';
 
 import { useUsers } from '../api';
+import { usePaginationParams, usePagination } from '../hooks';
 
 interface ProfileListProps {
   searchQuery?: string;
@@ -15,10 +16,17 @@ const ProfileList: React.FC<ProfileListProps> = ({
   searchQuery,
   filters = new Set(),
 }) => {
+  const { currentPage, pageSize } = usePaginationParams();
   const result = useUsers({
     searchQuery,
     filters: [...filters],
+    currentPage,
+    pageSize,
   });
+  const { numberOfPages, renderPageHref } = usePagination(
+    result.data?.total ?? 0,
+    pageSize,
+  );
 
   if (result.loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -35,10 +43,10 @@ const ProfileList: React.FC<ProfileListProps> = ({
   return (
     <NetworkPeople
       people={users}
-      numberOfItems={users.length}
-      numberOfPages={1}
-      currentPageIndex={0}
-      renderPageHref={() => ''}
+      numberOfItems={result.data.total}
+      numberOfPages={numberOfPages}
+      currentPageIndex={currentPage}
+      renderPageHref={renderPageHref}
     />
   );
 };

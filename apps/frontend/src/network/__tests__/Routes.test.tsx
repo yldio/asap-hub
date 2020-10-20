@@ -80,10 +80,10 @@ describe('the network page', () => {
       );
     });
 
-    it('preserves the query text', async () => {
+    it('preserves only the query text', async () => {
       const { getByText, getByRole } = await renderNetworkPage(
         '/network/teams',
-        '?searchQuery=test123',
+        '?searchQuery=test123&filter=123',
       );
       const toggle = getByText('People');
       const searchBox = getByRole('searchbox') as HTMLInputElement;
@@ -120,10 +120,10 @@ describe('the network page', () => {
         `"Search for a team…"`,
       );
     });
-    it('preserves the query text', async () => {
+    it('preserves only query text', async () => {
       const { getByText, getByRole } = await renderNetworkPage(
         '/network/users',
-        'searchQuery=test123',
+        'searchQuery=test123&filter=123',
       );
       const toggle = getByText('People');
       const searchBox = getByRole('searchbox') as HTMLInputElement;

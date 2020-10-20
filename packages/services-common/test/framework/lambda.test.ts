@@ -76,6 +76,27 @@ test('http default status code is 200', async () => {
   expect(result.statusCode).toStrictEqual(200);
 });
 
+test('http parses query string params correctly', async () => {
+  const fn = jest.fn().mockResolvedValue({});
+  const handler = http(fn);
+  const result = await handler(
+    apiGatewayEvent({
+      queryStringParameters: {
+        key1: 'foo',
+        key2: 'foo,bar',
+      },
+    }),
+  );
+  expect(fn).toBeCalledWith(
+    expect.objectContaining({
+      query: {
+        key1: 'foo',
+        key2: ['foo', 'bar'],
+      },
+    }),
+  );
+});
+
 test('http stringifies payload into body', async () => {
   const payload = {
     hello: 'world',

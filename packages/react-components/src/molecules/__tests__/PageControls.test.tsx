@@ -178,28 +178,6 @@ describe('the arrow controls', () => {
   });
 });
 
-it.each`
-  description                                                                 | currentPage | numberOfPages | expected
-  ${'renders the first, previous, current, next, and last page numbers'}      | ${5}        | ${9}          | ${'1 4 5 6 9'}
-  ${'does not leave a gap of one page numbers'}                               | ${4}        | ${9}          | ${'1 2 3 4 5 9'}
-  ${'does not render duplicate page numbers when first and previous overlap'} | ${2}        | ${9}          | ${'1 2 3 9'}
-  ${'does not render negative page numbers on the first page'}                | ${1}        | ${9}          | ${'1 2 9'}
-  ${'deals with a single page'}                                               | ${1}        | ${1}          | ${'1'}
-`('$description', ({ numberOfPages, currentPage, expected }) => {
-  const { getAllByText } = render(
-    <PageControls
-      numberOfPages={numberOfPages}
-      currentPageIndex={currentPage - 1}
-      renderPageHref={renderPageHref}
-    />,
-  );
-  expect(
-    getAllByText(/\d+/)
-      .map((e) => e.textContent)
-      .join(' '),
-  ).toBe(expected);
-});
-
 it('highlights the active page number', () => {
   const { getByText } = render(
     <PageControls

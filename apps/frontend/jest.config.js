@@ -1,5 +1,5 @@
 module.exports = {
-  ...require('../../jest-base.config.js'),
+  ...require('../../jest/jest-base.config.js'),
 
   rootDir: __dirname,
   testEnvironment: require.resolve('jest-environment-jsdom-sixteen'),

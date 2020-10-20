@@ -43,6 +43,7 @@ workflow:
 
 variables:
   ASAP_HOSTNAME: hub.asap.science
+  PLAYWRIGHT_BROWSERS_PATH: 0
 
 stages:
   - build
@@ -120,6 +121,18 @@ test:unit:
     - build:ts
   variables:
     <<: *tmpl_branch_variables
+
+test:browser:
+  <<: *tmpl_test
+  image: mcr.microsoft.com/playwright:bionic
+  cache:
+    paths:
+      - '.jest-cache'
+  script:
+    - yarn run test:browser
+  needs:
+    - build:ts
+    - build:native
 
 test:integration:
   <<: *tmpl_test
@@ -200,5 +213,6 @@ deploy:sls:production:
     - build:ts
     - build:native
     - test:unit
+    - test:browser
     - test:integration
     - sync:squidex:production

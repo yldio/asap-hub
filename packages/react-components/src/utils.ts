@@ -39,4 +39,4 @@ export const createMailTo = (
 export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');
 
 export const isInternalLink = (href: string): boolean =>
-  new URL(href ?? '', window.location.href).origin === window.location.origin;
+  new URL(href, window.location.href).origin === window.location.origin;

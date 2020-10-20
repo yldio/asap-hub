@@ -44,6 +44,23 @@
         }
       },
       {
+        "name": "shortText",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Short Text",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
         "name": "text",
         "isHidden": false,
         "isLocked": false,
@@ -55,6 +72,39 @@
           "inlineEditable": false,
           "editor": "RichText",
           "label": "Text",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "link",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "External Link",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "linkText",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "External Link Text",
           "hints": "",
           "placeholder": "",
           "isRequired": false

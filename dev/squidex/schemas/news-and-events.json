@@ -58,7 +58,7 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "label": "Subtitle",
+          "label": "Short Text",
           "hints": "",
           "placeholder": "",
           "isRequired": false

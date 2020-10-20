@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
-import { Layout, BasicLayout, NotFoundPage } from '@asap-hub/react-components';
+import {
+  Layout,
+  BasicLayout,
+  NotFoundPage,
+  createMailTo,
+} from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
 import history from './history';
@@ -49,7 +54,9 @@ const ConfiguredLayout: React.FC = ({ children }) => {
         href: `/network/teams/${id}`,
       }))}
       settingsHref="/settings"
-      feedbackHref="/feedback"
+      feedbackHref={createMailTo('info@asap.science', {
+        subject: 'Hub Feedback',
+      })}
       logoutHref="/logout"
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"

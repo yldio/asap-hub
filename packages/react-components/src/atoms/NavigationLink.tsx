@@ -14,6 +14,7 @@ import {
 } from '../pixels';
 import { navigationGrey } from '../layout';
 import { activeStyles } from '../button';
+import { isInternalLink } from '../utils';
 
 const activeClassName = 'active-link';
 
@@ -71,7 +72,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   children,
 }) => {
-  if (useHasRouter()) {
+  if (useHasRouter() && isInternalLink(href)) {
     return (
       <NavLink
         to={href}

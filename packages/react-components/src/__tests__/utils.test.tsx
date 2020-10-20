@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getSvgAspectRatio, createMailTo } from '../utils';
+import { getSvgAspectRatio, createMailTo, isInternalLink } from '../utils';
 
 describe('getSvgAspectRatio', () => {
   it('throws if the element does not contain a svg', () => {
@@ -29,5 +29,68 @@ describe('createMailTo', () => {
 
   it('does not escape the @ for email client compatibility', () => {
     expect(createMailTo('test@example.com')).toContain('@');
+  });
+
+  it('encodes subjects', () => {
+    expect(
+      new URL(
+        createMailTo('test@example.com', { subject: 'T?est &123' }),
+      ).searchParams.get('subject'),
+    ).toEqual('T?est &123');
+  });
+
+  it('encodes body', () => {
+    expect(
+      new URL(
+        createMailTo('test@example.com', { body: 'T?est &123' }),
+      ).searchParams.get('body'),
+    ).toEqual('T?est &123');
+  });
+
+  it('encodes body & subject', () => {
+    const mailTo = new URL(
+      createMailTo('test@example.com', {
+        body: 'b?ody &123',
+        subject: 's?ubject &123',
+      }),
+    );
+    expect(mailTo.searchParams.get('body')).toEqual('b?ody &123');
+    expect(mailTo.searchParams.get('subject')).toEqual('s?ubject &123');
+  });
+});
+
+describe('isInternalLink', () => {
+  describe.each`
+    description          | href
+    ${'external link'}   | ${`https://parkinsonsroadmap.org/`}
+    ${'external link'}   | ${`//parkinsonsroadmap.org/`}
+    ${'external link'}   | ${`//${window.location.hostname}:${Number(window.location.port || 80) - 1}/`}
+    ${'external mailto'} | ${`mailto:test@${window.location.hostname}`}
+  `('for an $href to be an $description', ({ href }) => {
+    it('returns false', () => {
+      expect(isInternalLink(href)).toBe(false);
+    });
+  });
+
+  describe.each([
+    `${window.location.protocol}//${window.location.host}`,
+    `${window.location.protocol}//${window.location.host}/page`,
+    `//${window.location.host}`,
+    `//${window.location.host}/page`,
+    `/`,
+    `/page`,
+    `.`,
+    `./page`,
+    `..`,
+    `../page`,
+    `page`,
+    `#`,
+    `#fragment`,
+    `?query`,
+    `${window.location.protocol}//${window.location.host}/page?query#fragment`,
+  ])('for an internal link with a router to %s', (href: string) => {
+    it('returns true', () => {
+      expect(isInternalLink(href)).toBe(true);
+    });
   });
 });

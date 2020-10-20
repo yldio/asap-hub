@@ -7,7 +7,7 @@ import {
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { authTestUtils } from '@asap-hub/react-components';
-import { createTeamListResponse } from '@asap-hub/fixtures';
+import { createListTeamResponse } from '@asap-hub/fixtures';
 
 import Teams from '../TeamList';
 import { API_BASE_URL } from '../../config';
@@ -44,8 +44,12 @@ it('renders a loading indicator', async () => {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/teams')
+<<<<<<< HEAD
     .query({ take: 10, skip: 0 })
     .reply(200, createTeamListResponse(1));
+=======
+    .reply(200, createListTeamResponse(1));
+>>>>>>> origin/master
   const { getByText } = await renderTeamList(false);
 
   const loadingIndicator = getByText(/loading/i);
@@ -55,7 +59,7 @@ it('renders a loading indicator', async () => {
 });
 
 it('renders a list of teams information', async () => {
-  const response = createTeamListResponse(1);
+  const response = createListTeamResponse(2);
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -63,13 +67,15 @@ it('renders a list of teams information', async () => {
     .query({ take: 10, skip: 0 })
     .reply(200, {
       ...response,
-      items: response.items.map((item) => ({
+      items: response.items.map((item, index) => ({
         ...item,
-        displayName: 'Name Unknown',
-        projectTitle: 'Project Title Unknown',
+        displayName: `Name Unknown ${index}`,
+        projectTitle: `Project Title Unknown ${index}`,
       })),
     });
   const { container } = await renderTeamList();
-  expect(container.textContent).toContain('Name Unknown');
-  expect(container.textContent).toContain('Project Title Unknown');
+  expect(container.textContent).toContain('Name Unknown 0');
+  expect(container.textContent).toContain('Project Title Unknown 0');
+  expect(container.textContent).toContain('Name Unknown 1');
+  expect(container.textContent).toContain('Project Title Unknown 1');
 });

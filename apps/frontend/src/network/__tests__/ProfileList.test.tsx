@@ -6,73 +6,24 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
-import { ListUserResponse } from '@asap-hub/model';
+import { createListUserResponse } from '@asap-hub/fixtures';
 import { authTestUtils } from '@asap-hub/react-components';
 
 import Profiles from '../ProfileList';
 import { API_BASE_URL } from '../../config';
 
-const users: ListUserResponse = {
-  total: 2,
-  items: [
-    {
-      id: '55724942-3408-4ad6-9a73-14b92226ffb6',
-      createdDate: '2020-09-07T17:36:54Z',
-      lastModifiedDate: '2020-09-07T17:36:54Z',
-      displayName: 'Person A',
-      email: 'agnete.kirkeby@sund.ku.dk',
-      firstName: 'Agnete',
-      middleName: '',
-      lastName: 'Kirkeby',
-      jobTitle: 'Assistant Professor',
-      institution: 'University of Copenhagen',
-      teams: [
-        {
-          id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
-          displayName: 'Jakobsson, J',
-          role: 'Core Leadership - Co-Investigator',
-        },
-      ],
-      orcid: '0000-0001-8203-6901',
-      orcidWorks: [],
-      skills: [],
-      questions: [],
-    },
-    {
-      id: '55724942-3408-4ad6-9a73-14b92226ffb7',
-      createdDate: '2020-09-07T17:36:54Z',
-      lastModifiedDate: '2020-09-07T17:36:54Z',
-      displayName: 'Person B',
-      email: 'agnete.kirkeby@sund.ku.dk',
-      firstName: 'Agnete',
-      middleName: '',
-      lastName: 'Kirkeby',
-      jobTitle: 'Assistant Professor',
-      institution: 'University of Copenhagen',
-      teams: [
-        {
-          id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
-          displayName: 'Jakobsson, J',
-          role: 'Core Leadership - Co-Investigator',
-        },
-      ],
-      orcid: '0000-0001-8203-6901',
-      orcidWorks: [],
-      skills: [],
-      questions: [],
-    },
-  ],
-};
-
 // fetch user by code request
 beforeEach(() => {
   nock.cleanAll();
+<<<<<<< HEAD
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/users')
     .query({ take: 10, skip: 0 })
     .reply(200, users);
+=======
+>>>>>>> origin/master
 });
 
 const renderProfileList = async (waitForLoading = true) => {
@@ -98,8 +49,13 @@ const renderProfileList = async (waitForLoading = true) => {
 };
 
 it('renders a loading indicator', async () => {
-  const { getByText } = await renderProfileList(false);
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/users')
+    .reply(200, createListUserResponse(2));
 
+  const { getByText } = await renderProfileList(false);
   const loadingIndicator = getByText(/loading/i);
   expect(loadingIndicator).toBeVisible();
 
@@ -107,6 +63,20 @@ it('renders a loading indicator', async () => {
 });
 
 it('renders a list of people', async () => {
+  const listUserResponse = createListUserResponse(2);
+  const names = ['Person A', 'Person B'];
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/users')
+    .reply(200, {
+      ...listUserResponse,
+      items: listUserResponse.items.map((item, itemIndex) => ({
+        ...item,
+        displayName: names[itemIndex],
+      })),
+    });
+
   const { container } = await renderProfileList();
   expect(container.textContent).toContain('Person A');
   expect(container.textContent).toContain('Person B');

@@ -9,11 +9,11 @@ import { CtaCard } from '../molecules';
 const styles = css({
   display: 'grid',
   gridRowGap: `${72 / perRem}em`,
-  marginBottom: `${24 / perRem}em`,
+  paddingBottom: `${24 / perRem}em`,
 });
 
-const containerStyles = css({
-  marginTop: `${24 / perRem}em`,
+const aboutUsStyles = css({
+  paddingTop: `${24 / perRem}em`,
 });
 
 const bottomStyles = css({
@@ -41,7 +41,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
     {aboutUs.length ? (
       <section>
         <Display styleAsHeading={2}>About us</Display>
-        <div css={containerStyles}>
+        <div css={aboutUsStyles}>
           <Card>
             <RichText text={aboutUs} />
           </Card>

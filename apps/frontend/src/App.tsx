@@ -43,7 +43,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   const user = useCurrentUser();
   return isAuthenticated && user ? (
     <Layout
-      discoverASAPHref="/discover"
+      discoverAsapHref="/discover"
       libraryHref="/library"
       networkHref="/network"
       newsAndEventsHref="/news-and-events"

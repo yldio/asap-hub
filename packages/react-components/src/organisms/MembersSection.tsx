@@ -45,12 +45,16 @@ const roleStyles = css({
 });
 
 type MembersSectionProps = {
-  readonly title: string;
+  readonly title?: string;
   readonly members: (Omit<TeamMember, 'role'> & {
     role: string;
   })[];
 };
-const MembersSection: React.FC<MembersSectionProps> = ({ members, title }) => {
+
+const MembersSection: React.FC<MembersSectionProps> = ({
+  members,
+  title = `Team Members (${members.length})`,
+}) => {
   return (
     <Card>
       <Headline2 styleAsHeading={3}>{title}</Headline2>

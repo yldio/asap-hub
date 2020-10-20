@@ -5,9 +5,7 @@ export default {
   title: 'Organisms / Team / Members',
 };
 
-export const Empty = () => (
-  <MembersSection title={'Team Members (0)'} members={[]} />
-);
+export const Empty = () => <MembersSection members={[]} />;
 
 export const Normal = () => (
   <MembersSection

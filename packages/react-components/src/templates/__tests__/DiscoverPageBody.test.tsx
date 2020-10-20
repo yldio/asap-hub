@@ -20,7 +20,7 @@ const props: ComponentProps<typeof DiscoverPageBody> = {
   members: [],
 };
 
-it('renders multiple page cards', () => {
+it('renders grantee guidance page cards', () => {
   const { queryAllByRole } = render(
     <DiscoverPageBody {...props} aboutUs={''} />,
   );
@@ -29,7 +29,18 @@ it('renders multiple page cards', () => {
   ).toEqual(['Grantee Guidance', 'Page 1 Title', 'Page 2 Title']);
 });
 
-it('renders about us section only when there is content', () => {
+it('renders about us section', () => {
+  const { queryAllByRole, queryByText } = render(
+    <DiscoverPageBody {...props} pages={[]} />,
+  );
+
+  expect(queryByText('Grantee Guidance')).not.toBeInTheDocument();
+  expect(
+    queryAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(['About us', 'About us content']);
+});
+
+it('renders grantee guidance page cards and about us section', () => {
   const { queryAllByRole } = render(<DiscoverPageBody {...props} />);
 
   expect(
@@ -41,15 +52,4 @@ it('renders about us section only when there is content', () => {
     'About us',
     'About us content',
   ]);
-});
-
-it('renders about us section when there are no pages', () => {
-  const { queryAllByRole, queryByText } = render(
-    <DiscoverPageBody {...props} pages={[]} />,
-  );
-
-  expect(queryByText('Grantee Guidance')).not.toBeInTheDocument();
-  expect(
-    queryAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['About us', 'About us content']);
 });

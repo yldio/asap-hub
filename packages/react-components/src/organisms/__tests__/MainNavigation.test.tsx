@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import MainNavigation from '../MainNavigation';
 
 const props: ComponentProps<typeof MainNavigation> = {
-  discoverASAPHref: '/discover',
+  discoverAsapHref: '/discover',
   networkHref: '/network',
   libraryHref: '/library',
   newsAndEventsHref: '/news-and-events',

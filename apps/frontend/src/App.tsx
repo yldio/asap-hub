@@ -10,6 +10,7 @@ import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
 import history from './history';
 import { AuthProvider, CheckAuth, Logout } from './auth';
+import ErrorBoundary from './errors/ErrorBoundary';
 
 const loadNewsAndEvents = () =>
   import(/* webpackChunkName: "news-and-events" */ './news/Routes');
@@ -75,48 +76,67 @@ const ConfiguredLayout: React.FC = ({ children }) => {
 
 const App: React.FC<{}> = () => {
   return (
-    <AuthProvider>
-      <Router history={history}>
-        <React.Suspense fallback="Loading...">
-          <Switch>
-            <Route path="/welcome" component={Welcome} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router history={history}>
+          <ErrorBoundary>
+            <React.Suspense fallback="Loading...">
+              <Switch>
+                <Route path="/welcome">
+                  <Welcome />
+                </Route>
 
-            <Route exact path="/terms-and-conditions">
-              <Content layoutComponent={ConfiguredLayout} />
-            </Route>
-            <Route exact path="/privacy-policy">
-              <Content layoutComponent={ConfiguredLayout} />
-            </Route>
+                <Route exact path="/terms-and-conditions">
+                  <Content layoutComponent={ConfiguredLayout} />
+                </Route>
+                <Route exact path="/privacy-policy">
+                  <Content layoutComponent={ConfiguredLayout} />
+                </Route>
 
-            <Route exact path="/admin" component={Admin} />
+                <Route exact path="/admin">
+                  <Admin />
+                </Route>
 
-            <Route>
-              <CheckAuth>
-                <ConfiguredLayout>
-                  <React.Suspense fallback="Loading...">
-                    <Prefetch />
-                    <Switch>
-                      <Route exact path="/" component={Home} />
-                      <Route path="/logout" component={Logout} />
-
-                      <Route
-                        path="/news-and-events"
-                        component={NewsAndEvents}
-                      />
-                      <Route path="/discover" component={Discover} />
-                      <Route path="/network" component={Network} />
-                      <Route path="/library" component={Library} />
-
-                      <Route component={NotFoundPage} />
-                    </Switch>
-                  </React.Suspense>
-                </ConfiguredLayout>
-              </CheckAuth>
-            </Route>
-          </Switch>
-        </React.Suspense>
-      </Router>
-    </AuthProvider>
+                <Route>
+                  <CheckAuth>
+                    <ConfiguredLayout>
+                      <ErrorBoundary>
+                        <React.Suspense fallback="Loading...">
+                          <Prefetch />
+                          <Switch>
+                            <Route exact path="/">
+                              <Home />
+                            </Route>
+                            <Route path="/logout">
+                              <Logout />
+                            </Route>
+                            <Route path="/discover">
+                              <Discover />
+                            </Route>
+                            <Route path="/news-and-events">
+                              <NewsAndEvents />
+                            </Route>
+                            <Route path="/network">
+                              <Network />
+                            </Route>
+                            <Route path="/library">
+                              <Library />
+                            </Route>
+                            <Route>
+                              <NotFoundPage />
+                            </Route>
+                          </Switch>
+                        </React.Suspense>
+                      </ErrorBoundary>
+                    </ConfiguredLayout>
+                  </CheckAuth>
+                </Route>
+              </Switch>
+            </React.Suspense>
+          </ErrorBoundary>
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 };
 

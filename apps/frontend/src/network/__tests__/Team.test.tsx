@@ -16,22 +16,21 @@ import { API_BASE_URL } from '../../config';
 const team: TeamResponse = {
   id: '42',
   displayName: 'Unknown',
-  applicationNumber: 'Unknow Number',
-  projectTitle: 'Unkown Project Title',
-  projectSummary: 'Unkown Project Summary',
+  applicationNumber: 'Unknown Number',
+  projectTitle: 'Unknown Project Title',
+  projectSummary: 'Unknown Project Summary',
   lastModifiedDate: new Date().toISOString(),
   members: [],
   skills: [],
 };
 
-// fetch user by code request
+let interceptor: nock.Interceptor;
 beforeEach(() => {
   nock.cleanAll();
-  nock(API_BASE_URL, {
+  interceptor = nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/teams/42')
-    .reply(200, team);
+  }).get('/teams/42');
+  interceptor.reply(200, team);
 });
 
 const renderTeam = async (waitForLoading = true) => {
@@ -66,8 +65,13 @@ it('renders a loading indicator', async () => {
 });
 
 it('renders the header info', async () => {
+  interceptor.reply(200, {
+    ...team,
+    displayName: 'Bla',
+  } as TeamResponse);
+
   const { getByText } = await renderTeam();
-  expect(getByText('Team Unknown')).toBeVisible();
+  expect(getByText(/Team.+Bla/i)).toBeVisible();
 });
 
 it('renders the about info', async () => {
@@ -75,9 +79,38 @@ it('renders the about info', async () => {
   expect(getByText(/project overview/i)).toBeVisible();
 });
 
+describe('the proposal', () => {
+  it('is not rendered when there is no proposal', async () => {
+    interceptor.reply(200, { ...team, proposalURL: undefined } as TeamResponse);
+
+    const { queryByText } = await renderTeam();
+    expect(queryByText(/proposal/i)).not.toBeInTheDocument();
+  });
+
+  it('is rendered with a library href', async () => {
+    interceptor.reply(200, {
+      ...team,
+      proposalURL: 'someproposal',
+    } as TeamResponse);
+
+    const { getByText } = await renderTeam();
+    expect(getByText(/proposal/i).closest('a')).toHaveAttribute(
+      'href',
+      '/library/someproposal',
+    );
+  });
+});
+
 it('navigates to the outputs', async () => {
   const { getByText } = await renderTeam();
 
   userEvent.click(getByText(/outputs/i, { selector: 'nav *' }));
   expect(getByText(/research outputs/i)).toBeVisible();
+});
+
+it('renders the not found page for a 404', async () => {
+  interceptor.reply(404);
+
+  const { getByText } = await renderTeam();
+  expect(getByText(/sorry.+page/i)).toBeVisible();
 });

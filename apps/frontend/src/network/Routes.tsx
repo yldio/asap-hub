@@ -7,7 +7,8 @@ import {
   useLocation,
   Redirect,
 } from 'react-router-dom';
-import { NetworkPage } from '@asap-hub/react-components';
+import { ErrorBoundary } from 'react-error-boundary';
+import { NetworkPage, ErrorCard } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import ProfileList from './ProfileList';
@@ -51,7 +52,9 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <ProfileList filters={filters} searchQuery={searchQueryDebounce} />
+          <ErrorBoundary FallbackComponent={ErrorCard}>
+            <ProfileList filters={filters} searchQuery={searchQueryDebounce} />
+          </ErrorBoundary>
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={Profile} />
@@ -64,7 +67,9 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <TeamList filters={filters} searchQuery={searchQueryDebounce} />
+          <ErrorBoundary FallbackComponent={ErrorCard}>
+            <TeamList filters={filters} searchQuery={searchQueryDebounce} />
+          </ErrorBoundary>
         </NetworkPage>
       </Route>
       <Route path={`${path}/teams/:id`} component={Team} />

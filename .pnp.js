@@ -6724,6 +6724,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.4.2"
       ],
       [
+        "react-error-boundary",
+        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2"
+      ],
+      [
         "react-error-overlay",
         "npm:6.0.7"
       ],
@@ -7142,6 +7146,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "send",
         "npm:0.17.1"
+      ],
+      [
+        "serialize-error",
+        "npm:7.0.1"
       ],
       [
         "serialize-javascript",
@@ -8691,6 +8699,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:16.13.1"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
+            ["react-error-boundary", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
             ["react-scripts", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:react-scripts@npm%3A3.4.3#./patches/react-scripts.patch::version=3.4.3&hash=4dc748&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
@@ -8807,6 +8816,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:3.0.0"],
             ["rehype-toc", "npm:3.0.2"],
+            ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"],
             ["util", "npm:0.12.3"],
@@ -8879,6 +8889,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:3.0.0"],
             ["rehype-toc", "npm:3.0.2"],
+            ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"],
             ["util", "npm:0.12.3"],
@@ -8946,6 +8957,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:3.0.0"],
             ["rehype-toc", "npm:3.0.2"],
+            ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"],
             ["util", "npm:0.12.3"],
@@ -9016,6 +9028,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["rehype-sanitize", "npm:4.0.0"],
             ["rehype-slug", "npm:3.0.0"],
             ["rehype-toc", "npm:3.0.2"],
+            ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"],
             ["util", "npm:0.12.3"],
@@ -11302,6 +11315,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.10.2-a84cbd8811-0f3466d635.zip/node_modules/@babel/runtime/",
           "packageDependencies": [
             ["@babel/runtime", "npm:7.10.2"],
+            ["regenerator-runtime", "npm:0.13.7"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:7.12.1", {
+          "packageLocation": "./.yarn/cache/@babel-runtime-npm-7.12.1-b069f70b16-979d1c099c.zip/node_modules/@babel/runtime/",
+          "packageDependencies": [
+            ["@babel/runtime", "npm:7.12.1"],
             ["regenerator-runtime", "npm:0.13.7"]
           ],
           "linkType": "HARD",
@@ -34129,6 +34150,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["react-error-boundary", [
+        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2", {
+          "packageLocation": "./.yarn/$$virtual/react-error-boundary-virtual-a3774925b7/0/cache/react-error-boundary-npm-3.0.2-f6ee3ac805-241a91a7db.zip/node_modules/react-error-boundary/",
+          "packageDependencies": [
+            ["react-error-boundary", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2"],
+            ["@babel/runtime", "npm:7.12.1"],
+            ["@types/react", "npm:16.9.34"],
+            ["react", "npm:16.13.1"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["react-error-overlay", [
         ["npm:6.0.7", {
           "packageLocation": "./.yarn/cache/react-error-overlay-npm-6.0.7-2914e1fee8-35533e193f.zip/node_modules/react-error-overlay/",
@@ -35991,6 +36028,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["on-finished", "npm:2.3.0"],
             ["range-parser", "npm:1.2.1"],
             ["statuses", "npm:1.5.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["serialize-error", [
+        ["npm:7.0.1", {
+          "packageLocation": "./.yarn/cache/serialize-error-npm-7.0.1-c0b3f881a0-2ed4699735.zip/node_modules/serialize-error/",
+          "packageDependencies": [
+            ["serialize-error", "npm:7.0.1"],
+            ["type-fest", "npm:0.13.1"]
           ],
           "linkType": "HARD",
         }]
@@ -38489,6 +38536,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/type-fest-npm-0.11.0-81410fe889-02e5cadf13.zip/node_modules/type-fest/",
           "packageDependencies": [
             ["type-fest", "npm:0.11.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.13.1", {
+          "packageLocation": "./.yarn/cache/type-fest-npm-0.13.1-7f4486b973-11acce4f34.zip/node_modules/type-fest/",
+          "packageDependencies": [
+            ["type-fest", "npm:0.13.1"]
           ],
           "linkType": "HARD",
         }],

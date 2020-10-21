@@ -2,9 +2,9 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { StaticRouter, Router } from 'react-router-dom';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { createMemoryHistory } from 'history';
 
 import NavigationLink from '../NavigationLink';
-import { createMemoryHistory } from 'history';
 
 describe.each`
   description           | wrapper

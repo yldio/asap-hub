@@ -38,11 +38,19 @@ it.each([1, 2])('renders <h$i> one heading level lower', (i) => {
   expect(heading.tagName).toBe(`H${i + 1}`);
 });
 
-it('Displays error when styling applied to h1', () => {
+it.each([1, 2])('displays error when disallowed <h$i> styling applied', (i) => {
   const { container } = render(
-    <RichText text={'<h1><strong>anchor</strong></h1>'} />,
+    <RichText text={`<h${i}><strong>heading</strong></h${i}>`} />,
   );
-  expect(container.textContent).toContain('Invalid h1 heading styling');
+  expect(container.textContent).toContain(`Invalid h${i} heading styling`);
+});
+
+it.each([1, 2])('displays heading when allowed <h$i> styling applied', (i) => {
+  const { getByRole } = render(
+    <RichText text={`<h${i}><i>heading</i></h${i}>`} />,
+  );
+  expect(getByRole('heading').firstElementChild?.tagName).toEqual('I');
+  expect(getByRole('heading').textContent).toEqual('heading');
 });
 
 it('Displays error when styling applied to h2', () => {

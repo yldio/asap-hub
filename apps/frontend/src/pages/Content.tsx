@@ -1,13 +1,12 @@
 import React from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
 import {
   ContentPage,
   Paragraph,
   NotFoundPage,
-  ErrorCard,
 } from '@asap-hub/react-components';
 import { usePageByPath } from '../api';
+import ErrorBoundary from '../errors/ErrorBoundary';
 
 interface StubPageProps {
   layoutComponent: React.FC;
@@ -23,7 +22,7 @@ const StubPage: React.FC<StubPageProps> = ({ layoutComponent: Layout }) => {
   if (page) {
     return (
       <Layout>
-        <ErrorBoundary FallbackComponent={ErrorCard}>
+        <ErrorBoundary>
           <ContentPage {...page} />
         </ErrorBoundary>
       </Layout>

@@ -1,16 +1,15 @@
 import React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 
 import {
   DashboardPage,
   DashboardPageBody,
   Paragraph,
   NotFoundPage,
-  ErrorCard,
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
 import { useDashboard } from '../api';
+import ErrorBoundary from '../errors/ErrorBoundary';
 
 const Home: React.FC<{}> = () => {
   const { firstName, id, teams = [] } = useCurrentUser() ?? {};
@@ -32,7 +31,7 @@ const Home: React.FC<{}> = () => {
     };
     return (
       <DashboardPage firstName={firstName}>
-        <ErrorBoundary FallbackComponent={ErrorCard}>
+        <ErrorBoundary>
           <DashboardPageBody {...data} />
         </ErrorBoundary>
       </DashboardPage>

@@ -4728,6 +4728,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.0"
       ],
       [
+        "is-core-module",
+        "npm:2.0.0"
+      ],
+      [
         "is-data-descriptor",
         "npm:0.1.4"
       ],
@@ -6881,7 +6885,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "react-error-boundary",
-        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2"
+        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.3.2"
       ],
       [
         "react-error-overlay",
@@ -7141,7 +7145,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "resolve",
-        "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"
+        "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"
       ],
       [
         "resolve-alpn",
@@ -8883,7 +8887,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:16.13.1"],
             ["react-app-polyfill", "npm:1.0.6"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:16.13.1"],
-            ["react-error-boundary", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2"],
+            ["react-error-boundary", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.3.2"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
             ["react-scripts", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:react-scripts@npm%3A3.4.3#./patches/react-scripts.patch::version=3.4.3&hash=4dc748&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:16.13.1"],
@@ -9497,7 +9501,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["gensync", "npm:1.0.0-beta.1"],
             ["json5", "npm:2.1.3"],
             ["lodash", "npm:4.17.20"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["semver", "npm:5.7.1"],
             ["source-map", "npm:0.5.7"]
           ],
@@ -11095,7 +11099,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/helper-module-imports", "npm:7.10.4"],
             ["@babel/helper-plugin-utils", "npm:7.10.4"],
             ["@types/babel__core", "npm:7.1.9"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["semver", "npm:5.7.1"]
           ],
           "packagePeers": [
@@ -11112,7 +11116,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/helper-module-imports", "npm:7.10.4"],
             ["@babel/helper-plugin-utils", "npm:7.10.4"],
             ["@types/babel__core", null],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["semver", "npm:5.7.1"]
           ],
           "packagePeers": [
@@ -11129,7 +11133,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/helper-module-imports", "npm:7.10.4"],
             ["@babel/helper-plugin-utils", "npm:7.10.4"],
             ["@types/babel__core", null],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["semver", "npm:5.7.1"]
           ],
           "packagePeers": [
@@ -18063,7 +18067,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/eslint", null],
             ["eslint", "npm:6.8.0"],
             ["eslint-visitor-keys", "npm:1.3.0"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"]
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -18357,7 +18361,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-plugin-macros", "npm:2.8.0"],
             ["@babel/runtime", "npm:7.10.2"],
             ["cosmiconfig", "npm:6.0.0"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"]
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"]
           ],
           "linkType": "HARD",
         }]
@@ -23344,7 +23348,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["eslint-import-resolver-node", "npm:0.3.4"],
             ["debug", "virtual:2bcc47d217f870e3d52f0e55493dc34fd3da852877f7db32fa2940cc320151746026495daf6a34a974488cf5a949d93be1e2dc1ffba036faf081a9b15fcd2252#npm:2.6.9"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"]
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"]
           ],
           "linkType": "HARD",
         }]
@@ -23361,7 +23365,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-plugin-import", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.22.0"],
             ["glob", "npm:7.1.6"],
             ["is-glob", "npm:4.0.1"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["tsconfig-paths", "npm:3.9.0"]
           ],
           "packagePeers": [
@@ -23456,7 +23460,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["minimatch", "npm:3.0.4"],
             ["object.values", "npm:1.1.1"],
             ["read-pkg-up", "npm:2.0.0"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"]
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"]
           ],
           "packagePeers": [
             "@types/eslint",
@@ -23481,7 +23485,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["minimatch", "npm:3.0.4"],
             ["object.values", "npm:1.1.1"],
             ["read-pkg-up", "npm:2.0.0"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["tsconfig-paths", "npm:3.9.0"]
           ],
           "packagePeers": [
@@ -23590,7 +23594,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["object.fromentries", "npm:2.0.2"],
             ["object.values", "npm:1.1.1"],
             ["prop-types", "npm:15.7.2"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["semver", "npm:6.3.0"],
             ["string.prototype.matchall", "npm:4.0.2"],
             ["xregexp", "npm:4.3.0"]
@@ -23616,7 +23620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["object.fromentries", "npm:2.0.2"],
             ["object.values", "npm:1.1.1"],
             ["prop-types", "npm:15.7.2"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["string.prototype.matchall", "npm:4.0.2"]
           ],
           "packagePeers": [
@@ -27123,6 +27127,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["is-core-module", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/is-core-module-npm-2.0.0-5ae474e0e9-de99dfbdf1.zip/node_modules/is-core-module/",
+          "packageDependencies": [
+            ["is-core-module", "npm:2.0.0"],
+            ["has", "npm:1.0.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["is-data-descriptor", [
         ["npm:0.1.4", {
           "packageLocation": "./.yarn/cache/is-data-descriptor-npm-0.1.4-6f53f71c67-51db89bb46.zip/node_modules/is-data-descriptor/",
@@ -28740,7 +28754,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-pnp-resolver", "virtual:90336bc9106b32a4c0d9882ae3622fae599b2d65fa3186b432ab0ec9b37bcb2d59208bac9463d5c837dac5366443488c9370688857ff1fe4331c9d3cb7272415#npm:1.2.2"],
             ["jest-util", "npm:26.3.0"],
             ["read-pkg-up", "npm:7.0.1"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["slash", "npm:3.0.0"]
           ],
           "linkType": "HARD",
@@ -31655,7 +31669,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["normalize-package-data", "npm:2.5.0"],
             ["hosted-git-info", "npm:2.8.8"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
             ["semver", "npm:5.7.1"],
             ["validate-npm-package-license", "npm:3.0.4"]
           ],
@@ -34967,10 +34981,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["react-error-boundary", [
-        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2", {
-          "packageLocation": "./.yarn/$$virtual/react-error-boundary-virtual-a3774925b7/0/cache/react-error-boundary-npm-3.0.2-f6ee3ac805-241a91a7db.zip/node_modules/react-error-boundary/",
+        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.3.2", {
+          "packageLocation": "./.yarn/$$virtual/react-error-boundary-virtual-f127ddcb2e/0/cache/react-error-boundary-npm-2.3.2-2e1c1815ae-9e6d4ad197.zip/node_modules/react-error-boundary/",
           "packageDependencies": [
-            ["react-error-boundary", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:3.0.2"],
+            ["react-error-boundary", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.3.2"],
             ["@babel/runtime", "npm:7.12.1"],
             ["@types/react", "npm:16.9.34"],
             ["react", "npm:16.13.1"]
@@ -35772,7 +35786,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/rechoir-npm-0.6.2-0df5f171ec-6646a6bce7.zip/node_modules/rechoir/",
           "packageDependencies": [
             ["rechoir", "npm:0.6.2"],
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"]
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"]
           ],
           "linkType": "HARD",
         }]
@@ -36253,10 +36267,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa", {
-          "packageLocation": "./.yarn/cache/resolve-patch-38ce149af0-4bcfb56886.zip/node_modules/resolve/",
+        ["patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa", {
+          "packageLocation": "./.yarn/cache/resolve-patch-af4189aea7-9e62d2803a.zip/node_modules/resolve/",
           "packageDependencies": [
-            ["resolve", "patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"],
+            ["is-core-module", "npm:2.0.0"],
             ["path-parse", "npm:1.0.6"]
           ],
           "linkType": "HARD",

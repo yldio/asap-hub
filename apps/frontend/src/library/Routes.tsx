@@ -6,12 +6,12 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
-import { LibraryPage, ErrorCard } from '@asap-hub/react-components';
+import { LibraryPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import List from './List';
 import ResearchOutput from './ResearchOutput';
+import ErrorBoundary from '../errors/ErrorBoundary';
 
 const Library: React.FC<{}> = () => {
   const { path } = useRouteMatch();
@@ -44,7 +44,7 @@ const Library: React.FC<{}> = () => {
           onChangeFilter={onChangeFilter}
           filters={filters}
         >
-          <ErrorBoundary FallbackComponent={ErrorCard}>
+          <ErrorBoundary>
             <List searchQuery={searchQueryDebounce} filters={filters} />
           </ErrorBoundary>
         </LibraryPage>

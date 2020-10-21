@@ -1,17 +1,16 @@
 import React from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
 import {
   Paragraph,
   TeamPage,
   TeamAbout,
   TeamOutputs,
   NotFoundPage,
-  ErrorCard,
 } from '@asap-hub/react-components';
 import { join } from 'path';
 
 import { useTeamById } from '../api';
+import ErrorBoundary from '../errors/ErrorBoundary';
 
 const Page: React.FC<{}> = () => {
   const {
@@ -35,7 +34,7 @@ const Page: React.FC<{}> = () => {
 
     return (
       <TeamPage {...teamPageProps}>
-        <ErrorBoundary FallbackComponent={ErrorCard}>
+        <ErrorBoundary>
           <Switch>
             <Route path={`${path}/about`}>
               <TeamAbout

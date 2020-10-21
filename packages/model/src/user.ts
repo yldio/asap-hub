@@ -11,7 +11,7 @@ export interface Invitee {
   department?: string;
   institution?: string;
   location?: string;
-  avatarURL?: string;
+  avatarUrl?: string;
 }
 
 export interface OrcidWork {

@@ -26,7 +26,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       email,
       firstName,
       lastName,
-      avatarURL,
+      avatarUrl,
       teams,
     } = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
       headers: {
@@ -41,7 +41,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       email,
       firstName,
       lastName,
-      avatarURL,
+      avatarUrl,
       teams: teams.map((team) => ({
         id: team.id,
         displayName: team.displayName,

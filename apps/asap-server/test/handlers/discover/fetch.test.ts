@@ -70,14 +70,30 @@ describe('GET /discover', () => {
                 ],
                 members: [
                   {
-                    id: 'uuid',
+                    id: 'uuid-1',
                     created: '2020-10-15T17:55:21Z',
                     flatData: {
+                      avatar: [
+                        {
+                          id: 'uuid-1',
+                        },
+                      ],
                       displayName: 'John',
                       email: 'john@example.com',
                       firstName: 'John',
                       lastModifiedDate: '2020-10-15T17:55:21Z',
                       lastName: 'Doe',
+                    },
+                  },
+                  {
+                    id: 'uuid-2',
+                    created: '2020-10-14T17:55:21Z',
+                    flatData: {
+                      displayName: 'Jon',
+                      email: 'doe@example.com',
+                      firstName: 'Jon',
+                      lastModifiedDate: '2020-10-15T17:55:21Z',
+                      lastName: 'Do',
                     },
                   },
                 ],
@@ -110,13 +126,26 @@ describe('GET /discover', () => {
       ],
       members: [
         {
-          id: 'uuid',
+          id: 'uuid-1',
           createdDate: '2020-10-15T17:55:21.000Z',
           displayName: 'John',
           email: 'john@example.com',
           firstName: 'John',
           lastModifiedDate: '2020-10-15T17:55:21Z',
           lastName: 'Doe',
+          questions: [],
+          skills: [],
+          teams: [],
+          avatarUrl: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-1`,
+        },
+        {
+          id: 'uuid-2',
+          createdDate: '2020-10-14T17:55:21.000Z',
+          displayName: 'Jon',
+          email: 'doe@example.com',
+          firstName: 'Jon',
+          lastModifiedDate: '2020-10-15T17:55:21Z',
+          lastName: 'Do',
           questions: [],
           skills: [],
           teams: [],

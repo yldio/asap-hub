@@ -25,7 +25,7 @@ const response: ListUserResponse = {
       orcidWorks: [],
       skills: [],
       questions: ['Question?'],
-      avatarURL: 'http://rup.cy/kebmazus',
+      avatarUrl: 'http://rup.cy/kebmazus',
     },
     {
       id: '253d02fe-8af2-4ab9-b4e2-c864d3f3cc5c',
@@ -43,7 +43,7 @@ const response: ListUserResponse = {
       orcidWorks: [],
       skills: [],
       questions: [],
-      avatarURL: 'http://ehuvazsob.ie/ceteup',
+      avatarUrl: 'http://ehuvazsob.ie/ceteup',
     },
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb6',

@@ -14,7 +14,7 @@ export const Normal = () => (
         displayName: text('Display Name', 'Randy Schekman'),
         firstName: text('First Name', 'Randy'),
         lastName: text('Last Name', 'Schekman'),
-        avatarURL: text(
+        avatarUrl: text(
           'Avatar URL',
           'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
         ),

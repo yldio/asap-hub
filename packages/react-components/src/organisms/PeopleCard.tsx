@@ -37,7 +37,7 @@ const moveStyles = css({
 
 type PeopleCardProps = Pick<
   UserResponse,
-  | 'avatarURL'
+  | 'avatarUrl'
   | 'department'
   | 'displayName'
   | 'firstName'
@@ -60,7 +60,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   location,
   teams,
   jobTitle,
-  avatarURL,
+  avatarUrl,
   href,
 }) => {
   return (
@@ -68,7 +68,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
       <div css={[containerStyles]}>
         <Link theme={null} href={href}>
           <Avatar
-            imageUrl={avatarURL}
+            imageUrl={avatarUrl}
             firstName={firstName}
             lastName={lastName}
           />

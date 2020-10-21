@@ -60,7 +60,7 @@ const MembersSection: React.FC<MembersSectionProps> = ({
       <Headline2 styleAsHeading={3}>{title}</Headline2>
       <ul css={containerStyles}>
         {members.map(
-          ({ id, displayName, firstName, lastName, avatarURL, role }) => (
+          ({ id, displayName, firstName, lastName, avatarUrl, role }) => (
             <li key={id} css={{ display: 'contents' }}>
               <Link
                 href={`/network/users/${id}`}
@@ -69,7 +69,7 @@ const MembersSection: React.FC<MembersSectionProps> = ({
               >
                 <div css={avatarStyles}>
                   <Avatar
-                    imageUrl={avatarURL}
+                    imageUrl={avatarUrl}
                     small
                     border
                     firstName={firstName}

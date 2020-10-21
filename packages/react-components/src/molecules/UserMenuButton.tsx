@@ -33,7 +33,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
     displayName = 'Unknown User',
     firstName = 'Unknown',
     lastName = 'User',
-    avatarURL,
+    avatarUrl,
   } = useCurrentUser() ?? {};
 
   return (
@@ -52,7 +52,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
       </Paragraph>
       <Avatar
         small
-        imageUrl={avatarURL}
+        imageUrl={avatarUrl}
         firstName={firstName}
         lastName={lastName}
       />

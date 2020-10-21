@@ -50,7 +50,7 @@ const lastModifiedStyles = css({
 
 type ProfileProps = Pick<
   UserResponse,
-  | 'avatarURL'
+  | 'avatarUrl'
   | 'department'
   | 'email'
   | 'displayName'
@@ -78,7 +78,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   location,
   teams,
   jobTitle,
-  avatarURL,
+  avatarUrl,
   email,
 
   aboutHref,
@@ -99,7 +99,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
           />
         </div>
         <Avatar
-          imageUrl={avatarURL}
+          imageUrl={avatarUrl}
           firstName={firstName}
           lastName={lastName}
         />

@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 import { OrcidWork, TeamMember, UserResponse } from '@asap-hub/model';
-import { parseDate } from '../utils/squidex';
+import { parseDate, createURL } from '../utils/squidex';
 
 interface CMSTeamMember extends Omit<TeamMember, 'id' | 'email'> {
   id: string[];
@@ -42,6 +42,9 @@ export interface CMSGraphQLUser {
   lastModified: string;
   created: string;
   flatData: {
+    avatar: {
+      id: string;
+    }[];
     displayName: string;
     email: string;
     firstName?: string;
@@ -64,12 +67,14 @@ export const createSchema = Joi.object({
 });
 
 export const parseGraphQL = (item: CMSGraphQLUser): UserResponse => {
+  const { avatar, ...flatData } = item.flatData;
   return {
     id: item.id,
     createdDate: parseDate(item.created).toISOString(),
     questions: [],
     teams: [],
     skills: [],
-    ...item.flatData,
+    ...flatData,
+    avatarUrl: avatar && createURL(avatar.map((a) => a.id))[0],
   };
 };

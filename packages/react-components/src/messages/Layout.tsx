@@ -5,10 +5,6 @@ import { silver } from '../colors';
 import { asapImage } from '../images';
 import { gradientStyles } from '../appearance';
 
-interface LayoutProps {
-  readonly children: React.ReactNode;
-}
-
 const containerStyles = css({
   maxWidth: '600px',
   marginLeft: 'auto',
@@ -38,10 +34,22 @@ const footerContainerStyles = css({
 });
 
 const footerContentContainerStyles = css({
+  display: 'flex',
+  gridGap: '16px',
+
   margin: silver.rgb,
 });
 
-const Component: React.FC<LayoutProps> = ({ children }) => (
+interface LayoutProps {
+  readonly termsHref: string;
+  readonly privacyPolicyHref: string;
+}
+
+const EmailLayout: React.FC<LayoutProps> = ({
+  children,
+  termsHref,
+  privacyPolicyHref,
+}) => (
   <>
     <div css={containerStyles}>
       <div role="presentation" css={[gradientStyles, coloredLineStyles]} />
@@ -56,11 +64,11 @@ const Component: React.FC<LayoutProps> = ({ children }) => (
     </div>
     <div css={footerContainerStyles}>
       <ul css={[containerStyles, footerContentContainerStyles]}>
-        <Link href="https://hub.asap.science">Privacy policy</Link>
-        <Link href="https://hub.asap.science">Terms and conditions</Link>
+        <Link href={privacyPolicyHref}>Privacy policy</Link>
+        <Link href={termsHref}>Terms and conditions</Link>
       </ul>
     </div>
   </>
 );
 
-export default Component;
+export default EmailLayout;

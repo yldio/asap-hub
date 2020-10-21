@@ -1,12 +1,7 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 import Layout from './Layout';
 import { Display, Paragraph, Link } from '../atoms';
-
-interface WelcomeProps {
-  readonly firstName: string;
-  readonly link: string;
-}
 
 const listStyle = css({
   margin: 0,
@@ -16,8 +11,18 @@ const listStyle = css({
   paddingRight: '12px',
 });
 
-const Component: React.FC<WelcomeProps> = ({ firstName, link }) => (
-  <Layout>
+type WelcomeProps = ComponentProps<typeof Layout> & {
+  readonly firstName: string;
+  readonly link: string;
+};
+
+const Welcome: React.FC<WelcomeProps> = ({
+  firstName,
+  link,
+  privacyPolicyHref,
+  termsHref,
+}) => (
+  <Layout privacyPolicyHref={privacyPolicyHref} termsHref={termsHref}>
     <Display styleAsHeading={3}>Dear {firstName}</Display>
     <>
       <Paragraph>Congratulations on being awarded the ASAP Grant.</Paragraph>
@@ -32,8 +37,10 @@ const Component: React.FC<WelcomeProps> = ({ firstName, link }) => (
       </ul>
       <Paragraph>Join the community and set up your profile.</Paragraph>
     </>
-    <Link href={link}>Create account</Link>
+    <Link buttonStyle primary href={link}>
+      Create account
+    </Link>
   </Layout>
 );
 
-export default Component;
+export default Welcome;

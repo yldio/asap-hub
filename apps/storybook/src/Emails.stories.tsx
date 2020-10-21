@@ -8,5 +8,13 @@ export const Welcome = () => (
   <messages.Welcome
     firstName={text('First Name', 'Filipe')}
     link="https://hub.asap.science/"
+    privacyPolicyHref={text(
+      'Privacy Policy',
+      'https://hub.asap.science/privacy-policy',
+    )}
+    termsHref={text(
+      'Terms and Conditions',
+      'https://hub.asap.science/terms-and-conditions',
+    )}
   />
 );

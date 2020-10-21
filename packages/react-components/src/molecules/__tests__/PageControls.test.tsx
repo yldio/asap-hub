@@ -1,9 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import {
   mockConsoleError,
   findParentWithStyle,
 } from '@asap-hub/dom-test-utils';
+import fc from 'fast-check';
 
 import PageControls from '../PageControls';
 import { fern, tin } from '../../colors';
@@ -178,26 +179,87 @@ describe('the arrow controls', () => {
   });
 });
 
-it.each`
-  description                                                                 | currentPage | numberOfPages | expected
-  ${'renders the first, previous, current, next, and last page numbers'}      | ${5}        | ${9}          | ${'1 4 5 6 9'}
-  ${'does not leave a gap of one page numbers'}                               | ${4}        | ${9}          | ${'1 2 3 4 5 9'}
-  ${'does not render duplicate page numbers when first and previous overlap'} | ${2}        | ${9}          | ${'1 2 3 9'}
-  ${'does not render negative page numbers on the first page'}                | ${1}        | ${9}          | ${'1 2 9'}
-  ${'deals with a single page'}                                               | ${1}        | ${1}          | ${'1'}
-`('$description', ({ numberOfPages, currentPage, expected }) => {
-  const { getAllByText } = render(
-    <PageControls
-      numberOfPages={numberOfPages}
-      currentPageIndex={currentPage - 1}
-      renderPageHref={renderPageHref}
-    />,
-  );
-  expect(
-    getAllByText(/\d+/)
-      .map((e) => e.textContent)
-      .join(' '),
-  ).toBe(expected);
+describe('the page numbers', () => {
+  const numPagesAndCurrPageIndex = fc
+    .tuple(fc.integer(1, 100), fc.integer(0, 99))
+    .filter(([numPages, currPageIndex]) => numPages !== currPageIndex)
+    .map(([numPages, currPageIndex]) =>
+      numPages > currPageIndex
+        ? [numPages, currPageIndex]
+        : [currPageIndex, numPages],
+    );
+
+  let result!: RenderResult;
+  beforeEach(() => {
+    result = render(
+      <PageControls
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={renderPageHref}
+      />,
+    );
+  });
+
+  it('always include the first page', async () => {
+    fc.assert(
+      fc.property(
+        numPagesAndCurrPageIndex,
+        ([numberOfPages, currentPageIndex]) => {
+          result.rerender(
+            <PageControls
+              numberOfPages={numberOfPages}
+              currentPageIndex={currentPageIndex}
+              renderPageHref={renderPageHref}
+            />,
+          );
+          expect(result.getByText('1', { exact: true })).toBeVisible();
+        },
+      ),
+      { interruptAfterTimeLimit: 500 },
+    );
+  });
+
+  it('always include the last page', async () => {
+    fc.assert(
+      fc.property(
+        numPagesAndCurrPageIndex,
+        ([numberOfPages, currentPageIndex]) => {
+          result.rerender(
+            <PageControls
+              numberOfPages={numberOfPages}
+              currentPageIndex={currentPageIndex}
+              renderPageHref={renderPageHref}
+            />,
+          );
+          expect(
+            result.getByText(String(numberOfPages), { exact: true }),
+          ).toBeVisible();
+        },
+      ),
+      { interruptAfterTimeLimit: 500 },
+    );
+  });
+
+  it('always include the current page', async () => {
+    fc.assert(
+      fc.property(
+        numPagesAndCurrPageIndex,
+        ([numberOfPages, currentPageIndex]) => {
+          result.rerender(
+            <PageControls
+              numberOfPages={numberOfPages}
+              currentPageIndex={currentPageIndex}
+              renderPageHref={renderPageHref}
+            />,
+          );
+          expect(
+            result.getByText(String(currentPageIndex + 1), { exact: true }),
+          ).toBeVisible();
+        },
+      ),
+      { interruptAfterTimeLimit: 500 },
+    );
+  });
 });
 
 it('highlights the active page number', () => {

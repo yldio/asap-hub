@@ -26,8 +26,9 @@
     "sls": "node serverless/link-plugins.js && yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "test:unit": "jest --testPathIgnorePatterns=\"integration\"",
-    "test:integration": "jest --testPathPattern=\"integration\"",
+    "test:unit": "jest",
+    "test:integration": "jest --config=apps/asap-server/jest-integration.config.js",
+    "test:browser": "jest --config=packages/react-components/jest-browser.config.js",
     "test": "jest"
   },
   "resolutions": {

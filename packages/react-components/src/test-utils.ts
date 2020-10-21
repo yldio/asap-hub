@@ -3,6 +3,8 @@ import { screen } from './pixels';
 
 // For TypeScript to understand the extended matcher
 import 'jest-emotion';
+// For TypeScript to understand the globals
+import 'jest-playwright-preset';
 
 export const viewportCalc = (
   calcExpression: string,
@@ -33,4 +35,21 @@ Found second unit: ${excessUnit}`);
 
   const calc = (num: number) => num + baseUnit;
   return new Function('calc', `return ${numbersOnlyCalcExpression}`)(calc);
+};
+
+export const textContentWithPseudo = (element: HTMLElement) => {
+  const texts = [];
+
+  const [, beforeText] =
+    getComputedStyle(element, '::before').content.match(/"(.+)"/) || [];
+  if (beforeText) texts.push(beforeText);
+
+  const { textContent } = element;
+  if (textContent) texts.push(textContent);
+
+  const [, afterText] =
+    getComputedStyle(element, '::after').content.match(/"(.+)"/) || [];
+  if (afterText) texts.push(afterText);
+
+  return texts;
 };

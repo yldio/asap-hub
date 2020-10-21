@@ -28,7 +28,7 @@ export const Empty = () => (
 export const Invalid = () => (
   <LabeledTextArea
     title="Members"
-    value="John Doe\nBat Man"
+    value={'John Doe\nBat Man'}
     customValidationMessage={text(
       'Validation Error Message',
       'Must have at least 3 members.',

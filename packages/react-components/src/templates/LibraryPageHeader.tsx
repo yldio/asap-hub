@@ -49,6 +49,7 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
         placeholder="Search for a protein, a method…"
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
+        filterEnabled={false}
         filterOptions={[
           { label: 'Proposal', value: 'Proposal' },
           { label: 'Dataset', value: 'Dataset', enabled: false },

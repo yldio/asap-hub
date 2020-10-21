@@ -18,7 +18,7 @@ describe('GET /discover', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  test('returns 200 when no inforamtion exists', async () => {
+  test('returns 200 when no information exists', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
@@ -58,7 +58,7 @@ describe('GET /discover', () => {
           queryDiscoverContents: [
             {
               flatData: {
-                guidance: [
+                pages: [
                   {
                     id: 'uuid',
                     flatData: {

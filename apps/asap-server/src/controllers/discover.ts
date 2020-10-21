@@ -14,7 +14,7 @@ export const query = `
     queryDiscoverContents {
       flatData {
         aboutUs
-        guidance {
+        pages {
           id
           flatData {
             text
@@ -41,8 +41,8 @@ interface Response {
   queryDiscoverContents: {
     flatData: {
       aboutUs: string;
-      guidance: CMSGraphQLPage[];
       members: CMSGraphQLUser[];
+      pages: CMSGraphQLPage[];
     };
   }[];
 }
@@ -68,7 +68,7 @@ export default class Discover {
     return {
       aboutUs: content.flatData.aboutUs || '',
       members: content.flatData.members?.map(parseGraphQLUser) ?? [],
-      pages: content.flatData.guidance?.map(parseGraphQLPage) ?? [],
+      pages: content.flatData.pages?.map(parseGraphQLPage) ?? [],
     };
   }
 }

@@ -12,7 +12,7 @@
     "fieldsInLists": [],
     "fields": [
       {
-        "name": "guidance",
+        "name": "pages",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -26,6 +26,8 @@
             "pages"
           ],
           "label": "Grantee Guidance",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false
         }
       },
@@ -63,7 +65,7 @@
         }
       },
       {
-        "name": "team",
+        "name": "members",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -76,7 +78,9 @@
           "schemaIds": [
             "users"
           ],
-          "label": "Team",
+          "label": "Members",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false
         }
       }

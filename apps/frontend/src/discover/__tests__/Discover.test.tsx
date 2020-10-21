@@ -44,7 +44,7 @@ test('renders discover header', async () => {
   expect(getByText(/discover/i, { selector: 'h1' })).toBeVisible();
 });
 
-test('renders dicover with guidance, about and members', async () => {
+test('renders discover with guidance, about and members', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })

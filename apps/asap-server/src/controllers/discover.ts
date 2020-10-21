@@ -25,6 +25,9 @@ export const query = `
           id
           created
           flatData {
+            avatar {
+              id
+            }
             displayName
             email
             firstName

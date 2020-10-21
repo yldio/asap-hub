@@ -22,7 +22,7 @@ export interface TeamMember {
   displayName: string;
   email: string;
   role: TeamRole;
-  avatarURL?: string;
+  avatarUrl?: string;
 }
 
 export interface TeamResponse extends TeamCreateRequest {

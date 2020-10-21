@@ -48,7 +48,7 @@ const TeamHeader: React.FC<TeamProps> = ({
           <ul css={membersContainerStyle}>
             {members
               .slice(0, 5)
-              .map(({ id, avatarURL, firstName, lastName }) => {
+              .map(({ id, avatarUrl, firstName, lastName }) => {
                 return (
                   <li key={id} css={memberStyle}>
                     <Link href={`/network/users/${id}`} theme={null}>
@@ -56,7 +56,7 @@ const TeamHeader: React.FC<TeamProps> = ({
                         small
                         firstName={firstName}
                         lastName={lastName}
-                        imageUrl={avatarURL}
+                        imageUrl={avatarUrl}
                       />
                     </Link>
                   </li>

@@ -24,7 +24,7 @@ export const Normal = () => (
       displayName: text('Team Name', 'A'),
     })}
     jobTitle={text('Job Title', 'Assistant Professor')}
-    avatarURL={text(
+    avatarUrl={text(
       'Avatar URL',
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     )}

@@ -29,7 +29,7 @@ it('renders the user avatar', async () => {
   const { findByAltText } = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.LoggedIn
-        user={{ avatarURL: '/pic.jpg', firstName: 'John', lastName: 'Doe' }}
+        user={{ avatarUrl: '/pic.jpg', firstName: 'John', lastName: 'Doe' }}
       >
         <UserMenuButton />
       </authTestUtils.LoggedIn>

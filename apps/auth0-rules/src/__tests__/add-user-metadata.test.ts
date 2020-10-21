@@ -160,7 +160,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       id: 'myRandomId123',
       firstName: undefined,
       lastName: undefined,
-      avatarURL: undefined,
+      avatarUrl: undefined,
       teams: [{ id: 'team-1', displayName: 'Team 1' }],
     });
   });

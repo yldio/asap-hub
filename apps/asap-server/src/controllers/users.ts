@@ -38,7 +38,7 @@ export const transform = (user: CMSUser): UserResponse => {
       orcidWorks: user.data.orcidWorks?.iv,
       skills: user.data.skills?.iv || [],
       questions: user.data.questions?.iv.map(({ question }) => question) || [],
-      avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
+      avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
     }),
   );
 };
@@ -120,7 +120,7 @@ export default class Users {
         orcid: { iv: user.orcid },
         institution: { iv: user.institution },
         location: { iv: user.location },
-        avatarURL: { iv: user.avatarURL },
+        avatarUrl: { iv: user.avatarUrl },
         connections: { iv: [{ code }] },
       }),
     );

@@ -14,7 +14,7 @@ const styles = css({
 
 type TeamAboutProps = ComponentProps<typeof TeamOverview> &
   ComponentProps<typeof ProfileSkills> &
-  ComponentProps<typeof MembersSection> &
+  Omit<ComponentProps<typeof MembersSection>, 'title'> &
   Pick<TeamResponse, 'pointOfContact'>;
 
 const TeamAbout: React.FC<TeamAboutProps> = ({

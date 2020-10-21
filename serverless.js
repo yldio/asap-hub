@@ -266,6 +266,18 @@ module.exports = {
         },
       ],
     },
+    discover: {
+      handler: 'apps/asap-server/build-cjs/handlers/discover/fetch.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/discover`,
+          },
+        },
+      ],
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

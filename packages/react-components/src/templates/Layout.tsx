@@ -152,6 +152,7 @@ type LayoutProps = {
   ComponentProps<typeof UserNavigation>;
 const Layout: React.FC<LayoutProps> = ({
   children,
+  discoverAsapHref,
   libraryHref,
   networkHref,
   newsAndEventsHref,
@@ -197,6 +198,7 @@ const Layout: React.FC<LayoutProps> = ({
       <div css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}>
         <React.Suspense fallback="Loading...">
           <MainNavigation
+            discoverAsapHref={discoverAsapHref}
             libraryHref={libraryHref}
             networkHref={networkHref}
             newsAndEventsHref={newsAndEventsHref}

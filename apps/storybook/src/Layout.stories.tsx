@@ -11,6 +11,7 @@ export default {
 
 export const Normal = () => (
   <Layout
+    discoverAsapHref="/discovery"
     networkHref="/network"
     libraryHref="/library"
     newsAndEventsHref="/news-and-events"

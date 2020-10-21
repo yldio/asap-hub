@@ -7,6 +7,7 @@ import { Display } from '../atoms';
 import { PageCard } from '.';
 
 type WhereToStartProps = {
+  readonly title: string;
   readonly pages: ReadonlyArray<PageResponse>;
 };
 
@@ -21,10 +22,10 @@ const gridContainerStyles = css({
   },
 });
 
-const WhereToStart: React.FC<WhereToStartProps> = ({ pages }) => {
+const WhereToStart: React.FC<WhereToStartProps> = ({ title, pages }) => {
   return (
     <section>
-      <Display styleAsHeading={2}>Not sure where to start?</Display>
+      <Display styleAsHeading={2}>{title}</Display>
       <div css={gridContainerStyles}>
         {pages.map((page, idx) => (
           <PageCard key={`page-${idx}`} {...page} href="#" />

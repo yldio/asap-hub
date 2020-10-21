@@ -9,6 +9,7 @@ export const Empty = () => <MembersSection members={[]} />;
 
 export const Normal = () => (
   <MembersSection
+    title={'Team Members (7)'}
     members={[
       {
         id: '1',

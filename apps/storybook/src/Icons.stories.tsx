@@ -3,6 +3,7 @@ import {
   chevronDownIcon,
   chevronUpIcon,
   crossIcon,
+  discoverIcon,
   docsIcon,
   dropdownChevronIcon,
   eventsPlaceholder,
@@ -40,6 +41,7 @@ export const ChevronCircleLeft = () => chevronCircleLeftIcon;
 export const ChevronDown = () => chevronDownIcon;
 export const ChevronUp = () => chevronUpIcon;
 export const Cross = () => crossIcon;
+export const Discover = () => discoverIcon;
 export const Docs = () => docsIcon;
 export const DropdownChevron = () => dropdownChevronIcon;
 export const EventsPlaceholder = () => eventsPlaceholder;

@@ -27,6 +27,7 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
   NoPaddingDecorator(
     () => (
       <Layout
+        discoverAsapHref="/discover"
         networkHref="/network"
         libraryHref="/library"
         newsAndEventsHref="/news-and-events"

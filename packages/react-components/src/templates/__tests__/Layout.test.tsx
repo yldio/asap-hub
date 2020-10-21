@@ -8,7 +8,7 @@ import { createMailTo } from '../../utils';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
-
+  discoverAsapHref: '/discover',
   libraryHref: '/library',
   networkHref: '/network',
   newsAndEventsHref: '/news-and-events',

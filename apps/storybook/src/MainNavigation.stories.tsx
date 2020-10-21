@@ -24,6 +24,7 @@ export const Normal = () => {
   return (
     <StaticRouter key={path} location={path}>
       <MainNavigation
+        discoverAsapHref="/discovery"
         networkHref="/network"
         libraryHref="/library"
         newsAndEventsHref="/news-and-events"

@@ -1,13 +1,14 @@
 import React from 'react';
-import { WhereToStartSection } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { PagesSection } from '@asap-hub/react-components';
+import { number, text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Dashboard / Where To Start',
+  title: 'Organisms / Sections / Pages',
 };
 
 export const Normal = () => (
-  <WhereToStartSection
+  <PagesSection
+    title={text('Title', 'Where to Start')}
     pages={Array.from(
       { length: number('Number of Pages', 2, { min: 0 }) },
       (_, idx) => ({

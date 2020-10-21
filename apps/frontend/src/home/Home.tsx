@@ -4,13 +4,14 @@ import {
   DashboardPage,
   DashboardPageBody,
   Paragraph,
+  NotFoundPage,
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { useDashboard } from '../api';
 
 const Home: React.FC<{}> = () => {
   const { firstName, id, teams = [] } = useCurrentUser() ?? {};
-  const { loading, data: dashboard, error } = useDashboard();
+  const { loading, data: dashboard } = useDashboard();
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -33,13 +34,7 @@ const Home: React.FC<{}> = () => {
     );
   }
 
-  return (
-    <Paragraph>
-      {error.name}
-      {': '}
-      {error.message}
-    </Paragraph>
-  );
+  return <NotFoundPage />;
 };
 
 export default Home;

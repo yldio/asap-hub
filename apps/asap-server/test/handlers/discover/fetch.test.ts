@@ -1,0 +1,128 @@
+import nock from 'nock';
+
+import { APIGatewayProxyResult } from 'aws-lambda';
+import { config as authConfig } from '@asap-hub/auth';
+
+import { handler } from '../../../src/handlers/discover/fetch';
+import { cms } from '../../../src/config';
+import { apiGatewayEvent } from '../../helpers/events';
+import { identity } from '../../helpers/squidex';
+import { DiscoverResponse } from '@asap-hub/model';
+
+describe('GET /discover', () => {
+  beforeAll(() => {
+    identity();
+  });
+
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
+  });
+
+  test('returns 200 when no information exists', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    nock(cms.baseUrl)
+      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+      .reply(200, {
+        data: {
+          queryDiscoverContents: [
+            { flatData: { aboutUs: null, pages: null, members: null } },
+          ],
+        },
+      });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(result.body).toBeDefined();
+    expect(body).toStrictEqual({
+      aboutUs: '',
+      members: [],
+      pages: [],
+    } as DiscoverResponse);
+  });
+
+  test('returns 200 when no news and events exist', async () => {
+    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
+    nock(cms.baseUrl)
+      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+      .reply(200, {
+        data: {
+          queryDiscoverContents: [
+            {
+              flatData: {
+                pages: [
+                  {
+                    id: 'uuid',
+                    flatData: {
+                      path: '/',
+                      title: 'Title',
+                      text: 'Content',
+                    },
+                  },
+                ],
+                members: [
+                  {
+                    id: 'uuid',
+                    created: '2020-10-15T17:55:21Z',
+                    flatData: {
+                      displayName: 'John',
+                      email: 'john@example.com',
+                      firstName: 'John',
+                      lastModifiedDate: '2020-10-15T17:55:21Z',
+                      lastName: 'Doe',
+                    },
+                  },
+                ],
+                aboutUs: '<p>content<p>',
+              },
+            },
+          ],
+        },
+      });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(result.body).toBeDefined();
+    expect(body).toStrictEqual({
+      pages: [
+        {
+          path: '/',
+          title: 'Title',
+          text: 'Content',
+        },
+      ],
+      members: [
+        {
+          id: 'uuid',
+          createdDate: '2020-10-15T17:55:21.000Z',
+          displayName: 'John',
+          email: 'john@example.com',
+          firstName: 'John',
+          lastModifiedDate: '2020-10-15T17:55:21Z',
+          lastName: 'Doe',
+          questions: [],
+          skills: [],
+          teams: [],
+        },
+      ],
+      aboutUs: '<p>content<p>',
+    });
+  });
+});

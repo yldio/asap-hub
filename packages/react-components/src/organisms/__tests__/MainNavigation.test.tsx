@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import MainNavigation from '../MainNavigation';
 
 const props: ComponentProps<typeof MainNavigation> = {
+  discoverAsapHref: '/discover',
   networkHref: '/network',
   libraryHref: '/library',
   newsAndEventsHref: '/news-and-events',
@@ -17,6 +18,7 @@ it('renders the navigation items', () => {
     expect.stringMatching(/network/i),
     expect.stringMatching(/library/i),
     expect.stringMatching(/news/i),
+    expect.stringMatching(/discover/i),
   ]);
 });
 

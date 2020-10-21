@@ -9,7 +9,7 @@ import {
   smallDesktopScreen,
 } from '../pixels';
 import { NavigationLink } from '../atoms';
-import { networkIcon, libraryIcon, newsIcon } from '../icons';
+import { networkIcon, discoverIcon, libraryIcon, newsIcon } from '../icons';
 
 const containerStyles = css({
   minWidth: `max(${vminLinearCalc(
@@ -43,13 +43,16 @@ const listStyles = css({
 });
 
 export interface MainNavigationProps {
-  networkHref: string;
+  discoverAsapHref: string;
   libraryHref: string;
+  networkHref: string;
   newsAndEventsHref: string;
 }
+
 const MainNavigation: React.FC<MainNavigationProps> = ({
-  networkHref,
+  discoverAsapHref,
   libraryHref,
+  networkHref,
   newsAndEventsHref,
 }) => (
   <nav css={containerStyles}>
@@ -67,6 +70,11 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       <li>
         <NavigationLink href={newsAndEventsHref} icon={newsIcon}>
           News and Events
+        </NavigationLink>
+      </li>
+      <li>
+        <NavigationLink href={discoverAsapHref} icon={discoverIcon}>
+          Discover ASAP
         </NavigationLink>
       </li>
     </ul>

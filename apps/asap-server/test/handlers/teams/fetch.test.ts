@@ -26,14 +26,19 @@ describe('GET /teams', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
-        $top: 8,
         $orderby: 'data/displayName/iv',
+        $top: 8,
+        $skip: 8,
       })
       .reply(200, { total: 0, items: [] });
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
+        queryStringParameters: {
+          take: '8',
+          skip: '8',
+        },
         headers: {
           Authorization: `Bearer ${chance.string()}`,
         },

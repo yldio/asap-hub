@@ -8,13 +8,7 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { Divider, NavigationLink, Caption, Link } from '../atoms';
-import {
-  teamIcon,
-  userIcon,
-  settingsIcon,
-  feedbackIcon,
-  logoutIcon,
-} from '../icons';
+import { teamIcon, userIcon, feedbackIcon, logoutIcon } from '../icons';
 
 const containerStyles = css({
   minWidth: '312px',
@@ -60,7 +54,6 @@ export interface UserNavigationProps {
 const UserNavigation: React.FC<UserNavigationProps> = ({
   profileHref,
   teams,
-  settingsHref,
   feedbackHref,
   logoutHref,
   termsHref,
@@ -84,11 +77,11 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
     </ul>
     <Divider />
     <ul css={listStyles}>
-      <li>
+      {/* <li>
         <NavigationLink href={settingsHref} icon={settingsIcon}>
           Settings
         </NavigationLink>
-      </li>
+      </li> */}
       <li>
         <NavigationLink href={feedbackHref} icon={feedbackIcon}>
           Give Feedback

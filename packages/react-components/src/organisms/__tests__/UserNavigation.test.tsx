@@ -25,7 +25,6 @@ it('renders the navigation items', () => {
     expect.stringMatching(/profile/i),
     expect.stringContaining('Team 1'),
     expect.stringContaining('Team 2'),
-    expect.stringMatching(/settings/i),
     expect.stringMatching(/feedback/i),
     expect.stringMatching(/log.*out/i),
   ]);

@@ -1,4 +1,5 @@
 import { CMSTeam, CMSUser } from '../../../src/entities';
+import { cms } from '../../../src/config';
 import { ListTeamResponse } from '@asap-hub/model';
 
 export const teamsResponse: { total: number; items: CMSTeam[] } = {
@@ -249,8 +250,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-1',
           firstName: 'Cristiano',
           lastName: 'Ronaldo',
-          avatarURL:
-            'https://data.hub.asap.science/api/assets/asap-test/uuid-user-id-1',
+          avatarURL: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-user-id-1`,
           email: 'cristiano@ronaldo.com',
           displayName: 'Cristiano Ronaldo',
           role: 'Lead PI',
@@ -272,8 +272,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-2',
           firstName: 'John',
           lastName: 'Travista',
-          avatarURL:
-            'https://data.hub.asap.science/api/assets/asap-test/uuid-user-id-2',
+          avatarURL: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-user-id-2`,
           email: 'john@ed.ma',
           displayName: 'John Travista',
           role: 'Lead PI',
@@ -282,8 +281,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-3',
           firstName: 'Bill',
           lastName: 'Travista',
-          avatarURL:
-            'https://data.hub.asap.science/api/assets/asap-test/uuid-user-id-3',
+          avatarURL: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-user-id-3`,
           email: 'bill@ed.ma',
           displayName: 'Bill Travista',
           role: 'Key Personnel',

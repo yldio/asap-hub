@@ -13,6 +13,7 @@ const props: ComponentProps<typeof Layout> = {
   libraryHref: '/library',
   networkHref: '/network',
   newsAndEventsHref: '/news-and-events',
+  discoverAsapHref: '/discover',
 
   profileHref: '/profile',
   teams: [],

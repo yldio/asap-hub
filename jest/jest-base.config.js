@@ -1,9 +1,13 @@
 const { join } = require('path');
 
+const testPathIgnorePatterns = [
+  '\\.browser-test\\.(js|jsx|ts|tsx)$',
+  'integration\\.test\\.(js|jsx|ts|tsx)$',
+];
+
 module.exports = {
   testRunner: require.resolve('jest-circus/runner'),
   testEnvironment: 'node',
-  bail: 0,
 
   cacheDirectory: join(__dirname, '..', '.jest-cache'),
 
@@ -12,12 +16,10 @@ module.exports = {
     '<rootDir>/coverage/',
     '<rootDir>/packages/services-common/src/cms/',
   ],
-  testPathIgnorePatterns: [
-    '\\.browser-test\\.(js|jsx|ts|tsx)$',
-    'integration\\.test\\.(js|jsx|ts|tsx)$',
-  ],
+  testPathIgnorePatterns,
 
   collectCoverageFrom: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
+  coveragePathIgnorePatterns: testPathIgnorePatterns,
   coverageThreshold: {
     global: {
       branches: 90,

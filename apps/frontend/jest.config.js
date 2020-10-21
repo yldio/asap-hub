@@ -1,11 +1,15 @@
-module.exports = {
-  ...require('../../jest/jest-base.config.js'),
+const {
+  setupFilesAfterEnv,
+  ...base
+} = require('../../jest/jest-base.config.js');
 
+module.exports = {
   rootDir: __dirname,
   testEnvironment: require.resolve('jest-environment-jsdom-sixteen'),
 
   setupFiles: [require.resolve('react-app-polyfill/jsdom')],
   setupFilesAfterEnv: [
+    ...(setupFilesAfterEnv || []),
     require.resolve('../../jest/dom-extensions-setup-after-env.js'),
   ],
 

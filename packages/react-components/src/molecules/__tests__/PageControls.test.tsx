@@ -1,9 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, RenderResult } from '@testing-library/react';
 import {
   mockConsoleError,
   findParentWithStyle,
 } from '@asap-hub/dom-test-utils';
+import fc from 'fast-check';
 
 import PageControls from '../PageControls';
 import { fern, tin } from '../../colors';
@@ -175,6 +176,89 @@ describe('the arrow controls', () => {
       ),
     ).toBe(tin.rgb.replace(/ /g, ''));
     expect(getByTitle(/last page/i).closest('a')).not.toHaveAttribute('href');
+  });
+});
+
+describe('the page numbers', () => {
+  const numPagesAndCurrPageIndex = fc
+    .tuple(fc.integer(1, 100), fc.integer(0, 99))
+    .filter(([numPages, currPageIndex]) => numPages !== currPageIndex)
+    .map(([numPages, currPageIndex]) =>
+      numPages > currPageIndex
+        ? [numPages, currPageIndex]
+        : [currPageIndex, numPages],
+    );
+
+  let result!: RenderResult;
+  beforeEach(() => {
+    result = render(
+      <PageControls
+        numberOfPages={1}
+        currentPageIndex={0}
+        renderPageHref={renderPageHref}
+      />,
+    );
+  });
+
+  it('always include the first page', async () => {
+    fc.assert(
+      fc.property(
+        numPagesAndCurrPageIndex,
+        ([numberOfPages, currentPageIndex]) => {
+          result.rerender(
+            <PageControls
+              numberOfPages={numberOfPages}
+              currentPageIndex={currentPageIndex}
+              renderPageHref={renderPageHref}
+            />,
+          );
+          expect(result.getByText('1', { exact: true })).toBeVisible();
+        },
+      ),
+      { interruptAfterTimeLimit: 500 },
+    );
+  });
+
+  it('always include the last page', async () => {
+    fc.assert(
+      fc.property(
+        numPagesAndCurrPageIndex,
+        ([numberOfPages, currentPageIndex]) => {
+          result.rerender(
+            <PageControls
+              numberOfPages={numberOfPages}
+              currentPageIndex={currentPageIndex}
+              renderPageHref={renderPageHref}
+            />,
+          );
+          expect(
+            result.getByText(String(numberOfPages), { exact: true }),
+          ).toBeVisible();
+        },
+      ),
+      { interruptAfterTimeLimit: 500 },
+    );
+  });
+
+  it('always include the current page', async () => {
+    fc.assert(
+      fc.property(
+        numPagesAndCurrPageIndex,
+        ([numberOfPages, currentPageIndex]) => {
+          result.rerender(
+            <PageControls
+              numberOfPages={numberOfPages}
+              currentPageIndex={currentPageIndex}
+              renderPageHref={renderPageHref}
+            />,
+          );
+          expect(
+            result.getByText(String(currentPageIndex + 1), { exact: true }),
+          ).toBeVisible();
+        },
+      ),
+      { interruptAfterTimeLimit: 500 },
+    );
   });
 });
 

@@ -322,6 +322,7 @@ __metadata:
     dom-to-playwright: ^0.1.2
     emotion-normalize: ^10.1.0
     expect-playwright: ^0.2.5
+    fast-check: ^2.5.0
     history: ^4
     jest-emotion: ^10.0.32
     jest-playwright-jsdom: ^0.0.4
@@ -12606,6 +12607,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fast-check@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "fast-check@npm:2.5.0"
+  dependencies:
+    pure-rand: ^3.0.0
+  checksum: ff153d9e216df9b3e475d6af8bd8ea03fe25afdc8e20f4d2c350386a56b123fe7c8a6e53d94ed557c009f3d2c761d91f7966c14f029ae6b305e326953d655ef4
+  languageName: node
+  linkType: hard
+
 "fast-deep-equal@npm:^3.1.1":
   version: 3.1.1
   resolution: "fast-deep-equal@npm:3.1.1"
@@ -22050,6 +22060,13 @@ fsevents@^1.2.7:
   dependencies:
     escape-goat: ^2.0.0
   checksum: d03edb9fd7d707e54618711896ab4a96c80fcfb380e413a9130157dc08a3553bf62fa7c7407edbba57095d4ba993df6de4f28a56dd5eca93b5dccbe1fc4a82db
+  languageName: node
+  linkType: hard
+
+"pure-rand@npm:^3.0.0":
+  version: 3.1.0
+  resolution: "pure-rand@npm:3.1.0"
+  checksum: 69d26369695f619997f7e484b529fe07bd922e7ff4a2d19c2e0cf6d6aeb3fe10d6ffe5c10e56d738e6dfa6a0ba5511841f21eca6000f7cfacf53c7975e988aac
   languageName: node
   linkType: hard
 

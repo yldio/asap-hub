@@ -71,6 +71,7 @@
     "@types/uuid": "^8.0.0",
     "dom-to-playwright": "^0.1.2",
     "expect-playwright": "^0.2.5",
+    "fast-check": "^2.5.0",
     "history": "^4",
     "jest-emotion": "^10.0.32",
     "jest-playwright-jsdom": "^0.0.4",

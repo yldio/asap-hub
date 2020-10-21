@@ -54,10 +54,11 @@ describe('GET /users', () => {
         $orderby: 'data/displayName/iv',
         $filter:
           "data/teams/iv/role eq 'Lead PI' and" +
-          " (contains(data/displayName/iv, 'first')" +
-          " or contains(data/firstName/iv, 'first')" +
-          " or contains(data/displayName/iv, 'last')" +
-          " or contains(data/firstName/iv, 'last'))",
+          " ((contains(data/displayName/iv, 'first')" +
+          " or contains(data/firstName/iv, 'first'))" +
+          ' and' +
+          " (contains(data/displayName/iv, 'last')" +
+          " or contains(data/firstName/iv, 'last')))",
       })
       .reply(200, fixtures.response);
 
@@ -89,10 +90,11 @@ describe('GET /users', () => {
         $filter:
           "data/teams/iv/role eq 'Lead PI' and " +
           "data/teams/iv/role eq 'anotherFilter' and" +
-          " (contains(data/displayName/iv, 'first')" +
-          " or contains(data/firstName/iv, 'first')" +
-          " or contains(data/displayName/iv, 'last')" +
-          " or contains(data/firstName/iv, 'last'))",
+          " ((contains(data/displayName/iv, 'first')" +
+          " or contains(data/firstName/iv, 'first'))" +
+          ' and' +
+          " (contains(data/displayName/iv, 'last')" +
+          " or contains(data/firstName/iv, 'last')))",
       })
       .reply(200, fixtures.response);
 

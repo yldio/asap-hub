@@ -63,7 +63,10 @@ build:ts:
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - yarn run build
   after_script:
-    - CI_REPO_OWNER="$CI_PROJECT_NAMESPACE" CI_REPO_NAME="$CI_PROJECT_NAME" yarn dlx bundlesize@0.18.0
+    - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
+    - export CI_REPO_NAME="$CI_PROJECT_NAME"
+    - export CI_BRANCH="$CI_COMMIT_BRANCH"
+    - yarn dlx bundlewatch@0.3.1
   needs:
     - []
   stage: build

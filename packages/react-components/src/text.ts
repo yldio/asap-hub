@@ -44,7 +44,7 @@ const isAllowedElement = (child: unknown): child is AllowedChild => {
     typeof child === 'object' &&
     isValidElement(child) &&
     typeof child.type === 'string' &&
-    ['i'].includes(child.type.toLowerCase())
+    ['i', 'em'].includes(child.type.toLowerCase())
   )
     return true;
   return false;

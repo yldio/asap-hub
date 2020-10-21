@@ -46,8 +46,10 @@ const components = {
     }
     return <Link href={href}>{children}</Link>;
   },
-  img: (props: ImgHTMLAttributes<HTMLImageElement>) => {
-    return <img {...props} css={{ height: 'auto', maxWidth: '100%' }} />;
+  img: ({ alt = '', ...props }: ImgHTMLAttributes<HTMLImageElement>) => {
+    return (
+      <img alt={alt} {...props} css={{ height: 'auto', maxWidth: '100%' }} />
+    );
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 

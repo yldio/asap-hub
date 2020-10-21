@@ -62,9 +62,15 @@ it('Displays error when styling applied to h2', () => {
 
 it('passes through image props', () => {
   const { getByRole } = render(
-    <RichText text={'<img data-test="test123"></img>'} />,
+    <RichText text={'<img data-test="test123" alt="alt text"></img>'} />,
   );
   expect(getByRole('img')).toHaveAttribute('data-test', 'test123');
+  expect(getByRole('img')).toHaveAttribute('alt', 'alt text');
+});
+
+it('sets blank alt when omitted', () => {
+  const { getByRole } = render(<RichText text={'<img></img>'} />);
+  expect(getByRole('img')).toHaveAttribute('alt');
 });
 
 it('sets images max-width to 100%', () => {

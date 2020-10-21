@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
 import { join } from 'path';
 import {
   Paragraph,
@@ -9,10 +8,10 @@ import {
   ProfileResearch,
   ProfileOutputs,
   NotFoundPage,
-  ErrorCard,
 } from '@asap-hub/react-components';
 
 import { useUserById } from '../api';
+import ErrorBoundary from '../errors/ErrorBoundary';
 
 const Profile: React.FC<{}> = () => {
   const {
@@ -43,7 +42,7 @@ const Profile: React.FC<{}> = () => {
 
     return (
       <ProfilePage {...profilePageProps}>
-        <ErrorBoundary FallbackComponent={ErrorCard}>
+        <ErrorBoundary>
           <Switch>
             <Route path={`${path}/about`}>
               <ProfileAbout {...profile} />

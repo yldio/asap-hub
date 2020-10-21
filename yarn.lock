@@ -226,7 +226,7 @@ __metadata:
     react: ^16.13.1
     react-app-polyfill: ^1.0.6
     react-dom: ^16.13.1
-    react-error-boundary: ^3.0.2
+    react-error-boundary: ^2.0.0
     react-router-dom: ^5.2.0
     react-scripts: "patch:react-scripts@3.4.3#./patches/react-scripts.patch"
     react-test-renderer: ^16.13.1
@@ -15294,6 +15294,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"is-core-module@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "is-core-module@npm:2.0.0"
+  dependencies:
+    has: ^1.0.3
+  checksum: de99dfbdf14d254f6d078aa37113512295acef3cfff5fb39fdf8020b04788535eae6da39e02b0c4ad07f7bc79594de8d5aeb4fce66f97feb9c597d7d6d6d43d4
+  languageName: node
+  linkType: hard
+
 "is-data-descriptor@npm:^0.1.4":
   version: 0.1.4
   resolution: "is-data-descriptor@npm:0.1.4"
@@ -22415,14 +22424,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "react-error-boundary@npm:3.0.2"
+"react-error-boundary@npm:^2.0.0":
+  version: 2.3.2
+  resolution: "react-error-boundary@npm:2.3.2"
   dependencies:
     "@babel/runtime": ^7.11.2
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 241a91a7db61350fcd7370e857b127ca232afb47cbc3b437b77f29277eb696785c85bf8e3d2597604ba68273125e3168783037d173cccc72fed4d2b379f6a2f8
+  checksum: 9e6d4ad197fd7d22e0a8fb9c7d7004282276ff2d6fda9ab0cb109ac72ffb324571f392776161af1a9ecc0e650aa08d97b403534110e53f0fd221a6091f0a99cb
   languageName: node
   linkType: hard
 
@@ -23538,11 +23547,12 @@ resolve@1.15.0:
   linkType: hard
 
 "resolve@^1.1.6, resolve@^1.10.0, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.15.1, resolve@^1.17.0, resolve@^1.3.2, resolve@^1.8.1":
-  version: 1.17.0
-  resolution: "resolve@npm:1.17.0"
+  version: 1.18.1
+  resolution: "resolve@npm:1.18.1"
   dependencies:
+    is-core-module: ^2.0.0
     path-parse: ^1.0.6
-  checksum: 5e3cdb8cf68c20b0c5edeb6505e7fab20c6776af0cae4b978836e557420aef7bb50acd25339bbb143b7f80533aa1988c7e827a0061aee9c237926a7d2c41f8d0
+  checksum: deb5ba746e1c038ba8fb7ca5c35ee3fe88665e2f79be3e9a706e5254eeea55eb12b6f1830dd60a11bbafa327bcd868284fbf5caf428cf5761b3f094abdffee77
   languageName: node
   linkType: hard
 
@@ -23563,11 +23573,12 @@ resolve@1.15.0:
   linkType: hard
 
 "resolve@patch:resolve@^1.1.6#builtin<compat/resolve>, resolve@patch:resolve@^1.10.0#builtin<compat/resolve>, resolve@patch:resolve@^1.12.0#builtin<compat/resolve>, resolve@patch:resolve@^1.13.1#builtin<compat/resolve>, resolve@patch:resolve@^1.15.1#builtin<compat/resolve>, resolve@patch:resolve@^1.17.0#builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#builtin<compat/resolve>, resolve@patch:resolve@^1.8.1#builtin<compat/resolve>":
-  version: 1.17.0
-  resolution: "resolve@patch:resolve@npm%3A1.17.0#builtin<compat/resolve>::version=1.17.0&hash=3388aa"
+  version: 1.18.1
+  resolution: "resolve@patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"
   dependencies:
+    is-core-module: ^2.0.0
     path-parse: ^1.0.6
-  checksum: 4bcfb568860d0c361fd16c26b6fce429711138ff0de7dd353bdd73fcb5c7eede2f4602d40ccfa08ff45ec7ef9830845eab2021a46036af0a6e5b58bab1ff6399
+  checksum: 9e62d2803ad1ec21b13780cc6a45b72bb7b6525eb5b44f0ede7cde37c00a8eb310c06ebfcc7de7dc10c2234d7d271bc4f1eed9783fb87acac141597cd4efaeec
   languageName: node
   linkType: hard
 

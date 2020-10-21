@@ -67,7 +67,7 @@ build:ts:
     - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
     - export CI_REPO_NAME="$CI_PROJECT_NAME"
     - export CI_BRANCH="$CI_COMMIT_BRANCH"
-    - yarn dlx bundlewatch@0.3.1
+    - yarn bundlewatch
   needs:
     - []
   stage: build
@@ -121,7 +121,7 @@ test:unit:
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - yarn run test:unit --coverage
   after_script:
-    - yarn dlx codecov@3.7.2
+    - yarn codecov
   needs:
     - build:ts
   variables:

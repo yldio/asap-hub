@@ -45,7 +45,7 @@ interface LayoutProps {
   readonly privacyPolicyHref: string;
 }
 
-const Component: React.FC<LayoutProps> = ({
+const EmailLayout: React.FC<LayoutProps> = ({
   children,
   termsHref,
   privacyPolicyHref,
@@ -71,4 +71,4 @@ const Component: React.FC<LayoutProps> = ({
   </>
 );
 
-export default Component;
+export default EmailLayout;

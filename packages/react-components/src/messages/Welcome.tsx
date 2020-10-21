@@ -16,7 +16,7 @@ type WelcomeProps = ComponentProps<typeof Layout> & {
   readonly link: string;
 };
 
-const Component: React.FC<WelcomeProps> = ({
+const Welcome: React.FC<WelcomeProps> = ({
   firstName,
   link,
   privacyPolicyHref,
@@ -43,4 +43,4 @@ const Component: React.FC<WelcomeProps> = ({
   </Layout>
 );
 
-export default Component;
+export default Welcome;

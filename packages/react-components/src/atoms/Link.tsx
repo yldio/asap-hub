@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import css, { CSSObject, SerializedStyles } from '@emotion/css';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 
 import { fern, paper, pine } from '../colors';
 import { useHasRouter } from '../hooks';
@@ -75,9 +75,9 @@ const Link: React.FC<LinkProps> = ({
   const internal = href ? isInternalLink(href) : false;
   if (useHasRouter() && href && internal) {
     return (
-      <ReactRouterLink css={linkStyles} to={href}>
+      <HashLink css={linkStyles} to={href} smooth>
         {linkChildren}
-      </ReactRouterLink>
+      </HashLink>
     );
   }
   return (

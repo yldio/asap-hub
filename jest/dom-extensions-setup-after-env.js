@@ -41,4 +41,7 @@ if (typeof document === 'object') {
       return { baseVal: rect, animVal: rect };
     },
   });
+
+  // scrollIntoView polyfill
+  Element.prototype.scrollIntoView = jest.fn();
 }

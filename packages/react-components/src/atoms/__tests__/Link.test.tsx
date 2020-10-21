@@ -1,6 +1,7 @@
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import Link from '../Link';
 import { fern, paper } from '../../colors';
@@ -179,6 +180,14 @@ describe('for an external link', () => {
     expect(relList).toContain('noreferrer');
     expect(relList).toContain('noopener');
   });
+
+  it('triggers a full page navigation on click', () => {
+    const { getByRole } = render(
+      <Link href="https://parkinsonsroadmap.org/">text</Link>,
+    );
+    const anchor = getByRole('link') as HTMLAnchorElement;
+    expect(fireEvent.click(anchor)).toBe(true);
+  });
 });
 
 describe.each`
@@ -199,24 +208,35 @@ describe.each`
     expect(relList).not.toContain('noopener');
   });
 });
-it('triggers a full page navigation on click of external link', () => {
-  const { getByRole } = render(
-    <Link href="https://parkinsonsroadmap.org/">text</Link>,
-  );
-  const anchor = getByRole('link') as HTMLAnchorElement;
-  expect(fireEvent.click(anchor)).toBe(true);
-});
-it('does not trigger a full page navigation on click of internal link', () => {
-  const { getByRole } = render(
-    <Link
-      href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
-    >
-      text
-    </Link>,
-    {
-      wrapper: StaticRouter,
-    },
-  );
-  const anchor = getByRole('link') as HTMLAnchorElement;
-  expect(fireEvent.click(anchor)).toBe(false);
+
+describe('for an internal link with a router', () => {
+  it('does not trigger a full page navigation on click', () => {
+    const { getByRole } = render(
+      <Link
+        href={`${window.location.protocol}//${window.location.host}/page?query#fragment`}
+      >
+        text
+      </Link>,
+      { wrapper: StaticRouter },
+    );
+    const anchor = getByRole('link') as HTMLAnchorElement;
+    expect(fireEvent.click(anchor)).toBe(false);
+  });
+
+  it('smoothly scrolls the anchor referenced by the fragment into view', async () => {
+    const { getByRole } = render(
+      <>
+        <Link href={`#fragment`}>text</Link>
+        <main id="fragment">text</main>
+      </>,
+      { wrapper: StaticRouter },
+    );
+    const main = getByRole('main');
+    const spyScrollIntoView = jest.spyOn(main, 'scrollIntoView');
+
+    userEvent.click(getByRole('link'));
+    await waitFor(() =>
+      expect(spyScrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' }),
+    );
+  });
 });

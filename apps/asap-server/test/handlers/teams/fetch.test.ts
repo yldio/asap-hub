@@ -26,16 +26,19 @@ describe('GET /teams', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $orderby: 'data/displayName/iv',
+        $top: 8,
+        $skip: 8,
       })
       .reply(200, { total: 0, items: [] });
 
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',
+        queryStringParameters: {
+          take: '8',
+          skip: '8',
+        },
         headers: {
           Authorization: `Bearer ${chance.string()}`,
         },
@@ -56,34 +59,16 @@ describe('GET /teams', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          filter: {
-            or: [
-              {
-                path: 'data.displayName.iv',
-                op: 'contains',
-                value: 'Cristiano',
-              },
-              {
-                path: 'data.projectTitle.iv',
-                op: 'contains',
-                value: 'Cristiano',
-              },
-              {
-                path: 'data.displayName.iv',
-                op: 'contains',
-                value: 'Ronaldo',
-              },
-              {
-                path: 'data.projectTitle.iv',
-                op: 'contains',
-                value: 'Ronaldo',
-              },
-            ],
-          },
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $top: 8,
+        $orderby: 'data/displayName/iv',
+        $filter:
+          "(contains(data/displayName/iv, 'Cristiano')" +
+          " or contains(data/projectTitle/iv, 'Cristiano')" +
+          " or contains(data/skills/iv, 'Cristiano'))" +
+          ' and' +
+          " (contains(data/displayName/iv, 'Ronaldo')" +
+          " or contains(data/projectTitle/iv, 'Ronaldo')" +
+          " or contains(data/skills/iv, 'Ronaldo'))",
       })
       .reply(200, { total: 1, items: fixtures.teamsResponse.items.slice(0, 1) })
       .get(`/api/content/${cms.appName}/users`)
@@ -117,10 +102,8 @@ describe('GET /teams', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $top: 8,
+        $orderby: 'data/displayName/iv',
       })
       .reply(404);
 
@@ -147,10 +130,8 @@ describe('GET /teams', () => {
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ path: 'data.displayName.iv' }],
-        }),
+        $top: 8,
+        $orderby: 'data/displayName/iv',
       })
       .reply(200, fixtures.teamsResponse)
       .get(`/api/content/${cms.appName}/users`)

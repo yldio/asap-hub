@@ -80,26 +80,32 @@ export default class Teams {
     search?: string;
     filter?: string | string[];
   }): Promise<ListTeamResponse> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { search, filter, ...opts } = options;
+    const { take, skip, search } = options;
 
-    const { total, items: teams } = await this.teams.fetch({
-      ...opts,
-      ...(search
-        ? {
-            filter: {
-              or: search
-                .split(' ')
-                .filter(Boolean)
-                .flatMap((word) => [
-                  { path: 'data.displayName.iv', op: 'contains', value: word },
-                  { path: 'data.projectTitle.iv', op: 'contains', value: word },
-                ]),
-            },
-          }
-        : {}),
-      sort: [{ path: 'data.displayName.iv' }],
-    });
+    const searchQ = (search || '')
+      .split(' ')
+      .filter(Boolean) // removes whitespaces
+      .reduce(
+        (acc: string[], word: string) =>
+          acc.concat(
+            `(${[
+              [`contains(data/displayName/iv, '${word}')`],
+              [`contains(data/projectTitle/iv, '${word}')`],
+              [`contains(data/skills/iv, '${word}')`],
+            ].join(' or ')})`,
+          ),
+        [],
+      )
+      .join(' and ');
+
+    const query = {
+      $orderby: 'data/displayName/iv',
+      ...(search ? { $filter: searchQ } : {}),
+      ...(take ? { $top: take } : {}),
+      ...(skip ? { $skip: skip } : {}),
+    };
+
+    const { total, items: teams } = await this.teams.fetch(query);
 
     const teamUsers = await Promise.all(
       teams.map((team) => fetchUsers(team.id, this.users.client)),

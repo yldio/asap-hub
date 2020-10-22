@@ -26,7 +26,7 @@ yargs(process.argv.slice(2))
             return yargs.positional('role', {
                 describe: 'specific a role to invite',
                 type: 'string',
-                choices: ["Staff", "Grantee"]
+                choices: ["Staff", "Grantee", "Guest"]
             });
         },
         handler: async ({ role }) => {

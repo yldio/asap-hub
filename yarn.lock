@@ -43,6 +43,7 @@ __metadata:
     "@yarnpkg/pnpify": ^2.2.1
     apr-intercept: ^3.0.4
     async-sema: ^3.1.0
+    aws-sdk: ^2.777.0
     csv-parse: ^4.12.0
     pump: ^3.0.0
     through2-concurrent: ^2.0.0
@@ -7324,6 +7325,23 @@ __metadata:
     uuid: 3.3.2
     xml2js: 0.4.19
   checksum: dce2d2e4f5b0485713384bdcbd3481158aa9a38757a9ab85e70ce016e3b1ac55198f55f7e589b08e1eff3b04308a5bb53ce0fe58edd880ba5f8f24bd63269de3
+  languageName: node
+  linkType: hard
+
+"aws-sdk@npm:^2.777.0":
+  version: 2.777.0
+  resolution: "aws-sdk@npm:2.777.0"
+  dependencies:
+    buffer: 4.9.2
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.15.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    uuid: 3.3.2
+    xml2js: 0.4.19
+  checksum: 91b79afdcb468df117ff331175aa33dff1fc9107d6fc0f69280d52367a623c91e07eb4c5faea05defd93aa21ec937caa1b3237a85bf18da166ac7799bd082ae4
   languageName: node
   linkType: hard
 

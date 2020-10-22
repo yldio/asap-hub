@@ -3845,7 +3845,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "events",
-        "npm:3.2.0"
+        "npm:1.1.1"
       ],
       [
         "eventsource",
@@ -8225,7 +8225,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "url",
-        "npm:0.11.0"
+        "npm:0.10.3"
       ],
       [
         "url-join",
@@ -8752,6 +8752,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "virtual:17df4a6b7bc90a892848ea4c573b3f4fb009d45ed9e2e79220aa6879fd736424e8c4a39cef6752e4925485f2fc611317f0f97be3d91b72001eff479d14125faa#npm:2.3.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["async-sema", "npm:3.1.0"],
+            ["aws-sdk", "npm:2.777.0"],
             ["csv-parse", "npm:4.12.0"],
             ["pump", "npm:3.0.0"],
             ["through2-concurrent", "npm:2.0.0"],
@@ -18118,6 +18119,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/aws-sdk-npm-2.745.0-74353fb423-dce2d2e4f5.zip/node_modules/aws-sdk/",
           "packageDependencies": [
             ["aws-sdk", "npm:2.745.0"],
+            ["buffer", "npm:4.9.2"],
+            ["events", "npm:1.1.1"],
+            ["ieee754", "npm:1.1.13"],
+            ["jmespath", "npm:0.15.0"],
+            ["querystring", "npm:0.2.0"],
+            ["sax", "npm:1.2.1"],
+            ["url", "npm:0.10.3"],
+            ["uuid", "npm:3.3.2"],
+            ["xml2js", "npm:0.4.19"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.777.0", {
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.777.0-4c4a625d73-91b79afdcb.zip/node_modules/aws-sdk/",
+          "packageDependencies": [
+            ["aws-sdk", "npm:2.777.0"],
             ["buffer", "npm:4.9.2"],
             ["events", "npm:1.1.1"],
             ["ieee754", "npm:1.1.13"],

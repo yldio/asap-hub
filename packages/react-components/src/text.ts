@@ -53,7 +53,13 @@ const isAllowedElement = (child: unknown): child is AllowedChild => {
 export const isAllowedChildren = (
   children: unknown,
 ): children is AllowedChildren => {
-  if (isTextChild(children) || isAllowedElement(children)) return true;
+  if (isTextChild(children)) return true;
+  if (isAllowedElement(children)) {
+    if (children.props.children) {
+      return isAllowedChildren(children.props.children);
+    }
+    return true;
+  }
   if (Array.isArray(children))
     return children.every(
       (child) => isAllowedChildren(child) || isAllowedElement(child),

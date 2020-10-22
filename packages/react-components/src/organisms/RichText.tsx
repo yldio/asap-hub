@@ -46,10 +46,10 @@ const components = {
     }
     return <Link href={href}>{children}</Link>;
   },
-  img: ({ alt = '', ...props }: ImgHTMLAttributes<HTMLImageElement>) => {
-    return (
-      <img alt={alt} {...props} css={{ height: 'auto', maxWidth: '100%' }} />
-    );
+  img: ({ ...props }: ImgHTMLAttributes<HTMLImageElement>) => {
+    // Set in Tiny/Squidex and up to editor discretion
+    // eslint-disable-next-line jsx-a11y/alt-text
+    return <img {...props} css={{ height: 'auto', maxWidth: '100%' }} />;
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 

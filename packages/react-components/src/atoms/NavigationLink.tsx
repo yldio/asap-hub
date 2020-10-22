@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavHashLink } from 'react-router-hash-link';
 import css from '@emotion/css';
 
 import { TextChildren } from '../text';
@@ -74,16 +74,17 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
 }) => {
   if (useHasRouter() && isInternalLink(href)) {
     return (
-      <NavLink
+      <NavHashLink
         to={href}
         activeClassName={activeClassName}
         css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
+        smooth
       >
         <p css={textStyles}>
           <span css={iconStyles}>{icon}</span>
           {children}
         </p>
-      </NavLink>
+      </NavHashLink>
     );
   }
 

@@ -81,7 +81,7 @@ describe.each([
   [createElement('i', { children: [createElement('div')] })],
   [createElement(React.Fragment, { children: {} })],
 ])('for the children %p', (children) => {
-  describe('isTextChildren', () => {
+  describe('isAllowedChildren', () => {
     it('returns false', () => {
       expect(isAllowedChildren(children)).toBe(false);
     });

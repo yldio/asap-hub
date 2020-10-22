@@ -1,4 +1,6 @@
 import Got from 'got';
+import get from 'lodash.get';
+import { CMSOrcidWork } from '../entities/user';
 
 export interface ORCIDWorksResponse {
   'last-modified-date': { value: number };
@@ -57,3 +59,34 @@ export const fetchOrcidProfile = (
 ): Promise<ORCIDWorksResponse> => {
   return Got.get(`https://pub.orcid.org/v2.1/${orcid}/works`).json();
 };
+
+export const transformOrcidWorks = (
+  orcidWorks: ORCIDWorksResponse,
+): { lastModifiedDate: string; works: CMSOrcidWork[] } => {
+  // parse & stringify to remove undefined values
+  return {
+    lastModifiedDate: `${orcidWorks['last-modified-date']?.value}`,
+    works: orcidWorks.group.map((work) =>
+      JSON.parse(
+        JSON.stringify({
+          doi: get(work, 'external-ids.external-id[0].external-id-url.value'),
+          id: `${work['work-summary'][0]['put-code']}`,
+          title: get(work, '["work-summary"][0].title.title.value'),
+          type: get(work, '["work-summary"][0].type'),
+          publicationDate: {
+            year: get(
+              work,
+              '["work-summary"][0]["publication-date"].year.value',
+            ),
+            month: get(
+              work,
+              '["work-summary"][0]["publication-date"].month.value',
+            ),
+            day: get(work, '["work-summary"][0]["publication-date"].day.value'),
+          },
+          lastModifiedDate: `${work['last-modified-date'].value}`,
+        }),
+      ),
+    ),
+  };
+}

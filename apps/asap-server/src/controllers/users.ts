@@ -3,77 +3,69 @@ import Debug from 'debug';
 import path from 'path';
 import url from 'url';
 import Intercept from 'apr-intercept';
-import get from 'lodash.get';
 import { Got } from 'got';
 import { v4 as uuidV4 } from 'uuid';
 import { Squidex } from '@asap-hub/services-common';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
-import { CMSUser, CMSOrcidWork } from '../entities/user';
+import { CMSUser, transform } from '../entities/user';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
-import { fetchOrcidProfile, ORCIDWorksResponse } from '../utils/fetch-orcid';
+import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { createURL } from '../utils/squidex';
 
-export const transform = (user: CMSUser): UserResponse => {
-  return JSON.parse(
-    JSON.stringify({
-      id: user.id,
-      createdDate: user.created,
-      lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
-      displayName: user.data.displayName.iv,
-      email: user.data.email.iv,
-      degree: user.data.degree?.iv,
-      firstName: user.data.firstName?.iv,
-      lastName: user.data.lastName?.iv,
-      biography: user.data.biography?.iv,
-      jobTitle: user.data.jobTitle?.iv,
-      institution: user.data.institution?.iv,
-      teams:
-        user.data.teams?.iv.map(({ id, ...t }) => ({ id: id[0], ...t })) || [],
-      location: user.data.location?.iv,
-      orcid: user.data.orcid?.iv,
-      orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
-      orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
-      orcidWorks: user.data.orcidWorks?.iv,
-      skills: user.data.skills?.iv || [],
-      skillsDescription: user.data.skillsDescription?.iv,
-      questions: user.data.questions?.iv.map(({ question }) => question) || [],
-      avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
-    }),
-  );
-};
-
-function transformOrcidWorks(
-  orcidWorks: ORCIDWorksResponse,
-): { lastModifiedDate: string; works: CMSOrcidWork[] } {
-  // parse & stringify to remove undefined values
-  return {
-    lastModifiedDate: `${orcidWorks['last-modified-date']?.value}`,
-    works: orcidWorks.group.map((work) =>
-      JSON.parse(
-        JSON.stringify({
-          doi: get(work, 'external-ids.external-id[0].external-id-url.value'),
-          id: `${work['work-summary'][0]['put-code']}`,
-          title: get(work, '["work-summary"][0].title.title.value'),
-          type: get(work, '["work-summary"][0].type'),
-          publicationDate: {
-            year: get(
-              work,
-              '["work-summary"][0]["publication-date"].year.value',
-            ),
-            month: get(
-              work,
-              '["work-summary"][0]["publication-date"].month.value',
-            ),
-            day: get(work, '["work-summary"][0]["publication-date"].day.value'),
-          },
-          lastModifiedDate: `${work['last-modified-date'].value}`,
-        }),
-      ),
-    ),
-  };
-}
+const buildGraphQlQuery = (top: number = 8, skip: number = 0, filter: string = "") => 
+`{
+  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: ${filter}, orderby: "data/displayName/iv") {
+    total
+    items {
+      id
+      flatData {
+        avatar {
+          id
+        }
+        biography
+        degree
+        department
+        displayName
+        email
+        firstName
+        institution
+        jobTitle
+        lastModifiedDate
+        lastName
+        location
+        orcid
+        orcidLastModifiedDate
+        orcidLastSyncDate
+        orcidWorks {
+          doi
+          id
+          lastModifiedDate
+          publicationDate
+          title
+          type
+        }
+        questions {
+          question
+        }
+        skills
+        skillsDescription
+        teams {
+          id {
+            id
+            flatData {
+              displayName
+              proposal {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`
 
 const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
   const [err, res] = await Intercept(

@@ -4,7 +4,7 @@ import { Squidex } from '@asap-hub/services-common';
 import { config as authConfig } from '@asap-hub/auth';
 import { UserResponse } from '@asap-hub/model';
 
-import { CMSUser } from '../../../src/entities';
+import { CMSUser } from '../../../src/entities/user';
 import { handler } from '../../../src/handlers/users/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/users';

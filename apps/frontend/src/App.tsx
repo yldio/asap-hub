@@ -37,9 +37,11 @@ const Discover = React.lazy(loadDiscover);
 
 const Prefetch: React.FC<{}> = () => {
   useEffect(() => {
-    loadNetwork();
-    loadLibrary();
-    loadNewsAndEvents();
+    loadHome()
+      .then(loadNewsAndEvents)
+      .then(loadNetwork)
+      .then(loadLibrary)
+      .then(loadDiscover);
   }, []);
   return null;
 };

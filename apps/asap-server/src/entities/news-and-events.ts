@@ -22,17 +22,16 @@ export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
     id: item.id,
     created: parseDate(item.created).toISOString(),
     shortText: item.data.shortText?.iv,
-    text: item.data.text.iv,
+    text: item.data.text?.iv,
     link: item.data.link?.iv,
     linkText: item.data.linkText?.iv,
     thumbnail:
       item.data.thumbnail &&
       createURL(
         item.data.thumbnail?.iv.map((t) => {
-          const t1 = t as string;
           // this handles thumbnails fetched with graphql
           if (typeof t === 'string') {
-            return t1;
+            return t as string;
           }
           return t.id;
         }),

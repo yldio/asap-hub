@@ -11,11 +11,11 @@ import {
 
 export type TextChild = React.ReactText | boolean | null | undefined;
 export type TextChildren = TextChild | ReadonlyArray<TextChild>;
-export type AllowedChild = React.ReactElement<HTMLStyleElement>;
+export type AllowedElement = React.ReactElement<HTMLElement>;
 export type AllowedChildren =
   | TextChildren
-  | AllowedChild
-  | ReadonlyArray<AllowedChild>;
+  | AllowedElement
+  | ReadonlyArray<AllowedElement | AllowedChildren>;
 
 const isTextChild = (child: unknown): child is TextChild => {
   return (
@@ -39,7 +39,7 @@ export function assertIsTextChildren(
   }
 }
 
-const isAllowedElement = (child: unknown): child is AllowedChild => {
+const isAllowedElement = (child: unknown): child is AllowedElement => {
   if (
     typeof child === 'object' &&
     isValidElement(child) &&
@@ -54,12 +54,14 @@ export const isAllowedChildren = (
   children: unknown,
 ): children is AllowedChildren => {
   if (isTextChild(children)) return true;
+
   if (isAllowedElement(children)) {
     if (children.props.children) {
       return isAllowedChildren(children.props.children);
     }
     return true;
   }
+
   if (Array.isArray(children))
     return children.every(
       (child) => isAllowedChildren(child) || isAllowedElement(child),

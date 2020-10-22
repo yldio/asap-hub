@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, Router } from 'react-router-dom';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { createMemoryHistory } from 'history';
 
 import NavigationLink from '../NavigationLink';
 
@@ -65,23 +66,23 @@ describe.each`
 
 describe('with a router', () => {
   it('does not trigger a full page navigation on click', () => {
+    const history = createMemoryHistory({ initialEntries: ['/'] });
     const { getByRole } = render(
-      <StaticRouter>
-        <NavigationLink href="/" icon={<svg />}>
+      <Router history={history}>
+        <NavigationLink href="/location" icon={<svg />}>
           Text
         </NavigationLink>
-      </StaticRouter>,
+      </Router>,
     );
     expect(fireEvent.click(getByRole('link'))).toBe(false);
+    expect(history.location.pathname).toEqual('/location');
   });
 
   it('triggers a full page navigation on click of an external link', () => {
     const { getByRole } = render(
-      <StaticRouter>
-        <NavigationLink href="http://example.com/" icon={<svg />}>
-          Text
-        </NavigationLink>
-      </StaticRouter>,
+      <NavigationLink href="http://example.com/" icon={<svg />}>
+        Text
+      </NavigationLink>,
     );
     expect(fireEvent.click(getByRole('link'))).toBe(true);
   });

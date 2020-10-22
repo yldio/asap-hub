@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { TextChildren, layoutStyles, headlineStyles } from '../text';
+import { AllowedChildren, layoutStyles, headlineStyles } from '../text';
 
 interface Headline2Props {
-  readonly children: TextChildren;
+  readonly children: AllowedChildren;
   readonly id?: string;
   readonly styleAsHeading?: keyof typeof headlineStyles;
 }

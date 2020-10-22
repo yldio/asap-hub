@@ -1,3 +1,4 @@
+import { isValidElement } from 'react';
 import type { Interpolation } from '@emotion/css';
 
 import {
@@ -10,6 +11,11 @@ import {
 
 export type TextChild = React.ReactText | boolean | null | undefined;
 export type TextChildren = TextChild | ReadonlyArray<TextChild>;
+export type AllowedElement = React.ReactElement<HTMLElement>;
+export type AllowedChildren =
+  | TextChildren
+  | AllowedElement
+  | ReadonlyArray<AllowedElement | AllowedChildren>;
 
 const isTextChild = (child: unknown): child is TextChild => {
   return (
@@ -17,12 +23,14 @@ const isTextChild = (child: unknown): child is TextChild => {
     ['string', 'number', 'boolean', 'undefined'].includes(typeof child)
   );
 };
+
 export const isTextChildren = (children: unknown): children is TextChildren => {
   if (isTextChild(children)) return true;
   if (Array.isArray(children))
     return children.every((child) => isTextChildren(child));
   return false;
 };
+
 export function assertIsTextChildren(
   children: unknown,
 ): asserts children is TextChildren {
@@ -30,6 +38,36 @@ export function assertIsTextChildren(
     throw new Error(`Expected text children, got ${String(children)}`);
   }
 }
+
+const isAllowedElement = (child: unknown): child is AllowedElement => {
+  if (
+    typeof child === 'object' &&
+    isValidElement(child) &&
+    typeof child.type === 'string' &&
+    ['i', 'em'].includes(child.type.toLowerCase())
+  )
+    return true;
+  return false;
+};
+
+export const isAllowedChildren = (
+  children: unknown,
+): children is AllowedChildren => {
+  if (isTextChild(children)) return true;
+
+  if (isAllowedElement(children)) {
+    if (children.props.children) {
+      return isAllowedChildren(children.props.children);
+    }
+    return true;
+  }
+
+  if (Array.isArray(children))
+    return children.every(
+      (child) => isAllowedChildren(child) || isAllowedElement(child),
+    );
+  return false;
+};
 
 export const fontStyles = {
   fontFamily: "Calibri, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",

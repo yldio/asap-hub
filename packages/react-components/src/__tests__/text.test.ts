@@ -1,6 +1,10 @@
 import React, { createElement } from 'react';
 
-import { isTextChildren, assertIsTextChildren } from '../text';
+import {
+  isTextChildren,
+  assertIsTextChildren,
+  isAllowedChildren,
+} from '../text';
 
 /* false positive */
 /* eslint-disable jest/no-identical-title */
@@ -43,6 +47,43 @@ describe.each([
   describe('assertIsTextChildren', () => {
     it('throws', () => {
       expect(() => assertIsTextChildren(children)).toThrow(/expected.+text/i);
+    });
+  });
+});
+
+describe.each([
+  [undefined],
+  [null],
+  [false],
+  [true],
+  [''],
+  ['text'],
+  [42],
+  [[]],
+  [['text']],
+  [[[false, 42], 'text']],
+  [createElement('i')],
+  [createElement('em')],
+  [createElement('i', { children: ['Italic Text'] })],
+])('for the allowed children %p', (children) => {
+  describe('isAllowedChildren', () => {
+    it('returns true', () => {
+      expect(isAllowedChildren(children)).toBe(true);
+    });
+  });
+});
+
+describe.each([
+  [{}],
+  [Symbol('Forbidden primitive type')],
+  [createElement('div')],
+  [createElement('b')],
+  [createElement('i', { children: [createElement('div')] })],
+  [createElement(React.Fragment, { children: {} })],
+])('for the children %p', (children) => {
+  describe('isAllowedChildren', () => {
+    it('returns false', () => {
+      expect(isAllowedChildren(children)).toBe(false);
     });
   });
 });

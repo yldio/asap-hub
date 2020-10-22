@@ -2,6 +2,7 @@ import React, {
   createElement,
   HTMLAttributes,
   AnchorHTMLAttributes,
+  ImgHTMLAttributes,
 } from 'react';
 import css from '@emotion/css';
 
@@ -13,7 +14,7 @@ import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
 
 import { Paragraph, Headline2, Headline3, Link } from '../atoms';
-import { isTextChildren } from '../text';
+import { isTextChildren, isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
 
@@ -23,7 +24,7 @@ const components = {
     return <Paragraph>{children}</Paragraph>;
   },
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
-    isTextChildren(children) ? (
+    isAllowedChildren(children) ? (
       <div css={headline1Spacing}>
         <Headline2 id={id}>{children}</Headline2>
       </div>
@@ -31,7 +32,7 @@ const components = {
       <ErrorCard>Invalid h1 heading styling</ErrorCard>
     ),
   h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
-    isTextChildren(children) ? (
+    isAllowedChildren(children) ? (
       <Headline3 id={id}>{children}</Headline3>
     ) : (
       <ErrorCard>Invalid h2 heading styling</ErrorCard>
@@ -44,6 +45,11 @@ const components = {
       return <ErrorCard>Link "{children}" is missing href</ErrorCard>;
     }
     return <Link href={href}>{children}</Link>;
+  },
+  img: ({ ...props }: ImgHTMLAttributes<HTMLImageElement>) => {
+    // Set in Tiny/Squidex and up to editor discretion
+    // eslint-disable-next-line jsx-a11y/alt-text
+    return <img {...props} css={{ height: 'auto', maxWidth: '100%' }} />;
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 

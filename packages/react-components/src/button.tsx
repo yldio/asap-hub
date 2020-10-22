@@ -70,6 +70,7 @@ const smallStyles = css({
   height: `${(36 + 2 * borderWidth) / perRem}em`,
   '> svg': {
     height: `${18 / perRem}em`,
+    width: `${18 / perRem}em`,
   },
   '> svg + span': {
     marginLeft: `${6 / perRem}em`,

@@ -19,14 +19,14 @@ describe('News', () => {
     expect(getByRole('heading').tagName).toEqual('H2');
   });
 
-  it('renders subtitle when present', () => {
+  it('renders short text when present', () => {
     const { rerender, queryByText, getByText } = render(
       <NewsAndEventsCard {...newsCardProps} />,
     );
-    expect(queryByText(/subtitle/i)).not.toBeInTheDocument();
+    expect(queryByText(/short text/i)).not.toBeInTheDocument();
 
-    rerender(<NewsAndEventsCard {...newsCardProps} subtitle="Subtitle" />);
-    expect(getByText(/subtitle/i)).toBeVisible();
+    rerender(<NewsAndEventsCard {...newsCardProps} shortText="short text" />);
+    expect(getByText(/short text/i)).toBeVisible();
   });
 
   it('renders thumbnail when when present', () => {
@@ -48,9 +48,7 @@ describe('News', () => {
     rerender(
       <NewsAndEventsCard
         {...newsCardProps}
-        link={{
-          href: 'https://hub.asap.science',
-        }}
+        link={'https://hub.asap.science'}
       />,
     );
     expect(getByRole('link').textContent).toContain('External Link');
@@ -65,10 +63,8 @@ describe('News', () => {
     rerender(
       <NewsAndEventsCard
         {...newsCardProps}
-        link={{
-          href: 'https://hub.asap.science',
-          name: 'Name',
-        }}
+        link={'https://hub.asap.science'}
+        linkText={'Name'}
       />,
     );
     expect(getByRole('link').textContent).toContain('Name');

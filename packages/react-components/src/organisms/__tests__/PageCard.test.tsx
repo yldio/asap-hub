@@ -1,32 +1,19 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { createPageResponse } from '@asap-hub/fixtures';
 
 import PageCard from '../PageCard';
 
-const props: ComponentProps<typeof PageCard> = {
-  title: 'Title',
-  text: 'Text',
-  href: 'http://localhost/pages/uuid',
-};
+const props: ComponentProps<typeof PageCard> = createPageResponse('1');
 
 it('renders the title', () => {
   const { getByRole } = render(<PageCard {...props} />);
-  expect(getByRole('heading').textContent).toEqual('Title');
+  expect(getByRole('heading').textContent).toEqual('Page 1 title');
   expect(getByRole('heading').tagName).toEqual('H2');
 });
 
-it('links to detail page', () => {
-  const { getByText } = render(
-    <MemoryRouter initialEntries={['/card']}>
-      <Route path="/card">
-        <PageCard {...props} href="/page" />,
-      </Route>
-      <Route path="/page">Full Page</Route>
-    </MemoryRouter>,
-  );
+it('renders link from properties', () => {
+  const { getByRole } = render(<PageCard {...props} link={'#'} />);
 
-  userEvent.click(getByText('Read more'));
-  expect(getByText('Full Page')).toBeVisible();
+  expect(getByRole('link')).toHaveAttribute('href', '#');
 });

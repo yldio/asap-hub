@@ -1,22 +1,12 @@
 import React, { ComponentProps } from 'react';
+import { createPageResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 
 import DiscoverPageBody from '../DiscoverPageBody';
 
 const props: ComponentProps<typeof DiscoverPageBody> = {
   aboutUs: '<h3>About us content</h3>',
-  pages: [
-    {
-      path: '/',
-      title: 'Page 1 Title',
-      text: 'Page 1 Text',
-    },
-    {
-      path: '/',
-      title: 'Page 2 Title',
-      text: 'Page 2 Text',
-    },
-  ],
+  pages: [createPageResponse('1'), createPageResponse('2')],
   members: [],
 };
 
@@ -26,7 +16,7 @@ it('renders grantee guidance page cards', () => {
   );
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Grantee Guidance', 'Page 1 Title', 'Page 2 Title']);
+  ).toEqual(['Grantee Guidance', 'Page 1 title', 'Page 2 title']);
 });
 
 it('renders about us section', () => {
@@ -47,8 +37,8 @@ it('renders grantee guidance page cards and about us section', () => {
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual([
     'Grantee Guidance',
-    'Page 1 Title',
-    'Page 2 Title',
+    'Page 1 title',
+    'Page 2 title',
     'About us',
     'About us content',
   ]);

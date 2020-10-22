@@ -67,6 +67,13 @@ describe('GET /discover', () => {
                       text: 'Content',
                     },
                   },
+                  {
+                    id: 'uuid',
+                    flatData: {
+                      path: '/',
+                      title: 'Title',
+                    },
+                  },
                 ],
                 members: [
                   {
@@ -119,9 +126,18 @@ describe('GET /discover', () => {
     expect(body).toStrictEqual({
       pages: [
         {
+          id: 'uuid',
           path: '/',
+          shortText: '',
           title: 'Title',
           text: 'Content',
+        },
+        {
+          id: 'uuid',
+          path: '/',
+          shortText: '',
+          title: 'Title',
+          text: '',
         },
       ],
       members: [

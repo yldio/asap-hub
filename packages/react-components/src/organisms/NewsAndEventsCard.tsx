@@ -8,6 +8,8 @@ import { newsPlaceholder, eventsPlaceholder, externalLinkIcon } from '../icons';
 
 const imageStyle = css({
   objectFit: 'cover',
+  width: '100%',
+  height: '100%',
 });
 
 const imageContainerStyle = css({
@@ -56,7 +58,8 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   title,
   thumbnail,
   link,
-  subtitle,
+  linkText,
+  shortText,
   created,
 }) => {
   return (
@@ -78,10 +81,10 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
             <TagLabel>{type}</TagLabel>
             {link ? (
               <div css={{ fontSize: `${13 / perRem}em` }}>
-                <Link buttonStyle small={true} href={link.href}>
+                <Link buttonStyle small={true} href={link}>
                   {externalLinkIcon}
                   <span css={{ fontWeight: 'normal' }}>
-                    {link.name || 'External Link'}
+                    {linkText || 'Open External Link'}
                   </span>
                 </Link>
               </div>
@@ -89,7 +92,7 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
           </div>
           <Headline2 styleAsHeading={4}>{title}</Headline2>
           <div css={{ flex: 1 }}>
-            <Paragraph accent="lead">{subtitle}</Paragraph>
+            <Paragraph accent="lead">{shortText}</Paragraph>
           </div>
           <div css={footerStyles}>
             <Caption accent={'lead'} asParagraph>

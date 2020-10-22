@@ -47,6 +47,7 @@
     "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils",
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
+    "@asap-hub/fixtures": "workspace:packages/fixtures",
     "@asap-hub/react-context": "workspace:packages/react-context",
     "@auth0/auth0-spa-js": "^1.9.0",
     "@babel/core": "^7.9.0",

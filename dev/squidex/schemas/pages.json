@@ -85,7 +85,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "pattern": "",
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",

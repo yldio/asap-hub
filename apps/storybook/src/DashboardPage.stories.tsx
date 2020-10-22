@@ -13,12 +13,14 @@ const commonProps = () => ({
   firstName: text('First Name', 'Phillip'),
   pages: [
     {
+      id: 'uuid-1',
       path: '/',
       title: 'Welcome Package',
-      text: [
+      shortText: [
         "Find your way around the grant, ASAP's ways of working, the deadlines and what is expected of grantees.",
         'Open to read the Welcome Package',
       ].join(''),
+      text: '',
     },
   ],
   newsAndEvents: [

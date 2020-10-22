@@ -7,15 +7,12 @@ import {
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { PageResponse } from '@asap-hub/model';
+import { createPageResponse } from '@asap-hub/fixtures';
 
 import ContentPage from '../Content';
 import { API_BASE_URL } from '../../config';
 
-const page: PageResponse = {
-  title: 'Page Title',
-  text: '<h1>Heading</h1>',
-  path: '/path',
-};
+const page: PageResponse = createPageResponse('1');
 
 describe('content page', () => {
   // fetch user by code request
@@ -52,7 +49,7 @@ describe('content page', () => {
   it('renders a page information', async () => {
     const { findByText } = await renderPage();
     expect(
-      await findByText(/heading/i, {
+      await findByText(/text/i, {
         selector: 'h2',
       }),
     ).toBeVisible();

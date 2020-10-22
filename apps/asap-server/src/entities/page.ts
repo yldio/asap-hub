@@ -3,33 +3,50 @@ import { PageResponse } from '@asap-hub/model';
 export interface CMSPage {
   id: string;
   data: {
-    title: {
-      iv: string;
-    };
     path: {
       iv: string;
     };
+    title: {
+      iv: string;
+    };
+    shortText: {
+      iv: string;
+    };
     text: { iv: string };
+    link?: { iv: string };
+    linkText?: { iv: string };
   };
 }
 
 export interface CMSGraphQLPage {
   id: string;
   flatData: {
-    title: string;
     path: string;
+    title: string;
+    shortText?: string;
     text: string;
+    link?: string;
+    linkText?: string;
   };
 }
 
-export const parse = (obj: CMSPage): PageResponse => {
+export const parse = (item: CMSPage): PageResponse => {
   return {
-    path: obj.data.path.iv,
-    text: obj.data.text?.iv || '',
-    title: obj.data.title.iv,
+    id: item.id,
+    path: item.data.path.iv,
+    title: item.data.title.iv,
+    shortText: item.data.shortText?.iv,
+    text: item.data.text?.iv || '',
+    link: item.data.link?.iv,
+    linkText: item.data.linkText?.iv,
   };
 };
 
 export const parseGraphQL = (item: CMSGraphQLPage): PageResponse => {
-  return item.flatData;
+  return {
+    id: item.id,
+    ...item.flatData,
+    shortText: item.flatData.shortText || '',
+    text: item.flatData.text || '',
+  };
 };

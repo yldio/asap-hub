@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { createPageResponse } from '@asap-hub/fixtures';
 
 import DashboardPageBody from '../DashboardPageBody';
 
@@ -18,18 +19,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       type: 'Event',
     },
   ],
-  pages: [
-    {
-      path: '/',
-      title: 'Page 1 Title',
-      text: 'Page 1 Text',
-    },
-    {
-      path: '/',
-      title: 'Page 2 Title',
-      text: 'Page 2 Text',
-    },
-  ],
+  pages: [createPageResponse('1'), createPageResponse('2')],
   hrefLibrary: '/library',
   hrefNewsAndEvents: '/news-and-events',
   hrefProfile: '/network/users/uuid',
@@ -44,7 +34,7 @@ it('renders multiple news cards', () => {
     queryAllByText(/title/i, { selector: 'h2' }).map(
       ({ textContent }) => textContent,
     ),
-  ).toEqual(['Page 1 Title', 'Page 2 Title', 'News Title', 'Event Title']);
+  ).toEqual(['Page 1 title', 'Page 2 title', 'News Title', 'Event Title']);
 });
 
 it('renders news section when there are no news', () => {
@@ -57,7 +47,7 @@ it('renders news section when there are no news', () => {
     queryAllByText(/title/i, { selector: 'h2' }).map(
       ({ textContent }) => textContent,
     ),
-  ).toEqual(['Page 1 Title', 'Page 2 Title']);
+  ).toEqual(['Page 1 title', 'Page 2 title']);
 });
 
 it('renders news section when there are no pages', () => {

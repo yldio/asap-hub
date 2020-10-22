@@ -42,13 +42,11 @@
           "inlineEditable": false,
           "editor": "Dropdown",
           "label": "Type",
-          "hints": "",
-          "placeholder": "",
           "isRequired": true
         }
       },
       {
-        "name": "subtitle",
+        "name": "shortText",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -59,25 +57,7 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Short Text",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "text",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "RichText",
-          "label": "Text",
-          "hints": "",
-          "placeholder": "",
+          "hints": "The text visible on the card version of News and Events",
           "isRequired": false
         }
       },
@@ -94,23 +74,6 @@
           "resolveImage": false,
           "allowDuplicates": false,
           "label": "Thumbnail",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "date",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "DateTime",
-          "editor": "DateTime",
-          "label": "Event Date",
-          "hints": "Property only used on Event type items",
-          "placeholder": "",
           "isRequired": false
         }
       },
@@ -122,7 +85,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          "pattern": "",
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
@@ -142,15 +105,41 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "External Link Text",
-          "hints": "Leave this empty to show \"External Link\"",
-          "placeholder": "",
+          "hints": "Leave this empty to show \"Open External Link\"",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "date",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Event Date",
+          "hints": "Property only used on Event type items",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "text",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "RichText",
+          "label": "Text",
           "isRequired": false
         }
       }
     ],
-    "previewUrls": {
-      "Web": "http://hub.asap.science/news-and-events/${id}"
-    },
+    "previewUrls": {},
     "category": "Content",
     "isPublished": true
   }

@@ -11,17 +11,21 @@ export default {
 const commonProps = () => ({
   pages: [
     {
+      id: 'uuid-1',
       path: '/',
       title: 'Welcome Package',
-      text: [
+      text: '',
+      shortText: [
         "Find your way around the grant, ASAP's ways of working, the deadlines and what is expected of grantees.",
         'Open to read the Welcome Package',
       ].join(''),
     },
     {
+      id: 'uuid-2',
       path: '/',
       title: "ASAP's Commitment to Open Science",
-      text: [
+      text: '',
+      shortText: [
         'When in doubt, check our Frequently Asked Questions about how, when and what to share according to our policy.',
       ].join(''),
     },

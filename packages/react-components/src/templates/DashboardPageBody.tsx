@@ -20,6 +20,7 @@ type DashboardPageBodyProps = Omit<
   'title'
 > &
   Omit<ComponentProps<typeof NewsAndEventsSection>, 'title'> & {
+    readonly hrefDiscoverAsap: string;
     readonly hrefNewsAndEvents: string;
     readonly hrefProfile: string;
     readonly hrefSharedResearch: string;
@@ -31,12 +32,13 @@ type DashboardPageBodyProps = Omit<
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   pages,
   newsAndEvents,
+  hrefDiscoverAsap,
+  hrefNewsAndEvents,
   hrefProfile,
-  hrefTeamWorkspace,
-  hrefUsersNetwork,
   hrefSharedResearch,
   hrefTeamsNetwork,
-  hrefNewsAndEvents,
+  hrefTeamWorkspace,
+  hrefUsersNetwork,
 }) => (
     <div css={styles}>
       {pages.length ? (
@@ -69,6 +71,12 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
                 <Paragraph primary>
                   Find other teams based on keywords on{' '}
                   <Link href={hrefTeamsNetwork}>Network</Link>
+                </Paragraph>
+              </li>
+              <li>
+                <Paragraph primary>
+                  Meet the ASAP team in{' '}
+                  <Link href={hrefDiscoverAsap}>Discover ASAP</Link>
                 </Paragraph>
               </li>
               <li>

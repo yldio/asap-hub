@@ -20,6 +20,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
     },
   ],
   pages: [createPageResponse('1'), createPageResponse('2')],
+  hrefDiscoverAsap: '/discover',
   hrefSharedResearch: '/shared-research',
   hrefNewsAndEvents: '/news-and-events',
   hrefProfile: '/network/users/uuid',

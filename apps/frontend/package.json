@@ -25,7 +25,7 @@
     "react-error-boundary": "^2.0.0",
     "react-router-dom": "^5.2.0",
     "use-debounce": "^5.0.1",
-    "use-http": "^1.0.13"
+    "use-http": "^1.0.15"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils",

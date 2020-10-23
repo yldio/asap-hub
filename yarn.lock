@@ -267,7 +267,7 @@ __metadata:
     react-test-renderer: ^16.13.1
     typescript: ~3.9.7
     use-debounce: ^5.0.1
-    use-http: ^1.0.13
+    use-http: ^1.0.15
   languageName: unknown
   linkType: soft
 
@@ -27066,9 +27066,9 @@ typescript@~3.9.7:
   languageName: node
   linkType: hard
 
-"use-http@npm:^1.0.13":
-  version: 1.0.13
-  resolution: "use-http@npm:1.0.13"
+"use-http@npm:^1.0.15":
+  version: 1.0.15
+  resolution: "use-http@npm:1.0.15"
   dependencies:
     urs: ^0.0.7
     use-ssr: ^1.0.22
@@ -27076,7 +27076,7 @@ typescript@~3.9.7:
   peerDependencies:
     react: ^16.13.1
     react-dom: ^16.13.1
-  checksum: 534f1a01c7f44c0c02a9f15b5cc4b8131977ca23bc79a120aa6300f0677ed182a4ba678fb16a9a2da6b763fec27307edd4b90200ade9d0bdab0cbdaca5fded3f
+  checksum: b5b05c2f382387862cef4cbf88f21183aa89f10d35de23c0bd299a1f5aa669027d91c301eb8096cb08264a8d29d7a6b2f107ebb19ca0d6c674619f453ae6fc7b
   languageName: node
   linkType: hard
 

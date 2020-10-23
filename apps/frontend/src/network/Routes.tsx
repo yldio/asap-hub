@@ -4,7 +4,6 @@ import {
   Route,
   useRouteMatch,
   useHistory,
-  useLocation,
   Redirect,
 } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
@@ -15,40 +14,28 @@ import Profile from './Profile';
 import TeamList from './TeamList';
 import Team from './Team';
 import ErrorBoundary from '../errors/ErrorBoundary';
+import { useSearch } from '../hooks';
 
 const Network: React.FC<{}> = () => {
   const { path } = useRouteMatch();
-  const { search } = useLocation();
+  const { filters, searchQuery, toggleFilter, setSearchQuery } = useSearch();
   const history = useHistory();
-  const currentUrlParams = new URLSearchParams(search);
-  const filters = new Set(currentUrlParams.getAll('filter'));
-  const searchQuery = currentUrlParams.get('searchQuery') || undefined;
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
+
   const onChangeToggle = (pathname: string) => () => {
     const newUrlParams = new URLSearchParams();
     searchQuery && newUrlParams.set('searchQuery', searchQuery);
     history.push({ pathname, search: newUrlParams.toString() });
   };
-  const onChangeSearch = (newQuery: string) => {
-    newQuery
-      ? currentUrlParams.set('searchQuery', newQuery)
-      : currentUrlParams.delete('searchQuery');
-    history.replace({ search: currentUrlParams.toString() });
-  };
-  const onChangeFilter = (filter: string) => {
-    currentUrlParams.delete('filter');
-    filters.has(filter) ? filters.delete(filter) : filters.add(filter);
-    filters.forEach((f) => currentUrlParams.append('filter', f));
-    history.replace({ search: currentUrlParams.toString() });
-  };
+
   return (
     <Switch>
       <Route exact path={`${path}/users`}>
         <NetworkPage
           page="users"
           onChangeToggle={onChangeToggle('teams')}
-          onChangeSearch={onChangeSearch}
-          onChangeFilter={onChangeFilter}
+          onChangeSearch={setSearchQuery}
+          onChangeFilter={toggleFilter}
           filters={filters}
           searchQuery={searchQuery}
         >
@@ -62,8 +49,8 @@ const Network: React.FC<{}> = () => {
         <NetworkPage
           page="teams"
           onChangeToggle={onChangeToggle('users')}
-          onChangeSearch={onChangeSearch}
-          onChangeFilter={onChangeFilter}
+          onChangeSearch={setSearchQuery}
+          onChangeFilter={toggleFilter}
           filters={filters}
           searchQuery={searchQuery}
         >

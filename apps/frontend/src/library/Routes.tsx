@@ -1,47 +1,25 @@
 import React from 'react';
-import {
-  Switch,
-  Route,
-  useRouteMatch,
-  useHistory,
-  useLocation,
-} from 'react-router-dom';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { LibraryPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import List from './List';
 import ResearchOutput from './ResearchOutput';
 import ErrorBoundary from '../errors/ErrorBoundary';
+import { useSearch } from '../hooks';
 
 const Library: React.FC<{}> = () => {
   const { path } = useRouteMatch();
-  const { search } = useLocation();
-  const history = useHistory();
-  const currentUrlParams = new URLSearchParams(search);
-  const filters = new Set(currentUrlParams.getAll('filter'));
-  const searchQuery = currentUrlParams.get('searchQuery') || undefined;
-  const [searchQueryDebounce] = useDebounce(searchQuery, 500);
-
-  const onChangeSearch = (newQuery: string) => {
-    newQuery
-      ? currentUrlParams.set('searchQuery', newQuery)
-      : currentUrlParams.delete('searchQuery');
-    history.replace({ search: currentUrlParams.toString() });
-  };
-  const onChangeFilter = (filter: string) => {
-    currentUrlParams.delete('filter');
-    filters.has(filter) ? filters.delete(filter) : filters.add(filter);
-    filters.forEach((f) => currentUrlParams.append('filter', f));
-    history.replace({ search: currentUrlParams.toString() });
-  };
+  const { filters, searchQuery, toggleFilter, setSearchQuery } = useSearch();
+  const [searchQueryDebounce] = useDebounce(searchQuery, 400);
 
   return (
     <Switch>
       <Route exact path={`${path}`}>
         <LibraryPage
-          onChangeSearch={onChangeSearch}
+          onChangeSearch={setSearchQuery}
           searchQuery={searchQuery}
-          onChangeFilter={onChangeFilter}
+          onChangeFilter={toggleFilter}
           filters={filters}
         >
           <ErrorBoundary>

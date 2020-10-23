@@ -1,7 +1,15 @@
 import { TeamResponse } from './team';
 import { ListResponse } from './common';
 
-export type ResearchOutputType = 'proposal';
+export type ResearchOutputType =
+  | 'Proposal'
+  | 'Dataset'
+  | 'Software'
+  | 'Protocol'
+  | 'Lab Resource'
+  | 'Preprint'
+  | 'Article'
+  | 'Other';
 
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
 export type ResearchOutputAuthor =

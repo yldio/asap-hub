@@ -55,7 +55,7 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
 
   const [url, setUrl] = useState('');
   const [doi, setDoi] = useState('');
-  const [type, setType] = useState<ResearchOutputType>('proposal');
+  const [type, setType] = useState<ResearchOutputType>('Proposal');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [authors, setAuthors] = useState('');
@@ -101,7 +101,7 @@ const RecordOutputForm: React.FC<RecordOutputFormProps> = ({
       </div>
       <LabeledDropdown<ResearchOutputType>
         options={[
-          { value: 'proposal', label: 'Proposal' },
+          { value: 'Proposal', label: 'Proposal' },
           // { value: 'dataset', label: 'Dataset' },
           // { value: 'code', label: 'Code' },
           // { value: 'protocol', label: 'Protocol' },

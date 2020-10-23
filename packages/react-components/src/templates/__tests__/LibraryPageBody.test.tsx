@@ -8,7 +8,7 @@ const props: Omit<ComponentProps<typeof LibraryPageBody>, 'children'> = {
     {
       id: '1',
       title: 'Output 1',
-      type: 'proposal',
+      type: 'Proposal',
       href: '#',
       publishDate: new Date().toISOString(),
       created: new Date().toISOString(),
@@ -16,7 +16,7 @@ const props: Omit<ComponentProps<typeof LibraryPageBody>, 'children'> = {
     {
       id: '2',
       title: 'Output 2',
-      type: 'proposal',
+      type: 'Proposal',
       href: '#',
       publishDate: new Date().toISOString(),
       created: new Date().toISOString(),

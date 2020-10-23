@@ -19,7 +19,7 @@ const researchOutputs: ListResearchOutputResponse = {
       publishDate: '2020-09-07T17:36:54Z',
       title: 'Output 1',
       text: 'description',
-      type: 'proposal',
+      type: 'Proposal',
       url: 'test',
       team: {
         id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
@@ -32,7 +32,7 @@ const researchOutputs: ListResearchOutputResponse = {
       publishDate: '2020-09-07T17:36:54Z',
       title: 'Output 2',
       text: 'description',
-      type: 'proposal',
+      type: 'Proposal',
       url: 'test',
       team: {
         id: 'e12729e0-a244-471f-a554-7b58eae83a8d',

@@ -13,7 +13,7 @@ const researchOutput: ResearchOutputResponse = {
   created: '2020-09-24T16:18:23Z',
   url: '',
   doi: '',
-  type: 'proposal',
+  type: 'Proposal',
   title: 'Proposal title.',
   text: 'Actual proposal?',
   publishDate: '2020-02-02T12:00:00.000Z',

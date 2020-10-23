@@ -5,7 +5,7 @@ import LibraryCard from '../LibraryCard';
 
 const libraryCardProps: ComponentProps<typeof LibraryCard> = {
   title: 'Output 1',
-  type: 'proposal',
+  type: 'Proposal',
   href: '#',
   publishDate: new Date().toISOString(),
   created: new Date().toISOString(),

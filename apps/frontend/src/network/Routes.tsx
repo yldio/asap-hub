@@ -18,7 +18,7 @@ import { useSearch } from '../hooks';
 
 const Network: React.FC<{}> = () => {
   const { path } = useRouteMatch();
-  const { filters, searchQuery, setFilter, setSearchQuery } = useSearch();
+  const { filters, searchQuery, toggleFilter, setSearchQuery } = useSearch();
   const history = useHistory();
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
 
@@ -35,7 +35,7 @@ const Network: React.FC<{}> = () => {
           page="users"
           onChangeToggle={onChangeToggle('teams')}
           onChangeSearch={setSearchQuery}
-          onChangeFilter={setFilter}
+          onChangeFilter={toggleFilter}
           filters={filters}
           searchQuery={searchQuery}
         >
@@ -50,7 +50,7 @@ const Network: React.FC<{}> = () => {
           page="teams"
           onChangeToggle={onChangeToggle('users')}
           onChangeSearch={setSearchQuery}
-          onChangeFilter={setFilter}
+          onChangeFilter={toggleFilter}
           filters={filters}
           searchQuery={searchQuery}
         >

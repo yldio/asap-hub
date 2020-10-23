@@ -10,7 +10,7 @@ import { useSearch } from '../hooks';
 
 const Library: React.FC<{}> = () => {
   const { path } = useRouteMatch();
-  const { filters, searchQuery, setFilter, setSearchQuery } = useSearch();
+  const { filters, searchQuery, toggleFilter, setSearchQuery } = useSearch();
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
 
   return (
@@ -19,7 +19,7 @@ const Library: React.FC<{}> = () => {
         <LibraryPage
           onChangeSearch={setSearchQuery}
           searchQuery={searchQuery}
-          onChangeFilter={setFilter}
+          onChangeFilter={toggleFilter}
           filters={filters}
         >
           <ErrorBoundary>

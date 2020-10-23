@@ -51,7 +51,7 @@ describe('useSearch', () => {
         initialEntries: ['/test'],
       },
     });
-    result.current.setFilter('test123');
+    result.current.toggleFilter('test123');
     expect(result.current.filters).toEqual(new Set(['test123']));
   });
 
@@ -62,8 +62,8 @@ describe('useSearch', () => {
         initialEntries: ['/test'],
       },
     });
-    result.current.setFilter('test123');
-    result.current.setFilter('test456');
+    result.current.toggleFilter('test123');
+    result.current.toggleFilter('test456');
     expect(result.current.filters).toEqual(new Set(['test123', 'test456']));
   });
 
@@ -74,7 +74,7 @@ describe('useSearch', () => {
         initialEntries: ['/test?filter=test123'],
       },
     });
-    result.current.setFilter('test123');
+    result.current.toggleFilter('test123');
     expect(result.current.filters).toEqual(new Set());
   });
 

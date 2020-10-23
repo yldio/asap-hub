@@ -1,17 +1,20 @@
 import React, { ComponentProps } from 'react';
-import { LibraryPage, LibraryPageBody } from '@asap-hub/react-components';
+import {
+  SharedResearchPage,
+  SharedResearchPageBody,
+} from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text, number } from '@storybook/addon-knobs';
 
 import { LayoutDecorator } from './decorators';
 
 export default {
-  title: 'Pages / Library',
+  title: 'Pages / SharedResearch',
   decorators: [LayoutDecorator],
 };
 
 const researchOutput: Omit<
-  ComponentProps<typeof LibraryPageBody>['researchOutputs'][0],
+  ComponentProps<typeof SharedResearchPageBody>['researchOutputs'][0],
   'id'
 > = {
   type: 'Proposal',
@@ -26,7 +29,7 @@ const researchOutput: Omit<
   href: '#',
 };
 
-const props = (): ComponentProps<typeof LibraryPageBody> => {
+const props = (): ComponentProps<typeof SharedResearchPageBody> => {
   const numberOfItems = number('Number of Outputs', 2, { min: 0 });
   const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
   return {
@@ -41,12 +44,12 @@ const props = (): ComponentProps<typeof LibraryPageBody> => {
   };
 };
 
-export const LibraryList = () => (
-  <LibraryPage
+export const SharedResearchList = () => (
+  <SharedResearchPage
     searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('search change')}
     filters={new Set()}
   >
-    <LibraryPageBody {...props()} />
-  </LibraryPage>
+    <SharedResearchPageBody {...props()} />
+  </SharedResearchPage>
 );

@@ -1,17 +1,17 @@
 import React from 'react';
-import { LibraryPageHeader } from '@asap-hub/react-components';
+import { SharedResearchPageHeader } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 
 import { NoPaddingDecorator } from './decorators';
 
 export default {
-  title: 'Templates / Library / Header',
+  title: 'Templates / SharedResearch / Header',
   decorators: [NoPaddingDecorator],
 };
 
 export const Normal = () => (
-  <LibraryPageHeader
+  <SharedResearchPageHeader
     searchQuery={text('Search Query', '')}
     onChangeSearch={() => action('Search change')}
     filters={new Set()}

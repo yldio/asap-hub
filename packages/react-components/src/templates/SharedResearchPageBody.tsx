@@ -1,28 +1,28 @@
 import React, { ComponentProps } from 'react';
 
-import { LibraryCard } from '../organisms';
+import { SharedResearchCard } from '../organisms';
 import CardList from '../organisms/CardList';
 
-type LibraryPageBodyProps = Omit<
+type SharedResearchPageBodyProps = Omit<
   ComponentProps<typeof CardList>,
   'children'
 > & {
   readonly researchOutputs: ReadonlyArray<
-    ComponentProps<typeof LibraryCard> & { id: string }
+    ComponentProps<typeof SharedResearchCard> & { id: string }
   >;
 };
 
-const LibraryPageBody: React.FC<LibraryPageBodyProps> = ({
+const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
   researchOutputs,
   ...cardListProps
 }) => (
   <CardList {...cardListProps}>
     {researchOutputs.map(({ id, ...output }) => (
       <div key={id}>
-        <LibraryCard {...output} />
+        <SharedResearchCard {...output} />
       </div>
     ))}
   </CardList>
 );
 
-export default LibraryPageBody;
+export default SharedResearchPageBody;

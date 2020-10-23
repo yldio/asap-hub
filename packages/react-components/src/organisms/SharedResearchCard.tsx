@@ -46,7 +46,7 @@ const typeStyles = css({
   textTransform: 'capitalize',
 });
 
-type LibraryCardProps = Pick<
+type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
   'publishDate' | 'title' | 'type' | 'created' | 'team'
 > & {
@@ -55,7 +55,7 @@ type LibraryCardProps = Pick<
     href: string;
   };
 };
-const LibraryCard: React.FC<LibraryCardProps> = ({
+const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   publishDate,
   title,
   type,
@@ -92,4 +92,4 @@ const LibraryCard: React.FC<LibraryCardProps> = ({
   );
 };
 
-export default LibraryCard;
+export default SharedResearchCard;

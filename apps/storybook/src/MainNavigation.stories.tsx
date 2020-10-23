@@ -15,7 +15,7 @@ export const Normal = () => {
     'Active Section',
     {
       Network: 'network',
-      Library: 'library',
+      'Shared Research': 'shared-research',
       'News and Events': 'news-and-events',
       None: 'none',
     },
@@ -26,7 +26,7 @@ export const Normal = () => {
       <MainNavigation
         discoverAsapHref="/discovery"
         networkHref="/network"
-        libraryHref="/library"
+        sharedResearchHref="/shared-research"
         newsAndEventsHref="/news-and-events"
       />
     </StaticRouter>

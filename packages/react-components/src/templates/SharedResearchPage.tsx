@@ -3,7 +3,7 @@ import css from '@emotion/css';
 
 import { perRem } from '../pixels';
 
-import LibraryPageHeader from './LibraryPageHeader';
+import SharedResearchPageHeader from './SharedResearchPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const articleStyles = css({
@@ -14,13 +14,13 @@ const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type LibraryPageProps = {
+type SharedResearchPageProps = {
   onChangeSearch?: (newQuery: string) => void;
   searchQuery?: string;
   onChangeFilter?: (filter: string) => void;
   filters: Set<string>;
 };
-const LibraryPage: React.FC<LibraryPageProps> = ({
+const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
   onChangeSearch,
   searchQuery,
   children,
@@ -28,7 +28,7 @@ const LibraryPage: React.FC<LibraryPageProps> = ({
   filters,
 }) => (
   <article css={articleStyles}>
-    <LibraryPageHeader
+    <SharedResearchPageHeader
       onChangeSearch={onChangeSearch}
       searchQuery={searchQuery}
       onChangeFilter={onChangeFilter}
@@ -38,4 +38,4 @@ const LibraryPage: React.FC<LibraryPageProps> = ({
   </article>
 );
 
-export default LibraryPage;
+export default SharedResearchPage;

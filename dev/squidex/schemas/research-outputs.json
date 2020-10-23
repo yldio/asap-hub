@@ -181,7 +181,7 @@
       }
     ],
     "previewUrls": {
-      "Web": "https://hub.asap.science/library/${id}"
+      "Web": "https://hub.asap.science/shared-research/${id}"
     },
     "category": "Storage",
     "isPublished": true

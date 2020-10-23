@@ -40,7 +40,7 @@ const commonProps = () => ({
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
     },
   ],
-  hrefLibrary: '/library',
+  hrefSharedResearch: '/shared-research',
   hrefNewsAndEvents: '/news-and-events',
   hrefProfile: text('Profile', '/network/users/1'),
   hrefTeamsNetwork: '/network/teams',

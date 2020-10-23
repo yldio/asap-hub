@@ -96,7 +96,7 @@ describe('the proposal', () => {
     const { getByText } = await renderTeam();
     expect(getByText(/proposal/i).closest('a')).toHaveAttribute(
       'href',
-      '/library/someproposal',
+      '/shared-research/someproposal',
     );
   });
 });

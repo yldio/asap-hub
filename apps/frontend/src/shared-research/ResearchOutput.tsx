@@ -25,7 +25,7 @@ const ResearchOutput: React.FC = () => {
           }
         : undefined,
       profileHref: '#',
-      libraryHref: '/library',
+      sharedResearchHref: '/shared-research',
     };
     return <ResearchOutputPage {...researchOutput} />;
   }

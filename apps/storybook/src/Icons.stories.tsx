@@ -53,7 +53,7 @@ export const Google = () => googleIcon;
 export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;
 export const HidePassword = () => hidePasswordIcon;
 export const LastPage = () => lastPageIcon;
-export const Library = () => libraryIcon;
+export const SharedResearch = () => libraryIcon;
 export const Location = () => locationIcon;
 export const Logout = () => logoutIcon;
 export const Menu = () => menuIcon;

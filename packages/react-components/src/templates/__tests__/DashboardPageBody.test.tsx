@@ -20,7 +20,7 @@ const props: ComponentProps<typeof DashboardPageBody> = {
     },
   ],
   pages: [createPageResponse('1'), createPageResponse('2')],
-  hrefLibrary: '/library',
+  hrefSharedResearch: '/shared-research',
   hrefNewsAndEvents: '/news-and-events',
   hrefProfile: '/network/users/uuid',
   hrefTeamsNetwork: '/network/teams',

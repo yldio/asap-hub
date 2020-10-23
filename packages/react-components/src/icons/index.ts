@@ -14,7 +14,7 @@ export { default as googleIcon } from './google';
 export { default as googleSigninLightNormalIcon } from './google-signin-light-normal';
 export { default as hidePasswordIcon } from './hide-password';
 export { default as lastPageIcon } from './last-page';
-export { default as libraryIcon } from './library';
+export { default as libraryIcon } from './shared-research';
 export { default as locationIcon } from './location';
 export { default as logoutIcon } from './logout';
 export { default as menuIcon } from './menu';

@@ -44,14 +44,14 @@ const listStyles = css({
 
 export interface MainNavigationProps {
   discoverAsapHref: string;
-  libraryHref: string;
+  sharedResearchHref: string;
   networkHref: string;
   newsAndEventsHref: string;
 }
 
 const MainNavigation: React.FC<MainNavigationProps> = ({
   discoverAsapHref,
-  libraryHref,
+  sharedResearchHref,
   networkHref,
   newsAndEventsHref,
 }) => (
@@ -63,8 +63,8 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={libraryHref} icon={libraryIcon}>
-          Library
+        <NavigationLink href={sharedResearchHref} icon={libraryIcon}>
+          Shared Research
         </NavigationLink>
       </li>
       <li>

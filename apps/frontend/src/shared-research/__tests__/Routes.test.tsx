@@ -42,13 +42,13 @@ const researchOutputs: ListResearchOutputResponse = {
   ],
 };
 
-const renderLibraryPage = async (pathname: string, query = '') => {
+const renderSharedResearchPage = async (pathname: string, query = '') => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-            <Route path={'/library'}>
+            <Route path={'/shared-research'}>
               <Routes />
             </Route>
           </MemoryRouter>
@@ -83,7 +83,7 @@ describe('the library page', () => {
   });
 
   it('allows typing in search queries', async () => {
-    const { getByRole } = await renderLibraryPage('/library');
+    const { getByRole } = await renderSharedResearchPage('/shared-research');
     const searchBox = getByRole('searchbox') as HTMLInputElement;
 
     await userEvent.type(searchBox, 'test123');
@@ -91,7 +91,9 @@ describe('the library page', () => {
   });
 
   it('allows selection of filters', async () => {
-    const { getByText, getByLabelText } = await renderLibraryPage('/library');
+    const { getByText, getByLabelText } = await renderSharedResearchPage(
+      '/shared-research',
+    );
 
     userEvent.click(getByText('Filters'));
     const checkbox = getByLabelText('Proposal');
@@ -106,8 +108,8 @@ describe('the library page', () => {
   });
 
   it('reads filters from url', async () => {
-    const { getByText, getByLabelText } = await renderLibraryPage(
-      '/library',
+    const { getByText, getByLabelText } = await renderSharedResearchPage(
+      '/shared-research',
       '?filter=Proposal',
     );
 

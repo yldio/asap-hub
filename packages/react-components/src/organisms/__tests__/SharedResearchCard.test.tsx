@@ -1,9 +1,9 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import LibraryCard from '../LibraryCard';
+import SharedResearchCard from '../SharedResearchCard';
 
-const libraryCardProps: ComponentProps<typeof LibraryCard> = {
+const libraryCardProps: ComponentProps<typeof SharedResearchCard> = {
   title: 'Output 1',
   type: 'Proposal',
   href: '#',
@@ -13,7 +13,7 @@ const libraryCardProps: ComponentProps<typeof LibraryCard> = {
 
 it('renders the title', () => {
   const { getByRole } = render(
-    <LibraryCard {...libraryCardProps} title="test123" />,
+    <SharedResearchCard {...libraryCardProps} title="test123" />,
   );
   expect(getByRole('heading').textContent).toEqual('test123');
   expect(getByRole('heading').tagName).toEqual('H2');
@@ -21,7 +21,7 @@ it('renders the title', () => {
 
 it('displays published date is undefined', () => {
   const { getByText } = render(
-    <LibraryCard
+    <SharedResearchCard
       {...libraryCardProps}
       publishDate={new Date(2019, 3, 3, 14, 32).toISOString()}
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
@@ -34,7 +34,7 @@ it('displays published date is undefined', () => {
 
 it('displays created date when published date is undefined', () => {
   const { getByText } = render(
-    <LibraryCard
+    <SharedResearchCard
       {...libraryCardProps}
       publishDate={undefined}
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
@@ -47,7 +47,7 @@ it('displays created date when published date is undefined', () => {
 
 it('displays team information when present', () => {
   const { getByText } = render(
-    <LibraryCard
+    <SharedResearchCard
       {...libraryCardProps}
       team={{
         id: '123',

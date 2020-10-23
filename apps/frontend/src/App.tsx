@@ -16,8 +16,8 @@ const loadNewsAndEvents = () =>
   import(/* webpackChunkName: "news-and-events" */ './news/Routes');
 const loadNetwork = () =>
   import(/* webpackChunkName: "network" */ './network/Routes');
-const loadLibrary = () =>
-  import(/* webpackChunkName: "library" */ './library/Routes');
+const loadSharedResearch = () =>
+  import(/* webpackChunkName: "shared-research" */ './shared-research/Routes');
 const loadHome = () => import(/* webpackChunkName: "home" */ './home/Home');
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
@@ -28,7 +28,7 @@ const loadDiscover = () =>
 const loadAdmin = () => import(/* webpackChunkName: "admin" */ './admin/Admin');
 const NewsAndEvents = React.lazy(loadNewsAndEvents);
 const Network = React.lazy(loadNetwork);
-const Library = React.lazy(loadLibrary);
+const SharedResearch = React.lazy(loadSharedResearch);
 const Home = React.lazy(loadHome);
 const Welcome = React.lazy(loadWelcome);
 const Content = React.lazy(loadContent);
@@ -40,7 +40,7 @@ const Prefetch: React.FC<{}> = () => {
     loadHome()
       .then(loadNewsAndEvents)
       .then(loadNetwork)
-      .then(loadLibrary)
+      .then(loadSharedResearch)
       .then(loadDiscover);
   }, []);
   return null;
@@ -52,7 +52,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   return isAuthenticated && user ? (
     <Layout
       discoverAsapHref="/discover"
-      libraryHref="/library"
+      sharedResearchHref="/shared-research"
       networkHref="/network"
       newsAndEventsHref="/news-and-events"
       profileHref={`/network/users/${user.id}`}
@@ -121,8 +121,8 @@ const App: React.FC<{}> = () => {
                             <Route path="/network">
                               <Network />
                             </Route>
-                            <Route path="/library">
-                              <Library />
+                            <Route path="/shared-research">
+                              <SharedResearch />
                             </Route>
                             <Route>
                               <NotFoundPage />

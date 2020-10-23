@@ -2,7 +2,7 @@ import { TeamResponse } from './team';
 import { ListResponse } from './common';
 
 export type ResearchOutputType =
-  | 'proposal'
+  | 'Proposal'
   | 'Dataset'
   | 'Software'
   | 'Protocol'

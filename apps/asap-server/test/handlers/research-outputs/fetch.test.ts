@@ -117,7 +117,7 @@ describe('GET /research-outputs/{id} - success', () => {
             id: 'uuid',
             created: '2020-09-23T16:34:26.842Z',
             data: {
-              type: { iv: 'proposal' },
+              type: { iv: 'Proposal' },
               title: { iv: 'Title' },
               text: { iv: 'Text' },
             },
@@ -133,7 +133,7 @@ describe('GET /research-outputs/{id} - success', () => {
             id: 'uuid',
             created: '2020-09-23T16:34:26.842Z',
             data: {
-              type: { iv: 'proposal' },
+              type: { iv: 'Proposal' },
               title: { iv: 'Title' },
               text: { iv: 'Text' },
             },
@@ -161,7 +161,7 @@ describe('GET /research-outputs/{id} - success', () => {
           id: 'uuid',
           text: 'Text',
           title: 'Title',
-          type: 'proposal',
+          type: 'Proposal',
           url: '',
         },
       ],
@@ -194,7 +194,7 @@ describe('GET /research-outputs/{id} - success', () => {
             id: 'uuid',
             created: '2020-09-23T16:34:26.842Z',
             data: {
-              type: { iv: 'proposal' },
+              type: { iv: 'Proposal' },
               title: { iv: 'Title' },
               text: { iv: 'Text' },
             },
@@ -210,7 +210,7 @@ describe('GET /research-outputs/{id} - success', () => {
             id: 'uuid',
             created: '2020-09-23T16:34:26.842Z',
             data: {
-              type: { iv: 'proposal' },
+              type: { iv: 'Proposal' },
               title: { iv: 'Title' },
               text: { iv: 'Text' },
             },
@@ -241,7 +241,7 @@ describe('GET /research-outputs/{id} - success', () => {
           id: 'uuid',
           text: 'Text',
           title: 'Title',
-          type: 'proposal',
+          type: 'Proposal',
           url: '',
         },
       ],

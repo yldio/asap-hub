@@ -7,7 +7,7 @@ const props: ComponentProps<typeof ResearchOutputPage> = {
   libraryHref: '#',
   profileHref: '#',
   title: 'title',
-  type: 'proposal',
+  type: 'Proposal',
   created: '2020-06-25T15:00:47.920Z',
   text: 'content',
 };
@@ -15,7 +15,7 @@ it('renders a proposal title and content', () => {
   const { getByText } = render(
     <ResearchOutputPage
       {...props}
-      type="proposal"
+      type="Proposal"
       title="title"
       text="content"
     />,

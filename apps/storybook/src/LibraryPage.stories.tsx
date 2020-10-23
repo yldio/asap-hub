@@ -14,7 +14,7 @@ const researchOutput: Omit<
   ComponentProps<typeof LibraryPageBody>['researchOutputs'][0],
   'id'
 > = {
-  type: 'proposal',
+  type: 'Proposal',
   title:
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
   created: new Date().toISOString(),

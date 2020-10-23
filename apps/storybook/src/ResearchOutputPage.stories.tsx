@@ -12,7 +12,7 @@ export default {
 export const Normal = () => (
   <ResearchOutputPage
     created={'2020-09-24T17:01:05.599Z'}
-    type="proposal"
+    type="Proposal"
     title={text(
       'title',
       'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brains',

@@ -32,7 +32,7 @@ type LibraryPageHeaderProps = {
 };
 
 const researchOutputFilters: Option<ResearchOutputType>[] = [
-  { label: 'Proposal', value: 'proposal' },
+  { label: 'Proposal', value: 'Proposal' },
   { label: 'Dataset', value: 'Dataset', enabled: false },
   { label: 'Software', value: 'Software', enabled: false },
   { label: 'Protocol', value: 'Protocol', enabled: false },

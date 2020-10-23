@@ -13,7 +13,7 @@ export const Normal = () => (
       'Title',
       'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
     )}
-    type={select('Type', ['proposal'], 'proposal')}
+    type={select('Type', ['Proposal'], 'Proposal')}
     publishDate={new Date(
       date('Published Date', new Date(2020, 6, 12, 14, 32)),
     ).toISOString()}

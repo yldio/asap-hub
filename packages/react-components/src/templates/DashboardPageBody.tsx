@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { PagesSection, LatestNewsSection, HelpSection } from '../organisms';
+import { PagesSection, NewsAndEventsSection, HelpSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card, Paragraph, Link } from '../atoms';
 
@@ -19,7 +19,7 @@ type DashboardPageBodyProps = Omit<
   ComponentProps<typeof PagesSection>,
   'title'
 > &
-  ComponentProps<typeof LatestNewsSection> & {
+  Omit<ComponentProps<typeof NewsAndEventsSection>, 'title'> & {
     readonly hrefLibrary: string;
     readonly hrefNewsAndEvents: string;
     readonly hrefProfile: string;
@@ -43,7 +43,10 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       <PagesSection title={'Not sure where to start?'} pages={pages} />
     ) : null}
     {newsAndEvents.length ? (
-      <LatestNewsSection newsAndEvents={newsAndEvents} />
+      <NewsAndEventsSection
+        title={'Latest News from ASAP'}
+        newsAndEvents={newsAndEvents}
+      />
     ) : null}
     <section>
       <Display styleAsHeading={2}>You may want to try</Display>

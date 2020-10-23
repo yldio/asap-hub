@@ -35,9 +35,10 @@ test('renders discover header', async () => {
     .get('/discover')
     .once()
     .reply(200, {
+      aboutUs: '',
       members: [],
       pages: [],
-      aboutUs: '',
+      training: [],
     });
 
   const { getByText } = await renderHome();
@@ -51,6 +52,7 @@ test('renders discover with guidance, about and members', async () => {
     .get('/discover')
     .once()
     .reply(200, {
+      training: [],
       aboutUs: '<h1>About us</h1>',
       pages: [
         {

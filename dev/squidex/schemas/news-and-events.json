@@ -36,7 +36,8 @@
           "fieldType": "String",
           "allowedValues": [
             "News",
-            "Event"
+            "Event",
+            "Training"
           ],
           "isUnique": false,
           "inlineEditable": false,
@@ -135,6 +136,20 @@
           "inlineEditable": false,
           "editor": "RichText",
           "label": "Text",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "subtitle",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
           "isRequired": false
         }
       }

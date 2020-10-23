@@ -6,6 +6,7 @@ import {
   RichText,
   MembersSection,
   HelpSection,
+  NewsAndEventsSection,
 } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card } from '../atoms';
@@ -26,16 +27,23 @@ type DashboardPageBodyProps = Omit<
 > &
   Omit<ComponentProps<typeof MembersSection>, 'title'> & {
     readonly aboutUs: string;
+    readonly training: ComponentProps<
+      typeof NewsAndEventsSection
+    >['newsAndEvents'];
   };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   pages,
   aboutUs,
+  training,
   members,
 }) => (
   <div css={styles}>
     {pages.length ? (
       <PagesSection title={'Grantee Guidance'} pages={pages} />
+    ) : null}
+    {training.length ? (
+      <NewsAndEventsSection title={'Training'} newsAndEvents={training} />
     ) : null}
     {aboutUs.length ? (
       <section>

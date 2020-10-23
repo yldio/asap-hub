@@ -25,6 +25,7 @@ describe('GET /news-and-events', () => {
       .query({
         q: JSON.stringify({
           take: 8,
+          filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
           sort: [{ order: 'descending', path: 'created' }],
         }),
       })
@@ -55,6 +56,7 @@ describe('GET /news-and-events', () => {
       .query({
         q: JSON.stringify({
           take: 8,
+          filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
           sort: [{ order: 'descending', path: 'created' }],
         }),
       })
@@ -85,6 +87,7 @@ describe('GET /news-and-events', () => {
       .query({
         q: JSON.stringify({
           take: 8,
+          filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
           sort: [{ order: 'descending', path: 'created' }],
         }),
       })

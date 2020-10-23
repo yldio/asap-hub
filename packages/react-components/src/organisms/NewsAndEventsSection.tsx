@@ -14,13 +14,17 @@ const styles = css({
 });
 
 type LatestNewsProps = {
+  readonly title: string;
   readonly newsAndEvents: ReadonlyArray<NewsAndEventsResponse>;
 };
 
-const LatestNews: React.FC<LatestNewsProps> = ({ newsAndEvents }) => {
+const NewsAndEventsSection: React.FC<LatestNewsProps> = ({
+  newsAndEvents,
+  title,
+}) => {
   return (
     <section>
-      <Display styleAsHeading={2}>Latest news from ASAP</Display>
+      <Display styleAsHeading={2}>{title}</Display>
       <div css={styles}>
         {newsAndEvents.map((newsAndEvent) => {
           return <NewsAndEventsCard key={newsAndEvent.id} {...newsAndEvent} />;
@@ -30,4 +34,4 @@ const LatestNews: React.FC<LatestNewsProps> = ({ newsAndEvents }) => {
   );
 };
 
-export default LatestNews;
+export default NewsAndEventsSection;

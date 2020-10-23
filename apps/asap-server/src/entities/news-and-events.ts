@@ -1,4 +1,4 @@
-import { NewsAndEventsResponse } from '@asap-hub/model';
+import { NewsAndEventsResponse, NewsAndEventsType } from '@asap-hub/model';
 import { parseDate, createURL } from '../utils/squidex';
 
 export interface CMSNewsAndEvents {
@@ -6,7 +6,7 @@ export interface CMSNewsAndEvents {
   created: string;
   data: {
     type: {
-      iv: 'News' | 'Event';
+      iv: NewsAndEventsType;
     };
     title: { iv: string };
     shortText: { iv: string };
@@ -14,6 +14,22 @@ export interface CMSNewsAndEvents {
     text: { iv: string };
     link?: { iv: string };
     linkText?: { iv: string };
+  };
+}
+
+export interface CMSGraphQLNewsAndEvents {
+  id: string;
+  created: string;
+  flatData: {
+    type: NewsAndEventsType;
+    title: string;
+    shortText: string;
+    thumbnail: {
+      id: string;
+    }[];
+    text: string;
+    link?: string;
+    linkText?: string;
   };
 }
 
@@ -39,4 +55,17 @@ export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
     title: item.data.title.iv,
     type: item.data.type.iv,
   } as NewsAndEventsResponse;
+};
+
+export const parseGraphQL = (
+  item: CMSGraphQLNewsAndEvents,
+): NewsAndEventsResponse => {
+  return {
+    id: item.id,
+    created: item.created,
+    ...item.flatData,
+    thumbnail:
+      item.flatData.thumbnail &&
+      createURL(item.flatData.thumbnail.map((t) => t.id))[0],
+  };
 };

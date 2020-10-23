@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { NewsAndEventsResponse } from '@asap-hub/model';
+import { NewsAndEventsResponse, NewsAndEventsType } from '@asap-hub/model';
 import { Card, Paragraph, Headline2, TagLabel, Caption, Link } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
@@ -46,9 +46,10 @@ const footerStyles = css({
   justifySelf: 'flex-end',
 });
 
-const placeholders: Record<'News' | 'Event', JSX.Element> = {
+const placeholders: Record<NewsAndEventsType, JSX.Element> = {
   News: newsPlaceholder,
   Event: eventsPlaceholder,
+  Training: newsPlaceholder,
 };
 
 type NewsAndEventsCardProps = NewsAndEventsResponse;

@@ -1,9 +1,11 @@
 import { ListResponse } from './common';
 
+export type NewsAndEventsType = 'News' | 'Event' | 'Training';
+
 export interface NewsAndEventsResponse {
   id: string;
   title: string;
-  type: 'News' | 'Event';
+  type: NewsAndEventsType;
   shortText?: string;
   text?: string;
   thumbnail?: string;

@@ -16,6 +16,11 @@ export default class ResearchOutputs {
   }): Promise<ListNewsAndEventsResponse> {
     const { total, items } = await this.newsAndEvents.fetch({
       ...options,
+      filter: {
+        path: 'data.type.iv',
+        op: 'ne',
+        value: 'Training',
+      },
       sort: [{ order: 'descending', path: 'created' }],
     });
 

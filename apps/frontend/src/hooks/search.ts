@@ -5,13 +5,13 @@ export const useSearch = () => {
   const currentUrlParams = new URLSearchParams(useLocation().search);
   const history = useHistory();
 
-  const { resetPage } = usePaginationParams();
+  const { resetPagination } = usePaginationParams();
 
   const filters = new Set<string>(currentUrlParams.getAll('filter'));
   const searchQuery = currentUrlParams.get('searchQuery') || undefined;
 
   const toggleFilter = (filter: string) => {
-    resetPage();
+    resetPagination();
 
     const newUrlParams = new URLSearchParams(history.location.search);
     newUrlParams.delete('filter');
@@ -21,7 +21,7 @@ export const useSearch = () => {
     history.replace({ search: newUrlParams.toString() });
   };
   const resetFilters = () => {
-    resetPage();
+    resetPagination();
 
     const newUrlParams = new URLSearchParams(history.location.search);
     newUrlParams.delete('filter');
@@ -30,7 +30,7 @@ export const useSearch = () => {
   };
 
   const setSearchQuery = (newSearchQuery: string) => {
-    resetPage();
+    resetPagination();
 
     const newUrlParams = new URLSearchParams(history.location.search);
     newSearchQuery

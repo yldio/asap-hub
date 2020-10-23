@@ -8,12 +8,12 @@ export const usePaginationParams = (pageSize = DEFAULT_PAGE_SIZE) => {
   const searchParams = new URLSearchParams(useLocation().search);
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
 
-  const resetPage = () => {
+  const resetPagination = () => {
     const newSearchParams = new URLSearchParams(history.location.search);
     newSearchParams.delete('currentPage');
     history.replace({ search: newSearchParams.toString() });
   };
-  return { currentPage, pageSize, resetPage };
+  return { currentPage, pageSize, resetPagination };
 };
 
 export const usePagination = (numberOfItems: number, pageSize: number) => {

@@ -1,8 +1,7 @@
 const aws = require('aws-sdk');
 
 const ses = new aws.SES({ apiVersion: '2010-12-01' });
-module.exports = async (src) => {
-  const template = require(src);
+module.exports = async (template) => {
   const templateName = template.TemplateName;
 
   try {

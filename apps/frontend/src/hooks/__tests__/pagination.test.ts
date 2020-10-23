@@ -3,6 +3,9 @@ import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { usePaginationParams, usePagination } from '../pagination';
 
+const urlSearchParamsToObject = (queryString: string) =>
+  Object.fromEntries(new URLSearchParams(queryString));
+
 describe('usePaginationParams', () => {
   it('returns default page and page size', () => {
     const { result } = renderHook(() => usePaginationParams(), {
@@ -79,8 +82,12 @@ describe('usePagination', () => {
     });
 
     expect(renderPageHref(0)).toEqual('.');
-    expect(renderPageHref(1)).toMatchInlineSnapshot(`"?currentPage=1"`);
-    expect(renderPageHref(9)).toMatchInlineSnapshot(`"?currentPage=9"`);
+    expect(urlSearchParamsToObject(renderPageHref(1))).toEqual({
+      currentPage: '1',
+    });
+    expect(urlSearchParamsToObject(renderPageHref(9))).toEqual({
+      currentPage: '9',
+    });
   });
 
   it('preserves other query parameters', async () => {
@@ -95,10 +102,13 @@ describe('usePagination', () => {
       },
     });
 
-    expect(renderPageHref(0)).toMatchInlineSnapshot(`"?searchQuery=123"`);
-    expect(renderPageHref(1)).toMatchInlineSnapshot(
-      `"?searchQuery=123&currentPage=1"`,
-    );
+    expect(urlSearchParamsToObject(renderPageHref(0))).toEqual({
+      searchQuery: '123',
+    });
+    expect(urlSearchParamsToObject(renderPageHref(1))).toEqual({
+      searchQuery: '123',
+      currentPage: '1',
+    });
   });
 
   it('does not return a link for the current page', async () => {

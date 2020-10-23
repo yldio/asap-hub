@@ -11,7 +11,7 @@ const styles = css({
 });
 const contentStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)}`,
 });
 
 type TeamPageProps = ComponentProps<typeof TeamHeader> & {

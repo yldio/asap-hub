@@ -15,9 +15,11 @@ import {
   berry,
   lavender,
   mauve,
+  charcoal,
+  paper,
 } from '../colors';
 import { perRem } from '../pixels';
-import { headlineStyles } from '../text';
+import { headlineStyles, fontStyles } from '../text';
 
 const hash = (str: string) => {
   let h = 0;
@@ -30,18 +32,15 @@ const hash = (str: string) => {
   return h;
 };
 
+const minWidth = 36;
+const maxWidth = 90;
 const ringStyle = css({
   boxSizing: 'border-box',
-  height: `${90 / perRem}em`,
-  width: `${90 / perRem}em`,
+  minWidth: `${minWidth / perRem}em`,
+  width: `min(100%, ${maxWidth / perRem}em)`,
 
-  margin: `${12 / perRem}em 0`,
-});
-
-const smallRingStyle = css({
-  boxSizing: 'border-box',
-  height: `${48 / perRem}em`,
-  width: `${48 / perRem}em`,
+  // margin only for Avatars that get all the space (max) they want
+  margin: `clamp(0px, calc(100% - ${maxWidth - 12}px), 12px) 0`,
 });
 
 const ringBorderStyle = css({
@@ -51,6 +50,12 @@ const ringBorderStyle = css({
   borderStyle: 'solid',
   borderRadius: '50%',
   borderColor: silver.rgb,
+});
+const placeholderBorderStyle = css({
+  borderWidth: '1px',
+  borderStyle: 'solid',
+  borderRadius: '50%',
+  borderColor: charcoal.rgb,
 });
 
 const circleStyle = css({
@@ -67,43 +72,69 @@ const imageStyle = css({
   objectFit: 'cover',
 });
 
-const initialsStyle = css(headlineStyles[3]);
-const smallInitialsStyle = css({
-  fontWeight: 'bold',
+const initialsStyle = css({
+  display: 'grid',
+  justifyContent: 'stretch',
+  alignContent: 'stretch',
 });
-
-type AvatarProps = {
+const textStyle = css(fontStyles, headlineStyles[3], {
+  dominantBaseline: 'central',
+  textAnchor: 'middle',
+});
+type RegularAvatarProps = {
   readonly imageUrl?: string;
   readonly firstName?: string;
   readonly lastName?: string;
-  readonly small?: boolean;
+
+  readonly placeholder?: undefined;
+};
+type PlaceholderAvatarProps = {
+  readonly imageUrl?: undefined;
+  readonly firstName?: undefined;
+  readonly lastName?: undefined;
+
+  readonly placeholder?: string;
+};
+type AvatarProps = (RegularAvatarProps | PlaceholderAvatarProps) & {
   readonly border?: boolean;
 };
 
-const colors = [
-  css({ backgroundColor: mint.rgb, color: pine.rgb }),
-  css({ backgroundColor: apricot.rgb, color: clay.rgb }),
-  css({ backgroundColor: sky.rgb, color: denim.rgb }),
-  css({ backgroundColor: azure.rgb, color: space.rgb }),
-  css({ backgroundColor: lilac.rgb, color: berry.rgb }),
-  css({ backgroundColor: lavender.rgb, color: mauve.rgb }),
+const placeholderColorStyle = css({
+  backgroundColor: paper.rgb,
+  fill: charcoal.rgb,
+});
+const colorStyles = [
+  css({ backgroundColor: mint.rgb, fill: pine.rgb }),
+  css({ backgroundColor: apricot.rgb, fill: clay.rgb }),
+  css({ backgroundColor: sky.rgb, fill: denim.rgb }),
+  css({ backgroundColor: azure.rgb, fill: space.rgb }),
+  css({ backgroundColor: lilac.rgb, fill: berry.rgb }),
+  css({ backgroundColor: lavender.rgb, fill: mauve.rgb }),
 ];
 
 const Avatar: React.FC<AvatarProps> = ({
   imageUrl,
   firstName = '',
   lastName = '',
-  small = false,
+  placeholder = '',
   border = false,
 }) => {
   const name = `${firstName}${firstName && lastName ? ' ' : ''}${lastName}`;
   const initials = (firstName?.[0] ?? '') + (lastName?.[0] ?? '');
 
   return (
-    <div css={[small ? smallRingStyle : ringStyle, border && ringBorderStyle]}>
+    <div
+      css={[
+        ringStyle,
+        border && ringBorderStyle,
+        placeholder && placeholderBorderStyle,
+      ]}
+    >
       {imageUrl ? (
         // eslint-disable-next-line jsx-a11y/img-redundant-alt
         <img
+          width={maxWidth}
+          height={maxWidth}
           alt={`Profile picture${name ? ` of ${name}` : ''}`}
           src={imageUrl}
           css={[circleStyle, imageStyle]}
@@ -112,11 +143,17 @@ const Avatar: React.FC<AvatarProps> = ({
         <p
           css={[
             circleStyle,
-            small ? smallInitialsStyle : initialsStyle,
-            colors[hash(initials) % colors.length],
+            initialsStyle,
+            placeholder
+              ? placeholderColorStyle
+              : colorStyles[hash(initials) % colorStyles.length],
           ]}
         >
-          {initials}
+          <svg viewBox="0 0 90 90">
+            <text x="50%" y="50%" css={textStyle}>
+              {placeholder || initials}
+            </text>
+          </svg>
         </p>
       )}
     </div>

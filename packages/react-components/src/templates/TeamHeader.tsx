@@ -8,29 +8,14 @@ import { TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../utils';
 import { perRem, mobileScreen } from '../pixels';
-import { paper, lead } from '../colors';
+import { paper } from '../colors';
+
+const MAX_MEMBER_AVATARS = 5;
 
 const containerStyles = css({
   alignSelf: 'stretch',
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
-});
-
-type TeamProps = TeamResponse & {
-  readonly aboutHref: string;
-  readonly outputsHref: string;
-};
-
-const memberStyle = css({});
-const membersContainerStyle = css({
-  padding: 0,
-  listStyle: 'none',
-
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-
-  gridArea: 'members',
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
 });
 
 const sectionStyles = css({
@@ -47,7 +32,7 @@ const sectionStyles = css({
 
   [`@media (min-width: ${mobileScreen.max}px)`]: {
     grid: `
-      "contact members update" auto / auto 1fr auto
+      "contact members update" / max-content 1fr max-content
     `,
   },
 });
@@ -65,18 +50,28 @@ const pointOfContactStyles = css({
   },
 });
 
-const extraUsersStyles = css({
+const membersContainerStyles = css({
+  gridArea: 'members',
+
   display: 'grid',
-  height: `${48 / perRem}em`,
-  width: `${48 / perRem}em`,
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: '50%',
-  border: `1px solid ${lead.rgb}`,
-  fontWeight: 'bold',
-  marginLeft: `${6 / perRem}em`,
+  gridAutoFlow: 'column',
+  gridTemplateColumns: `repeat(${MAX_MEMBER_AVATARS}, minmax(auto, 60px)) ${
+    6 / perRem
+  }em minmax(auto, 60px)`,
+});
+const membersListStyles = css({
+  display: 'contents',
+  listStyle: 'none',
+});
+const extraUsersStyles = css({
+  display: 'block',
+  gridColumnEnd: '-1',
 });
 
+type TeamProps = TeamResponse & {
+  readonly aboutHref: string;
+  readonly outputsHref: string;
+};
 const TeamHeader: React.FC<TeamProps> = ({
   displayName,
   lastModifiedDate,
@@ -90,25 +85,32 @@ const TeamHeader: React.FC<TeamProps> = ({
     <header css={containerStyles}>
       <Display styleAsHeading={2}>Team {displayName}</Display>
       <section css={sectionStyles}>
-        <ul css={membersContainerStyle}>
-          {members.slice(0, 5).map(({ id, avatarUrl, firstName, lastName }) => {
-            return (
-              <li key={id} css={memberStyle}>
-                <Link href={`/network/users/${id}`} theme={null}>
-                  <Avatar
-                    small
-                    firstName={firstName}
-                    lastName={lastName}
-                    imageUrl={avatarUrl}
-                  />
-                </Link>
-              </li>
-            );
-          })}
-          {members.length > 5 ? (
-            <li css={extraUsersStyles}>{`+${members.length - 5}`}</li>
-          ) : null}
-        </ul>
+        <div css={membersContainerStyles}>
+          <ul css={membersListStyles}>
+            {members
+              .slice(0, MAX_MEMBER_AVATARS)
+              .map(({ id, avatarUrl, firstName, lastName }) => {
+                return (
+                  <li key={id}>
+                    <Link href={`/network/users/${id}`} theme={null}>
+                      <Avatar
+                        firstName={firstName}
+                        lastName={lastName}
+                        imageUrl={avatarUrl}
+                      />
+                    </Link>
+                  </li>
+                );
+              })}
+            <li css={extraUsersStyles}>
+              {members.length > MAX_MEMBER_AVATARS && (
+                <Avatar
+                  placeholder={`+${members.length - MAX_MEMBER_AVATARS}`}
+                />
+              )}
+            </li>
+          </ul>
+        </div>
         {pointOfContact && (
           <div css={pointOfContactStyles}>
             <Link

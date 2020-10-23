@@ -12,9 +12,9 @@ const containerStyles = css({
   display: 'grid',
 
   gridColumnGap: `${18 / perRem}em`,
-  gridTemplateColumns: 'min-content 1fr',
+  gridTemplateColumns: `${48 / perRem}em 1fr`,
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: 'min-content 1fr min-content 1fr',
+    gridTemplateColumns: `${48 / perRem}em 1fr ${48 / perRem}em 1fr`,
   },
 
   alignItems: 'center',
@@ -70,7 +70,6 @@ const MembersSection: React.FC<MembersSectionProps> = ({
                 <div css={avatarStyles}>
                   <Avatar
                     imageUrl={avatarUrl}
-                    small
                     border
                     firstName={firstName}
                     lastName={lastName}

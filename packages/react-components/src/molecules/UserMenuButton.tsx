@@ -17,7 +17,8 @@ const styles = css({
   padding: `${12 / perRem}em ${24 / perRem}em`,
   cursor: 'pointer',
 
-  display: 'flex',
+  display: 'grid',
+  gridTemplateColumns: `auto ${48 / perRem}em auto auto`,
   alignItems: 'center',
 });
 
@@ -50,12 +51,7 @@ const UserMenuButton: React.FC<UserMenuButtonProps> = ({
           {displayName}
         </strong>
       </Paragraph>
-      <Avatar
-        small
-        imageUrl={avatarUrl}
-        firstName={firstName}
-        lastName={lastName}
-      />
+      <Avatar imageUrl={avatarUrl} firstName={firstName} lastName={lastName} />
       <div
         css={{
           paddingLeft: `${12 / perRem}em`,

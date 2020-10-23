@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Avatar from '../Avatar';
-import { viewportCalc } from '../../test-utils';
+import { paper } from '../../colors';
 
 it('renders the profile picture', () => {
   const { getByRole } = render(<Avatar imageUrl="/avatar.png" />);
@@ -24,9 +24,32 @@ it('generates an alt text when no name is available', () => {
   );
 });
 
+it('shows a placeholder on white background', () => {
+  const { getByText } = render(<Avatar placeholder="+1" />);
+
+  expect(getByText('+1')).toBeVisible();
+
+  const { backgroundColor } = findParentWithStyle(
+    getByText('+1'),
+    'backgroundColor',
+  )!;
+  expect(backgroundColor).toBe(paper.rgb);
+});
+
+it("shows the initials 'JD' on colored background", () => {
+  const { getByText } = render(<Avatar firstName="John" lastName="Doe" />);
+
+  expect(getByText('JD')).toBeVisible();
+
+  const { backgroundColor } = findParentWithStyle(
+    getByText('JD'),
+    'backgroundColor',
+  )!;
+  expect(backgroundColor).not.toBe(paper.rgb);
+});
+
 it.each`
   firstName    | lastName     | initials
-  ${'John'}    | ${'Doe'}     | ${'JD'}
   ${'John'}    | ${undefined} | ${'J'}
   ${undefined} | ${'Doe'}     | ${'D'}
   ${undefined} | ${undefined} | ${''}
@@ -48,20 +71,4 @@ it('respects the border prop', () => {
   expect(
     findParentWithStyle(getByRole('img'), 'borderStyle')?.borderStyle,
   ).toMatchInlineSnapshot(`"solid"`);
-});
-
-it('respects the small prop', () => {
-  const { getByText, rerender } = render(<Avatar firstName="J" lastName="D" />);
-  const normalFontSize = Number(
-    viewportCalc(
-      findParentWithStyle(getByText(/[A-Z]/), 'fontSize')!.fontSize,
-    ).replace(/px$/, ''),
-  );
-
-  rerender(<Avatar firstName="J" lastName="D" small />);
-  const smallFontSize = Number(
-    getComputedStyle(getByText(/[A-Z]/)).fontSize.replace(/em$/, ''),
-  );
-
-  expect(smallFontSize).toBeLessThan(normalFontSize);
 });

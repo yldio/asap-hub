@@ -12,7 +12,7 @@ const containerStyles = css({
   columnGap: '25px',
   rowGap: '12px',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridTemplateColumns: 'min-content auto',
+    gridTemplateColumns: '90px auto',
   },
 });
 

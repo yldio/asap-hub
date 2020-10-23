@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { ResearchOutputType } from '@asap-hub/model';
 
 import { Display, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
@@ -7,6 +8,7 @@ import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { noop } from '../utils';
 import { SearchControls } from '../organisms';
+import { Option } from '../organisms/CheckboxGroup';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -29,6 +31,17 @@ type LibraryPageHeaderProps = {
   filters: Set<string>;
 };
 
+const researchOutputFilters: Option<ResearchOutputType>[] = [
+  { label: 'Proposal', value: 'proposal' },
+  { label: 'Dataset', value: 'Dataset', enabled: false },
+  { label: 'Software', value: 'Software', enabled: false },
+  { label: 'Protocol', value: 'Protocol', enabled: false },
+  { label: 'Lab Resource', value: 'Lab Resource', enabled: false },
+  { label: 'Preprint', value: 'Preprint', enabled: false },
+  { label: 'Article', value: 'Article', enabled: false },
+  { label: 'Other', value: 'Other', enabled: false },
+];
+
 const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
   onChangeSearch = noop,
   searchQuery,
@@ -50,16 +63,7 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
         filterEnabled={false}
-        filterOptions={[
-          { label: 'Proposal', value: 'Proposal' },
-          { label: 'Dataset', value: 'Dataset', enabled: false },
-          { label: 'Software', value: 'Software', enabled: false },
-          { label: 'Protocol', value: 'Protocol', enabled: false },
-          { label: 'Lab Resource', value: 'Lab Resource', enabled: false },
-          { label: 'Preprint', value: 'Preprint', enabled: false },
-          { label: 'Article', value: 'Article', enabled: false },
-          { label: 'Other', value: 'Other', enabled: false },
-        ]}
+        filterOptions={researchOutputFilters}
         filterTitle="TYPE OF OUTPUTS"
         onChangeFilter={onChangeFilter}
         filters={filters}

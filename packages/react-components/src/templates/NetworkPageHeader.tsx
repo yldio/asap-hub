@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { TeamRole } from '@asap-hub/model';
 
 import { Display, Paragraph, Toggle } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
@@ -7,6 +8,7 @@ import { paper, steel } from '../colors';
 import { userIcon, teamIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchControls } from '../organisms';
+import { Option } from '../organisms/CheckboxGroup';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -43,6 +45,15 @@ type NetworkPageHeaderProps = {
   filters?: Set<string>;
 };
 
+const userFilters: Option<TeamRole>[] = [
+  { label: 'Lead PI', value: 'Lead PI' },
+  { label: 'Co-Investigator', value: 'Co-Investigator' },
+  { label: 'Key Personnel', value: 'Key Personnel' },
+  { label: 'Advisor', value: 'Advisor' },
+  { label: 'Staff', value: 'Staff' },
+  { label: 'Guest', value: 'Guest' },
+];
+
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   onChangeSearch,
   onChangeFilter,
@@ -78,18 +89,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           searchQuery={searchQuery}
           onChangeFilter={onChangeFilter}
           filterEnabled={page === 'users'}
-          filterOptions={
-            page === 'users'
-              ? [
-                  { label: 'Lead PI', value: 'Lead PI' },
-                  { label: 'Co-investigator', value: 'Co-investigator' },
-                  { label: 'Key Personnel', value: 'Key Personnel' },
-                  { label: 'Advisor', value: 'Advisor' },
-                  { label: 'Staff', value: 'Staff' },
-                  { label: 'Guest', value: 'Guest' },
-                ]
-              : []
-          }
+          filterOptions={page === 'users' ? userFilters : []}
           filterTitle={page === 'users' ? 'TEAM ROLES' : ''}
           filters={filters}
         />

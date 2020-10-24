@@ -17,8 +17,8 @@ export const newsAndEventsResponse: {
         type: {
           iv: 'News',
         },
-        subtitle: {
-          iv: 'Subtitle of news 1',
+        shortText: {
+          iv: 'Short text of news 1',
         },
         text: {
           iv: '<p>text</p>',
@@ -38,8 +38,8 @@ export const newsAndEventsResponse: {
         type: {
           iv: 'Event',
         },
-        subtitle: {
-          iv: 'Subtitle of event 2',
+        shortText: {
+          iv: 'Short text of event 2',
         },
         text: {
           iv: '<p>text</p>',
@@ -60,7 +60,7 @@ export const expectation: ListNewsAndEventsResponse = {
       id: 'news-and-events-1',
       title: 'News 1',
       type: 'News',
-      subtitle: 'Subtitle of news 1',
+      shortText: 'Short text of news 1',
       text: '<p>text</p>',
       thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/thumbnail-uuid1`,
       created: '2020-09-08T16:35:28.000Z',
@@ -69,7 +69,7 @@ export const expectation: ListNewsAndEventsResponse = {
       id: 'news-and-events-2',
       title: 'Event 2',
       type: 'Event',
-      subtitle: 'Subtitle of event 2',
+      shortText: 'Short text of event 2',
       text: '<p>text</p>',
       thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/thumbnail-uuid2`,
       created: '2020-09-16T14:31:19.000Z',

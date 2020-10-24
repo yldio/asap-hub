@@ -11,6 +11,7 @@
   "references": [
     { "path": "../auth" },
     { "path": "../dom-test-utils" },
+    { "path": "../fixtures" },
     { "path": "../model" },
     { "path": "../react-context" }
   ]

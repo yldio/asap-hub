@@ -4,13 +4,11 @@ export interface NewsAndEventsResponse {
   id: string;
   title: string;
   type: 'News' | 'Event';
-  subtitle?: string;
-  thumbnail?: string;
-  link?: {
-    name?: string;
-    href: string;
-  };
+  shortText?: string;
   text?: string;
+  thumbnail?: string;
+  link?: string;
+  linkText?: string;
   created: string;
 }
 

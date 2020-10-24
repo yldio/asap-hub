@@ -12,12 +12,10 @@ const newsProps = () => ({
   created: new Date().toISOString(),
   type: 'News' as const,
   title: text('Title', "Coordinating different approaches into Parkinson's"),
-  link: {
-    name: text('External Link Text', 'Read More'),
-    href: text('External Link', 'https://picsum.photos/200'),
-  },
-  subtitle: text(
-    'Subtitle',
+  link: text('External Link', 'https://picsum.photos/200'),
+  linkText: text('External Link Text', 'Read More'),
+  shortText: text(
+    'Short Text',
     'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
   ),
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),

@@ -3,18 +3,21 @@ import { PageResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Paragraph, Link } from '../atoms';
 
-type PageCardProps = Pick<PageResponse, 'title' | 'text'> & {
-  readonly href: string;
-};
+type PageCardProps = Omit<PageResponse, 'path'>;
 
-const PeopleCard: React.FC<PageCardProps> = ({ title, text, href }) => {
+const PageCard: React.FC<PageCardProps> = ({
+  title,
+  shortText,
+  link,
+  linkText,
+}) => {
   return (
     <Card>
       <Headline2 styleAsHeading={3}>{title}</Headline2>
-      <Paragraph>{text}</Paragraph>
-      <Link href={href}>Read more</Link>
+      <Paragraph>{shortText}</Paragraph>
+      {link ? <Link href={link}>{linkText || 'Read more'}</Link> : null}
     </Card>
   );
 };
 
-export default PeopleCard;
+export default PageCard;

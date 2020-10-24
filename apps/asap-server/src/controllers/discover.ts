@@ -17,8 +17,11 @@ export const query = `
         pages {
           id
           flatData {
+            shortText
             text
             title
+            link
+            linkText
           }
         }
         members {

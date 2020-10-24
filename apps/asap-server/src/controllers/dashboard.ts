@@ -18,7 +18,7 @@ export const query = `
               title {
                 iv
               }
-              subtitle {
+              shortText {
                 iv
               }
               text {
@@ -31,6 +31,12 @@ export const query = `
                 iv {
                   id
                 }
+              }
+              link {
+                iv
+              }
+              linkText {
+                iv
               }
             }
           }
@@ -46,7 +52,16 @@ export const query = `
               title {
                 iv
               }
+              shortText {
+                iv
+              }
               text {
+                iv
+              }
+              link {
+                iv
+              }
+              linkText {
                 iv
               }
             }

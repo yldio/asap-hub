@@ -9,9 +9,11 @@ export interface CMSNewsAndEvents {
       iv: 'News' | 'Event';
     };
     title: { iv: string };
-    subtitle: { iv: string };
-    thumbnail: { iv: string[] };
+    shortText: { iv: string };
+    thumbnail: { iv: ({ id: string } | string)[] };
     text: { iv: string };
+    link?: { iv: string };
+    linkText?: { iv: string };
   };
 }
 
@@ -19,9 +21,22 @@ export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
   return {
     id: item.id,
     created: parseDate(item.created).toISOString(),
-    subtitle: item.data.subtitle?.iv,
-    text: item.data.text?.iv,
-    thumbnail: item.data.thumbnail && createURL(item.data.thumbnail?.iv)[0],
+    shortText: item.data.shortText?.iv,
+    text: item.data.text.iv,
+    link: item.data.link?.iv,
+    linkText: item.data.linkText?.iv,
+    thumbnail:
+      item.data.thumbnail &&
+      createURL(
+        item.data.thumbnail?.iv.map((t) => {
+          const t1 = t as string;
+          // this handles thumbnails fetched with graphql
+          if (typeof t === 'string') {
+            return t1;
+          }
+          return t.id;
+        }),
+      )[0],
     title: item.data.title.iv,
     type: item.data.type.iv,
   } as NewsAndEventsResponse;

@@ -2,11 +2,11 @@ import React from 'react';
 import css from '@emotion/css';
 import { PageResponse } from '@asap-hub/model';
 
+import PageCard from './PageCard';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { Display } from '../atoms';
-import { PageCard } from '.';
 
-type WhereToStartProps = {
+type PagesProps = {
   readonly title: string;
   readonly pages: ReadonlyArray<PageResponse>;
 };
@@ -22,17 +22,17 @@ const gridContainerStyles = css({
   },
 });
 
-const WhereToStart: React.FC<WhereToStartProps> = ({ title, pages }) => {
+const Pages: React.FC<PagesProps> = ({ title, pages }) => {
   return (
     <section>
       <Display styleAsHeading={2}>{title}</Display>
       <div css={gridContainerStyles}>
         {pages.map((page, idx) => (
-          <PageCard key={`page-${idx}`} {...page} href="#" />
+          <PageCard key={`page-${idx}`} {...page} />
         ))}
       </div>
     </section>
   );
 };
 
-export default WhereToStart;
+export default Pages;

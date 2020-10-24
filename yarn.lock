@@ -290,6 +290,7 @@ __metadata:
     "@asap-hub/auth": "workspace:packages/auth"
     "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/fixtures": "workspace:packages/fixtures"
     "@asap-hub/model": "workspace:packages/model"
     "@asap-hub/react-context": "workspace:packages/react-context"
     "@auth0/auth0-spa-js": ^1.9.0
@@ -456,6 +457,7 @@ __metadata:
   resolution: "@asap-hub/storybook@workspace:apps/storybook"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/fixtures": "workspace:packages/fixtures"
     "@asap-hub/react-components": "workspace:packages/react-components"
     "@asap-hub/react-context": "workspace:packages/react-context"
     "@babel/core": ^7.9.0

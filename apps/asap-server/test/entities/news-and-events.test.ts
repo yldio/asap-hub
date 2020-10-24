@@ -1,7 +1,7 @@
-import { parse } from '../../src/entities/news-and-events';
+import { parse, parseGraphQL } from '../../src/entities/news-and-events';
 import { cms } from '../../src/config';
 
-describe('news and events entities', () => {
+describe('parse news and events entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
     expect(
@@ -51,6 +51,35 @@ describe('news and events entities', () => {
           text: {
             iv: 'text',
           },
+        },
+      }),
+    ).toMatchObject({
+      id: 'uuid',
+      created: date,
+      type: 'News',
+      title: 'Title',
+      shortText: 'shortText',
+      text: 'text',
+      thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/uuid`,
+    });
+  });
+});
+
+describe('parse GraphQL news and events entities', () => {
+  test('parse handles thumbnails', async () => {
+    const date = new Date().toISOString();
+    expect(
+      parseGraphQL({
+        id: 'uuid',
+        created: date,
+        flatData: {
+          type: 'News',
+
+          title: 'Title',
+
+          shortText: 'shortText',
+          thumbnail: [{ id: 'uuid' }],
+          text: 'text',
         },
       }),
     ).toMatchObject({

@@ -10,7 +10,7 @@ export interface CMSNewsAndEvents {
     };
     title: { iv: string };
     shortText: { iv: string };
-    thumbnail: { iv: string[] };
+    thumbnail: { iv: ({ id: string } | string)[] };
     text: { iv: string };
     link?: { iv: string };
     linkText?: { iv: string };
@@ -22,19 +22,19 @@ export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
     id: item.id,
     created: parseDate(item.created).toISOString(),
     shortText: item.data.shortText?.iv,
-    text: item.data.text?.iv,
+    text: item.data.text.iv,
     link: item.data.link?.iv,
     linkText: item.data.linkText?.iv,
     thumbnail:
       item.data.thumbnail &&
       createURL(
         item.data.thumbnail?.iv.map((t) => {
+          const t1 = t as string;
           // this handles thumbnails fetched with graphql
-          const thumbnail = (t as unknown) as { id: string };
-          if (thumbnail.id) {
-            return thumbnail.id;
+          if (typeof t === 'string') {
+            return t1;
           }
-          return t;
+          return t.id;
         }),
       )[0],
     title: item.data.title.iv,

@@ -15,8 +15,8 @@ import { createURL } from '../utils/squidex';
 
 const priorities: Record<TeamRole, number> = {
   'Lead PI': 1,
-  'Co-Investigator': 2,
-  'Project Manager': 3,
+  'Project Manager': 2,
+  'Co-Investigator': 3,
   Collaborator: 4,
   'Key Personnel': 5,
   Advisor: 6,

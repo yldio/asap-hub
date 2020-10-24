@@ -1,11 +1,9 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { PagesSection, LatestNewsSection } from '../organisms';
+import { PagesSection, LatestNewsSection, HelpSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card, Paragraph, Link } from '../atoms';
-import { CtaCard } from '../molecules';
-import { createMailTo } from '../utils';
 
 const styles = css({
   display: 'grid',
@@ -15,11 +13,6 @@ const styles = css({
 
 const containerStyles = css({
   marginTop: `${24 / perRem}em`,
-});
-
-const bottomStyles = css({
-  display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
 });
 
 type DashboardPageBodyProps = Omit<
@@ -99,26 +92,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         </Card>
       </div>
     </section>
-    <section css={bottomStyles}>
-      <CtaCard
-        href={createMailTo('grants@parkinsonsroadmap.org', {
-          subject: 'Hub Grants',
-        })}
-        buttonText="Contact Us"
-      >
-        <strong>Need help with grant-related matter?</strong>
-        <br /> ASAP and the Michael J Fox Foundation are here to help
-      </CtaCard>
-      <Paragraph>
-        If you're facing a technical issue with the Hub, please{' '}
-        <Link
-          href={createMailTo('info@asap.science', { subject: 'Hub Support' })}
-        >
-          get in touch
-        </Link>
-        . Our support team is happy to help!
-      </Paragraph>
-    </section>
+    <HelpSection />
   </div>
 );
 

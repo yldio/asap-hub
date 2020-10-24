@@ -28,6 +28,7 @@ export interface CMSUser {
     orcidLastSyncDate?: { iv: string };
     orcidWorks?: { iv: CMSOrcidWork[] };
     skills?: { iv: string[] };
+    skillsDescription?: { iv: string };
     questions?: {
       iv: {
         question: string;

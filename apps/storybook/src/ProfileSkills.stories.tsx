@@ -1,5 +1,5 @@
 import React from 'react';
-import { array } from '@storybook/addon-knobs';
+import { array, text } from '@storybook/addon-knobs';
 import { ProfileSkills } from '@asap-hub/react-components';
 
 export default {
@@ -8,6 +8,10 @@ export default {
 
 export const Normal = () => (
   <ProfileSkills
+    skillsDescription={text(
+      'Description',
+      'Multiple years of experience in Parkinson.',
+    )}
     skills={array('Skills', [
       'Neurological Diseases',
       'Clinical Neurology',

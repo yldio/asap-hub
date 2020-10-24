@@ -4,14 +4,14 @@ import css from '@emotion/css';
 
 import { Card, Headline2, Headline3, Divider } from '../atoms';
 
-type ProfileSkillsProps = Pick<UserResponse, 'firstName' | 'questions'>;
+type QuestionsSection = Pick<UserResponse, 'firstName' | 'questions'>;
 
 const containerStyles = css({
   display: 'flex',
   flexDirection: 'column',
 });
 
-const ProfileSkills: React.FC<ProfileSkillsProps> = ({
+const QuestionsSection: React.FC<QuestionsSection> = ({
   firstName,
   questions = [],
 }) => {
@@ -36,4 +36,4 @@ const ProfileSkills: React.FC<ProfileSkillsProps> = ({
   );
 };
 
-export default ProfileSkills;
+export default QuestionsSection;

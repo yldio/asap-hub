@@ -20,7 +20,9 @@ type ProfileInterestProps = Pick<
   ComponentProps<typeof ProfileBackground>,
   'firstName' | 'displayName'
 > &
-  Pick<UserResponse, 'skills' | 'questions' | 'email'> & {
+  ComponentProps<typeof QuestionsSection> &
+  ComponentProps<typeof ProfileSkills> &
+  Pick<UserResponse, 'email'> & {
     readonly teams: ReadonlyArray<
       Omit<ComponentProps<typeof ProfileBackground>, 'firstName'>
     >;
@@ -32,6 +34,7 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
   email,
   teams,
   skills,
+  skillsDescription,
   questions,
 }) => {
   return (
@@ -41,7 +44,9 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
             <ProfileBackground key={team.id} {...team} firstName={firstName} />
           ))
         : null}
-      {skills.length ? <ProfileSkills skills={skills} /> : null}
+      {skills.length ? (
+        <ProfileSkills skillsDescription={skillsDescription} skills={skills} />
+      ) : null}
       {questions.length ? (
         <QuestionsSection firstName={firstName} questions={questions} />
       ) : null}

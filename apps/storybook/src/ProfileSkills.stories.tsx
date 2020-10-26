@@ -10,7 +10,7 @@ export const Normal = () => (
   <ProfileSkills
     skillsDescription={text(
       'Description',
-      'Multiple years of experience in Parkinson.',
+      "Multiple years of experience in research on Parkinson's Disease.",
     )}
     skills={array('Skills', [
       'Neurological Diseases',

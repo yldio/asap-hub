@@ -100,7 +100,7 @@ test('renders dashboard with correct links', async () => {
     '/news-and-events',
     '/uuid',
     '/network/users/testuserid',
-    'mailto:grants@parkinsonsroadmap.org?subject=Hub+Grants',
-    'mailto:info@asap.science?subject=Hub+Support',
+    'mailto:grants@parkinsonsroadmap.org?subject=ASAP+Hub%3A+Grant+support',
+    'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
   ]);
 });

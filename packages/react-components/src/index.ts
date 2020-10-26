@@ -52,6 +52,7 @@ export {
   CheckboxGroup,
   ComingSoon,
   EmailPasswordSignin,
+  HelpSection,
   LatestNewsSection,
   LibraryCard,
   MainNavigation,
@@ -59,6 +60,7 @@ export {
   MenuHeader,
   NewsAndEventsCard,
   PageCard,
+  PagesSection,
   PeopleCard,
   ProfileBackground,
   ProfileBiography,
@@ -71,7 +73,6 @@ export {
   SsoButtons,
   TeamCard,
   UserNavigation,
-  PagesSection,
 } from './organisms';
 export {
   AdminInviteUserPage,

@@ -1,10 +1,14 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { PagesSection, RichText, MembersSection } from '../organisms';
+import {
+  PagesSection,
+  RichText,
+  MembersSection,
+  HelpSection,
+} from '../organisms';
 import { perRem } from '../pixels';
-import { Display, Card, Paragraph, Link } from '../atoms';
-import { CtaCard } from '../molecules';
+import { Display, Card } from '../atoms';
 
 const styles = css({
   display: 'grid',
@@ -14,11 +18,6 @@ const styles = css({
 
 const aboutUsStyles = css({
   paddingTop: `${24 / perRem}em`,
-});
-
-const bottomStyles = css({
-  display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
 });
 
 type DashboardPageBodyProps = Omit<
@@ -51,16 +50,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
     {members.length ? (
       <MembersSection title={'Meet the ASAP team'} members={members} />
     ) : null}
-    <section css={bottomStyles}>
-      <CtaCard href={'#'} buttonText="Contact Us">
-        <strong>Need help with grant-related matter?</strong>
-        <br /> ASAP and the Michael J Fox Foundation are here to help
-      </CtaCard>
-      <Paragraph>
-        If you're facing a technical issue with the Hub, please{' '}
-        <Link href={'#'}>get in touch</Link>. Our support team is happy to help!
-      </Paragraph>
-    </section>
+    <HelpSection />
   </div>
 );
 

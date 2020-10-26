@@ -555,6 +555,30 @@
         ]
       },
       {
+        "name": "role",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "defaultValue": "Grantee",
+          "allowedValues": [
+            "Staff",
+            "Grantee",
+            "Guest",
+            "Unlisted"
+          ],
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Dropdown",
+          "label": "ASAP Hub Role",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
         "name": "connections",
         "isHidden": false,
         "isLocked": false,

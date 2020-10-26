@@ -24,6 +24,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@asap-hub/asap-cli@workspace:apps/asap-cli":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/asap-cli@workspace:apps/asap-cli"
+  dependencies:
+    "@asap-hub/model": "workspace:packages/model"
+    "@asap-hub/services-common": "workspace:packages/services-common"
+    "@babel/core": ^7.9.0
+    "@babel/plugin-transform-modules-commonjs": ^7.10.4
+    "@babel/plugin-transform-runtime": ^7.10.3
+    "@babel/runtime-corejs3": ^7.9.6
+    "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/babel__core": ^7
+    "@types/jest": ^26.0.3
+    "@types/jwt-decode": ^2.2.1
+    "@types/jwt-encode": "workspace:@types/jwt-encode"
+    "@types/pump": ^1.1.0
+    "@types/through2-concurrent": ^2
+    "@types/uuid": ^8.0.0
+    "@types/yargs": ^15.0.9
+    "@yarnpkg/pnpify": ^2.2.1
+    apr-intercept: ^3.0.4
+    async-sema: ^3.1.0
+    aws-sdk: ^2.745.0
+    csv-parse: ^4.12.0
+    jwt-encode: ^1.0.1
+    nock: ^13.0.4
+    pump: ^3.0.0
+    through2-concurrent: ^2.0.0
+    uuid: ^8.3.0
+    yargs: ^16.1.0
+  bin:
+    asap-import: build/cli.js
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/asap-server@workspace:apps/asap-server":
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-server@workspace:apps/asap-server"
@@ -233,31 +268,6 @@ __metadata:
     typescript: ~3.9.7
     use-debounce: ^5.0.1
     use-http: ^1.0.13
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/import-data@workspace:apps/import-data":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/import-data@workspace:apps/import-data"
-  dependencies:
-    "@asap-hub/model": "workspace:packages/model"
-    "@asap-hub/services-common": "workspace:packages/services-common"
-    "@babel/core": ^7.9.0
-    "@babel/plugin-transform-modules-commonjs": ^7.10.4
-    "@babel/plugin-transform-runtime": ^7.10.3
-    "@babel/runtime-corejs3": ^7.9.6
-    "@types/apr-intercept": "workspace:@types/apr-intercept"
-    "@types/babel__core": ^7
-    "@types/pump": ^1.1.0
-    "@types/through2-concurrent": ^2
-    "@yarnpkg/pnpify": ^2.2.1
-    apr-intercept: ^3.0.4
-    commander: ^6.1.0
-    csv-parse: ^4.12.0
-    pump: ^3.0.0
-    through2-concurrent: ^2.0.0
-  bin:
-    asap-import: build/import.js
   languageName: unknown
   linkType: soft
 
@@ -5522,6 +5532,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/yargs@npm:^15.0.9":
+  version: 15.0.9
+  resolution: "@types/yargs@npm:15.0.9"
+  dependencies:
+    "@types/yargs-parser": "*"
+  checksum: 643069491a745b16e91485419bd4967b14b4814b0ecb8b84b5c410f2dec88e46d07711a19d790c0a952b09c4295dc990adbd88e5168bac5288a5496a4758c534
+  languageName: node
+  linkType: hard
+
 "@types/yauzl@npm:^2.9.1":
   version: 2.9.1
   resolution: "@types/yauzl@npm:2.9.1"
@@ -7179,6 +7198,13 @@ __metadata:
   version: 1.0.1
   resolution: "async-limiter@npm:1.0.1"
   checksum: d123312ace75c07399ddc58e06cc028dacce35f71cdf59cf9b22f6c31dde221c22285e6185ede823ecb67f3b3065e26205eb9f74fcbba3f12ce7a2c2b09d7763
+  languageName: node
+  linkType: hard
+
+"async-sema@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "async-sema@npm:3.1.0"
+  checksum: 43edc9b1829fda338ba34b602a91f96d4116e0dd51d2d1eb21888f978345ceb541a0f132afe0f2a8aabb70420bbe5cf2c69d16f835ff684fb72a335caa9c8f2e
   languageName: node
   linkType: hard
 
@@ -9214,6 +9240,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cliui@npm:^7.0.2":
+  version: 7.0.3
+  resolution: "cliui@npm:7.0.3"
+  dependencies:
+    string-width: ^4.2.0
+    strip-ansi: ^6.0.0
+    wrap-ansi: ^7.0.0
+  checksum: aa05598ac7178428d41188e73fcafd25dd17ddba6aba2f99d5c7805fc6655d503e46a0a56e4e173dbda9a4adf0001c484cd586f50324365e0c83cfa6c58a6520
+  languageName: node
+  linkType: hard
+
 "clone-deep@npm:^0.2.4":
   version: 0.2.4
   resolution: "clone-deep@npm:0.2.4"
@@ -9445,13 +9482,6 @@ __metadata:
   version: 5.1.0
   resolution: "commander@npm:5.1.0"
   checksum: d16141ea7f580945156fb8a06de2834c4647c7d9d3732ebd4534ab8e0b7c64747db301e18f2b840f28ea8fef51f7a8d6178e674b45a21931f0b65ff1c7f476b3
-  languageName: node
-  linkType: hard
-
-"commander@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "commander@npm:6.1.0"
-  checksum: ef1e310c3f430b84f8818ec9c6e5ce1b84909616eb2c1b1a79f646bc25fbca156eccf2ecf19f07e77a08dc519728d53d1300f94f3b2ad93de65add66044dfce6
   languageName: node
   linkType: hard
 
@@ -11827,7 +11857,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"escalade@npm:^3.1.0":
+"escalade@npm:^3.1.0, escalade@npm:^3.1.1":
   version: 3.1.1
   resolution: "escalade@npm:3.1.1"
   checksum: 1e31ff50d66f47cd0dfffa702061127116ccf9886d1f54a802a7b3bc95b94cab0cbf5b145cc5ac199036df6fd9d1bb24af1fa1bfed87c94879e950fbee5f86d1
@@ -13644,7 +13674,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"get-caller-file@npm:^2.0.1":
+"get-caller-file@npm:^2.0.1, get-caller-file@npm:^2.0.5":
   version: 2.0.5
   resolution: "get-caller-file@npm:2.0.5"
   checksum: 9dd9e1e2591039ee4c38c897365b904f66f1e650a8c1cb7b7db8ce667fa63e88cc8b13282b74df9d93de481114b3304a0487880d31cd926dfda6efe71455855d
@@ -28142,6 +28172,17 @@ typescript@~3.9.7:
   languageName: node
   linkType: hard
 
+"wrap-ansi@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "wrap-ansi@npm:7.0.0"
+  dependencies:
+    ansi-styles: ^4.0.0
+    string-width: ^4.1.0
+    strip-ansi: ^6.0.0
+  checksum: 09939dd775ae565bb99a25a6c072fe3775a95fa71751b5533c94265fe986ba3e3ab071a027ab76cf26876bd9afd10ac3c2d06d7c4bcce148bf7d2d9514e3a0df
+  languageName: node
+  linkType: hard
+
 "wrappy@npm:1":
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
@@ -28318,6 +28359,13 @@ typescript@~3.9.7:
   languageName: node
   linkType: hard
 
+"y18n@npm:^5.0.2":
+  version: 5.0.4
+  resolution: "y18n@npm:5.0.4"
+  checksum: 362a454e8ae75bcdae0ca46ee5cc24fd915238bb65a0e1fcf014ae1f11056e8ed1ac8fe4a72056c22f80ebe143fa8ccc86a24eb8bd8e71b5ab2cebd91d8fb9cd
+  languageName: node
+  linkType: hard
+
 "yallist@npm:^2.1.2":
   version: 2.1.2
   resolution: "yallist@npm:2.1.2"
@@ -28388,6 +28436,13 @@ typescript@~3.9.7:
   languageName: node
   linkType: hard
 
+"yargs-parser@npm:^20.2.2":
+  version: 20.2.3
+  resolution: "yargs-parser@npm:20.2.3"
+  checksum: 6504b053bbb7ac0a3cd4c0e343447f2a7bb7ee18f3de8865a83874531ac8b8b0661cab4a4603a515224d5f5cfcd26d0d9998642b07a58ceab29eea12878123f7
+  languageName: node
+  linkType: hard
+
 "yargs@npm:^13.3.0, yargs@npm:^13.3.2":
   version: 13.3.2
   resolution: "yargs@npm:13.3.2"
@@ -28441,6 +28496,21 @@ typescript@~3.9.7:
     y18n: ^4.0.0
     yargs-parser: ^18.1.1
   checksum: 6504a0bb4e6f5933ebaaa52307943a9cdb44da6200cd1ca8794aaa1d18b70f0acd2f49f46630b07bd4d2aa12cb1fe666b186d367c36fa1b4998f7ce8bdc9ffdf
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^16.1.0":
+  version: 16.1.0
+  resolution: "yargs@npm:16.1.0"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.0
+    y18n: ^5.0.2
+    yargs-parser: ^20.2.2
+  checksum: 19e94e62eb653f8310aa4ed6eab797b1756fea90cdacb38dec45afdd21b8607bf38723ee0fae0b967ca3886ad58b8430eb48b716958231f2f1b950c1c7f11034
   languageName: node
   linkType: hard
 

@@ -1,9 +1,9 @@
 {
-  "name": "@asap-hub/import-data",
+  "name": "@asap-hub/asap-cli",
   "private": true,
   "version": "0.1.0",
   "bin": {
-    "asap-import": "build/import.js"
+    "asap-import": "build/cli.js"
   },
   "engines": {
     "node": "12.x"
@@ -15,11 +15,16 @@
   "dependencies": {
     "@asap-hub/model": "workspace:packages/model",
     "@asap-hub/services-common": "workspace:packages/services-common",
+    "@types/yargs": "^15.0.9",
     "apr-intercept": "^3.0.4",
-    "commander": "^6.1.0",
+    "async-sema": "^3.1.0",
+    "aws-sdk": "^2.745.0",
     "csv-parse": "^4.12.0",
+    "jwt-encode": "^1.0.1",
     "pump": "^3.0.0",
-    "through2-concurrent": "^2.0.0"
+    "through2-concurrent": "^2.0.0",
+    "uuid": "^8.3.0",
+    "yargs": "^16.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -28,8 +33,13 @@
     "@babel/runtime-corejs3": "^7.9.6",
     "@types/apr-intercept": "workspace:@types/apr-intercept",
     "@types/babel__core": "^7",
+    "@types/jest": "^26.0.3",
+    "@types/jwt-decode": "^2.2.1",
+    "@types/jwt-encode": "workspace:@types/jwt-encode",
     "@types/pump": "^1.1.0",
     "@types/through2-concurrent": "^2",
-    "@yarnpkg/pnpify": "^2.2.1"
+    "@types/uuid": "^8.0.0",
+    "@yarnpkg/pnpify": "^2.2.1",
+    "nock": "^13.0.4"
   }
 }

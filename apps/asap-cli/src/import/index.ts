@@ -11,13 +11,10 @@ const parseAndTransform = (transform: (data: Data) => Promise<void>) => (
   return new Promise((resolve, reject) => {
     pump(
       createReadStream(src),
-      parse(),
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      parse({ from_line: 2 }),
       through.obj({ maxConcurrency: 10 }, async (chunk, _, callback) => {
-        const data = parseData(chunk);
-        if (data.applicationNumber === 'Application ID') {
-          return callback(null);
-        }
-        await transform(data);
+        await transform(parseData(chunk));
         return callback(null);
       }),
       (err: Error) => {

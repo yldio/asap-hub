@@ -5,7 +5,7 @@
     "resolveJsonModule": true,
     "outDir": "build"
   },
-  "include": ["src", "test", "test/**/*.json"],
+  "include": ["src", "test"],
   "references": [
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" }

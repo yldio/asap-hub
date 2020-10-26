@@ -16,7 +16,7 @@ it('renders the navigation items', () => {
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual([
     expect.stringMatching(/network/i),
-    expect.stringMatching(/shared-research/i),
+    expect.stringMatching(/research/i),
     expect.stringMatching(/news/i),
     expect.stringMatching(/discover/i),
   ]);

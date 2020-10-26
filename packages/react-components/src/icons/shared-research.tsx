@@ -12,7 +12,7 @@ const library = (
     xmlnsXlink="http://www.w3.org/1999/xlink"
     stroke="#4D646B"
   >
-    <title>Shared Research</title>
+    <title>Research</title>
     <defs>
       <polygon id="path-1" points="0 24 24 24 24 0 0 0"></polygon>
     </defs>

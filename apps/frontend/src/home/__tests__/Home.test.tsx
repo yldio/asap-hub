@@ -97,6 +97,7 @@ test('renders dashboard with correct links', async () => {
     '/network/users',
     '/shared-research',
     '/network/teams',
+    '/discover',
     '/news-and-events',
     '/uuid',
     '/network/users/testuserid',

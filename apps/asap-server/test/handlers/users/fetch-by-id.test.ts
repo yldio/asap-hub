@@ -4,6 +4,7 @@ import { config as authConfig } from '@asap-hub/auth';
 
 import { cms } from '../../../src/config';
 import { handler } from '../../../src/handlers/users/fetch-by-id';
+import { buildGraphQLQueryFetchUser } from '../../../src/controllers/users';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
@@ -21,7 +22,15 @@ describe('GET /users/{id}', () => {
   test("returns 404 when id doesn't exist", async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
-    identity().get(`/api/content/${cms.appName}/users/not-found`).reply(404);
+    identity()
+      .post(`/api/content/${cms.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUser('not-found'),
+      })
+      .reply(200, {
+        data: {
+          findUsersContent: null,
+        },
+      });
 
     const result = (await handler(
       apiGatewayEvent({

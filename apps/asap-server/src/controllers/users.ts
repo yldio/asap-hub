@@ -71,7 +71,7 @@ export const buildGraphQLQueryFetchUsers = (
   filter: string = '',
 ) =>
   `{
-  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: ${filter}, orderby: "data/displayName/iv") {
+  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/displayName/iv") {
     total
     items {
       ${GraphQLQueryUser}
@@ -81,16 +81,20 @@ export const buildGraphQLQueryFetchUsers = (
 
 export const buildGraphQLQueryFetchUser = (id: string) =>
   `{
-  findUsersContent(id: ${id}) {
+  findUsersContent(id: "${id}") {
     ${GraphQLQueryUser}
   }
 }`;
 
-interface Response {
+interface ResponseFetchUsers {
   queryUsersContentsWithTotal: {
     total: number;
     items: CMSGraphQLUser[];
   };
+}
+
+interface ResponseFetchUser {
+  findUsersContent: CMSGraphQLUser;
 }
 
 const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
@@ -208,7 +212,7 @@ export default class Users {
     const query = buildGraphQLQueryFetchUsers(take, skip, $filter);
 
     const { queryUsersContentsWithTotal } = await this.client.request<
-      Response,
+      ResponseFetchUsers,
       unknown
     >(query);
     const { total, items } = queryUsersContentsWithTotal;
@@ -221,7 +225,14 @@ export default class Users {
 
   async fetchById(id: string): Promise<UserResponse> {
     const query = buildGraphQLQueryFetchUser(id);
-    return parseGraphQLUser(await this.client.request(query));
+    const { findUsersContent } = await this.client.request<
+      ResponseFetchUser,
+      unknown
+    >(query);
+    if (!findUsersContent) {
+      throw Boom.notFound();
+    }
+    return parseGraphQLUser(findUsersContent);
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {

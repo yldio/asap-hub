@@ -17,11 +17,14 @@ const Discover: React.FC<{}> = () => {
   }
 
   if (discover) {
+    // ASAP Staff role is based on job title and institution
     const data = {
       ...discover,
       members: discover.members.map((m) => ({
         ...m,
-        role: 'Staff',
+        role: m.jobTitle
+          ? `${m.jobTitle}${m.institution ? ` at ${m.institution}` : ''}`
+          : 'Staff',
       })),
     };
     return (

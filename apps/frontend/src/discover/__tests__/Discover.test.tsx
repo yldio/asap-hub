@@ -2,6 +2,8 @@ import React from 'react';
 import nock from 'nock';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
+import { UserResponse } from '@asap-hub/model';
+import { createPageResponse } from '@asap-hub/fixtures';
 import { MemoryRouter, Route } from 'react-router-dom';
 import Discover from '../Discover';
 
@@ -54,20 +56,72 @@ test('renders discover with guidance, about and members', async () => {
     .reply(200, {
       training: [],
       aboutUs: '<h1>About us</h1>',
-      pages: [
+      pages: [createPageResponse('1'), createPageResponse('2')],
+      members: [
         {
-          title: 'Page 1 Title',
-          text: 'Page 1 text ',
-        },
-        {
-          title: 'Page 2 Title',
-          text: 'Page 2 text ',
-        },
+          id: 'uuid',
+          displayName: 'John Doe',
+          email: 'john@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+        } as UserResponse,
       ],
-      members: [],
     });
 
   const { queryAllByText, getByText } = await renderHome();
   expect(getByText(/about/i, { selector: 'h1' })).toBeVisible();
   expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
+});
+
+test('renders discover with members', async () => {
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/discover')
+    .once()
+    .reply(200, {
+      training: [],
+      aboutUs: '',
+      pages: [],
+      members: [
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          email: 'john@example.com',
+          firstName: 'John',
+          jobTitle: 'CEO',
+          lastName: 'Doe',
+        } as UserResponse,
+      ],
+    });
+
+  const { getByText } = await renderHome();
+  expect(getByText('CEO')).toBeVisible();
+});
+
+test('renders discover with members role', async () => {
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/discover')
+    .once()
+    .reply(200, {
+      training: [],
+      aboutUs: '',
+      pages: [],
+      members: [
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          email: 'john@example.com',
+          firstName: 'John',
+          institution: 'ASAP',
+          jobTitle: 'CEO',
+          lastName: 'Doe',
+        } as UserResponse,
+      ],
+    });
+
+  const { getByText } = await renderHome();
+  expect(getByText('CEO at ASAP')).toBeVisible();
 });

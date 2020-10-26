@@ -56,6 +56,8 @@ export const query = `
             displayName
             email
             firstName
+            institution
+            jobTitle
             lastModifiedDate
             lastName
           }

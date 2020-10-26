@@ -6,7 +6,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { createMailTo } from '../utils';
+import { createMailTo } from '../mail';
 import { perRem, mobileScreen } from '../pixels';
 import { paper } from '../colors';
 

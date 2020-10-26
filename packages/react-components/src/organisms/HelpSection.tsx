@@ -5,7 +5,7 @@ import css from '@emotion/css';
 import { perRem } from '../pixels';
 import { Paragraph, Link } from '../atoms';
 import { CtaCard } from '../molecules';
-import { createMailTo } from '../utils';
+import { mailToGrants, mailToSupport } from '../mail';
 
 const bottomStyles = css({
   display: 'grid',
@@ -13,14 +13,6 @@ const bottomStyles = css({
 });
 
 const LatestNews: React.FC = () => {
-  const mailToGrants = createMailTo('grants@parkinsonsroadmap.org', {
-    subject: 'ASAP Hub: Grant support',
-  });
-
-  const mailToSupport = createMailTo('techsupport@asap.science', {
-    subject: 'ASAP Hub: Tech support',
-  });
-
   return (
     <section css={bottomStyles}>
       <CtaCard href={mailToGrants} buttonText="Contact Us">

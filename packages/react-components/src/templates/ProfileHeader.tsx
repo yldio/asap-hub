@@ -7,7 +7,7 @@ import { tabletScreen, perRem } from '../pixels';
 import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
 import { ProfilePersonalText, TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { createMailTo } from '../utils';
+import { createMailTo } from '../mail';
 import { paper } from '../colors';
 
 const containerStyles = css({

@@ -18,12 +18,12 @@
     "@types/yargs": "^15.0.9",
     "apr-intercept": "^3.0.4",
     "async-sema": "^3.1.0",
-    "aws-sdk": "^2.777.0",
+    "aws-sdk": "^2.745.0",
     "csv-parse": "^4.12.0",
     "jwt-encode": "^1.0.1",
     "pump": "^3.0.0",
     "through2-concurrent": "^2.0.0",
-    "uuid": "^8.3.1",
+    "uuid": "^8.3.0",
     "yargs": "^16.1.0"
   },
   "devDependencies": {
@@ -38,7 +38,7 @@
     "@types/jwt-encode": "workspace:@types/jwt-encode",
     "@types/pump": "^1.1.0",
     "@types/through2-concurrent": "^2",
-    "@types/uuid": "^8",
+    "@types/uuid": "^8.0.0",
     "@yarnpkg/pnpify": "^2.2.1",
     "nock": "^13.0.4"
   }

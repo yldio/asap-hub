@@ -104,7 +104,8 @@ export const inviteUsers = async (
   );
 
   if (usersWithoutConnections.length === take) {
-    return inviteUsers(role, take + 20, skip + 20);
+    await inviteUsers(role, take, skip);
+    return;
   }
   console.log('Found no more uninvited users');
 };

@@ -60,6 +60,6 @@ export default (data: string[]): Data => {
       .split(',')
       .map((a) => a.trim())
       .filter(Boolean),
-    skillsDescription
+    skillsDescription,
   };
 };

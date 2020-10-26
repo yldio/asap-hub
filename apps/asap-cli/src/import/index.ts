@@ -11,6 +11,7 @@ const parseAndTransform = (transform: (data: Data) => Promise<void>) => (
   return new Promise((resolve, reject) => {
     pump(
       createReadStream(src),
+      // eslint-disable-next-line @typescript-eslint/camelcase
       parse({ from_line: 2 }),
       through.obj({ maxConcurrency: 10 }, async (chunk, _, callback) => {
         await transform(parseData(chunk));

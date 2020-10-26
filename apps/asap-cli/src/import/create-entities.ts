@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, no-param-reassign */
 
 import Intercept from 'apr-intercept';
 import { Squidex } from '@asap-hub/services-common';
@@ -129,7 +129,7 @@ const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
     institution,
     orcid,
     biography,
-    skillsDescription
+    skillsDescription,
   } = data;
 
   const user = {
@@ -152,17 +152,17 @@ const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
       iv: institution,
     },
     skillsDescription: {
-      iv: skillsDescription
+      iv: skillsDescription,
     },
     biography: {
       iv: biography,
     },
     ...(degree
       ? {
-        degree: {
-          iv: degree,
-        },
-      }
+          degree: {
+            iv: degree,
+          },
+        }
       : {}),
     skills: {
       iv: skills,
@@ -174,10 +174,10 @@ const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
     },
     ...(orcid
       ? {
-        orcid: {
-          iv: orcid,
-        },
-      }
+          orcid: {
+            iv: orcid,
+          },
+        }
       : {}),
   };
 

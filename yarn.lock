@@ -41,18 +41,18 @@ __metadata:
     "@types/jwt-encode": "workspace:@types/jwt-encode"
     "@types/pump": ^1.1.0
     "@types/through2-concurrent": ^2
-    "@types/uuid": ^8
+    "@types/uuid": ^8.0.0
     "@types/yargs": ^15.0.9
     "@yarnpkg/pnpify": ^2.2.1
     apr-intercept: ^3.0.4
     async-sema: ^3.1.0
-    aws-sdk: ^2.777.0
+    aws-sdk: ^2.745.0
     csv-parse: ^4.12.0
     jwt-encode: ^1.0.1
     nock: ^13.0.4
     pump: ^3.0.0
     through2-concurrent: ^2.0.0
-    uuid: ^8.3.1
+    uuid: ^8.3.0
     yargs: ^16.1.0
   bin:
     asap-import: build/cli.js
@@ -5468,13 +5468,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^8":
-  version: 8.3.0
-  resolution: "@types/uuid@npm:8.3.0"
-  checksum: 620985aed8fdb4aed153daca5235f4303457a67a4d181efac0021712eabd9edd7e88895f79730c0e651effde7633b1b61e49a81519ac8d4e75019d2ac9b6412f
-  languageName: node
-  linkType: hard
-
 "@types/uuid@npm:^8.0.0":
   version: 8.0.0
   resolution: "@types/uuid@npm:8.0.0"
@@ -7330,23 +7323,6 @@ __metadata:
     uuid: 3.3.2
     xml2js: 0.4.19
   checksum: dce2d2e4f5b0485713384bdcbd3481158aa9a38757a9ab85e70ce016e3b1ac55198f55f7e589b08e1eff3b04308a5bb53ce0fe58edd880ba5f8f24bd63269de3
-  languageName: node
-  linkType: hard
-
-"aws-sdk@npm:^2.777.0":
-  version: 2.777.0
-  resolution: "aws-sdk@npm:2.777.0"
-  dependencies:
-    buffer: 4.9.2
-    events: 1.1.1
-    ieee754: 1.1.13
-    jmespath: 0.15.0
-    querystring: 0.2.0
-    sax: 1.2.1
-    url: 0.10.3
-    uuid: 3.3.2
-    xml2js: 0.4.19
-  checksum: 91b79afdcb468df117ff331175aa33dff1fc9107d6fc0f69280d52367a623c91e07eb4c5faea05defd93aa21ec937caa1b3237a85bf18da166ac7799bd082ae4
   languageName: node
   linkType: hard
 
@@ -27255,15 +27231,6 @@ typescript@~3.9.7:
   bin:
     uuid: dist/bin/uuid
   checksum: a2bdb8a3eb80a53506e9657e7e1f70d7600562bf43fa010a645fd1deb7de1686df61c496c6f9826bac4be8db4d1ac1b976dd6fdf3bd083207eec1674507936fb
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^8.3.1":
-  version: 8.3.1
-  resolution: "uuid@npm:8.3.1"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 6a5d07c5564614271237d8bbc5c1c72abf056343e91af8f67a8e6d29957a1a061f347b8425a1e499af32f5a8f0039c44d200dff663b9a8090c51a7f7b5031534
   languageName: node
   linkType: hard
 

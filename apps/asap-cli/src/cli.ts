@@ -1,29 +1,33 @@
 #!/usr/bin/env node
+
+/* eslint-disable strict */
+
 'use strict';
 
 import yargs from 'yargs/yargs';
 import { parseAndCreateEntities } from './import';
 import { inviteUsers } from './invite';
 
+// eslint-disable-next-line no-unused-expressions
 yargs(process.argv.slice(2))
   .command({
     command: 'import <path>',
     describe: 'import data to squidex from csv',
-    builder: (yargs) => {
-      return yargs.positional('path', {
+    builder: (cli) => {
+      return cli.positional('path', {
         describe: 'specific path to csv file',
         type: 'string',
       });
     },
     handler: async ({ path }) => {
-      return parseAndCreateEntities(path as string).catch(console.error);
+      return parseAndCreateEntities(path as string);
     },
   })
   .command({
     command: 'invite <role>',
     describe: 'invite people to the ASAP Hub',
-    builder: (yargs) => {
-      return yargs.positional('role', {
+    builder: (cli) => {
+      return cli.positional('role', {
         describe: 'specific a role to invite',
         type: 'string',
         choices: ['Staff', 'Grantee', 'Guest'],

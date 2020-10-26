@@ -1,6 +1,6 @@
 import Chance from 'chance';
 
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import { CMSTeam } from '../../src/entities/team';
 
 const chance = new Chance();

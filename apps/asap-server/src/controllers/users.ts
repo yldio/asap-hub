@@ -5,7 +5,7 @@ import url from 'url';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import { v4 as uuidV4 } from 'uuid';
-import { Squidex, GraphQL } from '@asap-hub/services-common';
+import { Squidex, GraphQL } from '@asap-hub/squidex';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
 import {

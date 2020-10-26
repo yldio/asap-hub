@@ -1,0 +1,587 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "users",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Users"
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": ["email", "meta.id"],
+    "fields": [
+      {
+        "name": "email",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Email",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "displayName",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Display Name",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "firstName",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "First Name",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "lastName",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Last Name",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "avatar",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Assets",
+          "minItems": 0,
+          "maxItems": 1,
+          "mustBeImage": true,
+          "resolveFirst": false,
+          "resolveImage": false,
+          "allowDuplicates": false,
+          "label": "Avatar",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "jobTitle",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Job Title",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "degree",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": ["BA", "BSc", "MD", "MSc", "PhD, MD", "PhD"],
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Dropdown",
+          "label": "Degree",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "department",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Department",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "institution",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Institution",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "location",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Location",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "biography",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "TextArea",
+          "label": "Biography",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "skillsDescription",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Expertise and Resources Description",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "skills",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Expertise and Resources",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "questions",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "minItems": 0,
+          "maxItems": 4,
+          "label": "Open Questions",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "question",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Question",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "lastModifiedDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Last Modified Date",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "orcid",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "ORCID",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "orcidLastSyncDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "ORCID Last Sync Date",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "orcidLastModifiedDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "ORCID Last Modified Date",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "orcidWorks",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "ORCID Works",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "ID",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "doi",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "DOI",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "title",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Title",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "type",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Type",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "lastModifiedDate",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Last Modified Date",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "publicationDate",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "Json",
+              "label": "Publication Date",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "teams",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Teams",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "editor": "List",
+              "schemaIds": ["teams"],
+              "label": "ID",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "role",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "allowedValues": [
+                "Lead PI",
+                "Co-Investigator",
+                "Project Manager",
+                "Collaborator",
+                "Key Personnel"
+              ],
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Dropdown",
+              "label": "Role",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "approach",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Main Research Interests",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "responsibilities",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Responsibilities",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "role",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "defaultValue": "Grantee",
+          "allowedValues": ["Staff", "Grantee", "Guest", "Unlisted"],
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Dropdown",
+          "label": "ASAP Hub Role",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "connections",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Connections",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "code",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": true,
+              "editor": "Input",
+              "label": "Code",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          }
+        ]
+      }
+    ],
+    "previewUrls": {
+      "Web": "https://hub.asap.science/network/users/${id}"
+    },
+    "category": "Storage",
+    "isPublished": true
+  }
+}

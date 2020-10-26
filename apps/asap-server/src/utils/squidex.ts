@@ -1,10 +1,13 @@
 import { URL } from 'url';
 import { format } from 'date-fns';
-import { cms } from '../config';
+import { config } from '@asap-hub/squidex';
 
 export const createURL = (assets: string[]): string[] => {
   return assets.map((asset) =>
-    new URL(`/api/assets/${cms.appName}/${asset}`, cms.baseUrl).toString(),
+    new URL(
+      `/api/assets/${config.appName}/${asset}`,
+      config.baseUrl,
+    ).toString(),
   );
 };
 

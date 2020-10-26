@@ -1,9 +1,9 @@
 import nock from 'nock';
 import aws from 'aws-sdk';
 import matches from 'lodash.matches';
+import { config } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 
-import { cms } from '../../../src/config';
 import { handler } from '../../../src/handlers/users/create';
 import { apiGatewayEvent } from '../../helpers/events';
 import { globalToken } from '../../../src/config';
@@ -104,9 +104,9 @@ describe('POST /users', () => {
   });
 
   test('returns 409 when email is a duplicate', async () => {
-    nock(cms.baseUrl)
+    nock(config.baseUrl)
       .post(
-        `/api/content/${cms.appName}/users?publish=true`,
+        `/api/content/${config.appName}/users?publish=true`,
         matches({
           displayName: { iv: 'duplicated' },
           email: { iv: 'testuser@asap.science' },
@@ -152,9 +152,9 @@ describe('POST /users', () => {
       },
     };
 
-    nock(cms.baseUrl)
+    nock(config.baseUrl)
       .post(
-        `/api/content/${cms.appName}/users?publish=true`,
+        `/api/content/${config.appName}/users?publish=true`,
         matches({
           displayName: { iv: 'test user' },
           email: { iv: 'testuser@asap.science' },

@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import { UserResponse } from '@asap-hub/model';
 
 import { CMSTeam, CMSUser } from '../../../src/entities';

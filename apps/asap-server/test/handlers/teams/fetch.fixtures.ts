@@ -1,6 +1,6 @@
-import { CMSTeam, CMSUser } from '../../../src/entities';
-import { cms } from '../../../src/config';
 import { ListTeamResponse } from '@asap-hub/model';
+import { config } from '@asap-hub/squidex';
+import { CMSTeam, CMSUser } from '../../../src/entities';
 
 export const teamsResponse: { total: number; items: CMSTeam[] } = {
   total: 4,
@@ -259,7 +259,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-1',
           firstName: 'Cristiano',
           lastName: 'Ronaldo',
-          avatarUrl: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-user-id-1`,
+          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
           email: 'cristiano@ronaldo.com',
           displayName: 'Cristiano Ronaldo',
           role: 'Lead PI',
@@ -281,7 +281,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-2',
           firstName: 'John',
           lastName: 'Travista',
-          avatarUrl: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-user-id-2`,
+          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-2`,
           email: 'john@ed.ma',
           displayName: 'John Travista',
           role: 'Lead PI',
@@ -290,7 +290,7 @@ export const expectation: ListTeamResponse = {
           id: 'user-id-3',
           firstName: 'Bill',
           lastName: 'Travista',
-          avatarUrl: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-user-id-3`,
+          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-3`,
           email: 'bill@ed.ma',
           displayName: 'Bill Travista',
           role: 'Key Personnel',

@@ -1,4 +1,4 @@
-import { GraphQL } from '@asap-hub/services-common';
+import { GraphQL } from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
 import {
   CMSGraphQLUser,

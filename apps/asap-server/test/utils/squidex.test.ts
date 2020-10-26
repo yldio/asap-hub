@@ -1,11 +1,11 @@
 import { parseDate, formatDate, createURL } from '../../src/utils/squidex';
-import { cms } from '../../src/config';
+import { config } from '@asap-hub/squidex';
 
 describe('generate asset url from cms assets list', () => {
   test('return a url of the assets', async () => {
     expect(createURL(['1', '2'])).toEqual([
-      `${cms.baseUrl}/api/assets/${cms.appName}/1`,
-      `${cms.baseUrl}/api/assets/${cms.appName}/2`,
+      `${config.baseUrl}/api/assets/${config.appName}/1`,
+      `${config.baseUrl}/api/assets/${config.appName}/2`,
     ]);
   });
 });

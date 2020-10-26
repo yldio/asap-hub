@@ -1,7 +1,7 @@
 import Chance from 'chance';
+import { Squidex } from '@asap-hub/squidex';
 import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
 import { CMSTeam, CMSUser, parseUser } from '../../src/entities';
-import { Squidex } from '@asap-hub/services-common';
 
 const users = new Squidex<CMSUser>('users');
 const chance = new Chance();

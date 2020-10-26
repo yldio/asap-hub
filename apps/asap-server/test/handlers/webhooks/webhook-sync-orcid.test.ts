@@ -1,6 +1,7 @@
 import nock from 'nock';
 import matches from 'lodash.matches';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import {
   handler,
@@ -9,7 +10,7 @@ import {
 import { apiGatewayEvent } from '../../helpers/events';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
 import { identity } from '../../helpers/squidex';
-import { cms } from '../../../src/config';
+
 import * as fixtures from './webhook-sync-orcid.fixtures';
 
 const createSignedPayload = (payload: WebHookPayload) =>
@@ -64,8 +65,8 @@ describe('POST /webhook/users/orcid', () => {
   });
 
   test('returns 502 when ORCID returns an error', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users/userId`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users/userId`)
       .reply(200, fixtures.fetchUserResponse);
 
     nock('https://pub.orcid.org').get(`/v2.1/${orcid}/works`).reply(500);
@@ -84,8 +85,8 @@ describe('POST /webhook/users/orcid', () => {
     );
     syncNotFoundEvent.payload.id = 'user-does-not-exist';
 
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users/user-does-not-exist`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users/user-does-not-exist`)
       .reply(404);
 
     const res = (await handler(
@@ -100,11 +101,11 @@ describe('POST /webhook/users/orcid', () => {
       .get(`/v2.1/${orcid}/works`)
       .reply(200, fixtures.orcidWorksResponse);
 
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users/userId`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users/userId`)
       .reply(200, fixtures.fetchUserResponse)
       .patch(
-        `/api/content/${cms.appName}/users/userId`,
+        `/api/content/${config.appName}/users/userId`,
         matches({
           email: { iv: fixtures.fetchUserResponse.data.email.iv },
           orcidLastModifiedDate: {
@@ -129,11 +130,11 @@ describe('POST /webhook/users/orcid', () => {
       .get(`/v2.1/${orcid}/works`)
       .reply(200, fixtures.orcidWorksResponse);
 
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users/userId`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users/userId`)
       .reply(200, fixtures.fetchUserResponse)
       .patch(
-        `/api/content/${cms.appName}/users/userId`,
+        `/api/content/${config.appName}/users/userId`,
         matches({
           email: { iv: fixtures.fetchUserResponse.data.email.iv },
           orcidLastModifiedDate: {

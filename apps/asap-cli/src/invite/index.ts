@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import Intercept from 'apr-intercept';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import { RateLimit } from 'async-sema';
 import { v4 as uuidV4 } from 'uuid';
 import path from 'path';

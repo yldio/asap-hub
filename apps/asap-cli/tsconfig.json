@@ -8,6 +8,7 @@
   "include": ["src", "test"],
   "references": [
     { "path": "../../packages/model" },
-    { "path": "../../packages/services-common" }
+    { "path": "../../packages/services-common" },
+    { "path": "../../packages/squidex" }
   ]
 }

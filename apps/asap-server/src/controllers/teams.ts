@@ -1,7 +1,7 @@
 import get from 'lodash.get';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import {
   ListTeamResponse,
   TeamResponse,

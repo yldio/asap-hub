@@ -9,6 +9,7 @@
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/model" },
-    { "path": "../../packages/services-common" }
+    { "path": "../../packages/services-common" },
+    { "path": "../../packages/squidex" }
   ]
 }

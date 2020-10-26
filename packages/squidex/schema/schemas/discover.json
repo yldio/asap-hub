@@ -1,0 +1,86 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "discover",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Discover ASAP"
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "pages",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "List",
+          "schemaIds": ["pages"],
+          "label": "Grantee Guidance",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "training",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "List",
+          "schemaIds": ["news-and-events"],
+          "label": "Training",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "aboutUs",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "RichText",
+          "label": "About Us",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "members",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "List",
+          "schemaIds": ["users"],
+          "label": "Members",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Content",
+    "isPublished": true
+  }
+}

@@ -3,7 +3,7 @@ import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 
 import { CMSResearchOutput } from '../entities/research-outputs';
 import { CMSTeam } from '../entities';

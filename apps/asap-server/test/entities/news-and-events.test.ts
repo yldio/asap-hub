@@ -1,8 +1,8 @@
+import { config } from '@asap-hub/squidex';
 import {
   parseNewsAndEvents,
   parseGraphQLNewsAndEvents,
 } from '../../src/entities';
-import { cms } from '../../src/config';
 
 describe('parse news and events entities', () => {
   test('parse handles thumbnails', async () => {
@@ -32,7 +32,7 @@ describe('parse news and events entities', () => {
       title: 'Title',
       shortText: 'shortText',
       text: 'text',
-      thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/uuid`,
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid`,
     });
   });
 
@@ -63,7 +63,7 @@ describe('parse news and events entities', () => {
       title: 'Title',
       shortText: 'shortText',
       text: 'text',
-      thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/uuid`,
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid`,
     });
   });
 });
@@ -92,7 +92,7 @@ describe('parse GraphQL news and events entities', () => {
       title: 'Title',
       shortText: 'shortText',
       text: 'text',
-      thumbnail: `${cms.baseUrl}/api/assets/${cms.appName}/uuid`,
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid`,
     });
   });
 });

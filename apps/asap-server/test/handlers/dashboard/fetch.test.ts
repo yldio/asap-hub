@@ -1,9 +1,9 @@
 import nock from 'nock';
 
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/dashboard/fetch';
-import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from '../news-and-events/fetch.fixtures';
@@ -20,8 +20,8 @@ describe('GET /dashboard', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
       .reply(200, {
         data: {
           queryDashboardContents: [
@@ -49,8 +49,8 @@ describe('GET /dashboard', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
       .reply(200, {
         data: {
           queryDashboardContents: [{ data: { news: null, pages: null } }],
@@ -76,8 +76,8 @@ describe('GET /dashboard', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
       .reply(200, {
         data: {
           queryDashboardContents: [

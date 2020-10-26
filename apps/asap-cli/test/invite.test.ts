@@ -1,6 +1,6 @@
 import { SES } from 'aws-sdk';
 import nock from 'nock';
-import { config } from '@asap-hub/services-common';
+import { config } from '@asap-hub/squidex';
 import { identity } from './helpers/squidex';
 import inviteUsers from '../src/invite';
 import { origin } from '../src/config';
@@ -30,8 +30,8 @@ describe('Invite user', () => {
 
   test('Doesnt send mails when doesnt find users without code', async () => {
     const ses = new SES();
-    nock(config.cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/users`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         q: JSON.stringify({
           take: 20,
@@ -53,8 +53,8 @@ describe('Invite user', () => {
   test('Sends emails and fetches users correctly', async () => {
     const ses = new SES();
 
-    nock(config.cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/users`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         q: JSON.stringify({
           take: 20,
@@ -68,17 +68,17 @@ describe('Invite user', () => {
         }),
       })
       .reply(200, fetchUsersResponse)
-      .patch(`/api/content/${config.cms.appName}/users/userId1`, {
+      .patch(`/api/content/${config.appName}/users/userId1`, {
         email: { iv: 'testUser@asap.science' },
         connections: { iv: [{ code: 'uuid' }] },
       })
       .reply(200, fetchUsersResponse.items[0])
-      .patch(`/api/content/${config.cms.appName}/users/userId2`, {
+      .patch(`/api/content/${config.appName}/users/userId2`, {
         email: { iv: 'testUser@asap.science' },
         connections: { iv: [{ code: 'uuid' }] },
       })
       .reply(200, fetchUsersResponse.items[1])
-      .get(`/api/content/${config.cms.appName}/users`);
+      .get(`/api/content/${config.appName}/users`);
 
     await inviteUsers('Staff');
     expect(ses.sendTemplatedEmail).toBeCalledTimes(2);
@@ -96,8 +96,8 @@ describe('Invite user', () => {
   });
 
   test('Doesnt send mail when fails to write the users code on squidex', async () => {
-    nock(config.cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/users`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         q: JSON.stringify({
           take: 20,
@@ -111,7 +111,7 @@ describe('Invite user', () => {
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })
-      .patch(`/api/content/${config.cms.appName}/users/userId1`, {
+      .patch(`/api/content/${config.appName}/users/userId1`, {
         email: { iv: 'testUser@asap.science' },
         connections: { iv: [{ code: 'uuid' }] },
       })
@@ -128,8 +128,8 @@ describe('Invite user', () => {
       .spyOn(ses.sendTemplatedEmail(), 'promise')
       .mockRejectedValue(new Error());
 
-    nock(config.cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/users`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         q: JSON.stringify({
           take: 20,
@@ -143,12 +143,12 @@ describe('Invite user', () => {
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })
-      .patch(`/api/content/${config.cms.appName}/users/userId1`, {
+      .patch(`/api/content/${config.appName}/users/userId1`, {
         email: { iv: 'testUser@asap.science' },
         connections: { iv: [{ code: 'uuid' }] },
       })
       .reply(200, fetchUsersResponse.items[0])
-      .patch(`/api/content/${config.cms.appName}/users/userId1`, {
+      .patch(`/api/content/${config.appName}/users/userId1`, {
         email: { iv: 'testUser@asap.science' },
         connections: { iv: [] },
       })

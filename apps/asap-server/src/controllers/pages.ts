@@ -1,4 +1,4 @@
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import { PageResponse } from '@asap-hub/model';
 import { CMSPage, parsePage } from '../entities';
 

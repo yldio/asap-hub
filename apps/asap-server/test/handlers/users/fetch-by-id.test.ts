@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
-import { cms } from '../../../src/config';
 import { handler } from '../../../src/handlers/users/fetch-by-id';
 import { buildGraphQLQueryFetchUser } from '../../../src/controllers/users';
 import { apiGatewayEvent } from '../../helpers/events';
@@ -22,7 +22,7 @@ describe('GET /users/{id}', () => {
 
   test("returns 404 when id doesn't exist", async () => {
     identity()
-      .post(`/api/content/${cms.appName}/graphql`, {
+      .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUser('not-found'),
       })
       .reply(200, {

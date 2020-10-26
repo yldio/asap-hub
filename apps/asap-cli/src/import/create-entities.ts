@@ -1,7 +1,7 @@
 /* eslint-disable no-console, no-param-reassign */
 
 import Intercept from 'apr-intercept';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import { Data } from './parse-data';
 
 const teams = new Squidex<Team>('teams');

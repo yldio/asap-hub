@@ -1,8 +1,8 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
-import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { teamsResponse } from './fetch.fixtures';
@@ -72,8 +72,8 @@ describe('GET /teams/{id}', () => {
   });
 
   test("returns 404 when team doesn't exist", async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/teams/NotFound`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/teams/NotFound`)
       .reply(404);
 
     const result = (await handler(
@@ -92,8 +92,8 @@ describe('GET /teams/{id}', () => {
   });
 
   test('returns 200 when team exists', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/teams/teamId`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/teams/teamId`)
       .reply(200, teamsResponse.items[0]);
 
     const result = (await handler(

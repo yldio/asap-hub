@@ -1,9 +1,10 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/webhooks/webhook-fetch-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
-import { auth0SharedSecret as secret, cms } from '../../../src/config';
+import { auth0SharedSecret as secret } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
 import { buildGraphQLQueryFetchUsers } from '../../../src/controllers/users';
 import { fetchUserResponse } from './webhook-fetch-by-code.fixtures';
@@ -78,8 +79,8 @@ describe('GET /webhook/users/{code}', () => {
   });
 
   test("returns 403 when code doesn't exist", async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers(
           `data/connections/iv/code eq 'notFound'`,
           1,
@@ -111,8 +112,8 @@ describe('GET /webhook/users/{code}', () => {
   });
 
   test('returns 200 when user exists', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers(
           `data/connections/iv/code eq 'welcomeCode'`,
           1,

@@ -1,10 +1,11 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import { auth0SharedSecret as secret, cms } from '../../../src/config';
+import { auth0SharedSecret as secret } from '../../../src/config';
 import { CMSUser } from '../../../src/entities';
 
 const user: CMSUser = {
@@ -73,8 +74,8 @@ describe('POST /webhook/users/connections - success', () => {
   });
 
   test('returns 403 for invalid code', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         $top: 1,
         $filter: `data/connections/iv/code eq 'invalidConnectCode'`,
@@ -102,14 +103,14 @@ describe('POST /webhook/users/connections - success', () => {
     const patchedUser = JSON.parse(JSON.stringify(user));
     patchedUser.data.connections.iv = [{ code: userId }];
 
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         $top: 1,
         $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
       })
       .reply(200, { total: 1, items: [user] })
-      .patch(`/api/content/${cms.appName}/users/${user.id}`, {
+      .patch(`/api/content/${config.appName}/users/${user.id}`, {
         email: { iv: user.data.email.iv },
         connections: { iv: [{ code: userId }] },
       })

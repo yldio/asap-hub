@@ -51,13 +51,15 @@ export interface CMSGraphQLUser {
   lastModified: string;
   created: string;
   flatData: {
-    avatar: {
-      id: string;
-    }[];
+    avatar:
+      | {
+          id: string;
+        }[]
+      | null;
     displayName: string;
     email: string;
     firstName?: string;
-    lastModifiedDate: string;
+    lastModifiedDate: string | null;
     lastName?: string;
     teams: CMSGraphQLUserTeamConnection[];
   };
@@ -82,30 +84,30 @@ export const parseGraphQLUserTeamConnection = (
 ): UserTeam => {
   const {
     id,
-    flatData: { displayName = '', proposal = [] },
+    flatData: { displayName, proposal },
   } = item.id[0];
   return {
     id,
     role: item.role,
     approach: item.approach,
     responsibilities: item.responsibilities,
-    proposalURL: proposal[0],
+    proposalURL: proposal ? proposal[0] : undefined,
     displayName,
   };
 };
 
 export const parseGraphQLUser = (item: CMSGraphQLUser): UserResponse => {
-  const { avatar, ...flatData } = item.flatData;
+  const { avatar, teams, lastModifiedDate, ...flatData } = item.flatData;
+  const createdDate = parseDate(item.created).toISOString();
   return {
     id: item.id,
-    createdDate: parseDate(item.created).toISOString(),
+    createdDate,
     questions: [],
     skills: [],
     ...flatData,
-    teams: flatData.teams
-      ? flatData.teams.map(parseGraphQLUserTeamConnection)
-      : [],
-    avatarUrl: avatar && createURL(avatar.map((a) => a.id))[0],
+    lastModifiedDate: lastModifiedDate ?? createdDate,
+    teams: teams.map(parseGraphQLUserTeamConnection),
+    avatarUrl: avatar ? createURL(avatar.map((a) => a.id))[0] : undefined,
   };
 };
 

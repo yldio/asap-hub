@@ -66,9 +66,9 @@ flatData {
 }`;
 
 export const buildGraphQLQueryFetchUsers = (
+  filter: string = '',
   top: number = 8,
   skip: number = 0,
-  filter: string = '',
 ) =>
   `{
   queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/displayName/iv") {
@@ -86,14 +86,14 @@ export const buildGraphQLQueryFetchUser = (id: string) =>
   }
 }`;
 
-interface ResponseFetchUsers {
+export interface ResponseFetchUsers {
   queryUsersContentsWithTotal: {
     total: number;
     items: CMSGraphQLUser[];
   };
 }
 
-interface ResponseFetchUser {
+export interface ResponseFetchUser {
   findUsersContent: CMSGraphQLUser;
 }
 
@@ -209,7 +209,7 @@ export default class Users {
     const $filter =
       search || filter ? `${filterQ} ${and[0] + searchQ + and[1]}`.trim() : '';
 
-    const query = buildGraphQLQueryFetchUsers(take, skip, $filter);
+    const query = buildGraphQLQueryFetchUsers($filter, take, skip);
 
     const { queryUsersContentsWithTotal } = await this.client.request<
       ResponseFetchUsers,

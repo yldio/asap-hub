@@ -1,13 +1,12 @@
 import nock from 'nock';
-
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config as authConfig } from '@asap-hub/auth';
+import { DiscoverResponse } from '@asap-hub/model';
 
 import { handler } from '../../../src/handlers/discover/fetch';
 import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import { DiscoverResponse } from '@asap-hub/model';
 
 describe('GET /discover', () => {
   beforeAll(() => {

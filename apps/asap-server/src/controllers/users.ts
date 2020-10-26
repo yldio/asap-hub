@@ -178,7 +178,7 @@ export default class Users {
           acc.concat([`data/teams/iv/role eq '${word}'`]),
         [],
       )
-      .join(' and ');
+      .join(' or ');
 
     const and = filter && search ? ['and (', ')'] : ['', ''];
 

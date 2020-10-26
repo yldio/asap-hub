@@ -43,6 +43,7 @@ export const createUser = (
     orcid: { iv: data.orcid },
     institution: { iv: data.institution },
     location: { iv: data.location },
+    role: { iv: 'Guest' },
     connections: {
       iv: [
         {

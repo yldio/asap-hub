@@ -36,6 +36,9 @@ export interface CMSUser {
       }[];
     };
     avatar?: { iv: string[] };
+    role: {
+      iv: 'Staff' | 'Grantee' | 'Guest';
+    };
   };
 }
 
@@ -62,6 +65,12 @@ export interface CMSGraphQLUser {
     lastModifiedDate: string | null;
     lastName?: string;
     teams: CMSGraphQLUserTeamConnection[];
+    questions:
+      | {
+          question: string;
+        }[]
+      | null;
+    skills: string[] | null;
   };
 }
 
@@ -97,14 +106,15 @@ export const parseGraphQLUserTeamConnection = (
 };
 
 export const parseGraphQLUser = (item: CMSGraphQLUser): UserResponse => {
-  const { avatar, teams, lastModifiedDate, ...flatData } = item.flatData;
+  const { avatar, teams = [], lastModifiedDate, ...flatData } = item.flatData;
   const createdDate = parseDate(item.created).toISOString();
   return {
     id: item.id,
     createdDate,
-    questions: [],
-    skills: [],
     ...flatData,
+    questions: flatData.questions?.map((q) => q.question) || [],
+    skills: flatData.skills || [],
+
     lastModifiedDate: lastModifiedDate ?? createdDate,
     teams: teams.map(parseGraphQLUserTeamConnection),
     avatarUrl: avatar ? createURL(avatar.map((a) => a.id))[0] : undefined,
@@ -115,7 +125,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
   return JSON.parse(
     JSON.stringify({
       id: user.id,
-      createdDate: user.created,
+      createdDate: parseDate(user.created).toISOString(),
       lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
       displayName: user.data.displayName.iv,
       email: user.data.email.iv,

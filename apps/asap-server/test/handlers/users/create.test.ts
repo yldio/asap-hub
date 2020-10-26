@@ -134,6 +134,9 @@ describe('POST /users', () => {
       lastModified: '2020-09-25T11:06:27.164Z',
       created: '2020-09-24T11:06:27.164Z',
       data: {
+        role: {
+          iv: 'Grantee',
+        },
         lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
         displayName: { iv: 'Name' },
         email: { iv: 'me@example.com' },

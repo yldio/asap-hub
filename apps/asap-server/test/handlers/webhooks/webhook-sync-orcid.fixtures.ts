@@ -28,6 +28,9 @@ export const fetchUserResponse: CMSUser = {
     connections: {
       iv: [{ code: '22f012ba-a059-4673-b052-c097cddff13f' }],
     },
+    role: {
+      iv: 'Grantee',
+    },
   },
   created: '2020-08-27T13:20:57Z',
   lastModified: '2020-08-31T13:57:51Z',
@@ -42,6 +45,9 @@ export const updateUserEvent: SquidexEvent = {
     created: '2020-07-31T14:11:58Z',
     lastModified: '2020-07-31T15:49:41Z',
     data: {
+      role: {
+        iv: 'Grantee',
+      },
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',
       },
@@ -63,6 +69,9 @@ export const updateUserEvent: SquidexEvent = {
       },
     },
     dataOld: {
+      role: {
+        iv: 'Grantee',
+      },
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',
       },
@@ -95,6 +104,9 @@ export const createUserEvent: SquidexEvent = {
     created: '2020-07-31T15:52:33Z',
     lastModified: '2020-07-31T15:52:33Z',
     data: {
+      role: {
+        iv: 'Grantee',
+      },
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',
       },

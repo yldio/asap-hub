@@ -17,6 +17,8 @@ export const response: { data: ResponseFetchUsers } = {
             firstName: 'Tom',
             lastModifiedDate: null,
             lastName: 'Hardy',
+            questions: null,
+            skills: null,
             teams: [
               {
                 role: 'Lead PI',
@@ -49,6 +51,8 @@ export const response: { data: ResponseFetchUsers } = {
             firstName: 'Arnold',
             lastModifiedDate: null,
             lastName: 'Schwatzneger',
+            questions: [],
+            skills: [],
             teams: [
               {
                 role: 'Project Manager',

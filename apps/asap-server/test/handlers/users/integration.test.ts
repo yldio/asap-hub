@@ -45,6 +45,6 @@ describe('GET /users/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(user);
+    expect(body).toMatchObject(user);
   });
 });

@@ -53,6 +53,9 @@ flatData {
   skills
   skillsDescription
   teams {
+    role
+    approach
+    responsibilities
     id {
       id
       flatData {
@@ -66,10 +69,10 @@ flatData {
 }`;
 
 export const buildGraphQLQueryFetchUsers = (
-  filter: string = '',
-  top: number = 8,
-  skip: number = 0,
-) =>
+  filter = '',
+  top = 8,
+  skip = 0,
+): string =>
   `{
   queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/displayName/iv") {
     total
@@ -79,7 +82,7 @@ export const buildGraphQLQueryFetchUsers = (
   }
 }`;
 
-export const buildGraphQLQueryFetchUser = (id: string) =>
+export const buildGraphQLQueryFetchUser = (id: string): string =>
   `{
   findUsersContent(id: "${id}") {
     ${GraphQLQueryUser}
@@ -123,6 +126,7 @@ const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
 const debug = Debug('users.create');
 export default class Users {
   users: Squidex<CMSUser>;
+
   client: GraphQL;
 
   constructor() {

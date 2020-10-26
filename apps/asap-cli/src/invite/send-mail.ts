@@ -5,13 +5,13 @@ export interface Welcome {
   link: string;
 }
 
-const ses = new aws.SES({ apiVersion: '2010-12-01', region: 'us-east-1'});
+const ses = new aws.SES({ apiVersion: '2010-12-01', region: 'us-east-1' });
 export const sendEmail = async ({
   to,
   template,
   values,
 }: {
-  to: [string];
+  to: string[];
   template: 'Welcome';
   values: unknown;
 }): Promise<unknown> => {

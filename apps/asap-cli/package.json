@@ -20,6 +20,7 @@
     "async-sema": "^3.1.0",
     "aws-sdk": "^2.777.0",
     "csv-parse": "^4.12.0",
+    "jwt-encode": "^1.0.1",
     "pump": "^3.0.0",
     "through2-concurrent": "^2.0.0",
     "uuid": "^8.3.1",
@@ -32,9 +33,13 @@
     "@babel/runtime-corejs3": "^7.9.6",
     "@types/apr-intercept": "workspace:@types/apr-intercept",
     "@types/babel__core": "^7",
+    "@types/jest": "^26.0.3",
+    "@types/jwt-decode": "^2.2.1",
+    "@types/jwt-encode": "workspace:@types/jwt-encode",
     "@types/pump": "^1.1.0",
     "@types/through2-concurrent": "^2",
     "@types/uuid": "^8",
-    "@yarnpkg/pnpify": "^2.2.1"
+    "@yarnpkg/pnpify": "^2.2.1",
+    "nock": "^13.0.4"
   }
 }

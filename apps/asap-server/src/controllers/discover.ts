@@ -4,18 +4,40 @@ import {
   CMSGraphQLUser,
   parseGraphQL as parseGraphQLUser,
 } from '../entities/user';
+
 import {
   CMSGraphQLPage,
   parseGraphQL as parseGraphQLPage,
 } from '../entities/page';
+
+import {
+  CMSGraphQLNewsAndEvents,
+  parseGraphQL as parseGraphQLNewsAndEvents,
+} from '../entities/news-and-events';
 
 export const query = `
 {
     queryDiscoverContents {
       flatData {
         aboutUs
+        training {
+          id
+          created
+          flatData {
+            type
+            shortText
+            text
+            title
+            link
+            linkText
+            thumbnail {
+              id
+            }
+          }
+        }
         pages {
           id
+          created
           flatData {
             shortText
             text
@@ -47,6 +69,7 @@ interface Response {
   queryDiscoverContents: {
     flatData: {
       aboutUs: string;
+      training: CMSGraphQLNewsAndEvents[];
       members: CMSGraphQLUser[];
       pages: CMSGraphQLPage[];
     };
@@ -65,6 +88,7 @@ export default class Discover {
     if (res.queryDiscoverContents.length === 0) {
       return {
         aboutUs: '',
+        training: [],
         members: [],
         pages: [],
       };
@@ -73,6 +97,7 @@ export default class Discover {
     const [content] = res.queryDiscoverContents;
     return {
       aboutUs: content.flatData.aboutUs || '',
+      training: content.flatData.training?.map(parseGraphQLNewsAndEvents) ?? [],
       members: content.flatData.members?.map(parseGraphQLUser) ?? [],
       pages: content.flatData.pages?.map(parseGraphQLPage) ?? [],
     };

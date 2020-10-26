@@ -1,5 +1,8 @@
 import React, { ComponentProps } from 'react';
-import { createPageResponse } from '@asap-hub/fixtures';
+import {
+  createPageResponse,
+  createNewsAndEventsResponse,
+} from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 
 import DiscoverPageBody from '../DiscoverPageBody';
@@ -7,6 +10,7 @@ import DiscoverPageBody from '../DiscoverPageBody';
 const props: ComponentProps<typeof DiscoverPageBody> = {
   aboutUs: '<h3>About us content</h3>',
   pages: [createPageResponse('1'), createPageResponse('2')],
+  training: [],
   members: [],
 };
 
@@ -42,4 +46,22 @@ it('renders grantee guidance page cards and about us section', () => {
     'About us',
     'About us content',
   ]);
+});
+
+it('renders training information', () => {
+  const { queryAllByRole } = render(
+    <DiscoverPageBody
+      {...props}
+      pages={[]}
+      aboutUs={''}
+      training={[
+        createNewsAndEventsResponse('1'),
+        createNewsAndEventsResponse('2'),
+      ]}
+    />,
+  );
+
+  expect(
+    queryAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(['Training', 'News 1 title', 'News 2 title']);
 });

@@ -30,6 +30,17 @@ const commonProps = () => ({
       ].join(''),
     },
   ],
+  training: [
+    {
+      id: 'uuid-1',
+      created: new Date().toISOString(),
+      type: 'Training' as const,
+      title: "Coordinating different approaches into Parkinson's",
+      shortText:
+        'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
+      thumbnail: 'https://picsum.photos/200',
+    },
+  ],
   members: [
     {
       id: '1',

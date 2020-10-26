@@ -44,6 +44,7 @@ describe('GET /discover', () => {
     expect(result.body).toBeDefined();
     expect(body).toStrictEqual({
       aboutUs: '',
+      training: [],
       members: [],
       pages: [],
     } as DiscoverResponse);
@@ -124,6 +125,7 @@ describe('GET /discover', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
     expect(body).toStrictEqual({
+      training: [],
       pages: [
         {
           id: 'uuid',

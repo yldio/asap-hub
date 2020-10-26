@@ -36,5 +36,6 @@ export { default as TeamAbout } from './TeamAbout';
 export { default as TeamHeader } from './TeamHeader';
 export { default as TeamOutputs } from './TeamOutputs';
 export { default as TeamPage } from './TeamPage';
+export { default as TeamWorkspace } from './TeamWorkspace';
 export { default as WelcomeCard } from './WelcomeCard';
 export { default as WelcomePage } from './WelcomePage';

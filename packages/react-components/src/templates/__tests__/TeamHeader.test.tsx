@@ -15,6 +15,7 @@ const boilerplateProps = {
   lastModifiedDate: formatISO(new Date()),
   aboutHref: './about',
   outputsHref: './outputs',
+  workspaceHref: './workspace',
 };
 
 it('renders the name as the top-level heading', () => {

@@ -71,6 +71,7 @@ const extraUsersStyles = css({
 type TeamProps = TeamResponse & {
   readonly aboutHref: string;
   readonly outputsHref: string;
+  readonly workspaceHref: string;
 };
 const TeamHeader: React.FC<TeamProps> = ({
   displayName,
@@ -80,6 +81,7 @@ const TeamHeader: React.FC<TeamProps> = ({
 
   aboutHref,
   outputsHref,
+  workspaceHref,
 }) => {
   return (
     <header css={containerStyles}>
@@ -136,6 +138,7 @@ const TeamHeader: React.FC<TeamProps> = ({
       </section>
       <TabNav>
         <TabLink href={aboutHref}>About</TabLink>
+        <TabLink href={workspaceHref}>Team Workspace</TabLink>
         <TabLink href={outputsHref}>Outputs</TabLink>
       </TabNav>
     </header>

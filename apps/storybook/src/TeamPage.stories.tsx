@@ -92,6 +92,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
   ],
   aboutHref: '/wrong',
   outputsHref: '/wrong',
+  workspaceHref: '/wrong',
 });
 
 export const AboutTab = () => (

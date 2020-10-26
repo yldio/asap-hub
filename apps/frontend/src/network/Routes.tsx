@@ -18,14 +18,19 @@ import { useSearch } from '../hooks';
 
 const Network: React.FC<{}> = () => {
   const { path } = useRouteMatch();
-  const { filters, searchQuery, toggleFilter, setSearchQuery } = useSearch();
+  const {
+    filters,
+    searchQuery,
+    toggleFilter,
+    resetFilters,
+    setSearchQuery,
+  } = useSearch();
   const history = useHistory();
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
 
   const onChangeToggle = (pathname: string) => () => {
-    const newUrlParams = new URLSearchParams();
-    searchQuery && newUrlParams.set('searchQuery', searchQuery);
-    history.push({ pathname, search: newUrlParams.toString() });
+    history.push({ pathname, search: history.location.search });
+    resetFilters();
   };
 
   return (

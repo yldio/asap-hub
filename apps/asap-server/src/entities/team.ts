@@ -1,6 +1,3 @@
-import { TeamResponse } from '@asap-hub/model';
-import { parseDate } from '../utils/squidex';
-
 export interface CMSTeam {
   id: string;
   created: string;
@@ -30,13 +27,3 @@ export interface CMSGraphQLTeam {
     skills: string[];
   };
 }
-
-export const parseGraphQL = (item: CMSGraphQLTeam): TeamResponse => {
-  return {
-    id: item.id,
-    createdDate: parseDate(item.created).toISOString(),
-    members: [],
-    ...item.flatData,
-    proposal: item.flatData?.proposal[0]
-  };
-};

@@ -5,67 +5,93 @@ import url from 'url';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import { v4 as uuidV4 } from 'uuid';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex, GraphQL } from '@asap-hub/services-common';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
-import { CMSUser, transform } from '../entities/user';
+import {
+  CMSUser,
+  CMSGraphQLUser,
+  parseUser,
+  parseGraphQLUser,
+} from '../entities';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-import { createURL } from '../utils/squidex';
 
-const buildGraphQlQuery = (top: number = 8, skip: number = 0, filter: string = "") => 
-`{
-  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: ${filter}, orderby: "data/displayName/iv") {
-    total
-    items {
+const GraphQLQueryUser = `
+id
+created
+flatData {
+  avatar {
+    id
+  }
+  biography
+  degree
+  department
+  displayName
+  email
+  firstName
+  institution
+  jobTitle
+  lastModifiedDate
+  lastName
+  location
+  orcid
+  orcidLastModifiedDate
+  orcidLastSyncDate
+  orcidWorks {
+    doi
+    id
+    lastModifiedDate
+    publicationDate
+    title
+    type
+  }
+  questions {
+    question
+  }
+  skills
+  skillsDescription
+  teams {
+    id {
       id
       flatData {
-        avatar {
-          id
-        }
-        biography
-        degree
-        department
         displayName
-        email
-        firstName
-        institution
-        jobTitle
-        lastModifiedDate
-        lastName
-        location
-        orcid
-        orcidLastModifiedDate
-        orcidLastSyncDate
-        orcidWorks {
-          doi
+        proposal {
           id
-          lastModifiedDate
-          publicationDate
-          title
-          type
-        }
-        questions {
-          question
-        }
-        skills
-        skillsDescription
-        teams {
-          id {
-            id
-            flatData {
-              displayName
-              proposal {
-                id
-              }
-            }
-          }
         }
       }
     }
   }
-}`
+}`;
+
+export const buildGraphQLQueryFetchUsers = (
+  top: number = 8,
+  skip: number = 0,
+  filter: string = '',
+) =>
+  `{
+  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: ${filter}, orderby: "data/displayName/iv") {
+    total
+    items {
+      ${GraphQLQueryUser}
+    }
+  }
+}`;
+
+export const buildGraphQLQueryFetchUser = (id: string) =>
+  `{
+  findUsersContent(id: ${id}) {
+    ${GraphQLQueryUser}
+  }
+}`;
+
+interface Response {
+  queryUsersContentsWithTotal: {
+    total: number;
+    items: CMSGraphQLUser[];
+  };
+}
 
 const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
   const [err, res] = await Intercept(
@@ -93,8 +119,10 @@ const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
 const debug = Debug('users.create');
 export default class Users {
   users: Squidex<CMSUser>;
+  client: GraphQL;
 
   constructor() {
+    this.client = new GraphQL();
     this.users = new Squidex('users');
   }
 
@@ -138,7 +166,7 @@ export default class Users {
       debug(err);
     }
 
-    return transform(createdUser);
+    return parseUser(createdUser);
   }
 
   async fetch(options: {
@@ -174,32 +202,31 @@ export default class Users {
 
     const and = filter && search ? ['and (', ')'] : ['', ''];
 
-    const $filter = {
-      $filter: `${filterQ} ${and[0] + searchQ + and[1]}`.trim(),
-    };
+    const $filter =
+      search || filter ? `${filterQ} ${and[0] + searchQ + and[1]}`.trim() : '';
 
-    const query = {
-      $orderby: 'data/displayName/iv',
-      ...(search || filter ? $filter : {}),
-      ...(take ? { $top: take } : {}),
-      ...(skip ? { $skip: skip } : {}),
-    };
+    const query = buildGraphQLQueryFetchUsers(take, skip, $filter);
 
-    const { total, items: users } = await this.users.fetch(query);
+    const { queryUsersContentsWithTotal } = await this.client.request<
+      Response,
+      unknown
+    >(query);
+    const { total, items } = queryUsersContentsWithTotal;
 
     return {
       total,
-      items: users.map(transform),
+      items: items.map(parseGraphQLUser),
     };
   }
 
   async fetchById(id: string): Promise<UserResponse> {
-    return transform(await this.users.fetchById(id));
+    const query = buildGraphQLQueryFetchUser(id);
+    return parseGraphQLUser(await this.client.request(query));
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
     const user = await fetchByCode(code, this.users.client);
-    return transform(user);
+    return parseUser(user);
   }
 
   async connectByCode(
@@ -209,7 +236,7 @@ export default class Users {
     const user = await fetchByCode(welcomeCode, this.users.client);
 
     if (user.data.connections.iv.find(({ code }) => code === userId)) {
-      return Promise.resolve(transform(user));
+      return Promise.resolve(parseUser(user));
     }
 
     const connections = user.data.connections.iv.concat([{ code: userId }]);
@@ -219,7 +246,7 @@ export default class Users {
       connections: { iv: connections },
     });
 
-    return transform(res);
+    return parseUser(res);
   }
 
   async syncOrcidProfile(
@@ -254,9 +281,9 @@ export default class Users {
         orcidLastModifiedDate: { iv: lastModifiedDate },
         orcidWorks: { iv: works.slice(0, 10) },
       });
-      return transform(updatedUser);
+      return parseUser(updatedUser);
     }
 
-    return transform(user);
+    return parseUser(user);
   }
 }

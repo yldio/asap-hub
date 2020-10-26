@@ -2,9 +2,10 @@ import { GraphQL } from '@asap-hub/services-common';
 import { DashboardResponse } from '@asap-hub/model';
 import {
   CMSNewsAndEvents,
-  parse as parseNewsAndEvents,
-} from '../entities/news-and-events';
-import { CMSPage, parse as parsePage } from '../entities/page';
+  parseNewsAndEvents,
+  CMSPage,
+  parsePage,
+} from '../entities';
 
 export const query = `
   {

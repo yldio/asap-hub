@@ -73,6 +73,7 @@ export interface OrcidWork {
 export interface UserTeam {
   id: string;
   displayName: string;
+  proposalURL?: string;
   role: string;
   approach?: string;
   responsibilities?: string;
@@ -82,7 +83,7 @@ export interface UserResponse extends Invitee {
   id: string;
   lastModifiedDate: string;
   createdDate: string;
-  teams: ReadonlyArray<UserTeam>;
+  teams: UserTeam[];
   degree?: string;
   skills: string[];
   skillsDescription?: string;

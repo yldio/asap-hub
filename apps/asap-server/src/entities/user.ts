@@ -1,6 +1,7 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, TeamMember, UserResponse } from '@asap-hub/model';
+import { OrcidWork, TeamMember, UserResponse, UserTeam } from '@asap-hub/model';
 import { parseDate, createURL } from '../utils/squidex';
+import { CMSGraphQLTeam } from './team';
 
 interface CMSTeamMember extends Omit<TeamMember, 'id' | 'email'> {
   id: string[];
@@ -38,6 +39,13 @@ export interface CMSUser {
   };
 }
 
+interface CMSGraphQLUserTeamConnection {
+  role: string;
+  approach?: string;
+  responsibilities?: string;
+  id: CMSGraphQLTeam[];
+}
+
 export interface CMSGraphQLUser {
   id: string;
   lastModified: string;
@@ -51,6 +59,7 @@ export interface CMSGraphQLUser {
     firstName?: string;
     lastModifiedDate: string;
     lastName?: string;
+    teams: CMSGraphQLUserTeamConnection[];
   };
 }
 
@@ -68,20 +77,39 @@ export const createSchema = Joi.object({
   connections: Joi.string(),
 });
 
-export const parseGraphQL = (item: CMSGraphQLUser): UserResponse => {
+export const parseGraphQLUserTeamConnection = (
+  item: CMSGraphQLUserTeamConnection,
+): UserTeam => {
+  const {
+    id,
+    flatData: { displayName = '', proposal = [] },
+  } = item.id[0];
+  return {
+    id,
+    role: item.role,
+    approach: item.approach,
+    responsibilities: item.responsibilities,
+    proposalURL: proposal[0],
+    displayName,
+  };
+};
+
+export const parseGraphQLUser = (item: CMSGraphQLUser): UserResponse => {
   const { avatar, ...flatData } = item.flatData;
   return {
     id: item.id,
     createdDate: parseDate(item.created).toISOString(),
     questions: [],
-    teams: [],
     skills: [],
     ...flatData,
+    teams: flatData.teams
+      ? flatData.teams.map(parseGraphQLUserTeamConnection)
+      : [],
     avatarUrl: avatar && createURL(avatar.map((a) => a.id))[0],
   };
 };
 
-export const transform = (user: CMSUser): UserResponse => {
+export const parseUser = (user: CMSUser): UserResponse => {
   return JSON.parse(
     JSON.stringify({
       id: user.id,

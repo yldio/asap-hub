@@ -88,7 +88,7 @@ describe('GET /users', () => {
         $top: 8,
         $orderby: 'data/displayName/iv',
         $filter:
-          "data/teams/iv/role eq 'Lead PI' and " +
+          "data/teams/iv/role eq 'Lead PI' or " +
           "data/teams/iv/role eq 'anotherFilter' and" +
           " ((contains(data/displayName/iv, 'first')" +
           " or contains(data/firstName/iv, 'first'))" +

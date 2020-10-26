@@ -1,20 +1,20 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import LibraryPageHeader from '../LibraryPageHeader';
+import SharedResearchPageHeader from '../SharedResearchPageHeader';
 
-const props: ComponentProps<typeof LibraryPageHeader> = {
+const props: ComponentProps<typeof SharedResearchPageHeader> = {
   searchQuery: '',
   filters: new Set(),
 };
 it('renders the header', () => {
-  const { getByRole } = render(<LibraryPageHeader {...props} />);
+  const { getByRole } = render(<SharedResearchPageHeader {...props} />);
   expect(getByRole('heading')).toBeVisible();
 });
 
 it('Passes query correctly', () => {
   const { getByRole } = render(
-    <LibraryPageHeader {...props} searchQuery={'test123'} />,
+    <SharedResearchPageHeader {...props} searchQuery={'test123'} />,
   );
   expect(getByRole('searchbox')).toHaveValue('test123');
 });

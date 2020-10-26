@@ -44,6 +44,6 @@ export const Normal = () => (
       href: '#',
     }}
     profileHref="#"
-    libraryHref="#"
+    sharedResearchHref="#"
   />
 );

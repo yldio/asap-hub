@@ -13,13 +13,13 @@ beforeEach(() => {
   nock.cleanAll();
 });
 
-const renderLibraryList = async () => {
+const renderSharedResearchList = async () => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/library']}>
-            <Route path="/library" component={List} />
+          <MemoryRouter initialEntries={['/shared-research']}>
+            <Route path="/shared-research" component={List} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>
@@ -49,7 +49,7 @@ it('renders a list of research outputs', async () => {
         title: `Test Output ${index}`,
       })),
     });
-  const { container } = await renderLibraryList();
+  const { container } = await renderSharedResearchList();
   expect(container.textContent).toContain('Test Output 0');
   expect(container.textContent).toContain('Test Output 1');
 });
@@ -69,9 +69,11 @@ it('correctly generates research output link', async () => {
         id: `test-output-id-${index}`,
       })),
     });
-  const { getByText } = await renderLibraryList();
+  const { getByText } = await renderSharedResearchList();
   const link = getByText('Test Output 0').closest('a');
-  expect(link?.href).toEqual('http://localhost/library/test-output-id-0');
+  expect(link?.href).toEqual(
+    'http://localhost/shared-research/test-output-id-0',
+  );
 });
 
 it('correctly generates team link', async () => {
@@ -91,7 +93,7 @@ it('correctly generates team link', async () => {
         },
       })),
     });
-  const { getByText } = await renderLibraryList();
+  const { getByText } = await renderSharedResearchList();
   const link = getByText('Team Test Team 0').closest('a');
   expect(link?.href).toEqual('http://localhost/network/teams/test-team-0');
 });

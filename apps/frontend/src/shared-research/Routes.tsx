@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { LibraryPage } from '@asap-hub/react-components';
+import { SharedResearchPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import List from './List';
@@ -8,7 +8,7 @@ import ResearchOutput from './ResearchOutput';
 import ErrorBoundary from '../errors/ErrorBoundary';
 import { useSearch } from '../hooks';
 
-const Library: React.FC<{}> = () => {
+const SharedResearch: React.FC<{}> = () => {
   const { path } = useRouteMatch();
   const { filters, searchQuery, toggleFilter, setSearchQuery } = useSearch();
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
@@ -16,7 +16,7 @@ const Library: React.FC<{}> = () => {
   return (
     <Switch>
       <Route exact path={`${path}`}>
-        <LibraryPage
+        <SharedResearchPage
           onChangeSearch={setSearchQuery}
           searchQuery={searchQuery}
           onChangeFilter={toggleFilter}
@@ -25,7 +25,7 @@ const Library: React.FC<{}> = () => {
           <ErrorBoundary>
             <List searchQuery={searchQueryDebounce} filters={filters} />
           </ErrorBoundary>
-        </LibraryPage>
+        </SharedResearchPage>
       </Route>
       <Route path={`${path}/:id`}>
         <ResearchOutput />
@@ -34,4 +34,4 @@ const Library: React.FC<{}> = () => {
   );
 };
 
-export default Library;
+export default SharedResearch;

@@ -24,7 +24,7 @@ const textStyles = css({
   maxWidth: `${610 / perRem}em`,
 });
 
-type LibraryPageHeaderProps = {
+type SharedResearchPageHeaderProps = {
   onChangeSearch?: (newQuery: string) => void;
   searchQuery?: string;
   onChangeFilter?: (filters: string) => void;
@@ -42,7 +42,7 @@ const researchOutputFilters: Option<ResearchOutputType>[] = [
   { label: 'Other', value: 'Other', enabled: false },
 ];
 
-const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
+const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
   onChangeSearch = noop,
   searchQuery,
   filters,
@@ -50,7 +50,7 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
 }) => {
   return (
     <header css={containerStyles}>
-      <Display styleAsHeading={2}>Library</Display>
+      <Display styleAsHeading={2}>Shared Research</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
           The ASAP Network's library contains all shared outputs from the
@@ -72,4 +72,4 @@ const LibraryPageHeader: React.FC<LibraryPageHeaderProps> = ({
   );
 };
 
-export default LibraryPageHeader;
+export default SharedResearchPageHeader;

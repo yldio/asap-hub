@@ -13,7 +13,7 @@ export const Normal = () => (
   <Layout
     discoverAsapHref="/discovery"
     networkHref="/network"
-    libraryHref="/library"
+    sharedResearchHref="/shared-research"
     newsAndEventsHref="/news-and-events"
     profileHref="/profile"
     teams={[

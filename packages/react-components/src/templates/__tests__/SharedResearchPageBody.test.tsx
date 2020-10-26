@@ -1,9 +1,9 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import LibraryPageBody from '../LibraryPageBody';
+import SharedResearchPageBody from '../SharedResearchPageBody';
 
-const props: Omit<ComponentProps<typeof LibraryPageBody>, 'children'> = {
+const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
   researchOutputs: [
     {
       id: '1',
@@ -29,7 +29,7 @@ const props: Omit<ComponentProps<typeof LibraryPageBody>, 'children'> = {
 };
 
 it('renders multiple library cards', () => {
-  const { queryAllByRole } = render(<LibraryPageBody {...props} />);
+  const { queryAllByRole } = render(<SharedResearchPageBody {...props} />);
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);

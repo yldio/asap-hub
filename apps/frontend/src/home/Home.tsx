@@ -22,7 +22,8 @@ const Home: React.FC<{}> = () => {
   if (dashboard) {
     const data = {
       ...dashboard,
-      hrefLibrary: '/library',
+      hrefDiscoverAsap: '/discover',
+      hrefSharedResearch: '/shared-research',
       hrefNewsAndEvents: '/news-and-events',
       hrefProfile: `/network/users/${id}`,
       hrefTeamsNetwork: '/network/teams',

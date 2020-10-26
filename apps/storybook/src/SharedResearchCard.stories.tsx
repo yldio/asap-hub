@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { LibraryCard } from '@asap-hub/react-components';
+import { SharedResearchCard } from '@asap-hub/react-components';
 import { text, select, date } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Library Card',
+  title: 'Organisms / SharedResearch Card',
 };
 
 export const Normal = () => (
-  <LibraryCard
+  <SharedResearchCard
     title={text(
       'Title',
       'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',

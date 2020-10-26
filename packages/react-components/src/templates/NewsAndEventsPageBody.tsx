@@ -3,13 +3,13 @@ import React, { ComponentProps } from 'react';
 import { NewsAndEventsCard } from '../organisms';
 import CardList from '../organisms/CardList';
 
-interface LibraryPageBodyProps {
+interface SharedResearchPageBodyProps {
   readonly newsAndEvents: ReadonlyArray<
     ComponentProps<typeof NewsAndEventsCard>
   >;
 }
 
-const NewsAndEventsPageBody: React.FC<LibraryPageBodyProps> = ({
+const NewsAndEventsPageBody: React.FC<SharedResearchPageBodyProps> = ({
   newsAndEvents,
 }) => (
   <CardList

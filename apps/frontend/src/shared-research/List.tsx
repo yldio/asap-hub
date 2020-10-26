@@ -1,16 +1,16 @@
 import React from 'react';
-import { Paragraph, LibraryPageBody } from '@asap-hub/react-components';
+import { Paragraph, SharedResearchPageBody } from '@asap-hub/react-components';
 import { join } from 'path';
 
 import { useResearchOutputs } from '../api';
 import { usePaginationParams, usePagination } from '../hooks';
 
-interface LibraryListProps {
+interface SharedResearchListProps {
   searchQuery?: string;
   filters?: Set<string>;
 }
 
-const LibraryList: React.FC<LibraryListProps> = ({
+const SharedResearchList: React.FC<SharedResearchListProps> = ({
   searchQuery,
   filters = new Set(),
 }) => {
@@ -32,14 +32,14 @@ const LibraryList: React.FC<LibraryListProps> = ({
   }
   const researchOutputs = result.data.items.map((output) => ({
     ...output,
-    href: join('/library', output.id),
+    href: join('/shared-research', output.id),
     team: output.team && {
       ...output.team,
       href: join('/network/teams', output.team.id),
     },
   }));
   return (
-    <LibraryPageBody
+    <SharedResearchPageBody
       researchOutputs={researchOutputs}
       numberOfItems={result.data.total}
       numberOfPages={numberOfPages}
@@ -49,4 +49,4 @@ const LibraryList: React.FC<LibraryListProps> = ({
   );
 };
 
-export default LibraryList;
+export default SharedResearchList;

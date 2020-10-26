@@ -6,7 +6,7 @@ import MainNavigation from '../MainNavigation';
 const props: ComponentProps<typeof MainNavigation> = {
   discoverAsapHref: '/discover',
   networkHref: '/network',
-  libraryHref: '/library',
+  sharedResearchHref: '/shared-research',
   newsAndEventsHref: '/news-and-events',
 };
 
@@ -16,7 +16,7 @@ it('renders the navigation items', () => {
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual([
     expect.stringMatching(/network/i),
-    expect.stringMatching(/library/i),
+    expect.stringMatching(/research/i),
     expect.stringMatching(/news/i),
     expect.stringMatching(/discover/i),
   ]);

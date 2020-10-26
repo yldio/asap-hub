@@ -10,7 +10,7 @@ import { largeDesktopScreen } from '../../pixels';
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
 
-  libraryHref: '/library',
+  sharedResearchHref: '/shared-research',
   networkHref: '/network',
   newsAndEventsHref: '/news-and-events',
   discoverAsapHref: '/discover',

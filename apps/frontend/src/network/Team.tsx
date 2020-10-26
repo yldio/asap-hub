@@ -41,7 +41,7 @@ const Page: React.FC<{}> = () => {
                 {...team}
                 proposalHref={
                   team.proposalURL
-                    ? join('/library/', team.proposalURL)
+                    ? join('/shared-research/', team.proposalURL)
                     : undefined
                 }
               />

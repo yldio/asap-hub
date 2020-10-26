@@ -153,7 +153,7 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({
   children,
   discoverAsapHref,
-  libraryHref,
+  sharedResearchHref,
   networkHref,
   newsAndEventsHref,
   ...userNavProps
@@ -199,7 +199,7 @@ const Layout: React.FC<LayoutProps> = ({
         <React.Suspense fallback="Loading...">
           <MainNavigation
             discoverAsapHref={discoverAsapHref}
-            libraryHref={libraryHref}
+            sharedResearchHref={sharedResearchHref}
             networkHref={networkHref}
             newsAndEventsHref={newsAndEventsHref}
           />

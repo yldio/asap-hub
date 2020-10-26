@@ -12,11 +12,11 @@ const library = (
     xmlnsXlink="http://www.w3.org/1999/xlink"
     stroke="#4D646B"
   >
-    <title>Library</title>
+    <title>Research</title>
     <defs>
       <polygon id="path-1" points="0 24 24 24 24 0 0 0"></polygon>
     </defs>
-    <g id="Library" strokeWidth="1" fill="none" fillRule="evenodd">
+    <g id="SharedResearch" strokeWidth="1" fill="none" fillRule="evenodd">
       <g id="Group-12-Copy-2">
         <g id="Group-15"></g>
       </g>

@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import ResearchOutputPage from '../ResearchOutputPage';
 
 const props: ComponentProps<typeof ResearchOutputPage> = {
-  libraryHref: '#',
+  sharedResearchHref: '#',
   profileHref: '#',
   title: 'title',
   type: 'Proposal',

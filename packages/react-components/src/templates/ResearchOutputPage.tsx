@@ -56,7 +56,7 @@ type ResearchOutputPageProps = Pick<
     href: string;
   };
   profileHref: string;
-  libraryHref: string;
+  sharedResearchHref: string;
 };
 
 const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
@@ -66,11 +66,11 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   publishDate,
   created,
   profileHref,
-  libraryHref,
+  sharedResearchHref,
 }) => (
   <div css={containerStyles}>
     <div css={backContainerStyles}>
-      <Link href={libraryHref}>
+      <Link href={sharedResearchHref}>
         <div css={backButtonStyles}>
           <span css={iconStyles}>{chevronCircleLeftIcon}</span> Back
         </div>

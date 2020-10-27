@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
+import { createTeamResponseMembers } from '@asap-hub/fixtures';
 
 import TeamHeader from '../TeamHeader';
 
@@ -54,56 +55,11 @@ it('renders a list of members', () => {
 });
 
 it('renders no more than 5 members', () => {
-  const { getAllByRole } = render(
-    <TeamHeader
-      {...boilerplateProps}
-      members={[
-        {
-          id: '1',
-          displayName: 'Unknown',
-          email: 'foo1@bar.com',
-          avatarUrl: 'https://example.com',
-          role: 'Collaborator',
-        },
-        {
-          id: '2',
-          displayName: 'Unknown',
-          email: 'foo2@bar.com',
-          avatarUrl: 'https://example.com',
-          role: 'Collaborator',
-        },
-        {
-          id: '3',
-          displayName: 'Unknown',
-          email: 'foo3@bar.com',
-          avatarUrl: 'https://example.com',
-          role: 'Collaborator',
-        },
-        {
-          id: '4',
-          displayName: 'Unknown',
-          email: 'foo4@bar.com',
-          avatarUrl: 'https://example.com',
-          role: 'Collaborator',
-        },
-        {
-          id: '5',
-          displayName: 'Unknown',
-          email: 'foo5@bar.com',
-          avatarUrl: 'https://example.com',
-          role: 'Collaborator',
-        },
-        {
-          id: '6',
-          displayName: 'Unknown',
-          email: 'foo6@bar.com',
-          avatarUrl: 'https://example.com',
-          role: 'Collaborator',
-        },
-      ]}
-    />,
+  const { getByLabelText, getAllByLabelText } = render(
+    <TeamHeader {...boilerplateProps} members={createTeamResponseMembers(6)} />,
   );
-  expect(getAllByRole('img')).toHaveLength(5);
+  expect(getAllByLabelText(/pic.+ of .+/)).toHaveLength(5);
+  expect(getByLabelText(/\+1/)).toBeVisible();
 });
 
 it('renders a contact button when there is a pointOfContact', () => {

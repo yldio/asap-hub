@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { formatISO, subDays } from 'date-fns';
+import { text } from '@storybook/addon-knobs';
 import { TeamPage, TeamAbout, TeamOutputs } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
@@ -9,7 +10,7 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
+const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
   id: '42',
   displayName: 'Ramirez, T',
   projectTitle:
@@ -36,6 +37,10 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
       lastName: 'Venkman',
       email: 'peter@ven.com',
       role: 'Project Manager',
+      avatarUrl: text(
+        'Member 2 Avatar URL',
+        'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
+      ),
     },
     {
       id: '3',
@@ -80,16 +85,16 @@ const commonProps: Omit<ComponentProps<typeof TeamPage>, 'children'> = {
   ],
   aboutHref: '/wrong',
   outputsHref: '/wrong',
-};
+});
 
 export const AboutTab = () => (
-  <TeamPage {...commonProps} aboutHref="#">
-    <TeamAbout {...commonProps}></TeamAbout>
+  <TeamPage {...commonProps()} aboutHref="#">
+    <TeamAbout {...commonProps()}></TeamAbout>
   </TeamPage>
 );
 
 export const OutputsTab = () => (
-  <TeamPage {...commonProps} outputsHref="#">
+  <TeamPage {...commonProps()} outputsHref="#">
     <TeamOutputs />
   </TeamPage>
 );

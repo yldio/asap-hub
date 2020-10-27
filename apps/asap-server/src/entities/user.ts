@@ -144,7 +144,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
       orcidWorks: user.data.orcidWorks?.iv,
       skills: user.data.skills?.iv || [],
       questions: user.data.questions?.iv.map(({ question }) => question) || [],
-      avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
+      avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
     }),
   );
 };

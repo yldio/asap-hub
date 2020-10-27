@@ -6,6 +6,7 @@ export const fetchUserResponse: { total: number; items: CMSUser[] } = {
     {
       id: '57d80949-7a75-462d-b3b0-34173423c490',
       data: {
+        role: { iv: 'Grantee' },
         email: { iv: 'panog@ep.bv' },
         displayName: { iv: 'Peter Sharp' },
         skills: { iv: [] },

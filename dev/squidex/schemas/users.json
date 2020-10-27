@@ -507,22 +507,6 @@
             }
           },
           {
-            "name": "displayName",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Display Name",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false
-            }
-          },
-          {
             "name": "approach",
             "isHidden": false,
             "isLocked": false,
@@ -567,7 +551,7 @@
             "Staff",
             "Grantee",
             "Guest",
-            "Unlisted"
+            "Hidden"
           ],
           "isUnique": false,
           "inlineEditable": false,

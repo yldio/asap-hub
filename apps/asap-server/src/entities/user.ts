@@ -1,6 +1,7 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, TeamMember, UserResponse } from '@asap-hub/model';
+import { OrcidWork, TeamMember, UserResponse, UserTeam } from '@asap-hub/model';
 import { parseDate, createURL } from '../utils/squidex';
+import { CMSGraphQLTeam } from './team';
 
 interface CMSTeamMember extends Omit<TeamMember, 'id' | 'email'> {
   id: string[];
@@ -35,7 +36,17 @@ export interface CMSUser {
       }[];
     };
     avatar?: { iv: string[] };
+    role: {
+      iv: 'Staff' | 'Grantee' | 'Guest';
+    };
   };
+}
+
+interface CMSGraphQLUserTeamConnection {
+  role: string;
+  approach?: string;
+  responsibilities?: string;
+  id: CMSGraphQLTeam[];
 }
 
 export interface CMSGraphQLUser {
@@ -43,18 +54,28 @@ export interface CMSGraphQLUser {
   lastModified: string;
   created: string;
   flatData: {
-    avatar: {
-      id: string;
-    }[];
+    avatar:
+      | {
+          id: string;
+        }[]
+      | null;
     displayName: string;
     email: string;
     firstName?: string;
-    lastModifiedDate: string;
+    lastModifiedDate: string | null;
     lastName?: string;
+    teams: CMSGraphQLUserTeamConnection[];
+    questions:
+      | {
+          question: string;
+        }[]
+      | null;
+    skills: string[] | null;
   };
 }
 
 export type CMSOrcidWork = OrcidWork;
+
 export const createSchema = Joi.object({
   displayName: Joi.string().required(),
   email: Joi.string().required(),
@@ -67,15 +88,63 @@ export const createSchema = Joi.object({
   connections: Joi.string(),
 });
 
-export const parseGraphQL = (item: CMSGraphQLUser): UserResponse => {
-  const { avatar, ...flatData } = item.flatData;
+export const parseGraphQLUserTeamConnection = (
+  item: CMSGraphQLUserTeamConnection,
+): UserTeam => {
+  const {
+    id,
+    flatData: { displayName, proposal },
+  } = item.id[0];
+  return {
+    id,
+    role: item.role,
+    approach: item.approach,
+    responsibilities: item.responsibilities,
+    proposalURL: proposal ? proposal[0] : undefined,
+    displayName,
+  };
+};
+
+export const parseGraphQLUser = (item: CMSGraphQLUser): UserResponse => {
+  const { avatar, teams = [], lastModifiedDate, ...flatData } = item.flatData;
+  const createdDate = parseDate(item.created).toISOString();
   return {
     id: item.id,
-    createdDate: parseDate(item.created).toISOString(),
-    questions: [],
-    teams: [],
-    skills: [],
+    createdDate,
     ...flatData,
-    avatarUrl: avatar && createURL(avatar.map((a) => a.id))[0],
+    questions: flatData.questions?.map((q) => q.question) || [],
+    skills: flatData.skills || [],
+
+    lastModifiedDate: lastModifiedDate ?? createdDate,
+    teams: teams.map(parseGraphQLUserTeamConnection),
+    avatarUrl: avatar ? createURL(avatar.map((a) => a.id))[0] : undefined,
   };
+};
+
+export const parseUser = (user: CMSUser): UserResponse => {
+  return JSON.parse(
+    JSON.stringify({
+      id: user.id,
+      createdDate: parseDate(user.created).toISOString(),
+      lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
+      displayName: user.data.displayName.iv,
+      email: user.data.email.iv,
+      degree: user.data.degree?.iv,
+      firstName: user.data.firstName?.iv,
+      lastName: user.data.lastName?.iv,
+      biography: user.data.biography?.iv,
+      jobTitle: user.data.jobTitle?.iv,
+      institution: user.data.institution?.iv,
+      teams:
+        user.data.teams?.iv.map(({ id, ...t }) => ({ id: id[0], ...t })) || [],
+      location: user.data.location?.iv,
+      orcid: user.data.orcid?.iv,
+      orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
+      orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
+      orcidWorks: user.data.orcidWorks?.iv,
+      skills: user.data.skills?.iv || [],
+      questions: user.data.questions?.iv.map(({ question }) => question) || [],
+      avatarURL: user.data.avatar && createURL(user.data.avatar.iv)[0],
+    }),
+  );
 };

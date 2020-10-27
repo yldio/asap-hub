@@ -62,6 +62,9 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
     {
       id: 'user-id-1',
       data: {
+        role: {
+          iv: 'Grantee',
+        },
         lastModifiedDate: {
           iv: '2020-09-25T09:42:51.132Z',
         },
@@ -123,6 +126,9 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
     {
       id: 'user-id-2',
       data: {
+        role: {
+          iv: 'Grantee',
+        },
         lastModifiedDate: {
           iv: '2020-09-25T09:42:51.132Z',
         },
@@ -178,6 +184,9 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
     {
       id: 'user-id-3',
       data: {
+        role: {
+          iv: 'Grantee',
+        },
         lastModifiedDate: {
           iv: '2020-09-25T09:42:51.132Z',
         },

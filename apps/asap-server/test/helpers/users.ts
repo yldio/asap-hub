@@ -1,8 +1,6 @@
 import Chance from 'chance';
 import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
-import { CMSTeam } from '../../src/entities/team';
-import { CMSUser } from '../../src/entities/user';
-import { transform as defaultTransform } from '../../src/controllers/users';
+import { CMSTeam, CMSUser, parseUser } from '../../src/entities';
 import { Squidex } from '@asap-hub/services-common';
 
 const users = new Squidex<CMSUser>('users');
@@ -14,7 +12,7 @@ export type TestUserResponse = UserResponse & {
 
 function transform(user: CMSUser): TestUserResponse {
   return {
-    ...defaultTransform(user),
+    ...parseUser(user),
     connections: user.data.connections.iv,
   };
 }
@@ -45,6 +43,7 @@ export const createUser = (
     orcid: { iv: data.orcid },
     institution: { iv: data.institution },
     location: { iv: data.location },
+    role: { iv: 'Guest' },
     connections: {
       iv: [
         {

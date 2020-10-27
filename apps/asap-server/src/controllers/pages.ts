@@ -1,6 +1,6 @@
 import { Squidex } from '@asap-hub/services-common';
 import { PageResponse } from '@asap-hub/model';
-import { CMSPage, parse } from '../entities/page';
+import { CMSPage, parsePage } from '../entities';
 
 export default class Pages {
   pages: Squidex<CMSPage>;
@@ -14,6 +14,6 @@ export default class Pages {
       filter: { path: 'data.path.iv', op: 'eq', value: path },
     });
 
-    return parse(page);
+    return parsePage(page);
   }
 }

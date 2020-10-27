@@ -8,7 +8,7 @@ import { handler } from '../../../src/handlers/users/create';
 import { apiGatewayEvent } from '../../helpers/events';
 import { globalToken } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
-import { response } from './fetch.fixtures';
+import { CMSUser } from '../../../src/entities';
 
 jest.mock('aws-sdk', () => {
   const m = {
@@ -129,8 +129,26 @@ describe('POST /users', () => {
   });
 
   test('returns 201 and sends email with code', async () => {
-    const user = response.items[0];
-    user.data.connections.iv = [{ code: 'uuid' }];
+    const user: CMSUser = {
+      id: 'uuid-1',
+      lastModified: '2020-09-25T11:06:27.164Z',
+      created: '2020-09-24T11:06:27.164Z',
+      data: {
+        role: {
+          iv: 'Grantee',
+        },
+        lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
+        displayName: { iv: 'Name' },
+        email: { iv: 'me@example.com' },
+        firstName: { iv: 'First' },
+        lastName: { iv: 'Last' },
+        jobTitle: { iv: 'Title' },
+        institution: { iv: 'Institution' },
+        biography: { iv: 'Biography' },
+        location: { iv: 'Lisbon, Portugal' },
+        connections: { iv: [{ code: 'uuid' }] },
+      },
+    };
 
     nock(cms.baseUrl)
       .post(

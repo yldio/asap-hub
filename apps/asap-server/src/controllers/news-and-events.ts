@@ -1,7 +1,7 @@
 import { Squidex } from '@asap-hub/services-common';
 import { ListNewsAndEventsResponse } from '@asap-hub/model';
 
-import { CMSNewsAndEvents, parse } from '../entities/news-and-events';
+import { CMSNewsAndEvents, parseNewsAndEvents } from '../entities';
 
 export default class ResearchOutputs {
   newsAndEvents: Squidex<CMSNewsAndEvents>;
@@ -26,7 +26,7 @@ export default class ResearchOutputs {
 
     return {
       total,
-      items: items.map(parse),
+      items: items.map(parseNewsAndEvents),
     };
   }
 }

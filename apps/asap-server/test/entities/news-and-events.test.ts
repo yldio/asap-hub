@@ -1,11 +1,14 @@
-import { parse, parseGraphQL } from '../../src/entities/news-and-events';
+import {
+  parseNewsAndEvents,
+  parseGraphQLNewsAndEvents,
+} from '../../src/entities';
 import { cms } from '../../src/config';
 
 describe('parse news and events entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
     expect(
-      parse({
+      parseNewsAndEvents({
         id: 'uuid',
         created: date,
         data: {
@@ -36,7 +39,7 @@ describe('parse news and events entities', () => {
   test('parse handles graphQL thumbnails', async () => {
     const date = new Date().toISOString();
     expect(
-      parse({
+      parseNewsAndEvents({
         id: 'uuid',
         created: date,
         data: {
@@ -69,7 +72,7 @@ describe('parse GraphQL news and events entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
     expect(
-      parseGraphQL({
+      parseGraphQLNewsAndEvents({
         id: 'uuid',
         created: date,
         flatData: {

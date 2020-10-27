@@ -30,7 +30,7 @@ export interface CMSGraphQLPage {
   };
 }
 
-export const parse = (item: CMSPage): PageResponse => {
+export const parsePage = (item: CMSPage): PageResponse => {
   return {
     id: item.id,
     path: item.data.path.iv,
@@ -42,7 +42,7 @@ export const parse = (item: CMSPage): PageResponse => {
   };
 };
 
-export const parseGraphQL = (item: CMSGraphQLPage): PageResponse => {
+export const parseGraphQLPage = (item: CMSGraphQLPage): PageResponse => {
   return {
     id: item.id,
     ...item.flatData,

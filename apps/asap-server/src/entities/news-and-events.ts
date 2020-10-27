@@ -33,7 +33,9 @@ export interface CMSGraphQLNewsAndEvents {
   };
 }
 
-export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
+export const parseNewsAndEvents = (
+  item: CMSNewsAndEvents,
+): NewsAndEventsResponse => {
   return {
     id: item.id,
     created: parseDate(item.created).toISOString(),
@@ -57,7 +59,7 @@ export const parse = (item: CMSNewsAndEvents): NewsAndEventsResponse => {
   } as NewsAndEventsResponse;
 };
 
-export const parseGraphQL = (
+export const parseGraphQLNewsAndEvents = (
   item: CMSGraphQLNewsAndEvents,
 ): NewsAndEventsResponse => {
   return {

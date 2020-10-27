@@ -38,7 +38,7 @@ describe('GET /teams/{id}', () => {
     }
   });
 
-  test('returns 200 when users exist', async () => {
+  test('returns 200 when teams exist', async () => {
     nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     const result = (await handler(
       apiGatewayEvent({

@@ -2,18 +2,12 @@ import { GraphQL } from '@asap-hub/services-common';
 import { DiscoverResponse } from '@asap-hub/model';
 import {
   CMSGraphQLUser,
-  parseGraphQL as parseGraphQLUser,
-} from '../entities/user';
-
-import {
+  parseGraphQLUser,
   CMSGraphQLPage,
-  parseGraphQL as parseGraphQLPage,
-} from '../entities/page';
-
-import {
+  parseGraphQLPage,
   CMSGraphQLNewsAndEvents,
-  parseGraphQL as parseGraphQLNewsAndEvents,
-} from '../entities/news-and-events';
+  parseGraphQLNewsAndEvents,
+} from '../entities';
 
 export const query = `
 {

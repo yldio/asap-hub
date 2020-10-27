@@ -34,6 +34,19 @@ const hash = (str: string) => {
 
 const minWidth = 36;
 const maxWidth = 90;
+
+const borderPadding = 4;
+const borderWidth = 1;
+
+const borderMaxWidth = maxWidth - 2 * borderPadding - 2 * borderWidth;
+
+const squareStyle = css({
+  '::after': {
+    height: 0,
+    paddingBottom: '100%',
+  },
+});
+
 const ringStyle = css({
   boxSizing: 'border-box',
   minWidth: `${minWidth / perRem}em`,
@@ -44,14 +57,14 @@ const ringStyle = css({
 });
 
 const ringBorderStyle = css({
-  padding: `${4 / perRem}em`,
+  padding: `${borderPadding / perRem}em`,
 
-  borderWidth: '1px',
+  borderWidth,
   borderStyle: 'solid',
   borderRadius: '50%',
   borderColor: silver.rgb,
 });
-const placeholderBorderStyle = css({
+const placeholderStyle = css({
   borderWidth: '1px',
   borderStyle: 'solid',
   borderRadius: '50%',
@@ -59,8 +72,6 @@ const placeholderBorderStyle = css({
 });
 
 const circleStyle = css({
-  width: '100%',
-  height: '100%',
   margin: 0,
   display: 'flex',
   justifyContent: 'center',
@@ -125,19 +136,20 @@ const Avatar: React.FC<AvatarProps> = ({
   return (
     <div
       css={[
+        squareStyle,
         ringStyle,
         border && ringBorderStyle,
-        placeholder && placeholderBorderStyle,
+        placeholder && placeholderStyle,
       ]}
     >
       {imageUrl ? (
         // eslint-disable-next-line jsx-a11y/img-redundant-alt
         <img
-          width={maxWidth}
-          height={maxWidth}
+          width={border ? borderMaxWidth : maxWidth}
+          height={border ? borderMaxWidth : maxWidth}
           alt={`Profile picture${name ? ` of ${name}` : ''}`}
           src={imageUrl}
-          css={[circleStyle, imageStyle]}
+          css={[squareStyle, circleStyle, imageStyle]}
         />
       ) : (
         <p

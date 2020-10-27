@@ -21,22 +21,22 @@ export const useFetchOptions = (
   const { isAuthenticated, getIdTokenClaims } = useAuth0();
   const requestInterceptor: Interceptors['request'] = authenticated
     ? async ({ options: { headers, ...options }, ...args }) => {
-      if (!isAuthenticated) {
-        throw new Error('No authorization bearer token available');
-      }
+        if (!isAuthenticated) {
+          throw new Error('No authorization bearer token available');
+        }
 
-      const claims = await getIdTokenClaims();
-      return overrideRequestInterceptor({
-        ...args,
-        options: {
-          ...options,
-          headers: {
-            authorization: `Bearer ${claims.__raw}`,
-            ...headers,
+        const claims = await getIdTokenClaims();
+        return overrideRequestInterceptor({
+          ...args,
+          options: {
+            ...options,
+            headers: {
+              authorization: `Bearer ${claims.__raw}`,
+              ...headers,
+            },
           },
-        },
-      });
-    }
+        });
+      }
     : overrideRequestInterceptor;
 
   return {

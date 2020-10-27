@@ -83,7 +83,6 @@ describe('GET /users', () => {
   });
 
   test('returns 200 when searching users by name', async () => {
-
     const filter =
       "data/teams/iv/role eq 'Lead PI' or " +
       "data/teams/iv/role eq 'anotherFilter' and" +
@@ -118,7 +117,6 @@ describe('GET /users', () => {
   });
 
   test('returns 200 with the results from the requested page', async () => {
-
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers('', 8, 8),

@@ -3,6 +3,7 @@ import type { UserResponse } from '@asap-hub/model';
 
 import * as config from './config';
 
+export { default as decodeToken } from './decode-token';
 export { config };
 
 export type User = Pick<

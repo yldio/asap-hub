@@ -2,7 +2,6 @@ import nock from 'nock';
 import Chance from 'chance';
 
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/teams/fetch';
 import { cms } from '../../../src/config';
@@ -22,7 +21,6 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when no teams exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
@@ -55,7 +53,6 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when searching teams by name', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
@@ -98,7 +95,6 @@ describe('GET /teams', () => {
   });
 
   test("returns empty response when resource doesn't exist", async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
@@ -126,7 +122,6 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when teams exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({

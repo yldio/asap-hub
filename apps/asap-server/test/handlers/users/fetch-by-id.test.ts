@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
 import { cms } from '../../../src/config';
 import { handler } from '../../../src/handlers/users/fetch-by-id';
@@ -20,8 +19,6 @@ describe('GET /users/{id}', () => {
   });
 
   test("returns 404 when id doesn't exist", async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
     identity()
       .post(`/api/content/${cms.appName}/graphql`, {
         query: buildGraphQLQueryFetchUser('not-found'),

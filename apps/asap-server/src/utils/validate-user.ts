@@ -1,14 +1,10 @@
 import Boom from '@hapi/boom';
-import got from 'got';
-import Intercept from 'apr-intercept';
-import { config as authConfig } from '@asap-hub/auth';
+import { decodeToken, Auth0User } from '@asap-hub/auth';
 import { framework as lambda } from '@asap-hub/services-common';
-
-import * as auth0 from '../entities/auth0';
 
 export default async function validateUser(
   request: lambda.Request,
-): Promise<auth0.UserInfo> {
+): Promise<Auth0User> {
   const headers = request.headers as {
     authorization: string;
   };
@@ -23,18 +19,7 @@ export default async function validateUser(
     throw Boom.unauthorized();
   }
 
-  const [error, res] = await Intercept(
-    got(`https://${authConfig.domain}/userinfo`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    }).json<auth0.UserInfo>(),
-  );
-
-  if (error) {
-    throw Boom.forbidden('Forbidden', { error });
-  }
-
-  return res;
+  return decodeToken(token).catch(() => {
+    throw Boom.forbidden();
+  });
 }

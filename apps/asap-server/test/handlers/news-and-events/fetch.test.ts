@@ -1,7 +1,6 @@
 import nock from 'nock';
 
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/news-and-events/fetch';
 import { cms } from '../../../src/config';
@@ -19,7 +18,6 @@ describe('GET /news-and-events', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/news-and-events`)
       .query({
@@ -50,7 +48,6 @@ describe('GET /news-and-events', () => {
   });
 
   test("returns empty response when resource doesn't exist", async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/news-and-events`)
       .query({
@@ -81,7 +78,6 @@ describe('GET /news-and-events', () => {
   });
 
   test('returns 200 when news and events exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/news-and-events`)
       .query({

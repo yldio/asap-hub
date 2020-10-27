@@ -1,7 +1,6 @@
 import nock from 'nock';
 
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/dashboard/fetch';
 import { cms } from '../../../src/config';
@@ -19,7 +18,6 @@ describe('GET /dashboard', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
       .reply(200, {
@@ -49,7 +47,6 @@ describe('GET /dashboard', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
       .reply(200, {
@@ -77,7 +74,6 @@ describe('GET /dashboard', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
       .reply(200, {

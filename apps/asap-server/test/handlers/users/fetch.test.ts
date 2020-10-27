@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
 import { buildGraphQLQueryFetchUsers } from '../../../src/controllers/users';
 import { handler } from '../../../src/handlers/users/fetch';
@@ -19,7 +18,6 @@ describe('GET /users', () => {
   });
 
   test('returns 200 when no users exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers(),
@@ -52,8 +50,6 @@ describe('GET /users', () => {
   });
 
   test('returns 200 when searching users by name - should allow filter as string', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
-
     const filter =
       "data/teams/iv/role eq 'Lead PI' and" +
       " ((contains(data/displayName/iv, 'first')" +
@@ -87,7 +83,6 @@ describe('GET /users', () => {
   });
 
   test('returns 200 when searching users by name', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
     const filter =
       "data/teams/iv/role eq 'Lead PI' or " +
@@ -123,7 +118,6 @@ describe('GET /users', () => {
   });
 
   test('returns 200 with the results from the requested page', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
 
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, {

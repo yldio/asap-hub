@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { cms } from '../../../src/config';
@@ -39,25 +38,9 @@ describe('GET /teams/{id} - validations', () => {
   });
 
   test('returns 403 when Auth0 fails to verify token', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(404);
-
-    const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-        headers: {
-          Authorization: `Bearer token`,
-        },
-        pathParameters: {
-          id: 'teamId',
-        },
-      }),
-    )) as APIGatewayProxyResult;
-
-    expect(result.statusCode).toStrictEqual(403);
-  });
-
-  test('returns 403 when Auth0 is unavailable', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(500);
+    jest
+      .requireMock('@asap-hub/auth')
+      .decodeToken.mockRejectedValueOnce(new Error());
 
     const result = (await handler(
       apiGatewayEvent({
@@ -85,7 +68,6 @@ describe('GET /teams/{id}', () => {
   });
 
   test("returns 404 when team doesn't exist", async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams/NotFound`)
       .reply(404);
@@ -106,7 +88,6 @@ describe('GET /teams/{id}', () => {
   });
 
   test('returns 200 when team exists', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams/teamId`)
       .reply(200, teamsResponse.items[0]);

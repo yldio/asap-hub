@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 import { config } from '@asap-hub/services-common';
 
 import { identity } from '../../helpers/squidex';
@@ -35,22 +34,9 @@ describe('GET /research-outputs - failure', () => {
   });
 
   test('returns 403 when Auth0 fails to verify token', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(404);
-
-    const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-        headers: {
-          Authorization: `Bearer token`,
-        },
-      }),
-    )) as APIGatewayProxyResult;
-
-    expect(result.statusCode).toStrictEqual(403);
-  });
-
-  test('returns 403 when Auth0 is unavailable', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(500);
+    jest
+      .requireMock('@asap-hub/auth')
+      .decodeToken.mockRejectedValueOnce(new Error());
 
     const result = (await handler(
       apiGatewayEvent({
@@ -75,7 +61,6 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of empty research outputs', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs`)
       .query({
@@ -101,7 +86,6 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of research outputs', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs`)
       .query({
@@ -169,7 +153,6 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of research outputs - when searching', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs`)
       .query({

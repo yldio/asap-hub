@@ -1,7 +1,6 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { Squidex } from '@asap-hub/services-common';
-import { config as authConfig } from '@asap-hub/auth';
 import { UserResponse } from '@asap-hub/model';
 
 import { CMSUser } from '../../../src/entities/user';
@@ -30,7 +29,6 @@ describe('GET /users/{id}', () => {
   });
 
   test('returns 200 when users exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',

@@ -1,13 +1,12 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 import { config } from '@asap-hub/services-common';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { cms } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
 import { handler } from '../../../src/handlers/research-outputs/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
-import { ResearchOutputResponse } from '@asap-hub/model';
 
 const id = 'uuid';
 
@@ -42,25 +41,9 @@ describe('GET /research-outputs/{id} - validations', () => {
   });
 
   test('returns 403 when Auth0 fails to verify token', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(404);
-
-    const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-        headers: {
-          Authorization: `Bearer token`,
-        },
-        pathParameters: {
-          id,
-        },
-      }),
-    )) as APIGatewayProxyResult;
-
-    expect(result.statusCode).toStrictEqual(403);
-  });
-
-  test('returns 403 when Auth0 is unavailable', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(500);
+    jest
+      .requireMock('@asap-hub/auth')
+      .decodeToken.mockRejectedValueOnce(new Error());
 
     const result = (await handler(
       apiGatewayEvent({
@@ -88,7 +71,6 @@ describe('GET /research-outputs/{id}', () => {
   });
 
   test('returns 200 and the research output content a list of research outputs', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs/${id}`)
       .reply(200, {
@@ -153,7 +135,6 @@ describe('GET /research-outputs/{id}', () => {
   });
 
   test('returns 200 and the research output without team', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs/${id}`)
       .reply(200, {

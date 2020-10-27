@@ -64,6 +64,8 @@ describe('GET /discover', () => {
                       path: '/',
                       title: 'Title',
                       text: 'Content',
+                      link: 'https://hub.asap.science',
+                      linkText: 'ASAP Hub',
                     },
                   },
                   {
@@ -127,6 +129,8 @@ describe('GET /discover', () => {
       pages: [
         {
           id: 'uuid',
+          link: 'https://hub.asap.science',
+          linkText: 'ASAP Hub',
           path: '/',
           shortText: '',
           title: 'Title',
@@ -134,6 +138,8 @@ describe('GET /discover', () => {
         },
         {
           id: 'uuid',
+          link: '',
+          linkText: '',
           path: '/',
           shortText: '',
           title: 'Title',

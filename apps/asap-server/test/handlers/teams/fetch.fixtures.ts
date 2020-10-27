@@ -1,8 +1,8 @@
 import { ListTeamResponse } from '@asap-hub/model';
-import { config } from '@asap-hub/squidex';
-import { CMSTeam, CMSUser } from '../../../src/entities';
+import { config, RestTeam } from '@asap-hub/squidex';
+import { CMSUser } from '../../../src/entities';
 
-export const teamsResponse: { total: number; items: CMSTeam[] } = {
+export const teamsResponse: { total: number; items: RestTeam[] } = {
   total: 4,
   items: [
     {

@@ -45,6 +45,19 @@ describe('GET /users/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toMatchObject(user);
+    const {
+      avatarUrl,
+      biography,
+      degree,
+      orcidLastModifiedDate,
+      ...rest
+    } = body;
+    expect({
+      ...rest,
+      avatarUrl: avatarUrl || undefined,
+      biography: biography || undefined,
+      degree: degree || undefined,
+      orcidLastModifiedDate: orcidLastModifiedDate || undefined,
+    }).toMatchObject(user);
   });
 });

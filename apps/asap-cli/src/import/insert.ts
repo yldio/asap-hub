@@ -1,14 +1,19 @@
 /* eslint-disable no-console, no-param-reassign */
 
 import Intercept from 'apr-intercept';
-import { Squidex } from '@asap-hub/squidex';
+import {
+  Squidex,
+  RestTeam,
+  RestUser,
+  UserTeamConnection,
+} from '@asap-hub/squidex';
 import { Data } from './parse-data';
 
-const teams = new Squidex<Team>('teams');
-const users = new Squidex<User>('users');
+const teams = new Squidex<RestTeam>('teams');
+const users = new Squidex<RestUser>('users');
 
 interface Cache {
-  [key: string]: Promise<Team | User>;
+  [key: string]: Promise<RestTeam | RestUser>;
 }
 
 interface HTTPError extends Error {
@@ -18,52 +23,18 @@ interface HTTPError extends Error {
   };
 }
 
-interface Team {
-  id: string;
-  data: {
-    applicationNumber: { iv: string };
-    displayName: { iv: string };
-    projectTitle: { iv: string };
-  };
-}
-
-interface User {
-  id: string;
-  data: {
-    displayName: { iv: string };
-    email: { iv: string };
-    firstName: { iv: string };
-    lastName: { iv: string };
-    jobTitle?: { iv: string };
-    degree?: { iv: string };
-    institution?: { iv: string };
-    biography?: { iv: string };
-    location?: { iv: string };
-    teams?: {
-      iv: {
-        id: string[];
-        role: string;
-        approach: string;
-        responsabilities: string;
-      }[];
-    };
-    orcid?: { iv: string };
-    skills?: { iv: string[] };
-    questions?: {
-      iv: {
-        question: string;
-      }[];
-    };
-  };
-}
-
-const addTeamToUser = (user: User, team: Team, data: Data): Promise<object> => {
-  const newTeam = {
+const insertMembership = (
+  user: RestUser,
+  team: RestTeam,
+  data: Data,
+): Promise<object> => {
+  const newTeam: UserTeamConnection<string> = {
     id: [team.id],
     role: data.role,
     approach: data.approach,
-    responsabilities: data.researchInterest,
+    responsibilities: data.researchInterest,
   };
+
   return users.patch(user.id, {
     ...user.data,
     teams: {
@@ -75,7 +46,7 @@ const addTeamToUser = (user: User, team: Team, data: Data): Promise<object> => {
   });
 };
 
-const updateAndFetchTeam = async (data: Data, cache: Cache): Promise<Team> => {
+const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
   const { application, lastName, projectTitle, role } = data;
 
   const team = {
@@ -87,6 +58,9 @@ const updateAndFetchTeam = async (data: Data, cache: Cache): Promise<Team> => {
     },
     projectTitle: {
       iv: projectTitle,
+    },
+    skills: {
+      iv: [],
     },
   };
 
@@ -114,10 +88,14 @@ const updateAndFetchTeam = async (data: Data, cache: Cache): Promise<Team> => {
     });
   }
 
-  return cache[team.applicationNumber.iv] as Promise<Team>;
+  return cache[team.applicationNumber.iv] as Promise<RestTeam>;
 };
 
-const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
+const insertUser = async (
+  data: Data,
+  cache: Cache,
+  upsert: boolean,
+): Promise<RestUser> => {
   const {
     email,
     firstName,
@@ -130,9 +108,13 @@ const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
     orcid,
     biography,
     skillsDescription,
+    asapRole,
   } = data;
 
-  const user = {
+  const user: RestUser['data'] = {
+    avatar: {
+      iv: [],
+    },
     email: {
       iv: email,
     },
@@ -179,6 +161,15 @@ const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
           },
         }
       : {}),
+    teams: {
+      iv: [],
+    },
+    connections: {
+      iv: [],
+    },
+    role: {
+      iv: asapRole,
+    },
   };
 
   if (!cache[user.email.iv]) {
@@ -194,8 +185,13 @@ const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
             },
           })
           .then((t) => {
-            console.log(`upsert ${user.email.iv}`);
-            return users.patch(t.id, user);
+            if (upsert) {
+              console.log(`upsert ${user.email.iv}`);
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const { teams: _, connections, role, ...props } = user;
+              return users.patch(t.id, props);
+            }
+            return t;
           });
       }
 
@@ -203,14 +199,17 @@ const upsertAndFetchUser = async (data: Data, cache: Cache): Promise<User> => {
     });
   }
 
-  return cache[user.email.iv] as Promise<User>;
+  return cache[user.email.iv] as Promise<RestUser>;
 };
 
-export default (): ((data: Data) => Promise<void>) => {
-  const promises: Cache = {};
-
+export default ({
+  upsert,
+}: {
+  upsert: boolean;
+}): ((data: Data) => Promise<void>) => {
   return async (data: Data): Promise<void> => {
-    const [e1, user] = await Intercept(upsertAndFetchUser(data, promises));
+    const promises: Cache = {};
+    const [e1, user] = await Intercept(insertUser(data, promises, upsert));
     const err1 = e1 as HTTPError;
     if (err1) {
       console.error({
@@ -221,7 +220,7 @@ export default (): ((data: Data) => Promise<void>) => {
     }
 
     if (data.application) {
-      const [e2, team] = await Intercept(updateAndFetchTeam(data, promises));
+      const [e2, team] = await Intercept(insertTeam(data, promises));
       const err2 = e2 as HTTPError;
       if (err2) {
         console.error({
@@ -233,7 +232,7 @@ export default (): ((data: Data) => Promise<void>) => {
         return;
       }
 
-      const [e3] = await Intercept(addTeamToUser(user, team, data));
+      const [e3] = await Intercept(insertMembership(user, team, data));
       const err3 = e3 as HTTPError;
       if (err3) {
         console.error({

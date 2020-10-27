@@ -1,6 +1,6 @@
 import nock from 'nock';
 import config from '../src/config';
-import { GraphQL } from '../src/graphql';
+import { SquidexGraphql } from '../src/graphql';
 import { identity } from './identity';
 
 interface Content {
@@ -34,7 +34,7 @@ describe('squidex wrapper', () => {
         },
       });
 
-    const client = new GraphQL();
+    const client = new SquidexGraphql();
     const res = await client.request('{ id }');
     expect(res).toEqual({ id: 'id' });
   });

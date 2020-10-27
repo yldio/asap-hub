@@ -3,7 +3,7 @@ import { GraphQLClient } from 'graphql-request';
 import squidex from './config';
 import { getAccessToken } from './client';
 
-export class GraphQL {
+export class SquidexGraphql {
   client: GraphQLClient;
 
   constructor() {

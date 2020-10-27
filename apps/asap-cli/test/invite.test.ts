@@ -89,7 +89,7 @@ describe('Invite user', () => {
       },
       Template: 'Welcome',
       TemplateData: JSON.stringify({
-        firstName: 'TestUser',
+        firstName: 'First',
         link: `${origin}/welcome/uuid`,
       }),
     });

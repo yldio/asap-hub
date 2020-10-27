@@ -1,18 +1,18 @@
-import parse from 'csv-parse';
+import parser from 'csv-parse';
 import pump from 'pump';
 import through from 'through2-concurrent';
 import { createReadStream } from 'fs';
-import createEntities from './create-entities';
+import insert from './insert';
 import parseData, { Data } from './parse-data';
 
-const parseAndTransform = (transform: (data: Data) => Promise<void>) => (
+const parse = (transform: (data: Data) => Promise<void>) => (
   src: string,
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
     pump(
       createReadStream(src),
       // eslint-disable-next-line @typescript-eslint/camelcase
-      parse({ from_line: 2 }),
+      parser({ from_line: 2 }),
       through.obj({ maxConcurrency: 10 }, async (chunk, _, callback) => {
         await transform(parseData(chunk));
         return callback(null);
@@ -27,4 +27,8 @@ const parseAndTransform = (transform: (data: Data) => Promise<void>) => (
   });
 };
 
-export const parseAndCreateEntities = parseAndTransform(createEntities());
+export const importUsers = parse(
+  insert({
+    upsert: true,
+  }),
+);

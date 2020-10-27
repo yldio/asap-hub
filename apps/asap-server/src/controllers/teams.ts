@@ -1,7 +1,7 @@
 import get from 'lodash.get';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
-import { Squidex } from '@asap-hub/squidex';
+import { Squidex, RestTeam, RestUser } from '@asap-hub/squidex';
 import {
   ListTeamResponse,
   TeamResponse,
@@ -9,8 +9,6 @@ import {
   TeamRole,
 } from '@asap-hub/model';
 
-import { CMSTeam } from '../entities/team';
-import { CMSUser } from '../entities/user';
 import { createURL } from '../utils/squidex';
 
 const priorities: Record<TeamRole, number> = {
@@ -24,7 +22,7 @@ const priorities: Record<TeamRole, number> = {
   Staff: 8,
 };
 
-function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
+function transformTeam(team: RestTeam, members: TeamMember[]): TeamResponse {
   return {
     id: team.id,
     displayName: team.data.displayName.iv,
@@ -39,7 +37,7 @@ function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
   };
 }
 
-const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
+const transformUser = (users: RestUser[], teamId: string): TeamMember[] =>
   users.map((user) => ({
     id: user.id,
     firstName: user.data.firstName?.iv,
@@ -52,7 +50,7 @@ const transformUser = (users: CMSUser[], teamId: string): TeamMember[] =>
     avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
   }));
 
-const fetchUsers = async (id: string, client: Got): Promise<CMSUser[]> => {
+const fetchUsers = async (id: string, client: Got): Promise<RestUser[]> => {
   const [, res] = await Intercept(
     client
       .get('users', {
@@ -60,16 +58,16 @@ const fetchUsers = async (id: string, client: Got): Promise<CMSUser[]> => {
           $filter: `data/teams/iv/id eq '${id}'`,
         },
       })
-      .json() as Promise<{ total: number; items: CMSUser[] }>,
+      .json() as Promise<{ total: number; items: RestUser[] }>,
   );
 
   return res ? res.items : [];
 };
 
 export default class Teams {
-  teams: Squidex<CMSTeam>;
+  teams: Squidex<RestTeam>;
 
-  users: Squidex<CMSUser>;
+  users: Squidex<RestUser>;
 
   constructor() {
     this.teams = new Squidex('teams');

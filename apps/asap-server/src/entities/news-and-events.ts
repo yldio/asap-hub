@@ -1,4 +1,5 @@
 import { NewsAndEventsResponse, NewsAndEventsType } from '@asap-hub/model';
+import { GraphqlNewsOrEvent } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 
 export interface CMSNewsAndEvents {
@@ -60,14 +61,20 @@ export const parseNewsAndEvents = (
 };
 
 export const parseGraphQLNewsAndEvents = (
-  item: CMSGraphQLNewsAndEvents,
+  item: GraphqlNewsOrEvent,
 ): NewsAndEventsResponse => {
+  const createdDate = parseDate(item.created).toISOString();
   return {
     id: item.id,
-    created: item.created,
-    ...item.flatData,
-    thumbnail:
-      item.flatData.thumbnail &&
-      createURL(item.flatData.thumbnail.map((t) => t.id))[0],
+    created: createdDate,
+    title: item.flatData?.title || '',
+    shortText: item.flatData?.shortText || '',
+    text: item.flatData?.text || undefined,
+    link: item.flatData?.link || undefined,
+    linkText: item.flatData?.link || undefined,
+    type: item.flatData?.type || 'News',
+    thumbnail: item.flatData?.thumbnail
+      ? createURL(item.flatData.thumbnail.map((t) => t.id))[0]
+      : undefined,
   };
 };

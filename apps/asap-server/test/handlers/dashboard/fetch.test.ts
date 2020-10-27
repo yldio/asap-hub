@@ -24,9 +24,7 @@ describe('GET /dashboard', () => {
       .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
       .reply(200, {
         data: {
-          queryDashboardContents: [
-            { data: { news: { iv: [] }, pages: { iv: [] } } },
-          ],
+          queryDashboardContents: [{ flatData: { news: [], pages: [] } }],
         },
       });
 
@@ -53,7 +51,7 @@ describe('GET /dashboard', () => {
       .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
       .reply(200, {
         data: {
-          queryDashboardContents: [{ data: { news: null, pages: null } }],
+          queryDashboardContents: [{ flatData: { news: null, pages: null } }],
         },
       });
 
@@ -82,8 +80,31 @@ describe('GET /dashboard', () => {
         data: {
           queryDashboardContents: [
             {
-              data: {
-                news: { iv: fixtures.newsAndEventsResponse.items },
+              flatData: {
+                news: [
+                  {
+                    id: 'news-and-events-1',
+                    flatData: {
+                      title: 'News 1',
+                      type: 'News',
+                      shortText: 'Short text of news 1',
+                      text: '<p>text</p>',
+                      thumbnail: [{ id: 'thumbnail-uuid1' }],
+                    },
+                    created: '2020-09-08T16:35:28Z',
+                  },
+                  {
+                    id: 'news-and-events-2',
+                    flatData: {
+                      title: 'Event 2',
+                      type: 'Event',
+                      shortText: 'Short text of event 2',
+                      text: '<p>text</p>',
+                      thumbnail: [{ id: 'thumbnail-uuid2' }],
+                    },
+                    created: '2020-09-16T14:31:19Z',
+                  },
+                ],
                 pages: null,
               },
             },

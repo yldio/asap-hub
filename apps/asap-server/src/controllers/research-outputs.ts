@@ -3,14 +3,13 @@ import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
-import { Squidex } from '@asap-hub/squidex';
+import { Squidex, RestTeam } from '@asap-hub/squidex';
 
 import { CMSResearchOutput } from '../entities/research-outputs';
-import { CMSTeam } from '../entities';
 
 function transform(
   output: CMSResearchOutput,
-  team?: CMSTeam,
+  team?: RestTeam,
 ): ResearchOutputResponse {
   const teamProps = team
     ? {
@@ -37,7 +36,7 @@ function transform(
 export default class ResearchOutputs {
   researchOutputs: Squidex<CMSResearchOutput>;
 
-  teams: Squidex<CMSTeam>;
+  teams: Squidex<RestTeam>;
 
   constructor() {
     this.researchOutputs = new Squidex('research-outputs');

@@ -1,4 +1,4 @@
-import { config } from '@asap-hub/squidex';
+import { config, GraphqlNewsOrEvent } from '@asap-hub/squidex';
 import {
   parseNewsAndEvents,
   parseGraphQLNewsAndEvents,
@@ -71,21 +71,21 @@ describe('parse news and events entities', () => {
 describe('parse GraphQL news and events entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
-    expect(
-      parseGraphQLNewsAndEvents({
-        id: 'uuid',
-        created: date,
-        flatData: {
-          type: 'News',
+    const newsOrEvent: GraphqlNewsOrEvent = {
+      id: 'uuid',
+      created: date,
+      lastModified: date,
+      data: null,
+      flatData: {
+        type: 'News',
+        title: 'Title',
+        shortText: 'shortText',
+        thumbnail: [{ id: 'uuid' }],
+        text: 'text',
+      },
+    };
 
-          title: 'Title',
-
-          shortText: 'shortText',
-          thumbnail: [{ id: 'uuid' }],
-          text: 'text',
-        },
-      }),
-    ).toMatchObject({
+    expect(parseGraphQLNewsAndEvents(newsOrEvent)).toMatchObject({
       id: 'uuid',
       created: date,
       type: 'News',

@@ -1,3 +1,8 @@
+import { RestUser } from '@asap-hub/squidex';
+
+type Role = RestUser['data']['role']['iv'];
+type Degree = NonNullable<RestUser['data']['degree']>['iv'] | undefined;
+
 export interface Data {
   email: string;
   application: string;
@@ -6,7 +11,7 @@ export interface Data {
   firstName: string;
   lastName: string;
   institution: string;
-  degree: string;
+  degree: Degree;
   jobTitle: string;
   orcid: string;
   questions: string[];
@@ -15,6 +20,7 @@ export interface Data {
   approach: string;
   skills: string[];
   skillsDescription: string;
+  asapRole: Role;
 }
 
 export default (data: string[]): Data => {
@@ -38,6 +44,7 @@ export default (data: string[]): Data => {
     researchInterest,
     approach,
     skills,
+    asapRole,
   ] = data.map((s) => s.trim());
 
   const orcid = norcid.match(/((\d|X){4}-(\d|X){4}-(\d|X){4}-(\d|X){4})/i);
@@ -45,7 +52,9 @@ export default (data: string[]): Data => {
     application,
     approach,
     biography,
-    degree,
+    degree: ['BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'].includes(degree)
+      ? (degree as Degree)
+      : undefined,
     email,
     firstName,
     institution,
@@ -61,5 +70,8 @@ export default (data: string[]): Data => {
       .map((a) => a.trim())
       .filter(Boolean),
     skillsDescription,
+    asapRole: ['Staff', 'Grantee', 'Guest'].includes(asapRole)
+      ? (asapRole as Role)
+      : 'Guest',
   };
 };

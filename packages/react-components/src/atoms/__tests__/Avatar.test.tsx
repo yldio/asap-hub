@@ -7,21 +7,25 @@ import { paper } from '../../colors';
 
 it('renders the profile picture', () => {
   const { getByRole } = render(<Avatar imageUrl="/avatar.png" />);
-  expect(getByRole('img')).toHaveAttribute('src', '/avatar.png');
+  const { backgroundImage } = getComputedStyle(getByRole('img'));
+  expect(backgroundImage).toContain('/avatar.png');
 });
 
-it('generates an alt text based on the name', () => {
-  const { getByAltText } = render(
+it('generates a label text based on the name', () => {
+  const { getByLabelText } = render(
     <Avatar imageUrl="/avatar.png" firstName="John" lastName="Doe" />,
   );
-  expect(getByAltText(/pic.+John Doe/i)).toBeVisible();
+  expect(getByLabelText(/pic.+John Doe/i)).toBeVisible();
 });
 
-it('generates an alt text when no name is available', () => {
-  const { getByRole } = render(<Avatar imageUrl="/avatar.png" />);
-  expect((getByRole('img') as HTMLImageElement).alt).toMatchInlineSnapshot(
-    `"Profile picture"`,
-  );
+it('generates a label text when no name is available', () => {
+  const { getByLabelText } = render(<Avatar imageUrl="/avatar.png" />);
+  expect(getByLabelText(/pic/)).toBeVisible();
+});
+
+it('generates a label text for a placeholder', () => {
+  const { getByLabelText } = render(<Avatar placeholder="+1" />);
+  expect(getByLabelText(/placeholder.+\+1/)).toBeVisible();
 });
 
 it('shows a placeholder on white background', () => {
@@ -46,6 +50,14 @@ it("shows the initials 'JD' on colored background", () => {
     'backgroundColor',
   )!;
   expect(backgroundColor).not.toBe(paper.rgb);
+});
+
+it('does not show the initials if there is an image', () => {
+  const { getByText } = render(
+    <Avatar firstName="John" lastName="Doe" imageUrl="/avatar.png" />,
+  );
+
+  expect(getByText('JD')).not.toBeVisible();
 });
 
 it.each`

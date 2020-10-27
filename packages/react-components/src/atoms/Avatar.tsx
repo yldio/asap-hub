@@ -38,15 +38,6 @@ const maxWidth = 90;
 const borderPadding = 4;
 const borderWidth = 1;
 
-const borderMaxWidth = maxWidth - 2 * borderPadding - 2 * borderWidth;
-
-const squareStyle = css({
-  '::after': {
-    height: 0,
-    paddingBottom: '100%',
-  },
-});
-
 const ringStyle = css({
   boxSizing: 'border-box',
   minWidth: `${minWidth / perRem}em`,
@@ -73,15 +64,15 @@ const placeholderStyle = css({
 
 const circleStyle = css({
   margin: 0,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
   borderRadius: '50%',
 });
 
-const imageStyle = css({
-  objectFit: 'cover',
-});
+const imageStyle = (imageUrl: string) =>
+  css({
+    backgroundImage: `url(${JSON.stringify(imageUrl)})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  });
 
 const initialsStyle = css({
   display: 'grid',
@@ -92,6 +83,20 @@ const textStyle = css(fontStyles, headlineStyles[3], {
   dominantBaseline: 'central',
   textAnchor: 'middle',
 });
+
+const placeholderColorStyle = css({
+  backgroundColor: paper.rgb,
+  fill: charcoal.rgb,
+});
+const colorStyles = [
+  css({ backgroundColor: mint.rgb, fill: pine.rgb }),
+  css({ backgroundColor: apricot.rgb, fill: clay.rgb }),
+  css({ backgroundColor: sky.rgb, fill: denim.rgb }),
+  css({ backgroundColor: azure.rgb, fill: space.rgb }),
+  css({ backgroundColor: lilac.rgb, fill: berry.rgb }),
+  css({ backgroundColor: lavender.rgb, fill: mauve.rgb }),
+];
+
 type RegularAvatarProps = {
   readonly imageUrl?: string;
   readonly firstName?: string;
@@ -110,19 +115,6 @@ type AvatarProps = (RegularAvatarProps | PlaceholderAvatarProps) & {
   readonly border?: boolean;
 };
 
-const placeholderColorStyle = css({
-  backgroundColor: paper.rgb,
-  fill: charcoal.rgb,
-});
-const colorStyles = [
-  css({ backgroundColor: mint.rgb, fill: pine.rgb }),
-  css({ backgroundColor: apricot.rgb, fill: clay.rgb }),
-  css({ backgroundColor: sky.rgb, fill: denim.rgb }),
-  css({ backgroundColor: azure.rgb, fill: space.rgb }),
-  css({ backgroundColor: lilac.rgb, fill: berry.rgb }),
-  css({ backgroundColor: lavender.rgb, fill: mauve.rgb }),
-];
-
 const Avatar: React.FC<AvatarProps> = ({
   imageUrl,
   firstName = '',
@@ -136,38 +128,37 @@ const Avatar: React.FC<AvatarProps> = ({
   return (
     <div
       css={[
-        squareStyle,
         ringStyle,
         border && ringBorderStyle,
         placeholder && placeholderStyle,
       ]}
     >
-      {imageUrl ? (
-        // eslint-disable-next-line jsx-a11y/img-redundant-alt
-        <img
-          width={border ? borderMaxWidth : maxWidth}
-          height={border ? borderMaxWidth : maxWidth}
-          alt={`Profile picture${name ? ` of ${name}` : ''}`}
-          src={imageUrl}
-          css={[squareStyle, circleStyle, imageStyle]}
-        />
-      ) : (
-        <p
-          css={[
-            circleStyle,
-            initialsStyle,
-            placeholder
-              ? placeholderColorStyle
-              : colorStyles[hash(initials) % colorStyles.length],
-          ]}
-        >
-          <svg viewBox="0 0 90 90">
-            <text x="50%" y="50%" css={textStyle}>
-              {placeholder || initials}
-            </text>
-          </svg>
-        </p>
-      )}
+      <p
+        role="img"
+        aria-label={`Profile picture${
+          placeholder
+            ? ` placeholder: ${placeholder}`
+            : name
+            ? ` of ${name}`
+            : ''
+        }`}
+        css={[
+          circleStyle,
+          initialsStyle,
+          placeholder
+            ? placeholderColorStyle
+            : imageUrl
+            ? null
+            : colorStyles[hash(initials) % colorStyles.length],
+          imageUrl && imageStyle(imageUrl),
+        ]}
+      >
+        <svg viewBox="0 0 90 90" css={imageUrl && { visibility: 'hidden' }}>
+          <text x="50%" y="50%" css={textStyle}>
+            {placeholder || initials}
+          </text>
+        </svg>
+      </p>
     </div>
   );
 };

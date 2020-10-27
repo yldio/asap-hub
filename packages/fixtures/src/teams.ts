@@ -1,4 +1,4 @@
-import { ListTeamResponse } from '@asap-hub/model';
+import { ListTeamResponse, TeamMember } from '@asap-hub/model';
 
 const listTeamMember: Omit<ListTeamResponse['items'][0]['members'][0], 'id'> = {
   firstName: 'Mason',
@@ -18,6 +18,12 @@ const listTeamResponseItem: Omit<ListTeamResponse['items'][0], 'id'> = {
   lastModifiedDate: '2020-09-07T17:36:54Z',
 };
 
+export const createTeamResponseMembers = (teamMembers: number): TeamMember[] =>
+  Array.from({ length: teamMembers }, (__, memberIndex) => ({
+    ...listTeamMember,
+    id: `tm${memberIndex}`,
+  }));
+
 export const createListTeamResponse = (
   items: number,
   { teamMembers = 0 } = {},
@@ -27,10 +33,7 @@ export const createListTeamResponse = (
     ...listTeamResponseItem,
     id: `t${itemIndex}`,
     displayName: `${listTeamResponseItem.displayName} ${itemIndex + 1}`,
-    members: Array.from({ length: teamMembers }, (__, memberIndex) => ({
-      ...listTeamMember,
-      id: `t${itemIndex}-m${memberIndex}`,
-    })),
+    members: createTeamResponseMembers(teamMembers),
   })),
 });
 

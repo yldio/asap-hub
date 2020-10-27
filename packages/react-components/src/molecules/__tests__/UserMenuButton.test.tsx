@@ -26,7 +26,7 @@ it('renders a fallback instead of the display name', async () => {
 });
 
 it('renders the user avatar', async () => {
-  const { findByAltText } = render(
+  const { findByLabelText } = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.LoggedIn
         user={{ avatarUrl: '/pic.jpg', firstName: 'John', lastName: 'Doe' }}
@@ -35,7 +35,7 @@ it('renders the user avatar', async () => {
       </authTestUtils.LoggedIn>
     </authTestUtils.Auth0Provider>,
   );
-  expect(await findByAltText(/pic.+John Doe/i)).toBeVisible();
+  expect(await findByLabelText(/pic.+John Doe/i)).toBeVisible();
 });
 it('renders a fallback for the user avatar', async () => {
   const { findByText } = render(<UserMenuButton />);

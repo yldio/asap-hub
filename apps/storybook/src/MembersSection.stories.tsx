@@ -1,5 +1,6 @@
 import React from 'react';
 import { MembersSection } from '@asap-hub/react-components';
+import { text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Team / Members',
@@ -26,6 +27,10 @@ export const Normal = () => (
         lastName: 'Venkman',
         email: 'peter@venk.com',
         role: 'Project Manager',
+        avatarUrl: text(
+          'Member 2 Avatar URL',
+          'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
+        ),
       },
       {
         id: '3',

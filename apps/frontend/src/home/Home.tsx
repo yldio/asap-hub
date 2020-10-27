@@ -27,7 +27,8 @@ const Home: React.FC<{}> = () => {
       hrefNewsAndEvents: '/news-and-events',
       hrefProfile: `/network/users/${id}`,
       hrefTeamsNetwork: '/network/teams',
-      hrefTeamWorkspace: teams?.length > 0 ? teams[0].id : undefined,
+      hrefTeamWorkspace:
+        teams?.length > 0 ? `/network/teams/${teams[0].id}` : undefined,
       hrefUsersNetwork: '/network/users',
     };
     return (

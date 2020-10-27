@@ -99,7 +99,7 @@ test('renders dashboard with correct links', async () => {
     '/network/teams',
     '/discover',
     '/news-and-events',
-    '/uuid',
+    '/network/teams/uuid',
     '/network/users/testuserid',
     'mailto:grants@parkinsonsroadmap.org?subject=ASAP+Hub%3A+Grant+support',
     'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',

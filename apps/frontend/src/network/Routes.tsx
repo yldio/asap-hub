@@ -92,7 +92,7 @@ const Network: React.FC<{}> = () => {
         </NetworkPage>
       </Route>
       <Route path={`${path}/teams/:id`} component={Team} />
-      <Redirect to={`${path}/users`} />
+      <Redirect to={`${path}/teams`} />
     </Switch>
   );
 };

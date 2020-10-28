@@ -65,7 +65,6 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   team,
   publishDate,
   created,
-  profileHref,
   sharedResearchHref,
 }) => (
   <div css={containerStyles}>

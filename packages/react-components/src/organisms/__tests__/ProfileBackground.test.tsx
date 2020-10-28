@@ -10,9 +10,10 @@ it('generates a heading', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborator"
+      href="/network/teams/42"
     />,
   );
-  expect(getByText(/research/i).tagName).toBe('H2');
+  expect(getByText(/role.on.asap/i).tagName).toBe('H2');
 });
 
 it('renders links to team page twice', () => {
@@ -22,6 +23,7 @@ it('renders links to team page twice', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborator"
+      href="/network/teams/42"
     />,
   );
 
@@ -36,6 +38,34 @@ it('renders links to team page twice', () => {
   `);
 });
 
+it('renders proposal if present', () => {
+  const { rerender, queryAllByText } = render(
+    <ProfileBackground
+      id="42"
+      firstName="Phillip"
+      displayName="Phillip, M"
+      role="Collaborator"
+      href="/network/teams/42"
+    />,
+  );
+
+  expect(queryAllByText(/proposal/i)).toHaveLength(0);
+
+  rerender(
+    <ProfileBackground
+      id="42"
+      firstName="Phillip"
+      displayName="Phillip, M"
+      role="Collaborator"
+      approach="text"
+      href="/network/teams/42"
+      proposalHref="/shared-research/uuid"
+    />,
+  );
+
+  expect(queryAllByText(/proposal/i).length).toBeGreaterThan(0);
+});
+
 it('renders responsibilities if present', () => {
   const { rerender, queryAllByText } = render(
     <ProfileBackground
@@ -43,6 +73,7 @@ it('renders responsibilities if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborator"
+      href="/network/teams/42"
     />,
   );
   expect(queryAllByText(/responsibilities/i)).toHaveLength(0);
@@ -54,6 +85,7 @@ it('renders responsibilities if present', () => {
       displayName="Phillip, M"
       role="Collaborator"
       responsibilities="text"
+      href="/network/teams/42"
     />,
   );
 
@@ -67,6 +99,7 @@ it('renders approach if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborator"
+      href="/network/teams/42"
     />,
   );
 
@@ -79,8 +112,9 @@ it('renders approach if present', () => {
       displayName="Phillip, M"
       role="Collaborator"
       approach="text"
+      href="/network/teams/42"
     />,
   );
 
-  expect(queryAllByText(/approach/i).length).toBeGreaterThan(0);
+  expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);
 });

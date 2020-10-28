@@ -23,7 +23,7 @@ export interface CMSGraphQLTeam {
     applicationNumber: string;
     projectTitle: string;
     projectSummary?: string;
-    proposal?: string[] | null;
+    proposal?: { id: string }[] | null;
     skills: string[];
   };
 }

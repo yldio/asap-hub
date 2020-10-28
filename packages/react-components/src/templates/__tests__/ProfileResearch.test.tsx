@@ -21,11 +21,12 @@ it('renders research', () => {
           id: '42',
           displayName: 'Team',
           role: 'Role',
+          href: '/network/teams/42',
         },
       ]}
     />,
   );
-  expect(getByText(/research/i)).toBeVisible();
+  expect(getByText(/role.on.asap/i)).toBeVisible();
 });
 
 it('renders the skills', () => {

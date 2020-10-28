@@ -14,5 +14,7 @@ export const Normal = () => (
     role={text('Role', 'Researcher')}
     approach={text('Approach', '')}
     responsibilities={text('Responsibilities', '')}
+    href={text('Team', '/network/teams')}
+    proposalHref={text('Proposal', '/shared-research/uuid')}
   />
 );

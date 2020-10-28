@@ -16,19 +16,16 @@ const styles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-type ProfileInterestProps = Pick<
-  ComponentProps<typeof ProfileBackground>,
-  'firstName' | 'displayName'
-> &
-  ComponentProps<typeof QuestionsSection> &
+type ProfileInterestProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileSkills> &
+  Pick<ComponentProps<typeof ProfileBackground>, 'firstName' | 'displayName'> &
   Pick<UserResponse, 'email'> & {
     readonly teams: ReadonlyArray<
       Omit<ComponentProps<typeof ProfileBackground>, 'firstName'>
     >;
   };
 
-const ProfileAbout: React.FC<ProfileInterestProps> = ({
+const ProfileResearch: React.FC<ProfileInterestProps> = ({
   firstName,
   displayName,
   email,
@@ -58,4 +55,4 @@ const ProfileAbout: React.FC<ProfileInterestProps> = ({
   );
 };
 
-export default ProfileAbout;
+export default ProfileResearch;

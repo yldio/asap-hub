@@ -96,8 +96,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
       <div css={postedStyles}>
         <Caption asParagraph>
           Posted:
-          {format(new Date(publishDate || created), ' Mo MMMM yyyy')} by{' '}
-          <Link href={profileHref}> ASAP ADMIN</Link>
+          {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
         </Caption>
       </div>
     </Card>

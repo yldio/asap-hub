@@ -12,6 +12,7 @@ module.exports = {
 
   rootDir: __dirname,
   displayName: 'integration-test-asap-server',
+  setupFilesAfterEnv: ['./jest.setup.ts'],
 
   testMatch: ['**/*integration.test.{js,jsx,ts,tsx}'],
 };

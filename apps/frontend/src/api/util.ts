@@ -25,15 +25,13 @@ export const useFetchOptions = (
           throw new Error('No authorization bearer token available');
         }
 
-        const claims = await getIdTokenClaims();
-
         /* eslint-disable no-underscore-dangle */
         return overrideRequestInterceptor({
           ...args,
           options: {
             ...options,
             headers: {
-              authorization: `Bearer ${claims.__raw}`,
+              authorization: `Bearer ${(await getIdTokenClaims()).__raw}`,
               ...headers,
             },
           },

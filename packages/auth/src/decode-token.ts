@@ -26,8 +26,6 @@ const decodeToken = (token: string): Promise<Auth0User> => {
       }
 
       const payload = res as Auth0User;
-
-      console.log(payload.aud, config.clientID)
       if (payload?.aud !== config.clientID) {
         return reject(
           new Error(

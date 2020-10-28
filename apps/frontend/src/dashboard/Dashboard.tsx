@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import {
   DashboardPage,
-  DashboardPageBody,
   Paragraph,
   NotFoundPage,
 } from '@asap-hub/react-components';
@@ -11,7 +10,12 @@ import { useCurrentUser } from '@asap-hub/react-context';
 import { useDashboard } from '../api';
 import ErrorBoundary from '../errors/ErrorBoundary';
 
-const Home: React.FC<{}> = () => {
+const loadBody = () =>
+  import(/* webpackChunkName: "dashboard-body" */ './Body');
+const Body = React.lazy(loadBody);
+loadBody();
+
+const Dashboard: React.FC<{}> = () => {
   const { firstName, id, teams = [] } = useCurrentUser() ?? {};
   const { loading, data: dashboard } = useDashboard();
 
@@ -34,7 +38,9 @@ const Home: React.FC<{}> = () => {
     return (
       <DashboardPage firstName={firstName}>
         <ErrorBoundary>
-          <DashboardPageBody {...data} />
+          <Suspense fallback="Loading...">
+            <Body {...data} />
+          </Suspense>
         </ErrorBoundary>
       </DashboardPage>
     );
@@ -43,4 +49,4 @@ const Home: React.FC<{}> = () => {
   return <NotFoundPage />;
 };
 
-export default Home;
+export default Dashboard;

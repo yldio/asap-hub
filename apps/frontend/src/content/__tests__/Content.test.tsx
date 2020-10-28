@@ -9,7 +9,7 @@ import nock from 'nock';
 import { PageResponse } from '@asap-hub/model';
 import { createPageResponse } from '@asap-hub/fixtures';
 
-import ContentPage from '../Content';
+import Content from '../Content';
 import { API_BASE_URL } from '../../config';
 
 const page: PageResponse = createPageResponse('1');
@@ -25,7 +25,7 @@ describe('content page', () => {
     const result = render(
       <MemoryRouter initialEntries={['/privacy-policy']}>
         <Route path="/privacy-policy">
-          <ContentPage layoutComponent={React.Fragment} />
+          <Content layoutComponent={React.Fragment} />
         </Route>
       </MemoryRouter>,
     );

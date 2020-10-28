@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import {
   Layout,
@@ -18,18 +18,19 @@ const loadNetwork = () =>
   import(/* webpackChunkName: "network" */ './network/Routes');
 const loadSharedResearch = () =>
   import(/* webpackChunkName: "shared-research" */ './shared-research/Routes');
-const loadHome = () => import(/* webpackChunkName: "home" */ './home/Home');
+const loadDashboard = () =>
+  import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
 const loadContent = () =>
-  import(/* webpackChunkName: "content" */ './pages/Content');
+  import(/* webpackChunkName: "content" */ './content/Content');
 const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Discover');
 const loadAdmin = () => import(/* webpackChunkName: "admin" */ './admin/Admin');
 const NewsAndEvents = React.lazy(loadNewsAndEvents);
 const Network = React.lazy(loadNetwork);
 const SharedResearch = React.lazy(loadSharedResearch);
-const Home = React.lazy(loadHome);
+const Dashboard = React.lazy(loadDashboard);
 const Welcome = React.lazy(loadWelcome);
 const Content = React.lazy(loadContent);
 const Admin = React.lazy(loadAdmin);
@@ -37,7 +38,8 @@ const Discover = React.lazy(loadDiscover);
 
 const Prefetch: React.FC<{}> = () => {
   useEffect(() => {
-    loadHome()
+    // order by the likelyhood of user navigating there
+    loadDashboard()
       .then(loadNewsAndEvents)
       .then(loadNetwork)
       .then(loadSharedResearch)
@@ -82,7 +84,7 @@ const App: React.FC<{}> = () => {
       <AuthProvider>
         <Router history={history}>
           <ErrorBoundary>
-            <React.Suspense fallback="Loading...">
+            <Suspense fallback="Loading...">
               <Switch>
                 <Route path="/welcome">
                   <Welcome />
@@ -103,11 +105,11 @@ const App: React.FC<{}> = () => {
                   <CheckAuth>
                     <ConfiguredLayout>
                       <ErrorBoundary>
-                        <React.Suspense fallback="Loading...">
+                        <Suspense fallback="Loading...">
                           <Prefetch />
                           <Switch>
                             <Route exact path="/">
-                              <Home />
+                              <Dashboard />
                             </Route>
                             <Route path="/logout">
                               <Logout />
@@ -128,13 +130,13 @@ const App: React.FC<{}> = () => {
                               <NotFoundPage />
                             </Route>
                           </Switch>
-                        </React.Suspense>
+                        </Suspense>
                       </ErrorBoundary>
                     </ConfiguredLayout>
                   </CheckAuth>
                 </Route>
               </Switch>
-            </React.Suspense>
+            </Suspense>
           </ErrorBoundary>
         </Router>
       </AuthProvider>

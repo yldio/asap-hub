@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, useEffect } from 'react';
 import {
   Switch,
   Route,
@@ -9,14 +9,34 @@ import {
 import { NetworkPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
-import ProfileList from './ProfileList';
-import Profile from './Profile';
-import TeamList from './TeamList';
-import Team from './Team';
 import ErrorBoundary from '../errors/ErrorBoundary';
 import { useSearch } from '../hooks';
 
+const loadProfileList = () =>
+  import(/* webpackChunkName: "network-profile-list" */ './ProfileList');
+const loadProfile = () =>
+  import(/* webpackChunkName: "network-profile" */ './profile/Routes');
+const loadTeamList = () =>
+  import(/* webpackChunkName: "network-team-list" */ './TeamList');
+const loadTeam = () =>
+  import(/* webpackChunkName: "network-team" */ './team/Routes');
+const ProfileList = React.lazy(loadProfileList);
+const Profile = React.lazy(loadProfile);
+const TeamList = React.lazy(loadTeamList);
+const Team = React.lazy(loadTeam);
+loadProfileList();
+
 const Network: React.FC<{}> = () => {
+  useEffect(() => {
+    loadProfileList()
+      // Team toggle can be pressed very quickly
+      .then(loadTeamList)
+      // Profile can be clicked only after the list has been fetched
+      .then(loadProfile)
+      // Team can be clicked only after clicking the toggle and the list has been fetched
+      .then(loadTeam);
+  }, []);
+
   const { path } = useRouteMatch();
   const {
     filters,
@@ -45,7 +65,12 @@ const Network: React.FC<{}> = () => {
           searchQuery={searchQuery}
         >
           <ErrorBoundary>
-            <ProfileList filters={filters} searchQuery={searchQueryDebounce} />
+            <Suspense fallback="Loading...">
+              <ProfileList
+                filters={filters}
+                searchQuery={searchQueryDebounce}
+              />
+            </Suspense>
           </ErrorBoundary>
         </NetworkPage>
       </Route>
@@ -60,7 +85,9 @@ const Network: React.FC<{}> = () => {
           searchQuery={searchQuery}
         >
           <ErrorBoundary>
-            <TeamList filters={filters} searchQuery={searchQueryDebounce} />
+            <Suspense fallback="Loading...">
+              <TeamList filters={filters} searchQuery={searchQueryDebounce} />
+            </Suspense>
           </ErrorBoundary>
         </NetworkPage>
       </Route>

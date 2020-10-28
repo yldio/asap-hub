@@ -10,8 +10,8 @@ import nock from 'nock';
 import { TeamResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
 
-import Team from '../Team';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '@asap-hub/frontend/src/config';
+import Team from '../Routes';
 
 const team: TeamResponse = {
   id: '42',
@@ -102,10 +102,10 @@ describe('the proposal', () => {
 });
 
 it('navigates to the outputs', async () => {
-  const { getByText } = await renderTeam();
+  const { getByText, findByText } = await renderTeam();
 
   userEvent.click(getByText(/outputs/i, { selector: 'nav *' }));
-  expect(getByText(/research outputs/i)).toBeVisible();
+  expect(await findByText(/research outputs/i)).toBeVisible();
 });
 
 it('renders the not found page for a 404', async () => {

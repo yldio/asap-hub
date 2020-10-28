@@ -8,10 +8,10 @@ import {
 import { usePageByPath } from '../api';
 import ErrorBoundary from '../errors/ErrorBoundary';
 
-interface StubPageProps {
+interface ContentProps {
   layoutComponent: React.FC;
 }
-const StubPage: React.FC<StubPageProps> = ({ layoutComponent: Layout }) => {
+const Content: React.FC<ContentProps> = ({ layoutComponent: Layout }) => {
   const { path } = useRouteMatch();
   const { loading, data: page } = usePageByPath(path);
 
@@ -32,4 +32,4 @@ const StubPage: React.FC<StubPageProps> = ({ layoutComponent: Layout }) => {
   return <NotFoundPage />;
 };
 
-export default StubPage;
+export default Content;

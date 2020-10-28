@@ -9,7 +9,7 @@ import Discover from '../Discover';
 
 import { API_BASE_URL } from '../../config';
 
-const renderHome = async () => {
+const renderDiscover = async () => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
@@ -43,7 +43,7 @@ test('renders discover header', async () => {
       training: [],
     });
 
-  const { getByText } = await renderHome();
+  const { getByText } = await renderDiscover();
   expect(getByText(/discover/i, { selector: 'h1' })).toBeVisible();
 });
 
@@ -68,7 +68,7 @@ test('renders discover with guidance, about and members', async () => {
       ],
     });
 
-  const { queryAllByText, getByText } = await renderHome();
+  const { queryAllByText, getByText } = await renderDiscover();
   expect(getByText(/about/i, { selector: 'h1' })).toBeVisible();
   expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
 });
@@ -95,7 +95,7 @@ test('renders discover with members', async () => {
       ],
     });
 
-  const { getByText } = await renderHome();
+  const { getByText } = await renderDiscover();
   expect(getByText('CEO')).toBeVisible();
 });
 
@@ -122,6 +122,6 @@ test('renders discover with members role', async () => {
       ],
     });
 
-  const { getByText } = await renderHome();
+  const { getByText } = await renderDiscover();
   expect(getByText('CEO at ASAP')).toBeVisible();
 });

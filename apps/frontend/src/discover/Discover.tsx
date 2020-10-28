@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import {
   DiscoverPage,
-  DiscoverPageBody,
   Paragraph,
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { useDiscover } from '../api';
 import ErrorBoundary from '../errors/ErrorBoundary';
+
+const loadBody = () => import(/* webpackChunkName: "discover-body" */ './Body');
+const Body = React.lazy(loadBody);
+loadBody();
 
 const Discover: React.FC<{}> = () => {
   const { loading, data: discover } = useDiscover();
@@ -30,7 +33,9 @@ const Discover: React.FC<{}> = () => {
     return (
       <DiscoverPage>
         <ErrorBoundary>
-          <DiscoverPageBody {...data} />
+          <Suspense fallback="Loading...">
+            <Body {...data} />
+          </Suspense>
         </ErrorBoundary>
       </DiscoverPage>
     );

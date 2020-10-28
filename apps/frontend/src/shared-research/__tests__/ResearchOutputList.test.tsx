@@ -5,7 +5,7 @@ import nock from 'nock';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { authTestUtils } from '@asap-hub/react-components';
 
-import List from '../List';
+import ResearchOutputList from '../ResearchOutputList';
 import { API_BASE_URL } from '../../config';
 
 // fetch user by code request
@@ -13,13 +13,13 @@ beforeEach(() => {
   nock.cleanAll();
 });
 
-const renderSharedResearchList = async () => {
+const renderResearchOutputList = async () => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={['/shared-research']}>
-            <Route path="/shared-research" component={List} />
+            <Route path="/shared-research" component={ResearchOutputList} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>
@@ -49,7 +49,7 @@ it('renders a list of research outputs', async () => {
         title: `Test Output ${index}`,
       })),
     });
-  const { container } = await renderSharedResearchList();
+  const { container } = await renderResearchOutputList();
   expect(container.textContent).toContain('Test Output 0');
   expect(container.textContent).toContain('Test Output 1');
 });
@@ -69,7 +69,7 @@ it('correctly generates research output link', async () => {
         id: `test-output-id-${index}`,
       })),
     });
-  const { getByText } = await renderSharedResearchList();
+  const { getByText } = await renderResearchOutputList();
   const link = getByText('Test Output 0').closest('a');
   expect(link?.href).toEqual(
     'http://localhost/shared-research/test-output-id-0',
@@ -93,7 +93,7 @@ it('correctly generates team link', async () => {
         },
       })),
     });
-  const { getByText } = await renderSharedResearchList();
+  const { getByText } = await renderResearchOutputList();
   const link = getByText('Team Test Team 0').closest('a');
   expect(link?.href).toEqual('http://localhost/network/teams/test-team-0');
 });

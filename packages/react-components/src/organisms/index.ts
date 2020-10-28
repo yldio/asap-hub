@@ -2,8 +2,8 @@ export * from './auth';
 
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
+export { default as EditLinkModal } from './EditLinkModal';
 export { default as HelpSection } from './HelpSection';
-export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as LinkCard } from './LinkCard';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MembersSection } from './MembersSection';
@@ -21,6 +21,7 @@ export { default as QuestionsSection } from './QuestionsSection';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as RichText } from './RichText';
 export { default as SearchControls } from './SearchControls';
+export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamOverview } from './TeamOverview';
 export { default as Toast } from './Toast';

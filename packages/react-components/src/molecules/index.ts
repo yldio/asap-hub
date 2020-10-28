@@ -11,6 +11,7 @@ export { default as LabeledRadioButton } from './LabeledRadioButton';
 export { default as LabeledTextArea } from './LabeledTextArea';
 export { default as LabeledTextField } from './LabeledTextField';
 export { default as MenuButton } from './MenuButton';
+export { default as Modal } from './Modal';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as PageControls } from './PageControls';
 export { default as ProfilePersonalText } from './ProfilePersonalText';

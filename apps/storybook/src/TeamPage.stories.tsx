@@ -9,6 +9,7 @@ import {
 } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
+import { EditLinkModal } from '@asap-hub/react-components';
 
 export default {
   title: 'Pages / Team',
@@ -136,4 +137,13 @@ export const WorkspaceTab = () => (
   <TeamPage {...commonProps()} workspaceHref="#">
     <TeamWorkspace {...commonProps()} />
   </TeamPage>
+);
+
+export const WorkspaceTabEditLink = () => (
+  <>
+    <TeamPage {...commonProps()} workspaceHref="#">
+      <TeamWorkspace {...commonProps()} />
+    </TeamPage>
+    <EditLinkModal />
+  </>
 );

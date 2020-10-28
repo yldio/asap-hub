@@ -1,7 +1,8 @@
-import useFetch, { UseFetchObjectReturn } from 'use-http';
+import { UseFetchObjectReturn } from 'use-http';
 
 import { API_BASE_URL } from '../config';
 import { useFetchOptions } from './util';
+import useSafeFetch from './use-safe-fetch';
 
 export type OneResult<T> = Omit<UseFetchObjectReturn<T>, 'error'>;
 export const useGetOne = <T>(
@@ -9,10 +10,9 @@ export const useGetOne = <T>(
   { authenticated = true } = {},
 ): OneResult<T> => {
   const url = new URL(endpoint, `${API_BASE_URL}/`).toString();
-  const { error, ...result } = useFetch<T>(
+  const { error, ...result } = useSafeFetch<T>(
     url,
     useFetchOptions({ authenticated }, {}),
-    [url],
   );
   const {
     response: { status, statusText },

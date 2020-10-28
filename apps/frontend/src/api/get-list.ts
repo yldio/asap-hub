@@ -1,7 +1,8 @@
-import useFetch, { UseFetchObjectReturn } from 'use-http';
+import { UseFetchObjectReturn } from 'use-http';
 
 import { API_BASE_URL } from '../config';
 import { useFetchOptions } from './util';
+import useSafeFetch from './use-safe-fetch';
 
 export interface GetListOptions {
   searchQuery?: string;
@@ -38,7 +39,7 @@ export const useGetList = <T>(
   parameters?: GetListOptions,
 ): ListResult<T> => {
   const url = createListApiUrl(endpoint, parameters).toString();
-  const { error, ...result } = useFetch<T>(url, useFetchOptions(), [url]);
+  const { error, ...result } = useSafeFetch<T>(url, useFetchOptions());
 
   if (error) {
     const { name, message, stack } = error;

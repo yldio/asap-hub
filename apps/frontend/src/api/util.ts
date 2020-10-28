@@ -26,6 +26,8 @@ export const useFetchOptions = (
         }
 
         const claims = await getIdTokenClaims();
+
+        /* eslint-disable no-underscore-dangle */
         return overrideRequestInterceptor({
           ...args,
           options: {

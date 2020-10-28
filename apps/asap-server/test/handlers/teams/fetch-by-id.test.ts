@@ -1,5 +1,6 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { decodeToken } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { cms } from '../../../src/config';
@@ -37,10 +38,11 @@ describe('GET /teams/{id} - validations', () => {
     expect(result.statusCode).toStrictEqual(401);
   });
 
-  test('returns 403 when Auth0 fails to verify token', async () => {
-    jest
-      .requireMock('@asap-hub/auth')
-      .decodeToken.mockRejectedValueOnce(new Error());
+  test('returns 401 when Auth0 fails to verify token', async () => {
+    const mockDecodeToken = decodeToken as jest.MockedFunction<
+      typeof decodeToken
+    >;
+    mockDecodeToken.mockRejectedValueOnce(new Error());
 
     const result = (await handler(
       apiGatewayEvent({
@@ -54,7 +56,7 @@ describe('GET /teams/{id} - validations', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(403);
+    expect(result.statusCode).toStrictEqual(401);
   });
 });
 

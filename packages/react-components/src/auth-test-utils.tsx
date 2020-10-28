@@ -93,6 +93,7 @@ export const LoggedIn: React.FC<{
       name: completeUser.displayName,
       given_name: completeUser.firstName,
       family_name: completeUser.lastName,
+      aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
       [getUserClaimKey()]: completeUser,
     };
   }

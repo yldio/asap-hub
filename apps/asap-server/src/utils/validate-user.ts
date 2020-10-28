@@ -20,6 +20,6 @@ export default async function validateUser(
   }
 
   return decodeToken(token).catch(() => {
-    throw Boom.forbidden();
+    throw Boom.unauthorized();
   });
 }

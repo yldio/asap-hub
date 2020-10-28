@@ -2,6 +2,7 @@ import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config } from '@asap-hub/services-common';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import { decodeToken } from '@asap-hub/auth';
 
 import { cms } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
@@ -40,10 +41,11 @@ describe('GET /research-outputs/{id} - validations', () => {
     expect(result.statusCode).toStrictEqual(401);
   });
 
-  test('returns 403 when Auth0 fails to verify token', async () => {
-    jest
-      .requireMock('@asap-hub/auth')
-      .decodeToken.mockRejectedValueOnce(new Error());
+  test('returns 401 when Auth0 fails to verify token', async () => {
+    const mockDecodeToken = decodeToken as jest.MockedFunction<
+      typeof decodeToken
+    >;
+    mockDecodeToken.mockRejectedValueOnce(new Error());
 
     const result = (await handler(
       apiGatewayEvent({
@@ -57,7 +59,7 @@ describe('GET /research-outputs/{id} - validations', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(403);
+    expect(result.statusCode).toStrictEqual(401);
   });
 });
 

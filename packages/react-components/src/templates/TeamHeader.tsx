@@ -117,7 +117,7 @@ const TeamHeader: React.FC<TeamProps> = ({
               buttonStyle
               small
               primary
-              href={`${createMailTo(pointOfContact)}`}
+              href={`${createMailTo(pointOfContact.email)}`}
             >
               Contact PM
             </Link>

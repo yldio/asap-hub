@@ -16,7 +16,14 @@ it('renders the contact banner', () => {
   const { getByRole } = render(
     <TeamAbout
       projectTitle="Title"
-      pointOfContact="test@test.com"
+      pointOfContact={{
+        id: 'uuid',
+        displayName: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'test@test.com',
+        role: 'Project Manager',
+      }}
       skills={[]}
       members={[]}
     />,

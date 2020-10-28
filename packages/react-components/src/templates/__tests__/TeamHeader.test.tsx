@@ -64,7 +64,17 @@ it('renders no more than 5 members', () => {
 
 it('renders a contact button when there is a pointOfContact', () => {
   const { getByText } = render(
-    <TeamHeader {...boilerplateProps} pointOfContact="test@test.com" />,
+    <TeamHeader
+      {...boilerplateProps}
+      pointOfContact={{
+        id: 'uuid',
+        displayName: 'John Doe',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'test@test.com',
+        role: 'Project Manager',
+      }}
+    />,
   );
 
   expect(getByText('Contact PM').parentElement).toHaveAttribute(

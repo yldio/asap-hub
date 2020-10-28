@@ -20,7 +20,14 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
   applicationNumber: 'Unknnow',
   lastModifiedDate: formatISO(subDays(new Date(), 2)),
   skills: [],
-  pointOfContact: 'test@gmail.com',
+  pointOfContact: {
+    id: '2',
+    displayName: 'Peter Venkman',
+    firstName: 'Peter',
+    lastName: 'Venkman',
+    email: 'peter@ven.com',
+    role: 'Project Manager',
+  },
   members: [
     {
       id: '1',

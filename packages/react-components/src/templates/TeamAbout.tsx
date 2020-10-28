@@ -36,7 +36,10 @@ const TeamAbout: React.FC<TeamAboutProps> = ({
     {skills.length ? <ProfileSkills skills={skills} /> : null}
     {members.length ? <MembersSection members={members} /> : null}
     {pointOfContact && (
-      <CtaCard href={createMailTo(pointOfContact)} buttonText="Contact PM">
+      <CtaCard
+        href={createMailTo(pointOfContact.email)}
+        buttonText="Contact PM"
+      >
         <strong>Interested in what you have seen?</strong>
         <br /> Reach out to this team and see how you can collaborate
       </CtaCard>

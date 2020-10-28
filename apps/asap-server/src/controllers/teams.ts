@@ -33,8 +33,7 @@ function transformTeam(team: CMSTeam, members: TeamMember[]): TeamResponse {
     projectSummary: team.data.projectSummary?.iv,
     skills: team.data.skills?.iv || [],
     lastModifiedDate: team.lastModified,
-    pointOfContact: members.find(({ role }) => role === 'Project Manager')
-      ?.email,
+    pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     proposalURL: team.data.proposal?.iv[0],
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
   };

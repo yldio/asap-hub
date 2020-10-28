@@ -33,7 +33,7 @@ export interface TeamResponse extends TeamCreateRequest {
   skills: string[];
   members: TeamMember[];
   lastModifiedDate: string;
-  pointOfContact?: string;
+  pointOfContact?: TeamMember;
 }
 
 export type ListTeamResponse = ListResponse<TeamResponse>;

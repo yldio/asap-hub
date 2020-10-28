@@ -1,5 +1,5 @@
-jest.mock('@asap-hub/auth', () => ({
-  decodeToken: jest.fn().mockResolvedValue({
+export const decodeToken = () => {
+  return Promise.resolve({
     'https://hub.asap.science/user': {
       id: 'userId',
       displayName: 'JT',
@@ -24,5 +24,5 @@ jest.mock('@asap-hub/auth', () => ({
     exp: 1603857328,
     auth_time: 1603821323,
     nonce: 'onlyOnce',
-  }),
-}));
+  });
+};

@@ -29,12 +29,13 @@ const linkContainerStyles = css({
 
 type TeamWorkspaceProps = Pick<
   TeamResponse,
-  'pointOfContact' | 'lastModifiedDate'
+  'pointOfContact' | 'lastModifiedDate' | 'tools'
 >;
 
 const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
   pointOfContact,
   lastModifiedDate,
+  tools = [],
 }) => (
   <div css={containerStyles}>
     <Card>
@@ -43,20 +44,13 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
         This directory contains the most important links for your team's
         internally shared resources and what each link is used for.
       </Paragraph>
-      <div css={linkContainerStyles}>
-        <LinkCard
-          name="Slack (#team-ferguson)"
-          description="Chat privately with your team members or seek out others in the ASAP Network"
-        />
-        <LinkCard
-          name="Google Drive"
-          description="Access your team's private and secure Google Drive with unlimited storage"
-        />
-        <LinkCard
-          name="Protocols.io"
-          description="Post and find protocols privately within your team or share with the ASAP Network"
-        />
-      </div>
+      {!!tools.length && (
+        <div css={linkContainerStyles}>
+          {tools.map(({ name, description }) => (
+            <LinkCard name={name} description={description} />
+          ))}
+        </div>
+      )}
       <Button>Add a new team link</Button>
       <Caption asParagraph>
         Last edited on {formatDateAndTime(new Date(lastModifiedDate))}

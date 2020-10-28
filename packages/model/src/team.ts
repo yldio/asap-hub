@@ -10,6 +10,8 @@ export type TeamRole =
   | 'Staff'
   | 'Advisor';
 
+export type TeamTool = { name: string; description: string; url: string };
+
 export interface TeamCreateRequest {
   displayName: string;
   applicationNumber: string;
@@ -34,6 +36,7 @@ export interface TeamResponse extends TeamCreateRequest {
   members: TeamMember[];
   lastModifiedDate: string;
   pointOfContact?: TeamMember;
+  tools?: TeamTool[];
 }
 
 export type ListTeamResponse = ListResponse<TeamResponse>;

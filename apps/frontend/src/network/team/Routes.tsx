@@ -10,8 +10,11 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
 const loadOutputs = () =>
   import(/* webpackChunkName: "network-team-outputs" */ './Outputs');
+const loadWorkspace = () =>
+  import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
 const About = React.lazy(loadAbout);
 const Outputs = React.lazy(loadOutputs);
+const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
 const Team: React.FC<{}> = () => {
@@ -36,6 +39,7 @@ const Team: React.FC<{}> = () => {
       ...team,
       aboutHref: join(url, 'about'),
       outputsHref: join(url, 'outputs'),
+      workspaceHref: join(url, 'workspace'),
     };
 
     return (
@@ -55,6 +59,9 @@ const Team: React.FC<{}> = () => {
               </Route>
               <Route path={`${path}/outputs`}>
                 <Outputs />
+              </Route>
+              <Route path={`${path}/workspace`}>
+                <Workspace {...team} />
               </Route>
               <Redirect to={join(url, 'about')} />
             </Switch>

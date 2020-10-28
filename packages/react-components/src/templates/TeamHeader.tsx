@@ -78,10 +78,10 @@ const TeamHeader: React.FC<TeamProps> = ({
   lastModifiedDate,
   members,
   pointOfContact,
-
   aboutHref,
   outputsHref,
   workspaceHref,
+  tools,
 }) => {
   return (
     <header css={containerStyles}>
@@ -137,9 +137,16 @@ const TeamHeader: React.FC<TeamProps> = ({
         )}
       </section>
       <TabNav>
-        <TabLink href={aboutHref}>About</TabLink>
-        <TabLink href={workspaceHref}>Team Workspace</TabLink>
-        <TabLink href={outputsHref}>Outputs</TabLink>
+        {tools
+          ? [
+              <TabLink href={aboutHref}>About</TabLink>,
+              <TabLink href={workspaceHref}>Team Workspace</TabLink>,
+              <TabLink href={outputsHref}>Outputs</TabLink>,
+            ]
+          : [
+              <TabLink href={aboutHref}>About</TabLink>,
+              <TabLink href={outputsHref}>Outputs</TabLink>,
+            ]}
       </TabNav>
     </header>
   );

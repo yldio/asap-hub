@@ -41,7 +41,7 @@ export const createTeamResponseMembers = ({ teamMembers = 0 }): TeamMember[] =>
   }));
 
 export const createTeamResponse = (
-  { tools, teamMembers }: FixtureOptions,
+  { tools, teamMembers }: FixtureOptions = {},
   itemIndex = 0,
 ): TeamResponse => ({
   ...listTeamResponseItem,

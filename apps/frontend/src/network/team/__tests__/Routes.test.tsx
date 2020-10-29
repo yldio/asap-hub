@@ -9,21 +9,12 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { TeamResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
-
+import { createTeamResponse } from '@asap-hub/fixtures';
 import { API_BASE_URL } from '@asap-hub/frontend/src/config';
+
 import Team from '../Routes';
 
-const team: TeamResponse = {
-  id: '42',
-  displayName: 'Unknown',
-  applicationNumber: 'Unknown Number',
-  projectTitle: 'Unknown Project Title',
-  projectSummary: 'Unknown Project Summary',
-  lastModifiedDate: new Date().toISOString(),
-  members: [],
-  skills: [],
-};
-
+const team = createTeamResponse();
 let interceptor: nock.Interceptor;
 beforeEach(() => {
   nock.cleanAll();
@@ -113,4 +104,30 @@ it('renders the not found page for a 404', async () => {
 
   const { getByText } = await renderTeam();
   expect(getByText(/sorry.+page/i)).toBeVisible();
+});
+
+describe('the workspace', () => {
+  it('does not render a link to workspaces when tools omitted', async () => {
+    interceptor.reply(200, createTeamResponse());
+    const { queryByText } = await renderTeam();
+    expect(queryByText(/team workspace/i)).not.toBeInTheDocument();
+  });
+
+  it('renders a link to workspaces when tools provided', async () => {
+    interceptor.reply(200, createTeamResponse({ tools: 1 }));
+    const { getByText } = await renderTeam();
+    expect(getByText(/team workspace/i).closest('a')).toHaveAttribute(
+      'href',
+      '/42/workspace',
+    );
+  });
+
+  it('navigates to the outputs', async () => {
+    interceptor.reply(200, createTeamResponse({ tools: 1 }));
+
+    const { getByText, findByText } = await renderTeam();
+
+    userEvent.click(getByText(/team workspace/i, { selector: 'nav *' }));
+    expect(await findByText(/team collaboration tools/i)).toBeVisible();
+  });
 });

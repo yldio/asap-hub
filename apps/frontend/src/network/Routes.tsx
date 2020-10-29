@@ -24,7 +24,7 @@ const ProfileList = React.lazy(loadProfileList);
 const Profile = React.lazy(loadProfile);
 const TeamList = React.lazy(loadTeamList);
 const Team = React.lazy(loadTeam);
-loadProfileList();
+loadTeamList();
 
 const Network: React.FC<{}> = () => {
   useEffect(() => {

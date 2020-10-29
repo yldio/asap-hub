@@ -1,7 +1,5 @@
 import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
-import { Auth0User, config } from '.';
-
-import pubKeys from './pubKeys';
+import { Auth0User, config, auth0PubKeys } from '@asap-hub/auth';
 
 const certToPEM = (cert: string): string => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -11,7 +9,7 @@ const certToPEM = (cert: string): string => {
 };
 
 const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
-  const key = pubKeys.find(({ kid }) => kid === header.kid)?.x5c;
+  const key = auth0PubKeys.find(({ kid }) => kid === header.kid)?.x5c;
   if (!key || !key.length) {
     return cb(new Error(`Unable to find Public Key with kid=${header.kid}`));
   }

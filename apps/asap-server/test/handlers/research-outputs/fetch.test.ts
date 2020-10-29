@@ -2,13 +2,15 @@ import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { config } from '@asap-hub/services-common';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { decodeToken } from '@asap-hub/auth';
 
 import { identity } from '../../helpers/squidex';
 import { cms } from '../../../src/config';
 import { CMSResearchOutput } from '../../../src/entities/research-outputs';
 import { handler } from '../../../src/handlers/research-outputs/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
+import decodeToken from '../../../src/utils/validate-token';
+
+jest.mock('../../../src/utils/validate-token')
 
 describe('GET /research-outputs - failure', () => {
   test('return 401 when Authentication header is not set', async () => {

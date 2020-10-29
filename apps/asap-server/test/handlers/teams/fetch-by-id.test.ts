@@ -1,12 +1,14 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { decodeToken } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { teamsResponse } from './fetch.fixtures';
+import decodeToken from '../../../src/utils/validate-token';
+
+jest.mock('../../../src/utils/validate-token')
 
 describe('GET /teams/{id} - validations', () => {
   test('return 401 when Authentication header is not set', async () => {

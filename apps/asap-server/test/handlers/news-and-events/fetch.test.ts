@@ -8,6 +8,8 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
 
+jest.mock('../../../src/utils/validate-token')
+
 describe('GET /news-and-events', () => {
   beforeAll(() => {
     identity();

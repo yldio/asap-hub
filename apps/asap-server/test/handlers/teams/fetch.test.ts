@@ -1,6 +1,4 @@
 import nock from 'nock';
-import Chance from 'chance';
-
 import { APIGatewayProxyResult } from 'aws-lambda';
 
 import { handler } from '../../../src/handlers/teams/fetch';
@@ -9,7 +7,7 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
 
-const chance = new Chance();
+jest.mock('../../../src/utils/validate-token')
 
 describe('GET /teams', () => {
   beforeAll(() => {
@@ -38,7 +36,7 @@ describe('GET /teams', () => {
           skip: '8',
         },
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -81,7 +79,7 @@ describe('GET /teams', () => {
           search: 'Cristiano Ronaldo',
         },
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -107,7 +105,7 @@ describe('GET /teams', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -144,7 +142,7 @@ describe('GET /teams', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;

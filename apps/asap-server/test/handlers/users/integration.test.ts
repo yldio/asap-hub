@@ -8,6 +8,8 @@ import { handler } from '../../../src/handlers/users/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/users';
 
+jest.mock('../../../src/utils/validate-token')
+
 const users = new Squidex<CMSUser>('users');
 describe('GET /users/{id}', () => {
   let user: UserResponse;

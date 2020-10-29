@@ -9,8 +9,11 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { createUserOnTeam } from '../../helpers/users';
 import { createRandomTeam } from '../../helpers/teams';
 
+jest.mock('../../../src/utils/validate-token')
+
 const teams = new Squidex<CMSTeam>('teams');
 const users = new Squidex<CMSUser>('users');
+
 describe('GET /teams/{id}', () => {
   let user: UserResponse;
   let team: CMSTeam;

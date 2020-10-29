@@ -2,9 +2,9 @@ import type { Auth0Client } from '@auth0/auth0-spa-js';
 import type { UserResponse } from '@asap-hub/model';
 
 import * as config from './config';
+import auth0PubKeys from './pubKeys';
 
-export { default as decodeToken } from './decode-token';
-export { config };
+export { config, auth0PubKeys };
 
 export type User = Pick<
   UserResponse,

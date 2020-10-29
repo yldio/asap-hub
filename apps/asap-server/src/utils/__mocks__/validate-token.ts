@@ -1,4 +1,5 @@
-export const decodeToken = jest.fn().mockResolvedValue({
+/* eslint-disable @typescript-eslint/camelcase */
+const decodeToken = jest.fn().mockResolvedValue({
   'https://hub.asap.science/user': {
     id: 'userId',
     displayName: 'JT',
@@ -24,3 +25,4 @@ export const decodeToken = jest.fn().mockResolvedValue({
   auth_time: 1603821323,
   nonce: 'onlyOnce',
 });
+export default decodeToken

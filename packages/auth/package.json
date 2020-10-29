@@ -13,14 +13,12 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@babel/runtime-corejs3": "^7.9.6",
-    "jsonwebtoken": "^8.5.1"
+    "@babel/runtime-corejs3": "^7.9.6"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
     "@asap-hub/model": "workspace:packages/model",
     "@auth0/auth0-spa-js": "^1.9.0",
-    "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^12.12.0"
   }
 }

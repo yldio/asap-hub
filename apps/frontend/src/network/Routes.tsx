@@ -28,13 +28,13 @@ loadTeamList();
 
 const Network: React.FC<{}> = () => {
   useEffect(() => {
-    loadProfileList()
-      // Team toggle can be pressed very quickly
-      .then(loadTeamList)
-      // Profile can be clicked only after the list has been fetched
-      .then(loadProfile)
-      // Team can be clicked only after clicking the toggle and the list has been fetched
-      .then(loadTeam);
+    loadTeamList()
+      // Profile toggle can be pressed very quickly
+      .then(loadProfileList)
+      // Team can be clicked only after the list has been fetched
+      .then(loadTeam)
+      // Profile can be clicked only after clicking the toggle and the list has been fetched
+      .then(loadProfile);
   }, []);
 
   const { path } = useRouteMatch();

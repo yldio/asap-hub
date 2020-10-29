@@ -46,8 +46,12 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
       </Paragraph>
       {!!tools.length && (
         <div css={linkContainerStyles}>
-          {tools.map(({ name, description }) => (
-            <LinkCard name={name} description={description} />
+          {tools.map(({ name, description }, index) => (
+            <LinkCard
+              key={`link-${index}`}
+              name={name}
+              description={description}
+            />
           ))}
         </div>
       )}
@@ -63,7 +67,7 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
           Everyone else on the Hub can contact your team via the email address
           of your Project Manager,{' '}
           <Link href={createMailTo(pointOfContact.email)}>
-            {pointOfContact.firstName} {pointOfContact.lastName}
+            {pointOfContact.displayName}
           </Link>
           .
         </Paragraph>

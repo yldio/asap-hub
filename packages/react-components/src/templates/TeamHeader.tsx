@@ -139,13 +139,23 @@ const TeamHeader: React.FC<TeamProps> = ({
       <TabNav>
         {tools
           ? [
-              <TabLink href={aboutHref}>About</TabLink>,
-              <TabLink href={workspaceHref}>Team Workspace</TabLink>,
-              <TabLink href={outputsHref}>Outputs</TabLink>,
+              <TabLink key="1" href={aboutHref}>
+                About
+              </TabLink>,
+              <TabLink key="2" href={workspaceHref}>
+                Team Workspace
+              </TabLink>,
+              <TabLink key="3" href={outputsHref}>
+                Outputs
+              </TabLink>,
             ]
           : [
-              <TabLink href={aboutHref}>About</TabLink>,
-              <TabLink href={outputsHref}>Outputs</TabLink>,
+              <TabLink key="1" href={aboutHref}>
+                About
+              </TabLink>,
+              <TabLink key="2" href={outputsHref}>
+                Outputs
+              </TabLink>,
             ]}
       </TabNav>
     </header>

@@ -5,7 +5,8 @@ import { handler } from '../../../src/handlers/webhooks/webhook-fetch-by-code';
 import { apiGatewayEvent } from '../../helpers/events';
 import { auth0SharedSecret as secret, cms } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
-import fetchUserResponse from './webhook-fetch-by-code.fixtures';
+import { buildGraphQLQueryFetchUsers } from '../../../src/controllers/users';
+import { fetchUserResponse } from './webhook-fetch-by-code.fixtures';
 
 describe('POST /webhook/users/{code} - validation', () => {
   test("return 400 when code isn't present", async () => {
@@ -67,7 +68,7 @@ describe('POST /webhook/users/{code} - validation', () => {
   });
 });
 
-describe('POST /webhook/users/{code}', () => {
+describe('GET /webhook/users/{code}', () => {
   beforeAll(() => {
     identity();
   });
@@ -78,12 +79,21 @@ describe('POST /webhook/users/{code}', () => {
 
   test("returns 403 when code doesn't exist", async () => {
     nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users`)
-      .query({
-        $top: 1,
-        $filter: `data/connections/iv/code eq 'notFound'`,
+      .post(`/api/content/${cms.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUsers(
+          `data/connections/iv/code eq 'notFound'`,
+          1,
+          0,
+        ),
       })
-      .reply(404);
+      .reply(200, {
+        data: {
+          queryUsersContentsWithTotal: {
+            total: 0,
+            items: [],
+          },
+        },
+      });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -102,12 +112,18 @@ describe('POST /webhook/users/{code}', () => {
 
   test('returns 200 when user exists', async () => {
     nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users`)
-      .query({
-        $top: 1,
-        $filter: `data/connections/iv/code eq 'welcomeCode'`,
+      .post(`/api/content/${cms.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUsers(
+          `data/connections/iv/code eq 'welcomeCode'`,
+          1,
+          0,
+        ),
       })
-      .reply(200, fetchUserResponse);
+      .reply(200, {
+        data: {
+          queryUsersContentsWithTotal: fetchUserResponse,
+        },
+      });
 
     const result = (await handler(
       apiGatewayEvent({

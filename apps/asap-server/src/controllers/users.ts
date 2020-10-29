@@ -240,8 +240,22 @@ export default class Users {
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const user = await fetchByCode(code, this.users.client);
-    return parseUser(user);
+    const query = buildGraphQLQueryFetchUsers(
+      `data/connections/iv/code eq '${code}'`,
+      1,
+      0,
+    );
+    const { queryUsersContentsWithTotal } = await this.client.request<
+      ResponseFetchUsers,
+      unknown
+    >(query);
+
+    const { total, items } = queryUsersContentsWithTotal;
+    if (total !== 1) {
+      throw Boom.forbidden();
+    }
+
+    return parseGraphQLUser(items[0]);
   }
 
   async connectByCode(

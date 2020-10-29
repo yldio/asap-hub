@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import WelcomePage from '../WelcomePage';
+import { noop } from '../../utils';
 
 it('renders the signin page ', () => {
   const handleClick = jest.fn();
@@ -17,4 +18,12 @@ it('renders the signup page', () => {
   expect(getByRole('button').textContent).toMatchInlineSnapshot(
     `"Create account"`,
   );
+});
+
+it('shows an auth failed error message', () => {
+  const { queryByText, rerender } = render(<WelcomePage onClick={noop} />);
+  expect(queryByText(/problem/i)).not.toBeInTheDocument();
+
+  rerender(<WelcomePage authFailed onClick={noop} />);
+  expect(queryByText(/problem/i)).toBeVisible();
 });

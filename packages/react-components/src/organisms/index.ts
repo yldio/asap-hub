@@ -23,4 +23,5 @@ export { default as RichText } from './RichText';
 export { default as SearchControls } from './SearchControls';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamOverview } from './TeamOverview';
+export { default as Toast } from './Toast';
 export { default as UserNavigation } from './UserNavigation';

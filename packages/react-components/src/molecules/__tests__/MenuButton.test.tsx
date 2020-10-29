@@ -13,7 +13,7 @@ describe('when open', () => {
   it('renders a button to close the menu', () => {
     const { getByLabelText, getByTitle } = render(<MenuButton open />);
     expect(getByLabelText(/toggle menu/i)).toContainElement(
-      getByTitle(/cross/i),
+      getByTitle(/close/i),
     );
   });
 });

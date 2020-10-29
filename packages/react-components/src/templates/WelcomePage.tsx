@@ -7,6 +7,9 @@ import { Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { backgroundNeuronsImage } from '../images';
 import { themes } from '../theme';
+import { Toast } from '../organisms';
+import { noop } from '../utils';
+import { mailToSupport } from '../mail';
 
 const values = {
   signup: {
@@ -36,17 +39,22 @@ const values = {
 
 const containerStyles = css({
   height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
   overflow: 'auto',
+
+  backgroundImage: `url(${backgroundNeuronsImage})`,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+});
+const bodyStyles = css({
+  flexGrow: 1,
 
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'space-between',
   alignContent: 'space-between',
   alignItems: 'center',
-
-  backgroundImage: `url(${backgroundNeuronsImage})`,
-  backgroundPosition: 'center',
-  backgroundSize: 'cover',
 });
 
 const headerStyles = css({
@@ -88,41 +96,58 @@ const placeholderStyles = css({
 
 type WelcomePageProps = Pick<ComponentProps<typeof WelcomeCard>, 'onClick'> & {
   readonly allowSignup?: boolean;
+
+  readonly authFailed?: boolean;
+  readonly onCloseAuthFailedToast?: () => void;
 };
 const WelcomePage: React.FC<WelcomePageProps> = ({
   allowSignup = false,
+  authFailed = false,
+  onCloseAuthFailedToast = noop,
   ...props
 }) => {
   const copy = allowSignup ? values.signup : values.welcome;
 
   return (
     <div css={[themes.dark, containerStyles]}>
-      <div css={headerStyles}>
-        <Header transparent />
+      {authFailed && (
+        <Toast onClose={onCloseAuthFailedToast}>
+          There was a problem with your account. If this issue persists, please
+          contact{' '}
+          <Link theme={null} href={mailToSupport}>
+            <span css={{ textDecoration: 'underline' }}>ASAP Support</span>
+          </Link>
+          .
+        </Toast>
+      )}
+      <div css={bodyStyles}>
+        <div css={headerStyles}>
+          <Header transparent />
+        </div>
+        <main css={welcomeStyles}>
+          <WelcomeCard
+            title={copy.title}
+            content={copy.content}
+            buttonText={copy.buttonText}
+            {...props}
+          >
+            {copy.footer && copy.footer()}
+          </WelcomeCard>
+        </main>
+        <ul css={linksContainerStyles}>
+          <li css={linkItemStyles}>
+            <Link href="/terms-and-conditions" theme="dark">
+              Terms and conditions
+            </Link>
+          </li>
+          <li css={linkItemStyles}>
+            <Link href="/privacy-policy" theme="dark">
+              Privacy policy
+            </Link>
+          </li>
+        </ul>
+        <div css={placeholderStyles} />
       </div>
-      <main css={welcomeStyles}>
-        <WelcomeCard
-          title={copy.title}
-          content={copy.content}
-          buttonText={copy.buttonText}
-          {...props}
-        >
-          {copy.footer && copy.footer()}
-        </WelcomeCard>
-      </main>
-      <ul css={linksContainerStyles}>
-        <li css={linkItemStyles}>
-          <Link href="/terms-and-conditions" theme="dark">
-            Terms and conditions
-          </Link>
-        </li>
-        <li css={linkItemStyles}>
-          <Link href="/privacy-policy" theme="dark">
-            Privacy policy
-          </Link>
-        </li>
-      </ul>
-      <div css={placeholderStyles} />
     </div>
   );
 };

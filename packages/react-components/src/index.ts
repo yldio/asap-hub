@@ -72,6 +72,7 @@ export {
   SearchControls,
   SsoButtons,
   TeamCard,
+  Toast,
   UserNavigation,
 } from './organisms';
 export {

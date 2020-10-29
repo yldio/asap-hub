@@ -9,8 +9,8 @@ import nock from 'nock';
 import { UserResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
 
-import Profile from '../Profile';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '@asap-hub/frontend/src/config';
+import Profile from '../Routes';
 
 const user: UserResponse = {
   id: '42',

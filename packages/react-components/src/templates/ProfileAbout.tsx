@@ -9,7 +9,7 @@ const styles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-interface ProfileAboutProps {
+export interface ProfileAboutProps {
   biography?: ComponentProps<typeof ProfileBiography>['biography'];
   biosketch?: ComponentProps<typeof ProfileBiography>['biosketch'];
   orcidWorks?: ComponentProps<typeof ProfileRecentWorks>['orcidWorks'];

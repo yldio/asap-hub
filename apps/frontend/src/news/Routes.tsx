@@ -1,19 +1,25 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NewsAndEventsPage } from '@asap-hub/react-components';
 
-import NewsAndEvents from './NewsAndEvents';
 import ErrorBoundary from '../errors/ErrorBoundary';
 
-const Users: React.FC<{}> = () => {
+const loadBody = () =>
+  import(/* webpackChunkName: "news-and-events-body" */ './Body');
+const Body = React.lazy(loadBody);
+loadBody();
+
+const NewsAndEvents: React.FC<{}> = () => {
   const { path } = useRouteMatch();
 
   return (
     <Switch>
-      <Route exact path={`${path}`}>
+      <Route exact path={path}>
         <NewsAndEventsPage>
           <ErrorBoundary>
-            <NewsAndEvents />
+            <Suspense fallback="Loading...">
+              <Body />
+            </Suspense>
           </ErrorBoundary>
         </NewsAndEventsPage>
       </Route>
@@ -21,4 +27,4 @@ const Users: React.FC<{}> = () => {
   );
 };
 
-export default Users;
+export default NewsAndEvents;

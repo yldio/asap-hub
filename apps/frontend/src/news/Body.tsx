@@ -3,7 +3,7 @@ import { NewsAndEventsPageBody, Paragraph } from '@asap-hub/react-components';
 
 import { useNewsAndEvents } from '../api';
 
-const NewsAndEvents: React.FC = () => {
+const Body: React.FC<{}> = () => {
   const result = useNewsAndEvents();
 
   if (result.loading) {
@@ -13,4 +13,4 @@ const NewsAndEvents: React.FC = () => {
   return <NewsAndEventsPageBody newsAndEvents={result.data.items} />;
 };
 
-export default NewsAndEvents;
+export default Body;

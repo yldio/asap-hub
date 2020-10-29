@@ -5,7 +5,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { ListNewsAndEventsResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
 
-import NewsAndEventsPage from '../NewsAndEvents';
+import NewsAndEventsPage from '../Routes';
 import { API_BASE_URL } from '../../config';
 
 const newsAndEvents: ListNewsAndEventsResponse = {

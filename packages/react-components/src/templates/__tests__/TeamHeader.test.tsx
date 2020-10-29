@@ -57,7 +57,10 @@ it('renders a list of members', () => {
 
 it('renders no more than 5 members', () => {
   const { getByLabelText, getAllByLabelText } = render(
-    <TeamHeader {...boilerplateProps} members={createTeamResponseMembers(6)} />,
+    <TeamHeader
+      {...boilerplateProps}
+      members={createTeamResponseMembers({ teamMembers: 6 })}
+    />,
   );
   expect(getAllByLabelText(/pic.+ of .+/)).toHaveLength(5);
   expect(getByLabelText(/\+1/)).toBeVisible();

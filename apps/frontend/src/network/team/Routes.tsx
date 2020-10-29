@@ -60,9 +60,11 @@ const Team: React.FC<{}> = () => {
               <Route path={`${path}/outputs`}>
                 <Outputs />
               </Route>
-              <Route path={`${path}/workspace`}>
-                <Workspace {...team} />
-              </Route>
+              {team.tools && (
+                <Route path={`${path}/workspace`}>
+                  <Workspace {...team} />
+                </Route>
+              )}
               <Redirect to={join(url, 'about')} />
             </Switch>
           </Suspense>

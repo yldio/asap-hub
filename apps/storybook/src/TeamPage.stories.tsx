@@ -1,7 +1,12 @@
 import React, { ComponentProps } from 'react';
 import { formatISO, subDays } from 'date-fns';
 import { text } from '@storybook/addon-knobs';
-import { TeamPage, TeamAbout, TeamOutputs } from '@asap-hub/react-components';
+import {
+  TeamPage,
+  TeamAbout,
+  TeamOutputs,
+  TeamWorkspace,
+} from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
 
@@ -28,6 +33,26 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
     email: 'peter@ven.com',
     role: 'Project Manager',
   },
+  tools: [
+    {
+      name: 'Slack (#team-ferguson)',
+      description:
+        'Chat privately with your team members or seek out others in the ASAP Network',
+      url: '/wrong',
+    },
+    {
+      name: 'Google Drive',
+      description:
+        "Access your team's private and secure Google Drive with unlimited storage",
+      url: '/wrong',
+    },
+    {
+      name: 'Protocols.io',
+      description:
+        'Post and find protocols privately within your team or share with the ASAP Network',
+      url: '/wrong',
+    },
+  ],
   members: [
     {
       id: '1',
@@ -104,5 +129,11 @@ export const AboutTab = () => (
 export const OutputsTab = () => (
   <TeamPage {...commonProps()} outputsHref="#">
     <TeamOutputs />
+  </TeamPage>
+);
+
+export const WorkspaceTab = () => (
+  <TeamPage {...commonProps()} workspaceHref="#">
+    <TeamWorkspace {...commonProps()} />
   </TeamPage>
 );

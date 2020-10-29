@@ -1,12 +1,23 @@
-import { ListTeamResponse, TeamMember } from '@asap-hub/model';
+import {
+  ListTeamResponse,
+  TeamMember,
+  TeamTool,
+  TeamResponse,
+} from '@asap-hub/model';
 
-const listTeamMember: Omit<ListTeamResponse['items'][0]['members'][0], 'id'> = {
+const teamMember: Omit<ListTeamResponse['items'][0]['members'][0], 'id'> = {
   firstName: 'Mason',
   lastName: 'Carpenter',
   email: 'mason@car.com',
   displayName: 'Birdie Romeo',
   role: 'Lead PI',
 };
+
+const teamTool = (id: number): TeamTool => ({
+  description: 'Description of the tool',
+  name: `Tool Name ${id}`,
+  url: `/tool-${id}`,
+});
 
 const listTeamResponseItem: Omit<ListTeamResponse['items'][0], 'id'> = {
   displayName: 'Abu-Remaileh, M',
@@ -18,23 +29,42 @@ const listTeamResponseItem: Omit<ListTeamResponse['items'][0], 'id'> = {
   lastModifiedDate: '2020-09-07T17:36:54Z',
 };
 
-export const createTeamResponseMembers = (teamMembers: number): TeamMember[] =>
+type FixtureOptions = {
+  teamMembers?: number;
+  tools?: number;
+};
+
+export const createTeamResponseMembers = ({ teamMembers = 0 }): TeamMember[] =>
   Array.from({ length: teamMembers }, (__, memberIndex) => ({
-    ...listTeamMember,
+    ...teamMember,
     id: `tm${memberIndex}`,
   }));
 
+export const createTeamResponse = (
+  { tools, teamMembers }: FixtureOptions,
+  itemIndex = 0,
+): TeamResponse => ({
+  ...listTeamResponseItem,
+  id: `t${itemIndex}`,
+  displayName: `${listTeamResponseItem.displayName} ${itemIndex + 1}`,
+  members: createTeamResponseMembers({ teamMembers }),
+  ...(tools
+    ? {
+        tools: Array.from({ length: tools }, (___, toolIndex) =>
+          teamTool(toolIndex),
+        ),
+      }
+    : {}),
+});
+
 export const createListTeamResponse = (
   items: number,
-  { teamMembers = 0 } = {},
+  options: FixtureOptions = {},
 ): ListTeamResponse => ({
   total: items,
-  items: Array.from({ length: items }, (_, itemIndex) => ({
-    ...listTeamResponseItem,
-    id: `t${itemIndex}`,
-    displayName: `${listTeamResponseItem.displayName} ${itemIndex + 1}`,
-    members: createTeamResponseMembers(teamMembers),
-  })),
+  items: Array.from({ length: items }, (_, itemIndex) =>
+    createTeamResponse(options, itemIndex),
+  ),
 });
 
 export default createListTeamResponse;

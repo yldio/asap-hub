@@ -1,5 +1,6 @@
 import React from 'react';
 import { TeamResponse } from '@asap-hub/model';
+import css from '@emotion/css';
 
 import {
   Card,
@@ -10,7 +11,6 @@ import {
   Paragraph,
   Link,
 } from '../atoms';
-import css from '@emotion/css';
 import { perRem } from '../pixels';
 import { LinkCard } from '../organisms';
 import { mailToSupport, createMailTo } from '../mail';

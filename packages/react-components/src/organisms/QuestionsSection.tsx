@@ -25,7 +25,7 @@ const QuestionsSection: React.FC<QuestionsSection> = ({
           .flatMap((question, idx) => {
             const component = (
               <Headline3 key={`q-${idx}`} styleAsHeading={4}>
-                {`Q: ${question}`}
+                {question}
               </Headline3>
             );
             return [<Divider key={`sep-${idx}`} />, component];

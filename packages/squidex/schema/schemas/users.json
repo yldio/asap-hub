@@ -540,9 +540,42 @@
           "inlineEditable": false,
           "editor": "Dropdown",
           "label": "ASAP Hub Role",
-          "hints": "",
+          "hints": "Role on the ASAP Hub",
           "placeholder": "",
           "isRequired": true
+        }
+      },
+      {
+        "name": "responsibilities",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Responsibilities",
+          "hints": "Responsibilities on the ASAP Hub (only relevant for \"Staff\" users)",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "reachOut",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Reach Out",
+          "hints": "Reach out reasons (only relevant for \"Staff\" users)",
+          "placeholder": "",
+          "isRequired": false
         }
       },
       {

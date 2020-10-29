@@ -54,6 +54,7 @@ describe('GET /users/{id}', () => {
     } = body;
     expect({
       ...rest,
+      orcidWorks: [],
       avatarUrl: avatarUrl || undefined,
       biography: biography || undefined,
       degree: degree || undefined,

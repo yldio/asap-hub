@@ -2,10 +2,10 @@ import {
   SquidexGraphql,
   GraphqlPage,
   GraphqlNewsOrEvent,
+  GraphqlUser,
 } from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
 import {
-  CMSGraphQLUser,
   parseGraphQLUser,
   parseGraphQLPage,
   parseGraphQLNewsAndEvents,
@@ -68,7 +68,7 @@ interface Response {
     flatData: {
       aboutUs: string;
       training: GraphqlNewsOrEvent[];
-      members: CMSGraphQLUser[];
+      members: GraphqlUser[];
       pages: GraphqlPage[];
     };
   }[];

@@ -5,15 +5,10 @@ import url from 'url';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import { v4 as uuidV4 } from 'uuid';
-import { Squidex, SquidexGraphql } from '@asap-hub/squidex';
+import { Squidex, SquidexGraphql, GraphqlUser } from '@asap-hub/squidex';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
-import {
-  CMSUser,
-  CMSGraphQLUser,
-  parseUser,
-  parseGraphQLUser,
-} from '../entities';
+import { CMSUser, parseUser, parseGraphQLUser } from '../entities';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
@@ -66,6 +61,9 @@ flatData {
       }
     }
   }
+  role
+  responsibilities
+  reachOut
 }`;
 
 export const buildGraphQLQueryFetchUsers = (
@@ -92,12 +90,12 @@ export const buildGraphQLQueryFetchUser = (id: string): string =>
 export interface ResponseFetchUsers {
   queryUsersContentsWithTotal: {
     total: number;
-    items: CMSGraphQLUser[];
+    items: GraphqlUser[];
   };
 }
 
 export interface ResponseFetchUser {
-  findUsersContent: CMSGraphQLUser;
+  findUsersContent: GraphqlUser;
 }
 
 const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {

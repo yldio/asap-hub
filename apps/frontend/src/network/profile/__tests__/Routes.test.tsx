@@ -24,6 +24,7 @@ const user: UserResponse = {
   biography: 'Biography Text',
   skills: [],
   questions: ['Question?'],
+  role: 'Grantee',
 };
 
 const team = {

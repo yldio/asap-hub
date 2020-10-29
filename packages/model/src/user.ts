@@ -92,6 +92,7 @@ export interface UserResponse extends Invitee {
   biosketch?: string;
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
+  role: 'Staff' | 'Grantee' | 'Guest';
 }
 
 export type ListUserResponse = ListResponse<UserResponse>;

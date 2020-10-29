@@ -54,6 +54,11 @@ const editPersonalInfoStyles = css({
   gridArea: 'edit-personal-info',
   justifySelf: 'end',
 });
+
+const staffContainerStyles = css({
+  paddingBottom: `${36 / perRem}em`,
+});
+
 const personalInfoStyles = css({
   gridArea: 'personal-info',
 
@@ -118,6 +123,7 @@ type ProfileProps = Pick<
   | 'lastModifiedDate'
   | 'lastName'
   | 'location'
+  | 'role'
 > & {
   readonly aboutHref: string;
   readonly researchHref: string;
@@ -148,9 +154,10 @@ const ProfileHeader: React.FC<ProfileProps> = ({
 
   editPersonalInfoHref,
   editContactHref,
+  role,
 }) => {
   return (
-    <header css={containerStyles}>
+    <header css={[containerStyles, role === 'Staff' && staffContainerStyles]}>
       <section css={personalInfoStyles}>
         <div>
           <Display styleAsHeading={2}>{displayName}</Display>
@@ -184,11 +191,13 @@ const ProfileHeader: React.FC<ProfileProps> = ({
       <section
         css={[contactStyles, editContactHref ? null : contactNoEditStyles]}
       >
-        <div css={contactButtonStyles}>
-          <Link small buttonStyle primary href={createMailTo(email)}>
-            Contact
-          </Link>
-        </div>
+        {role !== 'Staff' ? (
+          <div css={contactButtonStyles}>
+            <Link small buttonStyle primary href={createMailTo(email)}>
+              Contact
+            </Link>
+          </div>
+        ) : null}
         {lastModifiedDate && (
           <div css={lastModifiedStyles}>
             <Paragraph accent="lead">
@@ -214,11 +223,13 @@ const ProfileHeader: React.FC<ProfileProps> = ({
         </div>
       )}
       <div css={tabNavStyles}>
-        <TabNav>
-          <TabLink href={researchHref}>Research</TabLink>
-          <TabLink href={aboutHref}>Background</TabLink>
-          <TabLink href={outputsHref}>Shared Outputs</TabLink>
-        </TabNav>
+        {role !== 'Staff' ? (
+          <TabNav>
+            <TabLink href={researchHref}>Research</TabLink>
+            <TabLink href={aboutHref}>Background</TabLink>
+            <TabLink href={outputsHref}>Shared Outputs</TabLink>
+          </TabNav>
+        ) : null}
       </div>
     </header>
   );

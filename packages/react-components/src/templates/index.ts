@@ -26,6 +26,7 @@ export { default as ProfileAbout } from './ProfileAbout';
 export { default as ProfileHeader } from './ProfileHeader';
 export { default as ProfileOutputs } from './ProfileOutputs';
 export { default as ProfilePage } from './ProfilePage';
+export { default as ProfileStaff } from './ProfileStaff';
 export { default as ProfileResearch } from './ProfileResearch';
 export { default as RecordOutputForm } from './RecordOutputForm';
 export { default as RecordOutputPage } from './RecordOutputPage';

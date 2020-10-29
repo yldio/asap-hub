@@ -16,9 +16,12 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-profile-about" */ './About');
 const loadOutputs = () =>
   import(/* webpackChunkName: "network-profile-outputs" */ './Outputs');
+const loadStaff = () =>
+  import(/* webpackChunkName: "network-profile-staff" */ './Staff');
 const Research = React.lazy(loadResearch);
 const About = React.lazy(loadAbout);
 const Outputs = React.lazy(loadOutputs);
+const Staff = React.lazy(loadStaff);
 loadResearch();
 
 const Profile: React.FC<{}> = () => {
@@ -41,15 +44,13 @@ const Profile: React.FC<{}> = () => {
   if (profile) {
     const teams = profile.teams.map(({ proposal, ...team }) => ({
       ...team,
-      href: `/network/teams/${team.id}`,
+      href: team.id === '0' ? `/discover` : `/network/teams/${team.id}`,
       proposalHref: proposal ? `/shared-research/${proposal}` : undefined,
     }));
 
     const profilePageProps = {
       ...profile,
-
       teams,
-
       aboutHref: join(url, 'about'),
       researchHref: join(url, 'research'),
       outputsHref: join(url, 'outputs'),
@@ -59,19 +60,22 @@ const Profile: React.FC<{}> = () => {
       <ProfilePage {...profilePageProps}>
         <ErrorBoundary>
           <Suspense fallback="Loading...">
-            <Switch>
-              <Route path={`${path}/research`}>
-                <Research {...profile} teams={teams} />
-              </Route>
-              <Route path={`${path}/about`}>
-                <About {...profile} />
-              </Route>
-              <Route path={`${path}/outputs`}>
-                <Outputs />
-              </Route>
-
-              <Redirect to={join(url, 'research')} />
-            </Switch>
+            {profile.role === 'Staff' ? (
+              <Staff {...profile} teams={teams} />
+            ) : (
+              <Switch>
+                <Route path={`${path}/research`}>
+                  <Research {...profile} teams={teams} />
+                </Route>
+                <Route path={`${path}/about`}>
+                  <About {...profile} />
+                </Route>
+                <Route path={`${path}/outputs`}>
+                  <Outputs />
+                </Route>{' '}
+                <Redirect to={join(url, 'research')} />
+              </Switch>
+            )}
           </Suspense>
         </ErrorBoundary>
       </ProfilePage>

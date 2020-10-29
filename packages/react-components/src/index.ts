@@ -104,6 +104,7 @@ export {
   ProfileHeader,
   ProfileOutputs,
   ProfilePage,
+  ProfileStaff,
   ProfileResearch,
   RecordOutputForm,
   RecordOutputPage,

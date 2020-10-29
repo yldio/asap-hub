@@ -2,15 +2,15 @@ import { TeamRole } from '@asap-hub/model';
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 
-export interface UserTeamConnection<T> {
+export interface UserTeamConnection<T = string> {
   role: TeamRole;
-  approach: string;
-  responsibilities: string;
+  approach?: string;
+  responsibilities?: string;
   id: T[];
 }
 
-interface User<T = string> {
-  avatar: string[];
+interface User<TAvatar = string, TConnection = string> {
+  avatar: TAvatar[];
   biography?: string;
   connections: { code: string }[];
   degree?: 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD';
@@ -24,11 +24,15 @@ interface User<T = string> {
   location?: string;
   orcid?: string;
   questions: { question: string }[];
-  role: 'Staff' | 'Grantee' | 'Guest';
+  role: 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
   skills: string[];
+  responsibilities?: string;
+  reachOut?: string;
   skillsDescription?: string;
-  teams: UserTeamConnection<T>[];
+  teams: UserTeamConnection<TConnection>[];
 }
 
 export interface RestUser extends Entity, Rest<User> {}
-export interface GraphqlUser extends Entity, Graphql<User<GraphqlTeam>> {}
+export interface GraphqlUser
+  extends Entity,
+    Graphql<User<{ id: string }, GraphqlTeam>> {}

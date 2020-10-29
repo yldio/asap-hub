@@ -26,6 +26,7 @@ const response: ListUserResponse = {
       skills: [],
       questions: ['Question?'],
       avatarUrl: 'http://rup.cy/kebmazus',
+      role: 'Grantee',
     },
     {
       id: '253d02fe-8af2-4ab9-b4e2-c864d3f3cc5c',
@@ -44,6 +45,7 @@ const response: ListUserResponse = {
       skills: [],
       questions: [],
       avatarUrl: 'http://ehuvazsob.ie/ceteup',
+      role: 'Grantee',
     },
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb6',
@@ -66,6 +68,7 @@ const response: ListUserResponse = {
       orcidWorks: [],
       skills: [],
       questions: [],
+      role: 'Grantee',
     },
   ],
 };

@@ -159,6 +159,7 @@ describe('GET /discover', () => {
           skills: [],
           teams: [],
           avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-1`,
+          role: 'Guest',
         },
         {
           id: 'uuid-2',
@@ -171,6 +172,7 @@ describe('GET /discover', () => {
           questions: [],
           skills: [],
           teams: [],
+          role: 'Guest',
         },
       ],
       aboutUs: '<p>content<p>',

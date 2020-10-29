@@ -10,6 +10,7 @@ export const response: { data: ResponseFetchUsers } = {
           id: 'userId1',
           lastModified: '2020-10-26T15:33:18Z',
           created: '2020-09-23T20:45:22Z',
+          data: null,
           flatData: {
             avatar: [],
             displayName: 'Tom Hardy',
@@ -27,6 +28,7 @@ export const response: { data: ResponseFetchUsers } = {
                     id: 'userId3',
                     created: '2020-09-23T20:45:22Z',
                     lastModified: '2020-10-26T15:33:18Z',
+                    data: null,
                     flatData: {
                       applicationNumber: 'applicationNumber',
                       projectTitle: 'Awesome project',
@@ -38,12 +40,15 @@ export const response: { data: ResponseFetchUsers } = {
                 ],
               },
             ],
+            role: 'Grantee',
+            connections: [],
           },
         },
         {
           id: 'userId2',
           created: '2020-09-23T20:45:22Z',
           lastModified: '2020-10-26T15:33:18Z',
+          data: null,
           flatData: {
             avatar: null,
             displayName: 'Arnold Schwatzneger',
@@ -67,10 +72,13 @@ export const response: { data: ResponseFetchUsers } = {
                       displayName: 'Jackson, M',
                       skills: [],
                     },
+                    data: null,
                   },
                 ],
               },
             ],
+            connections: [],
+            role: 'Grantee',
           },
         },
       ],
@@ -99,6 +107,7 @@ export const expectation: ListUserResponse = {
           proposal: 'proposalId',
         },
       ],
+      role: 'Grantee',
     },
     {
       id: 'userId2',
@@ -117,6 +126,7 @@ export const expectation: ListUserResponse = {
           displayName: 'Jackson, M',
         },
       ],
+      role: 'Grantee',
     },
   ],
 };

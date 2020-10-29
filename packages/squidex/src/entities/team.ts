@@ -15,4 +15,4 @@ interface Team<T = string> {
 }
 
 export interface RestTeam extends Entity, Rest<Team> {}
-export interface GraphqlTeam extends Entity, Graphql<Team<never>> {}
+export interface GraphqlTeam extends Entity, Graphql<Team<{ id: string }>> {}

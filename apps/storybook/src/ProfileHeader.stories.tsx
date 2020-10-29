@@ -1,5 +1,5 @@
 import React from 'react';
-import { date, text, number } from '@storybook/addon-knobs';
+import { date, text, number, select } from '@storybook/addon-knobs';
 import { ProfileHeader } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './decorators';
 
@@ -33,6 +33,7 @@ const commonProps = () => ({
   aboutHref: '/other',
   researchHref: '/other',
   outputsHref: '/other',
+  role: select('Role', ['Staff', 'Grantee', 'Guest'], 'Staff'),
 });
 
 export const ViewOnly = () => <ProfileHeader {...commonProps()} />;

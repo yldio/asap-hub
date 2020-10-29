@@ -10,7 +10,7 @@ import { globalToken } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
 import { CMSUser } from '../../../src/entities';
 
-jest.mock('../../../src/utils/validate-token')
+jest.mock('../../../src/utils/validate-token');
 
 jest.mock('aws-sdk', () => {
   const m = {

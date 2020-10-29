@@ -2,7 +2,7 @@ import Boom from '@hapi/boom';
 import { Auth0User } from '@asap-hub/auth';
 import { framework as lambda } from '@asap-hub/services-common';
 
-import decodeToken from './validate-token'
+import decodeToken from './validate-token';
 
 export default async function validateUser(
   request: lambda.Request,

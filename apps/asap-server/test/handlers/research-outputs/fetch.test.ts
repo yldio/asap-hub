@@ -10,7 +10,7 @@ import { handler } from '../../../src/handlers/research-outputs/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import decodeToken from '../../../src/utils/validate-token';
 
-jest.mock('../../../src/utils/validate-token')
+jest.mock('../../../src/utils/validate-token');
 
 describe('GET /research-outputs - failure', () => {
   test('return 401 when Authentication header is not set', async () => {

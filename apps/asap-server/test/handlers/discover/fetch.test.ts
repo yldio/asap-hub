@@ -7,7 +7,7 @@ import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
-jest.mock('../../../src/utils/validate-token')
+jest.mock('../../../src/utils/validate-token');
 
 describe('GET /discover', () => {
   beforeAll(() => {

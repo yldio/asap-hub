@@ -9,7 +9,7 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { createUserOnTeam } from '../../helpers/users';
 import { createRandomTeam } from '../../helpers/teams';
 
-jest.mock('../../../src/utils/validate-token')
+jest.mock('../../../src/utils/validate-token');
 
 const teams = new Squidex<CMSTeam>('teams');
 const users = new Squidex<CMSUser>('users');

@@ -25,4 +25,4 @@ const decodeToken = jest.fn().mockResolvedValue({
   auth_time: 1603821323,
   nonce: 'onlyOnce',
 });
-export default decodeToken
+export default decodeToken;

@@ -7,7 +7,7 @@ import { buildGraphQLQueryFetchUser } from '../../../src/controllers/users';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
-jest.mock('../../../src/utils/validate-token')
+jest.mock('../../../src/utils/validate-token');
 
 describe('GET /users/{id}', () => {
   test("return 400 when id isn't present", async () => {

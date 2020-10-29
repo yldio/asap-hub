@@ -9,7 +9,7 @@ import { handler } from '../../../src/handlers/research-outputs/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import decodeToken from '../../../src/utils/validate-token';
 
-jest.mock('../../../src/utils/validate-token')
+jest.mock('../../../src/utils/validate-token');
 
 const id = 'uuid';
 

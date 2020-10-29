@@ -61,7 +61,7 @@
           "label": "First Name",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": true
         }
       },
       {
@@ -78,7 +78,7 @@
           "label": "Last Name",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": true
         }
       },
       {
@@ -249,7 +249,7 @@
           "fieldType": "Array",
           "minItems": 0,
           "maxItems": 4,
-          "label": "Questions",
+          "label": "Open Questions",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -516,7 +516,7 @@
               "isUnique": false,
               "inlineEditable": false,
               "editor": "Input",
-              "label": "Main research interests",
+              "label": "Main Research Interests",
               "isRequired": false
             }
           },

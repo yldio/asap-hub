@@ -3,10 +3,13 @@ import css from '@emotion/css';
 import { UserResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Headline3, Link, Paragraph } from '../atoms';
-import { mobileScreen } from '../pixels';
+import { mobileScreen, perRem } from '../pixels';
 
 type ProfileBackgroundProps = UserResponse['teams'][0] &
-  Pick<UserResponse, 'firstName'>;
+  Pick<UserResponse, 'firstName'> & {
+    readonly proposalHref?: string;
+    readonly href: string;
+  };
 
 const dynamicContainerStyles = css({
   display: 'flex',
@@ -17,32 +20,51 @@ const dynamicContainerStyles = css({
   },
 });
 
+const linksContainer = css({
+  display: 'grid',
+
+  gridColumnGap: `${30 / perRem}em`,
+  justifyContent: 'stretch',
+
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    grid: '"1fr 1fr"',
+    justifyContent: 'flex-start',
+  },
+});
+
 const teamContentStyle = css({
   flex: 1,
 });
 
 const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
-  id,
   firstName,
   displayName,
   role,
   approach = '',
   responsibilities = '',
+  proposalHref,
+  href,
 }) => {
   return (
     <Card>
-      <Headline2 styleAsHeading={3}>{firstName}'s Research</Headline2>
+      <Headline2 styleAsHeading={3}>{firstName}'s Role on ASAP</Headline2>
       <div>
         <div css={dynamicContainerStyles}>
           <div css={teamContentStyle}>
             <Headline3 styleAsHeading={5}>Team</Headline3>
-            <Link href={`/network/teams/${id}`}>Team {displayName}</Link>
+            <Link href={href}>Team {displayName}</Link>
           </div>
           <div css={teamContentStyle}>
             <Headline3 styleAsHeading={5}>Role</Headline3>
             <Paragraph>{role}</Paragraph>
           </div>
         </div>
+        {approach && (
+          <div>
+            <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
+            <Paragraph>{approach}</Paragraph>
+          </div>
+        )}
         {responsibilities && (
           <div>
             <Headline3 styleAsHeading={5}>
@@ -51,15 +73,14 @@ const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
             <Paragraph>{responsibilities}</Paragraph>
           </div>
         )}
-        {approach && (
-          <div>
-            <Headline3 styleAsHeading={5}>Approach</Headline3>
-            <Paragraph>{approach}</Paragraph>
-          </div>
-        )}
       </div>
-      <div css={dynamicContainerStyles}>
-        <Link buttonStyle href={`/network/teams/${id}`}>
+      <div css={linksContainer}>
+        {proposalHref ? (
+          <Link buttonStyle primary href={proposalHref}>
+            Read Team Proposal
+          </Link>
+        ) : null}
+        <Link buttonStyle href={href}>
           Meet the Team
         </Link>
       </div>

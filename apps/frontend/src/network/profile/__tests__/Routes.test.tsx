@@ -109,4 +109,39 @@ describe('with team', () => {
       ]
     `);
   });
+
+  it('Calculates links with proposal', async () => {
+    nock.cleanAll();
+    nock(API_BASE_URL, {
+      reqheaders: { authorization: 'Bearer token' },
+    })
+      .get('/users/43')
+      .reply(200, {
+        ...user,
+        id: '43',
+        teams: [
+          {
+            ...team,
+            proposal: 'uuid',
+          },
+        ],
+      });
+    const { queryAllByRole, getByText } = await renderProfile('43');
+    const loadingIndicator = getByText(/loading/i);
+    await waitForElementToBeRemoved(loadingIndicator);
+    const links = (await queryAllByRole('link')) as HTMLAnchorElement[];
+    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
+      Array [
+        "http://localhost/network/teams/100",
+        "mailto:john.doe@example.com",
+        "http://localhost/43/research",
+        "http://localhost/43/about",
+        "http://localhost/43/outputs",
+        "http://localhost/network/teams/100",
+        "http://localhost/shared-research/uuid",
+        "http://localhost/network/teams/100",
+        "mailto:john.doe@example.com",
+      ]
+    `);
+  });
 });

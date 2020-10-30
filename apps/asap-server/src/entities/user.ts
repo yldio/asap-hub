@@ -100,7 +100,7 @@ export const parseGraphQLUserTeamConnection = (
     role: item.role,
     approach: item.approach,
     responsibilities: item.responsibilities,
-    proposal: proposal ? proposal[0].id : undefined,
+    proposal: proposal && proposal.length ? proposal[0].id : undefined,
     displayName,
   };
 };

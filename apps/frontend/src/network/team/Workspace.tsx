@@ -1,5 +1,5 @@
 import { TeamWorkspace } from '@asap-hub/react-components';
 
-const Outputs = TeamWorkspace;
+const Workspace = TeamWorkspace;
 
-export default Outputs;
+export default Workspace;

@@ -10,8 +10,11 @@ const certToPEM = (cert: string): string => {
 
 const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
   const key = auth0PubKeys.find(({ kid }) => kid === header.kid)?.x5c;
-  if (!key || !key.length) {
+  if (!key) {
     return cb(new Error(`Unable to find Public Key with kid=${header.kid}`));
+  }
+  if (!key.length || !key[0].trim().length) {
+    return cb(new Error('Received an invalid key'));
   }
   return cb(null, certToPEM(key[0]));
 };

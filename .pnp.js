@@ -8827,6 +8827,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
+            ["@types/jest", "npm:26.0.3"],
             ["@types/node", "npm:12.12.55"]
           ],
           "linkType": "SOFT",

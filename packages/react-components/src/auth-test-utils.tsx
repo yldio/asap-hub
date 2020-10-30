@@ -41,7 +41,7 @@ export const Auth0Provider: React.FC<{
         popupOpen: false,
         isAuthenticated: false,
         getIdTokenClaims: auth0Client
-          ? (...args) => auth0Client.getIdTokenClaims(...args).then()
+          ? (...args) => auth0Client.getIdTokenClaims(...args)
           : notReady('getIdTokenClaims'),
         getTokenSilently: notImplemented('getTokenSilently'),
         getTokenWithPopup: notImplemented('getTokenWithPopup'),

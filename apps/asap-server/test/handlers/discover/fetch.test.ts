@@ -1,12 +1,13 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 import { DiscoverResponse } from '@asap-hub/model';
 
 import { handler } from '../../../src/handlers/discover/fetch';
 import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
+
+jest.mock('../../../src/utils/validate-token');
 
 describe('GET /discover', () => {
   beforeAll(() => {
@@ -18,7 +19,6 @@ describe('GET /discover', () => {
   });
 
   test('returns 200 when no information exists', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
       .reply(200, {
@@ -50,7 +50,6 @@ describe('GET /discover', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
       .reply(200, {

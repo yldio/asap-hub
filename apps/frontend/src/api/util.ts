@@ -18,18 +18,20 @@ export const useFetchOptions = (
     ...overrideOptions
   }: UseFetchOptions & RequestInit = {},
 ): UseFetchOptions & RequestInit => {
-  const { isAuthenticated, getTokenSilently } = useAuth0();
+  const { isAuthenticated, getIdTokenClaims } = useAuth0();
   const requestInterceptor: Interceptors['request'] = authenticated
     ? async ({ options: { headers, ...options }, ...args }) => {
         if (!isAuthenticated) {
           throw new Error('No authorization bearer token available');
         }
+
+        /* eslint-disable no-underscore-dangle */
         return overrideRequestInterceptor({
           ...args,
           options: {
             ...options,
             headers: {
-              authorization: `Bearer ${await getTokenSilently()}`,
+              authorization: `Bearer ${(await getIdTokenClaims()).__raw}`,
               ...headers,
             },
           },

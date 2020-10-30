@@ -40,10 +40,13 @@ describe('useCurrentUser', () => {
 
   it('throws if the Auth0 user is missing the user claim', async () => {
     const { result } = renderHook(useCurrentUser, {
-      wrapper: userProvider({ sub: '42' }),
+      wrapper: userProvider({
+        sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+      }),
     });
     expect(result.error).toMatchInlineSnapshot(
-      `[Error: Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub]]`,
+      `[Error: Auth0 user is missing user claim - expected claim key http://localhost/user, got keys [sub, aud]]`,
     );
   });
 
@@ -51,6 +54,7 @@ describe('useCurrentUser', () => {
     const { result } = renderHook(useCurrentUser, {
       wrapper: userProvider({
         sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
         [`${window.location.origin}/user`]: 'testuser',
       }),
     });
@@ -63,6 +67,7 @@ describe('useCurrentUser', () => {
     const { result } = renderHook(useCurrentUser, {
       wrapper: userProvider({
         sub: '42',
+        aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
         [`${window.location.origin}/user`]: {
           id: 'testuser',
           email: 'john.doe@example.com',

@@ -1,13 +1,14 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { Squidex } from '@asap-hub/services-common';
-import { config as authConfig } from '@asap-hub/auth';
 import { UserResponse } from '@asap-hub/model';
 
 import { CMSUser } from '../../../src/entities/user';
 import { handler } from '../../../src/handlers/users/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/users';
+
+jest.mock('../../../src/utils/validate-token');
 
 const users = new Squidex<CMSUser>('users');
 describe('GET /users/{id}', () => {
@@ -30,7 +31,6 @@ describe('GET /users/{id}', () => {
   });
 
   test('returns 200 when users exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     const result = (await handler(
       apiGatewayEvent({
         httpMethod: 'get',

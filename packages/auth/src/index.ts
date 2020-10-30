@@ -2,8 +2,9 @@ import type { Auth0Client } from '@auth0/auth0-spa-js';
 import type { UserResponse } from '@asap-hub/model';
 
 import * as config from './config';
+import auth0PubKeys from './pubKeys';
 
-export { config };
+export { config, auth0PubKeys };
 
 export type User = Pick<
   UserResponse,
@@ -18,6 +19,7 @@ export interface Auth0User {
   readonly given_name?: string;
   readonly family_name?: string;
   readonly orcid?: string;
+  readonly aud: string;
   readonly [customUserClaim: string]: string | undefined | User;
 }
 

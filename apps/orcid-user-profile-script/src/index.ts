@@ -36,6 +36,7 @@ const fetchOrcidUserProfile: UserProfileFetcher<{}, string> = (
     family_name: idToken.family_name,
     name: `${idToken.given_name} ${idToken.family_name}`,
     orcid: idToken.sub,
+    aud: idToken.aud,
   };
   cb(null, profile);
 };

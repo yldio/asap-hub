@@ -1,8 +1,5 @@
 import nock from 'nock';
-import Chance from 'chance';
-
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 
 import { handler } from '../../../src/handlers/teams/fetch';
 import { cms } from '../../../src/config';
@@ -10,7 +7,7 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
 
-const chance = new Chance();
+jest.mock('../../../src/utils/validate-token');
 
 describe('GET /teams', () => {
   beforeAll(() => {
@@ -22,7 +19,6 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when no teams exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
@@ -40,7 +36,7 @@ describe('GET /teams', () => {
           skip: '8',
         },
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -55,7 +51,6 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when searching teams by name', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
@@ -84,7 +79,7 @@ describe('GET /teams', () => {
           search: 'Cristiano Ronaldo',
         },
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -98,7 +93,6 @@ describe('GET /teams', () => {
   });
 
   test("returns empty response when resource doesn't exist", async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
@@ -111,7 +105,7 @@ describe('GET /teams', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -126,7 +120,6 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when teams exist', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${cms.appName}/teams`)
       .query({
@@ -149,7 +142,7 @@ describe('GET /teams', () => {
       apiGatewayEvent({
         httpMethod: 'get',
         headers: {
-          Authorization: `Bearer ${chance.string()}`,
+          Authorization: 'Bearer token',
         },
       }),
     )) as APIGatewayProxyResult;

@@ -40,7 +40,9 @@ export const Auth0Provider: React.FC<{
         loading: !auth0Client,
         popupOpen: false,
         isAuthenticated: false,
-        getIdTokenClaims: notImplemented('getIdTokenClaims'),
+        getIdTokenClaims: auth0Client
+          ? (...args) => auth0Client.getIdTokenClaims(...args)
+          : notReady('getIdTokenClaims'),
         getTokenSilently: notImplemented('getTokenSilently'),
         getTokenWithPopup: notImplemented('getTokenWithPopup'),
         handleRedirectCallback: auth0Client
@@ -91,6 +93,7 @@ export const LoggedIn: React.FC<{
       name: completeUser.displayName,
       given_name: completeUser.firstName,
       family_name: completeUser.lastName,
+      aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
       [getUserClaimKey()]: completeUser,
     };
   }
@@ -102,6 +105,7 @@ export const LoggedIn: React.FC<{
         isAuthenticated: true,
         user: auth0User,
         getTokenSilently: async () => 'token',
+        getIdTokenClaims: async () => ({ __raw: 'token' }),
       }}
     >
       {children}

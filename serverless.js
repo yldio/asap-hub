@@ -53,6 +53,7 @@ module.exports = {
     },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
+      AUTH0_CLIENT_ID: `\${env:AUTH0_CLIENT_ID}`,
       AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
       NODE_ENV: `\${env:NODE_ENV}`,
       SQUIDEX_APP_NAME: `\${env:SQUIDEX_APP_NAME}`,

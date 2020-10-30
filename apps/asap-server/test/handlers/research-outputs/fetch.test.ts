@@ -1,14 +1,16 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config as authConfig } from '@asap-hub/auth';
 import { config } from '@asap-hub/services-common';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { identity } from '../../helpers/squidex';
 import { cms } from '../../../src/config';
 import { CMSResearchOutput } from '../../../src/entities/research-outputs';
 import { handler } from '../../../src/handlers/research-outputs/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import decodeToken from '../../../src/utils/validate-token';
+
+jest.mock('../../../src/utils/validate-token');
 
 describe('GET /research-outputs - failure', () => {
   test('return 401 when Authentication header is not set', async () => {
@@ -34,8 +36,11 @@ describe('GET /research-outputs - failure', () => {
     expect(result.statusCode).toStrictEqual(401);
   });
 
-  test('returns 403 when Auth0 fails to verify token', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(404);
+  test('returns 401 when Auth0 fails to verify token', async () => {
+    const mockDecodeToken = decodeToken as jest.MockedFunction<
+      typeof decodeToken
+    >;
+    mockDecodeToken.mockRejectedValueOnce(new Error());
 
     const result = (await handler(
       apiGatewayEvent({
@@ -46,22 +51,7 @@ describe('GET /research-outputs - failure', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(result.statusCode).toStrictEqual(403);
-  });
-
-  test('returns 403 when Auth0 is unavailable', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(500);
-
-    const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-        headers: {
-          Authorization: `Bearer token`,
-        },
-      }),
-    )) as APIGatewayProxyResult;
-
-    expect(result.statusCode).toStrictEqual(403);
+    expect(result.statusCode).toStrictEqual(401);
   });
 });
 
@@ -75,7 +65,6 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of empty research outputs', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs`)
       .query({
@@ -101,7 +90,6 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of research outputs', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs`)
       .query({
@@ -169,7 +157,6 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of research outputs - when searching', async () => {
-    nock(`https://${authConfig.domain}`).get('/userinfo').reply(200);
     nock(cms.baseUrl)
       .get(`/api/content/${config.cms.appName}/research-outputs`)
       .query({

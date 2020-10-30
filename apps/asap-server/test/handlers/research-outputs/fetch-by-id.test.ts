@@ -1,9 +1,8 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config } from '@asap-hub/services-common';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import { config } from '@asap-hub/squidex';
 
-import { cms } from '../../../src/config';
 import { identity } from '../../helpers/squidex';
 import { handler } from '../../../src/handlers/research-outputs/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
@@ -75,8 +74,8 @@ describe('GET /research-outputs/{id}', () => {
   });
 
   test('returns 200 and the research output content a list of research outputs', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/research-outputs/${id}`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/research-outputs/${id}`)
       .reply(200, {
         id: 'uuid',
         created: '2020-09-23T16:34:26.842Z',
@@ -86,7 +85,7 @@ describe('GET /research-outputs/{id}', () => {
           text: { iv: 'Text' },
         },
       })
-      .get(`/api/content/${config.cms.appName}/teams`)
+      .get(`/api/content/${config.appName}/teams`)
       .query({
         q: JSON.stringify({
           take: 1,
@@ -139,8 +138,8 @@ describe('GET /research-outputs/{id}', () => {
   });
 
   test('returns 200 and the research output without team', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/research-outputs/${id}`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/research-outputs/${id}`)
       .reply(200, {
         id: 'uuid',
         created: '2020-09-23T16:34:26.842Z',
@@ -150,7 +149,7 @@ describe('GET /research-outputs/{id}', () => {
           text: { iv: 'Text' },
         },
       })
-      .get(`/api/content/${config.cms.appName}/teams`)
+      .get(`/api/content/${config.appName}/teams`)
       .query({
         q: JSON.stringify({
           take: 1,

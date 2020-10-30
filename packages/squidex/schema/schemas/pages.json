@@ -1,0 +1,120 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "pages",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Pages"
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Title",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "path",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Path",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "shortText",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Short Text",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "text",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "RichText",
+          "label": "Text",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "link",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "External Link",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "linkText",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "External Link Text",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      }
+    ],
+    "previewUrls": {
+      "Web": "https://hub.asap.science${data.path.iv}"
+    },
+    "category": "Content",
+    "isPublished": true
+  }
+}

@@ -1,9 +1,9 @@
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex, RestPage } from '@asap-hub/squidex';
 import { PageResponse } from '@asap-hub/model';
-import { CMSPage, parsePage } from '../entities';
+import { parsePage } from '../entities';
 
 export default class Pages {
-  pages: Squidex<CMSPage>;
+  pages: Squidex<RestPage>;
 
   constructor() {
     this.pages = new Squidex('pages');

@@ -1,4 +1,4 @@
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import { ListNewsAndEventsResponse } from '@asap-hub/model';
 
 import { CMSNewsAndEvents, parseNewsAndEvents } from '../entities';

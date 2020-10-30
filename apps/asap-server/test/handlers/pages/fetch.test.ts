@@ -1,7 +1,7 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
-import { cms } from '../../../src/config';
 import { handler } from '../../../src/handlers/pages/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
@@ -16,8 +16,8 @@ describe('Get /pages/{path+}', () => {
   });
 
   test('returns 200 when page is found', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/pages`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/pages`)
       .query({
         q: JSON.stringify({
           take: 1,
@@ -53,8 +53,8 @@ describe('Get /pages/{path+}', () => {
   });
 
   test("returns 404 when page isn't found", async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/pages`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/pages`)
       .query({
         q: JSON.stringify({
           take: 1,

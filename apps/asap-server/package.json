@@ -13,6 +13,7 @@
     "@asap-hub/auth": "workspace:packages/auth",
     "@asap-hub/model": "workspace:packages/model",
     "@asap-hub/services-common": "workspace:packages/services-common",
+    "@asap-hub/squidex": "workspace:packages/squidex",
     "@babel/runtime-corejs3": "^7.9.6",
     "@hapi/boom": "^9.1.0",
     "@hapi/bourne": "^2.0.0",

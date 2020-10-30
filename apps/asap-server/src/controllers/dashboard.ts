@@ -1,71 +1,40 @@
-import { GraphQL } from '@asap-hub/services-common';
-import { DashboardResponse } from '@asap-hub/model';
 import {
-  CMSNewsAndEvents,
-  parseNewsAndEvents,
-  CMSPage,
-  parsePage,
-} from '../entities';
+  SquidexGraphql,
+  GraphqlPage,
+  GraphqlNewsOrEvent,
+} from '@asap-hub/squidex';
+import { DashboardResponse } from '@asap-hub/model';
+import { parseGraphQLPage, parseGraphQLNewsAndEvents } from '../entities';
 
 export const query = `
   {
     queryDashboardContents {
-      data {
+      flatData {
         news {
-          iv {
-            id
-            created
-            data {
-              title {
-                iv
-              }
-              shortText {
-                iv
-              }
-              text {
-                iv
-              }
-              type {
-                iv
-              }
-              thumbnail {
-                iv {
-                  id
-                }
-              }
-              link {
-                iv
-              }
-              linkText {
-                iv
-              }
+          id
+          created
+          flatData {
+            title 
+            shortText 
+            text 
+            type 
+            thumbnail {
+              id
             }
+            link 
+            linkText 
           }
         }
         pages {
-          iv {
-            id
-            created
-            data {
-              path {
-                iv
-              }
-              title {
-                iv
-              }
-              shortText {
-                iv
-              }
-              text {
-                iv
-              }
-              link {
-                iv
-              }
-              linkText {
-                iv
-              }
-            }
+          id
+          created
+          flatData {
+            path
+            title
+            shortText
+            text
+            link
+            linkText
           }
         }
       }
@@ -75,22 +44,18 @@ export const query = `
 
 interface Response {
   queryDashboardContents: {
-    data: {
-      news: {
-        iv: CMSNewsAndEvents[];
-      };
-      pages: {
-        iv: CMSPage[];
-      };
+    flatData: {
+      news?: GraphqlNewsOrEvent[];
+      pages?: GraphqlPage[];
     };
   }[];
 }
 
 export default class Dashboard {
-  client: GraphQL;
+  client: SquidexGraphql;
 
   constructor() {
-    this.client = new GraphQL();
+    this.client = new SquidexGraphql();
   }
 
   async fetch(): Promise<DashboardResponse> {
@@ -104,9 +69,12 @@ export default class Dashboard {
 
     return {
       newsAndEvents:
-        res.queryDashboardContents[0].data.news?.iv.map(parseNewsAndEvents) ??
+        res.queryDashboardContents[0].flatData.news?.map(
+          parseGraphQLNewsAndEvents,
+        ) ?? [],
+      pages:
+        res.queryDashboardContents[0].flatData.pages?.map(parseGraphQLPage) ??
         [],
-      pages: res.queryDashboardContents[0].data.pages?.iv.map(parsePage) ?? [],
     };
   }
 }

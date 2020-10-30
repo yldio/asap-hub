@@ -1,9 +1,8 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex, RestTeam, RestUser } from '@asap-hub/squidex';
 import { UserResponse } from '@asap-hub/model';
 
-import { CMSTeam, CMSUser } from '../../../src/entities';
 import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createUserOnTeam } from '../../helpers/users';
@@ -11,12 +10,12 @@ import { createRandomTeam } from '../../helpers/teams';
 
 jest.mock('../../../src/utils/validate-token');
 
-const teams = new Squidex<CMSTeam>('teams');
-const users = new Squidex<CMSUser>('users');
+const teams = new Squidex<RestTeam>('teams');
+const users = new Squidex<RestUser>('users');
 
 describe('GET /teams/{id}', () => {
   let user: UserResponse;
-  let team: CMSTeam;
+  let team: RestTeam;
 
   beforeAll(async () => {
     team = await createRandomTeam();

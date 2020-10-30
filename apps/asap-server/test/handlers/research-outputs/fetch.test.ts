@@ -1,10 +1,9 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config } from '@asap-hub/services-common';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import { config } from '@asap-hub/squidex';
 
 import { identity } from '../../helpers/squidex';
-import { cms } from '../../../src/config';
 import { CMSResearchOutput } from '../../../src/entities/research-outputs';
 import { handler } from '../../../src/handlers/research-outputs/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
@@ -65,8 +64,8 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of empty research outputs', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/research-outputs`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/research-outputs`)
       .query({
         q: JSON.stringify({
           take: 8,
@@ -90,8 +89,8 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of research outputs', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/research-outputs`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/research-outputs`)
       .query({
         q: JSON.stringify({
           take: 8,
@@ -112,7 +111,7 @@ describe('GET /research-outputs/{id} - success', () => {
           },
         ],
       } as { total: number; items: CMSResearchOutput[] })
-      .get(`/api/content/${config.cms.appName}/teams`)
+      .get(`/api/content/${config.appName}/teams`)
       .query(() => true)
       .reply(200, {
         total: 1,
@@ -157,8 +156,8 @@ describe('GET /research-outputs/{id} - success', () => {
   });
 
   test('returns 200 with a list of research outputs - when searching', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${config.cms.appName}/research-outputs`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/research-outputs`)
       .query({
         q: JSON.stringify({
           take: 8,
@@ -188,7 +187,7 @@ describe('GET /research-outputs/{id} - success', () => {
           },
         ],
       } as { total: number; items: CMSResearchOutput[] })
-      .get(`/api/content/${config.cms.appName}/teams`)
+      .get(`/api/content/${config.appName}/teams`)
       .query(() => true)
       .reply(200, {
         total: 1,

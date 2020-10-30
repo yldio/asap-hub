@@ -1,9 +1,9 @@
 import nock from 'nock';
 
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/news-and-events/fetch';
-import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
@@ -20,8 +20,8 @@ describe('GET /news-and-events', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/news-and-events`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/news-and-events`)
       .query({
         q: JSON.stringify({
           take: 8,
@@ -50,8 +50,8 @@ describe('GET /news-and-events', () => {
   });
 
   test("returns empty response when resource doesn't exist", async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/news-and-events`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/news-and-events`)
       .query({
         q: JSON.stringify({
           take: 8,
@@ -80,8 +80,8 @@ describe('GET /news-and-events', () => {
   });
 
   test('returns 200 when news and events exist', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/news-and-events`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/news-and-events`)
       .query({
         q: JSON.stringify({
           take: 8,

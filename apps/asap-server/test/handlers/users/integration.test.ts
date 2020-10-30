@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 import { UserResponse } from '@asap-hub/model';
 
 import { CMSUser } from '../../../src/entities/user';
@@ -45,6 +45,19 @@ describe('GET /users/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toMatchObject(user);
+    const {
+      avatarUrl,
+      biography,
+      degree,
+      orcidLastModifiedDate,
+      ...rest
+    } = body;
+    expect({
+      ...rest,
+      avatarUrl: avatarUrl || undefined,
+      biography: biography || undefined,
+      degree: degree || undefined,
+      orcidLastModifiedDate: orcidLastModifiedDate || undefined,
+    }).toMatchObject(user);
   });
 });

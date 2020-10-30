@@ -1,8 +1,8 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/teams/fetch';
-import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
@@ -19,8 +19,8 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when no teams exist', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/teams`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/teams`)
       .query({
         $orderby: 'data/displayName/iv',
         $top: 8,
@@ -51,8 +51,8 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when searching teams by name', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/teams`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/teams`)
       .query({
         $top: 8,
         $orderby: 'data/displayName/iv',
@@ -66,7 +66,7 @@ describe('GET /teams', () => {
           " or contains(data/skills/iv, 'Ronaldo'))",
       })
       .reply(200, { total: 1, items: fixtures.teamsResponse.items.slice(0, 1) })
-      .get(`/api/content/${cms.appName}/users`)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
       })
@@ -93,8 +93,8 @@ describe('GET /teams', () => {
   });
 
   test("returns empty response when resource doesn't exist", async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/teams`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/teams`)
       .query({
         $top: 8,
         $orderby: 'data/displayName/iv',
@@ -120,19 +120,19 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when teams exist', async () => {
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/teams`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/teams`)
       .query({
         $top: 8,
         $orderby: 'data/displayName/iv',
       })
       .reply(200, fixtures.teamsResponse)
-      .get(`/api/content/${cms.appName}/users`)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
       })
       .reply(200, fixtures.usersResponseTeam1)
-      .get(`/api/content/${cms.appName}/users`)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-2'",
       })

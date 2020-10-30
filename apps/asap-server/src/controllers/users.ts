@@ -5,7 +5,7 @@ import url from 'url';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import { v4 as uuidV4 } from 'uuid';
-import { Squidex, GraphQL } from '@asap-hub/services-common';
+import { Squidex, SquidexGraphql } from '@asap-hub/squidex';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
 import {
@@ -127,10 +127,10 @@ const debug = Debug('users.create');
 export default class Users {
   users: Squidex<CMSUser>;
 
-  client: GraphQL;
+  client: SquidexGraphql;
 
   constructor() {
-    this.client = new GraphQL();
+    this.client = new SquidexGraphql();
     this.users = new Squidex('users');
   }
 

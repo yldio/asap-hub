@@ -1,9 +1,9 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { config } from '@asap-hub/squidex';
 
 import { buildGraphQLQueryFetchUsers } from '../../../src/controllers/users';
 import { handler } from '../../../src/handlers/users/fetch';
-import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
@@ -20,8 +20,8 @@ describe('GET /users', () => {
   });
 
   test('returns 200 when no users exist', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers(),
       })
       .reply(200, {
@@ -62,8 +62,8 @@ describe('GET /users', () => {
       " or contains(data/firstName/iv, 'last')" +
       " or contains(data/institution/iv, 'last')))";
 
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers(filter),
       })
       .reply(200, fixtures.response);
@@ -98,8 +98,8 @@ describe('GET /users', () => {
       " or contains(data/firstName/iv, 'last')" +
       " or contains(data/institution/iv, 'last')))";
 
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers(filter),
       })
       .reply(200, fixtures.response);
@@ -123,8 +123,8 @@ describe('GET /users', () => {
   });
 
   test('returns 200 with the results from the requested page', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers('', 8, 8),
       })
       .reply(200, {

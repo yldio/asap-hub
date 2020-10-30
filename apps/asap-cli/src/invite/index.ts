@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import Intercept from 'apr-intercept';
-import { Squidex } from '@asap-hub/services-common';
+import { Squidex, RestUser } from '@asap-hub/squidex';
 import { RateLimit } from 'async-sema';
 import { v4 as uuidV4 } from 'uuid';
 import path from 'path';
@@ -15,17 +15,7 @@ interface HTTPError extends Error {
   };
 }
 
-interface SimpleUser {
-  id: string;
-  data: {
-    displayName: { iv: string };
-    email: { iv: string };
-    role: { iv: string };
-    connections: { iv: { code: string }[] };
-  };
-}
-
-const squidex: Squidex<SimpleUser> = new Squidex('users');
+const squidex: Squidex<RestUser> = new Squidex('users');
 
 const limiter = RateLimit(10);
 
@@ -54,7 +44,6 @@ export const inviteUsers = async (
       await limiter();
 
       const code = uuidV4();
-
       const [err1] = await Intercept(
         squidex.patch(user.id, {
           email: user.data.email,
@@ -82,7 +71,7 @@ export const inviteUsers = async (
           to: [user.data.email.iv],
           template: 'Welcome',
           values: {
-            firstName: user.data.displayName.iv,
+            firstName: user.data.firstName.iv,
             link: link.toString(),
           },
         }),

@@ -1,5 +1,6 @@
 import pLimit from 'p-limit';
-import { framework as lambda, Squidex } from '@asap-hub/services-common';
+import { framework as lambda } from '@asap-hub/services-common';
+import { Squidex } from '@asap-hub/squidex';
 
 import Users from '../../controllers/users';
 import { CMSUser } from '../../entities/user';

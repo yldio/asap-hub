@@ -1,4 +1,6 @@
-export const fetchUsersResponse: { total: number; items: object[] } = {
+import { RestUser } from '@asap-hub/squidex';
+
+export const fetchUsersResponse: { total: number; items: RestUser[] } = {
   total: 200,
   items: [
     {
@@ -6,6 +8,7 @@ export const fetchUsersResponse: { total: number; items: object[] } = {
       lastModified: '2020-09-25T11:06:27.164Z',
       created: '2020-09-24T11:06:27.164Z',
       data: {
+        avatar: { iv: [] },
         lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
         displayName: { iv: 'TestUser' },
         email: { iv: 'testUser@asap.science' },
@@ -16,6 +19,10 @@ export const fetchUsersResponse: { total: number; items: object[] } = {
         connections: { iv: [] },
         biography: { iv: 'Biography' },
         location: { iv: 'Lisbon, Portugal' },
+        teams: { iv: [] },
+        questions: { iv: [] },
+        skills: { iv: [] },
+        role: { iv: 'Grantee' },
       },
     },
     {
@@ -23,6 +30,7 @@ export const fetchUsersResponse: { total: number; items: object[] } = {
       lastModified: '2020-09-25T11:06:27.164Z',
       created: '2020-09-24T11:06:27.164Z',
       data: {
+        avatar: { iv: [] },
         lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
         displayName: { iv: 'TestUser' },
         email: { iv: 'testUser@asap.science' },
@@ -34,6 +42,9 @@ export const fetchUsersResponse: { total: number; items: object[] } = {
         biography: { iv: 'Biography' },
         questions: { iv: [{ question: 'Question?' }] },
         location: { iv: 'OPorto, Portugal' },
+        teams: { iv: [] },
+        skills: { iv: [] },
+        role: { iv: 'Grantee' },
       },
     },
     {
@@ -41,6 +52,7 @@ export const fetchUsersResponse: { total: number; items: object[] } = {
       lastModified: '2020-09-25T11:06:27.164Z',
       created: '2020-09-24T11:06:27.164Z',
       data: {
+        avatar: { iv: [] },
         lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
         displayName: { iv: 'TestUser' },
         email: { iv: 'me@example.com' },
@@ -58,6 +70,9 @@ export const fetchUsersResponse: { total: number; items: object[] } = {
         biography: { iv: 'Biography' },
         questions: { iv: [{ question: 'Question?' }] },
         location: { iv: 'OPorto, Portugal' },
+        teams: { iv: [] },
+        skills: { iv: [] },
+        role: { iv: 'Grantee' },
       },
     },
   ],

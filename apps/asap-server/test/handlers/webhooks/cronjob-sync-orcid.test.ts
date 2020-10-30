@@ -1,9 +1,9 @@
 import nock from 'nock';
 import matches from 'lodash.matches';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
 import { identity } from '../../helpers/squidex';
-import { cms } from '../../../src/config';
 import * as fixtures from './cronjob-sync-orcid.fixtures';
 
 describe('Cronjob - Sync Users ORCID', () => {
@@ -29,8 +29,8 @@ describe('Cronjob - Sync Users ORCID', () => {
     );
     patchedUser.data.orcidWorks.iv = fixtures.ORCIDWorksDeserialisedExpectation;
 
-    nock(cms.baseUrl)
-      .get(`/api/content/${cms.appName}/users`)
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
       .query({
         q: JSON.stringify({
           take: 30,
@@ -49,7 +49,7 @@ describe('Cronjob - Sync Users ORCID', () => {
       })
       .reply(200, fixtures.fetchUsersResponse)
       .patch(
-        `/api/content/${cms.appName}/users/57d80949-7a75-462d-b3b0-34173423c490`,
+        `/api/content/${config.appName}/users/57d80949-7a75-462d-b3b0-34173423c490`,
         matches({
           email: { iv: patchedUser.data.email.iv },
           orcidWorks: { iv: fixtures.ORCIDWorksDeserialisedExpectation },

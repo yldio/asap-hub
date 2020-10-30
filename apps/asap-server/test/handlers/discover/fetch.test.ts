@@ -1,9 +1,9 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { DiscoverResponse } from '@asap-hub/model';
+import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/discover/fetch';
-import { cms } from '../../../src/config';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
@@ -19,8 +19,8 @@ describe('GET /discover', () => {
   });
 
   test('returns 200 when no information exists', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
       .reply(200, {
         data: {
           queryDiscoverContents: [
@@ -50,8 +50,8 @@ describe('GET /discover', () => {
   });
 
   test('returns 200 when no news and events exist', async () => {
-    nock(cms.baseUrl)
-      .post(`/api/content/${cms.appName}/graphql`, (body) => body.query)
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
       .reply(200, {
         data: {
           queryDiscoverContents: [
@@ -64,6 +64,8 @@ describe('GET /discover', () => {
                       path: '/',
                       title: 'Title',
                       text: 'Content',
+                      link: 'https://hub.asap.science',
+                      linkText: 'ASAP Hub',
                     },
                   },
                   {
@@ -127,6 +129,8 @@ describe('GET /discover', () => {
       pages: [
         {
           id: 'uuid',
+          link: 'https://hub.asap.science',
+          linkText: 'ASAP Hub',
           path: '/',
           shortText: '',
           title: 'Title',
@@ -134,6 +138,8 @@ describe('GET /discover', () => {
         },
         {
           id: 'uuid',
+          link: '',
+          linkText: '',
           path: '/',
           shortText: '',
           title: 'Title',
@@ -152,7 +158,7 @@ describe('GET /discover', () => {
           questions: [],
           skills: [],
           teams: [],
-          avatarUrl: `${cms.baseUrl}/api/assets/${cms.appName}/uuid-1`,
+          avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-1`,
         },
         {
           id: 'uuid-2',

@@ -117,34 +117,33 @@ export const parseGraphQLUser = (item: CMSGraphQLUser): UserResponse => {
 
     lastModifiedDate: lastModifiedDate ?? createdDate,
     teams: teams.map(parseGraphQLUserTeamConnection),
-    avatarUrl: avatar ? createURL(avatar.map((a) => a.id))[0] : undefined,
+    avatarUrl: avatar?.length
+      ? createURL(avatar.map((a) => a.id))[0]
+      : undefined,
   };
 };
 
 export const parseUser = (user: CMSUser): UserResponse => {
-  return JSON.parse(
-    JSON.stringify({
-      id: user.id,
-      createdDate: parseDate(user.created).toISOString(),
-      lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
-      displayName: user.data.displayName.iv,
-      email: user.data.email.iv,
-      degree: user.data.degree?.iv,
-      firstName: user.data.firstName?.iv,
-      lastName: user.data.lastName?.iv,
-      biography: user.data.biography?.iv,
-      jobTitle: user.data.jobTitle?.iv,
-      institution: user.data.institution?.iv,
-      teams:
-        user.data.teams?.iv.map(({ id, ...t }) => ({ id: id[0], ...t })) || [],
-      location: user.data.location?.iv,
-      orcid: user.data.orcid?.iv,
-      orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
-      orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
-      orcidWorks: user.data.orcidWorks?.iv,
-      skills: user.data.skills?.iv || [],
-      questions: user.data.questions?.iv.map(({ question }) => question) || [],
-      avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
-    }),
-  );
+  return {
+    id: user.id,
+    createdDate: parseDate(user.created).toISOString(),
+    lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
+    displayName: user.data.displayName.iv,
+    email: user.data.email.iv,
+    degree: user.data.degree?.iv,
+    firstName: user.data.firstName?.iv,
+    lastName: user.data.lastName?.iv,
+    biography: user.data.biography?.iv,
+    jobTitle: user.data.jobTitle?.iv,
+    institution: user.data.institution?.iv,
+    teams:
+      user.data.teams?.iv.map(({ id, ...t }) => ({ id: id[0], ...t })) || [],
+    location: user.data.location?.iv,
+    orcid: user.data.orcid?.iv,
+    orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
+    orcidWorks: user.data.orcidWorks?.iv,
+    skills: user.data.skills?.iv || [],
+    questions: user.data.questions?.iv.map(({ question }) => question) || [],
+    avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
+  };
 };

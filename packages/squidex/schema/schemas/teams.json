@@ -1,0 +1,121 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "teams",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Teams"
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "displayName",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Display Name",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "applicationNumber",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Application Number",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "projectTitle",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Project Title",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true
+        }
+      },
+      {
+        "name": "projectSummary",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Project Summary",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "proposal",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "Dropdown",
+          "schemaIds": ["research-outputs"],
+          "label": "Proposal",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "skills",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Expertise and Resources",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      }
+    ],
+    "previewUrls": {
+      "Web": "https://hub.asap.science/network/teams/${id}"
+    },
+    "category": "Storage",
+    "isPublished": true
+  }
+}

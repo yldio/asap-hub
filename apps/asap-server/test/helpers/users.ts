@@ -1,7 +1,8 @@
 import Chance from 'chance';
+import { Squidex } from '@asap-hub/squidex';
 import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
-import { CMSTeam, CMSUser, parseUser } from '../../src/entities';
-import { Squidex } from '@asap-hub/services-common';
+import { RestTeam } from '@asap-hub/squidex';
+import { CMSUser, parseUser } from '../../src/entities';
 
 const users = new Squidex<CMSUser>('users');
 const chance = new Chance();
@@ -64,7 +65,7 @@ export const createRandomUser = async (
 };
 
 export const createUserOnTeam = async (
-  team: CMSTeam,
+  team: RestTeam,
   role: TeamRole | null = null,
 ): Promise<TestUserResponse> => {
   const createdUser = await createUser();

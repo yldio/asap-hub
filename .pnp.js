@@ -109,6 +109,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@asap-hub/services-common",
         "reference": "workspace:packages/services-common"
+      },
+      {
+        "name": "@asap-hub/squidex",
+        "reference": "workspace:packages/squidex"
       }
     ],
     "enableTopLevelFallback": true,
@@ -129,6 +133,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/react-context", ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context", "workspace:packages/react-context"]],
       ["@asap-hub/react-templates", ["workspace:apps/react-templates"]],
       ["@asap-hub/services-common", ["workspace:packages/services-common"]],
+      ["@asap-hub/squidex", ["workspace:packages/squidex"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
       ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
       ["@types/asap-hub__assets", ["workspace:@types/asap-hub__assets"]],
@@ -206,6 +211,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/services-common",
         "workspace:packages/services-common"
+      ],
+      [
+        "@asap-hub/squidex",
+        "workspace:packages/squidex"
       ],
       [
         "@asap-hub/storybook",
@@ -785,7 +794,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@hapi/bourne",
-        "npm:1.3.2"
+        "npm:2.0.0"
       ],
       [
         "@hapi/call",
@@ -8739,6 +8748,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/asap-cli", "workspace:apps/asap-cli"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
+            ["@asap-hub/squidex", "workspace:packages/squidex"],
             ["@babel/core", "npm:7.9.0"],
             ["@babel/plugin-transform-modules-commonjs", "virtual:17df4a6b7bc90a892848ea4c573b3f4fb009d45ed9e2e79220aa6879fd736424e8c4a39cef6752e4925485f2fc611317f0f97be3d91b72001eff479d14125faa#npm:7.10.4"],
             ["@babel/plugin-transform-runtime", "virtual:17df4a6b7bc90a892848ea4c573b3f4fb009d45ed9e2e79220aa6879fd736424e8c4a39cef6752e4925485f2fc611317f0f97be3d91b72001eff479d14125faa#npm:7.10.3"],
@@ -8775,6 +8785,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
+            ["@asap-hub/squidex", "workspace:packages/squidex"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],
@@ -9439,6 +9450,39 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
+            ["chance", "npm:1.1.7"],
+            ["cross-fetch", "npm:3.0.6"],
+            ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
+            ["got", "npm:11.6.0"],
+            ["graphql", "npm:15.3.0"],
+            ["graphql-request", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"],
+            ["jwt-decode", "npm:2.2.0"],
+            ["jwt-encode", "npm:1.0.1"],
+            ["nock", "npm:13.0.4"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/squidex", [
+        ["workspace:packages/squidex", {
+          "packageLocation": "./packages/squidex/",
+          "packageDependencies": [
+            ["@asap-hub/squidex", "workspace:packages/squidex"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.11.2"],
+            ["@hapi/boom", "npm:9.1.0"],
+            ["@hapi/bourne", "npm:2.0.0"],
+            ["@hapi/joi", "npm:17.1.1"],
+            ["@types/apr-intercept", "workspace:@types/apr-intercept"],
+            ["@types/debug", "npm:4.1.5"],
+            ["@types/hapi", "npm:18.0.3"],
+            ["@types/hapi__boom", "npm:9.0.1"],
+            ["@types/hapi__bourne", "workspace:@types/hapi__bourne"],
+            ["@types/hapi__joi", "npm:17.1.2"],
+            ["@types/jest", "npm:26.0.3"],
+            ["@types/jwt-decode", "npm:2.2.1"],
+            ["@types/jwt-encode", "workspace:@types/jwt-encode"],
+            ["apr-intercept", "npm:3.0.4"],
             ["chance", "npm:1.1.7"],
             ["cross-fetch", "npm:3.0.6"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],

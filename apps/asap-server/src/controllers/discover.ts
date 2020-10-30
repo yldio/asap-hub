@@ -1,11 +1,13 @@
-import { GraphQL } from '@asap-hub/services-common';
+import {
+  SquidexGraphql,
+  GraphqlPage,
+  GraphqlNewsOrEvent,
+} from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
 import {
   CMSGraphQLUser,
   parseGraphQLUser,
-  CMSGraphQLPage,
   parseGraphQLPage,
-  CMSGraphQLNewsAndEvents,
   parseGraphQLNewsAndEvents,
 } from '../entities';
 
@@ -65,18 +67,18 @@ interface Response {
   queryDiscoverContents: {
     flatData: {
       aboutUs: string;
-      training: CMSGraphQLNewsAndEvents[];
+      training: GraphqlNewsOrEvent[];
       members: CMSGraphQLUser[];
-      pages: CMSGraphQLPage[];
+      pages: GraphqlPage[];
     };
   }[];
 }
 
 export default class Discover {
-  client: GraphQL;
+  client: SquidexGraphql;
 
   constructor() {
-    this.client = new GraphQL();
+    this.client = new SquidexGraphql();
   }
 
   async fetch(): Promise<DiscoverResponse> {

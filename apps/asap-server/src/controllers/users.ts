@@ -194,6 +194,7 @@ export default class Users {
             `(${[
               [`contains(data/displayName/iv, '${word}')`],
               [`contains(data/firstName/iv, '${word}')`],
+              [`contains(data/institution/iv, '${word}')`],
             ].join(' or ')})`,
           ),
         [],

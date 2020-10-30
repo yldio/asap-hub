@@ -55,10 +55,12 @@ describe('GET /users', () => {
     const filter =
       "data/teams/iv/role eq 'Lead PI' and" +
       " ((contains(data/displayName/iv, 'first')" +
-      " or contains(data/firstName/iv, 'first'))" +
+      " or contains(data/firstName/iv, 'first')" +
+      " or contains(data/institution/iv, 'first'))" +
       ' and' +
       " (contains(data/displayName/iv, 'last')" +
-      " or contains(data/firstName/iv, 'last')))";
+      " or contains(data/firstName/iv, 'last')" +
+      " or contains(data/institution/iv, 'last')))";
 
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, {
@@ -89,10 +91,12 @@ describe('GET /users', () => {
       "data/teams/iv/role eq 'Lead PI' or " +
       "data/teams/iv/role eq 'anotherFilter' and" +
       " ((contains(data/displayName/iv, 'first')" +
-      " or contains(data/firstName/iv, 'first'))" +
+      " or contains(data/firstName/iv, 'first')" +
+      " or contains(data/institution/iv, 'first'))" +
       ' and' +
       " (contains(data/displayName/iv, 'last')" +
-      " or contains(data/firstName/iv, 'last')))";
+      " or contains(data/firstName/iv, 'last')" +
+      " or contains(data/institution/iv, 'last')))";
 
     nock(cms.baseUrl)
       .post(`/api/content/${cms.appName}/graphql`, {

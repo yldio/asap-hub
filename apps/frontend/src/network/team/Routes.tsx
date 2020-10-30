@@ -18,10 +18,6 @@ const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
 const Team: React.FC<{}> = () => {
-  useEffect(() => {
-    loadAbout().then(loadOutputs);
-  }, []);
-
   const {
     url,
     path,
@@ -29,6 +25,12 @@ const Team: React.FC<{}> = () => {
   } = useRouteMatch();
 
   const { loading, data: team } = useTeamById(id);
+
+  useEffect(() => {
+    loadAbout()
+      .then(team?.tools ? loadWorkspace : undefined)
+      .then(loadOutputs);
+  }, [team]);
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;

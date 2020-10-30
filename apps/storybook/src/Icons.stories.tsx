@@ -67,7 +67,6 @@ export const Search = () => searchIcon;
 export const Settings = () => settingsIcon;
 export const ShowPassword = () => showPasswordIcon;
 export const TeamMembers = () => teamIcon;
-export const TeamMembersIcon = () => teamIcon;
 export const TickIcon = () => tickIcon;
 export const User = () => userIcon;
 export const UserIcon = () => userIcon;

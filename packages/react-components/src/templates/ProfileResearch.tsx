@@ -9,7 +9,7 @@ import {
   QuestionsSection,
 } from '../organisms';
 import { CtaCard } from '../molecules';
-import { createMailTo } from '../utils';
+import { createMailTo } from '../mail';
 
 const styles = css({
   display: 'grid',

@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import domToPlaywright from 'dom-to-playwright';
 
 import Layout from '../Layout';
-import { createMailTo } from '../../utils';
+import { createMailTo } from '../../mail';
 import { largeDesktopScreen } from '../../pixels';
 
 const props: ComponentProps<typeof Layout> = {

@@ -15,6 +15,7 @@ const boilerplateProps = {
   lastModifiedDate: formatISO(new Date()),
   aboutHref: './about',
   outputsHref: './outputs',
+  workspaceHref: './workspace',
 };
 
 it('renders the name as the top-level heading', () => {
@@ -56,7 +57,10 @@ it('renders a list of members', () => {
 
 it('renders no more than 5 members', () => {
   const { getByLabelText, getAllByLabelText } = render(
-    <TeamHeader {...boilerplateProps} members={createTeamResponseMembers(6)} />,
+    <TeamHeader
+      {...boilerplateProps}
+      members={createTeamResponseMembers({ teamMembers: 6 })}
+    />,
   );
   expect(getAllByLabelText(/pic.+ of .+/)).toHaveLength(5);
   expect(getByLabelText(/\+1/)).toBeVisible();
@@ -81,4 +85,26 @@ it('renders a contact button when there is a pointOfContact', () => {
     'href',
     'mailto:test@test.com',
   );
+});
+
+it('renders tabs', () => {
+  const { getAllByRole } = render(<TeamHeader {...boilerplateProps} />);
+  expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([
+    'About',
+    'Outputs',
+  ]);
+});
+
+it('renders workspace tabs when tools provided', () => {
+  const { getAllByRole } = render(
+    <TeamHeader
+      {...boilerplateProps}
+      tools={[{ name: '', description: '', url: '' }]}
+    />,
+  );
+  expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([
+    'About',
+    'Team Workspace',
+    'Outputs',
+  ]);
 });

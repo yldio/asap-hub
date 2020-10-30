@@ -22,21 +22,9 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
   return width / height;
 };
 
-export const createMailTo = (
-  email: string,
-  { subject, body }: { subject?: string; body?: string } = {},
-): string => {
-  const mailTo = new URL(
-    `mailto:${email.split('@').map(encodeURIComponent).join('@')}`,
-  );
-
-  if (subject) mailTo.searchParams.set('subject', subject);
-  if (body) mailTo.searchParams.set('body', body);
-
-  return mailTo.toString();
-};
-
 export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');
+export const formatDateAndTime = (date: Date): string =>
+  format(date, "d/M/y 'at' HH:mm");
 
 export const isInternalLink = (href: string): boolean =>
   new URL(href, window.location.href).origin === window.location.origin;

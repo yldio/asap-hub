@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
 import Layout from '../Layout';
-import { createMailTo } from '../../utils';
+import { createMailTo } from '../../mail';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',

@@ -4,7 +4,7 @@ import {
   Layout,
   BasicLayout,
   NotFoundPage,
-  createMailTo,
+  mailToFeedback,
 } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
@@ -63,9 +63,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
         href: `/network/teams/${id}`,
       }))}
       settingsHref="/settings"
-      feedbackHref={createMailTo('info@asap.science', {
-        subject: 'Hub Feedback',
-      })}
+      feedbackHref={mailToFeedback}
       logoutHref="/logout"
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"

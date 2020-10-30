@@ -10,15 +10,14 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
 const loadOutputs = () =>
   import(/* webpackChunkName: "network-team-outputs" */ './Outputs');
+const loadWorkspace = () =>
+  import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
 const About = React.lazy(loadAbout);
 const Outputs = React.lazy(loadOutputs);
+const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
 const Team: React.FC<{}> = () => {
-  useEffect(() => {
-    loadAbout().then(loadOutputs);
-  }, []);
-
   const {
     url,
     path,
@@ -26,6 +25,12 @@ const Team: React.FC<{}> = () => {
   } = useRouteMatch();
 
   const { loading, data: team } = useTeamById(id);
+
+  useEffect(() => {
+    loadAbout()
+      .then(team?.tools ? loadWorkspace : undefined)
+      .then(loadOutputs);
+  }, [team]);
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -36,6 +41,7 @@ const Team: React.FC<{}> = () => {
       ...team,
       aboutHref: join(url, 'about'),
       outputsHref: join(url, 'outputs'),
+      workspaceHref: join(url, 'workspace'),
     };
 
     return (
@@ -56,6 +62,11 @@ const Team: React.FC<{}> = () => {
               <Route path={`${path}/outputs`}>
                 <Outputs />
               </Route>
+              {team.tools && (
+                <Route path={`${path}/workspace`}>
+                  <Workspace {...team} />
+                </Route>
+              )}
               <Redirect to={join(url, 'about')} />
             </Switch>
           </Suspense>

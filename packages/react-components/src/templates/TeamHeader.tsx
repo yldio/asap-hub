@@ -6,7 +6,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { createMailTo } from '../utils';
+import { createMailTo } from '../mail';
 import { perRem, mobileScreen } from '../pixels';
 import { paper } from '../colors';
 
@@ -71,15 +71,17 @@ const extraUsersStyles = css({
 type TeamProps = TeamResponse & {
   readonly aboutHref: string;
   readonly outputsHref: string;
+  readonly workspaceHref: string;
 };
 const TeamHeader: React.FC<TeamProps> = ({
   displayName,
   lastModifiedDate,
   members,
   pointOfContact,
-
   aboutHref,
   outputsHref,
+  workspaceHref,
+  tools,
 }) => {
   return (
     <header css={containerStyles}>
@@ -136,6 +138,7 @@ const TeamHeader: React.FC<TeamProps> = ({
       </section>
       <TabNav>
         <TabLink href={aboutHref}>About</TabLink>
+        {tools && <TabLink href={workspaceHref}>Team Workspace</TabLink>}
         <TabLink href={outputsHref}>Outputs</TabLink>
       </TabNav>
     </header>

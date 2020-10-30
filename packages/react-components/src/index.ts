@@ -5,8 +5,7 @@ import * as authTestUtils from './auth-test-utils';
 
 export { messages, pixels, text, authTestUtils };
 
-export { createMailTo } from './utils';
-
+export * from './mail';
 export * from './icons';
 export * from './images';
 export * from './theme';
@@ -54,6 +53,7 @@ export {
   EmailPasswordSignin,
   HelpSection,
   SharedResearchCard,
+  LinkCard,
   MainNavigation,
   MembersSection,
   MenuHeader,
@@ -111,6 +111,7 @@ export {
   SigninPage,
   TeamAbout,
   TeamOutputs,
+  TeamWorkspace,
   TeamPage,
   WelcomeCard,
   WelcomePage,

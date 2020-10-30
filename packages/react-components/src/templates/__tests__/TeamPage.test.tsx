@@ -13,6 +13,7 @@ const boilerplateProps = {
   skills: [],
   aboutHref: '#',
   outputsHref: '#',
+  workspaceHref: '#',
 };
 
 it('renders the header', () => {

@@ -108,7 +108,7 @@ it('renders the not found page for a 404', async () => {
 
 describe('the workspace', () => {
   it('does not render a link to workspaces when tools omitted', async () => {
-    interceptor.reply(200, createTeamResponse());
+    interceptor.reply(200, createTeamResponse({ tools: undefined }));
     const { queryByText } = await renderTeam();
     expect(queryByText(/team workspace/i)).not.toBeInTheDocument();
   });

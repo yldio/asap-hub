@@ -4,15 +4,13 @@ import { createTeamResponse } from '@asap-hub/fixtures';
 
 import TeamWorkspace from '../TeamWorkspace';
 
+const team = createTeamResponse({ teamMembers: 1, tools: 0 });
 it('renders the team workspace page', () => {
-  const team = createTeamResponse({ teamMembers: 1, tools: 0 });
-
-  const { getByRole } = render(<TeamWorkspace {...team} />);
+  const { getByRole } = render(<TeamWorkspace {...team} tools={[]} />);
 
   expect(getByRole('heading').textContent).toEqual('Team Collaboration Tools');
 });
 
-const team = createTeamResponse({ teamMembers: 1, tools: 0 });
 it('renders contact project manager when point of contact provided', () => {
   const { getByText } = render(
     <TeamWorkspace

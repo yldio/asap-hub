@@ -22,16 +22,20 @@ const styles = css({
 });
 
 interface TabNavProps {
-  readonly children: React.ReactElement | ReadonlyArray<React.ReactElement>;
+  readonly children:
+    | React.ReactElement
+    | ReadonlyArray<React.ReactElement | undefined>;
 }
 const TabNav: React.FC<TabNavProps> = ({ children }) => (
   <nav>
     <ul css={styles}>
       {((Array.isArray(children) ? children : [children]) as ReadonlyArray<
         React.ReactElement
-      >).map((child, index) => (
-        <li key={index}>{child}</li>
-      ))}
+      >)
+        .filter((child) => child && typeof child === 'object')
+        .map((child, index) => (
+          <li key={index}>{child}</li>
+        ))}
     </ul>
   </nav>
 );

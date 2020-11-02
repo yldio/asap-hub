@@ -21,7 +21,7 @@
     "react-router-dom": "^5.2.0"
   },
   "dependencies": {
-    "@asap-hub/model": "workspace:packages/model",
+    "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "^7.9.6",
     "@emotion/core": "^10.0.28",
     "@emotion/css": "^10.0.27",
@@ -44,11 +44,11 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "@asap-hub/auth": "workspace:packages/auth",
-    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils",
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
-    "@asap-hub/fixtures": "workspace:packages/fixtures",
-    "@asap-hub/react-context": "workspace:packages/react-context",
+    "@asap-hub/auth": "workspace:*",
+    "@asap-hub/dom-test-utils": "workspace:*",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
+    "@asap-hub/react-context": "workspace:*",
     "@auth0/auth0-spa-js": "^1.9.0",
     "@babel/core": "^7.9.0",
     "@babel/preset-react": "^7.9.0",
@@ -58,7 +58,7 @@
     "@testing-library/react": "^10.2.0",
     "@testing-library/react-hooks": "^3.4.1",
     "@testing-library/user-event": "^11.4.2",
-    "@types/asap-hub__assets": "workspace:@types/asap-hub__assets",
+    "@types/asap-hub__assets": "workspace:*",
     "@types/history": "^4.7.6",
     "@types/jest": "^26.0.3",
     "@types/ramda": "^0",
@@ -68,7 +68,7 @@
     "@types/react-router-hash-link": "^1.2.1",
     "@types/react-select": "^3.0.0",
     "@types/react-test-renderer": "16.9.2",
-    "@types/rehype-slug": "workspace:@types/rehype-slug",
+    "@types/rehype-slug": "workspace:*",
     "@types/testing-library__jest-dom": "^5.0.3",
     "@types/testing-library__react": "^10.0.1",
     "@types/testing-library__react-hooks": "^3.2.0",

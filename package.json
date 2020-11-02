@@ -94,7 +94,7 @@
     ]
   },
   "devDependencies": {
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",

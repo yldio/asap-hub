@@ -28,18 +28,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-cli@workspace:apps/asap-cli"
   dependencies:
-    "@asap-hub/model": "workspace:packages/model"
-    "@asap-hub/services-common": "workspace:packages/services-common"
-    "@asap-hub/squidex": "workspace:packages/squidex"
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/services-common": "workspace:*"
+    "@asap-hub/squidex": "workspace:*"
     "@babel/core": ^7.9.0
     "@babel/plugin-transform-modules-commonjs": ^7.10.4
     "@babel/plugin-transform-runtime": ^7.10.3
     "@babel/runtime-corejs3": ^7.9.6
-    "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/apr-intercept": "workspace:*"
     "@types/babel__core": ^7
     "@types/jest": ^26.0.3
     "@types/jwt-decode": ^2.2.1
-    "@types/jwt-encode": "workspace:@types/jwt-encode"
+    "@types/jwt-encode": "workspace:*"
     "@types/pump": ^1.1.0
     "@types/through2-concurrent": ^2
     "@types/uuid": ^8.0.0
@@ -64,27 +64,27 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-server@workspace:apps/asap-server"
   dependencies:
-    "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/model": "workspace:packages/model"
-    "@asap-hub/services-common": "workspace:packages/services-common"
-    "@asap-hub/squidex": "workspace:packages/squidex"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/services-common": "workspace:*"
+    "@asap-hub/squidex": "workspace:*"
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
-    "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": ^8.10.51
     "@types/chance": ^1.1.0
     "@types/date-fns": ^2.6.0
     "@types/debug": ^4.1.5
     "@types/hapi": ^18.0.3
     "@types/hapi__boom": ^9.0.1
-    "@types/hapi__bourne": "workspace:@types/hapi__bourne"
+    "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.0
     "@types/jest": ^26.0.3
     "@types/jsonwebtoken": ^8.5.0
     "@types/jwt-decode": ^2.2.1
-    "@types/jwt-encode": "workspace:@types/jwt-encode"
+    "@types/jwt-encode": "workspace:*"
     "@types/lodash.get": ^4
     "@types/lodash.matches": ^4
     "@types/pump": ^1.1.0
@@ -114,10 +114,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth-frontend@workspace:apps/auth-frontend"
   dependencies:
-    "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@asap-hub/react-components": "workspace:packages/react-components"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/dom-test-utils": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
     "@babel/runtime-corejs3": ^7.9.6
     "@testing-library/dom": ^7.10.0
     "@testing-library/jest-dom": ^5.9.0
@@ -154,26 +154,26 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth0-rules@workspace:apps/auth0-rules"
   dependencies:
-    "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@asap-hub/model": "workspace:packages/model"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/model": "workspace:*"
     "@babel/core": ^7.9.0
     "@babel/preset-env": ^7.9.5
     "@babel/preset-typescript": ^7.9.0
     "@babel/runtime-corejs3": ^7.9.6
-    "@types/asap-hub__auth0-rule": "workspace:@types/asap-hub__auth0-rule"
+    "@types/asap-hub__auth0-rule": "workspace:*"
     "@types/jest": ^26.0.3
     got: ^11.6.0
     nock: ^13.0.4
   languageName: unknown
   linkType: soft
 
-"@asap-hub/auth@workspace:packages/auth":
+"@asap-hub/auth@workspace:*, @asap-hub/auth@workspace:packages/auth":
   version: 0.0.0-use.local
   resolution: "@asap-hub/auth@workspace:packages/auth"
   dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@asap-hub/model": "workspace:packages/model"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/model": "workspace:*"
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/runtime-corejs3": ^7.9.6
     "@types/jest": ^26.0.3
@@ -181,17 +181,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/dom-test-utils@workspace:packages/dom-test-utils":
+"@asap-hub/dom-test-utils@workspace:*, @asap-hub/dom-test-utils@workspace:packages/dom-test-utils":
   version: 0.0.0-use.local
   resolution: "@asap-hub/dom-test-utils@workspace:packages/dom-test-utils"
   dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.9.6
     "@types/jest": ^26.0.3
   languageName: unknown
   linkType: soft
 
-"@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub":
+"@asap-hub/eslint-config-asap-hub@workspace:*, @asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub":
   version: 0.0.0-use.local
   resolution: "@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub"
   dependencies:
@@ -214,11 +214,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/fixtures@workspace:packages/fixtures":
+"@asap-hub/fixtures@workspace:*, @asap-hub/fixtures@workspace:packages/fixtures":
   version: 0.0.0-use.local
   resolution: "@asap-hub/fixtures@workspace:packages/fixtures"
   dependencies:
-    "@asap-hub/model": "workspace:packages/model"
+    "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.9.6
     core-js: ^3.6.5
     date-fns: ^2.16.1
@@ -231,13 +231,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
   dependencies:
-    "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@asap-hub/fixtures": "workspace:packages/fixtures"
-    "@asap-hub/model": "workspace:packages/model"
-    "@asap-hub/react-components": "workspace:packages/react-components"
-    "@asap-hub/react-context": "workspace:packages/react-context"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/dom-test-utils": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
+    "@asap-hub/react-context": "workspace:*"
     "@auth0/auth0-spa-js": ^1.9.0
     "@testing-library/dom": ^7.10.0
     "@testing-library/jest-dom": ^5.9.0
@@ -274,7 +274,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/model@workspace:packages/model":
+"@asap-hub/model@workspace:*, @asap-hub/model@workspace:packages/model":
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
   languageName: unknown
@@ -284,8 +284,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/orcid-user-profile-script@workspace:apps/orcid-user-profile-script"
   dependencies:
-    "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/core": ^7.9.0
     "@babel/preset-env": ^7.9.5
     "@babel/preset-typescript": ^7.9.0
@@ -296,16 +296,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/react-components@workspace:packages/react-components":
+"@asap-hub/react-components@workspace:*, @asap-hub/react-components@workspace:packages/react-components":
   version: 0.0.0-use.local
   resolution: "@asap-hub/react-components@workspace:packages/react-components"
   dependencies:
-    "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils"
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@asap-hub/fixtures": "workspace:packages/fixtures"
-    "@asap-hub/model": "workspace:packages/model"
-    "@asap-hub/react-context": "workspace:packages/react-context"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/dom-test-utils": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/react-context": "workspace:*"
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/core": ^7.9.0
     "@babel/preset-react": ^7.9.0
@@ -318,7 +318,7 @@ __metadata:
     "@testing-library/react": ^10.2.0
     "@testing-library/react-hooks": ^3.4.1
     "@testing-library/user-event": ^11.4.2
-    "@types/asap-hub__assets": "workspace:@types/asap-hub__assets"
+    "@types/asap-hub__assets": "workspace:*"
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.3
     "@types/ramda": ^0
@@ -328,7 +328,7 @@ __metadata:
     "@types/react-router-hash-link": ^1.2.1
     "@types/react-select": ^3.0.0
     "@types/react-test-renderer": 16.9.2
-    "@types/rehype-slug": "workspace:@types/rehype-slug"
+    "@types/rehype-slug": "workspace:*"
     "@types/testing-library__jest-dom": ^5.0.3
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.2.0
@@ -371,12 +371,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/react-context@workspace:packages/react-context":
+"@asap-hub/react-context@workspace:*, @asap-hub/react-context@workspace:packages/react-context":
   version: 0.0.0-use.local
   resolution: "@asap-hub/react-context@workspace:packages/react-context"
   dependencies:
-    "@asap-hub/auth": "workspace:packages/auth"
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/auth": "workspace:*"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/core": ^7.9.0
     "@babel/preset-react": ^7.9.0
     "@babel/runtime-corejs3": ^7.9.6
@@ -396,7 +396,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/react-templates@workspace:apps/react-templates"
   dependencies:
-    "@asap-hub/react-components": "workspace:packages/react-components"
+    "@asap-hub/react-components": "workspace:*"
     "@babel/core": ^7.9.0
     "@babel/plugin-transform-modules-commonjs": ^7.10.4
     "@babel/plugin-transform-runtime": ^7.10.3
@@ -432,25 +432,25 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/services-common@workspace:packages/services-common":
+"@asap-hub/services-common@workspace:*, @asap-hub/services-common@workspace:packages/services-common":
   version: 0.0.0-use.local
   resolution: "@asap-hub/services-common@workspace:packages/services-common"
   dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
-    "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": ^8.10.51
     "@types/debug": ^4.1.5
     "@types/hapi": ^18.0.3
     "@types/hapi__boom": ^9.0.1
-    "@types/hapi__bourne": "workspace:@types/hapi__bourne"
+    "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.0
     "@types/jest": ^26.0.3
     "@types/jwt-decode": ^2.2.1
-    "@types/jwt-encode": "workspace:@types/jwt-encode"
+    "@types/jwt-encode": "workspace:*"
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     chance: ^1.1.7
@@ -465,24 +465,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@asap-hub/squidex@workspace:packages/squidex":
+"@asap-hub/squidex@workspace:*, @asap-hub/squidex@workspace:packages/squidex":
   version: 0.0.0-use.local
   resolution: "@asap-hub/squidex@workspace:packages/squidex"
   dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
-    "@types/apr-intercept": "workspace:@types/apr-intercept"
+    "@types/apr-intercept": "workspace:*"
     "@types/debug": ^4.1.5
     "@types/hapi": ^18.0.3
     "@types/hapi__boom": ^9.0.1
-    "@types/hapi__bourne": "workspace:@types/hapi__bourne"
+    "@types/hapi__bourne": "workspace:*"
     "@types/hapi__joi": ^17.1.0
     "@types/jest": ^26.0.3
     "@types/jwt-decode": ^2.2.1
-    "@types/jwt-encode": "workspace:@types/jwt-encode"
+    "@types/jwt-encode": "workspace:*"
     apr-intercept: ^3.0.4
     chance: ^1.1.7
     cross-fetch: ^3.0.6
@@ -500,10 +500,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/storybook@workspace:apps/storybook"
   dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
-    "@asap-hub/fixtures": "workspace:packages/fixtures"
-    "@asap-hub/react-components": "workspace:packages/react-components"
-    "@asap-hub/react-context": "workspace:packages/react-context"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
+    "@asap-hub/react-context": "workspace:*"
     "@babel/core": ^7.9.0
     "@storybook/addon-actions": ^6.0.4
     "@storybook/addon-knobs": ^6.0.4
@@ -4563,19 +4563,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/apr-intercept@workspace:@types/apr-intercept":
+"@types/apr-intercept@workspace:*, @types/apr-intercept@workspace:@types/apr-intercept":
   version: 0.0.0-use.local
   resolution: "@types/apr-intercept@workspace:@types/apr-intercept"
   languageName: unknown
   linkType: soft
 
-"@types/asap-hub__assets@workspace:@types/asap-hub__assets":
+"@types/asap-hub__assets@workspace:*, @types/asap-hub__assets@workspace:@types/asap-hub__assets":
   version: 0.0.0-use.local
   resolution: "@types/asap-hub__assets@workspace:@types/asap-hub__assets"
   languageName: unknown
   linkType: soft
 
-"@types/asap-hub__auth0-rule@workspace:@types/asap-hub__auth0-rule":
+"@types/asap-hub__auth0-rule@workspace:*, @types/asap-hub__auth0-rule@workspace:@types/asap-hub__auth0-rule":
   version: 0.0.0-use.local
   resolution: "@types/asap-hub__auth0-rule@workspace:@types/asap-hub__auth0-rule"
   languageName: unknown
@@ -4838,7 +4838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/hapi__bourne@workspace:@types/hapi__bourne":
+"@types/hapi__bourne@workspace:*, @types/hapi__bourne@workspace:@types/hapi__bourne":
   version: 0.0.0-use.local
   resolution: "@types/hapi__bourne@workspace:@types/hapi__bourne"
   languageName: unknown
@@ -4988,7 +4988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jwt-encode@workspace:@types/jwt-encode":
+"@types/jwt-encode@workspace:*, @types/jwt-encode@workspace:@types/jwt-encode":
   version: 0.0.0-use.local
   resolution: "@types/jwt-encode@workspace:@types/jwt-encode"
   languageName: unknown
@@ -5325,7 +5325,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/rehype-slug@workspace:@types/rehype-slug":
+"@types/rehype-slug@workspace:*, @types/rehype-slug@workspace:@types/rehype-slug":
   version: 0.0.0-use.local
   resolution: "@types/rehype-slug@workspace:@types/rehype-slug"
   dependencies:
@@ -7054,7 +7054,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "asap-hub@workspace:."
   dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub"
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@babel/cli": ^7.8.4
     "@babel/core": ^7.9.0
     "@babel/plugin-transform-modules-commonjs": ^7.10.4

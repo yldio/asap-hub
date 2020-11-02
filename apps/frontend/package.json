@@ -13,10 +13,10 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
-    "@asap-hub/auth": "workspace:packages/auth",
-    "@asap-hub/model": "workspace:packages/model",
-    "@asap-hub/react-components": "workspace:packages/react-components",
-    "@asap-hub/react-context": "workspace:packages/react-context",
+    "@asap-hub/auth": "workspace:*",
+    "@asap-hub/model": "workspace:*",
+    "@asap-hub/react-components": "workspace:*",
+    "@asap-hub/react-context": "workspace:*",
     "@auth0/auth0-spa-js": "^1.9.0",
     "history": "^4",
     "react": "^16.13.1",
@@ -28,9 +28,9 @@
     "use-http": "^1.0.15"
   },
   "devDependencies": {
-    "@asap-hub/dom-test-utils": "workspace:packages/dom-test-utils",
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
-    "@asap-hub/fixtures": "workspace:packages/fixtures",
+    "@asap-hub/dom-test-utils": "workspace:*",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/fixtures": "workspace:*",
     "@testing-library/dom": "^7.10.0",
     "@testing-library/jest-dom": "^5.9.0",
     "@testing-library/react": "^10.2.0",

@@ -30,6 +30,7 @@ function transformTeam(team: RestTeam, members: TeamMember[]): TeamResponse {
     projectTitle: team.data.projectTitle.iv,
     projectSummary: team.data.projectSummary?.iv,
     skills: team.data.skills?.iv || [],
+    tools: team.data.tools?.iv,
     lastModifiedDate: team.lastModified,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     proposalURL: team.data.proposal?.iv[0],

@@ -25,6 +25,15 @@ export const teamsResponse: { total: number; items: RestTeam[] } = {
         skills: {
           iv: [],
         },
+        tools: {
+          iv: [
+            {
+              url: 'testUrl',
+              name: 'slack',
+              description: 'this is a test',
+            },
+          ],
+        },
       },
       created: '2020-09-08T16:35:28Z',
       lastModified: '2020-09-08T16:35:28Z',
@@ -254,6 +263,13 @@ export const expectation: ListTeamResponse = {
       projectSummary:
         'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
       skills: [],
+      tools: [
+        {
+          url: 'testUrl',
+          name: 'slack',
+          description: 'this is a test',
+        },
+      ],
       members: [
         {
           id: 'user-id-1',

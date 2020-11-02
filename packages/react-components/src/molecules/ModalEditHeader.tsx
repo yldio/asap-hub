@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { Headline3, Button } from '../atoms';
+import { Headline3, Button, Link } from '../atoms';
 import { crossIcon } from '../icons';
 import { tabletScreen } from '../pixels';
 import { noop } from '../utils';
@@ -25,13 +25,13 @@ const controlsContainerStyles = css({
 
 type ModalEditHeaderProps = {
   title: string;
+  backHref: string;
   onSave?: () => void;
-  onClose?: () => void;
 };
 
 const ModalEditHeader: React.FC<ModalEditHeaderProps> = ({
   title,
-  onClose = noop,
+  backHref,
   onSave = noop,
 }) => (
   <div css={headerStyles}>
@@ -39,9 +39,9 @@ const ModalEditHeader: React.FC<ModalEditHeaderProps> = ({
       <Button onClick={onSave} primary small>
         Save
       </Button>
-      <Button small onClick={onClose}>
+      <Link small buttonStyle href={backHref}>
         {crossIcon}
-      </Button>
+      </Link>
     </div>
     <Headline3>{title}</Headline3>
   </div>

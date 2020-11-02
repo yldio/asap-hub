@@ -43,18 +43,20 @@ const cardContainer = css({
 const modalRoot = document.getElementById('modal-root');
 
 const Modal: React.FC<{}> = ({ children }) =>
-  ReactDOM.createPortal(
-    <>
-      <div css={overlayContainerStyles}>
-        <Overlay />
-      </div>
-      <div role="dialog" css={modalContainerStyles}>
-        <Card>
-          <div css={cardContainer}>{children}</div>
-        </Card>
-      </div>
-    </>,
-    modalRoot!,
-  );
+  modalRoot
+    ? ReactDOM.createPortal(
+        <>
+          <div css={overlayContainerStyles}>
+            <Overlay />
+          </div>
+          <div role="dialog" css={modalContainerStyles}>
+            <Card>
+              <div css={cardContainer}>{children}</div>
+            </Card>
+          </div>
+        </>,
+        modalRoot,
+      )
+    : null;
 
 export default Modal;

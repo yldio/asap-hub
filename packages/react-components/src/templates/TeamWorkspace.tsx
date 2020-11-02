@@ -1,16 +1,8 @@
 import React from 'react';
-import { TeamResponse } from '@asap-hub/model';
+import { TeamResponse, TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
 
-import {
-  Card,
-  Display,
-  Button,
-  Caption,
-  Headline2,
-  Paragraph,
-  Link,
-} from '../atoms';
+import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { LinkCard } from '../organisms';
 import { mailToSupport, createMailTo } from '../mail';
@@ -29,13 +21,17 @@ const linkContainerStyles = css({
 
 type TeamWorkspaceProps = Pick<
   TeamResponse,
-  'pointOfContact' | 'lastModifiedDate' | 'tools'
->;
+  'pointOfContact' | 'lastModifiedDate'
+> & {
+  tools?: Array<TeamTool & { href: string }>;
+  newToolHref: string;
+};
 
 const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
   pointOfContact,
   lastModifiedDate,
   tools = [],
+  newToolHref,
 }) => (
   <div css={containerStyles}>
     <Card>
@@ -46,16 +42,14 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
       </Paragraph>
       {!!tools.length && (
         <div css={linkContainerStyles}>
-          {tools.map(({ name, description }, index) => (
-            <LinkCard
-              key={`link-${index}`}
-              name={name}
-              description={description}
-            />
+          {tools.map((tool, index) => (
+            <LinkCard key={`link-${index}`} {...tool} />
           ))}
         </div>
       )}
-      <Button>Add a new team link</Button>
+      <Link href={newToolHref} buttonStyle>
+        Add a new team link
+      </Link>
       <Caption asParagraph>
         Last edited on {formatDateAndTime(new Date(lastModifiedDate))}
       </Caption>

@@ -51,7 +51,7 @@ export {
 export {
   CheckboxGroup,
   ComingSoon,
-  EditLinkModal,
+  LinkModal,
   EmailPasswordSignin,
   HelpSection,
   LinkCard,

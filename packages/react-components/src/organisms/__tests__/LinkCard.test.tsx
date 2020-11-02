@@ -1,12 +1,12 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import LinkCard from '../LinkCard';
 
 const props: ComponentProps<typeof LinkCard> = {
   name: '',
   description: '',
+  href: '/wrong',
 };
 it('renders the title and description', () => {
   const { getByRole, getByText } = render(
@@ -18,8 +18,6 @@ it('renders the title and description', () => {
 });
 
 it('renders link from properties', () => {
-  const onClick = jest.fn();
-  const { getByText } = render(<LinkCard {...props} onClick={onClick} />);
-  userEvent.click(getByText('Edit Link'));
-  expect(onClick).toHaveBeenCalled();
+  const { getByText } = render(<LinkCard {...props} href="/link/0" />);
+  expect(getByText('Edit Link')).toHaveAttribute('href', '/link/0');
 });

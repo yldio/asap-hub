@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createTeamResponse } from '@asap-hub/fixtures';
 
 import TeamWorkspace from '../TeamWorkspace';
 
-const team = createTeamResponse({ teamMembers: 1, tools: 0 });
+const team: ComponentProps<typeof TeamWorkspace> = {
+  ...createTeamResponse({ teamMembers: 1, tools: 0 }),
+  tools: [],
+  newToolHref: '/wrong',
+};
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamWorkspace {...team} tools={[]} />);
 
@@ -49,6 +53,7 @@ it('Renders tools when provided', () => {
           name: 'Mr Trump',
           description: 'The President',
           url: 'https://www.whitehouse.gov',
+          href: '/wrong',
         },
       ]}
     />,

@@ -14,3 +14,10 @@ export const Normal = () => <WelcomePage onClick={action('sign-in-click')} />;
 export const AllowSignup = () => (
   <WelcomePage allowSignup onClick={action('create-account-click')} />
 );
+export const AuthError = () => (
+  <WelcomePage
+    onClick={action('sign-in-click')}
+    authFailed
+    onCloseAuthFailedToast={action('close-auth-failed-toast-click')}
+  />
+);

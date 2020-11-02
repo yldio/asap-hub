@@ -1,3 +1,4 @@
+export { default as alertIcon } from './alert';
 export { default as chevronCircleLeftIcon } from './chevron-circle-left';
 export { default as chevronDownIcon } from './chevron-down';
 export { default as chevronUpIcon } from './chevron-up';

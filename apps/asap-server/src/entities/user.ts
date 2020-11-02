@@ -104,6 +104,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
   const teams: UserTeam[] = (flatTeams || []).map(
     parseGraphqlUserTeamConnection,
   );
+
   return {
     id: item.id,
     createdDate,
@@ -123,15 +124,15 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     teams:
       item.flatData?.role === 'Staff'
         ? [
-            {
-              id: '0',
-              displayName: 'ASAP',
-              role: 'Staff',
-              responsibilities: item.flatData.responsibilities || undefined,
-              approach: item.flatData.reachOut || undefined,
-            },
-            ...teams,
-          ]
+          {
+            id: '0',
+            displayName: 'ASAP',
+            role: 'Staff',
+            responsibilities: item.flatData.responsibilities || undefined,
+            approach: item.flatData.reachOut || undefined,
+          },
+          ...teams,
+        ]
         : teams,
     avatarUrl: flatAvatar?.length
       ? createURL(flatAvatar.map((a) => a.id))[0]
@@ -161,25 +162,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
       biography: user.data.biography?.iv,
       jobTitle: user.data.jobTitle?.iv,
       institution: user.data.institution?.iv,
-      teams:
-        user.data.role.iv === 'Staff'
-          ? [
-              {
-                id: '0',
-                displayName: 'ASAP',
-                role: user.data.jobTitle?.iv
-                  ? `${user.data.jobTitle.iv}${
-                      user.data.institution?.iv
-                        ? ` at ${user.data.institution?.iv}`
-                        : ''
-                    }`
-                  : 'Staff',
-                responsibilities: user.data.responsibilities?.iv,
-                approach: user.data.reachOut?.iv,
-              },
-              ...teams,
-            ]
-          : teams,
+      teams,
       location: user.data.location?.iv,
       orcid: user.data.orcid?.iv,
       orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,

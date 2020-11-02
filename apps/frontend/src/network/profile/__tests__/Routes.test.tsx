@@ -145,4 +145,40 @@ describe('with team', () => {
       ]
     `);
   });
+
+  describe('staff', () => {
+    it('calculates links', async () => {
+      nock.cleanAll();
+      nock(API_BASE_URL, {
+        reqheaders: { authorization: 'Bearer token' },
+      })
+        .get('/users/43')
+        .reply(200, {
+          ...user,
+          id: '43',
+          teams: [
+            {
+              id: '0',
+              displayName: 'ASAP',
+              role: 'Staff',
+              approach: 'approach',
+              responsibilities: 'responsible',
+            },
+          ],
+          role: 'Staff',
+        } as UserResponse);
+
+      const { queryAllByRole, getByText } = await renderProfile('43');
+      const loadingIndicator = getByText(/loading/i);
+      await waitForElementToBeRemoved(loadingIndicator);
+      const links = (await queryAllByRole('link')) as HTMLAnchorElement[];
+      expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
+        Array [
+          "http://localhost/discover",
+          "http://localhost/discover",
+          "http://localhost/discover",
+        ]
+      `);
+    });
+  });
 });

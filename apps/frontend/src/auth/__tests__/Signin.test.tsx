@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { StaticRouter, Router } from 'react-router-dom';
+import { History, createMemoryHistory } from 'history';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { JWK, JWT } from 'jose';
@@ -26,16 +28,21 @@ const renderSignin = async (): Promise<RenderResult> => {
   };
 
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <GrabHandleRedirectCallback />
-      <Signin />
-    </authTestUtils.Auth0Provider>,
+    <StaticRouter location="/page?search#hash">
+      <authTestUtils.Auth0Provider>
+        <GrabHandleRedirectCallback />
+        <Signin />
+      </authTestUtils.Auth0Provider>
+    </StaticRouter>,
   );
   await waitFor(() => !!result.container.textContent);
   return result;
 };
 
 const { mockGetLocation, mockAssign } = mockLocation();
+beforeEach(() => {
+  mockGetLocation.mockReturnValue(new URL('http://localhost/page?search#hash'));
+});
 
 let nonce = '';
 beforeEach(() => {
@@ -64,7 +71,7 @@ afterEach(() => {
 });
 
 it('renders a button to signin', async () => {
-  const { getByRole } = render(<Signin />);
+  const { getByRole } = render(<Signin />, { wrapper: StaticRouter });
   expect(getByRole('button').textContent).toMatchInlineSnapshot(`"Sign in"`);
 });
 
@@ -106,6 +113,42 @@ describe('when clicking the button', () => {
     it('has the original location saved in the appState', async () => {
       const { appState } = await handleRedirectCallback!();
       expect(appState).toHaveProperty('targetUrl', '/page?search#hash');
+    });
+  });
+});
+
+describe('after a failed flow', () => {
+  let history: History;
+  let result!: RenderResult;
+  beforeEach(() => {
+    history = createMemoryHistory({
+      initialEntries: [
+        '/?search&state=state&error=access_denied&error_description=Forbidden',
+      ],
+    });
+    result = render(
+      <Router history={history}>
+        <Signin />
+      </Router>,
+    );
+  });
+
+  it('shows an error message', () => {
+    expect(result.container).toHaveTextContent(/problem/i);
+  });
+
+  describe('when closing the error message', () => {
+    beforeEach(() => {
+      userEvent.click(result.getByText(/close/i));
+    });
+
+    it('hides the error message', () => {
+      expect(result.container).not.toHaveTextContent(/problem/i);
+    });
+
+    it('removes related query params', () => {
+      const searchParams = new URLSearchParams(history.location.search);
+      expect([...searchParams.keys()]).toEqual(['search']);
     });
   });
 });

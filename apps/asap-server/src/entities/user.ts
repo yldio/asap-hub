@@ -1,10 +1,13 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, TeamMember, UserResponse, UserTeam } from '@asap-hub/model';
+import { OrcidWork, UserResponse, UserTeam, TeamRole } from '@asap-hub/model';
 import { parseDate, createURL } from '../utils/squidex';
 import { CMSGraphQLTeam } from './team';
 
-interface CMSTeamMember extends Omit<TeamMember, 'id' | 'email'> {
+interface CMSTeamMember {
   id: string[];
+  role: TeamRole;
+  responsibilities?: string;
+  approach?: string;
 }
 
 export interface CMSUser {

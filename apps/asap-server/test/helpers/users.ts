@@ -80,7 +80,6 @@ export const createUserOnTeam = async (
           'Collaborator',
           'Key Personnel',
         ]),
-      displayName: team.data.displayName.iv,
       id: [team.id],
     },
   ];

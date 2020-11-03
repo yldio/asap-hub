@@ -110,6 +110,65 @@
           "placeholder": "",
           "isRequired": false
         }
+      },
+      {
+        "name": "tools",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "External Tools",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "name",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Name",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "description",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Description",
+              "isRequired": false
+            }
+          },
+          {
+            "name": "url",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "isRequired": false
+            }
+          }
+        ]
       }
     ],
     "previewUrls": {

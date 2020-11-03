@@ -181,6 +181,12 @@ export class Squidex<T extends { id: string; data: object }> {
         throw Boom.unauthorized();
       }
 
+      if (err.response?.statusCode === 400) {
+        throw Boom.badImplementation('bad request', {
+          data: err.response?.body,
+        });
+      }
+
       throw Boom.badImplementation('squidex', {
         data: err.response?.body || err,
       });

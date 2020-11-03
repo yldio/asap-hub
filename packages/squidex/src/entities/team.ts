@@ -7,6 +7,11 @@ interface Team<T = string> {
   projectTitle: string;
   proposal?: T[];
   skills: string[];
+  tools?: {
+    url: string;
+    description: string;
+    name: string;
+  }[];
 }
 
 export interface RestTeam extends Entity, Rest<Team> {}

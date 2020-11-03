@@ -1,16 +1,9 @@
 import Joi from '@hapi/joi';
-import {
-  OrcidWork,
-  UserResponse,
-  UserTeam,
-  TeamRole,
-  TeamMember,
-} from '@asap-hub/model';
+import { OrcidWork, UserResponse, UserTeam, TeamRole } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 
-interface CMSTeamMember
-  extends Omit<TeamMember, 'id' | 'email' | 'displayName'> {
+interface CMSTeamMember {
   id: string[];
   role: TeamRole;
   responsibilities?: string;
@@ -121,23 +114,13 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     questions: flatQuestions.map((q) => q.question) || [],
     skills: flatSkills,
     lastModifiedDate: item.flatData?.lastModifiedDate ?? createdDate,
-    teams:
-      item.flatData?.role === 'Staff'
-        ? [
-          {
-            id: '0',
-            displayName: 'ASAP',
-            role: 'Staff',
-            responsibilities: item.flatData.responsibilities || undefined,
-            approach: item.flatData.reachOut || undefined,
-          },
-          ...teams,
-        ]
-        : teams,
+    teams,
     avatarUrl: flatAvatar?.length
       ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,
     role,
+    responsibilities: item.flatData?.responsibilities || undefined,
+    reachOut: item.flatData?.reachOut || undefined,
   };
 };
 
@@ -172,6 +155,8 @@ export const parseUser = (user: CMSUser): UserResponse => {
       questions: user.data.questions?.iv.map(({ question }) => question) || [],
       avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
       role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
+      responsibilities: user.data.responsibilities?.iv || undefined,
+      reachOut: user.data.reachOut?.iv || undefined,
     }),
   );
 };

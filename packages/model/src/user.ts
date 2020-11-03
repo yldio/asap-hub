@@ -92,6 +92,8 @@ export interface UserResponse extends Invitee {
   biosketch?: string;
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
+  reachOut?: string;
+  responsibilities?: string;
   role: 'Staff' | 'Grantee' | 'Guest';
 }
 

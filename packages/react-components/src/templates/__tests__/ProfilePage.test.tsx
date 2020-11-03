@@ -12,6 +12,7 @@ const boilerplateProps: Omit<ComponentProps<typeof ProfilePage>, 'children'> = {
   aboutHref: '#',
   outputsHref: '#',
   researchHref: '#',
+  discoverHref: '#',
   role: 'Grantee',
 };
 

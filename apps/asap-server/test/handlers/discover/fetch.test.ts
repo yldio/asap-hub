@@ -174,15 +174,9 @@ describe('GET /discover', () => {
           lastName: 'Do',
           questions: [],
           skills: [],
-          teams: [
-            {
-              id: '0',
-              displayName: 'ASAP',
-              role: 'ASAP Staff',
-              approach: 'reach out',
-              responsibilities: 'responsibilities',
-            },
-          ],
+          teams: [],
+          reachOut: 'reach out',
+          responsibilities: 'responsibilities',
           role: 'Staff',
         },
       ],

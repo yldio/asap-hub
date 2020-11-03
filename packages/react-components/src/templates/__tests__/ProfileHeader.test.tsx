@@ -11,6 +11,7 @@ const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
   aboutHref: './about',
   researchHref: './research',
   outputsHref: './outputs',
+  discoverHref: '/discover',
   role: 'Grantee',
 };
 

@@ -9,14 +9,18 @@ import {
   ProfileBackground,
   ProfileBiography,
   ProfileRecentWorks,
+  ProfileStaffBackground,
 } from '../organisms';
+import { Paragraph, Link } from '../atoms';
+import { mailToSupport } from '../mail';
 
 const styles = css({
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
 });
 
-type ProfileInterestProps = ComponentProps<typeof QuestionsSection> &
+type ProfileStaffProps = ComponentProps<typeof ProfileStaffBackground> &
+  ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileSkills> &
   Pick<UserResponse, 'email'> & {
     readonly biography?: ComponentProps<typeof ProfileBiography>['biography'];
@@ -26,9 +30,10 @@ type ProfileInterestProps = ComponentProps<typeof QuestionsSection> &
     readonly teams: ReadonlyArray<
       Omit<ComponentProps<typeof ProfileBackground>, 'firstName'>
     >;
+    readonly discoverHref: string;
   };
 
-const ProfileStaff: React.FC<ProfileInterestProps> = ({
+const ProfileStaff: React.FC<ProfileStaffProps> = ({
   biography,
   firstName,
   teams,
@@ -36,9 +41,18 @@ const ProfileStaff: React.FC<ProfileInterestProps> = ({
   skillsDescription,
   orcidWorks,
   questions,
+  discoverHref,
+  reachOut,
+  responsibilities,
 }) => {
   return (
     <div css={styles}>
+      <ProfileStaffBackground
+        firstName={firstName}
+        discoverHref={discoverHref}
+        reachOut={reachOut}
+        responsibilities={responsibilities}
+      />
       {teams.length
         ? teams.map((team) => (
             <ProfileBackground key={team.id} {...team} firstName={firstName} />
@@ -54,6 +68,16 @@ const ProfileStaff: React.FC<ProfileInterestProps> = ({
       {orcidWorks && orcidWorks.length ? (
         <ProfileRecentWorks orcidWorks={orcidWorks} />
       ) : null}
+      <section css={{ textAlign: 'center' }}>
+        <Paragraph accent="lead">
+          <span css={{ fontWeight: 'bold' }}>
+            Looking for help with an ASAP-related matter?
+          </span>
+          <br />
+          Our support team is happy to help. Get in touch{' '}
+          <Link href={mailToSupport}>here</Link>
+        </Paragraph>
+      </section>
     </div>
   );
 };

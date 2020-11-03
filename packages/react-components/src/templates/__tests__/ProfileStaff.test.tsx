@@ -9,6 +9,7 @@ const boilerplateProps: ComponentProps<typeof ProfileStaff> = {
   email: 'test@test.com',
   questions: [],
   skills: [],
+  discoverHref: '/discover',
 };
 
 it('renders the biography', () => {
@@ -38,26 +39,6 @@ it('renders questions section', () => {
   expect(getByText(/question.1/i)).toBeVisible();
 });
 
-it('renders teams section', () => {
-  const { getByText } = render(
-    <ProfileStaff
-      {...boilerplateProps}
-      teams={[
-        {
-          id: '0',
-          displayName: 'ASAP',
-          role: 'Staff',
-          href: '/discover',
-          responsibilities: 'responsible',
-        },
-      ]}
-    />,
-  );
-
-  expect(getByText(/role\son\sasap/i)).toBeVisible();
-  expect(getByText(/responsible/i)).toBeVisible();
-});
-
 it('renders orcid section', () => {
   const { getByText } = render(
     <ProfileStaff
@@ -78,4 +59,33 @@ it('renders orcid section', () => {
   );
 
   expect(getByText(/recent\spublications/i)).toBeVisible();
+});
+
+it('renders teams section', () => {
+  const { getByText } = render(
+    <ProfileStaff {...boilerplateProps} responsibilities={'responsible'} />,
+  );
+
+  expect(getByText(/role\son\sasap/i)).toBeVisible();
+  expect(getByText(/responsible/i)).toBeVisible();
+});
+
+it('renders extra teams section', () => {
+  const { getByText } = render(
+    <ProfileStaff
+      {...boilerplateProps}
+      responsibilities={'responsible'}
+      teams={[
+        {
+          id: 'uuid',
+          displayName: 'Awesome',
+          role: 'Project Manager',
+          href: '/uuid',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByText(/team\sawesome/i)).toBeVisible();
+  expect(getByText(/responsible/i)).toBeVisible();
 });

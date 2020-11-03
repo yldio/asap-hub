@@ -44,13 +44,14 @@ const Profile: React.FC<{}> = () => {
   if (profile) {
     const teams = profile.teams.map(({ proposal, ...team }) => ({
       ...team,
-      href: team.id === '0' ? `/discover` : `/network/teams/${team.id}`,
+      href: `/network/teams/${team.id}`,
       proposalHref: proposal ? `/shared-research/${proposal}` : undefined,
     }));
 
     const profilePageProps = {
       ...profile,
       teams,
+      discoverHref: '/discover',
       aboutHref: join(url, 'about'),
       researchHref: join(url, 'research'),
       outputsHref: join(url, 'outputs'),
@@ -61,7 +62,7 @@ const Profile: React.FC<{}> = () => {
         <ErrorBoundary>
           <Suspense fallback="Loading...">
             {profile.role === 'Staff' ? (
-              <Staff {...profile} teams={teams} />
+              <Staff {...profile} teams={teams} discoverHref={'/discover'} />
             ) : (
               <Switch>
                 <Route path={`${path}/research`}>

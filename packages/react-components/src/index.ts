@@ -66,6 +66,7 @@ export {
   ProfileBiography,
   ProfileRecentWorks,
   ProfileSkills,
+  ProfileStaffBackground,
   QuestionsSection,
   RadioButtonGroup,
   RichText,

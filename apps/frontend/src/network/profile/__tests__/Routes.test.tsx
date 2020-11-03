@@ -146,7 +146,7 @@ describe('with team', () => {
     `);
   });
 
-  describe('staff', () => {
+  describe('for a staff member', () => {
     it('calculates links', async () => {
       nock.cleanAll();
       nock(API_BASE_URL, {
@@ -156,29 +156,29 @@ describe('with team', () => {
         .reply(200, {
           ...user,
           id: '43',
-          teams: [
-            {
-              id: '0',
-              displayName: 'ASAP',
-              role: 'Staff',
-              approach: 'approach',
-              responsibilities: 'responsible',
-            },
-          ],
           role: 'Staff',
+          reachOut: 'approach',
+          responsibilities: 'responsible',
         } as UserResponse);
 
-      const { queryAllByRole, getByText } = await renderProfile('43');
+      const { queryAllByText, getByText } = await renderProfile('43');
       const loadingIndicator = getByText(/loading/i);
       await waitForElementToBeRemoved(loadingIndicator);
-      const links = (await queryAllByRole('link')) as HTMLAnchorElement[];
-      expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
-        Array [
-          "http://localhost/discover",
-          "http://localhost/discover",
-          "http://localhost/discover",
-        ]
-      `);
+
+      expect(
+        getByText(/here/i, {
+          selector: 'a',
+        }),
+      ).toHaveAttribute(
+        'href',
+        'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
+      );
+
+      expect(
+        await queryAllByText(/team\sasap/i, {
+          selector: 'a',
+        }).map((a) => a.getAttribute('href')),
+      ).toEqual(['/discover', '/discover']);
     });
   });
 });

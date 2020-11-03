@@ -17,6 +17,7 @@ export { default as ProfileBackground } from './ProfileBackground';
 export { default as ProfileBiography } from './ProfileBiography';
 export { default as ProfileRecentWorks } from './ProfileRecentWorks';
 export { default as ProfileSkills } from './ProfileSkills';
+export { default as ProfileStaffBackground } from './ProfileStaffBackground';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as RichText } from './RichText';

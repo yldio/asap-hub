@@ -13,14 +13,14 @@
     "got": "^11.6.0"
   },
   "devDependencies": {
-    "@asap-hub/auth": "workspace:packages/auth",
-    "@asap-hub/eslint-config-asap-hub": "workspace:packages/eslint-config-asap-hub",
-    "@asap-hub/model": "workspace:packages/model",
+    "@asap-hub/auth": "workspace:*",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@asap-hub/model": "workspace:*",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-typescript": "^7.9.0",
     "@babel/runtime-corejs3": "^7.9.6",
-    "@types/asap-hub__auth0-rule": "workspace:@types/asap-hub__auth0-rule",
+    "@types/asap-hub__auth0-rule": "workspace:*",
     "@types/jest": "^26.0.3",
     "nock": "^13.0.4"
   }

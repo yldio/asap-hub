@@ -13,7 +13,7 @@
     "watch:babel": "../../scripts/build-babel.sh watch"
   },
   "dependencies": {
-    "@asap-hub/model": "workspace:packages/model",
+    "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "^7.9.6",
     "core-js": "^3.6.5",
     "date-fns": "^2.16.1",

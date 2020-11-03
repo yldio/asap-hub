@@ -10,7 +10,7 @@
     "react-dom": "^16.13.1"
   },
   "dependencies": {
-    "@asap-hub/react-components": "workspace:packages/react-components",
+    "@asap-hub/react-components": "workspace:*",
     "@babel/core": "^7.9.0",
     "@emotion/cache": "^10.0.29",
     "@emotion/core": "^10.0.28",

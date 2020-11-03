@@ -4,7 +4,13 @@ import css from '@emotion/css';
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';
 import { crossIcon, alertIcon } from '../icons';
-import { perRem, lineHeight } from '../pixels';
+import {
+  perRem,
+  lineHeight,
+  vminLinearCalcClamped,
+  mobileScreen,
+  largeDesktopScreen,
+} from '../pixels';
 import { rose, ember } from '../colors';
 import { noop } from '../utils';
 
@@ -32,7 +38,13 @@ const alignIconWithParagraphStyles = css({
 const styles = css({
   boxSizing: 'border-box',
   width: '100%',
-  padding: `${12 / perRem}em ${SIDE_PADDING / perRem}em`,
+  padding: `${vminLinearCalcClamped(
+    mobileScreen,
+    12,
+    largeDesktopScreen,
+    6,
+    'px',
+  )} ${SIDE_PADDING / perRem}em`,
   position: 'relative',
 
   backgroundColor: rose.rgb,

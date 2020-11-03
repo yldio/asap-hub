@@ -27,11 +27,18 @@ describe('vminLinearCalc', () => {
 });
 
 describe('vminLinearCalcClamped', () => {
+  const smallScreen: Screen = { width: 125, height: 100, min: 100, max: 125 };
+  const largeScreen: Screen = { width: 250, height: 200, min: 200, max: 250 };
+
   it('creates a vminLinearCalc clamped to the value range', () => {
-    const smallScreen: Screen = { width: 125, height: 100, min: 100, max: 125 };
-    const largeScreen: Screen = { width: 250, height: 200, min: 200, max: 250 };
     expect(
       vminLinearCalcClamped(smallScreen, 10, largeScreen, 12, 'px'),
     ).toEqual('clamp(10px, calc(8px + 2vmin), 12px)');
+  });
+
+  it('creates a decreasing clamp', () => {
+    expect(
+      vminLinearCalcClamped(smallScreen, 12, largeScreen, 10, 'px'),
+    ).toEqual('clamp(10px, calc(14px + -2vmin), 12px)');
   });
 });

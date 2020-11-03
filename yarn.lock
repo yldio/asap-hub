@@ -56,7 +56,7 @@ __metadata:
     uuid: ^8.3.0
     yargs: ^16.1.0
   bin:
-    asap-import: build/cli.js
+    asap-cli: build-cjs/cli.js
   languageName: unknown
   linkType: soft
 

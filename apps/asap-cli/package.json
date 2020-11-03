@@ -2,9 +2,7 @@
   "name": "@asap-hub/asap-cli",
   "private": true,
   "version": "0.1.0",
-  "bin": {
-    "asap-import": "build/cli.js"
-  },
+  "bin": "build-cjs/cli.js",
   "engines": {
     "node": "12.x"
   },

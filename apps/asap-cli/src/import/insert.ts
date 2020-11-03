@@ -17,6 +17,7 @@ interface Cache {
 }
 
 interface HTTPError extends Error {
+  data: unknown;
   response?: {
     statusCode: number;
     body: string;
@@ -36,9 +37,11 @@ const insertMembership = (
   };
 
   return users.patch(user.id, {
-    ...user.data,
+    email: {
+      iv: user.data.email.iv,
+    },
     teams: {
-      iv: [...(user.data.teams?.iv || []), newTeam].filter(
+      iv: [newTeam, ...(user.data.teams?.iv || [])].filter(
         (value, index, self) =>
           self.findIndex((v) => v.id[0] === value.id[0]) === index,
       ),
@@ -66,7 +69,12 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
 
   if (cache[team.applicationNumber.iv] && role === 'Lead PI') {
     const t = await cache[team.applicationNumber.iv];
-    cache[team.applicationNumber.iv] = teams.patch(t.id, team);
+    cache[team.applicationNumber.iv] = teams.patch(t.id, {
+      ...t,
+      displayName: {
+        iv: lastName,
+      },
+    });
   }
 
   if (!cache[team.displayName.iv]) {
@@ -188,8 +196,10 @@ const insertUser = async (
             if (upsert) {
               console.log(`upsert ${user.email.iv}`);
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const { teams: _, connections, role, ...props } = user;
-              return users.patch(t.id, props);
+              const { teams: _, connections, avatar, ...props } = user;
+              return users.patch(t.id, {
+                ...props,
+              });
             }
             return t;
           });
@@ -238,7 +248,7 @@ export default ({
         console.error({
           op: `update '${data.email}'`,
           message: err3.message,
-          body: err3.response?.body,
+          body: err3.response?.body || err3.data,
         });
       }
     }

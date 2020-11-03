@@ -7,9 +7,6 @@ import { fetchUsersResponse } from './invite.fixtures';
 import { fetchTeamsResponse } from './import.fixtures';
 
 const body = {
-  avatar: {
-    iv: [],
-  },
   email: {
     iv: 'john@doe.com',
   },
@@ -71,6 +68,9 @@ describe('Import user', () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/users?publish=true`, {
         ...body,
+        avatar: {
+          iv: [],
+        },
         teams: {
           iv: [],
         },
@@ -90,6 +90,9 @@ describe('Import user', () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/users?publish=true`, {
         ...body,
+        avatar: {
+          iv: [],
+        },
         teams: {
           iv: [],
         },
@@ -113,7 +116,12 @@ describe('Import user', () => {
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })
-      .patch(`/api/content/${config.appName}/users/userId1`, body)
+      .patch(`/api/content/${config.appName}/users/userId1`, {
+        ...body,
+        role: {
+          iv: 'Staff',
+        },
+      })
       .reply(200, fetchUsersResponse.items[0]);
 
     await importUsers(join(__dirname, 'user.fixture.csv'));
@@ -126,7 +134,9 @@ describe('Import user', () => {
       .post(`/api/content/${config.appName}/teams?publish=true`)
       .reply(200, fetchTeamsResponse.items[0])
       .patch(`/api/content/${config.appName}/users/userId1`, {
-        ...fetchUsersResponse.items[0].data,
+        email: {
+          iv: fetchUsersResponse.items[0].data.email.iv,
+        },
         teams: {
           iv: [
             {
@@ -138,7 +148,7 @@ describe('Import user', () => {
           ],
         },
       })
-      .reply(200, fetchTeamsResponse.items[0]);
+      .reply(200, fetchUsersResponse.items[0]);
 
     await importUsers(join(__dirname, 'user-membership.fixture.csv'));
   });

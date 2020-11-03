@@ -3,32 +3,86 @@ import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 
-import { tabletScreen, perRem } from '../pixels';
+import {
+  tabletScreen,
+  perRem,
+  vminLinearCalc,
+  mobileScreen,
+  largeDesktopScreen,
+} from '../pixels';
 import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
 import { ProfilePersonalText, TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { paper } from '../colors';
+import { editIcon } from '../icons';
 
 const containerStyles = css({
   alignSelf: 'stretch',
   backgroundColor: paper.rgb,
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  padding: `${12 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
+
+  display: 'grid',
+  grid: `
+    ".             edit-personal-info" ${24 / perRem}em
+    "personal-info personal-info     " auto
+    "contact       edit-contact      " auto
+    "tab-nav       tab-nav           " auto
+      / auto ${36 / perRem}em
+  `,
+  gridColumnGap: `${12 / perRem}em`,
+
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    paddingTop: `${36 / perRem}em`,
+    grid: `
+      "edit-personal-info personal-info ."
+      "edit-contact       contact       ."
+      ".                  tab-nav       ."
+        / ${36 / perRem}em auto ${36 / perRem}em
+    `,
+    gridColumnGap: vminLinearCalc(
+      mobileScreen,
+      24,
+      largeDesktopScreen,
+      30,
+      'px',
+    ),
+  },
 });
 
+const editPersonalInfoStyles = css({
+  gridArea: 'edit-personal-info',
+  justifySelf: 'end',
+});
 const personalInfoStyles = css({
+  gridArea: 'personal-info',
+
   display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap-reverse',
+  flexDirection: 'column-reverse',
+
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    // only on big grid to avoid potential Avatar <=> Edit Button overlap
+    flexDirection: 'row',
+    flexWrap: 'wrap-reverse',
+  },
+
   justifyContent: 'space-between',
   alignItems: 'start',
 });
 
-const actionsStyles = css({
+const editContactStyles = css({
+  gridArea: 'edit-contact',
+});
+const contactStyles = css({
+  gridArea: 'contact',
+
   display: 'flex',
   flexWrap: 'wrap',
 });
-const contactStyles = css({
+const contactNoEditStyles = css({
+  gridColumnEnd: 'edit-contact',
+});
+const contactButtonStyles = css({
   flexGrow: 1,
   alignSelf: 'center',
 
@@ -48,6 +102,10 @@ const lastModifiedStyles = css({
   },
 });
 
+const tabNavStyles = css({
+  gridArea: 'tab-nav',
+});
+
 type ProfileProps = Pick<
   UserResponse,
   | 'avatarUrl'
@@ -64,6 +122,9 @@ type ProfileProps = Pick<
   readonly aboutHref: string;
   readonly researchHref: string;
   readonly outputsHref: string;
+
+  readonly editPersonalInfoHref?: string;
+  readonly editContactHref?: string;
 
   readonly teams: ReadonlyArray<UserTeam & { href: string }>;
 };
@@ -84,6 +145,9 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   aboutHref,
   researchHref,
   outputsHref,
+
+  editPersonalInfoHref,
+  editContactHref,
 }) => {
   return (
     <header css={containerStyles}>
@@ -104,8 +168,23 @@ const ProfileHeader: React.FC<ProfileProps> = ({
           lastName={lastName}
         />
       </section>
-      <section css={actionsStyles}>
-        <div css={contactStyles}>
+      {editPersonalInfoHref && (
+        <div css={editPersonalInfoStyles}>
+          <Link
+            buttonStyle
+            small
+            primary
+            href={editPersonalInfoHref}
+            label="Edit personal information"
+          >
+            {editIcon}
+          </Link>
+        </div>
+      )}
+      <section
+        css={[contactStyles, editContactHref ? null : contactNoEditStyles]}
+      >
+        <div css={contactButtonStyles}>
           <Link small buttonStyle primary href={createMailTo(email)}>
             Contact
           </Link>
@@ -121,11 +200,26 @@ const ProfileHeader: React.FC<ProfileProps> = ({
           </div>
         )}
       </section>
-      <TabNav>
-        <TabLink href={researchHref}>Research</TabLink>
-        <TabLink href={aboutHref}>Background</TabLink>
-        <TabLink href={outputsHref}>Shared Outputs</TabLink>
-      </TabNav>
+      {editContactHref && (
+        <div css={editContactStyles}>
+          <Link
+            buttonStyle
+            small
+            primary
+            href={editContactHref}
+            label="Edit contact information"
+          >
+            {editIcon}
+          </Link>
+        </div>
+      )}
+      <div css={tabNavStyles}>
+        <TabNav>
+          <TabLink href={researchHref}>Research</TabLink>
+          <TabLink href={aboutHref}>Background</TabLink>
+          <TabLink href={outputsHref}>Shared Outputs</TabLink>
+        </TabNav>
+      </div>
     </header>
   );
 };

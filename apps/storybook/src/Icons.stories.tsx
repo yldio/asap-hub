@@ -7,6 +7,7 @@ import {
   discoverIcon,
   docsIcon,
   dropdownChevronIcon,
+  editIcon,
   eventsPlaceholder,
   externalLinkIcon,
   feedbackIcon,
@@ -46,6 +47,7 @@ export const Cross = () => crossIcon;
 export const Discover = () => discoverIcon;
 export const Docs = () => docsIcon;
 export const DropdownChevron = () => dropdownChevronIcon;
+export const EditIcon = () => editIcon;
 export const EventsPlaceholder = () => eventsPlaceholder;
 export const ExternalLink = () => externalLinkIcon;
 export const Feedback = () => feedbackIcon;

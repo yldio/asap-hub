@@ -51,6 +51,7 @@ type LinkProps = {
   readonly children: ReactNode;
   // hrefs may conditionally be undefined, but the prop is mandatory so it cannot be forgotton
   readonly href: string | undefined;
+  readonly label?: string;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 const Link: React.FC<LinkProps> = ({
   children,
@@ -62,6 +63,7 @@ const Link: React.FC<LinkProps> = ({
   buttonStyle = false,
   primary = false,
   small = false,
+  label,
 }) => {
   const linkStyles = buttonStyle
     ? [styles, getButtonStyles({ primary, small, children })]
@@ -75,7 +77,7 @@ const Link: React.FC<LinkProps> = ({
   const internal = href ? isInternalLink(href) : false;
   if (useHasRouter() && href && internal) {
     return (
-      <HashLink css={linkStyles} to={href} smooth>
+      <HashLink to={href} aria-label={label} css={linkStyles} smooth>
         {linkChildren}
       </HashLink>
     );
@@ -83,6 +85,7 @@ const Link: React.FC<LinkProps> = ({
   return (
     <a
       href={href || undefined}
+      aria-label={label}
       css={linkStyles}
       target={internal ? undefined : '_blank'}
       rel={internal ? undefined : 'noreferrer noopener'}

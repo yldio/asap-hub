@@ -31,8 +31,8 @@ const styles = css({
 
   boxSizing: 'border-box',
   borderStyle: 'solid',
-  borderWidth: `${borderWidth}px`,
-  borderRadius: '4px',
+  borderWidth: `${borderWidth / perRem}em`,
+  borderRadius: `${4 / perRem}em`,
 
   cursor: 'pointer',
 
@@ -47,9 +47,10 @@ const styles = css({
 });
 
 const largeStyles = css({
-  height: `${(54 + 2 * borderWidth) / perRem}em`,
+  height: `${54 / perRem}em`,
   '> svg': {
     height: `${24 / perRem}em`,
+    width: 'auto',
   },
   '> svg + span': {
     marginLeft: `${12 / perRem}em`,
@@ -58,19 +59,19 @@ const largeStyles = css({
     marginLeft: `${12 / perRem}em`,
   },
 
-  marginTop: `${(18 - 2 * borderWidth) / perRem}em`,
-  marginBottom: `${(18 - 2 * borderWidth) / perRem}em`,
+  marginTop: `${16 / perRem}em`,
+  marginBottom: `${16 / perRem}em`,
 
-  paddingTop: `${15 / perRem}em`,
-  paddingBottom: `${15 / perRem}em`,
-  paddingLeft: `${18 / perRem}em`,
-  paddingRight: `${18 / perRem}em`,
+  paddingTop: `${(15 - borderWidth) / perRem}em`,
+  paddingBottom: `${(15 - borderWidth) / perRem}em`,
+  paddingLeft: `${(18 - borderWidth) / perRem}em`,
+  paddingRight: `${(18 - borderWidth) / perRem}em`,
 });
 const smallStyles = css({
-  height: `${(36 + 2 * borderWidth) / perRem}em`,
+  height: `${36 / perRem}em`,
   '> svg': {
     height: `${18 / perRem}em`,
-    width: `${18 / perRem}em`,
+    width: 'auto',
   },
   '> svg + span': {
     marginLeft: `${6 / perRem}em`,
@@ -79,26 +80,26 @@ const smallStyles = css({
     marginLeft: `${6 / perRem}em`,
   },
 
-  marginTop: `${(12 - 2 * borderWidth) / perRem}em`,
-  marginBottom: `${(12 - 2 * borderWidth) / perRem}em`,
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${12 / perRem}em`,
 
-  paddingTop: `${9 / perRem}em`,
-  paddingBottom: `${9 / perRem}em`,
-  paddingLeft: `${12 / perRem}em`,
-  paddingRight: `${12 / perRem}em`,
+  paddingTop: `${(9 - borderWidth) / perRem}em`,
+  paddingBottom: `${(9 - borderWidth) / perRem}em`,
+  paddingLeft: `${(12 - borderWidth) / perRem}em`,
+  paddingRight: `${(12 - borderWidth) / perRem}em`,
 });
 
 const largeTextOnlyStyles = css({
-  paddingLeft: `${42 / perRem}em`,
-  paddingRight: `${42 / perRem}em`,
+  paddingLeft: `${(42 - borderWidth) / perRem}em`,
+  paddingRight: `${(42 - borderWidth) / perRem}em`,
 });
 const largeIconOnlyStyles = css({
-  paddingLeft: `${15 / perRem}em`,
-  paddingRight: `${15 / perRem}em`,
+  paddingLeft: `${(15 - borderWidth) / perRem}em`,
+  paddingRight: `${(15 - borderWidth) / perRem}em`,
 });
 const smallIconOnlyStyles = css({
-  paddingLeft: `${9 / perRem}em`,
-  paddingRight: `${9 / perRem}em`,
+  paddingLeft: `${(9 - borderWidth) / perRem}em`,
+  paddingRight: `${(9 - borderWidth) / perRem}em`,
 });
 
 const boxShadow = (opaqueColor: OpaqueColor) =>

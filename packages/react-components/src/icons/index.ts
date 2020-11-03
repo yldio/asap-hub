@@ -6,6 +6,7 @@ export { default as crossIcon } from './cross';
 export { default as discoverIcon } from './discover';
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';
+export { default as editIcon } from './edit';
 export { default as eventsPlaceholder } from './events-placeholder';
 export { default as externalLinkIcon } from './external-link';
 export { default as feedbackIcon } from './feedback';

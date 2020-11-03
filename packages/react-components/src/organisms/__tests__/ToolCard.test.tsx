@@ -1,16 +1,16 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import LinkCard from '../LinkCard';
+import ToolCard from '../ToolCard';
 
-const props: ComponentProps<typeof LinkCard> = {
+const props: ComponentProps<typeof ToolCard> = {
   name: '',
   description: '',
   href: '/wrong',
 };
 it('renders the title and description', () => {
   const { getByRole, getByText } = render(
-    <LinkCard {...props} name="LinkName" description="LinkDescription" />,
+    <ToolCard {...props} name="LinkName" description="LinkDescription" />,
   );
   expect(getByRole('heading').textContent).toEqual('LinkName');
   expect(getByRole('heading').tagName).toEqual('H3');
@@ -18,6 +18,6 @@ it('renders the title and description', () => {
 });
 
 it('renders link from properties', () => {
-  const { getByText } = render(<LinkCard {...props} href="/link/0" />);
+  const { getByText } = render(<ToolCard {...props} href="/link/0" />);
   expect(getByText('Edit Link')).toHaveAttribute('href', '/link/0');
 });

@@ -6,7 +6,7 @@ import {
   TeamAbout,
   TeamOutputs,
   TeamWorkspace,
-  LinkModal,
+  ToolModal,
 } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
@@ -147,11 +147,11 @@ export const WorkspaceTab = () => (
   </TeamPage>
 );
 
-export const WorkspaceTabEditLink = () => (
+export const WorkspaceTabEditTool = () => (
   <>
     <TeamPage {...commonProps()} workspaceHref="#">
       <TeamWorkspace {...commonProps()} tools={tools()} newToolHref="/wrong" />
     </TeamPage>
-    <LinkModal {...tool()} title="123" backHref="/wrong" />
+    <ToolModal {...tool()} title="123" backHref="/wrong" />
   </>
 );

@@ -3,10 +3,10 @@ import { TeamTool } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph, Link } from '../atoms';
 
-type LinkCardProps = Pick<TeamTool, 'description' | 'name'> & {
+type ToolCardProps = Pick<TeamTool, 'description' | 'name'> & {
   readonly href: string;
 };
-const LinkCard: React.FC<LinkCardProps> = ({ name, description, href }) => (
+const ToolCard: React.FC<ToolCardProps> = ({ name, description, href }) => (
   <Card>
     <Headline3>{name}</Headline3>
     <Paragraph accent="lead">{description}</Paragraph>
@@ -14,4 +14,4 @@ const LinkCard: React.FC<LinkCardProps> = ({ name, description, href }) => (
   </Card>
 );
 
-export default LinkCard;
+export default ToolCard;

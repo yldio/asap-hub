@@ -1,13 +1,13 @@
 import React, { ComponentProps } from 'react';
 import { text } from '@storybook/addon-knobs';
 
-import { LinkCard } from '@asap-hub/react-components';
+import { ToolCard } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Link Card',
+  title: 'Organisms / Tool Card',
 };
 
-const linkCardProps = (): ComponentProps<typeof LinkCard> => ({
+const ToolCardProps = (): ComponentProps<typeof ToolCard> => ({
   name: text('Name', 'Slack (#team-ferguson)'),
   description: text(
     'Description',
@@ -16,4 +16,4 @@ const linkCardProps = (): ComponentProps<typeof LinkCard> => ({
   href: '/wrong',
 });
 
-export const Normal = () => <LinkCard {...linkCardProps()} />;
+export const Normal = () => <ToolCard {...ToolCardProps()} />;

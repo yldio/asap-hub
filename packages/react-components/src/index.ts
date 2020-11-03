@@ -51,10 +51,10 @@ export {
 export {
   CheckboxGroup,
   ComingSoon,
-  LinkModal,
+  ToolModal,
   EmailPasswordSignin,
   HelpSection,
-  LinkCard,
+  ToolCard,
   MainNavigation,
   MembersSection,
   MenuHeader,

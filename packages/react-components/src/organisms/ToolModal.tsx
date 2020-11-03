@@ -7,13 +7,13 @@ import ModalEditHeader from '../molecules/ModalEditHeader';
 import { Modal } from '../molecules';
 import { noop } from '../utils';
 
-type LinkModalProps = Partial<TeamTool> & {
+type ToolModalProps = Partial<TeamTool> & {
   onSave?: (data: TeamTool) => void;
   title: string;
   backHref: string;
 };
 
-const LinkModal: React.FC<LinkModalProps> = ({
+const ToolModal: React.FC<ToolModalProps> = ({
   title,
   url = '',
   description = '',
@@ -54,4 +54,4 @@ const LinkModal: React.FC<LinkModalProps> = ({
   );
 };
 
-export default LinkModal;
+export default ToolModal;

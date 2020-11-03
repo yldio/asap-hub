@@ -4,7 +4,7 @@ import {
   Paragraph,
   TeamPage,
   NotFoundPage,
-  LinkModal,
+  ToolModal,
   TeamWorkspace,
 } from '@asap-hub/react-components';
 import { join } from 'path';
@@ -83,7 +83,7 @@ const Team: React.FC<{}> = () => {
                 <Route path={`${path}/workspace`}>
                   <Workspace {...workspaceProps} />
                   <Route exact path={`${path}/workspace/tool`}>
-                    <LinkModal
+                    <ToolModal
                       title="Add Link"
                       backHref={join(url, 'workspace')}
                     />
@@ -93,7 +93,7 @@ const Team: React.FC<{}> = () => {
                       key={`tool-${i}`}
                       path={`${path}/workspace/tool/${i}`}
                     >
-                      <LinkModal
+                      <ToolModal
                         {...tool}
                         title="Edit Link"
                         backHref={join(url, 'workspace')}

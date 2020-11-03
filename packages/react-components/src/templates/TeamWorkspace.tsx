@@ -4,7 +4,7 @@ import css from '@emotion/css';
 
 import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
-import { LinkCard } from '../organisms';
+import { ToolCard } from '../organisms';
 import { mailToSupport, createMailTo } from '../mail';
 import { formatDateAndTime } from '../utils';
 
@@ -13,7 +13,7 @@ const containerStyles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-const linkContainerStyles = css({
+const toolContainerStyles = css({
   display: 'grid',
   gridRowGap: `${24 / perRem}em`,
   padding: `${24 / perRem}em 0`,
@@ -41,9 +41,9 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
         internally shared resources and what each link is used for.
       </Paragraph>
       {!!tools.length && (
-        <div css={linkContainerStyles}>
+        <div css={toolContainerStyles}>
           {tools.map((tool, index) => (
-            <LinkCard key={`link-${index}`} {...tool} />
+            <ToolCard key={`tool-${index}`} {...tool} />
           ))}
         </div>
       )}

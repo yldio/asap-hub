@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import css from '@emotion/css';
 
 import { Card, Overlay } from '../atoms';
@@ -40,23 +39,17 @@ const cardContainer = css({
   maxWidth: '725px',
 });
 
-const modalRoot = document.getElementById('modal-root');
-
-const Modal: React.FC<{}> = ({ children }) =>
-  modalRoot
-    ? ReactDOM.createPortal(
-        <>
-          <div css={overlayContainerStyles}>
-            <Overlay />
-          </div>
-          <div role="dialog" css={modalContainerStyles}>
-            <Card>
-              <div css={cardContainer}>{children}</div>
-            </Card>
-          </div>
-        </>,
-        modalRoot,
-      )
-    : null;
+const Modal: React.FC<{}> = ({ children }) => (
+  <>
+    <div css={overlayContainerStyles}>
+      <Overlay />
+    </div>
+    <div role="dialog" css={modalContainerStyles}>
+      <Card>
+        <div css={cardContainer}>{children}</div>
+      </Card>
+    </div>
+  </>
+);
 
 export default Modal;

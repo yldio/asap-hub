@@ -26,5 +26,5 @@ it('Displays the back link', () => {
   const { getByTitle } = render(
     <ModalEditHeader {...props} backHref="/back" />,
   );
-  expect(getByTitle('Cross').closest('a')).toHaveAttribute('href', '/back');
+  expect(getByTitle('Close').closest('a')).toHaveAttribute('href', '/back');
 });

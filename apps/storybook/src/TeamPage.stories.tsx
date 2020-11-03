@@ -152,6 +152,10 @@ export const WorkspaceTabEditTool = () => (
     <TeamPage {...commonProps()} workspaceHref="#">
       <TeamWorkspace {...commonProps()} tools={tools()} newToolHref="/wrong" />
     </TeamPage>
-    <ToolModal {...tool()} title="123" backHref="/wrong" />
+    <ToolModal
+      {...tool()}
+      title={text('Modal Title', 'Add Link')}
+      backHref="/wrong"
+    />
   </>
 );

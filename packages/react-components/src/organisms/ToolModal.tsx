@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { TeamTool } from '@asap-hub/model';
 
-import { Paragraph, TextField } from '../atoms';
-import Subtitle from '../atoms/Subtitle';
 import ModalEditHeader from '../molecules/ModalEditHeader';
-import { Modal } from '../molecules';
+import { Modal, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 
 type ToolModalProps = Partial<TeamTool> & {
@@ -37,19 +35,25 @@ const ToolModal: React.FC<ToolModalProps> = ({
         }
         title={title}
       />
-      <Subtitle>Add URL</Subtitle>
-      <Paragraph accent="lead">
-        Ensure sharing settings have been adjusted so that your team can access
-        this link.
-      </Paragraph>
-      <TextField value={newUrl} onChange={setNewUrl} />
-      <Subtitle>Tool Name</Subtitle>
-      <TextField value={newName} onChange={setNewName} />
-      <Subtitle>Description</Subtitle>
-      <Paragraph accent="lead">
-        Help your team understand what this link is used for.
-      </Paragraph>
-      <TextField value={newDescription} onChange={setNewDescription} />
+      <LabeledTextField
+        title="Add URL"
+        subtitle="Ensure sharing settings have been adjusted so that your team can access
+        this link."
+        value={newUrl}
+        onChange={setNewUrl}
+      />
+      <LabeledTextField
+        title="Tool Name"
+        value={newName}
+        onChange={setNewName}
+      />
+
+      <LabeledTextField
+        title="Description"
+        subtitle="Help your team understand what this link is used for."
+        value={newDescription}
+        onChange={setNewDescription}
+      />
     </Modal>
   );
 };

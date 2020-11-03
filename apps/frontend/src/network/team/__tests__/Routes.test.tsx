@@ -122,12 +122,32 @@ describe('the workspace', () => {
     );
   });
 
-  it('navigates to the outputs', async () => {
+  it('navigates to workspace', async () => {
     interceptor.reply(200, createTeamResponse({ tools: 1 }));
 
     const { getByText, findByText } = await renderTeam();
 
     userEvent.click(getByText(/team workspace/i, { selector: 'nav *' }));
     expect(await findByText(/team collaboration tools/i)).toBeVisible();
+  });
+
+  it('navigates to workspace tool edit modal ', async () => {
+    interceptor.reply(200, createTeamResponse({ tools: 1 }));
+
+    const { getByText, findByText } = await renderTeam();
+
+    userEvent.click(getByText(/team workspace/i, { selector: 'nav *' }));
+    userEvent.click(getByText(/edit link/i, { selector: 'a' }));
+    expect(await findByText('Edit Link', { selector: 'h3' })).toBeVisible();
+  });
+
+  it('navigates to workspace tool add modal ', async () => {
+    interceptor.reply(200, createTeamResponse({ tools: 1 }));
+
+    const { getByText, findByText } = await renderTeam();
+
+    userEvent.click(getByText(/team workspace/i, { selector: 'nav *' }));
+    userEvent.click(getByText(/add a new team link/i));
+    expect(await findByText('Add Link', { selector: 'h3' })).toBeVisible();
   });
 });

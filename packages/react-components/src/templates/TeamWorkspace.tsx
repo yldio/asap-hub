@@ -23,14 +23,14 @@ type TeamWorkspaceProps = Pick<
   TeamResponse,
   'pointOfContact' | 'lastModifiedDate'
 > & {
-  tools?: Array<TeamTool & { href: string }>;
+  tools: Array<TeamTool & { href: string }>;
   newToolHref: string;
 };
 
 const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
   pointOfContact,
   lastModifiedDate,
-  tools = [],
+  tools,
   newToolHref,
 }) => (
   <div css={containerStyles}>

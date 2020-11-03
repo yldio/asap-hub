@@ -1,11 +1,10 @@
-import React, { Suspense, useEffect, ComponentProps } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import {
   Paragraph,
   TeamPage,
   NotFoundPage,
   ToolModal,
-  TeamWorkspace,
 } from '@asap-hub/react-components';
 import { join } from 'path';
 
@@ -50,17 +49,6 @@ const Team: React.FC<{}> = () => {
       workspaceHref: join(url, 'workspace'),
     };
 
-    const workspaceProps: ComponentProps<typeof TeamWorkspace> = {
-      ...team,
-      tools: team.tools
-        ? team.tools.map((tool, index) => ({
-            ...tool,
-            href: join(url, 'workspace', 'tool', index.toString()),
-          }))
-        : undefined,
-      newToolHref: join(url, 'workspace', 'tool'),
-    };
-
     return (
       <TeamPage {...teamPageProps}>
         <ErrorBoundary>
@@ -81,7 +69,14 @@ const Team: React.FC<{}> = () => {
               </Route>
               {team.tools && (
                 <Route path={`${path}/workspace`}>
-                  <Workspace {...workspaceProps} />
+                  <Workspace
+                    {...team}
+                    tools={team.tools.map((tool, index) => ({
+                      ...tool,
+                      href: join(url, 'workspace', 'tool', index.toString()),
+                    }))}
+                    newToolHref={join(url, 'workspace', 'tool')}
+                  />
                   <Route exact path={`${path}/workspace/tool`}>
                     <ToolModal
                       title="Add Link"

@@ -142,14 +142,14 @@ export const OutputsTab = () => (
 );
 
 export const WorkspaceTab = () => (
-  <TeamPage {...commonProps()} workspaceHref="#">
+  <TeamPage {...commonProps()} tools={tools()} workspaceHref="#">
     <TeamWorkspace {...commonProps()} tools={tools()} newToolHref="/wrong" />
   </TeamPage>
 );
 
 export const WorkspaceTabEditTool = () => (
   <>
-    <TeamPage {...commonProps()} workspaceHref="#">
+    <TeamPage {...commonProps()} tools={tools()} workspaceHref="#">
       <TeamWorkspace {...commonProps()} tools={tools()} newToolHref="/wrong" />
     </TeamPage>
     <ToolModal

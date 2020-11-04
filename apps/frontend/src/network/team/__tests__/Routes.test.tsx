@@ -24,12 +24,12 @@ beforeEach(() => {
   interceptor.reply(200, team);
 });
 
-const renderTeam = async (waitForLoading = true) => {
+const renderTeam = async (waitForLoading = true, initialTab = 'about') => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/42/']}>
+          <MemoryRouter initialEntries={[`/42/${initialTab}`]}>
             <Route path="/:id" component={Team} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
@@ -131,22 +131,20 @@ describe('the workspace', () => {
     expect(await findByText(/team collaboration tools/i)).toBeVisible();
   });
 
-  it('navigates to workspace tool edit modal ', async () => {
+  it('navigates to tool edit modal ', async () => {
     interceptor.reply(200, createTeamResponse({ tools: 1 }));
 
-    const { getByText, findByText } = await renderTeam();
+    const { getByText, findByText } = await renderTeam(true, 'workspace');
 
-    userEvent.click(getByText(/team workspace/i, { selector: 'nav *' }));
     userEvent.click(getByText(/edit link/i, { selector: 'a' }));
     expect(await findByText('Edit Link', { selector: 'h3' })).toBeVisible();
   });
 
-  it('navigates to workspace tool add modal ', async () => {
+  it('navigates to tool add modal ', async () => {
     interceptor.reply(200, createTeamResponse({ tools: 1 }));
 
-    const { getByText, findByText } = await renderTeam();
+    const { getByText, findByText } = await renderTeam(true, 'workspace');
 
-    userEvent.click(getByText(/team workspace/i, { selector: 'nav *' }));
     userEvent.click(getByText(/add a new team link/i));
     expect(await findByText('Add Link', { selector: 'h3' })).toBeVisible();
   });

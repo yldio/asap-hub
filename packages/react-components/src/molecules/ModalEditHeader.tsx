@@ -17,9 +17,9 @@ const headerStyles = css({
 
 const controlsContainerStyles = css({
   display: 'grid',
-  gridTemplateColumns: 'min-content min-content',
-  alignItems: 'flex-end',
-  justifyContent: 'flex-end',
+  gridAutoFlow: 'column',
+  alignItems: 'end',
+  justifyContent: 'end',
   columnGap: '12px',
 });
 

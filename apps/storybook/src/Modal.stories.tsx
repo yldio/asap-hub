@@ -6,4 +6,4 @@ export default {
   component: Modal,
 };
 
-export const Normal = () => <Modal />;
+export const Normal = () => <Modal>Content</Modal>;

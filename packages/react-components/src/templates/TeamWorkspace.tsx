@@ -3,7 +3,7 @@ import { TeamResponse, TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
 
 import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';
-import { perRem } from '../pixels';
+import { perRem, mobileScreen } from '../pixels';
 import { ToolCard } from '../organisms';
 import { mailToSupport, createMailTo } from '../mail';
 import { formatDateAndTime } from '../utils';
@@ -12,7 +12,13 @@ const containerStyles = css({
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
 });
-
+const newToolStyles = css({
+  gridArea: 'contact',
+  display: 'flex',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'block',
+  },
+});
 const toolContainerStyles = css({
   display: 'grid',
   gridRowGap: `${24 / perRem}em`,
@@ -47,10 +53,12 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
           ))}
         </div>
       )}
-      <Link href={newToolHref} buttonStyle>
-        Add a new team link
-      </Link>
-      <Caption asParagraph>
+      <div css={newToolStyles}>
+        <Link href={newToolHref} buttonStyle>
+          <span>Add a new team link</span>
+        </Link>
+      </div>
+      <Caption accent="lead" asParagraph>
         Last edited on {formatDateAndTime(new Date(lastModifiedDate))}
       </Caption>
     </Card>

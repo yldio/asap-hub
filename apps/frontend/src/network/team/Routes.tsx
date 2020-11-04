@@ -73,11 +73,11 @@ const Team: React.FC<{}> = () => {
                     {...team}
                     tools={team.tools.map((tool, index) => ({
                       ...tool,
-                      href: join(url, 'workspace', 'tool', index.toString()),
+                      href: join(url, 'workspace', 'tools', index.toString()),
                     }))}
-                    newToolHref={join(url, 'workspace', 'tool')}
+                    newToolHref={join(url, 'workspace', 'tools')}
                   />
-                  <Route exact path={`${path}/workspace/tool`}>
+                  <Route exact path={`${path}/workspace/tools`}>
                     <ToolModal
                       title="Add Link"
                       backHref={join(url, 'workspace')}
@@ -86,7 +86,7 @@ const Team: React.FC<{}> = () => {
                   {team.tools.map((tool, i) => (
                     <Route
                       key={`tool-${i}`}
-                      path={`${path}/workspace/tool/${i}`}
+                      path={`${path}/workspace/tools/${i}`}
                     >
                       <ToolModal
                         {...tool}

@@ -46,7 +46,7 @@ export interface CMSUser {
 }
 
 interface CMSGraphQLUserTeamConnection {
-  role: string;
+  role: TeamRole;
   approach?: string;
   responsibilities?: string;
   id: CMSGraphQLTeam[];

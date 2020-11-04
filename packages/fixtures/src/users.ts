@@ -5,7 +5,7 @@ const listUserResponseTeam: Omit<
   'id'
 > = {
   displayName: 'Jakobsson, J',
-  role: 'Core Leadership - Co-Investigator',
+  role: 'Project Manager',
 };
 
 const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {

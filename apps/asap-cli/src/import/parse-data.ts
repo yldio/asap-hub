@@ -1,4 +1,5 @@
 import { RestUser } from '@asap-hub/squidex';
+import { TeamRole } from '@asap-hub/model';
 
 type Role = RestUser['data']['role']['iv'];
 type Degree = NonNullable<RestUser['data']['degree']>['iv'] | undefined;
@@ -6,7 +7,7 @@ type Degree = NonNullable<RestUser['data']['degree']>['iv'] | undefined;
 export interface Data {
   email: string;
   application: string;
-  role: string;
+  role: TeamRole;
   projectTitle: string;
   firstName: string;
   lastName: string;
@@ -64,7 +65,7 @@ export default (data: string[]): Data => {
     projectTitle,
     questions: [question1, question2, question3, question4].filter(Boolean),
     researchInterest,
-    role,
+    role: role as TeamRole, // Needs verification or default value
     skills: skills
       .split(',')
       .map((a) => a.trim())

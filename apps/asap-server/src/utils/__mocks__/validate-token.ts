@@ -1,12 +1,20 @@
+import { origin } from '../../config';
+
 /* eslint-disable @typescript-eslint/camelcase */
 const decodeToken = jest.fn().mockResolvedValue({
-  'https://hub.asap.science/user': {
+  [origin + '/user']: {
     id: 'userId',
     displayName: 'JT',
     email: 'joao.tiago@asap.science',
     firstName: 'Joao',
     lastName: 'Tiago',
-    teams: [],
+    teams: [
+      {
+        id: 'team-id-1',
+        displayName: 'Awesome Team',
+        role: 'Project Manager',
+      },
+    ],
   },
   given_name: 'Joao',
   family_name: 'Tiago',

@@ -1,5 +1,7 @@
+import { origin } from '../../src/config';
+
 export const idToken = {
-  'https://hub.asap.science/user': {
+  [origin + '/user']: {
     id: 'userId',
     displayName: 'JT',
     email: 'joao.tiago@asap.science',

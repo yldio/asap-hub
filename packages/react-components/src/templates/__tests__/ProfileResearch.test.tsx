@@ -20,7 +20,7 @@ it('renders research', () => {
         {
           id: '42',
           displayName: 'Team',
-          role: 'Role',
+          role: 'Lead PI',
           href: '/network/teams/42',
         },
       ]}

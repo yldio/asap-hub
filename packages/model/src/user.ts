@@ -72,7 +72,7 @@ export interface OrcidWork {
 
 export interface UserTeam {
   id: string;
-  displayName: string;
+  displayName?: string;
   proposal?: string;
   role: string;
   approach?: string;

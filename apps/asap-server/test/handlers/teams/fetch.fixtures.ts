@@ -114,7 +114,6 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
           iv: [
             {
               role: 'Lead PI',
-              displayName: 'Cristiano Ronaldo',
               id: ['team-id-1'],
             },
           ],
@@ -178,7 +177,6 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
           iv: [
             {
               role: 'Lead PI',
-              displayName: 'John Travista',
               id: ['team-id-2'],
             },
           ],
@@ -236,7 +234,6 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
           iv: [
             {
               role: 'Key Personnel',
-              displayName: 'John Travista',
               id: ['team-id-2'],
             },
           ],

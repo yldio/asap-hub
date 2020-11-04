@@ -63,7 +63,7 @@ build:ts:
     - source ci/env-setup.sh
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - yarn run build
-  after_script:
+
     - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
     - export CI_REPO_NAME="$CI_PROJECT_NAME"
     - export CI_BRANCH="$CI_COMMIT_BRANCH"
@@ -116,11 +116,8 @@ test:unit:
     paths:
       - '.jest-cache'
   script:
-    - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
-    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
-    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - yarn run test:unit --coverage
-  after_script:
+
     - yarn codecov
   needs:
     - build:ts

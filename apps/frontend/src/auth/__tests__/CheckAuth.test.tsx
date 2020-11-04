@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
 
@@ -11,6 +12,7 @@ it('renders a loading indicator while Auth0 is initializing', async () => {
         <CheckAuth>content</CheckAuth>
       </authTestUtils.Auth0Provider>
     </React.Suspense>,
+    { wrapper: MemoryRouter },
   );
 
   expect(getByText(/loading/i)).toBeVisible();
@@ -24,6 +26,7 @@ it('renders a sign in page if the user is not authenticated', async () => {
         <p>secure</p>
       </CheckAuth>
     </authTestUtils.Auth0Provider>,
+    { wrapper: MemoryRouter },
   );
   expect(await findByText('Sign in')).toBeVisible();
 });
@@ -37,6 +40,7 @@ it('renders the children if the user is authenticated', async () => {
         </CheckAuth>
       </authTestUtils.LoggedIn>
     </authTestUtils.Auth0Provider>,
+    { wrapper: MemoryRouter },
   );
   expect(await findByText('secure')).toBeVisible();
 });

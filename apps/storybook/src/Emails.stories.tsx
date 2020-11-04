@@ -6,8 +6,9 @@ export default { title: 'Pages / Emails' };
 
 export const Welcome = () => (
   <messages.Welcome
-    firstName={text('First Name', 'Filipe')}
-    link="https://hub.asap.science/"
+    firstName={text('First Name', '{{ firstName }}')}
+    lastName={text('First Name', '{{ lastName }}')}
+    link={text('First Name', '{{ link }}')}
     privacyPolicyHref={text(
       'Privacy Policy',
       'https://hub.asap.science/privacy-policy',

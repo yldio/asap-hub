@@ -6,6 +6,7 @@ import {
 } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text, number } from '@storybook/addon-knobs';
+import { TeamRole } from '@asap-hub/model'
 
 import { LayoutDecorator } from './decorators';
 
@@ -63,7 +64,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
         {
           id: 't1',
           displayName: 'Jakobsson, J',
-          role: 'Co-Investigator',
+          role: 'Co-Investigator' as TeamRole,
           href: '#',
         },
       ],

@@ -42,12 +42,12 @@ export const vminLinearCalcClamped = (
   largeValue: number,
   unit: string,
 ): string =>
-  `clamp(${smallValue}${unit}, ${vminLinearCalc(
+  `clamp(${Math.min(smallValue, largeValue)}${unit}, ${vminLinearCalc(
     smallScreen,
     smallValue,
     largeScreen,
     largeValue,
     unit,
-  )}, ${largeValue}${unit})`;
+  )}, ${Math.max(smallValue, largeValue)}${unit})`;
 
 export const formTargetWidth = 354;

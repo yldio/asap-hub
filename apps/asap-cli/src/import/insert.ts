@@ -32,8 +32,8 @@ const insertMembership = (
   const newTeam: UserTeamConnection<string> = {
     id: [team.id],
     role: data.role,
-    approach: data.approach,
-    responsibilities: data.researchInterest,
+    approach: data.researchInterest,
+    responsibilities: data.responsibilities,
   };
 
   return users.patch(user.id, {

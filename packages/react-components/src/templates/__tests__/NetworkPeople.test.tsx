@@ -19,6 +19,7 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
       href: '/teams/somewhere',
     },
   ],
+  role: 'Grantee',
   href: '/users/somewhere',
 };
 const people = [person, { ...person, id: '43', displayName: 'Person B' }];

@@ -17,8 +17,6 @@ import { createMailTo } from '../mail';
 import { paper } from '../colors';
 import { editIcon } from '../icons';
 
-const ASAP_TEAM_ID = '0';
-
 const containerStyles = css({
   alignSelf: 'stretch',
   backgroundColor: paper.rgb,
@@ -160,19 +158,6 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   discoverHref,
   role,
 }) => {
-  const teamsProps: ProfileProps['teams'] =
-    role === 'Staff'
-      ? [
-        {
-          id: ASAP_TEAM_ID,
-          displayName: 'ASAP',
-          role: 'Staff',
-          href: discoverHref,
-        },
-        ...teams,
-      ]
-      : teams;
-
   return (
     <header css={[containerStyles, role === 'Staff' && staffContainerStyles]}>
       <section css={personalInfoStyles}>
@@ -183,7 +168,9 @@ const ProfileHeader: React.FC<ProfileProps> = ({
             institution={institution}
             location={location}
             jobTitle={jobTitle}
-            teams={teamsProps}
+            teams={teams}
+            role={role}
+            discoverHref={discoverHref}
           />
         </div>
         <Avatar

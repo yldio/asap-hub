@@ -16,6 +16,7 @@ const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
   aboutHref: './about',
   researchHref: './research',
   outputsHref: './outputs',
+  discoverHref: './dsicover',
 };
 
 describe.each([

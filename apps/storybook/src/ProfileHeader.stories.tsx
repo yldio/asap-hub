@@ -33,6 +33,7 @@ const commonProps = () => ({
   aboutHref: '/other',
   researchHref: '/other',
   outputsHref: '/other',
+  discoverHref: '/discover',
   role: select('Role', ['Staff', 'Grantee', 'Guest'], 'Staff'),
 });
 

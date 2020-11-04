@@ -17,14 +17,24 @@ it.each`
 
 it('shows the location', async () => {
   const { getByText, getByTitle } = render(
-    <ProfilePersonalText location="New York" teams={[]} />,
+    <ProfilePersonalText
+      location="New York"
+      teams={[]}
+      role={'Grantee'}
+      discoverHref={'/'}
+    />,
   );
   expect(getByText('New York')).toBeVisible();
   expect(getByTitle(/location/i)).toBeInTheDocument();
 });
 it('does not show the location icon if no location is available', () => {
   const { queryByTitle } = render(
-    <ProfilePersonalText location={undefined} teams={[]} />,
+    <ProfilePersonalText
+      location={undefined}
+      teams={[]}
+      role={'Grantee'}
+      discoverHref={'/'}
+    />,
   );
   expect(queryByTitle(/location/i)).toBe(null);
 });
@@ -41,11 +51,15 @@ it("generates information about the user's team", async () => {
           href: `/teams/1337`,
         },
       ]}
+      role={'Grantee'}
+      discoverHref={'/'}
     />,
   );
   expect(container).toHaveTextContent(/Lead PI on Team/);
 });
 it('does not show team information if the user is not on a team', async () => {
-  const { container } = render(<ProfilePersonalText teams={[]} />);
+  const { container } = render(
+    <ProfilePersonalText teams={[]} role={'Grantee'} discoverHref={'/'} />,
+  );
   expect(container).not.toHaveTextContent(/\w on \w/);
 });

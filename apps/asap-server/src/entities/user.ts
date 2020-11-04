@@ -65,7 +65,7 @@ export const createSchema = Joi.object({
   connections: Joi.string(),
 });
 
-export const parseGraphqlUserTeamConnection = (
+export const parseGraphQLUserTeamConnection = (
   item: NonNullable<NonNullable<GraphqlUser['flatData']>['teams']>[0],
 ): UserTeam => {
   const team = item.id[0];
@@ -95,7 +95,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     ? (item.flatData?.role as 'Guest' | 'Staff' | 'Grantee')
     : 'Guest';
   const teams: UserTeam[] = (flatTeams || []).map(
-    parseGraphqlUserTeamConnection,
+    parseGraphQLUserTeamConnection,
   );
 
   return {

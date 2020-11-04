@@ -69,6 +69,7 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
         },
       ],
       href: '#',
+      role: 'Grantee' as const,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

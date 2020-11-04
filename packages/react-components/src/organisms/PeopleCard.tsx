@@ -46,6 +46,7 @@ type PeopleCardProps = Pick<
   | 'createdDate'
   | 'lastName'
   | 'location'
+  | 'role'
 > & {
   readonly href: string;
   readonly teams: ReadonlyArray<UserTeam & { href: string }>;
@@ -62,6 +63,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   jobTitle,
   avatarUrl,
   href,
+  role,
 }) => {
   return (
     <Card>
@@ -86,6 +88,8 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
               location={location}
               jobTitle={jobTitle}
               teams={teams}
+              role={role}
+              discoverHref={'/discover'}
             />
           </div>
           <div css={moveStyles}>

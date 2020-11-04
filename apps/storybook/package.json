@@ -13,6 +13,7 @@
   "dependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
+    "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@storybook/addon-actions": "^6.0.4",
@@ -27,7 +28,6 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@asap-hub/model": "workspace:packages/model",
     "@babel/core": "^7.9.0",
     "@types/history": "^4.7.6",
     "@types/react": "^16.9.0",

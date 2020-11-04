@@ -1,7 +1,7 @@
 import React from 'react';
 import { text } from '@storybook/addon-knobs';
 import { ProfileBackground } from '@asap-hub/react-components';
-import { TeamRole } from '@asap-hub/model'
+import { TeamRole } from '@asap-hub/model';
 
 export default {
   title: 'Organisms / Profile / Background',

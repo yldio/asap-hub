@@ -6,7 +6,7 @@ import {
 } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text, number } from '@storybook/addon-knobs';
-import { TeamRole } from '@asap-hub/model'
+import { TeamRole } from '@asap-hub/model';
 
 import { LayoutDecorator } from './decorators';
 

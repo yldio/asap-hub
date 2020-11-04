@@ -9,7 +9,7 @@ import { text, number } from '@storybook/addon-knobs';
 import { LayoutDecorator } from './decorators';
 
 export default {
-  title: 'Pages / SharedResearch',
+  title: 'Pages / Shared Research',
   decorators: [LayoutDecorator],
 };
 

@@ -6,7 +6,7 @@ import { text } from '@storybook/addon-knobs';
 import { NoPaddingDecorator } from './decorators';
 
 export default {
-  title: 'Templates / SharedResearch / Header',
+  title: 'Templates / Shared Research / Header',
   decorators: [NoPaddingDecorator],
 };
 

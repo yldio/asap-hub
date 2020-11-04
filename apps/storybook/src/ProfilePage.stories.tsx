@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { date, text, array, select } from '@storybook/addon-knobs';
 import {
   ProfileAbout,
@@ -16,15 +16,15 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-const commonProps = () => ({
+const commonProps = (): Omit<
+  ComponentProps<typeof ProfilePage>,
+  'children'
+> => ({
   department: text('Department', 'Biology Department'),
   displayName: text('Display Name', 'Phillip Mars, PhD'),
   institution: text('Institution', 'Yale University'),
   lastModifiedDate: new Date(
     date('Last modified', new Date(2020, 6, 12, 14, 32)),
-  ).toISOString(),
-  orcidLastModifiedDate: new Date(
-    date('Orcid last modified', new Date(2020, 6, 12, 14, 32)),
   ).toISOString(),
   firstName: text('First Name', 'Phillip'),
   lastName: text('Last Name', 'Mars'),
@@ -51,6 +51,20 @@ const commonProps = () => ({
     'Avatar URL',
     'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
   ),
+  role: select('Role', ['Grantee', 'Guest'], 'Grantee'),
+  aboutHref: '/wrong',
+  researchHref: '/wrong',
+  outputsHref: '/wrong',
+  discoverHref: '/discover',
+});
+const commonPropsEditable = (): ReturnType<typeof commonProps> => ({
+  ...commonProps(),
+  editPersonalInfoHref: '/wrong',
+  editContactHref: '/wrong',
+});
+
+const researchTabProps = (): ComponentProps<typeof ProfileResearch> => ({
+  ...commonProps(),
   skills: array('Skills', [
     'Neurological Diseases',
     'Clinical Neurology',
@@ -67,65 +81,55 @@ const commonProps = () => ({
     'Are alpha-synuclein deposits the cause or consequence of somethign deeper wrong with neurons?',
     'How much do we have to knock down extracellular alpha-synuclein to measurably slow cell to cell transmission?',
   ]),
+});
+
+const aboutTabProps = (): ComponentProps<typeof ProfileAbout> => ({
+  biography: text(
+    'Biography',
+    'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
+  ),
   orcidWorks: [
     {
       doi: 'https://doi.org/10.7554/elife.07083',
       title:
         'Recognizing the importance of new tools and resources for research',
-      type: 'UNDEFINED' as const,
+      type: 'WEBSITE',
       publicationDate: {
         year: '2015',
-        month: '05',
+        month: '3',
       },
       lastModifiedDate: '1478865224685',
     },
   ],
-  role: select('Role', ['Staff', 'Grantee', 'Guest'], 'Staff'),
-  discoverHref: '/wrong',
-  aboutHref: '/wrong',
-  researchHref: '/wrong',
-  outputsHref: '/wrong',
 });
 
-export const ResearchTab = () => (
+export const ResearchTabViewOnly = () => (
   <ProfilePage {...commonProps()} researchHref="#">
+    <ProfileResearch {...researchTabProps()} />
+  </ProfilePage>
+);
+export const ResearchTabEditable = () => (
+  <ProfilePage {...commonPropsEditable()} researchHref="#">
     <ProfileResearch
-      {...commonProps()}
-      skills={array('Skills', [
-        'Neurological Diseases',
-        'Clinical Neurology',
-        'Adult Neurology',
-        'Neuroimaging',
-        'Neurologic Examination',
-        'Neuroprotection',
-        'Movement Disorders',
-        'Neurodegenerative Diseases',
-        'Neurological Diseases',
-      ])}
+      {...researchTabProps()}
+      editBackgroundHref="/wrong"
+      editSkillsHref="/wrong"
+      editQuestionsHref="/wrong"
     />
   </ProfilePage>
 );
 
-export const AboutTab = () => (
+export const AboutTabViewOnly = () => (
   <ProfilePage {...commonProps()} aboutHref="#">
+    <ProfileAbout {...aboutTabProps()} />
+  </ProfilePage>
+);
+export const AboutTabEditable = () => (
+  <ProfilePage {...commonPropsEditable()} aboutHref="#">
     <ProfileAbout
-      biography={text(
-        'Biography',
-        'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
-      )}
-      orcidWorks={[
-        {
-          doi: 'https://doi.org/10.7554/elife.07083',
-          title:
-            'Recognizing the importance of new tools and resources for research',
-          type: 'WEBSITE',
-          publicationDate: {
-            year: '2015',
-            month: '3',
-          },
-          lastModifiedDate: '1478865224685',
-        },
-      ]}
+      {...aboutTabProps()}
+      editBiographyHref="/wrong"
+      editOrcidWorksHref="/wrong"
     />
   </ProfilePage>
 );
@@ -136,15 +140,12 @@ export const OutputsTab = () => (
   </ProfilePage>
 );
 
-export const Staff = () => (
+export const StaffTab = () => (
   <ProfilePage {...commonProps()} role="Staff" aboutHref="#">
     <ProfileStaff
       {...commonProps()}
-      biography={text(
-        'Biography',
-        'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
-      )}
-      discoverHref="/discover"
+      {...researchTabProps()}
+      {...aboutTabProps()}
     />
   </ProfilePage>
 );

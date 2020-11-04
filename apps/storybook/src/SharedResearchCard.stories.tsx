@@ -4,7 +4,7 @@ import { SharedResearchCard } from '@asap-hub/react-components';
 import { text, select, date } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / SharedResearch Card',
+  title: 'Organisms / Shared Research Card',
 };
 
 export const Normal = () => (

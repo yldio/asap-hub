@@ -26,7 +26,7 @@ const priorities: Record<TeamRole, number> = {
 
 function transformTeam(
   team: RestTeam,
-  members: TeamMember[] = [],
+  members: TeamMember[],
   user?: User,
 ): TeamResponse {
   return {

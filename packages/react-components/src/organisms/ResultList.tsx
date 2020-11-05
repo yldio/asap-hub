@@ -35,12 +35,12 @@ const pageControlsStyles = css({
   paddingBottom: `${36 / perRem}em`,
 });
 
-type CardListProps = ComponentProps<typeof PageControls> & {
+type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
 
   readonly children: React.ReactNode;
 };
-const CardList: React.FC<CardListProps> = ({
+const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
   children,
   ...pageControlsProps
@@ -60,4 +60,4 @@ const CardList: React.FC<CardListProps> = ({
   </article>
 );
 
-export default CardList;
+export default ResultList;

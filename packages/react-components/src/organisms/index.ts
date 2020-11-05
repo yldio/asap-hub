@@ -20,6 +20,7 @@ export { default as ProfileSkills } from './ProfileSkills';
 export { default as ProfileStaffBackground } from './ProfileStaffBackground';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
+export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
 export { default as SearchControls } from './SearchControls';
 export { default as SharedResearchCard } from './SharedResearchCard';

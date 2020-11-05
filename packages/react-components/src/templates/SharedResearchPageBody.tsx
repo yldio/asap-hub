@@ -1,10 +1,9 @@
 import React, { ComponentProps } from 'react';
 
-import { SharedResearchCard } from '../organisms';
-import CardList from '../organisms/CardList';
+import { ResultList, SharedResearchCard } from '../organisms';
 
 type SharedResearchPageBodyProps = Omit<
-  ComponentProps<typeof CardList>,
+  ComponentProps<typeof ResultList>,
   'children'
 > & {
   readonly researchOutputs: ReadonlyArray<
@@ -16,13 +15,13 @@ const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
   researchOutputs,
   ...cardListProps
 }) => (
-  <CardList {...cardListProps}>
+  <ResultList {...cardListProps}>
     {researchOutputs.map(({ id, ...output }) => (
       <div key={id}>
         <SharedResearchCard {...output} />
       </div>
     ))}
-  </CardList>
+  </ResultList>
 );
 
 export default SharedResearchPageBody;

@@ -1,8 +1,9 @@
+import { TeamRole } from '@asap-hub/model';
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 
 export interface UserTeamConnection<T> {
-  role: string;
+  role: TeamRole;
   approach: string;
   responsibilities: string;
   id: T[];

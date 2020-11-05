@@ -15,7 +15,7 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
     {
       id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
       displayName: 'Jakobsson, J',
-      role: 'Core Leadership - Co-Investigator',
+      role: 'Lead PI',
       href: '/teams/somewhere',
     },
   ],

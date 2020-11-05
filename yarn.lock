@@ -470,6 +470,7 @@ __metadata:
   resolution: "@asap-hub/squidex@workspace:packages/squidex"
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.9.6
     "@hapi/boom": ^9.1.0
     "@hapi/bourne": ^2.0.0
@@ -502,6 +503,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@babel/core": ^7.9.0

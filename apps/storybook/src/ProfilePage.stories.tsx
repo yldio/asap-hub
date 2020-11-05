@@ -6,6 +6,7 @@ import {
   ProfileOutputs,
   ProfileResearch,
 } from '@asap-hub/react-components';
+import { TeamRole } from '@asap-hub/model';
 
 import { LayoutDecorator } from './decorators';
 
@@ -32,7 +33,7 @@ const commonProps = () => ({
     {
       id: '42',
       href: '#42',
-      role: text('Role', 'Researcher'),
+      role: text('Role', 'Researcher') as TeamRole,
       displayName: text('Team Name', 'Ferguson, M'),
       approach: text(
         'Approach',

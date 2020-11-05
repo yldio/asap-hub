@@ -7,7 +7,7 @@ import { Handler } from '../../utils/types';
 
 export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
-    await validateUser(request);
+    const user = await validateUser(request);
 
     const paramsSchema = Joi.object({
       id: Joi.string().required(),
@@ -18,7 +18,7 @@ export const handler: Handler = lambda.http(
     };
 
     const teams = new Teams();
-    const team = await teams.fetchById(params.id);
+    const team = await teams.fetchById(params.id, user);
 
     return {
       statusCode: 200,

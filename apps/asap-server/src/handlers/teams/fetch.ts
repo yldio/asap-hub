@@ -15,7 +15,7 @@ const querySchema = Joi.object({
 // /teams?page=1&pageSize=8
 export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
-    await validateUser(request);
+    const user = await validateUser(request);
 
     const query = lambda.validate('query', request.query, querySchema) as {
       take: number;
@@ -25,7 +25,7 @@ export const handler: Handler = lambda.http(
     };
 
     const teams = new Teams();
-    const team = await teams.fetch(query);
+    const team = await teams.fetch(query, user);
 
     return {
       statusCode: 200,

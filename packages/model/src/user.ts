@@ -1,4 +1,5 @@
 import { ListResponse } from './common';
+import { TeamRole } from './team';
 
 export interface Invitee {
   displayName: string;
@@ -74,7 +75,7 @@ export interface UserTeam {
   id: string;
   displayName?: string;
   proposal?: string;
-  role: string;
+  role: TeamRole;
   approach?: string;
   responsibilities?: string;
 }

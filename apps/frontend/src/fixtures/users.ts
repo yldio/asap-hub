@@ -16,7 +16,7 @@ const response: ListUserResponse = {
       teams: [
         {
           id: '3b6417eb-1559-4c66-b799-89d0ebe0766d',
-          role: 'cohijgag',
+          role: 'Collaborator',
           displayName: 'Fanny Frank',
         },
       ],
@@ -59,7 +59,7 @@ const response: ListUserResponse = {
         {
           id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
           displayName: 'Jakobsson, J',
-          role: 'Core Leadership - Co-Investigator',
+          role: 'Collaborator',
         },
       ],
       orcid: '0000-0001-8203-6901',

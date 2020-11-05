@@ -1,12 +1,14 @@
 import Boom from '@hapi/boom';
-import { Auth0User } from '@asap-hub/auth';
+import Intercept from 'apr-intercept';
+import { User } from '@asap-hub/auth';
 import { framework as lambda } from '@asap-hub/services-common';
+import { origin } from '../config';
 
 import decodeToken from './validate-token';
 
 export default async function validateUser(
   request: lambda.Request,
-): Promise<Auth0User> {
+): Promise<User> {
   const headers = request.headers as {
     authorization: string;
   };
@@ -21,7 +23,11 @@ export default async function validateUser(
     throw Boom.unauthorized();
   }
 
-  return decodeToken(token).catch(() => {
+  const [err, payload] = await Intercept(decodeToken(token));
+
+  if (err) {
     throw Boom.unauthorized();
-  });
+  }
+
+  return payload[`${origin}/user`] as User;
 }

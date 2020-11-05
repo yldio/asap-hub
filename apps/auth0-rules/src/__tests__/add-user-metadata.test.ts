@@ -83,7 +83,7 @@ const apiUser: UserResponse = {
   id: 'myRandomId123',
   lastModifiedDate: '2020-08-21T14:23:31.924Z',
   createdDate: '2020-08-21T14:23:31.924Z',
-  teams: [{ id: 'team-1', displayName: 'Team 1', role: 'Team Role' }],
+  teams: [{ id: 'team-1', displayName: 'Team 1', role: 'Lead PI' }],
   skills: [],
   questions: [],
 };
@@ -161,7 +161,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       firstName: undefined,
       lastName: undefined,
       avatarUrl: undefined,
-      teams: [{ id: 'team-1', displayName: 'Team 1' }],
+      teams: [{ id: 'team-1', displayName: 'Team 1', role: 'Lead PI' }],
     });
   });
 });

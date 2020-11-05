@@ -9469,6 +9469,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/squidex", "workspace:packages/squidex"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.11.2"],
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],
@@ -9503,6 +9504,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/storybook", "workspace:apps/storybook"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
+            ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-components", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@babel/core", "npm:7.9.0"],

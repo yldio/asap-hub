@@ -8,6 +8,7 @@ import {
   TeamMember,
   TeamRole,
 } from '@asap-hub/model';
+import { User } from '@asap-hub/auth';
 
 import { createURL } from '../utils/squidex';
 
@@ -22,7 +23,11 @@ const priorities: Record<TeamRole, number> = {
   Staff: 8,
 };
 
-function transformTeam(team: RestTeam, members: TeamMember[]): TeamResponse {
+function transformTeam(
+  team: RestTeam,
+  members: TeamMember[],
+  user?: User,
+): TeamResponse {
   return {
     id: team.id,
     displayName: team.data.displayName.iv,
@@ -30,11 +35,13 @@ function transformTeam(team: RestTeam, members: TeamMember[]): TeamResponse {
     projectTitle: team.data.projectTitle.iv,
     projectSummary: team.data.projectSummary?.iv,
     skills: team.data.skills?.iv || [],
-    tools: team.data.tools?.iv,
     lastModifiedDate: team.lastModified,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     proposalURL: team.data.proposal?.iv[0],
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
+    tools: user?.teams.find(({ id }) => id === team.id)
+      ? team.data.tools?.iv
+      : undefined,
   };
 }
 
@@ -75,12 +82,15 @@ export default class Teams {
     this.users = new Squidex('users');
   }
 
-  async fetch(options: {
-    take: number;
-    skip: number;
-    search?: string;
-    filter?: string | string[];
-  }): Promise<ListTeamResponse> {
+  async fetch(
+    options: {
+      take: number;
+      skip: number;
+      search?: string;
+      filter?: string | string[];
+    },
+    user: User,
+  ): Promise<ListTeamResponse> {
     const { take, skip, search } = options;
 
     const searchQ = (search || '')
@@ -113,7 +123,7 @@ export default class Teams {
     );
 
     const teamItems = teams.map((team, index) =>
-      transformTeam(team, transformUser(teamUsers[index], team.id)),
+      transformTeam(team, transformUser(teamUsers[index], team.id), user),
     );
 
     return {
@@ -122,9 +132,9 @@ export default class Teams {
     };
   }
 
-  async fetchById(teamId: string): Promise<TeamResponse> {
+  async fetchById(teamId: string, user: User): Promise<TeamResponse> {
     const team = await this.teams.fetchById(teamId);
     const users = await fetchUsers(team.id, this.users.client);
-    return transformTeam(team, transformUser(users, team.id));
+    return transformTeam(team, transformUser(users, team.id), user);
   }
 }

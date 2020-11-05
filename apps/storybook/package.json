@@ -13,6 +13,7 @@
   "dependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@asap-hub/fixtures": "workspace:*",
+    "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
     "@storybook/addon-actions": "^6.0.4",

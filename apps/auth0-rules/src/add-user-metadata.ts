@@ -45,6 +45,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       teams: teams.map((team) => ({
         id: team.id,
         displayName: team.displayName,
+        role: team.role,
       })),
     };
     context.idToken[new URL('/user', redirect_uri).toString()] = user;

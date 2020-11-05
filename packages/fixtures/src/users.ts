@@ -2,7 +2,7 @@ import { ListUserResponse, UserTeam, UserResponse } from '@asap-hub/model';
 
 const listUserResponseTeam: Omit<UserTeam, 'id'> = {
   displayName: 'Jakobsson, J',
-  role: 'Core Leadership - Co-Investigator',
+  role: 'Project Manager',
 };
 
 const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {

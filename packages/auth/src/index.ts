@@ -10,7 +10,9 @@ export type User = Pick<
   UserResponse,
   'id' | 'displayName' | 'email' | 'firstName' | 'lastName' | 'avatarUrl'
 > & {
-  teams: ReadonlyArray<Pick<UserResponse['teams'][0], 'id' | 'displayName'>>;
+  teams: ReadonlyArray<
+    Omit<UserResponse['teams'][0], 'approach' | 'responsibilities'>
+  >;
 };
 
 export interface Auth0User {

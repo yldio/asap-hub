@@ -42,6 +42,21 @@ describe('squidex wrapper', () => {
     ).rejects.toThrow('Unauthorized');
   });
 
+  it('returns 404 when document doesnt exist', async () => {
+    nock(config.baseUrl)
+      .patch(`/api/content/${config.appName}/${collection}/42`)
+      .reply(404);
+    const client = new Squidex<Content>(collection);
+
+    await expect(() =>
+      client.patch('42', {
+        string: {
+          iv: 'value',
+        },
+      }),
+    ).rejects.toThrow('Not Found');
+  });
+
   it('returns 500 when squidex returns error', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/${collection}/42`)

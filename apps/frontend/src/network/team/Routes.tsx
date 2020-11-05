@@ -95,7 +95,6 @@ const Team: React.FC<{}> = () => {
                       />
                     </Route>
                   ))}
-                  <Redirect to={join(url, 'workspace')} />
                 </Route>
               )}
               <Redirect to={join(url, 'about')} />

@@ -7,10 +7,14 @@ import { Modal, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 
-const formContainer = css({
+const fieldsContainer = css({
   display: 'grid',
   rowGap: `${12 / perRem}em`,
   gridTemplateColumns: '100%',
+  '> div > div': {
+    width: 'unset',
+    maxWidth: 'unset',
+  },
 });
 
 type ToolModalProps = Partial<TeamTool> & {
@@ -48,7 +52,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
           }}
           title={title}
         />
-        <div css={formContainer}>
+        <div css={fieldsContainer}>
           <LabeledTextField
             title="Add URL"
             subtitle="Ensure sharing settings have been adjusted so that your team can access

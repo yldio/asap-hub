@@ -14,6 +14,7 @@ const ToolCardProps = (): ComponentProps<typeof ToolCard> => ({
     'Chat privately with your team members or seek out others in the ASAP Networks',
   ),
   href: '/wrong',
+  url: text('Tool Url', 'http://example.com'),
 });
 
 export const Normal = () => <ToolCard {...ToolCardProps()} />;

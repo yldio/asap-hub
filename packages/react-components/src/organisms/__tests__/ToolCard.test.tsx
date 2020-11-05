@@ -7,6 +7,7 @@ const props: ComponentProps<typeof ToolCard> = {
   name: '',
   description: '',
   href: '/wrong',
+  url: 'http://example.com',
 };
 it('renders the title and description', () => {
   const { getByRole, getByText } = render(

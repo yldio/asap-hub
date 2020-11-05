@@ -6,8 +6,8 @@ import { Card, Overlay } from '../atoms';
 import {
   vminLinearCalcClamped,
   mobileScreen,
-  largeDesktopScreen,
   tabletScreen,
+  perRem,
 } from '../pixels';
 
 const overlayContainerStyles = css({
@@ -19,37 +19,42 @@ const overlayContainerStyles = css({
 });
 
 const modalContainerStyles = css({
-  top: 0,
-  left: 0,
-  position: 'absolute',
-  padding: `${vminLinearCalcClamped(
-    mobileScreen,
-    63,
-    largeDesktopScreen,
-    300,
-    'px',
-  )} ${vminLinearCalcClamped(mobileScreen, 12, tabletScreen, 48, 'px')}`,
-  boxSizing: 'border-box',
+  position: 'relative',
   width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
+  height: '100%',
 });
 
-const cardContainer = css({
-  maxWidth: '725px',
+const modalStyles = css({
+  left: '50%',
+  top: '50%',
+  transform: 'translate(-50%,-50%)',
+  position: 'absolute',
+  padding: `${12 / perRem}em ${vminLinearCalcClamped(
+    mobileScreen,
+    12,
+    tabletScreen,
+    48,
+    'px',
+  )}`,
+  boxSizing: 'border-box',
+  width: '100%',
+  maxWidth: '800px',
+  height: 'max-content',
+  maxHeight: '100%',
+  justifyContent: 'center',
+  overflowY: 'auto',
+  bottom: 0,
 });
 
 const Modal: React.FC<{}> = ({ children }) => (
-  <>
-    <div css={overlayContainerStyles}>
+  <div css={overlayContainerStyles}>
+    <div css={modalContainerStyles}>
       <Overlay />
+      <div role="dialog" css={modalStyles}>
+        <Card>{children}</Card>
+      </div>
     </div>
-    <div role="dialog" css={modalContainerStyles}>
-      <Card>
-        <div css={cardContainer}>{children}</div>
-      </Card>
-    </div>
-  </>
+  </div>
 );
 
 export default Modal;

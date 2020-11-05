@@ -15,6 +15,7 @@ export { default as PagesSection } from './PagesSection';
 export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileBackground } from './ProfileBackground';
 export { default as ProfileBiography } from './ProfileBiography';
+export { default as ProfileCardList } from './ProfileCardList';
 export { default as ProfileRecentWorks } from './ProfileRecentWorks';
 export { default as ProfileSkills } from './ProfileSkills';
 export { default as ProfileStaffBackground } from './ProfileStaffBackground';

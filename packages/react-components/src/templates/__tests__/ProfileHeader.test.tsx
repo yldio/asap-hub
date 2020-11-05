@@ -1,13 +1,13 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
+import { createListUserResponse } from '@asap-hub/fixtures';
+
 import ProfileHeader from '../ProfileHeader';
 
 const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
-  displayName: 'John Doe',
+  ...createListUserResponse(1).items[0], // TODO
   teams: [],
-  lastModifiedDate: formatISO(new Date()),
-  email: 'phillip@blah.com',
   aboutHref: './about',
   researchHref: './research',
   outputsHref: './outputs',
@@ -39,4 +39,33 @@ it('generates the mailto link', () => {
     'href',
     'mailto:test@test.com',
   );
+});
+
+describe('an edit button', () => {
+  it('is not rendered by default', () => {
+    const { queryByLabelText } = render(
+      <ProfileHeader {...boilerplateProps} />,
+    );
+    expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
+  });
+
+  it('is rendered for personal info', () => {
+    const { getByLabelText } = render(
+      <ProfileHeader
+        {...boilerplateProps}
+        editPersonalInfoHref="/edit-personal-info"
+      />,
+    );
+    expect(getByLabelText(/edit.+personal/i)).toBeVisible();
+  });
+
+  it('is rendered for contact info', () => {
+    const { getByLabelText } = render(
+      <ProfileHeader
+        {...boilerplateProps}
+        editContactHref="/edit-contact-info"
+      />,
+    );
+    expect(getByLabelText(/edit.+contact/i)).toBeVisible();
+  });
 });

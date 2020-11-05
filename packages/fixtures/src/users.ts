@@ -1,9 +1,6 @@
-import { ListUserResponse } from '@asap-hub/model';
+import { ListUserResponse, UserTeam, UserResponse } from '@asap-hub/model';
 
-const listUserResponseTeam: Omit<
-  ListUserResponse['items'][0]['teams'][0],
-  'id'
-> = {
+const listUserResponseTeam: Omit<UserTeam, 'id'> = {
   displayName: 'Jakobsson, J',
   role: 'Core Leadership - Co-Investigator',
 };
@@ -24,20 +21,34 @@ const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   questions: [],
 };
 
+type FixtureOptions = {
+  teams?: number;
+};
+
+export const createUserTeams = ({ teams = 1 }): UserTeam[] =>
+  Array.from({ length: teams }, (__, teamIndex) => ({
+    ...listUserResponseTeam,
+    id: `t${teamIndex}`,
+  }));
+
+export const createUserResponse = (
+  options: FixtureOptions = {},
+  itemIndex = 0,
+): UserResponse => ({
+  ...listUserResponseItem,
+  id: `u${itemIndex}`,
+  displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
+  teams: createUserTeams(options),
+});
+
 export const createListUserResponse = (
   items: number,
-  { teams = 1 } = {},
+  options: FixtureOptions = {},
 ): ListUserResponse => ({
   total: items,
-  items: Array.from({ length: items }, (_, itemIndex) => ({
-    ...listUserResponseItem,
-    id: `u${itemIndex}`,
-    displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
-    teams: Array.from({ length: teams }, (__, teamIndex) => ({
-      ...listUserResponseTeam,
-      id: `u${itemIndex}-t${teamIndex}`,
-    })),
-  })),
+  items: Array.from({ length: items }, (_, itemIndex) =>
+    createUserResponse(options, itemIndex),
+  ),
 });
 
 export default createListUserResponse;

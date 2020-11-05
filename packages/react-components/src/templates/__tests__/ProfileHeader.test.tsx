@@ -11,6 +11,8 @@ const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
   aboutHref: './about',
   researchHref: './research',
   outputsHref: './outputs',
+  discoverHref: '/discover',
+  role: 'Grantee',
 };
 
 it('renders the name as the top-level heading', () => {
@@ -68,4 +70,15 @@ describe('an edit button', () => {
     );
     expect(getByLabelText(/edit.+contact/i)).toBeVisible();
   });
+});
+
+it('generates staff profile without contact and tabs', () => {
+  const { queryByText } = render(
+    <ProfileHeader {...boilerplateProps} email="test@test.com" role="Staff" />,
+  );
+
+  expect(queryByText(/contact/i)).not.toBeInTheDocument();
+  expect(queryByText(/research/i)).not.toBeInTheDocument();
+  expect(queryByText(/background/i)).not.toBeInTheDocument();
+  expect(queryByText(/outputs/i)).not.toBeInTheDocument();
 });

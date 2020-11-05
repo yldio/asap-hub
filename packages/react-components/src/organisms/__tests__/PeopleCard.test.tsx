@@ -16,6 +16,7 @@ const props: ComponentProps<typeof PeopleCard> = {
     },
   ],
   createdDate: new Date(2020, 6, 12, 14, 32).toISOString(),
+  role: 'Grantee',
   href: 'http://localhost/users/321',
 };
 

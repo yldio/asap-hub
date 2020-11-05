@@ -24,6 +24,7 @@ const user: UserResponse = {
   biography: 'Biography Text',
   skills: [],
   questions: ['Question?'],
+  role: 'Grantee',
 };
 
 const team = {
@@ -143,5 +144,41 @@ describe('with team', () => {
         "mailto:john.doe@example.com",
       ]
     `);
+  });
+
+  describe('for a staff member', () => {
+    it('calculates links', async () => {
+      nock.cleanAll();
+      nock(API_BASE_URL, {
+        reqheaders: { authorization: 'Bearer token' },
+      })
+        .get('/users/43')
+        .reply(200, {
+          ...user,
+          id: '43',
+          role: 'Staff',
+          reachOut: 'approach',
+          responsibilities: 'responsible',
+        } as UserResponse);
+
+      const { queryAllByText, getByText } = await renderProfile('43');
+      const loadingIndicator = getByText(/loading/i);
+      await waitForElementToBeRemoved(loadingIndicator);
+
+      expect(
+        getByText(/here/i, {
+          selector: 'a',
+        }),
+      ).toHaveAttribute(
+        'href',
+        'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
+      );
+
+      expect(
+        await queryAllByText(/team\sasap/i, {
+          selector: 'a',
+        }).map((a) => a.getAttribute('href')),
+      ).toEqual(['/discover', '/discover']);
+    });
   });
 });

@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import { OrcidWork, UserResponse, UserTeam, TeamRole } from '@asap-hub/model';
+import { GraphqlUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
-import { CMSGraphQLTeam } from './team';
 
 interface CMSTeamMember {
   id: string[];
@@ -40,40 +40,14 @@ export interface CMSUser {
     };
     avatar?: { iv: string[] };
     role: {
-      iv: 'Staff' | 'Grantee' | 'Guest';
+      iv: 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
     };
-  };
-}
-
-interface CMSGraphQLUserTeamConnection {
-  role: TeamRole;
-  approach?: string;
-  responsibilities?: string;
-  id: CMSGraphQLTeam[];
-}
-
-export interface CMSGraphQLUser {
-  id: string;
-  lastModified: string;
-  created: string;
-  flatData: {
-    avatar:
-      | {
-          id: string;
-        }[]
-      | null;
-    displayName: string;
-    email: string;
-    firstName?: string;
-    lastModifiedDate: string | null;
-    lastName?: string;
-    teams: CMSGraphQLUserTeamConnection[];
-    questions:
-      | {
-          question: string;
-        }[]
-      | null;
-    skills: string[] | null;
+    responsibilities?: {
+      iv: string;
+    };
+    reachOut?: {
+      iv: string;
+    };
   };
 }
 
@@ -92,61 +66,97 @@ export const createSchema = Joi.object({
 });
 
 export const parseGraphQLUserTeamConnection = (
-  item: CMSGraphQLUserTeamConnection,
+  item: NonNullable<NonNullable<GraphqlUser['flatData']>['teams']>[0],
 ): UserTeam => {
-  const {
-    id,
-    flatData: { displayName, proposal },
-  } = item.id[0];
+  const team = item.id[0];
+  const displayName = team.flatData?.displayName;
+  const proposal = team.flatData?.proposal;
+
   return {
-    id,
+    id: team.id,
     role: item.role,
     approach: item.approach,
     responsibilities: item.responsibilities,
-    proposal: proposal && proposal.length ? proposal[0].id : undefined,
-    displayName,
+    proposal: proposal?.length ? proposal[0].id : undefined,
+    displayName: displayName || '',
   };
 };
 
-export const parseGraphQLUser = (item: CMSGraphQLUser): UserResponse => {
-  const { avatar, teams = [], lastModifiedDate, ...flatData } = item.flatData;
+export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
+  const flatTeams: NonNullable<GraphqlUser['flatData']>['teams'] =
+    item.flatData?.teams || [];
+  const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
+    item.flatData?.avatar || [];
+  const flatQuestions = item.flatData?.questions || [];
+  const flatSkills = item.flatData?.skills || [];
   const createdDate = parseDate(item.created).toISOString();
+
+  const role = ['Guest', 'Staff', 'Grantee'].includes(item.flatData?.role || '')
+    ? (item.flatData?.role as 'Guest' | 'Staff' | 'Grantee')
+    : 'Guest';
+  const teams: UserTeam[] = (flatTeams || []).map(
+    parseGraphQLUserTeamConnection,
+  );
+
   return {
     id: item.id,
     createdDate,
-    ...flatData,
-    questions: flatData.questions?.map((q) => q.question) || [],
-    skills: flatData.skills || [],
-
-    lastModifiedDate: lastModifiedDate ?? createdDate,
-    teams: teams.map(parseGraphQLUserTeamConnection),
-    avatarUrl: avatar?.length
-      ? createURL(avatar.map((a) => a.id))[0]
+    firstName: item.flatData?.firstName || undefined,
+    biography: item.flatData?.biography || undefined,
+    degree: item.flatData?.degree || undefined,
+    displayName: item.flatData?.displayName || '',
+    email: item.flatData?.email || '',
+    institution: item.flatData?.institution || undefined,
+    jobTitle: item.flatData?.jobTitle || undefined,
+    lastName: item.flatData?.lastName || undefined,
+    location: item.flatData?.location || undefined,
+    orcid: item.flatData?.orcid || undefined,
+    questions: flatQuestions.map((q) => q.question) || [],
+    skills: flatSkills,
+    lastModifiedDate: item.flatData?.lastModifiedDate ?? createdDate,
+    teams,
+    avatarUrl: flatAvatar?.length
+      ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,
+    role,
+    responsibilities: item.flatData?.responsibilities || undefined,
+    reachOut: item.flatData?.reachOut || undefined,
   };
 };
 
 export const parseUser = (user: CMSUser): UserResponse => {
-  return {
-    id: user.id,
-    createdDate: parseDate(user.created).toISOString(),
-    lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
-    displayName: user.data.displayName.iv,
-    email: user.data.email.iv,
-    degree: user.data.degree?.iv,
-    firstName: user.data.firstName?.iv,
-    lastName: user.data.lastName?.iv,
-    biography: user.data.biography?.iv,
-    jobTitle: user.data.jobTitle?.iv,
-    institution: user.data.institution?.iv,
-    teams:
-      user.data.teams?.iv.map(({ id, ...t }) => ({ id: id[0], ...t })) || [],
-    location: user.data.location?.iv,
-    orcid: user.data.orcid?.iv,
-    orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
-    orcidWorks: user.data.orcidWorks?.iv,
-    skills: user.data.skills?.iv || [],
-    questions: user.data.questions?.iv.map(({ question }) => question) || [],
-    avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
-  };
+  const teams: UserTeam[] =
+    user.data.teams?.iv.map(({ id, ...t }) => ({
+      id: id[0],
+      displayName: 'Unknown',
+      ...t,
+    })) || [];
+
+  return JSON.parse(
+    JSON.stringify({
+      id: user.id,
+      createdDate: parseDate(user.created).toISOString(),
+      lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
+      displayName: user.data.displayName.iv,
+      email: user.data.email.iv,
+      degree: user.data.degree?.iv,
+      firstName: user.data.firstName?.iv,
+      lastName: user.data.lastName?.iv,
+      biography: user.data.biography?.iv,
+      jobTitle: user.data.jobTitle?.iv,
+      institution: user.data.institution?.iv,
+      teams,
+      location: user.data.location?.iv,
+      orcid: user.data.orcid?.iv,
+      orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
+      orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
+      orcidWorks: user.data.orcidWorks?.iv,
+      skills: user.data.skills?.iv || [],
+      questions: user.data.questions?.iv.map(({ question }) => question) || [],
+      avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
+      role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
+      responsibilities: user.data.responsibilities?.iv || undefined,
+      reachOut: user.data.reachOut?.iv || undefined,
+    }),
+  );
 };

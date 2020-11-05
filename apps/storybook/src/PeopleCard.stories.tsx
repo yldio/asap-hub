@@ -1,5 +1,5 @@
 import React from 'react';
-import { text, date, number } from '@storybook/addon-knobs';
+import { text, date, number, select } from '@storybook/addon-knobs';
 
 import { PeopleCard } from '@asap-hub/react-components';
 
@@ -29,5 +29,6 @@ export const Normal = () => (
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     )}
     href="#"
+    role={select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee')}
   />
 );

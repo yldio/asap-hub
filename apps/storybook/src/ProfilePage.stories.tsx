@@ -1,10 +1,11 @@
 import React from 'react';
-import { date, text, array } from '@storybook/addon-knobs';
+import { date, text, array, select } from '@storybook/addon-knobs';
 import {
-  ProfilePage,
   ProfileAbout,
   ProfileOutputs,
+  ProfilePage,
   ProfileResearch,
+  ProfileStaff,
 } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 
@@ -76,8 +77,11 @@ const commonProps = () => ({
         year: '2015',
         month: '05',
       },
+      lastModifiedDate: '1478865224685',
     },
   ],
+  role: select('Role', ['Staff', 'Grantee', 'Guest'], 'Staff'),
+  discoverHref: '/wrong',
   aboutHref: '/wrong',
   researchHref: '/wrong',
   outputsHref: '/wrong',
@@ -129,5 +133,18 @@ export const AboutTab = () => (
 export const OutputsTab = () => (
   <ProfilePage {...commonProps()} outputsHref="#">
     <ProfileOutputs />
+  </ProfilePage>
+);
+
+export const Staff = () => (
+  <ProfilePage {...commonProps()} role="Staff" aboutHref="#">
+    <ProfileStaff
+      {...commonProps()}
+      biography={text(
+        'Biography',
+        'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
+      )}
+      discoverHref="/discover"
+    />
   </ProfilePage>
 );

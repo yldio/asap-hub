@@ -31,6 +31,8 @@ type ProfilePersonalTextProps = Pick<
   UserResponse,
   'department' | 'institution' | 'jobTitle' | 'location'
 > & {
+  readonly discoverHref: string;
+  readonly role: UserResponse['role'];
   readonly teams: ReadonlyArray<UserTeam & { href: string }>;
 };
 
@@ -40,6 +42,8 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
   location,
   jobTitle,
   teams,
+  role,
+  discoverHref,
 }) => {
   return (
     <div>
@@ -48,10 +52,16 @@ const ProfilePersonalText: React.FC<ProfilePersonalTextProps> = ({
         {jobTitle && institution && ' at '}
         {institution}
         {institution && department && `, ${department}`}
-        {teams.map(({ id, role, href, displayName }) => (
+        {role === 'Staff' ? (
+          <>
+            <br />
+            ASAP Staff on <Link href={discoverHref}>Team ASAP</Link>
+          </>
+        ) : null}
+        {teams.map(({ id, role: teamRole, href, displayName }) => (
           <React.Fragment key={id}>
             <br />
-            {role} on <Link href={href}>Team {displayName}</Link>
+            {teamRole} on <Link href={href}>Team {displayName}</Link>
           </React.Fragment>
         ))}
       </p>

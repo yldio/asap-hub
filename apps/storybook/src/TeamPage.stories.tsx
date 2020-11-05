@@ -41,7 +41,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
       firstName: 'Daniel',
       lastName: 'Ramirez',
       email: 'd@niel.com',
-      role: 'Lead PI',
+      role: 'Lead PI (Core Leadership)',
     },
     {
       id: '2',
@@ -61,7 +61,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
       firstName: 'Tess',
       lastName: 'Goetz',
       email: 'tess@goetz.com',
-      role: 'Collaborator',
+      role: 'Collaborating PI',
     },
     {
       id: '4',
@@ -69,7 +69,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
       firstName: 'Robin',
       lastName: 'Peploe',
       email: 'r@bin.com',
-      role: 'Collaborator',
+      role: 'Collaborating PI',
     },
     {
       id: '5',
@@ -77,7 +77,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
       firstName: 'Alice',
       lastName: 'Lane',
       email: 'l@ne.com',
-      role: 'Collaborator',
+      role: 'Collaborating PI',
     },
     {
       id: '6',
@@ -85,7 +85,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
       firstName: 'Philip',
       lastName: 'Mars',
       email: 'm@rs.com',
-      role: 'Collaborator',
+      role: 'Collaborating PI',
     },
     {
       id: '7',
@@ -93,7 +93,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
       firstName: 'Emanuel',
       lastName: 'Depay',
       email: 'em@nuel.com',
-      role: 'Collaborator',
+      role: 'Collaborating PI',
     },
   ],
   aboutHref: '/wrong',

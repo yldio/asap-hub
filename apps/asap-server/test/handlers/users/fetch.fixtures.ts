@@ -22,7 +22,7 @@ export const response: { data: ResponseFetchUsers } = {
             skills: null,
             teams: [
               {
-                role: 'Lead PI',
+                role: 'Lead PI (Core Leadership)',
                 id: [
                   {
                     id: 'userId3',
@@ -103,7 +103,7 @@ export const expectation: ListUserResponse = {
       teams: [
         {
           id: 'userId3',
-          role: 'Lead PI',
+          role: 'Lead PI (Core Leadership)',
           displayName: 'Jackson, M',
           proposal: 'proposalId',
         },

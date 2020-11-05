@@ -47,7 +47,7 @@ it('renders a list of members', () => {
           displayName: 'Unknown',
           email: 'foo@bar.com',
           avatarUrl: 'https://example.com',
-          role: 'Collaborator',
+          role: 'Collaborating PI',
         },
       ]}
     />,

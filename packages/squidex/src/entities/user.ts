@@ -1,4 +1,4 @@
-import { TeamRole, OrcidWork } from '@asap-hub/model';
+import { TeamRole, OrcidWork, Role } from '@asap-hub/model';
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 
@@ -25,7 +25,7 @@ interface User<TAvatar = string, TConnection = string> {
   orcid?: string;
   orcidWorks?: OrcidWork[];
   questions: { question: string }[];
-  role: 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
+  role: Role;
   skills: string[];
   responsibilities?: string;
   reachOut?: string;

@@ -23,7 +23,7 @@ const member: Omit<
   lastName: 'Carpenter',
   email: 'mason@car.com',
   displayName: 'Birdie Romeo',
-  role: 'Lead PI',
+  role: 'Lead PI (Core Leadership)',
 };
 
 const teamProps = (): ComponentProps<typeof NetworkTeams> => {

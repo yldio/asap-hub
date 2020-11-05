@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { TeamRole } from '@asap-hub/model';
+import { TeamRole, Role } from '@asap-hub/model';
 
 import { Display, Paragraph, Toggle } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
@@ -45,13 +45,13 @@ type NetworkPageHeaderProps = {
   filters?: Set<string>;
 };
 
-const userFilters: Option<TeamRole>[] = [
-  { label: 'Lead PI', value: 'Lead PI' },
-  { label: 'Co-Investigator', value: 'Co-Investigator' },
+const userFilters: Option<TeamRole | Role>[] = [
+  { label: 'Lead PI', value: 'Lead PI (Core Leadership)' },
+  { label: 'Co-PI', value: 'Co-PI (Core Leadership)' },
+  { label: 'Project Manager', value: 'Project Manager' },
+  { label: 'Collaborating PI', value: 'Collaborating PI' },
   { label: 'Key Personnel', value: 'Key Personnel' },
-  { label: 'Advisor', value: 'Advisor' },
   { label: 'Staff', value: 'Staff' },
-  { label: 'Guest', value: 'Guest' },
 ];
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({

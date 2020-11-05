@@ -43,11 +43,16 @@ it("generates information about the user's team", async () => {
   const { container } = render(
     <ProfilePersonalText
       teams={[
-        { id: '42', displayName: 'Team', role: 'Lead PI', href: `/teams/42` },
+        {
+          id: '42',
+          displayName: 'Team',
+          role: 'Lead PI (Core Leadership)',
+          href: `/teams/42`,
+        },
         {
           id: '1337',
           displayName: 'Meat',
-          role: 'Collaborator',
+          role: 'Collaborating PI',
           href: `/teams/1337`,
         },
       ]}
@@ -55,7 +60,7 @@ it("generates information about the user's team", async () => {
       discoverHref={'/'}
     />,
   );
-  expect(container).toHaveTextContent(/Lead PI on Team/);
+  expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
 });
 it('does not show team information if the user is not on a team', async () => {
   const { container } = render(

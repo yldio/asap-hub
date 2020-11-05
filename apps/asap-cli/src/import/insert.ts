@@ -67,7 +67,10 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
     },
   };
 
-  if (cache[team.applicationNumber.iv] && role === 'Lead PI') {
+  if (
+    cache[team.applicationNumber.iv] &&
+    role === 'Lead PI (Core Leadership)'
+  ) {
     const t = await cache[team.applicationNumber.iv];
     cache[team.applicationNumber.iv] = teams.patch(t.id, {
       ...t,

@@ -53,7 +53,7 @@ describe('GET /users', () => {
 
   test('returns 200 when searching users by name - should allow filter as string', async () => {
     const filter =
-      "data/teams/iv/role eq 'Lead PI' and" +
+      "data/teams/iv/role eq 'Lead PI (Core Leadership)' and" +
       " (data/role/iv ne 'Hidden' and" +
       " (contains(data/displayName/iv, 'first')" +
       " or contains(data/firstName/iv, 'first')" +
@@ -76,7 +76,7 @@ describe('GET /users', () => {
         httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
-          filter: 'Lead PI',
+          filter: 'Lead PI (Core Leadership)',
         },
         headers: {
           Authorization: `Bearer token`,
@@ -91,7 +91,7 @@ describe('GET /users', () => {
 
   test('returns 200 when searching users by name', async () => {
     const filter =
-      "data/teams/iv/role eq 'Lead PI' or" +
+      "data/teams/iv/role eq 'Lead PI (Core Leadership)' or" +
       " data/teams/iv/role eq 'anotherFilter' and" +
       " (data/role/iv ne 'Hidden' and" +
       " (contains(data/displayName/iv, 'first')" +
@@ -115,7 +115,7 @@ describe('GET /users', () => {
         httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
-          filter: 'Lead PI,anotherFilter',
+          filter: 'Lead PI (Core Leadership),anotherFilter',
         },
         headers: {
           Authorization: `Bearer token`,

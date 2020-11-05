@@ -9,7 +9,7 @@ const member = {
   lastName: 'Carpenter',
   email: 'masoncarpenter@foo.com',
   displayName: 'Birdie Romeo',
-  role: 'Lead PI' as const,
+  role: 'Lead PI (Core Leadership)' as const,
 };
 const teamCardProps = {
   id: 'ee98d044-79a7-4028-915d-7f88793e3190',

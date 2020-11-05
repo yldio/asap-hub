@@ -92,7 +92,7 @@ test('renders dashboard with correct links', async () => {
       {
         id: 'uuid',
         displayName: 'Team',
-        role: 'Lead PI',
+        role: 'Lead PI (Core Leadership)',
       },
     ],
   });

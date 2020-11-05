@@ -160,14 +160,14 @@ describe('the network page', () => {
     expect(checkbox).toBeChecked();
     await waitFor(() => {
       const { searchParams } = new URL(usersReq!.path, 'http://api');
-      expect(searchParams.get('filter')).toBe('Lead PI');
+      expect(searchParams.get('filter')).toBe('Lead PI (Core Leadership)');
     });
   });
 
   it('reads filters from url', async () => {
     const { getByText, getByLabelText } = await renderNetworkPage(
       '/network/users',
-      '?filter=Lead+PI',
+      '?filter=Lead+PI+(Core Leadership)',
     );
 
     userEvent.click(getByText('Filters'));
@@ -175,7 +175,7 @@ describe('the network page', () => {
     expect(checkbox).toBeChecked();
     await waitFor(() => {
       const { searchParams } = new URL(usersReq!.path, 'http://api');
-      expect(searchParams.get('filter')).toBe('Lead PI');
+      expect(searchParams.get('filter')).toBe('Lead PI (Core Leadership)');
     });
   });
 });

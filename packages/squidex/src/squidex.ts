@@ -187,6 +187,10 @@ export class Squidex<T extends { id: string; data: object }> {
         });
       }
 
+      if (err.response?.statusCode === 404) {
+        throw Boom.notFound();
+      }
+
       throw Boom.badImplementation('squidex', {
         data: err.response?.body || err,
       });

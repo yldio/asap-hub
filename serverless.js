@@ -242,6 +242,18 @@ module.exports = {
         },
       ],
     },
+    updateTeam: {
+      handler: 'apps/asap-server/build-cjs/handlers/teams/update.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'PATCH',
+            path: `/teams/{id}`,
+          },
+        },
+      ],
+    },
     fetchNewsAndEvents: {
       handler:
         'apps/asap-server/build-cjs/handlers/news-and-events/fetch.handler',

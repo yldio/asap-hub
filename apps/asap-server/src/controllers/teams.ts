@@ -7,6 +7,7 @@ import {
   TeamResponse,
   TeamMember,
   TeamRole,
+  TeamTool,
 } from '@asap-hub/model';
 import { User } from '@asap-hub/auth';
 
@@ -80,6 +81,15 @@ export default class Teams {
   constructor() {
     this.teams = new Squidex('teams');
     this.users = new Squidex('users');
+  }
+
+  async update(
+    id: string,
+    tools: TeamTool[] | [],
+    user: User,
+  ): Promise<TeamResponse> {
+    const team = await this.teams.patch(id, { tools: { iv: tools } });
+    return transformTeam(team, [], user);
   }
 
   async fetch(

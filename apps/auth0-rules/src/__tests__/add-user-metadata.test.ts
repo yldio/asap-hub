@@ -158,11 +158,10 @@ describe('Auth0 Rule - Add User Metadata', () => {
       displayName: 'JT',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
-      role: 'Lead PI',
       firstName: undefined,
       lastName: undefined,
       avatarUrl: undefined,
-      teams: [{ id: 'team-1', displayName: 'Team 1' }],
+      teams: [{ id: 'team-1', displayName: 'Team 1', role: 'Lead PI' }],
     });
   });
 });

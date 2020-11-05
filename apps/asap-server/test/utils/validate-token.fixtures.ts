@@ -1,7 +1,7 @@
 import { origin } from '../../src/config';
 
 export const idToken = {
-  [origin + '/user']: {
+  [`${origin}/user`]: {
     id: 'userId',
     displayName: 'JT',
     email: 'joao.tiago@asap.science',

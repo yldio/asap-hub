@@ -2,7 +2,7 @@ import { origin } from '../../config';
 
 /* eslint-disable @typescript-eslint/camelcase */
 const decodeToken = jest.fn().mockResolvedValue({
-  [origin + '/user']: {
+  [`${origin}/user`]: {
     id: 'userId',
     displayName: 'JT',
     email: 'joao.tiago@asap.science',

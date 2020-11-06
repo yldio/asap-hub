@@ -179,8 +179,7 @@ export default class Users {
     const cleanUpdate = Object.entries(update).reduce((acc, [key, value]) => {
       acc[key] = { iv: value };
       return acc;
-      // eslint-disable @typescript-eslint/no-explicit-any
-    }, {} as { [key: string]: { iv: any } });
+    }, {} as { [key: string]: { iv: unknown } });
 
     const user = await this.users.patch(id, cleanUpdate);
     return parseUser(user);

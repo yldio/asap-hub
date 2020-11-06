@@ -14,6 +14,11 @@ const decodeToken = jest.fn().mockResolvedValue({
         displayName: 'Awesome Team',
         role: 'Project Manager',
       },
+      {
+        id: 'team-id-3',
+        displayName: 'Zac Torres',
+        role: 'Collaborator',
+      },
     ],
   },
   given_name: 'Joao',

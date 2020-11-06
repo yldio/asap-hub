@@ -10,11 +10,6 @@ import { perRem } from '../pixels';
 const fieldsContainer = css({
   display: 'grid',
   rowGap: `${12 / perRem}em`,
-  gridTemplateColumns: '100%',
-  '> div > div': {
-    width: 'unset',
-    maxWidth: 'unset',
-  },
 });
 
 type ToolModalProps = Partial<TeamTool> & {

@@ -10,9 +10,8 @@ import {
   ProfileBiography,
   ProfileRecentWorks,
   ProfileStaffBackground,
+  HelpSection,
 } from '../organisms';
-import { Paragraph, Link } from '../atoms';
-import { mailToSupport } from '../mail';
 
 const styles = css({
   display: 'grid',
@@ -68,16 +67,7 @@ const ProfileStaff: React.FC<ProfileStaffProps> = ({
       {orcidWorks && orcidWorks.length ? (
         <ProfileRecentWorks orcidWorks={orcidWorks} />
       ) : null}
-      <section css={{ textAlign: 'center' }}>
-        <Paragraph accent="lead">
-          <span css={{ fontWeight: 'bold' }}>
-            Looking for help with an ASAP-related matter?
-          </span>
-          <br />
-          Our support team is happy to help. Get in touch{' '}
-          <Link href={mailToSupport}>here</Link>
-        </Paragraph>
-      </section>
+      <HelpSection />
     </div>
   );
 };

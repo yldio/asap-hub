@@ -1,12 +1,12 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
-import { createListUserResponse } from '@asap-hub/fixtures';
+import { createUserResponse } from '@asap-hub/fixtures';
 
 import ProfileHeader from '../ProfileHeader';
 
 const boilerplateProps: ComponentProps<typeof ProfileHeader> = {
-  ...createListUserResponse(1).items[0], // TODO
+  ...createUserResponse(),
   teams: [],
   aboutHref: './about',
   researchHref: './research',
@@ -58,7 +58,10 @@ describe('an edit button', () => {
         editPersonalInfoHref="/edit-personal-info"
       />,
     );
-    expect(getByLabelText(/edit.+personal/i)).toBeVisible();
+    expect(getByLabelText(/edit.+personal/i)).toHaveAttribute(
+      'href',
+      '/edit-personal-info',
+    );
   });
 
   it('is rendered for contact info', () => {
@@ -68,7 +71,10 @@ describe('an edit button', () => {
         editContactHref="/edit-contact-info"
       />,
     );
-    expect(getByLabelText(/edit.+contact/i)).toBeVisible();
+    expect(getByLabelText(/edit.+contact/i)).toHaveAttribute(
+      'href',
+      '/edit-contact-info',
+    );
   });
 });
 

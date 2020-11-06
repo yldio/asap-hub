@@ -52,5 +52,4 @@ const ProfileAbout: React.FC<ProfileAboutProps> = ({
   </ProfileCardList>
 );
 
-// TODO test
 export default ProfileAbout;

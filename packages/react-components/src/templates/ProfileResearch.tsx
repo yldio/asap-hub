@@ -89,5 +89,4 @@ const ProfileResearch: React.FC<ProfileResearchProps> = ({
   );
 };
 
-// TODO edit tests
 export default ProfileResearch;

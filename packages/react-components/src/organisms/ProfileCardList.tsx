@@ -87,5 +87,4 @@ const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
   </div>
 );
 
-// TODO test
 export default ProfileCardList;

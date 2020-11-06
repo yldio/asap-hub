@@ -5,6 +5,7 @@ import { createUserResponse } from '@asap-hub/fixtures';
 
 import { ProfileHeader } from '..';
 import { mobileScreen, largeDesktopScreen } from '../../pixels';
+import { getBoundingClientRect } from '../../browser-test-utils';
 
 afterEach(async () => {
   await jestPlaywright.resetPage();
@@ -26,11 +27,6 @@ describe.each([
   beforeEach(() => {
     page.setViewportSize(screen);
   });
-
-  const getBoundingClientRect = async (selector: string) =>
-    page.$eval(selector, (elem: Element) =>
-      elem.getBoundingClientRect().toJSON(),
-    );
 
   it('does not re-layout when editable', async () => {
     const { getByRole, rerender } = render(

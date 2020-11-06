@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import { TeamTool } from '@asap-hub/model';
 
-export const updateSchema = Joi.object({
+export const teamUpdateSchema = Joi.object({
   tools: Joi.array()
     .items(
       Joi.object({
@@ -11,7 +11,9 @@ export const updateSchema = Joi.object({
       }),
     )
     .required(),
-});
+})
+  .min(1)
+  .required();
 
 export interface CMSGraphQLTeam {
   id: string;

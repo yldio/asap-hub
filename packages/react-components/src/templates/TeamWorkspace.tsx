@@ -29,8 +29,8 @@ type TeamWorkspaceProps = Pick<
   TeamResponse,
   'pointOfContact' | 'lastModifiedDate'
 > & {
-  tools: Array<TeamTool & { href: string }>;
-  newToolHref: string;
+  readonly tools: ReadonlyArray<TeamTool & { readonly href: string }>;
+  readonly newToolHref: string;
 };
 
 const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({

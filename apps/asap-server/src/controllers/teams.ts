@@ -41,7 +41,7 @@ function transformTeam(
     proposalURL: team.data.proposal?.iv[0],
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
     tools: user?.teams.find(({ id }) => id === team.id)
-      ? team.data.tools?.iv
+      ? team.data.tools?.iv || []
       : undefined,
   };
 }

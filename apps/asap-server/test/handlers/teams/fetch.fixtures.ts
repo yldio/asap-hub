@@ -62,6 +62,31 @@ export const teamsResponse: { total: number; items: RestTeam[] } = {
       created: '2020-09-16T14:31:19Z',
       lastModified: '2020-09-16T14:31:19Z',
     },
+    {
+      id: 'team-id-3',
+      data: {
+        displayName: {
+          iv: 'Zac Torres',
+        },
+        applicationNumber: {
+          iv: 'eish',
+        },
+        projectTitle: {
+          iv: 'This is good',
+        },
+        projectSummary: {
+          iv: 'Its good',
+        },
+        skills: {
+          iv: [],
+        },
+        tools: {
+          iv: [],
+        },
+      },
+      created: '2020-09-16T14:31:19Z',
+      lastModified: '2020-09-16T14:31:19Z',
+    },
   ],
 };
 
@@ -309,6 +334,17 @@ export const expectation: ListTeamResponse = {
           role: 'Key Personnel',
         },
       ],
+      lastModifiedDate: '2020-09-16T14:31:19Z',
+    },
+    {
+      id: 'team-id-3',
+      displayName: 'Zac Torres',
+      applicationNumber: 'eish',
+      skills: [],
+      members: [],
+      tools: [],
+      projectTitle: 'This is good',
+      projectSummary: 'Its good',
       lastModifiedDate: '2020-09-16T14:31:19Z',
     },
   ],

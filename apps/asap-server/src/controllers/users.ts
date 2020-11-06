@@ -176,6 +176,7 @@ export default class Users {
   }
 
   async update(id: string, update: UserUpdate): Promise<UserResponse> {
+    // eslint-disable @typescript-eslint/no-explicit-any
     const cleanUpdate = Object.entries(update).reduce((acc, [key, value]) => {
       acc[key] = { iv: value };
       return acc;

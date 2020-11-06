@@ -14,12 +14,12 @@ import {
   LabeledTextArea,
 } from '../molecules';
 import { RadioButtonGroup } from '../organisms';
-import { perRem } from '../pixels';
+import { perRem, formTargetWidth } from '../pixels';
 import { lead } from '../colors';
 import { noop } from '../utils';
 
 const containerStyles = css({
-  width: 'max-content',
+  width: `${formTargetWidth / perRem}em`,
   maxWidth: '100%',
   display: 'flex',
   flexDirection: 'column',

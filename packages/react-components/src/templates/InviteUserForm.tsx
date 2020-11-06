@@ -4,6 +4,7 @@ import { Invitee } from '@asap-hub/model';
 import { Button } from '../atoms';
 import { noop } from '../utils';
 import { LabeledTextField, LabeledPasswordField } from '../molecules';
+import { formTargetWidth, perRem } from '../pixels';
 
 interface InviteUserFormProps {
   readonly onSubmit?: (invitee: Invitee, adminPassword: string) => void;
@@ -25,7 +26,7 @@ const InviteUserForm: React.FC<InviteUserFormProps> = ({ onSubmit = noop }) => {
     <form
       ref={form}
       css={{
-        width: 'max-content',
+        width: `${formTargetWidth / perRem}em`,
         maxWidth: '100%',
       }}
     >

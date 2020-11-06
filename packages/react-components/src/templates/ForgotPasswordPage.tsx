@@ -4,7 +4,13 @@ import css from '@emotion/css';
 import { Display, Paragraph, Button } from '../atoms';
 import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
-import { vminLinearCalc, mobileScreen, largeDesktopScreen } from '../pixels';
+import {
+  vminLinearCalc,
+  mobileScreen,
+  largeDesktopScreen,
+  formTargetWidth,
+  perRem,
+} from '../pixels';
 import { contentSidePaddingWithoutNavigation } from '../layout';
 
 const styles = css({
@@ -34,9 +40,9 @@ const styles = css({
 });
 
 const formStyles = css({
+  width: `${formTargetWidth / perRem}em`,
   maxWidth: '100%',
   display: 'grid',
-  gridTemplateColumns: '100%',
 });
 
 interface ForgotPasswordPageProps {

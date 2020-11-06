@@ -2,12 +2,7 @@ import React, { useRef } from 'react';
 import css from '@emotion/css';
 import { v4 as uuidV4 } from 'uuid';
 
-import { perRem, formTargetWidth } from '../pixels';
-
 const containerStyles = css({
-  width: `${formTargetWidth / perRem}em`,
-  maxWidth: `min(${formTargetWidth / perRem}em, 100%)`,
-
   display: 'flex',
   flexWrap: 'wrap',
   alignItems: 'center',

@@ -68,8 +68,6 @@ export interface UserUpdate {
   skills?: string[];
   skillsDescription?: string;
   questions?: { question: string }[];
-  responsibilities?: string;
-  reachOut?: string;
 }
 
 export type CMSOrcidWork = OrcidWork;
@@ -100,8 +98,6 @@ export const userUpdateSchema = Joi.object({
   skills: Joi.array().items(Joi.string()),
   skillsDescription: Joi.string(),
   questions: Joi.array().items(Joi.object({ question: Joi.string() })),
-  responsibilities: Joi.string(),
-  reachOut: Joi.string(),
 })
   .min(1)
   .required();

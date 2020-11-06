@@ -10,6 +10,8 @@ interface CMSTeamMember {
   approach?: string;
 }
 
+type UserDegree = 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD';
+
 export interface CMSUser {
   id: string;
   lastModified: string;
@@ -21,7 +23,7 @@ export interface CMSUser {
     firstName?: { iv: string };
     lastName?: { iv: string };
     jobTitle?: { iv: string };
-    degree?: { iv: 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD' };
+    degree?: { iv: UserDegree };
     institution?: { iv: string };
     connections: { iv: { code: string }[] };
     biography?: { iv: string };
@@ -51,9 +53,26 @@ export interface CMSUser {
   };
 }
 
+export interface UserUpdate {
+  displayName?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  biography?: string;
+  jobTitle?: string;
+  orcid?: string;
+  department?: string;
+  institution?: string;
+  degree?: UserDegree;
+  location?: string;
+  skills?: string[];
+  skillsDescription?: string;
+  questions?: { question: string }[];
+}
+
 export type CMSOrcidWork = OrcidWork;
 
-export const createSchema = Joi.object({
+export const userCreateSchema = Joi.object({
   displayName: Joi.string().required(),
   email: Joi.string().required(),
   firstName: Joi.string(),
@@ -63,7 +82,25 @@ export const createSchema = Joi.object({
   biography: Joi.string(),
   institution: Joi.string(),
   connections: Joi.string(),
-});
+}).required();
+
+export const userUpdateSchema = Joi.object({
+  displayName: Joi.string(),
+  email: Joi.string(),
+  firstName: Joi.string(),
+  lastName: Joi.string(),
+  jobTitle: Joi.string(),
+  degree: Joi.string().allow('BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'),
+  institution: Joi.string(),
+  biography: Joi.string(),
+  location: Joi.string(),
+  orcid: Joi.string(),
+  skills: Joi.array().items(Joi.string()),
+  skillsDescription: Joi.string(),
+  questions: Joi.array().items(Joi.object({ question: Joi.string() })),
+})
+  .min(1)
+  .required();
 
 export const parseGraphQLUserTeamConnection = (
   item: NonNullable<NonNullable<GraphqlUser['flatData']>['teams']>[0],

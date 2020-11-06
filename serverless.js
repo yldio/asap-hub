@@ -141,6 +141,18 @@ module.exports = {
         },
       ],
     },
+    updateUser: {
+      handler: 'apps/asap-server/build-cjs/handlers/users/update.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'PATCH',
+            path: `/users/{id}`,
+          },
+        },
+      ],
+    },
     auth0FetchByCode: {
       handler:
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-fetch-by-code.handler',

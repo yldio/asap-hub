@@ -8,7 +8,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { Squidex, SquidexGraphql, GraphqlUser } from '@asap-hub/squidex';
 import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
 
-import { CMSUser, parseUser, parseGraphQLUser } from '../entities';
+import { CMSUser, parseUser, parseGraphQLUser, UserUpdate } from '../entities';
 import { sendEmail } from '../utils/send-mail';
 import { origin } from '../config';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
@@ -173,6 +173,16 @@ export default class Users {
     }
 
     return parseUser(createdUser);
+  }
+
+  async update(id: string, update: UserUpdate): Promise<UserResponse> {
+    const cleanUpdate = Object.entries(update).reduce((acc, [key, value]) => {
+      acc[key] = { iv: value };
+      return acc;
+    }, {} as { [key: string]: { iv: unknown } });
+
+    const user = await this.users.patch(id, cleanUpdate);
+    return parseUser(user);
   }
 
   async fetch(options: {

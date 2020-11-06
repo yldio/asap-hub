@@ -4,7 +4,7 @@ import { framework as lambda } from '@asap-hub/services-common';
 
 import Users from '../../controllers/users';
 import { globalToken } from '../../config';
-import { createSchema } from '../../entities/user';
+import { userCreateSchema } from '../../entities/user';
 import { Handler } from '../../utils/types';
 
 const validateUser = async (request: lambda.Request): Promise<void> => {
@@ -32,7 +32,7 @@ export const handler: Handler = lambda.http(
     const payload = lambda.validate(
       'payload',
       request.payload,
-      createSchema.required(),
+      userCreateSchema,
     ) as Invitee;
 
     // validate user

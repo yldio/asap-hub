@@ -1,12 +1,11 @@
 import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
-import { TeamTool } from '@asap-hub/model';
 
 import validateUser from '../../utils/validate-user';
-import Teams from '../../controllers/teams';
+import Users from '../../controllers/users';
+import { userUpdateSchema, UserUpdate } from '../../entities/user';
 import { Handler } from '../../utils/types';
-import { teamUpdateSchema } from '../../entities/team';
 
 export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
@@ -20,22 +19,22 @@ export const handler: Handler = lambda.http(
       id: string;
     };
 
-    const { tools } = lambda.validate(
+    const update = lambda.validate(
       'payload',
       request.payload,
-      teamUpdateSchema,
-    ) as { tools: TeamTool[] | [] };
+      userUpdateSchema,
+    ) as UserUpdate;
 
-    if (!user.teams.find(({ id }) => id === params.id)) {
+    if (user.id !== params.id) {
       throw Boom.forbidden();
     }
 
-    const teams = new Teams();
-    const team = await teams.update(params.id, tools, user);
+    const users = new Users();
+    const updated = await users.update(params.id, update);
 
     return {
       statusCode: 200,
-      payload: team,
+      payload: updated,
     };
   },
 );

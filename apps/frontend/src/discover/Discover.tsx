@@ -25,9 +25,7 @@ const Discover: React.FC<{}> = () => {
       ...discover,
       members: discover.members.map((m) => ({
         ...m,
-        role: m.jobTitle
-          ? `${m.jobTitle}${m.institution ? ` at ${m.institution}` : ''}`
-          : 'Staff',
+        role: 'Staff',
       })),
     };
     return (

@@ -96,7 +96,7 @@ test('renders discover with members', async () => {
     });
 
   const { getByText } = await renderDiscover();
-  expect(getByText('CEO')).toBeVisible();
+  expect(getByText('John Doe')).toBeVisible();
 });
 
 test('renders discover with members role', async () => {
@@ -123,5 +123,5 @@ test('renders discover with members role', async () => {
     });
 
   const { getByText } = await renderDiscover();
-  expect(getByText('CEO at ASAP')).toBeVisible();
+  expect(getByText('Staff')).toBeVisible();
 });

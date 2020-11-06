@@ -22,11 +22,11 @@ const Research = React.lazy(loadResearch);
 const About = React.lazy(loadAbout);
 const Outputs = React.lazy(loadOutputs);
 const Staff = React.lazy(loadStaff);
-loadResearch();
+loadResearch().then(loadStaff);
 
 const Profile: React.FC<{}> = () => {
   useEffect(() => {
-    loadResearch().then(loadAbout).then(loadOutputs);
+    loadResearch().then(loadStaff).then(loadAbout).then(loadOutputs);
   }, []);
 
   const {

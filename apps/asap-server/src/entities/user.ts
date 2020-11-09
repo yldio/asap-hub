@@ -148,6 +148,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     lastName: item.flatData?.lastName || undefined,
     location: item.flatData?.location || undefined,
     orcid: item.flatData?.orcid || undefined,
+    orcidWorks: item.flatData?.orcidWorks || [],
     questions: flatQuestions.map((q) => q.question) || [],
     skills: flatSkills,
     lastModifiedDate: item.flatData?.lastModifiedDate ?? createdDate,

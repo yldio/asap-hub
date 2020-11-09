@@ -99,6 +99,7 @@ export const expectation: ListUserResponse = {
       firstName: 'Tom',
       lastName: 'Hardy',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
+      orcidWorks: [],
       teams: [
         {
           id: 'userId3',
@@ -119,6 +120,7 @@ export const expectation: ListUserResponse = {
       firstName: 'Arnold',
       lastName: 'Schwatzneger',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
+      orcidWorks: [],
       teams: [
         {
           id: 'userId3',

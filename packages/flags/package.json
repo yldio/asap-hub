@@ -1,0 +1,22 @@
+{
+  "name": "@asap-hub/flags",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "12.18.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.9.6"
+  },
+  "devDependencies": {
+    "@types/asap-hub__inline-environment": "workspace:*",
+    "@types/jest": "^26.0.3"
+  }
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Overlay } from '@asap-hub/react-components';
 import { boolean } from '@storybook/addon-knobs';
-import { NoPaddingDecorator } from './decorators';
+import { NoPaddingDecorator } from './layout';
 
 export default {
   title: 'Atoms / Overlay',

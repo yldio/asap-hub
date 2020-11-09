@@ -2,7 +2,7 @@ import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
 import { SigninPage } from '@asap-hub/react-components';
-import { BasicLayoutDecorator } from './decorators';
+import { BasicLayoutDecorator } from './layout';
 
 export default {
   title: 'Pages / Auth / Sign in',

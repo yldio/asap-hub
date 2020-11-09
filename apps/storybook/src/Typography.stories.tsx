@@ -10,7 +10,7 @@ import {
   Paragraph as ParagraphText,
 } from '@asap-hub/react-components';
 import { accentColor } from './text';
-import { ThemeDecorator } from './decorators';
+import { ThemeDecorator } from './theme';
 
 export default {
   title: 'Atoms / Typography',

@@ -3,7 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { array, select } from '@storybook/addon-knobs';
 import { UserNavigation } from '@asap-hub/react-components';
 
-import { NoPaddingDecorator } from './decorators';
+import { NoPaddingDecorator } from './layout';
 
 export default {
   title: 'Organisms / Navigation / User Nav',

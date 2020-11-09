@@ -1,7 +1,7 @@
 import React from 'react';
 import { NotFoundPage } from '@asap-hub/react-components';
 
-import { LayoutDecorator } from './decorators';
+import { LayoutDecorator } from './layout';
 
 export default {
   title: 'Pages / Not Found',

@@ -2,7 +2,7 @@ import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
 import { AdminInviteUserPage } from '@asap-hub/react-components';
-import { LayoutDecorator } from './decorators';
+import { LayoutDecorator } from './layout';
 
 export default {
   title: 'Pages / Admin / Invite User',

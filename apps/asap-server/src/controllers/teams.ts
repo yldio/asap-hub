@@ -89,7 +89,10 @@ export default class Teams {
     user: User,
   ): Promise<TeamResponse> {
     const team = await this.teams.patch(id, { tools: { iv: tools } });
-    return transformTeam(team, [], user);
+
+    const users = await fetchUsers(id, this.users.client);
+
+    return transformTeam(team, transformUser(users, id), user);
   }
 
   async fetch(

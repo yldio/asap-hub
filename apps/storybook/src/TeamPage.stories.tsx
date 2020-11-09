@@ -101,7 +101,7 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
   workspaceHref: '/wrong',
 });
 
-const tool = () => ({
+const tool = (): ComponentProps<typeof TeamWorkspace>['tools'][0] => ({
   name: text('Tool Name', 'Slack (#team-ferguson)'),
   description: text(
     'Tool Description',

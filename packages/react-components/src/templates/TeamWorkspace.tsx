@@ -25,9 +25,8 @@ const toolContainerStyles = css({
   padding: `${24 / perRem}em 0`,
 });
 
-type TeamWorkspaceProps = Pick<
-  TeamResponse,
-  'pointOfContact' | 'lastModifiedDate'
+type TeamWorkspaceProps = Readonly<
+  Pick<TeamResponse, 'pointOfContact' | 'lastModifiedDate'>
 > & {
   readonly tools: ReadonlyArray<TeamTool & { readonly href: string }>;
   readonly newToolHref: string;

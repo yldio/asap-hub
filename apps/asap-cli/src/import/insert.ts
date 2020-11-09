@@ -32,8 +32,8 @@ const insertMembership = (
   const newTeam: UserTeamConnection<string> = {
     id: [team.id],
     role: data.role,
-    approach: data.approach,
-    responsibilities: data.researchInterest,
+    approach: data.researchInterest,
+    responsibilities: data.responsibilities,
   };
 
   return users.patch(user.id, {
@@ -111,6 +111,7 @@ const insertUser = async (
     degree,
     jobTitle,
     skills,
+    location,
     questions,
     institution,
     orcid,
@@ -147,13 +148,6 @@ const insertUser = async (
     biography: {
       iv: biography,
     },
-    ...(degree
-      ? {
-          degree: {
-            iv: degree,
-          },
-        }
-      : {}),
     skills: {
       iv: skills,
     },
@@ -162,13 +156,6 @@ const insertUser = async (
         question: q,
       })),
     },
-    ...(orcid
-      ? {
-          orcid: {
-            iv: orcid,
-          },
-        }
-      : {}),
     teams: {
       iv: [],
     },
@@ -179,6 +166,24 @@ const insertUser = async (
       iv: asapRole,
     },
   };
+
+  if (location) {
+    user.location = {
+      iv: location,
+    };
+  }
+
+  if (orcid) {
+    user.orcid = {
+      iv: orcid,
+    };
+  }
+
+  if (degree) {
+    user.degree = {
+      iv: degree,
+    };
+  }
 
   if (!cache[user.email.iv]) {
     cache[user.email.iv] = users.create(user).catch((err) => {

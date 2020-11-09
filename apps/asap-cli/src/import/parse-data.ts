@@ -13,12 +13,13 @@ export interface Data {
   lastName: string;
   institution: string;
   degree: Degree;
+  location: string;
   jobTitle: string;
   orcid: string;
   questions: string[];
   biography: string;
   researchInterest: string;
-  approach: string;
+  responsibilities: string;
   skills: string[];
   skillsDescription: string;
   asapRole: Role;
@@ -43,15 +44,15 @@ export default (data: string[]): Data => {
     skillsDescription,
     biography,
     researchInterest,
-    approach,
+    responsibilities,
     skills,
     asapRole,
+    location,
   ] = data.map((s) => s.trim());
 
   const orcid = norcid.match(/((\d|X){4}-(\d|X){4}-(\d|X){4}-(\d|X){4})/i);
   return {
     application,
-    approach,
     biography,
     degree: ['BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'].includes(degree)
       ? (degree as Degree)
@@ -65,7 +66,9 @@ export default (data: string[]): Data => {
     projectTitle,
     questions: [question1, question2, question3, question4].filter(Boolean),
     researchInterest,
-    role: role as TeamRole, // Needs verification or default value
+    responsibilities,
+    location,
+    role: role as TeamRole,
     skills: skills
       .split(',')
       .map((a) => a.trim())

@@ -72,6 +72,7 @@ export const inviteUsers = async (
           template: 'Welcome',
           values: {
             firstName: user.data.firstName.iv,
+            lastName: user.data.lastName.iv,
             link: link.toString(),
           },
         }),

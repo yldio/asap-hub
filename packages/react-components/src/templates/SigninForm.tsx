@@ -3,15 +3,19 @@ import css from '@emotion/css';
 
 import { EmailPasswordSignin, SsoButtons } from '../organisms';
 import { Display, Paragraph, Divider } from '../atoms';
-import { mobileScreen, largeDesktopScreen, vminLinearCalc } from '../pixels';
+import {
+  mobileScreen,
+  largeDesktopScreen,
+  vminLinearCalc,
+  formTargetWidth,
+  perRem,
+} from '../pixels';
 
 const styles = css({
-  width: 'max-content',
+  width: `${formTargetWidth / perRem}em`,
   maxWidth: '100%',
   display: 'grid',
-  gridTemplateColumns: '100%',
   gridGap: vminLinearCalc(mobileScreen, 12, largeDesktopScreen, 24, 'px'),
-  justifyContent: 'center',
 });
 const headerStyles = css({
   textAlign: 'center',

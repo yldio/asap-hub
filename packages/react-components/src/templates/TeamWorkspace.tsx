@@ -1,18 +1,10 @@
 import React from 'react';
-import { TeamResponse } from '@asap-hub/model';
+import { TeamResponse, TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
 
-import {
-  Card,
-  Display,
-  Button,
-  Caption,
-  Headline2,
-  Paragraph,
-  Link,
-} from '../atoms';
-import { perRem } from '../pixels';
-import { LinkCard } from '../organisms';
+import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';
+import { perRem, mobileScreen } from '../pixels';
+import { ToolCard } from '../organisms';
 import { mailToSupport, createMailTo } from '../mail';
 import { formatDateAndTime } from '../utils';
 
@@ -20,22 +12,31 @@ const containerStyles = css({
   display: 'grid',
   gridRowGap: `${36 / perRem}em`,
 });
-
-const linkContainerStyles = css({
+const newToolStyles = css({
+  gridArea: 'contact',
+  display: 'flex',
+  [`@media (min-width: ${mobileScreen.max}px)`]: {
+    display: 'block',
+  },
+});
+const toolContainerStyles = css({
   display: 'grid',
   gridRowGap: `${24 / perRem}em`,
   padding: `${24 / perRem}em 0`,
 });
 
-type TeamWorkspaceProps = Pick<
-  TeamResponse,
-  'pointOfContact' | 'lastModifiedDate' | 'tools'
->;
+type TeamWorkspaceProps = Readonly<
+  Pick<TeamResponse, 'pointOfContact' | 'lastModifiedDate'>
+> & {
+  readonly tools: ReadonlyArray<TeamTool & { readonly href: string }>;
+  readonly newToolHref: string;
+};
 
 const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
   pointOfContact,
   lastModifiedDate,
-  tools = [],
+  tools,
+  newToolHref,
 }) => (
   <div css={containerStyles}>
     <Card>
@@ -45,18 +46,18 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
         internally shared resources and what each link is used for.
       </Paragraph>
       {!!tools.length && (
-        <div css={linkContainerStyles}>
-          {tools.map(({ name, description }, index) => (
-            <LinkCard
-              key={`link-${index}`}
-              name={name}
-              description={description}
-            />
+        <div css={toolContainerStyles}>
+          {tools.map((tool, index) => (
+            <ToolCard key={`tool-${index}`} {...tool} />
           ))}
         </div>
       )}
-      <Button>Add a new team link</Button>
-      <Caption asParagraph>
+      <div css={newToolStyles}>
+        <Link href={newToolHref} buttonStyle>
+          <span>Add a new team link</span>
+        </Link>
+      </div>
+      <Caption accent="lead" asParagraph>
         Last edited on {formatDateAndTime(new Date(lastModifiedDate))}
       </Caption>
     </Card>

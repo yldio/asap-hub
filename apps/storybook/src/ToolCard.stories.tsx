@@ -1,20 +1,20 @@
 import React, { ComponentProps } from 'react';
 import { text } from '@storybook/addon-knobs';
 
-import { LinkCard } from '@asap-hub/react-components';
-import { action } from '@storybook/addon-actions';
+import { ToolCard } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Link Card',
+  title: 'Organisms / Tool Card',
 };
 
-const linkCardProps = (): ComponentProps<typeof LinkCard> => ({
+const ToolCardProps = (): ComponentProps<typeof ToolCard> => ({
   name: text('Name', 'Slack (#team-ferguson)'),
   description: text(
     'Description',
     'Chat privately with your team members or seek out others in the ASAP Networks',
   ),
-  onClick: action('Edit link'),
+  href: '/wrong',
+  url: text('Tool Url', 'http://example.com'),
 });
 
-export const Normal = () => <LinkCard {...linkCardProps()} />;
+export const Normal = () => <ToolCard {...ToolCardProps()} />;

@@ -6,6 +6,7 @@ import {
   TeamAbout,
   TeamOutputs,
   TeamWorkspace,
+  ToolModal,
 } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './decorators';
@@ -33,26 +34,6 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
     email: 'peter@ven.com',
     role: 'Project Manager',
   },
-  tools: [
-    {
-      name: 'Slack (#team-ferguson)',
-      description:
-        'Chat privately with your team members or seek out others in the ASAP Network',
-      url: '/wrong',
-    },
-    {
-      name: 'Google Drive',
-      description:
-        "Access your team's private and secure Google Drive with unlimited storage",
-      url: '/wrong',
-    },
-    {
-      name: 'Protocols.io',
-      description:
-        'Post and find protocols privately within your team or share with the ASAP Network',
-      url: '/wrong',
-    },
-  ],
   members: [
     {
       id: '1',
@@ -120,6 +101,34 @@ const commonProps = (): Omit<ComponentProps<typeof TeamPage>, 'children'> => ({
   workspaceHref: '/wrong',
 });
 
+const tool = (): ComponentProps<typeof TeamWorkspace>['tools'][0] => ({
+  name: text('Tool Name', 'Slack (#team-ferguson)'),
+  description: text(
+    'Tool Description',
+    'Chat privately with your team members or seek out others in the ASAP Network',
+  ),
+  url: text('Tool URL', 'https://slack.com'),
+  href: '/wrong',
+});
+
+const tools = (): ComponentProps<typeof TeamWorkspace>['tools'] => [
+  tool(),
+  {
+    name: 'Google Drive',
+    description:
+      "Access your team's private and secure Google Drive with unlimited storage",
+    url: '/wrong',
+    href: '/wrong',
+  },
+  {
+    name: 'Protocols.io',
+    description:
+      'Post and find protocols privately within your team or share with the ASAP Network',
+    url: '/wrong',
+    href: '/wrong',
+  },
+];
+
 export const AboutTab = () => (
   <TeamPage {...commonProps()} aboutHref="#">
     <TeamAbout {...commonProps()}></TeamAbout>
@@ -133,7 +142,20 @@ export const OutputsTab = () => (
 );
 
 export const WorkspaceTab = () => (
-  <TeamPage {...commonProps()} workspaceHref="#">
-    <TeamWorkspace {...commonProps()} />
+  <TeamPage {...commonProps()} tools={tools()} workspaceHref="#">
+    <TeamWorkspace {...commonProps()} tools={tools()} newToolHref="/wrong" />
   </TeamPage>
+);
+
+export const WorkspaceTabEditTool = () => (
+  <>
+    <TeamPage {...commonProps()} tools={tools()} workspaceHref="#">
+      <TeamWorkspace {...commonProps()} tools={tools()} newToolHref="/wrong" />
+    </TeamPage>
+    <ToolModal
+      {...tool()}
+      title={text('Modal Title', 'Add Link')}
+      backHref="/wrong"
+    />
+  </>
 );

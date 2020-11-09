@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { formatDistance } from 'date-fns';
-import { TeamResponse } from '@asap-hub/model';
+import { TeamResponse, TeamTool } from '@asap-hub/model';
 
 import { Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
@@ -68,7 +68,8 @@ const extraUsersStyles = css({
   gridColumnEnd: '-1',
 });
 
-type TeamProps = TeamResponse & {
+type TeamProps = Readonly<Omit<TeamResponse, 'tools'>> & {
+  readonly tools?: ReadonlyArray<TeamTool & { readonly href: string }>;
   readonly aboutHref: string;
   readonly outputsHref: string;
   readonly workspaceHref: string;

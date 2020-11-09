@@ -1,6 +1,11 @@
 import React, { Suspense, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { Paragraph, TeamPage, NotFoundPage } from '@asap-hub/react-components';
+import {
+  Paragraph,
+  TeamPage,
+  NotFoundPage,
+  ToolModal,
+} from '@asap-hub/react-components';
 import { join } from 'path';
 
 import { useTeamById } from '@asap-hub/frontend/src/api/teams';
@@ -37,8 +42,17 @@ const Team: React.FC<{}> = () => {
   }
 
   if (team) {
-    const teamPageProps = {
+    const teamProps = {
       ...team,
+      tools: team.tools
+        ? team.tools.map((tool, index) => ({
+            ...tool,
+            href: join(url, 'workspace', 'tools', index.toString()),
+          }))
+        : undefined,
+    };
+    const teamPageProps = {
+      ...teamProps,
       aboutHref: join(url, 'about'),
       outputsHref: join(url, 'outputs'),
       workspaceHref: join(url, 'workspace'),
@@ -62,9 +76,31 @@ const Team: React.FC<{}> = () => {
               <Route path={`${path}/outputs`}>
                 <Outputs />
               </Route>
-              {team.tools && (
+              {teamProps.tools && (
                 <Route path={`${path}/workspace`}>
-                  <Workspace {...team} />
+                  <Workspace
+                    {...teamProps}
+                    tools={teamProps.tools}
+                    newToolHref={join(url, 'workspace', 'tools')}
+                  />
+                  <Route exact path={`${path}/workspace/tools`}>
+                    <ToolModal
+                      title="Add Link"
+                      backHref={join(url, 'workspace')}
+                    />
+                  </Route>
+                  {teamProps.tools.map((tool, i) => (
+                    <Route
+                      key={`tool-${i}`}
+                      path={`${path}/workspace/tools/${i}`}
+                    >
+                      <ToolModal
+                        {...tool}
+                        title="Edit Link"
+                        backHref={join(url, 'workspace')}
+                      />
+                    </Route>
+                  ))}
                 </Route>
               )}
               <Redirect to={join(url, 'about')} />

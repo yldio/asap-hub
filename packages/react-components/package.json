@@ -21,6 +21,7 @@
     "react-router-dom": "^5.2.0"
   },
   "dependencies": {
+    "@asap-hub/flags": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@babel/runtime-corejs3": "^7.9.6",
     "@emotion/core": "^10.0.28",

@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { disable } from '@asap-hub/flags';
 
 import ProfileAbout from '../ProfileAbout';
 
@@ -49,6 +50,13 @@ it('renders an edit button for the biography', () => {
     '/edit-biography',
   );
 });
+it('disables the edit button for the biography (REGRESSION)', () => {
+  disable('PROFILE_EDITING');
+  const { getByLabelText } = render(
+    <ProfileAbout orcidWorks={[]} editBiographyHref="/edit-biography" />,
+  );
+  expect(getByLabelText(/edit.+bio/i)).not.toHaveAttribute('href');
+});
 it('renders an edit button for the recent works visibility', () => {
   const { getByLabelText } = render(
     <ProfileAbout orcidWorks={[]} editOrcidWorksHref="/edit-works" />,
@@ -57,4 +65,11 @@ it('renders an edit button for the recent works visibility', () => {
     'href',
     '/edit-works',
   );
+});
+it('disables the edit button for the recent works visibility (REGRESSION)', () => {
+  disable('PROFILE_EDITING');
+  const { getByLabelText } = render(
+    <ProfileAbout orcidWorks={[]} editOrcidWorksHref="/edit-works" />,
+  );
+  expect(getByLabelText(/edit.+recent.+visib/i)).not.toHaveAttribute('href');
 });

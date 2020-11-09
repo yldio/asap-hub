@@ -37,6 +37,7 @@ interface NormalLinkProps {
 
   readonly primary?: undefined;
   readonly small?: undefined;
+  readonly enabled?: undefined;
 }
 interface ButtonStyleLinkProps {
   readonly theme?: undefined;
@@ -46,6 +47,7 @@ interface ButtonStyleLinkProps {
 
   readonly primary?: boolean;
   readonly small?: boolean;
+  readonly enabled?: boolean;
 }
 type LinkProps = {
   readonly children: ReactNode;
@@ -56,6 +58,7 @@ type LinkProps = {
 const Link: React.FC<LinkProps> = ({
   children,
   href,
+  label,
 
   theme = defaultThemeVariant,
   display,
@@ -63,10 +66,10 @@ const Link: React.FC<LinkProps> = ({
   buttonStyle = false,
   primary = false,
   small = false,
-  label,
+  enabled = true,
 }) => {
   const linkStyles = buttonStyle
-    ? [styles, getButtonStyles({ primary, small, children })]
+    ? [styles, getButtonStyles({ primary, small, enabled, children })]
     : [
         styles,
         theme && themeStyles[theme],
@@ -74,7 +77,7 @@ const Link: React.FC<LinkProps> = ({
         { display },
       ];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
-  const internal = href ? isInternalLink(href) : false;
+  const internal = enabled && href ? isInternalLink(href) : false;
   if (useHasRouter() && href && internal) {
     return (
       <HashLink to={href} aria-label={label} css={linkStyles} smooth>
@@ -84,7 +87,7 @@ const Link: React.FC<LinkProps> = ({
   }
   return (
     <a
-      href={href || undefined}
+      href={(enabled && href) || undefined}
       aria-label={label}
       css={linkStyles}
       target={internal ? undefined : '_blank'}

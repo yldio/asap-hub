@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
 import { createUserResponse } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 
 import ProfileHeader from '../ProfileHeader';
 
@@ -63,6 +64,16 @@ describe('an edit button', () => {
       '/edit-personal-info',
     );
   });
+  it('is disabled for personal info (REGRESSION)', () => {
+    disable('PROFILE_EDITING');
+    const { getByLabelText } = render(
+      <ProfileHeader
+        {...boilerplateProps}
+        editPersonalInfoHref="/edit-personal-info"
+      />,
+    );
+    expect(getByLabelText(/edit.+personal/i)).not.toHaveAttribute('href');
+  });
 
   it('is rendered for contact info', () => {
     const { getByLabelText } = render(
@@ -75,6 +86,16 @@ describe('an edit button', () => {
       'href',
       '/edit-contact-info',
     );
+  });
+  it('is disabled for contact info (REGRESSION)', () => {
+    disable('PROFILE_EDITING');
+    const { getByLabelText } = render(
+      <ProfileHeader
+        {...boilerplateProps}
+        editContactHref="/edit-contact-info"
+      />,
+    );
+    expect(getByLabelText(/edit.+contact/i)).not.toHaveAttribute('href');
   });
 });
 

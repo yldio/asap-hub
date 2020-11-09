@@ -35,3 +35,17 @@ it('applies the href and label to the link', () => {
   );
   expect(getByLabelText('Edit card 1')).toHaveAttribute('href', '/edit1');
 });
+
+it('disables the link if requested', () => {
+  const { getByLabelText } = render(
+    <ProfileCardList>
+      {[
+        {
+          card: 'card1',
+          editLink: { href: '/edit1', label: 'Edit card 1', enabled: false },
+        },
+      ]}
+    </ProfileCardList>,
+  );
+  expect(getByLabelText('Edit card 1')).not.toHaveAttribute('href');
+});

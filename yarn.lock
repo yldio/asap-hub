@@ -234,6 +234,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.9.6
     "@types/asap-hub__inline-environment": "workspace:*"
     "@types/jest": ^26.0.3
+    core-js: ^3.6.5
   languageName: unknown
   linkType: soft
 
@@ -314,6 +315,7 @@ __metadata:
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@auth0/auth0-spa-js": ^1.9.0
@@ -387,15 +389,20 @@ __metadata:
   dependencies:
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/flags": "workspace:*"
     "@babel/core": ^7.9.0
     "@babel/preset-react": ^7.9.0
     "@babel/runtime-corejs3": ^7.9.6
+    "@testing-library/react": ^10.2.0
     "@testing-library/react-hooks": ^3.4.1
     "@types/jest": ^26.0.3
     "@types/react": ^16.9.0
+    "@types/testing-library__jest-dom": ^5.0.3
+    "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.2.0
     core-js: ^3.6.5
     react: ^16.13.1
+    react-dom: ^16.13.1
     react-test-renderer: ^16.13.1
   peerDependencies:
     react: ^16.13.1
@@ -513,6 +520,7 @@ __metadata:
   dependencies:
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/fixtures": "workspace:*"
+    "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"

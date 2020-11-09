@@ -2,9 +2,10 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Link from '../Link';
-import { fern, paper } from '../../colors';
+import { fern, paper, silver } from '../../colors';
 
 it('renders the text in an anchor', () => {
   const { getByText } = render(<Link href="/">text</Link>);
@@ -124,6 +125,37 @@ describe('when button-styled', () => {
     );
 
     expect(smallHeight).toBeLessThan(normalHeight);
+  });
+
+  it('supports disabled button styles', () => {
+    const { getByText, rerender } = render(
+      <Link href="/" buttonStyle>
+        text
+      </Link>,
+    );
+    expect(
+      findParentWithStyle(getByText('text'), 'backgroundColor')!
+        .backgroundColor,
+    ).not.toBe(silver.rgb);
+
+    rerender(
+      <Link href="/" buttonStyle enabled={false}>
+        text
+      </Link>,
+    );
+    expect(
+      findParentWithStyle(getByText('text'), 'backgroundColor')!
+        .backgroundColor,
+    ).toBe(silver.rgb);
+  });
+
+  it('removes the href when disabled', () => {
+    const { getByText } = render(
+      <Link href="/" buttonStyle enabled={false}>
+        text
+      </Link>,
+    );
+    expect(getByText('text')).not.toHaveAttribute('href');
   });
 });
 

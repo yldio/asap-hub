@@ -14,7 +14,6 @@ const edit = (
     <title>Edit</title>
     <g
       id="Profile-(Internal)"
-      stroke="none"
       strokeWidth="1"
       fill="none"
       fillRule="evenodd"
@@ -24,7 +23,6 @@ const edit = (
       <g
         id="1.0-Profile-/-Research-/-Large-Desktop-/-Paddings-Copy"
         transform="translate(-424.000000, -309.000000)"
-        stroke="#FFFFFF"
       >
         <g
           id="Button-/-Default-Copy-46"

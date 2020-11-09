@@ -1,4 +1,4 @@
-import { isEnabled, disable, reset } from '..';
+import { isEnabled, disable, reset, getOverrides } from '..';
 
 const originalNodeEnv = process.env.NODE_ENV;
 beforeEach(() => {
@@ -31,6 +31,12 @@ describe('in test', () => {
       disable('PERSISTENT_EXAMPLE');
       expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(false);
     });
+
+    it('changes the overrides identity', () => {
+      const prevOverrides = getOverrides();
+      disable('PERSISTENT_EXAMPLE');
+      expect(getOverrides()).not.toBe(prevOverrides);
+    });
   });
 
   describe('reset', () => {
@@ -40,6 +46,12 @@ describe('in test', () => {
 
       reset();
       expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+    });
+
+    it('changes the overrides identity', () => {
+      const prevOverrides = getOverrides();
+      reset();
+      expect(getOverrides()).not.toBe(prevOverrides);
     });
   });
 

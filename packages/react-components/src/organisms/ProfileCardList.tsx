@@ -55,6 +55,7 @@ interface ProfileCardListProps {
     editLink?: {
       href: string;
       label: string;
+      enabled?: boolean;
     };
   }>;
 }
@@ -78,6 +79,7 @@ const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
             primary
             href={editLink.href}
             label={editLink.label}
+            enabled={editLink.enabled}
           >
             {editIcon}
           </Link>

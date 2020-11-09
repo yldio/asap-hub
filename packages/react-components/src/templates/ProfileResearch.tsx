@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { UserResponse } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 
 import {
   ProfileBackground,
@@ -36,6 +37,8 @@ const ProfileResearch: React.FC<ProfileResearchProps> = ({
   editSkillsHref,
   editQuestionsHref,
 }) => {
+  const { isEnabled } = useFlags();
+
   return (
     <ProfileCardList>
       {{
@@ -51,7 +54,11 @@ const ProfileResearch: React.FC<ProfileResearchProps> = ({
         editLink:
           editBackgroundHref === undefined
             ? undefined
-            : { href: editBackgroundHref, label: 'Edit role on ASAP' },
+            : {
+                href: editBackgroundHref,
+                label: 'Edit role on ASAP',
+                enabled: isEnabled('PROFILE_EDITING'),
+              },
       }}
       {{
         card: skills.length ? (
@@ -66,6 +73,7 @@ const ProfileResearch: React.FC<ProfileResearchProps> = ({
             : {
                 href: editSkillsHref,
                 label: 'Edit expertise and resources',
+                enabled: isEnabled('PROFILE_EDITING'),
               },
       }}
       {{
@@ -75,7 +83,11 @@ const ProfileResearch: React.FC<ProfileResearchProps> = ({
         editLink:
           editQuestionsHref === undefined
             ? undefined
-            : { href: editQuestionsHref, label: 'Edit open questions' },
+            : {
+                href: editQuestionsHref,
+                label: 'Edit open questions',
+                enabled: isEnabled('PROFILE_EDITING'),
+              },
       }}
       {{
         card: (

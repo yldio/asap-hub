@@ -160,7 +160,7 @@ describe('PATCH /teams/{id}', () => {
 
   test('returns 200 when team exists', async () => {
     const res = { ...teamsResponse.items[0] };
-    res.data.tools.iv = [];
+    res.data.tools!.iv = [];
 
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/teams/team-id-1`)

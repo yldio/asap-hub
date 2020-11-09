@@ -166,7 +166,7 @@ describe('with team', () => {
       await waitForElementToBeRemoved(loadingIndicator);
 
       expect(
-        getByText(/here/i, {
+        getByText(/get in touch/i, {
           selector: 'a',
         }),
       ).toHaveAttribute(

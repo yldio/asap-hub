@@ -22,7 +22,7 @@ describe('GET /users', () => {
   test('returns 200 when no users exist', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
-        query: buildGraphQLQueryFetchUsers(),
+        query: buildGraphQLQueryFetchUsers("data/role/iv ne 'Hidden'"),
       })
       .reply(200, {
         data: {
@@ -91,8 +91,8 @@ describe('GET /users', () => {
 
   test('returns 200 when searching users by name', async () => {
     const filter =
-      "data/teams/iv/role eq 'Lead PI' or " +
-      "data/teams/iv/role eq 'anotherFilter' and" +
+      "data/teams/iv/role eq 'Lead PI' or" +
+      " data/teams/iv/role eq 'anotherFilter' and" +
       " (data/role/iv ne 'Hidden' and" +
       " (contains(data/displayName/iv, 'first')" +
       " or contains(data/firstName/iv, 'first')" +
@@ -131,7 +131,7 @@ describe('GET /users', () => {
   test('returns 200 with the results from the requested page', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
-        query: buildGraphQLQueryFetchUsers('', 8, 8),
+        query: buildGraphQLQueryFetchUsers("data/role/iv ne 'Hidden'", 8, 8),
       })
       .reply(200, {
         data: {

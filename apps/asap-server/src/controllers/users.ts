@@ -193,22 +193,24 @@ export default class Users {
   }): Promise<ListUserResponse> {
     const { take, skip, search, filter } = options;
 
-    const searchQ = (search || '')
-      .split(' ')
-      .filter(Boolean) // removes whitespaces
-      .reduce(
-        (acc: string[], word: string) =>
-          acc.concat(
-            `(${[
-              [`contains(data/displayName/iv, '${word}')`],
-              [`contains(data/firstName/iv, '${word}')`],
-              [`contains(data/institution/iv, '${word}')`],
-              [`contains(data/skills/iv, '${word}')`],
-            ].join(' or ')})`,
-          ),
-        ["data/role/iv ne 'Hidden'"],
-      )
-      .join(' and ');
+    const searchQ = [
+      "data/role/iv ne 'Hidden'",
+      ...(search || '')
+        .split(' ')
+        .filter(Boolean) // removes whitespaces
+        .reduce(
+          (acc: string[], word: string) =>
+            acc.concat(
+              `(${[
+                [`contains(data/displayName/iv, '${word}')`],
+                [`contains(data/firstName/iv, '${word}')`],
+                [`contains(data/institution/iv, '${word}')`],
+                [`contains(data/skills/iv, '${word}')`],
+              ].join(' or ')})`,
+            ),
+          [],
+        ),
+    ].join(' and ');
 
     const filterQ = (filter || [])
       .reduce(
@@ -218,10 +220,7 @@ export default class Users {
       )
       .join(' or ');
 
-    const and = filter && search ? ['and (', ')'] : ['', ''];
-
-    const $filter =
-      search || filter ? `${filterQ} ${and[0] + searchQ + and[1]}`.trim() : '';
+    const $filter = filterQ ? `${filterQ} and (${searchQ})`.trim() : searchQ;
 
     const query = buildGraphQLQueryFetchUsers($filter, take, skip);
 

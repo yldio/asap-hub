@@ -54,13 +54,16 @@ describe('GET /users', () => {
   test('returns 200 when searching users by name - should allow filter as string', async () => {
     const filter =
       "data/teams/iv/role eq 'Lead PI' and" +
-      " ((contains(data/displayName/iv, 'first')" +
+      " (data/role/iv ne 'Hidden' and" +
+      " (contains(data/displayName/iv, 'first')" +
       " or contains(data/firstName/iv, 'first')" +
-      " or contains(data/institution/iv, 'first'))" +
+      " or contains(data/institution/iv, 'first')" +
+      " or contains(data/skills/iv, 'first'))" +
       ' and' +
       " (contains(data/displayName/iv, 'last')" +
       " or contains(data/firstName/iv, 'last')" +
-      " or contains(data/institution/iv, 'last')))";
+      " or contains(data/institution/iv, 'last')" +
+      " or contains(data/skills/iv, 'last')))";
 
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
@@ -90,13 +93,16 @@ describe('GET /users', () => {
     const filter =
       "data/teams/iv/role eq 'Lead PI' or " +
       "data/teams/iv/role eq 'anotherFilter' and" +
-      " ((contains(data/displayName/iv, 'first')" +
+      " (data/role/iv ne 'Hidden' and" +
+      " (contains(data/displayName/iv, 'first')" +
       " or contains(data/firstName/iv, 'first')" +
-      " or contains(data/institution/iv, 'first'))" +
+      " or contains(data/institution/iv, 'first')" +
+      " or contains(data/skills/iv, 'first'))" +
       ' and' +
       " (contains(data/displayName/iv, 'last')" +
       " or contains(data/firstName/iv, 'last')" +
-      " or contains(data/institution/iv, 'last')))";
+      " or contains(data/institution/iv, 'last')" +
+      " or contains(data/skills/iv, 'last')))";
 
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {

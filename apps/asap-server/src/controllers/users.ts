@@ -203,9 +203,10 @@ export default class Users {
               [`contains(data/displayName/iv, '${word}')`],
               [`contains(data/firstName/iv, '${word}')`],
               [`contains(data/institution/iv, '${word}')`],
+              [`contains(data/skills/iv, '${word}')`],
             ].join(' or ')})`,
           ),
-        [],
+        ["data/role/iv ne 'Hidden'"],
       )
       .join(' and ');
 

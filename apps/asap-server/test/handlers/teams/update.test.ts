@@ -5,7 +5,11 @@ import { config } from '@asap-hub/squidex';
 import { handler } from '../../../src/handlers/teams/update';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import { teamsResponse } from './fetch.fixtures';
+import {
+  teamsResponse,
+  usersResponseTeam1,
+  expectation,
+} from './fetch.fixtures';
 import decodeToken from '../../../src/utils/validate-token';
 
 jest.mock('../../../src/utils/validate-token');
@@ -155,9 +159,17 @@ describe('PATCH /teams/{id}', () => {
   });
 
   test('returns 200 when team exists', async () => {
+    const res = { ...teamsResponse.items[0] };
+    res.data.tools!.iv = [];
+
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/teams/team-id-1`)
-      .reply(200, teamsResponse.items[0]);
+      .reply(200, res)
+      .get(`/api/content/${config.appName}/users`)
+      .query({
+        $filter: "data/teams/iv/id eq 'team-id-1'",
+      })
+      .reply(200, usersResponseTeam1);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -176,17 +188,6 @@ describe('PATCH /teams/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toEqual(
-      expect.objectContaining({
-        id: expect.any(String),
-        displayName: expect.any(String),
-        applicationNumber: expect.any(String),
-        projectTitle: expect.any(String),
-        projectSummary: expect.any(String),
-        skills: expect.anything(),
-        tools: expect.anything(),
-        members: expect.anything(),
-      }),
-    );
+    expect(body).toStrictEqual({ ...expectation.items[0], tools: [] });
   });
 });

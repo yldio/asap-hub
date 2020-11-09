@@ -10,6 +10,7 @@ import { join } from 'path';
 
 import { useTeamById } from '@asap-hub/frontend/src/api/teams';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
+import { TeamTool } from '@asap-hub/model';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -29,7 +30,7 @@ const Team: React.FC<{}> = () => {
     params: { id },
   } = useRouteMatch();
 
-  const { loading, data: team } = useTeamById(id);
+  const { loading, data: team, patch } = useTeamById(id);
 
   useEffect(() => {
     loadAbout()
@@ -40,7 +41,6 @@ const Team: React.FC<{}> = () => {
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
   }
-
   if (team) {
     const teamProps = {
       ...team,
@@ -87,6 +87,9 @@ const Team: React.FC<{}> = () => {
                     <ToolModal
                       title="Add Link"
                       backHref={join(url, 'workspace')}
+                      onSave={(data: TeamTool) =>
+                        patch({ tools: [...(team.tools ?? []), data] })
+                      }
                     />
                   </Route>
                   {teamProps.tools.map((tool, i) => (
@@ -98,6 +101,11 @@ const Team: React.FC<{}> = () => {
                         {...tool}
                         title="Edit Link"
                         backHref={join(url, 'workspace')}
+                        onSave={(data: TeamTool) =>
+                          patch({
+                            tools: Object.assign([], team.tools, { [i]: data }),
+                          })
+                        }
                       />
                     </Route>
                   ))}

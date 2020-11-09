@@ -49,9 +49,6 @@ export const useFetchOptions = (
       ...interceptors,
       request: requestInterceptor,
     },
-    headers: {
-      'content-type': 'application/json',
-      ...overrideHeaders,
-    },
+    headers: overrideHeaders,
   };
 };

@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
 
 import ToolModal from '../ToolModal';
 
@@ -35,8 +36,21 @@ it('renders default values into inputs', () => {
 it('triggers the save function', () => {
   const jestFn = jest.fn();
   const { getByText } = render(
-    <ToolModal {...props} title="ModalTitle" onSave={jestFn} />,
+    <MemoryRouter>
+      <ToolModal
+        {...props}
+        name="toolName"
+        url="http://example.com"
+        description="toolDescription"
+        onSave={jestFn}
+      />
+      ,
+    </MemoryRouter>,
   );
   userEvent.click(getByText('Save'));
-  expect(jestFn).toHaveBeenCalled();
+  expect(jestFn).toHaveBeenCalledWith({
+    name: 'toolName',
+    url: 'http://example.com',
+    description: 'toolDescription',
+  });
 });

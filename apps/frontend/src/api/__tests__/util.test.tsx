@@ -24,17 +24,6 @@ describe('useFetchOptions', () => {
     <authTestUtils.LoggedIn user={undefined}>{children}</authTestUtils.LoggedIn>
   );
 
-  it('sets the default headers', async () => {
-    const {
-      result: { current },
-    } = renderHook(useFetchOptions, { wrapper });
-    const { headers } = await current.interceptors!.request!({
-      options: current,
-      ...interceptorArgs,
-    });
-    expect(new Headers(headers).get('content-type')).toBe('application/json');
-  });
-
   it('fetches and sets the authorization header', async () => {
     const {
       result: { current },

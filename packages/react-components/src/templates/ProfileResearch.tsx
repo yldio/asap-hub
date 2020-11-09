@@ -1,31 +1,29 @@
 import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
 import { UserResponse } from '@asap-hub/model';
 
-import { perRem } from '../pixels';
 import {
   ProfileBackground,
   ProfileSkills,
   QuestionsSection,
+  ProfileCardList,
 } from '../organisms';
 import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
 
-const styles = css({
-  display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
-});
-
-type ProfileInterestProps = ComponentProps<typeof QuestionsSection> &
+type ProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileSkills> &
   Pick<ComponentProps<typeof ProfileBackground>, 'firstName' | 'displayName'> &
   Pick<UserResponse, 'email'> & {
     readonly teams: ReadonlyArray<
       Omit<ComponentProps<typeof ProfileBackground>, 'firstName'>
     >;
+  } & {
+    editBackgroundHref?: string;
+    editSkillsHref?: string;
+    editQuestionsHref?: string;
   };
 
-const ProfileResearch: React.FC<ProfileInterestProps> = ({
+const ProfileResearch: React.FC<ProfileResearchProps> = ({
   firstName,
   displayName,
   email,
@@ -33,25 +31,61 @@ const ProfileResearch: React.FC<ProfileInterestProps> = ({
   skills,
   skillsDescription,
   questions,
+
+  editBackgroundHref,
+  editSkillsHref,
+  editQuestionsHref,
 }) => {
   return (
-    <div css={styles}>
-      {teams.length
-        ? teams.map((team) => (
-            <ProfileBackground key={team.id} {...team} firstName={firstName} />
-          ))
-        : null}
-      {skills.length ? (
-        <ProfileSkills skillsDescription={skillsDescription} skills={skills} />
-      ) : null}
-      {questions.length ? (
-        <QuestionsSection firstName={firstName} questions={questions} />
-      ) : null}
-      <CtaCard href={createMailTo(email)} buttonText="Contact">
-        <strong>Interested in what you have seen?</strong> <br />
-        Why not get in touch with {displayName}?
-      </CtaCard>
-    </div>
+    <ProfileCardList>
+      {{
+        card: teams.length
+          ? teams.map((team) => (
+              <ProfileBackground
+                key={team.id}
+                {...team}
+                firstName={firstName}
+              />
+            ))
+          : null,
+        editLink:
+          editBackgroundHref === undefined
+            ? undefined
+            : { href: editBackgroundHref, label: 'Edit role on ASAP' },
+      }}
+      {{
+        card: skills.length ? (
+          <ProfileSkills
+            skillsDescription={skillsDescription}
+            skills={skills}
+          />
+        ) : null,
+        editLink:
+          editSkillsHref === undefined
+            ? undefined
+            : {
+                href: editSkillsHref,
+                label: 'Edit expertise and resources',
+              },
+      }}
+      {{
+        card: questions.length ? (
+          <QuestionsSection firstName={firstName} questions={questions} />
+        ) : null,
+        editLink:
+          editQuestionsHref === undefined
+            ? undefined
+            : { href: editQuestionsHref, label: 'Edit open questions' },
+      }}
+      {{
+        card: (
+          <CtaCard href={createMailTo(email)} buttonText="Contact">
+            <strong>Interested in what you have seen?</strong> <br />
+            Why not get in touch with {displayName}?
+          </CtaCard>
+        ),
+      }}
+    </ProfileCardList>
   );
 };
 

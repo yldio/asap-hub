@@ -1,7 +1,6 @@
 import React, { ComponentProps } from 'react';
 
-import { NewsAndEventsCard } from '../organisms';
-import CardList from '../organisms/CardList';
+import { ResultList, NewsAndEventsCard } from '../organisms';
 
 interface SharedResearchPageBodyProps {
   readonly newsAndEvents: ReadonlyArray<
@@ -12,7 +11,7 @@ interface SharedResearchPageBodyProps {
 const NewsAndEventsPageBody: React.FC<SharedResearchPageBodyProps> = ({
   newsAndEvents,
 }) => (
-  <CardList
+  <ResultList
     numberOfPages={1}
     numberOfItems={newsAndEvents.length}
     currentPageIndex={0}
@@ -25,7 +24,7 @@ const NewsAndEventsPageBody: React.FC<SharedResearchPageBodyProps> = ({
         </div>
       );
     })}
-  </CardList>
+  </ResultList>
 );
 
 export default NewsAndEventsPageBody;

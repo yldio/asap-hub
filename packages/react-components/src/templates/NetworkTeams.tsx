@@ -1,9 +1,8 @@
 import React, { ComponentProps } from 'react';
 
-import { TeamCard } from '../organisms';
-import CardList from '../organisms/CardList';
+import { ResultList, TeamCard } from '../organisms';
 
-type NetworkTeamsProps = Omit<ComponentProps<typeof CardList>, 'children'> & {
+type NetworkTeamsProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
   readonly teams: ReadonlyArray<
     { readonly id: string } & ComponentProps<typeof TeamCard>
   >;
@@ -13,12 +12,12 @@ const NetworkTeams: React.FC<NetworkTeamsProps> = ({
   teams,
   ...cardListProps
 }) => (
-  <CardList {...cardListProps}>
+  <ResultList {...cardListProps}>
     {teams.map(({ id, ...team }) => (
       <React.Fragment key={id}>
         <TeamCard {...team} />
       </React.Fragment>
     ))}
-  </CardList>
+  </ResultList>
 );
 export default NetworkTeams;

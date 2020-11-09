@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import CardList from '../CardList';
+import ResultList from '../ResultList';
 
 it.each([
   [0, /(^|\D)0 results($|\W)/i],
@@ -9,55 +9,55 @@ it.each([
   [5, /(^|\D)5 results($|\W)/i],
 ])('shows the number of items', (numberOfItems, text) => {
   const { getByRole, getByText } = render(
-    <CardList
+    <ResultList
       numberOfItems={numberOfItems}
       numberOfPages={1}
       currentPageIndex={0}
       renderPageHref={() => ''}
     >
       cards
-    </CardList>,
+    </ResultList>,
   );
   expect(getByRole('banner')).toContainElement(getByText(text));
 });
 
 it('renders the children', () => {
   const { getByRole, getByText } = render(
-    <CardList
+    <ResultList
       numberOfItems={3}
       numberOfPages={1}
       currentPageIndex={0}
       renderPageHref={() => ''}
     >
       cards
-    </CardList>,
+    </ResultList>,
   );
   expect(getByRole('main')).toContainElement(getByText('cards'));
 });
 it('omits the main section if there are no items', () => {
   const { queryByRole } = render(
-    <CardList
+    <ResultList
       numberOfItems={0}
       numberOfPages={1}
       currentPageIndex={0}
       renderPageHref={() => ''}
     >
       cards
-    </CardList>,
+    </ResultList>,
   );
   expect(queryByRole('main')).not.toBeInTheDocument();
 });
 
 it('renders page controls', () => {
   const { getByRole, getByTitle } = render(
-    <CardList
+    <ResultList
       numberOfItems={0}
       numberOfPages={2}
       currentPageIndex={0}
       renderPageHref={() => ''}
     >
       cards
-    </CardList>,
+    </ResultList>,
   );
   expect(getByRole('navigation')).toContainElement(getByTitle(/next page/i));
 });

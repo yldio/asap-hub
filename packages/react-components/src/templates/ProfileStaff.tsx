@@ -1,8 +1,6 @@
 import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
 import { UserResponse } from '@asap-hub/model';
 
-import { perRem } from '../pixels';
 import {
   ProfileSkills,
   QuestionsSection,
@@ -11,12 +9,8 @@ import {
   ProfileRecentWorks,
   ProfileStaffBackground,
   HelpSection,
+  ProfileCardList,
 } from '../organisms';
-
-const styles = css({
-  display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
-});
 
 type ProfileStaffProps = ComponentProps<typeof ProfileStaffBackground> &
   ComponentProps<typeof QuestionsSection> &
@@ -45,30 +39,52 @@ const ProfileStaff: React.FC<ProfileStaffProps> = ({
   responsibilities,
 }) => {
   return (
-    <div css={styles}>
-      <ProfileStaffBackground
-        firstName={firstName}
-        discoverHref={discoverHref}
-        reachOut={reachOut}
-        responsibilities={responsibilities}
-      />
-      {teams.length
-        ? teams.map((team) => (
-            <ProfileBackground key={team.id} {...team} firstName={firstName} />
-          ))
-        : null}
-      {biography ? <ProfileBiography biography={biography} /> : null}
-      {skills.length ? (
-        <ProfileSkills skillsDescription={skillsDescription} skills={skills} />
-      ) : null}
-      {questions.length ? (
-        <QuestionsSection firstName={firstName} questions={questions} />
-      ) : null}
-      {orcidWorks && orcidWorks.length ? (
-        <ProfileRecentWorks orcidWorks={orcidWorks} />
-      ) : null}
-      <HelpSection />
-    </div>
+    <ProfileCardList>
+      {{
+        card: (
+          <ProfileStaffBackground
+            firstName={firstName}
+            discoverHref={discoverHref}
+            reachOut={reachOut}
+            responsibilities={responsibilities}
+          />
+        ),
+      }}
+      {{
+        card: teams.length
+          ? teams.map((team) => (
+              <ProfileBackground
+                key={team.id}
+                {...team}
+                firstName={firstName}
+              />
+            ))
+          : null,
+      }}
+      {{ card: biography ? <ProfileBiography biography={biography} /> : null }}
+      {{
+        card: skills.length ? (
+          <ProfileSkills
+            skillsDescription={skillsDescription}
+            skills={skills}
+          />
+        ) : null,
+      }}
+      {{
+        card: questions.length ? (
+          <QuestionsSection firstName={firstName} questions={questions} />
+        ) : null,
+      }}
+      {{
+        card:
+          orcidWorks && orcidWorks.length ? (
+            <ProfileRecentWorks orcidWorks={orcidWorks} />
+          ) : null,
+      }}
+      {{
+        card: <HelpSection />,
+      }}
+    </ProfileCardList>
   );
 };
 

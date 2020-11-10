@@ -9,7 +9,7 @@ import {
   ToolModal,
 } from '@asap-hub/react-components';
 
-import { LayoutDecorator } from './decorators';
+import { LayoutDecorator } from './layout';
 
 export default {
   title: 'Pages / Team',

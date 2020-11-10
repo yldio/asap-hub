@@ -9,7 +9,7 @@ import {
 } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 
-import { LayoutDecorator } from './decorators';
+import { LayoutDecorator } from './layout';
 
 export default {
   title: 'Pages / Profile',

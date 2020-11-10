@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { Story } from '@storybook/react';
 
-import { ThemeDecorator } from './decorators';
+import { ThemeDecorator } from './theme';
 
 export default {
   title: 'Atoms / Link',

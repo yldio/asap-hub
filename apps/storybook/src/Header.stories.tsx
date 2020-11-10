@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Header } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './decorators';
+import { NoPaddingDecorator } from './layout';
 
 export default {
   title: 'Molecules / Header',

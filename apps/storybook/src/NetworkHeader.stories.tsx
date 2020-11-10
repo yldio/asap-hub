@@ -3,7 +3,7 @@ import { NetworkPageHeader } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text, select } from '@storybook/addon-knobs';
 
-import { NoPaddingDecorator } from './decorators';
+import { NoPaddingDecorator } from './layout';
 
 export default {
   title: 'Templates / Network / Header',

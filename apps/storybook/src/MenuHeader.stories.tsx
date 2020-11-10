@@ -1,6 +1,6 @@
 import React from 'react';
 import { MenuHeader } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './decorators';
+import { NoPaddingDecorator } from './layout';
 
 export default {
   title: 'Organisms / Menu Header',

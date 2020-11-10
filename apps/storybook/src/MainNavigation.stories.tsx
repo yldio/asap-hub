@@ -2,7 +2,7 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { select } from '@storybook/addon-knobs';
 import { MainNavigation } from '@asap-hub/react-components';
-import { NoPaddingDecorator } from './decorators';
+import { NoPaddingDecorator } from './layout';
 
 export default {
   title: 'Organisms / Navigation / Main Nav',

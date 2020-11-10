@@ -91,7 +91,7 @@ const RecentWork: React.FC<RecentWorkProps> = ({
     <div>
       <TagLabel>{typeMap[type]}</TagLabel>
       {doi ? (
-        <Link href={doi}>
+        <Link theme={null} href={doi}>
           <Headline3>{title}</Headline3>
         </Link>
       ) : (

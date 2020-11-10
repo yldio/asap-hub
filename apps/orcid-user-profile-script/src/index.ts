@@ -31,6 +31,7 @@ const fetchOrcidUserProfile: UserProfileFetcher<{}, string> = (
 ) => {
   const idToken = decode(id_token) as OrcidIdToken;
   const profile: Auth0User = {
+    user_id: idToken.sub,
     sub: idToken.sub,
     given_name: idToken.given_name,
     family_name: idToken.family_name,

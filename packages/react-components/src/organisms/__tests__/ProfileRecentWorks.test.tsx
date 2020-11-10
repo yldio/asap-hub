@@ -32,7 +32,7 @@ it('renders the content', async () => {
   expect(getByText('Publication')).toBeVisible();
 });
 
-it('renders content wit a link to external resource', async () => {
+it('renders content with a link to external resource', async () => {
   const { getByRole } = render(
     <ProfileRecentWorks
       orcidWorks={[

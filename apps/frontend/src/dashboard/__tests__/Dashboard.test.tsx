@@ -100,7 +100,6 @@ test('renders dashboard with correct links', async () => {
   expect(queryAllByRole('link').map((a) => a.getAttribute('href'))).toEqual([
     '/network/users',
     '/shared-research',
-    '/network/teams',
     '/discover',
     '/news-and-events',
     '/network/teams/uuid',

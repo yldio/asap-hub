@@ -34,10 +34,10 @@ const DashboardPageHeader: React.FC<DashboardPageHeaderProps> = ({
       }!`}</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          The Hub is the beating heart of the ASAP network, where all grantees
-          link like neurons of the same brain. You can access grantee profiles,
-          view other project proposals and hear the last news and events from
-          ASAP.
+          The ASAP Hub is the private meeting point for grantees to share
+          research ideas, outputs, learn what others are working on, and keep up
+          with ASAP’s news and events. Each team has a private workspace and a
+          listing of their shared research.
         </Paragraph>
       </div>
     </header>

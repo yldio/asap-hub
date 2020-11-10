@@ -11,7 +11,7 @@ interface ComingSoonProps {
 const ComingSoon: React.FC<ComingSoonProps> = ({ children }) => (
   <section css={{ textAlign: 'center', padding: `${24 / perRem}em 0` }}>
     <Paragraph primary>
-      <strong>Coming soon!</strong>
+      <strong>More to come!</strong>
       <br />
       <span css={{ color: lead.rgb }}>{children}</span>
     </Paragraph>

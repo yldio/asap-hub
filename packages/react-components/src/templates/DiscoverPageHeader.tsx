@@ -26,9 +26,8 @@ const DashboardPageHeader: React.FC = () => {
       <Display styleAsHeading={2}>Discover ASAP</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          In need of some guidance? We've got you covered. You'll find all
-          manner of different resources below, that will help you get the most
-          out of the ASAP Hub.
+          Guidance and resources about ASAP’s programs and policies as well as
+          the ASAP and MJFF team.
         </Paragraph>
       </div>
     </header>

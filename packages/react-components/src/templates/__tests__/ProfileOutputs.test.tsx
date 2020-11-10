@@ -6,6 +6,6 @@ import ProfileOutputs from '../ProfileOutputs';
 it('renders a coming soon text', () => {
   const { getByText } = render(<ProfileOutputs />);
 
-  expect(getByText(/coming soon/i)).toBeVisible();
-  expect(getByText(/your.+progress/i)).toBeVisible();
+  expect(getByText(/more\sto\scome/i)).toBeVisible();
+  expect(getByText(/as\sindividuals/i)).toBeVisible();
 });

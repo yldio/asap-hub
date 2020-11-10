@@ -6,7 +6,7 @@ it('renders an an header with number of members', () => {
   const { getByRole } = render(<ProfileRecentWorks />);
 
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Recent Publications (0)"`,
+    `"Most Recent Works (0)"`,
   );
 });
 

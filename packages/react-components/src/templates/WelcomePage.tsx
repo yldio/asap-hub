@@ -14,25 +14,38 @@ import { mailToSupport } from '../mail';
 const values = {
   signup: {
     title: 'Join the ASAP Hub',
-    content:
-      'Create your account to start sharing, discussing and collaborating instantly.',
+    content: 'Confirm your account and start exploring the ASAP Network.',
     buttonText: 'Create account',
     footer: () => (
-      <Paragraph accent="lead">
-        Already have an account? <Link href="/">Sign in</Link>
-      </Paragraph>
+      <>
+        <Paragraph accent="lead">
+          Already have an account? <Link href="/">Sign in</Link>
+        </Paragraph>
+        <Paragraph accent="lead">
+          By creating your account you are agreeing to the{' '}
+          <Link href="/terms-and-conditions">Terms and Conditions</Link> of the
+          ASAP Hub.
+        </Paragraph>
+      </>
     ),
   },
   welcome: {
     title: 'Welcome to the ASAP Hub',
-    content:
-      'The place for the ASAP community to share, discuss and collaborate.',
+    content: 'Where the ASAP Network collaborates!',
     buttonText: 'Sign in',
     footer: () => (
-      <Paragraph accent="lead">
-        Don't have an account? Keep an eye on ASAP's{' '}
-        <Link href="https://parkinsonsroadmap.org/">website</Link> for updates.
-      </Paragraph>
+      <>
+        <Paragraph accent="lead">
+          This is a private network, only invited users can create an account.
+          For more info, visit{' '}
+          <Link href="https://parkinsonsroadmap.org/">ASAP</Link> website.
+        </Paragraph>
+        <Paragraph accent="lead">
+          By signing in you are agreeing to the{' '}
+          <Link href="/terms-and-conditions">Terms and Conditions</Link> of the
+          ASAP Hub.
+        </Paragraph>
+      </>
     ),
   },
 };

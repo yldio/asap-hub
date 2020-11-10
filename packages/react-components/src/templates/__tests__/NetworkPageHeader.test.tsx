@@ -20,14 +20,14 @@ it('Displays relevant page information', () => {
   expect(getByText('People')).not.toBeChecked();
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Search for a team…"`);
+  ).toMatchInlineSnapshot(`"Enter name, keywork, method, …"`);
 
   rerender(<NetworkPageHeader {...props} page={'users'} />);
   expect(getByText('Teams')).not.toBeChecked();
   expect(getByText('People')).toBeChecked();
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Search for someone…"`);
+  ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 });
 
 it('triggers onChangeToggle', async () => {

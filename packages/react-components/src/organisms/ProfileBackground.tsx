@@ -47,7 +47,9 @@ const ProfileBackground: React.FC<ProfileBackgroundProps> = ({
 }) => {
   return (
     <Card>
-      <Headline2 styleAsHeading={3}>{firstName}'s Role on ASAP</Headline2>
+      <Headline2 styleAsHeading={3}>
+        {firstName}'s Role on ASAP Network
+      </Headline2>
       <div>
         <div css={dynamicContainerStyles}>
           <div css={teamContentStyle}>

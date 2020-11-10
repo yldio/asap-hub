@@ -78,7 +78,7 @@ it('renders a button to signin', async () => {
 describe('when clicking the button', () => {
   beforeEach(async () => {
     const { getByText } = await renderSignin();
-    userEvent.click(getByText(/sign.+in/i));
+    userEvent.click(getByText(/sign\sin/i));
   });
 
   it('redirects to the Auth0 signin page', async () => {

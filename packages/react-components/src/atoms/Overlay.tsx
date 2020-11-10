@@ -2,7 +2,6 @@ import React from 'react';
 import css from '@emotion/css';
 
 import { charcoal } from '../colors';
-import { noop } from '../utils';
 
 const buttonResetStyles = css({
   padding: 0,
@@ -27,10 +26,11 @@ interface OverlayProps {
   shown?: boolean;
   onClick?: () => void;
 }
-const Overlay: React.FC<OverlayProps> = ({ shown = true, onClick = noop }) => (
+const Overlay: React.FC<OverlayProps> = ({ shown = true, onClick }) => (
   <button
     aria-label="Close"
     css={[buttonResetStyles, styles, shown && shownStyles]}
+    disabled={!onClick}
     onClick={onClick}
   />
 );

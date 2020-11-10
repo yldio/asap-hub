@@ -19,9 +19,15 @@ it('can be hidden', () => {
   expect(getByLabelText(/close/i)).not.toBeVisible();
 });
 
-it('trigger click events', () => {
+it('disables when there is no handler', () => {
+  const { getByLabelText } = render(<Overlay />);
+  expect(getByLabelText(/close/i)).toBeDisabled();
+});
+
+it('triggers click events', () => {
   const handleClick = jest.fn();
   const { getByLabelText } = render(<Overlay onClick={handleClick} />);
+  expect(getByLabelText(/close/i)).not.toBeDisabled();
 
   userEvent.click(getByLabelText(/close/i));
   expect(handleClick).toHaveBeenCalled();

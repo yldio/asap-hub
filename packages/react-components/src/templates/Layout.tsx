@@ -175,7 +175,7 @@ const Layout: React.FC<LayoutProps> = ({
   }, [location]);
 
   return (
-    <article css={[styles]}>
+    <article css={[styles, menuShown || { overflow: 'hidden' }]}>
       {/* order relevant for overlap */}
       <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
         <MenuHeader

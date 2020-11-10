@@ -9,6 +9,7 @@ import {
   TagLabel,
   Divider,
   Paragraph,
+  Link,
 } from '../atoms';
 import { perRem } from '../pixels';
 
@@ -74,6 +75,7 @@ type RecentWorksProps = {
 };
 
 const RecentWork: React.FC<RecentWorkProps> = ({
+  doi,
   title,
   type,
   publicationDate,
@@ -88,7 +90,13 @@ const RecentWork: React.FC<RecentWorkProps> = ({
   return (
     <div>
       <TagLabel>{typeMap[type]}</TagLabel>
-      <Headline3>{title}</Headline3>
+      {doi ? (
+        <Link href={doi}>
+          <Headline3>{title}</Headline3>
+        </Link>
+      ) : (
+        <Headline3>{title}</Headline3>
+      )}
       <div css={footerStyle}>
         <Paragraph accent="lead">
           {`Originally Published: ${format(

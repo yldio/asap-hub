@@ -32,6 +32,28 @@ it('renders the content', async () => {
   expect(getByText('Publication')).toBeVisible();
 });
 
+it('renders content wit a link to external resource', async () => {
+  const { getByRole } = render(
+    <ProfileRecentWorks
+      orcidWorks={[
+        {
+          doi: 'https://hub.asap.science',
+          title: 'Title',
+          type: 'BOOK' as const,
+          publicationDate: {
+            year: '2020',
+            month: '05',
+            day: '12',
+          },
+          lastModifiedDate: '1478865224685',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByRole('link')).toHaveAttribute('href', 'https://hub.asap.science');
+});
+
 it('renders date with just the year', async () => {
   const { getByText } = render(
     <ProfileRecentWorks

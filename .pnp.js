@@ -35,6 +35,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:@types/asap-hub__auth0-rule"
       },
       {
+        "name": "@types/asap-hub__inline-environment",
+        "reference": "workspace:@types/asap-hub__inline-environment"
+      },
+      {
         "name": "@types/hapi__bourne",
         "reference": "workspace:@types/hapi__bourne"
       },
@@ -95,6 +99,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/fixtures"
       },
       {
+        "name": "@asap-hub/flags",
+        "reference": "workspace:packages/flags"
+      },
+      {
         "name": "@asap-hub/model",
         "reference": "workspace:packages/model"
       },
@@ -126,6 +134,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/dom-test-utils", ["workspace:packages/dom-test-utils"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/fixtures", ["workspace:packages/fixtures"]],
+      ["@asap-hub/flags", ["workspace:packages/flags"]],
       ["@asap-hub/frontend", ["workspace:apps/frontend"]],
       ["@asap-hub/model", ["workspace:packages/model"]],
       ["@asap-hub/orcid-user-profile-script", ["workspace:apps/orcid-user-profile-script"]],
@@ -138,6 +147,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
       ["@types/asap-hub__assets", ["workspace:@types/asap-hub__assets"]],
       ["@types/asap-hub__auth0-rule", ["workspace:@types/asap-hub__auth0-rule"]],
+      ["@types/asap-hub__inline-environment", ["workspace:@types/asap-hub__inline-environment"]],
       ["@types/hapi__bourne", ["workspace:@types/hapi__bourne"]],
       ["@types/jwt-encode", ["workspace:@types/jwt-encode"]],
       ["@types/rehype-slug", ["workspace:@types/rehype-slug"]],
@@ -183,6 +193,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/fixtures",
         "workspace:packages/fixtures"
+      ],
+      [
+        "@asap-hub/flags",
+        "workspace:packages/flags"
       ],
       [
         "@asap-hub/frontend",
@@ -1291,6 +1305,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/asap-hub__auth0-rule",
         "workspace:@types/asap-hub__auth0-rule"
+      ],
+      [
+        "@types/asap-hub__inline-environment",
+        "workspace:@types/asap-hub__inline-environment"
       ],
       [
         "@types/asn1js",
@@ -2410,7 +2428,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "babel-plugin-transform-inline-environment-variables",
-        "npm:0.4.3"
+        "npm:0.5.0-alpha.42"
       ],
       [
         "babel-plugin-transform-member-expression-literals",
@@ -8673,6 +8691,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",
           "packageDependencies": [
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/flags", "workspace:packages/flags"],
             ["@babel/cli", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.8.4"],
             ["@babel/core", "npm:7.9.0"],
             ["@babel/plugin-transform-modules-commonjs", "virtual:04e898dfb9d5a77994d6e728ffdf0920a698d6bccb8cefacc3793c8c53e6738d96370d779cac138845b4077af4b90ee97d310a9c93f97402dcbb80e8b7cd6df0#npm:7.10.4"],
@@ -8688,7 +8707,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-plugin-lodash", "npm:3.3.4"],
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["bundlewatch", "npm:0.3.1"],
             ["codecov", "npm:3.8.0"],
@@ -8954,6 +8973,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.16.1"],
             ["ramda", "npm:0.27.1"],
             ["uuid", "npm:8.3.0"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/flags", [
+        ["workspace:packages/flags", {
+          "packageLocation": "./packages/flags/",
+          "packageDependencies": [
+            ["@asap-hub/flags", "workspace:packages/flags"],
+            ["@babel/runtime-corejs3", "npm:7.11.2"],
+            ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"],
+            ["@types/jest", "npm:26.0.3"]
           ],
           "linkType": "SOFT",
         }]
@@ -14947,6 +14978,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@types/asap-hub__inline-environment", [
+        ["workspace:@types/asap-hub__inline-environment", {
+          "packageLocation": "./@types/asap-hub__inline-environment/",
+          "packageDependencies": [
+            ["@types/asap-hub__inline-environment", "workspace:@types/asap-hub__inline-environment"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@types/asn1js", [
         ["npm:0.0.1", {
           "packageLocation": "./.yarn/cache/@types-asn1js-npm-0.0.1-884021f10a-8ab342eec3.zip/node_modules/@types/asn1js/",
@@ -17876,6 +17916,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["asap-hub", "workspace:."],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@asap-hub/flags", "workspace:packages/flags"],
             ["@babel/cli", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.8.4"],
             ["@babel/core", "npm:7.9.0"],
             ["@babel/plugin-transform-modules-commonjs", "virtual:04e898dfb9d5a77994d6e728ffdf0920a698d6bccb8cefacc3793c8c53e6738d96370d779cac138845b4077af4b90ee97d310a9c93f97402dcbb80e8b7cd6df0#npm:7.10.4"],
@@ -17891,7 +17932,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-plugin-lodash", "npm:3.3.4"],
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["bundlewatch", "npm:0.3.1"],
             ["codecov", "npm:3.8.0"],
@@ -18714,10 +18755,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["babel-plugin-transform-inline-environment-variables", [
-        ["npm:0.4.3", {
-          "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-environment-variables-npm-0.4.3-9cd9e4345d-c25cf1190d.zip/node_modules/babel-plugin-transform-inline-environment-variables/",
+        ["npm:0.5.0-alpha.42", {
+          "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-environment-variables-npm-0.5.0-alpha.42-aa3c61a11b-f6acb71f7b.zip/node_modules/babel-plugin-transform-inline-environment-variables/",
           "packageDependencies": [
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.4.3"]
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"]
           ],
           "linkType": "HARD",
         }]

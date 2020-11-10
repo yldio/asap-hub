@@ -1,9 +1,11 @@
 const {
   setupFilesAfterEnv,
-  ...base
+  ...baseConfig
 } = require('../../jest/jest-base.config.js');
 
 module.exports = {
+  ...baseConfig,
+
   rootDir: __dirname,
   testEnvironment: require.resolve('jest-environment-jsdom-sixteen'),
 

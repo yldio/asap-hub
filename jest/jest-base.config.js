@@ -8,6 +8,7 @@ const testPathIgnorePatterns = [
 module.exports = {
   testRunner: require.resolve('jest-circus/runner'),
   testEnvironment: 'node',
+  setupFilesAfterEnv: [require.resolve('./flags-setup-after-env.js')],
 
   cacheDirectory: join(__dirname, '..', '.jest-cache'),
 

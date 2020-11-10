@@ -3,8 +3,9 @@ module.exports = {
   plugins: [
     [require.resolve('@babel/plugin-transform-runtime'), { corejs: 3 }],
 
-    require.resolve('babel-plugin-transform-inline-environment-variables'),
-
+    process.env.NODE_ENV === 'test'
+      ? {}
+      : require.resolve('babel-plugin-transform-inline-environment-variables'),
     require.resolve('babel-plugin-lodash'),
     require.resolve('@jeysal/babel-plugin-ramda'),
   ],

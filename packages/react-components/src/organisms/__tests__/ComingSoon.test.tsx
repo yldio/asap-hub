@@ -7,7 +7,7 @@ import ComingSoon from '../ComingSoon';
 it('renders the <strong> coming soon text', () => {
   const { getByText } = render(<ComingSoon>Text</ComingSoon>);
   expect(
-    findParentWithStyle(getByText(/coming soon/i), 'fontWeight')?.fontWeight,
+    findParentWithStyle(getByText(/more to come/i), 'fontWeight')?.fontWeight,
   ).toMatchInlineSnapshot(`"bold"`);
 });
 

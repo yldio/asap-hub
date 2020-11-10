@@ -107,7 +107,7 @@ const RecentWorks: React.FC<RecentWorksProps> = ({ orcidWorks = [] }) => {
   return (
     <Card>
       <Headline2 styleAsHeading={3}>
-        Recent Publications ({orcidWorks.length})
+        Most Recent Works ({orcidWorks.length})
       </Headline2>
       <div css={containerStyles}>
         {orcidWorks

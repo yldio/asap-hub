@@ -67,7 +67,7 @@ describe('the network page', () => {
       const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Search for a team…"`,
+        `"Enter name, keywork, method, …"`,
       );
 
       fireEvent.click(toggle);
@@ -76,7 +76,7 @@ describe('the network page', () => {
       );
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Search for someone…"`,
+        `"Enter name, keyword, institution, …"`,
       );
     });
 
@@ -108,7 +108,7 @@ describe('the network page', () => {
       const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Search for someone…"`,
+        `"Enter name, keyword, institution, …"`,
       );
 
       fireEvent.click(toggle);
@@ -117,7 +117,7 @@ describe('the network page', () => {
       );
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Search for a team…"`,
+        `"Enter name, keywork, method, …"`,
       );
     });
     it('preserves only query text', async () => {

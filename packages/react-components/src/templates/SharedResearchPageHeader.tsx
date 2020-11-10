@@ -53,13 +53,14 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
       <Display styleAsHeading={2}>Shared Research</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          The ASAP Network's library contains all shared outputs from the
-          research teams, beginning with each team's proposal. As teams begin to
-          share more items, this library will grow.
+          This page contains all shared outputs from the research teams. As
+          teams begin to share more items, this library will grow. Teams should
+          be mindful to respect intellectual boundaries and not share outside of
+          the Network
         </Paragraph>
       </div>
       <SearchControls
-        placeholder="Search for a protein, a method…"
+        placeholder="Enter a keyword, method, resource, tool, etc"
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
         filterEnabled={false}

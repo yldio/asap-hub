@@ -6,6 +6,6 @@ import TeamOutputs from '../TeamOutputs';
 it('renders a coming soon text', () => {
   const { getByText } = render(<TeamOutputs />);
 
-  expect(getByText(/coming soon/i)).toBeVisible();
-  expect(getByText(/team.+output/i)).toBeVisible();
+  expect(getByText(/more\sto\scome/i)).toBeVisible();
+  expect(getByText(/research\soutputs/i)).toBeVisible();
 });

@@ -57,20 +57,14 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
           <ul>
             <li>
               <Paragraph primary>
-                Check out grantee profiles on{' '}
+                Check out grantee profiles and team pages in the{' '}
                 <Link href={hrefUsersNetwork}>Network</Link>
               </Paragraph>
             </li>
             <li>
               <Paragraph primary>
-                Read ASAP awarded proposals in the{' '}
+                Read team proposals in{' '}
                 <Link href={hrefSharedResearch}>Shared Research</Link>
-              </Paragraph>
-            </li>
-            <li>
-              <Paragraph primary>
-                Find other teams based on keywords on{' '}
-                <Link href={hrefTeamsNetwork}>Network</Link>
               </Paragraph>
             </li>
             <li>
@@ -88,15 +82,14 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             {hrefTeamWorkspace ? (
               <li>
                 <Paragraph primary>
-                  Add important links to your{' '}
-                  <Link href={hrefTeamWorkspace}>Team Worspace</Link> (only your
-                  team has access to it)
+                  Add important links to your private{' '}
+                  <Link href={hrefTeamWorkspace}>Team Worspace</Link>
                 </Paragraph>
               </li>
             ) : null}
             <li>
               <Paragraph primary>
-                Rejoice on your fabulous <Link href={hrefProfile}>Profile</Link>
+                View and edit your own <Link href={hrefProfile}>Profile</Link>
               </Paragraph>
             </li>
           </ul>

@@ -67,9 +67,8 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
       <Display styleAsHeading={2}>Network</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          Explore the ASAP Network where the collaboration begins! Search and
-          browse and then connect with individuals and teams across the ASAP
-          Network.
+          Explore the ASAP Network and collaborate! Search for teams or
+          individuals by keyword or name.
         </Paragraph>
       </div>
       <div css={controlsStyles}>
@@ -84,7 +83,9 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         <SearchControls
           onChangeSearch={onChangeSearch}
           placeholder={
-            page === 'users' ? 'Search for someone…' : 'Search for a team…'
+            page === 'users'
+              ? 'Enter name, keyword, institution, …'
+              : 'Enter name, keywork, method, …'
           }
           searchQuery={searchQuery}
           onChangeFilter={onChangeFilter}

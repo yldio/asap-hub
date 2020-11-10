@@ -12,7 +12,7 @@ const bottomStyles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-const LatestNews: React.FC = () => {
+const HelpSection: React.FC = () => {
   return (
     <section css={bottomStyles}>
       <CtaCard href={mailToGrants} buttonText="Contact Us">
@@ -21,11 +21,11 @@ const LatestNews: React.FC = () => {
       </CtaCard>
       <Paragraph>
         If you're facing a technical issue with the Hub, please{' '}
-        <Link href={mailToSupport}>get in touch</Link>. Our support team is
+        <Link href={mailToSupport}>get in touch</Link>. Our Support team is
         happy to help!
       </Paragraph>
     </section>
   );
 };
 
-export default LatestNews;
+export default HelpSection;

@@ -12,6 +12,7 @@ import {
   Paragraph,
   ProfilePage,
   NotFoundPage,
+  PersonalInfoModal,
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
@@ -90,18 +91,29 @@ const Profile: React.FC<{}> = () => {
             {profile.role === 'Staff' ? (
               <Staff userProfile={profile} teams={teams} />
             ) : (
-              <Switch>
-                <Route path={`${path}/research`}>
-                  <Research userProfile={profile} teams={teams} />
-                </Route>
-                <Route path={`${path}/about`}>
-                  <About userProfile={profile} onPatchUserProfile={patch} />
-                </Route>
-                <Route path={`${path}/outputs`}>
-                  <Outputs />
-                </Route>
-                <Redirect to={join(url, 'research')} />
-              </Switch>
+              <>
+                <Switch>
+                  <Route path={`${path}/research`}>
+                    <Research userProfile={profile} teams={teams} />
+                  </Route>
+                  <Route path={`${path}/about`}>
+                    <About userProfile={profile} onPatchUserProfile={patch} />
+                  </Route>
+                  <Route path={`${path}/outputs`}>
+                    <Outputs />
+                  </Route>
+                  <Redirect to={join(url, 'research')} />
+                </Switch>
+                {currentUser?.id === id && tab && (
+                  <Route path={`${path}/${tab}/edit-personal-info`}>
+                    <PersonalInfoModal
+                      {...profile}
+                      backHref={join(url, tab)}
+                      onSave={patch}
+                    />
+                  </Route>
+                )}
+              </>
             )}
           </Suspense>
         </ErrorBoundary>

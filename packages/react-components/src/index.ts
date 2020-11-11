@@ -98,6 +98,7 @@ export {
   NewsAndEventsPageHeader,
   NotFoundPage,
   PasswordResetEmailSentPage,
+  PersonalInfoModal,
   ProfileAbout,
   ProfileHeader,
   ProfileOutputs,

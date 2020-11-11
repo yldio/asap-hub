@@ -7,6 +7,7 @@ import {
   ProfileResearch,
   ProfileStaff,
   BiographyModal,
+  PersonalInfoModal,
 } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 
@@ -146,6 +147,17 @@ export const AboutTabEditBiography = () => (
       editOrcidWorksHref="/wrong"
     />
     <BiographyModal biography={aboutTabProps().biography} backHref="#" />
+  </ProfilePage>
+);
+
+export const AboutTabPersonalInfoModal = () => (
+  <ProfilePage {...commonPropsEditable()} aboutHref="#">
+    <ProfileAbout
+      {...aboutTabProps()}
+      editBiographyHref="/wrong"
+      editOrcidWorksHref="/wrong"
+    />
+    <PersonalInfoModal backHref="/wrong" />
   </ProfilePage>
 );
 

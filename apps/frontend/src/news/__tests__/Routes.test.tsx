@@ -58,7 +58,6 @@ describe('news and events page', () => {
     nockInterceptor = nock(API_BASE_URL, {
       reqheaders: {
         authorization: 'Bearer token',
-        'content-type': 'application/json',
       },
     })
       .get('/news-and-events')

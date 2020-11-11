@@ -4,6 +4,7 @@ import { waitFor } from '@testing-library/dom';
 import { render, act, RenderResult } from '@testing-library/react';
 import { CachePolicies } from 'use-http';
 
+import userEvent from '@testing-library/user-event';
 import useSafeFetch from '../use-safe-fetch';
 import { API_BASE_URL } from '../../config';
 
@@ -133,5 +134,44 @@ describe('when the request URL changes', () => {
       );
     });
     expect(result.container).toHaveTextContent('data: hello2');
+  });
+});
+
+it('Supplies content type on patch requests', async () => {
+  nock(API_BASE_URL).get('/patch').reply(200, 'hello');
+  const patchIntercept = nock(API_BASE_URL, {
+    reqheaders: { 'content-type': 'application/json' },
+  })
+    .patch('/patch')
+    .reply(201);
+  const PatchComponent: React.FC<{}> = () => {
+    const { loading, error, data, patch } = useSafeFetch<string>(
+      `${API_BASE_URL}/patch`,
+      {
+        cachePolicy: CachePolicies.NO_CACHE,
+      },
+    );
+
+    if (loading) return <>loading</>;
+    if (error) return <>error: {error.toString()}</>;
+    if (data)
+      return (
+        <button
+          onClick={() => {
+            patch({ test: 123 });
+          }}
+        >
+          data: {data}
+        </button>
+      );
+    return <>what?</>;
+  };
+  await act(async () => {
+    result = render(<PatchComponent />);
+    await waitFor(() =>
+      expect(result.container).not.toHaveTextContent(/loading/i),
+    );
+    userEvent.click(result.getByRole('button'));
+    await waitFor(() => expect(patchIntercept.isDone()).toBe(true));
   });
 });

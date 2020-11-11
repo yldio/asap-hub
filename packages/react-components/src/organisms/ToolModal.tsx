@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
+import { useHistory } from 'react-router-dom';
 
 import ModalEditHeader from '../molecules/ModalEditHeader';
 import { Modal, LabeledTextField } from '../molecules';
@@ -13,7 +14,7 @@ const fieldsContainer = css({
 });
 
 type ToolModalProps = Partial<TeamTool> & {
-  onSave?: (data: TeamTool) => void;
+  onSave?: (data: TeamTool) => Promise<void>;
   title: string;
   backHref: string;
 };
@@ -30,19 +31,21 @@ const ToolModal: React.FC<ToolModalProps> = ({
   const [newDescription, setNewDescription] = useState(description);
   const [newName, setNewName] = useState(name);
   const formRef = useRef<HTMLFormElement>(null);
+  const history = useHistory();
   return (
     <Modal>
       <form ref={formRef}>
         <ModalEditHeader
           backHref={backHref}
-          onSave={() => {
+          onSave={async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
-              onSave({
+              await onSave({
                 name: newName,
                 url: newUrl,
                 description: newDescription,
               });
+              history.push(backHref);
             }
           }}
           title={title}

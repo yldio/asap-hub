@@ -48,9 +48,9 @@ const Team: React.FC<{}> = () => {
       ...team,
       tools: team.tools
         ? team.tools.map((tool, index) => ({
-          ...tool,
-          href: join(url, 'workspace', 'tools', index.toString()),
-        }))
+            ...tool,
+            href: join(url, 'workspace', 'tools', index.toString()),
+          }))
         : undefined,
     };
     const teamPageProps = {
@@ -62,20 +62,20 @@ const Team: React.FC<{}> = () => {
 
     const outputs = teamPageProps.proposalURL
       ? [
-        {
-          id: teamPageProps.proposalURL,
-          publishDate: PROPOSAL_PUBLISH_DATE,
-          created: PROPOSAL_PUBLISH_DATE,
-          title: teamPageProps.projectTitle,
-          type: 'Proposal' as ResearchOutputType,
-          href: join('/shared-research/', teamPageProps.proposalURL),
-          team: {
-            id: teamPageProps.id,
-            displayName: teamPageProps.displayName,
-            href: join('/network/teams', teamPageProps.id),
+          {
+            id: teamPageProps.proposalURL,
+            publishDate: PROPOSAL_PUBLISH_DATE,
+            created: PROPOSAL_PUBLISH_DATE,
+            title: teamPageProps.projectTitle,
+            type: 'Proposal' as ResearchOutputType,
+            href: join('/shared-research/', teamPageProps.proposalURL),
+            team: {
+              id: teamPageProps.id,
+              displayName: teamPageProps.displayName,
+              href: join('/network/teams', teamPageProps.id),
+            },
           },
-        },
-      ]
+        ]
       : [];
 
     return (

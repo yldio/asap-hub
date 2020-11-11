@@ -8,9 +8,9 @@ import {
   TeamWorkspace,
   ToolModal,
 } from '@asap-hub/react-components';
+import { ResearchOutputType } from '@asap-hub/model';
 
 import { LayoutDecorator } from './layout';
-import { ResearchOutputType } from '@asap-hub/model';
 
 export default {
   title: 'Pages / Team',

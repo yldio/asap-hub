@@ -10,6 +10,7 @@ import {
 } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './layout';
+import { ResearchOutputType } from '@asap-hub/model';
 
 export default {
   title: 'Pages / Team',
@@ -135,11 +136,30 @@ export const AboutTab = () => (
   </TeamPage>
 );
 
-export const OutputsTab = () => (
-  <TeamPage {...commonProps()} outputsHref="#">
-    <TeamOutputs />
-  </TeamPage>
-);
+export const OutputsTab = () => {
+  const props = commonProps();
+  return (
+    <TeamPage {...props} outputsHref="#">
+      <TeamOutputs
+        outputs={[
+          {
+            id: props.id,
+            publishDate: '2020-10-09T23:00:00.000Z',
+            created: '2020-10-09T23:00:00.000Z',
+            title: props.projectTitle,
+            type: 'Proposal' as ResearchOutputType,
+            href: '/wrong',
+            team: {
+              id: props.id,
+              displayName: props.displayName,
+              href: '/wrong',
+            },
+          },
+        ]}
+      />
+    </TeamPage>
+  );
+};
 
 export const WorkspaceTab = () => (
   <TeamPage {...commonProps()} tools={tools()} workspaceHref="#">

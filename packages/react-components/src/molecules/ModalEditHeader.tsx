@@ -36,7 +36,7 @@ const ModalEditHeader: React.FC<ModalEditHeaderProps> = ({
 }) => (
   <div css={headerStyles}>
     <div css={controlsContainerStyles}>
-      <Button onClick={onSave} primary small submit>
+      <Button onClick={onSave} primary small>
         Save
       </Button>
       <Link small buttonStyle href={backHref}>

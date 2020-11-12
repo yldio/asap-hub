@@ -9,7 +9,7 @@ it('generates a heading', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       href="/network/teams/42"
     />,
   );
@@ -22,7 +22,7 @@ it('renders links to team page twice', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       href="/network/teams/42"
     />,
   );
@@ -44,7 +44,7 @@ it('renders proposal if present', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       href="/network/teams/42"
     />,
   );
@@ -56,7 +56,7 @@ it('renders proposal if present', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       approach="text"
       href="/network/teams/42"
       proposalHref="/shared-research/uuid"
@@ -72,7 +72,7 @@ it('renders responsibilities if present', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       href="/network/teams/42"
     />,
   );
@@ -83,7 +83,7 @@ it('renders responsibilities if present', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       responsibilities="text"
       href="/network/teams/42"
     />,
@@ -98,7 +98,7 @@ it('renders approach if present', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       href="/network/teams/42"
     />,
   );
@@ -110,7 +110,7 @@ it('renders approach if present', () => {
       id="42"
       firstName="Phillip"
       displayName="Phillip, M"
-      role="Collaborator"
+      role="Collaborating PI"
       approach="text"
       href="/network/teams/42"
     />,

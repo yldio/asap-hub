@@ -483,8 +483,11 @@
               "allowedValues": [
                 "Lead PI",
                 "Co-Investigator",
-                "Project Manager",
                 "Collaborator",
+                "Lead PI (Core Leadership)",
+                "Co-PI (Core Leadership)",
+                "Project Manager",
+                "Collaborating PI",
                 "Key Personnel"
               ],
               "isUnique": false,

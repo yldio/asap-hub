@@ -1,6 +1,8 @@
 import { ListResponse } from './common';
 import { TeamRole } from './team';
 
+export type Role = 'Staff' | 'Grantee' | 'Guest';
+
 export interface Invitee {
   displayName: string;
   email: string;
@@ -94,7 +96,7 @@ export interface UserResponse extends Invitee {
   orcidWorks?: OrcidWork[];
   reachOut?: string;
   responsibilities?: string;
-  role: 'Staff' | 'Grantee' | 'Guest';
+  role: Role;
 }
 
 export type ListUserResponse = ListResponse<UserResponse>;

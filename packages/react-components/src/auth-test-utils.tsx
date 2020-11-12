@@ -85,7 +85,13 @@ export const LoggedIn: React.FC<{
       displayName: 'John Doe',
       firstName: 'John',
       lastName: 'Doe',
-      teams: [{ id: 'team-1', displayName: 'Team 1', role: 'Lead PI' }],
+      teams: [
+        {
+          id: 'team-1',
+          displayName: 'Team 1',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ],
       ...user,
     };
     auth0User = {

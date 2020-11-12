@@ -141,7 +141,7 @@ describe('Import user', () => {
           iv: [
             {
               id: ['team-uuid-1'],
-              role: 'Lead PI',
+              role: 'Lead PI (Core Leadership)',
               approach: 'Interests',
               responsibilities: 'Responsibilities',
             },

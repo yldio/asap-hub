@@ -73,13 +73,16 @@ export const createUserOnTeam = async (
     {
       role:
         role ||
-        chance.pickone([
-          'Lead PI',
-          'Co-Investigator',
+        (chance.pickone([
+          'Lead PI (Core Leadership)',
+          'Co-PI (Core Leadership)',
+          'Collaborating PI',
           'Project Manager',
-          'Collaborator',
           'Key Personnel',
-        ]),
+          'Guest',
+          'Staff',
+          'Advisor',
+        ]) as TeamRole),
       id: [team.id],
     },
   ];

@@ -20,7 +20,7 @@ it('renders the role on ASAP', () => {
         {
           id: '42',
           displayName: 'Team',
-          role: 'Lead PI',
+          role: 'Lead PI (Core Leadership)',
           href: '/network/teams/42',
         },
       ]}

@@ -138,7 +138,7 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
         teams: {
           iv: [
             {
-              role: 'Lead PI',
+              role: 'Lead PI (Core Leadership)',
               id: ['team-id-1'],
             },
           ],
@@ -201,7 +201,7 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         teams: {
           iv: [
             {
-              role: 'Lead PI',
+              role: 'Lead PI (Core Leadership)',
               id: ['team-id-2'],
             },
           ],
@@ -300,7 +300,7 @@ export const expectation: ListTeamResponse = {
           avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
           email: 'cristiano@ronaldo.com',
           displayName: 'Cristiano Ronaldo',
-          role: 'Lead PI',
+          role: 'Lead PI (Core Leadership)',
         },
       ],
       lastModifiedDate: '2020-09-08T16:35:28Z',
@@ -322,7 +322,7 @@ export const expectation: ListTeamResponse = {
           avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-2`,
           email: 'john@ed.ma',
           displayName: 'John Travista',
-          role: 'Lead PI',
+          role: 'Lead PI (Core Leadership)',
         },
         {
           id: 'user-id-3',

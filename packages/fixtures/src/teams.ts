@@ -10,7 +10,7 @@ const teamMember: Omit<ListTeamResponse['items'][0]['members'][0], 'id'> = {
   lastName: 'Carpenter',
   email: 'mason@car.com',
   displayName: 'Birdie Romeo',
-  role: 'Lead PI',
+  role: 'Lead PI (Core Leadership)',
 };
 
 const teamTool = (id: number): TeamTool => ({

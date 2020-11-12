@@ -11,7 +11,7 @@ const props: ComponentProps<typeof PeopleCard> = {
     {
       id: '321',
       displayName: 'Team 321',
-      role: 'Collaborator',
+      role: 'Collaborating PI',
       href: 'http://localhost/teams/321',
     },
   ],

@@ -1,14 +1,11 @@
 import { ListResponse } from './common';
 
 export type TeamRole =
-  | 'Lead PI'
-  | 'Co-Investigator'
+  | 'Lead PI (Core Leadership)'
+  | 'Co-PI (Core Leadership)'
+  | 'Collaborating PI'
   | 'Project Manager'
-  | 'Collaborator'
-  | 'Key Personnel'
-  | 'Guest'
-  | 'Staff'
-  | 'Advisor';
+  | 'Key Personnel';
 
 export type TeamTool = { name: string; description: string; url: string };
 

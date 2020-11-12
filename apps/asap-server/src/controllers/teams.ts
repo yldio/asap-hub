@@ -14,14 +14,11 @@ import { User } from '@asap-hub/auth';
 import { createURL } from '../utils/squidex';
 
 const priorities: Record<TeamRole, number> = {
-  'Lead PI': 1,
+  'Lead PI (Core Leadership)': 1,
   'Project Manager': 2,
-  'Co-Investigator': 3,
-  Collaborator: 4,
+  'Co-PI (Core Leadership)': 3,
+  'Collaborating PI': 4,
   'Key Personnel': 5,
-  Advisor: 6,
-  Guest: 7,
-  Staff: 8,
 };
 
 function transformTeam(

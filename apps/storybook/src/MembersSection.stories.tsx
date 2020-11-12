@@ -18,7 +18,7 @@ export const Normal = () => (
         firstName: 'Daniel',
         lastName: 'Ramirez',
         email: 'd@niel.com',
-        role: 'Lead PI',
+        role: 'Lead PI (Core Leadership)',
       },
       {
         id: '2',
@@ -38,7 +38,7 @@ export const Normal = () => (
         firstName: 'Tess',
         lastName: 'Goetz',
         email: 'tess@go.com',
-        role: 'Collaborator',
+        role: 'Collaborating PI',
       },
       {
         id: '4',
@@ -46,7 +46,7 @@ export const Normal = () => (
         firstName: 'Robin',
         lastName: 'Peploe',
         email: 'robin@pep.com',
-        role: 'Collaborator',
+        role: 'Collaborating PI',
       },
       {
         id: '5',
@@ -54,7 +54,7 @@ export const Normal = () => (
         firstName: 'Alice',
         lastName: 'Lane',
         email: 'alice@lane.com',
-        role: 'Collaborator',
+        role: 'Collaborating PI',
       },
       {
         id: '6',
@@ -62,7 +62,7 @@ export const Normal = () => (
         firstName: 'Philip',
         lastName: 'Mars',
         email: 'philip@mars.com',
-        role: 'Collaborator',
+        role: 'Collaborating PI',
       },
       {
         id: '7',
@@ -70,7 +70,7 @@ export const Normal = () => (
         firstName: 'Emanuel',
         lastName: 'Depay',
         email: 'em@nuel.com',
-        role: 'Collaborator',
+        role: 'Collaborating PI',
       },
     ]}
   />

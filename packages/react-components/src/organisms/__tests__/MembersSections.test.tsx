@@ -20,7 +20,7 @@ it('renders the content', async () => {
           lastName: 'Mars',
           email: 'foo@bar.com',
           displayName: 'Phillip Mars, PhD',
-          role: 'Collaborator',
+          role: 'Collaborating PI',
         },
       ]}
     />,
@@ -28,5 +28,5 @@ it('renders the content', async () => {
 
   expect(getByText('Title')).toBeVisible();
   expect(getByText('Phillip Mars, PhD')).toBeVisible();
-  expect(getByText('Collaborator')).toBeVisible();
+  expect(getByText('Collaborating PI')).toBeVisible();
 });

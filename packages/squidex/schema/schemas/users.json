@@ -19,7 +19,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "isUnique": true,
           "inlineEditable": false,
           "editor": "Input",

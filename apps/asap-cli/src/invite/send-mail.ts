@@ -1,4 +1,5 @@
 import aws from 'aws-sdk';
+import { grantsFromEmail } from '../config';
 
 export interface Welcome {
   displayName: string;
@@ -21,7 +22,7 @@ export const sendEmail = async ({
     },
     Template: template,
     TemplateData: JSON.stringify(values),
-    Source: 'no-reply@hub.asap.science',
+    Source: grantsFromEmail,
   };
 
   return ses.sendTemplatedEmail(params).promise();

@@ -3,7 +3,7 @@ import nock from 'nock';
 import { config } from '@asap-hub/squidex';
 import { identity } from './helpers/squidex';
 import inviteUsers from '../src/invite';
-import { origin } from '../src/config';
+import { origin, grantsFromEmail } from '../src/config';
 import { fetchUsersResponse } from './invite.fixtures';
 
 jest.mock('aws-sdk', () => ({
@@ -83,7 +83,7 @@ describe('Invite user', () => {
     await inviteUsers('Staff');
     expect(ses.sendTemplatedEmail).toBeCalledTimes(2);
     expect(ses.sendTemplatedEmail).toBeCalledWith({
-      Source: 'no-reply@hub.asap.science',
+      Source: grantsFromEmail,
       Destination: {
         ToAddresses: ['testUser@asap.science'],
       },

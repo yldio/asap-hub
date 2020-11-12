@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { disable } from '@asap-hub/flags';
 
 import ProfileResearch from '../ProfileResearch';
 
@@ -76,6 +77,13 @@ it('renders an edit button for the role on ASAP', () => {
     '/edit-background',
   );
 });
+it('disables the edit button for the role on ASAP (REGRESSION)', () => {
+  disable('PROFILE_EDITING');
+  const { getByLabelText } = render(
+    <ProfileResearch {...commonProps} editBackgroundHref="/edit-background" />,
+  );
+  expect(getByLabelText(/edit.+role.+asap/i)).not.toHaveAttribute('href');
+});
 it('renders an edit button for the skills list', () => {
   const { getByLabelText } = render(
     <ProfileResearch {...commonProps} editSkillsHref="/edit-skills" />,
@@ -85,6 +93,13 @@ it('renders an edit button for the skills list', () => {
     '/edit-skills',
   );
 });
+it('disables the edit button for the skills list (REGRESSION)', () => {
+  disable('PROFILE_EDITING');
+  const { getByLabelText } = render(
+    <ProfileResearch {...commonProps} editSkillsHref="/edit-skills" />,
+  );
+  expect(getByLabelText(/edit.+expertise/i)).not.toHaveAttribute('href');
+});
 it('renders an edit button for the questions list', () => {
   const { getByLabelText } = render(
     <ProfileResearch {...commonProps} editQuestionsHref="/edit-questions" />,
@@ -93,4 +108,11 @@ it('renders an edit button for the questions list', () => {
     'href',
     '/edit-questions',
   );
+});
+it('disables the edit button for the questions list (REGRESSION)', () => {
+  disable('PROFILE_EDITING');
+  const { getByLabelText } = render(
+    <ProfileResearch {...commonProps} editQuestionsHref="/edit-questions" />,
+  );
+  expect(getByLabelText(/edit.+question/i)).not.toHaveAttribute('href');
 });

@@ -145,6 +145,9 @@ const disabledStyles = css({
   backgroundColor: silver.rgb,
   borderColor: steel.rgb,
   boxShadow: 'none',
+
+  cursor: 'unset',
+
   svg: {
     stroke: tin.rgb,
   },

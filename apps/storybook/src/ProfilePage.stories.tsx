@@ -10,10 +10,14 @@ import {
 import { TeamRole } from '@asap-hub/model';
 
 import { LayoutDecorator } from './layout';
+import { makeFlagDecorator } from './flags';
 
 export default {
   title: 'Pages / Profile',
-  decorators: [LayoutDecorator],
+  decorators: [
+    LayoutDecorator,
+    makeFlagDecorator('Enable Profile Editing', 'PROFILE_EDITING'),
+  ],
 };
 
 const commonProps = (): Omit<

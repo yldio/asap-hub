@@ -2,6 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse, UserTeam } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 
 import {
   tabletScreen,
@@ -158,6 +159,8 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   discoverHref,
   role,
 }) => {
+  const { isEnabled } = useFlags();
+
   return (
     <header css={[containerStyles, role === 'Staff' && staffContainerStyles]}>
       <section css={personalInfoStyles}>
@@ -187,6 +190,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
             primary
             href={editPersonalInfoHref}
             label="Edit personal information"
+            enabled={isEnabled('PROFILE_EDITING')}
           >
             {editIcon}
           </Link>
@@ -221,6 +225,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
             primary
             href={editContactHref}
             label="Edit contact information"
+            enabled={isEnabled('PROFILE_EDITING')}
           >
             {editIcon}
           </Link>

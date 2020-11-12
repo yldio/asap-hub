@@ -1,5 +1,6 @@
-type Flag = 'PERSISTENT_EXAMPLE' | 'PROFILE_EDITING';
-let overrides: Partial<Record<Flag, boolean>> = {
+export type Flag = 'PERSISTENT_EXAMPLE' | 'PROFILE_EDITING';
+export type Flags = Partial<Record<Flag, boolean>>;
+let overrides: Flags = {
   // can also be used to manually disable a flag in development
 };
 
@@ -17,8 +18,9 @@ export const isEnabled = (flag: Flag): boolean => {
   );
 };
 
+export const getOverrides = (): Flags => overrides;
 export const disable = (flag: Flag): void => {
-  overrides[flag] = false;
+  overrides = { ...overrides, [flag]: false };
 };
 export const reset = (): void => {
   overrides = {};

@@ -6,39 +6,30 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
-import { UserResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
+import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
 
 import { API_BASE_URL } from '@asap-hub/frontend/src/config';
 import Profile from '../Routes';
 
-const user: UserResponse = {
-  id: '42',
-  lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
-  createdDate: new Date(2020, 6, 12, 14, 32).toISOString(),
-  displayName: 'John Doe',
-  email: 'john.doe@example.com',
-  institution: 'Unknown Institution',
-  jobTitle: 'Unknown Title',
-  teams: [],
-  biography: 'Biography Text',
-  skills: [],
-  questions: ['Question?'],
-  role: 'Grantee',
-};
+const renderProfile = async (
+  userResponse = createUserResponse(),
+  { ownUserId = userResponse.id, routeProfileId = userResponse.id } = {},
+) => {
+  nock.cleanAll();
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get(`/users/${userResponse.id}`)
+    .reply(200, userResponse)
+    .get(() => true)
+    .reply(404);
 
-const team = {
-  id: '100',
-  displayName: 'Team Unknown',
-  role: 'Unknown role',
-};
-
-const renderProfile = async (profileId = '42', waitForLoad = true) => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={[`/${profileId}/`]}>
+        <authTestUtils.LoggedIn user={{ id: ownUserId }}>
+          <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
             <Route path="/:id" component={Profile} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
@@ -50,135 +41,143 @@ const renderProfile = async (profileId = '42', waitForLoad = true) => {
   );
   return result;
 };
-describe('without team', () => {
-  // fetch user by code request
-  beforeEach(() => {
-    nock.cleanAll();
-    nock(API_BASE_URL, {
-      reqheaders: { authorization: 'Bearer token' },
-    })
-      .get('/users/42')
-      .reply(200, user);
+
+it('initially renders a loading indicator', async () => {
+  const { getByText } = await renderProfile();
+
+  const loadingIndicator = getByText(/loading/i);
+  expect(loadingIndicator).toBeVisible();
+
+  await waitForElementToBeRemoved(loadingIndicator);
+});
+
+it('renders the personal info', async () => {
+  const { findByText } = await renderProfile({
+    ...createUserResponse(),
+    displayName: 'Someone',
+  });
+  expect((await findByText('Someone')).tagName).toBe('H1');
+});
+
+it('by default renders the research tab', async () => {
+  const { findByText } = await renderProfile({
+    ...createUserResponse(),
+    questions: ['What?'],
+  });
+  expect(await findByText('What?')).toBeVisible();
+});
+
+it('renders the 404 page for a missing user', async () => {
+  const { findByText } = await renderProfile(
+    {
+      ...createUserResponse(),
+      id: '42',
+    },
+    { routeProfileId: '1337' },
+  );
+  expect(await findByText(/sorry.+page/i)).toBeVisible();
+});
+
+// TODO improve test quality
+describe('with team', () => {
+  it('calculates links', async () => {
+    const { findAllByRole } = await renderProfile({
+      ...createUserResponse({ teams: 1 }),
+    });
+    const links = (await findAllByRole('link')) as HTMLAnchorElement[];
+    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
+      Array [
+        "http://localhost/network/teams/t0",
+        "http://localhost/u0/research/edit-personal-info",
+        "mailto:agnete.kirkeby@sund.ku.dk",
+        "http://localhost/u0/research/edit-contact",
+        "http://localhost/u0/research",
+        "http://localhost/u0/about",
+        "http://localhost/u0/outputs",
+        "http://localhost/network/teams/t0",
+        "http://localhost/network/teams/t0",
+        "http://localhost/u0/research/edit-background",
+        "http://localhost/u0/research/edit-skills",
+        "http://localhost/u0/research/edit-questions",
+        "mailto:agnete.kirkeby@sund.ku.dk",
+      ]
+    `);
   });
 
-  it('renders a loading indicator', async () => {
-    const { getByText } = await renderProfile('42', false);
-
-    const loadingIndicator = getByText(/loading/i);
-    expect(loadingIndicator).toBeVisible();
-
-    await waitForElementToBeRemoved(loadingIndicator);
-  });
-
-  it('renders a member information', async () => {
-    const { findByText } = await renderProfile();
-    expect((await findByText(user.displayName)).tagName).toBe('H1');
-  });
-
-  it('renders the research member content', async () => {
-    const { findByText } = await renderProfile();
-    expect(await findByText('Open Questions')).toBeVisible();
+  it('calculates links with proposal', async () => {
+    const { findAllByRole } = await renderProfile({
+      ...createUserResponse(),
+      teams: [{ ...createUserTeams({ teams: 1 })[0], proposal: 'uuid' }],
+    });
+    const links = (await findAllByRole('link')) as HTMLAnchorElement[];
+    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
+      Array [
+        "http://localhost/network/teams/t0",
+        "http://localhost/u0/research/edit-personal-info",
+        "mailto:agnete.kirkeby@sund.ku.dk",
+        "http://localhost/u0/research/edit-contact",
+        "http://localhost/u0/research",
+        "http://localhost/u0/about",
+        "http://localhost/u0/outputs",
+        "http://localhost/network/teams/t0",
+        "http://localhost/shared-research/uuid",
+        "http://localhost/network/teams/t0",
+        "http://localhost/u0/research/edit-background",
+        "http://localhost/u0/research/edit-skills",
+        "http://localhost/u0/research/edit-questions",
+        "mailto:agnete.kirkeby@sund.ku.dk",
+      ]
+    `);
   });
 });
 
-describe('with team', () => {
-  it('Calculates links', async () => {
-    nock.cleanAll();
-    nock(API_BASE_URL, {
-      reqheaders: { authorization: 'Bearer token' },
-    })
-      .get('/users/43')
-      .reply(200, {
-        ...user,
-        id: '43',
-        teams: [team],
-      });
-    const { queryAllByRole, getByText } = await renderProfile('43');
-    const loadingIndicator = getByText(/loading/i);
-    await waitForElementToBeRemoved(loadingIndicator);
-    const links = (await queryAllByRole('link')) as HTMLAnchorElement[];
-    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
-      Array [
-        "http://localhost/network/teams/100",
-        "mailto:john.doe@example.com",
-        "http://localhost/43/research",
-        "http://localhost/43/about",
-        "http://localhost/43/outputs",
-        "http://localhost/network/teams/100",
-        "http://localhost/network/teams/100",
-        "mailto:john.doe@example.com",
-      ]
-    `);
-  });
-
-  it('Calculates links with proposal', async () => {
-    nock.cleanAll();
-    nock(API_BASE_URL, {
-      reqheaders: { authorization: 'Bearer token' },
-    })
-      .get('/users/43')
-      .reply(200, {
-        ...user,
-        id: '43',
-        teams: [
-          {
-            ...team,
-            proposal: 'uuid',
-          },
-        ],
-      });
-    const { queryAllByRole, getByText } = await renderProfile('43');
-    const loadingIndicator = getByText(/loading/i);
-    await waitForElementToBeRemoved(loadingIndicator);
-    const links = (await queryAllByRole('link')) as HTMLAnchorElement[];
-    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
-      Array [
-        "http://localhost/network/teams/100",
-        "mailto:john.doe@example.com",
-        "http://localhost/43/research",
-        "http://localhost/43/about",
-        "http://localhost/43/outputs",
-        "http://localhost/network/teams/100",
-        "http://localhost/shared-research/uuid",
-        "http://localhost/network/teams/100",
-        "mailto:john.doe@example.com",
-      ]
-    `);
-  });
-
-  describe('for a staff member', () => {
-    it('calculates links', async () => {
-      nock.cleanAll();
-      nock(API_BASE_URL, {
-        reqheaders: { authorization: 'Bearer token' },
-      })
-        .get('/users/43')
-        .reply(200, {
-          ...user,
-          id: '43',
-          role: 'Staff',
-          reachOut: 'approach',
-          responsibilities: 'responsible',
-        } as UserResponse);
-
-      const { queryAllByText, getByText } = await renderProfile('43');
-      const loadingIndicator = getByText(/loading/i);
-      await waitForElementToBeRemoved(loadingIndicator);
-
-      expect(
-        getByText(/get in touch/i, {
-          selector: 'a',
-        }),
-      ).toHaveAttribute(
-        'href',
-        'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
-      );
-
-      expect(
-        await queryAllByText(/team\sasap/i, {
-          selector: 'a',
-        }).map((a) => a.getAttribute('href')),
-      ).toEqual(['/discover', '/discover']);
+describe('for a staff member', () => {
+  it('calculates links', async () => {
+    const { findAllByText, findByText } = await renderProfile({
+      ...createUserResponse(),
+      role: 'Staff',
+      reachOut: 'approach',
+      responsibilities: 'responsible',
     });
+
+    expect(
+      await findByText(/get in touch/i, {
+        selector: 'a',
+      }),
+    ).toHaveAttribute(
+      'href',
+      'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
+    );
+
+    const links = await findAllByText(/team\sasap/i, {
+      selector: 'a',
+    });
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      '/discover',
+      '/discover',
+    ]);
+  });
+});
+
+describe('a header edit button', () => {
+  it("is not rendered on someone else's profile", async () => {
+    const { getByText, queryByLabelText } = await renderProfile(
+      { ...createUserResponse(), id: '42' },
+      { ownUserId: '1337' },
+    );
+    const loadingIndicator = getByText(/loading/i);
+    await waitForElementToBeRemoved(loadingIndicator);
+
+    expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
+  });
+
+  it('is rendered for personal info on your own profile', async () => {
+    const { findByLabelText } = await renderProfile();
+    expect(await findByLabelText(/edit.+personal/i)).toBeVisible();
+  });
+
+  it('is rendered for contact info on your own profile', async () => {
+    const { findByLabelText } = await renderProfile();
+    expect(await findByLabelText(/edit.+contact/i)).toBeVisible();
   });
 });

@@ -1,11 +1,19 @@
-import React, { Suspense, useEffect } from 'react';
-import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+import React, { Suspense, useEffect, ComponentProps } from 'react';
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  Redirect,
+  matchPath,
+  useLocation,
+} from 'react-router-dom';
 import { join } from 'path';
 import {
   Paragraph,
   ProfilePage,
   NotFoundPage,
 } from '@asap-hub/react-components';
+import { useCurrentUser } from '@asap-hub/react-context';
 
 import { useUserById } from '@asap-hub/frontend/src/api/users';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
@@ -29,11 +37,15 @@ const Profile: React.FC<{}> = () => {
     loadResearch().then(loadStaff).then(loadAbout).then(loadOutputs);
   }, []);
 
+  const currentUser = useCurrentUser();
   const {
     url,
     path,
     params: { id },
   } = useRouteMatch();
+  const tab = matchPath<{ tab: string }>(useLocation().pathname, {
+    path: `${path}/:tab`,
+  })?.params?.tab;
 
   const { loading, data: profile } = useUserById(id);
 
@@ -48,13 +60,27 @@ const Profile: React.FC<{}> = () => {
       proposalHref: proposal ? `/shared-research/${proposal}` : undefined,
     }));
 
-    const profilePageProps = {
+    const profilePageProps: Omit<
+      ComponentProps<typeof ProfilePage>,
+      'children'
+    > = {
       ...profile,
       teams,
+
       discoverHref: '/discover',
+
       aboutHref: join(url, 'about'),
       researchHref: join(url, 'research'),
       outputsHref: join(url, 'outputs'),
+
+      editPersonalInfoHref:
+        currentUser?.id === id && tab
+          ? join(url, tab, '/edit-personal-info')
+          : undefined,
+      editContactHref:
+        currentUser?.id === id && tab
+          ? join(url, tab, '/edit-contact')
+          : undefined,
     };
 
     return (
@@ -62,18 +88,18 @@ const Profile: React.FC<{}> = () => {
         <ErrorBoundary>
           <Suspense fallback="Loading...">
             {profile.role === 'Staff' ? (
-              <Staff {...profile} teams={teams} discoverHref={'/discover'} />
+              <Staff userProfile={profile} teams={teams} />
             ) : (
               <Switch>
                 <Route path={`${path}/research`}>
-                  <Research {...profile} teams={teams} />
+                  <Research userProfile={profile} teams={teams} />
                 </Route>
                 <Route path={`${path}/about`}>
-                  <About {...profile} />
+                  <About userProfile={profile} />
                 </Route>
                 <Route path={`${path}/outputs`}>
                   <Outputs />
-                </Route>{' '}
+                </Route>
                 <Redirect to={join(url, 'research')} />
               </Switch>
             )}

@@ -10,7 +10,9 @@ import { join } from 'path';
 
 import { useTeamById } from '@asap-hub/frontend/src/api/teams';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
-import { TeamTool } from '@asap-hub/model';
+import { TeamTool, ResearchOutputType } from '@asap-hub/model';
+
+const PROPOSAL_PUBLISH_DATE = '2020-10-09T23:00:00.000Z';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -58,6 +60,24 @@ const Team: React.FC<{}> = () => {
       workspaceHref: join(url, 'workspace'),
     };
 
+    const outputs = teamPageProps.proposalURL
+      ? [
+          {
+            id: teamPageProps.proposalURL,
+            publishDate: PROPOSAL_PUBLISH_DATE,
+            created: PROPOSAL_PUBLISH_DATE,
+            title: teamPageProps.projectTitle,
+            type: 'Proposal' as ResearchOutputType,
+            href: join('/shared-research/', teamPageProps.proposalURL),
+            team: {
+              id: teamPageProps.id,
+              displayName: teamPageProps.displayName,
+              href: join('/network/teams', teamPageProps.id),
+            },
+          },
+        ]
+      : [];
+
     return (
       <TeamPage {...teamPageProps}>
         <ErrorBoundary>
@@ -74,7 +94,7 @@ const Team: React.FC<{}> = () => {
                 />
               </Route>
               <Route path={`${path}/outputs`}>
-                <Outputs />
+                <Outputs outputs={outputs} />
               </Route>
               {teamProps.tools && (
                 <Route path={`${path}/workspace`}>

@@ -161,7 +161,9 @@ describe('PATCH /users/{id}', () => {
         avatar: { iv: ['uuid-user-id-1'] },
         skills: { iv: [] },
         orcidWorks: { iv: [] },
-        teams: { iv: [{ role: 'Lead PI', id: ['team-id-1'] }] },
+        teams: {
+          iv: [{ role: 'Lead PI (Core Leadership)', id: ['team-id-1'] }],
+        },
         connections: { iv: [] },
         biography: { iv: 'I do awesome stuff' },
         department: { iv: 'Awesome Department' },

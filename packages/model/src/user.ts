@@ -2,6 +2,7 @@ import { ListResponse } from './common';
 import { TeamRole } from './team';
 
 export type Role = 'Staff' | 'Grantee' | 'Guest';
+export type UserDegree = 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD';
 
 export interface Invitee {
   displayName: string;
@@ -87,7 +88,7 @@ export interface UserResponse extends Invitee {
   lastModifiedDate: string;
   createdDate: string;
   teams: UserTeam[];
-  degree?: string;
+  degree?: UserDegree;
   skills: string[];
   skillsDescription?: string;
   questions: string[];

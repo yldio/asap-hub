@@ -8,7 +8,7 @@ it('renders different headlines in signin and signup mode', () => {
     <SigninForm email="" password="" forgotPasswordHref="#" />,
   );
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Sign in to ASAP Hub"`,
+    `"Sign in to the ASAP Hub"`,
   );
 
   rerender(<SigninForm signup email="" password="" forgotPasswordHref="#" />);

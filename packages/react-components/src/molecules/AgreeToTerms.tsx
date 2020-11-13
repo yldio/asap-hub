@@ -10,9 +10,9 @@ const AgreeToTerms: React.FC<AgreeToTermsProps> = ({
   privacyPolicyHref,
 }) => (
   <Paragraph accent="lead">
-    By proceeding, you agree to our <Link href={termsHref}>Terms</Link> and
-    confirm that you have read our{' '}
-    <Link href={privacyPolicyHref}>Privacy policy</Link>.
+    By proceeding, you are agreeing to the{' '}
+    <Link href={termsHref}>Terms and Conditions</Link> and confirm that you have
+    read our <Link href={privacyPolicyHref}>Privacy Policy</Link>.
   </Paragraph>
 );
 

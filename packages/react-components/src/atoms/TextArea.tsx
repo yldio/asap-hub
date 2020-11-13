@@ -3,12 +3,8 @@ import css from '@emotion/css';
 
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
-import { ember, rose } from '../colors';
+import { ember, rose, fern, tin } from '../colors';
 
-const textareaStyles = css({
-  display: 'block',
-  resize: 'vertical',
-});
 const containerStyles = css({
   flexBasis: '100%',
 
@@ -17,7 +13,15 @@ const containerStyles = css({
     display: 'none',
   },
 });
-const invalidStyles = {
+const textareaStyles = css({
+  display: 'block',
+  resize: 'vertical',
+
+  '::placeholder': {
+    color: tin.rgb,
+  },
+});
+const invalidStyles = css({
   ':invalid': {
     color: ember.rgb,
     borderColor: ember.rgb,
@@ -27,7 +31,16 @@ const invalidStyles = {
       display: 'block',
     },
   },
-};
+});
+
+const validationAndLimitStyles = css({
+  display: 'grid',
+  gridTemplateColumns: 'auto max-content',
+});
+const limitStyles = css({
+  textAlign: 'right',
+  fontWeight: 'bold',
+});
 
 type TextAreaProps = {
   readonly id?: string;
@@ -38,11 +51,10 @@ type TextAreaProps = {
   readonly onChange?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLTextAreaElement>,
-  'id' | 'placeholder' | 'required' | 'minLength' | 'maxLength'
+  'id' | 'placeholder' | 'required' | 'maxLength'
 >;
 const TextArea: React.FC<TextAreaProps> = ({
   required,
-  minLength,
   maxLength,
 
   customValidationMessage = '',
@@ -56,6 +68,9 @@ const TextArea: React.FC<TextAreaProps> = ({
     HTMLTextAreaElement
   >(customValidationMessage);
 
+  const reachedMaxLength =
+    value.length >= (maxLength ?? Number.POSITIVE_INFINITY);
+
   return (
     <div css={containerStyles}>
       <textarea
@@ -63,7 +78,6 @@ const TextArea: React.FC<TextAreaProps> = ({
         {...validationTargetProps}
         rows={5}
         required={required}
-        minLength={minLength}
         maxLength={maxLength}
         value={value}
         onChange={({ currentTarget: { value: newValue } }) =>
@@ -71,7 +85,22 @@ const TextArea: React.FC<TextAreaProps> = ({
         }
         css={[styles, textareaStyles, validationMessage && invalidStyles]}
       />
-      <div css={validationMessageStyles}>{validationMessage}</div>
+      <div css={validationAndLimitStyles}>
+        <div css={validationMessageStyles}>
+          {validationMessage || (reachedMaxLength && 'Character count reached')}
+        </div>
+        {maxLength !== undefined && (
+          <div
+            css={[
+              validationMessageStyles,
+              limitStyles,
+              { color: reachedMaxLength ? ember.rgb : fern.rgb },
+            ]}
+          >
+            {value.length}/{maxLength}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

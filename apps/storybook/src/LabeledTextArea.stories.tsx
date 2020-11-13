@@ -1,5 +1,5 @@
 import React from 'react';
-import { text, array } from '@storybook/addon-knobs';
+import { text, array, number } from '@storybook/addon-knobs';
 
 import { LabeledTextArea } from '@asap-hub/react-components';
 
@@ -8,9 +8,10 @@ export default {
   component: LabeledTextArea,
 };
 
-export const Normal = () => (
+export const AllLabels = () => (
   <LabeledTextArea
     title={text('Title', 'Members')}
+    tip={text('Tip', 'Tip: One member name per line')}
     value={array('Value', ['John Doe', 'Bat Man'], '\n').join('\n')}
   />
 );
@@ -35,3 +36,13 @@ export const Invalid = () => (
     )}
   />
 );
+export const MaxLength = () => {
+  const value = 'John Doe';
+  return (
+    <LabeledTextArea
+      title="Members"
+      value={value}
+      maxLength={number('Maximum length', value.length, { min: value.length })}
+    />
+  );
+};

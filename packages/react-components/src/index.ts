@@ -79,6 +79,7 @@ export {
 } from './organisms';
 export {
   BasicLayout,
+  BiographyModal,
   ContentPage,
   DashboardPage,
   DashboardPageBody,

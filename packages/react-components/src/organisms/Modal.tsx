@@ -19,23 +19,25 @@ const overlayContainerStyles = css({
 });
 
 const modalContainerStyles = css({
-  position: 'relative',
   width: '100%',
   height: '100%',
-
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  display: 'grid',
+  gridTemplate: '100% / 100%',
+  overflow: 'hidden',
 });
 const overlayStyles = css({
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  top: 0,
-  left: 0,
+  gridArea: '1 / 1',
+});
+const scrollStyles = css({
+  gridArea: '1 / 1',
+  zIndex: 1,
+
+  display: 'grid',
+  justifyItems: 'center',
+  alignItems: 'center',
+  overflowY: 'auto',
 });
 const modalStyles = css({
-  position: 'absolute',
   padding: `${12 / perRem}em ${vminLinearCalcClamped(
     mobileScreen,
     12,
@@ -44,11 +46,7 @@ const modalStyles = css({
     'px',
   )}`,
   boxSizing: 'border-box',
-  width: '100%',
   maxWidth: '800px',
-  maxHeight: '100%',
-
-  overflowY: 'auto',
 });
 
 const Modal: React.FC<{}> = ({ children }) => (
@@ -57,8 +55,10 @@ const Modal: React.FC<{}> = ({ children }) => (
       <div css={overlayStyles}>
         <Overlay />
       </div>
-      <div role="dialog" css={modalStyles}>
-        <Card>{children}</Card>
+      <div css={scrollStyles}>
+        <div role="dialog" css={modalStyles}>
+          <Card>{children}</Card>
+        </div>
       </div>
     </div>
   </div>

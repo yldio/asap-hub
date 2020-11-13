@@ -136,20 +136,13 @@ type TextFieldProps = {
   readonly onChange?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  | 'id'
-  | 'placeholder'
-  | 'required'
-  | 'minLength'
-  | 'maxLength'
-  | 'pattern'
-  | 'role'
+  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern' | 'role'
 >;
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',
   enabled = true,
 
   required,
-  minLength,
   maxLength,
   pattern,
 
@@ -160,7 +153,6 @@ const TextField: React.FC<TextFieldProps> = ({
   loading = false,
   indicateValid = customIndicator === undefined &&
     (required !== undefined ||
-      minLength !== undefined ||
       maxLength !== undefined ||
       pattern !== undefined),
 
@@ -185,7 +177,6 @@ const TextField: React.FC<TextFieldProps> = ({
         type={type}
         disabled={!enabled}
         required={required}
-        minLength={minLength}
         maxLength={maxLength}
         pattern={pattern}
         value={value}

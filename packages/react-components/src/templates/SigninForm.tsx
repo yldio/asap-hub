@@ -2,7 +2,7 @@ import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { EmailPasswordSignin, SsoButtons } from '../organisms';
-import { Display, Paragraph, Divider } from '../atoms';
+import { Display, Divider } from '../atoms';
 import {
   mobileScreen,
   largeDesktopScreen,
@@ -40,11 +40,8 @@ const Signin: React.FC<SigninProps> = ({
   <article css={styles}>
     <header css={[headerStyles, ignoreWidthStyles]}>
       <Display styleAsHeading={2}>
-        {signup ? 'Create your account' : 'Sign in to ASAP Hub'}
+        {signup ? 'Create your account' : 'Sign in to the ASAP Hub'}
       </Display>
-      <Paragraph primary accent="lead">
-        Save time and sign in via Google or ORCID
-      </Paragraph>
     </header>
     <SsoButtons onGoogleSignin={onGoogleSignin} onOrcidSignin={onOrcidSignin} />
     <div css={ignoreWidthStyles}>

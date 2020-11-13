@@ -176,13 +176,28 @@ export default class Users {
   }
 
   async update(id: string, update: UserUpdate): Promise<UserResponse> {
+    let deletesAtributes = false;
+
     const cleanUpdate = Object.entries(update).reduce((acc, [key, value]) => {
+      if (value.trim && value.trim() === '') {
+        deletesAtributes = true;
+        acc[key] = { iv: null }; // deletes attribute on PUT requests
+        return acc;
+      }
+
       acc[key] = { iv: value };
       return acc;
     }, {} as { [key: string]: { iv: unknown } });
 
-    const user = await this.users.patch(id, cleanUpdate);
-    return parseUser(user);
+    if (!deletesAtributes) {
+      const user = await this.users.patch(id, cleanUpdate);
+      return parseUser(user);
+    }
+
+    const fullUser = await this.users.fetchById(id);
+    const updatedData = { ...fullUser.data, ...cleanUpdate };
+    const updatedUser = await this.users.put(id, updatedData);
+    return parseUser(updatedUser);
   }
 
   async fetch(options: {

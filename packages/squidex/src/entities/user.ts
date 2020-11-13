@@ -1,4 +1,4 @@
-import { TeamRole, OrcidWork, Role } from '@asap-hub/model';
+import { TeamRole, OrcidWork, UserDegree, Role } from '@asap-hub/model';
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 
@@ -13,7 +13,7 @@ interface User<TAvatar = string, TConnection = string> {
   avatar: TAvatar[];
   biography?: string;
   connections: { code: string }[];
-  degree?: 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD';
+  degree?: UserDegree;
   displayName: string;
   email: string;
   firstName: string;
@@ -27,6 +27,7 @@ interface User<TAvatar = string, TConnection = string> {
   questions: { question: string }[];
   role: Role;
   skills: string[];
+  department?: string;
   responsibilities?: string;
   reachOut?: string;
   skillsDescription?: string;

@@ -1,5 +1,11 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, UserResponse, UserTeam, TeamRole } from '@asap-hub/model';
+import {
+  OrcidWork,
+  UserResponse,
+  UserTeam,
+  UserDegree,
+  TeamRole,
+} from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 
@@ -9,8 +15,6 @@ interface CMSTeamMember {
   responsibilities?: string;
   approach?: string;
 }
-
-type UserDegree = 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD';
 
 export interface CMSUser {
   id: string;
@@ -29,6 +33,7 @@ export interface CMSUser {
     biography?: { iv: string };
     location?: { iv: string };
     teams?: { iv: CMSTeamMember[] };
+    department?: { iv: string };
     orcid?: { iv: string };
     orcidLastModifiedDate?: { iv: string };
     orcidLastSyncDate?: { iv: string };
@@ -87,16 +92,19 @@ export const userCreateSchema = Joi.object({
 export const userUpdateSchema = Joi.object({
   displayName: Joi.string(),
   email: Joi.string(),
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  jobTitle: Joi.string(),
-  degree: Joi.string().allow('BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'),
-  institution: Joi.string(),
-  biography: Joi.string(),
-  location: Joi.string(),
-  orcid: Joi.string(),
+  firstName: Joi.string().allow(''),
+  lastName: Joi.string().allow(''),
+  jobTitle: Joi.string().allow(''),
+  degree: Joi.string()
+    .allow('BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD')
+    .allow(''),
+  institution: Joi.string().allow(''),
+  biography: Joi.string().allow(''),
+  department: Joi.string().allow(''),
+  location: Joi.string().allow(''),
+  orcid: Joi.string().allow(''),
   skills: Joi.array().items(Joi.string()),
-  skillsDescription: Joi.string(),
+  skillsDescription: Joi.string().allow(''),
   questions: Joi.array().items(Joi.object({ question: Joi.string() })),
 })
   .min(1)
@@ -144,6 +152,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     displayName: item.flatData?.displayName || '',
     email: item.flatData?.email || '',
     institution: item.flatData?.institution || undefined,
+    department: item.flatData?.department || undefined,
     jobTitle: item.flatData?.jobTitle || undefined,
     lastName: item.flatData?.lastName || undefined,
     location: item.flatData?.location || undefined,
@@ -183,6 +192,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
       biography: user.data.biography?.iv,
       jobTitle: user.data.jobTitle?.iv,
       institution: user.data.institution?.iv,
+      department: user.data.department?.iv,
       teams,
       location: user.data.location?.iv,
       orcid: user.data.orcid?.iv,

@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
-import { useHistory } from 'react-router-dom';
 
 import { ModalEditHeader, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
@@ -31,7 +30,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
   const [newDescription, setNewDescription] = useState(description);
   const [newName, setNewName] = useState(name);
   const formRef = useRef<HTMLFormElement>(null);
-  const history = useHistory();
+
   return (
     <Modal>
       <form ref={formRef}>
@@ -45,7 +44,6 @@ const ToolModal: React.FC<ToolModalProps> = ({
                 url: newUrl,
                 description: newDescription,
               });
-              history.push(backHref);
             }
           }}
           title={title}

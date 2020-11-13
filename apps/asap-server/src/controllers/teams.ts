@@ -82,7 +82,7 @@ export default class Teams {
 
   async update(
     id: string,
-    tools: TeamTool[] | [],
+    tools: TeamTool[],
     user: User,
   ): Promise<TeamResponse> {
     const team = await this.teams.patch(id, { tools: { iv: tools } });

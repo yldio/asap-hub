@@ -1,10 +1,11 @@
 import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
+import { UserPatchRequest } from '@asap-hub/model';
 
 import validateUser from '../../utils/validate-user';
 import Users from '../../controllers/users';
-import { userUpdateSchema, UserUpdate } from '../../entities/user';
+import { userUpdateSchema } from '../../entities/user';
 import { Handler } from '../../utils/types';
 
 export const handler: Handler = lambda.http(
@@ -23,7 +24,7 @@ export const handler: Handler = lambda.http(
       'payload',
       request.payload,
       userUpdateSchema,
-    ) as UserUpdate;
+    ) as UserPatchRequest;
 
     if (user.id !== params.id) {
       throw Boom.forbidden();

@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
-import { TeamTool } from '@asap-hub/model';
+import { TeamPatchRequest } from '@asap-hub/model';
 
 import validateUser from '../../utils/validate-user';
 import Teams from '../../controllers/teams';
@@ -24,7 +24,7 @@ export const handler: Handler = lambda.http(
       'payload',
       request.payload,
       teamUpdateSchema,
-    ) as { tools: TeamTool[] | [] };
+    ) as TeamPatchRequest;
 
     if (!user.teams.find(({ id }) => id === params.id)) {
       throw Boom.forbidden();

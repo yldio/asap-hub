@@ -1,5 +1,11 @@
 import React, { Suspense, useEffect } from 'react';
-import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
+import {
+  useRouteMatch,
+  Switch,
+  Route,
+  Redirect,
+  useHistory,
+} from 'react-router-dom';
 import {
   Paragraph,
   TeamPage,
@@ -10,7 +16,11 @@ import { join } from 'path';
 
 import { useTeamById } from '@asap-hub/frontend/src/api/teams';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
-import { TeamTool, ResearchOutputType } from '@asap-hub/model';
+import {
+  TeamTool,
+  ResearchOutputType,
+  TeamPatchRequest,
+} from '@asap-hub/model';
 
 const PROPOSAL_PUBLISH_DATE = '2020-10-09T23:00:00.000Z';
 
@@ -31,6 +41,7 @@ const Team: React.FC<{}> = () => {
     path,
     params: { id },
   } = useRouteMatch();
+  const history = useHistory();
 
   const { loading, data: team, patch } = useTeamById(id);
 
@@ -107,25 +118,30 @@ const Team: React.FC<{}> = () => {
                     <ToolModal
                       title="Add Link"
                       backHref={join(url, 'workspace')}
-                      onSave={(data: TeamTool) =>
-                        patch({ tools: [...(team.tools ?? []), data] })
-                      }
+                      onSave={async (data: TeamTool) => {
+                        await patch({
+                          tools: [...(team.tools ?? []), data],
+                        } as TeamPatchRequest);
+                        history.push(join(url, 'workspace'));
+                      }}
                     />
                   </Route>
                   {teamProps.tools.map((tool, i) => (
                     <Route
                       key={`tool-${i}`}
+                      exact
                       path={`${path}/workspace/tools/${i}`}
                     >
                       <ToolModal
                         {...tool}
                         title="Edit Link"
                         backHref={join(url, 'workspace')}
-                        onSave={(data: TeamTool) =>
-                          patch({
+                        onSave={async (data: TeamTool) => {
+                          await patch({
                             tools: Object.assign([], team.tools, { [i]: data }),
-                          })
-                        }
+                          } as TeamPatchRequest);
+                          history.push(join(url, 'workspace'));
+                        }}
                       />
                     </Route>
                   ))}

@@ -16,6 +16,9 @@ export interface TeamCreateRequest {
   projectSummary?: string;
   proposalURL?: string;
 }
+export interface TeamPatchRequest {
+  tools: TeamTool[];
+}
 
 export interface TeamMember {
   id: string;

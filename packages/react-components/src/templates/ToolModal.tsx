@@ -3,10 +3,10 @@ import { TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
 import { useHistory } from 'react-router-dom';
 
-import ModalEditHeader from '../molecules/ModalEditHeader';
-import { Modal, LabeledTextField } from '../molecules';
+import { ModalEditHeader, LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
+import { Modal } from '../organisms';
 
 const fieldsContainer = css({
   display: 'grid',

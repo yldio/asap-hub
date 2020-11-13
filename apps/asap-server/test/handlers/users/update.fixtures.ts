@@ -46,7 +46,8 @@ export const putResponse: RestUser = {
     orcidWorks: { iv: [] },
     teams: { iv: [{ role: 'Lead PI (Core Leadership)', id: ['team-id-1'] }] },
     connections: { iv: [] },
-    biography: { iv: 'Epic shit' },
+    biography: { iv: 'I do awesome stuff' },
+    department: { iv: 'Awesome Department' },
     questions: { iv: [{ question: 'test' }] },
   },
   created: '2020-09-25T09:42:51Z',
@@ -61,7 +62,8 @@ export const expectation: UserResponse = {
   email: 'cristiano@ronaldo.com',
   firstName: 'Cristiano',
   lastName: 'Ronaldo',
-  biography: 'Epic shit',
+  biography: 'I do awesome stuff',
+  department: 'Awesome Department',
   teams: [
     {
       id: 'team-id-1',

@@ -33,6 +33,7 @@ export interface CMSUser {
     biography?: { iv: string };
     location?: { iv: string };
     teams?: { iv: CMSTeamMember[] };
+    department?: { iv: string };
     orcid?: { iv: string };
     orcidLastModifiedDate?: { iv: string };
     orcidLastSyncDate?: { iv: string };
@@ -151,6 +152,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     displayName: item.flatData?.displayName || '',
     email: item.flatData?.email || '',
     institution: item.flatData?.institution || undefined,
+    department: item.flatData?.department || undefined,
     jobTitle: item.flatData?.jobTitle || undefined,
     lastName: item.flatData?.lastName || undefined,
     location: item.flatData?.location || undefined,
@@ -190,6 +192,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
       biography: user.data.biography?.iv,
       jobTitle: user.data.jobTitle?.iv,
       institution: user.data.institution?.iv,
+      department: user.data.department?.iv,
       teams,
       location: user.data.location?.iv,
       orcid: user.data.orcid?.iv,

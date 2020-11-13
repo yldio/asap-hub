@@ -1,6 +1,7 @@
 import { UserResponse } from '@asap-hub/model';
 import { RestUser } from '@asap-hub/squidex';
 import { CMSUser } from '../../../src/entities';
+import { config } from '@asap-hub/squidex';
 
 export const patchResponse: CMSUser = {
   id: 'userId',
@@ -74,6 +75,6 @@ export const expectation: UserResponse = {
   orcidWorks: [],
   skills: [],
   questions: ['test'],
-  avatarUrl: 'http://localhost:4004/api/assets/asap-local/uuid-user-id-1',
+  avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
   role: 'Grantee',
 };

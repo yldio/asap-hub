@@ -44,7 +44,7 @@ export const putResponse: RestUser = {
     avatar: { iv: ['uuid-user-id-1'] },
     skills: { iv: [] },
     orcidWorks: { iv: [] },
-    teams: { iv: [{ role: 'Lead PI', id: ['team-id-1'] }] },
+    teams: { iv: [{ role: 'Lead PI (Core Leadership)', id: ['team-id-1'] }] },
     connections: { iv: [] },
     biography: { iv: 'Epic shit' },
     questions: { iv: [{ question: 'test' }] },
@@ -66,7 +66,7 @@ export const expectation: UserResponse = {
     {
       id: 'team-id-1',
       displayName: 'Unknown',
-      role: 'Lead PI',
+      role: 'Lead PI (Core Leadership)',
     },
   ],
   orcidWorks: [],

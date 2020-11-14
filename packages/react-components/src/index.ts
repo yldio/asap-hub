@@ -78,7 +78,6 @@ export {
   UserNavigation,
 } from './organisms';
 export {
-  AdminInviteUserPage,
   BasicLayout,
   ContentPage,
   DashboardPage,
@@ -88,7 +87,6 @@ export {
   DiscoverPageBody,
   DiscoverPageHeader,
   ForgotPasswordPage,
-  InviteUserForm,
   Layout,
   NetworkPage,
   NetworkPageHeader,

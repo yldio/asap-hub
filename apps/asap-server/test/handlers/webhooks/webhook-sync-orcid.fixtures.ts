@@ -17,11 +17,12 @@ export const fetchUserResponse: CMSUser = {
   id: 'userId',
   data: {
     email: { iv: 'panog@ep.bv' },
-    displayName: { iv: 'Peter Sharp' },
     skills: { iv: [] },
     lastModifiedDate: {
       iv: '2020-09-02T10:34:13.259Z',
     },
+    firstName: { iv: 'Bill' },
+    lastName: { iv: 'Grades' },
     orcid: { iv: '0000-0002-9079-593X' },
     orcidWorks: { iv: [] },
     teams: { iv: [] },
@@ -51,9 +52,8 @@ export const updateUserEvent: SquidexEvent = {
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',
       },
-      displayName: {
-        iv: 'Test User',
-      },
+      firstName: { iv: 'Bill' },
+      lastName: { iv: 'Grades' },
       connections: {
         iv: [
           {
@@ -69,14 +69,13 @@ export const updateUserEvent: SquidexEvent = {
       },
     },
     dataOld: {
+      firstName: { iv: 'Bill' },
+      lastName: { iv: 'Grades' },
       role: {
         iv: 'Grantee',
       },
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',
-      },
-      displayName: {
-        iv: 'Test User',
       },
       connections: {
         iv: [
@@ -104,14 +103,13 @@ export const createUserEvent: SquidexEvent = {
     created: '2020-07-31T15:52:33Z',
     lastModified: '2020-07-31T15:52:33Z',
     data: {
+      firstName: { iv: 'Gil' },
+      lastName: { iv: 'Eanes' },
       role: {
         iv: 'Grantee',
       },
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',
-      },
-      displayName: {
-        iv: 'Test User',
       },
       connections: {
         iv: [

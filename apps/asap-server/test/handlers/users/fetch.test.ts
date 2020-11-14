@@ -55,13 +55,13 @@ describe('GET /users', () => {
     const filter =
       "data/teams/iv/role eq 'Lead PI (Core Leadership)' and" +
       " (data/role/iv ne 'Hidden' and" +
-      " (contains(data/displayName/iv, 'first')" +
-      " or contains(data/firstName/iv, 'first')" +
+      " (contains(data/firstName/iv, 'first')" +
+      " or contains(data/lastName/iv, 'first')" +
       " or contains(data/institution/iv, 'first')" +
       " or contains(data/skills/iv, 'first'))" +
       ' and' +
-      " (contains(data/displayName/iv, 'last')" +
-      " or contains(data/firstName/iv, 'last')" +
+      " (contains(data/firstName/iv, 'last')" +
+      " or contains(data/lastName/iv, 'last')" +
       " or contains(data/institution/iv, 'last')" +
       " or contains(data/skills/iv, 'last')))";
 
@@ -94,13 +94,13 @@ describe('GET /users', () => {
       "data/teams/iv/role eq 'Lead PI (Core Leadership)' or" +
       " data/teams/iv/role eq 'anotherFilter' and" +
       " (data/role/iv ne 'Hidden' and" +
-      " (contains(data/displayName/iv, 'first')" +
-      " or contains(data/firstName/iv, 'first')" +
+      " (contains(data/firstName/iv, 'first')" +
+      " or contains(data/lastName/iv, 'first')" +
       " or contains(data/institution/iv, 'first')" +
       " or contains(data/skills/iv, 'first'))" +
       ' and' +
-      " (contains(data/displayName/iv, 'last')" +
-      " or contains(data/firstName/iv, 'last')" +
+      " (contains(data/firstName/iv, 'last')" +
+      " or contains(data/lastName/iv, 'last')" +
       " or contains(data/institution/iv, 'last')" +
       " or contains(data/skills/iv, 'last')))";
 

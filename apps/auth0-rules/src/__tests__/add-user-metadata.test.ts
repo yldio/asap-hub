@@ -78,7 +78,9 @@ const context: RuleContext = {
 };
 
 const apiUser: UserResponse = {
-  displayName: 'JT',
+  displayName: 'Joao Tiago',
+  firstName: 'Joao',
+  lastName: 'Tiago',
   email: 'joao.tiago@yld.io',
   id: 'myRandomId123',
   lastModifiedDate: '2020-08-21T14:23:31.924Z',

@@ -10,7 +10,6 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
       data: {
         avatar: { iv: [] },
         lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
-        displayName: { iv: 'TestUser' },
         email: { iv: 'testUser@asap.science' },
         firstName: { iv: 'First' },
         lastName: { iv: 'Last' },
@@ -32,7 +31,6 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
       data: {
         avatar: { iv: [] },
         lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
-        displayName: { iv: 'TestUser' },
         email: { iv: 'testUser@asap.science' },
         firstName: { iv: 'First' },
         lastName: { iv: 'Last' },
@@ -54,7 +52,6 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
       data: {
         avatar: { iv: [] },
         lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
-        displayName: { iv: 'TestUser' },
         email: { iv: 'me@example.com' },
         firstName: { iv: 'First' },
         lastName: { iv: 'Last' },

@@ -17,7 +17,6 @@ const user: CMSUser = {
       iv: 'Grantee',
     },
     lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
-    displayName: { iv: 'Name' },
     email: { iv: 'me@example.com' },
     firstName: { iv: 'First' },
     lastName: { iv: 'Last' },

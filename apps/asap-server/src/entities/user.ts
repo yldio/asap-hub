@@ -22,10 +22,9 @@ export interface CMSUser {
   created: string;
   data: {
     lastModifiedDate: { iv: string };
-    displayName: { iv: string };
     email: { iv: string };
-    firstName?: { iv: string };
-    lastName?: { iv: string };
+    firstName: { iv: string };
+    lastName: { iv: string };
     jobTitle?: { iv: string };
     degree?: { iv: UserDegree };
     institution?: { iv: string };
@@ -59,7 +58,6 @@ export interface CMSUser {
 }
 
 export interface UserUpdate {
-  displayName?: string;
   email?: string;
   firstName?: string;
   lastName?: string;
@@ -77,20 +75,7 @@ export interface UserUpdate {
 
 export type CMSOrcidWork = OrcidWork;
 
-export const userCreateSchema = Joi.object({
-  displayName: Joi.string().required(),
-  email: Joi.string().required(),
-  firstName: Joi.string(),
-  lastName: Joi.string(),
-  title: Joi.string(),
-  orcid: Joi.string(),
-  biography: Joi.string(),
-  institution: Joi.string(),
-  connections: Joi.string(),
-}).required();
-
 export const userUpdateSchema = Joi.object({
-  displayName: Joi.string(),
   email: Joi.string(),
   firstName: Joi.string().allow(''),
   lastName: Joi.string().allow(''),
@@ -143,18 +128,20 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     parseGraphQLUserTeamConnection,
   );
 
+  const displayName = `${item.flatData!.firstName} ${item.flatData!.lastName}`;
+
   return {
     id: item.id,
     createdDate,
-    firstName: item.flatData?.firstName || undefined,
+    displayName,
+    firstName: item.flatData?.firstName || '',
+    lastName: item.flatData?.lastName || '',
     biography: item.flatData?.biography || undefined,
     degree: item.flatData?.degree || undefined,
-    displayName: item.flatData?.displayName || '',
     email: item.flatData?.email || '',
     institution: item.flatData?.institution || undefined,
     department: item.flatData?.department || undefined,
     jobTitle: item.flatData?.jobTitle || undefined,
-    lastName: item.flatData?.lastName || undefined,
     location: item.flatData?.location || undefined,
     orcid: item.flatData?.orcid || undefined,
     orcidWorks: item.flatData?.orcidWorks?.slice(0, 5) || [],
@@ -179,12 +166,14 @@ export const parseUser = (user: CMSUser): UserResponse => {
       ...t,
     })) || [];
 
+  const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;
+
   return JSON.parse(
     JSON.stringify({
       id: user.id,
+      displayName,
       createdDate: parseDate(user.created).toISOString(),
       lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
-      displayName: user.data.displayName.iv,
       email: user.data.email.iv,
       degree: user.data.degree?.iv,
       firstName: user.data.firstName?.iv,

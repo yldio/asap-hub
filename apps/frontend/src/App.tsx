@@ -26,14 +26,12 @@ const loadContent = () =>
   import(/* webpackChunkName: "content" */ './content/Content');
 const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Discover');
-const loadAdmin = () => import(/* webpackChunkName: "admin" */ './admin/Admin');
 const NewsAndEvents = React.lazy(loadNewsAndEvents);
 const Network = React.lazy(loadNetwork);
 const SharedResearch = React.lazy(loadSharedResearch);
 const Dashboard = React.lazy(loadDashboard);
 const Welcome = React.lazy(loadWelcome);
 const Content = React.lazy(loadContent);
-const Admin = React.lazy(loadAdmin);
 const Discover = React.lazy(loadDiscover);
 
 const Prefetch: React.FC<{}> = () => {
@@ -93,10 +91,6 @@ const App: React.FC<{}> = () => {
                 </Route>
                 <Route exact path="/privacy-policy">
                   <Content layoutComponent={ConfiguredLayout} />
-                </Route>
-
-                <Route exact path="/admin">
-                  <Admin />
                 </Route>
 
                 <Route>

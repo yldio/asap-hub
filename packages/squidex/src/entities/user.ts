@@ -14,13 +14,12 @@ interface User<TAvatar = string, TConnection = string> {
   biography?: string;
   connections: { code: string }[];
   degree?: UserDegree;
-  displayName: string;
   email: string;
   firstName: string;
+  lastName: string;
   institution?: string;
   jobTitle?: string;
   lastModifiedDate?: string;
-  lastName: string;
   location?: string;
   orcid?: string;
   orcidWorks?: OrcidWork[];

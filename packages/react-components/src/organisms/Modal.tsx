@@ -46,7 +46,7 @@ const modalStyles = css({
     'px',
   )}`,
   boxSizing: 'border-box',
-  maxWidth: '800px',
+  maxWidth: `${730 / perRem}em`,
 });
 
 const Modal: React.FC<{}> = ({ children }) => (

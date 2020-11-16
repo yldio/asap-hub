@@ -160,11 +160,11 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
     expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual({
-      displayName: 'JT',
+      displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
-      firstName: undefined,
-      lastName: undefined,
+      firstName: 'Joao',
+      lastName: 'Tiago',
       avatarUrl: undefined,
       teams: [
         {

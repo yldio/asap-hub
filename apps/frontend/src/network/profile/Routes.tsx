@@ -47,7 +47,7 @@ const Profile: React.FC<{}> = () => {
     path: `${path}/:tab`,
   })?.params?.tab;
 
-  const { loading, data: profile } = useUserById(id);
+  const { loading, data: profile, patch } = useUserById(id);
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -95,7 +95,7 @@ const Profile: React.FC<{}> = () => {
                   <Research userProfile={profile} teams={teams} />
                 </Route>
                 <Route path={`${path}/about`}>
-                  <About userProfile={profile} />
+                  <About userProfile={profile} onPatchUserProfile={patch} />
                 </Route>
                 <Route path={`${path}/outputs`}>
                   <Outputs />

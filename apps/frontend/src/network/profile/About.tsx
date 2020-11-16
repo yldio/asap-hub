@@ -4,18 +4,16 @@ import { useRouteMatch, Route, useHistory } from 'react-router-dom';
 import { ProfileAbout, BiographyModal } from '@asap-hub/react-components';
 import { UserResponse, UserPatchRequest } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
-import { useUserById } from '../../api';
 
 type AboutProps = {
   userProfile: UserResponse;
+  onPatchUserProfile: (patch: UserPatchRequest) => void | Promise<void>;
 };
-const About: React.FC<AboutProps> = ({ userProfile }) => {
+const About: React.FC<AboutProps> = ({ userProfile, onPatchUserProfile }) => {
   const { id } = useCurrentUser() ?? {};
 
   const { path, url } = useRouteMatch();
   const history = useHistory();
-
-  const { patch } = useUserById(userProfile.id);
 
   return (
     <>
@@ -33,7 +31,9 @@ const About: React.FC<AboutProps> = ({ userProfile }) => {
           biography={userProfile.biography}
           backHref={url}
           onSave={async (newBiography) => {
-            await patch({ biography: newBiography } as UserPatchRequest);
+            await onPatchUserProfile({
+              biography: newBiography,
+            });
             history.push(url);
           }}
         />

@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { UserResponse } from '@asap-hub/model';
 import css from '@emotion/css';
-import { useHistory } from 'react-router-dom';
 
 import ModalEditHeader from '../molecules/ModalEditHeader';
-import { Modal, LabeledTextField, LabeledDropdown } from '../molecules';
+import { LabeledTextField, LabeledDropdown } from '../molecules';
 import { noop } from '../utils';
 import { perRem, tabletScreen } from '../pixels';
+import { Modal } from '../organisms';
 
 const fieldsContainerStyles = css({
   display: 'grid',
@@ -52,16 +52,15 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   );
   const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle || '');
   const [newLocation, setNewLocation] = useState<string>(location || '');
-  const history = useHistory();
   return (
     <Modal>
       <form ref={formRef}>
         <ModalEditHeader
           backHref={backHref}
-          onSave={async () => {
+          onSave={() => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
-              await onSave(
+              onSave(
                 Object.fromEntries(
                   Object.entries({
                     firstName: newFirstName,
@@ -73,7 +72,6 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
                   }).map(([key, value]) => [key, value.trim()]),
                 ),
               );
-              history.push(backHref);
             }
           }}
           title="Your details"
@@ -95,6 +93,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             title="Degree"
             onChange={setNewDegree}
             options={[
+              { label: 'Choose a degree', value: '' },
               { label: 'BA', value: 'BA' },
               { label: 'BSc', value: 'BSc' },
               { label: 'MSc', value: 'MSc' },
@@ -108,11 +107,13 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         <div css={fieldsContainerStyles}>
           <LabeledTextField
             title="Institution"
+            maxLength={44}
             onChange={setNewInstitution}
             value={newInstitution}
           />
           <LabeledTextField
             title="Position"
+            maxLength={22}
             onChange={setNewJobTitle}
             value={newJobTitle}
           />

@@ -55,11 +55,13 @@ const ToolModal: React.FC<ToolModalProps> = ({
         this link."
             value={newUrl}
             onChange={setNewUrl}
+            required
           />
           <LabeledTextField
             title="Tool Name"
             value={newName}
             onChange={setNewName}
+            required
           />
 
           <LabeledTextField
@@ -67,6 +69,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
             subtitle="Help your team understand what this link is used for."
             value={newDescription}
             onChange={setNewDescription}
+            required
           />
         </div>
       </form>

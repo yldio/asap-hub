@@ -12,7 +12,6 @@ export { default as NewsAndEventsSection } from './NewsAndEventsSection';
 export { default as PageCard } from './PageCard';
 export { default as PagesSection } from './PagesSection';
 export { default as PeopleCard } from './PeopleCard';
-export { default as PersonalInfoModal } from './PersonalInfoModal';
 export { default as ProfileBackground } from './ProfileBackground';
 export { default as ProfileBiography } from './ProfileBiography';
 export { default as ProfileCardList } from './ProfileCardList';

@@ -6,6 +6,7 @@ import {
   Redirect,
   matchPath,
   useLocation,
+  useHistory,
 } from 'react-router-dom';
 import { join } from 'path';
 import {
@@ -49,6 +50,7 @@ const Profile: React.FC<{}> = () => {
   })?.params?.tab;
 
   const { loading, data: profile, patch } = useUserById(id);
+  const history = useHistory();
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -89,7 +91,21 @@ const Profile: React.FC<{}> = () => {
         <ErrorBoundary>
           <Suspense fallback="Loading...">
             {profile.role === 'Staff' ? (
-              <Staff userProfile={profile} teams={teams} />
+              <>
+                <Staff userProfile={profile} teams={teams} />
+                {currentUser?.id === id && (
+                  <Route path={join(path, 'edit-personal-info')}>
+                    <PersonalInfoModal
+                      {...profile}
+                      backHref={url}
+                      onSave={async (data) => {
+                        await patch(data);
+                        history.push(url);
+                      }}
+                    />
+                  </Route>
+                )}
+              </>
             ) : (
               <>
                 <Switch>
@@ -105,11 +121,14 @@ const Profile: React.FC<{}> = () => {
                   <Redirect to={join(url, 'research')} />
                 </Switch>
                 {currentUser?.id === id && tab && (
-                  <Route path={`${path}/${tab}/edit-personal-info`}>
+                  <Route path={join(path, tab, 'edit-personal-info')}>
                     <PersonalInfoModal
                       {...profile}
                       backHref={join(url, tab)}
-                      onSave={patch}
+                      onSave={async (data) => {
+                        await patch(data);
+                        history.push(join(url, tab));
+                      }}
                     />
                   </Route>
                 )}

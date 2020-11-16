@@ -157,7 +157,7 @@ export const AboutTabPersonalInfoModal = () => (
       editBiographyHref="/wrong"
       editOrcidWorksHref="/wrong"
     />
-    <PersonalInfoModal backHref="/wrong" />
+    <PersonalInfoModal {...aboutTabProps()} backHref="/wrong" />
   </ProfilePage>
 );
 

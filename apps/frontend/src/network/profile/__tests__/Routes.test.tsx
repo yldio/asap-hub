@@ -8,13 +8,26 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { authTestUtils } from '@asap-hub/react-components';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
-
+import { join } from 'path';
 import { API_BASE_URL } from '@asap-hub/frontend/src/config';
+import { UserDegree, Role } from '@asap-hub/model';
+import userEvent from '@testing-library/user-event';
+
 import Profile from '../Routes';
 
 const renderProfile = async (
   userResponse = createUserResponse(),
-  { ownUserId = userResponse.id, routeProfileId = userResponse.id } = {},
+  {
+    ownUserId = userResponse.id,
+    routeProfileId = userResponse.id,
+    tab = '.',
+    modal = '.',
+  }: {
+    ownUserId?: string;
+    routeProfileId?: string;
+    tab?: string;
+    modal?: string;
+  } = {},
 ) => {
   nock.cleanAll();
   nock(API_BASE_URL, {
@@ -24,12 +37,13 @@ const renderProfile = async (
     .reply(200, userResponse)
     .get(() => true)
     .reply(404);
-
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={{ id: ownUserId }}>
-          <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
+          <MemoryRouter
+            initialEntries={[`/${join(routeProfileId, tab, modal)}/`]}
+          >
             <Route path="/:id" component={Profile} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
@@ -180,4 +194,134 @@ describe('a header edit button', () => {
     const { findByLabelText } = await renderProfile();
     expect(await findByLabelText(/edit.+contact/i)).toBeVisible();
   });
+});
+
+describe('an edit personal info modal', () => {
+  it.each`
+    page          | ownProfile | visible
+    ${'research'} | ${'yes'}   | ${'yes'}
+    ${'research'} | ${'no'}    | ${'no'}
+    ${'about'}    | ${'yes'}   | ${'yes'}
+    ${'about'}    | ${'no'}    | ${'no'}
+    ${'outputs'}  | ${'yes'}   | ${'yes'}
+    ${'outputs'}  | ${'no'}    | ${'no'}
+    ${'staff'}    | ${'yes'}   | ${'yes'}
+    ${'staff'}    | ${'no'}    | ${'no'}
+  `(
+    'is visible ($visible); viewing $page; using ownProfile ($ownProfile)',
+    async ({ page, ownProfile, visible }) => {
+      const { findByText, getByText, queryByText } = await renderProfile(
+        {
+          ...createUserResponse(),
+          role: page === 'staff' ? 'Staff' : 'Grantee',
+          id: '42',
+        },
+        {
+          modal: 'edit-personal-info',
+          tab: page === 'staff' ? undefined : page,
+          ownUserId: ownProfile === 'yes' ? '42' : '1337',
+        },
+      );
+
+      const loadingIndicator = getByText(/loading/i);
+      await waitForElementToBeRemoved(loadingIndicator);
+      if (visible === 'yes') {
+        expect(
+          await findByText('Your details', { selector: 'h3' }),
+        ).toBeVisible();
+      } else {
+        expect(queryByText('Your details', { selector: 'h3' })).toBe(null);
+      }
+    },
+  );
+  it.each`
+    page          | backUrl
+    ${'research'} | ${'/42/research'}
+    ${'about'}    | ${'/42/about'}
+    ${'outputs'}  | ${'/42/outputs'}
+    ${'staff'}    | ${'/42'}
+  `('generates $backUrl back url for $page', async ({ page, backUrl }) => {
+    const { findByTitle } = await renderProfile(
+      {
+        ...createUserResponse(),
+        role: page === 'staff' ? 'Staff' : 'Grantee',
+        id: '42',
+      },
+      {
+        modal: 'edit-personal-info',
+        tab: page === 'staff' ? undefined : page,
+        ownUserId: '42',
+      },
+    );
+
+    expect((await findByTitle('Close')).closest('a')).toHaveAttribute(
+      'href',
+      backUrl,
+    );
+  });
+
+  it.each`
+    page
+    ${'research'}
+    ${'staff'}
+  `(
+    'Submits data via $page',
+    async ({ page }) => {
+      const user = {
+        ...createUserResponse(),
+        firstName: 'John',
+        lastName: 'smith',
+        institution: 'harvard',
+        jobTitle: 'researcher',
+        location: 'moon',
+        degree: 'BA' as UserDegree,
+        role: page === 'staff' ? 'Staff' : ('Grantee' as Role),
+        id: '42',
+      };
+      const updatedUser = {
+        firstName: 'John edited',
+        lastName: 'smith edited',
+        institution: 'harvard edited',
+        jobTitle: 'researcher edited',
+        location: 'moon edited',
+        degree: 'MD',
+      };
+
+      const { getByLabelText, getByText } = await renderProfile(user, {
+        modal: 'edit-personal-info',
+        tab: page === 'staff' ? undefined : page,
+        ownUserId: '42',
+      });
+      const patch = nock(API_BASE_URL)
+        .patch('/users/42', updatedUser)
+        .reply(200, { ...user, ...updatedUser });
+
+      const loadingIndicator = getByText(/loading/i);
+      await waitForElementToBeRemoved(loadingIndicator);
+
+      await Promise.all([
+        userEvent.type(getByLabelText(/first name/i), ' edited', {
+          allAtOnce: true,
+        }),
+        userEvent.type(getByLabelText(/last name/i), ' edited', {
+          allAtOnce: true,
+        }),
+        userEvent.type(getByLabelText(/institution/i), ' edited', {
+          allAtOnce: true,
+        }),
+        userEvent.type(getByLabelText(/position/i), ' edited', {
+          allAtOnce: true,
+        }),
+        userEvent.type(getByLabelText(/location/i), ' edited', {
+          allAtOnce: true,
+        }),
+      ]);
+      userEvent.click(getByText('BA'));
+      userEvent.click(getByText('MD'));
+      userEvent.click(getByText('Save'));
+
+      await waitFor(() => expect(patch.isDone()).toBe(true));
+    },
+    10000,
+  );
 });

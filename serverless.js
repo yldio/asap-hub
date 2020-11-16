@@ -6,12 +6,7 @@ const pkg = require('./package.json');
 const { NODE_ENV = 'development' } = process.env;
 
 if (NODE_ENV === 'production') {
-  [
-    'ASAP_API_URL',
-    'ASAP_APP_URL',
-    'AWS_ACM_CERTIFICATE_ARN',
-    'GLOBAL_TOKEN',
-  ].forEach((env) => {
+  ['ASAP_API_URL', 'ASAP_APP_URL', 'AWS_ACM_CERTIFICATE_ARN'].forEach((env) => {
     assert.ok(process.env[env], `${env} not defined`);
   });
 }
@@ -95,28 +90,6 @@ module.exports = {
     },
   },
   functions: {
-    createUser: {
-      handler: 'apps/asap-server/build-cjs/handlers/users/create.handler',
-      events: [
-        {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
-          httpApi: {
-            method: 'POST',
-            path: `/users`,
-          },
-        },
-      ],
-      iamRoleStatements: [
-        {
-          Effect: 'Allow',
-          Action: ['ses:SendTemplatedEmail'],
-          Resource: '*',
-        },
-      ],
-      environment: {
-        GLOBAL_TOKEN: `\${env:GLOBAL_TOKEN}`,
-      },
-    },
     fetchUsers: {
       handler: 'apps/asap-server/build-cjs/handlers/users/fetch.handler',
       events: [

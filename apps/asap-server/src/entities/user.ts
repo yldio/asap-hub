@@ -57,22 +57,6 @@ export interface CMSUser {
   };
 }
 
-export interface UserUpdate {
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  biography?: string;
-  jobTitle?: string;
-  orcid?: string;
-  department?: string;
-  institution?: string;
-  degree?: UserDegree;
-  location?: string;
-  skills?: string[];
-  skillsDescription?: string;
-  questions?: { question: string }[];
-}
-
 export type CMSOrcidWork = OrcidWork;
 
 export const userUpdateSchema = Joi.object({

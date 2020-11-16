@@ -185,7 +185,7 @@ describe('the workspace', () => {
   });
 });
 
-it('adds a tool ', async () => {
+it('adds a tool', async () => {
   const response = {
     ...createTeamResponse(),
     tools: [{ name: 'name', url: 'url', description: 'description' }],
@@ -207,7 +207,10 @@ it('adds a tool ', async () => {
     .patch('/teams/42', updatedTools)
     .reply(200, { ...response, ...updatedTools });
 
-  const { getByText, getByLabelText } = await renderTeam(true, 'workspace');
+  const { getByText, getByLabelText, queryByLabelText } = await renderTeam(
+    true,
+    'workspace',
+  );
   userEvent.click(getByText(/add a new team link/i));
   await userEvent.type(getByLabelText(/tool name/i), 'new tool', {
     allAtOnce: true,
@@ -220,4 +223,5 @@ it('adds a tool ', async () => {
   });
   userEvent.click(getByText('Save'));
   await waitFor(() => expect(patch.isDone()).toBe(true));
+  expect(queryByLabelText(/tool name/i)).not.toBeInTheDocument();
 });

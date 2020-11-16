@@ -2,9 +2,13 @@ import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import { Squidex, SquidexGraphql, GraphqlUser } from '@asap-hub/squidex';
-import { UserResponse, ListUserResponse } from '@asap-hub/model';
+import {
+  UserResponse,
+  ListUserResponse,
+  UserPatchRequest,
+} from '@asap-hub/model';
 
-import { CMSUser, parseUser, parseGraphQLUser, UserUpdate } from '../entities';
+import { CMSUser, parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 
 const GraphQLQueryUser = `
@@ -124,7 +128,7 @@ export default class Users {
     this.users = new Squidex('users');
   }
 
-  async update(id: string, update: UserUpdate): Promise<UserResponse> {
+  async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
     let deletesAtributes = false;
 
     const cleanUpdate = Object.entries(update).reduce((acc, [key, value]) => {

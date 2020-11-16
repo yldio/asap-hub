@@ -128,6 +128,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     parseGraphQLUserTeamConnection,
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const displayName = `${item.flatData!.firstName} ${item.flatData!.lastName}`;
 
   return {

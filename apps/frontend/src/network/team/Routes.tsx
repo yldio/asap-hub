@@ -35,6 +35,7 @@ const Outputs = React.lazy(loadOutputs);
 const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
+// TODO split
 const Team: React.FC<{}> = () => {
   const {
     url,

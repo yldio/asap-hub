@@ -22,7 +22,6 @@ export const createUser = (
   overwrites: Invitee | object = {},
 ): Promise<CMSUser> => {
   const data = {
-    displayName: `${chance.first()} ${chance.last()}`,
     firstName: chance.first(),
     lastName: chance.last(),
     jobTitle: chance.suffix({ full: true }),
@@ -36,7 +35,6 @@ export const createUser = (
 
   const user: CMSUser['data'] = {
     lastModifiedDate: { iv: `${new Date().toISOString()}` },
-    displayName: { iv: data.displayName },
     email: { iv: data.email },
     firstName: { iv: data.firstName },
     lastName: { iv: data.lastName },

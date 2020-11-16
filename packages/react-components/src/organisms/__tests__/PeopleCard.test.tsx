@@ -7,6 +7,8 @@ import PeopleCard from '../PeopleCard';
 
 const props: ComponentProps<typeof PeopleCard> = {
   displayName: 'Jane Doe',
+  firstName: 'Jane',
+  lastName: 'Doe',
   teams: [
     {
       id: '321',

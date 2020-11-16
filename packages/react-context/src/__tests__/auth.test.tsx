@@ -71,6 +71,8 @@ describe('useCurrentUser', () => {
         [`${window.location.origin}/user`]: {
           id: 'testuser',
           email: 'john.doe@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
           displayName: 'John Doe',
           teams: [],
         },

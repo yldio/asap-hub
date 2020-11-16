@@ -1,16 +1,10 @@
 import Boom from '@hapi/boom';
-import Debug from 'debug';
-import path from 'path';
-import url from 'url';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
-import { v4 as uuidV4 } from 'uuid';
 import { Squidex, SquidexGraphql, GraphqlUser } from '@asap-hub/squidex';
-import { Invitee, UserResponse, ListUserResponse } from '@asap-hub/model';
+import { UserResponse, ListUserResponse } from '@asap-hub/model';
 
 import { CMSUser, parseUser, parseGraphQLUser, UserUpdate } from '../entities';
-import { sendEmail } from '../utils/send-mail';
-import { origin } from '../config';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 
 const GraphQLQueryUser = `
@@ -23,7 +17,6 @@ flatData {
   biography
   degree
   department
-  displayName
   email
   firstName
   institution
@@ -72,7 +65,7 @@ export const buildGraphQLQueryFetchUsers = (
   skip = 0,
 ): string =>
   `{
-  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/displayName/iv") {
+  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/firstName/iv,data/lastName/iv") {
     total
     items {
       ${GraphQLQueryUser}
@@ -121,7 +114,6 @@ const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
   return res.items[0];
 };
 
-const debug = Debug('users.create');
 export default class Users {
   users: Squidex<CMSUser>;
 
@@ -130,49 +122,6 @@ export default class Users {
   constructor() {
     this.client = new SquidexGraphql();
     this.users = new Squidex('users');
-  }
-
-  async create(user: Invitee): Promise<UserResponse> {
-    const code = uuidV4();
-
-    // remove undefined(s)
-    const userData: CMSUser['data'] = JSON.parse(
-      JSON.stringify({
-        lastModifiedDate: { iv: `${new Date().toISOString()}` },
-        displayName: { iv: user.displayName },
-        email: { iv: user.email },
-        firstName: { iv: user.firstName },
-        lastName: { iv: user.lastName },
-        jobTitle: { iv: user.jobTitle },
-        orcid: { iv: user.orcid },
-        institution: { iv: user.institution },
-        location: { iv: user.location },
-        avatarUrl: { iv: user.avatarUrl },
-        connections: { iv: [{ code }] },
-      }),
-    );
-
-    const createdUser = await this.users.create(userData);
-
-    const link = new url.URL(path.join(`/welcome/${code}`), origin);
-
-    const [err] = await Intercept(
-      sendEmail({
-        to: [user.email],
-        template: 'Welcome',
-        values: {
-          firstName: user.displayName,
-          link: link.toString(),
-        },
-      }),
-    );
-
-    // istanbul ignore if
-    if (err) {
-      debug(err);
-    }
-
-    return parseUser(createdUser);
   }
 
   async update(id: string, update: UserUpdate): Promise<UserResponse> {
@@ -217,8 +166,8 @@ export default class Users {
           (acc: string[], word: string) =>
             acc.concat(
               `(${[
-                [`contains(data/displayName/iv, '${word}')`],
                 [`contains(data/firstName/iv, '${word}')`],
+                [`contains(data/lastName/iv, '${word}')`],
                 [`contains(data/institution/iv, '${word}')`],
                 [`contains(data/skills/iv, '${word}')`],
               ].join(' or ')})`,

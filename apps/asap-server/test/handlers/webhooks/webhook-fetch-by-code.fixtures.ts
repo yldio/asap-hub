@@ -6,8 +6,9 @@ export const fetchUserResponse: { total: number; items: object } = {
       flatData: {
         avatar: [],
         role: 'Grantee',
+        firstName: 'First',
+        lastName: 'Last',
         email: 'panog@ep.bv',
-        displayName: 'Peter Sharp',
         skills: [],
         lastModifiedDate: '2020-09-02T10:34:13.259Z',
         orcid: '0000-0001-9884-1913',

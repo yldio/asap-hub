@@ -102,9 +102,6 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
         lastModifiedDate: {
           iv: '2020-09-25T09:42:51.132Z',
         },
-        displayName: {
-          iv: 'Cristiano Ronaldo',
-        },
         email: {
           iv: 'cristiano@ronaldo.com',
         },
@@ -165,9 +162,6 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         lastModifiedDate: {
           iv: '2020-09-25T09:42:51.132Z',
         },
-        displayName: {
-          iv: 'John Travista',
-        },
         email: {
           iv: 'john@ed.ma',
         },
@@ -221,9 +215,6 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
         },
         lastModifiedDate: {
           iv: '2020-09-25T09:42:51.132Z',
-        },
-        displayName: {
-          iv: 'Bill Travista',
         },
         email: {
           iv: 'bill@ed.ma',

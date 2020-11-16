@@ -78,7 +78,9 @@ const context: RuleContext = {
 };
 
 const apiUser: UserResponse = {
-  displayName: 'JT',
+  displayName: 'Joao Tiago',
+  firstName: 'Joao',
+  lastName: 'Tiago',
   email: 'joao.tiago@yld.io',
   id: 'myRandomId123',
   lastModifiedDate: '2020-08-21T14:23:31.924Z',
@@ -158,11 +160,11 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
     expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual({
-      displayName: 'JT',
+      displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
-      firstName: undefined,
-      lastName: undefined,
+      firstName: 'Joao',
+      lastName: 'Tiago',
       avatarUrl: undefined,
       teams: [
         {

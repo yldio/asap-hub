@@ -10,9 +10,6 @@ const body = {
   email: {
     iv: 'john@doe.com',
   },
-  displayName: {
-    iv: 'John Doe',
-  },
   firstName: {
     iv: 'John',
   },

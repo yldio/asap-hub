@@ -5,6 +5,7 @@ import ProfilePage from '../ProfilePage';
 
 const boilerplateProps: Omit<ComponentProps<typeof ProfilePage>, 'children'> = {
   firstName: 'John',
+  lastName: 'Doe',
   displayName: 'John Doe',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   teams: [],

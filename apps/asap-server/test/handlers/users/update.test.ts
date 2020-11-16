@@ -19,7 +19,7 @@ describe('PATCH /users/{id} - validations', () => {
           id: 'userId',
         },
         body: {
-          displayName: 'Updated Name',
+          jobTitle: 'CEO',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -38,7 +38,7 @@ describe('PATCH /users/{id} - validations', () => {
           id: 'userId',
         },
         body: {
-          displayName: 'Updated Name',
+          jobTitle: 'CEO',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -62,7 +62,7 @@ describe('PATCH /users/{id} - validations', () => {
           id: 'userId',
         },
         body: {
-          displayName: 'Updated Name',
+          jobTitle: 'CEO',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -98,7 +98,7 @@ describe('PATCH /users/{id} - validations', () => {
           id: 'not-me',
         },
         body: {
-          displayName: 'Awesome',
+          jobTitle: 'CEO',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -119,9 +119,7 @@ describe('PATCH /users/{id}', () => {
   test("returns 404 when team doesn't exist", async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/users/userId`, {
-        displayName: {
-          iv: 'Updated Name',
-        },
+        jobTitle: { iv: 'CEO' },
       })
       .reply(404);
 
@@ -135,7 +133,7 @@ describe('PATCH /users/{id}', () => {
           id: 'userId',
         },
         body: {
-          displayName: 'Updated Name',
+          jobTitle: 'CEO',
         },
       }),
     )) as APIGatewayProxyResult;
@@ -150,7 +148,6 @@ describe('PATCH /users/{id}', () => {
       .put(`/api/content/${config.appName}/users/userId`, {
         role: { iv: 'Grantee' },
         lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-        displayName: { iv: 'Cristiano Ronaldo' },
         email: { iv: 'cristiano@ronaldo.com' },
         firstName: { iv: 'Cristiano' },
         lastName: { iv: 'Ronaldo' },
@@ -205,9 +202,7 @@ describe('PATCH /users/{id}', () => {
   test('returns 200 when user exists', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/users/userId`, {
-        displayName: {
-          iv: 'Updated Name',
-        },
+        jobTitle: { iv: 'CEO' },
       })
       .reply(200, patchResponse);
 
@@ -221,7 +216,7 @@ describe('PATCH /users/{id}', () => {
           id: 'userId',
         },
         body: {
-          displayName: 'Updated Name',
+          jobTitle: 'CEO',
           firstName: undefined,
         },
       }),

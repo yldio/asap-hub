@@ -153,7 +153,7 @@ describe('GET /discover', () => {
         {
           id: 'uuid-1',
           createdDate: '2020-10-15T17:55:21.000Z',
-          displayName: 'John',
+          displayName: 'John Doe',
           email: 'john@example.com',
           firstName: 'John',
           lastModifiedDate: '2020-10-15T17:55:21Z',
@@ -168,7 +168,7 @@ describe('GET /discover', () => {
         {
           id: 'uuid-2',
           createdDate: '2020-10-14T17:55:21.000Z',
-          displayName: '',
+          displayName: 'Jon Do',
           email: '',
           firstName: 'Jon',
           lastModifiedDate: '2020-10-15T17:55:21Z',

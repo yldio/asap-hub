@@ -130,9 +130,6 @@ const insertUser = async (
     email: {
       iv: email,
     },
-    displayName: {
-      iv: `${firstName} ${lastName}`,
-    },
     firstName: {
       iv: firstName,
     },

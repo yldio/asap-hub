@@ -5,10 +5,9 @@ export type Role = 'Staff' | 'Grantee' | 'Guest';
 export type UserDegree = 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD';
 
 export interface Invitee {
-  displayName: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   biography?: string;
   jobTitle?: string;
   orcid?: string;
@@ -85,6 +84,7 @@ export interface UserTeam {
 
 export interface UserResponse extends Invitee {
   id: string;
+  displayName: string;
   lastModifiedDate: string;
   createdDate: string;
   teams: UserTeam[];

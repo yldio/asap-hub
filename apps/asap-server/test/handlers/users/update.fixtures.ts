@@ -8,7 +8,6 @@ export const patchResponse: CMSUser = {
   data: {
     role: { iv: 'Grantee' },
     lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-    displayName: { iv: 'Cristiano Ronaldo' },
     email: { iv: 'cristiano@ronaldo.com' },
     firstName: { iv: 'Cristiano' },
     lastName: { iv: 'Ronaldo' },
@@ -38,7 +37,6 @@ export const putResponse: RestUser = {
   data: {
     role: { iv: 'Grantee' },
     lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-    displayName: { iv: 'Cristiano Ronaldo' },
     email: { iv: 'cristiano@ronaldo.com' },
     firstName: { iv: 'Cristiano' },
     lastName: { iv: 'Ronaldo' },

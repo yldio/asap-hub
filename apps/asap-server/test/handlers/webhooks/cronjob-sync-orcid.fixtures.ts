@@ -11,8 +11,9 @@ export const fetchUsersResponse: { total: number; items: CMSUser[] } = {
         role: {
           iv: 'Grantee',
         },
+        firstName: { iv: 'First' },
+        lastName: { iv: 'Last' },
         email: { iv: 'panog@ep.bv' },
-        displayName: { iv: 'Peter Sharp' },
         skills: { iv: [] },
         lastModifiedDate: {
           iv: '2020-09-02T10:34:13.259Z',
@@ -33,8 +34,9 @@ export const fetchUsersResponse: { total: number; items: CMSUser[] } = {
         role: {
           iv: 'Grantee',
         },
+        firstName: { iv: 'Johny' },
+        lastName: { iv: 'Depth' },
         email: { iv: 'ola@ep.bv' },
-        displayName: { iv: 'Peter Blunt' },
         skills: { iv: [] },
         lastModifiedDate: {
           iv: '2020-09-02T10:34:13.259Z',

@@ -13,11 +13,10 @@ export const response: { data: ResponseFetchUsers } = {
           data: null,
           flatData: {
             avatar: [],
-            displayName: 'Tom Hardy',
             email: 'H@rdy.io',
             firstName: 'Tom',
-            lastModifiedDate: null,
             lastName: 'Hardy',
+            lastModifiedDate: null,
             questions: null,
             skills: null,
             teams: [
@@ -51,7 +50,6 @@ export const response: { data: ResponseFetchUsers } = {
           data: null,
           flatData: {
             avatar: null,
-            displayName: 'Arnold Schwatzneger',
             email: 'iwillbeback@arnold.com',
             firstName: 'Arnold',
             lastModifiedDate: null,

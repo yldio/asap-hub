@@ -20,15 +20,15 @@ export const handler: Handler = lambda.http(
       id: string;
     };
 
+    if (user.id !== params.id) {
+      throw Boom.forbidden();
+    }
+
     const update = lambda.validate(
       'payload',
       request.payload,
       userUpdateSchema,
     ) as UserPatchRequest;
-
-    if (user.id !== params.id) {
-      throw Boom.forbidden();
-    }
 
     const users = new Users();
     const updated = await users.update(params.id, update);

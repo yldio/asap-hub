@@ -15,6 +15,7 @@ interface User<TAvatar = string, TConnection = string> {
   connections: { code: string }[];
   degree?: UserDegree;
   email: string;
+  contactEmail?: string;
   firstName: string;
   lastName: string;
   institution?: string;

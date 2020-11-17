@@ -14,6 +14,7 @@ export const response: { data: ResponseFetchUsers } = {
           flatData: {
             avatar: [],
             email: 'H@rdy.io',
+            contactEmail: 'T@rdy.io',
             firstName: 'Tom',
             lastName: 'Hardy',
             lastModifiedDate: null,
@@ -93,7 +94,7 @@ export const expectation: ListUserResponse = {
       questions: [],
       skills: [],
       displayName: 'Tom Hardy',
-      email: 'H@rdy.io',
+      email: 'T@rdy.io',
       firstName: 'Tom',
       lastName: 'Hardy',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',

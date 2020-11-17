@@ -102,7 +102,7 @@ export interface UserResponse extends Invitee {
 
 export interface UserPatchRequest {
   displayName?: string;
-  email?: string;
+  contactEmail?: string;
   firstName?: string;
   lastName?: string;
   biography?: string;

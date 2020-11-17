@@ -57,6 +57,20 @@ describe('GET /discover', () => {
           queryDiscoverContents: [
             {
               flatData: {
+                training: [
+                  {
+                    id: 'uuid',
+                    created: '2020-09-24T11:06:27.164Z',
+                    flatData: {
+                      path: '/',
+                      title: 'Title',
+                      text: 'Content',
+                      link: 'https://hub.asap.science',
+                      linkText: 'ASAP Training',
+                      type: 'Training',
+                    },
+                  },
+                ],
                 pages: [
                   {
                     id: 'uuid',
@@ -128,7 +142,18 @@ describe('GET /discover', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
     expect(body).toStrictEqual({
-      training: [],
+      training: [
+        {
+          created: '2020-09-24T11:06:27.164Z',
+          id: 'uuid',
+          link: 'https://hub.asap.science',
+          linkText: 'ASAP Training',
+          shortText: '',
+          text: 'Content',
+          title: 'Title',
+          type: 'Training',
+        },
+      ],
       pages: [
         {
           id: 'uuid',

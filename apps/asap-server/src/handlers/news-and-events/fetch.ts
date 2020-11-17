@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
+import { http } from '../../utils/instrumented-framework';
 
 import validateUser from '../../utils/validate-user';
 import NewsAndEvents from '../../controllers/news-and-events';
@@ -10,7 +11,7 @@ const querySchema = Joi.object({
   skip: Joi.number(),
 }).required();
 
-export const handler: Handler = lambda.http(
+export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     await validateUser(request);
 
@@ -23,7 +24,7 @@ export const handler: Handler = lambda.http(
       skip: number;
     };
 
-    const newsAndEvents = new NewsAndEvents();
+    const newsAndEvents = new NewsAndEvents(request.headers);
     const payload = await newsAndEvents.fetch(query);
 
     return {

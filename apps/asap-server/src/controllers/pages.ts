@@ -1,12 +1,14 @@
-import { Squidex, RestPage } from '@asap-hub/squidex';
+import { RestPage } from '@asap-hub/squidex';
 import { PageResponse } from '@asap-hub/model';
+
+import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parsePage } from '../entities';
 
 export default class Pages {
-  pages: Squidex<RestPage>;
+  pages: InstrumentedSquidex<RestPage>;
 
-  constructor() {
-    this.pages = new Squidex('pages');
+  constructor(ctxHeaders?: object) {
+    this.pages = new InstrumentedSquidex('pages', ctxHeaders);
   }
 
   async fetchByPath(path: string): Promise<PageResponse> {

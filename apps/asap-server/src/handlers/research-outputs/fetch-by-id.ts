@@ -1,11 +1,12 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
+import { http } from '../../utils/instrumented-framework';
 
 import validateUser from '../../utils/validate-user';
 import ResearchOutputs from '../../controllers/research-outputs';
 import { Handler } from '../../utils/types';
 
-export const handler: Handler = lambda.http(
+export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     await validateUser(request);
 
@@ -17,7 +18,7 @@ export const handler: Handler = lambda.http(
       id: string;
     };
 
-    const researchOutputs = new ResearchOutputs();
+    const researchOutputs = new ResearchOutputs(request.headers);
     const outputs = await researchOutputs.fetchById(params.id);
 
     return {

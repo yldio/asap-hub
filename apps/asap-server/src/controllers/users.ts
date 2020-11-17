@@ -3,18 +3,17 @@ import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import FormData from 'form-data';
 import mime from 'mime-types';
-import {
-  Squidex,
-  SquidexGraphql,
-  GraphqlUser,
-  config,
-} from '@asap-hub/squidex';
+import { GraphqlUser, config } from '@asap-hub/squidex';
 import {
   UserResponse,
   ListUserResponse,
   UserPatchRequest,
 } from '@asap-hub/model';
 
+import {
+  InstrumentedSquidex,
+  InstrumentedSquidexGraphql,
+} from '../utils/instrumented-client';
 import { CMSUser, parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 
@@ -137,13 +136,13 @@ const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
 };
 
 export default class Users {
-  users: Squidex<CMSUser>;
+  users: InstrumentedSquidex<CMSUser>;
 
-  client: SquidexGraphql;
+  client: InstrumentedSquidexGraphql;
 
-  constructor() {
-    this.client = new SquidexGraphql();
-    this.users = new Squidex('users');
+  constructor(ctxHeaders?: object) {
+    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
+    this.users = new InstrumentedSquidex('users', ctxHeaders);
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {

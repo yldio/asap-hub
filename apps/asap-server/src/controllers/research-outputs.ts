@@ -3,7 +3,8 @@ import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
-import { Squidex, RestTeam, RestResearchOutput } from '@asap-hub/squidex';
+import { RestTeam, RestResearchOutput } from '@asap-hub/squidex';
+import { InstrumentedSquidex } from '../utils/instrumented-client';
 
 function transform(
   output: RestResearchOutput,
@@ -31,13 +32,16 @@ function transform(
 }
 
 export default class ResearchOutputs {
-  researchOutputs: Squidex<RestResearchOutput>;
+  researchOutputs: InstrumentedSquidex<RestResearchOutput>;
 
-  teams: Squidex<RestTeam>;
+  teams: InstrumentedSquidex<RestTeam>;
 
-  constructor() {
-    this.researchOutputs = new Squidex('research-outputs');
-    this.teams = new Squidex('teams');
+  constructor(ctxHeaders?: object) {
+    this.researchOutputs = new InstrumentedSquidex(
+      'research-outputs',
+      ctxHeaders,
+    );
+    this.teams = new InstrumentedSquidex('teams', ctxHeaders);
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {

@@ -51,7 +51,9 @@ stages:
   - prepare
   - deploy
 
-# stage build
+###############
+# stage build #
+###############j
 
 build:ts:
   artifacts:
@@ -83,7 +85,9 @@ build:native:
     - []
   stage: build
 
-# stage test
+##############
+# stage test #
+##############j
 
 .tmpl:test: &tmpl_test
   script:
@@ -117,12 +121,10 @@ test:unit:
       - '.jest-cache'
   script:
     - yarn run test:unit --coverage
-
     - yarn codecov
   needs:
     - build:ts
-  variables:
-    <<: *tmpl_branch_variables
+    - build:native
 
 test:browser:
   <<: *tmpl_test
@@ -145,8 +147,11 @@ test:integration:
     - yarn run test:integration
   needs:
     - build:ts
-  variables:
-    <<: *tmpl_branch_variables
+    - build:native
+
+################
+# stage deploy #
+################
 
 deploy:sls:branch:
   <<: *tmpl_branch

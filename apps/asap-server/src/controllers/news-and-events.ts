@@ -1,16 +1,16 @@
-import { Squidex } from '@asap-hub/squidex';
 import {
   ListNewsAndEventsResponse,
   NewsOrEventResponse,
 } from '@asap-hub/model';
 
+import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { CMSNewsAndEvents, parseNewsAndEvents } from '../entities';
 
 export default class ResearchOutputs {
-  newsAndEvents: Squidex<CMSNewsAndEvents>;
+  newsAndEvents: InstrumentedSquidex<CMSNewsAndEvents>;
 
-  constructor() {
-    this.newsAndEvents = new Squidex('news-and-events');
+  constructor(ctxHeaders?: object) {
+    this.newsAndEvents = new InstrumentedSquidex('news-and-events', ctxHeaders);
   }
 
   async fetch(options: {

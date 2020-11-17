@@ -1,10 +1,11 @@
 import {
-  SquidexGraphql,
   GraphqlPage,
   GraphqlNewsOrEvent,
   GraphqlUser,
 } from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
+
+import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import {
   parseGraphQLUser,
   parseGraphQLPage,
@@ -74,10 +75,10 @@ interface Response {
 }
 
 export default class Discover {
-  client: SquidexGraphql;
+  client: InstrumentedSquidexGraphql;
 
-  constructor() {
-    this.client = new SquidexGraphql();
+  constructor(ctxHeaders?: object) {
+    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
   }
 
   async fetch(): Promise<DiscoverResponse> {

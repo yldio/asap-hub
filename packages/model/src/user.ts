@@ -114,7 +114,7 @@ export interface UserPatchRequest {
   location?: string;
   skills?: string[];
   skillsDescription?: string;
-  questions?: { question: string }[];
+  questions?: string[];
 }
 
 export type ListUserResponse = ListResponse<UserResponse>;

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { UserResponse } from '@asap-hub/model';
+import { UserPatchRequest } from '@asap-hub/model';
 import css from '@emotion/css';
 
 import ModalEditHeader from '../molecules/ModalEditHeader';
@@ -22,13 +22,8 @@ const paddingStyles = css({
   },
 });
 
-type ModelData = Pick<
-  UserResponse,
-  'firstName' | 'lastName' | 'degree' | 'institution' | 'location' | 'jobTitle'
->;
-
-type PersonalInfoModalProps = ModelData & {
-  onSave?: (data: ModelData) => Promise<void>;
+type PersonalInfoModalProps = UserPatchRequest & {
+  onSave?: (data: UserPatchRequest) => Promise<void>;
   backHref: string;
 };
 

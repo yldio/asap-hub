@@ -197,16 +197,79 @@ describe('a header edit button', () => {
 });
 
 describe('an edit personal info modal', () => {
+  it.each(['research', 'about', 'outputs'])(
+    'can open and close model from %s',
+    async (page) => {
+      const {
+        getByTitle,
+        getByLabelText,
+        getByText,
+        queryByText,
+      } = await renderProfile(
+        {
+          ...createUserResponse(),
+          role: page === 'staff' ? 'Staff' : 'Grantee',
+          id: '42',
+        },
+        {
+          tab: page === 'staff' ? undefined : page,
+          ownUserId: '42',
+        },
+      );
+      const loadingIndicator = getByText(/loading/i);
+      await waitForElementToBeRemoved(loadingIndicator);
+      userEvent.click(getByLabelText(/edit.+personal/i));
+      expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
+      userEvent.click(getByTitle('Close'));
+      expect(queryByText('Your details', { selector: 'h3' })).toBeNull();
+    },
+  );
+
   it.each`
     page          | ownProfile | visible
-    ${'research'} | ${'yes'}   | ${'yes'}
-    ${'research'} | ${'no'}    | ${'no'}
-    ${'about'}    | ${'yes'}   | ${'yes'}
-    ${'about'}    | ${'no'}    | ${'no'}
-    ${'outputs'}  | ${'yes'}   | ${'yes'}
-    ${'outputs'}  | ${'no'}    | ${'no'}
-    ${'staff'}    | ${'yes'}   | ${'yes'}
-    ${'staff'}    | ${'no'}    | ${'no'}
+    ${'research'} | ${true}    | ${true}
+    ${'research'} | ${false}   | ${false}
+    ${'about'}    | ${true}    | ${true}
+    ${'about'}    | ${false}   | ${false}
+    ${'outputs'}  | ${true}    | ${true}
+    ${'outputs'}  | ${false}   | ${false}
+    ${'staff'}    | ${true}    | ${true}
+    ${'staff'}    | ${false}   | ${false}
+  `('opens and closes', async ({ page, ownProfile, visible }) => {
+    const { findByText, getByText, queryByText } = await renderProfile(
+      {
+        ...createUserResponse(),
+        role: page === 'staff' ? 'Staff' : 'Grantee',
+        id: '42',
+      },
+      {
+        modal: 'edit-personal-info',
+        tab: page === 'staff' ? undefined : page,
+        ownUserId: ownProfile ? '42' : '1337',
+      },
+    );
+
+    const loadingIndicator = getByText(/loading/i);
+    await waitForElementToBeRemoved(loadingIndicator);
+    if (visible) {
+      expect(
+        await findByText('Your details', { selector: 'h3' }),
+      ).toBeVisible();
+    } else {
+      expect(queryByText('Your details', { selector: 'h3' })).toBe(null);
+    }
+  });
+
+  it.each`
+    page          | ownProfile | visible
+    ${'research'} | ${true}    | ${true}
+    ${'research'} | ${false}   | ${false}
+    ${'about'}    | ${true}    | ${true}
+    ${'about'}    | ${false}   | ${false}
+    ${'outputs'}  | ${true}    | ${true}
+    ${'outputs'}  | ${false}   | ${false}
+    ${'staff'}    | ${true}    | ${true}
+    ${'staff'}    | ${false}   | ${false}
   `(
     'is visible ($visible); viewing $page; using ownProfile ($ownProfile)',
     async ({ page, ownProfile, visible }) => {
@@ -219,13 +282,13 @@ describe('an edit personal info modal', () => {
         {
           modal: 'edit-personal-info',
           tab: page === 'staff' ? undefined : page,
-          ownUserId: ownProfile === 'yes' ? '42' : '1337',
+          ownUserId: ownProfile ? '42' : '1337',
         },
       );
 
       const loadingIndicator = getByText(/loading/i);
       await waitForElementToBeRemoved(loadingIndicator);
-      if (visible === 'yes') {
+      if (visible) {
         expect(
           await findByText('Your details', { selector: 'h3' }),
         ).toBeVisible();
@@ -234,31 +297,6 @@ describe('an edit personal info modal', () => {
       }
     },
   );
-  it.each`
-    page          | backUrl
-    ${'research'} | ${'/42/research'}
-    ${'about'}    | ${'/42/about'}
-    ${'outputs'}  | ${'/42/outputs'}
-    ${'staff'}    | ${'/42'}
-  `('generates $backUrl back url for $page', async ({ page, backUrl }) => {
-    const { findByTitle } = await renderProfile(
-      {
-        ...createUserResponse(),
-        role: page === 'staff' ? 'Staff' : 'Grantee',
-        id: '42',
-      },
-      {
-        modal: 'edit-personal-info',
-        tab: page === 'staff' ? undefined : page,
-        ownUserId: '42',
-      },
-    );
-
-    expect((await findByTitle('Close')).closest('a')).toHaveAttribute(
-      'href',
-      backUrl,
-    );
-  });
 
   it.each`
     page

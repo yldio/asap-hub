@@ -6,12 +6,14 @@ import {
   Redirect,
   matchPath,
   useLocation,
+  useHistory,
 } from 'react-router-dom';
 import { join } from 'path';
 import {
   Paragraph,
   ProfilePage,
   NotFoundPage,
+  PersonalInfoModal,
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
@@ -48,6 +50,7 @@ const Profile: React.FC<{}> = () => {
   })?.params?.tab;
 
   const { loading, data: profile, patch } = useUserById(id);
+  const history = useHistory();
 
   if (loading) {
     return <Paragraph>Loading...</Paragraph>;
@@ -88,20 +91,48 @@ const Profile: React.FC<{}> = () => {
         <ErrorBoundary>
           <Suspense fallback="Loading...">
             {profile.role === 'Staff' ? (
-              <Staff userProfile={profile} teams={teams} />
+              <>
+                <Staff userProfile={profile} teams={teams} />
+                {currentUser?.id === id && (
+                  <Route path={join(path, 'edit-personal-info')}>
+                    <PersonalInfoModal
+                      {...profile}
+                      backHref={url}
+                      onSave={async (data) => {
+                        await patch(data);
+                        history.push(url);
+                      }}
+                    />
+                  </Route>
+                )}
+              </>
             ) : (
-              <Switch>
-                <Route path={`${path}/research`}>
-                  <Research userProfile={profile} teams={teams} />
-                </Route>
-                <Route path={`${path}/about`}>
-                  <About userProfile={profile} onPatchUserProfile={patch} />
-                </Route>
-                <Route path={`${path}/outputs`}>
-                  <Outputs />
-                </Route>
-                <Redirect to={join(url, 'research')} />
-              </Switch>
+              <>
+                <Switch>
+                  <Route path={`${path}/research`}>
+                    <Research userProfile={profile} teams={teams} />
+                  </Route>
+                  <Route path={`${path}/about`}>
+                    <About userProfile={profile} onPatchUserProfile={patch} />
+                  </Route>
+                  <Route path={`${path}/outputs`}>
+                    <Outputs />
+                  </Route>
+                  <Redirect to={join(url, 'research')} />
+                </Switch>
+                {currentUser?.id === id && tab && (
+                  <Route path={join(path, tab, 'edit-personal-info')}>
+                    <PersonalInfoModal
+                      {...profile}
+                      backHref={join(url, tab)}
+                      onSave={async (data) => {
+                        await patch(data);
+                        history.push(join(url, tab));
+                      }}
+                    />
+                  </Route>
+                )}
+              </>
             )}
           </Suspense>
         </ErrorBoundary>

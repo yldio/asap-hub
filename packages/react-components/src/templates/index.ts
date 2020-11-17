@@ -18,6 +18,7 @@ export { default as NewsAndEventsPageBody } from './NewsAndEventsPageBody';
 export { default as NewsAndEventsPageHeader } from './NewsAndEventsPageHeader';
 export { default as NotFoundPage } from './NotFoundPage';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
+export { default as PersonalInfoModal } from './PersonalInfoModal';
 export { default as ProfileAbout } from './ProfileAbout';
 export { default as ProfileHeader } from './ProfileHeader';
 export { default as ProfileOutputs } from './ProfileOutputs';

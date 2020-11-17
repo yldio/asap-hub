@@ -150,7 +150,7 @@ export const AboutTabEditBiography = () => (
   </ProfilePage>
 );
 
-export const AboutTabPersonalInfoModal = () => (
+export const AboutTabEditPersonalInfo = () => (
   <ProfilePage {...commonPropsEditable()} aboutHref="#">
     <ProfileAbout
       {...aboutTabProps()}

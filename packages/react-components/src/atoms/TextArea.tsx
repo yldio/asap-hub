@@ -4,6 +4,7 @@ import css from '@emotion/css';
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
 import { ember, rose, fern, tin } from '../colors';
+import { perRem, tabletScreen } from '../pixels';
 
 const containerStyles = css({
   flexBasis: '100%',
@@ -16,6 +17,12 @@ const containerStyles = css({
 const textareaStyles = css({
   display: 'block',
   resize: 'vertical',
+
+  boxSizing: 'border-box',
+  height: `${318 / perRem}em`,
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    height: `${150 / perRem}em`,
+  },
 
   '::placeholder': {
     color: tin.rgb,
@@ -76,7 +83,6 @@ const TextArea: React.FC<TextAreaProps> = ({
       <textarea
         {...props}
         {...validationTargetProps}
-        rows={5}
         required={required}
         maxLength={maxLength}
         value={value}

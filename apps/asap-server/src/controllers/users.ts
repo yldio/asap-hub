@@ -171,6 +171,7 @@ export default class Users {
         }),
       };
     }
+    /* eslint-enable @typescript-eslint/no-non-null-assertion, no-param-reassign */
 
     const updatedData = { ...user.data, ...cleanUpdate };
     const updatedUser = await this.users.put(id, updatedData);

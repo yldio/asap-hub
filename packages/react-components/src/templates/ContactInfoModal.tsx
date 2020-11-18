@@ -1,0 +1,58 @@
+import React, { useRef, useState } from 'react';
+
+import { Modal } from '../organisms';
+import { LabeledTextField, ModalEditHeader } from '../molecules';
+import { noop } from '../utils';
+import { charcoal } from '../colors';
+
+interface ContactInfoModalProps {
+  readonly email?: string;
+
+  readonly fallbackEmail: string;
+
+  readonly backHref: string;
+  readonly onSave?: (newEmail: string) => void | Promise<void>;
+}
+const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
+  email = '',
+  fallbackEmail,
+  backHref,
+  onSave = noop,
+}) => {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [newEmail, setNewEmail] = useState(email);
+
+  return (
+    <Modal>
+      <form ref={formRef}>
+        <ModalEditHeader
+          backHref={backHref}
+          title="Your contact details"
+          onSave={async () => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            if (formRef.current!.reportValidity()) {
+              await onSave(newEmail);
+            }
+          }}
+        />
+        <LabeledTextField
+          type="email"
+          value={newEmail}
+          onChange={setNewEmail}
+          title="Contact email"
+          subtitle={
+            <>
+              People in the ASAP Network will contact you using{' '}
+              <strong css={{ color: charcoal.rgb }}>{fallbackEmail}</strong>. To
+              use a different correspondence email address, please add it below.
+            </>
+          }
+          hint="Note: This will not change your login email."
+        />
+      </form>
+    </Modal>
+  );
+};
+
+export default ContactInfoModal;

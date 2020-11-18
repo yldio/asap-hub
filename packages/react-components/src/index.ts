@@ -80,6 +80,7 @@ export {
 export {
   BasicLayout,
   BiographyModal,
+  ContactInfoModal,
   ContentPage,
   DashboardPage,
   DashboardPageBody,

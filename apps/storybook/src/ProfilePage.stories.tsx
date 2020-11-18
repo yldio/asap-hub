@@ -8,6 +8,7 @@ import {
   ProfileStaff,
   BiographyModal,
   PersonalInfoModal,
+  ContactInfoModal,
 } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 
@@ -34,7 +35,8 @@ const commonProps = (): Omit<
   ).toISOString(),
   firstName: text('First Name', 'Phillip'),
   lastName: text('Last Name', 'Mars'),
-  email: 'test@test.com',
+  email: text('Email', 'me@example.com'),
+  contactEmail: text('Contact email', 'contact@example.com'),
   location: text('Location', 'New Haven, Connecticut'),
   teams: [
     {
@@ -158,6 +160,20 @@ export const AboutTabEditPersonalInfo = () => (
       editOrcidWorksHref="/wrong"
     />
     <PersonalInfoModal {...aboutTabProps()} backHref="/wrong" />
+  </ProfilePage>
+);
+export const AboutTabEditContactInfo = () => (
+  <ProfilePage {...commonPropsEditable()} aboutHref="#">
+    <ProfileAbout
+      {...aboutTabProps()}
+      editBiographyHref="/wrong"
+      editOrcidWorksHref="/wrong"
+    />
+    <ContactInfoModal
+      email={commonPropsEditable().contactEmail}
+      fallbackEmail={commonPropsEditable().email}
+      backHref="/wrong"
+    />
   </ProfilePage>
 );
 

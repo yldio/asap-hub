@@ -36,11 +36,20 @@ it('generates the last updated text', () => {
 
 it('generates the mailto link', () => {
   const { getByText } = render(
-    <ProfileHeader {...boilerplateProps} email="test@test.com" />,
+    <ProfileHeader {...boilerplateProps} email="me@example.com" />,
   );
-  expect(getByText(/contact/i).parentElement).toHaveAttribute(
+  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
     'href',
-    'mailto:test@test.com',
+    'mailto:me@example.com',
+  );
+});
+it('prefers an explicit contact email address', () => {
+  const { getByText } = render(
+    <ProfileHeader {...boilerplateProps} contactEmail="contact@example.com" />,
+  );
+  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+    'href',
+    'mailto:contact@example.com',
   );
 });
 

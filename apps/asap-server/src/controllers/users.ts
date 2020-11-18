@@ -154,11 +154,13 @@ export default class Users {
 
     const user = await this.users.fetchById(id);
 
-    // eslint-disable @typescript-eslint/no-non-null-assertion
+    /* eslint-disable @typescript-eslint/no-non-null-assertion, no-param-reassign */
     if (update.teams?.length) {
       cleanUpdate.teams = {
         iv: user.data.teams?.iv.map((team) => {
-          const teamUpdates = update.teams!.find(({ id }) => team.id[0] === id);
+          const teamUpdates = update.teams!.find(
+            ({ id: teamId }) => team.id[0] === teamId,
+          );
           if (teamUpdates?.approach) {
             team!.approach = teamUpdates.approach;
           }

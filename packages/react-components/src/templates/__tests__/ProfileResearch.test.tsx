@@ -68,21 +68,43 @@ it('does not render an edit button by default', () => {
   const { queryByLabelText } = render(<ProfileResearch {...commonProps} />);
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
-it('renders an edit button for the role on ASAP', () => {
+it('renders an edit button for the role on the team', () => {
   const { getByLabelText } = render(
-    <ProfileResearch {...commonProps} editBackgroundHref="/edit-background" />,
+    <ProfileResearch
+      {...commonProps}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Team',
+          role: 'Lead PI (Core Leadership)',
+          href: '/network/teams/42',
+          editHref: '/edit-team-membership/42',
+        },
+      ]}
+    />,
   );
-  expect(getByLabelText(/edit.+role.+asap/i)).toHaveAttribute(
+  expect(getByLabelText(/edit.+role.+team/i)).toHaveAttribute(
     'href',
-    '/edit-background',
+    '/edit-team-membership/42',
   );
 });
-it('disables the edit button for the role on ASAP (REGRESSION)', () => {
+it('disables the edit button for the role on the team (REGRESSION)', () => {
   disable('PROFILE_EDITING');
   const { getByLabelText } = render(
-    <ProfileResearch {...commonProps} editBackgroundHref="/edit-background" />,
+    <ProfileResearch
+      {...commonProps}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Team',
+          role: 'Lead PI (Core Leadership)',
+          href: '/network/teams/42',
+          editHref: '/edit-team-membership/42',
+        },
+      ]}
+    />,
   );
-  expect(getByLabelText(/edit.+role.+asap/i)).not.toHaveAttribute('href');
+  expect(getByLabelText(/edit.+role.+team/i)).not.toHaveAttribute('href');
 });
 it('renders an edit button for the skills list', () => {
   const { getByLabelText } = render(

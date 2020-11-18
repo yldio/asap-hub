@@ -1,5 +1,5 @@
 import React from 'react';
-import { text, select } from '@storybook/addon-knobs';
+import { text, select, boolean } from '@storybook/addon-knobs';
 
 import { LabeledDropdown } from '@asap-hub/react-components';
 
@@ -31,6 +31,7 @@ export const Normal = () => (
       },
       'LHR',
     )}
+    enabled={boolean('enabled', true)}
   />
 );
 export const EmptyOption = () => (
@@ -46,6 +47,7 @@ export const EmptyOption = () => (
       { value: 'SEN', label: 'Southend' },
     ]}
     value=""
+    enabled={boolean('enabled', true)}
   />
 );
 export const Invalid = () => (
@@ -64,5 +66,6 @@ export const Invalid = () => (
       'Validation Error Message',
       'This airport is currently closed.',
     )}
+    enabled={boolean('enabled', true)}
   />
 );

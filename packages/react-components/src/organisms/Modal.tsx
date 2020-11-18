@@ -46,6 +46,7 @@ const modalStyles = css({
     'px',
   )}`,
   boxSizing: 'border-box',
+  width: '100%',
   maxWidth: `${730 / perRem}em`,
 });
 

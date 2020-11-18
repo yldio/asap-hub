@@ -115,6 +115,7 @@ export {
   SigninForm,
   SigninPage,
   TeamAbout,
+  TeamMembershipModal,
   TeamOutputs,
   TeamPage,
   TeamWorkspace,

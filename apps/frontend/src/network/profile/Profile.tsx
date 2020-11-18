@@ -103,7 +103,11 @@ const Profile: React.FC<{}> = () => {
               <>
                 <Switch>
                   <Route path={`${path}/research`}>
-                    <Research userProfile={userProfile} teams={teams} />
+                    <Research
+                      userProfile={userProfile}
+                      teams={teams}
+                      onPatchUserProfile={patch}
+                    />
                   </Route>
                   <Route path={`${path}/about`}>
                     <About

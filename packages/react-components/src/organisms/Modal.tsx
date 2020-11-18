@@ -40,7 +40,7 @@ const scrollStyles = css({
 const modalStyles = css({
   padding: `${12 / perRem}em ${vminLinearCalcClamped(
     mobileScreen,
-    12,
+    24,
     tabletScreen,
     48,
     'px',

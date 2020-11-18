@@ -151,6 +151,7 @@ describe('PATCH /users/{id}', () => {
         email: { iv: 'cristiano@ronaldo.com' },
         firstName: { iv: 'Cristiano' },
         lastName: { iv: 'Ronaldo' },
+        contactEmail: { iv: null },
         jobTitle: { iv: null },
         orcid: { iv: null },
         institution: { iv: null },
@@ -180,6 +181,7 @@ describe('PATCH /users/{id}', () => {
           id: 'userId',
         },
         body: {
+          contactEmail: '',
           biography: 'I do awesome stuff',
           jobTitle: '',
           orcid: '',

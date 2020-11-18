@@ -84,6 +84,7 @@ export interface UserTeam {
 
 export interface UserResponse extends Invitee {
   id: string;
+  contactEmail?: string;
   displayName: string;
   lastModifiedDate: string;
   createdDate: string;

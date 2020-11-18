@@ -76,6 +76,15 @@ export const userUpdateSchema = Joi.object({
   skills: Joi.array().items(Joi.string()),
   skillsDescription: Joi.string().allow(''),
   questions: Joi.array().items(Joi.object({ question: Joi.string() })),
+  teams: Joi.array().items(
+    Joi.object({
+      id: Joi.string().required(),
+      responsibilities: Joi.string(),
+      approach: Joi.string(),
+    })
+      .min(2)
+      .required(),
+  ),
 })
   .min(1)
   .required();

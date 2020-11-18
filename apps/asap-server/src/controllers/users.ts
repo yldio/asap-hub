@@ -130,11 +130,15 @@ export default class Users {
   }
 
   async update(id: string, update: UserPatchRequest): Promise<UserResponse> {
-    let deletesAtributes = false;
+    let isFullUpdate = false;
+
+    if (update.teams?.length) {
+      isFullUpdate = true;
+    }
 
     const cleanUpdate = Object.entries(update).reduce((acc, [key, value]) => {
       if (value.trim && value.trim() === '') {
-        deletesAtributes = true;
+        isFullUpdate = true;
         acc[key] = { iv: null }; // deletes attribute on PUT requests
         return acc;
       }
@@ -143,13 +147,30 @@ export default class Users {
       return acc;
     }, {} as { [key: string]: { iv: unknown } });
 
-    if (!deletesAtributes) {
-      const user = await this.users.patch(id, cleanUpdate);
-      return parseUser(user);
+    if (!isFullUpdate) {
+      const userResponse = await this.users.patch(id, cleanUpdate);
+      return parseUser(userResponse);
     }
 
-    const fullUser = await this.users.fetchById(id);
-    const updatedData = { ...fullUser.data, ...cleanUpdate };
+    const user = await this.users.fetchById(id);
+
+    // eslint-disable @typescript-eslint/no-non-null-assertion
+    if (update.teams?.length) {
+      cleanUpdate.teams = {
+        iv: user.data.teams?.iv.map((team) => {
+          const teamUpdates = update.teams!.find(({ id }) => team.id[0] === id);
+          if (teamUpdates?.approach) {
+            team!.approach = teamUpdates.approach;
+          }
+          if (teamUpdates?.responsibilities) {
+            team!.responsibilities = teamUpdates.responsibilities;
+          }
+          return team;
+        }),
+      };
+    }
+
+    const updatedData = { ...user.data, ...cleanUpdate };
     const updatedUser = await this.users.put(id, updatedData);
     return parseUser(updatedUser);
   }

@@ -26,7 +26,16 @@ export const handler: Handler = lambda.http(
       userUpdateSchema,
     ) as UserPatchRequest;
 
+    // user trying to change someone else
     if (user.id !== params.id) {
+      throw Boom.forbidden();
+    }
+
+    // user trying to change a team he doesn't belong to
+    if (
+      update.teams &&
+      !user.teams.every(({ id }) => user.teams.find((t) => t.id === id))
+    ) {
       throw Boom.forbidden();
     }
 

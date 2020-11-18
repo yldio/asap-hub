@@ -21,8 +21,12 @@ export const patchResponse: CMSUser = {
     teams: {
       iv: [
         {
-          role: 'Lead PI (Core Leadership)',
           id: ['team-id-1'],
+          role: 'Lead PI (Core Leadership)',
+        },
+        {
+          id: ['team-id-3'],
+          role: 'Collaborating PI',
         },
       ],
     },

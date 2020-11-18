@@ -84,7 +84,27 @@ describe('PATCH /users/{id} - validations', () => {
       }),
     )) as APIGatewayProxyResult;
 
+    const result2 = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'userId',
+        },
+        body: {
+          teams: [
+            {
+              id: 'team-id-3',
+            },
+          ],
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
     expect(result1.statusCode).toStrictEqual(400);
+    expect(result2.statusCode).toStrictEqual(400);
   });
 
   test('returns 403 when user is changing other user', async () => {
@@ -99,6 +119,30 @@ describe('PATCH /users/{id} - validations', () => {
         },
         body: {
           jobTitle: 'CEO',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(403);
+  });
+
+  test('returns 403 when editing a team he doesnt belong to', async () => {
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'not-me',
+        },
+        body: {
+          teams: [
+            {
+              id: 'team-id-3',
+              responsibilities: 'I do stuff',
+            },
+          ],
         },
       }),
     )) as APIGatewayProxyResult;
@@ -146,29 +190,18 @@ describe('PATCH /users/{id}', () => {
       .get(`/api/content/${config.appName}/users/userId`)
       .reply(200, patchResponse)
       .put(`/api/content/${config.appName}/users/userId`, {
-        role: { iv: 'Grantee' },
-        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-        email: { iv: 'cristiano@ronaldo.com' },
-        firstName: { iv: 'Cristiano' },
-        lastName: { iv: 'Ronaldo' },
-        contactEmail: { iv: null },
+        ...patchResponse.data,
+        biography: { iv: 'I do awesome stuff' },
         jobTitle: { iv: null },
         orcid: { iv: null },
-        institution: { iv: null },
-        location: { iv: null },
-        avatar: { iv: ['uuid-user-id-1'] },
-        skills: { iv: [] },
-        orcidWorks: { iv: [] },
-        teams: {
-          iv: [{ role: 'Lead PI (Core Leadership)', id: ['team-id-1'] }],
-        },
-        connections: { iv: [] },
-        biography: { iv: 'I do awesome stuff' },
         department: { iv: 'Awesome Department' },
+        institution: { iv: null },
         degree: { iv: null },
+        location: { iv: null },
+        skills: { iv: [] },
         skillsDescription: { iv: null },
         questions: { iv: [{ question: 'test' }] },
-      })
+      } as { [k: string]: any })
       .reply(200, putResponse);
 
     const result = (await handler(
@@ -192,6 +225,58 @@ describe('PATCH /users/{id}', () => {
           skills: [],
           skillsDescription: '',
           questions: [{ question: 'test' }],
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual(expectation);
+  });
+
+  test('returns 200 when trying to edit user teams', async () => {
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users/userId`)
+      .reply(200, patchResponse)
+      .put(`/api/content/${config.appName}/users/userId`, {
+        ...patchResponse.data,
+        biography: { iv: 'I do awesome stuff' },
+        department: { iv: 'Awesome Department' },
+        questions: { iv: [{ question: 'test' }] },
+        teams: {
+          iv: [
+            { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
+            {
+              role: 'Collaborating PI',
+              id: ['team-id-3'],
+              responsibilities: 'I do stuff',
+              approach: 'orthodox',
+            },
+          ],
+        },
+      } as { [k: string]: any })
+      .reply(200, putResponse);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'userId',
+        },
+        body: {
+          biography: 'I do awesome stuff',
+          department: 'Awesome Department',
+          questions: [{ question: 'test' }],
+          teams: [
+            {
+              id: 'team-id-3',
+              responsibilities: 'I do stuff',
+              approach: 'orthodox',
+            },
+          ],
         },
       }),
     )) as APIGatewayProxyResult;

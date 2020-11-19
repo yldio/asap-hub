@@ -157,18 +157,30 @@ export default class Users {
     /* eslint-disable @typescript-eslint/no-non-null-assertion, no-param-reassign */
     if (update.teams?.length) {
       cleanUpdate.teams = {
-        iv: user.data.teams?.iv.map((team) => {
-          const teamUpdates = update.teams!.find(
-            ({ id: teamId }) => team.id[0] === teamId,
-          );
-          if (teamUpdates?.approach) {
-            team!.approach = teamUpdates.approach;
-          }
-          if (teamUpdates?.responsibilities) {
-            team!.responsibilities = teamUpdates.responsibilities;
-          }
-          return team;
-        }),
+        iv: user.data.teams?.iv.map(
+          (team: {
+            id: string[];
+            responsibilities?: string | null;
+            approach?: string | null;
+          }) => {
+            const teamUpdates = update.teams!.find(
+              ({ id: teamId }) => team.id[0] === teamId,
+            );
+            if (teamUpdates?.approach) {
+              team.approach =
+                teamUpdates.approach.trim() === ''
+                  ? null
+                  : teamUpdates.approach;
+            }
+            if (teamUpdates?.responsibilities) {
+              team.responsibilities =
+                teamUpdates.responsibilities.trim() === ''
+                  ? null
+                  : teamUpdates.responsibilities;
+            }
+            return team;
+          },
+        ),
       };
     }
     /* eslint-enable @typescript-eslint/no-non-null-assertion, no-param-reassign */

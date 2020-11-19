@@ -286,6 +286,50 @@ describe('PATCH /users/{id}', () => {
     expect(body).toStrictEqual(expectation);
   });
 
+  test('returns 200 when trying to delete user teams', async () => {
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users/userId`)
+      .reply(200, patchResponse)
+      .put(`/api/content/${config.appName}/users/userId`, {
+        ...patchResponse.data,
+        teams: {
+          iv: [
+            { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
+            {
+              role: 'Collaborating PI',
+              id: ['team-id-3'],
+            },
+          ],
+        },
+      } as { [k: string]: any })
+      .reply(200, putResponse);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'userId',
+        },
+        body: {
+          teams: [
+            {
+              id: 'team-id-3',
+              responsibilities: '',
+              approach: '',
+            },
+          ],
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual(expectation);
+  });
+
   test('returns 200 when user exists', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/users/userId`, {

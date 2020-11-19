@@ -22,6 +22,7 @@ flatData {
   degree
   department
   email
+  contactEmail
   firstName
   institution
   jobTitle

@@ -23,6 +23,7 @@ export interface CMSUser {
   data: {
     lastModifiedDate: { iv: string };
     email: { iv: string };
+    contactEmail?: { iv: string };
     firstName: { iv: string };
     lastName: { iv: string };
     jobTitle?: { iv: string };
@@ -60,7 +61,7 @@ export interface CMSUser {
 export type CMSOrcidWork = OrcidWork;
 
 export const userUpdateSchema = Joi.object({
-  email: Joi.string(),
+  contactEmail: Joi.string().allow(''),
   firstName: Joi.string().allow(''),
   lastName: Joi.string().allow(''),
   jobTitle: Joi.string().allow(''),
@@ -124,6 +125,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     biography: item.flatData?.biography || undefined,
     degree: item.flatData?.degree || undefined,
     email: item.flatData?.email || '',
+    contactEmail: item.flatData?.contactEmail || undefined,
     institution: item.flatData?.institution || undefined,
     department: item.flatData?.department || undefined,
     jobTitle: item.flatData?.jobTitle || undefined,
@@ -160,6 +162,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
       createdDate: parseDate(user.created).toISOString(),
       lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
       email: user.data.email.iv,
+      contactEmail: user.data?.contactEmail?.iv,
       degree: user.data.degree?.iv,
       firstName: user.data.firstName?.iv,
       lastName: user.data.lastName?.iv,

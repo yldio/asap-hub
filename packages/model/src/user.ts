@@ -84,6 +84,7 @@ export interface UserTeam {
 
 export interface UserResponse extends Invitee {
   id: string;
+  contactEmail?: string;
   displayName: string;
   lastModifiedDate: string;
   createdDate: string;
@@ -102,7 +103,7 @@ export interface UserResponse extends Invitee {
 
 export interface UserPatchRequest {
   displayName?: string;
-  email?: string;
+  contactEmail?: string;
   firstName?: string;
   lastName?: string;
   biography?: string;

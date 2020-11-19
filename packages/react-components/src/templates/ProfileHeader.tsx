@@ -133,7 +133,7 @@ type ProfileProps = Pick<
   readonly discoverHref: string;
 
   readonly editPersonalInfoHref?: string;
-  readonly editContactHref?: string;
+  readonly editContactInfoHref?: string;
 
   readonly teams: ReadonlyArray<UserTeam & { href: string }>;
 };
@@ -157,7 +157,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   outputsHref,
 
   editPersonalInfoHref,
-  editContactHref,
+  editContactInfoHref,
   discoverHref,
   role,
 }) => {
@@ -199,7 +199,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
         </div>
       )}
       <section
-        css={[contactStyles, editContactHref ? null : contactNoEditStyles]}
+        css={[contactStyles, editContactInfoHref ? null : contactNoEditStyles]}
       >
         {role !== 'Staff' ? (
           <div css={contactButtonStyles}>
@@ -224,13 +224,13 @@ const ProfileHeader: React.FC<ProfileProps> = ({
           </div>
         )}
       </section>
-      {editContactHref && (
+      {editContactInfoHref && (
         <div css={editContactStyles}>
           <Link
             buttonStyle
             small
             primary
-            href={editContactHref}
+            href={editContactInfoHref}
             label="Edit contact information"
             enabled={isEnabled('PROFILE_EDITING')}
           >

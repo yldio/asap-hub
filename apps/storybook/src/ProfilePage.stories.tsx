@@ -68,7 +68,7 @@ const commonProps = (): Omit<
 const commonPropsEditable = (): ReturnType<typeof commonProps> => ({
   ...commonProps(),
   editPersonalInfoHref: '/wrong',
-  editContactHref: '/wrong',
+  editContactInfoHref: '/wrong',
 });
 
 const researchTabProps = (): ComponentProps<typeof ProfileResearch> => ({

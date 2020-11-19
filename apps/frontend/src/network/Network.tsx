@@ -15,11 +15,11 @@ import { useSearch } from '../hooks';
 const loadProfileList = () =>
   import(/* webpackChunkName: "network-profile-list" */ './ProfileList');
 const loadProfile = () =>
-  import(/* webpackChunkName: "network-profile" */ './profile/Routes');
+  import(/* webpackChunkName: "network-profile" */ './profile/Profile');
 const loadTeamList = () =>
   import(/* webpackChunkName: "network-team-list" */ './TeamList');
 const loadTeam = () =>
-  import(/* webpackChunkName: "network-team" */ './team/Routes');
+  import(/* webpackChunkName: "network-team" */ './team/Team');
 const ProfileList = React.lazy(loadProfileList);
 const Profile = React.lazy(loadProfile);
 const TeamList = React.lazy(loadTeamList);

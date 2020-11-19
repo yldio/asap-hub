@@ -13,7 +13,7 @@ import { API_BASE_URL } from '@asap-hub/frontend/src/config';
 import { UserDegree } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 
-import Profile from '../Routes';
+import Profile from '../Profile';
 
 jest.mock('../../../config');
 

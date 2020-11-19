@@ -12,7 +12,7 @@ import { authTestUtils } from '@asap-hub/react-components';
 import { createTeamResponse } from '@asap-hub/fixtures';
 import { API_BASE_URL } from '@asap-hub/frontend/src/config';
 
-import Team from '../Routes';
+import Team from '../Team';
 
 const team = createTeamResponse();
 let interceptor: nock.Interceptor;

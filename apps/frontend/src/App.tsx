@@ -15,7 +15,7 @@ import ErrorBoundary from './errors/ErrorBoundary';
 const loadNewsAndEvents = () =>
   import(/* webpackChunkName: "news-and-events" */ './news/Routes');
 const loadNetwork = () =>
-  import(/* webpackChunkName: "network" */ './network/Routes');
+  import(/* webpackChunkName: "network" */ './network/Network');
 const loadSharedResearch = () =>
   import(/* webpackChunkName: "shared-research" */ './shared-research/Routes');
 const loadDashboard = () =>

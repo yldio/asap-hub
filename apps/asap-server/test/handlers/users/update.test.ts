@@ -134,12 +134,12 @@ describe('PATCH /users/{id} - validations', () => {
           Authorization: 'Bearer token',
         },
         pathParameters: {
-          id: 'not-me',
+          id: 'userId',
         },
         body: {
           teams: [
             {
-              id: 'team-id-3',
+              id: 'team-id-1000',
               responsibilities: 'I do stuff',
             },
           ],

@@ -34,7 +34,7 @@ export const handler: Handler = lambda.http(
     // user trying to change a team he doesn't belong to
     if (
       update.teams &&
-      !user.teams.every(({ id }) => user.teams.find((t) => t.id === id))
+      !update.teams.every(({ id }) => user.teams.find((t) => t.id === id))
     ) {
       throw Boom.forbidden();
     }

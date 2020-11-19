@@ -10,10 +10,12 @@ import { authTestUtils } from '@asap-hub/react-components';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
 import { join } from 'path';
 import { API_BASE_URL } from '@asap-hub/frontend/src/config';
-import { UserDegree, Role } from '@asap-hub/model';
+import { UserDegree } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 
 import Profile from '../Routes';
+
+jest.mock('../../../config');
 
 const renderProfile = async (
   userResponse = createUserResponse(),
@@ -104,7 +106,7 @@ describe('with team', () => {
         "http://localhost/network/teams/t0",
         "http://localhost/u0/research/edit-personal-info",
         "mailto:agnete.kirkeby@sund.ku.dk",
-        "http://localhost/u0/research/edit-contact",
+        "http://localhost/u0/research/edit-contact-info",
         "http://localhost/u0/research",
         "http://localhost/u0/about",
         "http://localhost/u0/outputs",
@@ -129,7 +131,7 @@ describe('with team', () => {
         "http://localhost/network/teams/t0",
         "http://localhost/u0/research/edit-personal-info",
         "mailto:agnete.kirkeby@sund.ku.dk",
-        "http://localhost/u0/research/edit-contact",
+        "http://localhost/u0/research/edit-contact-info",
         "http://localhost/u0/research",
         "http://localhost/u0/about",
         "http://localhost/u0/outputs",
@@ -184,6 +186,16 @@ describe('a header edit button', () => {
 
     expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
   });
+  it('is not rendered on your own staff profile', async () => {
+    const { getByText, queryByLabelText } = await renderProfile({
+      ...createUserResponse(),
+      role: 'Staff',
+    });
+    const loadingIndicator = getByText(/loading/i);
+    await waitForElementToBeRemoved(loadingIndicator);
+
+    expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
+  });
 
   it('is rendered for personal info on your own profile', async () => {
     const { findByLabelText } = await renderProfile();
@@ -198,7 +210,7 @@ describe('a header edit button', () => {
 
 describe('an edit personal info modal', () => {
   it.each(['research', 'about', 'outputs'])(
-    'can open and close model from %s',
+    'can be opened and closed from %s',
     async (page) => {
       const {
         getByTitle,
@@ -233,18 +245,15 @@ describe('an edit personal info modal', () => {
     ${'about'}    | ${false}   | ${false}
     ${'outputs'}  | ${true}    | ${true}
     ${'outputs'}  | ${false}   | ${false}
-    ${'staff'}    | ${true}    | ${true}
-    ${'staff'}    | ${false}   | ${false}
   `('opens and closes', async ({ page, ownProfile, visible }) => {
     const { findByText, getByText, queryByText } = await renderProfile(
       {
         ...createUserResponse(),
-        role: page === 'staff' ? 'Staff' : 'Grantee',
         id: '42',
       },
       {
         modal: 'edit-personal-info',
-        tab: page === 'staff' ? undefined : page,
+        tab: page,
         ownUserId: ownProfile ? '42' : '1337',
       },
     );
@@ -268,20 +277,18 @@ describe('an edit personal info modal', () => {
     ${'about'}    | ${false}   | ${false}
     ${'outputs'}  | ${true}    | ${true}
     ${'outputs'}  | ${false}   | ${false}
-    ${'staff'}    | ${true}    | ${true}
-    ${'staff'}    | ${false}   | ${false}
   `(
     'is visible ($visible); viewing $page; using ownProfile ($ownProfile)',
     async ({ page, ownProfile, visible }) => {
       const { findByText, getByText, queryByText } = await renderProfile(
         {
           ...createUserResponse(),
-          role: page === 'staff' ? 'Staff' : 'Grantee',
+          role: page,
           id: '42',
         },
         {
           modal: 'edit-personal-info',
-          tab: page === 'staff' ? undefined : page,
+          tab: page,
           ownUserId: ownProfile ? '42' : '1337',
         },
       );
@@ -298,68 +305,120 @@ describe('an edit personal info modal', () => {
     },
   );
 
-  it.each`
-    page
-    ${'research'}
-    ${'staff'}
-  `(
-    'Submits data via $page',
-    async ({ page }) => {
-      const user = {
-        ...createUserResponse(),
-        firstName: 'John',
-        lastName: 'smith',
-        institution: 'harvard',
-        jobTitle: 'researcher',
-        location: 'moon',
-        degree: 'BA' as UserDegree,
-        role: page === 'staff' ? 'Staff' : ('Grantee' as Role),
-        id: '42',
-      };
-      const updatedUser = {
-        firstName: 'John edited',
-        lastName: 'smith edited',
-        institution: 'harvard edited',
-        jobTitle: 'researcher edited',
-        location: 'moon edited',
-        degree: 'MD',
-      };
+  it('Submits data', async () => {
+    const user = {
+      ...createUserResponse(),
+      firstName: 'John',
+      lastName: 'smith',
+      institution: 'harvard',
+      jobTitle: 'researcher',
+      location: 'moon',
+      degree: 'BA' as UserDegree,
+      id: '42',
+    };
+    const updatedUser = {
+      firstName: 'John edited',
+      lastName: 'smith edited',
+      institution: 'harvard edited',
+      jobTitle: 'researcher edited',
+      location: 'moon edited',
+      degree: 'MD',
+    };
 
-      const { getByLabelText, getByText } = await renderProfile(user, {
-        modal: 'edit-personal-info',
-        tab: page === 'staff' ? undefined : page,
-        ownUserId: '42',
-      });
-      const patch = nock(API_BASE_URL)
-        .patch('/users/42', updatedUser)
-        .reply(200, { ...user, ...updatedUser });
+    const { getByLabelText, getByText } = await renderProfile(user, {
+      tab: 'research',
+      modal: 'edit-personal-info',
+      ownUserId: '42',
+    });
+    const patch = nock(API_BASE_URL)
+      .patch('/users/42', updatedUser)
+      .reply(200, { ...user, ...updatedUser });
 
-      const loadingIndicator = getByText(/loading/i);
-      await waitForElementToBeRemoved(loadingIndicator);
+    const loadingIndicator = getByText(/loading/i);
+    await waitForElementToBeRemoved(loadingIndicator);
 
-      await Promise.all([
-        userEvent.type(getByLabelText(/first name/i), ' edited', {
-          allAtOnce: true,
-        }),
-        userEvent.type(getByLabelText(/last name/i), ' edited', {
-          allAtOnce: true,
-        }),
-        userEvent.type(getByLabelText(/institution/i), ' edited', {
-          allAtOnce: true,
-        }),
-        userEvent.type(getByLabelText(/position/i), ' edited', {
-          allAtOnce: true,
-        }),
-        userEvent.type(getByLabelText(/location/i), ' edited', {
-          allAtOnce: true,
-        }),
-      ]);
-      userEvent.click(getByText('BA'));
-      userEvent.click(getByText('MD'));
-      userEvent.click(getByText('Save'));
+    await userEvent.type(getByLabelText(/first name/i), ' edited', {
+      allAtOnce: true,
+    });
+    await userEvent.type(getByLabelText(/last name/i), ' edited', {
+      allAtOnce: true,
+    });
+    await userEvent.type(getByLabelText(/institution/i), ' edited', {
+      allAtOnce: true,
+    });
+    await userEvent.type(getByLabelText(/position/i), ' edited', {
+      allAtOnce: true,
+    });
+    await userEvent.type(getByLabelText(/location/i), ' edited', {
+      allAtOnce: true,
+    });
+    userEvent.click(getByText('BA'));
+    userEvent.click(getByText('MD'));
+    userEvent.click(getByText('Save'));
 
-      await waitFor(() => expect(patch.isDone()).toBe(true));
-    },
-    10000,
-  );
+    await waitFor(() => expect(patch.isDone()).toBe(true));
+  }, 10_000);
+});
+
+describe('when editing the contact info', () => {
+  it('opens and closes the dialog', async () => {
+    const {
+      getByText,
+      queryByText,
+      findByLabelText,
+      getByDisplayValue,
+      queryByDisplayValue,
+    } = await renderProfile({
+      ...createUserResponse(),
+      contactEmail: 'contact@example.com',
+    });
+
+    userEvent.click(await findByLabelText(/edit.+contact/i));
+    expect(getByDisplayValue('contact@example.com')).toBeVisible();
+
+    userEvent.click(getByText(/close/i));
+    await waitFor(() => {
+      expect(queryByText(/loading/i)).not.toBeInTheDocument();
+      expect(
+        queryByDisplayValue('contact@example.com'),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  it('saves the changes from the dialog', async () => {
+    const userProfile = {
+      ...createUserResponse(),
+      contactEmail: 'contact@example.com',
+      id: '42',
+    };
+    const {
+      getByText,
+      queryByText,
+      findByLabelText,
+      getByDisplayValue,
+      queryByDisplayValue,
+    } = await renderProfile(userProfile);
+
+    userEvent.click(await findByLabelText(/edit.+contact/i));
+    await userEvent.type(getByDisplayValue('contact@example.com'), 'm');
+    expect(getByDisplayValue('contact@example.comm')).toBeVisible();
+
+    const patched = new Promise((resolve) =>
+      nock(API_BASE_URL)
+        .patch('/users/42')
+        .reply(200, (uri, body, cb) => {
+          resolve(body);
+          cb(null, { ...userProfile, ...(body as object) });
+        }),
+    );
+
+    userEvent.click(getByText(/save/i));
+    await waitFor(() => {
+      expect(queryByText(/loading/i)).not.toBeInTheDocument();
+      expect(
+        queryByDisplayValue('contact@example.comm'),
+      ).not.toBeInTheDocument();
+    });
+    expect(await patched).toEqual({ contactEmail: 'contact@example.comm' });
+  });
 });

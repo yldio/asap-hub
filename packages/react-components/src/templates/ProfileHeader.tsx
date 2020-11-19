@@ -27,7 +27,7 @@ const containerStyles = css({
   grid: `
     ".             edit-personal-info" ${24 / perRem}em
     "personal-info personal-info     " auto
-    "contact       edit-contact      " auto
+    "contact       edit-contact-info " auto
     "tab-nav       tab-nav           " auto
       / auto ${36 / perRem}em
   `,
@@ -37,7 +37,7 @@ const containerStyles = css({
     paddingTop: `${36 / perRem}em`,
     grid: `
       "edit-personal-info personal-info ."
-      "edit-contact       contact       ."
+      "edit-contact-info  contact       ."
       ".                  tab-nav       ."
         / ${36 / perRem}em auto ${36 / perRem}em
     `,
@@ -77,7 +77,7 @@ const personalInfoStyles = css({
 });
 
 const editContactStyles = css({
-  gridArea: 'edit-contact',
+  gridArea: 'edit-contact-info',
 });
 const contactStyles = css({
   gridArea: 'contact',
@@ -86,7 +86,7 @@ const contactStyles = css({
   flexWrap: 'wrap',
 });
 const contactNoEditStyles = css({
-  gridColumnEnd: 'edit-contact',
+  gridColumnEnd: 'edit-contact-info',
 });
 const contactButtonStyles = css({
   flexGrow: 1,
@@ -115,6 +115,7 @@ const tabNavStyles = css({
 type ProfileProps = Pick<
   UserResponse,
   | 'avatarUrl'
+  | 'contactEmail'
   | 'department'
   | 'email'
   | 'displayName'
@@ -148,6 +149,7 @@ const ProfileHeader: React.FC<ProfileProps> = ({
   teams,
   jobTitle,
   avatarUrl,
+  contactEmail,
   email,
 
   aboutHref,
@@ -201,7 +203,12 @@ const ProfileHeader: React.FC<ProfileProps> = ({
       >
         {role !== 'Staff' ? (
           <div css={contactButtonStyles}>
-            <Link small buttonStyle primary href={createMailTo(email)}>
+            <Link
+              small
+              buttonStyle
+              primary
+              href={createMailTo(contactEmail || email)}
+            >
               Contact
             </Link>
           </div>

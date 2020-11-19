@@ -14,11 +14,13 @@ import {
   ProfilePage,
   NotFoundPage,
   PersonalInfoModal,
+  ContactInfoModal,
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
 import { useUserById } from '@asap-hub/frontend/src/api/users';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
+import { UserPatchRequest } from '@asap-hub/model';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -34,6 +36,7 @@ const Outputs = React.lazy(loadOutputs);
 const Staff = React.lazy(loadStaff);
 loadResearch().then(loadStaff);
 
+// TODO split
 const Profile: React.FC<{}> = () => {
   useEffect(() => {
     loadResearch().then(loadStaff).then(loadAbout).then(loadOutputs);
@@ -82,7 +85,7 @@ const Profile: React.FC<{}> = () => {
           : undefined,
       editContactHref:
         currentUser?.id === id && tab
-          ? join(url, tab, '/edit-contact')
+          ? join(url, tab, '/edit-contact-info')
           : undefined,
     };
 
@@ -91,21 +94,7 @@ const Profile: React.FC<{}> = () => {
         <ErrorBoundary>
           <Suspense fallback="Loading...">
             {profile.role === 'Staff' ? (
-              <>
-                <Staff userProfile={profile} teams={teams} />
-                {currentUser?.id === id && (
-                  <Route path={join(path, 'edit-personal-info')}>
-                    <PersonalInfoModal
-                      {...profile}
-                      backHref={url}
-                      onSave={async (data) => {
-                        await patch(data);
-                        history.push(url);
-                      }}
-                    />
-                  </Route>
-                )}
-              </>
+              <Staff userProfile={profile} teams={teams} />
             ) : (
               <>
                 <Switch>
@@ -121,16 +110,31 @@ const Profile: React.FC<{}> = () => {
                   <Redirect to={join(url, 'research')} />
                 </Switch>
                 {currentUser?.id === id && tab && (
-                  <Route path={join(path, tab, 'edit-personal-info')}>
-                    <PersonalInfoModal
-                      {...profile}
-                      backHref={join(url, tab)}
-                      onSave={async (data) => {
-                        await patch(data);
-                        history.push(join(url, tab));
-                      }}
-                    />
-                  </Route>
+                  <>
+                    <Route path={join(path, tab, 'edit-personal-info')}>
+                      <PersonalInfoModal
+                        {...profile}
+                        backHref={join(url, tab)}
+                        onSave={async (data) => {
+                          await patch(data);
+                          history.push(join(url, tab));
+                        }}
+                      />
+                    </Route>
+                    <Route path={join(path, tab, 'edit-contact-info')}>
+                      <ContactInfoModal
+                        email={profile.contactEmail}
+                        fallbackEmail={profile.email}
+                        backHref={url}
+                        onSave={async (newContactEmail) => {
+                          await patch({
+                            contactEmail: newContactEmail,
+                          } as UserPatchRequest);
+                          history.push(join(url, tab));
+                        }}
+                      />
+                    </Route>
+                  </>
                 )}
               </>
             )}

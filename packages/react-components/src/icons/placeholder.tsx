@@ -10,6 +10,7 @@ const palceholder = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Placeholder</title>
     <rect width="30" height="30" fill="white" />
     <g opacity="0.13">
       <g opacity="0.13">

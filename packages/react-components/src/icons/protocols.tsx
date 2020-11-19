@@ -11,6 +11,7 @@ const protocolsIcon = (
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
+    <title>Protocols</title>
     <g clipPath="url(#clip-protocols)">
       <rect width="30" height="30" fill="white" />
       <rect

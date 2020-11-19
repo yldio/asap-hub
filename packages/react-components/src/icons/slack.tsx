@@ -11,6 +11,7 @@ const slackIcon = (
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
+    <title>Slack</title>
     <rect width="30" height="30" fill="white" />
     <rect x="2" y="2" width="26" height="26" fill="url(#pattern-slack)" />
     <defs>

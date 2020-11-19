@@ -4144,7 +4144,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "form-data",
-        "npm:2.5.1"
+        "npm:3.0.0"
       ],
       [
         "format",
@@ -8837,6 +8837,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["csv-parse", "npm:4.12.0"],
             ["date-fns", "npm:2.16.1"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
+            ["form-data", "npm:3.0.0"],
             ["got", "npm:11.6.0"],
             ["graphql", "npm:15.3.0"],
             ["jsonwebtoken", "npm:8.5.1"],

@@ -1,7 +1,13 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
-import { Squidex, SquidexGraphql, GraphqlUser } from '@asap-hub/squidex';
+import FormData from 'form-data';
+import {
+  Squidex,
+  SquidexGraphql,
+  GraphqlUser,
+  config,
+} from '@asap-hub/squidex';
 import {
   UserResponse,
   ListUserResponse,
@@ -282,6 +288,28 @@ export default class Users {
     }
 
     return parseGraphQLUser(items[0]);
+  }
+
+  async updateAvatar(id: string, avatar: Buffer): Promise<UserResponse> {
+    const form = new FormData();
+    form.append('file', avatar, {
+      filename: `${id}.jpg`,
+      contentType: 'image/jpeg',
+    });
+
+    const { id: assetId } = await this.users.client
+      .post('assets', {
+        prefixUrl: `${config.baseUrl}/api/apps/${config.appName}`,
+        headers: form.getHeaders(),
+        body: form,
+      })
+      .json();
+
+    const user = await this.users.patch(id, {
+      avatar: { iv: [assetId] },
+    });
+
+    return parseUser(user);
   }
 
   async connectByCode(

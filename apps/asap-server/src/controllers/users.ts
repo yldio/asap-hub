@@ -166,13 +166,16 @@ export default class Users {
             const teamUpdates = update.teams!.find(
               ({ id: teamId }) => team.id[0] === teamId,
             );
-            if (teamUpdates?.approach) {
+            if (teamUpdates?.approach || teamUpdates?.approach?.trim) {
               team.approach =
                 teamUpdates.approach.trim() === ''
                   ? null
                   : teamUpdates.approach;
             }
-            if (teamUpdates?.responsibilities) {
+            if (
+              teamUpdates?.responsibilities ||
+              teamUpdates?.responsibilities?.trim
+            ) {
               team.responsibilities =
                 teamUpdates.responsibilities.trim() === ''
                   ? null

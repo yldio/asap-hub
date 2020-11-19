@@ -298,6 +298,8 @@ describe('PATCH /users/{id}', () => {
             {
               role: 'Collaborating PI',
               id: ['team-id-3'],
+              responsibilities: null,
+              approach: null,
             },
           ],
         },

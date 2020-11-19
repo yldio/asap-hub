@@ -70,6 +70,68 @@ it('by default renders the research tab', async () => {
   expect(await findByText('What?')).toBeVisible();
 });
 
+it('navigates to the background tab', async () => {
+  const { findByText } = await renderProfile({
+    ...createUserResponse(),
+    biography: 'My Bio',
+  });
+
+  userEvent.click(await findByText(/background/i, { selector: 'nav *' }));
+  expect(await findByText('My Bio')).toBeVisible();
+});
+
+it('navigates to the outputs tab', async () => {
+  const { findByText } = await renderProfile(createUserResponse());
+
+  userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
+  expect(await findByText(/research.+outputs/i)).toBeVisible();
+});
+
+it("links to the user's team", async () => {
+  const { findByText } = await renderProfile({
+    ...createUserResponse(),
+    teams: [
+      {
+        ...createUserTeams({ teams: 1 })[0],
+        id: '42',
+        displayName: 'Kool Krew',
+      },
+    ],
+  });
+  expect(
+    (
+      await findByText('Kool Krew', { exact: false, selector: 'h2 ~ * *' })
+    ).closest('a')!.href,
+  ).toContain('42');
+});
+
+it("links to the user's team proposal", async () => {
+  const { findByText } = await renderProfile({
+    ...createUserResponse(),
+    teams: [
+      {
+        ...createUserTeams({ teams: 1 })[0],
+        proposal: '1337',
+      },
+    ],
+  });
+  expect((await findByText(/proposal/i)).closest('a')!.href).toContain('1337');
+});
+it('does not show a proposal for a user whose team has none', async () => {
+  const { getByText, queryByText } = await renderProfile({
+    ...createUserResponse(),
+    teams: [
+      {
+        ...createUserTeams({ teams: 1 })[0],
+        proposal: undefined,
+      },
+    ],
+  });
+  const loadingIndicator = getByText(/loading/i);
+  await waitForElementToBeRemoved(loadingIndicator);
+  expect(queryByText(/proposal/i)).not.toBeInTheDocument();
+});
+
 it('renders the 404 page for a missing user', async () => {
   const { findByText } = await renderProfile(
     {
@@ -79,87 +141,6 @@ it('renders the 404 page for a missing user', async () => {
     { routeProfileId: '1337' },
   );
   expect(await findByText(/sorry.+page/i)).toBeVisible();
-});
-
-// TODO improve test quality
-describe('with team', () => {
-  it('calculates links', async () => {
-    const { findAllByRole } = await renderProfile({
-      ...createUserResponse({ teams: 1 }),
-    });
-    const links = (await findAllByRole('link')) as HTMLAnchorElement[];
-    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
-      Array [
-        "http://localhost/network/teams/t0",
-        "http://localhost/u0/research/edit-personal-info",
-        "mailto:agnete.kirkeby@sund.ku.dk",
-        "http://localhost/u0/research/edit-contact-info",
-        "http://localhost/u0/research",
-        "http://localhost/u0/about",
-        "http://localhost/u0/outputs",
-        "http://localhost/network/teams/t0",
-        "http://localhost/network/teams/t0",
-        "http://localhost/u0/research/edit-background",
-        "http://localhost/u0/research/edit-skills",
-        "http://localhost/u0/research/edit-questions",
-        "mailto:agnete.kirkeby@sund.ku.dk",
-      ]
-    `);
-  });
-
-  it('calculates links with proposal', async () => {
-    const { findAllByRole } = await renderProfile({
-      ...createUserResponse(),
-      teams: [{ ...createUserTeams({ teams: 1 })[0], proposal: 'uuid' }],
-    });
-    const links = (await findAllByRole('link')) as HTMLAnchorElement[];
-    expect(links.map(({ href }) => href)).toMatchInlineSnapshot(`
-      Array [
-        "http://localhost/network/teams/t0",
-        "http://localhost/u0/research/edit-personal-info",
-        "mailto:agnete.kirkeby@sund.ku.dk",
-        "http://localhost/u0/research/edit-contact-info",
-        "http://localhost/u0/research",
-        "http://localhost/u0/about",
-        "http://localhost/u0/outputs",
-        "http://localhost/network/teams/t0",
-        "http://localhost/shared-research/uuid",
-        "http://localhost/network/teams/t0",
-        "http://localhost/u0/research/edit-background",
-        "http://localhost/u0/research/edit-skills",
-        "http://localhost/u0/research/edit-questions",
-        "mailto:agnete.kirkeby@sund.ku.dk",
-      ]
-    `);
-  });
-});
-
-describe('for a staff member', () => {
-  it('calculates links', async () => {
-    const { findAllByText, findByText } = await renderProfile({
-      ...createUserResponse(),
-      role: 'Staff',
-      reachOut: 'approach',
-      responsibilities: 'responsible',
-    });
-
-    expect(
-      await findByText(/get in touch/i, {
-        selector: 'a',
-      }),
-    ).toHaveAttribute(
-      'href',
-      'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
-    );
-
-    const links = await findAllByText(/team\sasap/i, {
-      selector: 'a',
-    });
-    expect(links.map((a) => a.getAttribute('href'))).toEqual([
-      '/discover',
-      '/discover',
-    ]);
-  });
 });
 
 describe('a header edit button', () => {

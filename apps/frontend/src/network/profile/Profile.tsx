@@ -17,7 +17,9 @@ import { useCurrentUser } from '@asap-hub/react-context';
 
 import { useUserById } from '@asap-hub/frontend/src/api/users';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
+import { DISCOVER_PATH, NETWORK_PATH } from '@asap-hub/frontend/src/routes';
 import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
+import { TEAMS_PATH } from '../routes';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -64,7 +66,7 @@ const Profile: React.FC<{}> = () => {
   if (userProfile) {
     const teams = userProfile.teams.map(({ proposal, ...team }) => ({
       ...team,
-      href: `/network/teams/${team.id}`,
+      href: `${NETWORK_PATH}/${TEAMS_PATH}/${team.id}`,
       proposalHref: proposal ? `/shared-research/${proposal}` : undefined,
     }));
 
@@ -75,7 +77,7 @@ const Profile: React.FC<{}> = () => {
       ...userProfile,
       teams,
 
-      discoverHref: '/discover',
+      discoverHref: DISCOVER_PATH,
 
       aboutHref: join(url, 'about'),
       researchHref: join(url, 'research'),

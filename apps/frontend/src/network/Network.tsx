@@ -11,6 +11,7 @@ import { useDebounce } from 'use-debounce';
 
 import ErrorBoundary from '../errors/ErrorBoundary';
 import { useSearch } from '../hooks';
+import { TEAMS_PATH } from './routes';
 
 const loadProfileList = () =>
   import(/* webpackChunkName: "network-profile-list" */ './ProfileList');
@@ -75,7 +76,7 @@ const Network: React.FC<{}> = () => {
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={Profile} />
-      <Route exact path={`${path}/teams`}>
+      <Route exact path={`${path}/${TEAMS_PATH}`}>
         <NetworkPage
           page="teams"
           onChangeToggle={onChangeToggle('users')}
@@ -91,8 +92,8 @@ const Network: React.FC<{}> = () => {
           </ErrorBoundary>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/teams/:id`} component={Team} />
-      <Redirect to={`${path}/teams`} />
+      <Route path={`${path}/${TEAMS_PATH}/:id`} component={Team} />
+      <Redirect to={`${path}/${TEAMS_PATH}`} />
     </Switch>
   );
 };

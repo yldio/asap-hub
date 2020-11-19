@@ -4,6 +4,8 @@ import { join } from 'path';
 
 import { useResearchOutputs } from '../api';
 import { usePaginationParams, usePagination } from '../hooks';
+import { NETWORK_PATH } from '../routes';
+import { TEAMS_PATH } from '../network/routes';
 
 interface SharedResearchListProps {
   searchQuery?: string;
@@ -35,7 +37,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
     href: join('/shared-research', output.id),
     team: output.team && {
       ...output.team,
-      href: join('/network/teams', output.team.id),
+      href: join(`${NETWORK_PATH}/${TEAMS_PATH}`, output.team.id),
     },
   }));
   return (

@@ -5,6 +5,8 @@ import { join } from 'path';
 
 import { useTeams } from '../api';
 import { usePaginationParams, usePagination } from '../hooks';
+import { NETWORK_PATH } from '../routes';
+import { TEAMS_PATH } from './routes';
 
 interface NetworkTeamListProps {
   searchQuery?: string;
@@ -35,7 +37,7 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
 
   const teams = result.data.items.map((team: TeamResponse) => ({
     ...team,
-    href: join('/network/teams', team.id),
+    href: join(`${NETWORK_PATH}/${TEAMS_PATH}`, team.id),
   }));
   return (
     <NetworkTeams

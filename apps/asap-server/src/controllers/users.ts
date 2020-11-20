@@ -143,6 +143,12 @@ export default class Users {
         return acc;
       }
 
+      // map flat questions to squidex format
+      if (key === 'questions' && value.length) {
+        acc[key] = { iv: value.map((question: string) => ({ question })) };
+        return acc;
+      }
+
       acc[key] = { iv: value };
       return acc;
     }, {} as { [key: string]: { iv: unknown } });
@@ -154,6 +160,9 @@ export default class Users {
 
     const user = await this.users.fetchById(id);
 
+    // update only contain the team the user is trying to change
+    // we need to merge it with the ones on the DB, replacing the updated props
+    // and deleting them if update is an empty string.
     /* eslint-disable @typescript-eslint/no-non-null-assertion, no-param-reassign */
     if (update.teams?.length) {
       cleanUpdate.teams = {

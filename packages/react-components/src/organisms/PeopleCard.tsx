@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Avatar, Caption } from '../atoms';
-import { ProfilePersonalText } from '../molecules';
+import { UserProfilePersonalText } from '../molecules';
 import { tabletScreen } from '../pixels';
 import { formatDate } from '../utils';
 
@@ -82,7 +82,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
             </Link>
           </div>
           <div css={profileTextStyles}>
-            <ProfilePersonalText
+            <UserProfilePersonalText
               department={department}
               institution={institution}
               location={location}

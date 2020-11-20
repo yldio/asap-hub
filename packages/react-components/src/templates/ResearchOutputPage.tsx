@@ -55,7 +55,6 @@ type ResearchOutputPageProps = Pick<
   team?: {
     href: string;
   };
-  profileHref: string;
   sharedResearchHref: string;
 };
 

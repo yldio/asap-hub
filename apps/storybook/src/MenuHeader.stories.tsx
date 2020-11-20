@@ -3,7 +3,7 @@ import { MenuHeader } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './layout';
 
 export default {
-  title: 'Organisms / Menu Header',
+  title: 'Organisms / Layout / Menu Header',
   component: MenuHeader,
   decorators: [NoPaddingDecorator],
 };

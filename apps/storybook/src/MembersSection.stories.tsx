@@ -3,7 +3,7 @@ import { MembersSection } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Team / Members',
+  title: 'Organisms / Members',
 };
 
 export const Empty = () => <MembersSection members={[]} />;

@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import UserNavigation from '../UserNavigation';
 
 const props: ComponentProps<typeof UserNavigation> = {
-  profileHref: '/profile',
+  userProfileHref: '/profile',
   teams: [
     { name: 'Team 1', href: '/team-1' },
     { name: 'Team 2', href: '/team-2' },
@@ -39,7 +39,7 @@ it('renders the bottom links', () => {
 
 it('applies the passed href', () => {
   const { getAllByRole } = render(
-    <UserNavigation {...props} profileHref="/profile" />,
+    <UserNavigation {...props} userProfileHref="/profile" />,
   );
   expect(
     getAllByRole('link').find(({ textContent }) =>

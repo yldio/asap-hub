@@ -45,7 +45,7 @@ describe.each([
       <ProfileHeader
         {...boilerplateProps}
         editPersonalInfoHref="#somewhere"
-        editContactHref="#somewhere"
+        editContactInfoHref="#somewhere"
       />,
     );
     await update(document);

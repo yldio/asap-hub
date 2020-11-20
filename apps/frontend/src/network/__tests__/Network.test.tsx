@@ -6,7 +6,7 @@ import nock from 'nock';
 import { ClientRequest } from 'http';
 import { authTestUtils } from '@asap-hub/react-components';
 
-import Routes from '../Routes';
+import Network from '../Network';
 import { API_BASE_URL } from '../../config';
 import teamsResponse from '../../fixtures/teams';
 import usersResponse from '../../fixtures/users';
@@ -18,7 +18,7 @@ const renderNetworkPage = async (pathname: string, query = '') => {
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter initialEntries={[{ pathname, search: query }]}>
             <Route path={'/network'}>
-              <Routes />
+              <Network />
             </Route>
           </MemoryRouter>
         </authTestUtils.LoggedIn>

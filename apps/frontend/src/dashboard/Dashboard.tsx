@@ -9,6 +9,8 @@ import { useCurrentUser } from '@asap-hub/react-context';
 
 import { useDashboard } from '../api';
 import ErrorBoundary from '../errors/ErrorBoundary';
+import { DISCOVER_PATH, NETWORK_PATH } from '../routes';
+import { TEAMS_PATH } from '../network/routes';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
@@ -26,14 +28,16 @@ const Dashboard: React.FC<{}> = () => {
   if (dashboard) {
     const data = {
       ...dashboard,
-      hrefDiscoverAsap: '/discover',
+      hrefDiscoverAsap: DISCOVER_PATH,
       hrefSharedResearch: '/shared-research',
       hrefNewsAndEvents: '/news-and-events',
-      hrefProfile: `/network/users/${id}`,
-      hrefTeamsNetwork: '/network/teams',
+      hrefProfile: `${NETWORK_PATH}/users/${id}`,
+      hrefTeamsNetwork: `${NETWORK_PATH}/${TEAMS_PATH}`,
       hrefTeamWorkspace:
-        teams?.length > 0 ? `/network/teams/${teams[0].id}` : undefined,
-      hrefUsersNetwork: '/network/users',
+        teams?.length > 0
+          ? `${NETWORK_PATH}/${TEAMS_PATH}/${teams[0].id}`
+          : undefined,
+      hrefUsersNetwork: `${NETWORK_PATH}/users`,
     };
     return (
       <DashboardPage firstName={firstName}>

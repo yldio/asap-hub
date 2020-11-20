@@ -6,6 +6,8 @@ import { UserResponse } from '@asap-hub/model';
 
 import { useUsers } from '../api';
 import { usePaginationParams, usePagination } from '../hooks';
+import { NETWORK_PATH } from '../routes';
+import { TEAMS_PATH } from './routes';
 
 interface ProfileListProps {
   searchQuery?: string;
@@ -34,10 +36,10 @@ const ProfileList: React.FC<ProfileListProps> = ({
 
   const users = result.data.items.map((user: UserResponse) => ({
     ...user,
-    href: join('/network/users', user.id),
+    href: join(`${NETWORK_PATH}/users`, user.id),
     teams: user.teams.map((team) => ({
       ...team,
-      href: `/network/teams/${team.id}`,
+      href: `${NETWORK_PATH}/${TEAMS_PATH}/${team.id}`,
     })),
   }));
   return (

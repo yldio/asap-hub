@@ -11,11 +11,13 @@ import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import history from './history';
 import { AuthProvider, CheckAuth, Logout } from './auth';
 import ErrorBoundary from './errors/ErrorBoundary';
+import { DISCOVER_PATH, NETWORK_PATH } from './routes';
+import { TEAMS_PATH } from './network/routes';
 
 const loadNewsAndEvents = () =>
   import(/* webpackChunkName: "news-and-events" */ './news/Routes');
 const loadNetwork = () =>
-  import(/* webpackChunkName: "network" */ './network/Routes');
+  import(/* webpackChunkName: "network" */ './network/Network');
 const loadSharedResearch = () =>
   import(/* webpackChunkName: "shared-research" */ './shared-research/Routes');
 const loadDashboard = () =>
@@ -51,14 +53,14 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   const user = useCurrentUser();
   return isAuthenticated && user ? (
     <Layout
-      discoverAsapHref="/discover"
+      discoverAsapHref={DISCOVER_PATH}
       sharedResearchHref="/shared-research"
-      networkHref="/network/teams"
+      networkHref={`${NETWORK_PATH}/${TEAMS_PATH}`}
       newsAndEventsHref="/news-and-events"
       profileHref={`/network/users/${user.id}`}
       teams={user.teams.map(({ id, displayName = '' }) => ({
         name: displayName,
-        href: `/network/teams/${id}`,
+        href: `${NETWORK_PATH}/${TEAMS_PATH}/${id}`,
       }))}
       settingsHref="/settings"
       feedbackHref={mailToFeedback}
@@ -106,13 +108,13 @@ const App: React.FC<{}> = () => {
                             <Route path="/logout">
                               <Logout />
                             </Route>
-                            <Route path="/discover">
+                            <Route path={DISCOVER_PATH}>
                               <Discover />
                             </Route>
                             <Route path="/news-and-events">
                               <NewsAndEvents />
                             </Route>
-                            <Route path="/network">
+                            <Route path={NETWORK_PATH}>
                               <Network />
                             </Route>
                             <Route path="/shared-research">

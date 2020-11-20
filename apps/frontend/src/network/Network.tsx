@@ -11,15 +11,16 @@ import { useDebounce } from 'use-debounce';
 
 import ErrorBoundary from '../errors/ErrorBoundary';
 import { useSearch } from '../hooks';
+import { TEAMS_PATH } from './routes';
 
 const loadProfileList = () =>
   import(/* webpackChunkName: "network-profile-list" */ './ProfileList');
 const loadProfile = () =>
-  import(/* webpackChunkName: "network-profile" */ './profile/Routes');
+  import(/* webpackChunkName: "network-profile" */ './profile/Profile');
 const loadTeamList = () =>
   import(/* webpackChunkName: "network-team-list" */ './TeamList');
 const loadTeam = () =>
-  import(/* webpackChunkName: "network-team" */ './team/Routes');
+  import(/* webpackChunkName: "network-team" */ './team/Team');
 const ProfileList = React.lazy(loadProfileList);
 const Profile = React.lazy(loadProfile);
 const TeamList = React.lazy(loadTeamList);
@@ -75,7 +76,7 @@ const Network: React.FC<{}> = () => {
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={Profile} />
-      <Route exact path={`${path}/teams`}>
+      <Route exact path={`${path}/${TEAMS_PATH}`}>
         <NetworkPage
           page="teams"
           onChangeToggle={onChangeToggle('users')}
@@ -91,8 +92,8 @@ const Network: React.FC<{}> = () => {
           </ErrorBoundary>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/teams/:id`} component={Team} />
-      <Redirect to={`${path}/teams`} />
+      <Route path={`${path}/${TEAMS_PATH}/:id`} component={Team} />
+      <Redirect to={`${path}/${TEAMS_PATH}`} />
     </Switch>
   );
 };

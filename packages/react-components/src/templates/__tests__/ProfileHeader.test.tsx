@@ -88,7 +88,7 @@ describe('an edit button', () => {
     const { getByLabelText } = render(
       <ProfileHeader
         {...boilerplateProps}
-        editContactHref="/edit-contact-info"
+        editContactInfoHref="/edit-contact-info"
       />,
     );
     expect(getByLabelText(/edit.+contact/i)).toHaveAttribute(
@@ -101,7 +101,7 @@ describe('an edit button', () => {
     const { getByLabelText } = render(
       <ProfileHeader
         {...boilerplateProps}
-        editContactHref="/edit-contact-info"
+        editContactInfoHref="/edit-contact-info"
       />,
     );
     expect(getByLabelText(/edit.+contact/i)).not.toHaveAttribute('href');

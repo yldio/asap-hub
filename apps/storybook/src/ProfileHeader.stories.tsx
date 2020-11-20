@@ -43,6 +43,6 @@ export const Editable = () => (
   <ProfileHeader
     {...commonProps()}
     editPersonalInfoHref="/other"
-    editContactHref="/other"
+    editContactInfoHref="/other"
   />
 );

@@ -6,6 +6,8 @@ import {
   NotFoundPage,
 } from '@asap-hub/react-components';
 import { useResearchOutputById } from '../api';
+import { NETWORK_PATH } from '../routes';
+import { TEAMS_PATH } from '../network/routes';
 
 const ResearchOutput: React.FC = () => {
   const { id } = useParams();
@@ -21,7 +23,7 @@ const ResearchOutput: React.FC = () => {
       team: researchOutputData.team
         ? {
             ...researchOutputData.team,
-            href: `/network/teams/${researchOutputData.team.id}`,
+            href: `${NETWORK_PATH}/${TEAMS_PATH}/${researchOutputData.team.id}`,
           }
         : undefined,
       profileHref: '#',

@@ -191,6 +191,7 @@ describe('PATCH /users/{id}', () => {
       .reply(200, patchResponse)
       .put(`/api/content/${config.appName}/users/userId`, {
         ...patchResponse.data,
+        contactEmail: { iv: null },
         biography: { iv: 'I do awesome stuff' },
         jobTitle: { iv: null },
         orcid: { iv: null },

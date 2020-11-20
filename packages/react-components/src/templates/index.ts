@@ -1,7 +1,7 @@
 export { default as BasicLayout } from './BasicLayout';
 export { default as BiographyModal } from './BiographyModal';
-export { default as ContentPage } from './ContentPage';
 export { default as ContactInfoModal } from './ContactInfoModal';
+export { default as ContentPage } from './ContentPage';
 export { default as DashboardPage } from './DashboardPage';
 export { default as DashboardPageBody } from './DashboardPageBody';
 export { default as DashboardPageHeader } from './DashboardPageHeader';
@@ -18,6 +18,7 @@ export { default as NewsAndEventsPage } from './NewsAndEventsPage';
 export { default as NewsAndEventsPageBody } from './NewsAndEventsPageBody';
 export { default as NewsAndEventsPageHeader } from './NewsAndEventsPageHeader';
 export { default as NotFoundPage } from './NotFoundPage';
+export { default as OpenQuestionsModal } from './OpenQuestionsModal';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
 export { default as PersonalInfoModal } from './PersonalInfoModal';
 export { default as UserProfileAbout } from './UserProfileAbout';

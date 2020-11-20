@@ -49,9 +49,10 @@ it('allows editing your own profile', () => {
   expect(getAllByLabelText(/edit/i)).not.toHaveLength(0);
 });
 
-describe('when editing team membership', () => {
+describe('when editing', () => {
   const userProfile: ComponentProps<typeof Research>['userProfile'] = {
     ...createUserResponse({ teams: 1 }),
+    questions: ['question 1', 'question 2', 'question 3', 'question 4'],
     id: '42',
   };
 
@@ -86,55 +87,111 @@ describe('when editing team membership', () => {
       </authTestUtils.LoggedIn>,
     );
   });
+  describe('team membership', () => {
+    it('opens and closes the dialog', async () => {
+      const {
+        getByText,
+        queryByText,
+        getByLabelText,
+        getByDisplayValue,
+        queryByDisplayValue,
+      } = result;
 
-  it('opens and closes the dialog', async () => {
-    const {
-      getByText,
-      queryByText,
-      getByLabelText,
-      getByDisplayValue,
-      queryByDisplayValue,
-    } = result;
+      userEvent.click(getByLabelText(/example.+team/i));
+      expect(getByDisplayValue('My Approach')).toBeVisible();
 
-    userEvent.click(getByLabelText(/example.+team/i));
-    expect(getByDisplayValue('My Approach')).toBeVisible();
+      userEvent.click(getByText(/close/i));
+      await waitFor(() => {
+        expect(queryByText(/loading/i)).not.toBeInTheDocument();
+        expect(queryByDisplayValue('My Approach')).not.toBeInTheDocument();
+      });
+    });
 
-    userEvent.click(getByText(/close/i));
-    await waitFor(() => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-      expect(queryByDisplayValue('My Approach')).not.toBeInTheDocument();
+    it('saves the changes from the dialog', async () => {
+      const {
+        getByText,
+        queryByText,
+        getByLabelText,
+        getByDisplayValue,
+        queryByDisplayValue,
+      } = result;
+
+      userEvent.click(getByLabelText(/example.+team/i));
+      await userEvent.type(getByDisplayValue('My Approach'), ' 2');
+      expect(getByDisplayValue('My Approach 2')).toBeVisible();
+
+      await userEvent.type(getByDisplayValue('My Responsibilities'), ' 2');
+      expect(getByDisplayValue('My Responsibilities 2')).toBeVisible();
+
+      userEvent.click(getByText(/save/i));
+      await waitFor(() => {
+        expect(queryByText(/loading/i)).not.toBeInTheDocument();
+        expect(queryByDisplayValue('My Approach 2')).not.toBeInTheDocument();
+      });
+      expect(handlePatchUserProfile).toHaveBeenCalledWith({
+        teams: [
+          {
+            id: '1',
+            approach: 'My Approach 2',
+            responsibilities: 'My Responsibilities 2',
+          },
+        ],
+      });
     });
   });
+  describe('questions', () => {
+    it('opens and closes the dialog', async () => {
+      const {
+        getByText,
+        queryByText,
+        getByLabelText,
+        getByDisplayValue,
+        queryByDisplayValue,
+      } = result;
 
-  it('saves the changes from the dialog', async () => {
-    const {
-      getByText,
-      queryByText,
-      getByLabelText,
-      getByDisplayValue,
-      queryByDisplayValue,
-    } = result;
+      userEvent.click(getByLabelText(/edit.+questions/i));
+      expect(getByDisplayValue('question 1')).toBeVisible();
 
-    userEvent.click(getByLabelText(/example.+team/i));
-    await userEvent.type(getByDisplayValue('My Approach'), ' 2');
-    expect(getByDisplayValue('My Approach 2')).toBeVisible();
-
-    await userEvent.type(getByDisplayValue('My Responsibilities'), ' 2');
-    expect(getByDisplayValue('My Responsibilities 2')).toBeVisible();
-
-    userEvent.click(getByText(/save/i));
-    await waitFor(() => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-      expect(queryByDisplayValue('My Approach 2')).not.toBeInTheDocument();
+      userEvent.click(getByText(/close/i));
+      await waitFor(() => {
+        expect(queryByText(/loading/i)).not.toBeInTheDocument();
+        expect(queryByDisplayValue('question 1')).not.toBeInTheDocument();
+      });
     });
-    expect(handlePatchUserProfile).toHaveBeenCalledWith({
-      teams: [
-        {
-          id: '1',
-          approach: 'My Approach 2',
-          responsibilities: 'My Responsibilities 2',
-        },
-      ],
+
+    it('saves the changes from the dialog', async () => {
+      const {
+        getByText,
+        queryByText,
+        getByLabelText,
+        getByDisplayValue,
+        queryByDisplayValue,
+      } = result;
+
+      userEvent.click(getByLabelText(/edit.+questions/i));
+      await userEvent.type(getByDisplayValue('question 1'), ' a');
+      expect(getByDisplayValue('question 1 a')).toBeVisible();
+
+      await userEvent.type(getByDisplayValue('question 2'), ' b');
+      expect(getByDisplayValue('question 2 b')).toBeVisible();
+
+      await userEvent.type(getByDisplayValue('question 3'), ' c');
+      expect(getByDisplayValue('question 3 c')).toBeVisible();
+      await userEvent.type(getByDisplayValue('question 4'), ' d');
+      expect(getByDisplayValue('question 4 d')).toBeVisible();
+      userEvent.click(getByText(/save/i));
+      await waitFor(() => {
+        expect(queryByText(/loading/i)).not.toBeInTheDocument();
+        expect(queryByDisplayValue('question 1 a')).not.toBeInTheDocument();
+      });
+      expect(handlePatchUserProfile).toHaveBeenCalledWith({
+        questions: [
+          'question 1 a',
+          'question 2 b',
+          'question 3 c',
+          'question 4 d',
+        ],
+      });
     });
   });
 });

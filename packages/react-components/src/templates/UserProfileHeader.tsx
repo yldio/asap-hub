@@ -192,7 +192,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             primary
             href={editPersonalInfoHref}
             label="Edit personal information"
-            enabled={isEnabled('PROFILE_EDITING')}
+            enabled={isEnabled('EDIT_PROFILE_REST')}
           >
             {editIcon}
           </Link>
@@ -232,7 +232,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             primary
             href={editContactInfoHref}
             label="Edit contact information"
-            enabled={isEnabled('PROFILE_EDITING')}
+            enabled={isEnabled('EDIT_PROFILE_REST')}
           >
             {editIcon}
           </Link>

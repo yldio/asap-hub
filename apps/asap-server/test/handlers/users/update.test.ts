@@ -201,7 +201,7 @@ describe('PATCH /users/{id}', () => {
         location: { iv: null },
         skills: { iv: [] },
         skillsDescription: { iv: null },
-        questions: { iv: [{ question: 'test' }] },
+        questions: { iv: [] },
       } as { [k: string]: any })
       .reply(200, putResponse);
 
@@ -225,7 +225,7 @@ describe('PATCH /users/{id}', () => {
           location: '',
           skills: [],
           skillsDescription: '',
-          questions: [{ question: 'test' }],
+          questions: [],
         },
       }),
     )) as APIGatewayProxyResult;
@@ -243,7 +243,7 @@ describe('PATCH /users/{id}', () => {
         ...patchResponse.data,
         biography: { iv: 'I do awesome stuff' },
         department: { iv: 'Awesome Department' },
-        questions: { iv: [{ question: 'test' }] },
+        questions: { iv: [{ question: 'To be or not to be?' }] },
         teams: {
           iv: [
             { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
@@ -270,7 +270,7 @@ describe('PATCH /users/{id}', () => {
         body: {
           biography: 'I do awesome stuff',
           department: 'Awesome Department',
-          questions: [{ question: 'test' }],
+          questions: ['To be or not to be?'],
           teams: [
             {
               id: 'team-id-3',

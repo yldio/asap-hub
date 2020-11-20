@@ -83,7 +83,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
               <li>
                 <Paragraph primary>
                   Add important links to your private{' '}
-                  <Link href={hrefTeamWorkspace}>Team Worspace</Link>
+                  <Link href={hrefTeamWorkspace}>Team Workspace</Link>
                 </Paragraph>
               </li>
             ) : null}

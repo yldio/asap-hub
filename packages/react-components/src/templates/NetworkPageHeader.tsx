@@ -85,7 +85,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           placeholder={
             page === 'users'
               ? 'Enter name, keyword, institution, …'
-              : 'Enter name, keywork, method, …'
+              : 'Enter name, keyword, method, …'
           }
           searchQuery={searchQuery}
           onChangeFilter={onChangeFilter}

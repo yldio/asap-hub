@@ -20,7 +20,7 @@ it('Displays relevant page information', () => {
   expect(getByText('People')).not.toBeChecked();
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Enter name, keywork, method, …"`);
+  ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
   rerender(<NetworkPageHeader {...props} page={'users'} />);
   expect(getByText('Teams')).not.toBeChecked();

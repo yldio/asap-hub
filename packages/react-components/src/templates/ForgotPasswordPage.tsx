@@ -71,6 +71,11 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
         <Paragraph primary accent="lead">
           We’ll send you a password reset link
         </Paragraph>
+        <Paragraph>
+          You might have set up your account with Google or Orcid. Please check
+          if you are able to log in with any of those log in methods before
+          resetting your password.
+        </Paragraph>
       </div>
       <form autoComplete="on" ref={formRef} css={formStyles}>
         <LabeledTextField

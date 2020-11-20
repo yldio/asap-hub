@@ -128,7 +128,7 @@ describe('the workspace', () => {
     const { getByText, findByText } = await renderTeam();
 
     userEvent.click(getByText(/team workspace/i, { selector: 'nav *' }));
-    expect(await findByText(/team collaboration tools/i)).toBeVisible();
+    expect(await findByText(/collaboration\stools/i)).toBeVisible();
   });
 
   it('navigates to tool edit modal ', async () => {

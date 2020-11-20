@@ -40,7 +40,7 @@ const TeamWorkspace: React.FC<TeamWorkspaceProps> = ({
 }) => (
   <div css={containerStyles}>
     <Card>
-      <Display styleAsHeading={3}>Team Collaboration Tools</Display>
+      <Display styleAsHeading={3}>Collaboration Tools (Team Only)</Display>
       <Paragraph accent="lead">
         This directory contains the most important links for your team's
         internally shared resources and what each link is used for.

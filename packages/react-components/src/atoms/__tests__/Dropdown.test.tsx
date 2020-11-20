@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import Dropdown from '../Dropdown';
-import { ember, tin, fern, pine } from '../../colors';
+import { ember, tin, fern, pine, lead, silver } from '../../colors';
 
 it('shows the selected value', () => {
   const { getByText } = render(
@@ -123,4 +123,32 @@ it('gets a green border when focused', () => {
       'borderColor',
     )?.borderColor.replace(/ /g, ''),
   ).toBe(fern.rgb.replace(/ /g, ''));
+});
+
+it('shows the dropdown grey out', () => {
+  const { getByRole, getByText, rerender } = render(
+    <Dropdown
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value="LHR"
+      enabled={false}
+    />,
+  );
+  expect(findParentWithStyle(getByText('Heathrow'), 'color')?.color).toBe(
+    lead.rgb,
+  );
+  expect(
+    findParentWithStyle(getByText('Heathrow'), 'background')?.background,
+  ).toBe(silver.rgb);
+  expect(getByRole('textbox')).toBeDisabled();
+
+  rerender(
+    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="LHR" />,
+  );
+  expect(findParentWithStyle(getByText('Heathrow'), 'color')?.color).not.toBe(
+    lead.rgb,
+  );
+  expect(
+    findParentWithStyle(getByText('Heathrow'), 'background')?.background,
+  ).not.toBe(silver.rgb);
+  expect(getByRole('textbox')).not.toBeDisabled();
 });

@@ -36,6 +36,7 @@ export { default as SigninForm } from './SigninForm';
 export { default as SigninPage } from './SigninPage';
 export { default as TeamAbout } from './TeamAbout';
 export { default as TeamHeader } from './TeamHeader';
+export { default as TeamMembershipModal } from './TeamMembershipModal';
 export { default as TeamOutputs } from './TeamOutputs';
 export { default as TeamPage } from './TeamPage';
 export { default as TeamWorkspace } from './TeamWorkspace';

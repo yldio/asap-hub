@@ -9,6 +9,7 @@ import {
   BiographyModal,
   PersonalInfoModal,
   ContactInfoModal,
+  TeamMembershipModal,
 } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 
@@ -116,11 +117,21 @@ export const ResearchTabViewOnly = () => (
     <ProfileResearch {...researchTabProps()} />
   </ProfilePage>
 );
+
+export const ResearchTabTeamMembershipModal = () => (
+  <ProfilePage {...commonProps()} researchHref="#">
+    <ProfileResearch {...researchTabProps()} />
+    <TeamMembershipModal backHref="#" {...researchTabProps().teams[0]} />
+  </ProfilePage>
+);
 export const ResearchTabEditable = () => (
   <ProfilePage {...commonPropsEditable()} researchHref="#">
     <ProfileResearch
       {...researchTabProps()}
-      editBackgroundHref="/wrong"
+      teams={commonProps().teams.map((team) => ({
+        ...team,
+        editHref: `/edit-team-membership/${team.id}`,
+      }))}
       editSkillsHref="/wrong"
       editQuestionsHref="/wrong"
     />

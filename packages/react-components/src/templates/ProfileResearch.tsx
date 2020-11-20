@@ -16,10 +16,11 @@ type ProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   Pick<ComponentProps<typeof ProfileBackground>, 'firstName' | 'displayName'> &
   Pick<UserResponse, 'email'> & {
     readonly teams: ReadonlyArray<
-      Omit<ComponentProps<typeof ProfileBackground>, 'firstName'>
+      Omit<ComponentProps<typeof ProfileBackground>, 'firstName'> & {
+        editHref?: string;
+      }
     >;
   } & {
-    editBackgroundHref?: string;
     editSkillsHref?: string;
     editQuestionsHref?: string;
   };
@@ -33,70 +34,64 @@ const ProfileResearch: React.FC<ProfileResearchProps> = ({
   skillsDescription,
   questions,
 
-  editBackgroundHref,
   editSkillsHref,
   editQuestionsHref,
 }) => {
   const { isEnabled } = useFlags();
-
   return (
     <ProfileCardList>
-      {{
-        card: teams.length
-          ? teams.map((team) => (
-              <ProfileBackground
-                key={team.id}
-                {...team}
-                firstName={firstName}
-              />
-            ))
-          : null,
-        editLink:
-          editBackgroundHref === undefined
-            ? undefined
-            : {
-                href: editBackgroundHref,
-                label: 'Edit role on ASAP',
-                enabled: isEnabled('PROFILE_EDITING'),
-              },
-      }}
-      {{
-        card: skills.length ? (
-          <ProfileSkills
-            skillsDescription={skillsDescription}
-            skills={skills}
-          />
-        ) : null,
-        editLink:
-          editSkillsHref === undefined
-            ? undefined
-            : {
-                href: editSkillsHref,
-                label: 'Edit expertise and resources',
-                enabled: isEnabled('PROFILE_EDITING'),
-              },
-      }}
-      {{
-        card: questions.length ? (
-          <QuestionsSection firstName={firstName} questions={questions} />
-        ) : null,
-        editLink:
-          editQuestionsHref === undefined
-            ? undefined
-            : {
-                href: editQuestionsHref,
-                label: 'Edit open questions',
-                enabled: isEnabled('PROFILE_EDITING'),
-              },
-      }}
-      {{
-        card: (
-          <CtaCard href={createMailTo(email)} buttonText="Contact">
-            <strong>Interested in what you have seen?</strong> <br />
-            Why not get in touch with {displayName}?
-          </CtaCard>
-        ),
-      }}
+      {[
+        ...teams.map((team) => ({
+          card: (
+            <ProfileBackground key={team.id} {...team} firstName={firstName} />
+          ),
+          editLink:
+            team.editHref !== undefined
+              ? {
+                  href: team.editHref,
+                  label: `Edit role on ${team.displayName}`,
+                  enabled: isEnabled('PROFILE_EDITING'),
+                }
+              : undefined,
+        })),
+        {
+          card: skills.length ? (
+            <ProfileSkills
+              skillsDescription={skillsDescription}
+              skills={skills}
+            />
+          ) : null,
+          editLink:
+            editSkillsHref === undefined
+              ? undefined
+              : {
+                  href: editSkillsHref,
+                  label: 'Edit expertise and resources',
+                  enabled: isEnabled('PROFILE_EDITING'),
+                },
+        },
+        {
+          card: questions.length ? (
+            <QuestionsSection firstName={firstName} questions={questions} />
+          ) : null,
+          editLink:
+            editQuestionsHref === undefined
+              ? undefined
+              : {
+                  href: editQuestionsHref,
+                  label: 'Edit open questions',
+                  enabled: isEnabled('PROFILE_EDITING'),
+                },
+        },
+        {
+          card: (
+            <CtaCard href={createMailTo(email)} buttonText="Contact">
+              <strong>Interested in what you have seen?</strong> <br />
+              Why not get in touch with {displayName}?
+            </CtaCard>
+          ),
+        },
+      ]}
     </ProfileCardList>
   );
 };

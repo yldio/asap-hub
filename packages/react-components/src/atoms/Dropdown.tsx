@@ -12,7 +12,7 @@ import {
 } from '../form';
 import { dropdownChevronIcon } from '../icons';
 import { perRem, lineHeight } from '../pixels';
-import { ember, steel, mint, pine, tin, rose } from '../colors';
+import { ember, steel, mint, pine, tin, rose, lead, silver } from '../colors';
 import { Option } from '../select';
 
 const containerStyles = css({
@@ -27,10 +27,18 @@ const invalidStyles = {
   backgroundColor: rose.rgb,
 };
 
+const disabledStyles = {
+  color: lead.rgb,
+  svg: {
+    fill: lead.rgb,
+  },
+  backgroundColor: silver.rgb,
+};
+
 const reactSelectStyles = (
   isInvalid: boolean,
 ): ComponentProps<typeof Select>['styles'] => ({
-  control: (_provided, { isFocused }) => ({
+  control: (_provided, { isFocused, isDisabled }) => ({
     ...baseStyles,
 
     display: 'flex',
@@ -39,6 +47,7 @@ const reactSelectStyles = (
 
     ...(isFocused ? focusStyles : {}),
     ...(isInvalid ? invalidStyles : {}),
+    ...(isDisabled ? disabledStyles : {}),
   }),
 
   valueContainer: (provided) => ({
@@ -92,6 +101,7 @@ const reactSelectStyles = (
     color: isFocused ? pine.rgb : 'unset',
     ':active': undefined,
   }),
+
   noOptionsMessage: (_provided) => ({
     padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
   }),
@@ -102,6 +112,7 @@ export interface DropdownProps<V extends string> {
 
   readonly id?: string;
   readonly options: ReadonlyArray<Option<V>>;
+  readonly enabled?: boolean;
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
@@ -111,6 +122,7 @@ export default function Dropdown<V extends string>({
 
   id,
   options,
+  enabled = true,
 
   value,
   onChange = noop,
@@ -118,6 +130,7 @@ export default function Dropdown<V extends string>({
   return (
     <div css={containerStyles}>
       <Select<Option<V>>
+        isDisabled={!enabled}
         options={options.filter((option) => option.value !== '')}
         value={options.find((option) => option.value === value)}
         onChange={(option) => {

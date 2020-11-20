@@ -1,7 +1,8 @@
+import { Auth0User } from '@asap-hub/auth';
 import { origin } from '../../config';
 
 /* eslint-disable @typescript-eslint/camelcase */
-const decodeToken = jest.fn().mockResolvedValue({
+const user: Auth0User = {
   [`${origin}/user`]: {
     id: 'userId',
     displayName: 'JT',
@@ -17,7 +18,7 @@ const decodeToken = jest.fn().mockResolvedValue({
       {
         id: 'team-id-3',
         displayName: 'Zac Torres',
-        role: 'Collaborator',
+        role: 'Collaborating PI',
       },
     ],
   },
@@ -29,13 +30,11 @@ const decodeToken = jest.fn().mockResolvedValue({
   locale: 'en',
   updated_at: '2020-10-27T17:55:23.418Z',
   email: 'joao.tiago@asap.science',
-  email_verified: true,
   iss: 'https://asap-hub.us.auth0.com/',
   sub: 'google-oauth2|awesomeGoogleCode',
   aud: 'audience',
-  iat: 1603821328,
-  exp: 1603857328,
-  auth_time: 1603821323,
   nonce: 'onlyOnce',
-});
+};
+
+const decodeToken = jest.fn().mockResolvedValue(user);
 export default decodeToken;

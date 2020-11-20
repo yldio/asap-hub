@@ -116,7 +116,7 @@ export interface UserPatchRequest {
   skills?: string[];
   skillsDescription?: string;
   questions?: string[];
-  teams?: Omit<UserTeam, 'displayName' | 'role' | 'proposal'>[];
+  teams?: Pick<UserTeam, 'id' | 'approach' | 'responsibilities'>[];
 }
 
 export type ListUserResponse = ListResponse<UserResponse>;

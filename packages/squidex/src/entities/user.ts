@@ -4,8 +4,8 @@ import { GraphqlTeam } from './team';
 
 export interface UserTeamConnection<T = string> {
   role: TeamRole;
-  approach?: string;
-  responsibilities?: string;
+  approach?: string | null;
+  responsibilities?: string | null;
   id: T[];
 }
 

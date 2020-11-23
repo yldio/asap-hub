@@ -99,8 +99,8 @@ export const parseGraphQLUserTeamConnection = (
   return {
     id: team.id,
     role: item.role,
-    approach: item.approach,
-    responsibilities: item.responsibilities,
+    approach: item.approach ? item.approach : undefined,
+    responsibilities: item.responsibilities ? item.responsibilities : undefined,
     proposal: proposal?.length ? proposal[0].id : undefined,
     displayName: displayName || '',
   };

@@ -1,4 +1,9 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'PROFILE_EDITING';
+export type Flag =
+  | 'PERSISTENT_EXAMPLE'
+  | 'EDIT_PROFILE_SKILLS'
+  | 'EDIT_PROFILE_QUESTIONS'
+  | 'EDIT_PROFILE_WORKS'
+  | 'EDIT_PROFILE_REST';
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // can also be used to manually disable a flag in development

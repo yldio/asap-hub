@@ -89,7 +89,7 @@ it('renders an edit button for the role on the team', () => {
   );
 });
 it('disables the edit button for the role on the team (REGRESSION)', () => {
-  disable('PROFILE_EDITING');
+  disable('EDIT_PROFILE_REST');
   const { getByLabelText } = render(
     <UserProfileResearch
       {...commonProps}
@@ -116,7 +116,7 @@ it('renders an edit button for the skills list', () => {
   );
 });
 it('disables the edit button for the skills list (REGRESSION)', () => {
-  disable('PROFILE_EDITING');
+  disable('EDIT_PROFILE_SKILLS');
   const { getByLabelText } = render(
     <UserProfileResearch {...commonProps} editSkillsHref="/edit-skills" />,
   );
@@ -135,7 +135,7 @@ it('renders an edit button for the questions list', () => {
   );
 });
 it('disables the edit button for the questions list (REGRESSION)', () => {
-  disable('PROFILE_EDITING');
+  disable('EDIT_PROFILE_QUESTIONS');
   const { getByLabelText } = render(
     <UserProfileResearch
       {...commonProps}

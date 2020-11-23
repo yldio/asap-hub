@@ -77,7 +77,7 @@ describe('an edit button', () => {
     );
   });
   it('is disabled for personal info (REGRESSION)', () => {
-    disable('PROFILE_EDITING');
+    disable('EDIT_PROFILE_REST');
     const { getByLabelText } = render(
       <UserProfileHeader
         {...boilerplateProps}
@@ -100,7 +100,7 @@ describe('an edit button', () => {
     );
   });
   it('is disabled for contact info (REGRESSION)', () => {
-    disable('PROFILE_EDITING');
+    disable('EDIT_PROFILE_REST');
     const { getByLabelText } = render(
       <UserProfileHeader
         {...boilerplateProps}

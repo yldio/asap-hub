@@ -5,7 +5,7 @@ type Flags = Pick<
   typeof import('@asap-hub/flags'),
   'isEnabled' | 'reset' | 'disable'
 >;
-const FlagsContext = React.createContext<Flags>({
+export const FlagsContext = React.createContext<Flags>({
   isEnabled,
   disable,
   reset,

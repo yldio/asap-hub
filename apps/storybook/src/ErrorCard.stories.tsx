@@ -13,10 +13,10 @@ export const PlainText = () => (
 );
 
 export const ApplicationError = () => (
-  <ErrorCard>
-    {Object.assign(new Error(), {
+  <ErrorCard
+    error={Object.assign(new Error(), {
       name: text('Name', 'BasicError'),
       message: text('Message', 'Failed to get data'),
     })}
-  </ErrorCard>
+  ></ErrorCard>
 );

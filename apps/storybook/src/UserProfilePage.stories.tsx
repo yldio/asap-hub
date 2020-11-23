@@ -10,6 +10,7 @@ import {
   PersonalInfoModal,
   ContactInfoModal,
   TeamMembershipModal,
+  OpenQuestionsModal,
 } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 
@@ -125,6 +126,13 @@ export const ResearchTabTeamMembershipModal = () => (
   <UserProfilePage {...commonProps()} researchHref="#">
     <UserProfileResearch {...researchTabProps()} />
     <TeamMembershipModal backHref="#" {...researchTabProps().teams[0]} />
+  </UserProfilePage>
+);
+
+export const ResearchTabOpenQuestionsModal = () => (
+  <UserProfilePage {...commonProps()} researchHref="#">
+    <UserProfileResearch {...researchTabProps()} />
+    <OpenQuestionsModal backHref="#" {...researchTabProps()} />
   </UserProfilePage>
 );
 export const ResearchTabEditable = () => (

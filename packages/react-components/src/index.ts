@@ -98,6 +98,7 @@ export {
   NewsAndEventsPageBody,
   NewsAndEventsPageHeader,
   NotFoundPage,
+  OpenQuestionsModal,
   PasswordResetEmailSentPage,
   PersonalInfoModal,
   RecordOutputForm,

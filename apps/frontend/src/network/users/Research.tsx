@@ -4,6 +4,7 @@ import { join } from 'path';
 import {
   UserProfileResearch,
   TeamMembershipModal,
+  OpenQuestionsModal,
 } from '@asap-hub/react-components';
 import { UserResponse, UserPatchRequest } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
@@ -39,30 +40,44 @@ const Research: React.FC<ResearchProps> = ({
           id === userProfile.id ? join(url, 'edit-questions') : undefined
         }
       />
-      <Route
-        path={`${path}/edit-team-membership/:teamId`}
-        render={({
-          match: {
-            params: { teamId },
-          },
-        }) => {
-          const team = teams.find(
-            ({ id: currentTeamId }) => currentTeamId === teamId,
-          );
-          return team ? (
-            <TeamMembershipModal
-              {...team}
+      {id === userProfile.id && (
+        <>
+          <Route
+            path={`${path}/edit-team-membership/:teamId`}
+            render={({
+              match: {
+                params: { teamId },
+              },
+            }) => {
+              const team = teams.find(
+                ({ id: currentTeamId }) => currentTeamId === teamId,
+              );
+              return team ? (
+                <TeamMembershipModal
+                  {...team}
+                  backHref={url}
+                  onSave={async (data) => {
+                    await onPatchUserProfile(data);
+                    history.push(url);
+                  }}
+                />
+              ) : (
+                <Redirect to={url} />
+              );
+            }}
+          />
+          <Route path={`${path}/edit-questions`}>
+            <OpenQuestionsModal
+              {...userProfile}
               backHref={url}
               onSave={async (data) => {
                 await onPatchUserProfile(data);
                 history.push(url);
               }}
             />
-          ) : (
-            <Redirect to={url} />
-          );
-        }}
-      />
+          </Route>
+        </>
+      )}
     </>
   );
 };

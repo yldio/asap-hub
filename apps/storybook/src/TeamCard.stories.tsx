@@ -16,7 +16,7 @@ const member = {
 const skill = 'Neurological Diseases';
 
 const teamCardProps = () => {
-  const numberOfSkills = number('Number of skills', 3, { min: 0 });
+  const numberOfSkills = number('Number of skills', 8, { min: 0 });
   const numberOfMembers = number('Number of team members', 3, { min: 0 });
   return {
     id: 'ee98d044-79a7-4028-915d-7f88793e3190',

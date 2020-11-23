@@ -27,9 +27,9 @@ const styles = css({
   borderRadius: `${18 / perRem}em`,
 
   transition: '200ms',
-  ':hover': {
-    borderColor: charcoal.rgb,
-  },
+  // ':hover': {
+  //   borderColor: charcoal.rgb,
+  // },
 });
 
 const highlightStyles = css({

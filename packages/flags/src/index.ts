@@ -8,6 +8,7 @@ export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:
   EDIT_PROFILE_REST: true,
+  EDIT_PROFILE_QUESTIONS: true,
   // can also be used to manually disable a flag in development:
 };
 

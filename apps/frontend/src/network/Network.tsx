@@ -13,29 +13,29 @@ import ErrorBoundary from '../errors/ErrorBoundary';
 import { useSearch } from '../hooks';
 import { TEAMS_PATH } from './routes';
 
-const loadProfileList = () =>
-  import(/* webpackChunkName: "network-profile-list" */ './ProfileList');
-const loadProfile = () =>
-  import(/* webpackChunkName: "network-profile" */ './profile/Profile');
+const loadUserList = () =>
+  import(/* webpackChunkName: "network-user-list" */ './UserList');
+const loadUserProfile = () =>
+  import(/* webpackChunkName: "network-user-profile" */ './users/UserProfile');
 const loadTeamList = () =>
   import(/* webpackChunkName: "network-team-list" */ './TeamList');
-const loadTeam = () =>
-  import(/* webpackChunkName: "network-team" */ './team/Team');
-const ProfileList = React.lazy(loadProfileList);
-const Profile = React.lazy(loadProfile);
+const loadTeamProfile = () =>
+  import(/* webpackChunkName: "network-team-profile" */ './teams/TeamProfile');
+const UserList = React.lazy(loadUserList);
+const UserProfile = React.lazy(loadUserProfile);
 const TeamList = React.lazy(loadTeamList);
-const Team = React.lazy(loadTeam);
+const TeamProfile = React.lazy(loadTeamProfile);
 loadTeamList();
 
 const Network: React.FC<{}> = () => {
   useEffect(() => {
     loadTeamList()
-      // Profile toggle can be pressed very quickly
-      .then(loadProfileList)
+      // Toggle can be pressed very quickly
+      .then(loadUserList)
       // Team can be clicked only after the list has been fetched
-      .then(loadTeam)
-      // Profile can be clicked only after clicking the toggle and the list has been fetched
-      .then(loadProfile);
+      .then(loadTeamProfile)
+      // User can be clicked only after clicking the toggle and the list has been fetched
+      .then(loadUserProfile);
   }, []);
 
   const { path } = useRouteMatch();
@@ -67,15 +67,12 @@ const Network: React.FC<{}> = () => {
         >
           <ErrorBoundary>
             <Suspense fallback="Loading...">
-              <ProfileList
-                filters={filters}
-                searchQuery={searchQueryDebounce}
-              />
+              <UserList filters={filters} searchQuery={searchQueryDebounce} />
             </Suspense>
           </ErrorBoundary>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/users/:id`} component={Profile} />
+      <Route path={`${path}/users/:id`} component={UserProfile} />
       <Route exact path={`${path}/${TEAMS_PATH}`}>
         <NetworkPage
           page="teams"
@@ -92,7 +89,7 @@ const Network: React.FC<{}> = () => {
           </ErrorBoundary>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/${TEAMS_PATH}/:id`} component={Team} />
+      <Route path={`${path}/${TEAMS_PATH}/:id`} component={TeamProfile} />
       <Redirect to={`${path}/${TEAMS_PATH}`} />
     </Switch>
   );

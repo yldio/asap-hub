@@ -15,7 +15,7 @@ const props: ComponentProps<typeof Layout> = {
   newsAndEventsHref: '/news-and-events',
   discoverAsapHref: '/discover',
 
-  profileHref: '/profile',
+  userProfileHref: '/profile',
   teams: [],
   settingsHref: '/settings',
   feedbackHref: createMailTo('test@test.science'),

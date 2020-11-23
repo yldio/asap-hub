@@ -4,7 +4,7 @@ import { text, date, number, select } from '@storybook/addon-knobs';
 import { PeopleCard } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Team / People Card',
+  title: 'Organisms / Network / People Card',
 };
 
 export const Normal = () => (

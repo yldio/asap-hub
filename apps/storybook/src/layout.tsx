@@ -24,7 +24,7 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
         networkHref="/network"
         sharedResearchHref="/shared-research"
         newsAndEventsHref="/news-and-events"
-        profileHref="/profile"
+        userProfileHref="/profile"
         teams={[
           { name: '1', href: '/team-1' },
           { name: '2', href: '/team-2' },

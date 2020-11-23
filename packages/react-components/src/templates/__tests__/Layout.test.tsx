@@ -13,7 +13,7 @@ const props: ComponentProps<typeof Layout> = {
   networkHref: '/network',
   newsAndEventsHref: '/news-and-events',
 
-  profileHref: '/profile',
+  userProfileHref: '/profile',
   teams: [],
   settingsHref: '/settings',
   feedbackHref: createMailTo('test@test.science'),

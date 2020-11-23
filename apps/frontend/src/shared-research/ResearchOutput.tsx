@@ -26,7 +26,7 @@ const ResearchOutput: React.FC = () => {
             href: `${NETWORK_PATH}/${TEAMS_PATH}/${researchOutputData.team.id}`,
           }
         : undefined,
-      profileHref: '#',
+      userProfileHref: '#',
       sharedResearchHref: '/shared-research',
     };
     return <ResearchOutputPage {...researchOutput} />;

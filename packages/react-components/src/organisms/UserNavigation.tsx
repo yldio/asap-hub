@@ -42,7 +42,7 @@ const bottomLinksStyles = css({
 });
 
 export interface UserNavigationProps {
-  readonly profileHref: string;
+  readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
   readonly settingsHref: string;
   readonly feedbackHref: string;
@@ -52,7 +52,7 @@ export interface UserNavigationProps {
   readonly aboutHref: string;
 }
 const UserNavigation: React.FC<UserNavigationProps> = ({
-  profileHref,
+  userProfileHref,
   teams,
   feedbackHref,
   logoutHref,
@@ -63,7 +63,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={profileHref} icon={userIcon}>
+        <NavigationLink href={userProfileHref} icon={userIcon}>
           My Profile
         </NavigationLink>
       </li>

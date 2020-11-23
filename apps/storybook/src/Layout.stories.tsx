@@ -4,7 +4,7 @@ import { Layout, createMailTo } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './layout';
 
 export default {
-  title: 'Organisms / Layout',
+  title: 'Organisms / Layout / Layout',
   component: Layout,
   decorators: [NoPaddingDecorator],
 };
@@ -15,7 +15,7 @@ export const Normal = () => (
     networkHref="/network"
     sharedResearchHref="/shared-research"
     newsAndEventsHref="/news-and-events"
-    profileHref="/profile"
+    userProfileHref="/profile"
     teams={[
       { name: '1', href: '/team-1' },
       { name: '2', href: '/team-2' },

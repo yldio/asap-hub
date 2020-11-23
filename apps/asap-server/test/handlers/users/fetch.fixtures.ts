@@ -23,6 +23,8 @@ export const response: { data: ResponseFetchUsers } = {
             teams: [
               {
                 role: 'Lead PI (Core Leadership)',
+                approach: null,
+                responsibilities: null,
                 id: [
                   {
                     id: 'userId3',

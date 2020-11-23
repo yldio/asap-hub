@@ -25,6 +25,10 @@ describe('Summarized', () => {
           'Clinical Neurology',
           'Adult Neurology',
           'Neuroimaging',
+          'A53T',
+          'alpha-synuclein interactions',
+          'alpha-synuclein',
+          'autophagy',
         ]}
       />,
     );
@@ -34,6 +38,8 @@ describe('Summarized', () => {
       'Neurological Diseases',
       'Clinical Neurology',
       'Adult Neurology',
+      'Neuroimaging',
+      'A53T',
     ]);
   });
 });

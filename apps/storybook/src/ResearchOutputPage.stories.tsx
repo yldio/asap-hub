@@ -43,6 +43,5 @@ export const Normal = () => (
       displayName: text('Team Name', 'asdf'),
       href: '#',
     }}
-    sharedResearchHref="#"
   />
 );

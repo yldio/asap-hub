@@ -8,7 +8,7 @@ import { RichText } from '../organisms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { teamIcon, chevronCircleLeftIcon } from '../icons';
+import { teamIcon } from '../icons';
 
 const teamMemberStyles = css({
   color: lead.rgb,
@@ -29,16 +29,6 @@ const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-const backContainerStyles = css({
-  alignSelf: 'flex-start',
-  padding: `${30 / perRem}em 0 `,
-});
-
-const backButtonStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-});
-
 const visibilityStyles = css({
   paddingTop: `${24 / perRem}em`,
   paddingBottom: `${30 / perRem}em`,
@@ -55,7 +45,6 @@ type ResearchOutputPageProps = Pick<
   team?: {
     href: string;
   };
-  sharedResearchHref: string;
 };
 
 const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
@@ -64,16 +53,8 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   team,
   publishDate,
   created,
-  sharedResearchHref,
 }) => (
   <div css={containerStyles}>
-    <div css={backContainerStyles}>
-      <Link href={sharedResearchHref}>
-        <div css={backButtonStyles}>
-          <span css={iconStyles}>{chevronCircleLeftIcon}</span> Back
-        </div>
-      </Link>
-    </div>
     <Card>
       <TagLabel>Proposal</TagLabel>
       <Display styleAsHeading={3}>{title}</Display>

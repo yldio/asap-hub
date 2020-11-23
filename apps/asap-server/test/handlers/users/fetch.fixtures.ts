@@ -62,6 +62,8 @@ export const response: { data: ResponseFetchUsers } = {
             teams: [
               {
                 role: 'Project Manager',
+                approach: 'cover',
+                responsibilities: 'increase coverage',
                 id: [
                   {
                     id: 'userId3',
@@ -128,6 +130,8 @@ export const expectation: ListUserResponse = {
           id: 'userId3',
           role: 'Project Manager',
           displayName: 'Jackson, M',
+          approach: 'cover',
+          responsibilities: 'increase coverage',
         },
       ],
       role: 'Grantee',

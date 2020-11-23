@@ -23,6 +23,8 @@ export const patchResponse: CMSUser = {
         {
           id: ['team-id-1'],
           role: 'Lead PI (Core Leadership)',
+          approach: 'Exact',
+          responsibilities: 'Make sure coverage is high',
         },
         {
           id: ['team-id-3'],
@@ -47,7 +49,16 @@ export const putResponse: RestUser = {
     avatar: { iv: ['uuid-user-id-1'] },
     skills: { iv: [] },
     orcidWorks: { iv: [] },
-    teams: { iv: [{ role: 'Lead PI (Core Leadership)', id: ['team-id-1'] }] },
+    teams: {
+      iv: [
+        {
+          role: 'Lead PI (Core Leadership)',
+          approach: 'Exact',
+          responsibilities: 'Make sure coverage is high',
+          id: ['team-id-1'],
+        },
+      ],
+    },
     connections: { iv: [] },
     biography: { iv: 'I do awesome stuff' },
     department: { iv: 'Awesome Department' },
@@ -72,6 +83,8 @@ export const expectation: UserResponse = {
       id: 'team-id-1',
       displayName: 'Unknown',
       role: 'Lead PI (Core Leadership)',
+      approach: 'Exact',
+      responsibilities: 'Make sure coverage is high',
     },
   ],
   orcidWorks: [],

@@ -246,7 +246,12 @@ describe('PATCH /users/{id}', () => {
         questions: { iv: [{ question: 'To be or not to be?' }] },
         teams: {
           iv: [
-            { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
+            {
+              role: 'Lead PI (Core Leadership)',
+              id: ['team-id-1'],
+              approach: 'Exact',
+              responsibilities: 'Make sure coverage is high',
+            },
             {
               role: 'Collaborating PI',
               id: ['team-id-3'],
@@ -292,7 +297,12 @@ describe('PATCH /users/{id}', () => {
       ...putResponse.data,
       teams: {
         iv: [
-          { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
+          {
+            role: 'Lead PI (Core Leadership)',
+            id: ['team-id-1'],
+            approach: 'Exact',
+            responsibilities: 'Make sure coverage is high',
+          },
           {
             role: 'Collaborating PI',
             id: ['team-id-3'],
@@ -310,7 +320,12 @@ describe('PATCH /users/{id}', () => {
         ...patchResponse.data,
         teams: {
           iv: [
-            { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
+            {
+              role: 'Lead PI (Core Leadership)',
+              id: ['team-id-1'],
+              approach: 'Exact',
+              responsibilities: 'Make sure coverage is high',
+            },
             {
               role: 'Collaborating PI',
               id: ['team-id-3'],
@@ -347,11 +362,7 @@ describe('PATCH /users/{id}', () => {
     expect(result.statusCode).toStrictEqual(200);
 
     const teams = [
-      {
-        id: 'team-id-1',
-        displayName: 'Unknown',
-        role: 'Lead PI (Core Leadership)',
-      },
+      { ...expectation.teams[0] },
       {
         id: 'team-id-3',
         displayName: 'Unknown',

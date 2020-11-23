@@ -246,7 +246,12 @@ describe('PATCH /users/{id}', () => {
         questions: { iv: [{ question: 'To be or not to be?' }] },
         teams: {
           iv: [
-            { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
+            {
+              role: 'Lead PI (Core Leadership)',
+              id: ['team-id-1'],
+              approach: 'Exact',
+              responsibilities: 'Make sure coverage is high',
+            },
             {
               role: 'Collaborating PI',
               id: ['team-id-3'],
@@ -288,6 +293,26 @@ describe('PATCH /users/{id}', () => {
   });
 
   test('returns 200 when trying to delete user teams', async () => {
+    const data = {
+      ...putResponse.data,
+      teams: {
+        iv: [
+          {
+            role: 'Lead PI (Core Leadership)',
+            id: ['team-id-1'],
+            approach: 'Exact',
+            responsibilities: 'Make sure coverage is high',
+          },
+          {
+            role: 'Collaborating PI',
+            id: ['team-id-3'],
+            responsibilities: null,
+            approach: null,
+          },
+        ],
+      },
+    };
+
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/users/userId`)
       .reply(200, patchResponse)
@@ -295,7 +320,12 @@ describe('PATCH /users/{id}', () => {
         ...patchResponse.data,
         teams: {
           iv: [
-            { role: 'Lead PI (Core Leadership)', id: ['team-id-1'] },
+            {
+              role: 'Lead PI (Core Leadership)',
+              id: ['team-id-1'],
+              approach: 'Exact',
+              responsibilities: 'Make sure coverage is high',
+            },
             {
               role: 'Collaborating PI',
               id: ['team-id-3'],
@@ -305,7 +335,7 @@ describe('PATCH /users/{id}', () => {
           ],
         },
       } as { [k: string]: any })
-      .reply(200, putResponse);
+      .reply(200, { ...putResponse, data });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -330,7 +360,16 @@ describe('PATCH /users/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(expectation);
+
+    const teams = [
+      { ...expectation.teams[0] },
+      {
+        id: 'team-id-3',
+        displayName: 'Unknown',
+        role: 'Collaborating PI',
+      },
+    ];
+    expect(body).toStrictEqual({ ...expectation, teams });
   });
 
   test('returns 200 when user exists', async () => {

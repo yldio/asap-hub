@@ -12,8 +12,8 @@ import { parseDate, createURL } from '../utils/squidex';
 interface CMSTeamMember {
   id: string[];
   role: TeamRole;
-  responsibilities?: string;
-  approach?: string;
+  responsibilities?: string | null;
+  approach?: string | null;
 }
 
 export interface CMSUser {
@@ -160,6 +160,8 @@ export const parseUser = (user: CMSUser): UserResponse => {
       id: id[0],
       displayName: 'Unknown',
       ...t,
+      approach: t.approach ? t.approach : undefined,
+      responsibilities: t.responsibilities ? t.responsibilities : undefined,
     })) || [];
 
   const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;

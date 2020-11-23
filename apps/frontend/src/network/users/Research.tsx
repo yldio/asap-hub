@@ -6,41 +6,39 @@ import {
   TeamMembershipModal,
   OpenQuestionsModal,
 } from '@asap-hub/react-components';
-import { UserResponse, UserPatchRequest } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { usePatchUserById } from './state';
 
 type ResearchProps = {
-  userProfile: UserResponse;
+  user: UserResponse;
   teams: ComponentProps<typeof UserProfileResearch>['teams'];
-  onPatchUserProfile: (patch: UserPatchRequest) => void | Promise<void>;
 };
-const Research: React.FC<ResearchProps> = ({
-  userProfile,
-  teams,
-  onPatchUserProfile,
-}) => {
+const Research: React.FC<ResearchProps> = ({ user, teams }) => {
   const { id } = useCurrentUser() ?? {};
+
   const { url, path } = useRouteMatch();
   const history = useHistory();
+
+  const patchUser = usePatchUserById(user.id);
+
   return (
     <>
       <UserProfileResearch
-        {...userProfile}
+        {...user}
         teams={teams.map((team) => ({
           ...team,
           editHref:
-            id === userProfile.id
+            id === user.id
               ? join(url, 'edit-team-membership', team.id)
               : undefined,
         }))}
-        editSkillsHref={
-          id === userProfile.id ? join(url, 'edit-skills') : undefined
-        }
+        editSkillsHref={id === user.id ? join(url, 'edit-skills') : undefined}
         editQuestionsHref={
-          id === userProfile.id ? join(url, 'edit-questions') : undefined
+          id === user.id ? join(url, 'edit-questions') : undefined
         }
       />
-      {id === userProfile.id && (
+      {id === user.id && (
         <>
           <Route
             path={`${path}/edit-team-membership/:teamId`}
@@ -56,8 +54,8 @@ const Research: React.FC<ResearchProps> = ({
                 <TeamMembershipModal
                   {...team}
                   backHref={url}
-                  onSave={async (data) => {
-                    await onPatchUserProfile(data);
+                  onSave={async (patch) => {
+                    await patchUser(patch);
                     history.push(url);
                   }}
                 />
@@ -68,10 +66,10 @@ const Research: React.FC<ResearchProps> = ({
           />
           <Route path={`${path}/edit-questions`}>
             <OpenQuestionsModal
-              {...userProfile}
+              {...user}
               backHref={url}
-              onSave={async (data) => {
-                await onPatchUserProfile(data);
+              onSave={async (patch) => {
+                await patchUser(patch);
                 history.push(url);
               }}
             />

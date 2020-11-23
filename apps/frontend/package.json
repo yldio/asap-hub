@@ -24,6 +24,7 @@
     "react-dom": "^16.13.1",
     "react-error-boundary": "^2.0.0",
     "react-router-dom": "^5.2.0",
+    "recoil": "^0.1.2",
     "use-debounce": "^5.0.1",
     "use-http": "^1.0.15"
   },

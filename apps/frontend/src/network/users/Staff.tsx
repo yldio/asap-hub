@@ -5,15 +5,11 @@ import { UserResponse } from '@asap-hub/model';
 import { DISCOVER_PATH } from '../../routes';
 
 type StaffProps = {
-  userProfile: UserResponse;
+  user: UserResponse;
   teams: ComponentProps<typeof UserProfileStaff>['teams'];
 };
-const Staff: React.FC<StaffProps> = ({ userProfile, teams }) => (
-  <UserProfileStaff
-    {...userProfile}
-    teams={teams}
-    discoverHref={DISCOVER_PATH}
-  />
+const Staff: React.FC<StaffProps> = ({ user, teams }) => (
+  <UserProfileStaff {...user} teams={teams} discoverHref={DISCOVER_PATH} />
 );
 
 export default Staff;

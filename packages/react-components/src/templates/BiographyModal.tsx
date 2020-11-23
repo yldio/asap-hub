@@ -17,6 +17,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
   backHref,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
+  const [isSaving, setSaving] = useState(false);
 
   const [newBiography, setNewBiography] = useState(biography);
 
@@ -24,18 +25,22 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
     <Modal>
       <form ref={formRef}>
         <ModalEditHeader
-          backHref={backHref}
           title="Biography"
+          backHref={backHref}
+          saveEnabled={!isSaving}
           onSave={async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
+              setSaving(true);
               await onSave(newBiography);
+              if (formRef.current) setSaving(false);
             }
           }}
         />
         <LabeledTextArea
           value={newBiography}
           onChange={setNewBiography}
+          enabled={!isSaving}
           required
           maxLength={1000}
           title="Summarize your background and highlight any past achievements."

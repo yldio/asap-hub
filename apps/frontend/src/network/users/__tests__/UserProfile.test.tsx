@@ -1,58 +1,59 @@
 import React from 'react';
-import {
-  render,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import { RecoilRoot } from 'recoil';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import nock from 'nock';
-import { authTestUtils } from '@asap-hub/react-components';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
-import { API_BASE_URL } from '@asap-hub/frontend/src/config';
 import { UserResponse } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
 
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/frontend/src/auth/test-utils';
 import UserProfile from '../UserProfile';
+import { getUser, patchUser } from '../api';
+import { refreshUserState } from '../state';
 
-jest.mock('../../../config');
+jest.mock('../api');
+
+const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
+const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+const standardMockPatchUser = mockPatchUser.getMockImplementation() as typeof patchUser;
 
 const renderUserProfile = async (
   userResponse = createUserResponse(),
   { ownUserId = userResponse.id, routeProfileId = userResponse.id } = {},
 ) => {
-  nock.cleanAll();
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get(`/users/${userResponse.id}`)
-    .reply(200, userResponse)
-    .get(() => true)
-    .reply(404);
+  mockGetUser.mockImplementation(async (id) => {
+    return id === userResponse.id ? userResponse : undefined;
+  });
+  mockPatchUser.mockImplementation(async (id, ...args) => {
+    if (id === userResponse.id) return standardMockPatchUser(id, ...args);
+    throw new Error('404');
+  });
+
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={{ id: ownUserId }}>
-          <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
-            <Route path="/:id" component={UserProfile} />
-          </MemoryRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
+    <RecoilRoot
+      initializeState={({ set }) => {
+        set(refreshUserState(userResponse.id), Math.random());
+      }}
+    >
+      <React.Suspense fallback="loading">
+        <Auth0Provider user={{ id: ownUserId }}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
+              <Route path="/:id" component={UserProfile} />
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </React.Suspense>
+    </RecoilRoot>,
   );
   await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   return result;
 };
-
-it('initially renders a loading indicator', async () => {
-  const { getByText } = await renderUserProfile();
-
-  const loadingIndicator = getByText(/loading/i);
-  expect(loadingIndicator).toBeVisible();
-
-  await waitForElementToBeRemoved(loadingIndicator);
-});
 
 it('renders the personal info', async () => {
   const { findByText } = await renderUserProfile({
@@ -118,7 +119,7 @@ it("links to the user's team proposal", async () => {
   expect((await findByText(/proposal/i)).closest('a')!.href).toContain('1337');
 });
 it('does not show a proposal for a user whose team has none', async () => {
-  const { getByText, queryByText } = await renderUserProfile({
+  const { queryByText } = await renderUserProfile({
     ...createUserResponse(),
     teams: [
       {
@@ -127,8 +128,8 @@ it('does not show a proposal for a user whose team has none', async () => {
       },
     ],
   });
-  const loadingIndicator = getByText(/loading/i);
-  await waitForElementToBeRemoved(loadingIndicator);
+  await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
+
   expect(queryByText(/proposal/i)).not.toBeInTheDocument();
 });
 
@@ -145,22 +146,24 @@ it('renders the 404 page for a missing user', async () => {
 
 describe('a header edit button', () => {
   it("is not rendered on someone else's profile", async () => {
-    const { getByText, queryByLabelText } = await renderUserProfile(
+    const { queryByText, queryByLabelText } = await renderUserProfile(
       { ...createUserResponse(), id: '42' },
       { ownUserId: '1337' },
     );
-    const loadingIndicator = getByText(/loading/i);
-    await waitForElementToBeRemoved(loadingIndicator);
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
 
     expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
   });
   it('is not rendered on your own staff profile', async () => {
-    const { getByText, queryByLabelText } = await renderUserProfile({
+    const { queryByText, queryByLabelText } = await renderUserProfile({
       ...createUserResponse(),
       role: 'Staff',
     });
-    const loadingIndicator = getByText(/loading/i);
-    await waitForElementToBeRemoved(loadingIndicator);
+    await waitFor(() =>
+      expect(queryByText(/loading/i)).not.toBeInTheDocument(),
+    );
 
     expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
   });
@@ -186,25 +189,20 @@ describe('a header edit button', () => {
       getByText,
       findByText,
       findByLabelText,
-      getByDisplayValue,
+      findByDisplayValue,
     } = await renderUserProfile(userProfile);
 
     userEvent.click(await findByLabelText(/edit.+personal/i));
-    await userEvent.type(getByDisplayValue('York'), 'shire');
-    expect(getByDisplayValue('Yorkshire')).toBeVisible();
-
-    const patched = new Promise((resolve) =>
-      nock(API_BASE_URL)
-        .patch('/users/42')
-        .reply(200, (_uri, body, cb) => {
-          resolve(body);
-          cb(null, { ...userProfile, ...(body as object) });
-        }),
-    );
+    await userEvent.type(await findByDisplayValue('York'), 'shire');
+    expect(await findByDisplayValue('Yorkshire')).toBeVisible();
 
     userEvent.click(getByText(/save/i));
     expect(await findByText('Yorkshire')).toBeVisible();
-    expect(await patched).toHaveProperty('location', 'Yorkshire');
+    expect(mockPatchUser).toHaveBeenLastCalledWith(
+      '42',
+      expect.objectContaining({ location: 'Yorkshire' }),
+      expect.any(String),
+    );
   });
 
   it('can change contact info', async () => {
@@ -217,29 +215,23 @@ describe('a header edit button', () => {
       getByText,
       findByText,
       findByLabelText,
-      getByDisplayValue,
+      findByDisplayValue,
     } = await renderUserProfile(userProfile);
 
     userEvent.click(await findByLabelText(/edit.+contact/i));
-    await userEvent.type(getByDisplayValue('contact@example.com'), 'm');
-    expect(getByDisplayValue('contact@example.comm')).toBeVisible();
-
-    const patched = new Promise((resolve) =>
-      nock(API_BASE_URL)
-        .patch('/users/42')
-        .reply(200, (_uri, body, cb) => {
-          resolve(body);
-          cb(null, { ...userProfile, ...(body as object) });
-        }),
-    );
+    await userEvent.type(await findByDisplayValue('contact@example.com'), 'm');
+    expect(await findByDisplayValue('contact@example.comm')).toBeVisible();
 
     userEvent.click(getByText(/save/i));
     expect(
       (await findByText(/contact/i, { selector: 'header *' })).closest('a'),
     ).toHaveAttribute('href', 'mailto:contact@example.comm');
-    expect(await patched).toHaveProperty(
-      'contactEmail',
-      'contact@example.comm',
+    expect(mockPatchUser).toHaveBeenLastCalledWith(
+      '42',
+      expect.objectContaining({
+        contactEmail: 'contact@example.comm',
+      }),
+      expect.any(String),
     );
   });
 });

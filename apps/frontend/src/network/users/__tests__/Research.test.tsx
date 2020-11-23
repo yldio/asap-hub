@@ -1,56 +1,62 @@
 import React, { ComponentProps } from 'react';
+import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import { StaticRouter, MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { authTestUtils } from '@asap-hub/react-components';
 import userEvent from '@testing-library/user-event';
 
+import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import Research from '../Research';
+import { patchUser } from '../api';
 
-it('renders the profile research section', () => {
-  const { getByText } = render(
+jest.mock('../api');
+
+const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+
+const wrapper: React.FC = ({ children }) => (
+  <RecoilRoot>
+    <React.Suspense fallback="loading">
+      <Auth0Provider user={{ id: '42' }}>
+        <StaticRouter>{children}</StaticRouter>
+      </Auth0Provider>
+    </React.Suspense>
+  </RecoilRoot>
+);
+
+it('renders the profile research section', async () => {
+  const { findByText } = render(
     <Research
-      onPatchUserProfile={() => {}}
-      userProfile={{ ...createUserResponse(), skills: ['Some Skill'] }}
+      user={{ ...createUserResponse(), skills: ['Some Skill'] }}
       teams={[]}
     />,
-    { wrapper: StaticRouter },
+    { wrapper },
   );
-  expect(getByText('Some Skill')).toBeVisible();
+  expect(await findByText('Some Skill')).toBeVisible();
 });
 
-it("does not allow editing somebody else's profile", () => {
-  const { queryByLabelText } = render(
-    <authTestUtils.LoggedIn user={{ id: '42' }}>
-      <Research
-        onPatchUserProfile={() => {}}
-        userProfile={{ ...createUserResponse(), id: '1337' }}
-        teams={[]}
-      />
-      ,
-    </authTestUtils.LoggedIn>,
-    { wrapper: StaticRouter },
+it("does not allow editing somebody else's profile", async () => {
+  const { queryByText, queryByLabelText } = render(
+    <Auth0Provider user={{ id: '42' }}>
+      <Research user={{ ...createUserResponse(), id: '1337' }} teams={[]} />,
+    </Auth0Provider>,
+    { wrapper },
   );
+  await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
 
-it('allows editing your own profile', () => {
-  const { getAllByLabelText } = render(
-    <authTestUtils.LoggedIn user={{ id: '42' }}>
-      <Research
-        onPatchUserProfile={() => {}}
-        userProfile={{ ...createUserResponse(), id: '42' }}
-        teams={[]}
-      />
-      ,
-    </authTestUtils.LoggedIn>,
-    { wrapper: StaticRouter },
+it('allows editing your own profile', async () => {
+  const { findAllByLabelText } = render(
+    <Auth0Provider user={{ id: '42' }}>
+      <Research user={{ ...createUserResponse(), id: '42' }} teams={[]} />,
+    </Auth0Provider>,
+    { wrapper },
   );
-  expect(getAllByLabelText(/edit/i)).not.toHaveLength(0);
+  expect(await findAllByLabelText(/edit/i)).not.toHaveLength(0);
 });
 
 describe('when editing', () => {
-  const userProfile: ComponentProps<typeof Research>['userProfile'] = {
+  const user: ComponentProps<typeof Research>['user'] = {
     ...createUserResponse({ teams: 1 }),
     questions: ['question 1', 'question 2', 'question 3', 'question 4'],
     id: '42',
@@ -58,7 +64,7 @@ describe('when editing', () => {
 
   const teams: ComponentProps<typeof Research>['teams'] = [
     {
-      ...userProfile.teams[0],
+      ...user.teams[0],
       id: '1',
       href: '/wrong',
       role: 'Collaborating PI',
@@ -67,37 +73,31 @@ describe('when editing', () => {
       responsibilities: 'My Responsibilities',
     },
   ];
-  let handlePatchUserProfile: jest.MockedFunction<
-    ComponentProps<typeof Research>['onPatchUserProfile']
-  >;
   let result!: RenderResult;
   beforeEach(async () => {
-    handlePatchUserProfile = jest.fn();
     result = render(
-      <authTestUtils.LoggedIn user={{ id: '42' }}>
+      <Auth0Provider user={{ id: '42' }}>
         <MemoryRouter initialEntries={['/research']}>
           <Route path="/research">
-            <Research
-              userProfile={userProfile}
-              teams={teams}
-              onPatchUserProfile={handlePatchUserProfile}
-            />
+            <Research user={user} teams={teams} />
           </Route>
         </MemoryRouter>
-      </authTestUtils.LoggedIn>,
+      </Auth0Provider>,
+      { wrapper },
     );
+    await result.findAllByLabelText(/edit/i);
   });
   describe('team membership', () => {
     it('opens and closes the dialog', async () => {
       const {
         getByText,
         queryByText,
-        getByLabelText,
+        findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(getByLabelText(/example.+team/i));
+      userEvent.click(await findByLabelText(/edit.+team/i));
       expect(getByDisplayValue('My Approach')).toBeVisible();
 
       userEvent.click(getByText(/close/i));
@@ -111,12 +111,12 @@ describe('when editing', () => {
       const {
         getByText,
         queryByText,
-        getByLabelText,
+        findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(getByLabelText(/example.+team/i));
+      userEvent.click(await findByLabelText(/example.+team/i));
       await userEvent.type(getByDisplayValue('My Approach'), ' 2');
       expect(getByDisplayValue('My Approach 2')).toBeVisible();
 
@@ -128,15 +128,19 @@ describe('when editing', () => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
         expect(queryByDisplayValue('My Approach 2')).not.toBeInTheDocument();
       });
-      expect(handlePatchUserProfile).toHaveBeenCalledWith({
-        teams: [
-          {
-            id: '1',
-            approach: 'My Approach 2',
-            responsibilities: 'My Responsibilities 2',
-          },
-        ],
-      });
+      expect(mockPatchUser).toHaveBeenCalledWith(
+        '42',
+        {
+          teams: [
+            {
+              id: '1',
+              approach: 'My Approach 2',
+              responsibilities: 'My Responsibilities 2',
+            },
+          ],
+        },
+        expect.any(String),
+      );
     });
   });
   describe('questions', () => {
@@ -144,12 +148,12 @@ describe('when editing', () => {
       const {
         getByText,
         queryByText,
-        getByLabelText,
+        findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(getByLabelText(/edit.+questions/i));
+      userEvent.click(await findByLabelText(/edit.+questions/i));
       expect(getByDisplayValue('question 1')).toBeVisible();
 
       userEvent.click(getByText(/close/i));
@@ -163,12 +167,12 @@ describe('when editing', () => {
       const {
         getByText,
         queryByText,
-        getByLabelText,
+        findByLabelText,
         getByDisplayValue,
         queryByDisplayValue,
       } = result;
 
-      userEvent.click(getByLabelText(/edit.+questions/i));
+      userEvent.click(await findByLabelText(/edit.+questions/i));
       await userEvent.type(getByDisplayValue('question 1'), ' a');
       expect(getByDisplayValue('question 1 a')).toBeVisible();
 
@@ -184,14 +188,18 @@ describe('when editing', () => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
         expect(queryByDisplayValue('question 1 a')).not.toBeInTheDocument();
       });
-      expect(handlePatchUserProfile).toHaveBeenCalledWith({
-        questions: [
-          'question 1 a',
-          'question 2 b',
-          'question 3 c',
-          'question 4 d',
-        ],
-      });
+      expect(mockPatchUser).toHaveBeenCalledWith(
+        '42',
+        {
+          questions: [
+            'question 1 a',
+            'question 2 b',
+            'question 3 c',
+            'question 4 d',
+          ],
+        },
+        expect.any(String),
+      );
     });
   });
 });

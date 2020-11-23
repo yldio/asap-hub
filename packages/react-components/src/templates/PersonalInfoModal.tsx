@@ -23,7 +23,7 @@ const paddingStyles = css({
 });
 
 type PersonalInfoModalProps = UserPatchRequest & {
-  onSave?: (data: UserPatchRequest) => Promise<void>;
+  onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
 };
 
@@ -39,6 +39,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   backHref,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
+  const [isSaving, setSaving] = useState(false);
+
   const [newFirstName, setNewFirstName] = useState<string>(firstName || '');
   const [newLastName, setNewLastName] = useState<string>(lastName || '');
   const [newDegree, setNewDegree] = useState<string>(degree || '');
@@ -47,15 +49,18 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   );
   const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle || '');
   const [newLocation, setNewLocation] = useState<string>(location || '');
+
   return (
     <Modal>
       <form ref={formRef}>
         <ModalEditHeader
           backHref={backHref}
-          onSave={() => {
+          saveEnabled={!isSaving}
+          onSave={async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
-              onSave(
+              setSaving(true);
+              await onSave(
                 Object.fromEntries(
                   Object.entries({
                     firstName: newFirstName,
@@ -67,6 +72,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
                   }).map(([key, value]) => [key, value.trim()]),
                 ),
               );
+              if (formRef.current) setSaving(false);
             }
           }}
           title="Your details"
@@ -76,12 +82,14 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             title="First name*"
             onChange={setNewFirstName}
             value={newFirstName}
+            enabled={!isSaving}
             required
           />
           <LabeledTextField
             title="Last name(s)*"
             onChange={setNewLastName}
             value={newLastName}
+            enabled={!isSaving}
             required
           />
           <LabeledDropdown
@@ -97,6 +105,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               { label: 'PhD, MD', value: 'PhD, MD' },
             ]}
             value={newDegree}
+            enabled={!isSaving}
           />
         </div>
         <div css={fieldsContainerStyles}>
@@ -105,17 +114,20 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             maxLength={44}
             onChange={setNewInstitution}
             value={newInstitution}
+            enabled={!isSaving}
           />
           <LabeledTextField
             title="Position"
             maxLength={22}
             onChange={setNewJobTitle}
             value={newJobTitle}
+            enabled={!isSaving}
           />
           <LabeledTextField
             title="Location"
             onChange={setNewLocation}
             value={newLocation}
+            enabled={!isSaving}
           />
         </div>
       </form>

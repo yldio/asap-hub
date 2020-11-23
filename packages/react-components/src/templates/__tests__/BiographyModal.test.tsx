@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BiographyModal from '../BiographyModal';
@@ -25,6 +25,10 @@ it('fires onSave when submitting', async () => {
   await userEvent.type(getByDisplayValue('My Bio'), ' 2');
   userEvent.click(getByText(/save/i));
   expect(handleSave).toHaveBeenLastCalledWith('My Bio 2');
+
+  await waitFor(() =>
+    expect(getByText(/save/i).closest('button')).toBeEnabled(),
+  );
 });
 it('does not fire onSave when the bio is missing', () => {
   const handleSave = jest.fn();
@@ -35,4 +39,43 @@ it('does not fire onSave when the bio is missing', () => {
   userEvent.clear(getByDisplayValue('My Bio'));
   userEvent.click(getByText(/save/i));
   expect(handleSave).not.toHaveBeenCalled();
+});
+
+it('disables the form elements while submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText, unmount } = render(
+    <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
+  );
+
+  userEvent.click(getByText(/save/i));
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  [...form.elements].forEach((element) => expect(element).toBeDisabled());
+
+  unmount();
+  act(() => resolveSubmit());
+});
+it('re-enables the form elements after submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText } = render(
+    <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
+  );
+
+  userEvent.click(getByText(/save/i));
+  act(() => resolveSubmit());
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  await waitFor(() =>
+    [...form.elements].forEach((element) => expect(element).toBeEnabled()),
+  );
 });

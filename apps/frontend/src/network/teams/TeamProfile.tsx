@@ -30,6 +30,7 @@ const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
 // TODO split
+// TODO use recoil
 const TeamProfile: React.FC<{}> = () => {
   const {
     url,

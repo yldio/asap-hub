@@ -8,18 +8,14 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { join } from 'path';
-import {
-  Paragraph,
-  UserProfilePage,
-  NotFoundPage,
-} from '@asap-hub/react-components';
+import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
-import { useUserById } from '@asap-hub/frontend/src/api/users';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
 import { DISCOVER_PATH, NETWORK_PATH } from '@asap-hub/frontend/src/routes';
 import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
 import { TEAMS_PATH } from '../routes';
+import { useUserById } from './state';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -56,15 +52,13 @@ const User: React.FC<{}> = () => {
     path: `${path}/:tab`,
   })?.params?.tab;
 
-  const { loading, data: userProfile, patch } = useUserById(id);
-  const isOwnProfile = useCurrentUser()?.id === userProfile?.id;
+  const user = useUserById(id);
+  const currentUser = useCurrentUser();
 
-  if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
-  }
+  const isOwnProfile = currentUser?.id === user?.id;
 
-  if (userProfile) {
-    const teams = userProfile.teams.map(({ proposal, ...team }) => ({
+  if (user) {
+    const teams = user.teams.map(({ proposal, ...team }) => ({
       ...team,
       href: `${NETWORK_PATH}/${TEAMS_PATH}/${team.id}`,
       proposalHref: proposal ? `/shared-research/${proposal}` : undefined,
@@ -74,7 +68,7 @@ const User: React.FC<{}> = () => {
       ComponentProps<typeof UserProfilePage>,
       'children'
     > = {
-      ...userProfile,
+      ...user,
       teams,
 
       discoverHref: DISCOVER_PATH,
@@ -97,23 +91,16 @@ const User: React.FC<{}> = () => {
       <UserProfilePage {...profilePageProps}>
         <ErrorBoundary>
           <Suspense fallback="Loading...">
-            {userProfile.role === 'Staff' ? (
-              <Staff userProfile={userProfile} teams={teams} />
+            {user.role === 'Staff' ? (
+              <Staff user={user} teams={teams} />
             ) : (
               <>
                 <Switch>
                   <Route path={`${path}/research`}>
-                    <Research
-                      userProfile={userProfile}
-                      teams={teams}
-                      onPatchUserProfile={patch}
-                    />
+                    <Research user={user} teams={teams} />
                   </Route>
                   <Route path={`${path}/about`}>
-                    <About
-                      userProfile={userProfile}
-                      onPatchUserProfile={patch}
-                    />
+                    <About user={user} />
                   </Route>
                   <Route path={`${path}/outputs`}>
                     <Outputs />
@@ -122,10 +109,7 @@ const User: React.FC<{}> = () => {
                 </Switch>
                 {isOwnProfile && (
                   <Route path={`${path}/:tab`}>
-                    <Editing
-                      userProfile={userProfile}
-                      onPatchUserProfile={patch}
-                    />
+                    <Editing user={user} />
                   </Route>
                 )}
               </>

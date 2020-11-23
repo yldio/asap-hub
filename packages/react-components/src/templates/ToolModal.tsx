@@ -26,24 +26,29 @@ const ToolModal: React.FC<ToolModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSaving, setSaving] = useState(false);
+
   const [newUrl, setNewUrl] = useState(url);
   const [newDescription, setNewDescription] = useState(description);
   const [newName, setNewName] = useState(name);
-  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <Modal>
       <form ref={formRef}>
         <ModalEditHeader
           backHref={backHref}
+          saveEnabled={!isSaving}
           onSave={async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
+              setSaving(true);
               await onSave({
                 name: newName,
                 url: newUrl,
                 description: newDescription,
               });
+              if (formRef.current) setSaving(false);
             }
           }}
           title={title}
@@ -55,12 +60,14 @@ const ToolModal: React.FC<ToolModalProps> = ({
         this link."
             value={newUrl}
             onChange={setNewUrl}
+            enabled={!isSaving}
             required
           />
           <LabeledTextField
             title="Tool Name"
             value={newName}
             onChange={setNewName}
+            enabled={!isSaving}
             required
           />
 
@@ -69,6 +76,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
             subtitle="Help your team understand what this link is used for."
             value={newDescription}
             onChange={setNewDescription}
+            enabled={!isSaving}
             required
           />
         </div>

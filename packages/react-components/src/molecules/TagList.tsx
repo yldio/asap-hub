@@ -4,6 +4,9 @@ import css from '@emotion/css';
 import { perRem, tabletScreen } from '../pixels';
 import { Tag } from '../atoms';
 
+const NUMBER_OF_TAGS = 5;
+const NUMBER_OF_TAGS_MOBILE = 5;
+
 const listStyles = css({
   padding: 0,
   marginBlockStart: 0,
@@ -27,7 +30,7 @@ const normalListItemStyles = css({
 
 const summarizedListItemStyles = css({
   counterIncrement: 'tags -1',
-  ':nth-of-type(n + 4)': {
+  [`:nth-of-type(n + ${NUMBER_OF_TAGS + 1})`]: {
     display: 'none',
     '~ .overflow': {
       display: 'unset',
@@ -35,7 +38,7 @@ const summarizedListItemStyles = css({
   },
 
   [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    ':nth-of-type(n + 3)': {
+    [`:nth-of-type(n + ${NUMBER_OF_TAGS_MOBILE + 1})`]: {
       display: 'none',
       '~ .overflow': {
         display: 'unset',

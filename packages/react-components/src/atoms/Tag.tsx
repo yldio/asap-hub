@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { steel, charcoal, mint } from '../colors';
+import { steel, mint } from '../colors';
 import { perRem } from '../pixels';
 
 const borderWidth = 1;
@@ -25,11 +25,6 @@ const styles = css({
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
   borderRadius: `${18 / perRem}em`,
-
-  transition: '200ms',
-  ':hover': {
-    borderColor: charcoal.rgb,
-  },
 });
 
 const highlightStyles = css({

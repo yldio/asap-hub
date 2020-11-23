@@ -6,7 +6,9 @@ export type Flag =
   | 'EDIT_PROFILE_REST';
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
-  // can also be used to manually disable a flag in development
+  // flags already live in prod:
+  EDIT_PROFILE_REST: true,
+  // can also be used to manually disable a flag in development:
 };
 
 const envDefaults: Record<string, boolean> = {

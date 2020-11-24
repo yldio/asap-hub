@@ -3,6 +3,7 @@ import { ListResponse } from './common';
 
 export type ResearchOutputType =
   | 'Proposal'
+  | 'Presentation'
   | 'Dataset'
   | 'Software'
   | 'Protocol'

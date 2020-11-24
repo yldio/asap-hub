@@ -34,7 +34,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["Proposal"],
+          "allowedValues": ["Proposal", "Presentation", "Protocol"],
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Dropdown",
@@ -122,55 +122,22 @@
         }
       },
       {
-        "name": "createdBy",
+        "name": "teams",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "Array",
-          "label": "Created By",
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "List",
+          "schemaIds": ["teams"],
+          "label": "Teams",
           "hints": "",
           "placeholder": "",
           "isRequired": false
-        },
-        "nested": [
-          {
-            "name": "id",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "References",
-              "minItems": 1,
-              "maxItems": 1,
-              "allowDuplicates": false,
-              "resolveReference": true,
-              "editor": "List",
-              "schemaIds": ["users"],
-              "label": "Id",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": true
-            }
-          },
-          {
-            "name": "displayName",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Display Name",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": false
-            }
-          }
-        ]
+        }
       }
     ],
     "previewUrls": {

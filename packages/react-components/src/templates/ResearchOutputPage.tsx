@@ -26,6 +26,7 @@ const iconStyles = css({
 });
 
 const containerStyles = css({
+  alignSelf: 'stretch',
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
@@ -50,7 +51,7 @@ const postedStyles = css({
 
 type ResearchOutputPageProps = Pick<
   ResearchOutputResponse,
-  'publishDate' | 'title' | 'type' | 'created' | 'team' | 'text'
+  'created' | 'publishDate' | 'team' | 'text' | 'title' | 'type'
 > & {
   team?: {
     href: string;
@@ -59,11 +60,12 @@ type ResearchOutputPageProps = Pick<
 };
 
 const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
-  title,
-  text,
-  team,
-  publishDate,
   created,
+  publishDate,
+  team,
+  text,
+  title,
+  type,
   sharedResearchHref,
 }) => (
   <div css={containerStyles}>
@@ -75,7 +77,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
       </Link>
     </div>
     <Card>
-      <TagLabel>Proposal</TagLabel>
+      <TagLabel>{type}</TagLabel>
       <Display styleAsHeading={3}>{title}</Display>
       {team && (
         <span css={teamMemberStyles}>

@@ -42,7 +42,7 @@ const renderComponent = async (id: string) => {
 afterEach(() => {
   nock.cleanAll();
 });
-it('renders the proposal', async () => {
+it('renders the research output', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -55,7 +55,7 @@ it('renders the proposal', async () => {
   expect(getByRole('heading').textContent).toEqual('Proposal title!');
 });
 
-it('renders the proposal with a team', async () => {
+it('renders the research output with a team', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -76,7 +76,7 @@ it('renders the proposal with a team', async () => {
   );
 });
 
-it('renders the 404 page for a missing proposal', async () => {
+it('renders the 404 page for a missing research output', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })

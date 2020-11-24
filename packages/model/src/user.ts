@@ -99,6 +99,15 @@ export interface UserResponse extends Invitee {
   reachOut?: string;
   responsibilities?: string;
   role: Role;
+  social: {
+    linkedIn?: string;
+    orcid?: string;
+    researcherId?: string;
+    twitter?: string;
+    github?: string;
+    googleScholar?: string;
+    researchGate?: string;
+  };
 }
 
 export interface UserPatchRequest {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { UserResponse } from '@asap-hub/model';
 import css from '@emotion/css';
-import { join } from 'path';
 
 import { Link } from '../atoms';
 import {
@@ -35,18 +34,28 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
 }) => (
   <div css={socialContainerStyles}>
     {orcid && (
-      <Link href={join('https://orcid.org', orcid)}>{orcidSocialIcon}</Link>
+      <Link href={new URL(`https://orcid.org/${orcid}`).toString()}>
+        {orcidSocialIcon}
+      </Link>
     )}
     {researcherId && (
-      <Link href={join('https://publons.com/researcher', researcherId)}>
+      <Link
+        href={new URL(
+          `https://publons.com/researcher/${researcherId}`,
+        ).toString()}
+      >
         {researcherIdIcon}
       </Link>
     )}
     {twitter && (
-      <Link href={join('https://twitter.com', twitter)}>{twitterIcon}</Link>
+      <Link href={new URL(`https://twitter.com/${twitter}`).toString()}>
+        {twitterIcon}
+      </Link>
     )}
     {github && (
-      <Link href={join('https://github.com', github)}>{githubIcon}</Link>
+      <Link href={new URL(`https://github.com/${github}`).toString()}>
+        {githubIcon}
+      </Link>
     )}
     {googleScholar && (
       <Link
@@ -58,12 +67,18 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
       </Link>
     )}
     {researchGate && (
-      <Link href={join('https://www.researchgate.net/profile', researchGate)}>
+      <Link
+        href={new URL(
+          `https://www.researchgate.net/profile/${researchGate}`,
+        ).toString()}
+      >
         {researchGateIcon}
       </Link>
     )}
     {linkedIn && (
-      <Link href={join('https://www.linkedin.com/in/', linkedIn)}>
+      <Link
+        href={new URL(`https://www.linkedin.com/in/${linkedIn}`).toString()}
+      >
         {linkedInIcon}
       </Link>
     )}

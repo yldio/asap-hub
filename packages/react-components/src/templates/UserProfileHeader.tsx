@@ -84,8 +84,6 @@ const contactStyles = css({
 
   display: 'flex',
   flexWrap: 'wrap',
-
-  gridRowGap: '12px',
 });
 const contactNoEditStyles = css({
   gridColumnEnd: 'edit-contact-info',
@@ -96,8 +94,10 @@ const contactButtonStyles = css({
 
   display: 'flex',
   flexDirection: 'column',
+  paddingBottom: `${12 / perRem}em`,
   [`@media (min-width: ${tabletScreen.width}px)`]: {
-    paddingRight: '24px',
+    paddingRight: `${24 / perRem}em`,
+    paddingBottom: 0,
   },
 });
 const lastModifiedStyles = css({

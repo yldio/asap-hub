@@ -59,3 +59,11 @@ it('displays team information when present', () => {
   const link = getByText('Team A', { selector: 'a' }) as HTMLAnchorElement;
   expect(link.href).toEqual('http://localhost/network/teams/123');
 });
+
+it('displays link component when link property present', () => {
+  const { getByText } = render(
+    <SharedResearchCard {...libraryCardProps} link={'https://example.com'} />,
+  );
+  const link = getByText(/external\slink/i).closest('a');
+  expect(link).toHaveAttribute('href', 'https://example.com');
+});

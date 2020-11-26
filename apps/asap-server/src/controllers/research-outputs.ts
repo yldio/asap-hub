@@ -59,26 +59,35 @@ export default class ResearchOutputs {
     take: number;
     skip: number;
     search?: string;
-    filter?: string | string[];
+    filter?: string[];
   }): Promise<ListResearchOutputResponse> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { search, filter, ...opts } = options;
+    const { search, filter, take = 8, skip = 0 } = options;
+
+    const searchQ = (search || '')
+      .split(' ')
+      .filter(Boolean)
+      .reduce((acc: string[], word: string) => {
+        return acc.concat(`contains(data/firstName/iv, '${word}')`);
+      }, [])
+      .join(' or ');
+
+    const filterQ = (filter || [])
+      .reduce(
+        (acc: string[], word: string) =>
+          acc.concat([`data/type/iv eq '${word}'`]),
+        [],
+      )
+      .join(' or ');
+
+    const $filter = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
+      .filter(Boolean)
+      .join(' and ');
 
     const { total, items } = await this.researchOutputs.fetch({
-      ...opts,
-      ...(search
-        ? {
-            filter: {
-              or: search
-                .split(' ')
-                .filter(Boolean)
-                .flatMap((word) => [
-                  { path: 'data.title.iv', op: 'contains', value: word },
-                ]),
-            },
-          }
-        : {}),
-      sort: [{ path: 'created', order: 'descending' }],
+      $top: take,
+      $skip: skip,
+      $orderby: 'created desc',
+      $filter,
     });
 
     const teams = items.length
@@ -102,8 +111,7 @@ export default class ResearchOutputs {
           teams.items.find(
             (t) =>
               t.data.outputs &&
-              t.data.outputs.iv.filter((output) => output === item.id).length >
-                0,
+              t.data.outputs.iv.filter((o) => o === item.id).length > 0,
           ),
         ),
       ),

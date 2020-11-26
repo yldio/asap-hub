@@ -124,12 +124,10 @@ describe('GET /research-outputs/{id}', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(res).toStrictEqual({
       created: '2020-09-23T16:34:26.842Z',
-      doi: '',
       id: 'uuid',
       text: 'Text',
       title: 'Title',
       type: 'proposal',
-      url: '',
       team: {
         id: 'uuid-team',
         displayName: 'team',
@@ -180,12 +178,10 @@ describe('GET /research-outputs/{id}', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(res).toStrictEqual({
       created: '2020-09-23T16:34:26.842Z',
-      doi: '',
       id: 'uuid',
       text: 'Text',
       title: 'Title',
       type: 'proposal',
-      url: '',
     });
   });
 });

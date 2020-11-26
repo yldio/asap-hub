@@ -3,12 +3,10 @@ import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
-import { Squidex, RestTeam } from '@asap-hub/squidex';
-
-import { CMSResearchOutput } from '../entities/research-outputs';
+import { Squidex, RestTeam, RestResearchOutput } from '@asap-hub/squidex';
 
 function transform(
-  output: CMSResearchOutput,
+  output: RestResearchOutput,
   team?: RestTeam,
 ): ResearchOutputResponse {
   const teamProps = team
@@ -23,8 +21,7 @@ function transform(
   return {
     id: output.id,
     created: output.created,
-    url: output.data.url?.iv || '',
-    doi: output.data.doi?.iv || '',
+    link: output.data.link?.iv || undefined,
     type: output.data.type.iv,
     title: output.data.title.iv,
     text: output.data.text?.iv || '',
@@ -34,7 +31,7 @@ function transform(
 }
 
 export default class ResearchOutputs {
-  researchOutputs: Squidex<CMSResearchOutput>;
+  researchOutputs: Squidex<RestResearchOutput>;
 
   teams: Squidex<RestTeam>;
 

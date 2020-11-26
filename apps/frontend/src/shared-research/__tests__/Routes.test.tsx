@@ -20,7 +20,7 @@ const researchOutputs: ListResearchOutputResponse = {
       title: 'Output 1',
       text: 'description',
       type: 'Proposal',
-      url: 'test',
+      link: 'test',
       team: {
         id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
         displayName: 'Jakobsson, J',
@@ -33,7 +33,7 @@ const researchOutputs: ListResearchOutputResponse = {
       title: 'Output 2',
       text: 'description',
       type: 'Proposal',
-      url: 'test',
+      link: 'test',
       team: {
         id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
         displayName: 'Rickson, B',

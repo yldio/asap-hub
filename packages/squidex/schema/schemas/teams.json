@@ -23,8 +23,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Display Name",
-          "hints": "",
-          "placeholder": "",
           "isRequired": true
         }
       },
@@ -55,8 +53,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Project Title",
-          "hints": "",
-          "placeholder": "",
           "isRequired": true
         }
       },
@@ -72,8 +68,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Project Summary",
-          "hints": "",
-          "placeholder": "",
           "isRequired": false
         }
       },
@@ -91,8 +85,23 @@
           "editor": "Dropdown",
           "schemaIds": ["research-outputs"],
           "label": "Proposal",
-          "hints": "",
-          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "outputs",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "Dropdown",
+          "schemaIds": ["research-outputs"],
+          "label": "Outputs",
           "isRequired": false
         }
       },
@@ -106,8 +115,6 @@
           "fieldType": "Tags",
           "editor": "Tags",
           "label": "Expertise and Resources",
-          "hints": "",
-          "placeholder": "",
           "isRequired": false
         }
       },
@@ -120,8 +127,6 @@
         "properties": {
           "fieldType": "Array",
           "label": "External Tools",
-          "hints": "",
-          "placeholder": "",
           "isRequired": false
         },
         "nested": [
@@ -136,8 +141,6 @@
               "inlineEditable": false,
               "editor": "Input",
               "label": "Name",
-              "hints": "",
-              "placeholder": "",
               "isRequired": false
             }
           },

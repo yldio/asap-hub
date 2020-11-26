@@ -11,8 +11,7 @@ import { API_BASE_URL } from '../../config';
 const researchOutput: ResearchOutputResponse = {
   id: 'f9712278-b3f2-4895-8e4b-d5ebdb7f49b7',
   created: '2020-09-24T16:18:23Z',
-  url: '',
-  doi: '',
+  link: '',
   type: 'Proposal',
   title: 'Proposal title.',
   text: 'Actual proposal?',
@@ -42,7 +41,7 @@ const renderComponent = async (id: string) => {
 afterEach(() => {
   nock.cleanAll();
 });
-it('renders the proposal', async () => {
+it('renders the research output', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -55,7 +54,7 @@ it('renders the proposal', async () => {
   expect(getByRole('heading').textContent).toEqual('Proposal title!');
 });
 
-it('renders the proposal with a team', async () => {
+it('renders the research output with a team', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -76,7 +75,7 @@ it('renders the proposal with a team', async () => {
   );
 });
 
-it('renders the 404 page for a missing proposal', async () => {
+it('renders the 404 page for a missing research output', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })

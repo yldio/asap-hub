@@ -9,6 +9,7 @@ export default {
 
 export const Normal = () => (
   <SharedResearchCard
+    link={text('Link', 'https://hub.asap.science')}
     title={text(
       'Title',
       'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',

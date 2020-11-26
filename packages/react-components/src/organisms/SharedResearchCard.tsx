@@ -3,10 +3,10 @@ import css from '@emotion/css';
 import format from 'date-fns/format';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-import { Card, Link, Headline2, Caption, TagLabel, Paragraph } from '../atoms';
-import { tabletScreen, perRem } from '../pixels';
+import { Card, Link, Headline2, Caption, TagLabel } from '../atoms';
+import { perRem } from '../pixels';
 import { lead } from '../colors';
-import { teamIcon } from '../icons';
+import { teamIcon, externalLinkIcon } from '../icons';
 
 const containerStyles = css({
   display: 'flex',
@@ -14,15 +14,15 @@ const containerStyles = css({
   justifyContent: 'space-between',
 });
 
-const textStyles = css({
-  flexBasis: '100%',
+const headerStyles = css({
+  flex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
 });
 
-const moveStyles = css({
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    flexBasis: 'auto',
-    order: 1,
-  },
+const textStyles = css({
+  flexBasis: '100%',
 });
 
 const teamMemberStyles = css({
@@ -48,7 +48,7 @@ const typeStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
-  'publishDate' | 'title' | 'type' | 'created' | 'team'
+  'created' | 'publishDate' | 'team' | 'title' | 'type' | 'link'
 > & {
   href: string;
   team?: {
@@ -56,26 +56,40 @@ type SharedResearchCardProps = Pick<
   };
 };
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
-  publishDate,
-  title,
-  type,
   created,
   href,
+  link,
+  publishDate,
   team,
+  title,
+  type,
 }) => {
+  const titleComponent = link ? (
+    <Headline2 styleAsHeading={4}>{title}</Headline2>
+  ) : (
+    <Link theme={null} href={href}>
+      <Headline2 styleAsHeading={4}>{title}</Headline2>
+    </Link>
+  );
+
   return (
     <Card>
       <div css={containerStyles}>
-        <div css={typeStyles}>
-          <TagLabel>{type}</TagLabel>
-        </div>
-        <div css={moveStyles}>
-          <Paragraph accent={'lead'}>via ASAP</Paragraph>
+        <div css={headerStyles}>
+          <div css={typeStyles}>
+            <TagLabel>{type}</TagLabel>
+          </div>
+          {link ? (
+            <div css={{ fontSize: `${13 / perRem}em` }}>
+              <Link buttonStyle small={true} href={link}>
+                {externalLinkIcon}
+                <span css={{ fontWeight: 'normal' }}>{'External Link'}</span>
+              </Link>
+            </div>
+          ) : null}
         </div>
         <div css={textStyles}>
-          <Link theme={null} href={href}>
-            <Headline2 styleAsHeading={4}>{title}</Headline2>
-          </Link>
+          {titleComponent}
           {team && (
             <span css={teamMemberStyles}>
               <span css={iconStyles}>{teamIcon}</span>

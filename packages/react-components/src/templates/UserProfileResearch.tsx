@@ -17,7 +17,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     ComponentProps<typeof UserProfileBackground>,
     'firstName' | 'displayName'
   > &
-  Pick<UserResponse, 'email'> & {
+  Pick<UserResponse, 'email' | 'contactEmail'> & {
     readonly teams: ReadonlyArray<
       Omit<ComponentProps<typeof UserProfileBackground>, 'firstName'> & {
         editHref?: string;
@@ -32,6 +32,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   firstName,
   displayName,
   email,
+  contactEmail,
   teams,
   skills,
   skillsDescription,
@@ -92,7 +93,10 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
         },
         {
           card: (
-            <CtaCard href={createMailTo(email)} buttonText="Contact">
+            <CtaCard
+              href={createMailTo(contactEmail || email)}
+              buttonText="Contact"
+            >
               <strong>Interested in what you have seen?</strong> <br />
               Why not get in touch with {displayName}?
             </CtaCard>

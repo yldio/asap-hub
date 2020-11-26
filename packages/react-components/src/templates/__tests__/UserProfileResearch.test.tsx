@@ -7,7 +7,7 @@ import UserProfileResearch from '../UserProfileResearch';
 const commonProps: ComponentProps<typeof UserProfileResearch> = {
   firstName: 'Phillip',
   displayName: 'Phillip Winter',
-  email: 'test@test.com',
+  email: 'test@example.com',
   teams: [],
   skills: [],
   questions: [],
@@ -143,4 +143,28 @@ it('disables the edit button for the questions list (REGRESSION)', () => {
     />,
   );
   expect(getByLabelText(/edit.+question/i)).not.toHaveAttribute('href');
+});
+
+it('create mailto for email when contactEmail not present', () => {
+  const { getByText } = render(
+    <UserProfileResearch {...commonProps} email="email@example.com" />,
+  );
+  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+    'href',
+    'mailto:email@example.com',
+  );
+});
+
+it('create mailto for contactEmail', () => {
+  const { getByText } = render(
+    <UserProfileResearch
+      {...commonProps}
+      email="email@example.com"
+      contactEmail="contactEmail@example.com"
+    />,
+  );
+  expect(getByText(/contact/i).closest('a')).toHaveAttribute(
+    'href',
+    'mailto:contactEmail@example.com',
+  );
 });

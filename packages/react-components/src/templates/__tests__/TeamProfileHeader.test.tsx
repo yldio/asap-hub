@@ -12,6 +12,7 @@ const boilerplateProps = {
   applicationNumber: 'Unknown',
   members: [],
   skills: [],
+  outputs: [],
   lastModifiedDate: formatISO(new Date()),
   aboutHref: './about',
   outputsHref: './outputs',

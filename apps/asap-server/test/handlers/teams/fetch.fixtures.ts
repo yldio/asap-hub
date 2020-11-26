@@ -25,6 +25,9 @@ export const teamsResponse: { total: number; items: RestTeam[] } = {
         skills: {
           iv: [],
         },
+        outputs: {
+          iv: [],
+        },
         tools: {
           iv: [
             {
@@ -58,6 +61,9 @@ export const teamsResponse: { total: number; items: RestTeam[] } = {
         skills: {
           iv: [],
         },
+        outputs: {
+          iv: [],
+        },
       },
       created: '2020-09-16T14:31:19Z',
       lastModified: '2020-09-16T14:31:19Z',
@@ -78,6 +84,9 @@ export const teamsResponse: { total: number; items: RestTeam[] } = {
           iv: 'Its good',
         },
         skills: {
+          iv: [],
+        },
+        outputs: {
           iv: [],
         },
         tools: {
@@ -276,6 +285,7 @@ export const expectation: ListTeamResponse = {
       projectSummary:
         'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
       skills: [],
+      outputs: [],
       tools: [
         {
           url: 'testUrl',
@@ -305,6 +315,7 @@ export const expectation: ListTeamResponse = {
       projectSummary:
         'Opwounege epjav mevkop fuvjamal erejol ho su ri ropzuumu wumufi.',
       skills: [],
+      outputs: [],
       members: [
         {
           id: 'user-id-2',
@@ -332,6 +343,7 @@ export const expectation: ListTeamResponse = {
       displayName: 'Zac Torres',
       applicationNumber: 'eish',
       skills: [],
+      outputs: [],
       members: [],
       tools: [],
       projectTitle: 'This is good',

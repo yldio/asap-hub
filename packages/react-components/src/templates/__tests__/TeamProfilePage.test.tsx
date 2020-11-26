@@ -11,6 +11,7 @@ const boilerplateProps = {
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   members: [],
   skills: [],
+  outputs: [],
   aboutHref: '#',
   outputsHref: '#',
   workspaceHref: '#',

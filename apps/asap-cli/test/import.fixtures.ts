@@ -12,6 +12,7 @@ export const fetchTeamsResponse: { total: number; items: RestTeam[] } = {
         applicationNumber: { iv: 'app' },
         projectTitle: { iv: 'title' },
         skills: { iv: [] },
+        outputs: { iv: [] },
       },
     },
   ],

@@ -37,6 +37,7 @@ export const response: { data: ResponseFetchUsers } = {
                       displayName: 'Jackson, M',
                       proposal: [{ id: 'proposalId' }],
                       skills: [],
+                      outputs: [],
                     },
                   },
                 ],
@@ -74,6 +75,7 @@ export const response: { data: ResponseFetchUsers } = {
                       projectTitle: 'Awesome project',
                       displayName: 'Jackson, M',
                       skills: [],
+                      outputs: []
                     },
                     data: null,
                   },

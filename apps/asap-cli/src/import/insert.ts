@@ -65,6 +65,9 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
     skills: {
       iv: [],
     },
+    outputs: {
+      iv: [],
+    },
   };
 
   if (

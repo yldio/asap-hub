@@ -10,6 +10,7 @@ const response: ListTeamResponse = {
       projectTitle:
         'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
       skills: [],
+      outputs: [],
       members: [
         {
           id: '0647bb95-6ee7-4055-b9be-0e88e28d245f',
@@ -29,6 +30,7 @@ const response: ListTeamResponse = {
       projectTitle:
         'Understanding inherited and acquired genetic variation in Parkinson’s disease through single-cell multi-omics analyses: a unique data resource',
       skills: [],
+      outputs: [],
       members: [
         {
           id: 'e80ec01e-ef8c-4d91-be38-0c70c195fcf5',
@@ -48,6 +50,7 @@ const response: ListTeamResponse = {
       projectTitle:
         'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
       skills: [],
+      outputs: [],
       members: [
         {
           id: '8bc03d37-96f0-4b22-8f99-67b7b980566e',

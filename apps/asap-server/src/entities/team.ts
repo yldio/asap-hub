@@ -40,7 +40,7 @@ export const parseGraphQLTeam = (team: GraphqlTeam, members: TeamMember[] = []):
   const outputs: ResearchOutputResponse[] = flatOutputs.map(o => {
     const output = parseGraphQLResearchOutput(o as GraphqlResearchOutput) 
     return { ...output, team: { id: team.id, displayName }}
-  });
+  }).sort((a,b) => new Date(b.created).getTime() - new Date(a.created).getTime());
 
   return {
     id: team.id,

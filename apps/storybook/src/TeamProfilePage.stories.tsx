@@ -30,6 +30,7 @@ const commonProps = (): Omit<
   applicationNumber: 'Unknnow',
   lastModifiedDate: formatISO(subDays(new Date(), 2)),
   skills: [],
+  outputs: [],
   pointOfContact: {
     id: '2',
     displayName: 'Peter Venkman',

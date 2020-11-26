@@ -33,7 +33,9 @@ flatData {
   projectSummary
   projectTitle
   skills
-  proposal
+  proposal {
+    id
+  }
   tools{
     description
     name

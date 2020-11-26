@@ -11,8 +11,7 @@ import { API_BASE_URL } from '../../config';
 const researchOutput: ResearchOutputResponse = {
   id: 'f9712278-b3f2-4895-8e4b-d5ebdb7f49b7',
   created: '2020-09-24T16:18:23Z',
-  url: '',
-  doi: '',
+  link: '',
   type: 'Proposal',
   title: 'Proposal title.',
   text: 'Actual proposal?',

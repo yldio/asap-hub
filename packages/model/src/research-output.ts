@@ -18,32 +18,26 @@ export type ResearchOutputAuthor =
   | { readonly id: string };
 
 export type ResearchOutputFormData = {
-  readonly url: string;
-  readonly doi?: string;
-
+  readonly link: string;
   readonly type: ResearchOutputType;
   readonly title: string;
   readonly text: string;
-  readonly authors: ReadonlyArray<string>;
   readonly publishDate?: Date;
-
-  readonly accessLevel: ResearchOutputAccessLevel;
 };
 
 export type ResearchOutputCreationRequest = Omit<
   ResearchOutputFormData,
-  'publishDate' | 'authors'
+  'publishDate'
 > & {
   readonly publishDate?: string;
-  readonly authors: ReadonlyArray<ResearchOutputAuthor>;
 };
 
 export type ResearchOutputResponse = Omit<
   ResearchOutputCreationRequest,
-  'accessLevel' | 'authors' | 'url'
+  'link'
 > & {
   readonly id: string;
-  readonly url?: string;
+  readonly link?: string;
   readonly created: string;
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
 };

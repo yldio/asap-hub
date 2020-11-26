@@ -101,8 +101,6 @@ export {
   OpenQuestionsModal,
   PasswordResetEmailSentPage,
   PersonalInfoModal,
-  RecordOutputForm,
-  RecordOutputPage,
   ResearchOutputPage,
   SharedResearchPage,
   SharedResearchPageBody,

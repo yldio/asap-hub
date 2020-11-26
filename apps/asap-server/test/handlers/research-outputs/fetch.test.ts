@@ -1,10 +1,9 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import { config } from '@asap-hub/squidex';
+import { config, RestResearchOutput, RestTeam } from '@asap-hub/squidex';
 
 import { identity } from '../../helpers/squidex';
-import { CMSResearchOutput } from '../../../src/entities/research-outputs';
 import { handler } from '../../../src/handlers/research-outputs/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import decodeToken from '../../../src/utils/validate-token';
@@ -107,10 +106,11 @@ describe('GET /research-outputs/{id} - success', () => {
               type: { iv: 'Proposal' },
               title: { iv: 'Title' },
               text: { iv: 'Text' },
+              link: { iv: 'test' },
             },
           },
         ],
-      } as { total: number; items: CMSResearchOutput[] })
+      } as { total: number; items: RestResearchOutput[] })
       .get(`/api/content/${config.appName}/teams`)
       .query(() => true)
       .reply(200, {
@@ -119,14 +119,14 @@ describe('GET /research-outputs/{id} - success', () => {
           {
             id: 'uuid',
             created: '2020-09-23T16:34:26.842Z',
+            lastModified: '2020-09-23T16:34:26.842Z',
             data: {
-              type: { iv: 'Proposal' },
-              title: { iv: 'Title' },
-              text: { iv: 'Text' },
+              displayName: { iv: 'Unknown' },
+              applicationNumber: { iv: 'APP' },
             },
           },
         ],
-      } as { total: number; items: CMSResearchOutput[] });
+      } as { total: number; items: RestTeam[] });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -144,12 +144,11 @@ describe('GET /research-outputs/{id} - success', () => {
       items: [
         {
           created: '2020-09-23T16:34:26.842Z',
-          doi: '',
           id: 'uuid',
           text: 'Text',
           title: 'Title',
           type: 'Proposal',
-          url: '',
+          link: 'test',
         },
       ],
     });
@@ -186,7 +185,7 @@ describe('GET /research-outputs/{id} - success', () => {
             },
           },
         ],
-      } as { total: number; items: CMSResearchOutput[] })
+      } as { total: number; items: RestResearchOutput[] })
       .get(`/api/content/${config.appName}/teams`)
       .query(() => true)
       .reply(200, {
@@ -195,14 +194,14 @@ describe('GET /research-outputs/{id} - success', () => {
           {
             id: 'uuid',
             created: '2020-09-23T16:34:26.842Z',
+            lastModified: '2020-09-23T16:34:26.842Z',
             data: {
-              type: { iv: 'Proposal' },
-              title: { iv: 'Title' },
-              text: { iv: 'Text' },
+              displayName: { iv: 'No Display Name' },
+              applicationNumber: { iv: 'APP' },
             },
           },
         ],
-      } as { total: number; items: CMSResearchOutput[] });
+      } as { total: number; items: RestTeam[] });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -223,12 +222,10 @@ describe('GET /research-outputs/{id} - success', () => {
       items: [
         {
           created: '2020-09-23T16:34:26.842Z',
-          doi: '',
           id: 'uuid',
           text: 'Text',
           title: 'Title',
           type: 'Proposal',
-          url: '',
         },
       ],
     });

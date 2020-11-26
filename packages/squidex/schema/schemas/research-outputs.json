@@ -45,7 +45,7 @@
         }
       },
       {
-        "name": "doi",
+        "name": "shortText",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -55,37 +55,7 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "label": "DOI",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "url",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "URL",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "description",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Description",
+          "label": "Short Text",
           "isRequired": false
         }
       },
@@ -107,6 +77,23 @@
         }
       },
       {
+        "name": "link",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "External Link",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
         "name": "publishDate",
         "isHidden": false,
         "isLocked": false,
@@ -118,24 +105,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Publish Date",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "teams",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "editor": "List",
-          "schemaIds": ["teams"],
-          "label": "Teams",
-          "hints": "",
-          "placeholder": "",
           "isRequired": false
         }
       }

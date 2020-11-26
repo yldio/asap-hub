@@ -45,7 +45,7 @@ export default class ResearchOutputs {
     const [, team] = await intercept(
       this.teams.fetchOne({
         filter: {
-          path: 'data.proposal.iv',
+          path: 'data.outputs.iv',
           op: 'eq',
           value: res.id,
         },
@@ -86,7 +86,7 @@ export default class ResearchOutputs {
           take: items.length,
           filter: {
             or: items.map((item) => ({
-              path: 'data.proposal.iv',
+              path: 'data.outputs.iv',
               op: 'eq',
               value: item.id,
             })),
@@ -99,7 +99,12 @@ export default class ResearchOutputs {
       items: items.map((item) =>
         transform(
           item,
-          teams.items.filter((t) => t.data.proposal?.iv[0] === item.id)[0],
+          teams.items.find(
+            (t) =>
+              t.data.outputs &&
+              t.data.outputs.iv.filter((output) => output === item.id).length >
+                0,
+          ),
         ),
       ),
     };

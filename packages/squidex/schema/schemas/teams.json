@@ -96,7 +96,6 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
-          "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "editor": "List",

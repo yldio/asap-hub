@@ -22,6 +22,7 @@ import { createURL } from '../utils/squidex';
 const GraphQLQueryTeam = `
 id
 created
+lastModified
 flatData {
   applicationNumber
   displayName

@@ -3,11 +3,11 @@ import {
   ResearchOutputResponse,
   TeamResponse,
   TeamRole,
-  TeamMember
+  TeamMember,
 } from '@asap-hub/model';
 import { GraphqlTeam, GraphqlResearchOutput } from '@asap-hub/squidex';
 
-import { parseGraphQLResearchOutput } from './research-output'
+import { parseGraphQLResearchOutput } from './research-output';
 import { parseDate } from '../utils/squidex';
 
 export const teamUpdateSchema = Joi.object({
@@ -32,15 +32,22 @@ const priorities: Record<TeamRole, number> = {
   'Key Personnel': 5,
 };
 
-export const parseGraphQLTeam = (team: GraphqlTeam, members: TeamMember[] = []): TeamResponse => {
+export const parseGraphQLTeam = (
+  team: GraphqlTeam,
+  members: TeamMember[] = [],
+): TeamResponse => {
   const flatOutputs: NonNullable<GraphqlTeam['flatData']>['outputs'] =
     team.flatData?.outputs || [];
-  const displayName = team.flatData?.displayName || ''
+  const displayName = team.flatData?.displayName || '';
 
-  const outputs: ResearchOutputResponse[] = flatOutputs.map(o => {
-    const output = parseGraphQLResearchOutput(o as GraphqlResearchOutput) 
-    return { ...output, team: { id: team.id, displayName }}
-  }).sort((a,b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+  const outputs: ResearchOutputResponse[] = flatOutputs
+    .map((o) => {
+      const output = parseGraphQLResearchOutput(o as GraphqlResearchOutput);
+      return { ...output, team: { id: team.id, displayName } };
+    })
+    .sort(
+      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
+    );
 
   return {
     id: team.id,
@@ -53,6 +60,8 @@ export const parseGraphQLTeam = (team: GraphqlTeam, members: TeamMember[] = []):
     applicationNumber: team.flatData?.applicationNumber || '',
     projectTitle: team.flatData?.projectTitle || '',
     projectSummary: team.flatData?.projectSummary || undefined,
-    proposalURL: team.flatData?.proposal ? team.flatData?.proposal[0]?.id : undefined,
+    proposalURL: team.flatData?.proposal
+      ? team.flatData?.proposal[0]?.id
+      : undefined,
   };
 };

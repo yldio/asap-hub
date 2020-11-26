@@ -75,7 +75,7 @@ export const response: { data: ResponseFetchUsers } = {
                       projectTitle: 'Awesome project',
                       displayName: 'Jackson, M',
                       skills: [],
-                      outputs: []
+                      outputs: [],
                     },
                     data: null,
                   },

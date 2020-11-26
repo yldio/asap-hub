@@ -1,7 +1,13 @@
 import get from 'lodash.get';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
-import { Squidex, SquidexGraphql, RestTeam, RestUser, GraphqlTeam } from '@asap-hub/squidex';
+import {
+  Squidex,
+  SquidexGraphql,
+  RestTeam,
+  RestUser,
+  GraphqlTeam,
+} from '@asap-hub/squidex';
 import {
   ListTeamResponse,
   TeamResponse,
@@ -9,7 +15,7 @@ import {
   TeamTool,
 } from '@asap-hub/model';
 import { User } from '@asap-hub/auth';
-import { parseGraphQLTeam } from '../entities'
+import { parseGraphQLTeam } from '../entities';
 
 import { createURL } from '../utils/squidex';
 
@@ -75,7 +81,10 @@ export interface ResponseFetchTeam {
   findTeamsContent: GraphqlTeam;
 }
 
-const transformRestTeamMember = (users: RestUser[], teamId: string): TeamMember[] =>
+const transformRestTeamMember = (
+  users: RestUser[],
+  teamId: string,
+): TeamMember[] =>
   users.map((user) => ({
     id: user.id,
     displayName: `${user.data.firstName.iv} ${user.data.lastName.iv}`,
@@ -99,7 +108,7 @@ const transformGraphQLTeam = (
       ? team.flatData?.tools || []
       : undefined,
   };
-}
+};
 
 const fetchUsers = async (id: string, client: Got): Promise<RestUser[]> => {
   const [, res] = await Intercept(
@@ -134,7 +143,7 @@ export default class Teams {
     user: User,
   ): Promise<TeamResponse> {
     await this.teams.patch(id, { tools: { iv: tools } });
-    return this.fetchById(id, user)
+    return this.fetchById(id, user);
   }
 
   async fetch(
@@ -178,7 +187,11 @@ export default class Teams {
     );
 
     const teamItems = teams.map((team, index) =>
-      transformGraphQLTeam(team, transformRestTeamMember(teamUsers[index], team.id), user),
+      transformGraphQLTeam(
+        team,
+        transformRestTeamMember(teamUsers[index], team.id),
+        user,
+      ),
     );
 
     return {
@@ -196,6 +209,10 @@ export default class Teams {
 
     const users = await fetchUsers(teamId, this.users.client);
 
-    return transformGraphQLTeam(team, transformRestTeamMember(users, teamId), user);
+    return transformGraphQLTeam(
+      team,
+      transformRestTeamMember(users, teamId),
+      user,
+    );
   }
 }

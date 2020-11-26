@@ -1,11 +1,11 @@
-import {
-  ResearchOutputResponse,
-} from '@asap-hub/model';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
 import { parseDate } from '../utils/squidex';
 
-export const parseGraphQLResearchOutput= (output: GraphqlResearchOutput): ResearchOutputResponse => {
+export const parseGraphQLResearchOutput = (
+  output: GraphqlResearchOutput,
+): ResearchOutputResponse => {
   return {
     id: output.id,
     created: parseDate(output.created).toISOString(),
@@ -16,4 +16,3 @@ export const parseGraphQLResearchOutput= (output: GraphqlResearchOutput): Resear
     publishDate: output.flatData?.publishDate || undefined,
   };
 };
-

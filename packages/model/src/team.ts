@@ -1,5 +1,5 @@
 import { ListResponse } from './common';
-import { ResearchOutputResponse } from './research-output'
+import { ResearchOutputResponse } from './research-output';
 
 export type TeamRole =
   | 'Lead PI (Core Leadership)'

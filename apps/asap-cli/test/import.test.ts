@@ -35,7 +35,7 @@ const body = {
     iv: ['aggregation', 'alpha-synuclein interactions'],
   },
   outputs: {
-    iv: []
+    iv: [],
   },
   questions: {
     iv: [

@@ -33,13 +33,13 @@ type SharedResearchPageHeaderProps = {
 
 const researchOutputFilters: Option<ResearchOutputType>[] = [
   { label: 'Proposal', value: 'Proposal' },
+  { label: 'Presentation', value: 'Presentation' },
+  { label: 'Protocol', value: 'Protocol' },
   { label: 'Dataset', value: 'Dataset', enabled: false },
-  { label: 'Software', value: 'Software', enabled: false },
-  { label: 'Protocol', value: 'Protocol', enabled: false },
+  { label: 'Software', value: 'Code', enabled: false },
   { label: 'Lab Resource', value: 'Lab Resource', enabled: false },
   { label: 'Preprint', value: 'Preprint', enabled: false },
   { label: 'Article', value: 'Article', enabled: false },
-  { label: 'Other', value: 'Other', enabled: false },
 ];
 
 const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
@@ -63,7 +63,7 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
         placeholder="Enter a keyword, method, resource, tool, etc"
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
-        filterEnabled={false}
+        filterEnabled={true}
         filterOptions={researchOutputFilters}
         filterTitle="TYPE OF OUTPUTS"
         onChangeFilter={onChangeFilter}

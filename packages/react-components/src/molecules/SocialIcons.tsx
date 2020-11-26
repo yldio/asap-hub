@@ -12,13 +12,16 @@ import {
   orcidSocialIcon,
   googleScholarIcon,
 } from '../icons';
+import { perRem } from '../pixels';
 
 const socialContainerStyles = css({
   display: 'grid',
-  columnGap: '12px',
+  columnGap: `${12 / perRem}em`,
   gridAutoFlow: 'column',
   alignItems: 'center',
   lineHeight: 0,
+  paddingTop: `${15 / perRem}em`,
+  paddingBottom: `${17 / perRem}em`,
 });
 
 type SocialIconsProps = UserResponse['social'];

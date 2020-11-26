@@ -94,10 +94,8 @@ const contactButtonStyles = css({
 
   display: 'flex',
   flexDirection: 'column',
-  paddingBottom: `${12 / perRem}em`,
   [`@media (min-width: ${tabletScreen.width}px)`]: {
     paddingRight: `${24 / perRem}em`,
-    paddingBottom: 0,
   },
 });
 const lastModifiedStyles = css({
@@ -110,6 +108,13 @@ const lastModifiedStyles = css({
   display: 'none',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'unset',
+  },
+});
+
+const socialIconsStyles = css({
+  paddingTop: `${12 / perRem}em`,
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    paddingTop: 0,
   },
 });
 
@@ -220,7 +225,11 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             </Link>
           </div>
         ) : null}
-        {social && social !== {} && <SocialIcons {...social} />}
+        {social && social !== {} && (
+          <div css={socialIconsStyles}>
+            <SocialIcons {...social} />
+          </div>
+        )}
         {lastModifiedDate && (
           <div css={lastModifiedStyles}>
             <Paragraph accent="lead">

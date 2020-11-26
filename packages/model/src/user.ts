@@ -99,7 +99,7 @@ export interface UserResponse extends Invitee {
   reachOut?: string;
   responsibilities?: string;
   role: Role;
-  social: {
+  social?: {
     linkedIn?: string;
     orcid?: string;
     researcherId?: string;

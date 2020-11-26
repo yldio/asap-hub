@@ -12,7 +12,7 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
-import { UserProfilePersonalText, TabNav } from '../molecules';
+import { UserProfilePersonalText, TabNav, SocialIcons } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { paper } from '../colors';
@@ -84,6 +84,8 @@ const contactStyles = css({
 
   display: 'flex',
   flexWrap: 'wrap',
+
+  gridRowGap: '12px',
 });
 const contactNoEditStyles = css({
   gridColumnEnd: 'edit-contact-info',
@@ -94,6 +96,9 @@ const contactButtonStyles = css({
 
   display: 'flex',
   flexDirection: 'column',
+  [`@media (min-width: ${tabletScreen.width}px)`]: {
+    paddingRight: '24px',
+  },
 });
 const lastModifiedStyles = css({
   flexBasis: 0,
@@ -126,6 +131,7 @@ type UserProfileHeaderProps = Pick<
   | 'lastName'
   | 'location'
   | 'role'
+  | 'social'
 > & {
   readonly aboutHref: string;
   readonly researchHref: string;
@@ -160,6 +166,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   editContactInfoHref,
   discoverHref,
   role,
+  social,
 }) => {
   const { isEnabled } = useFlags();
 
@@ -213,6 +220,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             </Link>
           </div>
         ) : null}
+        {social && social !== {} && <SocialIcons {...social} />}
         {lastModifiedDate && (
           <div css={lastModifiedStyles}>
             <Paragraph accent="lead">

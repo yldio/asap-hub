@@ -10,6 +10,7 @@ const researchGateIcon = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Research Gate</title>
     <path fill="#fff" d="M0 0h28v28H0z" />
     <rect width={28} height={28} rx={3} fill="#00222C" />
     <path

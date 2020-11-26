@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { date, text, number, select } from '@storybook/addon-knobs';
 import { UserProfileHeader } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './layout';
@@ -8,7 +8,7 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-const commonProps = () => ({
+const commonProps = (): ComponentProps<typeof UserProfileHeader> => ({
   department: text('Department', 'Biology Department'),
   displayName: text('Display Name', 'Phillip Mars, PhD'),
   lastModifiedDate: new Date(
@@ -35,6 +35,16 @@ const commonProps = () => ({
   outputsHref: '/other',
   discoverHref: '/discover',
   role: select('Role', ['Staff', 'Grantee', 'Guest'], 'Staff'),
+  contactEmail: 'test@example.com',
+  social: {
+    twitter: text('Twitter Handle', '123'),
+    github: text('Github Handle', '123'),
+    googleScholar: text('Google Scholar', '123'),
+    linkedIn: text('Linkedin', '123'),
+    orcid: text('Orcid Id', '123'),
+    researchGate: text('Research Gate', '123'),
+    researcherId: text('Researcher Id', '123'),
+  },
 });
 
 export const ViewOnly = () => <UserProfileHeader {...commonProps()} />;

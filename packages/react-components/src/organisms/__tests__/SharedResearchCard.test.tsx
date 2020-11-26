@@ -64,6 +64,6 @@ it('displays link component when link property present', () => {
   const { getByText } = render(
     <SharedResearchCard {...libraryCardProps} link={'https://example.com'} />,
   );
-  const link = getByText(/external\slink/i);
-  expect(link.parentElement).toHaveAttribute('href', 'https://example.com');
+  const link = getByText(/external\slink/i).closest('a');
+  expect(link).toHaveAttribute('href', 'https://example.com');
 });

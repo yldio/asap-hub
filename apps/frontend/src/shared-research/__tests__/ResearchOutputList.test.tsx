@@ -76,6 +76,27 @@ it('correctly generates research output link', async () => {
   );
 });
 
+it('correctly generates external research output link', async () => {
+  const researchOutputs = createListResearchOutputResponse(2);
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs')
+    .query({ take: 10, skip: 0 })
+    .reply(200, {
+      ...researchOutputs,
+      items: researchOutputs.items.map((item, index) => ({
+        ...item,
+        link: index === 0 ? 'https://example.com' : null,
+        title: `Test Output ${index}`,
+        id: `test-output-id-${index}`,
+      })),
+    });
+  const { getByText } = await renderResearchOutputList();
+  const link = getByText(/external\slink/i).closest('a');
+  expect(link).toHaveAttribute('href', 'https://example.com');
+});
+
 it('correctly generates team link', async () => {
   const researchOutputs = createListResearchOutputResponse(2);
   nock(API_BASE_URL, {

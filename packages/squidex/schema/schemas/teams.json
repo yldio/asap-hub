@@ -96,12 +96,11 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
-          "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
-          "editor": "Dropdown",
+          "editor": "List",
           "schemaIds": ["research-outputs"],
-          "label": "Outputs",
+          "label": "Shared Research",
           "isRequired": false
         }
       },

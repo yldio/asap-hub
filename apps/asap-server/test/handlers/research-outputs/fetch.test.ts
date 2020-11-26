@@ -173,10 +173,28 @@ describe('GET /research-outputs/{id} - success', () => {
         }),
       })
       .reply(200, {
-        total: 1,
+        total: 3,
         items: [
           {
-            id: 'uuid',
+            id: 'uuid-1',
+            created: '2020-09-23T16:34:26.842Z',
+            data: {
+              type: { iv: 'Proposal' },
+              title: { iv: 'Title' },
+              text: { iv: 'Text' },
+            },
+          },
+          {
+            id: 'uuid-2',
+            created: '2020-09-23T16:34:26.842Z',
+            data: {
+              type: { iv: 'Proposal' },
+              title: { iv: 'Title' },
+              text: { iv: 'Text' },
+            },
+          },
+          {
+            id: 'uuid-3',
             created: '2020-09-23T16:34:26.842Z',
             data: {
               type: { iv: 'Proposal' },
@@ -189,15 +207,30 @@ describe('GET /research-outputs/{id} - success', () => {
       .get(`/api/content/${config.appName}/teams`)
       .query(() => true)
       .reply(200, {
-        total: 1,
+        total: 2,
         items: [
           {
-            id: 'uuid',
+            id: 'uuid-team-1',
             created: '2020-09-23T16:34:26.842Z',
             lastModified: '2020-09-23T16:34:26.842Z',
             data: {
-              displayName: { iv: 'No Display Name' },
+              displayName: { iv: 'Team 1' },
               applicationNumber: { iv: 'APP' },
+              outputs: {
+                iv: ['uuid-1', 'uuid-3'],
+              },
+            },
+          },
+          {
+            id: 'uuid-team-2',
+            created: '2020-09-23T16:34:26.842Z',
+            lastModified: '2020-09-23T16:34:26.842Z',
+            data: {
+              displayName: { iv: 'Team 2' },
+              applicationNumber: { iv: 'APP' },
+              outputs: {
+                iv: ['uuid-2'],
+              },
             },
           },
         ],
@@ -218,14 +251,40 @@ describe('GET /research-outputs/{id} - success', () => {
     const res = JSON.parse(result.body) as ResearchOutputResponse;
     expect(result.statusCode).toStrictEqual(200);
     expect(res).toStrictEqual({
-      total: 1,
+      total: 3,
       items: [
         {
           created: '2020-09-23T16:34:26.842Z',
-          id: 'uuid',
+          id: 'uuid-1',
           text: 'Text',
           title: 'Title',
           type: 'Proposal',
+          team: {
+            id: 'uuid-team-1',
+            displayName: 'Team 1',
+          },
+        },
+        {
+          created: '2020-09-23T16:34:26.842Z',
+          id: 'uuid-2',
+          text: 'Text',
+          title: 'Title',
+          type: 'Proposal',
+          team: {
+            id: 'uuid-team-2',
+            displayName: 'Team 2',
+          },
+        },
+        {
+          created: '2020-09-23T16:34:26.842Z',
+          id: 'uuid-3',
+          text: 'Text',
+          title: 'Title',
+          type: 'Proposal',
+          team: {
+            id: 'uuid-team-1',
+            displayName: 'Team 1',
+          },
         },
       ],
     });

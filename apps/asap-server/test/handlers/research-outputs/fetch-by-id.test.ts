@@ -90,7 +90,7 @@ describe('GET /research-outputs/{id}', () => {
         q: JSON.stringify({
           take: 1,
           filter: {
-            path: 'data.proposal.iv',
+            path: 'data.outputs.iv',
             op: 'eq',
             value: 'uuid',
           },
@@ -103,6 +103,9 @@ describe('GET /research-outputs/{id}', () => {
             created: '2020-09-23T16:34:26.842Z',
             data: {
               displayName: { iv: 'team' },
+              outputs: {
+                iv: ['uuid'],
+              },
             },
           },
         ],
@@ -152,7 +155,7 @@ describe('GET /research-outputs/{id}', () => {
         q: JSON.stringify({
           take: 1,
           filter: {
-            path: 'data.proposal.iv',
+            path: 'data.outputs.iv',
             op: 'eq',
             value: 'uuid',
           },

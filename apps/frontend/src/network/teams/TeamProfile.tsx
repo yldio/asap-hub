@@ -16,13 +16,7 @@ import { join } from 'path';
 
 import { useTeamById } from '@asap-hub/frontend/src/api/teams';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
-import {
-  TeamTool,
-  ResearchOutputType,
-  TeamPatchRequest,
-} from '@asap-hub/model';
-
-const PROPOSAL_PUBLISH_DATE = '2020-10-09T23:00:00.000Z';
+import { TeamTool, TeamPatchRequest } from '@asap-hub/model';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -72,23 +66,16 @@ const TeamProfile: React.FC<{}> = () => {
       workspaceHref: join(url, 'workspace'),
     };
 
-    const outputs = teamPageProps.proposalURL
-      ? [
-          {
-            id: teamPageProps.proposalURL,
-            publishDate: PROPOSAL_PUBLISH_DATE,
-            created: PROPOSAL_PUBLISH_DATE,
-            title: teamPageProps.projectTitle,
-            type: 'Proposal' as ResearchOutputType,
-            href: join('/shared-research/', teamPageProps.proposalURL),
-            team: {
-              id: teamPageProps.id,
-              displayName: teamPageProps.displayName,
-              href: join('/network/teams', teamPageProps.id),
-            },
-          },
-        ]
-      : [];
+    const outputs = team.outputs.map((output) => ({
+      ...output,
+      team: output.team
+        ? {
+            ...output.team,
+            href: join('/network/teams', output.team.id),
+          }
+        : undefined,
+      href: join('/shared-research/', output.id),
+    }));
 
     return (
       <TeamProfilePage {...teamPageProps}>

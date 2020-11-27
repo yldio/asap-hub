@@ -1,4 +1,5 @@
 import get from 'lodash.get';
+import Boom from '@hapi/boom';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
 import {
@@ -15,8 +16,8 @@ import {
   TeamTool,
 } from '@asap-hub/model';
 import { User } from '@asap-hub/auth';
-import { parseGraphQLTeam } from '../entities';
 
+import { parseGraphQLTeam } from '../entities';
 import { createURL } from '../utils/squidex';
 
 const GraphQLQueryTeam = `
@@ -85,8 +86,8 @@ export interface ResponseFetchTeam {
 const transformRestTeamMember = (
   users: RestUser[],
   teamId: string,
-): TeamMember[] =>
-  users.map((user) => ({
+): TeamMember[] => {
+  return users.map((user) => ({
     id: user.id,
     displayName: `${user.data.firstName.iv} ${user.data.lastName.iv}`,
     firstName: user.data.firstName.iv,
@@ -97,6 +98,7 @@ const transformRestTeamMember = (
     ).role,
     avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
   }));
+}
 
 const transformGraphQLTeam = (
   team: GraphqlTeam,
@@ -104,7 +106,7 @@ const transformGraphQLTeam = (
   user?: User,
 ): TeamResponse => {
   return {
-    ...parseGraphQLTeam(team),
+    ...parseGraphQLTeam(team, members),
     tools: user?.teams.find(({ id }) => id === team.id)
       ? team.flatData?.tools || []
       : undefined,
@@ -203,12 +205,19 @@ export default class Teams {
 
   async fetchById(teamId: string, user: User): Promise<TeamResponse> {
     const query = buildGraphQLQueryFetchTeam(teamId);
-    const { findTeamsContent: team } = await this.client.request<
+    const teamPromise = this.client.request<
       ResponseFetchTeam,
       unknown
     >(query);
 
-    const users = await fetchUsers(teamId, this.users.client);
+    const usersPromise = fetchUsers(teamId, this.users.client);
+
+    const [ teamResponse, users ] = await Promise.all([teamPromise, usersPromise])
+
+    const { findTeamsContent: team } = teamResponse
+    if (!team) {
+      throw Boom.notFound();
+    }
 
     return transformGraphQLTeam(
       team,

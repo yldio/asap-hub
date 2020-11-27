@@ -4,7 +4,12 @@ import { NewsAndEventsResponse, NewsAndEventsType } from '@asap-hub/model';
 import { Card, Paragraph, Headline2, TagLabel, Caption, Link } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
-import { newsPlaceholder, eventsPlaceholder, externalLinkIcon } from '../icons';
+import {
+  newsPlaceholder,
+  eventsPlaceholder,
+  externalLinkIcon,
+  trainingPlaceholderIcon,
+} from '../icons';
 
 const imageStyle = css({
   objectFit: 'cover',
@@ -49,7 +54,7 @@ const footerStyles = css({
 const placeholders: Record<NewsAndEventsType, JSX.Element> = {
   News: newsPlaceholder,
   Event: eventsPlaceholder,
-  Training: newsPlaceholder,
+  Training: trainingPlaceholderIcon,
 };
 
 type NewsAndEventsCardProps = NewsAndEventsResponse;

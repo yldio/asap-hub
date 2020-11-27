@@ -35,6 +35,7 @@ export { default as showPasswordIcon } from './show-password';
 export { default as slackIcon } from './slack';
 export { default as teamIcon } from './team';
 export { default as tickIcon } from './tick';
+export { default as trainingPlaceholderIcon } from './training-placeholder';
 export { default as userIcon } from './user';
 export { default as validTickIcon } from './valid-tick-icon';
 export { default as verticalDividerIcon } from './vertical-divider';

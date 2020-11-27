@@ -56,7 +56,7 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
         />
         <LabeledPasswordField
           required
-          forgotPasswordHref={forgotPasswordHref}
+          forgotPasswordHref={signup ? undefined : forgotPasswordHref}
           value={password}
           onChange={onChangePassword}
           customValidationMessage={customValidationMessage}

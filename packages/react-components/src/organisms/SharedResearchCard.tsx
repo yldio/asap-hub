@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import format from 'date-fns/format';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
 
 import { Card, Link, Headline2, Caption, TagLabel } from '../atoms';
 import { perRem } from '../pixels';
@@ -55,6 +55,19 @@ type SharedResearchCardProps = Pick<
     href: string;
   };
 };
+
+const labels: Record<ResearchOutputType, string> = {
+  Proposal: 'Open External Link',
+  Presentation: 'View on Google',
+  Dataset: 'Open External Link',
+  Software: 'Open External Link',
+  Protocol: 'View on Protocols.io',
+  'Lab Resource': 'Open External Link',
+  Preprint: 'Open External Link',
+  Article: 'Open External Link',
+  Other: 'Open External Link',
+};
+
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   created,
   href,
@@ -83,7 +96,9 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
             <div css={{ fontSize: `${13 / perRem}em` }}>
               <Link buttonStyle small={true} href={link}>
                 {externalLinkIcon}
-                <span css={{ fontWeight: 'normal' }}>{'External Link'}</span>
+                <span css={{ fontWeight: 'normal' }}>
+                  {labels[type] || 'Open External Link'}
+                </span>
               </Link>
             </div>
           ) : null}

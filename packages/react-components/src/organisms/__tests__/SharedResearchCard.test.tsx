@@ -67,3 +67,27 @@ it('displays link component when link property present', () => {
   const link = getByText(/external\slink/i).closest('a');
   expect(link).toHaveAttribute('href', 'https://example.com');
 });
+
+it('displays link component when protocol link property is present', () => {
+  const { getByText } = render(
+    <SharedResearchCard
+      {...libraryCardProps}
+      type={'Protocol'}
+      link={'https://example.com'}
+    />,
+  );
+  const link = getByText(/protocols.io/i).closest('a');
+  expect(link).toHaveAttribute('href', 'https://example.com');
+});
+
+it('displays link component when presentation link property is present', () => {
+  const { getByText } = render(
+    <SharedResearchCard
+      {...libraryCardProps}
+      type={'Presentation'}
+      link={'https://example.com'}
+    />,
+  );
+  const link = getByText(/view\son\sgoogle/i).closest('a');
+  expect(link).toHaveAttribute('href', 'https://example.com');
+});

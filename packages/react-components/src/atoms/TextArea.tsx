@@ -3,7 +3,7 @@ import css from '@emotion/css';
 
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';
-import { ember, rose, fern, tin } from '../colors';
+import { ember, rose, fern, tin, lead, silver } from '../colors';
 import { perRem, tabletScreen } from '../pixels';
 
 const containerStyles = css({
@@ -28,6 +28,10 @@ const textareaStyles = css({
     color: tin.rgb,
   },
 });
+const disabledStyles = css({
+  color: lead.rgb,
+  backgroundColor: silver.rgb,
+});
 const invalidStyles = css({
   ':invalid': {
     color: ember.rgb,
@@ -50,7 +54,7 @@ const limitStyles = css({
 });
 
 type TextAreaProps = {
-  readonly id?: string;
+  readonly enabled?: boolean;
 
   readonly customValidationMessage?: string;
 
@@ -61,6 +65,8 @@ type TextAreaProps = {
   'id' | 'placeholder' | 'required' | 'maxLength'
 >;
 const TextArea: React.FC<TextAreaProps> = ({
+  enabled = true,
+
   required,
   maxLength,
 
@@ -83,13 +89,19 @@ const TextArea: React.FC<TextAreaProps> = ({
       <textarea
         {...props}
         {...validationTargetProps}
+        disabled={!enabled}
         required={required}
         maxLength={maxLength}
         value={value}
         onChange={({ currentTarget: { value: newValue } }) =>
           onChange(newValue)
         }
-        css={[styles, textareaStyles, validationMessage && invalidStyles]}
+        css={[
+          styles,
+          textareaStyles,
+          enabled || disabledStyles,
+          validationMessage && invalidStyles,
+        ]}
       />
       <div css={validationAndLimitStyles}>
         <div css={validationMessageStyles}>

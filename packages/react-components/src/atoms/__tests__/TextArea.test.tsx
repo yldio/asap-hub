@@ -3,7 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import TextArea from '../TextArea';
-import { ember, fern } from '../../colors';
+import { ember, fern, silver } from '../../colors';
 
 it('renders a text area, passing through props', () => {
   const { getByRole } = render(<TextArea value="val" />);
@@ -18,6 +18,20 @@ it('emits value changes', async () => {
 
   await userEvent.type(getByRole('textbox'), '123', { allAtOnce: true });
   expect(handleChange).toHaveBeenLastCalledWith('val123');
+});
+
+it('renders a disabled text area', () => {
+  const { getByRole, rerender } = render(<TextArea value="val" />);
+  expect((getByRole('textbox') as HTMLInputElement).disabled).toBeFalsy();
+  expect(getComputedStyle(getByRole('textbox')).backgroundColor).not.toBe(
+    silver.rgb,
+  );
+
+  rerender(<TextArea value="val" enabled={false} />);
+  expect((getByRole('textbox') as HTMLInputElement).disabled).toBe(true);
+  expect(getComputedStyle(getByRole('textbox')).backgroundColor).toBe(
+    silver.rgb,
+  );
 });
 
 describe('when invalid', () => {

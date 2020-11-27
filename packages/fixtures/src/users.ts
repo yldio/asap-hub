@@ -20,6 +20,15 @@ const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   skills: [],
   questions: [],
   role: 'Grantee',
+  social: {
+    github: '',
+    googleScholar: '',
+    linkedIn: '',
+    orcid: '',
+    researchGate: '',
+    researcherId: '',
+    twitter: '',
+  },
 };
 
 type FixtureOptions = {

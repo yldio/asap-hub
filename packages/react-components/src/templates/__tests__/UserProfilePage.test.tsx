@@ -18,6 +18,7 @@ const boilerplateProps: Omit<
   researchHref: '#',
   discoverHref: '#',
   role: 'Grantee',
+  social: {},
 };
 
 it('renders the header', () => {

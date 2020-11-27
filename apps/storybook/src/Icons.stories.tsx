@@ -13,12 +13,15 @@ import {
   feedbackIcon,
   filterIcon,
   firstPageIcon,
+  githubIcon,
   googleDriveIcon,
   googleIcon,
+  googleScholarIcon,
   googleSigninLightNormalIcon,
   hidePasswordIcon,
   lastPageIcon,
   libraryIcon,
+  linkedInIcon,
   locationIcon,
   logoutIcon,
   menuIcon,
@@ -27,9 +30,12 @@ import {
   newsPlaceholder,
   nextPageIcon,
   orcidIcon,
+  orcidSocialIcon,
   placeholderIcon,
   previousPageIcon,
   protocolsIcon,
+  researchGateIcon,
+  researcherIdIcon,
   searchIcon,
   settingsIcon,
   showPasswordIcon,
@@ -37,6 +43,7 @@ import {
   teamIcon,
   tickIcon,
   trainingPlaceholderIcon,
+  twitterIcon,
   userIcon,
   validTickIcon,
   verticalDividerIcon,
@@ -58,11 +65,14 @@ export const ExternalLink = () => externalLinkIcon;
 export const Feedback = () => feedbackIcon;
 export const Filter = () => filterIcon;
 export const FirstPage = () => firstPageIcon;
+export const Github = () => githubIcon;
 export const Google = () => googleIcon;
 export const GoogleDrive = () => googleDriveIcon;
+export const GoogleScholar = () => googleScholarIcon;
 export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;
 export const HidePassword = () => hidePasswordIcon;
 export const LastPage = () => lastPageIcon;
+export const LinkedIn = () => linkedInIcon;
 export const Location = () => locationIcon;
 export const Logout = () => logoutIcon;
 export const Menu = () => menuIcon;
@@ -71,9 +81,12 @@ export const News = () => newsIcon;
 export const NewsPlaceholder = () => newsPlaceholder;
 export const NextPage = () => nextPageIcon;
 export const Orcid = () => orcidIcon;
+export const OrcidSocial = () => orcidSocialIcon;
 export const Placeholder = () => placeholderIcon;
 export const PreviousPage = () => previousPageIcon;
 export const Protocols = () => protocolsIcon;
+export const ResearchGate = () => researchGateIcon;
+export const ResearcherId = () => researcherIdIcon;
 export const Search = () => searchIcon;
 export const Settings = () => settingsIcon;
 export const SharedResearch = () => libraryIcon;
@@ -82,6 +95,7 @@ export const Slack = () => slackIcon;
 export const TeamMembers = () => teamIcon;
 export const TickIcon = () => tickIcon;
 export const TrainingPlaceholderIcon = () => trainingPlaceholderIcon;
+export const Twitter = () => twitterIcon;
 export const User = () => userIcon;
 export const UserIcon = () => userIcon;
 export const ValidTick = () => validTickIcon;

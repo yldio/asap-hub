@@ -12,7 +12,7 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
-import { UserProfilePersonalText, TabNav } from '../molecules';
+import { UserProfilePersonalText, TabNav, SocialIcons } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { paper } from '../colors';
@@ -82,18 +82,26 @@ const editContactStyles = css({
 const contactStyles = css({
   gridArea: 'contact',
 
-  display: 'flex',
-  flexWrap: 'wrap',
+  display: 'grid',
+
+  gridRowGap: `${12 / perRem}em`,
+  gridColumnGap: `${12 / perRem}em`,
+
+  gridTemplateColumns: 'min-content min-content auto',
 });
 const contactNoEditStyles = css({
   gridColumnEnd: 'edit-contact-info',
 });
 const contactButtonStyles = css({
   flexGrow: 1,
-  alignSelf: 'center',
-
   display: 'flex',
   flexDirection: 'column',
+  gridColumn: 'span 3',
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gridColumn: 'span 1',
+    display: 'block',
+    paddingRight: `${12 / perRem}em`,
+  },
 });
 const lastModifiedStyles = css({
   flexBasis: 0,
@@ -106,6 +114,10 @@ const lastModifiedStyles = css({
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     display: 'unset',
   },
+});
+
+const lastModifiedNoContactStyles = css({
+  gridColumn: 'span 2',
 });
 
 const tabNavStyles = css({
@@ -126,6 +138,7 @@ type UserProfileHeaderProps = Pick<
   | 'lastName'
   | 'location'
   | 'role'
+  | 'social'
 > & {
   readonly aboutHref: string;
   readonly researchHref: string;
@@ -160,6 +173,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   editContactInfoHref,
   discoverHref,
   role,
+  social,
 }) => {
   const { isEnabled } = useFlags();
 
@@ -213,16 +227,20 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             </Link>
           </div>
         ) : null}
-        {lastModifiedDate && (
-          <div css={lastModifiedStyles}>
-            <Paragraph accent="lead">
-              <small>
-                Last updated:{' '}
-                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-              </small>
-            </Paragraph>
-          </div>
-        )}
+        <SocialIcons {...social} />
+        <div
+          css={[
+            lastModifiedStyles,
+            role === 'Staff' ? lastModifiedNoContactStyles : null,
+          ]}
+        >
+          <Paragraph accent="lead">
+            <small>
+              Last updated:{' '}
+              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+            </small>
+          </Paragraph>
+        </div>
       </section>
       {editContactInfoHref && (
         <div css={editContactStyles}>

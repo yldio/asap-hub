@@ -15,6 +15,7 @@ export { default as ModalEditHeader } from './ModalEditHeader';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as PageControls } from './PageControls';
 export { default as SearchField } from './SearchField';
+export { default as SocialIcons } from './SocialIcons';
 export { default as TabNav } from './TabNav';
 export { default as TagList } from './TagList';
 export { default as UserMenuButton } from './UserMenuButton';

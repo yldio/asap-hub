@@ -45,7 +45,7 @@ describe('GET /teams/{id}', () => {
     expect(result.statusCode).toStrictEqual(404);
   });
 
-  test("returns team even when members return 404", async () => {
+  test('returns team even when members return 404', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchTeam('team-id-1'),
@@ -71,7 +71,36 @@ describe('GET /teams/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual({...fixtures.expectation, members: []})
+    expect(body).toStrictEqual({ ...fixtures.expectation, members: [] });
+  });
+
+  test('returns team even when has no members', async () => {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchTeam('team-id-1'),
+      })
+      .reply(200, fixtures.graphQlTeamResponse)
+      .get(`/api/content/${config.appName}/users`)
+      .query({
+        $filter: "data/teams/iv/id eq 'team-id-1'",
+      })
+      .reply(200, { total: 0, items: [] });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: `Bearer token`,
+        },
+        pathParameters: {
+          id: 'team-id-1',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual({ ...fixtures.expectation, members: [] });
   });
 
   test('returns 200 when team exists', async () => {

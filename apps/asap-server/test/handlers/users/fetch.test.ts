@@ -128,7 +128,7 @@ describe('GET /users', () => {
     expect(body).toStrictEqual(fixtures.expectation);
   });
 
-  test('returns 200 with the results from the requested page', async () => {
+  test('returns 200 when no users are found', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchUsers("data/role/iv ne 'Hidden'", 8, 8),

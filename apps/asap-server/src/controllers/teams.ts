@@ -98,7 +98,7 @@ const transformRestTeamMember = (
     ).role,
     avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
   }));
-}
+};
 
 const transformGraphQLTeam = (
   team: GraphqlTeam,
@@ -205,16 +205,16 @@ export default class Teams {
 
   async fetchById(teamId: string, user: User): Promise<TeamResponse> {
     const query = buildGraphQLQueryFetchTeam(teamId);
-    const teamPromise = this.client.request<
-      ResponseFetchTeam,
-      unknown
-    >(query);
+    const teamPromise = this.client.request<ResponseFetchTeam, unknown>(query);
 
     const usersPromise = fetchUsers(teamId, this.users.client);
 
-    const [ teamResponse, users ] = await Promise.all([teamPromise, usersPromise])
+    const [teamResponse, users] = await Promise.all([
+      teamPromise,
+      usersPromise,
+    ]);
 
-    const { findTeamsContent: team } = teamResponse
+    const { findTeamsContent: team } = teamResponse;
     if (!team) {
       throw Boom.notFound();
     }

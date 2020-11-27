@@ -3,6 +3,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/teams/fetch';
+import { buildGraphQLQueryFetchTeams } from '../../../src/controllers/teams';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './fetch.fixtures';
@@ -20,13 +21,17 @@ describe('GET /teams', () => {
 
   test('returns 200 when no teams exist', async () => {
     nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/teams`)
-      .query({
-        $orderby: 'data/displayName/iv',
-        $top: 8,
-        $skip: 8,
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchTeams('', 8, 8),
       })
-      .reply(200, { total: 0, items: [] });
+      .reply(200, {
+        data: {
+          queryTeamsContentsWithTotal: {
+            total: 0,
+            items: [],
+          },
+        },
+      });
 
     const result = (await handler(
       apiGatewayEvent({
@@ -51,21 +56,20 @@ describe('GET /teams', () => {
   });
 
   test('returns 200 when searching teams by name', async () => {
+    const searchQ =
+      "(contains(data/displayName/iv, 'Cristiano')" +
+      " or contains(data/projectTitle/iv, 'Cristiano')" +
+      " or contains(data/skills/iv, 'Cristiano'))" +
+      ' and' +
+      " (contains(data/displayName/iv, 'Ronaldo')" +
+      " or contains(data/projectTitle/iv, 'Ronaldo')" +
+      " or contains(data/skills/iv, 'Ronaldo'))";
+
     nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/teams`)
-      .query({
-        $top: 8,
-        $orderby: 'data/displayName/iv',
-        $filter:
-          "(contains(data/displayName/iv, 'Cristiano')" +
-          " or contains(data/projectTitle/iv, 'Cristiano')" +
-          " or contains(data/skills/iv, 'Cristiano'))" +
-          ' and' +
-          " (contains(data/displayName/iv, 'Ronaldo')" +
-          " or contains(data/projectTitle/iv, 'Ronaldo')" +
-          " or contains(data/skills/iv, 'Ronaldo'))",
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchTeams(searchQ),
       })
-      .reply(200, { total: 1, items: fixtures.teamsResponse.items.slice(0, 1) })
+      .reply(200, fixtures.graphQlTeamsResponseSingle)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
@@ -92,41 +96,12 @@ describe('GET /teams', () => {
     });
   });
 
-  test("returns empty response when resource doesn't exist", async () => {
-    nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/teams`)
-      .query({
-        $top: 8,
-        $orderby: 'data/displayName/iv',
-      })
-      .reply(404);
-
-    const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-        headers: {
-          Authorization: 'Bearer token',
-        },
-      }),
-    )) as APIGatewayProxyResult;
-
-    const body = JSON.parse(result.body);
-    expect(result.statusCode).toStrictEqual(200);
-    expect(result.body).toBeDefined();
-    expect(body).toStrictEqual({
-      items: [],
-      total: 0,
-    });
-  });
-
   test('returns 200 when teams exist', async () => {
     nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/teams`)
-      .query({
-        $top: 8,
-        $orderby: 'data/displayName/iv',
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchTeams(),
       })
-      .reply(200, fixtures.teamsResponse)
+      .reply(200, fixtures.graphQlTeamsResponse)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
@@ -136,7 +111,12 @@ describe('GET /teams', () => {
       .query({
         $filter: "data/teams/iv/id eq 'team-id-2'",
       })
-      .reply(200, fixtures.usersResponseTeam2);
+      .reply(200, fixtures.usersResponseTeam2)
+      .get(`/api/content/${config.appName}/users`)
+      .query({
+        $filter: "data/teams/iv/id eq 'team-id-3'",
+      })
+      .reply(200, fixtures.usersResponseTeam3);
 
     const result = (await handler(
       apiGatewayEvent({

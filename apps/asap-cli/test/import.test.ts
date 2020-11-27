@@ -34,9 +34,6 @@ const body = {
   skills: {
     iv: ['aggregation', 'alpha-synuclein interactions'],
   },
-  outputs: {
-    iv: [],
-  },
   questions: {
     iv: [
       {

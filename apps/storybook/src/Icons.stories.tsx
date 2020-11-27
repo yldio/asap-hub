@@ -36,6 +36,7 @@ import {
   slackIcon,
   teamIcon,
   tickIcon,
+  trainingPlaceholderIcon,
   userIcon,
   validTickIcon,
   verticalDividerIcon,
@@ -80,6 +81,7 @@ export const ShowPassword = () => showPasswordIcon;
 export const Slack = () => slackIcon;
 export const TeamMembers = () => teamIcon;
 export const TickIcon = () => tickIcon;
+export const TrainingPlaceholderIcon = () => trainingPlaceholderIcon;
 export const User = () => userIcon;
 export const UserIcon = () => userIcon;
 export const ValidTick = () => validTickIcon;

@@ -17,7 +17,7 @@ export interface Rest<T extends object> {
 }
 
 export interface Graphql<T extends object> {
-  data:
+  data?:
     | {
         [K in keyof T]: {
           iv: NonNullable<T[K]>;
@@ -26,7 +26,7 @@ export interface Graphql<T extends object> {
     | null;
   flatData:
     | {
-        [K in keyof T]: T[K] | null;
+        [K in keyof T]?: T[K] | null;
       }
     | null;
 }

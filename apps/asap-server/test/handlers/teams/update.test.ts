@@ -3,13 +3,11 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/teams/update';
+import { buildGraphQLQueryFetchTeam } from '../../../src/controllers/teams';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import {
-  teamsResponse,
-  usersResponseTeam1,
-  expectation,
-} from './fetch.fixtures';
+import * as fetchFixtures from './fetch-by-id.fixtures';
+import { updateTeamResponse } from './update.fixtures';
 import decodeToken from '../../../src/utils/validate-token';
 
 jest.mock('../../../src/utils/validate-token');
@@ -159,17 +157,20 @@ describe('PATCH /teams/{id}', () => {
   });
 
   test('returns 200 when team exists', async () => {
-    const res = { ...teamsResponse.items[0] };
-    res.data.tools!.iv = [];
-
     nock(config.baseUrl)
-      .patch(`/api/content/${config.appName}/teams/team-id-1`)
-      .reply(200, res)
+      .patch(`/api/content/${config.appName}/teams/team-id-1`, {
+        tools: { iv: [] },
+      })
+      .reply(200, updateTeamResponse) // response is not used
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchTeam('team-id-1'),
+      })
+      .reply(200, fetchFixtures.graphQlTeamResponse)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
       })
-      .reply(200, usersResponseTeam1);
+      .reply(200, fetchFixtures.usersResponseTeam1);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -188,6 +189,6 @@ describe('PATCH /teams/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual({ ...expectation.items[0], tools: [] });
+    expect(body).toStrictEqual(fetchFixtures.expectation);
   });
 });

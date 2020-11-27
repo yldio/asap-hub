@@ -28,7 +28,7 @@ it('displays published date is undefined', () => {
     />,
   );
   expect(getByText(/Originally Published/i).textContent).toMatchInlineSnapshot(
-    `"Originally Published: 4th April 2019"`,
+    `"Originally Published: 3rd April 2019"`,
   );
 });
 
@@ -41,7 +41,7 @@ it('displays created date when published date is undefined', () => {
     />,
   );
   expect(getByText(/Originally Published/i).textContent).toMatchInlineSnapshot(
-    `"Originally Published: 7th July 2020"`,
+    `"Originally Published: 12th July 2020"`,
   );
 });
 
@@ -65,5 +65,29 @@ it('displays link component when link property present', () => {
     <SharedResearchCard {...libraryCardProps} link={'https://example.com'} />,
   );
   const link = getByText(/external\slink/i).closest('a');
+  expect(link).toHaveAttribute('href', 'https://example.com');
+});
+
+it('displays link component when protocol link property is present', () => {
+  const { getByText } = render(
+    <SharedResearchCard
+      {...libraryCardProps}
+      type={'Protocol'}
+      link={'https://example.com'}
+    />,
+  );
+  const link = getByText(/protocols.io/i).closest('a');
+  expect(link).toHaveAttribute('href', 'https://example.com');
+});
+
+it('displays link component when presentation link property is present', () => {
+  const { getByText } = render(
+    <SharedResearchCard
+      {...libraryCardProps}
+      type={'Presentation'}
+      link={'https://example.com'}
+    />,
+  );
+  const link = getByText(/view\son\sgoogle/i).closest('a');
   expect(link).toHaveAttribute('href', 'https://example.com');
 });

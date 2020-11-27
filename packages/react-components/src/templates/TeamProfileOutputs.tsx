@@ -1,5 +1,12 @@
+import css from '@emotion/css';
 import React, { ComponentProps } from 'react';
 import { ComingSoon, SharedResearchCard } from '../organisms';
+import { perRem } from '../pixels';
+
+const containerStyles = css({
+  display: 'grid',
+  gridRowGap: `${36 / perRem}em`,
+});
 
 export type TeamProfileOutputsProps = {
   outputs: ReadonlyArray<
@@ -9,7 +16,7 @@ export type TeamProfileOutputsProps = {
 
 const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({ outputs }) => {
   return (
-    <>
+    <div css={containerStyles}>
       {outputs.map(({ id, ...output }) => {
         return <SharedResearchCard key={id} {...output} />;
       })}
@@ -21,7 +28,7 @@ const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({ outputs }) => {
         information shared within the Network without express permission from
         and credit to the investigator(s) that shared the information.
       </ComingSoon>
-    </>
+    </div>
   );
 };
 

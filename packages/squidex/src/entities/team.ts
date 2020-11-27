@@ -1,4 +1,5 @@
 import { Rest, Entity, Graphql } from './common';
+import { GraphqlResearchOutput } from './research-output';
 
 interface Team<T = string> {
   applicationNumber: string;
@@ -12,8 +13,11 @@ interface Team<T = string> {
     description: string;
     name: string;
   }[];
-  outputs?: T[];
+  outputs: T[];
 }
 
 export interface RestTeam extends Entity, Rest<Team> {}
-export interface GraphqlTeam extends Entity, Graphql<Team<{ id: string }>> {}
+// TODO: REMOVE old proposal type
+export interface GraphqlTeam
+  extends Entity,
+    Graphql<Team<GraphqlResearchOutput | { id: string }>> {}

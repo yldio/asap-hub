@@ -1,4 +1,5 @@
 import { ListResponse } from './common';
+import { ResearchOutputResponse } from './research-output';
 
 export type TeamRole =
   | 'Lead PI (Core Leadership)'
@@ -16,6 +17,7 @@ export interface TeamCreateRequest {
   projectSummary?: string;
   proposalURL?: string;
 }
+
 export interface TeamPatchRequest {
   tools: TeamTool[];
 }
@@ -37,6 +39,7 @@ export interface TeamResponse extends TeamCreateRequest {
   lastModifiedDate: string;
   pointOfContact?: TeamMember;
   tools?: TeamTool[];
+  outputs: ResearchOutputResponse[];
 }
 
 export type ListTeamResponse = ListResponse<TeamResponse>;

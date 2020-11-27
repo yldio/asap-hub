@@ -26,6 +26,9 @@ export const Empty = () => (
     ).join('\n')}
   />
 );
+export const Disabled = () => (
+  <LabeledTextArea title="Members" value="" enabled={false} />
+);
 export const Invalid = () => (
   <LabeledTextArea
     title="Members"

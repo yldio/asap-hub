@@ -82,20 +82,25 @@ const editContactStyles = css({
 const contactStyles = css({
   gridArea: 'contact',
 
-  display: 'flex',
-  flexWrap: 'wrap',
+  display: 'grid',
+
+  gridRowGap: `${12 / perRem}em`,
+  gridColumnGap: `${12 / perRem}em`,
+
+  gridTemplateColumns: 'min-content min-content auto',
 });
 const contactNoEditStyles = css({
   gridColumnEnd: 'edit-contact-info',
 });
 const contactButtonStyles = css({
   flexGrow: 1,
-  alignSelf: 'center',
-
   display: 'flex',
   flexDirection: 'column',
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
-    paddingRight: `${24 / perRem}em`,
+  gridColumn: 'span 3',
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gridColumn: 'span 1',
+    display: 'block',
+    paddingRight: `${12 / perRem}em`,
   },
 });
 const lastModifiedStyles = css({
@@ -111,11 +116,8 @@ const lastModifiedStyles = css({
   },
 });
 
-const socialIconsStyles = css({
-  paddingTop: `${12 / perRem}em`,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    paddingTop: 0,
-  },
+const lastModifiedNoContactStyles = css({
+  gridColumn: 'span 2',
 });
 
 const tabNavStyles = css({
@@ -225,21 +227,20 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             </Link>
           </div>
         ) : null}
-        {social && social !== {} && (
-          <div css={socialIconsStyles}>
-            <SocialIcons {...social} />
-          </div>
-        )}
-        {lastModifiedDate && (
-          <div css={lastModifiedStyles}>
-            <Paragraph accent="lead">
-              <small>
-                Last updated:{' '}
-                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-              </small>
-            </Paragraph>
-          </div>
-        )}
+        <SocialIcons {...social} />
+        <div
+          css={[
+            lastModifiedStyles,
+            role === 'Staff' ? lastModifiedNoContactStyles : null,
+          ]}
+        >
+          <Paragraph accent="lead">
+            <small>
+              Last updated:{' '}
+              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+            </small>
+          </Paragraph>
+        </div>
       </section>
       {editContactInfoHref && (
         <div css={editContactStyles}>

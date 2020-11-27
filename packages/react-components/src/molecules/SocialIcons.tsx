@@ -18,8 +18,9 @@ const socialContainerStyles = css({
   display: 'grid',
   columnGap: `${12 / perRem}em`,
   gridAutoFlow: 'column',
-  alignItems: 'center',
-  lineHeight: 0,
+});
+
+const iconStyles = css({
   paddingTop: `${15 / perRem}em`,
   paddingBottom: `${17 / perRem}em`,
 });
@@ -38,7 +39,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
   <div css={socialContainerStyles}>
     {orcid && (
       <Link href={new URL(`https://orcid.org/${orcid}`).toString()}>
-        {orcidSocialIcon}
+        <div css={iconStyles}>{orcidSocialIcon}</div>
       </Link>
     )}
     {researcherId && (
@@ -47,17 +48,17 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
           `https://publons.com/researcher/${researcherId}`,
         ).toString()}
       >
-        {researcherIdIcon}
+        <div css={iconStyles}>{researcherIdIcon}</div>
       </Link>
     )}
     {twitter && (
       <Link href={new URL(`https://twitter.com/${twitter}`).toString()}>
-        {twitterIcon}
+        <div css={iconStyles}>{twitterIcon}</div>
       </Link>
     )}
     {github && (
       <Link href={new URL(`https://github.com/${github}`).toString()}>
-        {githubIcon}
+        <div css={iconStyles}>{githubIcon}</div>
       </Link>
     )}
     {googleScholar && (
@@ -66,7 +67,7 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
           user: googleScholar,
         }).toString()}`}
       >
-        {googleScholarIcon}
+        <div css={iconStyles}> {googleScholarIcon}</div>
       </Link>
     )}
     {researchGate && (
@@ -75,14 +76,14 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
           `https://www.researchgate.net/profile/${researchGate}`,
         ).toString()}
       >
-        {researchGateIcon}
+        <div css={iconStyles}>{researchGateIcon}</div>
       </Link>
     )}
     {linkedIn && (
       <Link
         href={new URL(`https://www.linkedin.com/in/${linkedIn}`).toString()}
       >
-        {linkedInIcon}
+        <div css={iconStyles}> {linkedInIcon}</div>
       </Link>
     )}
   </div>

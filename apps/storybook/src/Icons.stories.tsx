@@ -42,11 +42,8 @@ import {
   slackIcon,
   teamIcon,
   tickIcon,
-<<<<<<< HEAD
   trainingPlaceholderIcon,
-=======
   twitterIcon,
->>>>>>> Icons, stories & typings
   userIcon,
   validTickIcon,
   verticalDividerIcon,

@@ -23,11 +23,11 @@ it('renders icon and link', () => {
   ).toMatchInlineSnapshot(`
     Array [
       Array [
-        "Orcid Social",
+        "ORCID",
         "https://orcid.org/test",
       ],
       Array [
-        "Researcher Id",
+        "ResearcherID",
         "https://publons.com/researcher/test",
       ],
       Array [
@@ -35,7 +35,7 @@ it('renders icon and link', () => {
         "https://twitter.com/test",
       ],
       Array [
-        "Github",
+        "GitHub",
         "https://github.com/test",
       ],
       Array [

@@ -10,7 +10,7 @@ const orcidSocialIcon = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <title>Orcid Social</title>
+    <title>ORCID</title>
     <path fill="#fff" d="M0 0h28v28H0z" />
     <g
       style={{

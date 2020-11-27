@@ -27,7 +27,7 @@ const showPasswordIndicatorStyles = css({
 type LabeledPasswordFieldProps = {
   readonly title?: React.ReactNode;
 
-  readonly forgotPasswordHref: string;
+  readonly forgotPasswordHref?: string;
 } & Pick<
   ComponentProps<typeof TextField>,
   'value' | 'onChange' | 'required' | 'placeholder' | 'customValidationMessage'
@@ -70,9 +70,11 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
           <strong>{title}</strong>
         </Paragraph>
       </Label>
-      <div css={forgotPasswordStyles}>
-        <Link href={forgotPasswordHref}>Forgot Password?</Link>
-      </div>
+      {forgotPasswordHref && (
+        <div css={forgotPasswordStyles}>
+          <Link href={forgotPasswordHref}>Forgot Password?</Link>
+        </div>
+      )}
     </div>
   );
 };

@@ -28,7 +28,7 @@ it('displays published date is undefined', () => {
     />,
   );
   expect(getByText(/Originally Published/i).textContent).toMatchInlineSnapshot(
-    `"Originally Published: 4th April 2019"`,
+    `"Originally Published: 3rd April 2019"`,
   );
 });
 
@@ -41,7 +41,7 @@ it('displays created date when published date is undefined', () => {
     />,
   );
   expect(getByText(/Originally Published/i).textContent).toMatchInlineSnapshot(
-    `"Originally Published: 7th July 2020"`,
+    `"Originally Published: 12th July 2020"`,
   );
 });
 

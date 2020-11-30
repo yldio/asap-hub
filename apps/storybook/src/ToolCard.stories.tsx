@@ -13,7 +13,7 @@ const ToolCardProps = (): ComponentProps<typeof ToolCard> => ({
     'Description',
     'Chat privately with your team members or seek out others in the ASAP Networks',
   ),
-  href: '/wrong',
+  editHref: '/wrong',
   url: text('Tool Url', 'http://example.com'),
 });
 

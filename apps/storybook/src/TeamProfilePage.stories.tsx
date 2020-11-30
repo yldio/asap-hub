@@ -113,7 +113,7 @@ const tool = (): ComponentProps<typeof TeamProfileWorkspace>['tools'][0] => ({
     'Chat privately with your team members or seek out others in the ASAP Network',
   ),
   url: text('Tool URL', 'https://asap.slack.com'),
-  href: '/wrong',
+  editHref: '/wrong',
 });
 
 const tools = (): ComponentProps<typeof TeamProfileWorkspace>['tools'] => [
@@ -123,20 +123,20 @@ const tools = (): ComponentProps<typeof TeamProfileWorkspace>['tools'] => [
     description:
       "Access your team's private and secure Google Drive with unlimited storage",
     url: 'https://drive.google.com',
-    href: '/wrong',
+    editHref: '/wrong',
   },
   {
     name: 'Protocols.io',
     description:
       'Post and find protocols privately within your team or share with the ASAP Network',
     url: 'https://protocols.io',
-    href: '/wrong',
+    editHref: '/wrong',
   },
   {
     name: 'Other',
     description: 'Other tool',
     url: '/wrong',
-    href: '/wrong',
+    editHref: '/wrong',
   },
 ];
 

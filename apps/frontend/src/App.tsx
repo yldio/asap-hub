@@ -12,7 +12,7 @@ import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import history from './history';
 import { AuthProvider, CheckAuth, Logout } from './auth';
 import ErrorBoundary from './errors/ErrorBoundary';
-import { DISCOVER_PATH, NETWORK_PATH } from './routes';
+import { DISCOVER_PATH, NETWORK_PATH, SHARED_RESEARCH_PATH } from './routes';
 import { TEAMS_PATH } from './network/routes';
 
 const loadNewsAndEvents = () =>
@@ -55,7 +55,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   return isAuthenticated && user ? (
     <Layout
       discoverAsapHref={DISCOVER_PATH}
-      sharedResearchHref="/shared-research"
+      sharedResearchHref={SHARED_RESEARCH_PATH}
       networkHref={`${NETWORK_PATH}/${TEAMS_PATH}`}
       newsAndEventsHref="/news-and-events"
       userProfileHref={`/network/users/${user.id}`}

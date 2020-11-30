@@ -69,7 +69,7 @@ const extraUsersStyles = css({
 });
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
-  readonly tools?: ReadonlyArray<TeamTool & { readonly href: string }>;
+  readonly tools?: ReadonlyArray<TeamTool>;
   readonly aboutHref: string;
   readonly outputsHref: string;
   readonly workspaceHref: string;

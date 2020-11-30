@@ -20,15 +20,18 @@ const newToolStyles = css({
   },
 });
 const toolContainerStyles = css({
+  listStyle: 'none',
+  margin: 0,
+  padding: `${24 / perRem}em 0`,
+
   display: 'grid',
   gridRowGap: `${24 / perRem}em`,
-  padding: `${24 / perRem}em 0`,
 });
 
 type TeamProfileWorkspaceProps = Readonly<
   Pick<TeamResponse, 'pointOfContact' | 'lastModifiedDate'>
 > & {
-  readonly tools: ReadonlyArray<TeamTool & { readonly href: string }>;
+  readonly tools: ReadonlyArray<TeamTool & { readonly editHref: string }>;
   readonly newToolHref: string;
 };
 
@@ -46,11 +49,13 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
         internally shared resources and what each link is used for.
       </Paragraph>
       {!!tools.length && (
-        <div css={toolContainerStyles}>
+        <ul css={toolContainerStyles}>
           {tools.map((tool, index) => (
-            <ToolCard key={`tool-${index}`} {...tool} />
+            <li key={`tool-${index}`}>
+              <ToolCard {...tool} />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
       <div css={newToolStyles}>
         <Link href={newToolHref} buttonStyle>

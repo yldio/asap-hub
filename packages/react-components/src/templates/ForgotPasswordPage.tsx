@@ -12,6 +12,7 @@ import {
   perRem,
 } from '../pixels';
 import { contentSidePaddingWithoutNavigation } from '../layout';
+import { lead } from '../colors';
 
 const styles = css({
   width: 'max-content',
@@ -43,6 +44,7 @@ const formStyles = css({
   width: `${formTargetWidth / perRem}em`,
   maxWidth: '100%',
   display: 'grid',
+  justifySelf: 'center',
 });
 
 interface ForgotPasswordPageProps {
@@ -68,13 +70,14 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
     <div css={styles}>
       <div>
         <Display styleAsHeading={2}>Forgot Password</Display>
-        <Paragraph primary accent="lead">
-          We’ll send you a password reset link
-        </Paragraph>
-        <Paragraph>
-          You might have set up your account with Google or Orcid. Please check
-          if you are able to log in with any of those log in methods before
-          resetting your password.
+        <Paragraph primary>
+          <strong>We’ll send you a password reset link</strong>
+          <br />
+          <span css={{ color: lead.rgb }}>
+            You might have set up your account with Google or Orcid. Please
+            check if you are able to log in with any of those log in methods
+            before resetting your password.
+          </span>
         </Paragraph>
       </div>
       <form autoComplete="on" ref={formRef} css={formStyles}>

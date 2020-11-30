@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -7,7 +7,10 @@ import ToolModal from '../ToolModal';
 
 const props: ComponentProps<typeof ToolModal> = {
   backHref: '/wrong',
-  title: '',
+  title: 'Title',
+  name: 'Tool',
+  description: 'Description',
+  url: 'https://example.com/tool',
 };
 it('renders the title', () => {
   const { getByText } = render(<ToolModal {...props} title="ModalTitle" />);
@@ -33,7 +36,7 @@ it('renders default values into inputs', () => {
   `);
 });
 
-it('triggers the save function', () => {
+it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
     <MemoryRouter>
@@ -47,10 +50,52 @@ it('triggers the save function', () => {
       ,
     </MemoryRouter>,
   );
-  userEvent.click(getByText('Save'));
+
+  userEvent.click(getByText(/save/i));
   expect(jestFn).toHaveBeenCalledWith({
     name: 'toolName',
     url: 'http://example.com',
     description: 'toolDescription',
   });
+
+  await waitFor(() =>
+    expect(getByText(/save/i).closest('button')).toBeEnabled(),
+  );
+});
+
+it('disables the form elements while submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText, unmount } = render(
+    <ToolModal {...props} onSave={handleSave} />,
+  );
+
+  userEvent.click(getByText(/save/i));
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  [...form.elements].forEach((element) => expect(element).toBeDisabled());
+
+  unmount();
+  act(() => resolveSubmit());
+});
+it('re-enables the form elements after submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText } = render(<ToolModal {...props} onSave={handleSave} />);
+
+  userEvent.click(getByText(/save/i));
+  act(() => resolveSubmit());
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  await waitFor(() =>
+    [...form.elements].forEach((element) => expect(element).toBeEnabled()),
+  );
 });

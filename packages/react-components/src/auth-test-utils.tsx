@@ -66,7 +66,7 @@ export const WhenReady: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { loading } = useAuth0();
-  return loading ? <p>Initializing Auth0</p> : <>{children}</>;
+  return loading ? <p>Auth0 loading...</p> : <>{children}</>;
 };
 
 export const LoggedIn: React.FC<{

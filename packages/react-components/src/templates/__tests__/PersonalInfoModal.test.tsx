@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -39,7 +39,7 @@ it('renders default values into text inputs', () => {
   `);
 });
 
-it('triggers the save function', () => {
+it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
     <MemoryRouter>
@@ -56,6 +56,7 @@ it('triggers the save function', () => {
       ,
     </MemoryRouter>,
   );
+
   userEvent.click(getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
@@ -65,4 +66,47 @@ it('triggers the save function', () => {
     jobTitle: 'jobTitle',
     institution: 'institution',
   });
+
+  await waitFor(() =>
+    expect(getByText(/save/i).closest('button')).toBeEnabled(),
+  );
+});
+
+it('disables the form elements while submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText, unmount } = render(
+    <PersonalInfoModal {...props} onSave={handleSave} />,
+  );
+
+  userEvent.click(getByText(/save/i));
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  [...form.elements].forEach((element) => expect(element).toBeDisabled());
+
+  unmount();
+  act(() => resolveSubmit());
+});
+it('re-enables the form elements after submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText } = render(
+    <PersonalInfoModal {...props} onSave={handleSave} />,
+  );
+
+  userEvent.click(getByText(/save/i));
+  act(() => resolveSubmit());
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  await waitFor(() =>
+    [...form.elements].forEach((element) => expect(element).toBeEnabled()),
+  );
 });

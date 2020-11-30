@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -39,9 +39,7 @@ describe('triggers the save function', () => {
       userEvent.type(
         getByLabelText(`Open Question ${index}`),
         questions[index],
-        {
-          allAtOnce: true,
-        },
+        { allAtOnce: true },
       );
 
     questions[1] && (await answerQuestion(1));
@@ -49,6 +47,10 @@ describe('triggers the save function', () => {
     questions[3] && (await answerQuestion(3));
     questions[4] && (await answerQuestion(4));
     userEvent.click(getByText('Save'));
+
+    await waitFor(() =>
+      expect(getByText(/save/i).closest('button')).toBeEnabled(),
+    );
   };
 
   it('sends an empty array when no questions are entered and saved', async () => {
@@ -63,4 +65,43 @@ describe('triggers the save function', () => {
     await testSave({ 1: 'a', 2: 'b', 3: 'c', 4: 'd' });
     expect(jestFn).toHaveBeenCalledWith({ questions: ['a', 'b', 'c', 'd'] });
   });
+});
+
+it('disables the form elements while submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText, unmount } = render(
+    <OpenQuestionsModal {...props} onSave={handleSave} />,
+  );
+
+  userEvent.click(getByText(/save/i));
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  [...form.elements].forEach((element) => expect(element).toBeDisabled());
+
+  unmount();
+  act(() => resolveSubmit());
+});
+it('re-enables the form elements after submitting', async () => {
+  let resolveSubmit!: () => void;
+  const handleSave = () =>
+    new Promise<void>((resolve) => {
+      resolveSubmit = resolve;
+    });
+  const { getByText } = render(
+    <OpenQuestionsModal {...props} onSave={handleSave} />,
+  );
+
+  userEvent.click(getByText(/save/i));
+  act(() => resolveSubmit());
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  await waitFor(() =>
+    [...form.elements].forEach((element) => expect(element).toBeEnabled()),
+  );
 });

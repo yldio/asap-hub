@@ -2,36 +2,38 @@ import React from 'react';
 import { join } from 'path';
 import { useRouteMatch, Route, useHistory } from 'react-router-dom';
 import { UserProfileAbout, BiographyModal } from '@asap-hub/react-components';
-import { UserResponse, UserPatchRequest } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { usePatchUserById } from './state';
 
 type AboutProps = {
-  userProfile: UserResponse;
-  onPatchUserProfile: (patch: UserPatchRequest) => void | Promise<void>;
+  user: UserResponse;
 };
-const About: React.FC<AboutProps> = ({ userProfile, onPatchUserProfile }) => {
+const About: React.FC<AboutProps> = ({ user }) => {
   const { id } = useCurrentUser() ?? {};
 
   const { path, url } = useRouteMatch();
   const history = useHistory();
 
+  const patchUser = usePatchUserById(user.id);
+
   return (
     <>
       <UserProfileAbout
-        {...userProfile}
+        {...user}
         editBiographyHref={
-          id === userProfile.id ? join(url, 'edit-biography') : undefined
+          id === user.id ? join(url, 'edit-biography') : undefined
         }
         editOrcidWorksHref={
-          id === userProfile.id ? join(url, 'edit-works') : undefined
+          id === user.id ? join(url, 'edit-works') : undefined
         }
       />
       <Route exact path={`${path}/edit-biography`}>
         <BiographyModal
-          biography={userProfile.biography}
+          biography={user.biography}
           backHref={url}
           onSave={async (newBiography) => {
-            await onPatchUserProfile({
+            await patchUser({
               biography: newBiography,
             });
             history.push(url);

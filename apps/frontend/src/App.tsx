@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import {
   Layout,
   BasicLayout,
@@ -79,61 +80,63 @@ const ConfiguredLayout: React.FC = ({ children }) => {
 const App: React.FC<{}> = () => {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <Router history={history}>
-          <ErrorBoundary>
-            <Suspense fallback="Loading...">
-              <Switch>
-                <Route path="/welcome">
-                  <Welcome />
-                </Route>
+      <RecoilRoot>
+        <AuthProvider>
+          <Router history={history}>
+            <ErrorBoundary>
+              <Suspense fallback="Loading...">
+                <Switch>
+                  <Route path="/welcome">
+                    <Welcome />
+                  </Route>
 
-                <Route exact path="/terms-and-conditions">
-                  <Content layoutComponent={ConfiguredLayout} />
-                </Route>
-                <Route exact path="/privacy-policy">
-                  <Content layoutComponent={ConfiguredLayout} />
-                </Route>
+                  <Route exact path="/terms-and-conditions">
+                    <Content layoutComponent={ConfiguredLayout} />
+                  </Route>
+                  <Route exact path="/privacy-policy">
+                    <Content layoutComponent={ConfiguredLayout} />
+                  </Route>
 
-                <Route>
-                  <CheckAuth>
-                    <ConfiguredLayout>
-                      <ErrorBoundary>
-                        <Suspense fallback="Loading...">
-                          <Prefetch />
-                          <Switch>
-                            <Route exact path="/">
-                              <Dashboard />
-                            </Route>
-                            <Route path="/logout">
-                              <Logout />
-                            </Route>
-                            <Route path={DISCOVER_PATH}>
-                              <Discover />
-                            </Route>
-                            <Route path="/news-and-events">
-                              <NewsAndEvents />
-                            </Route>
-                            <Route path={NETWORK_PATH}>
-                              <Network />
-                            </Route>
-                            <Route path="/shared-research">
-                              <SharedResearch />
-                            </Route>
-                            <Route>
-                              <NotFoundPage />
-                            </Route>
-                          </Switch>
-                        </Suspense>
-                      </ErrorBoundary>
-                    </ConfiguredLayout>
-                  </CheckAuth>
-                </Route>
-              </Switch>
-            </Suspense>
-          </ErrorBoundary>
-        </Router>
-      </AuthProvider>
+                  <Route>
+                    <CheckAuth>
+                      <ConfiguredLayout>
+                        <ErrorBoundary>
+                          <Suspense fallback="Loading...">
+                            <Prefetch />
+                            <Switch>
+                              <Route exact path="/">
+                                <Dashboard />
+                              </Route>
+                              <Route path="/logout">
+                                <Logout />
+                              </Route>
+                              <Route path={DISCOVER_PATH}>
+                                <Discover />
+                              </Route>
+                              <Route path="/news-and-events">
+                                <NewsAndEvents />
+                              </Route>
+                              <Route path={NETWORK_PATH}>
+                                <Network />
+                              </Route>
+                              <Route path="/shared-research">
+                                <SharedResearch />
+                              </Route>
+                              <Route>
+                                <NotFoundPage />
+                              </Route>
+                            </Switch>
+                          </Suspense>
+                        </ErrorBoundary>
+                      </ConfiguredLayout>
+                    </CheckAuth>
+                  </Route>
+                </Switch>
+              </Suspense>
+            </ErrorBoundary>
+          </Router>
+        </AuthProvider>
+      </RecoilRoot>
     </ErrorBoundary>
   );
 };

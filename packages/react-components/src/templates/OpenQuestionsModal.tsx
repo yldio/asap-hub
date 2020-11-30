@@ -15,7 +15,7 @@ const fieldsContainerStyles = css({
 });
 
 type OpenQuestionsModalProps = Pick<UserResponse, 'questions'> & {
-  onSave?: (data: UserPatchRequest) => Promise<void>;
+  onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
 };
 
@@ -25,18 +25,24 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
   backHref,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
+  const [isSaving, setSaving] = useState(false);
+
   const [newQuestions, setNewQuestions] = useState<string[]>(questions);
+
   return (
     <Modal>
       <form ref={formRef}>
         <ModalEditHeader
           backHref={backHref}
-          onSave={() => {
+          saveEnabled={!isSaving}
+          onSave={async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
-              onSave({
+              setSaving(true);
+              await onSave({
                 questions: newQuestions.filter((item) => item.trim() !== ''),
               });
+              if (formRef.current) setSaving(false);
             }
           }}
           title="Your Open Questions"
@@ -51,6 +57,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             title="Open Question 1"
             placeholder="Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?"
             maxLength={200}
+            enabled={!isSaving}
             onChange={(newValue) =>
               setNewQuestions(Object.assign([], newQuestions, { 0: newValue }))
             }
@@ -60,6 +67,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             title="Open Question 2"
             placeholder="Does alpha-synuclein represent a pathologically relevant stimulator of microglial activation?"
             maxLength={200}
+            enabled={!isSaving}
             onChange={(newValue) =>
               setNewQuestions(Object.assign([], newQuestions, { 1: newValue }))
             }
@@ -69,6 +77,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             title="Open Question 3"
             placeholder="Example: To what extent do pre-formed fibrils (PFFs) of alpha-synuclein alter neuronal (synaptic) activity prior to neuronal loss?"
             maxLength={200}
+            enabled={!isSaving}
             onChange={(newValue) =>
               setNewQuestions(Object.assign([], newQuestions, { 2: newValue }))
             }
@@ -78,6 +87,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             title="Open Question 4"
             placeholder="Example: Is it possible that LRRK2 alters the expression of multiple different miRNAs in different systems?"
             maxLength={200}
+            enabled={!isSaving}
             onChange={(newValue) =>
               setNewQuestions(Object.assign([], newQuestions, { 3: newValue }))
             }

@@ -20,6 +20,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   onSave = noop,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
+  const [isSaving, setSaving] = useState(false);
 
   const [newEmail, setNewEmail] = useState(email);
 
@@ -29,10 +30,13 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
         <ModalEditHeader
           backHref={backHref}
           title="Your contact details"
+          saveEnabled={!isSaving}
           onSave={async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
+              setSaving(true);
               await onSave(newEmail);
+              if (formRef.current) setSaving(false);
             }
           }}
         />
@@ -40,6 +44,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           type="email"
           value={newEmail}
           onChange={setNewEmail}
+          enabled={!isSaving}
           title="Contact email"
           subtitle={
             <>

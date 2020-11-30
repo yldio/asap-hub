@@ -1,78 +1,78 @@
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { StaticRouter, MemoryRouter, Route } from 'react-router-dom';
+import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { authTestUtils } from '@asap-hub/react-components';
 
+import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import About from '../About';
+import { patchUser } from '../api';
 
-it('renders the profile about section', () => {
-  const { getByText } = render(
-    <authTestUtils.LoggedIn user={{ id: '42' }}>
-      <About
-        userProfile={{ ...createUserResponse(), biography: 'Some Bio' }}
-        onPatchUserProfile={() => {}}
-      />
-    </authTestUtils.LoggedIn>,
-    { wrapper: StaticRouter },
+jest.mock('../api');
+
+const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+
+const wrapper: React.FC<{}> = ({ children }) => (
+  <RecoilRoot>
+    <React.Suspense fallback="loading">
+      <Auth0Provider user={{ id: '42' }}>
+        <StaticRouter>{children}</StaticRouter>
+      </Auth0Provider>
+    </React.Suspense>
+  </RecoilRoot>
+);
+
+it('renders the profile about section', async () => {
+  const { findByText } = render(
+    <About user={{ ...createUserResponse(), biography: 'Some Bio' }} />,
+    { wrapper },
   );
-  expect(getByText('Some Bio')).toBeVisible();
+  expect(await findByText('Some Bio')).toBeVisible();
 });
 
-it("does not allow editing somebody else's profile", () => {
-  const { queryByLabelText } = render(
-    <authTestUtils.LoggedIn user={{ id: '42' }}>
-      <About
-        userProfile={{ ...createUserResponse(), id: '1337' }}
-        onPatchUserProfile={() => {}}
-      />
-      ,
-    </authTestUtils.LoggedIn>,
-    { wrapper: StaticRouter },
+it("does not allow editing somebody else's profile", async () => {
+  const { queryByText, queryByLabelText } = render(
+    <Auth0Provider user={{ id: '42' }}>
+      <About user={{ ...createUserResponse(), id: '1337' }} />
+    </Auth0Provider>,
+    { wrapper },
   );
+  await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
 });
 
-it('allows editing your own profile', () => {
-  const { getAllByLabelText } = render(
-    <authTestUtils.LoggedIn user={{ id: '42' }}>
-      <About
-        userProfile={{ ...createUserResponse(), id: '42' }}
-        onPatchUserProfile={() => {}}
-      />
-      ,
-    </authTestUtils.LoggedIn>,
-    { wrapper: StaticRouter },
+it('allows editing your own profile', async () => {
+  const { findAllByLabelText } = render(
+    <Auth0Provider user={{ id: '42' }}>
+      <About user={{ ...createUserResponse(), id: '42' }} />
+    </Auth0Provider>,
+    { wrapper },
   );
-  expect(getAllByLabelText(/edit/i)).not.toHaveLength(0);
+  expect(await findAllByLabelText(/edit/i)).not.toHaveLength(0);
 });
 
 describe('when editing the biography', () => {
-  const userProfile = {
+  const user = {
     ...createUserResponse(),
     id: '42',
     biography: 'My Bio',
   };
 
-  let handlePatchUserProfile: jest.MockedFunction<
-    ComponentProps<typeof About>['onPatchUserProfile']
-  >;
   let result!: RenderResult;
   beforeEach(async () => {
-    handlePatchUserProfile = jest.fn();
     result = render(
-      <authTestUtils.LoggedIn user={{ id: '42' }}>
+      <Auth0Provider user={{ id: '42' }}>
         <MemoryRouter initialEntries={['/about']}>
           <Route path="/about">
-            <About
-              userProfile={userProfile}
-              onPatchUserProfile={handlePatchUserProfile}
-            />
+            <About user={user} />
           </Route>
         </MemoryRouter>
-      </authTestUtils.LoggedIn>,
+      </Auth0Provider>,
+      { wrapper },
     );
+
+    await result.findAllByLabelText(/edit/i);
   });
 
   it('opens and closes the dialog', async () => {
@@ -112,8 +112,10 @@ describe('when editing the biography', () => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
       expect(queryByDisplayValue('My Bio 2')).not.toBeInTheDocument();
     });
-    expect(handlePatchUserProfile).toHaveBeenLastCalledWith({
-      biography: 'My Bio 2',
-    });
+    expect(mockPatchUser).toHaveBeenLastCalledWith(
+      '42',
+      { biography: 'My Bio 2' },
+      expect.any(String),
+    );
   });
 });

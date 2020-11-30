@@ -1,6 +1,7 @@
 import * as messages from './messages';
 import * as pixels from './pixels';
 import * as text from './text';
+// Do not use in the frontend anymore; the frontend now has its own auth test utils. Remove once unused.
 import * as authTestUtils from './auth-test-utils';
 
 export { messages, pixels, text, authTestUtils };

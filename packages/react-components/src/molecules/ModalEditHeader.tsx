@@ -25,18 +25,22 @@ const controlsContainerStyles = css({
 
 type ModalEditHeaderProps = {
   title: string;
+
   backHref: string;
+
   onSave?: () => void;
+  saveEnabled?: boolean;
 };
 
 const ModalEditHeader: React.FC<ModalEditHeaderProps> = ({
   title,
   backHref,
   onSave = noop,
+  saveEnabled = true,
 }) => (
   <header css={headerStyles}>
     <div css={controlsContainerStyles}>
-      <Button onClick={onSave} primary small>
+      <Button primary small onClick={onSave} enabled={saveEnabled}>
         Save
       </Button>
       <Link small buttonStyle href={backHref}>

@@ -44,20 +44,24 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [isSaving, setSaving] = useState(false);
+
   const [newApproach, setNewApproach] = useState(approach);
   const [newResponsibilities, setNewResponsibilities] = useState(
     responsibilities,
   );
-  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <Modal>
       <form ref={formRef}>
         <ModalEditHeader
           backHref={backHref}
+          saveEnabled={!isSaving}
           onSave={async () => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
+              setSaving(true);
               await onSave({
                 teams: [
                   {
@@ -67,6 +71,7 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
                   },
                 ],
               });
+              if (formRef.current) setSaving(false);
             }
           }}
           title={'Your Role in ASAP Network'}
@@ -92,14 +97,16 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
           <LabeledTextArea
             title="Main research interests"
             placeholder="Example: Randy is interested in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretary pathway."
-            onChange={setNewApproach}
             maxLength={200}
+            enabled={!isSaving}
             value={newApproach}
+            onChange={setNewApproach}
           />
           <LabeledTextArea
             title="Your responsibilities"
             placeholder="Example: Randy will be responsible for applying basic principles he developed from studies of a simple eukaryote, yeast, to investigate the mechanisms of intracellular vesicular transport and biogenesis of extracellular vesicles (exosomes) in cultured human cells. His team's current work is devoted to understanding how proteins and RNA are sorted into extracellular vesicles and how these molecules may be delivered to target cells in relation to normal and pathological functions."
             maxLength={500}
+            enabled={!isSaving}
             value={newResponsibilities}
             onChange={setNewResponsibilities}
             tip="Tip: Refer to yourself in the third person."

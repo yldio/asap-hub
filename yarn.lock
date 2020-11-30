@@ -279,6 +279,7 @@ __metadata:
     react-router-dom: ^5.2.0
     react-scripts: "patch:react-scripts@3.4.3#./patches/react-scripts.patch"
     react-test-renderer: ^16.13.1
+    recoil: ^0.1.2
     typescript: ~3.9.7
     use-debounce: ^5.0.1
     use-http: ^1.0.15
@@ -23264,6 +23265,20 @@ react-scripts@3.4.3:
   dependencies:
     resolve: ^1.1.6
   checksum: 6646a6bce733282d182bf04816b15d4e2d63736b3453cf62a8568aaa1399621a73b3942315161f549e090f9a3c61bc09f4cb674f928c369a40037621e10295bd
+  languageName: node
+  linkType: hard
+
+"recoil@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "recoil@npm:0.1.2"
+  peerDependencies:
+    react: ^16.13.1
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: c69105dd7da74430b2c58d17a9c690ebe6e6364c8a7e79e08ff732d4a3d6154a365dc698113ac29639948a6f0ddee05a34201375235f370fc9e3dc17234ed7b2
   languageName: node
   linkType: hard
 

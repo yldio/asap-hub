@@ -15,14 +15,22 @@ it('renders the header', () => {
   expect(getByRole('heading').textContent).toEqual('Edit Link');
 });
 
-it('calls the save function ', () => {
-  const jestFn = jest.fn();
-  const { getByText } = render(<ModalEditHeader {...props} onSave={jestFn} />);
-  userEvent.click(getByText('Save'));
-  expect(jestFn).toHaveBeenCalled();
+it('calls the save function', () => {
+  const handleSave = jest.fn();
+  const { getByText } = render(
+    <ModalEditHeader {...props} onSave={handleSave} />,
+  );
+  userEvent.click(getByText(/save/i));
+  expect(handleSave).toHaveBeenCalled();
+});
+it('disables the save button', () => {
+  const { getByText } = render(
+    <ModalEditHeader {...props} saveEnabled={false} />,
+  );
+  expect(getByText(/save/i).closest('button')).toBeDisabled();
 });
 
-it('Displays the back link', () => {
+it('displays the back link', () => {
   const { getByTitle } = render(
     <ModalEditHeader {...props} backHref="/back" />,
   );

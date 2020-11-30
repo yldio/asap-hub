@@ -60,12 +60,11 @@ const labels: Record<ResearchOutputType, string> = {
   Proposal: 'Open External Link',
   Presentation: 'View on Google',
   Dataset: 'Open External Link',
-  Software: 'Open External Link',
+  Code: 'Open External Link',
   Protocol: 'View on Protocols.io',
   'Lab Resource': 'Open External Link',
   Preprint: 'Open External Link',
   Article: 'Open External Link',
-  Other: 'Open External Link',
 };
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({

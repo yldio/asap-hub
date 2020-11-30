@@ -67,7 +67,7 @@ export default class ResearchOutputs {
       .split(' ')
       .filter(Boolean)
       .reduce((acc: string[], word: string) => {
-        return acc.concat(`contains(data/firstName/iv, '${word}')`);
+        return acc.concat(`contains(data/title/iv, '${word}')`);
       }, [])
       .join(' or ');
 

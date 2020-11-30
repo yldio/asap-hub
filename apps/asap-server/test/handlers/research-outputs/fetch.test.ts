@@ -163,7 +163,7 @@ describe('GET /research-outputs - success', () => {
         $orderby: 'created desc',
         $filter: [
           "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation')",
-          "(contains(data/firstName/iv, 'Title'))",
+          "(contains(data/title/iv, 'Title'))",
         ].join(' and '),
       })
       .reply(200, {

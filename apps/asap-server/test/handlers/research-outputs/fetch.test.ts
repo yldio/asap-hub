@@ -53,7 +53,7 @@ describe('GET /research-outputs - failure', () => {
   });
 });
 
-describe('GET /research-outputs/{id} - success', () => {
+describe('GET /research-outputs - success', () => {
   beforeAll(() => {
     identity();
   });
@@ -66,10 +66,10 @@ describe('GET /research-outputs/{id} - success', () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/research-outputs`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ path: 'created', order: 'descending' }],
-        }),
+        $top: 8,
+        $skip: 0,
+        $orderby: 'created desc',
+        $filter: '',
       })
       .reply(200, { total: 0, items: [] });
 
@@ -91,10 +91,10 @@ describe('GET /research-outputs/{id} - success', () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/research-outputs`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          sort: [{ path: 'created', order: 'descending' }],
-        }),
+        $top: 8,
+        $skip: 0,
+        $orderby: 'created desc',
+        $filter: '',
       })
       .reply(200, {
         total: 1,
@@ -158,19 +158,13 @@ describe('GET /research-outputs/{id} - success', () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/research-outputs`)
       .query({
-        q: JSON.stringify({
-          take: 8,
-          filter: {
-            or: [
-              {
-                path: 'data.title.iv',
-                op: 'contains',
-                value: 'Title',
-              },
-            ],
-          },
-          sort: [{ path: 'created', order: 'descending' }],
-        }),
+        $top: 8,
+        $skip: 0,
+        $orderby: 'created desc',
+        $filter: [
+          "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation')",
+          "(contains(data/title/iv, 'Title'))",
+        ].join(' and '),
       })
       .reply(200, {
         total: 3,
@@ -241,6 +235,7 @@ describe('GET /research-outputs/{id} - success', () => {
         httpMethod: 'get',
         queryStringParameters: {
           search: 'Title',
+          filter: ['Proposal', 'Presentation'],
         },
         headers: {
           Authorization: `Bearer token`,

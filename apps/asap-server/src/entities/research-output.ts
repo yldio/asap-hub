@@ -10,7 +10,7 @@ export const parseGraphQLResearchOutput = (
     id: output.id,
     created: parseDate(output.created).toISOString(),
     link: output.flatData?.link || undefined,
-    type: output.flatData?.type || 'Other',
+    type: output.flatData?.type || 'Proposal',
     title: output.flatData?.title || '',
     text: output.flatData?.text || '',
     publishDate: output.flatData?.publishDate || undefined,

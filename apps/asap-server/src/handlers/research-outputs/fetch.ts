@@ -20,7 +20,7 @@ export const handler: Handler = lambda.http(
       take: number;
       skip: number;
       search?: string;
-      filter?: string[] | string;
+      filter?: string[];
     };
 
     const researchOutputs = new ResearchOutputs();

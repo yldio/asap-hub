@@ -5,12 +5,11 @@ export type ResearchOutputType =
   | 'Proposal'
   | 'Presentation'
   | 'Dataset'
-  | 'Software'
+  | 'Code'
   | 'Protocol'
   | 'Lab Resource'
   | 'Preprint'
-  | 'Article'
-  | 'Other';
+  | 'Article';
 
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
 export type ResearchOutputAuthor =

@@ -40,6 +40,10 @@ const styles = css({
   textAlign: 'center',
 });
 
+const textStyles = css({
+  maxWidth: `${640 / perRem}em`,
+});
+
 const formStyles = css({
   width: `${formTargetWidth / perRem}em`,
   maxWidth: '100%',
@@ -68,7 +72,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({
   const formRef = useRef<HTMLFormElement>(null);
   return (
     <div css={styles}>
-      <div>
+      <div css={textStyles}>
         <Display styleAsHeading={2}>Forgot Password</Display>
         <Paragraph primary>
           <strong>We’ll send you a password reset link</strong>

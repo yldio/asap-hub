@@ -8,7 +8,9 @@ describe('Summarized', () => {
     const { getAllByRole } = render(
       <TagList
         summarize
-        tags={['Neurological Diseases', 'Clinical Neurology']}
+        tags={['Neurological Diseases', 'Clinical Neurology'].map((label) => ({
+          label,
+        }))}
       />,
     );
     expect(
@@ -29,7 +31,7 @@ describe('Summarized', () => {
           'alpha-synuclein interactions',
           'alpha-synuclein',
           'autophagy',
-        ]}
+        ].map((label) => ({ label }))}
       />,
     );
     expect(
@@ -53,7 +55,7 @@ describe('Full tag list', () => {
           'Clinical Neurology',
           'Adult Neurology',
           'Neuroimaging',
-        ]}
+        ].map((label) => ({ label }))}
       />,
     );
     expect(

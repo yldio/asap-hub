@@ -26,6 +26,7 @@ interface TeamCardProps {
   readonly skills: string[];
   readonly members: TeamMember[];
   readonly href: string;
+  readonly searchHref?: string;
 }
 const TeamCard: React.FC<TeamCardProps> = ({
   displayName,
@@ -33,6 +34,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
   skills,
   members,
   href,
+  searchHref,
 }) => {
   return (
     <Card>
@@ -40,7 +42,24 @@ const TeamCard: React.FC<TeamCardProps> = ({
         <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
         <Paragraph accent="lead">{projectTitle}</Paragraph>
       </Link>
-      <TagList summarize tags={skills} />
+      <TagList
+        summarize
+        tags={skills.map((label) => {
+          let url;
+          if (searchHref) {
+            const searchHrefURL = new URL(searchHref);
+            const searchParams = new URLSearchParams(searchHrefURL.search);
+            searchParams.set('searchQuery', label);
+            searchHrefURL.search = searchParams.toString();
+            url = searchHrefURL.toString();
+          }
+
+          return {
+            label,
+            href: url,
+          };
+        })}
+      />
       <span css={teamMemberStyles}>
         <span css={iconStyles}>{teamIcon} </span>
         {members.length} Team Member

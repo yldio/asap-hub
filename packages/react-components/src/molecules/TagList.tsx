@@ -54,20 +54,21 @@ const overflowContentStyles = css({
 });
 
 interface TagListProps {
-  tags: string[];
+  tags: { label: string; href?: string }[];
   summarize?: boolean;
+  href?: string[];
 }
 const TagList: React.FC<TagListProps> = ({ tags, summarize = false }) =>
   tags.length ? (
     <ul
       css={[listStyles, summarize && { counterReset: `tags ${tags.length}` }]}
     >
-      {tags.map((tag, index) => (
+      {tags.map(({ label, href }, index) => (
         <li
           key={index}
           css={[normalListItemStyles, summarize && summarizedListItemStyles]}
         >
-          <Tag>{tag}</Tag>
+          <Tag href={href}>{label}</Tag>
         </li>
       ))}
       {summarize && (

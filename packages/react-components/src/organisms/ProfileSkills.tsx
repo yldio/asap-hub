@@ -16,7 +16,7 @@ const ProfileSkills: React.FC<ProfileSkillsProps> = ({
     <Card>
       <Headline2 styleAsHeading={3}>Expertise and Resources</Headline2>
       {skillsDescription ? <Paragraph>{skillsDescription}</Paragraph> : null}
-      <TagList tags={skills} />
+      <TagList tags={skills.map((label) => ({ label }))} />
     </Card>
   );
 };

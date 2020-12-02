@@ -20,7 +20,10 @@ export const Normal = () => {
         'Movement Disorders',
         'Neurodegenerative Diseases',
         'Neurological Diseases',
-      ])}
+      ]).map((label) => ({
+        label,
+        href: '#label',
+      }))}
     />
   );
 };

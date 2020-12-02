@@ -140,7 +140,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
       <TabNav>
         <TabLink href={aboutHref}>About</TabLink>
         {tools && <TabLink href={workspaceHref}>Team Workspace</TabLink>}
-        <TabLink href={outputsHref}>Outputs</TabLink>
+        <TabLink href={outputsHref}>Team Outputs</TabLink>
       </TabNav>
     </header>
   );

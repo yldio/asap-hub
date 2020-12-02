@@ -17,6 +17,7 @@ export const Normal = () => {
       Network: 'network',
       'Shared Research': 'shared-research',
       'News and Events': 'news-and-events',
+      'Discover ASAP': 'discover',
       None: 'none',
     },
     'network',
@@ -24,7 +25,7 @@ export const Normal = () => {
   return (
     <StaticRouter key={path} location={path}>
       <MainNavigation
-        discoverAsapHref="/discovery"
+        discoverAsapHref="/discover"
         networkHref="/network"
         sharedResearchHref="/shared-research"
         newsAndEventsHref="/news-and-events"

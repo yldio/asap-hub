@@ -53,7 +53,7 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
       <Display styleAsHeading={2}>Shared Research</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          This page contains all shared outputs from the research teams. As
+          This page contains all shared research from the research teams. As
           teams begin to share more items, this library will grow. Teams should
           be mindful to respect intellectual boundaries and not share outside of
           the Network

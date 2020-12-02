@@ -92,7 +92,7 @@ it('renders tabs', () => {
   const { getAllByRole } = render(<TeamProfileHeader {...boilerplateProps} />);
   expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([
     'About',
-    'Outputs',
+    'Team Outputs',
   ]);
 });
 
@@ -106,6 +106,6 @@ it('renders workspace tabs when tools provided', () => {
   expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([
     'About',
     'Team Workspace',
-    'Outputs',
+    'Team Outputs',
   ]);
 });

@@ -56,39 +56,39 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
         <Card>
           <ul>
             <li>
-              <Paragraph primary>
+              <Paragraph primary accent="lead">
                 Check out grantee profiles and team pages in the{' '}
                 <Link href={hrefUsersNetwork}>Network</Link>
               </Paragraph>
             </li>
             <li>
-              <Paragraph primary>
+              <Paragraph primary accent="lead">
                 Read team proposals in{' '}
                 <Link href={hrefSharedResearch}>Shared Research</Link>
               </Paragraph>
             </li>
             <li>
-              <Paragraph primary>
+              <Paragraph primary accent="lead">
                 Meet the ASAP team in{' '}
                 <Link href={hrefDiscoverAsap}>Discover ASAP</Link>
               </Paragraph>
             </li>
             <li>
-              <Paragraph primary>
+              <Paragraph primary accent="lead">
                 Stay up date with{' '}
                 <Link href={hrefNewsAndEvents}>News and Events</Link>
               </Paragraph>
             </li>
             {hrefTeamWorkspace ? (
               <li>
-                <Paragraph primary>
+                <Paragraph primary accent="lead">
                   Add important links to your private{' '}
                   <Link href={hrefTeamWorkspace}>Team Workspace</Link>
                 </Paragraph>
               </li>
             ) : null}
             <li>
-              <Paragraph primary>
+              <Paragraph primary accent="lead">
                 View and edit your own <Link href={hrefProfile}>Profile</Link>
               </Paragraph>
             </li>

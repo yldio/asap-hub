@@ -182,7 +182,7 @@ export class Squidex<T extends { id: string; data: object }> {
       }
 
       if (err.response?.statusCode === 400) {
-        throw Boom.badImplementation('bad request', {
+        throw Boom.badImplementation('Bad Request', {
           data: err.response?.body,
         });
       }
@@ -213,7 +213,7 @@ export class Squidex<T extends { id: string; data: object }> {
       }
 
       if (err.response?.statusCode === 400) {
-        throw Boom.badImplementation('bad request', {
+        throw Boom.badImplementation('Bad Request', {
           data: err.response?.body,
         });
       }

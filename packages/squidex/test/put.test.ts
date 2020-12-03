@@ -25,7 +25,7 @@ describe('squidex wrapper', () => {
 
   it('returns 400 when squidex returns bad request', async () => {
     nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}`)
+      .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
       .reply(400, {
         details: [ "Request  body has an invalid format" ],
@@ -35,17 +35,13 @@ describe('squidex wrapper', () => {
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.create({
-        array: {
-          iv: 'value',
-        },
-      }),
+      client.put(42, { array: { iv: 'value', }, }),
     ).rejects.toThrow('Bad Request');
   });
 
   it('returns 403 when squidex returns with credentials error', async () => {
     nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}`)
+      .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
       .reply(400, {
         details: 'invalid_client',
@@ -55,7 +51,7 @@ describe('squidex wrapper', () => {
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.create({
+      client.put(42, {
         string: {
           iv: 'value',
         },
@@ -63,35 +59,30 @@ describe('squidex wrapper', () => {
     ).rejects.toThrow('Unauthorized');
   });
 
-  it('returns 409 when squidex returns conflict', async () => {
+  it('returns 404 when document doesnt exist', async () => {
     nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}`)
-      .query(() => true)
-      .reply(409, {
-        details: 'user with same email already exists',
-        statusCode: 409,
-      });
-
+      .put(`/api/content/${config.appName}/${collection}/42`)
+      .reply(404);
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.create({
+      client.put('42', {
         string: {
           iv: 'value',
         },
       }),
-    ).rejects.toThrow('Conflict');
+    ).rejects.toThrow('Not Found');
   });
 
   it('returns 500 when squidex returns error', async () => {
     nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}`)
+      .put(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
       .reply(500);
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.create({
+      client.put(42, {
         string: {
           iv: 'value',
         },
@@ -99,14 +90,14 @@ describe('squidex wrapper', () => {
     ).rejects.toThrow('squidex');
   });
 
-  it('creates a specific document as published', async () => {
+  it('updates a specific document', async () => {
     nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}?publish=true`, {
+      .put(`/api/content/${config.appName}/${collection}/42`, {
         string: {
           iv: 'value',
         },
       })
-      .reply(201, {
+      .reply(200, {
         id: '42',
         data: {
           string: {
@@ -116,47 +107,11 @@ describe('squidex wrapper', () => {
       });
 
     const client = new Squidex<Content>(collection);
-    const result = await client.create({
+    const result = await client.put(42, {
       string: {
         iv: 'value',
       },
     });
-
-    expect(result).toEqual({
-      id: '42',
-      data: {
-        string: {
-          iv: 'value',
-        },
-      },
-    });
-  });
-
-  it('creates a specific document as draft', async () => {
-    nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/${collection}?publish=false`, {
-        string: {
-          iv: 'value',
-        },
-      })
-      .reply(201, {
-        id: '42',
-        data: {
-          string: {
-            iv: 'value',
-          },
-        },
-      });
-
-    const client = new Squidex<Content>(collection);
-    const result = await client.create(
-      {
-        string: {
-          iv: 'value',
-        },
-      },
-      false,
-    );
 
     expect(result).toEqual({
       id: '42',

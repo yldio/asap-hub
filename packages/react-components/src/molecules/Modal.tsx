@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { Card, Overlay } from '../atoms';
@@ -50,7 +50,10 @@ const modalStyles = css({
   maxWidth: `${730 / perRem}em`,
 });
 
-const Modal: React.FC<{}> = ({ children }) => (
+type ModalProps = Pick<ComponentProps<typeof Card>, 'padding'> & {
+  children: React.ReactNode;
+};
+const Modal: React.FC<ModalProps> = ({ padding, children }) => (
   <div css={overlayContainerStyles}>
     <div css={modalContainerStyles}>
       <div css={overlayStyles}>
@@ -58,7 +61,7 @@ const Modal: React.FC<{}> = ({ children }) => (
       </div>
       <div css={scrollStyles}>
         <div role="dialog" css={modalStyles}>
-          <Card>{children}</Card>
+          <Card padding={padding}>{children}</Card>
         </div>
       </div>
     </div>

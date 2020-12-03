@@ -7,10 +7,10 @@ import {
   LabeledTextField,
   LabeledTextArea,
   LabeledDropdown,
+  Modal,
 } from '../molecules';
 import { noop } from '../utils';
 import { perRem, tabletScreen } from '../pixels';
-import { Modal } from '../organisms';
 import { Paragraph } from '../atoms';
 
 const fieldsContainer = css({

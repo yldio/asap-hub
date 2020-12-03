@@ -3,10 +3,9 @@ import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import css from '@emotion/css';
 
 import ModalEditHeader from '../molecules/ModalEditHeader';
-import { LabeledTextArea } from '../molecules';
+import { LabeledTextArea, Modal } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
-import { Modal } from '../organisms';
 import { Paragraph } from '../atoms';
 
 const fieldsContainerStyles = css({

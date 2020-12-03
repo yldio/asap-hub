@@ -3,10 +3,9 @@ import { UserPatchRequest } from '@asap-hub/model';
 import css from '@emotion/css';
 
 import ModalEditHeader from '../molecules/ModalEditHeader';
-import { LabeledTextField, LabeledDropdown } from '../molecules';
+import { LabeledTextField, LabeledDropdown, Modal } from '../molecules';
 import { noop } from '../utils';
 import { perRem, tabletScreen } from '../pixels';
-import { Modal } from '../organisms';
 
 const fieldsContainerStyles = css({
   display: 'grid',

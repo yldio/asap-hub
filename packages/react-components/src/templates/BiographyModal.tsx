@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { Modal } from '../organisms';
-import { ModalEditHeader, LabeledTextArea } from '../molecules';
+import { ModalEditHeader, LabeledTextArea, Modal } from '../molecules';
 import { noop } from '../utils';
 
 interface BiographyModalProps {

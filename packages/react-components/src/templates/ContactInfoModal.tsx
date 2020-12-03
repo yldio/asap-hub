@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 
-import { Modal } from '../organisms';
-import { LabeledTextField, ModalEditHeader } from '../molecules';
+import { LabeledTextField, ModalEditHeader, Modal } from '../molecules';
 import { noop } from '../utils';
 import { charcoal } from '../colors';
 

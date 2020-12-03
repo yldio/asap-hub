@@ -2,10 +2,9 @@ import React, { useState, useRef } from 'react';
 import { TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
 
-import { ModalEditHeader, LabeledTextField } from '../molecules';
+import { ModalEditHeader, LabeledTextField, Modal } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
-import { Modal } from '../organisms';
 
 const fieldsContainer = css({
   display: 'grid',

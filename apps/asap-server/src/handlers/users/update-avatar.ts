@@ -35,7 +35,7 @@ export const handler: Handler = lambda.http(
     };
 
     const users = new Users();
-    const avatar = new Buffer(payload.avatar, 'base64');
+    const avatar = Buffer.from(payload.avatar, 'base64');
 
     // convert bytes to MB and check size
     // 3MB = 2.8MB (2MB Base64 image) + some margin

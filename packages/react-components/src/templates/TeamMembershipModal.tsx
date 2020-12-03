@@ -1,17 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { UserTeam, UserPatchRequest } from '@asap-hub/model';
 import css from '@emotion/css';
 
 import {
-  ModalEditHeader,
   LabeledTextField,
   LabeledTextArea,
   LabeledDropdown,
-  Modal,
 } from '../molecules';
 import { noop } from '../utils';
 import { perRem, tabletScreen } from '../pixels';
 import { Paragraph } from '../atoms';
+import { EditModal } from '../organisms';
 
 const fieldsContainer = css({
   display: 'grid',
@@ -44,76 +43,68 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [isSaving, setSaving] = useState(false);
-
   const [newApproach, setNewApproach] = useState(approach);
   const [newResponsibilities, setNewResponsibilities] = useState(
     responsibilities,
   );
 
   return (
-    <Modal>
-      <form ref={formRef}>
-        <ModalEditHeader
-          backHref={backHref}
-          saveEnabled={!isSaving}
-          onSave={async () => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (formRef.current!.reportValidity()) {
-              setSaving(true);
-              await onSave({
-                teams: [
-                  {
-                    id,
-                    approach: newApproach.trim(),
-                    responsibilities: newResponsibilities.trim(),
-                  },
-                ],
-              });
-              if (formRef.current) setSaving(false);
-            }
-          }}
-          title={'Your Role in ASAP Network'}
-        />
-        <Paragraph accent="lead">
-          Tell the network what role you play in your team and your main
-          research goals.
-        </Paragraph>
-        <div css={fieldsContainer}>
-          <div css={textFieldsContainerStyles}>
-            <LabeledTextField
-              title="Team"
-              value={displayName}
-              enabled={false}
+    <EditModal
+      title={'Your Role in ASAP Network'}
+      backHref={backHref}
+      onSave={() =>
+        onSave({
+          teams: [
+            {
+              id,
+              approach: newApproach.trim(),
+              responsibilities: newResponsibilities.trim(),
+            },
+          ],
+        })
+      }
+    >
+      {({ isSaving }) => (
+        <>
+          <Paragraph accent="lead">
+            Tell the network what role you play in your team and your main
+            research goals.
+          </Paragraph>
+          <div css={fieldsContainer}>
+            <div css={textFieldsContainerStyles}>
+              <LabeledTextField
+                title="Team"
+                value={displayName}
+                enabled={false}
+              />
+              <LabeledDropdown
+                title="Role"
+                enabled={false}
+                value={role}
+                options={[{ label: role, value: role }]}
+              />
+            </div>
+            <LabeledTextArea
+              title="Main research interests"
+              placeholder="Example: Randy is interested in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretary pathway."
+              maxLength={200}
+              enabled={!isSaving}
+              value={newApproach}
+              onChange={setNewApproach}
             />
-            <LabeledDropdown
-              title="Role"
-              enabled={false}
-              value={role}
-              options={[{ label: role, value: role }]}
+            <LabeledTextArea
+              title="Your responsibilities"
+              placeholder="Example: Randy will be responsible for applying basic principles he developed from studies of a simple eukaryote, yeast, to investigate the mechanisms of intracellular vesicular transport and biogenesis of extracellular vesicles (exosomes) in cultured human cells. His team's current work is devoted to understanding how proteins and RNA are sorted into extracellular vesicles and how these molecules may be delivered to target cells in relation to normal and pathological functions."
+              maxLength={500}
+              enabled={!isSaving}
+              value={newResponsibilities}
+              onChange={setNewResponsibilities}
+              tip="Tip: Refer to yourself in the third person."
             />
           </div>
-          <LabeledTextArea
-            title="Main research interests"
-            placeholder="Example: Randy is interested in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretary pathway."
-            maxLength={200}
-            enabled={!isSaving}
-            value={newApproach}
-            onChange={setNewApproach}
-          />
-          <LabeledTextArea
-            title="Your responsibilities"
-            placeholder="Example: Randy will be responsible for applying basic principles he developed from studies of a simple eukaryote, yeast, to investigate the mechanisms of intracellular vesicular transport and biogenesis of extracellular vesicles (exosomes) in cultured human cells. His team's current work is devoted to understanding how proteins and RNA are sorted into extracellular vesicles and how these molecules may be delivered to target cells in relation to normal and pathological functions."
-            maxLength={500}
-            enabled={!isSaving}
-            value={newResponsibilities}
-            onChange={setNewResponsibilities}
-            tip="Tip: Refer to yourself in the third person."
-          />
-        </div>
-      </form>
-    </Modal>
+        </>
+      )}
+    </EditModal>
   );
 };
 

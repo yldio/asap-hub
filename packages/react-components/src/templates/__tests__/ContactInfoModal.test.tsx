@@ -69,7 +69,7 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText, unmount } = render(
+  const { getByText } = render(
     <ContactInfoModal
       backHref="#"
       email="contact@example.com"
@@ -84,30 +84,8 @@ it('disables the form elements while submitting', async () => {
   expect(form.elements.length).toBeGreaterThan(1);
   [...form.elements].forEach((element) => expect(element).toBeDisabled());
 
-  unmount();
-  act(() => resolveSubmit());
-});
-it('re-enables the form elements after submitting', async () => {
-  let resolveSubmit!: () => void;
-  const handleSave = () =>
-    new Promise<void>((resolve) => {
-      resolveSubmit = resolve;
-    });
-  const { getByText } = render(
-    <ContactInfoModal
-      backHref="#"
-      email="contact@example.com"
-      fallbackEmail="fallback@example.com"
-      onSave={handleSave}
-    />,
-  );
-
-  userEvent.click(getByText(/save/i));
-  act(() => resolveSubmit());
-
-  const form = getByText(/save/i).closest('form')!;
-  expect(form.elements.length).toBeGreaterThan(1);
+  act(resolveSubmit);
   await waitFor(() =>
-    [...form.elements].forEach((element) => expect(element).toBeEnabled()),
+    expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });

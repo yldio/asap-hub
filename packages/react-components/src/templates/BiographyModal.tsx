@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
-import { ModalEditHeader, LabeledTextArea, Modal } from '../molecules';
+import { LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
+import { EditModal } from '../organisms';
 
 interface BiographyModalProps {
   biography?: string;
@@ -15,27 +16,15 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [isSaving, setSaving] = useState(false);
-
   const [newBiography, setNewBiography] = useState(biography);
 
   return (
-    <Modal>
-      <form ref={formRef}>
-        <ModalEditHeader
-          title="Biography"
-          backHref={backHref}
-          saveEnabled={!isSaving}
-          onSave={async () => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (formRef.current!.reportValidity()) {
-              setSaving(true);
-              await onSave(newBiography);
-              if (formRef.current) setSaving(false);
-            }
-          }}
-        />
+    <EditModal
+      title="Biography"
+      backHref={backHref}
+      onSave={() => onSave(newBiography)}
+    >
+      {({ isSaving }) => (
         <LabeledTextArea
           value={newBiography}
           onChange={setNewBiography}
@@ -46,8 +35,8 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
           tip="Tip: refer to yourself in the third person."
           placeholder="Example: Randy is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof."
         />
-      </form>
-    </Modal>
+      )}
+    </EditModal>
   );
 };
 

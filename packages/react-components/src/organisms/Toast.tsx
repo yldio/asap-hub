@@ -12,7 +12,6 @@ import {
   largeDesktopScreen,
 } from '../pixels';
 import { rose, ember } from '../colors';
-import { noop } from '../utils';
 
 const SIDE_PADDING = 24;
 
@@ -79,16 +78,18 @@ interface ToastProps {
   children: ReactNode;
   onClose?: () => void;
 }
-const Toast: React.FC<ToastProps> = ({ children, onClose = noop }) => (
+const Toast: React.FC<ToastProps> = ({ children, onClose }) => (
   <section css={styles}>
-    <button onClick={onClose} css={[buttonResetStyles, crossIconStyles]}>
-      {crossIcon}
-    </button>
-    <div css={wrapStyles}>
+    {onClose && (
+      <button onClick={onClose} css={[buttonResetStyles, crossIconStyles]}>
+        {crossIcon}
+      </button>
+    )}
+    <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
       <div css={alertIconStyles}>{alertIcon}</div>
       <div css={wrapStyles}>
         <Paragraph>{children}</Paragraph>
-        <span css={crossPlaceholderStyles}> </span>
+        {onClose && <span css={crossPlaceholderStyles}> </span>}
       </div>
     </div>
   </section>

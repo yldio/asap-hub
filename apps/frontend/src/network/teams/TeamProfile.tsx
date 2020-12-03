@@ -1,22 +1,10 @@
 import React, { Suspense, useEffect } from 'react';
-import {
-  useRouteMatch,
-  Switch,
-  Route,
-  Redirect,
-  useHistory,
-} from 'react-router-dom';
-import {
-  Paragraph,
-  TeamProfilePage,
-  NotFoundPage,
-  ToolModal,
-} from '@asap-hub/react-components';
+import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
+import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { join } from 'path';
 
-import { useTeamById } from '@asap-hub/frontend/src/api/teams';
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
-import { TeamTool, TeamPatchRequest } from '@asap-hub/model';
+import { useTeamById } from './state';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -29,17 +17,14 @@ const Outputs = React.lazy(loadOutputs);
 const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
-// TODO split
-// TODO use recoil
 const TeamProfile: React.FC<{}> = () => {
   const {
     url,
     path,
     params: { id },
   } = useRouteMatch();
-  const history = useHistory();
 
-  const { loading, data: team, patch } = useTeamById(id);
+  const team = useTeamById(id);
 
   useEffect(() => {
     loadAbout()
@@ -47,36 +32,13 @@ const TeamProfile: React.FC<{}> = () => {
       .then(loadOutputs);
   }, [team]);
 
-  if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
-  }
   if (team) {
-    const teamProps = {
-      ...team,
-      tools: team.tools
-        ? team.tools.map((tool, index) => ({
-            ...tool,
-            href: join(url, 'workspace', 'tools', index.toString()),
-          }))
-        : undefined,
-    };
     const teamPageProps = {
-      ...teamProps,
+      ...team,
       aboutHref: join(url, 'about'),
       outputsHref: join(url, 'outputs'),
       workspaceHref: join(url, 'workspace'),
     };
-
-    const outputs = team.outputs.map((output) => ({
-      ...output,
-      team: output.team
-        ? {
-            ...output.team,
-            href: join('/network/teams', output.team.id),
-          }
-        : undefined,
-      href: join('/shared-research/', output.id),
-    }));
 
     return (
       <TeamProfilePage {...teamPageProps}>
@@ -84,56 +46,14 @@ const TeamProfile: React.FC<{}> = () => {
           <Suspense fallback="Loading...">
             <Switch>
               <Route path={`${path}/about`}>
-                <About
-                  {...team}
-                  proposalHref={
-                    team.proposalURL
-                      ? join('/shared-research/', team.proposalURL)
-                      : undefined
-                  }
-                />
+                <About team={team} />
               </Route>
               <Route path={`${path}/outputs`}>
-                <Outputs outputs={outputs} />
+                <Outputs outputs={team.outputs} />
               </Route>
-              {teamProps.tools && (
+              {team.tools && (
                 <Route path={`${path}/workspace`}>
-                  <Workspace
-                    {...teamProps}
-                    tools={teamProps.tools}
-                    newToolHref={join(url, 'workspace', 'tools')}
-                  />
-                  <Route exact path={`${path}/workspace/tools`}>
-                    <ToolModal
-                      title="Add Link"
-                      backHref={join(url, 'workspace')}
-                      onSave={async (data: TeamTool) => {
-                        await patch({
-                          tools: [...(team.tools ?? []), data],
-                        } as TeamPatchRequest);
-                        history.push(join(url, 'workspace'));
-                      }}
-                    />
-                  </Route>
-                  {teamProps.tools.map((tool, i) => (
-                    <Route
-                      key={`tool-${i}`}
-                      exact
-                      path={`${path}/workspace/tools/${i}`}
-                    >
-                      <ToolModal
-                        {...tool}
-                        title="Edit Link"
-                        backHref={join(url, 'workspace')}
-                        onSave={async (data: TeamTool) => {
-                          await patch({
-                            tools: Object.assign([], team.tools, { [i]: data }),
-                          } as TeamPatchRequest);
-                          history.push(join(url, 'workspace'));
-                        }}
-                      />
-                    </Route>
-                  ))}
+                  <Workspace team={{ ...team, tools: team.tools }} />
                 </Route>
               )}
               <Redirect to={join(url, 'about')} />

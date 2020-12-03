@@ -100,7 +100,7 @@ it('renders workspace tabs when tools provided', () => {
   const { getAllByRole } = render(
     <TeamProfileHeader
       {...boilerplateProps}
-      tools={[{ name: '', description: '', url: '', href: '' }]}
+      tools={[{ name: '', description: '', url: '' }]}
     />,
   );
   expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([

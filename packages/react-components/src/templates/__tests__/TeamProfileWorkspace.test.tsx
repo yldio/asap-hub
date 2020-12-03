@@ -55,7 +55,7 @@ it('Renders tools when provided', () => {
           name: 'Mr Trump',
           description: 'The President',
           url: 'https://www.whitehouse.gov',
-          href: '/wrong',
+          editHref: '/wrong',
         },
       ]}
     />,

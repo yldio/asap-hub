@@ -12,7 +12,7 @@ import {
 import { perRem, tabletScreen } from '../pixels';
 
 type ToolCardProps = Pick<TeamTool, 'description' | 'name' | 'url'> & {
-  readonly href: string;
+  readonly editHref: string;
 };
 
 const icons = Object.entries({
@@ -42,7 +42,7 @@ const logoIconStyle = css({
 const ToolCard: React.FC<ToolCardProps> = ({
   name,
   description,
-  href,
+  editHref,
   url,
 }) => {
   const res = icons.filter(([key]) => {
@@ -63,7 +63,7 @@ const ToolCard: React.FC<ToolCardProps> = ({
             <Headline3 styleAsHeading={4}>{name}</Headline3>
             <Paragraph accent="lead">{description}</Paragraph>
           </Link>
-          <Link href={href}>Edit Link</Link>
+          <Link href={editHref}>Edit Link</Link>
         </div>
       </div>
     </Card>

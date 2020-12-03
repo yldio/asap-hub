@@ -1,6 +1,9 @@
-import { ListResearchOutputResponse } from '@asap-hub/model';
+import {
+  ListResearchOutputResponse,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 
-const listResearchOutputResponseItem: Omit<
+const researchOutputResponse: Omit<
   ListResearchOutputResponse['items'][0],
   'id'
 > = {
@@ -15,15 +18,21 @@ const listResearchOutputResponseItem: Omit<
   },
 };
 
+export const createResearchOutputResponse = (
+  itemIndex = 0,
+): ResearchOutputResponse => ({
+  ...researchOutputResponse,
+  id: `ro${itemIndex}`,
+  title: `${researchOutputResponse.title} ${itemIndex + 1}`,
+});
+
 export const createListResearchOutputResponse = (
   items: number,
 ): ListResearchOutputResponse => ({
   total: items,
-  items: Array.from({ length: items }, (_, itemIndex) => ({
-    ...listResearchOutputResponseItem,
-    id: `ro${itemIndex}`,
-    title: `${listResearchOutputResponseItem.title} ${itemIndex + 1}`,
-  })),
+  items: Array.from({ length: items }, (_, itemIndex) =>
+    createResearchOutputResponse(itemIndex),
+  ),
 });
 
 export default createListResearchOutputResponse;

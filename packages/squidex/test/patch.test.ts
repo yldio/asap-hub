@@ -28,14 +28,14 @@ describe('squidex wrapper', () => {
       .patch(`/api/content/${config.appName}/${collection}/42`)
       .query(() => true)
       .reply(400, {
-        details: [ "Request  body has an invalid format" ],
-        message: "The model is not valid"
+        details: ['Request  body has an invalid format'],
+        message: 'The model is not valid',
       });
 
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.patch(42, { array: { iv: 'value', }, }),
+      client.patch(42, { array: { iv: 'value' } }),
     ).rejects.toThrow('Bad Request');
   });
 

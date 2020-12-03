@@ -147,6 +147,32 @@ describe('Update user avatar', () => {
     expect(result.statusCode).toBe(500);
   });
 
+  test('should return detailed error when squidex returns 400', async () => {
+    nock(config.baseUrl)
+      .post(`/api/apps/${config.appName}/assets`)
+      .reply(400, {
+        message: 'wrong file type',
+        details: ['must be an image'],
+      });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'userId',
+        },
+        body,
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toBe(400);
+    expect(result.body).toEqual(expect.stringContaining('Squidex Error'));
+    expect(result.body).toEqual(expect.stringContaining('details'));
+  });
+
   test('should return 500 when fails to update user', async () => {
     nock(config.baseUrl)
       .post(`/api/apps/${config.appName}/assets`)

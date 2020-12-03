@@ -36,6 +36,13 @@ export const handler: Handler = lambda.http(
 
     const users = new Users();
     const avatar = new Buffer(payload.avatar, 'base64');
+
+    // convert bytes to MB and check size
+    // 3MB = 2.8MB (2MB Base64 image) + some margin
+    if (avatar.length / 1e6 > 3) {
+      throw Boom.entityTooLarge('Avatar must be smaller than 2MB');
+    }
+
     const updatedUser = await users.updateAvatar(params.id, avatar);
 
     return {

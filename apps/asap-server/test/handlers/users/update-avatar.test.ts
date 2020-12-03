@@ -82,6 +82,25 @@ describe('PATCH /users/{id}/avatar - validations', () => {
     expect(result1.statusCode).toStrictEqual(400);
   });
 
+  test('returns 413 when avatar is too big', async () => {
+    const result1 = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'userId',
+        },
+        body: {
+          avatar: Buffer.alloc(4e6),
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result1.statusCode).toStrictEqual(400);
+  });
+
   test('returns 403 when user is changing other user', async () => {
     const result = (await handler(
       apiGatewayEvent({
@@ -185,7 +204,6 @@ describe('Update user avatar', () => {
 
     const resBody = JSON.parse(result.body);
     expect(result.statusCode).toBe(200);
-
     expect(resBody).toStrictEqual({
       id: 'userId',
       displayName: 'Cristiano Ronaldo',
@@ -201,6 +219,13 @@ describe('Update user avatar', () => {
           id: 'team-id-1',
           displayName: 'Unknown',
           role: 'Lead PI (Core Leadership)',
+          approach: 'Exact',
+          responsibilities: 'Make sure coverage is high',
+        },
+        {
+          id: 'team-id-3',
+          displayName: 'Unknown',
+          role: 'Collaborating PI',
         },
       ],
       location: 'Zofilte',

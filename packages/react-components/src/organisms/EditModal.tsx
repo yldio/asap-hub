@@ -2,6 +2,8 @@ import React, { ComponentProps, ReactNode, useRef, useState } from 'react';
 
 import { ModalEditHeader, Modal } from '../molecules';
 import { noop } from '../utils';
+import Toast from './Toast';
+import { paddingStyles } from '../card';
 
 type EditModalProps = Pick<
   ComponentProps<typeof ModalEditHeader>,
@@ -17,20 +19,32 @@ const EditModal: React.FC<EditModalProps> = ({
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSaving, setSaving] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   return (
-    <Modal>
-      <form ref={formRef}>
+    <Modal padding={false}>
+      {hasError && (
+        <Toast>
+          There was an error and we were unable to save your changes
+        </Toast>
+      )}
+      <form ref={formRef} css={paddingStyles}>
         <ModalEditHeader
           title={title}
           backHref={backHref}
           saveEnabled={!isSaving}
           onSave={async () => {
+            setHasError(false);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
               setSaving(true);
-              await onSave();
-              if (formRef.current) setSaving(false);
+              try {
+                await onSave();
+              } catch {
+                if (formRef.current) setHasError(true);
+              } finally {
+                if (formRef.current) setSaving(false);
+              }
             }
           }}
         />

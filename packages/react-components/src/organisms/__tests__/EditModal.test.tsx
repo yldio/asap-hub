@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import EditModal from '../EditModal';
@@ -32,7 +32,7 @@ describe('when saving', () => {
         </EditModal>,
       );
 
-      userEvent.click(getByText(/save/i));
+      userEvent.click(getByText(/^save/i));
       expect(handleSave).not.toHaveBeenCalled();
     });
   });
@@ -46,50 +46,112 @@ describe('when saving', () => {
         </EditModal>,
       );
 
-      userEvent.click(getByText(/save/i));
+      userEvent.click(getByText(/^save/i));
       expect(handleSave).toHaveBeenCalled();
       await waitFor(() =>
-        expect(getByText(/save/i).closest('button')).toBeEnabled(),
+        expect(getByText(/^save/i).closest('button')).toBeEnabled(),
       );
     });
 
-    it('disables the save button while saving', async () => {
+    describe('and the save succeeds', () => {
       let resolveSave!: () => void;
-      const handleSave = () =>
-        new Promise<void>((resolve) => {
-          resolveSave = resolve;
-        });
-      const { getByText, unmount } = render(
-        <EditModal title="Title" backHref="#" onSave={handleSave}>
-          {() => null}
-        </EditModal>,
-      );
+      let result!: RenderResult;
+      beforeEach(() => {
+        const handleSave = () =>
+          new Promise<void>((resolve) => {
+            resolveSave = resolve;
+          });
+        result = render(
+          <EditModal title="Title" backHref="#" onSave={handleSave}>
+            {() => null}
+          </EditModal>,
+        );
+      });
 
-      userEvent.click(getByText(/save/i));
-      expect(getByText(/save/i).closest('button')).toBeDisabled();
+      it('disables the save button while saving', async () => {
+        const { getByText, unmount } = result;
 
-      unmount();
-      act(resolveSave);
+        userEvent.click(getByText(/^save/i));
+        expect(getByText(/^save/i).closest('button')).toBeDisabled();
+
+        unmount();
+        act(resolveSave);
+      });
+
+      it('re-enables the save button after saving', async () => {
+        const { getByText } = result;
+
+        userEvent.click(getByText(/^save/i));
+        act(resolveSave);
+
+        await waitFor(() =>
+          expect(getByText(/^save/i).closest('button')).toBeEnabled(),
+        );
+      });
     });
 
-    it('re-enables the save button after saving', async () => {
-      let resolveSave!: () => void;
-      const handleSave = () =>
-        new Promise<void>((resolve) => {
-          resolveSave = resolve;
-        });
-      const { getByText } = render(
-        <EditModal title="Title" backHref="#" onSave={handleSave}>
-          {() => null}
-        </EditModal>,
-      );
+    describe('and the save fails', () => {
+      let rejectSave!: (error: Error) => void;
+      let result!: RenderResult;
+      beforeEach(() => {
+        const handleSave = () =>
+          new Promise<void>((_resolve, reject) => {
+            rejectSave = reject;
+          });
+        result = render(
+          <EditModal title="Title" backHref="#" onSave={handleSave}>
+            {() => null}
+          </EditModal>,
+        );
+      });
 
-      userEvent.click(getByText(/save/i));
-      act(resolveSave);
+      it('shows an error message', async () => {
+        const { getByText } = result;
 
-      await waitFor(() =>
-        expect(getByText(/save/i).closest('button')).toBeEnabled(),
-      );
+        userEvent.click(getByText(/^save/i));
+        act(() => rejectSave(new Error()));
+
+        await waitFor(() => expect(getByText(/error/i)).toBeVisible());
+      });
+
+      it('re-enables the save button', async () => {
+        const { getByText } = result;
+
+        userEvent.click(getByText(/^save/i));
+        act(() => rejectSave(new Error()));
+
+        await waitFor(() =>
+          expect(getByText(/^save/i).closest('button')).toBeEnabled(),
+        );
+      });
+
+      it('removes the error message when attempting to save again', async () => {
+        const { getByText, queryByText, rerender, unmount } = result;
+
+        userEvent.click(getByText(/^save/i));
+        act(() => rejectSave(new Error()));
+        await waitFor(() =>
+          expect(getByText(/^save/i).closest('button')).toBeEnabled(),
+        );
+
+        let rejectSaveAgain!: (error: Error) => void;
+        const handleSave = jest.fn().mockReturnValue(
+          new Promise((_resolve, reject) => {
+            rejectSaveAgain = reject;
+          }),
+        );
+        rerender(
+          <EditModal title="Title" backHref="#" onSave={handleSave}>
+            {() => null}
+          </EditModal>,
+        );
+
+        userEvent.click(getByText(/^save/i));
+        expect(queryByText(/error/i)).not.toBeInTheDocument();
+
+        unmount();
+        act(() => rejectSaveAgain(new Error()));
+      });
     });
   });
 });

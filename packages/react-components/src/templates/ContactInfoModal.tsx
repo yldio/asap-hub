@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
-import { Modal } from '../organisms';
-import { LabeledTextField, ModalEditHeader } from '../molecules';
+import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { charcoal } from '../colors';
+import { EditModal } from '../organisms';
 
 interface ContactInfoModalProps {
   readonly email?: string;
@@ -19,27 +19,15 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   backHref,
   onSave = noop,
 }) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [isSaving, setSaving] = useState(false);
-
   const [newEmail, setNewEmail] = useState(email);
 
   return (
-    <Modal>
-      <form ref={formRef}>
-        <ModalEditHeader
-          backHref={backHref}
-          title="Your contact details"
-          saveEnabled={!isSaving}
-          onSave={async () => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (formRef.current!.reportValidity()) {
-              setSaving(true);
-              await onSave(newEmail);
-              if (formRef.current) setSaving(false);
-            }
-          }}
-        />
+    <EditModal
+      backHref={backHref}
+      title="Your contact details"
+      onSave={() => onSave(newEmail)}
+    >
+      {({ isSaving }) => (
         <LabeledTextField
           type="email"
           value={newEmail}
@@ -55,8 +43,8 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           }
           hint="Note: This will not change your login email."
         />
-      </form>
-    </Modal>
+      )}
+    </EditModal>
   );
 };
 

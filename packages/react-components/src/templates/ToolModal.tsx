@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { TeamTool } from '@asap-hub/model';
 import css from '@emotion/css';
 
-import { ModalEditHeader, LabeledTextField } from '../molecules';
+import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
-import { Modal } from '../organisms';
+import { EditModal } from '../organisms';
 
 const fieldsContainer = css({
   display: 'grid',
@@ -26,33 +26,23 @@ const ToolModal: React.FC<ToolModalProps> = ({
   onSave = noop,
   backHref,
 }) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [isSaving, setSaving] = useState(false);
-
   const [newUrl, setNewUrl] = useState(url);
   const [newDescription, setNewDescription] = useState(description);
   const [newName, setNewName] = useState(name);
 
   return (
-    <Modal>
-      <form ref={formRef}>
-        <ModalEditHeader
-          backHref={backHref}
-          saveEnabled={!isSaving}
-          onSave={async () => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (formRef.current!.reportValidity()) {
-              setSaving(true);
-              await onSave({
-                name: newName,
-                url: newUrl,
-                description: newDescription,
-              });
-              if (formRef.current) setSaving(false);
-            }
-          }}
-          title={title}
-        />
+    <EditModal
+      title={title}
+      backHref={backHref}
+      onSave={() =>
+        onSave({
+          name: newName,
+          url: newUrl,
+          description: newDescription,
+        })
+      }
+    >
+      {({ isSaving }) => (
         <div css={fieldsContainer}>
           <LabeledTextField
             title="Add URL"
@@ -80,8 +70,8 @@ const ToolModal: React.FC<ToolModalProps> = ({
             required
           />
         </div>
-      </form>
-    </Modal>
+      )}
+    </EditModal>
   );
 };
 

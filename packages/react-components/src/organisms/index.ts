@@ -2,11 +2,11 @@ export * from './auth';
 
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
+export { default as EditModal } from './EditModal';
 export { default as HelpSection } from './HelpSection';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MembersSection } from './MembersSection';
 export { default as MenuHeader } from './MenuHeader';
-export { default as Modal } from './Modal';
 export { default as NewsAndEventsCard } from './NewsAndEventsCard';
 export { default as NewsAndEventsSection } from './NewsAndEventsSection';
 export { default as PageCard } from './PageCard';

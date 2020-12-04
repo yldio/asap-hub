@@ -28,7 +28,7 @@ type ModalEditHeaderProps = {
 
   backHref: string;
 
-  onSave?: () => void;
+  onSave?: () => void | Promise<void>;
   saveEnabled?: boolean;
 };
 

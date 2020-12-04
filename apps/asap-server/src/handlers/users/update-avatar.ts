@@ -1,6 +1,7 @@
 import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
+import parseURI from 'parse-data-url';
 
 import validateUser from '../../utils/validate-user';
 import Users from '../../controllers/users';
@@ -34,8 +35,19 @@ export const handler: Handler = lambda.http(
       avatar: string;
     };
 
+    const parsed = parseURI(payload.avatar);
+
+    // Shouldnt break here. Joi is doing validation prior to this
+    if (!parsed) {
+      throw Boom.badRequest('avatar must be a valid data URL');
+    }
+
+    if (!parsed.contentType.startsWith('image')) {
+      throw Boom.unsupportedMediaType('Content-type must be image');
+    }
+
     const users = new Users();
-    const avatar = Buffer.from(payload.avatar, 'base64');
+    const avatar = parsed.toBuffer();
 
     // convert bytes to MB and check size
     // 3MB = 2.8MB (2MB Base64 image) + some margin

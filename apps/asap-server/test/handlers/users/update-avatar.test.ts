@@ -11,11 +11,11 @@ import decodeToken from '../../../src/utils/validate-token';
 
 jest.mock('../../../src/utils/validate-token');
 
-describe('PATCH /users/{id}/avatar - validations', () => {
+describe('POST /users/{id}/avatar - validations', () => {
   test('returns 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         pathParameters: {
           id: 'userId',
         },
@@ -29,7 +29,7 @@ describe('PATCH /users/{id}/avatar - validations', () => {
   test('returns 401 when method is not bearer', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Basic token',
         },
@@ -51,7 +51,7 @@ describe('PATCH /users/{id}/avatar - validations', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -66,9 +66,9 @@ describe('PATCH /users/{id}/avatar - validations', () => {
   });
 
   test('returns 400 when payload is invalid', async () => {
-    const result1 = (await handler(
+    const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -79,13 +79,12 @@ describe('PATCH /users/{id}/avatar - validations', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    expect(result1.statusCode).toStrictEqual(400);
+    expect(result.statusCode).toStrictEqual(400);
   });
-
-  test('returns 413 when avatar is too big', async () => {
-    const result1 = (await handler(
+  test('returns 400 when payload is not data URL conformant', async () => {
+    const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -93,7 +92,47 @@ describe('PATCH /users/{id}/avatar - validations', () => {
           id: 'userId',
         },
         body: {
-          avatar: Buffer.alloc(4e6).toString('base64'),
+          avatar: 'data:video/mp4',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(400);
+  });
+
+  test('returns 415 when content type is invalid', async () => {
+    const result1 = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'post',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'userId',
+        },
+        body: {
+          avatar: 'data:video/mp4;base64,some-data',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result1.statusCode).toStrictEqual(415);
+  });
+
+  test('returns 413 when avatar is too big', async () => {
+    const result1 = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'post',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'userId',
+        },
+        body: {
+          avatar: `data:image/jpeg;base64,${Buffer.alloc(4e6).toString(
+            'base64',
+          )}`,
         },
       }),
     )) as APIGatewayProxyResult;
@@ -104,7 +143,7 @@ describe('PATCH /users/{id}/avatar - validations', () => {
   test('returns 403 when user is changing other user', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -133,7 +172,7 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -157,7 +196,7 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -184,7 +223,7 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -217,7 +256,7 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
+        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },

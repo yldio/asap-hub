@@ -19,6 +19,7 @@
     "@hapi/bourne": "^2.0.0",
     "@hapi/joi": "^17.1.1",
     "@types/date-fns": "^2.6.0",
+    "@types/parse-data-url": "^3.0.0",
     "apr-intercept": "^3.0.4",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.745.0",
@@ -35,6 +36,7 @@
     "lodash.matches": "^4.6.0",
     "nock": "^13.0.4",
     "p-limit": "^3.0.2",
+    "parse-data-url": "^3.0.0",
     "pump": "^3.0.0",
     "uuid": "^8.3.0"
   },

@@ -93,12 +93,12 @@ describe('PATCH /users/{id}/avatar - validations', () => {
           id: 'userId',
         },
         body: {
-          avatar: Buffer.alloc(4e6),
+          avatar: Buffer.alloc(4e6).toString('base64'),
         },
       }),
     )) as APIGatewayProxyResult;
 
-    expect(result1.statusCode).toStrictEqual(400);
+    expect(result1.statusCode).toStrictEqual(413);
   });
 
   test('returns 403 when user is changing other user', async () => {

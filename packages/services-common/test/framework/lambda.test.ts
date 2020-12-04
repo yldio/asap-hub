@@ -49,6 +49,24 @@ test('http returns data from Boom error in payload', async () => {
   );
 });
 
+test('http wraps squidex errors correctly', async () => {
+  const handler = http(async (_) => {
+    const err = new Error()
+    err.response = {
+      body: JSON.stringify({
+        message: "Unable to update model",
+        details: [ "teams must be an array" ]
+      }),
+      statusCode: 400
+    }
+    throw err
+  });
+  const result = await handler(apiGatewayEvent({}));
+  expect(result.statusCode).toStrictEqual(400);
+  expect(result.body).toEqual(expect.stringContaining('Squidex Error'));
+  expect(result.body).toEqual(expect.stringContaining('details'));
+});
+
 test('http returns 500 on unknown execption', async () => {
   const handler = http(async (_) => {
     throw new Error('uncaught');

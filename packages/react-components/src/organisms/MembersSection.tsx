@@ -70,7 +70,6 @@ const MembersSection: React.FC<MembersSectionProps> = ({
                 <div css={avatarStyles}>
                   <Avatar
                     imageUrl={avatarUrl}
-                    border
                     firstName={firstName}
                     lastName={lastName}
                   />

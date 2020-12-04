@@ -2,6 +2,7 @@ import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import FormData from 'form-data';
+import mime from 'mime-types';
 import {
   Squidex,
   SquidexGraphql,
@@ -297,7 +298,7 @@ export default class Users {
   ): Promise<UserResponse> {
     const form = new FormData();
     form.append('file', avatar, {
-      filename: id,
+      filename: `${id}.${mime.extension(contentType)}`,
       contentType,
     });
 

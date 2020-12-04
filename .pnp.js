@@ -1535,6 +1535,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.43.0"
       ],
       [
+        "@types/mime-types",
+        "npm:2.1.0"
+      ],
+      [
         "@types/mimos",
         "npm:3.0.2"
       ],
@@ -8836,6 +8840,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["@types/lodash.get", "npm:4.4.6"],
             ["@types/lodash.matches", "npm:4.6.6"],
+            ["@types/mime-types", "npm:2.1.0"],
             ["@types/parse-data-url", "npm:3.0.0"],
             ["@types/pump", "npm:1.1.0"],
             ["@types/uuid", "npm:8.0.0"],
@@ -8854,6 +8859,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-encode", "npm:1.0.1"],
             ["lodash.get", "npm:4.4.2"],
             ["lodash.matches", "npm:4.6.0"],
+            ["mime-types", "npm:2.1.27"],
             ["nock", "npm:13.0.4"],
             ["p-limit", "npm:3.0.2"],
             ["parse-data-url", "npm:3.0.0"],
@@ -15601,6 +15607,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-mime-db-npm-1.43.0-125c1fb2a1-fc11bbc547.zip/node_modules/@types/mime-db/",
           "packageDependencies": [
             ["@types/mime-db", "npm:1.43.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/mime-types", [
+        ["npm:2.1.0", {
+          "packageLocation": "./.yarn/cache/@types-mime-types-npm-2.1.0-33f410f277-26915c3601.zip/node_modules/@types/mime-types/",
+          "packageDependencies": [
+            ["@types/mime-types", "npm:2.1.0"]
           ],
           "linkType": "HARD",
         }]

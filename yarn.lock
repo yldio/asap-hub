@@ -87,6 +87,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/lodash.get": ^4
     "@types/lodash.matches": ^4
+    "@types/mime-types": ^2
     "@types/parse-data-url": ^3.0.0
     "@types/pump": ^1.1.0
     "@types/uuid": ^8.0.0
@@ -105,6 +106,7 @@ __metadata:
     jwt-encode: ^1.0.1
     lodash.get: ^4.4.2
     lodash.matches: ^4.6.0
+    mime-types: ^2.1.27
     nock: ^13.0.4
     p-limit: ^3.0.2
     parse-data-url: ^3.0.0
@@ -5087,6 +5089,13 @@ __metadata:
   version: 1.43.0
   resolution: "@types/mime-db@npm:1.43.0"
   checksum: fc11bbc547089727e96b034a94d056494df348b6e11fde15920bbba2e694bd92b90148c4e1d580521e761a629dfe150fd4b745c17b7668d6905ce59770f0e874
+  languageName: node
+  linkType: hard
+
+"@types/mime-types@npm:^2":
+  version: 2.1.0
+  resolution: "@types/mime-types@npm:2.1.0"
+  checksum: 26915c3601cb8569f4a3665ea8e460adc97165d48a3898edf816066212eca0de3935a0c11d111a3aff8c0ebb4b7e03923001d8bac90c24896719e3ff4655e1a9
   languageName: node
   linkType: hard
 

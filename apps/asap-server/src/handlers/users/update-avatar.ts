@@ -55,7 +55,11 @@ export const handler: Handler = lambda.http(
       throw Boom.entityTooLarge('Avatar must be smaller than 2MB');
     }
 
-    const updatedUser = await users.updateAvatar(params.id, avatar);
+    const updatedUser = await users.updateAvatar(
+      params.id,
+      avatar,
+      parsed.contentType,
+    );
 
     return {
       statusCode: 200,

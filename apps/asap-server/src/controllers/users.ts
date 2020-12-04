@@ -290,11 +290,15 @@ export default class Users {
     return parseGraphQLUser(items[0]);
   }
 
-  async updateAvatar(id: string, avatar: Buffer): Promise<UserResponse> {
+  async updateAvatar(
+    id: string,
+    avatar: Buffer,
+    contentType: string,
+  ): Promise<UserResponse> {
     const form = new FormData();
     form.append('file', avatar, {
       filename: `${id}.jpg`,
-      contentType: 'image/jpeg',
+      contentType,
     });
 
     const { id: assetId } = await this.users.client

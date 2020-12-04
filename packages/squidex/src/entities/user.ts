@@ -1,4 +1,10 @@
-import { TeamRole, OrcidWork, UserDegree, Role } from '@asap-hub/model';
+import {
+  TeamRole,
+  OrcidWork,
+  UserDegree,
+  UserSocialLinks,
+  Role,
+} from '@asap-hub/model';
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 
@@ -32,6 +38,7 @@ interface User<TAvatar = string, TConnection = string> {
   reachOut?: string;
   skillsDescription?: string;
   teams: UserTeamConnection<TConnection>[];
+  social?: Omit<UserSocialLinks, 'orcid'>[];
 }
 
 export interface RestUser extends Entity, Rest<User> {}

@@ -66,6 +66,14 @@ flatData {
       }
     }
   }
+  social{
+    github
+    googleScholar
+    linkedIn
+    researcherId
+    researchGate
+    twitter
+  }
   role
   responsibilities
   reachOut

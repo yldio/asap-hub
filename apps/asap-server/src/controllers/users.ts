@@ -297,7 +297,7 @@ export default class Users {
   ): Promise<UserResponse> {
     const form = new FormData();
     form.append('file', avatar, {
-      filename: `${id}.jpg`,
+      filename: id,
       contentType,
     });
 

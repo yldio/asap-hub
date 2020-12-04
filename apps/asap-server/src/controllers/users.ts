@@ -235,6 +235,7 @@ export default class Users {
           acc.concat([`data/teams/iv/role eq '${word}'`]),
         [],
       )
+      .concat(filter?.includes('Staff') ? `data/role/iv eq 'Staff'` : [])
       .join(' or ');
 
     const $filter = filterQ ? `${filterQ} and (${searchQ})`.trim() : searchQ;

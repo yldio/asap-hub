@@ -163,4 +163,33 @@ describe('GET /users', () => {
       total: 0,
     });
   });
+
+  test('returns 200 when searching for staff members', async () => {
+    const filter =
+      "data/teams/iv/role eq 'Staff' or" +
+      " data/role/iv eq 'Staff' and" +
+      " (data/role/iv ne 'Hidden')";
+
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUsers(filter),
+      })
+      .reply(200, fixtures.response);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        queryStringParameters: {
+          filter: 'Staff',
+        },
+        headers: {
+          Authorization: `Bearer token`,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual(fixtures.expectation);
+  });
 });

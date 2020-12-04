@@ -44,6 +44,7 @@ import {
   tickIcon,
   trainingPlaceholderIcon,
   twitterIcon,
+  uploadIcon,
   userIcon,
   validTickIcon,
   verticalDividerIcon,
@@ -96,6 +97,7 @@ export const TeamMembers = () => teamIcon;
 export const TickIcon = () => tickIcon;
 export const TrainingPlaceholderIcon = () => trainingPlaceholderIcon;
 export const Twitter = () => twitterIcon;
+export const UploadIcon = () => uploadIcon;
 export const User = () => userIcon;
 export const UserIcon = () => userIcon;
 export const ValidTick = () => validTickIcon;

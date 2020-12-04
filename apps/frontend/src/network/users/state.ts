@@ -7,7 +7,7 @@ import {
 import { authorizationState } from '@asap-hub/frontend/src/auth';
 import { UserResponse, UserPatchRequest } from '@asap-hub/model';
 
-import { getUser, patchUser } from './api';
+import { getUser, patchUser, postUserAvatar } from './api';
 
 export const refreshUserState = atomFamily<number, string>({
   key: 'refreshUser',
@@ -39,5 +39,13 @@ export const usePatchUserById = (id: string) => {
   const setPatchedUser = useSetRecoilState(patchedUserState(id));
   return async (patch: UserPatchRequest) => {
     setPatchedUser(await patchUser(id, patch, authorization));
+  };
+};
+
+export const usePatchUserAvatarById = (id: string) => {
+  const authorization = useRecoilValue(authorizationState);
+  const setSetPatchedUserState = useSetRecoilState(patchedUserState(id));
+  return async (avatar: string) => {
+    setSetPatchedUserState(await postUserAvatar(id, { avatar }, authorization));
   };
 };

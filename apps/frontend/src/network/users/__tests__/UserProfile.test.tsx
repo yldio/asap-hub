@@ -11,14 +11,18 @@ import {
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
 import UserProfile from '../UserProfile';
-import { getUser, patchUser } from '../api';
+import { getUser, patchUser, postUserAvatar } from '../api';
 import { refreshUserState } from '../state';
 
 jest.mock('../api');
 
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
+  typeof postUserAvatar
+>;
 const standardMockPatchUser = mockPatchUser.getMockImplementation() as typeof patchUser;
+const standardMockPostUserAvatar = mockPostUserAvatar.getMockImplementation() as typeof postUserAvatar;
 
 const renderUserProfile = async (
   userResponse = createUserResponse(),
@@ -29,6 +33,10 @@ const renderUserProfile = async (
   });
   mockPatchUser.mockImplementation(async (id, ...args) => {
     if (id === userResponse.id) return standardMockPatchUser(id, ...args);
+    throw new Error('404');
+  });
+  mockPostUserAvatar.mockImplementation(async (id, ...args) => {
+    if (id === userResponse.id) return standardMockPostUserAvatar(id, ...args);
     throw new Error('404');
   });
 
@@ -178,6 +186,11 @@ describe('a header edit button', () => {
     expect(await findByLabelText(/edit.+contact/i)).toBeVisible();
   });
 
+  it('is rendered for avatar on your own profile', async () => {
+    const { findByLabelText } = await renderUserProfile();
+    expect(await findByLabelText(/edit.+avatar/i)).toBeVisible();
+  });
+
   it('can change personal info', async () => {
     const userProfile: UserResponse = {
       ...createUserResponse(),
@@ -232,6 +245,29 @@ describe('a header edit button', () => {
         contactEmail: 'contact@example.comm',
       }),
       expect.any(String),
+    );
+  });
+
+  it('can change avatar', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+      avatarUrl: 'https://placekitten.com/200/300',
+      id: '42',
+    };
+    const { findByLabelText } = await renderUserProfile(userProfile);
+
+    userEvent.upload(
+      await findByLabelText(/upload.+avatar/i),
+      new File([':)'], 'puppy.jpeg', { type: 'image/jpg' }),
+    );
+    await waitFor(() =>
+      expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
+        '42',
+        expect.objectContaining({
+          avatar: `data:image/jpg;base64,${btoa(':)')}`,
+        }),
+        expect.any(String),
+      ),
     );
   });
 });

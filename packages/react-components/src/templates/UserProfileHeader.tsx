@@ -16,7 +16,7 @@ import { UserProfilePersonalText, TabNav, SocialIcons } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { paper } from '../colors';
-import { editIcon } from '../icons';
+import { editIcon, uploadIcon } from '../icons';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -123,6 +123,14 @@ const lastModifiedNoContactStyles = css({
 const tabNavStyles = css({
   gridArea: 'tab-nav',
 });
+const avatarContainer = css({ display: 'grid', width: 90, height: 90 });
+const imageContainer = css({ gridRow: 1, gridColumn: '1 / span 2' });
+const editButtonContainer = css({
+  gridRow: 1,
+  gridColumn: '3 / -1',
+  alignSelf: 'flex-end',
+  justifySelf: 'flex-end',
+});
 
 type UserProfileHeaderProps = Pick<
   UserResponse,
@@ -140,6 +148,9 @@ type UserProfileHeaderProps = Pick<
   | 'role'
   | 'social'
 > & {
+  readonly onImageSelect?: (file: File) => void;
+  readonly avatarSaving?: boolean;
+
   readonly aboutHref: string;
   readonly researchHref: string;
   readonly outputsHref: string;
@@ -164,6 +175,8 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   avatarUrl,
   contactEmail,
   email,
+  onImageSelect,
+  avatarSaving,
 
   aboutHref,
   researchHref,
@@ -192,11 +205,44 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             discoverHref={discoverHref}
           />
         </div>
-        <Avatar
-          imageUrl={avatarUrl}
-          firstName={firstName}
-          lastName={lastName}
-        />
+        <div css={avatarContainer}>
+          <div css={imageContainer}>
+            <Avatar
+              imageUrl={avatarUrl}
+              firstName={firstName}
+              lastName={lastName}
+            />
+          </div>
+          {onImageSelect && (
+            <div css={editButtonContainer}>
+              <label>
+                <Link
+                  buttonStyle
+                  small
+                  primary
+                  href={undefined}
+                  label="Edit Avatar"
+                  enabled={isEnabled('EDIT_PROFILE_REST') && !avatarSaving}
+                >
+                  {uploadIcon}
+                  <input
+                    disabled={
+                      !(isEnabled('EDIT_PROFILE_REST') && !avatarSaving)
+                    }
+                    type="file"
+                    accept="image/*"
+                    aria-label="Upload Avatar"
+                    onChange={(event) =>
+                      event.target.files?.length &&
+                      onImageSelect(event.target.files[0])
+                    }
+                    css={{ display: 'none' }}
+                  />
+                </Link>
+              </label>
+            </div>
+          )}
+        </div>
       </section>
       {editPersonalInfoHref && (
         <div css={editPersonalInfoStyles}>

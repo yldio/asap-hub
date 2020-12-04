@@ -44,5 +44,6 @@ export { default as tickIcon } from './tick';
 export { default as trainingPlaceholderIcon } from './training-placeholder';
 export { default as twitterIcon } from './twitter';
 export { default as userIcon } from './user';
+export { default as uploadIcon } from './upload';
 export { default as validTickIcon } from './valid-tick-icon';
 export { default as verticalDividerIcon } from './vertical-divider';

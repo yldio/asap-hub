@@ -1,8 +1,12 @@
 import nock from 'nock';
-import { UserPatchRequest, UserResponse } from '@asap-hub/model';
+import {
+  UserPatchRequest,
+  UserResponse,
+  UserAvatarPostRequest,
+} from '@asap-hub/model';
 import { createUserResponse } from '@asap-hub/fixtures';
 
-import { getUser, patchUser } from '../api';
+import { getUser, patchUser, postUserAvatar } from '../api';
 import { API_BASE_URL } from '../../../config';
 
 jest.mock('../../../config');
@@ -75,6 +79,47 @@ describe('patchUser', () => {
 
     await expect(
       patchUser('42', patch, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to update user with id 42. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('postUserAvatar', () => {
+  it('makes an authorized PATCH request for the user id', async () => {
+    const post: UserAvatarPostRequest = { avatar: '123' };
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .post('/users/42/avatar')
+      .reply(200, {});
+
+    await postUserAvatar('42', post, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('passes the patch object in the body', async () => {
+    const post = { avatar: '123' };
+    nock(API_BASE_URL).post('/users/42/avatar', post).reply(200, {});
+
+    await postUserAvatar('42', post, '');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns a successfully updated user', async () => {
+    const post = { avatar: '123' };
+    const updated: Partial<UserResponse> = {
+      avatarUrl: 'http://example.com',
+    };
+    nock(API_BASE_URL).post('/users/42/avatar', post).reply(200, updated);
+
+    expect(await postUserAvatar('42', post, '')).toEqual(updated);
+  });
+
+  it('errors for an error status', async () => {
+    const post = { avatar: '123' };
+    nock(API_BASE_URL).post('/users/42/avatar', post).reply(500, {});
+
+    await expect(
+      postUserAvatar('42', post, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update user with id 42. Expected status 2xx. Received status 500."`,
     );

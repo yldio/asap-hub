@@ -5704,8 +5704,8 @@ __metadata:
   linkType: hard
 
 "@vercel/nft@npm:^0.9.3":
-  version: 0.9.3
-  resolution: "@vercel/nft@npm:0.9.3"
+  version: 0.9.4
+  resolution: "@vercel/nft@npm:0.9.4"
   dependencies:
     acorn: ^7.1.1
     acorn-class-fields: ^0.3.2
@@ -5725,7 +5725,7 @@ __metadata:
     rollup-pluginutils: ^2.8.2
   bin:
     nft: out/cli.js
-  checksum: 4900cb2da440d52f9d5145a0fe7248ad28ca37dc87b091243bcab0d4158393c7b8af6f1fc3b44fb0309bc08fa54b11d518b69bc5ba4fb64233a0d32183f5c89b
+  checksum: 08446659850ef4bd60f7dce5ea5537cad936bcdf5fa2685684e64591f8831135660cacbc798e7c1a13708380b672e86af7ec83426eaebf6ffb8c7ab76dde5295
   languageName: node
   linkType: hard
 
@@ -13678,7 +13678,7 @@ fsevents@^1.2.7:
 
 "fsevents@patch:fsevents@2.1.2#builtin<compat/fsevents>, fsevents@patch:fsevents@^2.1.2#builtin<compat/fsevents>, fsevents@patch:fsevents@~2.1.2#builtin<compat/fsevents>":
   version: 2.1.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.1.2#builtin<compat/fsevents>::version=2.1.2&hash=127e8e"
+  resolution: "fsevents@patch:fsevents@npm%3A2.1.2#builtin<compat/fsevents>::version=2.1.2&hash=11e9ea"
   dependencies:
     node-gyp: latest
   checksum: f4e06c69cb1f888dcefd81822f7789fadb2885efd0f5967cb1ec499d5bdd086fa6b7ab5d76ad2160bed8e68daf81fa96be8b8bf61957d7a531b4c12dbeab3a6a
@@ -13687,7 +13687,7 @@ fsevents@^1.2.7:
 
 "fsevents@patch:fsevents@^1.2.7#builtin<compat/fsevents>":
   version: 1.2.13
-  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#builtin<compat/fsevents>::version=1.2.13&hash=127e8e"
+  resolution: "fsevents@patch:fsevents@npm%3A1.2.13#builtin<compat/fsevents>::version=1.2.13&hash=11e9ea"
   dependencies:
     bindings: ^1.5.0
     nan: ^2.12.1
@@ -26698,7 +26698,7 @@ serverless-offline@^6.8.0:
 
 "typescript@patch:typescript@~3.9.7#builtin<compat/typescript>":
   version: 3.9.7
-  resolution: "typescript@patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=5bf698"
+  resolution: "typescript@patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=cc6730"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver

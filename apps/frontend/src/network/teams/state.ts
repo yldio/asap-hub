@@ -6,8 +6,8 @@ import {
 } from 'recoil';
 import { TeamResponse, TeamPatchRequest } from '@asap-hub/model';
 
-import { authorizationState } from '../../auth';
 import { getTeam, patchTeam } from './api';
+import { authorizationState } from '../../auth/state';
 
 export const refreshTeamState = atomFamily<number, string>({
   key: 'refreshTeam',

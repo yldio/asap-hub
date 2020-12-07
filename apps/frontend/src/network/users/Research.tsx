@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import { useRouteMatch, useHistory, Route, Redirect } from 'react-router-dom';
+import { useRouteMatch, Route, Redirect } from 'react-router-dom';
 import { join } from 'path';
 import {
   UserProfileResearch,
@@ -9,6 +9,7 @@ import {
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { usePatchUserById } from './state';
+import { usePushFromHere } from '../../history';
 
 type ResearchProps = {
   user: UserResponse;
@@ -18,7 +19,7 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
   const { id } = useCurrentUser() ?? {};
 
   const { url, path } = useRouteMatch();
-  const history = useHistory();
+  const historyPush = usePushFromHere();
 
   const patchUser = usePatchUserById(user.id);
 
@@ -56,7 +57,7 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
                   backHref={url}
                   onSave={async (patch) => {
                     await patchUser(patch);
-                    history.push(url);
+                    historyPush(url);
                   }}
                 />
               ) : (
@@ -70,7 +71,7 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
               backHref={url}
               onSave={async (patch) => {
                 await patchUser(patch);
-                history.push(url);
+                historyPush(url);
               }}
             />
           </Route>

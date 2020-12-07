@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { Route, useRouteMatch } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
@@ -8,13 +8,14 @@ import { UserResponse } from '@asap-hub/model';
 
 import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
 import { usePatchUserById } from './state';
+import { usePushFromHere } from '../../history';
 
 interface EditingProps {
   user: UserResponse;
 }
 const Editing: React.FC<EditingProps> = ({ user }) => {
-  const history = useHistory();
   const { path, url } = useRouteMatch();
+  const historyPush = usePushFromHere();
 
   const patchUser = usePatchUserById(user.id);
 
@@ -26,7 +27,7 @@ const Editing: React.FC<EditingProps> = ({ user }) => {
           backHref={url}
           onSave={async (patch) => {
             await patchUser(patch);
-            history.push(url);
+            historyPush(url);
           }}
         />
       </Route>
@@ -39,7 +40,7 @@ const Editing: React.FC<EditingProps> = ({ user }) => {
             await patchUser({
               contactEmail: newContactEmail,
             });
-            history.push(url);
+            historyPush(url);
           }}
         />
       </Route>

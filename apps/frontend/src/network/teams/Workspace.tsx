@@ -1,16 +1,17 @@
 import React from 'react';
-import { useRouteMatch, Route, useHistory } from 'react-router-dom';
+import { useRouteMatch, Route } from 'react-router-dom';
 import { join } from 'path';
 import { TeamProfileWorkspace, ToolModal } from '@asap-hub/react-components';
 import { TeamTool, TeamResponse } from '@asap-hub/model';
 import { usePatchTeamById } from './state';
+import { usePushFromHere } from '../../history';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const { path, url } = useRouteMatch();
-  const history = useHistory();
+  const historyPush = usePushFromHere();
 
   const patchTeam = usePatchTeamById(team.id);
 
@@ -34,7 +35,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             await patchTeam({
               tools: [...(team.tools ?? []), data],
             });
-            history.push(url);
+            historyPush(url);
           }}
         />
       </Route>
@@ -48,7 +49,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
               await patchTeam({
                 tools: Object.assign([], team.tools, { [i]: data }),
               });
-              history.push(url);
+              historyPush(url);
             }}
           />
         </Route>

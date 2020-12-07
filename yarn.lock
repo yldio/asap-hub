@@ -87,6 +87,8 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/lodash.get": ^4
     "@types/lodash.matches": ^4
+    "@types/mime-types": ^2
+    "@types/parse-data-url": ^3.0.0
     "@types/pump": ^1.1.0
     "@types/uuid": ^8.0.0
     apr-intercept: ^3.0.4
@@ -96,6 +98,7 @@ __metadata:
     csv-parse: ^4.12.0
     date-fns: ^2.16.1
     debug: ^4.2.0
+    form-data: ^3.0.0
     got: ^11.6.0
     graphql: ^15.3.0
     jsonwebtoken: ^8.5.1
@@ -103,8 +106,10 @@ __metadata:
     jwt-encode: ^1.0.1
     lodash.get: ^4.4.2
     lodash.matches: ^4.6.0
+    mime-types: ^2.1.27
     nock: ^13.0.4
     p-limit: ^3.0.2
+    parse-data-url: ^3.0.0
     pump: ^3.0.0
     uuid: ^8.3.0
   languageName: unknown
@@ -5087,6 +5092,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mime-types@npm:^2":
+  version: 2.1.0
+  resolution: "@types/mime-types@npm:2.1.0"
+  checksum: 26915c3601cb8569f4a3665ea8e460adc97165d48a3898edf816066212eca0de3935a0c11d111a3aff8c0ebb4b7e03923001d8bac90c24896719e3ff4655e1a9
+  languageName: node
+  linkType: hard
+
 "@types/mimos@npm:*":
   version: 3.0.2
   resolution: "@types/mimos@npm:3.0.2"
@@ -5161,6 +5173,15 @@ __metadata:
   version: 1.12.0
   resolution: "@types/overlayscrollbars@npm:1.12.0"
   checksum: 6ef727673b63f5b7991dc0608930ed13bfff5f624741dd342148e58d1878d8475ace12f02b5dcb98d25574e97b65cc9e3dbcb8c5a2b6998a37940ab4df4d0f14
+  languageName: node
+  linkType: hard
+
+"@types/parse-data-url@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/parse-data-url@npm:3.0.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: a524e5ae254119cdedd627485037c14a07824e02d7a4fe46173af9a0c51e6777045f6d0b3920ddecf030656ed2b3fc75dc218e81e67adf5221e994225b4d5103
   languageName: node
   linkType: hard
 
@@ -20506,6 +20527,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"parse-data-url@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "parse-data-url@npm:3.0.0"
+  dependencies:
+    valid-data-url: ^3.0.1
+  checksum: 8baa1cf55ab67efebd268922d192434f822737e5deb0d36c8bab0344c993a10f241d6d1c95c3f793ea7f4624439db88dc6d06875cd76bd524bd1505c44c3fd62
+  languageName: node
+  linkType: hard
+
 "parse-entities@npm:^1.1.2":
   version: 1.2.2
   resolution: "parse-entities@npm:1.2.2"
@@ -27332,6 +27362,13 @@ typescript@~3.9.7:
   version: 3.0.0
   resolution: "valid-data-url@npm:3.0.0"
   checksum: 893311376130722683bee8f6aeca96290827d319720bfcc632232ce4d3fa3a42315ac329d5ceb18664c5a8d475a27d7e263f8b6b68e4b447e764fd4275c5c1f5
+  languageName: node
+  linkType: hard
+
+"valid-data-url@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "valid-data-url@npm:3.0.1"
+  checksum: 4995bff08c112bb679eeff6f1ac5a0f28e639380f2ce6d3f8dff746a1a32390ec527d22cc3c79491f7557577619ae365f5ce8182684629cb1928746f322b6be1
   languageName: node
   linkType: hard
 

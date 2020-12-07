@@ -1,7 +1,6 @@
 import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
-import Debug from 'debug';
 import Joi from '@hapi/joi';
 import {
   APIGatewayProxyResultV2,
@@ -26,6 +25,14 @@ export interface Response {
         [header: string]: string | number | boolean;
       }
     | undefined;
+}
+
+interface HTTPError extends Error {
+  data: unknown;
+  response?: {
+    statusCode: number;
+    body: string;
+  };
 }
 
 export const response = (
@@ -56,8 +63,44 @@ export const validate = <T>(
   return res;
 };
 
+const handlerError = (error: Error): APIGatewayProxyResultV2 => {
+  // Squidex errors
+  const err = error as HTTPError;
+  if (err.response && err.response.body) {
+    const { message, details } = JSON.parse(err.response.body) as {
+      message: string;
+      details?: string[];
+    };
+    return response({
+      statusCode: err.response.statusCode,
+      body: JSON.stringify({
+        message: `Squidex Error: ${message}`,
+        details,
+      }),
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
+  }
+
+  // Boom errors created on controllers handlers and fail-safe
+  const internalError = Boom.isBoom(error) ? error : Boom.internal();
+  return response({
+    statusCode: internalError.output.statusCode,
+    body: JSON.stringify({
+      ...internalError.output.payload,
+      ...(internalError.data ? internalError.data : {}),
+    }),
+    headers: {
+      'content-type': 'application/json',
+      ...(internalError.output.headers as
+        | { [header: string]: string | number | boolean }
+        | undefined),
+    },
+  });
+};
+
 // ensure any thrown exception is handled and returned correctly
-const debug = Debug('http');
 export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
   event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResultV2> => {
@@ -102,34 +145,7 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
   const [err, res] = await Intercept(fn(request));
 
   if (err) {
-    const error = !Boom.isBoom(err)
-      ? Boom.boomify(err, {
-          data: {
-            error: err,
-          },
-        })
-      : err;
-
-    debug('Error caught on request', error);
-    const data = error.data as { details: unknown };
-    const payload =
-      data && data.details
-        ? {
-            ...error.output.payload,
-            details: data.details,
-          }
-        : error.output.payload;
-
-    return response({
-      statusCode: error.output.statusCode,
-      body: JSON.stringify(payload),
-      headers: {
-        'content-type': 'application/json',
-        ...(error.output.headers as
-          | { [header: string]: string | number | boolean }
-          | undefined),
-      },
-    });
+    return handlerError(err);
   }
 
   return response({

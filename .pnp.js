@@ -1535,6 +1535,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.43.0"
       ],
       [
+        "@types/mime-types",
+        "npm:2.1.0"
+      ],
+      [
         "@types/mimos",
         "npm:3.0.2"
       ],
@@ -1569,6 +1573,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/overlayscrollbars",
         "npm:1.12.0"
+      ],
+      [
+        "@types/parse-data-url",
+        "npm:3.0.0"
       ],
       [
         "@types/parse-json",
@@ -4144,7 +4152,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "form-data",
-        "npm:2.5.1"
+        "npm:3.0.0"
       ],
       [
         "format",
@@ -6237,6 +6245,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "parse-asn1",
         "npm:5.1.5"
+      ],
+      [
+        "parse-data-url",
+        "npm:3.0.0"
       ],
       [
         "parse-entities",
@@ -8356,7 +8368,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "valid-data-url",
-        "npm:3.0.0"
+        "npm:3.0.1"
       ],
       [
         "validate-npm-package-license",
@@ -8828,6 +8840,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
             ["@types/lodash.get", "npm:4.4.6"],
             ["@types/lodash.matches", "npm:4.6.6"],
+            ["@types/mime-types", "npm:2.1.0"],
+            ["@types/parse-data-url", "npm:3.0.0"],
             ["@types/pump", "npm:1.1.0"],
             ["@types/uuid", "npm:8.0.0"],
             ["apr-intercept", "npm:3.0.4"],
@@ -8837,6 +8851,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["csv-parse", "npm:4.12.0"],
             ["date-fns", "npm:2.16.1"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
+            ["form-data", "npm:3.0.0"],
             ["got", "npm:11.6.0"],
             ["graphql", "npm:15.3.0"],
             ["jsonwebtoken", "npm:8.5.1"],
@@ -8844,8 +8859,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jwt-encode", "npm:1.0.1"],
             ["lodash.get", "npm:4.4.2"],
             ["lodash.matches", "npm:4.6.0"],
+            ["mime-types", "npm:2.1.27"],
             ["nock", "npm:13.0.4"],
             ["p-limit", "npm:3.0.2"],
+            ["parse-data-url", "npm:3.0.0"],
             ["pump", "npm:3.0.0"],
             ["uuid", "npm:8.3.0"]
           ],
@@ -15594,6 +15611,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/mime-types", [
+        ["npm:2.1.0", {
+          "packageLocation": "./.yarn/cache/@types-mime-types-npm-2.1.0-33f410f277-26915c3601.zip/node_modules/@types/mime-types/",
+          "packageDependencies": [
+            ["@types/mime-types", "npm:2.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/mimos", [
         ["npm:3.0.2", {
           "packageLocation": "./.yarn/cache/@types-mimos-npm-3.0.2-299f41e982-95bb48b4a8.zip/node_modules/@types/mimos/",
@@ -15682,6 +15708,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-overlayscrollbars-npm-1.12.0-18c7d686ad-6ef727673b.zip/node_modules/@types/overlayscrollbars/",
           "packageDependencies": [
             ["@types/overlayscrollbars", "npm:1.12.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/parse-data-url", [
+        ["npm:3.0.0", {
+          "packageLocation": "./.yarn/cache/@types-parse-data-url-npm-3.0.0-17ae99adc5-a524e5ae25.zip/node_modules/@types/parse-data-url/",
+          "packageDependencies": [
+            ["@types/parse-data-url", "npm:3.0.0"],
+            ["@types/node", "npm:13.11.1"]
           ],
           "linkType": "HARD",
         }]
@@ -32918,6 +32954,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["parse-data-url", [
+        ["npm:3.0.0", {
+          "packageLocation": "./.yarn/cache/parse-data-url-npm-3.0.0-846f37c26b-8baa1cf55a.zip/node_modules/parse-data-url/",
+          "packageDependencies": [
+            ["parse-data-url", "npm:3.0.0"],
+            ["valid-data-url", "npm:3.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["parse-entities", [
         ["npm:1.2.2", {
           "packageLocation": "./.yarn/cache/parse-entities-npm-1.2.2-6be249f6ff-66fb7cb7c8.zip/node_modules/parse-entities/",
@@ -40741,6 +40787,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/valid-data-url-npm-3.0.0-15a5dd7f89-8933113761.zip/node_modules/valid-data-url/",
           "packageDependencies": [
             ["valid-data-url", "npm:3.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.0.1", {
+          "packageLocation": "./.yarn/cache/valid-data-url-npm-3.0.1-d31c986fd6-4995bff08c.zip/node_modules/valid-data-url/",
+          "packageDependencies": [
+            ["valid-data-url", "npm:3.0.1"]
           ],
           "linkType": "HARD",
         }]

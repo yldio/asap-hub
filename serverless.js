@@ -90,6 +90,19 @@ module.exports = {
     },
   },
   functions: {
+    uploadUserAvatar: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/users/update-avatar.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'POST',
+            path: `/users/{id}/avatar`,
+          },
+        },
+      ],
+    },
     fetchUsers: {
       handler: 'apps/asap-server/build-cjs/handlers/users/fetch.handler',
       events: [

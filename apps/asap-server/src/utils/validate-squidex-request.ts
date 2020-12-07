@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { framework as lambda } from '@asap-hub/services-common';
 import { squidexSharedSecret } from '../config';
 
-export const signPayload = (payload: object | undefined): string => {
+export const signPayload = (payload: lambda.Request['payload']): string => {
   return crypto
     .createHash('SHA256')
     .update(Buffer.from(JSON.stringify(payload) + squidexSharedSecret, 'utf8'))

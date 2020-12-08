@@ -18,16 +18,12 @@ describe('the built index.html', () => {
           <meta
             charset="utf-8"
           />
-          <link
-            href="https://dev.hub.asap.science/.auth/favicon.png"
-            rel="icon"
-          />
           <meta
             content="width=device-width,initial-scale=1"
             name="viewport"
           />
           <meta
-            content="#000000"
+            content="#34A270"
             name="theme-color"
           />
           <meta
@@ -35,8 +31,20 @@ describe('the built index.html', () => {
             name="description"
           />
           <link
+            href="https://dev.hub.asap.science/.auth/favicon.png"
+            rel="icon"
+          />
+          <link
             href="https://dev.hub.asap.science/.auth/logo192.png"
             rel="apple-touch-icon"
+          />
+          <link
+            href="https://fonts.gstatic.com"
+            rel="preconnect"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&display=swap"
+            rel="stylesheet"
           />
           <link
             href="https://dev.hub.asap.science/.auth/manifest.json"

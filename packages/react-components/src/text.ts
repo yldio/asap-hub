@@ -71,7 +71,7 @@ export const isAllowedChildren = (
 
 export const fontStyles = {
   fontFamily:
-    "Calibri, 'Open Sans', Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",
+    "Calibri, Mukta, Candara, Segoe, 'Segoe UI', Optima, Arial, sans-serif",
   WebkitFontSmoothing: 'antialiased',
   MozOsxFontSmoothing: 'auto',
 

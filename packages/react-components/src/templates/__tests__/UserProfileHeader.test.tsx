@@ -123,7 +123,7 @@ it('is rendered for avatar', () => {
 });
 
 it('is disabled for avatar (REGRESSION)', () => {
-  disable('EDIT_PROFILE_REST');
+  disable('EDIT_PROFILE_AVATAR');
   const { getByLabelText } = render(
     <UserProfileHeader
       {...boilerplateProps}

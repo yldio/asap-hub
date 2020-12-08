@@ -2619,6 +2619,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.0"
       ],
       [
+        "browser-image-compression",
+        "npm:1.0.13"
+      ],
+      [
         "browser-process-hrtime",
         "npm:1.0.0"
       ],
@@ -9044,6 +9048,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.0.3"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
+            ["browser-image-compression", "npm:1.0.13"],
             ["cross-env", "npm:7.0.2"],
             ["history", "npm:4.10.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
@@ -20342,6 +20347,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/brorand-npm-1.1.0-ea86634c4b-4536dd73f0.zip/node_modules/brorand/",
           "packageDependencies": [
             ["brorand", "npm:1.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["browser-image-compression", [
+        ["npm:1.0.13", {
+          "packageLocation": "./.yarn/cache/browser-image-compression-npm-1.0.13-3747725c50-15e99ba7dc.zip/node_modules/browser-image-compression/",
+          "packageDependencies": [
+            ["browser-image-compression", "npm:1.0.13"]
           ],
           "linkType": "HARD",
         }]

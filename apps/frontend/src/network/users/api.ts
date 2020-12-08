@@ -31,7 +31,10 @@ export const patchUser = async (
 ): Promise<UserResponse> => {
   const resp = await fetch(`${API_BASE_URL}/users/${id}`, {
     method: 'PATCH',
-    headers: { authorization },
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+    },
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {
@@ -49,7 +52,10 @@ export const postUserAvatar = async (
 ): Promise<UserResponse> => {
   const resp = await fetch(`${API_BASE_URL}/users/${id}/avatar`, {
     method: 'POST',
-    headers: { authorization },
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+    },
     body: JSON.stringify(post),
   });
   if (!resp.ok) {

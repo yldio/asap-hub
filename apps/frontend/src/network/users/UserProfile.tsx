@@ -10,6 +10,7 @@ import {
 import { join } from 'path';
 import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
+import imageCompression from 'browser-image-compression';
 
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
 import { DISCOVER_PATH, NETWORK_PATH } from '@asap-hub/frontend/src/routes';
@@ -89,18 +90,15 @@ const User: React.FC<{}> = () => {
           : undefined,
       onImageSelect:
         currentUser?.id === id && tab
-          ? (file: File) =>
-              new Promise((resolve, reject) => {
-                setAvatarSaving(true);
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = async () => {
-                  if (reader.result) {
-                    resolve(await patchUserAvatar(reader.result.toString()));
-                  }
-                };
-                reader.onerror = (error) => reject(error);
-              }).finally(() => setAvatarSaving(false))
+          ? (file: File) => {
+              setAvatarSaving(true);
+              return imageCompression(file, { maxSizeMB: 2 })
+                .then((compressedFile) =>
+                  imageCompression.getDataUrlFromFile(compressedFile),
+                )
+                .then((encodedFile) => patchUserAvatar(encodedFile))
+                .finally(() => setAvatarSaving(false));
+            }
           : undefined,
       avatarSaving,
     };

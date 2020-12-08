@@ -46,7 +46,6 @@ interface LinkStyleButtonProps {
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
   readonly submit?: boolean;
-  readonly label?: string;
 
   readonly children?: React.ReactNode;
 
@@ -60,7 +59,6 @@ const Button: React.FC<ButtonProps> = ({
   active = false,
 
   submit = primary,
-  label,
 
   children,
 
@@ -69,7 +67,6 @@ const Button: React.FC<ButtonProps> = ({
   <button
     type={submit ? 'submit' : 'button'}
     disabled={!enabled}
-    aria-label={label}
     onClick={(event) => {
       onClick();
       event.preventDefault();

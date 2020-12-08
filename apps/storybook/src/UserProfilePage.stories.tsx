@@ -83,6 +83,7 @@ const commonPropsEditable = (): ReturnType<typeof commonProps> => ({
   ...commonProps(),
   editPersonalInfoHref: '/wrong',
   editContactInfoHref: '/wrong',
+  onImageSelect: () => {},
 });
 
 const researchTabProps = (): ComponentProps<typeof UserProfileResearch> => ({

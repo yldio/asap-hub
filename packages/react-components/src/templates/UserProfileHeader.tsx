@@ -123,11 +123,16 @@ const lastModifiedNoContactStyles = css({
 const tabNavStyles = css({
   gridArea: 'tab-nav',
 });
-const avatarContainer = css({ display: 'grid', width: 90, height: 90 });
-const imageContainer = css({ gridRow: 1, gridColumn: '1 / span 2' });
+const avatarContainer = css({
+  display: 'grid',
+  width: 90,
+  height: 90,
+  paddingBottom: `${12 / perRem}em`,
+});
+const imageContainer = css({ gridRow: 1, gridColumn: 1 });
 const editButtonContainer = css({
   gridRow: 1,
-  gridColumn: '3 / -1',
+  gridColumn: 1,
   alignSelf: 'flex-end',
   justifySelf: 'flex-end',
 });
@@ -222,15 +227,15 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
                   primary
                   href={undefined}
                   label="Edit Avatar"
-                  enabled={isEnabled('EDIT_PROFILE_REST') && !avatarSaving}
+                  enabled={isEnabled('EDIT_PROFILE_AVATAR') && !avatarSaving}
                 >
                   {uploadIcon}
                   <input
                     disabled={
-                      !(isEnabled('EDIT_PROFILE_REST') && !avatarSaving)
+                      !(isEnabled('EDIT_PROFILE_AVATAR') && !avatarSaving)
                     }
                     type="file"
-                    accept="image/*"
+                    accept="image/x-png,image/jpeg"
                     aria-label="Upload Avatar"
                     onChange={(event) =>
                       event.target.files?.length &&

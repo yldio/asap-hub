@@ -271,6 +271,7 @@ __metadata:
     "@types/testing-library__jest-dom": ^5.0.3
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.2.0
+    browser-image-compression: ^1.0.13
     cross-env: ^7.0.2
     history: ^4
     identity-obj-proxy: ^3.0.0
@@ -8349,6 +8350,13 @@ __metadata:
   version: 1.1.0
   resolution: "brorand@npm:1.1.0"
   checksum: 4536dd73f07f6884d89c09c906345b606abff477e87babef64a85656e8cf12b1c5f40d06313b91dac12bf3e031ac190b5d548f2c3bf75f655344c3fcf90cbc8a
+  languageName: node
+  linkType: hard
+
+"browser-image-compression@npm:^1.0.13":
+  version: 1.0.13
+  resolution: "browser-image-compression@npm:1.0.13"
+  checksum: 15e99ba7dcd8c85af28ca44a5c3049640a77edf2a8f06d214f299737efa1b4eb3337ebb52f532b822cff41a01d1c3fbde6587f2d2c01e0d0ed5f6ec7074090f2
   languageName: node
   linkType: hard
 

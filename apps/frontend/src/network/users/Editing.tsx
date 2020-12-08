@@ -8,40 +8,30 @@ import { UserResponse } from '@asap-hub/model';
 
 import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
 import { usePatchUserById } from './state';
-import { usePushFromHere } from '../../history';
 
 interface EditingProps {
   user: UserResponse;
 }
 const Editing: React.FC<EditingProps> = ({ user }) => {
   const { path, url } = useRouteMatch();
-  const historyPush = usePushFromHere();
 
   const patchUser = usePatchUserById(user.id);
 
   return (
     <>
       <Route exact path={`${path}/${EDIT_PERSONAL_INFO_PATH}`}>
-        <PersonalInfoModal
-          {...user}
-          backHref={url}
-          onSave={async (patch) => {
-            await patchUser(patch);
-            historyPush(url);
-          }}
-        />
+        <PersonalInfoModal {...user} backHref={url} onSave={patchUser} />
       </Route>
       <Route exact path={`${path}/${EDIT_CONTACT_INFO_PATH}`}>
         <ContactInfoModal
           email={user.contactEmail}
           fallbackEmail={user.email}
           backHref={url}
-          onSave={async (newContactEmail) => {
-            await patchUser({
+          onSave={(newContactEmail) =>
+            patchUser({
               contactEmail: newContactEmail,
-            });
-            historyPush(url);
-          }}
+            })
+          }
         />
       </Route>
     </>

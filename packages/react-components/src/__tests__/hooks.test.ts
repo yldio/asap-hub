@@ -1,23 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { StaticRouter } from 'react-router-dom';
 
-import { useGifReplay, useHasRouter } from '../hooks';
-
-describe('useHasRouter', () => {
-  it('returns false if there is no Router context', () => {
-    const {
-      result: { current },
-    } = renderHook(useHasRouter);
-    expect(current).toBe(false);
-  });
-
-  it('returns true if there is a Router context', () => {
-    const {
-      result: { current },
-    } = renderHook(useHasRouter, { wrapper: StaticRouter });
-    expect(current).toBe(true);
-  });
-});
+import { useGifReplay } from '../hooks';
 
 describe('useGifReplay', () => {
   it('returns the same GIF URL apart from the fragment', () => {

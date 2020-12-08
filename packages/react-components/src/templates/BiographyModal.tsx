@@ -21,6 +21,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
   return (
     <EditModal
       title="Biography"
+      dirty={newBiography !== biography}
       backHref={backHref}
       onSave={() => onSave(newBiography)}
     >

@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 
 import ToolModal from '../ToolModal';
 
@@ -13,7 +13,9 @@ const props: ComponentProps<typeof ToolModal> = {
   url: 'https://example.com/tool',
 };
 it('renders the title', () => {
-  const { getByText } = render(<ToolModal {...props} title="ModalTitle" />);
+  const { getByText } = render(<ToolModal {...props} title="ModalTitle" />, {
+    wrapper: StaticRouter,
+  });
   expect(getByText('ModalTitle', { selector: 'h3' })).toBeVisible();
 });
 
@@ -25,6 +27,7 @@ it('renders default values into inputs', () => {
       description="LinkDescription"
       url="http://example.com"
     />,
+    { wrapper: StaticRouter },
   );
   expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
     .toMatchInlineSnapshot(`
@@ -39,16 +42,14 @@ it('renders default values into inputs', () => {
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
-    <MemoryRouter>
-      <ToolModal
-        {...props}
-        name="toolName"
-        url="http://example.com"
-        description="toolDescription"
-        onSave={jestFn}
-      />
-      ,
-    </MemoryRouter>,
+    <ToolModal
+      {...props}
+      name="toolName"
+      url="http://example.com"
+      description="toolDescription"
+      onSave={jestFn}
+    />,
+    { wrapper: MemoryRouter },
   );
 
   userEvent.click(getByText(/save/i));
@@ -69,7 +70,9 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(<ToolModal {...props} onSave={handleSave} />);
+  const { getByText } = render(<ToolModal {...props} onSave={handleSave} />, {
+    wrapper: StaticRouter,
+  });
 
   userEvent.click(getByText(/save/i));
 

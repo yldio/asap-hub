@@ -9,7 +9,6 @@ import {
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { usePatchUserById } from './state';
-import { usePushFromHere } from '../../history';
 
 type ResearchProps = {
   user: UserResponse;
@@ -19,7 +18,6 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
   const { id } = useCurrentUser() ?? {};
 
   const { url, path } = useRouteMatch();
-  const historyPush = usePushFromHere();
 
   const patchUser = usePatchUserById(user.id);
 
@@ -55,10 +53,7 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
                 <TeamMembershipModal
                   {...team}
                   backHref={url}
-                  onSave={async (patch) => {
-                    await patchUser(patch);
-                    historyPush(url);
-                  }}
+                  onSave={patchUser}
                 />
               ) : (
                 <Redirect to={url} />
@@ -66,14 +61,7 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
             }}
           />
           <Route path={`${path}/edit-questions`}>
-            <OpenQuestionsModal
-              {...user}
-              backHref={url}
-              onSave={async (patch) => {
-                await patchUser(patch);
-                historyPush(url);
-              }}
-            />
+            <OpenQuestionsModal {...user} backHref={url} onSave={patchUser} />
           </Route>
         </>
       )}

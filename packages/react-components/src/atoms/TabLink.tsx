@@ -5,7 +5,7 @@ import css from '@emotion/css';
 import { TextChildren, layoutStyles } from '../text';
 import { perRem } from '../pixels';
 import { fern, lead, charcoal } from '../colors';
-import { useHasRouter } from '../hooks';
+import { useHasRouter } from '../routing';
 
 const activeClassName = 'active-link';
 const styles = css({

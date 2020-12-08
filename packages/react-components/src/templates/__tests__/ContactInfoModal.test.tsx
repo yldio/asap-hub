@@ -1,4 +1,5 @@
 import React from 'react';
+import { StaticRouter } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -7,12 +8,14 @@ import ContactInfoModal from '../ContactInfoModal';
 it('renders a form to edit the contact info', () => {
   const { getByRole } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
+    { wrapper: StaticRouter },
   );
   expect(getByRole('heading')).toHaveTextContent(/contact/i);
 });
 it('shows the fallback email', () => {
   const { container } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
+    { wrapper: StaticRouter },
   );
   expect(container.textContent).toContain('fallback@example.com');
 });
@@ -24,6 +27,7 @@ it('renders a text field containing the email', () => {
       email="contact@example.com"
       backHref="#"
     />,
+    { wrapper: StaticRouter },
   );
   expect(getByLabelText(/email/i)).toHaveValue('contact@example.com');
 });
@@ -36,6 +40,7 @@ it('fires onSave when submitting', async () => {
       backHref="#"
       onSave={handleSave}
     />,
+    { wrapper: StaticRouter },
   );
 
   userEvent.clear(getByLabelText(/email/i));
@@ -55,6 +60,7 @@ it('does not fire onSave when the email is invalid', async () => {
       backHref="#"
       onSave={handleSave}
     />,
+    { wrapper: StaticRouter },
   );
 
   userEvent.clear(getByLabelText(/email/i));
@@ -76,6 +82,7 @@ it('disables the form elements while submitting', async () => {
       fallbackEmail="fallback@example.com"
       onSave={handleSave}
     />,
+    { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));

@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import OpenQuestionsModal from '../OpenQuestionsModal';
@@ -11,13 +11,16 @@ const props: ComponentProps<typeof OpenQuestionsModal> = {
   backHref: '/wrong',
 };
 it('renders the title', () => {
-  const { getByText } = render(<OpenQuestionsModal {...props} />);
+  const { getByText } = render(<OpenQuestionsModal {...props} />, {
+    wrapper: StaticRouter,
+  });
   expect(getByText('Your Open Questions', { selector: 'h3' })).toBeVisible();
 });
 
 it('renders default values into text inputs', () => {
   const { getByLabelText } = render(
     <OpenQuestionsModal {...props} questions={['1', '2', '3', '4']} />,
+    { wrapper: StaticRouter },
   );
   expect(getByLabelText(/open question 1/i)).toHaveValue('1');
   expect(getByLabelText(/open question 2/i)).toHaveValue('2');
@@ -30,9 +33,8 @@ describe('triggers the save function', () => {
   const testSave = async (questions: { [id: string]: string }) => {
     jestFn = jest.fn();
     const { getByLabelText, getByText } = render(
-      <MemoryRouter>
-        <OpenQuestionsModal {...props} onSave={jestFn} />
-      </MemoryRouter>,
+      <OpenQuestionsModal {...props} onSave={jestFn} />,
+      { wrapper: MemoryRouter },
     );
 
     const answerQuestion = (index: number) =>
@@ -75,6 +77,7 @@ it('disables the form elements while submitting', async () => {
     });
   const { getByText } = render(
     <OpenQuestionsModal {...props} onSave={handleSave} />,
+    { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));

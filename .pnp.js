@@ -9143,6 +9143,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["expect-playwright", "npm:0.2.5"],
             ["fast-check", "npm:2.5.0"],
+            ["fast-deep-equal", "npm:3.1.3"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
@@ -9226,6 +9227,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["expect-playwright", "npm:0.2.5"],
             ["fast-check", "npm:2.5.0"],
+            ["fast-deep-equal", "npm:3.1.3"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
@@ -9304,6 +9306,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["expect-playwright", "npm:0.2.5"],
             ["fast-check", "npm:2.5.0"],
+            ["fast-deep-equal", "npm:3.1.3"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
@@ -9385,6 +9388,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:10.1.0"],
             ["expect-playwright", "npm:0.2.5"],
             ["fast-check", "npm:2.5.0"],
+            ["fast-deep-equal", "npm:3.1.3"],
             ["history", "npm:4.10.1"],
             ["jest-emotion", "npm:10.0.32"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
@@ -25655,6 +25659,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/fast-deep-equal-npm-3.1.1-cbd83be021-38fe57c5ea.zip/node_modules/fast-deep-equal/",
           "packageDependencies": [
             ["fast-deep-equal", "npm:3.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.1.3", {
+          "packageLocation": "./.yarn/cache/fast-deep-equal-npm-3.1.3-790edcfcf5-451526766b.zip/node_modules/fast-deep-equal/",
+          "packageDependencies": [
+            ["fast-deep-equal", "npm:3.1.3"]
           ],
           "linkType": "HARD",
         }]

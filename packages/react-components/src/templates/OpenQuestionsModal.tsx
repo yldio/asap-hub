@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import css from '@emotion/css';
+import deepEqual from 'fast-deep-equal';
 
 import { LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
@@ -28,6 +29,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
   return (
     <EditModal
       title="Your Open Questions"
+      dirty={!deepEqual(newQuestions, questions)}
       backHref={backHref}
       onSave={() =>
         onSave({

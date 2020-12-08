@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import PersonalInfoModal from '../PersonalInfoModal';
@@ -11,7 +11,9 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
   backHref: '/wrong',
 };
 it('renders the title', () => {
-  const { getByText } = render(<PersonalInfoModal {...props} />);
+  const { getByText } = render(<PersonalInfoModal {...props} />, {
+    wrapper: StaticRouter,
+  });
   expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
 });
 
@@ -25,6 +27,7 @@ it('renders default values into text inputs', () => {
       jobTitle="jobTitle"
       institution="institution"
     />,
+    { wrapper: StaticRouter },
   );
   expect(queryAllByRole('textbox').map((input) => input.getAttribute('value')))
     .toMatchInlineSnapshot(`
@@ -42,19 +45,17 @@ it('renders default values into text inputs', () => {
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(
-    <MemoryRouter>
-      <PersonalInfoModal
-        {...props}
-        firstName="firstName"
-        lastName="lastName"
-        location="location"
-        jobTitle="jobTitle"
-        institution="institution"
-        degree="BA"
-        onSave={jestFn}
-      />
-      ,
-    </MemoryRouter>,
+    <PersonalInfoModal
+      {...props}
+      firstName="firstName"
+      lastName="lastName"
+      location="location"
+      jobTitle="jobTitle"
+      institution="institution"
+      degree="BA"
+      onSave={jestFn}
+    />,
+    { wrapper: MemoryRouter },
   );
 
   userEvent.click(getByText('Save'));
@@ -80,6 +81,7 @@ it('disables the form elements while submitting', async () => {
     });
   const { getByText } = render(
     <PersonalInfoModal {...props} onSave={handleSave} />,
+    { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));

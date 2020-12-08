@@ -1,14 +1,4 @@
 import { useState, useEffect, DependencyList } from 'react';
-import { useLocation } from 'react-router-dom';
-
-export const useHasRouter = () => {
-  try {
-    useLocation();
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 export const useGifReplay = (
   url: string,

@@ -8,7 +8,7 @@ export type TeamRole =
   | 'Project Manager'
   | 'Key Personnel';
 
-export type TeamTool = { name: string; description: string; url: string };
+export type TeamTool = { name: string; description?: string; url: string };
 
 export interface TeamCreateRequest {
   displayName: string;

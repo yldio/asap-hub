@@ -6,8 +6,7 @@ import { handler } from '../../../src/handlers/teams/update';
 import { buildGraphQLQueryFetchTeam } from '../../../src/controllers/teams';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import * as fetchFixtures from './fetch-by-id.fixtures';
-import { updateTeamResponse } from './update.fixtures';
+import * as fixtures from './update.fixtures';
 import decodeToken from '../../../src/utils/validate-token';
 
 jest.mock('../../../src/utils/validate-token');
@@ -156,21 +155,21 @@ describe('PATCH /teams/{id}', () => {
     expect(result.statusCode).toStrictEqual(404);
   });
 
-  test('returns 200 when team exists', async () => {
+  test('returns 200 when team exists - removes', async () => {
     nock(config.baseUrl)
       .patch(`/api/content/${config.appName}/teams/team-id-1`, {
         tools: { iv: [] },
       })
-      .reply(200, updateTeamResponse) // response is not used
+      .reply(200, fixtures.getUpdateTeamResponse()) // response is not used
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchTeam('team-id-1'),
       })
-      .reply(200, fetchFixtures.graphQlTeamResponse)
+      .reply(200, fixtures.getGraphQlTeamResponse())
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
       })
-      .reply(200, fetchFixtures.usersResponseTeam1);
+      .reply(200, fixtures.usersResponseTeam1);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -189,6 +188,47 @@ describe('PATCH /teams/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(fetchFixtures.expectation);
+    expect(body).toStrictEqual(fixtures.expectation);
+  });
+
+  test('returns 200 when team exists - updates', async () => {
+    const tools = [
+      {
+        url: 'https://example.com',
+        name: 'good link',
+      },
+    ];
+
+    nock(config.baseUrl)
+      .patch(`/api/content/${config.appName}/teams/team-id-1`, {
+        tools: { iv: tools },
+      })
+      .reply(200, fixtures.getUpdateTeamResponse(tools)) // response is not used
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchTeam('team-id-1'),
+      })
+      .reply(200, fixtures.getGraphQlTeamResponse(tools))
+      .get(`/api/content/${config.appName}/users`)
+      .query({
+        $filter: "data/teams/iv/id eq 'team-id-1'",
+      })
+      .reply(200, fixtures.usersResponseTeam1);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'team-id-1',
+        },
+        body: { tools },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual({ ...fixtures.expectation, tools });
   });
 });

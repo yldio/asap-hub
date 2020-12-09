@@ -10,7 +10,7 @@ interface Team<T = string> {
   skills: string[];
   tools?: {
     url: string;
-    description: string;
+    description?: string;
     name: string;
   }[];
   outputs: T[];

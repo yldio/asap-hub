@@ -39,7 +39,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
       sharedResearchHref={SHARED_RESEARCH_PATH}
       networkHref={`${NETWORK_PATH}/${TEAMS_PATH}`}
       newsAndEventsHref={NEWS_AND_EVENTS_PATH}
-      userProfileHref={`/${NETWORK_PATH}/users/${user.id}`}
+      userProfileHref={`${NETWORK_PATH}/users/${user.id}`}
       teams={user.teams.map(({ id, displayName = '' }) => ({
         name: displayName,
         href: `${NETWORK_PATH}/${TEAMS_PATH}/${id}`,

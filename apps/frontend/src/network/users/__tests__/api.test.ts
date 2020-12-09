@@ -86,7 +86,7 @@ describe('patchUser', () => {
 });
 
 describe('postUserAvatar', () => {
-  it('makes an authorized PATCH request for the user id', async () => {
+  it('makes an authorized POST request for the user id', async () => {
     const post: UserAvatarPostRequest = { avatar: '123' };
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .post('/users/42/avatar')
@@ -96,7 +96,7 @@ describe('postUserAvatar', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  it('passes the patch object in the body', async () => {
+  it('passes the post object in the body', async () => {
     const post = { avatar: '123' };
     nock(API_BASE_URL).post('/users/42/avatar', post).reply(200, {});
 
@@ -121,7 +121,7 @@ describe('postUserAvatar', () => {
     await expect(
       postUserAvatar('42', post, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to update user with id 42. Expected status 2xx. Received status 500."`,
+      `"Failed to update avatar for user with id 42. Expected status 2xx. Received status 500."`,
     );
   });
 });

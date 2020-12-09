@@ -6,7 +6,7 @@ import {
   useHistory,
   Redirect,
 } from 'react-router-dom';
-import { NetworkPage } from '@asap-hub/react-components';
+import { NetworkPage, Loading } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import ErrorBoundary from '../errors/ErrorBoundary';
@@ -66,7 +66,7 @@ const Network: React.FC<{}> = () => {
           searchQuery={searchQuery}
         >
           <ErrorBoundary>
-            <Suspense fallback="Loading...">
+            <Suspense fallback={<Loading />}>
               <UserList filters={filters} searchQuery={searchQueryDebounce} />
             </Suspense>
           </ErrorBoundary>
@@ -83,7 +83,7 @@ const Network: React.FC<{}> = () => {
           searchQuery={searchQuery}
         >
           <ErrorBoundary>
-            <Suspense fallback="Loading...">
+            <Suspense fallback={<Loading />}>
               <TeamList filters={filters} searchQuery={searchQueryDebounce} />
             </Suspense>
           </ErrorBoundary>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth0 } from '@asap-hub/react-context';
-import { Paragraph } from '@asap-hub/react-components';
+import { Loading } from '@asap-hub/react-components';
 
 const Signin = React.lazy(() => import('./Signin'));
 
@@ -11,8 +11,7 @@ const CheckAuth: React.FC<CheckAuthProps> = ({ children }) => {
   const { loading, isAuthenticated } = useAuth0();
 
   if (loading) {
-    // TODO proper loading page here and everywhere else
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
 
   if (!isAuthenticated) {

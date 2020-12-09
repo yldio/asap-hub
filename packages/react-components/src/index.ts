@@ -39,6 +39,7 @@ export {
   LabeledPasswordField,
   LabeledTextArea,
   LabeledTextField,
+  Loading,
   MenuButton,
   Modal,
   OrcidSigninButton,

@@ -7,6 +7,7 @@ import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
+import { Loading } from '../molecules';
 
 const UserMenuButton = React.lazy(
   () =>
@@ -184,7 +185,7 @@ const Layout: React.FC<LayoutProps> = ({
         />
       </div>
       <div css={userButtonStyles}>
-        <React.Suspense fallback="Loading...">
+        <React.Suspense fallback={<Loading />}>
           <UserMenuButton
             onClick={() => setMenuShown(!menuShown)}
             open={menuShown}
@@ -196,7 +197,7 @@ const Layout: React.FC<LayoutProps> = ({
         <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
       </div>
       <div css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}>
-        <React.Suspense fallback="Loading...">
+        <React.Suspense fallback={<Loading />}>
           <MainNavigation
             discoverAsapHref={discoverAsapHref}
             sharedResearchHref={sharedResearchHref}
@@ -213,7 +214,7 @@ const Layout: React.FC<LayoutProps> = ({
           menuShown && userMenuShownStyles,
         ]}
       >
-        <React.Suspense fallback="Loading...">
+        <React.Suspense fallback={<Loading />}>
           <UserNavigation {...userNavProps} />
         </React.Suspense>
       </div>

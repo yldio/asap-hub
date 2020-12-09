@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Paragraph, NetworkPeople } from '@asap-hub/react-components';
+import { NetworkPeople, Loading } from '@asap-hub/react-components';
 import { join } from 'path';
 import { UserResponse } from '@asap-hub/model';
 
@@ -31,7 +31,7 @@ const ProfileList: React.FC<ProfileListProps> = ({
   );
 
   if (result.loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
 
   const users = result.data.items.map((user: UserResponse) => ({

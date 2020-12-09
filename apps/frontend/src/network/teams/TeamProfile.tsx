@@ -1,6 +1,10 @@
 import React, { Suspense, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
+import {
+  TeamProfilePage,
+  NotFoundPage,
+  Loading,
+} from '@asap-hub/react-components';
 import { join } from 'path';
 
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
@@ -43,7 +47,7 @@ const TeamProfile: React.FC<{}> = () => {
     return (
       <TeamProfilePage {...teamPageProps}>
         <ErrorBoundary>
-          <Suspense fallback="Loading...">
+          <Suspense fallback={<Loading />}>
             <Switch>
               <Route path={`${path}/about`}>
                 <About team={team} />

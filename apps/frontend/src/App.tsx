@@ -4,6 +4,7 @@ import {
   Layout,
   BasicLayout,
   mailToFeedback,
+  Loading,
 } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
@@ -68,7 +69,7 @@ const App: React.FC<{}> = () => {
       <AuthProvider>
         <Router history={history}>
           <ErrorBoundary>
-            <Suspense fallback="Loading...">
+            <Suspense fallback={<Loading />}>
               <Switch>
                 <Route path="/welcome">
                   <Welcome />
@@ -85,7 +86,7 @@ const App: React.FC<{}> = () => {
                   <CheckAuth>
                     <ConfiguredLayout>
                       <ErrorBoundary>
-                        <Suspense fallback="Loading...">
+                        <Suspense fallback={<Loading />}>
                           <GuardedApp />
                         </Suspense>
                       </ErrorBoundary>

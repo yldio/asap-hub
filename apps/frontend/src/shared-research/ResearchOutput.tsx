@@ -2,8 +2,8 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import {
   ResearchOutputPage,
-  Paragraph,
   NotFoundPage,
+  Loading,
 } from '@asap-hub/react-components';
 import { useResearchOutputById } from '../api';
 import { NETWORK_PATH } from '../routes';
@@ -14,7 +14,7 @@ const ResearchOutput: React.FC = () => {
   const { loading, data: researchOutputData } = useResearchOutputById(id);
 
   if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
 
   if (researchOutputData) {

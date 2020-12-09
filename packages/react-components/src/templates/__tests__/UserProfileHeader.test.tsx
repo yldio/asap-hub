@@ -111,6 +111,29 @@ describe('an edit button', () => {
   });
 });
 
+it('is rendered for avatar', () => {
+  const { getByLabelText } = render(
+    <UserProfileHeader
+      {...boilerplateProps}
+      onImageSelect={(file: File) => {}}
+    />,
+  );
+  expect(getByLabelText(/edit.+avatar/i)).toBeVisible();
+  expect(getByLabelText(/upload.+avatar/i)).not.toHaveAttribute('disabled');
+});
+
+it('is disabled for avatar (REGRESSION)', () => {
+  disable('EDIT_PROFILE_AVATAR');
+  const { getByLabelText } = render(
+    <UserProfileHeader
+      {...boilerplateProps}
+      onImageSelect={(file: File) => {}}
+    />,
+  );
+  expect(getByLabelText(/edit.+avatar/i)).toBeVisible();
+  expect(getByLabelText(/upload.+avatar/i)).toHaveAttribute('disabled');
+});
+
 it('generates staff profile without contact and tabs', () => {
   const { queryByText } = render(
     <UserProfileHeader

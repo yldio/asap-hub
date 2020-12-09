@@ -3,7 +3,8 @@ export type Flag =
   | 'EDIT_PROFILE_SKILLS'
   | 'EDIT_PROFILE_QUESTIONS'
   | 'EDIT_PROFILE_WORKS'
-  | 'EDIT_PROFILE_REST';
+  | 'EDIT_PROFILE_REST'
+  | 'EDIT_PROFILE_AVATAR';
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:

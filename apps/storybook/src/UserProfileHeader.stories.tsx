@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import { date, text, number, select } from '@storybook/addon-knobs';
+import { date, text, number, select, boolean } from '@storybook/addon-knobs';
 import { UserProfileHeader } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './layout';
 
@@ -54,5 +54,7 @@ export const Editable = () => (
     {...commonProps()}
     editPersonalInfoHref="/other"
     editContactInfoHref="/other"
+    onImageSelect={() => {}}
+    avatarSaving={boolean('Avatar Saving', false)}
   />
 );

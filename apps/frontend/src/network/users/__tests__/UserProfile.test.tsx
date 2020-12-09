@@ -5,20 +5,31 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
 import userEvent from '@testing-library/user-event';
-
+import { readFileSync } from 'fs';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+import { join } from 'path';
+import imageCompression from 'browser-image-compression';
+
 import UserProfile from '../UserProfile';
-import { getUser, patchUser } from '../api';
+import { getUser, patchUser, postUserAvatar } from '../api';
 import { refreshUserState } from '../state';
 
 jest.mock('../api');
+jest.mock('browser-image-compression');
+const imageCompressionMock = imageCompression as jest.MockedFunction<
+  typeof imageCompression
+>;
 
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
+  typeof postUserAvatar
+>;
 const standardMockPatchUser = mockPatchUser.getMockImplementation() as typeof patchUser;
+const standardMockPostUserAvatar = mockPostUserAvatar.getMockImplementation() as typeof postUserAvatar;
 
 const renderUserProfile = async (
   userResponse = createUserResponse(),
@@ -29,6 +40,10 @@ const renderUserProfile = async (
   });
   mockPatchUser.mockImplementation(async (id, ...args) => {
     if (id === userResponse.id) return standardMockPatchUser(id, ...args);
+    throw new Error('404');
+  });
+  mockPostUserAvatar.mockImplementation(async (id, ...args) => {
+    if (id === userResponse.id) return standardMockPostUserAvatar(id, ...args);
     throw new Error('404');
   });
 
@@ -178,6 +193,11 @@ describe('a header edit button', () => {
     expect(await findByLabelText(/edit.+contact/i)).toBeVisible();
   });
 
+  it('is rendered for avatar on your own profile', async () => {
+    const { findByLabelText } = await renderUserProfile();
+    expect(await findByLabelText(/edit.+avatar/i)).toBeVisible();
+  });
+
   it('can change personal info', async () => {
     const userProfile: UserResponse = {
       ...createUserResponse(),
@@ -232,6 +252,36 @@ describe('a header edit button', () => {
         contactEmail: 'contact@example.comm',
       }),
       expect.any(String),
+    );
+  });
+
+  it('can change avatar', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+      avatarUrl: 'https://placekitten.com/200/300',
+      id: '42',
+    };
+    const { findByLabelText } = await renderUserProfile(userProfile);
+    imageCompressionMock.mockImplementationOnce((file) =>
+      Promise.resolve(file),
+    );
+    imageCompressionMock.getDataUrlFromFile = jest.requireActual(
+      'browser-image-compression',
+    ).getDataUrlFromFile;
+    const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));
+    const file = new File([new Uint8Array(fileBuffer)], 'jpeg.jpg', {
+      type: 'image/jpeg',
+    });
+
+    userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
+    await waitFor(() =>
+      expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
+        '42',
+        expect.objectContaining({
+          avatar: `data:image/jpeg;base64,${fileBuffer.toString('base64')}`,
+        }),
+        expect.any(String),
+      ),
     );
   });
 });

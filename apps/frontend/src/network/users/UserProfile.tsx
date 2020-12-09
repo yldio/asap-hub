@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, ComponentProps } from 'react';
+import React, { Suspense, useEffect, ComponentProps, useState } from 'react';
 import {
   Switch,
   Route,
@@ -10,12 +10,13 @@ import {
 import { join } from 'path';
 import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
+import imageCompression from 'browser-image-compression';
 
 import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
 import { DISCOVER_PATH, NETWORK_PATH } from '@asap-hub/frontend/src/routes';
 import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
 import { TEAMS_PATH } from '../routes';
-import { useUserById } from './state';
+import { useUserById, usePatchUserAvatarById } from './state';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -54,6 +55,8 @@ const User: React.FC<{}> = () => {
 
   const user = useUserById(id);
   const currentUser = useCurrentUser();
+  const patchUserAvatar = usePatchUserAvatarById(id);
+  const [avatarSaving, setAvatarSaving] = useState(false);
 
   const isOwnProfile = currentUser?.id === user?.id;
 
@@ -85,6 +88,19 @@ const User: React.FC<{}> = () => {
         isOwnProfile && tab
           ? join(url, tab, EDIT_CONTACT_INFO_PATH)
           : undefined,
+      onImageSelect:
+        currentUser?.id === id && tab
+          ? (file: File) => {
+              setAvatarSaving(true);
+              return imageCompression(file, { maxSizeMB: 2 })
+                .then((compressedFile) =>
+                  imageCompression.getDataUrlFromFile(compressedFile),
+                )
+                .then((encodedFile) => patchUserAvatar(encodedFile))
+                .finally(() => setAvatarSaving(false));
+            }
+          : undefined,
+      avatarSaving,
     };
 
     return (

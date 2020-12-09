@@ -1,4 +1,8 @@
-import { UserResponse, UserPatchRequest } from '@asap-hub/model';
+import {
+  UserResponse,
+  UserPatchRequest,
+  UserAvatarPostRequest,
+} from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
 
@@ -19,6 +23,7 @@ export const getUser = async (
   }
   return resp.json();
 };
+
 export const patchUser = async (
   id: string,
   patch: UserPatchRequest,
@@ -26,12 +31,36 @@ export const patchUser = async (
 ): Promise<UserResponse> => {
   const resp = await fetch(`${API_BASE_URL}/users/${id}`, {
     method: 'PATCH',
-    headers: { authorization },
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+    },
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {
     throw new Error(
       `Failed to update user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const postUserAvatar = async (
+  id: string,
+  post: UserAvatarPostRequest,
+  authorization: string,
+): Promise<UserResponse> => {
+  const resp = await fetch(`${API_BASE_URL}/users/${id}/avatar`, {
+    method: 'POST',
+    headers: {
+      authorization,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(post),
+  });
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to update avatar for user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

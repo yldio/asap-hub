@@ -128,4 +128,8 @@ export interface UserPatchRequest {
   teams?: Pick<UserTeam, 'id' | 'approach' | 'responsibilities'>[];
 }
 
+export interface UserAvatarPostRequest {
+  avatar: string;
+}
+
 export type ListUserResponse = ListResponse<UserResponse>;

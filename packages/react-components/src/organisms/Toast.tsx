@@ -85,9 +85,9 @@ const Toast: React.FC<ToastProps> = ({ children, onClose }) => (
         {crossIcon}
       </button>
     )}
-    <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
+    <div css={wrapStyles}>
       <div css={alertIconStyles}>{alertIcon}</div>
-      <div css={wrapStyles}>
+      <div css={[wrapStyles, !onClose && { justifyContent: 'center' }]}>
         <Paragraph>{children}</Paragraph>
         {onClose && <span css={crossPlaceholderStyles}> </span>}
       </div>

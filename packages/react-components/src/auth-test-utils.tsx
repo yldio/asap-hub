@@ -17,6 +17,10 @@ const notReady = (method: string) => () => {
   throw new Error(`Auth0 test fixture loading, not ready for ${method}`);
 };
 
+/**
+ * You probably don't want to use this in the frontend,
+ * which has its own recoil-integrated auth test utils.
+ */
 export const Auth0Provider: React.FC<{
   readonly children: React.ReactNode;
 }> = ({ children }) => {

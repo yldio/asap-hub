@@ -4,7 +4,7 @@ import {
   useSetRecoilState,
   useRecoilValue,
 } from 'recoil';
-import { authorizationState } from '@asap-hub/frontend/src/auth';
+import { authorizationState } from '@asap-hub/frontend/src/auth/state';
 import { UserResponse, UserPatchRequest } from '@asap-hub/model';
 
 import { getUser, patchUser, postUserAvatar } from './api';

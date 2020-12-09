@@ -1,53 +1,34 @@
 import React, { Suspense, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
 import {
   Layout,
   BasicLayout,
-  NotFoundPage,
   mailToFeedback,
 } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
 import history from './history';
-import { AuthProvider, CheckAuth, Logout } from './auth';
 import ErrorBoundary from './errors/ErrorBoundary';
-import { DISCOVER_PATH, NETWORK_PATH, SHARED_RESEARCH_PATH } from './routes';
+import {
+  DISCOVER_PATH,
+  NETWORK_PATH,
+  SHARED_RESEARCH_PATH,
+  NEWS_AND_EVENTS_PATH,
+  LOGOUT_PATH,
+} from './routes';
 import { TEAMS_PATH } from './network/routes';
+import AuthProvider from './auth/AuthProvider';
+import CheckAuth from './auth/CheckAuth';
 
-const loadNewsAndEvents = () =>
-  import(/* webpackChunkName: "news-and-events" */ './news/Routes');
-const loadNetwork = () =>
-  import(/* webpackChunkName: "network" */ './network/Network');
-const loadSharedResearch = () =>
-  import(/* webpackChunkName: "shared-research" */ './shared-research/Routes');
-const loadDashboard = () =>
-  import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
 const loadContent = () =>
   import(/* webpackChunkName: "content" */ './content/Content');
-const loadDiscover = () =>
-  import(/* webpackChunkName: "discover" */ './discover/Discover');
-const NewsAndEvents = React.lazy(loadNewsAndEvents);
-const Network = React.lazy(loadNetwork);
-const SharedResearch = React.lazy(loadSharedResearch);
-const Dashboard = React.lazy(loadDashboard);
+const loadGuardedApp = () =>
+  import(/* webpackChunkName: "guarded-app" */ './GuardedApp');
 const Welcome = React.lazy(loadWelcome);
 const Content = React.lazy(loadContent);
-const Discover = React.lazy(loadDiscover);
-
-const Prefetch: React.FC<{}> = () => {
-  useEffect(() => {
-    // order by the likelyhood of user navigating there
-    loadDashboard()
-      .then(loadNewsAndEvents)
-      .then(loadNetwork)
-      .then(loadSharedResearch)
-      .then(loadDiscover);
-  }, []);
-  return null;
-};
+const GuardedApp = React.lazy(loadGuardedApp);
 
 const ConfiguredLayout: React.FC = ({ children }) => {
   const { isAuthenticated } = useAuth0();
@@ -57,15 +38,15 @@ const ConfiguredLayout: React.FC = ({ children }) => {
       discoverAsapHref={DISCOVER_PATH}
       sharedResearchHref={SHARED_RESEARCH_PATH}
       networkHref={`${NETWORK_PATH}/${TEAMS_PATH}`}
-      newsAndEventsHref="/news-and-events"
-      userProfileHref={`/network/users/${user.id}`}
+      newsAndEventsHref={NEWS_AND_EVENTS_PATH}
+      userProfileHref={`/${NETWORK_PATH}/users/${user.id}`}
       teams={user.teams.map(({ id, displayName = '' }) => ({
         name: displayName,
         href: `${NETWORK_PATH}/${TEAMS_PATH}/${id}`,
       }))}
       settingsHref="/settings"
       feedbackHref={mailToFeedback}
-      logoutHref="/logout"
+      logoutHref={LOGOUT_PATH}
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"
       aboutHref="https://www.parkinsonsroadmap.org/"
@@ -78,65 +59,44 @@ const ConfiguredLayout: React.FC = ({ children }) => {
 };
 
 const App: React.FC<{}> = () => {
+  useEffect(() => {
+    loadGuardedApp().then(loadContent).then(loadWelcome);
+  }, []);
+
   return (
     <ErrorBoundary>
-      <RecoilRoot>
-        <AuthProvider>
-          <Router history={history}>
-            <ErrorBoundary>
-              <Suspense fallback="Loading...">
-                <Switch>
-                  <Route path="/welcome">
-                    <Welcome />
-                  </Route>
+      <AuthProvider>
+        <Router history={history}>
+          <ErrorBoundary>
+            <Suspense fallback="Loading...">
+              <Switch>
+                <Route path="/welcome">
+                  <Welcome />
+                </Route>
 
-                  <Route exact path="/terms-and-conditions">
-                    <Content layoutComponent={ConfiguredLayout} />
-                  </Route>
-                  <Route exact path="/privacy-policy">
-                    <Content layoutComponent={ConfiguredLayout} />
-                  </Route>
+                <Route exact path="/terms-and-conditions">
+                  <Content layoutComponent={ConfiguredLayout} />
+                </Route>
+                <Route exact path="/privacy-policy">
+                  <Content layoutComponent={ConfiguredLayout} />
+                </Route>
 
-                  <Route>
-                    <CheckAuth>
-                      <ConfiguredLayout>
-                        <ErrorBoundary>
-                          <Suspense fallback="Loading...">
-                            <Prefetch />
-                            <Switch>
-                              <Route exact path="/">
-                                <Dashboard />
-                              </Route>
-                              <Route path="/logout">
-                                <Logout />
-                              </Route>
-                              <Route path={DISCOVER_PATH}>
-                                <Discover />
-                              </Route>
-                              <Route path="/news-and-events">
-                                <NewsAndEvents />
-                              </Route>
-                              <Route path={NETWORK_PATH}>
-                                <Network />
-                              </Route>
-                              <Route path="/shared-research">
-                                <SharedResearch />
-                              </Route>
-                              <Route>
-                                <NotFoundPage />
-                              </Route>
-                            </Switch>
-                          </Suspense>
-                        </ErrorBoundary>
-                      </ConfiguredLayout>
-                    </CheckAuth>
-                  </Route>
-                </Switch>
-              </Suspense>
-            </ErrorBoundary>
-          </Router>
-        </AuthProvider>
-      </RecoilRoot>
+                <Route>
+                  <CheckAuth>
+                    <ConfiguredLayout>
+                      <ErrorBoundary>
+                        <Suspense fallback="Loading...">
+                          <GuardedApp />
+                        </Suspense>
+                      </ErrorBoundary>
+                    </ConfiguredLayout>
+                  </CheckAuth>
+                </Route>
+              </Switch>
+            </Suspense>
+          </ErrorBoundary>
+        </Router>
+      </AuthProvider>
     </ErrorBoundary>
   );
 };

@@ -1,9 +1,8 @@
-// Copied from the Auth0 React quickstart, added some types, checks, and recoil integration
+// Copied from the Auth0 React quickstart, added some types and checks
 /* istanbul ignore file */
 /* eslint-disable no-shadow */
 
 import React, { useState, useEffect } from 'react';
-import { useSetRecoilState, useResetRecoilState } from 'recoil';
 import { Auth0User, Auth0 } from '@asap-hub/auth';
 import { Auth0Context } from '@asap-hub/react-context';
 import createAuth0Client, {
@@ -11,8 +10,6 @@ import createAuth0Client, {
   Auth0Client,
   RedirectLoginResult,
 } from '@auth0/auth0-spa-js';
-
-import { auth0State } from './state';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
@@ -31,9 +28,6 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
   const [auth0Client, setAuth0Client] = useState<Auth0Client>();
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);
-
-  const setAuth0 = useSetRecoilState(auth0State);
-  const resetAuth0 = useResetRecoilState(auth0State);
 
   useEffect(() => {
     const initAuth0 = async () => {
@@ -123,10 +117,6 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     ),
     logout: getSafeAuth0ClientProperty('logout').bind(auth0Client),
   };
-  useEffect(() => {
-    setAuth0(auth0);
-    return () => resetAuth0();
-  }, [auth0, setAuth0, resetAuth0]);
 
   return (
     <Auth0Context.Provider value={auth0}>{children}</Auth0Context.Provider>

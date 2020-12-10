@@ -1,6 +1,11 @@
+interface MailOptions {
+  subject?: string;
+  body?: string;
+}
+
 export const createMailTo = (
   email: string,
-  { subject, body }: { subject?: string; body?: string } = {},
+  { subject, body }: MailOptions = {},
 ): string => {
   const mailTo = new URL(
     `mailto:${email.split('@').map(encodeURIComponent).join('@')}`,
@@ -12,14 +17,20 @@ export const createMailTo = (
   return mailTo.toString();
 };
 
-export const mailToFeedback = createMailTo('info@asap.science', {
-  subject: 'ASAP Hub: Hub Feedback',
-});
+export const mailToFeedback = (overrides?: MailOptions) =>
+  createMailTo('info@asap.science', {
+    subject: 'ASAP Hub: Hub Feedback',
+    ...overrides,
+  });
 
-export const mailToGrants = createMailTo('grants@parkinsonsroadmap.org', {
-  subject: 'ASAP Hub: Grant support',
-});
+export const mailToGrants = (overrides?: MailOptions) =>
+  createMailTo('grants@parkinsonsroadmap.org', {
+    subject: 'ASAP Hub: Grant support',
+    ...overrides,
+  });
 
-export const mailToSupport = createMailTo('techsupport@asap.science', {
-  subject: 'ASAP Hub: Tech support',
-});
+export const mailToSupport = (overrides?: MailOptions) =>
+  createMailTo('techsupport@asap.science', {
+    subject: 'ASAP Hub: Tech support',
+    ...overrides,
+  });

@@ -1,89 +1,93 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import css from '@emotion/css';
 import { serializeError } from 'serialize-error';
 
-import { Card, Paragraph, Caption } from '../atoms';
-import { crossIcon } from '../icons';
-import { perRem, lineHeight } from '../pixels';
-import { ember } from '../colors';
+import { Card, Link, Button } from '../atoms';
+import { alertIcon } from '../icons';
+import { perRem } from '../pixels';
+import { useHistory } from 'react-router-dom';
+import { mailToSupport } from '../mail';
 
 const styles = css({
   boxSizing: 'border-box',
   maxHeight: '100%',
-  padding: `${12 / perRem}em`,
+  padding: `${24 / perRem}em`,
+  display: 'grid',
+  gridColumnGap: `${12 / perRem}em`,
+  gridTemplateColumns: 'min-content auto',
 
   overflowY: 'auto',
 });
-const iconStyles = css({
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
-  display: 'grid',
-  justifyItems: 'center',
-  alignItems: 'center',
 
-  svg: {
-    stroke: ember.rgb,
-  },
-});
-const errorInfoStyles = css({
-  fontSize: 'smaller',
+interface ErrorProps {
+  readonly error: Error;
 
-  overflowX: 'hidden',
-  wordBreak: 'break-all',
-
-  userSelect: 'all',
-  // inline (without -block) allows clicking between lines, bypassing user-select
-  display: 'inline-block',
-});
-
-interface ErrorCardProps {
-  children?: React.ReactNode;
-  error?: Error;
+  readonly description?: string;
 }
+
+interface TitleDescriptionProps {
+  readonly error?: Error;
+  readonly title?: string;
+  readonly description: string;
+}
+
+const mailto = (error: Error) =>
+  mailToSupport({
+    subject: 'Error message on the ASAP Hub',
+    body: `Dear ASAP Support,
+I've come across this error and it would be great if you could address it. Thank you!
+
+Details about the issue (please don't delete, this will help our engineers solve the issue)
+${btoa(
+  JSON.stringify(
+    {
+      error: serializeError(error),
+    },
+    null,
+    2,
+  ),
+)}`,
+  });
+
+type ErrorCardProps = (
+  | ErrorProps
+  | TitleDescriptionProps
+  | (ErrorProps & TitleDescriptionProps)
+) & {
+  readonly title?: string;
+  readonly refreshLink?: boolean;
+};
+
 const ErrorCard: React.FC<ErrorCardProps> = ({
-  children = 'Unknown Error',
   error,
+  title,
+  description,
+  refreshLink = false,
 }) => {
-  const [headHtml, setHeadHtml] = useState<string>();
-  useEffect(() => setHeadHtml(document.head.innerHTML), [error]);
-
-  const [time, setTime] = useState<Date>();
-  useEffect(() => setTime(new Date()), [error]);
-
+  const history = useHistory();
   return (
     <Card padding={false} accent="red">
       <div css={styles}>
-        <Paragraph primary>
-          <span css={{ display: 'flex' }}>
-            <span css={iconStyles}>{crossIcon}</span>
-            {error?.message ?? children}
-          </span>
-        </Paragraph>
-        {error && (
-          <>
-            <Paragraph>
-              Should you ask for support via the menu, we would be glad if you
-              could paste the following info to help us track down the problem:
-            </Paragraph>
-            <figure css={{ margin: 0 }}>
-              <Caption>Error info for nerds</Caption>
-              <code css={errorInfoStyles}>
-                {btoa(
-                  JSON.stringify(
-                    {
-                      error: serializeError(error),
-                      time,
-                      headHtml,
-                    },
-                    null,
-                    2,
-                  ),
-                )}
-              </code>
-            </figure>
-          </>
-        )}
+        {alertIcon}
+        <span>
+          <b>{title ?? 'Something went wrong!'}</b> <br />
+          {description ?? error?.message}
+          {refreshLink && (
+            <>
+              {' '}
+              <Button linkStyle onClick={() => history.go(0)}>
+                Please reload the page
+              </Button>
+              .{' '}
+            </>
+          )}
+          {error && (
+            <span>
+              <br /> If the issue persists, you can{' '}
+              <Link href={mailto(error)}>contact support</Link>.
+            </span>
+          )}
+        </span>
       </div>
     </Card>
   );

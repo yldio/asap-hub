@@ -6,7 +6,7 @@ import ErrorCard from '../ErrorCard';
 jest.useFakeTimers('modern');
 
 it('renders a plain message', () => {
-  const { getByText } = render(<ErrorCard>oops</ErrorCard>);
+  const { getByText } = render(<ErrorCard title="oops" description="" />);
   expect(getByText('oops')).toBeVisible();
 });
 

@@ -79,7 +79,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
         </Paragraph>
         <Paragraph accent="lead">
           To assign a different team member as the Project Manager, please{' '}
-          <Link href={mailToSupport}>contact ASAP support</Link>.
+          <Link href={mailToSupport()}>contact ASAP support</Link>.
         </Paragraph>
       </Card>
     )}

@@ -5,8 +5,13 @@ import { config } from '@asap-hub/squidex';
 import { handler } from '../../../src/handlers/users/update-avatar';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import { body } from './update-avatar.fixtures';
-import { patchResponse } from './update.fixtures';
+import { buildGraphQLQueryFetchUser } from '../../../src/controllers/users';
+import {
+  body,
+  getUserGraphqlResponse,
+  patchResponse,
+  expectation,
+} from './update-avatar.fixtures';
 import decodeToken from '../../../src/utils/validate-token';
 
 jest.mock('../../../src/utils/validate-token');
@@ -244,15 +249,11 @@ describe('Update user avatar', () => {
       .patch(`/api/content/${config.appName}/users/userId`, {
         avatar: { iv: ['squidex-asset-id'] },
       })
-      .reply(200, {
-        ...patchResponse,
-        data: {
-          ...patchResponse.data,
-          avatar: {
-            iv: ['squidex-asset-id'],
-          },
-        },
-      });
+      .reply(200, patchResponse)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUser('userId'),
+      })
+      .reply(200, getUserGraphqlResponse);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -269,37 +270,6 @@ describe('Update user avatar', () => {
 
     const resBody = JSON.parse(result.body);
     expect(result.statusCode).toBe(200);
-    expect(resBody).toStrictEqual({
-      id: 'userId',
-      displayName: 'Cristiano Ronaldo',
-      createdDate: '2020-09-25T09:42:51.000Z',
-      lastModifiedDate: '2020-09-25T09:42:51.132Z',
-      email: 'cristiano@ronaldo.com',
-      firstName: 'Cristiano',
-      lastName: 'Ronaldo',
-      jobTitle: 'Junior',
-      institution: 'Dollar General Corporation',
-      teams: [
-        {
-          id: 'team-id-1',
-          displayName: 'Unknown',
-          role: 'Lead PI (Core Leadership)',
-          approach: 'Exact',
-          responsibilities: 'Make sure coverage is high',
-        },
-        {
-          id: 'team-id-3',
-          displayName: 'Unknown',
-          role: 'Collaborating PI',
-        },
-      ],
-      location: 'Zofilte',
-      orcid: '363-98-9330',
-      orcidWorks: [],
-      skills: [],
-      questions: [],
-      avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
-      role: 'Grantee',
-    });
+    expect(resBody).toStrictEqual(expectation);
   });
 });

@@ -65,7 +65,13 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <Frame>
+          <Frame
+            boundaryProps={{
+              description:
+                "We're sorry, we couldn't load the page due to an error.",
+              refreshLink: true,
+            }}
+          >
             <UserList filters={filters} searchQuery={searchQueryDebounce} />
           </Frame>
         </NetworkPage>
@@ -80,7 +86,13 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <Frame>
+          <Frame
+            boundaryProps={{
+              description:
+                "We're sorry, we couldn't load the page due to an error.",
+              refreshLink: true,
+            }}
+          >
             <TeamList filters={filters} searchQuery={searchQueryDebounce} />
           </Frame>
         </NetworkPage>

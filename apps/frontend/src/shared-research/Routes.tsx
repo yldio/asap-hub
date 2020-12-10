@@ -34,7 +34,13 @@ const SharedResearch: React.FC<{}> = () => {
           onChangeFilter={toggleFilter}
           filters={filters}
         >
-          <Frame>
+          <Frame
+            boundaryProps={{
+              description:
+                "We're sorry, we couldn't load the page due to an error.",
+              refreshLink: true,
+            }}
+          >
             <ResearchOutputList
               searchQuery={searchQueryDebounce}
               filters={filters}

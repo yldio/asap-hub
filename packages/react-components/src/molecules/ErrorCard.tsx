@@ -76,7 +76,11 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
           {refreshLink && (
             <>
               {' '}
-              <Button linkStyle theme={null} onClick={() => location.reload()}>
+              <Button
+                linkStyle
+                theme={null}
+                onClick={() => window.location.reload()}
+              >
                 Please reload the page
               </Button>
               .{' '}

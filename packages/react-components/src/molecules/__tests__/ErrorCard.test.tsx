@@ -6,8 +6,11 @@ import ErrorCard from '../ErrorCard';
 jest.useFakeTimers('modern');
 
 it('renders a plain message', () => {
-  const { getByText } = render(<ErrorCard title="oops" description="" />);
+  const { getByText } = render(
+    <ErrorCard title="oops" description="went wrong" />,
+  );
   expect(getByText('oops')).toBeVisible();
+  expect(getByText('went wrong')).toBeVisible();
 });
 
 describe('when passed an error', () => {
@@ -23,31 +26,31 @@ describe('when passed an error', () => {
   };
 
   it('renders the same error info for the same error', () => {
-    const { getByRole, rerender } = render(
+    const { container, rerender } = render(
       <ErrorCard error={makeDeterministicError()} />,
     );
-    const errorInfo1 = getByRole('figure').textContent;
+    const errorInfo1 = container.textContent;
 
     rerender(<ErrorCard error={makeDeterministicError()} />);
-    const errorInfo2 = getByRole('figure').textContent;
+    const errorInfo2 = container.textContent;
 
     expect(errorInfo2).toEqual(errorInfo1);
   });
 
-  it('includes the error name in the error info', () => {
-    const { getByRole, rerender } = render(
+  it('includes the error description', () => {
+    const { container, rerender } = render(
       <ErrorCard error={makeDeterministicError()} />,
     );
-    const errorInfo1 = getByRole('figure').textContent;
+    const errorInfo1 = container.textContent;
 
     rerender(
       <ErrorCard
         error={Object.assign(makeDeterministicError(), {
-          name: 'SpecialError',
+          message: 'Different error',
         })}
       />,
     );
-    const errorInfo2 = getByRole('figure').textContent;
+    const errorInfo2 = container.textContent;
 
     expect(errorInfo2).not.toEqual(errorInfo1);
   });
@@ -56,7 +59,7 @@ describe('when passed an error', () => {
     const { getByRole, rerender } = render(
       <ErrorCard error={makeDeterministicError()} />,
     );
-    const errorInfo1 = getByRole('figure').textContent;
+    const errorInfo1 = getByRole('link').getAttribute('href');
 
     rerender(
       <ErrorCard
@@ -65,36 +68,7 @@ describe('when passed an error', () => {
         })}
       />,
     );
-    const errorInfo2 = getByRole('figure').textContent;
-
-    expect(errorInfo2).not.toEqual(errorInfo1);
-  });
-
-  it('includes a timestamp in the error info', () => {
-    const { getByRole, rerender } = render(
-      <ErrorCard error={makeDeterministicError()} />,
-    );
-    const errorInfo1 = getByRole('figure').textContent;
-
-    jest.advanceTimersByTime(1000);
-    rerender(<ErrorCard error={makeDeterministicError()} />);
-    const errorInfo2 = getByRole('figure').textContent;
-
-    expect(errorInfo2).not.toEqual(errorInfo1);
-  });
-
-  it('includes the document head in the error info', () => {
-    const { getByRole, rerender } = render(
-      <ErrorCard error={makeDeterministicError()} />,
-    );
-    const errorInfo1 = getByRole('figure').textContent;
-
-    const extraHeadElement = document.head.appendChild(
-      document.createElement('style'),
-    );
-    rerender(<ErrorCard error={makeDeterministicError()} />);
-    extraHeadElement.remove();
-    const errorInfo2 = getByRole('figure').textContent;
+    const errorInfo2 = getByRole('link').getAttribute('href');
 
     expect(errorInfo2).not.toEqual(errorInfo1);
   });

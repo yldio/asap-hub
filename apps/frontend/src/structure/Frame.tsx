@@ -1,10 +1,14 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, ComponentProps } from 'react';
 import { Loading } from '@asap-hub/react-components';
 
 import ErrorBoundary from './ErrorBoundary';
 
-const Frame: React.FC<{}> = ({ children }) => (
-  <ErrorBoundary>
+type FrameProps = {
+  boundaryProps?: Omit<ComponentProps<typeof ErrorBoundary>, 'children'>;
+};
+
+const Frame: React.FC<FrameProps> = ({ children, boundaryProps }) => (
+  <ErrorBoundary {...boundaryProps}>
     <Suspense fallback={<Loading />}>{children}</Suspense>
   </ErrorBoundary>
 );

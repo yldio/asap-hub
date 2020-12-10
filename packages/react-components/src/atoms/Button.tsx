@@ -1,9 +1,10 @@
 import React from 'react';
 import css from '@emotion/css';
 
-import { fern, pine } from '../colors';
 import { noop } from '../utils';
 import { getButtonStyles, getButtonChildren } from '../button';
+import { themeStyles } from './Link';
+import { defaultThemeVariant, ThemeVariant } from '../theme';
 
 const linkStyles = css({
   display: 'inline',
@@ -22,12 +23,8 @@ const linkStyles = css({
   ':hover, :focus': {
     textDecoration: 'none',
   },
-
+  color: 'unset',
   backgroundColor: 'unset',
-  color: fern.rgb,
-  ':active': {
-    color: pine.rgb,
-  },
 });
 
 interface NormalButtonProps {
@@ -36,6 +33,7 @@ interface NormalButtonProps {
   readonly active?: boolean;
   readonly small?: boolean;
   readonly linkStyle?: undefined;
+  readonly theme?: undefined;
 }
 interface LinkStyleButtonProps {
   readonly linkStyle: true;
@@ -43,6 +41,7 @@ interface LinkStyleButtonProps {
   readonly primary?: undefined;
   readonly active?: undefined;
   readonly small?: undefined;
+  readonly theme?: ThemeVariant | null;
 }
 type ButtonProps = (NormalButtonProps | LinkStyleButtonProps) & {
   readonly submit?: boolean;
@@ -57,6 +56,7 @@ const Button: React.FC<ButtonProps> = ({
   small = false,
   linkStyle = false,
   active = false,
+  theme = defaultThemeVariant,
 
   submit = primary,
 
@@ -73,7 +73,7 @@ const Button: React.FC<ButtonProps> = ({
     }}
     css={
       linkStyle
-        ? linkStyles
+        ? [linkStyles, theme && themeStyles[theme]]
         : getButtonStyles({ primary, small, enabled, active, children })
     }
   >

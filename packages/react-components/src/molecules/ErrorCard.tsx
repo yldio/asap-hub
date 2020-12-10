@@ -5,7 +5,6 @@ import { serializeError } from 'serialize-error';
 import { Card, Link, Button } from '../atoms';
 import { alertIcon } from '../icons';
 import { perRem } from '../pixels';
-import { useHistory } from 'react-router-dom';
 import { mailToSupport } from '../mail';
 
 const styles = css({
@@ -15,19 +14,22 @@ const styles = css({
   display: 'grid',
   gridColumnGap: `${12 / perRem}em`,
   gridTemplateColumns: 'min-content auto',
+});
 
-  overflowY: 'auto',
+const underlineStyles = css({
+  textDecoration: 'underline',
+  ':hover': {
+    textDecoration: 'unset',
+  },
 });
 
 interface ErrorProps {
   readonly error: Error;
-
   readonly description?: string;
 }
 
-interface TitleDescriptionProps {
+interface DescriptionProps {
   readonly error?: Error;
-  readonly title?: string;
   readonly description: string;
 }
 
@@ -51,8 +53,8 @@ ${btoa(
 
 type ErrorCardProps = (
   | ErrorProps
-  | TitleDescriptionProps
-  | (ErrorProps & TitleDescriptionProps)
+  | DescriptionProps
+  | (ErrorProps & DescriptionProps)
 ) & {
   readonly title?: string;
   readonly refreshLink?: boolean;
@@ -64,7 +66,6 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
   description,
   refreshLink = false,
 }) => {
-  const history = useHistory();
   return (
     <Card padding={false} accent="red">
       <div css={styles}>
@@ -75,7 +76,7 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
           {refreshLink && (
             <>
               {' '}
-              <Button linkStyle onClick={() => history.go(0)}>
+              <Button linkStyle theme={null} onClick={() => location.reload()}>
                 Please reload the page
               </Button>
               .{' '}
@@ -84,7 +85,10 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
           {error && (
             <span>
               <br /> If the issue persists, you can{' '}
-              <Link href={mailto(error)}>contact support</Link>.
+              <Link theme={null} href={mailto(error)}>
+                <span css={underlineStyles}>contact support</span>
+              </Link>
+              .
             </span>
           )}
         </span>

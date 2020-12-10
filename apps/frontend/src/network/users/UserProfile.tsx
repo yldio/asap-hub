@@ -8,7 +8,11 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { join } from 'path';
-import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
+import {
+  UserProfilePage,
+  NotFoundPage,
+  Loading,
+} from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 
@@ -106,7 +110,7 @@ const User: React.FC<{}> = () => {
     return (
       <UserProfilePage {...profilePageProps}>
         <ErrorBoundary>
-          <Suspense fallback="Loading...">
+          <Suspense fallback={<Loading />}>
             {user.role === 'Staff' ? (
               <Staff user={user} teams={teams} />
             ) : (

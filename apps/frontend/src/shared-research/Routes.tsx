@@ -1,6 +1,6 @@
 import React, { useEffect, Suspense } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { SharedResearchPage } from '@asap-hub/react-components';
+import { SharedResearchPage, Loading } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import ErrorBoundary from '../errors/ErrorBoundary';
@@ -35,7 +35,7 @@ const SharedResearch: React.FC<{}> = () => {
           filters={filters}
         >
           <ErrorBoundary>
-            <Suspense fallback="Loading...">
+            <Suspense fallback={<Loading />}>
               <ResearchOutputList
                 searchQuery={searchQueryDebounce}
                 filters={filters}

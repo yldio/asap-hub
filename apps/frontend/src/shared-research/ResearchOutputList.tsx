@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paragraph, SharedResearchPageBody } from '@asap-hub/react-components';
+import { SharedResearchPageBody, Loading } from '@asap-hub/react-components';
 import { join } from 'path';
 
 import { useResearchOutputs } from '../api';
@@ -30,7 +30,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   );
 
   if (result.loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
   const researchOutputs = result.data.items.map((output) => ({
     ...output,

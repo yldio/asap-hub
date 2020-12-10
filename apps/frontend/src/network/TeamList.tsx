@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paragraph, NetworkTeams } from '@asap-hub/react-components';
+import { NetworkTeams, Loading } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
 import { join } from 'path';
 
@@ -32,7 +32,7 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
   );
 
   if (result.loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
 
   const teams = result.data.items.map((team: TeamResponse) => ({

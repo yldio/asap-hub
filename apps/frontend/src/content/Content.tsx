@@ -1,10 +1,7 @@
 import React from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import {
-  ContentPage,
-  Paragraph,
-  NotFoundPage,
-} from '@asap-hub/react-components';
+import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
+
 import { usePageByPath } from '../api';
 import ErrorBoundary from '../errors/ErrorBoundary';
 
@@ -16,7 +13,7 @@ const Content: React.FC<ContentProps> = ({ layoutComponent: Layout }) => {
   const { loading, data: page } = usePageByPath(path);
 
   if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
 
   if (page) {

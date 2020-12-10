@@ -2,8 +2,8 @@ import React, { Suspense } from 'react';
 
 import {
   DashboardPage,
-  Paragraph,
   NotFoundPage,
+  Loading,
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
@@ -22,7 +22,7 @@ const Dashboard: React.FC<{}> = () => {
   const { loading, data: dashboard } = useDashboard();
 
   if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
 
   if (dashboard) {
@@ -42,7 +42,7 @@ const Dashboard: React.FC<{}> = () => {
     return (
       <DashboardPage firstName={firstName}>
         <ErrorBoundary>
-          <Suspense fallback="Loading...">
+          <Suspense fallback={<Loading />}>
             <Body {...data} />
           </Suspense>
         </ErrorBoundary>

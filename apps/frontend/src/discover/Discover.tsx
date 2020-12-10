@@ -2,8 +2,8 @@ import React, { Suspense } from 'react';
 
 import {
   DiscoverPage,
-  Paragraph,
   NotFoundPage,
+  Loading,
 } from '@asap-hub/react-components';
 import { useDiscover } from '../api';
 import ErrorBoundary from '../errors/ErrorBoundary';
@@ -16,7 +16,7 @@ const Discover: React.FC<{}> = () => {
   const { loading, data: discover } = useDiscover();
 
   if (loading) {
-    return <Paragraph>Loading...</Paragraph>;
+    return <Loading />;
   }
 
   if (discover) {
@@ -31,7 +31,7 @@ const Discover: React.FC<{}> = () => {
     return (
       <DiscoverPage>
         <ErrorBoundary>
-          <Suspense fallback="Loading...">
+          <Suspense fallback={<Loading />}>
             <Body {...data} />
           </Suspense>
         </ErrorBoundary>

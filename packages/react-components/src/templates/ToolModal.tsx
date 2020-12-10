@@ -62,12 +62,11 @@ const ToolModal: React.FC<ToolModalProps> = ({
           />
 
           <LabeledTextField
-            title="Description"
+            title="Description (optional)"
             subtitle="Help your team understand what this link is used for."
             value={newDescription}
             onChange={setNewDescription}
             enabled={!isSaving}
-            required
           />
         </div>
       )}

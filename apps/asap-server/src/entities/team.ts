@@ -16,7 +16,7 @@ export const teamUpdateSchema = Joi.object({
       Joi.object({
         url: Joi.string().required(),
         name: Joi.string().required(),
-        description: Joi.string(),
+        description: Joi.string().allow(''),
       }),
     )
     .required(),

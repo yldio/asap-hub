@@ -26,7 +26,7 @@ const NewsOrEventPage: React.FC<ResearchOutputPageProps> = ({
     <Card>
       <TagLabel>{type}</TagLabel>
       <Display styleAsHeading={3}>{title}</Display>
-      <RichText text={text} />
+      <RichText text={text} sanitize={false} />
     </Card>
   </div>
 );

@@ -62,7 +62,7 @@ it('Displays error when styling applied to h2', () => {
 
 it('passes through image props', () => {
   const { getByRole } = render(
-    <RichText text={'<img data-test="test123"></img>'} />,
+    <RichText sanitize={false} text={'<img data-test="test123"></img>'} />,
   );
   expect(getByRole('img')).toHaveAttribute('data-test', 'test123');
 });

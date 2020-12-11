@@ -161,8 +161,8 @@ export default class Users {
     }, {} as { [key: string]: { iv: unknown } });
 
     if (!isFullUpdate) {
-      const userResponse = await this.users.patch(id, cleanUpdate);
-      return parseUser(userResponse);
+      await this.users.patch(id, cleanUpdate);
+      return this.fetchById(id);
     }
 
     const user = await this.users.fetchById(id);
@@ -205,9 +205,10 @@ export default class Users {
     /* eslint-enable @typescript-eslint/no-non-null-assertion, no-param-reassign */
 
     const updatedData = { ...user.data, ...cleanUpdate };
-    const updatedUser = await this.users.put(id, updatedData);
+    await this.users.put(id, updatedData);
 
-    return parseUser(updatedUser);
+    // use fetch for proper user teams hydration
+    return this.fetchById(id);
   }
 
   async fetch(options: {
@@ -314,7 +315,7 @@ export default class Users {
 
     await this.users.patch(id, { avatar: { iv: [assetId] } });
 
-    // use fetch for proper user teams hidration
+    // use fetch for proper user teams hydration
     return this.fetchById(id);
   }
 

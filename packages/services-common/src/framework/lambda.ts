@@ -67,20 +67,27 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
   // Squidex errors
   const err = error as HTTPError;
   if (err.response && err.response.body) {
-    const { message, details } = JSON.parse(err.response.body) as {
-      message: string;
-      details?: string[];
-    };
-    return response({
-      statusCode: err.response.statusCode,
-      body: JSON.stringify({
-        message: `Squidex Error: ${message}`,
-        details,
-      }),
-      headers: {
-        'content-type': 'application/json',
-      },
-    });
+    try {
+      const { message, details } = JSON.parse(err.response.body) as {
+        message: string;
+        details?: string[];
+      };
+      return response({
+        statusCode: err.response.statusCode,
+        body: JSON.stringify({
+          message: `Squidex Error: ${message}`,
+          details,
+        }),
+        headers: { 'content-type': 'application/json' },
+      });
+    } catch (e) {
+      // safe parse, in case squidex responds with non-json body
+      return response({
+        statusCode: err.response.statusCode,
+        body: JSON.stringify({ message: 'Unable to parse error message' }),
+        headers: { 'content-type': 'application/json' },
+      });
+    }
   }
 
   // Boom errors created on controllers handlers and fail-safe

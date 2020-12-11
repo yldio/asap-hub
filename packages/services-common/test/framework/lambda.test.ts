@@ -67,6 +67,30 @@ test('http wraps squidex errors correctly', async () => {
   expect(result.body).toEqual(expect.stringContaining('details'));
 });
 
+test('http wraps squidex errors correctly - non-json body', async () => {
+  const handler = http(async (_) => {
+    const err = new Error();
+    err.response = {
+      body: `
+      <html>
+      <head><title>413 Request Entity Too Large</title></head>
+      <body bgcolor="white">
+      <center><h1>413 Request Entity Too Large</h1></center>
+      <hr><center>nginx/1.12.2</center>
+      </body>
+      </html>
+      `,
+      statusCode: 413,
+    };
+    throw err;
+  });
+  const result = await handler(apiGatewayEvent({}));
+  expect(result.statusCode).toStrictEqual(413);
+  expect(result.body).toEqual(
+    expect.stringContaining('Unable to parse error message'),
+  );
+});
+
 test('http returns 500 on unknown execption', async () => {
   const handler = http(async (_) => {
     throw new Error('uncaught');

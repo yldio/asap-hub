@@ -145,7 +145,15 @@ export default class Teams {
     tools: TeamTool[],
     user: User,
   ): Promise<TeamResponse> {
-    await this.teams.patch(id, { tools: { iv: tools } });
+    const cleanUpdate = tools.map((tool) =>
+      Object.entries(tool).reduce((acc, [key, value]) => {
+        return value?.trim && value?.trim() === ''
+          ? acc // deleted field
+          : { ...acc, [key]: value };
+      }, {} as TeamTool),
+    );
+
+    await this.teams.patch(id, { tools: { iv: cleanUpdate } });
     return this.fetchById(id, user);
   }
 

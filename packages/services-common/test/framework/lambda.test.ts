@@ -86,7 +86,9 @@ test('http wraps squidex errors correctly - non-json body', async () => {
   });
   const result = await handler(apiGatewayEvent({}));
   expect(result.statusCode).toStrictEqual(413);
-  expect(result.body).toEqual(expect.stringContaining('Squidex Error'));
+  expect(result.body).toEqual(
+    expect.stringContaining('Unable to parse error message'),
+  );
 });
 
 test('http returns 500 on unknown execption', async () => {

@@ -84,7 +84,7 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
       // safe parse, in case squidex responds with non-json body
       return response({
         statusCode: err.response.statusCode,
-        body: JSON.stringify({ message: 'Squidex Error' }),
+        body: JSON.stringify({ message: 'Unable to parse error message' }),
         headers: { 'content-type': 'application/json' },
       });
     }

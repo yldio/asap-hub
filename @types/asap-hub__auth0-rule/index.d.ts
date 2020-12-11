@@ -39,6 +39,9 @@ export type RuleContext<CustomContext extends object = {}> = Partial<
   samlConfiguration?: object;
   request: {
     query: Record<string, string>;
+    body: {
+      redirect_uri?: string;
+    };
   };
   protocol:
     | 'oidc-basic-profile'

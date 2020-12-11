@@ -53,6 +53,7 @@ const context: RuleContext = {
   stats: { loginsCount: 14 },
   request: {
     query: {},
+    body: {},
   },
   sso: {
     with_auth0: false,
@@ -122,7 +123,7 @@ describe('Auth0 Rule - Connect User', () => {
 
     await connectUser(
       user,
-      { ...context, request: { query: { invitation_code } } },
+      { ...context, request: { query: { invitation_code }, body: {} } },
       cb,
     );
 
@@ -151,7 +152,7 @@ describe('Auth0 Rule - Connect User', () => {
 
     await connectUser(
       user,
-      { ...context, request: { query: { invitation_code } } },
+      { ...context, request: { query: { invitation_code }, body: {} } },
       cb,
     );
 

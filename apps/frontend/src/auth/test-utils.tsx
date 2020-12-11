@@ -66,6 +66,7 @@ const createAuth0 = (
       logout: auth0Client
         ? (...args) => auth0Client.logout(...args)
         : notReady('logout'),
+      refreshUser: auth0Client ? async () => {} : notReady('refreshUser'),
     },
     ...(auth0User && {
       isAuthenticated: true,

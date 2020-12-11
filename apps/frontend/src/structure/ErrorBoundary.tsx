@@ -23,9 +23,9 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
 
   return (
     <ReactErrorBoundary
-      fallbackRender={({
-        error = new Error('We have encountered an error.'),
-      }) => <ErrorCard error={error} {...errorCardProps} />}
+      fallbackRender={({ error }) => (
+        <ErrorCard error={error} {...errorCardProps} />
+      )}
       resetKeys={[pathname, search]}
     >
       {children}

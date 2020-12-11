@@ -21,6 +21,20 @@ it('catches child errors', async () => {
   expect(container).toHaveTextContent('oops');
 });
 
+it('Overrides title and description when error thrown', async () => {
+  const { container } = render(
+    <ErrorBoundary
+      title="Something went wrong"
+      description="There was a problem with your request"
+    >
+      <Throw />
+    </ErrorBoundary>,
+  );
+  expect(container).not.toHaveTextContent('oops');
+  expect(container).toHaveTextContent('Something went wrong');
+  expect(container).toHaveTextContent('There was a problem with your request');
+});
+
 it('resets on navigation', async () => {
   const history = createMemoryHistory({ initialEntries: ['/throw'] });
   const { container } = render(

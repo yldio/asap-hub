@@ -1,4 +1,9 @@
-import { createMailTo } from '../mail';
+import {
+  createMailTo,
+  mailToFeedback,
+  mailToGrants,
+  mailToSupport,
+} from '../mail';
 
 describe('createMailTo', () => {
   it('generates a mailto link', () => {
@@ -40,5 +45,53 @@ describe('createMailTo', () => {
     );
     expect(mailTo.searchParams.get('body')).toEqual('b?ody &123');
     expect(mailTo.searchParams.get('subject')).toEqual('s?ubject &123');
+  });
+});
+
+describe('mailToFeedback', () => {
+  it('creates default mail', () => {
+    expect(mailToFeedback()).toMatchInlineSnapshot(
+      `"mailto:info@asap.science?subject=ASAP+Hub%3A+Hub+Feedback"`,
+    );
+  });
+
+  it('overrides defaults', () => {
+    const mailTo = new URL(
+      mailToFeedback({ body: 'body123', subject: 'subject123' }),
+    );
+    expect(mailTo.searchParams.get('body')).toEqual('body123');
+    expect(mailTo.searchParams.get('subject')).toEqual('subject123');
+  });
+});
+
+describe('mailToGrants', () => {
+  it('creates default mail', () => {
+    expect(mailToGrants()).toMatchInlineSnapshot(
+      `"mailto:grants@parkinsonsroadmap.org?subject=ASAP+Hub%3A+Grant+support"`,
+    );
+  });
+
+  it('overrides defaults', () => {
+    const mailTo = new URL(
+      mailToGrants({ body: 'body123', subject: 'subject123' }),
+    );
+    expect(mailTo.searchParams.get('body')).toEqual('body123');
+    expect(mailTo.searchParams.get('subject')).toEqual('subject123');
+  });
+});
+
+describe('mailToSupport', () => {
+  it('creates default mail', () => {
+    expect(mailToSupport()).toMatchInlineSnapshot(
+      `"mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support"`,
+    );
+  });
+
+  it('overrides defaults', () => {
+    const mailTo = new URL(
+      mailToSupport({ body: 'body123', subject: 'subject123' }),
+    );
+    expect(mailTo.searchParams.get('body')).toEqual('body123');
+    expect(mailTo.searchParams.get('subject')).toEqual('subject123');
   });
 });

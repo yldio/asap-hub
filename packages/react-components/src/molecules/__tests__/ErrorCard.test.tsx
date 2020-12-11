@@ -1,16 +1,21 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import ErrorCard from '../ErrorCard';
 
-jest.useFakeTimers('modern');
-
+it('renders a default error', () => {
+  const { container } = render(<ErrorCard />);
+  expect(container.textContent).toMatchInlineSnapshot(
+    `"AlertSomething went wrong! We have encountered an error."`,
+  );
+});
 it('renders a plain message', () => {
   const { getByText } = render(
-    <ErrorCard title="oops" description="went wrong" />,
+    <ErrorCard title="oops123" description="went wrong123" />,
   );
-  expect(getByText('oops')).toBeVisible();
-  expect(getByText('went wrong')).toBeVisible();
+  expect(getByText('oops123')).toBeVisible();
+  expect(getByText('went wrong123')).toBeVisible();
 });
 
 describe('when passed an error', () => {
@@ -71,5 +76,28 @@ describe('when passed an error', () => {
     const errorInfo2 = getByRole('link').getAttribute('href');
 
     expect(errorInfo2).not.toEqual(errorInfo1);
+  });
+  describe('refresh link', () => {
+    const { location } = window;
+    const reloadMock = jest.fn();
+    beforeEach(() => {
+      delete window.location;
+      globalThis.location = {
+        ...location,
+        reload: reloadMock,
+      };
+    });
+    afterEach(() => {
+      globalThis.location = location;
+      jest.resetAllMocks();
+    });
+    it('includes a refresh link', () => {
+      const { getByText } = render(
+        <ErrorCard error={makeDeterministicError()} refreshLink />,
+      );
+      const reloadLink = getByText(/reload/i);
+      userEvent.click(reloadLink);
+      expect(window.location.reload).toHaveBeenCalled();
+    });
   });
 });

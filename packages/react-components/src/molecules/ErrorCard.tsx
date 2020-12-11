@@ -23,16 +23,6 @@ const underlineStyles = css({
   },
 });
 
-interface ErrorProps {
-  readonly error: Error;
-  readonly description?: string;
-}
-
-interface DescriptionProps {
-  readonly error?: Error;
-  readonly description: string;
-}
-
 const mailto = (error: Error) =>
   mailToSupport({
     subject: 'Error message on the ASAP Hub',
@@ -51,11 +41,9 @@ ${btoa(
 )}`,
   });
 
-type ErrorCardProps = (
-  | ErrorProps
-  | DescriptionProps
-  | (ErrorProps & DescriptionProps)
-) & {
+type ErrorCardProps = {
+  readonly error?: Error;
+  readonly description?: string;
   readonly title?: string;
   readonly refreshLink?: boolean;
 };
@@ -72,7 +60,7 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
         {alertIcon}
         <span>
           <b>{title ?? 'Something went wrong!'}</b> <br />
-          {description ?? error?.message}
+          {description ?? error?.message ?? 'We have encountered an error.'}
           {refreshLink && (
             <>
               {' '}

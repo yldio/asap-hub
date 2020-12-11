@@ -1,6 +1,13 @@
-import { ListNewsAndEventsResponse } from '@asap-hub/model';
+import {
+  ListNewsAndEventsResponse,
+  NewsOrEventResponse,
+} from '@asap-hub/model';
 
 import { useGetList } from './get-list';
+import { useGetOne } from './get-one';
 
 export const useNewsAndEvents = () =>
   useGetList<ListNewsAndEventsResponse>(`news-and-events`);
+
+export const useNewsOrEvent = (id: string) =>
+  useGetOne<NewsOrEventResponse>(`news-and-events/${id}`);

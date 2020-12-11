@@ -4,10 +4,13 @@ import { NewsAndEventsPage } from '@asap-hub/react-components';
 
 import Frame from '../structure/Frame';
 
-const loadBody = () =>
-  import(/* webpackChunkName: "news-and-events-body" */ './Body');
-const Body = React.lazy(loadBody);
-loadBody();
+const loadNewsAndEventsList = () =>
+  import(/* webpackChunkName: "news-and-events-list" */ './NewsAndEventsList');
+const loadNewsOrEvent = () =>
+  import(/* webpackChunkName: "news-or-event" */ './NewsOrEvent');
+const NewsAndEventsList = React.lazy(loadNewsAndEventsList);
+const NewsOrEventPage = React.lazy(loadNewsOrEvent);
+loadNewsAndEventsList();
 
 const NewsAndEvents: React.FC<{}> = () => {
   const { path } = useRouteMatch();
@@ -17,10 +20,11 @@ const NewsAndEvents: React.FC<{}> = () => {
       <Route exact path={path}>
         <NewsAndEventsPage>
           <Frame>
-            <Body />
+            <NewsAndEventsList />
           </Frame>
         </NewsAndEventsPage>
       </Route>
+      <Route path={`${path}/:id`} component={NewsOrEventPage} />
     </Switch>
   );
 };

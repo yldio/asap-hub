@@ -1,8 +1,8 @@
-import { NewsAndEventsResponse } from '@asap-hub/model';
+import { NewsOrEventResponse } from '@asap-hub/model';
 
 export const createNewsAndEventsResponse = (
   key: string,
-): NewsAndEventsResponse => ({
+): NewsOrEventResponse => ({
   id: `uuid-${key}`,
   type: 'News',
   title: `News ${key} title`,

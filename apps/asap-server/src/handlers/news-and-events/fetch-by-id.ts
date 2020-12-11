@@ -18,11 +18,11 @@ export const handler: Handler = lambda.http(
     };
 
     const newsAndEvents = new NewsAndEvents();
-    const outputs = await newsAndEvents.fetchById(params.id);
+    const result = await newsAndEvents.fetchById(params.id);
 
     return {
       statusCode: 200,
-      payload: outputs,
+      payload: result,
     };
   },
 );

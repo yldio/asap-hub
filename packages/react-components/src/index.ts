@@ -95,6 +95,7 @@ export {
   NetworkPageHeader,
   NetworkPeople,
   NetworkTeams,
+  NewsOrEventPage,
   NewsAndEventsPage,
   NewsAndEventsPageBody,
   NewsAndEventsPageHeader,

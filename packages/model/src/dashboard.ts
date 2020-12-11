@@ -1,7 +1,7 @@
-import { NewsAndEventsResponse } from './news-and-events';
+import { NewsOrEventResponse } from './news-and-events';
 import { PageResponse } from './page';
 
 export interface DashboardResponse {
-  newsAndEvents: ReadonlyArray<NewsAndEventsResponse>;
+  newsAndEvents: ReadonlyArray<NewsOrEventResponse>;
   pages: ReadonlyArray<PageResponse>;
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { NewsAndEventsResponse, NewsAndEventsType } from '@asap-hub/model';
+import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
 import { Card, Paragraph, Headline2, TagLabel, Caption, Link } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
@@ -57,7 +57,7 @@ const placeholders: Record<NewsAndEventsType, JSX.Element> = {
   Training: trainingPlaceholderIcon,
 };
 
-type NewsAndEventsCardProps = NewsAndEventsResponse;
+type NewsAndEventsCardProps = NewsOrEventResponse;
 
 const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   type,

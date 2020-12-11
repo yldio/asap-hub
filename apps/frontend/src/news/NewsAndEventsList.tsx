@@ -3,7 +3,7 @@ import { NewsAndEventsPageBody, Loading } from '@asap-hub/react-components';
 
 import { useNewsAndEvents } from '../api';
 
-const Body: React.FC<{}> = () => {
+const NewsAndEventsList: React.FC<{}> = () => {
   const result = useNewsAndEvents();
 
   if (result.loading) {
@@ -13,4 +13,4 @@ const Body: React.FC<{}> = () => {
   return <NewsAndEventsPageBody newsAndEvents={result.data.items} />;
 };
 
-export default Body;
+export default NewsAndEventsList;

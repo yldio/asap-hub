@@ -23,6 +23,10 @@ const components = {
   p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
     return <Paragraph>{children}</Paragraph>;
   },
+  iframe: (props: HTMLAttributes<HTMLIFrameElement>) => {
+    console.log(props);
+    return <iframe {...props} />;
+  },
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (
       <div css={headline1Spacing}>

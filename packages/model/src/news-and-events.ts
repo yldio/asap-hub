@@ -2,7 +2,7 @@ import { ListResponse } from './common';
 
 export type NewsAndEventsType = 'News' | 'Event' | 'Training';
 
-export interface NewsAndEventsResponse {
+export interface NewsOrEventResponse {
   id: string;
   title: string;
   type: NewsAndEventsType;
@@ -14,4 +14,4 @@ export interface NewsAndEventsResponse {
   created: string;
 }
 
-export type ListNewsAndEventsResponse = ListResponse<NewsAndEventsResponse>;
+export type ListNewsAndEventsResponse = ListResponse<NewsOrEventResponse>;

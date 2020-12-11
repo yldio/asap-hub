@@ -17,6 +17,7 @@ export { default as NetworkTeams } from './NetworkTeams';
 export { default as NewsAndEventsPage } from './NewsAndEventsPage';
 export { default as NewsAndEventsPageBody } from './NewsAndEventsPageBody';
 export { default as NewsAndEventsPageHeader } from './NewsAndEventsPageHeader';
+export { default as NewsOrEventPage } from './NewsOrEventPage';
 export { default as NotFoundPage } from './NotFoundPage';
 export { default as OpenQuestionsModal } from './OpenQuestionsModal';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';

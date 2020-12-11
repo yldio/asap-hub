@@ -29,4 +29,9 @@ export default class ResearchOutputs {
       items: items.map(parseNewsAndEvents),
     };
   }
+
+  async fetchById(id: string) {
+    const result = await this.newsAndEvents.fetchById(id);
+    return parseNewsAndEvents(result);
+  }
 }

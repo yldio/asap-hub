@@ -265,6 +265,19 @@ module.exports = {
         },
       ],
     },
+    fetchNewsAndEventsById: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/news-and-events/fetch-by-id.handler',
+      events: [
+        {
+          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
+          httpApi: {
+            method: 'GET',
+            path: `/news-and-events/{id}`,
+          },
+        },
+      ],
+    },
     dashboard: {
       handler: 'apps/asap-server/build-cjs/handlers/dashboard/fetch.handler',
       events: [

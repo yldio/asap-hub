@@ -206,6 +206,7 @@ export default class Users {
 
     const updatedData = { ...user.data, ...cleanUpdate };
     const updatedUser = await this.users.put(id, updatedData);
+
     return parseUser(updatedUser);
   }
 
@@ -311,11 +312,10 @@ export default class Users {
       })
       .json();
 
-    const user = await this.users.patch(id, {
-      avatar: { iv: [assetId] },
-    });
+    await this.users.patch(id, { avatar: { iv: [assetId] } });
 
-    return parseUser(user);
+    // use fetch for proper user teams hidration
+    return this.fetchById(id);
   }
 
   async connectByCode(

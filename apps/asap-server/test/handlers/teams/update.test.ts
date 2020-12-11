@@ -191,6 +191,55 @@ describe('PATCH /teams/{id}', () => {
     expect(body).toStrictEqual(fixtures.expectation);
   });
 
+  test('returns 200 when team exists - deletes field', async () => {
+    const tools = [
+      {
+        url: 'https://example.com',
+        name: 'good link',
+      },
+    ];
+
+    nock(config.baseUrl)
+      .patch(`/api/content/${config.appName}/teams/team-id-1`, {
+        tools: { iv: tools },
+      })
+      .reply(200, fixtures.getUpdateTeamResponse(tools)) // response is not used
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchTeam('team-id-1'),
+      })
+      .reply(200, fixtures.getGraphQlTeamResponse(tools))
+      .get(`/api/content/${config.appName}/users`)
+      .query({
+        $filter: "data/teams/iv/id eq 'team-id-1'",
+      })
+      .reply(200, fixtures.usersResponseTeam1);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'patch',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'team-id-1',
+        },
+        body: {
+          tools: [
+            {
+              url: 'https://example.com',
+              name: 'good link',
+              description: '',
+            },
+          ],
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(body).toStrictEqual({ ...fixtures.expectation, tools });
+  });
+
   test('returns 200 when team exists - updates', async () => {
     const tools = [
       {

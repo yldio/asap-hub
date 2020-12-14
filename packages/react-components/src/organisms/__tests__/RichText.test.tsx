@@ -8,6 +8,22 @@ it('renders <p> as a paragraph', () => {
   expect(getByText('text').tagName).toBe('P');
 });
 
+it('renders <iframe>', () => {
+  const { getByTestId } = render(
+    <RichText sanitize={false} text={'<iframe data-testid="embed"/>'} />,
+  );
+
+  expect(getByTestId('embed')).toBeInTheDocument();
+});
+
+it('sanitize <iframe>', () => {
+  const { queryByTestId } = render(
+    <RichText text={'<iframe data-testid="embed"/>'} />,
+  );
+
+  expect(queryByTestId('embed')).not.toBeInTheDocument();
+});
+
 it('renders <a> as a link', () => {
   const { getByText } = render(
     <RichText text={'<a href="https://localhost/">anchor</a>'} />,

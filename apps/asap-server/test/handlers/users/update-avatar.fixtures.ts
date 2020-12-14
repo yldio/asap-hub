@@ -120,6 +120,9 @@ export const expectation: UserResponse = {
   lastName: 'Ronaldo',
   jobTitle: 'Junior',
   institution: 'Dollar General Corporation',
+  social: {
+    orcid: '363-98-9330',
+  },
   teams: [
     {
       id: 'team-id-1',

@@ -129,10 +129,10 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
   const social = Object.entries({
     ...((item.flatData?.social && item.flatData?.social[0]) || {}),
     orcid,
-  }).reduce(
-    (acc, [k, v]) => (v == null ? acc : ((acc[k] = v), acc)),
-    {} as { [key: string]: string },
-  );
+  }).reduce((acc, [k, v]) => {
+    if (v == null) return acc;
+    return { ...acc, [k]: v };
+  }, {} as { [key: string]: string });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const displayName = `${item.flatData!.firstName} ${item.flatData!.lastName}`;
@@ -182,6 +182,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
     ...((user.data.social?.iv && user.data.social?.iv[0]) || {}),
     orcid,
   };
+  console.log(social);
 
   const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;
 

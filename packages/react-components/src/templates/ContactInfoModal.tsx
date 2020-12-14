@@ -25,6 +25,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
     <EditModal
       backHref={backHref}
       title="Your contact details"
+      dirty={newEmail !== email}
       onSave={() => onSave(newEmail)}
     >
       {({ isSaving }) => (

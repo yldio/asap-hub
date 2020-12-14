@@ -51,6 +51,9 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   return (
     <EditModal
       title={'Your Role in ASAP Network'}
+      dirty={
+        newApproach !== approach || newResponsibilities !== responsibilities
+      }
       backHref={backHref}
       onSave={() =>
         onSave({

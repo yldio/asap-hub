@@ -1,29 +1,55 @@
-import React, { ComponentProps, ReactNode, useRef, useState } from 'react';
+import React, {
+  ComponentProps,
+  ReactNode,
+  useRef,
+  useState,
+  useEffect,
+} from 'react';
+import { Prompt } from 'react-router-dom';
 
 import { ModalEditHeader, Modal } from '../molecules';
 import { noop } from '../utils';
 import Toast from './Toast';
 import { paddingStyles } from '../card';
+import { usePushFromHere } from '../routing';
 
 type EditModalProps = Pick<
   ComponentProps<typeof ModalEditHeader>,
   'title' | 'backHref' | 'onSave'
 > & {
+  dirty: boolean; // mandatory so that it cannot be forgotten
   children: (state: { isSaving: boolean }) => ReactNode;
 };
 const EditModal: React.FC<EditModalProps> = ({
+  dirty,
   children,
   title,
   backHref,
   onSave = noop,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
-  const [isSaving, setSaving] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [status, setStatus] = useState<
+    'initial' | 'isSaving' | 'hasError' | 'hasSaved'
+  >('initial');
+  useEffect(() => {
+    if (status === 'hasSaved' && !dirty) {
+      setStatus('initial');
+    }
+  }, [status, dirty]);
+
+  const historyPush = usePushFromHere();
 
   return (
     <Modal padding={false}>
-      {hasError && (
+      <Prompt
+        when={
+          status === 'isSaving' ||
+          status === 'hasError' ||
+          (status === 'initial' && dirty)
+        }
+        message="Are you sure you want to leave the dialog? Unsaved changes will be lost."
+      />
+      {status === 'hasError' && (
         <Toast>
           There was an error and we were unable to save your changes
         </Toast>
@@ -32,23 +58,24 @@ const EditModal: React.FC<EditModalProps> = ({
         <ModalEditHeader
           title={title}
           backHref={backHref}
-          saveEnabled={!isSaving}
+          saveEnabled={status !== 'isSaving'}
           onSave={async () => {
-            setHasError(false);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             if (formRef.current!.reportValidity()) {
-              setSaving(true);
+              setStatus('isSaving');
               try {
                 await onSave();
+                if (!formRef.current) return;
+                setStatus('hasSaved');
+                historyPush(backHref);
               } catch {
-                if (formRef.current) setHasError(true);
-              } finally {
-                if (formRef.current) setSaving(false);
+                if (!formRef.current) return;
+                setStatus('hasError');
               }
             }
           }}
         />
-        {children({ isSaving })}
+        {children({ isSaving: status === 'isSaving' })}
       </form>
     </Modal>
   );

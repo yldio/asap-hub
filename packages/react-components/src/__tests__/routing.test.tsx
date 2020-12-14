@@ -1,9 +1,25 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
+import { Router, StaticRouter } from 'react-router-dom';
 import { renderHook } from '@testing-library/react-hooks';
 import { createMemoryHistory } from 'history';
 
-import { usePushFromHere, usePushFromPathname } from '..';
+import { useHasRouter, usePushFromHere, usePushFromPathname } from '../routing';
+
+describe('useHasRouter', () => {
+  it('returns false if there is no Router context', () => {
+    const {
+      result: { current },
+    } = renderHook(useHasRouter);
+    expect(current).toBe(false);
+  });
+
+  it('returns true if there is a Router context', () => {
+    const {
+      result: { current },
+    } = renderHook(useHasRouter, { wrapper: StaticRouter });
+    expect(current).toBe(true);
+  });
+});
 
 describe('usePushFromPathname', () => {
   it('pushes a history entry if currently on given page', () => {

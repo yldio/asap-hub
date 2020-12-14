@@ -3,7 +3,7 @@ import css, { CSSObject, SerializedStyles } from '@emotion/css';
 import { HashLink } from 'react-router-hash-link';
 
 import { fern, paper, pine } from '../colors';
-import { useHasRouter } from '../hooks';
+import { useHasRouter } from '../routing';
 import { ThemeVariant, defaultThemeVariant } from '../theme';
 import { getButtonStyles, getButtonChildren } from '../button';
 import { isInternalLink } from '../utils';

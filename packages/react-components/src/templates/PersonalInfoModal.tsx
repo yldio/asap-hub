@@ -27,28 +27,34 @@ type PersonalInfoModalProps = UserPatchRequest & {
 };
 
 const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
-  firstName,
-  lastName,
-  degree,
-  institution,
-  location,
-  jobTitle,
+  firstName = '',
+  lastName = '',
+  degree = '',
+  institution = '',
+  location = '',
+  jobTitle = '',
 
   onSave = noop,
   backHref,
 }) => {
-  const [newFirstName, setNewFirstName] = useState<string>(firstName || '');
-  const [newLastName, setNewLastName] = useState<string>(lastName || '');
-  const [newDegree, setNewDegree] = useState<string>(degree || '');
-  const [newInstitution, setNewInstitution] = useState<string>(
-    institution || '',
-  );
-  const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle || '');
-  const [newLocation, setNewLocation] = useState<string>(location || '');
+  const [newFirstName, setNewFirstName] = useState<string>(firstName);
+  const [newLastName, setNewLastName] = useState<string>(lastName);
+  const [newDegree, setNewDegree] = useState<string>(degree);
+  const [newInstitution, setNewInstitution] = useState<string>(institution);
+  const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle);
+  const [newLocation, setNewLocation] = useState<string>(location);
 
   return (
     <EditModal
       title="Your details"
+      dirty={
+        newFirstName !== firstName ||
+        newLastName !== lastName ||
+        newDegree !== degree ||
+        newInstitution !== institution ||
+        newJobTitle !== jobTitle ||
+        newLocation !== location
+      }
       backHref={backHref}
       onSave={() =>
         onSave(

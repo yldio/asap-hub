@@ -1,17 +1,21 @@
 import React from 'react';
+import { StaticRouter } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import BiographyModal from '../BiographyModal';
 
 it('renders a form to edit the biography', () => {
-  const { getByRole } = render(<BiographyModal backHref="#" />);
+  const { getByRole } = render(<BiographyModal backHref="#" />, {
+    wrapper: StaticRouter,
+  });
   expect(getByRole('heading')).toHaveTextContent(/bio/i);
 });
 
 it('renders a text field containing the biography', () => {
   const { getByDisplayValue } = render(
     <BiographyModal backHref="#" biography="My Bio" />,
+    { wrapper: StaticRouter },
   );
   expect(getByDisplayValue('My Bio')).toBeEnabled();
 });
@@ -20,6 +24,7 @@ it('fires onSave when submitting', async () => {
   const handleSave = jest.fn();
   const { getByDisplayValue, getByText } = render(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
+    { wrapper: StaticRouter },
   );
 
   await userEvent.type(getByDisplayValue('My Bio'), ' 2');
@@ -34,6 +39,7 @@ it('does not fire onSave when the bio is missing', () => {
   const handleSave = jest.fn();
   const { getByDisplayValue, getByText } = render(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
+    { wrapper: StaticRouter },
   );
 
   userEvent.clear(getByDisplayValue('My Bio'));
@@ -49,6 +55,7 @@ it('disables the form elements while submitting', async () => {
     });
   const { getByText } = render(
     <BiographyModal backHref="#" biography="My Bio" onSave={handleSave} />,
+    { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));

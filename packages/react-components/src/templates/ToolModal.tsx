@@ -33,6 +33,9 @@ const ToolModal: React.FC<ToolModalProps> = ({
   return (
     <EditModal
       title={title}
+      dirty={
+        newUrl !== url || newDescription !== description || newName !== name
+      }
       backHref={backHref}
       onSave={() =>
         onSave({

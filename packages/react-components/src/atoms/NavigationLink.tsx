@@ -3,7 +3,7 @@ import { NavHashLink } from 'react-router-hash-link';
 import css from '@emotion/css';
 
 import { TextChildren } from '../text';
-import { useHasRouter } from '../hooks';
+import { useHasRouter } from '../routing';
 import { lead } from '../colors';
 import {
   perRem,

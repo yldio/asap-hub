@@ -4,14 +4,12 @@ import { join } from 'path';
 import { TeamProfileWorkspace, ToolModal } from '@asap-hub/react-components';
 import { TeamTool, TeamResponse } from '@asap-hub/model';
 import { usePatchTeamById } from './state';
-import { usePushFromHere } from '../../history';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const { path, url } = useRouteMatch();
-  const historyPush = usePushFromHere();
 
   const patchTeam = usePatchTeamById(team.id);
 
@@ -31,12 +29,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
         <ToolModal
           title="Add Link"
           backHref={url}
-          onSave={async (data: TeamTool) => {
-            await patchTeam({
+          onSave={(data: TeamTool) =>
+            patchTeam({
               tools: [...(team.tools ?? []), data],
-            });
-            historyPush(url);
-          }}
+            })
+          }
         />
       </Route>
       {team.tools.map((tool, i) => (
@@ -45,12 +42,11 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
             {...tool}
             title="Edit Link"
             backHref={url}
-            onSave={async (data: TeamTool) => {
-              await patchTeam({
+            onSave={(data: TeamTool) =>
+              patchTeam({
                 tools: Object.assign([], team.tools, { [i]: data }),
-              });
-              historyPush(url);
-            }}
+              })
+            }
           />
         </Route>
       ))}

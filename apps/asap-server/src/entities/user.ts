@@ -182,7 +182,6 @@ export const parseUser = (user: CMSUser): UserResponse => {
     ...((user.data.social?.iv && user.data.social?.iv[0]) || {}),
     orcid,
   };
-  console.log(social);
 
   const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;
 

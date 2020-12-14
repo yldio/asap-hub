@@ -1,5 +1,4 @@
-import React from 'react';
-import { NewsOrEventResponse } from '@asap-hub/model';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 import { Display } from '../atoms';
 import { perRem } from '../pixels';
@@ -15,7 +14,9 @@ const styles = css({
 
 type LatestNewsProps = {
   readonly title: string;
-  readonly newsAndEvents: ReadonlyArray<NewsOrEventResponse>;
+  readonly newsAndEvents: ReadonlyArray<
+    ComponentProps<typeof NewsAndEventsCard>
+  >;
 };
 
 const NewsAndEventsSection: React.FC<LatestNewsProps> = ({

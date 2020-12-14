@@ -10,7 +10,14 @@ const NewsAndEventsList: React.FC<{}> = () => {
     return <Loading />;
   }
 
-  return <NewsAndEventsPageBody newsAndEvents={result.data.items} />;
+  return (
+    <NewsAndEventsPageBody
+      newsAndEvents={result.data.items.map((n) => ({
+        ...n,
+        href: `/news-and-events/${n.id}`,
+      }))}
+    />
+  );
 };
 
 export default NewsAndEventsList;

@@ -9,6 +9,7 @@ describe('News', () => {
     type: 'News',
     title: 'Not a Title',
     created: new Date().toISOString(),
+    href: `/news-and-events/uuid`,
   };
 
   it('renders the title', () => {

@@ -28,6 +28,10 @@ const Dashboard: React.FC<{}> = () => {
   if (dashboard) {
     const data = {
       ...dashboard,
+      newsAndEvents: dashboard.newsAndEvents.map((n) => ({
+        ...n,
+        href: `/news-and-events/${n.id}`,
+      })),
       hrefDiscoverAsap: DISCOVER_PATH,
       hrefSharedResearch: '/shared-research',
       hrefNewsAndEvents: '/news-and-events',

@@ -23,6 +23,10 @@ const Discover: React.FC<{}> = () => {
     // ASAP Staff role is based on job title and institution
     const data = {
       ...discover,
+      training: discover.training.map((t) => ({
+        ...t,
+        href: `/news-and-events/${t.id}`,
+      })),
       members: discover.members.map((m) => ({
         ...m,
         role: 'Staff',

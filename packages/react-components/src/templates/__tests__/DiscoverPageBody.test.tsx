@@ -57,7 +57,10 @@ it('renders training information', () => {
       training={[
         createNewsAndEventsResponse('1'),
         createNewsAndEventsResponse('2'),
-      ]}
+      ].map((n) => ({
+        ...n,
+        href: `/news-and-events/${n.id}`,
+      }))}
     />,
   );
 

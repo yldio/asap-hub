@@ -10,6 +10,7 @@ let overrides: Flags = {
   // flags already live in prod:
   EDIT_PROFILE_REST: true,
   EDIT_PROFILE_QUESTIONS: true,
+  EDIT_PROFILE_AVATAR: true,
   // can also be used to manually disable a flag in development:
 };
 

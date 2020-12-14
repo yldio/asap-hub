@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { NewsAndEventsPage, Loading } from '@asap-hub/react-components';
+import { NewsAndEventsPage } from '@asap-hub/react-components';
 
-import ErrorBoundary from '../errors/ErrorBoundary';
+import Frame from '../structure/Frame';
 
 const loadBody = () =>
   import(/* webpackChunkName: "news-and-events-body" */ './Body');
@@ -16,11 +16,9 @@ const NewsAndEvents: React.FC<{}> = () => {
     <Switch>
       <Route exact path={path}>
         <NewsAndEventsPage>
-          <ErrorBoundary>
-            <Suspense fallback={<Loading />}>
-              <Body />
-            </Suspense>
-          </ErrorBoundary>
+          <Frame>
+            <Body />
+          </Frame>
         </NewsAndEventsPage>
       </Route>
     </Switch>

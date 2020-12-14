@@ -3,7 +3,7 @@ import { useRouteMatch } from 'react-router-dom';
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
 
 import { usePageByPath } from '../api';
-import ErrorBoundary from '../errors/ErrorBoundary';
+import Frame from '../structure/Frame';
 
 interface ContentProps {
   layoutComponent: React.FC;
@@ -19,9 +19,9 @@ const Content: React.FC<ContentProps> = ({ layoutComponent: Layout }) => {
   if (page) {
     return (
       <Layout>
-        <ErrorBoundary>
+        <Frame>
           <ContentPage {...page} />
-        </ErrorBoundary>
+        </Frame>
       </Layout>
     );
   }

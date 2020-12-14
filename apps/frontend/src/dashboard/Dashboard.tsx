@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 
 import {
   DashboardPage,
@@ -8,9 +8,9 @@ import {
 import { useCurrentUser } from '@asap-hub/react-context';
 
 import { useDashboard } from '../api';
-import ErrorBoundary from '../errors/ErrorBoundary';
 import { DISCOVER_PATH, NETWORK_PATH } from '../routes';
 import { TEAMS_PATH } from '../network/routes';
+import Frame from '../structure/Frame';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
@@ -41,11 +41,9 @@ const Dashboard: React.FC<{}> = () => {
     };
     return (
       <DashboardPage firstName={firstName}>
-        <ErrorBoundary>
-          <Suspense fallback={<Loading />}>
-            <Body {...data} />
-          </Suspense>
-        </ErrorBoundary>
+        <Frame>
+          <Body {...data} />
+        </Frame>
       </DashboardPage>
     );
   }

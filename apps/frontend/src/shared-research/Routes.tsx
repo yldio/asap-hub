@@ -1,10 +1,10 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { SharedResearchPage, Loading } from '@asap-hub/react-components';
+import { SharedResearchPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
-import ErrorBoundary from '../errors/ErrorBoundary';
 import { useSearch } from '../hooks';
+import Frame from '../structure/Frame';
 
 const loadResearchOutputList = () =>
   import(
@@ -34,14 +34,12 @@ const SharedResearch: React.FC<{}> = () => {
           onChangeFilter={toggleFilter}
           filters={filters}
         >
-          <ErrorBoundary>
-            <Suspense fallback={<Loading />}>
-              <ResearchOutputList
-                searchQuery={searchQueryDebounce}
-                filters={filters}
-              />
-            </Suspense>
-          </ErrorBoundary>
+          <Frame>
+            <ResearchOutputList
+              searchQuery={searchQueryDebounce}
+              filters={filters}
+            />
+          </Frame>
         </SharedResearchPage>
       </Route>
       <Route path={`${path}/:id`}>

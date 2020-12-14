@@ -1,15 +1,13 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import {
   Layout,
   BasicLayout,
   mailToFeedback,
-  Loading,
 } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 
 import history from './history';
-import ErrorBoundary from './errors/ErrorBoundary';
 import {
   DISCOVER_PATH,
   NETWORK_PATH,
@@ -20,6 +18,7 @@ import {
 import { TEAMS_PATH } from './network/routes';
 import AuthProvider from './auth/AuthProvider';
 import CheckAuth from './auth/CheckAuth';
+import Frame from './structure/Frame';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
@@ -65,40 +64,36 @@ const App: React.FC<{}> = () => {
   }, []);
 
   return (
-    <ErrorBoundary>
+    <Frame>
       <AuthProvider>
         <Router history={history}>
-          <ErrorBoundary>
-            <Suspense fallback={<Loading />}>
-              <Switch>
-                <Route path="/welcome">
-                  <Welcome />
-                </Route>
+          <Frame>
+            <Switch>
+              <Route path="/welcome">
+                <Welcome />
+              </Route>
 
-                <Route exact path="/terms-and-conditions">
-                  <Content layoutComponent={ConfiguredLayout} />
-                </Route>
-                <Route exact path="/privacy-policy">
-                  <Content layoutComponent={ConfiguredLayout} />
-                </Route>
+              <Route exact path="/terms-and-conditions">
+                <Content layoutComponent={ConfiguredLayout} />
+              </Route>
+              <Route exact path="/privacy-policy">
+                <Content layoutComponent={ConfiguredLayout} />
+              </Route>
 
-                <Route>
-                  <CheckAuth>
-                    <ConfiguredLayout>
-                      <ErrorBoundary>
-                        <Suspense fallback={<Loading />}>
-                          <GuardedApp />
-                        </Suspense>
-                      </ErrorBoundary>
-                    </ConfiguredLayout>
-                  </CheckAuth>
-                </Route>
-              </Switch>
-            </Suspense>
-          </ErrorBoundary>
+              <Route>
+                <CheckAuth>
+                  <ConfiguredLayout>
+                    <Frame>
+                      <GuardedApp />
+                    </Frame>
+                  </ConfiguredLayout>
+                </CheckAuth>
+              </Route>
+            </Switch>
+          </Frame>
         </Router>
       </AuthProvider>
-    </ErrorBoundary>
+    </Frame>
   );
 };
 

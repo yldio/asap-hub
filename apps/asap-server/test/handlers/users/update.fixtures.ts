@@ -1,9 +1,83 @@
 import { UserResponse } from '@asap-hub/model';
-import { RestUser } from '@asap-hub/squidex';
+import { RestUser, config, GraphqlUser } from '@asap-hub/squidex';
 import { CMSUser } from '../../../src/entities';
-import { config } from '@asap-hub/squidex';
+import { ResponseFetchUser } from '../../../src/controllers/users';
 
-export const patchResponse: CMSUser = {
+export const buildUserGraphqlResponse = (
+  flatdata: Partial<GraphqlUser['flatData']> = {},
+): { data: ResponseFetchUser } => ({
+  data: {
+    findUsersContent: {
+      id: 'userId',
+      created: '2020-09-25T09:42:51Z',
+      lastModified: '2020-09-25T09:42:51Z',
+      data: null,
+      flatData: {
+        email: 'cristiano@ronaldo.com',
+        contactEmail: 'cristiano@ronaldo.com',
+        firstName: 'Cristiano',
+        lastName: 'Ronaldo',
+        lastModifiedDate: '2020-09-25T09:42:51.132Z',
+        jobTitle: 'Junior',
+        orcid: '363-98-9330',
+        institution: 'Dollar General Corporation',
+        location: 'Zofilte',
+        avatar: [{ id: 'uuid-user-id-1' }],
+        questions: null,
+        skills: null,
+        teams: [
+          {
+            role: 'Lead PI (Core Leadership)',
+            approach: 'Exact',
+            responsibilities: 'Make sure coverage is high',
+            id: [
+              {
+                id: 'team-id-1',
+                created: '2020-09-23T20:45:22Z',
+                lastModified: '2020-10-26T15:33:18Z',
+                data: null,
+                flatData: {
+                  applicationNumber: 'applicationNumber',
+                  projectTitle: 'Awesome project',
+                  displayName: 'Jackson, M',
+                  proposal: [{ id: 'proposal-id-1' }],
+                  skills: [],
+                  outputs: [],
+                },
+              },
+            ],
+          },
+          {
+            role: 'Collaborating PI',
+            approach: null,
+            responsibilities: null,
+            id: [
+              {
+                id: 'team-id-3',
+                created: '2020-09-23T20:45:22Z',
+                lastModified: '2020-10-26T15:33:18Z',
+                data: null,
+                flatData: {
+                  applicationNumber: 'applicationNumber',
+                  projectTitle: 'Another Awesome project',
+                  displayName: 'Tarantino, M',
+                  proposal: [{ id: 'proposal-id-2' }],
+                  skills: [],
+                  outputs: [],
+                },
+              },
+            ],
+          },
+        ],
+        role: 'Grantee',
+        connections: [],
+        ...flatdata,
+      },
+    },
+  },
+});
+
+export const getUserResponse: CMSUser = {
   id: 'userId',
   data: {
     role: { iv: 'Grantee' },
@@ -70,26 +144,36 @@ export const putResponse: RestUser = {
 
 export const expectation: UserResponse = {
   id: 'userId',
+  displayName: 'Cristiano Ronaldo',
   createdDate: '2020-09-25T09:42:51.000Z',
   lastModifiedDate: '2020-09-25T09:42:51.132Z',
-  displayName: 'Cristiano Ronaldo',
   email: 'cristiano@ronaldo.com',
+  contactEmail: 'cristiano@ronaldo.com',
   firstName: 'Cristiano',
   lastName: 'Ronaldo',
-  biography: 'I do awesome stuff',
-  department: 'Awesome Department',
+  jobTitle: 'Junior',
+  institution: 'Dollar General Corporation',
   teams: [
     {
       id: 'team-id-1',
-      displayName: 'Unknown',
+      displayName: 'Jackson, M',
+      proposal: 'proposal-id-1',
       role: 'Lead PI (Core Leadership)',
       approach: 'Exact',
       responsibilities: 'Make sure coverage is high',
     },
+    {
+      displayName: 'Tarantino, M',
+      id: 'team-id-3',
+      proposal: 'proposal-id-2',
+      role: 'Collaborating PI',
+    },
   ],
+  location: 'Zofilte',
+  orcid: '363-98-9330',
   orcidWorks: [],
   skills: [],
-  questions: ['test'],
+  questions: [],
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
   role: 'Grantee',
 };

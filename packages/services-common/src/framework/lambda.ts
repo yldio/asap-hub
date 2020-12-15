@@ -10,7 +10,7 @@ import {
 } from 'aws-lambda';
 import { origin } from '../config';
 
-const debug = Debug('http')
+const debug = Debug('http');
 
 export interface Request {
   method: 'get' | 'post';

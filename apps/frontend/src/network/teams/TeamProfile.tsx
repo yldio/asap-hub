@@ -1,14 +1,10 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import {
-  TeamProfilePage,
-  NotFoundPage,
-  Loading,
-} from '@asap-hub/react-components';
+import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { join } from 'path';
 
-import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
 import { useTeamById } from './state';
+import Frame from '../../structure/Frame';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -46,24 +42,22 @@ const TeamProfile: React.FC<{}> = () => {
 
     return (
       <TeamProfilePage {...teamPageProps}>
-        <ErrorBoundary>
-          <Suspense fallback={<Loading />}>
-            <Switch>
-              <Route path={`${path}/about`}>
-                <About team={team} />
+        <Frame>
+          <Switch>
+            <Route path={`${path}/about`}>
+              <About team={team} />
+            </Route>
+            <Route path={`${path}/outputs`}>
+              <Outputs outputs={team.outputs} />
+            </Route>
+            {team.tools && (
+              <Route path={`${path}/workspace`}>
+                <Workspace team={{ ...team, tools: team.tools }} />
               </Route>
-              <Route path={`${path}/outputs`}>
-                <Outputs outputs={team.outputs} />
-              </Route>
-              {team.tools && (
-                <Route path={`${path}/workspace`}>
-                  <Workspace team={{ ...team, tools: team.tools }} />
-                </Route>
-              )}
-              <Redirect to={join(url, 'about')} />
-            </Switch>
-          </Suspense>
-        </ErrorBoundary>
+            )}
+            <Redirect to={join(url, 'about')} />
+          </Switch>
+        </Frame>
       </TeamProfilePage>
     );
   }

@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, ComponentProps, useState } from 'react';
+import React, { useEffect, ComponentProps, useState } from 'react';
 import {
   Switch,
   Route,
@@ -8,19 +8,15 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { join } from 'path';
-import {
-  UserProfilePage,
-  NotFoundPage,
-  Loading,
-} from '@asap-hub/react-components';
+import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 
-import ErrorBoundary from '@asap-hub/frontend/src/errors/ErrorBoundary';
 import { DISCOVER_PATH, NETWORK_PATH } from '@asap-hub/frontend/src/routes';
 import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
 import { TEAMS_PATH } from '../routes';
 import { useUserById, usePatchUserAvatarById } from './state';
+import Frame from '../../structure/Frame';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -109,33 +105,31 @@ const User: React.FC<{}> = () => {
 
     return (
       <UserProfilePage {...profilePageProps}>
-        <ErrorBoundary>
-          <Suspense fallback={<Loading />}>
-            {user.role === 'Staff' ? (
-              <Staff user={user} teams={teams} />
-            ) : (
-              <>
-                <Switch>
-                  <Route path={`${path}/research`}>
-                    <Research user={user} teams={teams} />
-                  </Route>
-                  <Route path={`${path}/about`}>
-                    <About user={user} />
-                  </Route>
-                  <Route path={`${path}/outputs`}>
-                    <Outputs />
-                  </Route>
-                  <Redirect to={join(url, 'research')} />
-                </Switch>
-                {isOwnProfile && (
-                  <Route path={`${path}/:tab`}>
-                    <Editing user={user} />
-                  </Route>
-                )}
-              </>
-            )}
-          </Suspense>
-        </ErrorBoundary>
+        <Frame>
+          {user.role === 'Staff' ? (
+            <Staff user={user} teams={teams} />
+          ) : (
+            <>
+              <Switch>
+                <Route path={`${path}/research`}>
+                  <Research user={user} teams={teams} />
+                </Route>
+                <Route path={`${path}/about`}>
+                  <About user={user} />
+                </Route>
+                <Route path={`${path}/outputs`}>
+                  <Outputs />
+                </Route>
+                <Redirect to={join(url, 'research')} />
+              </Switch>
+              {isOwnProfile && (
+                <Route path={`${path}/:tab`}>
+                  <Editing user={user} />
+                </Route>
+              )}
+            </>
+          )}
+        </Frame>
       </UserProfilePage>
     );
   }

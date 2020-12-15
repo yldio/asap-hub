@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   Switch,
   Route,
@@ -6,12 +6,12 @@ import {
   useHistory,
   Redirect,
 } from 'react-router-dom';
-import { NetworkPage, Loading } from '@asap-hub/react-components';
+import { NetworkPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
-import ErrorBoundary from '../errors/ErrorBoundary';
 import { useSearch } from '../hooks';
 import { TEAMS_PATH } from './routes';
+import Frame from '../structure/Frame';
 
 const loadUserList = () =>
   import(/* webpackChunkName: "network-user-list" */ './UserList');
@@ -65,11 +65,9 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <ErrorBoundary>
-            <Suspense fallback={<Loading />}>
-              <UserList filters={filters} searchQuery={searchQueryDebounce} />
-            </Suspense>
-          </ErrorBoundary>
+          <Frame>
+            <UserList filters={filters} searchQuery={searchQueryDebounce} />
+          </Frame>
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={UserProfile} />
@@ -82,11 +80,9 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <ErrorBoundary>
-            <Suspense fallback={<Loading />}>
-              <TeamList filters={filters} searchQuery={searchQueryDebounce} />
-            </Suspense>
-          </ErrorBoundary>
+          <Frame>
+            <TeamList filters={filters} searchQuery={searchQueryDebounce} />
+          </Frame>
         </NetworkPage>
       </Route>
       <Route path={`${path}/${TEAMS_PATH}/:id`} component={TeamProfile} />

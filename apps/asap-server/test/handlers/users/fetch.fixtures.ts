@@ -64,8 +64,13 @@ export const response: { data: ResponseFetchUsers } = {
             skills: [],
             social: [
               {
-                github: 'awesome',
-              },
+                "github": "awesome",
+                "googleScholar": null,
+                "linkedIn": null,
+                "researcherId": null,
+                "researchGate": null,
+                "twitter": null
+              }
             ],
             teams: [
               {

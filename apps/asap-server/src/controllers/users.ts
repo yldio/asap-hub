@@ -73,6 +73,8 @@ flatData {
     researcherId
     researchGate
     twitter
+    website1
+    website2
   }
   role
   responsibilities

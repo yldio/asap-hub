@@ -70,6 +70,8 @@ export const response: { data: ResponseFetchUsers } = {
                 researcherId: null,
                 researchGate: null,
                 twitter: null,
+                website1: null,
+                website2: null,
               },
             ],
             teams: [

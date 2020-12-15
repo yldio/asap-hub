@@ -33,6 +33,8 @@ export const buildUserGraphqlResponse = (
             researcherId: null,
             researchGate: null,
             twitter: null,
+            website1: null,
+            website2: null,
           },
         ],
         teams: [

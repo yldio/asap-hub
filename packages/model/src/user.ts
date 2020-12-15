@@ -82,6 +82,8 @@ export interface UserTeam {
 }
 
 export interface UserSocialLinks {
+  website1?: string;
+  website2?: string;
   linkedIn?: string;
   orcid?: string;
   researcherId?: string;

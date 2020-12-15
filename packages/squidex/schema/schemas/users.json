@@ -672,6 +672,24 @@
               "contentType": "Unspecified",
               "label": "Research Gate"
             }
+          },
+          {
+            "name": "website1",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Website 1"
+            }
+          },
+          {
+            "name": "website2",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Website 2"
+            }
           }
         ]
       }

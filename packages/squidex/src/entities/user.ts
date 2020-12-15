@@ -15,9 +15,13 @@ export interface UserTeamConnection<T = string> {
   id: T[];
 }
 
-type OrNull<T> = { [K in keyof T]: T[K] | null }
+type OrNull<T> = { [K in keyof T]: T[K] | null };
 
-interface User<TAvatar = string, TConnection = string, TSocial = Omit<UserSocialLinks, 'orcid'>> {
+interface User<
+  TAvatar = string,
+  TConnection = string,
+  TSocial = Omit<UserSocialLinks, 'orcid'>
+> {
   avatar: TAvatar[];
   biography?: string;
   connections: { code: string }[];
@@ -46,4 +50,6 @@ interface User<TAvatar = string, TConnection = string, TSocial = Omit<UserSocial
 export interface RestUser extends Entity, Rest<User> {}
 export interface GraphqlUser
   extends Entity,
-    Graphql<User<{ id: string }, GraphqlTeam, OrNull<Omit<UserSocialLinks, 'orcid'>>>> {}
+    Graphql<
+      User<{ id: string }, GraphqlTeam, OrNull<Omit<UserSocialLinks, 'orcid'>>>
+    > {}

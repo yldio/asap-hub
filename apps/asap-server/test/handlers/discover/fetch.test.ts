@@ -4,6 +4,7 @@ import { DiscoverResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/discover/fetch';
+import { buildGraphQLDiscoverQuery } from '../../../src/controllers/discover';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 
@@ -20,7 +21,9 @@ describe('GET /discover', () => {
 
   test('returns 200 when no information exists', async () => {
     nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLDiscoverQuery(),
+      })
       .reply(200, {
         data: {
           queryDiscoverContents: [
@@ -49,9 +52,48 @@ describe('GET /discover', () => {
     } as DiscoverResponse);
   });
 
+  test('returns 200 when no information exists - with pagination', async () => {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLDiscoverQuery(8, 8),
+      })
+      .reply(200, {
+        data: {
+          queryDiscoverContents: [
+            { flatData: { aboutUs: null, pages: null, members: null } },
+          ],
+        },
+      });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        httpMethod: 'get',
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        queryStringParameters: {
+          take: '8',
+          skip: '8',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    const body = JSON.parse(result.body);
+    expect(result.statusCode).toStrictEqual(200);
+    expect(result.body).toBeDefined();
+    expect(body).toStrictEqual({
+      aboutUs: '',
+      training: [],
+      members: [],
+      pages: [],
+    } as DiscoverResponse);
+  });
+
   test('returns 200 when no news and events exist', async () => {
     nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLDiscoverQuery(),
+      })
       .reply(200, {
         data: {
           queryDiscoverContents: [

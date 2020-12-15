@@ -11,9 +11,8 @@ import {
   parseGraphQLNewsAndEvents,
 } from '../entities';
 
-export const query = `
-{
-    queryDiscoverContents {
+export const buildGraphQLDiscoverQuery = (top = 8, skip = 0): string => `{
+    queryDiscoverContents (top: ${top}, skip: ${skip}) {
       flatData {
         aboutUs
         training {
@@ -59,8 +58,7 @@ export const query = `
         }  
       }
     }
-  }  
-`;
+  }  `;
 
 interface Response {
   queryDiscoverContents: {
@@ -80,7 +78,12 @@ export default class Discover {
     this.client = new SquidexGraphql();
   }
 
-  async fetch(): Promise<DiscoverResponse> {
+  async fetch(options: {
+    take: number;
+    skip: number;
+  }): Promise<DiscoverResponse> {
+    const { take, skip } = options;
+    const query = buildGraphQLDiscoverQuery(take, skip);
     const res = await this.client.request<Response, unknown>(query);
     if (res.queryDiscoverContents.length === 0) {
       return {

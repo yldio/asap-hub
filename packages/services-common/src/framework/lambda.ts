@@ -1,6 +1,7 @@
 import Intercept from 'apr-intercept';
 import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
+import Debug from 'debug';
 import Joi from '@hapi/joi';
 import {
   APIGatewayProxyResultV2,
@@ -8,6 +9,8 @@ import {
   APIGatewayProxyStructuredResultV2,
 } from 'aws-lambda';
 import { origin } from '../config';
+
+const debug = Debug('http');
 
 export interface Request {
   method: 'get' | 'post';
@@ -64,6 +67,8 @@ export const validate = <T>(
 };
 
 const handlerError = (error: Error): APIGatewayProxyResultV2 => {
+  debug('Error caught on request', error);
+
   // Squidex errors
   const err = error as HTTPError;
   if (err.response && err.response.body) {

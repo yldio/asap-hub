@@ -17,7 +17,16 @@ it('catches errors', () => {
       <Throw />
     </Frame>,
   );
-  expect(container).toHaveTextContent(/error/i);
+  expect(container).toHaveTextContent(/went wrong/i);
+});
+
+it('Passes through error boundary  props', () => {
+  const { container } = render(
+    <Frame boundaryProps={{ description: 'specificerror' }}>
+      <Throw />
+    </Frame>,
+  );
+  expect(container).toHaveTextContent(/specificerror/i);
 });
 
 it('provides a suspense fallback', async () => {

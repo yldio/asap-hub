@@ -142,9 +142,6 @@ test:integration:
     paths:
       - '.jest-cache'
   script:
-    - export SQUIDEX_APP_NAME=$SQUIDEX_TEST_APP_NAME
-    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
-    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - yarn run test:integration
   needs:
     - build:ts

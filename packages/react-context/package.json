@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/dom-test-utils": "workspace:*",
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@babel/core": "^7.9.0",
     "@babel/preset-react": "^7.9.0",

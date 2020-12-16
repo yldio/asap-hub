@@ -9422,6 +9422,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/flags", "workspace:packages/flags"],
             ["@babel/core", "npm:7.9.0"],
@@ -9450,6 +9451,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/react-context", "workspace:packages/react-context"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
             ["@asap-hub/flags", "workspace:packages/flags"],
             ["@babel/core", "npm:7.9.0"],

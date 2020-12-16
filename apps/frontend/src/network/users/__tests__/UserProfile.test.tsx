@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ContextType } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
+import { ToastContext } from '@asap-hub/react-context';
 import userEvent from '@testing-library/user-event';
 import { readFileSync } from 'fs';
 import {
@@ -22,6 +23,9 @@ jest.mock('browser-image-compression');
 const imageCompressionMock = imageCompression as jest.MockedFunction<
   typeof imageCompression
 >;
+imageCompressionMock.getDataUrlFromFile = jest.requireActual(
+  'browser-image-compression',
+).getDataUrlFromFile;
 
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
@@ -30,6 +34,10 @@ const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
 >;
 const standardMockPatchUser = mockPatchUser.getMockImplementation() as typeof patchUser;
 const standardMockPostUserAvatar = mockPostUserAvatar.getMockImplementation() as typeof postUserAvatar;
+
+const mockToast = jest.fn() as jest.MockedFunction<
+  ContextType<typeof ToastContext>
+>;
 
 const renderUserProfile = async (
   userResponse = createUserResponse(),
@@ -47,6 +55,8 @@ const renderUserProfile = async (
     throw new Error('404');
   });
 
+  mockToast.mockClear();
+
   const result = render(
     <RecoilRoot
       initializeState={({ set }) => {
@@ -54,13 +64,15 @@ const renderUserProfile = async (
       }}
     >
       <React.Suspense fallback="loading">
-        <Auth0Provider user={{ id: ownUserId }}>
-          <WhenReady>
-            <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
-              <Route path="/:id" component={UserProfile} />
-            </MemoryRouter>
-          </WhenReady>
-        </Auth0Provider>
+        <ToastContext.Provider value={mockToast}>
+          <Auth0Provider user={{ id: ownUserId }}>
+            <WhenReady>
+              <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
+                <Route path="/:id" component={UserProfile} />
+              </MemoryRouter>
+            </WhenReady>
+          </Auth0Provider>
+        </ToastContext.Provider>
       </React.Suspense>
     </RecoilRoot>,
   );
@@ -255,33 +267,52 @@ describe('a header edit button', () => {
     );
   });
 
-  it('can change avatar', async () => {
-    const userProfile: UserResponse = {
-      ...createUserResponse(),
-      avatarUrl: 'https://placekitten.com/200/300',
-      id: '42',
-    };
-    const { findByLabelText } = await renderUserProfile(userProfile);
-    imageCompressionMock.mockImplementationOnce((file) =>
-      Promise.resolve(file),
-    );
-    imageCompressionMock.getDataUrlFromFile = jest.requireActual(
-      'browser-image-compression',
-    ).getDataUrlFromFile;
+  describe('for the avatar', () => {
     const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));
     const file = new File([new Uint8Array(fileBuffer)], 'jpeg.jpg', {
       type: 'image/jpeg',
     });
+    beforeEach(() => {
+      imageCompressionMock.mockImplementationOnce((fileToCompress) =>
+        Promise.resolve(fileToCompress),
+      );
+    });
 
-    userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
-    await waitFor(() =>
-      expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
-        '42',
-        expect.objectContaining({
-          avatar: `data:image/jpeg;base64,${fileBuffer.toString('base64')}`,
-        }),
-        expect.any(String),
-      ),
-    );
+    it('updates the avatar', async () => {
+      const userProfile: UserResponse = {
+        ...createUserResponse(),
+        avatarUrl: 'https://placekitten.com/200/300',
+        id: '42',
+      };
+      const { findByLabelText } = await renderUserProfile(userProfile);
+
+      userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
+      await waitFor(() =>
+        expect(mockPostUserAvatar).toHaveBeenLastCalledWith(
+          '42',
+          expect.objectContaining({
+            avatar: `data:image/jpeg;base64,${fileBuffer.toString('base64')}`,
+          }),
+          expect.any(String),
+        ),
+      );
+    });
+
+    it('toasts if the upload fails', async () => {
+      const userProfile: UserResponse = {
+        ...createUserResponse(),
+        avatarUrl: 'https://placekitten.com/200/300',
+        id: '42',
+      };
+      const { findByLabelText } = await renderUserProfile(userProfile);
+
+      mockPostUserAvatar.mockRejectedValue(new Error('500'));
+      userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
+      await waitFor(() => {
+        expect(mockToast).toHaveBeenCalledWith(
+          expect.stringMatching(/error.+picture/i),
+        );
+      });
+    });
   });
 });

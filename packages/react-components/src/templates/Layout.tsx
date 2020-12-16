@@ -4,7 +4,7 @@ import { Location } from 'history';
 import css from '@emotion/css';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
-import { MenuHeader } from '../organisms';
+import { MenuHeader, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
@@ -176,49 +176,53 @@ const Layout: React.FC<LayoutProps> = ({
   }, [location]);
 
   return (
-    <article css={[styles, menuShown || { overflow: 'hidden' }]}>
-      {/* order relevant for overlap */}
-      <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
-        <MenuHeader
-          menuOpen={menuShown}
-          onToggleMenu={() => setMenuShown(!menuShown)}
-        />
-      </div>
-      <div css={userButtonStyles}>
-        <React.Suspense fallback={<Loading />}>
-          <UserMenuButton
-            onClick={() => setMenuShown(!menuShown)}
-            open={menuShown}
+    <ToastStack>
+      <article css={[styles, menuShown || { overflow: 'hidden' }]}>
+        {/* order relevant for overlap */}
+        <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
+          <MenuHeader
+            menuOpen={menuShown}
+            onToggleMenu={() => setMenuShown(!menuShown)}
           />
-        </React.Suspense>
-      </div>
-      <main css={contentStyles}>{children}</main>
-      <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
-        <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
-      </div>
-      <div css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}>
-        <React.Suspense fallback={<Loading />}>
-          <MainNavigation
-            discoverAsapHref={discoverAsapHref}
-            sharedResearchHref={sharedResearchHref}
-            networkHref={networkHref}
-            newsAndEventsHref={newsAndEventsHref}
-          />
-        </React.Suspense>
-      </div>
-      <div
-        css={[
-          menuStyles,
-          menuShown && menuMenuShownStyles,
-          userMenuStyles,
-          menuShown && userMenuShownStyles,
-        ]}
-      >
-        <React.Suspense fallback={<Loading />}>
-          <UserNavigation {...userNavProps} />
-        </React.Suspense>
-      </div>
-    </article>
+        </div>
+        <div css={userButtonStyles}>
+          <React.Suspense fallback={<Loading />}>
+            <UserMenuButton
+              onClick={() => setMenuShown(!menuShown)}
+              open={menuShown}
+            />
+          </React.Suspense>
+        </div>
+        <main css={contentStyles}>{children}</main>
+        <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
+          <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
+        </div>
+        <div
+          css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}
+        >
+          <React.Suspense fallback={<Loading />}>
+            <MainNavigation
+              discoverAsapHref={discoverAsapHref}
+              sharedResearchHref={sharedResearchHref}
+              networkHref={networkHref}
+              newsAndEventsHref={newsAndEventsHref}
+            />
+          </React.Suspense>
+        </div>
+        <div
+          css={[
+            menuStyles,
+            menuShown && menuMenuShownStyles,
+            userMenuStyles,
+            menuShown && userMenuShownStyles,
+          ]}
+        >
+          <React.Suspense fallback={<Loading />}>
+            <UserNavigation {...userNavProps} />
+          </React.Suspense>
+        </div>
+      </article>
+    </ToastStack>
   );
 };
 

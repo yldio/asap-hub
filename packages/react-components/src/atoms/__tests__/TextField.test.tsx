@@ -142,7 +142,7 @@ describe('when valid', () => {
     expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
   });
 
-  describe('when a type prop is set', () => {
+  describe('when the type is set to a validated type', () => {
     it('does not show indicator on unchanged field', () => {
       const { getByRole } = render(
         <TextField value="test@example.com" type="email" />,

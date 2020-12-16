@@ -20,6 +20,8 @@ export const response: { data: ResponseFetchUsers } = {
             lastModifiedDate: null,
             questions: null,
             skills: null,
+            orcid: '123-456-789',
+            social: null,
             teams: [
               {
                 role: 'Lead PI (Core Leadership)',
@@ -60,6 +62,18 @@ export const response: { data: ResponseFetchUsers } = {
             lastName: 'Schwatzneger',
             questions: [],
             skills: [],
+            social: [
+              {
+                github: 'awesome',
+                googleScholar: null,
+                linkedIn: null,
+                researcherId: null,
+                researchGate: null,
+                twitter: null,
+                website1: null,
+                website2: null,
+              },
+            ],
             teams: [
               {
                 role: 'Project Manager',
@@ -106,6 +120,10 @@ export const expectation: ListUserResponse = {
       lastName: 'Hardy',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
       orcidWorks: [],
+      orcid: '123-456-789',
+      social: {
+        orcid: '123-456-789',
+      },
       teams: [
         {
           id: 'userId3',
@@ -127,6 +145,9 @@ export const expectation: ListUserResponse = {
       lastName: 'Schwatzneger',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
       orcidWorks: [],
+      social: {
+        github: 'awesome',
+      },
       teams: [
         {
           id: 'userId3',

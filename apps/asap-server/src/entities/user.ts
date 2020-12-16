@@ -4,6 +4,7 @@ import {
   UserResponse,
   UserTeam,
   UserDegree,
+  UserSocialLinks,
   TeamRole,
 } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
@@ -38,6 +39,7 @@ export interface CMSUser {
     orcidLastModifiedDate?: { iv: string };
     orcidLastSyncDate?: { iv: string };
     orcidWorks?: { iv: CMSOrcidWork[] };
+    social?: { iv: Omit<UserSocialLinks, 'orcid'>[] };
     skills?: { iv: string[] };
     skillsDescription?: { iv: string };
     questions?: {
@@ -122,6 +124,16 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     parseGraphQLUserTeamConnection,
   );
 
+  const orcid = item.flatData?.orcid || undefined;
+  // merge both and remove null values
+  const social = Object.entries({
+    ...((item.flatData?.social && item.flatData?.social[0]) || {}),
+    orcid,
+  }).reduce((acc, [k, v]) => {
+    if (v == null) return acc;
+    return { ...acc, [k]: v };
+  }, {} as { [key: string]: string });
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const displayName = `${item.flatData!.firstName} ${item.flatData!.lastName}`;
 
@@ -129,6 +141,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     id: item.id,
     createdDate,
     displayName,
+    orcid, // TODO: remove once edit social is added
     firstName: item.flatData?.firstName || '',
     lastName: item.flatData?.lastName || '',
     biography: item.flatData?.biography || undefined,
@@ -139,12 +152,12 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     department: item.flatData?.department || undefined,
     jobTitle: item.flatData?.jobTitle || undefined,
     location: item.flatData?.location || undefined,
-    orcid: item.flatData?.orcid || undefined,
     orcidWorks: item.flatData?.orcidWorks?.slice(0, 5) || [],
     questions: flatQuestions.map((q) => q.question) || [],
     skills: flatSkills,
     lastModifiedDate: item.flatData?.lastModifiedDate ?? createdDate,
     teams,
+    social,
     avatarUrl: flatAvatar?.length
       ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,
@@ -164,6 +177,12 @@ export const parseUser = (user: CMSUser): UserResponse => {
       responsibilities: t.responsibilities ? t.responsibilities : undefined,
     })) || [];
 
+  const orcid = user.data.orcid?.iv;
+  const social = {
+    ...((user.data.social?.iv && user.data.social?.iv[0]) || {}),
+    orcid,
+  };
+
   const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;
 
   return JSON.parse(
@@ -182,6 +201,7 @@ export const parseUser = (user: CMSUser): UserResponse => {
       institution: user.data.institution?.iv,
       department: user.data.department?.iv,
       teams,
+      social,
       location: user.data.location?.iv,
       orcid: user.data.orcid?.iv,
       orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,

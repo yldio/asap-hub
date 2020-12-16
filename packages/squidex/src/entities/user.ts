@@ -1,4 +1,10 @@
-import { TeamRole, OrcidWork, UserDegree, Role } from '@asap-hub/model';
+import {
+  TeamRole,
+  OrcidWork,
+  UserDegree,
+  UserSocialLinks,
+  Role,
+} from '@asap-hub/model';
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 
@@ -9,7 +15,13 @@ export interface UserTeamConnection<T = string> {
   id: T[];
 }
 
-interface User<TAvatar = string, TConnection = string> {
+type OrNull<T> = { [K in keyof T]: T[K] | null };
+
+interface User<
+  TAvatar = string,
+  TConnection = string,
+  TSocial = Omit<UserSocialLinks, 'orcid'>
+> {
   avatar: TAvatar[];
   biography?: string;
   connections: { code: string }[];
@@ -32,9 +44,12 @@ interface User<TAvatar = string, TConnection = string> {
   reachOut?: string;
   skillsDescription?: string;
   teams: UserTeamConnection<TConnection>[];
+  social?: TSocial[];
 }
 
 export interface RestUser extends Entity, Rest<User> {}
 export interface GraphqlUser
   extends Entity,
-    Graphql<User<{ id: string }, GraphqlTeam>> {}
+    Graphql<
+      User<{ id: string }, GraphqlTeam, OrNull<Omit<UserSocialLinks, 'orcid'>>>
+    > {}

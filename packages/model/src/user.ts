@@ -10,7 +10,6 @@ export interface Invitee {
   lastName: string;
   biography?: string;
   jobTitle?: string;
-  orcid?: string;
   department?: string;
   institution?: string;
   location?: string;
@@ -82,6 +81,18 @@ export interface UserTeam {
   responsibilities?: string;
 }
 
+export interface UserSocialLinks {
+  website1?: string;
+  website2?: string;
+  linkedIn?: string;
+  orcid?: string;
+  researcherId?: string;
+  twitter?: string;
+  github?: string;
+  googleScholar?: string;
+  researchGate?: string;
+}
+
 export interface UserResponse extends Invitee {
   id: string;
   contactEmail?: string;
@@ -94,20 +105,13 @@ export interface UserResponse extends Invitee {
   skillsDescription?: string;
   questions: string[];
   biosketch?: string;
+  orcid?: string;
   orcidLastModifiedDate?: string;
   orcidWorks?: OrcidWork[];
   reachOut?: string;
   responsibilities?: string;
   role: Role;
-  social?: {
-    linkedIn?: string;
-    orcid?: string;
-    researcherId?: string;
-    twitter?: string;
-    github?: string;
-    googleScholar?: string;
-    researchGate?: string;
-  };
+  social?: UserSocialLinks;
 }
 
 export interface UserPatchRequest {
@@ -126,6 +130,7 @@ export interface UserPatchRequest {
   skillsDescription?: string;
   questions?: string[];
   teams?: Pick<UserTeam, 'id' | 'approach' | 'responsibilities'>[];
+  social?: UserSocialLinks;
 }
 
 export interface UserAvatarPostRequest {

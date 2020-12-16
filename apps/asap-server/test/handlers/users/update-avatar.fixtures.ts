@@ -139,6 +139,9 @@ export const expectation: UserResponse = {
   location: 'Zofilte',
   orcid: '363-98-9330',
   orcidWorks: [],
+  social: {
+    orcid: '363-98-9330',
+  },
   skills: [],
   questions: [],
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,

@@ -25,6 +25,18 @@ export const buildUserGraphqlResponse = (
         avatar: [{ id: 'uuid-user-id-1' }],
         questions: null,
         skills: null,
+        social: [
+          {
+            github: 'awesome',
+            googleScholar: null,
+            linkedIn: null,
+            researcherId: null,
+            researchGate: null,
+            twitter: null,
+            website1: null,
+            website2: null,
+          },
+        ],
         teams: [
           {
             role: 'Lead PI (Core Leadership)',
@@ -92,6 +104,13 @@ export const getUserResponse: CMSUser = {
     avatar: { iv: ['uuid-user-id-1'] },
     skills: { iv: [] },
     orcidWorks: { iv: [] },
+    social: {
+      iv: [
+        {
+          github: 'awesome',
+        },
+      ],
+    },
     teams: {
       iv: [
         {
@@ -123,6 +142,13 @@ export const putResponse: RestUser = {
     avatar: { iv: ['uuid-user-id-1'] },
     skills: { iv: [] },
     orcidWorks: { iv: [] },
+    social: {
+      iv: [
+        {
+          github: 'awesome',
+        },
+      ],
+    },
     teams: {
       iv: [
         {
@@ -153,6 +179,10 @@ export const expectation: UserResponse = {
   lastName: 'Ronaldo',
   jobTitle: 'Junior',
   institution: 'Dollar General Corporation',
+  social: {
+    github: 'awesome',
+    orcid: '363-98-9330',
+  },
   teams: [
     {
       id: 'team-id-1',

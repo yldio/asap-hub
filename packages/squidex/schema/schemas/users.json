@@ -609,6 +609,89 @@
             }
           }
         ]
+      },
+      {
+        "name": "social",
+        "properties": {
+          "fieldType": "Array",
+          "maxItems": 1,
+          "label": "Social Links"
+        },
+        "partitioning": "invariant",
+        "nested": [
+          {
+            "name": "linkedIn",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "LinkedIn"
+            }
+          },
+          {
+            "name": "researcherId",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Researcher ID"
+            }
+          },
+          {
+            "name": "twitter",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Twitter"
+            }
+          },
+          {
+            "name": "github",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Github"
+            }
+          },
+          {
+            "name": "googleScholar",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Google Scholar"
+            }
+          },
+          {
+            "name": "researchGate",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Research Gate"
+            }
+          },
+          {
+            "name": "website1",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Website 1"
+            }
+          },
+          {
+            "name": "website2",
+            "properties": {
+              "fieldType": "String",
+              "editor": "Input",
+              "contentType": "Unspecified",
+              "label": "Website 2"
+            }
+          }
+        ]
       }
     ],
     "previewUrls": {

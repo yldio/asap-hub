@@ -142,6 +142,24 @@ describe('when valid', () => {
     expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
   });
 
+  describe('when a type prop is set', () => {
+    it('does not show indicator on unchanged field', () => {
+      const { getByRole } = render(
+        <TextField value="test@example.com" type="email" />,
+      );
+      expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
+    });
+    it('show indicator on changed field', async () => {
+      const { getByRole } = render(
+        <TextField value="test@example.co" type="email" />,
+      );
+      await userEvent.type(getByRole('textbox'), 'a');
+      expect(getComputedStyle(getByRole('textbox')).backgroundImage).toMatch(
+        /^url\(.*tick.*\.gif.*\)$/,
+      );
+    });
+  });
+
   describe('when a validation prop is set', () => {
     it('Does not show an indicator when field is unchanged', () => {
       const { getByRole } = render(<TextField value="a" pattern=".*" />);

@@ -1,9 +1,16 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, ComponentProps } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
 import { ErrorCard } from '@asap-hub/react-components';
 
-const ErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => {
+type ErrorBoundaryProps = { children: ReactNode } & Partial<
+  ComponentProps<typeof ErrorCard>
+>;
+
+const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
+  children,
+  ...errorCardProps
+}) => {
   let pathname = '';
   let search = '';
   try {
@@ -16,7 +23,9 @@ const ErrorBoundary: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <ReactErrorBoundary
-      FallbackComponent={ErrorCard}
+      fallbackRender={({ error }) => (
+        <ErrorCard error={error} {...errorCardProps} />
+      )}
       resetKeys={[pathname, search]}
     >
       {children}

@@ -29,20 +29,36 @@ const components = {
         <Headline2 id={id}>{children}</Headline2>
       </div>
     ) : (
-      <ErrorCard>Invalid h1 heading styling</ErrorCard>
+      <ErrorCard
+        title="Styling Error"
+        description="Invalid h1 heading styling"
+      />
     ),
   h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (
       <Headline3 id={id}>{children}</Headline3>
     ) : (
-      <ErrorCard>Invalid h2 heading styling</ErrorCard>
+      <ErrorCard
+        title="Styling Error"
+        description="Invalid h2 heading styling"
+      />
     ),
   a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
     if (!isTextChildren(children)) {
-      return <ErrorCard>Invalid link styling with href {href}</ErrorCard>;
+      return (
+        <ErrorCard
+          title="Styling Error"
+          description={`Invalid link styling with href ${href}`}
+        />
+      );
     }
     if (typeof href === 'undefined') {
-      return <ErrorCard>Link "{children}" is missing href</ErrorCard>;
+      return (
+        <ErrorCard
+          title="Styling Error"
+          description={`"${children}" is missing href`}
+        />
+      );
     }
     return <Link href={href}>{children}</Link>;
   },

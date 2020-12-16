@@ -20,7 +20,7 @@ const styles = css({
   },
 });
 
-const themeStyles: Record<ThemeVariant, SerializedStyles> = {
+export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({ color: fern.rgb, ':active': { color: pine.rgb } }),
   grey: css({ color: fern.rgb, ':active': { color: pine.rgb } }),
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),

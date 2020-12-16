@@ -1,5 +1,5 @@
 import React from 'react';
-import { text } from '@storybook/addon-knobs';
+import { text, boolean } from '@storybook/addon-knobs';
 
 import { ErrorCard } from '@asap-hub/react-components';
 
@@ -9,7 +9,16 @@ export default {
 };
 
 export const PlainText = () => (
-  <ErrorCard>{text('Text', 'Something went wrong!')}</ErrorCard>
+  <ErrorCard
+    title={text('Title', 'Something went wrong!')}
+    description={text('Description', 'There was a problem with your request')}
+    refreshLink={boolean('Refresh Link', false)}
+    error={
+      boolean('Error Included', false)
+        ? new Error('Failed to get data')
+        : undefined
+    }
+  />
 );
 
 export const ApplicationError = () => (
@@ -18,5 +27,6 @@ export const ApplicationError = () => (
       name: text('Name', 'BasicError'),
       message: text('Message', 'Failed to get data'),
     })}
-  ></ErrorCard>
+    refreshLink={boolean('Refresh Link', false)}
+  />
 );

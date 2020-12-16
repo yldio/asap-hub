@@ -45,7 +45,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
         href: `${NETWORK_PATH}/${TEAMS_PATH}/${id}`,
       }))}
       settingsHref="/settings"
-      feedbackHref={mailToFeedback}
+      feedbackHref={mailToFeedback()}
       logoutHref={LOGOUT_PATH}
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"

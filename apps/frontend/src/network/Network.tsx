@@ -11,7 +11,7 @@ import { useDebounce } from 'use-debounce';
 
 import { useSearch } from '../hooks';
 import { TEAMS_PATH } from './routes';
-import Frame from '../structure/Frame';
+import { SearchFrame } from '../structure/Frame';
 
 const loadUserList = () =>
   import(/* webpackChunkName: "network-user-list" */ './UserList');
@@ -65,9 +65,9 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <Frame>
+          <SearchFrame>
             <UserList filters={filters} searchQuery={searchQueryDebounce} />
-          </Frame>
+          </SearchFrame>
         </NetworkPage>
       </Route>
       <Route path={`${path}/users/:id`} component={UserProfile} />
@@ -80,9 +80,9 @@ const Network: React.FC<{}> = () => {
           filters={filters}
           searchQuery={searchQuery}
         >
-          <Frame>
+          <SearchFrame>
             <TeamList filters={filters} searchQuery={searchQueryDebounce} />
-          </Frame>
+          </SearchFrame>
         </NetworkPage>
       </Route>
       <Route path={`${path}/${TEAMS_PATH}/:id`} component={TeamProfile} />

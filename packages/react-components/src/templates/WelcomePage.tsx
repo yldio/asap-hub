@@ -127,7 +127,7 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
         <Toast onClose={onCloseAuthFailedToast}>
           There was a problem with your account. If this issue persists, please
           contact{' '}
-          <Link theme={null} href={mailToSupport}>
+          <Link theme={null} href={mailToSupport()}>
             <span css={{ textDecoration: 'underline' }}>ASAP Support</span>
           </Link>
           .

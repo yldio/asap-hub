@@ -1,89 +1,89 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import css from '@emotion/css';
 import { serializeError } from 'serialize-error';
 
-import { Card, Paragraph, Caption } from '../atoms';
-import { crossIcon } from '../icons';
-import { perRem, lineHeight } from '../pixels';
-import { ember } from '../colors';
+import { Card, Link, Button } from '../atoms';
+import { alertIcon } from '../icons';
+import { perRem } from '../pixels';
+import { mailToSupport } from '../mail';
 
 const styles = css({
   boxSizing: 'border-box',
   maxHeight: '100%',
-  padding: `${12 / perRem}em`,
-
-  overflowY: 'auto',
-});
-const iconStyles = css({
-  width: `${lineHeight / perRem}em`,
-  height: `${lineHeight / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
+  padding: `${24 / perRem}em`,
   display: 'grid',
-  justifyItems: 'center',
-  alignItems: 'center',
+  gridColumnGap: `${12 / perRem}em`,
+  gridTemplateColumns: 'min-content auto',
+});
 
-  svg: {
-    stroke: ember.rgb,
+const underlineStyles = css({
+  textDecoration: 'underline',
+  ':hover': {
+    textDecoration: 'unset',
   },
 });
-const errorInfoStyles = css({
-  fontSize: 'smaller',
 
-  overflowX: 'hidden',
-  wordBreak: 'break-all',
+const mailto = (error: Error) =>
+  mailToSupport({
+    subject: 'Error message on the ASAP Hub',
+    body: `Dear ASAP Support,
+I've come across this error and it would be great if you could address it. Thank you!
 
-  userSelect: 'all',
-  // inline (without -block) allows clicking between lines, bypassing user-select
-  display: 'inline-block',
-});
+Details about the issue (please don't delete, this will help our engineers solve the issue)
+${btoa(
+  JSON.stringify(
+    {
+      error: serializeError(error),
+    },
+    null,
+    2,
+  ),
+)}`,
+  });
 
-interface ErrorCardProps {
-  children?: React.ReactNode;
-  error?: Error;
-}
+type ErrorCardProps = {
+  readonly error?: Error;
+  readonly description?: string;
+  readonly title?: string;
+  readonly refreshLink?: boolean;
+};
+
 const ErrorCard: React.FC<ErrorCardProps> = ({
-  children = 'Unknown Error',
   error,
+  title,
+  description,
+  refreshLink = false,
 }) => {
-  const [headHtml, setHeadHtml] = useState<string>();
-  useEffect(() => setHeadHtml(document.head.innerHTML), [error]);
-
-  const [time, setTime] = useState<Date>();
-  useEffect(() => setTime(new Date()), [error]);
-
   return (
     <Card padding={false} accent="red">
       <div css={styles}>
-        <Paragraph primary>
-          <span css={{ display: 'flex' }}>
-            <span css={iconStyles}>{crossIcon}</span>
-            {error?.message ?? children}
-          </span>
-        </Paragraph>
-        {error && (
-          <>
-            <Paragraph>
-              Should you ask for support via the menu, we would be glad if you
-              could paste the following info to help us track down the problem:
-            </Paragraph>
-            <figure css={{ margin: 0 }}>
-              <Caption>Error info for nerds</Caption>
-              <code css={errorInfoStyles}>
-                {btoa(
-                  JSON.stringify(
-                    {
-                      error: serializeError(error),
-                      time,
-                      headHtml,
-                    },
-                    null,
-                    2,
-                  ),
-                )}
-              </code>
-            </figure>
-          </>
-        )}
+        {alertIcon}
+        <span>
+          <b>{title ?? 'Something went wrong!'}</b> <br />
+          {description ?? error?.message ?? 'We have encountered an error.'}
+          {refreshLink && (
+            <>
+              {' '}
+              <Button
+                linkStyle
+                theme={null}
+                onClick={() => window.location.reload()}
+              >
+                Please reload the page
+              </Button>
+              .{' '}
+            </>
+          )}
+          {error && (
+            <span>
+              <br /> If the issue persists, you can{' '}
+              <Link theme={null} href={mailto(error)}>
+                <span css={underlineStyles}>contact support</span>
+              </Link>
+              .
+            </span>
+          )}
+        </span>
       </div>
     </Card>
   );

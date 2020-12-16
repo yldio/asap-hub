@@ -13,4 +13,16 @@ const Frame: React.FC<FrameProps> = ({ children, boundaryProps }) => (
   </ErrorBoundary>
 );
 
+export const SearchFrame: React.FC<{}> = ({ children }) => (
+  <Frame
+    boundaryProps={{
+      description:
+        'We’re sorry, we couldn’t fetch search results due to an error.',
+      refreshLink: true,
+    }}
+  >
+    {children}
+  </Frame>
+);
+
 export default Frame;

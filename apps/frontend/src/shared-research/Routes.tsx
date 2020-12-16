@@ -4,7 +4,7 @@ import { SharedResearchPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import { useSearch } from '../hooks';
-import Frame from '../structure/Frame';
+import { SearchFrame } from '../structure/Frame';
 
 const loadResearchOutputList = () =>
   import(
@@ -34,18 +34,12 @@ const SharedResearch: React.FC<{}> = () => {
           onChangeFilter={toggleFilter}
           filters={filters}
         >
-          <Frame
-            boundaryProps={{
-              description:
-                "We're sorry, we couldn't load the page due to an error.",
-              refreshLink: true,
-            }}
-          >
+          <SearchFrame>
             <ResearchOutputList
               searchQuery={searchQueryDebounce}
               filters={filters}
             />
-          </Frame>
+          </SearchFrame>
         </SharedResearchPage>
       </Route>
       <Route path={`${path}/:id`}>

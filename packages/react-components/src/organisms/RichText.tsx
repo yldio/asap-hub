@@ -24,7 +24,7 @@ const components = {
     return <Paragraph>{children}</Paragraph>;
   },
   iframe: (props: HTMLAttributes<HTMLIFrameElement>) => {
-    return <iframe title="embeded content" {...props} />;
+    return <iframe title="embedded content" {...props} />;
   },
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (

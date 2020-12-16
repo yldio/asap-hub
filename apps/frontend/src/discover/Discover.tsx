@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { join } from 'path';
 import {
   DiscoverPage,
   NotFoundPage,
@@ -7,6 +7,8 @@ import {
 } from '@asap-hub/react-components';
 import { useDiscover } from '../api';
 import Frame from '../structure/Frame';
+
+import { NEWS_AND_EVENTS_PATH } from '../routes';
 
 const loadBody = () => import(/* webpackChunkName: "discover-body" */ './Body');
 const Body = React.lazy(loadBody);
@@ -25,7 +27,7 @@ const Discover: React.FC<{}> = () => {
       ...discover,
       training: discover.training.map((t) => ({
         ...t,
-        href: `/news-and-events/${t.id}`,
+        href: join(NEWS_AND_EVENTS_PATH, t.id),
       })),
       members: discover.members.map((m) => ({
         ...m,

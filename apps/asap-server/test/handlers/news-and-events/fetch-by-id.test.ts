@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { ResearchOutputResponse, NewsOrEventResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
 
 import { identity } from '../../helpers/squidex';
@@ -98,7 +97,7 @@ describe('GET /news-and-events/{id}', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    const res = JSON.parse(result.body) as ResearchOutputResponse;
+    const res = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
     expect(res).toStrictEqual({
       created: '2020-09-23T16:34:26.842Z',
@@ -109,7 +108,7 @@ describe('GET /news-and-events/{id}', () => {
     });
   });
 
-  test('returns 200 and the research output without team', async () => {
+  test('returns 200 and the news and events', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/news-and-events/${id}`)
       .reply(200, {
@@ -134,7 +133,7 @@ describe('GET /news-and-events/{id}', () => {
       }),
     )) as APIGatewayProxyResult;
 
-    const res = JSON.parse(result.body) as NewsOrEventResponse;
+    const res = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
     expect(res).toStrictEqual({
       created: '2020-09-23T16:34:26.842Z',

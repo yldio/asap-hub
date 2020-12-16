@@ -1,3 +1,4 @@
+import { URL } from 'url';
 import { RestUser } from '@asap-hub/squidex';
 import { TeamRole } from '@asap-hub/model';
 
@@ -23,6 +24,17 @@ export interface Data {
   skills: string[];
   skillsDescription: string;
   asapRole: Role;
+  social: {
+    website1?: string;
+    website2?: string;
+    linkedIn?: string;
+    orcid?: string;
+    researcherId?: string;
+    twitter?: string;
+    github?: string;
+    googleScholar?: string;
+    researchGate?: string;
+  };
 }
 
 export default (data: string[]): Data => {
@@ -48,6 +60,15 @@ export default (data: string[]): Data => {
     skills,
     asapRole,
     location,
+    ,
+    website1,
+    website2,
+    linkedIn,
+    googleScholar,
+    gitHub,
+    researchGate,
+    researcherID,
+    twitter,
   ] = data.map((s) => s.trim());
 
   const orcid = norcid.match(/((\d|X){4}-(\d|X){4}-(\d|X){4}-(\d|X){4})/i);
@@ -77,5 +98,21 @@ export default (data: string[]): Data => {
     asapRole: ['Staff', 'Grantee', 'Guest'].includes(asapRole)
       ? (asapRole as Role)
       : 'Guest',
+    social: {
+      website1: website1 || undefined,
+      website2: website2 || undefined,
+      linkedIn: linkedIn ? new URL(linkedIn).pathname.split('/')[2] : undefined,
+      researcherId: researcherID
+        ? new URL(researcherID).pathname.split('/')[2]
+        : undefined,
+      twitter: twitter ? twitter.slice(1) : undefined,
+      github: gitHub ? new URL(gitHub).pathname.split('/')[1] : undefined,
+      googleScholar: googleScholar
+        ? new URL(googleScholar).searchParams.get('key') || undefined
+        : undefined,
+      researchGate: researchGate
+        ? new URL(researchGate).pathname.split('/')[2]
+        : undefined,
+    },
   };
 };

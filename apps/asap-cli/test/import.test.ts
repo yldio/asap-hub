@@ -50,6 +50,13 @@ const body = {
   orcid: {
     iv: '0000-0000-0000-0000',
   },
+  social: {
+    iv: [
+      {
+        website1: 'https://google.com',
+      },
+    ],
+  },
 };
 
 describe('Import user', () => {

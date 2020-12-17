@@ -41,7 +41,7 @@ export const usePatchUserById = (id: string) => {
   const setPatchedUser = useSetRecoilState(patchedUserState(id));
   return async (patch: UserPatchRequest) => {
     setPatchedUser(await patchUser(id, patch, authorization));
-    await getTokenSilently({
+    getTokenSilently({
       /* eslint-disable @typescript-eslint/camelcase */
       redirect_uri: window.location.origin,
       ignoreCache: true,

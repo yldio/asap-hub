@@ -19,12 +19,32 @@ import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
 
 const headline1Spacing = css({ paddingTop: `${24 / perRem}em` });
+const iframeContainer = css({
+  display: 'block',
+  position: 'relative',
+  paddingBottom: '56.25%',
+  width: '100%',
+  height: 0,
+
+  iframe: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+});
+
 const components = {
   p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
     return <Paragraph>{children}</Paragraph>;
   },
   iframe: (props: HTMLAttributes<HTMLIFrameElement>) => {
-    return <iframe title="embedded content" {...props} />;
+    return (
+      <span css={iframeContainer}>
+        <iframe title="Embedded Page" {...props} />
+      </span>
+    );
   },
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (

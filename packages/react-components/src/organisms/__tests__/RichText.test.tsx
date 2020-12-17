@@ -10,7 +10,10 @@ it('renders <p> as a paragraph', () => {
 
 it('renders <iframe>', () => {
   const { getByTestId } = render(
-    <RichText sanitize={false} text={'<iframe data-testid="embed"/>'} />,
+    <RichText
+      sanitize={false}
+      text={'<iframe title="iframe" data-testid="embed"/>'}
+    />,
   );
 
   expect(getByTestId('embed')).toBeInTheDocument();
@@ -18,7 +21,7 @@ it('renders <iframe>', () => {
 
 it('sanitize <iframe>', () => {
   const { queryByTestId } = render(
-    <RichText text={'<iframe data-testid="embed"/>'} />,
+    <RichText text={'<iframe title="iframe" data-testid="embed"/>'} />,
   );
 
   expect(queryByTestId('embed')).not.toBeInTheDocument();

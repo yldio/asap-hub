@@ -23,6 +23,7 @@ export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamProfileOverview } from './TeamProfileOverview';
 export { default as Toast } from './Toast';
+export { default as ToastStack } from './ToastStack';
 export { default as ToolCard } from './ToolCard';
 export { default as UserNavigation } from './UserNavigation';
 export { default as UserProfileBackground } from './UserProfileBackground';

@@ -1,4 +1,4 @@
-import React, { useEffect, ComponentProps, useState } from 'react';
+import React, { useEffect, ComponentProps, useState, useContext } from 'react';
 import {
   Switch,
   Route,
@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import { join } from 'path';
 import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
-import { useCurrentUser } from '@asap-hub/react-context';
+import { useCurrentUser, ToastContext } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 
 import { DISCOVER_PATH, NETWORK_PATH } from '@asap-hub/frontend/src/routes';
@@ -55,8 +55,10 @@ const User: React.FC<{}> = () => {
 
   const user = useUserById(id);
   const currentUser = useCurrentUser();
+
   const patchUserAvatar = usePatchUserAvatarById(id);
   const [avatarSaving, setAvatarSaving] = useState(false);
+  const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
 
@@ -97,6 +99,11 @@ const User: React.FC<{}> = () => {
                   imageCompression.getDataUrlFromFile(compressedFile),
                 )
                 .then((encodedFile) => patchUserAvatar(encodedFile))
+                .catch(() =>
+                  toast(
+                    'There was an error and we were unable to save your picture',
+                  ),
+                )
                 .finally(() => setAvatarSaving(false));
             }
           : undefined,

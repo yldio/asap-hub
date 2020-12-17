@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react';
+import React, { InputHTMLAttributes, useState } from 'react';
 import css from '@emotion/css';
 import { useDebounce } from 'use-debounce';
 
@@ -18,6 +18,14 @@ import {
 } from '../form';
 
 type Position = 'left' | 'right';
+type FieldType =
+  | 'text'
+  | 'search'
+  | 'email'
+  | 'tel'
+  | 'url'
+  | 'password'
+  | 'date';
 
 const disabledStyles = css({
   color: lead.rgb,
@@ -107,15 +115,15 @@ const customIndicatorStyles = (aspectRatio: number, position: Position) =>
     width: `${(indicatorSize * aspectRatio) / perRem}em`,
   });
 
+const showValidationType: Set<FieldType> = new Set([
+  'date',
+  'email',
+  'tel',
+  'url',
+]);
+
 type TextFieldProps = {
-  readonly type?:
-    | 'text'
-    | 'search'
-    | 'email'
-    | 'tel'
-    | 'url'
-    | 'password'
-    | 'date';
+  readonly type?: FieldType;
   readonly enabled?: boolean;
 
   /**
@@ -152,9 +160,7 @@ const TextField: React.FC<TextFieldProps> = ({
   customIndicatorPosition = 'right',
   loading = false,
   indicateValid = customIndicator === undefined &&
-    (required !== undefined ||
-      maxLength !== undefined ||
-      pattern !== undefined),
+    (pattern !== undefined || showValidationType.has(type)),
 
   value,
   onChange = noop,
@@ -167,8 +173,9 @@ const TextField: React.FC<TextFieldProps> = ({
 
   const validGifUrl = useGifReplay(validTickGreenImage, [indicateValid, value]);
   const [debouncedValue] = useDebounce(value, 500);
-  const debouncedIndicateValid = indicateValid && value === debouncedValue;
-
+  const [isDirty, setIsDirty] = useState(false);
+  const debouncedIndicateValid =
+    isDirty && indicateValid && value === debouncedValue;
   return (
     <div css={containerStyles}>
       <input
@@ -180,9 +187,10 @@ const TextField: React.FC<TextFieldProps> = ({
         maxLength={maxLength}
         pattern={pattern}
         value={value}
-        onChange={({ currentTarget: { value: newValue } }) =>
-          onChange(newValue)
-        }
+        onChange={({ currentTarget: { value: newValue } }) => {
+          setIsDirty(true);
+          return onChange(newValue);
+        }}
         css={[
           styles,
           textFieldStyles,

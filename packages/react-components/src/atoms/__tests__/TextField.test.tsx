@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, act, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import TextField from '../TextField';
 import { silver, ember } from '../../colors';
@@ -141,9 +142,35 @@ describe('when valid', () => {
     expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
   });
 
+  describe('when the type is set to a validated type', () => {
+    it('does not show indicator on unchanged field', () => {
+      const { getByRole } = render(
+        <TextField value="test@example.com" type="email" />,
+      );
+      expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
+    });
+    it('show indicator on changed field', async () => {
+      const { getByRole } = render(
+        <TextField value="test@example.co" type="email" />,
+      );
+      await userEvent.type(getByRole('textbox'), 'a');
+      expect(getComputedStyle(getByRole('textbox')).backgroundImage).toMatch(
+        /^url\(.*tick.*\.gif.*\)$/,
+      );
+    });
+  });
+
   describe('when a validation prop is set', () => {
-    it('shows an indicator', () => {
+    it('Does not show an indicator when field is unchanged', () => {
+      const { getByRole } = render(<TextField value="a" pattern=".*" />);
+      expect(getComputedStyle(getByRole('textbox')).backgroundImage).toEqual(
+        '',
+      );
+    });
+
+    it('shows an indicator on changed field', async () => {
       const { getByRole } = render(<TextField value="" pattern=".*" />);
+      await userEvent.type(getByRole('textbox'), 'a');
       expect(getComputedStyle(getByRole('textbox')).backgroundImage).toMatch(
         /^url\(.*tick.*\.gif.*\)$/,
       );
@@ -169,30 +196,17 @@ describe('when valid', () => {
       rerender(<TextField value="changed" pattern=".*" />);
       expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
     });
-
-    it('shows an indicator again with a new animation after a second without changes', () => {
-      const { getByRole, rerender } = render(
-        <TextField value="val" pattern=".*" />,
-      );
-      const [, oldFragment] = getComputedStyle(
-        getByRole('textbox'),
-      ).backgroundImage.match(/^url\(.*tick.*\.gif#(.*)\)$/)!;
-
-      rerender(<TextField value="changed" pattern=".*" />);
-      act(() => {
-        jest.advanceTimersByTime(1000);
-      });
-      const [, newFragment] = getComputedStyle(
-        getByRole('textbox'),
-      ).backgroundImage.match(/^url\(.*tick.*\.gif#(.*)\)$/)!;
-
-      expect(newFragment).not.toEqual(oldFragment);
-    });
   });
 
   describe('with the indicateValid prop', () => {
-    it('shows an indicator', () => {
+    it('Does not shows an indicator when field unchanged', () => {
       const { getByRole } = render(<TextField value="" indicateValid />);
+      expect(getComputedStyle(getByRole('textbox')).backgroundImage).toBe('');
+    });
+
+    it('Shows an indicator when field changed', async () => {
+      const { getByRole } = render(<TextField value="" indicateValid />);
+      await userEvent.type(getByRole('textbox'), 'a');
       expect(getComputedStyle(getByRole('textbox')).backgroundImage).toMatch(
         /^url\(.*tick.*\.gif.*\)$/,
       );

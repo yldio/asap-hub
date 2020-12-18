@@ -1,8 +1,9 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
-import { silver, fern } from '../../colors';
+import { silver, fern, charcoal } from '../../colors';
 import { orcidIcon } from '../../icons';
+import { activePrimaryBackgroundColor } from '../../button';
 
 import Button from '../Button';
 
@@ -53,6 +54,30 @@ it('renders a primary button', () => {
 
   rerender(<Button primary />);
   expect(getComputedStyle(getByRole('button')).backgroundColor).toBe(fern.rgb);
+});
+
+it('renders an active secondary button', () => {
+  const { getByRole, rerender } = render(<Button />);
+  expect(getComputedStyle(getByRole('button')).borderColor).not.toBe(
+    charcoal.rgb.replace(/ /g, ''),
+  );
+
+  rerender(<Button active />);
+  expect(getComputedStyle(getByRole('button')).borderColor).toBe(
+    charcoal.rgb.replace(/ /g, ''),
+  );
+});
+
+it('renders an active primary button', () => {
+  const { getByRole, rerender } = render(<Button primary />);
+  expect(getComputedStyle(getByRole('button')).backgroundColor).not.toBe(
+    activePrimaryBackgroundColor.rgba,
+  );
+
+  rerender(<Button primary active />);
+  expect(getComputedStyle(getByRole('button')).backgroundColor).toBe(
+    activePrimaryBackgroundColor.rgba,
+  );
 });
 
 it('renders a disabled button', () => {

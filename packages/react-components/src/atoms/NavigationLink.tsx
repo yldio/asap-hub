@@ -13,7 +13,7 @@ import {
   vminLinearCalc,
 } from '../pixels';
 import { navigationGrey } from '../layout';
-import { activeStyles } from '../button';
+import { activePrimaryStyles } from '../button';
 import { isInternalLink } from '../utils';
 
 const activeClassName = 'active-link';
@@ -77,7 +77,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       <NavHashLink
         to={href}
         activeClassName={activeClassName}
-        css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
+        css={[styles, { [`&.${activeClassName}`]: activePrimaryStyles }]}
         smooth
       >
         <p css={textStyles}>
@@ -91,7 +91,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
   return (
-    <a href={href} css={[styles, active && activeStyles]}>
+    <a href={href} css={[styles, active && activePrimaryStyles]}>
       <p css={textStyles}>
         <span css={iconStyles}>{icon}</span>
         {children}

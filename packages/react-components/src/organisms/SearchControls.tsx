@@ -91,7 +91,6 @@ const SearchControls: React.FC<SearchControlsProps> = ({
       />
       <div>
         <Button
-          primary
           enabled={filterEnabled}
           active={menuShown}
           onClick={() => setMenuShown(!menuShown)}

@@ -18,6 +18,10 @@ const notReady = (method: string) => () => {
 const createAuth0 = (
   auth0Client?: Auth0Client,
   user?: Partial<User>,
+  auth0Overrides?: (
+    auth0Client?: Auth0Client,
+    auth0User?: Auth0User,
+  ) => Partial<Auth0>,
 ): Auth0 => {
   let auth0User: Auth0User | undefined;
   if (user) {
@@ -66,6 +70,7 @@ const createAuth0 = (
       logout: auth0Client
         ? (...args) => auth0Client.logout(...args)
         : notReady('logout'),
+      refreshUser: auth0Client ? async () => {} : notReady('refreshUser'),
     },
     ...(auth0User && {
       isAuthenticated: true,
@@ -73,13 +78,18 @@ const createAuth0 = (
       getTokenSilently: async () => 'access_token',
       getIdTokenClaims: async () => ({ __raw: 'id_token' }),
     }),
+    ...(auth0Overrides && auth0Overrides(auth0Client, auth0User)),
   };
 };
 
 export const Auth0Provider: React.FC<{
   readonly user?: Partial<User>;
   readonly children: React.ReactNode;
-}> = ({ user, children }) => {
+  readonly auth0Overrides?: (
+    auth0Client?: Auth0Client,
+    auth0User?: Auth0User,
+  ) => Partial<Auth0>;
+}> = ({ user, children, auth0Overrides }) => {
   const [auth0, setAuth0] = useRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
   useEffect(() => {
@@ -89,17 +99,19 @@ export const Auth0Provider: React.FC<{
         client_id: 'client_id',
         redirect_uri: 'http://localhost',
       });
-      setAuth0(createAuth0(auth0Client, user));
+      setAuth0(createAuth0(auth0Client, user, auth0Overrides));
     };
     initAuth0();
 
     return () => {
       resetAuth0();
     };
-  }, [user, setAuth0, resetAuth0]);
+  }, [user, setAuth0, resetAuth0, auth0Overrides]);
 
   return (
-    <Auth0Context.Provider value={auth0 ?? createAuth0()}>
+    <Auth0Context.Provider
+      value={auth0 ?? createAuth0(undefined, undefined, auth0Overrides)}
+    >
       {children}
     </Auth0Context.Provider>
   );

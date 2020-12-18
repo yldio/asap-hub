@@ -13,6 +13,8 @@ import {
 } from '@asap-hub/frontend/src/auth/test-utils';
 import { join } from 'path';
 import imageCompression from 'browser-image-compression';
+import { Auth0Client } from '@auth0/auth0-spa-js';
+import { Auth0User, Auth0 } from '@asap-hub/auth';
 
 import UserProfile from '../UserProfile';
 import { getUser, patchUser, postUserAvatar } from '../api';
@@ -20,6 +22,7 @@ import { refreshUserState } from '../state';
 
 jest.mock('../api');
 jest.mock('browser-image-compression');
+
 const imageCompressionMock = imageCompression as jest.MockedFunction<
   typeof imageCompression
 >;
@@ -42,6 +45,10 @@ const mockToast = jest.fn() as jest.MockedFunction<
 const renderUserProfile = async (
   userResponse = createUserResponse(),
   { ownUserId = userResponse.id, routeProfileId = userResponse.id } = {},
+  auth0Overrides?: (
+    auth0Client?: Auth0Client,
+    auth0User?: Auth0User,
+  ) => Partial<Auth0>,
 ) => {
   mockGetUser.mockImplementation(async (id) => {
     return id === userResponse.id ? userResponse : undefined;
@@ -65,7 +72,10 @@ const renderUserProfile = async (
     >
       <React.Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
-          <Auth0Provider user={{ id: ownUserId }}>
+          <Auth0Provider
+            user={{ id: ownUserId }}
+            auth0Overrides={auth0Overrides}
+          >
             <WhenReady>
               <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
                 <Route path="/:id" component={UserProfile} />
@@ -267,6 +277,29 @@ describe('a header edit button', () => {
     );
   });
 
+  it('refreshes auth0 id token', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+    };
+    const mockToken = jest.fn().mockResolvedValue('token');
+    const { getByText, findByLabelText } = await renderUserProfile(
+      userProfile,
+      {},
+      (authClient, user) => ({
+        getTokenSilently:
+          authClient && user
+            ? mockToken
+            : () => {
+                throw new Error('Not Ready');
+              },
+      }),
+    );
+    userEvent.click(await findByLabelText(/edit.+contact/i));
+
+    userEvent.click(getByText(/save/i));
+    await waitFor(() => expect(mockToken).toHaveBeenCalled());
+  });
+
   describe('for the avatar', () => {
     const fileBuffer = readFileSync(join(__dirname, 'jpeg.jpg'));
     const file = new File([new Uint8Array(fileBuffer)], 'jpeg.jpg', {
@@ -296,6 +329,30 @@ describe('a header edit button', () => {
           expect.any(String),
         ),
       );
+    });
+
+    it('refreshes the Auth0 id token', async () => {
+      const userProfile: UserResponse = {
+        ...createUserResponse(),
+        avatarUrl: 'https://placekitten.com/200/300',
+        id: '42',
+      };
+      const mockToken = jest.fn().mockResolvedValue('token');
+      const { findByLabelText } = await renderUserProfile(
+        userProfile,
+        {},
+        (authClient, user) => ({
+          getTokenSilently:
+            authClient && user
+              ? mockToken
+              : () => {
+                  throw new Error('Not Ready');
+                },
+        }),
+      );
+
+      userEvent.upload(await findByLabelText(/upload.+avatar/i), file);
+      await waitFor(() => expect(mockToken).toHaveBeenCalled());
     });
 
     it('toasts if the upload fails', async () => {

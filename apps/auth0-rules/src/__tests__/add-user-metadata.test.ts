@@ -52,7 +52,7 @@ const context: RuleContext = {
   samlConfiguration: {},
   protocol: 'oidc-basic-profile',
   stats: { loginsCount: 14 },
-  request: { query: { redirect_uri: 'https://hub.asap.science/' } },
+  request: { query: { redirect_uri: 'https://hub.asap.science/' }, body: {} },
   sso: {
     with_auth0: false,
     with_dbconn: false,
@@ -110,7 +110,11 @@ describe('Auth0 Rule - Add User Metadata', () => {
       Parameters<typeof addUserMetadata>[2]
     > = jest.fn();
 
-    await addUserMetadata(user, { ...context, request: { query: {} } }, cb);
+    await addUserMetadata(
+      user,
+      { ...context, request: { query: {}, body: {} } },
+      cb,
+    );
 
     expect(cb).toHaveBeenCalledWith(expect.any(Error));
     const [err] = cb.mock.calls[0];
@@ -153,6 +157,53 @@ describe('Auth0 Rule - Add User Metadata', () => {
     > = jest.fn();
 
     await addUserMetadata(user, context, cb);
+
+    expect(cb).toHaveBeenCalled();
+    const [err, resUser, resContext] = cb.mock.calls[0];
+    expect(err).toBeFalsy();
+    expect(resUser).not.toBeNull();
+    expect(resContext).not.toBeNull();
+    expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual({
+      displayName: 'Joao Tiago',
+      email: 'joao.tiago@yld.io',
+      id: 'myRandomId123',
+      firstName: 'Joao',
+      lastName: 'Tiago',
+      avatarUrl: undefined,
+      teams: [
+        {
+          id: 'team-1',
+          displayName: 'Team 1',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ],
+    });
+  });
+
+  it('adds the user metadata on successful fetch when fetch uri provided in request body', async () => {
+    nock(apiURL, {
+      reqheaders: {
+        authorization: `Basic ${apiSharedSecret}`,
+      },
+    })
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, apiUser);
+
+    const cb: jest.MockedFunction<
+      Parameters<typeof addUserMetadata>[2]
+    > = jest.fn();
+
+    await addUserMetadata(
+      user,
+      {
+        ...context,
+        request: {
+          query: {},
+          body: { redirect_uri: 'https://hub.asap.science/' },
+        },
+      },
+      cb,
+    );
 
     expect(cb).toHaveBeenCalled();
     const [err, resUser, resContext] = cb.mock.calls[0];

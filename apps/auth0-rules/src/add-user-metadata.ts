@@ -14,7 +14,9 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
 
   const redirect_uri = new URLSearchParams(context.request.query).get(
     'redirect_uri',
-  );
+  )
+    ? new URLSearchParams(context.request.query).get('redirect_uri')
+    : context.request.body.redirect_uri;
   if (!redirect_uri) {
     return callback(new Error('Missing redirect_uri'));
   }

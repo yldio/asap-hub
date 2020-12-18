@@ -16,7 +16,7 @@ it('applies a default border and paper background', () => {
     container.firstElementChild as Element,
   );
 
-  expect(borderColor).toMatchInlineSnapshot(`"rgb(237,241,243)"`);
+  expect(borderColor).toMatchInlineSnapshot(`"rgb(223,229,234)"`);
   expect(backgroundColor).toMatchInlineSnapshot(`"rgb(255, 255, 255)"`);
 });
 

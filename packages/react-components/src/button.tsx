@@ -64,8 +64,8 @@ const largeStyles = css({
   marginTop: `${18 / perRem}em`,
   marginBottom: `${18 / perRem}em`,
 
-  paddingTop: `${15 / perRem}em`,
-  paddingBottom: `${15 / perRem}em`,
+  paddingTop: `${(15 - borderWidth) / perRem}em`,
+  paddingBottom: `${(15 - borderWidth) / perRem}em`,
   paddingLeft: `${(20 - borderWidth) / perRem}em`,
   paddingRight: `${(20 - borderWidth) / perRem}em`,
 });

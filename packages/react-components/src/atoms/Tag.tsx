@@ -15,7 +15,7 @@ const containerStyles = css({
 });
 
 const styles = css({
-  padding: `${7 / perRem}em ${15 / perRem}em ${5 / perRem}em`,
+  padding: `${5 / perRem}em ${15 / perRem}em ${5 / perRem}em`,
 
   display: 'flex',
   justifyContent: 'center',

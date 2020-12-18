@@ -9,6 +9,7 @@ describe('News', () => {
     type: 'News',
     title: 'Not a Title',
     created: new Date().toISOString(),
+    href: `/news-and-events/uuid`,
   };
 
   it('renders the title', () => {
@@ -54,7 +55,7 @@ describe('News', () => {
     expect(getByRole('link').textContent).toContain('External Link');
   });
 
-  it('renders external link when present and custom name', () => {
+  it('renders external link when present and use custom name', () => {
     const { rerender, getByRole, queryByRole } = render(
       <NewsAndEventsCard {...newsCardProps} />,
     );
@@ -68,5 +69,15 @@ describe('News', () => {
       />,
     );
     expect(getByRole('link').textContent).toContain('Name');
+  });
+
+  it('links to detail page when text is present', () => {
+    const { rerender, getByRole, queryByRole } = render(
+      <NewsAndEventsCard {...newsCardProps} />,
+    );
+    expect(queryByRole('link')).not.toBeInTheDocument();
+
+    rerender(<NewsAndEventsCard {...newsCardProps} text={'<h1>title</h1>'} />);
+    expect(getByRole('link').textContent).toContain(newsCardProps.title);
   });
 });

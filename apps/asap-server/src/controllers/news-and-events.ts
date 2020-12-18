@@ -1,5 +1,8 @@
 import { Squidex } from '@asap-hub/squidex';
-import { ListNewsAndEventsResponse } from '@asap-hub/model';
+import {
+  ListNewsAndEventsResponse,
+  NewsOrEventResponse,
+} from '@asap-hub/model';
 
 import { CMSNewsAndEvents, parseNewsAndEvents } from '../entities';
 
@@ -28,5 +31,10 @@ export default class ResearchOutputs {
       total,
       items: items.map(parseNewsAndEvents),
     };
+  }
+
+  async fetchById(id: string): Promise<NewsOrEventResponse> {
+    const result = await this.newsAndEvents.fetchById(id);
+    return parseNewsAndEvents(result);
   }
 }

@@ -39,6 +39,7 @@ const commonProps = () => ({
       shortText:
         'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
       thumbnail: 'https://picsum.photos/200',
+      href: '#',
     },
   ],
   members: [

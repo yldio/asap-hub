@@ -8,6 +8,25 @@ it('renders <p> as a paragraph', () => {
   expect(getByText('text').tagName).toBe('P');
 });
 
+it('renders <iframe>', () => {
+  const { getByTestId } = render(
+    <RichText
+      sanitize={false}
+      text={'<iframe title="iframe" data-testid="embed"/>'}
+    />,
+  );
+
+  expect(getByTestId('embed')).toBeInTheDocument();
+});
+
+it('sanitize <iframe>', () => {
+  const { queryByTestId } = render(
+    <RichText text={'<iframe title="iframe" data-testid="embed"/>'} />,
+  );
+
+  expect(queryByTestId('embed')).not.toBeInTheDocument();
+});
+
 it('renders <a> as a link', () => {
   const { getByText } = render(
     <RichText text={'<a href="https://localhost/">anchor</a>'} />,
@@ -62,7 +81,7 @@ it('Displays error when styling applied to h2', () => {
 
 it('passes through image props', () => {
   const { getByRole } = render(
-    <RichText text={'<img data-test="test123"></img>'} />,
+    <RichText sanitize={false} text={'<img data-test="test123"></img>'} />,
   );
   expect(getByRole('img')).toHaveAttribute('data-test', 'test123');
 });

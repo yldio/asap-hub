@@ -7,8 +7,9 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
+import { join } from 'path';
 import { useDashboard } from '../api';
-import { DISCOVER_PATH, NETWORK_PATH } from '../routes';
+import { DISCOVER_PATH, NETWORK_PATH, NEWS_AND_EVENTS_PATH } from '../routes';
 import { TEAMS_PATH } from '../network/routes';
 import Frame from '../structure/Frame';
 
@@ -28,9 +29,13 @@ const Dashboard: React.FC<{}> = () => {
   if (dashboard) {
     const data = {
       ...dashboard,
+      newsAndEvents: dashboard.newsAndEvents.map((n) => ({
+        ...n,
+        href: join(NEWS_AND_EVENTS_PATH, n.id),
+      })),
       hrefDiscoverAsap: DISCOVER_PATH,
       hrefSharedResearch: '/shared-research',
-      hrefNewsAndEvents: '/news-and-events',
+      hrefNewsAndEvents: NEWS_AND_EVENTS_PATH,
       hrefProfile: `${NETWORK_PATH}/users/${id}`,
       hrefTeamsNetwork: `${NETWORK_PATH}/${TEAMS_PATH}`,
       hrefTeamWorkspace:

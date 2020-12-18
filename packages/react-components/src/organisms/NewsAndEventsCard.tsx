@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { NewsAndEventsResponse, NewsAndEventsType } from '@asap-hub/model';
+import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
 import { Card, Paragraph, Headline2, TagLabel, Caption, Link } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
@@ -57,17 +57,27 @@ const placeholders: Record<NewsAndEventsType, JSX.Element> = {
   Training: trainingPlaceholderIcon,
 };
 
-type NewsAndEventsCardProps = NewsAndEventsResponse;
+type NewsAndEventsCardProps = NewsOrEventResponse & { href: string };
 
 const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   type,
   title,
   thumbnail,
+  text,
   link,
   linkText,
   shortText,
   created,
+  href,
 }) => {
+  const titleComponent = text ? (
+    <Link theme={null} href={href}>
+      <Headline2 styleAsHeading={4}>{title}</Headline2>
+    </Link>
+  ) : (
+    <Headline2 styleAsHeading={4}>{title}</Headline2>
+  );
+
   return (
     <Card>
       <div css={cardStyle}>
@@ -96,7 +106,7 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
               </div>
             ) : null}
           </div>
-          <Headline2 styleAsHeading={4}>{title}</Headline2>
+          {titleComponent}
           <div css={{ flex: 1 }}>
             <Paragraph accent="lead">{shortText}</Paragraph>
           </div>

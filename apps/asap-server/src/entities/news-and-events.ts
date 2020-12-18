@@ -1,4 +1,4 @@
-import { NewsAndEventsResponse, NewsAndEventsType } from '@asap-hub/model';
+import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
 import { GraphqlNewsOrEvent } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 
@@ -36,7 +36,7 @@ export interface CMSGraphQLNewsAndEvents {
 
 export const parseNewsAndEvents = (
   item: CMSNewsAndEvents,
-): NewsAndEventsResponse => {
+): NewsOrEventResponse => {
   return {
     id: item.id,
     created: parseDate(item.created).toISOString(),
@@ -57,12 +57,12 @@ export const parseNewsAndEvents = (
       )[0],
     title: item.data.title.iv,
     type: item.data.type.iv,
-  } as NewsAndEventsResponse;
+  } as NewsOrEventResponse;
 };
 
 export const parseGraphQLNewsAndEvents = (
   item: GraphqlNewsOrEvent,
-): NewsAndEventsResponse => {
+): NewsOrEventResponse => {
   const createdDate = parseDate(item.created).toISOString();
   return {
     id: item.id,

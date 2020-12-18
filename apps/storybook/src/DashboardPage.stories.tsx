@@ -31,6 +31,7 @@ const commonProps = () => ({
       title: "Coordinating different approaches into Parkinson's",
       subtitle:
         'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
+      href: '/news-and-events/uuid-1',
     },
     {
       id: 'uuid-2',
@@ -38,6 +39,7 @@ const commonProps = () => ({
       type: 'Event' as const,
       title:
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
+      href: '/news-and-events/uuid-2',
     },
   ],
   hrefDiscoverAsap: '/dicover',

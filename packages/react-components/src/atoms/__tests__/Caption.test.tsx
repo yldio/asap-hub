@@ -30,6 +30,17 @@ it('applies the text margin', () => {
   expect(marginTop).toMatchInlineSnapshot(`"12px"`);
 });
 
+it('renders text with font-weight bold', () => {
+  const { getByText } = render(
+    <figure>
+      the figure
+      <Caption bold>text</Caption>
+    </figure>,
+  );
+  const { fontWeight } = getComputedStyle(getByText('text'));
+  expect(fontWeight).toMatchInlineSnapshot(`"bold"`);
+});
+
 it('renders a given accent color', () => {
   const { getByText } = render(
     <figure>

@@ -19,9 +19,32 @@ import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
 
 const headline1Spacing = css({ paddingTop: `${24 / perRem}em` });
+const iframeContainer = css({
+  display: 'block',
+  position: 'relative',
+  paddingBottom: '56.25%',
+  width: '100%',
+  height: 0,
+
+  iframe: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+  },
+});
+
 const components = {
   p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
     return <Paragraph>{children}</Paragraph>;
+  },
+  iframe: (props: HTMLAttributes<HTMLIFrameElement>) => {
+    return (
+      <span css={iframeContainer}>
+        <iframe title="Embedded Page" {...props} />
+      </span>
+    );
   },
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (
@@ -69,25 +92,9 @@ const components = {
   },
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 
-const processor = unified()
-  .use(rehypeHtml, { fragment: true })
-  .use(rehypeReact, {
-    components,
-    createElement,
-  });
-
-const tocProcessor = unified()
-  .use(rehypeHtml, { fragment: true })
-  .use(rehypeSanitize)
-  .use(rehypeSlug)
-  .use(rehypeToc)
-  .use(rehypeReact, {
-    components,
-    createElement,
-  });
-
 interface RichTextProps {
   readonly toc?: boolean;
+  readonly sanitize?: boolean;
   readonly text: string;
 }
 
@@ -101,9 +108,27 @@ const styles = css`
   }
 `;
 
-const RichText: React.FC<RichTextProps> = ({ toc = false, text }) => {
-  const p = toc ? tocProcessor : processor;
-  const { result } = p.processSync(text);
+const RichText: React.FC<RichTextProps> = ({
+  sanitize = true,
+  toc = false,
+  text,
+}) => {
+  let processor = unified().use(rehypeHtml, { fragment: true });
+
+  if (sanitize) {
+    processor = processor.use(rehypeSanitize);
+  }
+
+  if (toc) {
+    processor = processor.use(rehypeSlug).use(rehypeToc);
+  }
+
+  processor = processor.use(rehypeReact, {
+    components,
+    createElement,
+  });
+
+  const { result } = processor.processSync(text);
   return (
     <div css={styles}>
       <>{result}</>

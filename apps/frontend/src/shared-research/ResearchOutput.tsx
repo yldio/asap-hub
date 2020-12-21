@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   ResearchOutputPage,
   NotFoundPage,
@@ -12,6 +12,7 @@ import { TEAMS_PATH } from '../network/routes';
 const ResearchOutput: React.FC = () => {
   const { id } = useParams();
   const { loading, data: researchOutputData } = useResearchOutputById(id);
+  const { goBack } = useHistory();
 
   if (loading) {
     return <Loading />;
@@ -27,7 +28,7 @@ const ResearchOutput: React.FC = () => {
           }
         : undefined,
       userProfileHref: '#',
-      sharedResearchHref: '/shared-research',
+      goBack,
     };
     return <ResearchOutputPage {...researchOutput} />;
   }

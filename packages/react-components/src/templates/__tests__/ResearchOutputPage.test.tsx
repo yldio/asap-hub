@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import ResearchOutputPage from '../ResearchOutputPage';
 
 const props: ComponentProps<typeof ResearchOutputPage> = {
-  sharedResearchHref: '#',
+  goBack: () => {},
   title: 'title',
   type: 'Proposal',
   created: '2020-06-25T15:00:47.920Z',

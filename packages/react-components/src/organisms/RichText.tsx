@@ -13,7 +13,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
 
-import { Paragraph, Headline2, Headline3, Link } from '../atoms';
+import { Paragraph, Headline4, Headline5, Link } from '../atoms';
 import { isTextChildren, isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
@@ -49,7 +49,7 @@ const components = {
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (
       <div css={headline1Spacing}>
-        <Headline2 id={id}>{children}</Headline2>
+        <Headline4 id={id}>{children}</Headline4>
       </div>
     ) : (
       <ErrorCard
@@ -59,11 +59,20 @@ const components = {
     ),
   h2: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (
-      <Headline3 id={id}>{children}</Headline3>
+      <Headline5 id={id}>{children}</Headline5>
     ) : (
       <ErrorCard
         title="Styling Error"
         description="Invalid h2 heading styling"
+      />
+    ),
+  h3: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
+    isAllowedChildren(children) ? (
+      <Paragraph id={id}>{children}</Paragraph>
+    ) : (
+      <ErrorCard
+        title="Styling Error"
+        description="Invalid h3 heading styling"
       />
     ),
   a: ({ children, href }: AnchorHTMLAttributes<HTMLAnchorElement>) => {

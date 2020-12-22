@@ -8,7 +8,7 @@ import { render } from '@testing-library/react';
 import DiscoverPageBody from '../DiscoverPageBody';
 
 const props: ComponentProps<typeof DiscoverPageBody> = {
-  aboutUs: '<h3>About us content</h3>',
+  aboutUs: '<h1>About us content</h1>',
   pages: [createPageResponse('1'), createPageResponse('2')],
   training: [],
   members: [],

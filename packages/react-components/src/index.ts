@@ -21,6 +21,7 @@ export {
   Headline2,
   Headline3,
   Headline4,
+  Headline5,
   Link,
   Overlay,
   Paragraph,

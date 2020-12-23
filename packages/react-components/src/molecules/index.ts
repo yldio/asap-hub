@@ -1,6 +1,7 @@
 export { default as AgreeToTerms } from './AgreeToTerms';
 export { default as CtaCard } from './CtaCard';
 export { default as ErrorCard } from './ErrorCard';
+export { default as ExternalLink } from './ExternalLink';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
 export { default as LabeledCheckbox } from './LabeledCheckbox';

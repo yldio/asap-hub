@@ -2,12 +2,12 @@ import React from 'react';
 import css from '@emotion/css';
 import { NewsOrEventResponse } from '@asap-hub/model';
 
-import { TagLabel, Display, Card, Caption, Link } from '../atoms';
+import { TagLabel, Display, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { formatDate } from '../utils';
-import { externalLinkIcon } from '../icons';
+import { ExternalLink } from '../molecules';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -41,14 +41,7 @@ const NewsOrEventPage: React.FC<NewsOrEventPageProps> = ({
       <Caption bold asParagraph>
         Attachments
       </Caption>
-      <div css={{ fontSize: `${13 / perRem}em` }}>
-        <Link buttonStyle small={true} href={link}>
-          {externalLinkIcon}
-          <span css={{ fontWeight: 'normal' }}>
-            {linkText || 'Open External Link'}
-          </span>
-        </Link>
-      </div>
+      <ExternalLink href={link} label={linkText} />
     </div>
   ) : null;
   const publishDateComponent = (

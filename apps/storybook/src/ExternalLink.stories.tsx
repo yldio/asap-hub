@@ -9,5 +9,8 @@ export default {
 };
 
 export const Normal = () => (
-  <ExternalLink href={text('href', 'http://example.com')} />
+  <ExternalLink
+    href={text('href', 'http://example.com')}
+    label={text('Label', 'External Link')}
+  />
 );

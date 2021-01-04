@@ -54,7 +54,7 @@
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jose": "^2.0.2",
     "nock": "^13.0.4",
-    "react-scripts": "patch:react-scripts@3.4.3#./patches/react-scripts.patch",
+    "react-scripts": "^4.0.1",
     "react-test-renderer": "^16.13.1",
     "typescript": "~3.9.7"
   }

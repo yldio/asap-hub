@@ -46,7 +46,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "jsdom": "^16.4.0",
-    "react-scripts": "patch:react-scripts@3.4.3#./patches/react-scripts.patch",
+    "react-scripts": "^4.0.1",
     "typescript": "~3.9.7"
   }
 }

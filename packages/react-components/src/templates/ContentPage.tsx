@@ -13,13 +13,11 @@ const styles = css({
 });
 
 type ContentPageProps = Omit<PageResponse, 'id' | 'shortText'>;
-const ContentPage: React.FC<ContentPageProps> = ({ text, title }) => {
-  return (
-    <article css={styles}>
-      <Display>{title}</Display>
-      <RichText toc text={text} />
-    </article>
-  );
-};
+const ContentPage: React.FC<ContentPageProps> = ({ text, title }) => (
+  <article css={styles}>
+    <Display>{title}</Display>
+    <RichText toc text={text} />
+  </article>
+);
 
 export default ContentPage;

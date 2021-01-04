@@ -4,7 +4,7 @@ import { render } from '@testing-library/react';
 import WelcomePage from '../WelcomePage';
 import { noop } from '../../utils';
 
-it('renders the signin page ', () => {
+it('renders the signin page', () => {
   const handleClick = jest.fn();
   const { getByRole } = render(<WelcomePage onClick={handleClick} />);
   expect(getByRole('button').textContent).toMatchInlineSnapshot(`"Sign in"`);

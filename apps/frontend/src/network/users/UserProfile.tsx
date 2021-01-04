@@ -35,7 +35,7 @@ const Staff = React.lazy(loadStaff);
 const Editing = React.lazy(loadEditing);
 loadResearch().then(loadStaff);
 
-const User: React.FC<{}> = () => {
+const User: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadResearch()
       .then(loadStaff)

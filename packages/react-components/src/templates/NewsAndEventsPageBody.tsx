@@ -17,13 +17,11 @@ const NewsAndEventsPageBody: React.FC<SharedResearchPageBodyProps> = ({
     currentPageIndex={0}
     renderPageHref={() => ''}
   >
-    {newsAndEvents.map((newsOrEvent) => {
-      return (
-        <div key={newsOrEvent.id}>
-          <NewsAndEventsCard {...newsOrEvent} />
-        </div>
-      );
-    })}
+    {newsAndEvents.map((newsOrEvent) => (
+      <div key={newsOrEvent.id}>
+        <NewsAndEventsCard {...newsOrEvent} />
+      </div>
+    ))}
   </ResultList>
 );
 

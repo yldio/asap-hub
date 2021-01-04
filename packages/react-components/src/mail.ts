@@ -17,19 +17,19 @@ export const createMailTo = (
   return mailTo.toString();
 };
 
-export const mailToFeedback = (overrides?: MailOptions) =>
+export const mailToFeedback = (overrides?: MailOptions): string =>
   createMailTo('info@asap.science', {
     subject: 'ASAP Hub: Hub Feedback',
     ...overrides,
   });
 
-export const mailToGrants = (overrides?: MailOptions) =>
+export const mailToGrants = (overrides?: MailOptions): string =>
   createMailTo('grants@parkinsonsroadmap.org', {
     subject: 'ASAP Hub: Grant support',
     ...overrides,
   });
 
-export const mailToSupport = (overrides?: MailOptions) =>
+export const mailToSupport = (overrides?: MailOptions): string =>
   createMailTo('techsupport@asap.science', {
     subject: 'ASAP Hub: Tech support',
     ...overrides,

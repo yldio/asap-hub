@@ -53,40 +53,38 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
   title,
   description,
   refreshLink = false,
-}) => {
-  return (
-    <Card padding={false} accent="red">
-      <div css={styles}>
-        {alertIcon}
-        <span>
-          <b>{title ?? 'Something went wrong!'}</b> <br />
-          {description ?? error?.message ?? 'We have encountered an error.'}
-          {refreshLink && (
-            <>
-              {' '}
-              <Button
-                linkStyle
-                theme={null}
-                onClick={() => window.location.reload()}
-              >
-                Please reload the page
-              </Button>
-              .{' '}
-            </>
-          )}
-          {error && (
-            <span>
-              <br /> If the issue persists, you can{' '}
-              <Link theme={null} href={mailto(error)}>
-                <span css={underlineStyles}>contact support</span>
-              </Link>
-              .
-            </span>
-          )}
-        </span>
-      </div>
-    </Card>
-  );
-};
+}) => (
+  <Card padding={false} accent="red">
+    <div css={styles}>
+      {alertIcon}
+      <span>
+        <b>{title ?? 'Something went wrong!'}</b> <br />
+        {description ?? error?.message ?? 'We have encountered an error.'}
+        {refreshLink && (
+          <>
+            {' '}
+            <Button
+              linkStyle
+              theme={null}
+              onClick={() => window.location.reload()}
+            >
+              Please reload the page
+            </Button>
+            .{' '}
+          </>
+        )}
+        {error && (
+          <span>
+            <br /> If the issue persists, you can{' '}
+            <Link theme={null} href={mailto(error)}>
+              <span css={underlineStyles}>contact support</span>
+            </Link>
+            .
+          </span>
+        )}
+      </span>
+    </div>
+  </Card>
+);
 
 export default ErrorCard;

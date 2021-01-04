@@ -5,7 +5,7 @@ import { ToastContext } from '@asap-hub/react-context';
 
 import ToastStack from '../ToastStack';
 
-const TwoToasts: React.FC<{}> = () => {
+const TwoToasts: React.FC<Record<string, never>> = () => {
   const toast = useContext(ToastContext);
   useEffect(() => {
     toast('t1');

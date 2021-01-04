@@ -47,7 +47,7 @@ export interface ODataQuery {
   $search?: string;
 }
 
-export class Squidex<T extends { id: string; data: object }> {
+export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
   client: typeof Got;
   collection: string;
 

@@ -27,7 +27,7 @@ const TeamList = React.lazy(loadTeamList);
 const TeamProfile = React.lazy(loadTeamProfile);
 loadTeamList();
 
-const Network: React.FC<{}> = () => {
+const Network: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadTeamList()
       // Toggle can be pressed very quickly

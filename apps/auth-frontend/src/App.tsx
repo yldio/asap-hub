@@ -6,7 +6,7 @@ import Login from './login/Login';
 import ForgotPassword from './forgot-password/ForgotPassword';
 import { getHubUrlFromRedirect } from './utils';
 
-const App: React.FC<{}> = () => {
+const App: React.FC<Record<string, never>> = () => {
   const [email, setEmail] = useState('');
   const hubUrl = getHubUrlFromRedirect();
   return (

@@ -33,7 +33,7 @@ export const Normal = () => <Layout {...props}>Content</Layout>;
 
 export const Toasts = () => {
   const numToasts = number('Number of toasts', 3, { min: 0 });
-  const Toast: React.FC<{}> = () => {
+  const Toast: React.FC<Record<string, never>> = () => {
     const toast = useContext(ToastContext);
     useEffect(() => {
       Array.from({ length: numToasts }, (_, i) => `Toast ${i + 1}`).forEach(

@@ -1,7 +1,6 @@
 import { Auth0User } from '@asap-hub/auth';
 import { origin } from '../../config';
 
-/* eslint-disable @typescript-eslint/camelcase */
 const user: Auth0User = {
   [`${origin}/user`]: {
     id: 'userId',

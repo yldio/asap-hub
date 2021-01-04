@@ -35,7 +35,11 @@ type FixtureOptions = {
   teams?: number;
 };
 
-export const createUserTeams = ({ teams = 1 }): UserTeam[] =>
+export const createUserTeams = ({
+  teams = 1,
+}: {
+  teams?: number;
+}): UserTeam[] =>
   Array.from({ length: teams }, (__, teamIndex) => ({
     ...listUserResponseTeam,
     id: `t${teamIndex}`,

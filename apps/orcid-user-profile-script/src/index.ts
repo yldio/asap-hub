@@ -4,11 +4,17 @@ import type { Auth0User } from '@asap-hub/auth';
 interface UserProfileFetcherContext<IDT> {
   id_token: IDT;
 }
-type UserProfileFetcher<AT = {}, IDT extends string | undefined = undefined> = (
+// complaining about
+/* eslint-disable no-unused-vars */
+type UserProfileFetcher<
+  AT = Record<string, never>,
+  IDT extends string | undefined = undefined
+> = (
   accessToken: AT,
   ctx: UserProfileFetcherContext<IDT>,
   cb: (err: Error | null | undefined, profile: Auth0User) => void,
 ) => void;
+/* eslint-enable no-unused-vars */
 
 // inspected the ID token we get from ORCID to write this interface
 export interface OrcidIdToken {
@@ -24,11 +30,10 @@ export interface OrcidIdToken {
   jti: string;
 }
 
-const fetchOrcidUserProfile: UserProfileFetcher<{}, string> = (
-  accessToken,
-  { id_token },
-  cb,
-) => {
+const fetchOrcidUserProfile: UserProfileFetcher<
+  Record<string, never>,
+  string
+> = (accessToken, { id_token }, cb) => {
   const idToken = decode(id_token) as OrcidIdToken;
   const profile: Auth0User = {
     user_id: idToken.sub,

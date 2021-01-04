@@ -35,7 +35,11 @@ type FixtureOptions = {
   tools?: number;
 };
 
-export const createTeamResponseMembers = ({ teamMembers = 0 }): TeamMember[] =>
+export const createTeamResponseMembers = ({
+  teamMembers = 0,
+}: {
+  teamMembers?: number;
+}): TeamMember[] =>
   Array.from({ length: teamMembers }, (__, memberIndex) => ({
     ...teamMember,
     id: `tm${memberIndex}`,

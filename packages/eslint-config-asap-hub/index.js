@@ -12,6 +12,9 @@ module.exports = {
         project: ['packages/*/tsconfig.json', 'apps/*/tsconfig.json'],
       },
     },
+    jest: {
+      version: require('jest-config/package.json').version,
+    },
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [

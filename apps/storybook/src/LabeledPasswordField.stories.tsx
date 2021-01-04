@@ -28,18 +28,16 @@ export const Empty = () => (
     placeholder={text('Placeholder', '')}
   />
 );
-export const Invalid = () => {
-  return (
-    <LabeledPasswordField
-      value={text('Value', "_%6.o*fGR75)':7,")}
-      forgotPasswordHref={text(
-        'Forgot Password Link',
-        'https://en.wikipedia.org/wiki/Password',
-      )}
-      customValidationMessage={text(
-        'Validation Error Message',
-        'This does not look correct.',
-      )}
-    />
-  );
-};
+export const Invalid = () => (
+  <LabeledPasswordField
+    value={text('Value', "_%6.o*fGR75)':7,")}
+    forgotPasswordHref={text(
+      'Forgot Password Link',
+      'https://en.wikipedia.org/wiki/Password',
+    )}
+    customValidationMessage={text(
+      'Validation Error Message',
+      'This does not look correct.',
+    )}
+  />
+);

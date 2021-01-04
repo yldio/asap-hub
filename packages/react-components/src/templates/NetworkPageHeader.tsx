@@ -61,42 +61,40 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   searchQuery,
   page,
   filters,
-}) => {
-  return (
-    <header css={containerStyles}>
-      <Display styleAsHeading={2}>Network</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          Explore the ASAP Network and collaborate! Search for teams or
-          individuals by keyword or name.
-        </Paragraph>
-      </div>
-      <div css={controlsStyles}>
-        <Toggle
-          leftButtonText="Teams"
-          leftButtonIcon={teamIcon}
-          rightButtonText="People"
-          rightButtonIcon={userIcon}
-          onChange={onChangeToggle}
-          position={page === 'teams' ? 'left' : 'right'}
-        />
-        <SearchControls
-          onChangeSearch={onChangeSearch}
-          placeholder={
-            page === 'users'
-              ? 'Enter name, keyword, institution, …'
-              : 'Enter name, keyword, method, …'
-          }
-          searchQuery={searchQuery}
-          onChangeFilter={onChangeFilter}
-          filterEnabled={page === 'users'}
-          filterOptions={page === 'users' ? userFilters : []}
-          filterTitle={page === 'users' ? 'TEAM ROLES' : ''}
-          filters={filters}
-        />
-      </div>
-    </header>
-  );
-};
+}) => (
+  <header css={containerStyles}>
+    <Display styleAsHeading={2}>Network</Display>
+    <div css={textStyles}>
+      <Paragraph accent="lead">
+        Explore the ASAP Network and collaborate! Search for teams or
+        individuals by keyword or name.
+      </Paragraph>
+    </div>
+    <div css={controlsStyles}>
+      <Toggle
+        leftButtonText="Teams"
+        leftButtonIcon={teamIcon}
+        rightButtonText="People"
+        rightButtonIcon={userIcon}
+        onChange={onChangeToggle}
+        position={page === 'teams' ? 'left' : 'right'}
+      />
+      <SearchControls
+        onChangeSearch={onChangeSearch}
+        placeholder={
+          page === 'users'
+            ? 'Enter name, keyword, institution, …'
+            : 'Enter name, keyword, method, …'
+        }
+        searchQuery={searchQuery}
+        onChangeFilter={onChangeFilter}
+        filterEnabled={page === 'users'}
+        filterOptions={page === 'users' ? userFilters : []}
+        filterTitle={page === 'users' ? 'TEAM ROLES' : ''}
+        filters={filters}
+      />
+    </div>
+  </header>
+);
 
 export default NetworkPageHeader;

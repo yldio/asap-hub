@@ -8,7 +8,7 @@ import {
 } from '@asap-hub/react-components';
 import { useNewsOrEvent } from '../api';
 
-const NewsOrEvent: React.FC<{}> = () => {
+const NewsOrEvent: React.FC<Record<string, never>> = () => {
   const {
     params: { id },
   } = useRouteMatch();

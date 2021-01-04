@@ -5,13 +5,14 @@ import { createReadStream } from 'fs';
 import insert from './insert';
 import parseData, { Data } from './parse-data';
 
+// complaining about `data` here is a lint rule bug
+// eslint-disable-next-line no-unused-vars
 const parse = (transform: (data: Data) => Promise<void>) => (
   src: string,
-): Promise<void> => {
-  return new Promise((resolve, reject) => {
+): Promise<void> =>
+  new Promise((resolve, reject) => {
     pump(
       createReadStream(src),
-      // eslint-disable-next-line @typescript-eslint/camelcase
       parser({ from_line: 2 }),
       through.obj({ maxConcurrency: 10 }, async (chunk, _, callback) => {
         await transform(parseData(chunk));
@@ -25,7 +26,6 @@ const parse = (transform: (data: Data) => Promise<void>) => (
       },
     );
   });
-};
 
 export const importUsers = parse(
   insert({

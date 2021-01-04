@@ -12,7 +12,7 @@ const NewsAndEventsList = React.lazy(loadNewsAndEventsList);
 const NewsOrEventPage = React.lazy(loadNewsOrEvent);
 loadNewsAndEventsList();
 
-const NewsAndEvents: React.FC<{}> = () => {
+const NewsAndEvents: React.FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
 
   return (

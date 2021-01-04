@@ -58,10 +58,8 @@ export const Caption = () => {
   );
 };
 
-export const CaptionAsParagraph = () => {
-  return (
-    <CaptionText asParagraph={true} accent={accentColor()}>
-      {text('Text', 'Caption')}
-    </CaptionText>
-  );
-};
+export const CaptionAsParagraph = () => (
+  <CaptionText asParagraph={true} accent={accentColor()}>
+    {text('Text', 'Caption')}
+  </CaptionText>
+);

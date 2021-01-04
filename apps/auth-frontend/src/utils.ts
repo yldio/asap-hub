@@ -1,4 +1,4 @@
-export const getHubUrlFromRedirect = () => {
+export const getHubUrlFromRedirect = (): string => {
   const redirectUri = new URLSearchParams(window.location.search).get(
     'redirect_uri',
   );

@@ -20,7 +20,7 @@ describe('useFetchOptions', () => {
     ).rejects.toThrow(/auth/i);
   });
 
-  const wrapper: React.FC<{}> = ({ children }) => (
+  const wrapper: React.FC = ({ children }) => (
     <authTestUtils.LoggedIn user={undefined}>{children}</authTestUtils.LoggedIn>
   );
 

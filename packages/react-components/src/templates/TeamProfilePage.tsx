@@ -21,13 +21,11 @@ type TeamProfilePageProps = ComponentProps<typeof TeamProfileHeader> & {
 const TeamProfilePage: React.FC<TeamProfilePageProps> = ({
   children,
   ...profile
-}) => {
-  return (
-    <article css={styles}>
-      <TeamProfileHeader {...profile} />
-      <main css={contentStyles}>{children}</main>
-    </article>
-  );
-};
+}) => (
+  <article css={styles}>
+    <TeamProfileHeader {...profile} />
+    <main css={contentStyles}>{children}</main>
+  </article>
+);
 
 export default TeamProfilePage;

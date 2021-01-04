@@ -1,7 +1,7 @@
 import { History } from 'history';
 import { useHistory, useLocation } from 'react-router-dom';
 
-export const useHasRouter = () => {
+export const useHasRouter = (): boolean => {
   try {
     useLocation();
     return true;
@@ -20,5 +20,5 @@ export const usePushFromPathname = (
     }
   };
 };
-export const usePushFromHere = () =>
+export const usePushFromHere = (): ReturnType<typeof usePushFromPathname> =>
   usePushFromPathname(useLocation().pathname);

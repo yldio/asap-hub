@@ -29,20 +29,18 @@ const NetworkPage: React.FC<NetworkPageProps> = ({
   page,
   onChangeFilter,
   filters,
-}) => {
-  return (
-    <article css={articleStyles}>
-      <NetworkPageHeader
-        onChangeToggle={onChangeToggle}
-        page={page}
-        onChangeSearch={onChangeSearch}
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filters={filters}
-      />
-      <main css={mainStyles}>{children}</main>
-    </article>
-  );
-};
+}) => (
+  <article css={articleStyles}>
+    <NetworkPageHeader
+      onChangeToggle={onChangeToggle}
+      page={page}
+      onChangeSearch={onChangeSearch}
+      searchQuery={searchQuery}
+      onChangeFilter={onChangeFilter}
+      filters={filters}
+    />
+    <main css={mainStyles}>{children}</main>
+  </article>
+);
 
 export default NetworkPage;

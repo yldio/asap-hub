@@ -1,13 +1,11 @@
 import jwt, { JwtHeader, SigningKeyCallback } from 'jsonwebtoken';
 import { Auth0User, config, auth0PubKeys } from '@asap-hub/auth';
 
-const certToPEM = (cert: string): string => {
+const certToPEM = (cert: string): string =>
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return `-----BEGIN CERTIFICATE-----\n${cert
+  `-----BEGIN CERTIFICATE-----\n${cert
     .match(/.{1,64}/g)!
     .join('\n')}\n-----END CERTIFICATE-----\n`;
-};
-
 const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
   const key = auth0PubKeys.find(({ kid }) => kid === header.kid)?.x5c;
   if (!key) {
@@ -19,8 +17,8 @@ const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
   return cb(null, certToPEM(key[0]));
 };
 
-const decodeToken = (token: string): Promise<Auth0User> => {
-  return new Promise((resolve, reject) => {
+const decodeToken = (token: string): Promise<Auth0User> =>
+  new Promise((resolve, reject) => {
     jwt.verify(token, getPublicKey, { algorithms: ['RS256'] }, (err, res) => {
       if (err) {
         return reject(err);
@@ -37,6 +35,5 @@ const decodeToken = (token: string): Promise<Auth0User> => {
       return resolve(payload);
     });
   });
-};
 
 export default decodeToken;

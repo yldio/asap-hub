@@ -10,7 +10,9 @@ export const FlagsContext = React.createContext<Flags>({
   disable,
   reset,
 });
-export const LiveFlagsProvider: React.FC<{}> = ({ children }) => {
+export const LiveFlagsProvider: React.FC<Record<string, never>> = ({
+  children,
+}) => {
   // ignore overrides value, new flags object identity every time will be sufficient to update consumers
   const [, setOverrides] = useState(getOverrides());
   const flags: Flags = {
@@ -29,4 +31,4 @@ export const LiveFlagsProvider: React.FC<{}> = ({ children }) => {
     <FlagsContext.Provider value={flags}>{children}</FlagsContext.Provider>
   );
 };
-export const useFlags = () => useContext(FlagsContext);
+export const useFlags = (): Flags => useContext(FlagsContext);

@@ -62,6 +62,8 @@ it('respects the passed options', async () => {
 describe('when the request URL changes', () => {
   let requests!: Array<{
     context: ReplyFnContext;
+    // complaining about `result` here is a lint rule bug
+    // eslint-disable-next-line no-shadow
     cb: (err: NodeJS.ErrnoException | null, result: ReplyFnResult) => void;
   }>;
   beforeEach(async () => {
@@ -144,7 +146,7 @@ it('Supplies content type on patch requests', async () => {
   })
     .patch('/patch')
     .reply(201);
-  const PatchComponent: React.FC<{}> = () => {
+  const PatchComponent: React.FC<Record<string, never>> = () => {
     const { loading, error, data, patch } = useSafeFetch<string>(
       `${API_BASE_URL}/patch`,
       {

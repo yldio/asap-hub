@@ -22,17 +22,15 @@ type LatestNewsProps = {
 const NewsAndEventsSection: React.FC<LatestNewsProps> = ({
   newsAndEvents,
   title,
-}) => {
-  return (
-    <section>
-      <Display styleAsHeading={2}>{title}</Display>
-      <div css={styles}>
-        {newsAndEvents.map((newsAndEvent) => {
-          return <NewsAndEventsCard key={newsAndEvent.id} {...newsAndEvent} />;
-        })}
-      </div>
-    </section>
-  );
-};
+}) => (
+  <section>
+    <Display styleAsHeading={2}>{title}</Display>
+    <div css={styles}>
+      {newsAndEvents.map((newsAndEvent) => (
+        <NewsAndEventsCard key={newsAndEvent.id} {...newsAndEvent} />
+      ))}
+    </div>
+  </section>
+);
 
 export default NewsAndEventsSection;

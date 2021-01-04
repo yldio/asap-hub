@@ -42,7 +42,6 @@ export const usePatchUserById = (id: string) => {
   return async (patch: UserPatchRequest) => {
     setPatchedUser(await patchUser(id, patch, authorization));
     getTokenSilently({
-      /* eslint-disable @typescript-eslint/camelcase */
       redirect_uri: window.location.origin,
       ignoreCache: true,
     });
@@ -56,7 +55,6 @@ export const usePatchUserAvatarById = (id: string) => {
   return async (avatar: string) => {
     const user = await postUserAvatar(id, { avatar }, authorization);
     await getTokenSilently({
-      /* eslint-disable @typescript-eslint/camelcase */
       redirect_uri: window.location.origin,
       ignoreCache: true,
     });

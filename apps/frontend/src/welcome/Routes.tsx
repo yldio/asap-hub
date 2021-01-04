@@ -4,7 +4,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 
 import Welcome from './Welcome';
 
-const Users: React.FC<{}> = () => {
+const Users: React.FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
 
   return (

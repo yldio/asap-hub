@@ -13,13 +13,11 @@ const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-const NewsAndEventsPage: React.FC = ({ children }) => {
-  return (
-    <article css={articleStyles}>
-      <NewsAndEventsPageHeader />
-      <main css={mainStyles}>{children}</main>
-    </article>
-  );
-};
+const NewsAndEventsPage: React.FC = ({ children }) => (
+  <article css={articleStyles}>
+    <NewsAndEventsPageHeader />
+    <main css={mainStyles}>{children}</main>
+  </article>
+);
 
 export default NewsAndEventsPage;

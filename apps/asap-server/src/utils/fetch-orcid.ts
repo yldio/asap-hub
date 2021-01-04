@@ -2,12 +2,6 @@ import Got from 'got';
 import get from 'lodash.get';
 import { CMSOrcidWork } from '../entities/user';
 
-export interface ORCIDWorksResponse {
-  'last-modified-date': { value: number };
-  group: ORCIDWork[];
-  path: string;
-}
-
 interface ORCIDExternalIds {
   'external-id': [
     {
@@ -26,7 +20,7 @@ interface ORCIDWork {
     'put-code': number;
     'created-date': { value: number };
     'last-modified-date': { value: number };
-    source: object;
+    source: Record<string, unknown>;
     title: {
       title: {
         value?: string;
@@ -54,17 +48,20 @@ interface ORCIDWork {
   }[];
 }
 
-export const fetchOrcidProfile = (
-  orcid: string,
-): Promise<ORCIDWorksResponse> => {
-  return Got.get(`https://pub.orcid.org/v2.1/${orcid}/works`).json();
-};
+export interface ORCIDWorksResponse {
+  'last-modified-date': { value: number };
+  group: ORCIDWork[];
+  path: string;
+}
+
+export const fetchOrcidProfile = (orcid: string): Promise<ORCIDWorksResponse> =>
+  Got.get(`https://pub.orcid.org/v2.1/${orcid}/works`).json();
 
 export const transformOrcidWorks = (
   orcidWorks: ORCIDWorksResponse,
-): { lastModifiedDate: string; works: CMSOrcidWork[] } => {
+): { lastModifiedDate: string; works: CMSOrcidWork[] } =>
   // parse & stringify to remove undefined values
-  return {
+  ({
     lastModifiedDate: `${orcidWorks['last-modified-date']?.value}`,
     works: orcidWorks.group.map((work) =>
       JSON.parse(
@@ -88,5 +85,4 @@ export const transformOrcidWorks = (
         }),
       ),
     ),
-  };
-};
+  });

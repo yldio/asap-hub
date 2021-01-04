@@ -4,7 +4,7 @@ export interface Entity {
   lastModified: string;
 }
 
-export interface Rest<T extends object> {
+export interface Rest<T> {
   data: {
     [K in keyof T]: null extends T[K]
       ? {
@@ -16,7 +16,7 @@ export interface Rest<T extends object> {
   };
 }
 
-export interface Graphql<T extends object> {
+export interface Graphql<T> {
   data?:
     | {
         [K in keyof T]: {

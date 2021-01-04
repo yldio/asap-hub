@@ -20,19 +20,17 @@ const onRedirectCallback = (appState: RedirectLoginResult['appState']) => {
 
 const AuthProvider: React.FC<{ readonly children: React.ReactNode }> = ({
   children,
-}) => {
-  return (
-    <Auth0Provider
-      domain={config.domain}
-      client_id={config.clientID}
-      redirect_uri={window.location.origin}
-      onRedirectCallback={onRedirectCallback}
-      cacheLocation="localstorage"
-      useRefreshTokens
-    >
-      {children}
-    </Auth0Provider>
-  );
-};
+}) => (
+  <Auth0Provider
+    domain={config.domain}
+    client_id={config.clientID}
+    redirect_uri={window.location.origin}
+    onRedirectCallback={onRedirectCallback}
+    cacheLocation="localstorage"
+    useRefreshTokens
+  >
+    {children}
+  </Auth0Provider>
+);
 
 export default AuthProvider;

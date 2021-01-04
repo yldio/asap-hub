@@ -28,7 +28,7 @@ const insertMembership = (
   user: RestUser,
   team: RestTeam,
   data: Data,
-): Promise<object> => {
+): Promise<RestUser> => {
   const newTeam: UserTeamConnection<string> = {
     id: [team.id],
     role: data.role,
@@ -224,41 +224,41 @@ export default ({
   upsert,
 }: {
   upsert: boolean;
-}): ((data: Data) => Promise<void>) => {
-  return async (data: Data): Promise<void> => {
-    const promises: Cache = {};
-    const [e1, user] = await Intercept(insertUser(data, promises, upsert));
-    const err1 = e1 as HTTPError;
-    if (err1) {
+  // complaining about `data` here is a lint rule bug
+  // eslint-disable-next-line no-unused-vars
+}): ((data: Data) => Promise<void>) => async (data: Data): Promise<void> => {
+  const promises: Cache = {};
+  const [e1, user] = await Intercept(insertUser(data, promises, upsert));
+  const err1 = e1 as HTTPError;
+  if (err1) {
+    console.error({
+      op: `create '${data.email}'`,
+      message: err1.message,
+      body: err1.response?.body,
+    });
+  }
+
+  if (data.application) {
+    const [e2, team] = await Intercept(insertTeam(data, promises));
+    const err2 = e2 as HTTPError;
+    if (err2) {
       console.error({
-        op: `create '${data.email}'`,
+        op: `create '${data.application}'`,
         message: err1.message,
+        statusCode: err1.response?.statusCode,
         body: err1.response?.body,
       });
+      return;
     }
 
-    if (data.application) {
-      const [e2, team] = await Intercept(insertTeam(data, promises));
-      const err2 = e2 as HTTPError;
-      if (err2) {
-        console.error({
-          op: `create '${data.application}'`,
-          message: err1.message,
-          statusCode: err1.response?.statusCode,
-          body: err1.response?.body,
-        });
-        return;
-      }
-
-      const [e3] = await Intercept(insertMembership(user, team, data));
-      const err3 = e3 as HTTPError;
-      if (err3) {
-        console.error({
-          op: `update '${data.email}'`,
-          message: err3.message,
-          body: err3.response?.body || err3.data,
-        });
-      }
+    const [e3] = await Intercept(insertMembership(user, team, data));
+    const err3 = e3 as HTTPError;
+    if (err3) {
+      console.error({
+        op: `update '${data.email}'`,
+        message: err3.message,
+        body: err3.response?.body || err3.data,
+      });
     }
-  };
+  }
 };

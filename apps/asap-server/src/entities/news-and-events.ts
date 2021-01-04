@@ -36,8 +36,8 @@ export interface CMSGraphQLNewsAndEvents {
 
 export const parseNewsAndEvents = (
   item: CMSNewsAndEvents,
-): NewsOrEventResponse => {
-  return {
+): NewsOrEventResponse =>
+  ({
     id: item.id,
     created: parseDate(item.created).toISOString(),
     shortText: item.data.shortText?.iv,
@@ -57,8 +57,7 @@ export const parseNewsAndEvents = (
       )[0],
     title: item.data.title.iv,
     type: item.data.type.iv,
-  } as NewsOrEventResponse;
-};
+  } as NewsOrEventResponse);
 
 export const parseGraphQLNewsAndEvents = (
   item: GraphqlNewsOrEvent,

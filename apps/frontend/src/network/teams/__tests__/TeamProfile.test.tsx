@@ -21,9 +21,9 @@ const renderTeamProfile = async (
   teamResponse = createTeamResponse(),
   { routeProfileId = teamResponse.id } = {},
 ) => {
-  mockGetTeam.mockImplementation(async (id) => {
-    return id === teamResponse.id ? teamResponse : undefined;
-  });
+  mockGetTeam.mockImplementation(async (id) =>
+    id === teamResponse.id ? teamResponse : undefined,
+  );
 
   const result = render(
     <RecoilRoot

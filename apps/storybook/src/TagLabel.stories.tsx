@@ -6,6 +6,4 @@ export default {
   title: 'Atoms / Tag Label',
 };
 
-export const Normal = () => {
-  return <TagLabel>{text('Text', 'Publication')}</TagLabel>;
-};
+export const Normal = () => <TagLabel>{text('Text', 'Publication')}</TagLabel>;

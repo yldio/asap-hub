@@ -6,21 +6,19 @@ export default {
   title: 'Molecules / Tag List',
 };
 
-export const Normal = () => {
-  return (
-    <TagList
-      summarize={boolean('Summarize', false)}
-      tags={array('Skills', [
-        'Neurological Diseases',
-        'Clinical Neurology',
-        'Adult Neurology',
-        'Neuroimaging',
-        'Neurologic Examination',
-        'Neuroprotection',
-        'Movement Disorders',
-        'Neurodegenerative Diseases',
-        'Neurological Diseases',
-      ])}
-    />
-  );
-};
+export const Normal = () => (
+  <TagList
+    summarize={boolean('Summarize', false)}
+    tags={array('Skills', [
+      'Neurological Diseases',
+      'Clinical Neurology',
+      'Adult Neurology',
+      'Neuroimaging',
+      'Neurologic Examination',
+      'Neuroprotection',
+      'Movement Disorders',
+      'Neurodegenerative Diseases',
+      'Neurological Diseases',
+    ])}
+  />
+);

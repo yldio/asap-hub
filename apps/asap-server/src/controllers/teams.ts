@@ -86,8 +86,8 @@ export interface ResponseFetchTeam {
 const transformRestTeamMember = (
   users: RestUser[],
   teamId: string,
-): TeamMember[] => {
-  return users.map((user) => ({
+): TeamMember[] =>
+  users.map((user) => ({
     id: user.id,
     displayName: `${user.data.firstName.iv} ${user.data.lastName.iv}`,
     firstName: user.data.firstName.iv,
@@ -98,20 +98,17 @@ const transformRestTeamMember = (
     ).role,
     avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
   }));
-};
 
 const transformGraphQLTeam = (
   team: GraphqlTeam,
   members: TeamMember[],
   user?: User,
-): TeamResponse => {
-  return {
-    ...parseGraphQLTeam(team, members),
-    tools: user?.teams.find(({ id }) => id === team.id)
-      ? team.flatData?.tools || []
-      : undefined,
-  };
-};
+): TeamResponse => ({
+  ...parseGraphQLTeam(team, members),
+  tools: user?.teams.find(({ id }) => id === team.id)
+    ? team.flatData?.tools || []
+    : undefined,
+});
 
 const fetchUsers = async (id: string, client: Got): Promise<RestUser[]> => {
   const [, res] = await Intercept(
@@ -146,11 +143,13 @@ export default class Teams {
     user: User,
   ): Promise<TeamResponse> {
     const cleanUpdate = tools.map((tool) =>
-      Object.entries(tool).reduce((acc, [key, value]) => {
-        return value?.trim && value?.trim() === ''
-          ? acc // deleted field
-          : { ...acc, [key]: value };
-      }, {} as TeamTool),
+      Object.entries(tool).reduce(
+        (acc, [key, value]) =>
+          value?.trim && value?.trim() === ''
+            ? acc // deleted field
+            : { ...acc, [key]: value },
+        {} as TeamTool,
+      ),
     );
 
     await this.teams.patch(id, { tools: { iv: cleanUpdate } });

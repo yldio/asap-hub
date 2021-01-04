@@ -20,19 +20,17 @@ const textStyles = css({
   maxWidth: `${610 / perRem}em`,
 });
 
-const NewsAndEventsPageHeader: React.FC = () => {
-  return (
-    <header css={containerStyles}>
-      <Display styleAsHeading={2}>News and Events</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          Stay up to date with all the latest activity from ASAP. You'll be able
-          to access current news, upcoming events and invaluable training
-          materials here.
-        </Paragraph>
-      </div>
-    </header>
-  );
-};
+const NewsAndEventsPageHeader: React.FC = () => (
+  <header css={containerStyles}>
+    <Display styleAsHeading={2}>News and Events</Display>
+    <div css={textStyles}>
+      <Paragraph accent="lead">
+        Stay up to date with all the latest activity from ASAP. You'll be able
+        to access current news, upcoming events and invaluable training
+        materials here.
+      </Paragraph>
+    </div>
+  </header>
+);
 
 export default NewsAndEventsPageHeader;

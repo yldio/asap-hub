@@ -36,16 +36,14 @@ const iframeContainer = css({
 });
 
 const components = {
-  p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => {
-    return <Paragraph>{children}</Paragraph>;
-  },
-  iframe: (props: HTMLAttributes<HTMLIFrameElement>) => {
-    return (
-      <span css={iframeContainer}>
-        <iframe title="Embedded Page" {...props} />
-      </span>
-    );
-  },
+  p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => (
+    <Paragraph>{children}</Paragraph>
+  ),
+  iframe: (props: HTMLAttributes<HTMLIFrameElement>) => (
+    <span css={iframeContainer}>
+      <iframe title="Embedded Page" {...props} />
+    </span>
+  ),
   h1: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (
       <div css={headline1Spacing}>
@@ -94,11 +92,11 @@ const components = {
     }
     return <Link href={href}>{children}</Link>;
   },
-  img: ({ ...props }: ImgHTMLAttributes<HTMLImageElement>) => {
+  img: ({ ...props }: ImgHTMLAttributes<HTMLImageElement>) => (
     // Set in Tiny/Squidex and up to editor discretion
     // eslint-disable-next-line jsx-a11y/alt-text
-    return <img {...props} css={{ height: 'auto', maxWidth: '100%' }} />;
-  },
+    <img {...props} css={{ height: 'auto', maxWidth: '100%' }} />
+  ),
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 
 interface RichTextProps {

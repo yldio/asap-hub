@@ -37,7 +37,7 @@ Found second unit: ${excessUnit}`);
   return new Function('calc', `return ${numbersOnlyCalcExpression}`)(calc);
 };
 
-export const textContentWithPseudo = (element: HTMLElement) => {
+export const textContentWithPseudo = (element: HTMLElement): string[] => {
   const texts = [];
 
   const [, beforeText] =

@@ -22,17 +22,15 @@ const gridContainerStyles = css({
   },
 });
 
-const Pages: React.FC<PagesProps> = ({ title, pages }) => {
-  return (
-    <section>
-      <Display styleAsHeading={2}>{title}</Display>
-      <div css={gridContainerStyles}>
-        {pages.map((page, idx) => (
-          <PageCard key={`page-${idx}`} {...page} />
-        ))}
-      </div>
-    </section>
-  );
-};
+const Pages: React.FC<PagesProps> = ({ title, pages }) => (
+  <section>
+    <Display styleAsHeading={2}>{title}</Display>
+    <div css={gridContainerStyles}>
+      {pages.map((page, idx) => (
+        <PageCard key={`page-${idx}`} {...page} />
+      ))}
+    </div>
+  </section>
+);
 
 export default Pages;

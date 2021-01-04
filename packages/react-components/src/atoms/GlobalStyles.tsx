@@ -25,6 +25,8 @@ const styles = css`
   }
 `;
 
-const GlobalStyles: React.FC<{}> = () => <Global styles={styles} />;
+const GlobalStyles: React.FC<Record<string, never>> = () => (
+  <Global styles={styles} />
+);
 
 export default GlobalStyles;

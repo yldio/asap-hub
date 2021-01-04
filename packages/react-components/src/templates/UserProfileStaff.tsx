@@ -39,57 +39,52 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
   discoverHref,
   reachOut,
   responsibilities,
-}) => {
-  return (
-    <ProfileCardList>
-      {{
-        card: (
-          <UserProfileStaffBackground
-            firstName={firstName}
-            discoverHref={discoverHref}
-            reachOut={reachOut}
-            responsibilities={responsibilities}
-          />
-        ),
-      }}
-      {{
-        card: teams.length
-          ? teams.map((team) => (
-              <UserProfileBackground
-                key={team.id}
-                {...team}
-                firstName={firstName}
-              />
-            ))
-          : null,
-      }}
-      {{
-        card: biography ? <UserProfileBiography biography={biography} /> : null,
-      }}
-      {{
-        card: skills.length ? (
-          <ProfileSkills
-            skillsDescription={skillsDescription}
-            skills={skills}
-          />
+}) => (
+  <ProfileCardList>
+    {{
+      card: (
+        <UserProfileStaffBackground
+          firstName={firstName}
+          discoverHref={discoverHref}
+          reachOut={reachOut}
+          responsibilities={responsibilities}
+        />
+      ),
+    }}
+    {{
+      card: teams.length
+        ? teams.map((team) => (
+            <UserProfileBackground
+              key={team.id}
+              {...team}
+              firstName={firstName}
+            />
+          ))
+        : null,
+    }}
+    {{
+      card: biography ? <UserProfileBiography biography={biography} /> : null,
+    }}
+    {{
+      card: skills.length ? (
+        <ProfileSkills skillsDescription={skillsDescription} skills={skills} />
+      ) : null,
+    }}
+    {{
+      card: questions.length ? (
+        <QuestionsSection firstName={firstName} questions={questions} />
+      ) : null,
+    }}
+    {{
+      card:
+        orcidWorks && orcidWorks.length ? (
+          <UserProfileRecentWorks orcidWorks={orcidWorks} />
         ) : null,
-      }}
-      {{
-        card: questions.length ? (
-          <QuestionsSection firstName={firstName} questions={questions} />
-        ) : null,
-      }}
-      {{
-        card:
-          orcidWorks && orcidWorks.length ? (
-            <UserProfileRecentWorks orcidWorks={orcidWorks} />
-          ) : null,
-      }}
-      {{
-        card: <HelpSection />,
-      }}
-    </ProfileCardList>
-  );
-};
+    }}
+    {{
+      card: <HelpSection />,
+    }}
+  </ProfileCardList>
+);
 
 export default UserProfileStaff;

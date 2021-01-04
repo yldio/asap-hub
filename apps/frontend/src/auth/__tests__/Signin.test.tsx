@@ -55,7 +55,6 @@ beforeEach(() => {
     .post('/oauth/token')
     .reply(200, (_uri, _body, cb) =>
       cb(null, {
-        /* eslint-disable @typescript-eslint/camelcase */
         id_token: JWT.sign({ nonce }, JWK.generateSync('RSA'), {
           algorithm: 'RS256',
           subject: 'auth0|42',

@@ -83,67 +83,61 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   outputsHref,
   workspaceHref,
   tools,
-}) => {
-  return (
-    <header css={containerStyles}>
-      <Display styleAsHeading={2}>Team {displayName}</Display>
-      <section css={sectionStyles}>
-        <div css={membersContainerStyles}>
-          <ul css={membersListStyles}>
-            {members
-              .slice(0, MAX_MEMBER_AVATARS)
-              .map(({ id, avatarUrl, firstName, lastName }) => {
-                return (
-                  <li key={id}>
-                    <Link href={`/network/users/${id}`} theme={null}>
-                      <Avatar
-                        firstName={firstName}
-                        lastName={lastName}
-                        imageUrl={avatarUrl}
-                      />
-                    </Link>
-                  </li>
-                );
-              })}
-            <li css={extraUsersStyles}>
-              {members.length > MAX_MEMBER_AVATARS && (
-                <Avatar
-                  placeholder={`+${members.length - MAX_MEMBER_AVATARS}`}
-                />
-              )}
-            </li>
-          </ul>
+}) => (
+  <header css={containerStyles}>
+    <Display styleAsHeading={2}>Team {displayName}</Display>
+    <section css={sectionStyles}>
+      <div css={membersContainerStyles}>
+        <ul css={membersListStyles}>
+          {members
+            .slice(0, MAX_MEMBER_AVATARS)
+            .map(({ id, avatarUrl, firstName, lastName }) => (
+              <li key={id}>
+                <Link href={`/network/users/${id}`} theme={null}>
+                  <Avatar
+                    firstName={firstName}
+                    lastName={lastName}
+                    imageUrl={avatarUrl}
+                  />
+                </Link>
+              </li>
+            ))}
+          <li css={extraUsersStyles}>
+            {members.length > MAX_MEMBER_AVATARS && (
+              <Avatar placeholder={`+${members.length - MAX_MEMBER_AVATARS}`} />
+            )}
+          </li>
+        </ul>
+      </div>
+      {pointOfContact && (
+        <div css={pointOfContactStyles}>
+          <Link
+            buttonStyle
+            small
+            primary
+            href={`${createMailTo(pointOfContact.email)}`}
+          >
+            Contact PM
+          </Link>
         </div>
-        {pointOfContact && (
-          <div css={pointOfContactStyles}>
-            <Link
-              buttonStyle
-              small
-              primary
-              href={`${createMailTo(pointOfContact.email)}`}
-            >
-              Contact PM
-            </Link>
-          </div>
-        )}
-        {lastModifiedDate && (
-          <div css={updateContainerStyles}>
-            <Paragraph accent="lead">
-              <small>
-                Last updated:{' '}
-                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-              </small>
-            </Paragraph>
-          </div>
-        )}
-      </section>
-      <TabNav>
-        <TabLink href={aboutHref}>About</TabLink>
-        {tools && <TabLink href={workspaceHref}>Team Workspace</TabLink>}
-        <TabLink href={outputsHref}>Team Outputs</TabLink>
-      </TabNav>
-    </header>
-  );
-};
+      )}
+      {lastModifiedDate && (
+        <div css={updateContainerStyles}>
+          <Paragraph accent="lead">
+            <small>
+              Last updated:{' '}
+              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+            </small>
+          </Paragraph>
+        </div>
+      )}
+    </section>
+    <TabNav>
+      <TabLink href={aboutHref}>About</TabLink>
+      {tools && <TabLink href={workspaceHref}>Team Workspace</TabLink>}
+      <TabLink href={outputsHref}>Team Outputs</TabLink>
+    </TabNav>
+  </header>
+);
 
 export default TeamProfileHeader;

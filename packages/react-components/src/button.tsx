@@ -15,6 +15,8 @@ import {
   color,
 } from './colors';
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+
 const activeBackgroundColor = color(122, 210, 169, 0.18);
 const borderWidth = 1;
 const styles = css({

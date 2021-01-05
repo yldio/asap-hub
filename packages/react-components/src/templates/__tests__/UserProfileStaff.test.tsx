@@ -58,7 +58,7 @@ it('renders orcid section', () => {
     />,
   );
 
-  expect(getByText(/most\srecent\sworks/i)).toBeVisible();
+  expect(getByText(/recent/i)).toBeVisible();
 });
 
 it('renders teams section', () => {

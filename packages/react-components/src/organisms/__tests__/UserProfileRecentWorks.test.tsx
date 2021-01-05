@@ -2,11 +2,11 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import UserProfileRecentWorks from '../UserProfileRecentWorks';
 
-it('renders an an header with number of members', () => {
+it('renders a header with the number of works', () => {
   const { getByRole } = render(<UserProfileRecentWorks />);
 
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Most Recent Works (0)"`,
+    `"Recent Publications (0)"`,
   );
 });
 

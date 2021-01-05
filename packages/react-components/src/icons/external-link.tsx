@@ -4,15 +4,15 @@ import React from 'react';
 
 const externalLink = (
   <svg
-    width="18px"
-    height="18px"
+    width="17.8px"
+    height="17.8px"
     viewBox="0 0 24 24"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     stroke="#00222C"
   >
-    <title>ExternalLink</title>
+    <title>External Link</title>
     <g
       id="ExternalLink"
       strokeWidth="1"

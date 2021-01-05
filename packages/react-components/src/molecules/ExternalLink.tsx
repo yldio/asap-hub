@@ -9,15 +9,15 @@ const containerStyles = css({
   display: 'flex',
 });
 const styles = css({
-  border: `1px solid ${fern.rgb}`,
+  display: 'flex',
+  alignItems: 'center',
   color: fern.rgb,
+  height: '24px',
   borderRadius: `${36 / perRem}em`,
   boxSizing: 'border-box',
-  display: 'flex',
+  border: `1px solid ${fern.rgb}`,
   padding: `0 ${11 / perRem}em`,
   margin: `${12 / perRem}em 0`,
-  alignItems: 'center',
-  fontSize: `${13.6 / perRem}em`,
   svg: {
     stroke: fern.rgb,
   },
@@ -30,6 +30,8 @@ const styles = css({
   },
 });
 
+const textStyles = css({ paddingTop: '1px', fontSize: `${13.6 / perRem}em` });
+
 type ExternalLinkProps = {
   readonly href: string;
   readonly label?: string;
@@ -41,7 +43,8 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   <div css={containerStyles}>
     <Link theme={null} href={href}>
       <div css={styles}>
-        {externalLinkIcon} {label}
+        {externalLinkIcon}
+        <div css={textStyles}>{label}</div>
       </div>
     </Link>
   </div>

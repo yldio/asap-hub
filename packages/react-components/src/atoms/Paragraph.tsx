@@ -18,18 +18,15 @@ type ParagraphProps = {
   readonly children: React.ReactNode;
   readonly primary?: boolean;
   readonly accent?: AccentColorName;
-  readonly id?: string;
 };
 
 const Paragraph: React.FC<ParagraphProps> = ({
   children,
   primary = false,
   accent,
-  id,
 }) => {
   return (
     <p
-      id={id}
       css={[
         layoutStyles,
         primary ? primaryStyles : secondaryStyles,

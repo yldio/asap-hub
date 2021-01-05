@@ -138,6 +138,10 @@ export const headlineStyles = {
     ...fontStyles,
     fontWeight: 'bold',
   } as Interpolation,
+  6: {
+    ...fontStyles,
+    fontWeight: 'normal',
+  },
 } as const;
 
 export type AccentColorName =

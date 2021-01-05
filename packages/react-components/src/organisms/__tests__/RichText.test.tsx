@@ -54,7 +54,7 @@ it('Displays error when styling applied within <a>', () => {
 it.each([
   [1, 'H4'],
   [2, 'H5'],
-  [3, 'P'],
+  [3, 'H6'],
 ])('renders <h%i> to %s', (i, expected) => {
   const { getByText } = render(<RichText text={`<h${i}>heading</h${i}>`} />);
   const heading = getByText('heading');

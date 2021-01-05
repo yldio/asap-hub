@@ -13,7 +13,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
 
-import { Paragraph, Headline4, Headline5, Link } from '../atoms';
+import { Paragraph, Headline4, Headline5, Headline6, Link } from '../atoms';
 import { isTextChildren, isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
@@ -68,7 +68,7 @@ const components = {
     ),
   h3: ({ children, id }: HTMLAttributes<HTMLHeadingElement>) =>
     isAllowedChildren(children) ? (
-      <Paragraph id={id}>{children}</Paragraph>
+      <Headline6 id={id}>{children}</Headline6>
     ) : (
       <ErrorCard
         title="Styling Error"

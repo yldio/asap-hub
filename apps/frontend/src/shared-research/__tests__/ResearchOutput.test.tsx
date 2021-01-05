@@ -1,9 +1,10 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import nock from 'nock';
 import { authTestUtils } from '@asap-hub/react-components';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import userEvent from '@testing-library/user-event';
 
 import ResearchOutput from '../ResearchOutput';
 import { API_BASE_URL } from '../../config';
@@ -23,8 +24,11 @@ const renderComponent = async (id: string) => {
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={[`/${id}/`]}>
-            <Route path="/:id" component={ResearchOutput} />
+          <MemoryRouter initialEntries={['/prev', `/${id}/`]} initialIndex={1}>
+            <Switch>
+              <Route path="/prev">Previous Page</Route>
+              <Route path="/:id" component={ResearchOutput} />
+            </Switch>
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>
@@ -83,4 +87,15 @@ it('renders the 404 page for a missing research output', async () => {
     .reply(404);
   const { getByText } = await renderComponent('42');
   expect(getByText(/sorry.+page/i)).toBeVisible();
+});
+
+it('has a button to go back in browser history', async () => {
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/research-outputs/42')
+    .reply(200, researchOutput);
+  const { getByText } = await renderComponent('42');
+  userEvent.click(getByText(/back/i));
+  expect(getByText('Previous Page')).toBeVisible();
 });

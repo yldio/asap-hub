@@ -3,7 +3,15 @@ import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
 
-import { TagLabel, Display, Link, Paragraph, Card, Caption } from '../atoms';
+import {
+  TagLabel,
+  Display,
+  Link,
+  Paragraph,
+  Card,
+  Caption,
+  Button,
+} from '../atoms';
 import { RichText } from '../organisms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
@@ -56,7 +64,7 @@ type ResearchOutputPageProps = Pick<
   team?: {
     href: string;
   };
-  sharedResearchHref: string;
+  goBack: () => void;
 };
 
 const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
@@ -66,15 +74,15 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   text,
   title,
   type,
-  sharedResearchHref,
+  goBack,
 }) => (
   <div css={containerStyles}>
     <div css={backContainerStyles}>
-      <Link href={sharedResearchHref}>
+      <Button linkStyle onClick={goBack}>
         <div css={backButtonStyles}>
           <span css={iconStyles}>{chevronCircleLeftIcon}</span> Back
         </div>
-      </Link>
+      </Button>
     </div>
     <Card>
       <TagLabel>{type}</TagLabel>

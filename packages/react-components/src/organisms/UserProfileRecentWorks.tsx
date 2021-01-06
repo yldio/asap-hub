@@ -11,7 +11,9 @@ import {
   Paragraph,
   Link,
 } from '../atoms';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
+import { orcidIcon } from '../icons';
+import { lead } from '../colors';
 
 const typeMap: { [key in OrcidWork['type']]: string } = {
   ANNOTATION: 'Other',
@@ -59,13 +61,26 @@ const typeMap: { [key in OrcidWork['type']]: string } = {
   UNDEFINED: 'Other',
 };
 
-const containerStyles = css({
+const headerStyles = css({
   display: 'grid',
-  gridRowGap: `${12 / perRem}em`,
+  alignItems: 'center',
+  gridColumnGap: `${12 / perRem}em`,
+
+  gridTemplateColumns: '100% 0 0',
+  overflow: 'hidden',
+
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gridTemplateColumns: '1fr max-content 28px',
+  },
 });
 
-const footerStyle = css({
-  textAlign: 'right',
+const listStyles = css({
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+
+  display: 'grid',
+  gridRowGap: `${12 / perRem}em`,
 });
 
 type UserProfileRecentWorkProps = Omit<OrcidWork, 'id'>;
@@ -87,27 +102,31 @@ const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
     parseInt(day, 10),
   );
 
-  return (
+  const elements = (
     <div>
       <TagLabel>{typeMap[type]}</TagLabel>
+      <Headline3 styleAsHeading={4}>{title}</Headline3>
+      <Paragraph accent="lead">
+        {`Originally Published: ${format(
+          date,
+          `${publicationDate.day ? 'do ' : ''}${
+            publicationDate.month ? 'MMMM ' : ''
+          }yyyy`,
+        )}`}
+      </Paragraph>
+    </div>
+  );
+
+  return (
+    <li>
       {doi ? (
         <Link theme={null} href={doi}>
-          <Headline3>{title}</Headline3>
+          {elements}
         </Link>
       ) : (
-        <Headline3>{title}</Headline3>
+        elements
       )}
-      <div css={footerStyle}>
-        <Paragraph accent="lead">
-          {`Originally Published: ${format(
-            date,
-            `${publicationDate.day ? 'do ' : ''}${
-              publicationDate.month ? 'MMMM ' : ''
-            }yyyy`,
-          )}`}
-        </Paragraph>
-      </div>
-    </div>
+    </li>
   );
 };
 
@@ -115,17 +134,23 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
   orcidWorks = [],
 }) => (
   <Card>
-    <Headline2 styleAsHeading={3}>
-      Most Recent Works ({orcidWorks.length})
-    </Headline2>
-    <div css={containerStyles}>
+    <div css={headerStyles}>
+      <Headline2 styleAsHeading={3}>
+        Recent Publications ({orcidWorks.length})
+      </Headline2>
+      <Paragraph accent="lead">Via ORCID</Paragraph>
+      <span css={{ display: 'grid', svg: { fill: lead.rgb } }}>
+        {orcidIcon}
+      </span>
+    </div>
+    <ul css={listStyles}>
       {orcidWorks
         .flatMap((work, idx) => [
           <Divider key={`sep-${idx}`} />,
           <UserProfileRecentWork key={`wrk-${idx}`} {...work} />,
         ])
         .slice(1)}
-    </div>
+    </ul>
   </Card>
 );
 

@@ -7,6 +7,8 @@ import {
   Headline2 as Headline2Text,
   Headline3 as Headline3Text,
   Headline4 as Headline4Text,
+  Headline5 as Headline5Text,
+  Headline6 as Headline6Text,
   Paragraph as ParagraphText,
 } from '@asap-hub/react-components';
 import { accentColor } from './text';
@@ -28,6 +30,12 @@ export const Headline3 = () => (
 );
 export const Headline4 = () => (
   <Headline4Text>{text('Text', 'Headline 4')}</Headline4Text>
+);
+export const Headline5 = () => (
+  <Headline5Text>{text('Text', 'Headline 5')}</Headline5Text>
+);
+export const Headline6 = () => (
+  <Headline6Text>{text('Text', 'Headline 6')}</Headline6Text>
 );
 
 export const Paragraph = () => {

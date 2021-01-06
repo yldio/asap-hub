@@ -51,33 +51,35 @@ it('Displays error when styling applied within <a>', () => {
   );
 });
 
-it.each([1, 2])('renders <h$i> one heading level lower', (i) => {
+it.each([
+  [1, 'H4'],
+  [2, 'H5'],
+  [3, 'H6'],
+])('renders <h%i> to %s', (i, expected) => {
   const { getByText } = render(<RichText text={`<h${i}>heading</h${i}>`} />);
   const heading = getByText('heading');
-  expect(heading.tagName).toBe(`H${i + 1}`);
+  expect(heading.tagName).toBe(expected);
 });
 
-it.each([1, 2])('displays error when disallowed <h$i> styling applied', (i) => {
-  const { container } = render(
-    <RichText text={`<h${i}><strong>heading</strong></h${i}>`} />,
-  );
-  expect(container.textContent).toContain(`Invalid h${i} heading styling`);
-});
+it.each([1, 2, 3])(
+  'displays error when disallowed <h%i> styling applied',
+  (i) => {
+    const { container } = render(
+      <RichText text={`<h${i}><strong>heading</strong></h${i}>`} />,
+    );
+    expect(container.textContent).toContain(`Invalid h${i} heading styling`);
+  },
+);
 
-it.each([1, 2])('displays heading when allowed <h$i> styling applied', (i) => {
-  const { getByRole } = render(
-    <RichText text={`<h${i}><i>heading</i></h${i}>`} />,
-  );
-  expect(getByRole('heading').firstElementChild?.tagName).toEqual('I');
-  expect(getByRole('heading').textContent).toEqual('heading');
-});
-
-it('Displays error when styling applied to h2', () => {
-  const { container } = render(
-    <RichText text={'<h2><strong>anchor</strong></h2>'} />,
-  );
-  expect(container.textContent).toContain('Invalid h2 heading styling');
-});
+it.each([1, 2, 3])(
+  'displays heading when allowed <h%i> styling applied',
+  (i) => {
+    const { getByText } = render(
+      <RichText text={`<h${i}><i>heading</i></h${i}>`} />,
+    );
+    expect(getByText('heading').tagName).toEqual('I');
+  },
+);
 
 it('passes through image props', () => {
   const { getByRole } = render(
@@ -103,8 +105,8 @@ describe('with toc', () => {
     const tocEntry2 = getByText('heading 2', {
       selector: 'nav li a',
     }) as HTMLAnchorElement;
-    const heading1 = getByText('heading 1', { selector: 'h2' });
-    const heading2 = getByText('heading 2', { selector: 'h3' });
+    const heading1 = getByText('heading 1', { selector: 'h4' });
+    const heading2 = getByText('heading 2', { selector: 'h5' });
 
     expect(heading1.id).not.toBe(heading2.id);
     expect(tocEntry1.href).toBe(

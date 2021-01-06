@@ -14,5 +14,5 @@ it('renders the content and the title', () => {
 
   expect(getByText('title')).toBeVisible();
   expect(getByText('title').tagName).toEqual('H1');
-  expect(getByText('h1', { selector: 'h2' })).toBeVisible();
+  expect(getByText('h1', { selector: 'h4' })).toBeVisible();
 });

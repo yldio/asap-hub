@@ -50,7 +50,7 @@ describe('content page', () => {
     const { findByText } = await renderPage();
     expect(
       await findByText(/text/i, {
-        selector: 'h2',
+        selector: 'h4',
       }),
     ).toBeVisible();
   });

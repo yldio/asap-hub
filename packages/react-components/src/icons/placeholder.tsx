@@ -2,7 +2,7 @@ import React from 'react';
 
 /* istanbul ignore file */
 
-const palceholder = (
+const placeholder = (
   <svg
     width="30"
     height="30"
@@ -77,4 +77,4 @@ const palceholder = (
   </svg>
 );
 
-export default palceholder;
+export default placeholder;

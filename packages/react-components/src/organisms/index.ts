@@ -1,5 +1,6 @@
 export * from './auth';
 
+export { default as CalendarList } from './CalendarList';
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
 export { default as EditModal } from './EditModal';

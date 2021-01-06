@@ -14,6 +14,7 @@ import {
   filterIcon,
   firstPageIcon,
   githubIcon,
+  googleCalendarIcon,
   googleDriveIcon,
   googleIcon,
   googleScholarIcon,
@@ -32,6 +33,7 @@ import {
   orcidIcon,
   orcidSocialIcon,
   placeholderIcon,
+  plusIcon,
   previousPageIcon,
   protocolsIcon,
   researchGateIcon,
@@ -68,6 +70,7 @@ export const Filter = () => filterIcon;
 export const FirstPage = () => firstPageIcon;
 export const Github = () => githubIcon;
 export const Google = () => googleIcon;
+export const GoogleCalendarIcon = () => googleCalendarIcon;
 export const GoogleDrive = () => googleDriveIcon;
 export const GoogleScholar = () => googleScholarIcon;
 export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;
@@ -84,6 +87,7 @@ export const NextPage = () => nextPageIcon;
 export const Orcid = () => orcidIcon;
 export const OrcidSocial = () => orcidSocialIcon;
 export const Placeholder = () => placeholderIcon;
+export const Plus = () => plusIcon;
 export const PreviousPage = () => previousPageIcon;
 export const Protocols = () => protocolsIcon;
 export const ResearchGate = () => researchGateIcon;

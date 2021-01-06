@@ -20,13 +20,10 @@ const envDefaults: Record<string, boolean> = {
   production: false,
 };
 
-export const isEnabled = (flag: Flag): boolean => {
-  return (
-    overrides[flag] ??
-    envDefaults[process.env.NODE_ENV ?? 'development'] ??
-    false
-  );
-};
+export const isEnabled = (flag: Flag): boolean =>
+  overrides[flag] ??
+  envDefaults[process.env.NODE_ENV ?? 'development'] ??
+  false;
 
 export const getOverrides = (): Flags => overrides;
 export const disable = (flag: Flag): void => {

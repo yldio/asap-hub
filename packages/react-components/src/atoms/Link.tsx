@@ -86,6 +86,8 @@ const Link: React.FC<LinkProps> = ({
     );
   }
   return (
+    // lint rule does not understand the conditionals
+    // eslint-disable-next-line react/jsx-no-target-blank
     <a
       href={(enabled && href) || undefined}
       aria-label={label}

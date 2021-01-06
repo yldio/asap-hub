@@ -9,7 +9,7 @@ type LabeledDropdownProps<V extends string> = {
 export default function LabeledDropdown<V extends string>({
   title,
   ...dropdownProps
-}: LabeledDropdownProps<V>) {
+}: LabeledDropdownProps<V>): ReturnType<React.FC> {
   return (
     <div css={{ paddingBottom: `${18 / perRem}em` }}>
       <Label forContent={(id) => <Dropdown {...dropdownProps} id={id} />}>

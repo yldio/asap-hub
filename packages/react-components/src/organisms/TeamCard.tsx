@@ -33,21 +33,19 @@ const TeamCard: React.FC<TeamCardProps> = ({
   skills,
   members,
   href,
-}) => {
-  return (
-    <Card>
-      <Link theme={null} href={href}>
-        <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
-        <Paragraph accent="lead">{projectTitle}</Paragraph>
-      </Link>
-      <TagList summarize tags={skills} />
-      <span css={teamMemberStyles}>
-        <span css={iconStyles}>{teamIcon} </span>
-        {members.length} Team Member
-        {members.length !== 1 ? 's' : ''}
-      </span>
-    </Card>
-  );
-};
+}) => (
+  <Card>
+    <Link theme={null} href={href}>
+      <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
+      <Paragraph accent="lead">{projectTitle}</Paragraph>
+    </Link>
+    <TagList summarize tags={skills} />
+    <span css={teamMemberStyles}>
+      <span css={iconStyles}>{teamIcon} </span>
+      {members.length} Team Member
+      {members.length !== 1 ? 's' : ''}
+    </span>
+  </Card>
+);
 
 export default TeamCard;

@@ -44,50 +44,46 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   responsibilities = '',
   proposalHref,
   href,
-}) => {
-  return (
-    <Card>
-      <Headline2 styleAsHeading={3}>
-        {firstName}'s Role on ASAP Network
-      </Headline2>
-      <div>
-        <div css={dynamicContainerStyles}>
-          <div css={teamContentStyle}>
-            <Headline3 styleAsHeading={5}>Team</Headline3>
-            <Link href={href}>Team {displayName}</Link>
-          </div>
-          <div css={teamContentStyle}>
-            <Headline3 styleAsHeading={5}>Role</Headline3>
-            <Paragraph>{role}</Paragraph>
-          </div>
+}) => (
+  <Card>
+    <Headline2 styleAsHeading={3}>{firstName}'s Role on ASAP Network</Headline2>
+    <div>
+      <div css={dynamicContainerStyles}>
+        <div css={teamContentStyle}>
+          <Headline3 styleAsHeading={5}>Team</Headline3>
+          <Link href={href}>Team {displayName}</Link>
         </div>
-        {approach && (
-          <div>
-            <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
-            <Paragraph>{approach}</Paragraph>
-          </div>
-        )}
-        {responsibilities && (
-          <div>
-            <Headline3 styleAsHeading={5}>
-              {firstName}'s Responsibilities
-            </Headline3>
-            <Paragraph>{responsibilities}</Paragraph>
-          </div>
-        )}
+        <div css={teamContentStyle}>
+          <Headline3 styleAsHeading={5}>Role</Headline3>
+          <Paragraph>{role}</Paragraph>
+        </div>
       </div>
-      <div css={linksContainer}>
-        {proposalHref ? (
-          <Link buttonStyle primary href={proposalHref}>
-            Read Team Proposal
-          </Link>
-        ) : null}
-        <Link buttonStyle href={href}>
-          Meet the Team
+      {approach && (
+        <div>
+          <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
+          <Paragraph>{approach}</Paragraph>
+        </div>
+      )}
+      {responsibilities && (
+        <div>
+          <Headline3 styleAsHeading={5}>
+            {firstName}'s Responsibilities
+          </Headline3>
+          <Paragraph>{responsibilities}</Paragraph>
+        </div>
+      )}
+    </div>
+    <div css={linksContainer}>
+      {proposalHref ? (
+        <Link buttonStyle primary href={proposalHref}>
+          Read Team Proposal
         </Link>
-      </div>
-    </Card>
-  );
-};
+      ) : null}
+      <Link buttonStyle href={href}>
+        Meet the Team
+      </Link>
+    </div>
+  </Card>
+);
 
 export default UserProfileBackground;

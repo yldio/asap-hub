@@ -54,35 +54,29 @@ type MembersSectionProps = {
 const MembersSection: React.FC<MembersSectionProps> = ({
   members,
   title = `Team Members (${members.length})`,
-}) => {
-  return (
-    <Card>
-      <Headline2 styleAsHeading={3}>{title}</Headline2>
-      <ul css={containerStyles}>
-        {members.map(
-          ({ id, displayName, firstName, lastName, avatarUrl, role }) => (
-            <li key={id} css={{ display: 'contents' }}>
-              <Link
-                href={`/network/users/${id}`}
-                theme={null}
-                display="contents"
-              >
-                <div css={avatarStyles}>
-                  <Avatar
-                    imageUrl={avatarUrl}
-                    firstName={firstName}
-                    lastName={lastName}
-                  />
-                </div>
-                <div css={nameStyles}>{displayName}</div>
-                <div css={roleStyles}>{role}</div>
-              </Link>
-            </li>
-          ),
-        )}
-      </ul>
-    </Card>
-  );
-};
+}) => (
+  <Card>
+    <Headline2 styleAsHeading={3}>{title}</Headline2>
+    <ul css={containerStyles}>
+      {members.map(
+        ({ id, displayName, firstName, lastName, avatarUrl, role }) => (
+          <li key={id} css={{ display: 'contents' }}>
+            <Link href={`/network/users/${id}`} theme={null} display="contents">
+              <div css={avatarStyles}>
+                <Avatar
+                  imageUrl={avatarUrl}
+                  firstName={firstName}
+                  lastName={lastName}
+                />
+              </div>
+              <div css={nameStyles}>{displayName}</div>
+              <div css={roleStyles}>{role}</div>
+            </Link>
+          </li>
+        ),
+      )}
+    </ul>
+  </Card>
+);
 
 export default MembersSection;

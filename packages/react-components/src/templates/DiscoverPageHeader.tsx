@@ -20,18 +20,16 @@ const textStyles = css({
   maxWidth: `${610 / perRem}em`,
 });
 
-const DashboardPageHeader: React.FC = () => {
-  return (
-    <header css={containerStyles}>
-      <Display styleAsHeading={2}>Discover ASAP</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          Guidance and resources about ASAP’s programs and policies as well as
-          the ASAP and MJFF team.
-        </Paragraph>
-      </div>
-    </header>
-  );
-};
+const DashboardPageHeader: React.FC = () => (
+  <header css={containerStyles}>
+    <Display styleAsHeading={2}>Discover ASAP</Display>
+    <div css={textStyles}>
+      <Paragraph accent="lead">
+        Guidance and resources about ASAP’s programs and policies as well as the
+        ASAP and MJFF team.
+      </Paragraph>
+    </div>
+  </header>
+);
 
 export default DashboardPageHeader;

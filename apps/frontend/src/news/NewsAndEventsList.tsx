@@ -5,7 +5,7 @@ import { NewsAndEventsPageBody, Loading } from '@asap-hub/react-components';
 import { useNewsAndEvents } from '../api';
 import { NEWS_AND_EVENTS_PATH } from '../routes';
 
-const NewsAndEventsList: React.FC<{}> = () => {
+const NewsAndEventsList: React.FC<Record<string, never>> = () => {
   const result = useNewsAndEvents();
 
   if (result.loading) {

@@ -6,7 +6,7 @@ import Frame from '../Frame';
 
 mockConsoleError();
 
-const Throw: React.FC<{}> = () => {
+const Throw: React.FC<Record<string, never>> = () => {
   throw new Error('oops');
 };
 const Suspend = React.lazy(() => new Promise(() => {}));

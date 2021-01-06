@@ -3,6 +3,8 @@ import decode from 'jwt-decode';
 import Boom from '@hapi/boom';
 import squidex from './config';
 
+/* eslint-disable camelcase */
+
 interface JwtToken {
   exp: number;
 }
@@ -21,7 +23,6 @@ export const getAccessToken = async (): Promise<string> => {
     }
   }
 
-  /* eslint-disable @typescript-eslint/camelcase, camelcase */
   const url = `${squidex.baseUrl}/identity-server/connect/token`;
   token = Got.post(url, {
     form: {
@@ -36,7 +37,6 @@ export const getAccessToken = async (): Promise<string> => {
       const { access_token: accessToken } = r as { access_token: string };
       return accessToken;
     });
-  /* eslint-enable @typescript-eslint/camelcase, camelcase */
 
   if (token) {
     return token;

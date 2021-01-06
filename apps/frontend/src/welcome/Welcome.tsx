@@ -5,7 +5,7 @@ import { useAuth0 } from '@asap-hub/react-context';
 
 import { API_BASE_URL } from '../config';
 
-const Welcome: React.FC<{}> = () => {
+const Welcome: React.FC<Record<string, never>> = () => {
   const history = useHistory();
   const { code } = useParams<{ code: string }>();
 
@@ -32,7 +32,6 @@ const Welcome: React.FC<{}> = () => {
   }, [history, code]);
 
   const createAccount = () => {
-    /* eslint-disable @typescript-eslint/camelcase */
     loginWithRedirect({
       prompt: 'login',
       screen_hint: 'signup',

@@ -7,15 +7,13 @@ export default {
   title: 'Atoms / Toggle',
 };
 
-export const Normal = () => {
-  return (
-    <Toggle
-      leftButtonText={text('Left Text', 'People')}
-      leftButtonIcon={userIcon}
-      rightButtonText={text('Right Text', 'Teams')}
-      rightButtonIcon={teamIcon}
-      position={boolean('Toggled', false) ? 'right' : 'left'}
-      onChange={() => action('Toggle Changed')}
-    />
-  );
-};
+export const Normal = () => (
+  <Toggle
+    leftButtonText={text('Left Text', 'People')}
+    leftButtonIcon={userIcon}
+    rightButtonText={text('Right Text', 'Teams')}
+    rightButtonIcon={teamIcon}
+    position={boolean('Toggled', false) ? 'right' : 'left'}
+    onChange={() => action('Toggle Changed')}
+  />
+);

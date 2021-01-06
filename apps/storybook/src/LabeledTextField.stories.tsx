@@ -40,19 +40,17 @@ export const Valid = () => (
     pattern=".*"
   />
 );
-export const Invalid = () => {
-  return (
-    <LabeledTextField
-      title={text('Title', 'Full Name')}
-      value={text('Value', 'John|Doe')}
-      customValidationMessage={text(
-        'Validation Error Message',
-        "Must not include special characters, such as '|' and '%'.",
-      )}
-      hint={text('Hint', 'Hint')}
-    />
-  );
-};
+export const Invalid = () => (
+  <LabeledTextField
+    title={text('Title', 'Full Name')}
+    value={text('Value', 'John|Doe')}
+    customValidationMessage={text(
+      'Validation Error Message',
+      "Must not include special characters, such as '|' and '%'.",
+    )}
+    hint={text('Hint', 'Hint')}
+  />
+);
 export const Loading = () => (
   <LabeledTextField
     title={text('Title', 'Full Name')}

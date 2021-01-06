@@ -17,7 +17,7 @@ beforeEach(() => {
   MockDashboard.mockReset().mockReturnValue(null);
 });
 
-const wrapper: React.FC<{}> = ({ children }) => (
+const wrapper: React.FC<Record<string, never>> = ({ children }) => (
   <authTestUtils.Auth0Provider>
     <authTestUtils.LoggedIn user={{}}>
       <StaticRouter>

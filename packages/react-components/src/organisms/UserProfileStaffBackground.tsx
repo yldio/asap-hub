@@ -41,47 +41,43 @@ const UserProfileStaffBackground: React.FC<UserProfileStaffBackgroundProps> = ({
   reachOut = '',
   responsibilities = '',
   discoverHref,
-}) => {
-  return (
-    <Card>
-      <Headline2 styleAsHeading={3}>
-        {firstName}'s Role on ASAP Network
-      </Headline2>
-      <div>
-        <div css={dynamicContainerStyles}>
-          <div css={teamContentStyle}>
-            <Headline3 styleAsHeading={5}>Team</Headline3>
-            <Link href={discoverHref}>Team ASAP</Link>
-          </div>
-          <div css={teamContentStyle}>
-            <Headline3 styleAsHeading={5}>Role</Headline3>
-            <Paragraph>ASAP Staff</Paragraph>
-          </div>
+}) => (
+  <Card>
+    <Headline2 styleAsHeading={3}>{firstName}'s Role on ASAP Network</Headline2>
+    <div>
+      <div css={dynamicContainerStyles}>
+        <div css={teamContentStyle}>
+          <Headline3 styleAsHeading={5}>Team</Headline3>
+          <Link href={discoverHref}>Team ASAP</Link>
         </div>
-        {responsibilities && (
-          <div>
-            <Headline3 styleAsHeading={5}>
-              {firstName}'s Responsibilities
-            </Headline3>
-            <Paragraph>{responsibilities}</Paragraph>
-          </div>
-        )}
-        {reachOut && (
-          <div>
-            <Headline3 styleAsHeading={5}>
-              Reach out to {firstName} if...
-            </Headline3>
-            <Paragraph>{reachOut}</Paragraph>
-          </div>
-        )}
+        <div css={teamContentStyle}>
+          <Headline3 styleAsHeading={5}>Role</Headline3>
+          <Paragraph>ASAP Staff</Paragraph>
+        </div>
       </div>
-      <div css={linksContainer}>
-        <Link buttonStyle href={discoverHref}>
-          Meet the Team
-        </Link>
-      </div>
-    </Card>
-  );
-};
+      {responsibilities && (
+        <div>
+          <Headline3 styleAsHeading={5}>
+            {firstName}'s Responsibilities
+          </Headline3>
+          <Paragraph>{responsibilities}</Paragraph>
+        </div>
+      )}
+      {reachOut && (
+        <div>
+          <Headline3 styleAsHeading={5}>
+            Reach out to {firstName} if...
+          </Headline3>
+          <Paragraph>{reachOut}</Paragraph>
+        </div>
+      )}
+    </div>
+    <div css={linksContainer}>
+      <Link buttonStyle href={discoverHref}>
+        Meet the Team
+      </Link>
+    </div>
+  </Card>
+);
 
 export default UserProfileStaffBackground;

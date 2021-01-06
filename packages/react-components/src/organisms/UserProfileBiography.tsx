@@ -19,28 +19,26 @@ type UserProfileBiographyProps = {
 const UserProfileBiography: React.FC<UserProfileBiographyProps> = ({
   biography,
   biosketch,
-}) => {
-  return (
-    <Card>
-      <div
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Headline2 styleAsHeading={3}>Biography</Headline2>
-        <Paragraph accent="lead">{biography}</Paragraph>
-        {biosketch && (
-          <div css={stretchOnMobile}>
-            <Link buttonStyle href={biosketch}>
-              {docsIcon}
-              View Biosketch
-            </Link>
-          </div>
-        )}
-      </div>
-    </Card>
-  );
-};
+}) => (
+  <Card>
+    <div
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Headline2 styleAsHeading={3}>Biography</Headline2>
+      <Paragraph accent="lead">{biography}</Paragraph>
+      {biosketch && (
+        <div css={stretchOnMobile}>
+          <Link buttonStyle href={biosketch}>
+            {docsIcon}
+            View Biosketch
+          </Link>
+        </div>
+      )}
+    </div>
+  </Card>
+);
 
 export default UserProfileBiography;

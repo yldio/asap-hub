@@ -17,7 +17,7 @@ const Outputs = React.lazy(loadOutputs);
 const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
-const TeamProfile: React.FC<{}> = () => {
+const TeamProfile: React.FC<Record<string, never>> = () => {
   const {
     url,
     path,

@@ -21,13 +21,11 @@ type UserProfilePageProps = ComponentProps<typeof UserProfileHeader> & {
 const UserProfilePage: React.FC<UserProfilePageProps> = ({
   children,
   ...profile
-}) => {
-  return (
-    <article css={styles}>
-      <UserProfileHeader {...profile} />
-      <main css={contentStyles}>{children}</main>
-    </article>
-  );
-};
+}) => (
+  <article css={styles}>
+    <UserProfileHeader {...profile} />
+    <main css={contentStyles}>{children}</main>
+  </article>
+);
 
 export default UserProfilePage;

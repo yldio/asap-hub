@@ -16,7 +16,11 @@ export const handler: Handler = lambda.http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     await validateUser(request);
 
-    const query = lambda.validate('query', request.query, querySchema) as {
+    const query = (lambda.validate(
+      'query',
+      request.query,
+      querySchema,
+    ) as unknown) as {
       take: number;
       skip: number;
       search?: string;

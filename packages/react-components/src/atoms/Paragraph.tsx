@@ -24,18 +24,16 @@ const Paragraph: React.FC<ParagraphProps> = ({
   children,
   primary = false,
   accent,
-}) => {
-  return (
-    <p
-      css={[
-        layoutStyles,
-        primary ? primaryStyles : secondaryStyles,
-        accent ? { color: colors[accent].rgb } : null,
-      ]}
-    >
-      {children}
-    </p>
-  );
-};
+}) => (
+  <p
+    css={[
+      layoutStyles,
+      primary ? primaryStyles : secondaryStyles,
+      accent ? { color: colors[accent].rgb } : null,
+    ]}
+  >
+    {children}
+  </p>
+);
 
 export default Paragraph;

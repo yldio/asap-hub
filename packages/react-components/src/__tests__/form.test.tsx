@@ -28,19 +28,19 @@ describe('useValidation', () => {
     );
   };
 
-  it('does not immediately show a validation error message ', () => {
+  it('does not immediately show a validation error message', () => {
     const { queryByText } = render(
       <ValidatedInput value="wrong" pattern="^val$" />,
     );
     expect(queryByText(/match/i)).not.toBeInTheDocument();
   });
 
-  it('shows a validation error message after losing focus', () => {
-    const { getByRole, getByText } = render(
+  it('shows a validation error message after losing focus', async () => {
+    const { getByRole, findByText } = render(
       <ValidatedInput value="wrong" pattern="^val$" />,
     );
-    fireEvent.blur(getByRole('textbox'));
-    expect(getByText(/match/i)).toBeVisible();
+    fireEvent.focusOut(getByRole('textbox'));
+    expect(await findByText(/match/i)).toBeVisible();
   });
 
   it('shows a validation error message when the form is validated', () => {

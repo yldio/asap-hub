@@ -16,7 +16,7 @@ const ResearchOutputList = React.lazy(loadResearchOutputList);
 const ResearchOutput = React.lazy(loadResearchOutput);
 loadResearchOutputList();
 
-const SharedResearch: React.FC<{}> = () => {
+const SharedResearch: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadResearchOutputList().then(loadResearchOutput);
   }, []);

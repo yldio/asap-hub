@@ -16,6 +16,7 @@ interface CMSTeamMember {
   responsibilities?: string | null;
   approach?: string | null;
 }
+export type CMSOrcidWork = OrcidWork;
 
 export interface CMSUser {
   id: string;
@@ -59,8 +60,6 @@ export interface CMSUser {
     };
   };
 }
-
-export type CMSOrcidWork = OrcidWork;
 
 export const userUpdateSchema = Joi.object({
   contactEmail: Joi.string().allow(''),

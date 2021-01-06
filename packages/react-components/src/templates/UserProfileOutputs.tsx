@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ComingSoon, ProfileCardList } from '../organisms';
 
-const UserProfileOutputs: React.FC<{}> = () => (
+const UserProfileOutputs: React.FC<Record<string, never>> = () => (
   <ProfileCardList>
     {[
       {

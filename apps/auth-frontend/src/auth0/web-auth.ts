@@ -17,7 +17,7 @@ type SsoConnection = 'google-oauth2' | 'ORCID';
 export const authorizeWithSso = (
   location: Location | URL,
   connection: SsoConnection,
-) =>
+): void =>
   webAuth.authorize({
     ...getOptionsFromLocation(location),
     connection,
@@ -28,7 +28,7 @@ export const authorizeWithEmailPassword = async (
   email: string,
   password: string,
   signup: boolean,
-) => {
+): Promise<void> => {
   if (signup) {
     await pify(webAuth.signup.bind(webAuth))({
       email,
@@ -45,7 +45,7 @@ export const authorizeWithEmailPassword = async (
   });
 };
 
-export const sendPasswordResetLink = async (email: string) => {
+export const sendPasswordResetLink = async (email: string): Promise<void> => {
   await pify(webAuth.changePassword.bind(webAuth))({
     email,
     connection: 'Username-Password-Authentication',

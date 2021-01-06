@@ -24,7 +24,7 @@ describe('useGetOne', () => {
       </authTestUtils.WhenReady>
     </authTestUtils.Auth0Provider>
   );
-  const renderUseGetList = async <P extends {}>(
+  const renderUseGetList = async <P extends unknown>(
     hookFn: (props: P) => OneResult<{ id: string }>,
   ) => {
     let renderedHook!: RenderHookResult<P, OneResult<{ id: string }>>;

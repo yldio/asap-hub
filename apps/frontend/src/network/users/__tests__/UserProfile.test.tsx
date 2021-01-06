@@ -50,9 +50,9 @@ const renderUserProfile = async (
     auth0User?: Auth0User,
   ) => Partial<Auth0>,
 ) => {
-  mockGetUser.mockImplementation(async (id) => {
-    return id === userResponse.id ? userResponse : undefined;
-  });
+  mockGetUser.mockImplementation(async (id) =>
+    id === userResponse.id ? userResponse : undefined,
+  );
   mockPatchUser.mockImplementation(async (id, ...args) => {
     if (id === userResponse.id) return standardMockPatchUser(id, ...args);
     throw new Error('404');

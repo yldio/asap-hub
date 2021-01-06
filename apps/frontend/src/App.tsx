@@ -58,7 +58,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   );
 };
 
-const App: React.FC<{}> = () => {
+const App: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadGuardedApp().then(loadContent).then(loadWelcome);
   }, []);

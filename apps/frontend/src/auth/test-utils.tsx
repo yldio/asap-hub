@@ -1,5 +1,4 @@
 /* istanbul ignore file */
-/* eslint-disable @typescript-eslint/camelcase */
 
 import React, { useEffect } from 'react';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
@@ -19,8 +18,8 @@ const createAuth0 = (
   auth0Client?: Auth0Client,
   user?: Partial<User>,
   auth0Overrides?: (
-    auth0Client?: Auth0Client,
-    auth0User?: Auth0User,
+    auth0ClientOverride?: Auth0Client,
+    auth0UserOverride?: Auth0User,
   ) => Partial<Auth0>,
 ): Auth0 => {
   let auth0User: Auth0User | undefined;

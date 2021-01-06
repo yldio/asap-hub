@@ -17,7 +17,7 @@ jest.mock('../api');
 
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
-const wrapper: React.FC<{}> = ({ children }) => (
+const wrapper: React.FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
     <React.Suspense fallback="loading">
       <Auth0Provider user={{}}>

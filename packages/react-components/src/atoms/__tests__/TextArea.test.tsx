@@ -35,15 +35,15 @@ it('renders a disabled text area', () => {
 });
 
 describe('when invalid', () => {
-  it('shows a validation error message only after losing focus', () => {
-    const { getByRole, getByText, queryByText } = render(
+  it('shows a validation error message only after losing focus', async () => {
+    const { getByRole, findByText, queryByText } = render(
       <TextArea value="" required />,
     );
     expect(queryByText(/fill/i)).not.toBeInTheDocument();
 
-    fireEvent.blur(getByRole('textbox'));
-    expect(getByText(/fill/i)).toBeVisible();
-    expect(getComputedStyle(getByText(/fill/i)).color).toBe(ember.rgb);
+    fireEvent.focusOut(getByRole('textbox'));
+    expect(await findByText(/fill/i)).toBeVisible();
+    expect(getComputedStyle(await findByText(/fill/i)).color).toBe(ember.rgb);
   });
 
   it('shows a custom validation message', () => {

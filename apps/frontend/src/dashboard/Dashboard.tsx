@@ -18,7 +18,7 @@ const loadBody = () =>
 const Body = React.lazy(loadBody);
 loadBody();
 
-const Dashboard: React.FC<{}> = () => {
+const Dashboard: React.FC<Record<string, never>> = () => {
   const { firstName, id, teams = [] } = useCurrentUser() ?? {};
   const { loading, data: dashboard } = useDashboard();
 

@@ -14,29 +14,23 @@ yargs(process.argv.slice(2))
   .command({
     command: 'import <path>',
     describe: 'import data to squidex from csv',
-    builder: (cli) => {
-      return cli.positional('path', {
+    builder: (cli) =>
+      cli.positional('path', {
         describe: 'path to csv file',
         type: 'string',
-      });
-    },
-    handler: async ({ path }) => {
-      return importUsers(path as string);
-    },
+      }),
+    handler: async ({ path }) => importUsers(path as string),
   })
   .command({
     command: 'invite <role>',
     describe: 'invite people to the ASAP Hub',
-    builder: (cli) => {
-      return cli.positional('role', {
+    builder: (cli) =>
+      cli.positional('role', {
         describe: 'specific a role to invite',
         type: 'string',
         choices: ['Staff', 'Grantee', 'Guest'],
-      });
-    },
-    handler: async ({ role }) => {
-      return inviteUsers(role as string);
-    },
+      }),
+    handler: async ({ role }) => inviteUsers(role as string),
   })
   .demandCommand(1)
   .help('h')

@@ -44,37 +44,35 @@ const UserProfilePersonalText: React.FC<UserProfilePersonalTextProps> = ({
   teams,
   role,
   discoverHref,
-}) => {
-  return (
-    <div>
-      <p css={paragraphStyles}>
-        {jobTitle}
-        {jobTitle && institution && ' at '}
-        {institution}
-        {institution && department && `, ${department}`}
-        {role === 'Staff' ? (
-          <>
-            <br />
-            ASAP Staff on <Link href={discoverHref}>Team ASAP</Link>
-          </>
-        ) : null}
-        {teams.map(({ id, role: teamRole, href, displayName }) => (
-          <React.Fragment key={id}>
-            <br />
-            {teamRole} on <Link href={href}>Team {displayName}</Link>
-          </React.Fragment>
-        ))}
-      </p>
-      {location && (
-        <Paragraph accent="lead">
-          <span css={locationStyles}>
-            <span css={iconStyles}>{locationIcon}</span>
-            {location}
-          </span>
-        </Paragraph>
-      )}
-    </div>
-  );
-};
+}) => (
+  <div>
+    <p css={paragraphStyles}>
+      {jobTitle}
+      {jobTitle && institution && ' at '}
+      {institution}
+      {institution && department && `, ${department}`}
+      {role === 'Staff' ? (
+        <>
+          <br />
+          ASAP Staff on <Link href={discoverHref}>Team ASAP</Link>
+        </>
+      ) : null}
+      {teams.map(({ id, role: teamRole, href, displayName }) => (
+        <React.Fragment key={id}>
+          <br />
+          {teamRole} on <Link href={href}>Team {displayName}</Link>
+        </React.Fragment>
+      ))}
+    </p>
+    {location && (
+      <Paragraph accent="lead">
+        <span css={locationStyles}>
+          <span css={iconStyles}>{locationIcon}</span>
+          {location}
+        </span>
+      </Paragraph>
+    )}
+  </div>
+);
 
 export default UserProfilePersonalText;

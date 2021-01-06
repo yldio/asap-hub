@@ -15,13 +15,11 @@ const mainStyles = css({
 
 type DashboardPageProps = ComponentProps<typeof DashboardPageHeader>;
 
-const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => {
-  return (
-    <article css={articleStyles}>
-      <DashboardPageHeader firstName={firstName} />
-      <main css={mainStyles}>{children}</main>
-    </article>
-  );
-};
+const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
+  <article css={articleStyles}>
+    <DashboardPageHeader firstName={firstName} />
+    <main css={mainStyles}>{children}</main>
+  </article>
+);
 
 export default Dashboard;

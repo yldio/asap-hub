@@ -66,9 +66,11 @@ export default class ResearchOutputs {
     const searchQ = (search || '')
       .split(' ')
       .filter(Boolean)
-      .reduce((acc: string[], word: string) => {
-        return acc.concat(`contains(data/title/iv, '${word}')`);
-      }, [])
+      .reduce(
+        (acc: string[], word: string) =>
+          acc.concat(`contains(data/title/iv, '${word}')`),
+        [],
+      )
       .join(' or ');
 
     const filterQ = (filter || [])

@@ -2,9 +2,8 @@ import { User } from '@asap-hub/auth';
 
 import { useAuth0 } from './auth0';
 
-export const getUserClaimKey = (): string => {
-  return new URL('/user', window.location.href).toString();
-};
+export const getUserClaimKey = (): string =>
+  new URL('/user', window.location.href).toString();
 export const useCurrentUser = (): User | null => {
   const { user: auth0User } = useAuth0();
   if (!auth0User) return null;

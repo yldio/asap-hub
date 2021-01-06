@@ -47,30 +47,28 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
   searchQuery,
   filters,
   onChangeFilter,
-}) => {
-  return (
-    <header css={containerStyles}>
-      <Display styleAsHeading={2}>Shared Research</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          This page contains all shared research from the research teams. As
-          teams begin to share more items, this library will grow. Teams should
-          be mindful to respect intellectual boundaries and not share outside of
-          the Network
-        </Paragraph>
-      </div>
-      <SearchControls
-        placeholder="Enter a keyword, method, resource, tool, etc"
-        onChangeSearch={onChangeSearch}
-        searchQuery={searchQuery}
-        filterEnabled={true}
-        filterOptions={researchOutputFilters}
-        filterTitle="TYPE OF OUTPUTS"
-        onChangeFilter={onChangeFilter}
-        filters={filters}
-      />
-    </header>
-  );
-};
+}) => (
+  <header css={containerStyles}>
+    <Display styleAsHeading={2}>Shared Research</Display>
+    <div css={textStyles}>
+      <Paragraph accent="lead">
+        This page contains all shared research from the research teams. As teams
+        begin to share more items, this library will grow. Teams should be
+        mindful to respect intellectual boundaries and not share outside of the
+        Network
+      </Paragraph>
+    </div>
+    <SearchControls
+      placeholder="Enter a keyword, method, resource, tool, etc"
+      onChangeSearch={onChangeSearch}
+      searchQuery={searchQuery}
+      filterEnabled={true}
+      filterOptions={researchOutputFilters}
+      filterTitle="TYPE OF OUTPUTS"
+      onChangeFilter={onChangeFilter}
+      filters={filters}
+    />
+  </header>
+);
 
 export default SharedResearchPageHeader;

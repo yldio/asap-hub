@@ -11,14 +11,12 @@ type ProfileSkillsProps = {
 const ProfileSkills: React.FC<ProfileSkillsProps> = ({
   skills = [],
   skillsDescription,
-}) => {
-  return (
-    <Card>
-      <Headline2 styleAsHeading={3}>Expertise and Resources</Headline2>
-      {skillsDescription ? <Paragraph>{skillsDescription}</Paragraph> : null}
-      <TagList tags={skills} />
-    </Card>
-  );
-};
+}) => (
+  <Card>
+    <Headline2 styleAsHeading={3}>Expertise and Resources</Headline2>
+    {skillsDescription ? <Paragraph>{skillsDescription}</Paragraph> : null}
+    <TagList tags={skills} />
+  </Card>
+);
 
 export default ProfileSkills;

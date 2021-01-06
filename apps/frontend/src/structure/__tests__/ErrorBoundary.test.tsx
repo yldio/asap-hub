@@ -8,7 +8,7 @@ import ErrorBoundary from '../ErrorBoundary';
 
 mockConsoleError();
 
-const Throw: React.FC<{}> = () => {
+const Throw: React.FC<Record<string, never>> = () => {
   throw new Error('oops');
 };
 

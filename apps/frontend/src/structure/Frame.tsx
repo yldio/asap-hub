@@ -13,7 +13,7 @@ const Frame: React.FC<FrameProps> = ({ children, boundaryProps }) => (
   </ErrorBoundary>
 );
 
-export const SearchFrame: React.FC<{}> = ({ children }) => (
+export const SearchFrame: React.FC = ({ children }) => (
   <Frame
     boundaryProps={{
       description:

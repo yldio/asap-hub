@@ -30,7 +30,7 @@ const SharedResearch = React.lazy(loadSharedResearch);
 const Dashboard = React.lazy(loadDashboard);
 const Discover = React.lazy(loadDiscover);
 
-const GuardedApp: React.FC<{}> = () => {
+const GuardedApp: React.FC<Record<string, never>> = () => {
   const auth0 = useAuth0();
   const setAuth0 = useSetRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
@@ -75,7 +75,7 @@ const GuardedApp: React.FC<{}> = () => {
   );
 };
 
-const GuardedAppWithRecoil: React.FC<{}> = () => (
+const GuardedAppWithRecoil: React.FC<Record<string, never>> = () => (
   <RecoilRoot>
     <GuardedApp />
   </RecoilRoot>

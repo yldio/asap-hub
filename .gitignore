@@ -10,6 +10,7 @@ node_modules
 
 # testing
 /.jest-cache
+.eslintcache
 
 /coverage
 /apps/*/coverage

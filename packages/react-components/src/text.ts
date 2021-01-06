@@ -17,12 +17,9 @@ export type AllowedChildren =
   | AllowedElement
   | ReadonlyArray<AllowedElement | AllowedChildren>;
 
-const isTextChild = (child: unknown): child is TextChild => {
-  return (
-    child === null ||
-    ['string', 'number', 'boolean', 'undefined'].includes(typeof child)
-  );
-};
+const isTextChild = (child: unknown): child is TextChild =>
+  child === null ||
+  ['string', 'number', 'boolean', 'undefined'].includes(typeof child);
 
 export const isTextChildren = (children: unknown): children is TextChildren => {
   if (isTextChild(children)) return true;

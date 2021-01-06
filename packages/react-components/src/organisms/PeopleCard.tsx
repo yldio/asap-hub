@@ -64,43 +64,41 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   avatarUrl,
   href,
   role,
-}) => {
-  return (
-    <Card>
-      <div css={[containerStyles]}>
-        <Link theme={null} href={href}>
-          <Avatar
-            imageUrl={avatarUrl}
-            firstName={firstName}
-            lastName={lastName}
+}) => (
+  <Card>
+    <div css={[containerStyles]}>
+      <Link theme={null} href={href}>
+        <Avatar
+          imageUrl={avatarUrl}
+          firstName={firstName}
+          lastName={lastName}
+        />
+      </Link>
+      <div css={textContainerStyles}>
+        <div css={moveStyles}>
+          <Link theme={null} href={href}>
+            <Headline2 styleAsHeading={4}>{displayName}</Headline2>
+          </Link>
+        </div>
+        <div css={profileTextStyles}>
+          <UserProfilePersonalText
+            department={department}
+            institution={institution}
+            location={location}
+            jobTitle={jobTitle}
+            teams={teams}
+            role={role}
+            discoverHref={'/discover'}
           />
-        </Link>
-        <div css={textContainerStyles}>
-          <div css={moveStyles}>
-            <Link theme={null} href={href}>
-              <Headline2 styleAsHeading={4}>{displayName}</Headline2>
-            </Link>
-          </div>
-          <div css={profileTextStyles}>
-            <UserProfilePersonalText
-              department={department}
-              institution={institution}
-              location={location}
-              jobTitle={jobTitle}
-              teams={teams}
-              role={role}
-              discoverHref={'/discover'}
-            />
-          </div>
-          <div css={moveStyles}>
-            <Caption accent={'lead'} asParagraph>
-              Joined: {formatDate(new Date(createdDate))}
-            </Caption>
-          </div>
+        </div>
+        <div css={moveStyles}>
+          <Caption accent={'lead'} asParagraph>
+            Joined: {formatDate(new Date(createdDate))}
+          </Caption>
         </div>
       </div>
-    </Card>
-  );
-};
+    </div>
+  </Card>
+);
 
 export default PeopleCard;

@@ -6,7 +6,7 @@ import { ToastContext } from '../toast';
 
 mockConsoleError();
 
-const OneToast: React.FC<{}> = () => {
+const OneToast: React.FC<Record<string, never>> = () => {
   const toast = useContext(ToastContext);
   useEffect(() => {
     toast('error');

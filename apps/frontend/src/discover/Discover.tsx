@@ -14,7 +14,7 @@ const loadBody = () => import(/* webpackChunkName: "discover-body" */ './Body');
 const Body = React.lazy(loadBody);
 loadBody();
 
-const Discover: React.FC<{}> = () => {
+const Discover: React.FC<Record<string, never>> = () => {
   const { loading, data: discover } = useDiscover();
 
   if (loading) {

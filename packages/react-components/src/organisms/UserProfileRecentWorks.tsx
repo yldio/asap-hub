@@ -113,22 +113,20 @@ const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
 
 const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
   orcidWorks = [],
-}) => {
-  return (
-    <Card>
-      <Headline2 styleAsHeading={3}>
-        Most Recent Works ({orcidWorks.length})
-      </Headline2>
-      <div css={containerStyles}>
-        {orcidWorks
-          .flatMap((work, idx) => [
-            <Divider key={`sep-${idx}`} />,
-            <UserProfileRecentWork key={`wrk-${idx}`} {...work} />,
-          ])
-          .slice(1)}
-      </div>
-    </Card>
-  );
-};
+}) => (
+  <Card>
+    <Headline2 styleAsHeading={3}>
+      Most Recent Works ({orcidWorks.length})
+    </Headline2>
+    <div css={containerStyles}>
+      {orcidWorks
+        .flatMap((work, idx) => [
+          <Divider key={`sep-${idx}`} />,
+          <UserProfileRecentWork key={`wrk-${idx}`} {...work} />,
+        ])
+        .slice(1)}
+    </div>
+  </Card>
+);
 
 export default UserProfileRecentWorks;

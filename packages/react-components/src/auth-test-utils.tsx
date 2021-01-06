@@ -1,5 +1,4 @@
 /* istanbul ignore file */
-/* eslint-disable @typescript-eslint/camelcase */
 
 import React, { useState, useEffect } from 'react';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';

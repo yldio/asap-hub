@@ -12,17 +12,20 @@ import { origin } from '../config';
 
 const debug = Debug('http');
 
+interface Query {
+  [key: string]: string[] | string | undefined;
+}
 export interface Request {
   method: 'get' | 'post';
-  headers: object;
+  headers: Record<string, string>;
   params?: { [key: string]: string };
-  payload?: object;
-  query?: object;
+  payload?: unknown;
+  query?: Query;
 }
 
 export interface Response {
   statusCode?: number | undefined;
-  payload?: object;
+  payload?: unknown;
   headers?:
     | {
         [header: string]: string | number | boolean;
@@ -40,16 +43,14 @@ interface HTTPError extends Error {
 
 export const response = (
   res: APIGatewayProxyStructuredResultV2,
-): APIGatewayProxyResultV2 => {
-  return {
-    ...res,
-    headers: {
-      'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Credentials': true,
-      ...res.headers,
-    },
-  };
-};
+): APIGatewayProxyResultV2 => ({
+  ...res,
+  headers: {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Credentials': true,
+    ...res.headers,
+  },
+});
 
 export const validate = <T>(
   prop: string,
@@ -113,7 +114,9 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 };
 
 // ensure any thrown exception is handled and returned correctly
-export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
+// complaining about `request` here is a lint rule bug
+// eslint-disable-next-line no-unused-vars
+export const http = (fn: (request: Request) => Promise<Response>) => async (
   event: APIGatewayProxyEventV2,
 ): Promise<APIGatewayProxyResultV2> => {
   // we assume the body is json
@@ -131,19 +134,19 @@ export const http = <T>(fn: (request: Request) => Promise<Response>) => async (
   // lowercase headers
   const headers =
     event.headers &&
-    Object.entries(event.headers).reduce((res, [key, value]) => {
-      return {
+    Object.entries(event.headers).reduce(
+      (res, [key, value]) => ({
         ...res,
         [key.toLowerCase()]: value,
-      };
-    }, {});
+      }),
+      {},
+    );
 
-  const query: {
-    [key: string]: string[] | string | undefined;
-  } = Object.fromEntries(
-    Object.entries(event.queryStringParameters || {}).map(([key, value]) => {
-      return [key, value?.includes(',') ? value.split(',') : value];
-    }),
+  const query: Query = Object.fromEntries(
+    Object.entries(event.queryStringParameters || {}).map(([key, value]) => [
+      key,
+      value?.includes(',') ? value.split(',') : value,
+    ]),
   );
 
   const request = {

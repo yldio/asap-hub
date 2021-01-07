@@ -14,15 +14,14 @@ const styles = css({
   borderRadius: `${6 / perRem}em`,
 
   transition: '200ms',
-  paddingTop: `${1 / perRem}em`,
-  paddingLeft: `${8 / perRem}em`,
-  paddingRight: `${8 / perRem}em`,
+  padding: `0 ${8 / perRem}em`,
+  height: '24px',
+  boxSizing: 'border-box',
 
   color: lead.rgb,
   fontSize: '0.8em',
 
-  marginTop: `${6 / perRem}em`,
-  marginBottom: `${6 / perRem}em`,
+  margin: `${12 / perRem}em 0`,
 });
 
 type TagLabelProps = {

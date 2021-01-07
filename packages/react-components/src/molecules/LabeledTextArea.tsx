@@ -3,7 +3,7 @@ import css from '@emotion/css';
 
 import { perRem } from '../pixels';
 import { Label, TextArea, Paragraph } from '../atoms';
-import { tin } from '../colors';
+import { lead } from '../colors';
 
 const tipStyles = css({
   ':empty': {
@@ -11,7 +11,7 @@ const tipStyles = css({
   },
   paddingTop: `${6 / perRem}em`,
 
-  color: tin.rgb,
+  color: lead.rgb,
 });
 
 type LabeledTextAreaProps = {

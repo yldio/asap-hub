@@ -16,8 +16,8 @@ import {
 } from './colors';
 
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+export const activePrimaryBackgroundColor = color(122, 210, 169, 0.18);
 
-const activeBackgroundColor = color(122, 210, 169, 0.18);
 const borderWidth = 1;
 const styles = css({
   flexGrow: 1,
@@ -55,19 +55,19 @@ const largeStyles = css({
     width: 'auto',
   },
   '> svg + span': {
-    marginLeft: `${12 / perRem}em`,
+    marginLeft: `${10 / perRem}em`,
   },
   '> span + svg': {
-    marginLeft: `${12 / perRem}em`,
+    marginLeft: `${10 / perRem}em`,
   },
 
-  marginTop: `${16 / perRem}em`,
-  marginBottom: `${16 / perRem}em`,
+  marginTop: `${18 / perRem}em`,
+  marginBottom: `${18 / perRem}em`,
 
   paddingTop: `${(15 - borderWidth) / perRem}em`,
   paddingBottom: `${(15 - borderWidth) / perRem}em`,
-  paddingLeft: `${(18 - borderWidth) / perRem}em`,
-  paddingRight: `${(18 - borderWidth) / perRem}em`,
+  paddingLeft: `${(20 - borderWidth) / perRem}em`,
+  paddingRight: `${(20 - borderWidth) / perRem}em`,
 });
 const smallStyles = css({
   height: `${36 / perRem}em`,
@@ -155,16 +155,31 @@ const disabledStyles = css({
   },
 });
 
-export const activeStyles = css({
-  backgroundColor: activeBackgroundColor.rgba,
+export const activePrimaryStyles = css({
+  backgroundColor: activePrimaryBackgroundColor.rgba,
   borderColor: 'transparent',
   color: pine.rgb,
   svg: {
     stroke: pine.rgb,
   },
   ':hover, :focus': {
-    backgroundColor: activeBackgroundColor.rgba,
+    backgroundColor: activePrimaryBackgroundColor.rgba,
     color: pine.rgb,
+  },
+});
+
+export const activeSecondaryStyles = css({
+  backgroundColor: paper.rgb,
+  color: charcoal.rgb,
+  borderColor: charcoal.rgb,
+
+  svg: {
+    stroke: charcoal.rgb,
+  },
+  ':hover, :focus': {
+    backgroundColor: paper.rgb,
+    color: charcoal.rgb,
+    borderColor: charcoal.rgb,
   },
 });
 
@@ -180,7 +195,9 @@ export const getButtonStyles = ({
     small ? smallStyles : largeStyles,
     enabled
       ? active
-        ? activeStyles
+        ? primary
+          ? activePrimaryStyles
+          : activeSecondaryStyles
         : primary
         ? primaryStyles
         : secondaryStyles

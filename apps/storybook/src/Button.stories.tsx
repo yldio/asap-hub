@@ -13,6 +13,7 @@ export const Text = () => (
     enabled={boolean('Enabled', true)}
     primary={boolean('Primary', true)}
     small={boolean('Small', false)}
+    active={boolean('Active', false)}
   >
     {text('Text', 'Text')}
   </Button>
@@ -23,6 +24,7 @@ export const Icon = () => (
     enabled={boolean('Enabled', true)}
     primary={boolean('Primary', true)}
     small={boolean('Small', false)}
+    active={boolean('Active', false)}
   >
     {orcidIcon}
   </Button>
@@ -33,6 +35,7 @@ export const IconAndText = () => (
     enabled={boolean('Enabled', true)}
     primary={boolean('Primary', true)}
     small={boolean('Small', false)}
+    active={boolean('Active', false)}
   >
     {orcidIcon}
     {text('Text', 'Text')}

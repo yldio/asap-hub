@@ -100,7 +100,7 @@ __metadata:
     debug: ^4.2.0
     form-data: ^3.0.0
     got: ^11.6.0
-    graphql: ^15.4.0
+    graphql: ^15.3.0
     graphql-tag: ^2.11.0
     jsonwebtoken: ^8.5.1
     jwt-decode: ^2.2.0
@@ -15915,13 +15915,6 @@ fsevents@^2.1.3:
   version: 15.3.0
   resolution: "graphql@npm:15.3.0"
   checksum: f01c05eb9102a88f33b4276b38399f066067d5be03c66c3bfec3e71e1793a91750e408f7abb001831bc2daf09746ab70ac0af16894d0ef1f1c1246fb0c2f4b0e
-  languageName: node
-  linkType: hard
-
-"graphql@npm:^15.4.0":
-  version: 15.4.0
-  resolution: "graphql@npm:15.4.0"
-  checksum: 1a307dcfe2646e1e8323d03e8cd24554ba9f7369863bf0b020f2e4b39bff3504dc7d6dcad19cb96899f0825eda4c688819911f0c270e84f1bb0954fe3ac16a31
   languageName: node
   linkType: hard
 

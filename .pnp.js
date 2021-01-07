@@ -4455,6 +4455,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:3.2.0"
       ],
       [
+        "graphql-tag",
+        "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.11.0"
+      ],
+      [
         "growly",
         "npm:1.3.0"
       ],
@@ -8993,7 +8997,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
             ["form-data", "npm:3.0.0"],
             ["got", "npm:11.6.0"],
-            ["graphql", "npm:15.4.0"],
+            ["graphql", "npm:15.3.0"],
             ["graphql-tag", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.11.0"],
             ["jsonwebtoken", "npm:8.5.1"],
             ["jwt-decode", "npm:2.2.0"],
@@ -31019,13 +31023,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["graphql", "npm:15.3.0"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:15.4.0", {
-          "packageLocation": "./.yarn/cache/graphql-npm-15.4.0-ffa0f9cd71-1a307dcfe2.zip/node_modules/graphql/",
-          "packageDependencies": [
-            ["graphql", "npm:15.4.0"]
-          ],
-          "linkType": "HARD",
         }]
       ]],
       ["graphql-request", [
@@ -31066,7 +31063,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["graphql-tag", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.11.0"],
             ["@types/graphql", null],
-            ["graphql", "npm:15.4.0"]
+            ["graphql", "npm:15.3.0"]
           ],
           "packagePeers": [
             "@types/graphql",

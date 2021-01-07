@@ -62,7 +62,7 @@ export class InstrumentedSquidexGraphql extends SquidexGraphql {
 }
 
 export class InstrumentedSquidex<
-  T extends { id: string; data: object }
+  T extends { id: string; data: Record<string, unknown> }
 > extends Squidex<T> {
   tracingContext: SpanContext | undefined;
 

@@ -97,7 +97,6 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/users/update-avatar.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
             path: `/users/{id}/avatar`,
@@ -109,7 +108,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/users/fetch.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/users`,
@@ -121,7 +119,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/users/fetch-by-id.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/users/{id}`,
@@ -133,7 +130,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/users/update.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'PATCH',
             path: `/users/{id}`,
@@ -146,7 +142,6 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-fetch-by-code.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/webhook/users/{code}`,
@@ -159,7 +154,6 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-connect-by-code.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
             path: `/webhook/users/connections`,
@@ -172,10 +166,20 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-orcid.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'POST',
             path: `/webhook/users/orcid`,
+          },
+        },
+      ],
+    },
+    fetchUsers: {
+      handler: 'apps/asap-server/build-cjs/handlers/calendars/fetch.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/calendars`,
           },
         },
       ],
@@ -185,7 +189,6 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/research-outputs/fetch.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/research-outputs`,
@@ -198,7 +201,6 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/research-outputs/fetch-by-id.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/research-outputs/{id}`,
@@ -210,7 +212,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/pages/fetch.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/pages/{path+}`,
@@ -222,7 +223,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/teams/fetch.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/teams`,
@@ -234,7 +234,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/teams/fetch-by-id.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/teams/{id}`,
@@ -246,7 +245,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/teams/update.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'PATCH',
             path: `/teams/{id}`,
@@ -259,7 +257,6 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/news-and-events/fetch.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/news-and-events`,
@@ -272,7 +269,6 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/news-and-events/fetch-by-id.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/news-and-events/{id}`,
@@ -284,7 +280,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/dashboard/fetch.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/dashboard`,
@@ -296,7 +291,6 @@ module.exports = {
       handler: 'apps/asap-server/build-cjs/handlers/discover/fetch.handler',
       events: [
         {
-          // https://www.serverless.com/framework/docs/providers/aws/events/http-api/
           httpApi: {
             method: 'GET',
             path: `/discover`,

@@ -1,3 +1,4 @@
+export * from './calendar';
 export * from './news-or-event';
 export * from './page';
 export * from './research-output';

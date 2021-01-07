@@ -129,7 +129,7 @@ export default class Teams {
 
   client: InstrumentedSquidexGraphql;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     this.client = new InstrumentedSquidexGraphql(ctxHeaders);
     this.users = new InstrumentedSquidex('users', ctxHeaders);
     this.teams = new InstrumentedSquidex('teams', ctxHeaders);

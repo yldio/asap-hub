@@ -9,7 +9,7 @@ import { CMSNewsAndEvents, parseNewsAndEvents } from '../entities';
 export default class ResearchOutputs {
   newsAndEvents: InstrumentedSquidex<CMSNewsAndEvents>;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     this.newsAndEvents = new InstrumentedSquidex('news-and-events', ctxHeaders);
   }
 

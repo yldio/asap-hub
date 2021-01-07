@@ -35,7 +35,7 @@ const getQueryName = (query: string): string => {
 export class InstrumentedSquidexGraphql extends SquidexGraphql {
   tracingContext: SpanContext | undefined;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     super();
     const tracer = opentracing.globalTracer();
     this.tracingContext =
@@ -43,9 +43,8 @@ export class InstrumentedSquidexGraphql extends SquidexGraphql {
   }
 
   async request<T, V>(query: string): Promise<T> {
-    const queryName = getQueryName(query);
-    const spanName = queryName ? queryName : 'Graphql Request';
-    const span = startSpan(spanName, this.tracingContext);
+    const queryName = getQueryName(query) || 'Graphql Request';
+    const span = startSpan(queryName, this.tracingContext);
     span.log({ event: 'request_started', query });
 
     const res = await super.request<T, V>(query).catch((err) => {
@@ -66,7 +65,7 @@ export class InstrumentedSquidex<
 > extends Squidex<T> {
   tracingContext: SpanContext | undefined;
 
-  constructor(collection: string, ctxHeaders?: object) {
+  constructor(collection: string, ctxHeaders?: Record<string, string>) {
     super(collection);
     const tracer = opentracing.globalTracer();
     this.tracingContext =

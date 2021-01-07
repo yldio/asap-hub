@@ -77,7 +77,7 @@ interface Response {
 export default class Discover {
   client: InstrumentedSquidexGraphql;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     this.client = new InstrumentedSquidexGraphql(ctxHeaders);
   }
 

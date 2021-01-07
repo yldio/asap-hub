@@ -7,7 +7,7 @@ import { parsePage } from '../entities';
 export default class Pages {
   pages: InstrumentedSquidex<RestPage>;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     this.pages = new InstrumentedSquidex('pages', ctxHeaders);
   }
 

@@ -52,7 +52,7 @@ interface Response {
 export default class Dashboard {
   client: InstrumentedSquidexGraphql;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     this.client = new InstrumentedSquidexGraphql(ctxHeaders);
   }
 

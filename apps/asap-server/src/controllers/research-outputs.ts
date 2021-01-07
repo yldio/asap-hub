@@ -36,7 +36,7 @@ export default class ResearchOutputs {
 
   teams: InstrumentedSquidex<RestTeam>;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     this.researchOutputs = new InstrumentedSquidex(
       'research-outputs',
       ctxHeaders,

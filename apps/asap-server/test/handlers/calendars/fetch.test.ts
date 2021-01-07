@@ -15,7 +15,7 @@ const getCalendarsResponse: Results<RestCalendar> = {
       id: 'cms-calendar-id-1',
       data: {
         id: { iv: 'calendar-id-1' },
-        color: { iv: 'blue' },
+        color: { iv: '#FFFFFF' },
         name: { iv: 'Kubernetes Meetups' },
       },
       created: '2021-01-07T16:44:09Z',
@@ -25,7 +25,7 @@ const getCalendarsResponse: Results<RestCalendar> = {
       id: 'cms-calendar-id-2',
       data: {
         id: { iv: 'calendar-id-2' },
-        color: { iv: 'green' },
+        color: { iv: '#000000' },
         name: { iv: 'Service Mesh Conferences' },
       },
       created: '2021-01-07T16:44:09Z',
@@ -87,12 +87,12 @@ describe('Get /calendars', () => {
       items: [
         {
           id: 'calendar-id-1',
-          color: 'blue',
+          color: '#FFFFFF',
           name: 'Kubernetes Meetups',
         },
         {
           id: 'calendar-id-2',
-          color: 'green',
+          color: '#000000',
           name: 'Service Mesh Conferences',
         },
       ],

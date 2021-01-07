@@ -6,7 +6,8 @@ import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
 import { Card, Link, Headline2, Caption, TagLabel } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
-import { teamIcon, externalLinkIcon } from '../icons';
+import { teamIcon } from '../icons';
+import { ExternalLink } from '../molecules';
 
 const containerStyles = css({
   display: 'flex',
@@ -91,16 +92,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
           <div css={typeStyles}>
             <TagLabel>{type}</TagLabel>
           </div>
-          {link ? (
-            <div css={{ fontSize: `${13 / perRem}em` }}>
-              <Link buttonStyle small={true} href={link}>
-                {externalLinkIcon}
-                <span css={{ fontWeight: 'normal' }}>
-                  {labels[type] || 'Open External Link'}
-                </span>
-              </Link>
-            </div>
-          ) : null}
+          {link ? <ExternalLink label={labels[type]} href={link} /> : null}
         </div>
         <div css={textStyles}>
           {titleComponent}

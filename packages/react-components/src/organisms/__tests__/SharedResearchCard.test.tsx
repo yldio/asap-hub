@@ -62,9 +62,13 @@ it('displays team information when present', () => {
 
 it('displays link component when link property present', () => {
   const { getByText } = render(
-    <SharedResearchCard {...libraryCardProps} link={'https://example.com'} />,
+    <SharedResearchCard
+      {...libraryCardProps}
+      type={'Presentation'}
+      link={'https://example.com'}
+    />,
   );
-  const link = getByText(/external\slink/i).closest('a');
+  const link = getByText(/google/i).closest('a');
   expect(link).toHaveAttribute('href', 'https://example.com');
 });
 

@@ -92,8 +92,8 @@ it('correctly generates external research output link', async () => {
         id: `test-output-id-${index}`,
       })),
     });
-  const { getByText } = await renderResearchOutputList();
-  const link = getByText(/external\slink/i).closest('a');
+  const { getByTitle } = await renderResearchOutputList();
+  const link = getByTitle(/external\slink/i).closest('a');
   expect(link).toHaveAttribute('href', 'https://example.com');
 });
 

@@ -7,9 +7,9 @@ import { formatDate } from '../utils';
 import {
   newsPlaceholder,
   eventsPlaceholder,
-  externalLinkIcon,
   trainingPlaceholderIcon,
 } from '../icons';
+import { ExternalLink } from '../molecules';
 
 const imageStyle = css({
   objectFit: 'cover',
@@ -95,16 +95,7 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
         <div css={containerStyle}>
           <div css={headerStyles}>
             <TagLabel>{type}</TagLabel>
-            {link ? (
-              <div css={{ fontSize: `${13 / perRem}em` }}>
-                <Link buttonStyle small={true} href={link}>
-                  {externalLinkIcon}
-                  <span css={{ fontWeight: 'normal' }}>
-                    {linkText || 'Open External Link'}
-                  </span>
-                </Link>
-              </div>
-            ) : null}
+            {link ? <ExternalLink label={linkText} href={link} /> : null}
           </div>
           {titleComponent}
           <div css={{ flex: 1 }}>

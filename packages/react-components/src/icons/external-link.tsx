@@ -4,24 +4,24 @@ import React from 'react';
 
 const externalLink = (
   <svg
-    width="24px"
-    height="24px"
+    width="17.8px"
+    height="17.8px"
     viewBox="0 0 24 24"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
+    stroke="#00222C"
   >
-    <title>ExternalLink</title>
+    <title>External Link</title>
     <g
       id="ExternalLink"
-      stroke="none"
       strokeWidth="1"
       fill="none"
       fillRule="evenodd"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <g id="Group-14-Copy-2" stroke="#00222C" strokeWidth="1.3">
+      <g id="Group-14-Copy-2" strokeWidth="1.3">
         <g id="Group" transform="translate(4.283900, 5.271700)">
           <polyline
             id="Stroke-11"

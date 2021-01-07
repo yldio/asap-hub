@@ -24,8 +24,6 @@
           "editor": "List",
           "schemaIds": ["pages"],
           "label": "Grantee Guidance",
-          "hints": "",
-          "placeholder": "",
           "isRequired": false
         }
       },
@@ -73,8 +71,6 @@
           "editor": "List",
           "schemaIds": ["users"],
           "label": "Members",
-          "hints": "",
-          "placeholder": "",
           "isRequired": false
         }
       }

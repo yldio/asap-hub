@@ -7,7 +7,7 @@ import { parseCalendar } from '../entities';
 export default class Calendars {
   calendars: InstrumentedSquidex<RestCalendar>;
 
-  constructor(ctxHeaders?: object) {
+  constructor(ctxHeaders?: Record<string, string>) {
     this.calendars = new InstrumentedSquidex('calendars', ctxHeaders);
   }
 

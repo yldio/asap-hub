@@ -56,6 +56,7 @@ export {
   CheckboxGroup,
   ComingSoon,
   EmailPasswordSignin,
+  GoogleCalendar,
   HelpSection,
   MainNavigation,
   MembersSection,

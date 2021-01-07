@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
+import { http } from '../../utils/instrumented-framework';
 
 import validateUser from '../../utils/validate-user';
 import Teams from '../../controllers/teams';
@@ -13,7 +14,7 @@ const querySchema = Joi.object({
 }).required();
 
 // /teams?page=1&pageSize=8
-export const handler: Handler = lambda.http(
+export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     const user = await validateUser(request);
 
@@ -28,7 +29,7 @@ export const handler: Handler = lambda.http(
       filter?: string[] | string;
     };
 
-    const teams = new Teams();
+    const teams = new Teams(request.headers);
     const team = await teams.fetch(query, user);
 
     return {

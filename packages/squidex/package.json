@@ -23,7 +23,8 @@
     "got": "^11.6.0",
     "graphql": "^15.3.0",
     "graphql-request": "^3.2.0",
-    "jwt-decode": "^2.2.0"
+    "jwt-decode": "^2.2.0",
+    "opentracing": "^0.14.5"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",

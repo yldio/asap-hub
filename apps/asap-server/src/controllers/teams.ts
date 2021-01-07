@@ -2,13 +2,7 @@ import get from 'lodash.get';
 import Boom from '@hapi/boom';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
-import {
-  Squidex,
-  SquidexGraphql,
-  RestTeam,
-  RestUser,
-  GraphqlTeam,
-} from '@asap-hub/squidex';
+import { RestTeam, RestUser, GraphqlTeam } from '@asap-hub/squidex';
 import {
   ListTeamResponse,
   TeamResponse,
@@ -17,6 +11,10 @@ import {
 } from '@asap-hub/model';
 import { User } from '@asap-hub/auth';
 
+import {
+  InstrumentedSquidex,
+  InstrumentedSquidexGraphql,
+} from '../utils/instrumented-client';
 import { parseGraphQLTeam } from '../entities';
 import { createURL } from '../utils/squidex';
 
@@ -125,16 +123,16 @@ const fetchUsers = async (id: string, client: Got): Promise<RestUser[]> => {
 };
 
 export default class Teams {
-  teams: Squidex<RestTeam>;
+  teams: InstrumentedSquidex<RestTeam>;
 
-  users: Squidex<RestUser>;
+  users: InstrumentedSquidex<RestUser>;
 
-  client: SquidexGraphql;
+  client: InstrumentedSquidexGraphql;
 
-  constructor() {
-    this.teams = new Squidex('teams');
-    this.users = new Squidex('users');
-    this.client = new SquidexGraphql();
+  constructor(ctxHeaders?: Record<string, string>) {
+    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
+    this.users = new InstrumentedSquidex('users', ctxHeaders);
+    this.teams = new InstrumentedSquidex('teams', ctxHeaders);
   }
 
   async update(

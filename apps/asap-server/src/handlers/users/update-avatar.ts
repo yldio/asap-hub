@@ -1,13 +1,14 @@
 import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
-import { framework as lambda } from '@asap-hub/services-common';
 import parseURI from 'parse-data-url';
+import { framework as lambda } from '@asap-hub/services-common';
+import { http } from '../../utils/instrumented-framework';
 
 import validateUser from '../../utils/validate-user';
 import Users from '../../controllers/users';
 import { Handler } from '../../utils/types';
 
-export const handler: Handler = lambda.http(
+export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     const user = await validateUser(request);
 
@@ -46,7 +47,7 @@ export const handler: Handler = lambda.http(
       throw Boom.unsupportedMediaType('Content-type must be image');
     }
 
-    const users = new Users();
+    const users = new Users(request.headers);
     const avatar = parsed.toBuffer();
 
     // convert bytes to MB and check size

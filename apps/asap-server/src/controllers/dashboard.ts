@@ -1,9 +1,7 @@
-import {
-  SquidexGraphql,
-  GraphqlPage,
-  GraphqlNewsOrEvent,
-} from '@asap-hub/squidex';
+import { GraphqlPage, GraphqlNewsOrEvent } from '@asap-hub/squidex';
 import { DashboardResponse } from '@asap-hub/model';
+
+import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { parseGraphQLPage, parseGraphQLNewsAndEvents } from '../entities';
 
 export const query = `
@@ -52,10 +50,10 @@ interface Response {
 }
 
 export default class Dashboard {
-  client: SquidexGraphql;
+  client: InstrumentedSquidexGraphql;
 
-  constructor() {
-    this.client = new SquidexGraphql();
+  constructor(ctxHeaders?: Record<string, string>) {
+    this.client = new InstrumentedSquidexGraphql(ctxHeaders);
   }
 
   async fetch(): Promise<DashboardResponse> {

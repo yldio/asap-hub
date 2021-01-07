@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
+import { http } from '../../utils/instrumented-framework';
 
 import { Handler } from '../../utils/types';
 import Users from '../../controllers/users';
@@ -11,7 +12,7 @@ export interface WebHookPayload {
   payload: CMSUser & { dataOld?: CMSUser['data'] };
 }
 
-export const handler: Handler = lambda.http(
+export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
     await validateRequest(request);
 
@@ -34,7 +35,7 @@ export const handler: Handler = lambda.http(
       bodySchema,
     ) as WebHookPayload;
 
-    const users = new Users();
+    const users = new Users(request.headers);
     const { id } = payload;
     const newOrcid = payload.data.orcid?.iv;
 

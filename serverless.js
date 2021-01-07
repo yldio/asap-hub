@@ -51,6 +51,8 @@ module.exports = {
       AUTH0_CLIENT_ID: `\${env:AUTH0_CLIENT_ID}`,
       AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
       NODE_ENV: `\${env:NODE_ENV}`,
+      ENVIRONMENT: `\${env:SLS_STAGE}`,
+      LIGHTSTEP_TOKEN: `\${env:LIGHTSTEP_TOKEN}`,
       SQUIDEX_APP_NAME: `\${env:SQUIDEX_APP_NAME}`,
       SQUIDEX_BASE_URL: `\${env:SQUIDEX_BASE_URL}`,
       SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,

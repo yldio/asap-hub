@@ -1,3 +1,4 @@
+import * as opentracing from 'opentracing';
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { User } from '@asap-hub/auth';
@@ -9,6 +10,12 @@ import decodeToken from './validate-token';
 export default async function validateUser(
   request: lambda.Request,
 ): Promise<User> {
+  const tracer = opentracing.globalTracer();
+  const tracingContext =
+    tracer.extract(opentracing.FORMAT_HTTP_HEADERS, request.headers) ||
+    undefined;
+  const span = tracer.startSpan('authorization', { childOf: tracingContext });
+
   const headers = request.headers as {
     authorization: string;
   };
@@ -29,5 +36,10 @@ export default async function validateUser(
     throw Boom.unauthorized();
   }
 
-  return payload[`${origin}/user`] as User;
+  const user = payload[`${origin}/user`] as User;
+
+  span.setTag('userId', user.id);
+  span.log({ event: 'validated_user', ...user });
+  span.finish();
+  return user;
 }

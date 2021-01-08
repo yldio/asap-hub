@@ -86,6 +86,17 @@ export const userUpdateSchema = Joi.object({
       .min(2)
       .required(),
   ),
+  social: Joi.object({
+    website1: Joi.string(),
+    website2: Joi.string(),
+    linkedIn: Joi.string(),
+    orcid: Joi.string(),
+    researcherId: Joi.string(),
+    twitter: Joi.string(),
+    github: Joi.string(),
+    googleScholar: Joi.string(),
+    researchGate: Joi.string(),
+  }),
 })
   .min(1)
   .required();

@@ -165,6 +165,12 @@ export default class Users {
         return acc;
       }
 
+      // we get an object but squidex expects an array of objects
+      if (key === 'social') {
+        acc[key] = { iv: [value] };
+        return acc;
+      }
+
       acc[key] = { iv: value };
       return acc;
     }, {} as { [key: string]: { iv: unknown } });

@@ -63,9 +63,11 @@ export const http = (
     span.setTag('statusCode', statusCode);
 
     try {
-      body
-        ? span.log({ event: 'error', ...JSON.parse(body) })
-        : span.log({ event: 'error', error: body });
+      if (body) {
+        span.log({ event: 'error', ...JSON.parse(body) });
+      } else {
+        span.log({ event: 'error', error: body });
+      }
     } catch (e) {
       span.log({ event: 'error', error: body });
     }

@@ -173,7 +173,7 @@ module.exports = {
         },
       ],
     },
-    fetchUsers: {
+    fetchCalendars: {
       handler: 'apps/asap-server/build-cjs/handlers/calendars/fetch.handler',
       events: [
         {

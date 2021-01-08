@@ -272,7 +272,7 @@ describe('PATCH /users/{id}', () => {
       );
     });
 
-    test.only('returns 200 when user exists', async () => {
+    test('returns 200 when user exists', async () => {
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/userId`, {
           social: { iv: [{ github: 'johnytiago' }] },

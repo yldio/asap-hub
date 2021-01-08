@@ -58,9 +58,17 @@ export const http = (
   )) as APIGatewayProxyStructuredResultV2;
 
   if (response.statusCode && response.statusCode >= 400) {
-    const { statusCode, body: error } = response;
+    const { statusCode, body } = response;
     span.setTag(opentracing.Tags.ERROR, true);
-    span.log({ event: 'error', statusCode, error });
+    span.setTag('statusCode', statusCode);
+
+    try {
+      body
+        ? span.log({ event: 'error', ...JSON.parse(body) })
+        : span.log({ event: 'error', error: body });
+    } catch (e) {
+      span.log({ event: 'error', error: body });
+    }
   }
 
   span.finish();

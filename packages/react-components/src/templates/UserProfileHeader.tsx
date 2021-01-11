@@ -29,7 +29,7 @@ const containerStyles = css({
     "personal-info personal-info     " auto
     "contact       edit-contact-info " auto
     "tab-nav       tab-nav           " auto
-      / auto ${36 / perRem}em
+      / 1fr ${36 / perRem}em
   `,
   gridColumnGap: `${12 / perRem}em`,
 
@@ -39,7 +39,7 @@ const containerStyles = css({
       "edit-personal-info personal-info ."
       "edit-contact-info  contact       ."
       ".                  tab-nav       ."
-        / ${36 / perRem}em auto ${36 / perRem}em
+        / ${36 / perRem}em 1fr ${36 / perRem}em
     `,
     gridColumnGap: vminLinearCalc(
       mobileScreen,

@@ -36,3 +36,18 @@ it('renders the children in a list filtering undefined', () => {
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual(['Tab 1', 'Tab 2']);
 });
+
+it('handles nested child arrays', () => {
+  const { getAllByRole } = render(
+    <TabNav>
+      <a href="/tab1">Tab 1</a>
+      {[
+        <a href="/tab2">Tab 2</a>,
+        [<a href="/tab3">Tab 3</a>, <a href="/tab4">Tab 4</a>],
+      ]}
+    </TabNav>,
+  );
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['Tab 1', 'Tab 2', 'Tab 3', 'Tab 4']);
+});

@@ -1,9 +1,5 @@
 import Joi from '@hapi/joi';
-import {
-  OrcidWork,
-  UserResponse,
-  UserTeam,
-} from '@asap-hub/model';
+import { OrcidWork, UserResponse, UserTeam } from '@asap-hub/model';
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 

@@ -25,9 +25,9 @@ const user: RestUser = {
     connections: { iv: [] },
     biography: { iv: 'Biography' },
     location: { iv: 'Lisbon, Portugal' },
-    avatar: { iv: [], },
-    skills: { iv: [], },
-    questions: { iv: [], },
+    avatar: { iv: [] },
+    skills: { iv: [] },
+    questions: { iv: [] },
     teams: { iv: [] },
   },
 };

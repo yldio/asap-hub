@@ -50,9 +50,9 @@ export const createUser = (
         },
       ],
     },
-    avatar: { iv: [], },
-    skills: { iv: [], },
-    questions: { iv: [], },
+    avatar: { iv: [] },
+    skills: { iv: [] },
+    questions: { iv: [] },
     teams: { iv: [] },
   };
 

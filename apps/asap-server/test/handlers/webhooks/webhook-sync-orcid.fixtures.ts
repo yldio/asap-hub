@@ -24,9 +24,9 @@ export const fetchUserResponse: RestUser = {
     lastName: { iv: 'Grades' },
     orcid: { iv: '0000-0002-9079-593X' },
     orcidWorks: { iv: [] },
-    avatar: { iv: ['uuid-user-id-1'], },
-    skills: { iv: [], },
-    questions: { iv: [], },
+    avatar: { iv: ['uuid-user-id-1'] },
+    skills: { iv: [] },
+    questions: { iv: [] },
     teams: { iv: [] },
     connections: {
       iv: [{ code: '22f012ba-a059-4673-b052-c097cddff13f' }],
@@ -69,9 +69,9 @@ export const updateUserEvent: SquidexEvent = {
       orcid: {
         iv: 'notChanged',
       },
-      avatar: { iv: [], },
-      skills: { iv: [], },
-      questions: { iv: [], },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
       teams: { iv: [] },
     },
     dataOld: {
@@ -96,9 +96,9 @@ export const updateUserEvent: SquidexEvent = {
       orcid: {
         iv: 'notChanged',
       },
-      avatar: { iv: [], },
-      skills: { iv: [], },
-      questions: { iv: [], },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
       teams: { iv: [] },
     },
   },
@@ -118,9 +118,9 @@ export const createUserEvent: SquidexEvent = {
       role: {
         iv: 'Grantee',
       },
-      avatar: { iv: [], },
-      skills: { iv: [], },
-      questions: { iv: [], },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
       teams: { iv: [] },
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',

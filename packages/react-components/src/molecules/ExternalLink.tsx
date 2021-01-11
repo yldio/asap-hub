@@ -20,8 +20,8 @@ const styles = css({
   margin: `${12 / perRem}em 0`,
   svg: {
     stroke: fern.rgb,
-    width: '17.8px',
-    height: '17.8px',
+    width: `${17.8 / perRem}em`,
+    height: `${17.8 / perRem}em`,
   },
   ':hover, :focus': {
     color: pine.rgb,

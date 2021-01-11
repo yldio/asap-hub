@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { CalendarResponse } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph } from '../atoms';
 import { googleCalendarIcon, plusIcon } from '../icons';
@@ -55,11 +56,7 @@ const orderList = css({
   },
 });
 interface CalendarListProps {
-  calendars: {
-    id: string;
-    name: string;
-    colour: string;
-  }[];
+  calendars: ReadonlyArray<CalendarResponse>;
 }
 const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
   <Card>
@@ -74,8 +71,8 @@ const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
     </Paragraph>
     {calendars.length && (
       <ul css={orderList}>
-        {calendars.map(({ id, name, colour: color }) => {
-          const url = new URL('https://calendar.google.com/calendar/u/1/r');
+        {calendars.map(({ id, name, color }) => {
+          const url = new URL('https://calendar.google.com/calendar/r');
           url.searchParams.set('cid', id);
           return (
             <li key={id}>

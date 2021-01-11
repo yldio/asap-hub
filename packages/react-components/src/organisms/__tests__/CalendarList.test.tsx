@@ -13,14 +13,14 @@ it('Renders calender list item with colour', () => {
     <CalendarList
       calendars={[
         {
-          colour: 'red',
+          color: '#0D7813',
           name: 'Test Event',
           id: '1',
         },
       ]}
     />,
   );
-  expect(getComputedStyle(getByText('●')).color).toMatch('red');
+  expect(getComputedStyle(getByText('●')).color).toMatch('rgb(13, 120, 19)');
   expect(getByText('Test Event')).toBeVisible();
 });
 
@@ -29,7 +29,7 @@ it('Correctly generates the subscribe link', () => {
     <CalendarList
       calendars={[
         {
-          colour: 'red',
+          color: '#113F47',
           name: 'Test Event',
           id: '1',
         },
@@ -38,6 +38,6 @@ it('Correctly generates the subscribe link', () => {
   );
   expect(getByRole('link')).toHaveAttribute(
     'href',
-    'https://calendar.google.com/calendar/u/1/r?cid=1',
+    'https://calendar.google.com/calendar/r?cid=1',
   );
 });

@@ -1,30 +1,32 @@
 import React from 'react';
 
 import { CalendarList } from '@asap-hub/react-components';
-import { color, text } from '@storybook/addon-knobs';
+import { text } from '@storybook/addon-knobs';
+
+import { googleLegacyCalendarColor } from './colors';
 
 export default {
-  title: 'Organisims / Calendar List',
+  title: 'Organisms / Calendar List',
   component: CalendarList,
 };
-// number('Items', 3, { min :0, max: 10})
+
 export const Normal = () => (
   <CalendarList
     calendars={[
       {
-        colour: color('color', 'red', '1'),
+        color: googleLegacyCalendarColor('Calendar 1 Color'),
         id: '123',
-        name: text('name', 'ASAP Calendar', '1'),
+        name: text('Calendar 1 Name', 'ASAP Calendar'),
       },
       {
-        colour: color('color', 'blue', '2'),
+        color: googleLegacyCalendarColor('Calendar 2 Color'),
         id: '234',
-        name: text('name', 'Sci 1 - GWAS Functional', '2'),
+        name: text('Calendar 2 Name', 'Sci 1 - GWAS Functional', '2'),
       },
       {
-        colour: color('color', 'green', '3'),
+        color: googleLegacyCalendarColor('Calendar 3 Color'),
         id: '456',
-        name: text('name 3', 'Sci 2 - Aging and Progression', '3'),
+        name: text('Calendar 3 Name', 'Sci 2 - Aging and Progression', '3'),
       },
     ]}
   />

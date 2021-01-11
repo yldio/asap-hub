@@ -4,6 +4,7 @@ import * as opentracing from 'opentracing';
 import lightstep from 'lightstep-tracer';
 import { promisify } from 'util';
 import {
+  APIGatewayProxyStructuredResultV2,
   APIGatewayProxyResultV2,
   APIGatewayProxyEventV2,
   Context,
@@ -52,7 +53,25 @@ export const http = (
   // eslint-disable-next-line no-param-reassign
   event.headers = { ...event.headers, ...headersCarrier };
 
-  const response = await lambda.http(fn)(event);
+  const response = (await lambda.http(fn)(
+    event,
+  )) as APIGatewayProxyStructuredResultV2;
+
+  if (response.statusCode && response.statusCode >= 400) {
+    const { statusCode, body } = response;
+    span.setTag(opentracing.Tags.ERROR, true);
+    span.setTag('statusCode', statusCode);
+
+    try {
+      if (body) {
+        span.log({ event: 'error', ...JSON.parse(body) });
+      } else {
+        span.log({ event: 'error', error: body });
+      }
+    } catch (e) {
+      span.log({ event: 'error', error: body });
+    }
+  }
 
   span.finish();
 

@@ -120,11 +120,7 @@ describe('GET /webhook/users/{code}', () => {
           0,
         ),
       })
-      .reply(200, {
-        data: {
-          queryUsersContentsWithTotal: fetchUserResponse,
-        },
-      });
+      .reply(200, fetchUserResponse);
 
     const result = (await handler(
       apiGatewayEvent({

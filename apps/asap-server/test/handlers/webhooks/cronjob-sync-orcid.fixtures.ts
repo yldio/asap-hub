@@ -1,8 +1,8 @@
 import { OrcidWork } from '@asap-hub/model';
-import { CMSUser } from '../../../src/entities/user';
+import { RestUser } from '@asap-hub/squidex';
 import { ORCIDWorksResponse } from '../../../src/utils/fetch-orcid';
 
-export const fetchUsersResponse: { total: number; items: CMSUser[] } = {
+export const fetchUsersResponse: { total: number; items: RestUser[] } = {
   total: 2,
   items: [
     {
@@ -14,16 +14,18 @@ export const fetchUsersResponse: { total: number; items: CMSUser[] } = {
         firstName: { iv: 'First' },
         lastName: { iv: 'Last' },
         email: { iv: 'panog@ep.bv' },
-        skills: { iv: [] },
         lastModifiedDate: {
           iv: '2020-09-02T10:34:13.259Z',
         },
         orcid: { iv: '0000-0001-9884-1913' },
         orcidWorks: { iv: [] },
-        teams: { iv: [] },
         connections: {
           iv: [{ code: '22f012ba-a059-4673-b052-c097cddff13f' }],
         },
+        avatar: { iv: [], },
+        skills: { iv: [], },
+        questions: { iv: [], },
+        teams: { iv: [] },
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',
@@ -37,17 +39,19 @@ export const fetchUsersResponse: { total: number; items: CMSUser[] } = {
         firstName: { iv: 'Johny' },
         lastName: { iv: 'Depth' },
         email: { iv: 'ola@ep.bv' },
-        skills: { iv: [] },
         lastModifiedDate: {
           iv: '2020-09-02T10:34:13.259Z',
         },
         orcid: { iv: '0000-0001-9884-1913' },
         orcidWorks: { iv: [] },
         orcidLastSyncDate: { iv: 'CHANGE_ME' },
-        teams: { iv: [] },
         connections: {
           iv: [{ code: '22f012ba-a059-4673-b052-c097cddff13f' }],
         },
+        avatar: { iv: [], },
+        skills: { iv: [], },
+        questions: { iv: [], },
+        teams: { iv: [] },
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',

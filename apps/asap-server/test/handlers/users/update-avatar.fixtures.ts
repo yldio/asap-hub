@@ -1,6 +1,6 @@
 import { UserResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import { CMSUser } from '../../../src/entities';
+import { RestUser } from '@asap-hub/squidex';
 import { ResponseFetchUser } from '../../../src/controllers/users';
 
 export const getUserGraphqlResponse: { data: ResponseFetchUser } = {
@@ -74,7 +74,7 @@ export const getUserGraphqlResponse: { data: ResponseFetchUser } = {
   },
 };
 
-export const patchResponse: CMSUser = {
+export const patchResponse: RestUser = {
   id: 'userId',
   data: {
     role: { iv: 'Grantee' },
@@ -104,6 +104,7 @@ export const patchResponse: CMSUser = {
       ],
     },
     connections: { iv: [] },
+    questions: { iv: [] },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',

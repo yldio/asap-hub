@@ -1,17 +1,17 @@
 import Chance from 'chance';
 import { Squidex } from '@asap-hub/squidex';
 import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
-import { RestTeam } from '@asap-hub/squidex';
-import { CMSUser, parseUser } from '../../src/entities';
+import { RestTeam, RestUser } from '@asap-hub/squidex';
+import { parseUser } from '../../src/entities';
 
-const users = new Squidex<CMSUser>('users');
+const users = new Squidex<RestUser>('users');
 const chance = new Chance();
 
 export type TestUserResponse = UserResponse & {
   connections: ReadonlyArray<{ code: string }>;
 };
 
-function transform(user: CMSUser): TestUserResponse {
+function transform(user: RestUser): TestUserResponse {
   return {
     ...parseUser(user),
     connections: user.data.connections.iv,
@@ -20,7 +20,7 @@ function transform(user: CMSUser): TestUserResponse {
 
 export const createUser = (
   overwrites: Invitee | object = {},
-): Promise<CMSUser> => {
+): Promise<RestUser> => {
   const data = {
     firstName: chance.first(),
     lastName: chance.last(),
@@ -33,7 +33,7 @@ export const createUser = (
     ...overwrites,
   };
 
-  const user: CMSUser['data'] = {
+  const user: RestUser['data'] = {
     lastModifiedDate: { iv: `${new Date().toISOString()}` },
     email: { iv: data.email },
     firstName: { iv: data.firstName },
@@ -50,6 +50,10 @@ export const createUser = (
         },
       ],
     },
+    avatar: { iv: [], },
+    skills: { iv: [], },
+    questions: { iv: [], },
+    teams: { iv: [] },
   };
 
   return users.create(user);

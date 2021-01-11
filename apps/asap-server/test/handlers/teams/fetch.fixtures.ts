@@ -1,6 +1,6 @@
 import { ListTeamResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import { CMSUser } from '../../../src/entities';
+import { RestUser } from '@asap-hub/squidex';
 import { ResponseFetchTeams } from '../../../src/controllers/teams';
 
 export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
@@ -104,48 +104,23 @@ export const graphQlTeamsResponseSingle: { data: ResponseFetchTeams } = {
   },
 };
 
-export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
+export const usersResponseTeam1: { total: number; items: RestUser[] } = {
   total: 1,
   items: [
     {
       id: 'user-id-1',
       data: {
-        role: {
-          iv: 'Grantee',
-        },
-        lastModifiedDate: {
-          iv: '2020-09-25T09:42:51.132Z',
-        },
-        email: {
-          iv: 'cristiano@ronaldo.com',
-        },
-        firstName: {
-          iv: 'Cristiano',
-        },
-        lastName: {
-          iv: 'Ronaldo',
-        },
-        jobTitle: {
-          iv: 'Junior',
-        },
-        orcid: {
-          iv: '363-98-9330',
-        },
-        institution: {
-          iv: 'Dollar General Corporation',
-        },
-        location: {
-          iv: 'Zofilte',
-        },
-        avatar: {
-          iv: ['uuid-user-id-1'],
-        },
-        skills: {
-          iv: [],
-        },
-        orcidWorks: {
-          iv: [],
-        },
+        role: { iv: 'Grantee', },
+        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z', },
+        email: { iv: 'cristiano@ronaldo.com', },
+        firstName: { iv: 'Cristiano', },
+        lastName: { iv: 'Ronaldo', },
+        jobTitle: { iv: 'Junior', },
+        orcid: { iv: '363-98-9330', },
+        institution: { iv: 'Dollar General Corporation', },
+        location: { iv: 'Zofilte', },
+        avatar: { iv: ['uuid-user-id-1'], },
+        orcidWorks: { iv: [], },
         teams: {
           iv: [
             {
@@ -154,9 +129,9 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
             },
           ],
         },
-        connections: {
-          iv: [],
-        },
+        connections: { iv: [], },
+        questions: { iv: [], },
+        skills: { iv: [], },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -164,48 +139,23 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
   ],
 };
 
-export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
+export const usersResponseTeam2: { total: number; items: RestUser[] } = {
   total: 2,
   items: [
     {
       id: 'user-id-2',
       data: {
-        role: {
-          iv: 'Grantee',
-        },
-        lastModifiedDate: {
-          iv: '2020-09-25T09:42:51.132Z',
-        },
-        email: {
-          iv: 'john@ed.ma',
-        },
-        firstName: {
-          iv: 'John',
-        },
-        lastName: {
-          iv: 'Travista',
-        },
-        jobTitle: {
-          iv: 'Junior',
-        },
-        orcid: {
-          iv: '363-98-9330',
-        },
-        institution: {
-          iv: 'Dollar General Corporation',
-        },
-        location: {
-          iv: 'Zofilte',
-        },
-        avatar: {
-          iv: ['uuid-user-id-2'],
-        },
-        skills: {
-          iv: [],
-        },
-        orcidWorks: {
-          iv: [],
-        },
+        role: { iv: 'Grantee', },
+        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z', },
+        email: { iv: 'john@ed.ma', },
+        firstName: { iv: 'John', },
+        lastName: { iv: 'Travista', },
+        jobTitle: { iv: 'Junior', },
+        orcid: { iv: '363-98-9330', },
+        institution: { iv: 'Dollar General Corporation', },
+        location: { iv: 'Zofilte', },
+        avatar: { iv: ['uuid-user-id-2'], },
+        orcidWorks: { iv: [], },
         teams: {
           iv: [
             {
@@ -214,9 +164,9 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
             },
           ],
         },
-        connections: {
-          iv: [],
-        },
+        connections: { iv: [], },
+        skills: { iv: [], },
+        questions: { iv: [], },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -224,42 +174,17 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
     {
       id: 'user-id-3',
       data: {
-        role: {
-          iv: 'Grantee',
-        },
-        lastModifiedDate: {
-          iv: '2020-09-25T09:42:51.132Z',
-        },
-        email: {
-          iv: 'bill@ed.ma',
-        },
-        firstName: {
-          iv: 'Bill',
-        },
-        lastName: {
-          iv: 'Travista',
-        },
-        jobTitle: {
-          iv: 'Junior',
-        },
-        orcid: {
-          iv: '363-98-9330',
-        },
-        institution: {
-          iv: 'Dollar General Corporation',
-        },
-        location: {
-          iv: 'Zofilte',
-        },
-        avatar: {
-          iv: ['uuid-user-id-3'],
-        },
-        skills: {
-          iv: [],
-        },
-        orcidWorks: {
-          iv: [],
-        },
+        role: { iv: 'Grantee', },
+        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z', },
+        email: { iv: 'bill@ed.ma', },
+        firstName: { iv: 'Bill', },
+        lastName: { iv: 'Travista', },
+        jobTitle: { iv: 'Junior', },
+        orcid: { iv: '363-98-9330', },
+        institution: { iv: 'Dollar General Corporation', },
+        location: { iv: 'Zofilte', },
+        avatar: { iv: ['uuid-user-id-3'], },
+        orcidWorks: { iv: [], },
         teams: {
           iv: [
             {
@@ -268,9 +193,9 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
             },
           ],
         },
-        connections: {
-          iv: [],
-        },
+        connections: { iv: [], },
+        skills: { iv: [], },
+        questions: { iv: [], },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -278,48 +203,23 @@ export const usersResponseTeam2: { total: number; items: CMSUser[] } = {
   ],
 };
 
-export const usersResponseTeam3: { total: number; items: CMSUser[] } = {
+export const usersResponseTeam3: { total: number; items: RestUser[] } = {
   total: 1,
   items: [
     {
       id: 'user-id-4',
       data: {
-        role: {
-          iv: 'Grantee',
-        },
-        lastModifiedDate: {
-          iv: '2020-09-25T09:42:51.132Z',
-        },
-        email: {
-          iv: 'seb@.da',
-        },
-        firstName: {
-          iv: 'Seb',
-        },
-        lastName: {
-          iv: 'Oliver',
-        },
-        jobTitle: {
-          iv: 'Junior',
-        },
-        orcid: {
-          iv: '363-98-9335',
-        },
-        institution: {
-          iv: 'Euro General Corporation',
-        },
-        location: {
-          iv: 'Zurich',
-        },
-        avatar: {
-          iv: ['uuid-user-id-4'],
-        },
-        skills: {
-          iv: [],
-        },
-        orcidWorks: {
-          iv: [],
-        },
+        role: { iv: 'Grantee', },
+        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z', },
+        email: { iv: 'seb@.da', },
+        firstName: { iv: 'Seb', },
+        lastName: { iv: 'Oliver', },
+        jobTitle: { iv: 'Junior', },
+        orcid: { iv: '363-98-9335', },
+        institution: { iv: 'Euro General Corporation', },
+        location: { iv: 'Zurich', },
+        avatar: { iv: ['uuid-user-id-4'], },
+        orcidWorks: { iv: [], },
         teams: {
           iv: [
             {
@@ -328,9 +228,9 @@ export const usersResponseTeam3: { total: number; items: CMSUser[] } = {
             },
           ],
         },
-        connections: {
-          iv: [],
-        },
+        connections: { iv: [], },
+        skills: { iv: [], },
+        questions: { iv: [], },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',

@@ -1,15 +1,15 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
+import { RestUser } from '@asap-hub/squidex';
 import { http } from '../../utils/instrumented-framework';
 
 import { Handler } from '../../utils/types';
 import Users from '../../controllers/users';
-import { CMSUser } from '../../entities/user';
 import validateRequest from '../../utils/validate-squidex-request';
 
 export interface WebHookPayload {
   type: string;
-  payload: CMSUser & { dataOld?: CMSUser['data'] };
+  payload: RestUser & { dataOld?: RestUser['data'] };
 }
 
 export const handler: Handler = http(

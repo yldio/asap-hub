@@ -1,7 +1,7 @@
 import { ListResponse } from './common';
 import { TeamRole } from './team';
 
-export type Role = 'Staff' | 'Grantee' | 'Guest';
+export type Role = 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
 export type UserDegree = 'BA' | 'BSc' | 'MSc' | 'PhD' | 'MD' | 'PhD, MD';
 
 export interface Invitee {

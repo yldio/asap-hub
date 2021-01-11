@@ -3,7 +3,7 @@ import Intercept from 'apr-intercept';
 import { Got } from 'got';
 import FormData from 'form-data';
 import mime from 'mime-types';
-import { GraphqlUser, config } from '@asap-hub/squidex';
+import { GraphqlUser, RestUser, config } from '@asap-hub/squidex';
 import {
   UserResponse,
   ListUserResponse,
@@ -14,7 +14,7 @@ import {
   InstrumentedSquidex,
   InstrumentedSquidexGraphql,
 } from '../utils/instrumented-client';
-import { CMSUser, parseUser, parseGraphQLUser } from '../entities';
+import { parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 
 const GraphQLQueryUser = `
@@ -112,7 +112,7 @@ export interface ResponseFetchUser {
   findUsersContent: GraphqlUser;
 }
 
-const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
+const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
   const [err, res] = await Intercept(
     client
       .get('users', {
@@ -121,7 +121,7 @@ const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
           $filter: `data/connections/iv/code eq '${code}'`,
         },
       })
-      .json() as Promise<{ items: CMSUser[] }>,
+      .json() as Promise<{ items: RestUser[] }>,
   );
 
   if (err) {
@@ -136,7 +136,7 @@ const fetchByCode = async (code: string, client: Got): Promise<CMSUser> => {
 };
 
 export default class Users {
-  users: InstrumentedSquidex<CMSUser>;
+  users: InstrumentedSquidex<RestUser>;
 
   client: InstrumentedSquidexGraphql;
 
@@ -350,14 +350,14 @@ export default class Users {
 
   async syncOrcidProfile(
     id: string,
-    cachedUser: CMSUser | undefined = undefined,
+    cachedUser: RestUser | undefined = undefined,
   ): Promise<UserResponse> {
     let fetchedUser;
     if (!cachedUser) {
       fetchedUser = await this.users.fetchById(id);
     }
 
-    const user = cachedUser || (fetchedUser as CMSUser);
+    const user = cachedUser || (fetchedUser as RestUser);
 
     const [error, res] = await Intercept(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

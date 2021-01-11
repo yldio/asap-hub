@@ -26,6 +26,7 @@ const dataGrid = css({
   width: '100%',
   gridTemplateRows: 'auto 12px auto',
   gridTemplateColumns: '1fr max-content',
+  alignItems: 'center',
 });
 const gridText = css({
   gridColumn: '1',
@@ -34,6 +35,7 @@ const gridText = css({
 const gridButton = css({
   gridColumn: '1',
   gridRow: '2 / span 2',
+  alignSelf: 'middle',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridColumn: 'auto',
     gridRow: '1 / span 2',
@@ -76,25 +78,23 @@ const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
           const url = new URL('https://calendar.google.com/calendar/u/1/r');
           url.searchParams.set('cid', id);
           return (
-            <>
-              <li>
-                <div css={dataGrid}>
-                  <div css={gridText}>
-                    <Paragraph accent="charcoal">
-                      <span css={{ color, paddingRight: '1em' }}>●</span>
-                      <span css={{ fontWeight: 'bold' }}>{name}</span>
-                    </Paragraph>
-                  </div>
-                  <div css={gridButton}>
-                    <ExternalLink
-                      icon={plusIcon}
-                      label="Add to calendar"
-                      href={url.toString()}
-                    />
-                  </div>
+            <li key={id}>
+              <div css={dataGrid}>
+                <div css={gridText}>
+                  <Paragraph accent="charcoal">
+                    <span css={{ color, paddingRight: '1em' }}>●</span>
+                    <span css={{ fontWeight: 'bold' }}>{name}</span>
+                  </Paragraph>
                 </div>
-              </li>
-            </>
+                <div css={gridButton}>
+                  <ExternalLink
+                    icon={plusIcon}
+                    label="Add to calendar"
+                    href={url.toString()}
+                  />
+                </div>
+              </div>
+            </li>
           );
         })}
       </ul>

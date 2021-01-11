@@ -3,6 +3,7 @@ export * from './auth';
 export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
 export { default as EditModal } from './EditModal';
+export { default as GoogleCalendar } from './GoogleCalendar';
 export { default as HelpSection } from './HelpSection';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MembersSection } from './MembersSection';

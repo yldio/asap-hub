@@ -1,10 +1,9 @@
-import { config } from '@asap-hub/squidex';
+import { config, RestNewsOrEvent } from '@asap-hub/squidex';
 import { ListNewsAndEventsResponse } from '@asap-hub/model';
-import { CMSNewsAndEvents } from '../../../src/entities/news-and-events';
 
 export const newsAndEventsResponse: {
   total: number;
-  items: CMSNewsAndEvents[];
+  items: RestNewsOrEvent[];
 } = {
   total: 2,
   items: [
@@ -27,6 +26,7 @@ export const newsAndEventsResponse: {
           iv: ['thumbnail-uuid1'],
         },
       },
+      lastModified: '2020-09-25T09:42:51Z',
       created: '2020-09-08T16:35:28Z',
     },
     {
@@ -48,6 +48,7 @@ export const newsAndEventsResponse: {
           iv: ['thumbnail-uuid2'],
         },
       },
+      lastModified: '2020-09-25T09:42:51Z',
       created: '2020-09-16T14:31:19Z',
     },
   ],

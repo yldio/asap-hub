@@ -2,12 +2,13 @@ import {
   ListNewsAndEventsResponse,
   NewsOrEventResponse,
 } from '@asap-hub/model';
+import { RestNewsOrEvent } from '@asap-hub/squidex';
 
 import { InstrumentedSquidex } from '../utils/instrumented-client';
-import { CMSNewsAndEvents, parseNewsAndEvents } from '../entities';
+import { parseNewsAndEvents } from '../entities';
 
 export default class ResearchOutputs {
-  newsAndEvents: InstrumentedSquidex<CMSNewsAndEvents>;
+  newsAndEvents: InstrumentedSquidex<RestNewsOrEvent>;
 
   constructor(ctxHeaders?: Record<string, string>) {
     this.newsAndEvents = new InstrumentedSquidex('news-and-events', ctxHeaders);

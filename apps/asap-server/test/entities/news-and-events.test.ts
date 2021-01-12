@@ -11,6 +11,7 @@ describe('parse news and events entities', () => {
       parseNewsAndEvents({
         id: 'uuid',
         created: date,
+        lastModified: date,
         data: {
           type: {
             iv: 'News',
@@ -20,37 +21,6 @@ describe('parse news and events entities', () => {
           },
           shortText: { iv: 'shortText' },
           thumbnail: { iv: ['uuid'] },
-          text: {
-            iv: 'text',
-          },
-        },
-      }),
-    ).toMatchObject({
-      id: 'uuid',
-      created: date,
-      type: 'News',
-      title: 'Title',
-      shortText: 'shortText',
-      text: 'text',
-      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid`,
-    });
-  });
-
-  test('parse handles graphQL thumbnails', async () => {
-    const date = new Date().toISOString();
-    expect(
-      parseNewsAndEvents({
-        id: 'uuid',
-        created: date,
-        data: {
-          type: {
-            iv: 'News',
-          },
-          title: {
-            iv: 'Title',
-          },
-          shortText: { iv: 'shortText' },
-          thumbnail: { iv: [{ id: 'uuid' }] },
           text: {
             iv: 'text',
           },

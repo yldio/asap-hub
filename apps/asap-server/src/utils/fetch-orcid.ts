@@ -2,20 +2,18 @@ import Got from 'got';
 import get from 'lodash.get';
 import { CMSOrcidWork } from '../entities/user';
 
-interface ORCIDExternalIds {
-  'external-id': [
-    {
-      'external-id-type': string;
-      'external-id-url': { value: string };
-      'external-id-value': string;
-      'external-id-relationship': string;
-    },
-  ];
+interface ORCIDExternalId {
+  'external-id-type': string;
+  'external-id-url': { value: string };
+  'external-id-value': string;
+  'external-id-relationship': string;
 }
 
 interface ORCIDWork {
   'last-modified-date': { value: number };
-  'external-ids': ORCIDExternalIds;
+  'external-ids': {
+    'external-id': ORCIDExternalId[];
+  };
   'work-summary': {
     'put-code': number;
     'created-date': { value: number };
@@ -28,7 +26,9 @@ interface ORCIDWork {
       subtitle: string | null;
       'translated-title': string | null;
     };
-    'external-ids': ORCIDExternalIds;
+    'external-ids': {
+      'external-id': ORCIDExternalId[];
+    };
     type: string;
     'publication-date': {
       year: {
@@ -66,7 +66,14 @@ export const transformOrcidWorks = (
     works: orcidWorks.group.map((work) =>
       JSON.parse(
         JSON.stringify({
-          doi: get(work, 'external-ids.external-id[0].external-id-url.value'),
+          doi: get(
+            // get first external-id with url value
+            get(work, 'external-ids.external-id', []).find(
+              (e: ORCIDExternalId) => e['external-id-url']?.value,
+            ),
+            // return such value
+            'external-id-url.value',
+          ),
           id: `${work['work-summary'][0]['put-code']}`,
           title: get(work, '["work-summary"][0].title.title.value'),
           type: get(work, '["work-summary"][0].type'),

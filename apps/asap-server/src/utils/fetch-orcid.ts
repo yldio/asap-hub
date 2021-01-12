@@ -4,7 +4,7 @@ import { CMSOrcidWork } from '../entities/user';
 
 interface ORCIDExternalId {
   'external-id-type': string;
-  'external-id-url': { value: string };
+  'external-id-url': { value: string } | null;
   'external-id-value': string;
   'external-id-relationship': string;
 }

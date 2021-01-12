@@ -1,7 +1,7 @@
 import { RestTeam } from '@asap-hub/squidex';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import { CMSUser } from '../../../src/entities';
+import { RestUser } from '@asap-hub/squidex';
 import { ResponseFetchTeam } from '../../../src/controllers/teams';
 
 export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
@@ -77,48 +77,24 @@ export const getGraphQlTeamResponse = (
   },
 });
 
-export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
+export const usersResponseTeam1: { total: number; items: RestUser[] } = {
   total: 1,
   items: [
     {
       id: 'user-id-1',
       data: {
-        role: {
-          iv: 'Grantee',
-        },
-        lastModifiedDate: {
-          iv: '2020-09-25T09:42:51.132Z',
-        },
-        email: {
-          iv: 'cristiano@ronaldo.com',
-        },
-        firstName: {
-          iv: 'Cristiano',
-        },
-        lastName: {
-          iv: 'Ronaldo',
-        },
-        jobTitle: {
-          iv: 'Junior',
-        },
-        orcid: {
-          iv: '363-98-9330',
-        },
-        institution: {
-          iv: 'Dollar General Corporation',
-        },
-        location: {
-          iv: 'Zofilte',
-        },
-        avatar: {
-          iv: ['uuid-user-id-1'],
-        },
-        skills: {
-          iv: [],
-        },
-        orcidWorks: {
-          iv: [],
-        },
+        role: { iv: 'Grantee' },
+        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
+        email: { iv: 'cristiano@ronaldo.com' },
+        firstName: { iv: 'Cristiano' },
+        lastName: { iv: 'Ronaldo' },
+        jobTitle: { iv: 'Junior' },
+        orcid: { iv: '363-98-9330' },
+        institution: { iv: 'Dollar General Corporation' },
+        location: { iv: 'Zofilte' },
+        avatar: { iv: ['uuid-user-id-1'] },
+        skills: { iv: [] },
+        orcidWorks: { iv: [] },
         teams: {
           iv: [
             {
@@ -127,9 +103,8 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
             },
           ],
         },
-        connections: {
-          iv: [],
-        },
+        connections: { iv: [] },
+        questions: { iv: [] },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',

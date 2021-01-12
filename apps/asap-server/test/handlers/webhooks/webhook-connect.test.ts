@@ -6,9 +6,9 @@ import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code'
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { auth0SharedSecret as secret } from '../../../src/config';
-import { CMSUser } from '../../../src/entities';
+import { RestUser } from '@asap-hub/squidex';
 
-const user: CMSUser = {
+const user: RestUser = {
   id: 'userId',
   lastModified: '2020-09-25T11:06:27.164Z',
   created: '2020-09-24T11:06:27.164Z',
@@ -25,6 +25,10 @@ const user: CMSUser = {
     connections: { iv: [] },
     biography: { iv: 'Biography' },
     location: { iv: 'Lisbon, Portugal' },
+    avatar: { iv: [] },
+    skills: { iv: [] },
+    questions: { iv: [] },
+    teams: { iv: [] },
   },
 };
 

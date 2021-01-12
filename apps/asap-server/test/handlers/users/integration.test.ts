@@ -3,14 +3,14 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { Squidex } from '@asap-hub/squidex';
 import { UserResponse } from '@asap-hub/model';
 
-import { CMSUser } from '../../../src/entities/user';
+import { RestUser } from '@asap-hub/squidex';
 import { handler } from '../../../src/handlers/users/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { createRandomUser } from '../../helpers/users';
 
 jest.mock('../../../src/utils/validate-token');
 
-const users = new Squidex<CMSUser>('users');
+const users = new Squidex<RestUser>('users');
 describe('GET /users/{id}', () => {
   let user: UserResponse;
 

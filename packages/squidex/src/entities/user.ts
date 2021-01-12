@@ -36,6 +36,8 @@ interface User<
   location?: string;
   orcid?: string;
   orcidWorks?: OrcidWork[];
+  orcidLastSyncDate?: string;
+  orcidLastModifiedDate?: string;
   questions: { question: string }[];
   role: Role;
   skills: string[];

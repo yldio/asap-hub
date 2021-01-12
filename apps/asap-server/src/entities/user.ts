@@ -1,65 +1,9 @@
 import Joi from '@hapi/joi';
-import {
-  OrcidWork,
-  UserResponse,
-  UserTeam,
-  UserDegree,
-  UserSocialLinks,
-  TeamRole,
-} from '@asap-hub/model';
-import { GraphqlUser } from '@asap-hub/squidex';
+import { OrcidWork, UserResponse, UserTeam } from '@asap-hub/model';
+import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 
-interface CMSTeamMember {
-  id: string[];
-  role: TeamRole;
-  responsibilities?: string | null;
-  approach?: string | null;
-}
 export type CMSOrcidWork = OrcidWork;
-
-export interface CMSUser {
-  id: string;
-  lastModified: string;
-  created: string;
-  data: {
-    lastModifiedDate: { iv: string };
-    email: { iv: string };
-    contactEmail?: { iv: string };
-    firstName: { iv: string };
-    lastName: { iv: string };
-    jobTitle?: { iv: string };
-    degree?: { iv: UserDegree };
-    institution?: { iv: string };
-    connections: { iv: { code: string }[] };
-    biography?: { iv: string };
-    location?: { iv: string };
-    teams?: { iv: CMSTeamMember[] };
-    department?: { iv: string };
-    orcid?: { iv: string };
-    orcidLastModifiedDate?: { iv: string };
-    orcidLastSyncDate?: { iv: string };
-    orcidWorks?: { iv: CMSOrcidWork[] };
-    social?: { iv: Omit<UserSocialLinks, 'orcid'>[] };
-    skills?: { iv: string[] };
-    skillsDescription?: { iv: string };
-    questions?: {
-      iv: {
-        question: string;
-      }[];
-    };
-    avatar?: { iv: string[] };
-    role: {
-      iv: 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
-    };
-    responsibilities?: {
-      iv: string;
-    };
-    reachOut?: {
-      iv: string;
-    };
-  };
-}
 
 export const userUpdateSchema = Joi.object({
   contactEmail: Joi.string().allow(''),
@@ -166,7 +110,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
   };
 };
 
-export const parseUser = (user: CMSUser): UserResponse => {
+export const parseUser = (user: RestUser): UserResponse => {
   const teams: UserTeam[] =
     user.data.teams?.iv.map(({ id, ...t }) => ({
       id: id[0],

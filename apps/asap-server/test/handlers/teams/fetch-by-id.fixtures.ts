@@ -1,6 +1,6 @@
 import { TeamResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import { CMSUser } from '../../../src/entities';
+import { RestUser } from '@asap-hub/squidex';
 import { ResponseFetchTeam } from '../../../src/controllers/teams';
 
 export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
@@ -53,7 +53,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
   },
 };
 
-export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
+export const usersResponseTeam1: { total: number; items: RestUser[] } = {
   total: 1,
   items: [
     {
@@ -90,6 +90,9 @@ export const usersResponseTeam1: { total: number; items: CMSUser[] } = {
           iv: ['uuid-user-id-1'],
         },
         skills: {
+          iv: [],
+        },
+        questions: {
           iv: [],
         },
         orcidWorks: {

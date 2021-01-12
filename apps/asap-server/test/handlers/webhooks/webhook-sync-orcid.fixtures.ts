@@ -1,11 +1,11 @@
 import { OrcidWork } from '@asap-hub/model';
-import { CMSUser } from '../../../src/entities/user';
+import { RestUser } from '@asap-hub/squidex';
 import { ORCIDWorksResponse } from '../../../src/utils/fetch-orcid';
 
-interface SquidexEventPayload extends CMSUser {
+interface SquidexEventPayload extends RestUser {
   $type: string;
   type: string;
-  dataOld?: CMSUser['data'];
+  dataOld?: RestUser['data'];
 }
 
 interface SquidexEvent {
@@ -13,11 +13,10 @@ interface SquidexEvent {
   payload: SquidexEventPayload;
 }
 
-export const fetchUserResponse: CMSUser = {
+export const fetchUserResponse: RestUser = {
   id: 'userId',
   data: {
     email: { iv: 'panog@ep.bv' },
-    skills: { iv: [] },
     lastModifiedDate: {
       iv: '2020-09-02T10:34:13.259Z',
     },
@@ -25,6 +24,9 @@ export const fetchUserResponse: CMSUser = {
     lastName: { iv: 'Grades' },
     orcid: { iv: '0000-0002-9079-593X' },
     orcidWorks: { iv: [] },
+    avatar: { iv: ['uuid-user-id-1'] },
+    skills: { iv: [] },
+    questions: { iv: [] },
     teams: { iv: [] },
     connections: {
       iv: [{ code: '22f012ba-a059-4673-b052-c097cddff13f' }],
@@ -67,6 +69,10 @@ export const updateUserEvent: SquidexEvent = {
       orcid: {
         iv: 'notChanged',
       },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
+      teams: { iv: [] },
     },
     dataOld: {
       firstName: { iv: 'Bill' },
@@ -90,6 +96,10 @@ export const updateUserEvent: SquidexEvent = {
       orcid: {
         iv: 'notChanged',
       },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
+      teams: { iv: [] },
     },
   },
 };
@@ -108,6 +118,10 @@ export const createUserEvent: SquidexEvent = {
       role: {
         iv: 'Grantee',
       },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
+      teams: { iv: [] },
       lastModifiedDate: {
         iv: '2020-08-26T16:36:47.984Z',
       },

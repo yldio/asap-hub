@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { Auth0User, Auth0 } from '@asap-hub/auth';
 import { Auth0Context } from '@asap-hub/react-context';
-import createAuth0Client, {
+import {
   Auth0ClientOptions,
   Auth0Client,
   RedirectLoginResult,
@@ -31,7 +31,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
 
   useEffect(() => {
     const initAuth0 = async () => {
-      const auth0FromHook = await createAuth0Client(initOptions);
+      const auth0FromHook = new Auth0Client(initOptions);
       setAuth0Client(auth0FromHook);
 
       if (

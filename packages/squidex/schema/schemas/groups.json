@@ -1,18 +1,18 @@
 {
   "$schema": "./../__json/schema.json",
-  "name": "teams",
+  "name": "groups",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Teams"
+      "label": "Groups"
     },
     "scripts": {},
-    "fieldsInReferences": ["displayName"],
+    "fieldsInReferences": ["name"],
     "fieldsInLists": [],
     "fields": [
       {
-        "name": "displayName",
+        "name": "name",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -22,90 +22,12 @@
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",
-          "label": "Display Name",
-          "isRequired": true
-        }
-      },
-      {
-        "name": "applicationNumber",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": true,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Application Number",
-          "isRequired": true
-        }
-      },
-      {
-        "name": "projectTitle",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Project Title",
-          "isRequired": true
-        }
-      },
-      {
-        "name": "projectSummary",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Project Summary",
+          "label": "Name",
           "isRequired": false
         }
       },
       {
-        "name": "proposal",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "maxItems": 1,
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "editor": "Dropdown",
-          "schemaIds": ["research-outputs"],
-          "label": "Proposal",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "outputs",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "editor": "List",
-          "schemaIds": ["research-outputs"],
-          "label": "Shared Research",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "skills",
+        "name": "tags",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -113,7 +35,37 @@
         "properties": {
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Expertise and Resources",
+          "label": "Tags",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "description",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Description",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "summary",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Summary",
           "isRequired": false
         }
       },
@@ -172,11 +124,96 @@
             }
           }
         ]
+      },
+      {
+        "name": "teams",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "List",
+          "schemaIds": ["teams"],
+          "label": "Teams",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "leaders",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Leaders",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "user",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "editor": "List",
+              "schemaIds": ["users"],
+              "label": "User",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "role",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "allowedValues": ["Project Manager", "Lead PI - Chair"],
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Dropdown",
+              "label": "Role",
+              "isRequired": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "calendars",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "List",
+          "schemaIds": ["calendars"],
+          "label": "Calendars",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
       }
     ],
-    "previewUrls": {
-      "Web": "https://hub.asap.science/network/teams/${id}"
-    },
+    "previewUrls": {},
     "category": "Storage",
     "isPublished": true
   }

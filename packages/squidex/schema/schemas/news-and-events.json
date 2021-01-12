@@ -8,7 +8,7 @@
       "label": "News and Events"
     },
     "scripts": {},
-    "fieldsInReferences": [],
+    "fieldsInReferences": ["title"],
     "fieldsInLists": [],
     "fields": [
       {

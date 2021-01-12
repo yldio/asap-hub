@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import * as opentracing from 'opentracing';
 import lightstep from 'lightstep-tracer';
 import { promisify } from 'util';
@@ -75,8 +73,10 @@ export const http = (
 
   span.finish();
 
-  const flushTracing = promisify(LsTracer.flush).bind(LsTracer);
-  await flushTracing();
+  if (LsTracer?.flush) {
+    const flushTracing = promisify(LsTracer.flush).bind(LsTracer);
+    await flushTracing();
+  }
 
   return response;
 };

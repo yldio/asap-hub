@@ -45,34 +45,32 @@ describe('useSearch', () => {
     expect(result.current.filters).toEqual(new Set(['test123', 'test456']));
   });
 
-  it('resets filters', () => {
-    const { result } = renderHook(() => useSearch(), {
+  it('returns the search query params', () => {
+    const { result } = renderHook(useSearch, {
       wrapper: MemoryRouter,
       initialProps: {
-        initialEntries: ['/test?filter=test123&filter=test456'],
+        initialEntries: ['/test?searchQuery=test123'],
       },
     });
-    result.current.resetFilters();
-    expect(result.current.filters).toEqual(new Set([]));
+    expect(result.current.searchQueryParams.get('searchQuery')).toBe('test123');
   });
-
-  it('reset filter resets pagination', () => {
-    const { result } = renderHook(
-      () => ({
-        useSearch: useSearch(),
-        usePaginationParams: usePaginationParams(),
-        usePagination: usePagination(50, 1),
-      }),
-      {
-        wrapper: MemoryRouter,
-        initialProps: {
-          initialEntries: ['/test?filter=test123&currentPage=2'],
-        },
+  it('returns empty search query params if no search query set', () => {
+    const { result } = renderHook(useSearch, {
+      wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: ['/test'],
       },
-    );
-    expect(result.current.usePaginationParams.currentPage).toBe(2);
-    result.current.useSearch.resetFilters();
-    expect(result.current.usePaginationParams.currentPage).toBe(0);
+    });
+    expect(result.current.searchQueryParams.has('searchQuery')).toBe(false);
+  });
+  it('does not include filter in the search query params', () => {
+    const { result } = renderHook(useSearch, {
+      wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: ['/test?searchQuery=test123&filter=test123'],
+      },
+    });
+    expect(result.current.searchQueryParams.has('filter')).toBe(false);
   });
 
   it('adds filter', () => {
@@ -109,7 +107,7 @@ describe('useSearch', () => {
     expect(result.current.filters).toEqual(new Set());
   });
 
-  it('toggle filter resets pagination', () => {
+  it('resets pagination when filter toggled', () => {
     const { result } = renderHook(
       () => ({
         useSearch: useSearch(),

@@ -44756,7 +44756,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ]],
       ["thrift", [
         ["npm:0.13.0", {
-          "packageLocation": "./.yarn/unplugged/thrift-npm-0.13.0-866c2f37bf/node_modules/thrift/",
+          "packageLocation": "./.yarn/cache/thrift-npm-0.13.0-866c2f37bf-ad61a5830d.zip/node_modules/thrift/",
           "packageDependencies": [
             ["thrift", "npm:0.13.0"],
             ["jsdoc", "npm:3.5.5"],

@@ -5,6 +5,8 @@ import NetworkPage from '../NetworkPage';
 
 const props: ComponentProps<typeof NetworkPage> = {
   page: 'teams',
+  usersHref: '/users',
+  teamsHref: '/teams',
   searchQuery: '',
 };
 it('renders the header', () => {

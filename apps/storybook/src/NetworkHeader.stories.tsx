@@ -1,4 +1,5 @@
 import React from 'react';
+import { StaticRouter } from 'react-router-dom';
 import { NetworkPageHeader } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text, select } from '@storybook/addon-knobs';
@@ -10,11 +11,18 @@ export default {
   decorators: [NoPaddingDecorator],
 };
 
-export const Normal = () => (
-  <NetworkPageHeader
-    page={select('page', ['teams', 'users'], 'teams')}
-    searchQuery={text('Search Query', '')}
-    onChangeSearch={() => action('search change')}
-    onChangeToggle={() => action('toggle')}
-  />
-);
+export const Normal = () => {
+  const page = select('Page', { Teams: 'teams', Users: 'users' }, 'teams');
+
+  return (
+    <StaticRouter key={page} location={`/${page}`}>
+      <NetworkPageHeader
+        page={page}
+        usersHref="/users"
+        teamsHref="/teams"
+        searchQuery={text('Search Query', '')}
+        onChangeSearch={() => action('search change')}
+      />
+    </StaticRouter>
+  );
+};

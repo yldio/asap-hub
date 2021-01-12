@@ -8566,6 +8566,8 @@ __metadata:
       unplugged: true
     term-size:
       unplugged: false
+    thrift:
+      unplugged: false
   languageName: unknown
   linkType: soft
 

@@ -2,46 +2,46 @@ import React from 'react';
 import css from '@emotion/css';
 import { TeamRole, Role } from '@asap-hub/model';
 
-import { Display, Paragraph, Toggle } from '../atoms';
-import { perRem, tabletScreen } from '../pixels';
+import { Display, Paragraph, TabLink } from '../atoms';
+import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
-import { userIcon, teamIcon } from '../icons';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchControls } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
+import { TabNav } from '../molecules';
+import { teamIcon, userIcon } from '../icons';
 
 const containerStyles = css({
   alignSelf: 'stretch',
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-  marginBottom: '2px',
-  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
-    48 / perRem
-  }em `,
 });
 
+const visualHeaderStyles = css({
+  padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
+  marginBottom: `${36 / perRem}em`,
+  background: paper.rgb,
+  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
+});
 const textStyles = css({
   maxWidth: `${610 / perRem}em`,
 });
+const iconStyles = css({
+  display: 'inline-grid',
+  verticalAlign: 'middle',
+  paddingRight: `${6 / perRem}em`,
+});
 
 const controlsStyles = css({
-  display: 'grid',
-  gridRowGap: `${8 / perRem}em`,
-  gridColumnGap: `${18 / perRem}em`,
-  alignItems: 'center',
-  paddingTop: `${18 / perRem}em`,
-  [`@media (min-width: ${tabletScreen.max + 1}px)`]: {
-    paddingTop: `${2 / perRem}em`,
-    gridTemplateColumns: 'min-content auto',
-  },
+  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
 type NetworkPageHeaderProps = {
-  onChangeToggle?: () => void;
+  page: 'teams' | 'users';
+  teamsHref: string;
+  usersHref: string;
+
   onChangeSearch?: (newQuery: string) => void;
   onChangeFilter?: (filter: string) => void;
   searchQuery?: string;
-  page: 'teams' | 'users';
   filters?: Set<string>;
 };
 
@@ -55,30 +55,34 @@ const userFilters: Option<TeamRole | Role>[] = [
 ];
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
+  page,
+  teamsHref,
+  usersHref,
+
   onChangeSearch,
   onChangeFilter,
-  onChangeToggle,
   searchQuery,
-  page,
   filters,
 }) => (
   <header css={containerStyles}>
-    <Display styleAsHeading={2}>Network</Display>
-    <div css={textStyles}>
-      <Paragraph accent="lead">
-        Explore the ASAP Network and collaborate! Search for teams or
-        individuals by keyword or name.
-      </Paragraph>
+    <div css={visualHeaderStyles}>
+      <Display styleAsHeading={2}>Network</Display>
+      <div css={textStyles}>
+        <Paragraph accent="lead">
+          Explore the ASAP Network and collaborate! Search for teams or
+          individuals by keyword or name.
+        </Paragraph>
+      </div>
+      <TabNav>
+        <TabLink href={usersHref}>
+          <span css={iconStyles}>{userIcon}</span>People
+        </TabLink>
+        <TabLink href={teamsHref}>
+          <span css={iconStyles}>{teamIcon}</span>Teams
+        </TabLink>
+      </TabNav>
     </div>
     <div css={controlsStyles}>
-      <Toggle
-        leftButtonText="Teams"
-        leftButtonIcon={teamIcon}
-        rightButtonText="People"
-        rightButtonIcon={userIcon}
-        onChange={onChangeToggle}
-        position={page === 'teams' ? 'left' : 'right'}
-      />
       <SearchControls
         onChangeSearch={onChangeSearch}
         placeholder={

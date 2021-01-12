@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { NavHashLink } from 'react-router-hash-link';
 import css from '@emotion/css';
 
-import { TextChildren, layoutStyles } from '../text';
+import { layoutStyles } from '../text';
 import { perRem } from '../pixels';
 import { fern, lead, charcoal } from '../colors';
 import { useHasRouter } from '../routing';
@@ -27,7 +27,7 @@ const activeStyles = css({
 
 interface TabLinkProps {
   readonly href: string;
-  readonly children: TextChildren;
+  readonly children: ReactNode;
 }
 const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
   if (useHasRouter()) {

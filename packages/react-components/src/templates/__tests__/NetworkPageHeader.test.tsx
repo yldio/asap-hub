@@ -1,10 +1,15 @@
 import React, { ComponentProps } from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { render } from '@testing-library/react';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import NetworkPageHeader from '../NetworkPageHeader';
 
 const props: ComponentProps<typeof NetworkPageHeader> = {
   page: 'teams',
+  usersHref: '/users',
+  teamsHref: '/teams',
+
   searchQuery: '',
 };
 it('renders the header', () => {
@@ -14,30 +19,58 @@ it('renders the header', () => {
 
 it('Displays relevant page information', () => {
   const { getByText, getByRole, rerender } = render(
-    <NetworkPageHeader {...props} page={'teams'} />,
+    <MemoryRouter initialEntries={['/current']}>
+      <NetworkPageHeader {...props} page="teams" teamsHref="/current" />
+    </MemoryRouter>,
   );
-  expect(getByText('Teams')).toBeChecked();
-  expect(getByText('People')).not.toBeChecked();
+  expect(
+    findParentWithStyle(
+      getByText(/teams/i, { selector: 'nav a *' }),
+      'fontWeight',
+    )!.fontWeight,
+  ).toBe('bold');
+  expect(
+    findParentWithStyle(
+      getByText(/people/i, { selector: 'nav a *' }),
+      'fontWeight',
+    )?.fontWeight,
+  ).not.toBe('bold');
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
-  rerender(<NetworkPageHeader {...props} page={'users'} />);
-  expect(getByText('Teams')).not.toBeChecked();
-  expect(getByText('People')).toBeChecked();
+  rerender(
+    <MemoryRouter initialEntries={['/current']}>
+      <NetworkPageHeader {...props} page="users" usersHref="/current" />
+    </MemoryRouter>,
+  );
+  expect(
+    findParentWithStyle(
+      getByText(/teams/i, { selector: 'nav a *' }),
+      'fontWeight',
+    )?.fontWeight,
+  ).not.toBe('bold');
+  expect(
+    findParentWithStyle(
+      getByText(/people/i, { selector: 'nav a *' }),
+      'fontWeight',
+    )!.fontWeight,
+  ).toBe('bold');
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 });
 
-it('triggers onChangeToggle', async () => {
-  const onChangeToggle = jest.fn();
-
+it('renders the tab links', async () => {
   const { getByText } = render(
-    <NetworkPageHeader {...props} onChangeToggle={onChangeToggle} />,
+    <NetworkPageHeader {...props} usersHref="/users" teamsHref="/teams" />,
   );
-  fireEvent.click(getByText('People'));
-  expect(onChangeToggle.mock.calls.length).toBe(1);
+  expect(
+    getByText(/people/i, { selector: 'nav a *' }).closest('a'),
+  ).toHaveAttribute('href', '/users');
+  expect(
+    getByText(/teams/i, { selector: 'nav a *' }).closest('a'),
+  ).toHaveAttribute('href', '/teams');
 });
 
 it('Passes query correctly', () => {

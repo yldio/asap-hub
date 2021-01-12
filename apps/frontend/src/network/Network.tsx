@@ -1,16 +1,11 @@
 import React, { useEffect } from 'react';
-import {
-  Switch,
-  Route,
-  useRouteMatch,
-  useHistory,
-  Redirect,
-} from 'react-router-dom';
+import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+import { join } from 'path';
 import { NetworkPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import { useSearch } from '../hooks';
-import { TEAMS_PATH } from './routes';
+import { TEAMS_PATH, USERS_PATH } from './routes';
 import { SearchFrame } from '../structure/Frame';
 
 const loadUserList = () =>
@@ -38,28 +33,27 @@ const Network: React.FC<Record<string, never>> = () => {
       .then(loadUserProfile);
   }, []);
 
-  const { path } = useRouteMatch();
+  const { path, url } = useRouteMatch();
   const {
-    filters,
     searchQuery,
-    toggleFilter,
-    resetFilters,
+    searchQueryParams,
     setSearchQuery,
+    filters,
+    toggleFilter,
   } = useSearch();
-  const history = useHistory();
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
+  const searchQueryParamString = `?${searchQueryParams.toString()}`;
 
-  const onChangeToggle = (pathname: string) => () => {
-    history.push({ pathname, search: history.location.search });
-    resetFilters();
-  };
+  const usersHref = join(url, USERS_PATH) + searchQueryParamString;
+  const teamsHref = join(url, TEAMS_PATH) + searchQueryParamString;
 
   return (
     <Switch>
-      <Route exact path={`${path}/users`}>
+      <Route exact path={`${path}/${USERS_PATH}`}>
         <NetworkPage
           page="users"
-          onChangeToggle={onChangeToggle('teams')}
+          usersHref={usersHref}
+          teamsHref={teamsHref}
           onChangeSearch={setSearchQuery}
           onChangeFilter={toggleFilter}
           filters={filters}
@@ -70,11 +64,12 @@ const Network: React.FC<Record<string, never>> = () => {
           </SearchFrame>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/users/:id`} component={UserProfile} />
+      <Route path={`${path}/${USERS_PATH}/:id`} component={UserProfile} />
       <Route exact path={`${path}/${TEAMS_PATH}`}>
         <NetworkPage
           page="teams"
-          onChangeToggle={onChangeToggle('users')}
+          usersHref={usersHref}
+          teamsHref={teamsHref}
           onChangeSearch={setSearchQuery}
           onChangeFilter={toggleFilter}
           filters={filters}

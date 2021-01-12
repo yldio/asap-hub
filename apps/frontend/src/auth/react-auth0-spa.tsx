@@ -1,4 +1,6 @@
-// Copied from the Auth0 React quickstart, added some types and checks
+// Copied from the Auth0 React quickstart.
+// Added some typings and guards.
+// Refactored to use constructor instead of createAuth0Client factory.
 /* istanbul ignore file */
 /* eslint-disable no-shadow */
 

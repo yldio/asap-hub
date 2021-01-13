@@ -8,7 +8,7 @@
       "label": "Pages"
     },
     "scripts": {},
-    "fieldsInReferences": [],
+    "fieldsInReferences": ["title"],
     "fieldsInLists": [],
     "fields": [
       {

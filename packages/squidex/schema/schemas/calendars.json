@@ -8,7 +8,7 @@
       "label": "Calendars"
     },
     "scripts": {},
-    "fieldsInReferences": [],
+    "fieldsInReferences": ["name"],
     "fieldsInLists": [],
     "fields": [
       {

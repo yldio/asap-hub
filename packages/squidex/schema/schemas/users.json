@@ -8,7 +8,7 @@
       "label": "Users"
     },
     "scripts": {},
-    "fieldsInReferences": [],
+    "fieldsInReferences": ["email"],
     "fieldsInLists": ["email", "meta.id"],
     "fields": [
       {

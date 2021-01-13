@@ -152,6 +152,12 @@ export const orcidWorksResponse: ORCIDWorksResponse = {
           {
             'external-id-type': 'doi',
             'external-id-value': '10.1101/2020.06.24.169219',
+            'external-id-url': null,
+            'external-id-relationship': 'SELF',
+          },
+          {
+            'external-id-type': 'doi',
+            'external-id-value': '10.1101/2020.06.24.169219',
             'external-id-url': {
               value: 'https://doi.org/10.1101/2020.06.24.169219',
             },

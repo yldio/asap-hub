@@ -35,6 +35,10 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     const initAuth0 = async () => {
       const auth0FromHook = new Auth0Client(initOptions);
       setAuth0Client(auth0FromHook);
+      try {
+        await auth0FromHook.checkSession(); // use refresh token to get new access token if required
+        // eslint-disable-next-line
+      } catch (error) {} // Invalid refresh token proceed as if user isn't logged in
 
       if (
         window.location.search.includes('code=') &&

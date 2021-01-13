@@ -4,7 +4,7 @@ import { CalendarResponse } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph } from '../atoms';
 import { googleCalendarIcon, plusIcon } from '../icons';
-import { tabletScreen } from '../pixels';
+import { tabletScreen, perRem } from '../pixels';
 import { ExternalLink } from '../molecules';
 import { steel } from '../colors';
 
@@ -52,6 +52,9 @@ const orderList = css({
     display: 'inline-flex',
   },
   '& li + li': {
+    [`@media (max-width: ${tabletScreen.min}px)`]: {
+      marginTop: `${12 / perRem}em`,
+    },
     borderTop: `1px solid ${steel.rgb}`,
   },
 });
@@ -79,7 +82,9 @@ const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
               <div css={dataGrid}>
                 <div css={gridText}>
                   <Paragraph accent="charcoal">
-                    <span css={{ color, paddingRight: '1em' }}>●</span>
+                    <span css={{ color, paddingRight: `${14 / perRem}em` }}>
+                      ●
+                    </span>
                     <span css={{ fontWeight: 'bold' }}>{name}</span>
                   </Paragraph>
                 </div>

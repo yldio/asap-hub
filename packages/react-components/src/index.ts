@@ -53,6 +53,7 @@ export {
   UserMenuButton,
 } from './molecules';
 export {
+  CalendarList,
   CheckboxGroup,
   ComingSoon,
   EmailPasswordSignin,

@@ -143,6 +143,7 @@ export const headlineStyles = {
 
 export type AccentColorName =
   | 'lead'
+  | 'charcoal'
   | 'ember'
   | 'pepper'
   | 'sandstone'

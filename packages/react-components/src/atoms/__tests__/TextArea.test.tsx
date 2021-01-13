@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 import TextArea from '../TextArea';
 import { ember, fern, silver } from '../../colors';
@@ -16,7 +15,7 @@ it('emits value changes', async () => {
     <TextArea value="val" onChange={handleChange} />,
   );
 
-  await userEvent.type(getByRole('textbox'), '123', { allAtOnce: true });
+  fireEvent.change(getByRole('textbox'), { target: { value: 'val123' } });
   expect(handleChange).toHaveBeenLastCalledWith('val123');
 });
 

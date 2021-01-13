@@ -3,6 +3,7 @@ import {
   render,
   RenderResult,
   waitForElementToBeRemoved,
+  fireEvent,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -28,15 +29,15 @@ it('renders the email in an input field', () => {
   expect(getByLabelText(/e-?mail/i)).toHaveValue('john.doe@example.com');
 });
 
-it('emits email change events', () => {
+it('emits email change events', async () => {
   const handleEmailChange = jest.fn();
   const { getByLabelText } = render(
     <ForgotPassword email="" setEmail={handleEmailChange} />,
     { wrapper: MemoryRouter },
   );
 
-  userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
-    allAtOnce: true,
+  fireEvent.change(getByLabelText(/e-?mail/i), {
+    target: { value: 'john.doe@example.com' },
   });
   expect(handleEmailChange).toHaveBeenLastCalledWith('john.doe@example.com');
 });

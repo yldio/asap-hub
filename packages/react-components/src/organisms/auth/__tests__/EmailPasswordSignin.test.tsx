@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import EmailPasswordSignin from '../EmailPasswordSignin';
@@ -24,8 +24,8 @@ it('emits email change events', async () => {
       onChangeEmail={handleChangeEmail}
     />,
   );
-  await userEvent.type(getByLabelText(/e-?mail/i), 'john.doe@example.com', {
-    allAtOnce: true,
+  fireEvent.change(getByLabelText(/e-?mail/i), {
+    target: { value: 'john.doe@example.com' },
   });
   expect(handleChangeEmail).toHaveBeenLastCalledWith('john.doe@example.com');
 });
@@ -46,7 +46,7 @@ it('emits password change events', async () => {
       onChangePassword={handleChangePassword}
     />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW', { allAtOnce: true });
+  fireEvent.change(getByLabelText(/password/i), { target: { value: 'PW' } });
   expect(handleChangePassword).toHaveBeenLastCalledWith('PW');
 });
 

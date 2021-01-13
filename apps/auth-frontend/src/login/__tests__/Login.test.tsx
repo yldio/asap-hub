@@ -62,9 +62,7 @@ it('initiates a signin with email and password', async () => {
   const { getByText, getByLabelText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW', {
-    allAtOnce: true,
-  });
+  userEvent.type(getByLabelText(/password/i), 'PW');
 
   userEvent.click(getByText(/sign.*in/i, { selector: 'button *' }));
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
@@ -87,9 +85,7 @@ it('initiates a signup with email and password', async () => {
   const { getByText, getByLabelText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW', {
-    allAtOnce: true,
-  });
+  userEvent.type(getByLabelText(/password/i), 'PW');
 
   userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
   expect(mockAuthorizeWithEmailPassword).toHaveBeenCalledWith(
@@ -114,9 +110,7 @@ it('shows an Auth0 error', async () => {
   const { getByText, getByLabelText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW', {
-    allAtOnce: true,
-  });
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('Authentication Error');
   ((error as unknown) as WebAuthError).errorDescription =
@@ -139,9 +133,7 @@ it('shows a generic authentication error', async () => {
   const { getByText, getByLabelText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW', {
-    allAtOnce: true,
-  });
+  await userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('FetchError');
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
@@ -160,9 +152,7 @@ it('hides the authentication error message again when changing the credentials',
   const { getByText, getByLabelText, queryByText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW', {
-    allAtOnce: true,
-  });
+  userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('FetchError');
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);

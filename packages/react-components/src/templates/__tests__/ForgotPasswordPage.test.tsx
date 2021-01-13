@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ForgotPasswordPage from '../ForgotPasswordPage';
@@ -22,8 +22,8 @@ it('emits email change events', () => {
     <ForgotPasswordPage email="" onChangeEmail={handleChangeEmail} />,
   );
 
-  userEvent.type(getByLabelText(/e-?mail/i), 'batman@example.com', {
-    allAtOnce: true,
+  fireEvent.change(getByLabelText(/e-?mail/i), {
+    target: { value: 'batman@example.com' },
   });
   expect(handleChangeEmail).toHaveBeenLastCalledWith('batman@example.com');
 });

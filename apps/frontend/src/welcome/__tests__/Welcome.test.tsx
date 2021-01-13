@@ -13,9 +13,6 @@ import { API_BASE_URL } from '../../config';
 beforeEach(() => {
   nock(API_BASE_URL).get('/users/invites/42').reply(200, {});
 });
-afterEach(async () => {
-  await waitFor(() => nock.isDone());
-});
 
 // storage
 afterEach(() => {
@@ -34,6 +31,7 @@ const renderWelcome = async (): Promise<RenderResult> => {
       </MemoryRouter>
     </authTestUtils.Auth0Provider>,
   );
+  await waitFor(() => nock.isDone());
   await waitFor(() => !!result.container.textContent);
   return result;
 };

@@ -7,7 +7,7 @@ module.exports = {
   ...baseConfig,
 
   rootDir: __dirname,
-  testEnvironment: require.resolve('jest-environment-jsdom-sixteen'),
+  testEnvironment: 'jsdom',
 
   setupFiles: [require.resolve('react-app-polyfill/jsdom')],
   setupFilesAfterEnv: [

@@ -2,7 +2,7 @@
 import { screen } from './pixels';
 
 // For TypeScript to understand the extended matcher
-import 'jest-emotion';
+import '@emotion/jest';
 // For TypeScript to understand the globals
 import 'jest-playwright-preset';
 

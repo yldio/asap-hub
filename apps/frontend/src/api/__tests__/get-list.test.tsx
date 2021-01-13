@@ -1,18 +1,25 @@
 import React from 'react';
 import { authTestUtils } from '@asap-hub/react-components';
 import { waitFor } from '@testing-library/dom';
-import {
-  RenderHookResult,
-  renderHook,
-  act,
-} from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 import { ClientRequest } from 'http';
 import nock from 'nock';
 
-import { createListApiUrl, useGetList, ListResult } from '../get-list';
+import {
+  createListApiUrl,
+  useGetList,
+  ListResult,
+  GetListOptions,
+} from '../get-list';
 import { API_BASE_URL } from '../../config';
 
 jest.mock('../../config');
+
+const helperToExtractReturnType = () =>
+  renderHook<GetListOptions, ListResult<string[]>>(() =>
+    useGetList('/endpoint'),
+  );
+type RenderUseGetListResult = ReturnType<typeof helperToExtractReturnType>;
 
 describe('createListApiUrl', () => {
   it('handles requests without parameters', async () => {
@@ -56,10 +63,10 @@ describe('useGetList', () => {
       </authTestUtils.WhenReady>
     </authTestUtils.Auth0Provider>
   );
-  const renderUseGetList = async <P extends unknown>(
-    hookFn: (props: P) => ListResult<string[]>,
+  const renderUseGetList = async (
+    hookFn: (props: GetListOptions) => ListResult<string[]>,
   ) => {
-    let renderedHook!: RenderHookResult<P, ListResult<string[]>>;
+    let renderedHook!: RenderUseGetListResult;
     await act(async () => {
       renderedHook = renderHook(hookFn, {
         wrapper,

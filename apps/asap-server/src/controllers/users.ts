@@ -17,7 +17,7 @@ import {
 import { parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 
-const GraphQLQueryUser = `
+export const GraphQLQueryUser = `
 id
 created
 flatData {

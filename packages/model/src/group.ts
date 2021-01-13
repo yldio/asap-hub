@@ -9,14 +9,13 @@ export type GroupTool = { name: string; description?: string; url: string };
 
 export interface GroupResponse {
   id: string;
-  lastModifiedDate: string;
   createdDate: string;
   name: string;
   tags: string[];
   description: string;
   summary: string;
   tools: GroupTool[];
-  teams: TeamResponse[];
+  teams: Omit<TeamResponse, 'members'>[];
   leaders: {
     user: UserResponse;
     role: GroupRole;

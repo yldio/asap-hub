@@ -63,13 +63,13 @@ describe('the network page', () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
         '/network/teams',
       );
-      const toggle = getByText('People');
       const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
         `"Enter name, keyword, method, …"`,
       );
 
+      const toggle = getByText(/people/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       await waitFor(() =>
         expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
@@ -85,11 +85,11 @@ describe('the network page', () => {
         '/network/teams',
         '?searchQuery=test123&filter=123',
       );
-      const toggle = getByText('People');
       const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.value).toEqual('test123');
 
+      const toggle = getByText(/people/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
       await waitFor(() => {
@@ -104,13 +104,13 @@ describe('the network page', () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
         '/network/users',
       );
-      const toggle = getByText('People');
       const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.placeholder).toMatchInlineSnapshot(
         `"Enter name, keyword, institution, …"`,
       );
 
+      const toggle = getByText(/teams/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       await waitFor(() =>
         expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
@@ -125,11 +125,11 @@ describe('the network page', () => {
         '/network/users',
         'searchQuery=test123&filter=123',
       );
-      const toggle = getByText('People');
       const searchBox = getByRole('searchbox') as HTMLInputElement;
 
       expect(searchBox.value).toEqual('test123');
 
+      const toggle = getByText(/teams/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
       await waitFor(() => {

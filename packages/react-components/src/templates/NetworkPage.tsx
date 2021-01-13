@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
@@ -13,32 +13,13 @@ const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type NetworkPageProps = {
-  onChangeSearch?: (newQuery: string) => void;
-  onChangeFilter?: (filter: string) => void;
-  onChangeToggle?: () => void;
-  searchQuery?: string;
-  page: 'teams' | 'users';
-  filters?: Set<string>;
-};
-const NetworkPage: React.FC<NetworkPageProps> = ({
+const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
   children,
-  onChangeSearch,
-  searchQuery,
-  onChangeToggle,
-  page,
-  onChangeFilter,
-  filters,
+
+  ...props
 }) => (
   <article css={articleStyles}>
-    <NetworkPageHeader
-      onChangeToggle={onChangeToggle}
-      page={page}
-      onChangeSearch={onChangeSearch}
-      searchQuery={searchQuery}
-      onChangeFilter={onChangeFilter}
-      filters={filters}
-    />
+    <NetworkPageHeader {...props} />
     <main css={mainStyles}>{children}</main>
   </article>
 );

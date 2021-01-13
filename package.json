@@ -67,6 +67,9 @@
     },
     "term-size": {
       "unplugged": false
+    },
+    "thrift": {
+      "unplugged": false
     }
   },
   "prettier": {

@@ -1,4 +1,5 @@
 import React, { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
 import {
   NetworkPage,
   NetworkTeams,
@@ -79,23 +80,29 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
 };
 
 export const TeamList = () => (
-  <NetworkPage
-    page="teams"
-    searchQuery={text('Search Query', '')}
-    onChangeSearch={() => action('search change')}
-    onChangeToggle={() => action('toggle')}
-  >
-    <NetworkTeams {...teamProps()} />
-  </NetworkPage>
+  <StaticRouter location="/teams">
+    <NetworkPage
+      page="teams"
+      usersHref="/users"
+      teamsHref="/teams"
+      searchQuery={text('Search Query', '')}
+      onChangeSearch={() => action('search change')}
+    >
+      <NetworkTeams {...teamProps()} />
+    </NetworkPage>
+  </StaticRouter>
 );
 
 export const PeopleList = () => (
-  <NetworkPage
-    page="users"
-    searchQuery={text('Search Query', '')}
-    onChangeSearch={() => action('search change')}
-    onChangeToggle={() => action('toggle')}
-  >
-    <NetworkPeople {...peopleProps()} />
-  </NetworkPage>
+  <StaticRouter location="/users">
+    <NetworkPage
+      page="users"
+      usersHref="/users"
+      teamsHref="/teams"
+      searchQuery={text('Search Query', '')}
+      onChangeSearch={() => action('search change')}
+    >
+      <NetworkPeople {...peopleProps()} />
+    </NetworkPage>
+  </StaticRouter>
 );

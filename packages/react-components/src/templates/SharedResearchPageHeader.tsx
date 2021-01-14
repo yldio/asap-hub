@@ -7,7 +7,7 @@ import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { noop } from '../utils';
-import { SearchControls } from '../organisms';
+import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
 
 const containerStyles = css({
@@ -58,11 +58,10 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
         Network
       </Paragraph>
     </div>
-    <SearchControls
-      placeholder="Enter a keyword, method, resource, tool, etc"
+    <SearchAndFilter
+      searchPlaceholder="Enter a keyword, method, resource, tool, etc"
       onChangeSearch={onChangeSearch}
       searchQuery={searchQuery}
-      filterEnabled={true}
       filterOptions={researchOutputFilters}
       filterTitle="TYPE OF OUTPUTS"
       onChangeFilter={onChangeFilter}

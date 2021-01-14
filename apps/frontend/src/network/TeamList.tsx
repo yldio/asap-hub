@@ -10,18 +10,13 @@ import { TEAMS_PATH } from './routes';
 
 interface NetworkTeamListProps {
   searchQuery?: string;
-  filters?: Set<string>;
 }
 
-const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
-  searchQuery,
-  filters = new Set(),
-}) => {
+const NetworkTeamList: React.FC<NetworkTeamListProps> = ({ searchQuery }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const result = useTeams({
     searchQuery,
-    filters: [...filters],
     currentPage,
     pageSize,
   });

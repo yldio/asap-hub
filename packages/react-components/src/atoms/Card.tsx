@@ -1,5 +1,5 @@
 import React from 'react';
-import css from '@emotion/css';
+import css, { CSSObject } from '@emotion/css';
 
 import * as colors from '../colors';
 import { perRem } from '../pixels';
@@ -8,10 +8,22 @@ import { paddingStyles } from '../card';
 
 export type AccentVariant = 'default' | 'red' | 'green';
 
-export const accents: Record<AccentVariant, string> = {
-  default: `${themes.light} border-color: ${colors.steel.rgb}; box-shadow: 0px 2px 4px ${colors.steel.rgb};`,
-  red: `background-color: ${colors.rose.rgb}; color: ${colors.ember.rgb};  border-color: ${colors.ember.rgb};`,
-  green: `background-color: ${colors.mint.rgb}; color: ${colors.pine.rgb};  border-color: ${colors.pine.rgb};`,
+export const accents: Record<AccentVariant, CSSObject> = {
+  default: {
+    ...themes.light,
+    borderColor: colors.steel.rgb,
+    boxShadow: `0px 2px 4px ${colors.steel.rgb}`,
+  },
+  red: {
+    backgroundColor: colors.rose.rgb,
+    color: colors.ember.rgb,
+    borderColor: colors.ember.rgb,
+  },
+  green: {
+    backgroundColor: colors.mint.rgb,
+    color: colors.pine.rgb,
+    borderColor: colors.pine.rgb,
+  },
 };
 
 const containerStyles = css({

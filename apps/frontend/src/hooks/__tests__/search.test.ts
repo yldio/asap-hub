@@ -10,7 +10,7 @@ describe('useSearch', () => {
       wrapper: MemoryRouter,
     });
     expect(result.current.filters).toEqual(new Set());
-    expect(result.current.searchQuery).toEqual(undefined);
+    expect(result.current.searchQuery).toEqual('');
   });
 
   it('returns search query', () => {
@@ -32,7 +32,7 @@ describe('useSearch', () => {
       },
     });
     expect(result.current.filters).toEqual(new Set(['test123']));
-    expect(result.current.searchQuery).toEqual(undefined);
+    expect(result.current.searchQuery).toEqual('');
   });
 
   it('returns multiple filters', () => {
@@ -145,7 +145,7 @@ describe('useSearch', () => {
       },
     });
     result.current.setSearchQuery('');
-    expect(result.current.searchQuery).toEqual(undefined);
+    expect(result.current.searchQuery).toEqual('');
   });
 
   it('resets pagination when search set', () => {

@@ -6,9 +6,9 @@ import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { SearchControls } from '../organisms';
+import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
-import { TabNav } from '../molecules';
+import { TabNav, SearchField } from '../molecules';
 import { teamIcon, userIcon } from '../icons';
 
 const containerStyles = css({
@@ -17,7 +17,7 @@ const containerStyles = css({
 
 const visualHeaderStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
-  marginBottom: `${36 / perRem}em`,
+  marginBottom: `${30 / perRem}em`,
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
 });
@@ -34,15 +34,25 @@ const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type NetworkPageHeaderProps = {
-  page: 'teams' | 'users';
+interface NetworkTeamPageHeaderProps {
+  page: 'teams';
+  filters?: undefined;
+  onChangeFilter?: undefined;
+}
+interface NetworkPeoplePageHeaderProps {
+  page: 'users';
+  filters?: Set<string>;
+  onChangeFilter?: (filter: string) => void;
+}
+type NetworkPageHeaderProps = (
+  | NetworkTeamPageHeaderProps
+  | NetworkPeoplePageHeaderProps
+) & {
   teamsHref: string;
   usersHref: string;
 
+  searchQuery: string;
   onChangeSearch?: (newQuery: string) => void;
-  onChangeFilter?: (filter: string) => void;
-  searchQuery?: string;
-  filters?: Set<string>;
 };
 
 const userFilters: Option<TeamRole | Role>[] = [
@@ -83,20 +93,23 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
       </TabNav>
     </div>
     <div css={controlsStyles}>
-      <SearchControls
-        onChangeSearch={onChangeSearch}
-        placeholder={
-          page === 'users'
-            ? 'Enter name, keyword, institution, …'
-            : 'Enter name, keyword, method, …'
-        }
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filterEnabled={page === 'users'}
-        filterOptions={page === 'users' ? userFilters : []}
-        filterTitle={page === 'users' ? 'TEAM ROLES' : ''}
-        filters={filters}
-      />
+      {page === 'users' ? (
+        <SearchAndFilter
+          onChangeSearch={onChangeSearch}
+          searchPlaceholder="Enter name, keyword, institution, …"
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
+          filterOptions={userFilters}
+          filterTitle="TEAM ROLES"
+          filters={filters}
+        />
+      ) : (
+        <SearchField
+          placeholder="Enter name, keyword, method, …"
+          value={searchQuery}
+          onChange={onChangeSearch}
+        />
+      )}
     </div>
   </header>
 );

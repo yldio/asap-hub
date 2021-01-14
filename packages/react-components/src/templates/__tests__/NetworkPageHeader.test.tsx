@@ -17,8 +17,44 @@ it('renders the header', () => {
   expect(getByRole('heading')).toBeVisible();
 });
 
-it('Displays relevant page information', () => {
-  const { getByText, getByRole, rerender } = render(
+it('alters the search placeholder based on the tab', () => {
+  const { getByRole, rerender } = render(
+    <MemoryRouter initialEntries={['/current']}>
+      <NetworkPageHeader {...props} page="teams" teamsHref="/current" />
+    </MemoryRouter>,
+  );
+  expect(
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
+  ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
+
+  rerender(
+    <MemoryRouter initialEntries={['/current']}>
+      <NetworkPageHeader {...props} page="users" usersHref="/current" />
+    </MemoryRouter>,
+  );
+  expect(
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
+  ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
+});
+
+it('shows the filter only on the users tab', () => {
+  const { getByText, queryByText, rerender } = render(
+    <MemoryRouter initialEntries={['/current']}>
+      <NetworkPageHeader {...props} page="teams" teamsHref="/current" />
+    </MemoryRouter>,
+  );
+  expect(queryByText(/filters/i)).not.toBeInTheDocument();
+
+  rerender(
+    <MemoryRouter initialEntries={['/current']}>
+      <NetworkPageHeader {...props} page="users" usersHref="/current" />
+    </MemoryRouter>,
+  );
+  expect(getByText(/filters/i)).toBeInTheDocument();
+});
+
+it('highlights the current tab', () => {
+  const { getByText, rerender } = render(
     <MemoryRouter initialEntries={['/current']}>
       <NetworkPageHeader {...props} page="teams" teamsHref="/current" />
     </MemoryRouter>,
@@ -35,9 +71,6 @@ it('Displays relevant page information', () => {
       'fontWeight',
     )?.fontWeight,
   ).not.toBe('bold');
-  expect(
-    (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
   rerender(
     <MemoryRouter initialEntries={['/current']}>
@@ -56,9 +89,6 @@ it('Displays relevant page information', () => {
       'fontWeight',
     )!.fontWeight,
   ).toBe('bold');
-  expect(
-    (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 });
 
 it('renders the tab links', async () => {

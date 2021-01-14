@@ -547,6 +547,7 @@ __metadata:
     babel-preset-react-app: ^9.1.2
     core-js: ^3.6.5
     date-fns: ^2.16.1
+    emotion: ^10.0.0
     history: ^4
     react: ^17.0.1
     react-dom: ^17.0.1
@@ -11583,6 +11584,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"create-emotion@npm:^10.0.27":
+  version: 10.0.27
+  resolution: "create-emotion@npm:10.0.27"
+  dependencies:
+    "@emotion/cache": ^10.0.27
+    "@emotion/serialize": ^0.11.15
+    "@emotion/sheet": 0.9.4
+    "@emotion/utils": 0.11.3
+  checksum: 59581a54fe4f6da6bcbae502df852f0cf0dc6f002aaf416701266a4d944e63d9e33ac0d733b35d8a6265f4052dfdba67222ae341e8f9382afb2e40ed03831053
+  languageName: node
+  linkType: hard
+
 "create-error-class@npm:^3.0.0":
   version: 3.0.2
   resolution: "create-error-class@npm:3.0.2"
@@ -13227,6 +13240,16 @@ __metadata:
     "@emotion/core": ^10.0.27
     react: ">=16.3.0"
   checksum: da47722975067f1e31f9f789b79ca91bdd3c79c5edd07d016f22e10fb2b3a7c0f69b8225abd0c05251e9c534b6f98580d4bd3ace3dfbbb4ce553230aec2a4e84
+  languageName: node
+  linkType: hard
+
+"emotion@npm:^10.0.0":
+  version: 10.0.27
+  resolution: "emotion@npm:10.0.27"
+  dependencies:
+    babel-plugin-emotion: ^10.0.27
+    create-emotion: ^10.0.27
+  checksum: cc542b2df96732b0c60683a60c94e42d226ac37854c73d33c6e32f596dce52261a4c07a841edf621f44166a4b5a146e4cb18d294ae6759a5522f80e2dba5cd44
   languageName: node
   linkType: hard
 

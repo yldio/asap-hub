@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { fern, steel, ember } from './colors';
 import { perRem, lineHeight } from './pixels';
+import { themes } from './theme';
 
 export const borderWidth = 1;
 
@@ -21,6 +22,7 @@ export const textPaddingBottom = paddingTopBottom - 1;
 export const indicatorSize = lineHeight;
 
 export const styles = {
+  ...themes.light,
   boxSizing: 'border-box',
   width: '100%',
   paddingLeft: `${paddingLeftRight / perRem}em`,
@@ -29,8 +31,6 @@ export const styles = {
   paddingBottom: `${textPaddingBottom / perRem}em`,
 
   lineHeight: `${lineHeight / perRem}em`,
-
-  backgroundColor: 'unset',
 
   outline: 'none',
 

@@ -9,7 +9,6 @@ export default {
 };
 
 const commonProps = (): ComponentProps<typeof UserProfileHeader> => ({
-  department: text('Department', 'Biology Department'),
   displayName: text('Display Name', 'Phillip Mars, PhD'),
   lastModifiedDate: new Date(
     date('Last modified', new Date(2020, 6, 12, 14, 32)),

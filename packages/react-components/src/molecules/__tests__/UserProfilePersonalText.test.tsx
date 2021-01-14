@@ -3,11 +3,10 @@ import { render } from '@testing-library/react';
 import UserProfilePersonalText from '../UserProfilePersonalText';
 
 it.each`
-  jobTitle     | institution  | department   | text
-  ${undefined} | ${'Inst'}    | ${'Dep'}     | ${/Inst, Dep/}
-  ${'Job'}     | ${undefined} | ${'Dep'}     | ${/Job/}
-  ${'Job'}     | ${'Inst'}    | ${undefined} | ${/Job at Inst/}
-  ${'Job'}     | ${'Inst'}    | ${'Dep'}     | ${/Job at Inst, Dep/}
+  jobTitle     | institution  | text
+  ${undefined} | ${'Inst'}    | ${/Inst/}
+  ${'Job'}     | ${undefined} | ${/Job/}
+  ${'Job'}     | ${'Inst'}    | ${/Job at Inst/}
 `('generates the position description "$text"', ({ text, ...position }) => {
   const { container } = render(
     <UserProfilePersonalText teams={[]} {...position} />,

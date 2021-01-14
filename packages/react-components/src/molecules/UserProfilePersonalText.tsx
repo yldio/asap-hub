@@ -29,7 +29,7 @@ const paragraphStyles = css({
 
 type UserProfilePersonalTextProps = Pick<
   UserResponse,
-  'department' | 'institution' | 'jobTitle' | 'location'
+  'institution' | 'jobTitle' | 'location'
 > & {
   readonly discoverHref: string;
   readonly role: UserResponse['role'];
@@ -37,7 +37,6 @@ type UserProfilePersonalTextProps = Pick<
 };
 
 const UserProfilePersonalText: React.FC<UserProfilePersonalTextProps> = ({
-  department,
   institution,
   location,
   jobTitle,
@@ -50,7 +49,6 @@ const UserProfilePersonalText: React.FC<UserProfilePersonalTextProps> = ({
       {jobTitle}
       {jobTitle && institution && ' at '}
       {institution}
-      {institution && department && `, ${department}`}
       {role === 'Staff' ? (
         <>
           <br />

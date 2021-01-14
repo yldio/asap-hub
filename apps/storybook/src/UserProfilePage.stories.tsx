@@ -32,7 +32,6 @@ const commonProps = (): Omit<
   ComponentProps<typeof UserProfilePage>,
   'children'
 > => ({
-  department: text('Department', 'Biology Department'),
   displayName: text('Display Name', 'Phillip Mars, PhD'),
   institution: text('Institution', 'Yale University'),
   lastModifiedDate: new Date(

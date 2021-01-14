@@ -275,6 +275,7 @@ describe('PATCH /users/{id}', () => {
     test('returns 200 when user exists', async () => {
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/userId`, {
+          social: { iv: [{ github: 'johnytiago' }] },
           jobTitle: { iv: 'CEO' },
           questions: { iv: [{ question: 'To be or not to be?' }] },
         })
@@ -285,6 +286,7 @@ describe('PATCH /users/{id}', () => {
         .reply(
           200,
           buildUserGraphqlResponse({
+            social: [{ github: 'johnytiago' }],
             questions: [{ question: 'To be or not to be?' }],
             jobTitle: 'CEO',
           }),
@@ -300,6 +302,7 @@ describe('PATCH /users/{id}', () => {
             id: 'userId',
           },
           body: {
+            social: { github: 'johnytiago' },
             jobTitle: 'CEO',
             questions: ['To be or not to be?'],
             firstName: undefined, // should be ignored
@@ -311,6 +314,7 @@ describe('PATCH /users/{id}', () => {
       expect(result.statusCode).toStrictEqual(200);
       expect(body).toStrictEqual({
         ...expectation,
+        social: { github: 'johnytiago', orcid: '363-98-9330' },
         jobTitle: 'CEO',
         questions: ['To be or not to be?'],
       });

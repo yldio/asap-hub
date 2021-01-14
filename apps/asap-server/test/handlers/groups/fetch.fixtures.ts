@@ -1,4 +1,5 @@
 import { ListGroupResponse } from '@asap-hub/model';
+import { config } from '@asap-hub/squidex';
 import { ResponseFetchGroups } from '../../../src/controllers/groups';
 
 export const response: { data: ResponseFetchGroups } = {
@@ -258,7 +259,7 @@ export const expectation: ListGroupResponse = {
               linkedIn: 'fampinheiro',
               twitter: 'fampinheiro',
             },
-            avatarUrl: 'http://localhost:4004/api/assets/asap-local/asset-id-1',
+            avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/asset-id-1`,
             role: 'Guest',
           },
           role: 'Lead PI - Chair',

@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  RenderHookResult,
-  renderHook,
-  act,
-} from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/dom';
 import { authTestUtils } from '@asap-hub/react-components';
 import { ClientRequest } from 'http';
@@ -13,6 +9,12 @@ import { API_BASE_URL } from '../../config';
 import { useGetOne, OneResult } from '../get-one';
 
 jest.mock('../../config');
+
+const helperToExtractReturnType = () =>
+  renderHook<Record<string, never>, OneResult<{ id: string }>>(() =>
+    useGetOne('/endpoint'),
+  );
+type RenderUseGetOneResult = ReturnType<typeof helperToExtractReturnType>;
 
 describe('useGetOne', () => {
   const wrapper: React.FC = ({ children }) => (
@@ -24,10 +26,10 @@ describe('useGetOne', () => {
       </authTestUtils.WhenReady>
     </authTestUtils.Auth0Provider>
   );
-  const renderUseGetList = async <P extends unknown>(
-    hookFn: (props: P) => OneResult<{ id: string }>,
+  const renderUseGetOne = async (
+    hookFn: (props: Record<string, never>) => OneResult<{ id: string }>,
   ) => {
-    let renderedHook!: RenderHookResult<P, OneResult<{ id: string }>>;
+    let renderedHook!: RenderUseGetOneResult;
     await act(async () => {
       renderedHook = renderHook(hookFn, {
         wrapper,
@@ -57,16 +59,16 @@ describe('useGetOne', () => {
   it('requests from given URL', async () => {
     const {
       result: { current },
-    } = await renderUseGetList(() => useGetOne('users/42'));
+    } = await renderUseGetOne(() => useGetOne('users/42'));
     expect(current.data).toEqual({ id: '42' });
   });
 
   it('sets the authorization header by default', async () => {
-    await renderUseGetList(() => useGetOne('users/42'));
+    await renderUseGetOne(() => useGetOne('users/42'));
     expect(req!.getHeader('authorization')).not.toHaveLength(0);
   });
   it('does not set the authorization header with authenticated=false', async () => {
-    await renderUseGetList(() =>
+    await renderUseGetOne(() =>
       useGetOne('users/42', { authenticated: false }),
     );
     expect(req!.hasHeader('authorization')).toBe(false);
@@ -76,7 +78,7 @@ describe('useGetOne', () => {
     nock.cleanAll();
     nock(API_BASE_URL).get('/users/42').reply(500, 'nope');
     await expect(
-      renderUseGetList(() => useGetOne('users/42', { authenticated: false })),
+      renderUseGetOne(() => useGetOne('users/42', { authenticated: false })),
     ).rejects.toThrow(/500/);
   });
 
@@ -85,7 +87,7 @@ describe('useGetOne', () => {
     nock(API_BASE_URL).get('/users/42').reply(404, { id: 'nope' });
     const {
       result: { current },
-    } = await renderUseGetList(() => useGetOne('users/42'));
+    } = await renderUseGetOne(() => useGetOne('users/42'));
     expect(current.data).toBe(undefined);
   });
 });

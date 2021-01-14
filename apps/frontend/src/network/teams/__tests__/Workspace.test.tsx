@@ -9,7 +9,10 @@ import {
 import userEvent from '@testing-library/user-event';
 import { createTeamResponse } from '@asap-hub/fixtures';
 
-import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/frontend/src/auth/test-utils';
 import Workspace from '../Workspace';
 import { patchTeam } from '../api';
 
@@ -21,9 +24,11 @@ const wrapper: React.FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
     <React.Suspense fallback="loading">
       <Auth0Provider user={{}}>
-        <MemoryRouter initialEntries={['/team/workspace']}>
-          <Route path="/team/workspace">{children}</Route>
-        </MemoryRouter>
+        <WhenReady>
+          <MemoryRouter initialEntries={['/team/workspace']}>
+            <Route path="/team/workspace">{children}</Route>
+          </MemoryRouter>
+        </WhenReady>
       </Auth0Provider>
     </React.Suspense>
   </RecoilRoot>
@@ -62,12 +67,9 @@ describe('the add tool dialog', () => {
       { wrapper },
     );
     userEvent.click(await findByText(/add/i));
-    await userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
-    await userEvent.type(await findByLabelText(/description/i), 'description');
-    await userEvent.type(
-      await findByLabelText(/url/i),
-      'http://example.com/tool',
-    );
+    userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
+    userEvent.type(await findByLabelText(/description/i), 'description');
+    userEvent.type(await findByLabelText(/url/i), 'http://example.com/tool');
     userEvent.click(await findByText(/save/i));
 
     await waitFor(() => {
@@ -145,9 +147,9 @@ describe('the edit tool dialog', () => {
     userEvent.click(
       getChildByText((await findByText('tool 2')).closest('li')!, /edit/i),
     );
-    await userEvent.type(await findByLabelText(/tool.+name/i), ' new');
-    await userEvent.type(await findByLabelText(/description/i), ' new');
-    await userEvent.type(await findByLabelText(/url/i), '-new');
+    userEvent.type(await findByLabelText(/tool.+name/i), ' new');
+    userEvent.type(await findByLabelText(/description/i), ' new');
+    userEvent.type(await findByLabelText(/url/i), '-new');
     userEvent.click(await findByText(/save/i));
 
     await waitFor(() => {

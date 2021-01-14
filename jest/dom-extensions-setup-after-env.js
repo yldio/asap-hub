@@ -6,7 +6,7 @@ if (typeof document === 'object') {
   require('@testing-library/jest-dom/extend-expect');
 
   // emotion CSS matchers
-  const { matchers } = require('jest-emotion');
+  const { matchers } = require('@emotion/jest');
   expect.extend(matchers);
 
   // fetch polyfill

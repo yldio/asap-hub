@@ -41,13 +41,12 @@ describe('triggers the save function', () => {
       userEvent.type(
         getByLabelText(`Open Question ${index}`),
         questions[index],
-        { allAtOnce: true },
       );
 
-    questions[1] && (await answerQuestion(1));
-    questions[2] && (await answerQuestion(2));
-    questions[3] && (await answerQuestion(3));
-    questions[4] && (await answerQuestion(4));
+    questions[1] && answerQuestion(1);
+    questions[2] && answerQuestion(2);
+    questions[3] && answerQuestion(3);
+    questions[4] && answerQuestion(4);
     userEvent.click(getByText('Save'));
 
     await waitFor(() =>

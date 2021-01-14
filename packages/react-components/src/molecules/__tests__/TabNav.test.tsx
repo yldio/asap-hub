@@ -42,8 +42,17 @@ it('handles nested child arrays', () => {
     <TabNav>
       <a href="/tab1">Tab 1</a>
       {[
-        <a href="/tab2">Tab 2</a>,
-        [<a href="/tab3">Tab 3</a>, <a href="/tab4">Tab 4</a>],
+        <a key={2} href="/tab2">
+          Tab 2
+        </a>,
+        [
+          <a key={3} href="/tab3">
+            Tab 3
+          </a>,
+          <a key={4} href="/tab4">
+            Tab 4
+          </a>,
+        ],
       ]}
     </TabNav>,
   );

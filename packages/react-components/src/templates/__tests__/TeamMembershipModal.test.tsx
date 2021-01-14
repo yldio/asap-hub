@@ -51,9 +51,7 @@ it('triggers the save function', async () => {
     { wrapper: MemoryRouter },
   );
 
-  await userEvent.type(getByDisplayValue('approach'), ' 1', {
-    allAtOnce: true,
-  });
+  userEvent.type(getByDisplayValue('approach'), ' 1');
   userEvent.click(getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     teams: [

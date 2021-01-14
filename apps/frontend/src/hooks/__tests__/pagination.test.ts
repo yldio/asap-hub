@@ -101,7 +101,33 @@ describe('usePagination', () => {
       },
     });
 
-    expect(renderPageHref(0)).toEqual('.');
+    expect(renderPageHref(0)).toEqual('/');
+    expect(urlSearchParamsToObject(renderPageHref(1))).toEqual({
+      currentPage: '1',
+    });
+    expect(urlSearchParamsToObject(renderPageHref(9))).toEqual({
+      currentPage: '9',
+    });
+  });
+
+  it('generates hrefs one level deep', async () => {
+    const {
+      result: {
+        current: { renderPageHref },
+      },
+    } = renderHook(() => usePagination(31, 10), {
+      wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: [
+          {
+            pathname: '/test',
+            search: '?currentPage=3',
+          },
+        ],
+      },
+    });
+
+    expect(renderPageHref(0)).toEqual('/test');
     expect(urlSearchParamsToObject(renderPageHref(1))).toEqual({
       currentPage: '1',
     });

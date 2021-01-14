@@ -35,7 +35,7 @@ flatData {
       name
     }
   }
-`;
+}`;
 
 export const buildGraphQLQueryFetchGroups = (
   filter = '',

@@ -7,6 +7,8 @@ export type GroupRole = 'Lead PI - Chair' | 'Project Manager';
 
 export type GroupTool = { name: string; description?: string; url: string };
 
+export type GroupTeam = Omit<TeamResponse, 'members'>;
+
 export interface GroupResponse {
   id: string;
   createdDate: string;
@@ -15,7 +17,7 @@ export interface GroupResponse {
   description: string;
   summary: string;
   tools: GroupTool[];
-  teams: Omit<TeamResponse, 'members'>[];
+  teams: GroupTeam[];
   leaders: {
     user: UserResponse;
     role: GroupRole;

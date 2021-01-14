@@ -1,4 +1,9 @@
-import { GroupResponse, TeamResponse, CalendarResponse } from '@asap-hub/model';
+import {
+  GroupResponse,
+  TeamResponse,
+  CalendarResponse,
+  GroupTeam,
+} from '@asap-hub/model';
 import { GraphqlGroup } from '@asap-hub/squidex';
 
 import { parseGraphQLTeam } from './team';
@@ -8,9 +13,7 @@ import { parseDate } from '../utils/squidex';
 
 export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
-  const teams: Omit<TeamResponse, 'members'>[] = (
-    item.flatData?.teams || []
-  ).map((t) => {
+  const teams: GroupTeam[] = (item.flatData?.teams || []).map((t) => {
     const team: TeamResponse = parseGraphQLTeam(t, []);
     delete team.members;
     return team;
@@ -20,7 +23,7 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   );
   const leaders: GroupResponse['leaders'] = (item.flatData?.leaders || []).map(
     (leader) => ({
-      user: parseGraphQLUser(leader.user),
+      user: parseGraphQLUser(leader.user[0]),
       role: leader.role,
     }),
   );

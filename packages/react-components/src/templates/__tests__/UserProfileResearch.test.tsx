@@ -88,24 +88,6 @@ it('renders an edit button for the role on the team', () => {
     '/edit-team-membership/42',
   );
 });
-it('disables the edit button for the role on the team (REGRESSION)', () => {
-  disable('EDIT_PROFILE_REST');
-  const { getByLabelText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      teams={[
-        {
-          id: '42',
-          displayName: 'Team',
-          role: 'Lead PI (Core Leadership)',
-          href: '/network/teams/42',
-          editHref: '/edit-team-membership/42',
-        },
-      ]}
-    />,
-  );
-  expect(getByLabelText(/edit.+role.+team/i)).not.toHaveAttribute('href');
-});
 it('renders an edit button for the skills list', () => {
   const { getByLabelText } = render(
     <UserProfileResearch {...commonProps} editSkillsHref="/edit-skills" />,
@@ -116,7 +98,7 @@ it('renders an edit button for the skills list', () => {
   );
 });
 it('disables the edit button for the skills list (REGRESSION)', () => {
-  disable('EDIT_PROFILE_SKILLS');
+  disable('USER_PROFILE_EDIT_SKILLS');
   const { getByLabelText } = render(
     <UserProfileResearch {...commonProps} editSkillsHref="/edit-skills" />,
   );
@@ -133,16 +115,6 @@ it('renders an edit button for the questions list', () => {
     'href',
     '/edit-questions',
   );
-});
-it('disables the edit button for the questions list (REGRESSION)', () => {
-  disable('EDIT_PROFILE_QUESTIONS');
-  const { getByLabelText } = render(
-    <UserProfileResearch
-      {...commonProps}
-      editQuestionsHref="/edit-questions"
-    />,
-  );
-  expect(getByLabelText(/edit.+question/i)).not.toHaveAttribute('href');
 });
 
 it('create mailto for email when contactEmail not present', () => {

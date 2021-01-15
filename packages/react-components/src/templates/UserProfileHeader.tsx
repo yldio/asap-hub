@@ -2,7 +2,6 @@ import React from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse, UserTeam } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 
 import {
   tabletScreen,
@@ -190,131 +189,123 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   discoverHref,
   role,
   social,
-}) => {
-  const { isEnabled } = useFlags();
-
-  return (
-    <header css={[containerStyles, role === 'Staff' && staffContainerStyles]}>
-      <section css={personalInfoStyles}>
-        <div>
-          <Display styleAsHeading={2}>{displayName}</Display>
-          <UserProfilePersonalText
-            institution={institution}
-            location={location}
-            jobTitle={jobTitle}
-            teams={teams}
-            role={role}
-            discoverHref={discoverHref}
+}) => (
+  <header css={[containerStyles, role === 'Staff' && staffContainerStyles]}>
+    <section css={personalInfoStyles}>
+      <div>
+        <Display styleAsHeading={2}>{displayName}</Display>
+        <UserProfilePersonalText
+          institution={institution}
+          location={location}
+          jobTitle={jobTitle}
+          teams={teams}
+          role={role}
+          discoverHref={discoverHref}
+        />
+      </div>
+      <div css={avatarContainer}>
+        <div css={imageContainer}>
+          <Avatar
+            imageUrl={avatarUrl}
+            firstName={firstName}
+            lastName={lastName}
           />
         </div>
-        <div css={avatarContainer}>
-          <div css={imageContainer}>
-            <Avatar
-              imageUrl={avatarUrl}
-              firstName={firstName}
-              lastName={lastName}
-            />
+        {onImageSelect && (
+          <div css={editButtonContainer}>
+            <label>
+              <Link
+                buttonStyle
+                small
+                primary
+                href={undefined}
+                label="Edit Avatar"
+                enabled={!avatarSaving}
+              >
+                {uploadIcon}
+                <input
+                  disabled={avatarSaving}
+                  type="file"
+                  accept="image/x-png,image/jpeg"
+                  aria-label="Upload Avatar"
+                  onChange={(event) =>
+                    event.target.files?.length &&
+                    onImageSelect(event.target.files[0])
+                  }
+                  css={{ display: 'none' }}
+                />
+              </Link>
+            </label>
           </div>
-          {onImageSelect && (
-            <div css={editButtonContainer}>
-              <label>
-                <Link
-                  buttonStyle
-                  small
-                  primary
-                  href={undefined}
-                  label="Edit Avatar"
-                  enabled={isEnabled('EDIT_PROFILE_AVATAR') && !avatarSaving}
-                >
-                  {uploadIcon}
-                  <input
-                    disabled={
-                      !(isEnabled('EDIT_PROFILE_AVATAR') && !avatarSaving)
-                    }
-                    type="file"
-                    accept="image/x-png,image/jpeg"
-                    aria-label="Upload Avatar"
-                    onChange={(event) =>
-                      event.target.files?.length &&
-                      onImageSelect(event.target.files[0])
-                    }
-                    css={{ display: 'none' }}
-                  />
-                </Link>
-              </label>
-            </div>
-          )}
-        </div>
-      </section>
-      {editPersonalInfoHref && (
-        <div css={editPersonalInfoStyles}>
-          <Link
-            buttonStyle
-            small
-            primary
-            href={editPersonalInfoHref}
-            label="Edit personal information"
-            enabled={isEnabled('EDIT_PROFILE_REST')}
-          >
-            {editIcon}
-          </Link>
-        </div>
-      )}
-      <section
-        css={[contactStyles, editContactInfoHref ? null : contactNoEditStyles]}
-      >
-        {role !== 'Staff' ? (
-          <div css={contactButtonStyles}>
-            <Link
-              small
-              buttonStyle
-              primary
-              href={createMailTo(contactEmail || email)}
-            >
-              Contact
-            </Link>
-          </div>
-        ) : null}
-        <SocialIcons {...social} />
-        <div
-          css={[
-            lastModifiedStyles,
-            role === 'Staff' ? lastModifiedNoContactStyles : null,
-          ]}
-        >
-          <Paragraph accent="lead">
-            <small>
-              Last updated:{' '}
-              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-            </small>
-          </Paragraph>
-        </div>
-      </section>
-      {editContactInfoHref && (
-        <div css={editContactStyles}>
-          <Link
-            buttonStyle
-            small
-            primary
-            href={editContactInfoHref}
-            label="Edit contact information"
-            enabled={isEnabled('EDIT_PROFILE_REST')}
-          >
-            {editIcon}
-          </Link>
-        </div>
-      )}
-      <div css={tabNavStyles}>
-        {role !== 'Staff' ? (
-          <TabNav>
-            <TabLink href={researchHref}>Research</TabLink>
-            <TabLink href={aboutHref}>Background</TabLink>
-            <TabLink href={outputsHref}>Shared Outputs</TabLink>
-          </TabNav>
-        ) : null}
+        )}
       </div>
-    </header>
-  );
-};
+    </section>
+    {editPersonalInfoHref && (
+      <div css={editPersonalInfoStyles}>
+        <Link
+          buttonStyle
+          small
+          primary
+          href={editPersonalInfoHref}
+          label="Edit personal information"
+        >
+          {editIcon}
+        </Link>
+      </div>
+    )}
+    <section
+      css={[contactStyles, editContactInfoHref ? null : contactNoEditStyles]}
+    >
+      {role !== 'Staff' ? (
+        <div css={contactButtonStyles}>
+          <Link
+            small
+            buttonStyle
+            primary
+            href={createMailTo(contactEmail || email)}
+          >
+            Contact
+          </Link>
+        </div>
+      ) : null}
+      <SocialIcons {...social} />
+      <div
+        css={[
+          lastModifiedStyles,
+          role === 'Staff' ? lastModifiedNoContactStyles : null,
+        ]}
+      >
+        <Paragraph accent="lead">
+          <small>
+            Last updated:{' '}
+            {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+          </small>
+        </Paragraph>
+      </div>
+    </section>
+    {editContactInfoHref && (
+      <div css={editContactStyles}>
+        <Link
+          buttonStyle
+          small
+          primary
+          href={editContactInfoHref}
+          label="Edit contact information"
+        >
+          {editIcon}
+        </Link>
+      </div>
+    )}
+    <div css={tabNavStyles}>
+      {role !== 'Staff' ? (
+        <TabNav>
+          <TabLink href={researchHref}>Research</TabLink>
+          <TabLink href={aboutHref}>Background</TabLink>
+          <TabLink href={outputsHref}>Shared Outputs</TabLink>
+        </TabNav>
+      ) : null}
+    </div>
+  </header>
+);
 
 export default UserProfileHeader;

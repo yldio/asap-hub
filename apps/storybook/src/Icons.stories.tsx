@@ -1,5 +1,6 @@
 import {
   alertIcon,
+  calendarIcon,
   chevronCircleLeftIcon,
   chevronDownIcon,
   chevronUpIcon,
@@ -55,6 +56,7 @@ import {
 export default { title: 'Atoms / Icons' };
 
 export const Alert = () => alertIcon;
+export const Calendar = () => calendarIcon;
 export const ChevronCircleLeft = () => chevronCircleLeftIcon;
 export const ChevronDown = () => chevronDownIcon;
 export const ChevronUp = () => chevronUpIcon;

@@ -157,6 +157,7 @@ const Layout: React.FC<LayoutProps> = ({
   sharedResearchHref,
   networkHref,
   newsAndEventsHref,
+  eventsHref,
   ...userNavProps
 }) => {
   const [menuShown, setMenuShown] = useState(false);
@@ -206,6 +207,7 @@ const Layout: React.FC<LayoutProps> = ({
               sharedResearchHref={sharedResearchHref}
               networkHref={networkHref}
               newsAndEventsHref={newsAndEventsHref}
+              eventsHref={eventsHref}
             />
           </React.Suspense>
         </div>

@@ -35,6 +35,7 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
         termsHref="/terms"
         privacyPolicyHref="/privacy-policy"
         aboutHref="/about"
+        eventsHref="/events"
       >
         {storyFn()}
       </Layout>

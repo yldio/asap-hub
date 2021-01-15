@@ -72,7 +72,7 @@ const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
       future. You can subscribe to each one of them by adding them to your
       Google calendar via the buttons below.
     </Paragraph>
-    {calendars.length && (
+    {!!calendars.length && (
       <ul css={orderList}>
         {calendars.map(({ id, name, color }) => {
           const url = new URL('https://calendar.google.com/calendar/r');
@@ -82,10 +82,12 @@ const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
               <div css={dataGrid}>
                 <div css={gridText}>
                   <Paragraph accent="charcoal">
-                    <span css={{ color, paddingRight: `${14 / perRem}em` }}>
-                      ●
-                    </span>
-                    <span css={{ fontWeight: 'bold' }}>{name}</span>
+                    <div css={{ display: 'flex' }}>
+                      <span css={{ color, paddingRight: `${14 / perRem}em` }}>
+                        ●
+                      </span>
+                      <span css={{ fontWeight: 'bold' }}>{name}</span>
+                    </div>
                   </Paragraph>
                 </div>
                 <div css={gridButton}>

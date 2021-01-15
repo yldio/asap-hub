@@ -21,6 +21,7 @@ const props: ComponentProps<typeof Layout> = {
   termsHref: '/terms',
   privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
+  eventsHref: '/events',
 };
 
 it('renders an ASAP logo', () => {

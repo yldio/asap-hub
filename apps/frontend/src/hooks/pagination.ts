@@ -32,7 +32,7 @@ export const usePagination = (numberOfItems: number, pageSize: number) => {
     else newSearchParams.set('currentPage', String(page));
 
     const newParams = newSearchParams.toString();
-    return `${newParams.length ? '?' : '.'}${newParams}`;
+    return `${newParams.length ? '?' : history.location.pathname}${newParams}`;
   };
 
   useEffect(() => {

@@ -38,7 +38,6 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
             : {
                 href: editBiographyHref,
                 label: 'Edit biography',
-                enabled: isEnabled('EDIT_PROFILE_REST'),
               },
       }}
       {{
@@ -52,7 +51,7 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
             : {
                 href: editOrcidWorksHref,
                 label: 'Edit recent works visibility',
-                enabled: isEnabled('EDIT_PROFILE_WORKS'),
+                enabled: isEnabled('USER_PROFILE_EDIT_WORKS'),
               },
       }}
     </ProfileCardList>

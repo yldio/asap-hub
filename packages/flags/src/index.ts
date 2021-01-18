@@ -1,16 +1,11 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
-  | 'EDIT_PROFILE_SKILLS'
-  | 'EDIT_PROFILE_QUESTIONS'
-  | 'EDIT_PROFILE_WORKS'
-  | 'EDIT_PROFILE_REST'
-  | 'EDIT_PROFILE_AVATAR';
+  | 'USER_PROFILE_EDIT_SKILLS'
+  | 'USER_PROFILE_EDIT_WORKS'
+  | 'GROUPS';
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:
-  EDIT_PROFILE_REST: true,
-  EDIT_PROFILE_QUESTIONS: true,
-  EDIT_PROFILE_AVATAR: true,
   // can also be used to manually disable a flag in development:
 };
 

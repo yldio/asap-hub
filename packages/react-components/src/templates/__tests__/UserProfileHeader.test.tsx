@@ -2,7 +2,6 @@ import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
 
 import UserProfileHeader from '../UserProfileHeader';
 
@@ -76,16 +75,6 @@ describe('an edit button', () => {
       '/edit-personal-info',
     );
   });
-  it('is disabled for personal info (REGRESSION)', () => {
-    disable('EDIT_PROFILE_REST');
-    const { getByLabelText } = render(
-      <UserProfileHeader
-        {...boilerplateProps}
-        editPersonalInfoHref="/edit-personal-info"
-      />,
-    );
-    expect(getByLabelText(/edit.+personal/i)).not.toHaveAttribute('href');
-  });
 
   it('is rendered for contact info', () => {
     const { getByLabelText } = render(
@@ -99,16 +88,6 @@ describe('an edit button', () => {
       '/edit-contact-info',
     );
   });
-  it('is disabled for contact info (REGRESSION)', () => {
-    disable('EDIT_PROFILE_REST');
-    const { getByLabelText } = render(
-      <UserProfileHeader
-        {...boilerplateProps}
-        editContactInfoHref="/edit-contact-info"
-      />,
-    );
-    expect(getByLabelText(/edit.+contact/i)).not.toHaveAttribute('href');
-  });
 });
 
 it('is rendered for avatar', () => {
@@ -120,18 +99,6 @@ it('is rendered for avatar', () => {
   );
   expect(getByLabelText(/edit.+avatar/i)).toBeVisible();
   expect(getByLabelText(/upload.+avatar/i)).not.toHaveAttribute('disabled');
-});
-
-it('is disabled for avatar (REGRESSION)', () => {
-  disable('EDIT_PROFILE_AVATAR');
-  const { getByLabelText } = render(
-    <UserProfileHeader
-      {...boilerplateProps}
-      onImageSelect={(file: File) => {}}
-    />,
-  );
-  expect(getByLabelText(/edit.+avatar/i)).toBeVisible();
-  expect(getByLabelText(/upload.+avatar/i)).toHaveAttribute('disabled');
 });
 
 it('generates staff profile without contact and tabs', () => {

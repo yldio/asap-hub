@@ -50,13 +50,6 @@ it('renders an edit button for the biography', () => {
     '/edit-biography',
   );
 });
-it('disables the edit button for the biography (REGRESSION)', () => {
-  disable('EDIT_PROFILE_REST');
-  const { getByLabelText } = render(
-    <UserProfileAbout orcidWorks={[]} editBiographyHref="/edit-biography" />,
-  );
-  expect(getByLabelText(/edit.+bio/i)).not.toHaveAttribute('href');
-});
 it('renders an edit button for the recent works visibility', () => {
   const { getByLabelText } = render(
     <UserProfileAbout orcidWorks={[]} editOrcidWorksHref="/edit-works" />,
@@ -67,7 +60,7 @@ it('renders an edit button for the recent works visibility', () => {
   );
 });
 it('disables the edit button for the recent works visibility (REGRESSION)', () => {
-  disable('EDIT_PROFILE_WORKS');
+  disable('USER_PROFILE_EDIT_WORKS');
   const { getByLabelText } = render(
     <UserProfileAbout orcidWorks={[]} editOrcidWorksHref="/edit-works" />,
   );

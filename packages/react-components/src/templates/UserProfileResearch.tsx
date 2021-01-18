@@ -58,7 +58,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               ? {
                   href: team.editHref,
                   label: `Edit role on ${team.displayName}`,
-                  enabled: isEnabled('EDIT_PROFILE_REST'),
                 }
               : undefined,
         })),
@@ -75,7 +74,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               : {
                   href: editSkillsHref,
                   label: 'Edit expertise and resources',
-                  enabled: isEnabled('EDIT_PROFILE_SKILLS'),
+                  enabled: isEnabled('USER_PROFILE_EDIT_SKILLS'),
                 },
         },
         {
@@ -88,7 +87,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               : {
                   href: editQuestionsHref,
                   label: 'Edit open questions',
-                  enabled: isEnabled('EDIT_PROFILE_QUESTIONS'),
                 },
         },
         {

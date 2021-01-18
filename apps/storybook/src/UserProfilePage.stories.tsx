@@ -21,10 +21,11 @@ export default {
   title: 'Pages / User Profile',
   decorators: [
     LayoutDecorator,
-    makeFlagDecorator('Enable Works Visibility Editing', 'EDIT_PROFILE_WORKS'),
-    makeFlagDecorator('Enable Skills Editing', 'EDIT_PROFILE_SKILLS'),
-    makeFlagDecorator('Enable Questions Editing', 'EDIT_PROFILE_QUESTIONS'),
-    makeFlagDecorator('Enable Other Editing', 'EDIT_PROFILE_REST'),
+    makeFlagDecorator(
+      'Enable Works Visibility Editing',
+      'USER_PROFILE_EDIT_WORKS',
+    ),
+    makeFlagDecorator('Enable Skills Editing', 'USER_PROFILE_EDIT_SKILLS'),
   ],
 };
 

@@ -19,6 +19,7 @@ import {
   googleIcon,
   googleScholarIcon,
   googleSigninLightNormalIcon,
+  groupsIcon,
   hidePasswordIcon,
   lastPageIcon,
   libraryIcon,
@@ -74,6 +75,7 @@ export const GoogleCalendarIcon = () => googleCalendarIcon;
 export const GoogleDrive = () => googleDriveIcon;
 export const GoogleScholar = () => googleScholarIcon;
 export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;
+export const Groups = () => groupsIcon;
 export const HidePassword = () => hidePasswordIcon;
 export const LastPage = () => lastPageIcon;
 export const LinkedIn = () => linkedInIcon;

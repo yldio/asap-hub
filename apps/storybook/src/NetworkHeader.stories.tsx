@@ -5,14 +5,22 @@ import { action } from '@storybook/addon-actions';
 import { text, select } from '@storybook/addon-knobs';
 
 import { NoPaddingDecorator } from './layout';
+import { makeFlagDecorator } from './flags';
 
 export default {
   title: 'Templates / Network / Header',
-  decorators: [NoPaddingDecorator],
+  decorators: [
+    NoPaddingDecorator,
+    makeFlagDecorator('Groups Enabled', 'GROUPS'),
+  ],
 };
 
 export const Normal = () => {
-  const page = select('Page', { Teams: 'teams', Users: 'users' }, 'teams');
+  const page = select(
+    'Page',
+    { Teams: 'teams', People: 'users', Groups: 'groups' },
+    'users',
+  );
 
   return (
     <StaticRouter key={page} location={`/${page}`}>
@@ -20,6 +28,7 @@ export const Normal = () => {
         page={page}
         usersHref="/users"
         teamsHref="/teams"
+        groupsHref="/groups"
         searchQuery={text('Search Query', '')}
         onChangeSearch={() => action('search change')}
       />

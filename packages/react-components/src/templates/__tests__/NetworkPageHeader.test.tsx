@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { disable } from '@asap-hub/flags';
 
 import NetworkPageHeader from '../NetworkPageHeader';
 
@@ -9,6 +10,7 @@ const props: ComponentProps<typeof NetworkPageHeader> = {
   page: 'teams',
   usersHref: '/users',
   teamsHref: '/teams',
+  groupsHref: '/groups',
 
   searchQuery: '',
 };
@@ -93,7 +95,12 @@ it('highlights the current tab', () => {
 
 it('renders the tab links', async () => {
   const { getByText } = render(
-    <NetworkPageHeader {...props} usersHref="/users" teamsHref="/teams" />,
+    <NetworkPageHeader
+      {...props}
+      usersHref="/users"
+      teamsHref="/teams"
+      groupsHref="/groups"
+    />,
   );
   expect(
     getByText(/people/i, { selector: 'nav a *' }).closest('a'),
@@ -101,6 +108,14 @@ it('renders the tab links', async () => {
   expect(
     getByText(/teams/i, { selector: 'nav a *' }).closest('a'),
   ).toHaveAttribute('href', '/teams');
+  expect(
+    getByText(/groups/i, { selector: 'nav a *' }).closest('a'),
+  ).toHaveAttribute('href', '/groups');
+});
+it('does not show the groups tab (REGRESSION)', () => {
+  disable('GROUPS');
+  const { queryByText } = render(<NetworkPageHeader {...props} />);
+  expect(queryByText(/groups/i)).not.toBeInTheDocument();
 });
 
 it('Passes query correctly', () => {

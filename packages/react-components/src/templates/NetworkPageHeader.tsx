@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { TeamRole, Role } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
@@ -9,7 +10,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
 import { TabNav, SearchField } from '../molecules';
-import { teamIcon, userIcon } from '../icons';
+import { teamIcon, userIcon, groupsIcon } from '../icons';
 
 const containerStyles = css({
   alignSelf: 'stretch',
@@ -34,8 +35,8 @@ const controlsStyles = css({
   padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
-interface NetworkTeamPageHeaderProps {
-  page: 'teams';
+interface NetworkTeamsOrGroupsPageHeaderProps {
+  page: 'teams' | 'groups';
   filters?: undefined;
   onChangeFilter?: undefined;
 }
@@ -45,11 +46,12 @@ interface NetworkPeoplePageHeaderProps {
   onChangeFilter?: (filter: string) => void;
 }
 type NetworkPageHeaderProps = (
-  | NetworkTeamPageHeaderProps
+  | NetworkTeamsOrGroupsPageHeaderProps
   | NetworkPeoplePageHeaderProps
 ) & {
   teamsHref: string;
   usersHref: string;
+  groupsHref: string;
 
   searchQuery: string;
   onChangeSearch?: (newQuery: string) => void;
@@ -68,50 +70,60 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   page,
   teamsHref,
   usersHref,
+  groupsHref,
 
   onChangeSearch,
   onChangeFilter,
   searchQuery,
   filters,
-}) => (
-  <header css={containerStyles}>
-    <div css={visualHeaderStyles}>
-      <Display styleAsHeading={2}>Network</Display>
-      <div css={textStyles}>
-        <Paragraph accent="lead">
-          Explore the ASAP Network and collaborate! Search for teams or
-          individuals by keyword or name.
-        </Paragraph>
+}) => {
+  const { isEnabled } = useFlags();
+
+  return (
+    <header css={containerStyles}>
+      <div css={visualHeaderStyles}>
+        <Display styleAsHeading={2}>Network</Display>
+        <div css={textStyles}>
+          <Paragraph accent="lead">
+            Explore the ASAP Network and collaborate! Search for teams or
+            individuals by keyword or name.
+          </Paragraph>
+        </div>
+        <TabNav>
+          <TabLink href={usersHref}>
+            <span css={iconStyles}>{userIcon}</span>People
+          </TabLink>
+          <TabLink href={teamsHref}>
+            <span css={iconStyles}>{teamIcon}</span>Teams
+          </TabLink>
+          {isEnabled('GROUPS') && (
+            <TabLink href={groupsHref}>
+              <span css={iconStyles}>{groupsIcon}</span>Groups
+            </TabLink>
+          )}
+        </TabNav>
       </div>
-      <TabNav>
-        <TabLink href={usersHref}>
-          <span css={iconStyles}>{userIcon}</span>People
-        </TabLink>
-        <TabLink href={teamsHref}>
-          <span css={iconStyles}>{teamIcon}</span>Teams
-        </TabLink>
-      </TabNav>
-    </div>
-    <div css={controlsStyles}>
-      {page === 'users' ? (
-        <SearchAndFilter
-          onChangeSearch={onChangeSearch}
-          searchPlaceholder="Enter name, keyword, institution, …"
-          searchQuery={searchQuery}
-          onChangeFilter={onChangeFilter}
-          filterOptions={userFilters}
-          filterTitle="TEAM ROLES"
-          filters={filters}
-        />
-      ) : (
-        <SearchField
-          placeholder="Enter name, keyword, method, …"
-          value={searchQuery}
-          onChange={onChangeSearch}
-        />
-      )}
-    </div>
-  </header>
-);
+      <div css={controlsStyles}>
+        {page === 'users' ? (
+          <SearchAndFilter
+            onChangeSearch={onChangeSearch}
+            searchPlaceholder="Enter name, keyword, institution, …"
+            searchQuery={searchQuery}
+            onChangeFilter={onChangeFilter}
+            filterOptions={userFilters}
+            filterTitle="TEAM ROLES"
+            filters={filters}
+          />
+        ) : (
+          <SearchField
+            placeholder="Enter name, keyword, method, …"
+            value={searchQuery}
+            onChange={onChangeSearch}
+          />
+        )}
+      </div>
+    </header>
+  );
+};
 
 export default NetworkPageHeader;

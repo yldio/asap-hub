@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { Got } from 'got';
+import { Got, RequestError } from 'got';
 import FormData from 'form-data';
 import mime from 'mime-types';
 import { GraphqlUser, RestUser, config } from '@asap-hub/squidex';
@@ -369,25 +369,24 @@ export default class Users {
       fetchOrcidProfile(user!.data.orcid!.iv),
     );
 
-    if (error) {
-      throw Boom.badGateway();
+    const err = error as RequestError;
+    if (err && err?.response?.statusCode !== 404) {
+      // eslint-disable-next-line no-console
+      console.log('Error fetching user from ORCID:', err);
     }
 
-    const { lastModifiedDate, works } = transformOrcidWorks(res);
+    const update: Partial<RestUser['data']> = {
+      email: { iv: user.data.email.iv },
+      orcidLastSyncDate: { iv: new Date().toISOString() },
+    };
 
-    if (
-      !user.data.orcidLastModifiedDate?.iv ||
-      user.data.orcidLastModifiedDate.iv < lastModifiedDate
-    ) {
-      const updatedUser = await this.users.patch(user.id, {
-        email: { iv: user.data.email.iv },
-        orcidLastSyncDate: { iv: `${new Date().toISOString()}` },
-        orcidLastModifiedDate: { iv: lastModifiedDate },
-        orcidWorks: { iv: works.slice(0, 10) },
-      });
-      return parseUser(updatedUser);
+    if (!error) {
+      const { lastModifiedDate, works } = transformOrcidWorks(res);
+      update.orcidLastModifiedDate = { iv: lastModifiedDate };
+      update.orcidWorks = { iv: works.slice(0, 10) };
     }
 
-    return parseUser(user);
+    const updatedUser = await this.users.patch(user.id, update);
+    return parseUser(updatedUser);
   }
 }

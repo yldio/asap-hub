@@ -20,7 +20,7 @@ export { default as QuestionsSection } from './QuestionsSection';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as ResultList } from './ResultList';
 export { default as RichText } from './RichText';
-export { default as SearchControls } from './SearchControls';
+export { default as SearchAndFilter } from './SearchAndFilter';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamProfileOverview } from './TeamProfileOverview';

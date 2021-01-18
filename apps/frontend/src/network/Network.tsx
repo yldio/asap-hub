@@ -54,10 +54,10 @@ const Network: React.FC<Record<string, never>> = () => {
           page="users"
           usersHref={usersHref}
           teamsHref={teamsHref}
-          onChangeSearch={setSearchQuery}
-          onChangeFilter={toggleFilter}
-          filters={filters}
           searchQuery={searchQuery}
+          onChangeSearch={setSearchQuery}
+          filters={filters}
+          onChangeFilter={toggleFilter}
         >
           <SearchFrame>
             <UserList filters={filters} searchQuery={searchQueryDebounce} />
@@ -70,13 +70,11 @@ const Network: React.FC<Record<string, never>> = () => {
           page="teams"
           usersHref={usersHref}
           teamsHref={teamsHref}
-          onChangeSearch={setSearchQuery}
-          onChangeFilter={toggleFilter}
-          filters={filters}
           searchQuery={searchQuery}
+          onChangeSearch={setSearchQuery}
         >
           <SearchFrame>
-            <TeamList filters={filters} searchQuery={searchQueryDebounce} />
+            <TeamList searchQuery={searchQueryDebounce} />
           </SearchFrame>
         </NetworkPage>
       </Route>

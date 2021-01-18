@@ -1,17 +1,17 @@
 import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
-import { SearchControls } from '@asap-hub/react-components';
+import { SearchAndFilter } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 
 export default {
-  title: 'Organisms / Search Controls',
-  component: SearchControls,
+  title: 'Organisms / Search and Filter',
+  component: SearchAndFilter,
 };
 
 export const Normal = () => (
-  <SearchControls
-    placeholder={text('Placeholder', 'Search for a protein, a method…')}
+  <SearchAndFilter
+    searchPlaceholder={text('Placeholder', 'Search for a protein, a method…')}
     onChangeSearch={() => action('Search')}
     searchQuery={text('Search Query', '')}
     filterTitle={text('Filter Title', 'TYPE OF OUTPUTS')}

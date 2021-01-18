@@ -15,7 +15,7 @@ import { noop } from '../utils';
 import CheckboxGroup, { Option } from './CheckboxGroup';
 import { paper, steel, tin, colorWithTransparency } from '../colors';
 
-const searchContainerStyles = css({
+const containerStyles = css({
   display: 'grid',
   gridTemplateColumns: 'auto min-content',
   gridColumnGap: `${18 / perRem}em`,
@@ -56,26 +56,26 @@ const showMenuStyles = css({
   display: 'flex',
 });
 
-interface SearchControlsProps {
+interface SearchAndFilterProps {
   searchQuery?: string;
   onChangeSearch?: (newQuery: string) => void;
-  onChangeFilter?: (filter: string) => void;
-  filterTitle: string;
+  searchPlaceholder: string;
+
   filters?: Set<string>;
+  onChangeFilter?: (filter: string) => void;
   filterOptions: Option<string>[];
-  filterEnabled?: boolean;
-  placeholder: string;
+  filterTitle: string;
 }
 
-const SearchControls: React.FC<SearchControlsProps> = ({
+const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   searchQuery,
   onChangeSearch = noop,
-  onChangeFilter = noop,
-  placeholder,
+  searchPlaceholder,
+
   filters = new Set(),
+  onChangeFilter = noop,
   filterOptions,
   filterTitle,
-  filterEnabled = true,
 }) => {
   const [menuShown, setMenuShown] = useState(false);
   useEffect(() => {
@@ -83,18 +83,14 @@ const SearchControls: React.FC<SearchControlsProps> = ({
   }, [filterTitle]);
 
   return (
-    <div role="search" css={searchContainerStyles}>
+    <div role="search" css={containerStyles}>
       <SearchField
         value={searchQuery || ''}
-        placeholder={placeholder}
+        placeholder={searchPlaceholder}
         onChange={onChangeSearch}
       />
       <div>
-        <Button
-          enabled={filterEnabled}
-          active={menuShown}
-          onClick={() => setMenuShown(!menuShown)}
-        >
+        <Button active={menuShown} onClick={() => setMenuShown(!menuShown)}>
           {filterIcon}
           <span css={buttonTextStyles}>Filters</span>
         </Button>
@@ -119,4 +115,4 @@ const SearchControls: React.FC<SearchControlsProps> = ({
   );
 };
 
-export default SearchControls;
+export default SearchAndFilter;

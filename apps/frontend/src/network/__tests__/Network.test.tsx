@@ -63,21 +63,20 @@ describe('the network page', () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
         '/network/teams',
       );
-      const searchBox = getByRole('searchbox') as HTMLInputElement;
 
-      expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Enter name, keyword, method, …"`,
-      );
+      expect(
+        (getByRole('searchbox') as HTMLInputElement).placeholder,
+      ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
-      const toggle = getByText(/people/i, { selector: 'nav a *' });
-      fireEvent.click(toggle);
+      const peopleLink = getByText(/people/i, { selector: 'nav a *' });
+      userEvent.click(peopleLink);
       await waitFor(() =>
         expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
       );
 
-      expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Enter name, keyword, institution, …"`,
-      );
+      expect(
+        (getByRole('searchbox') as HTMLInputElement).placeholder,
+      ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
     });
 
     it('preserves only the query text', async () => {
@@ -104,11 +103,10 @@ describe('the network page', () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
         '/network/users',
       );
-      const searchBox = getByRole('searchbox') as HTMLInputElement;
 
-      expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Enter name, keyword, institution, …"`,
-      );
+      expect(
+        (getByRole('searchbox') as HTMLInputElement).placeholder,
+      ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 
       const toggle = getByText(/teams/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
@@ -116,9 +114,9 @@ describe('the network page', () => {
         expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
       );
 
-      expect(searchBox.placeholder).toMatchInlineSnapshot(
-        `"Enter name, keyword, method, …"`,
-      );
+      expect(
+        (getByRole('searchbox') as HTMLInputElement).placeholder,
+      ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
     });
     it('preserves only query text', async () => {
       const { getByText, getByRole } = await renderNetworkPage(

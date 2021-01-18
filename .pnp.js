@@ -3227,6 +3227,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.0.3"
       ],
       [
+        "create-emotion",
+        "npm:10.0.27"
+      ],
+      [
         "create-emotion-server",
         "npm:10.0.27"
       ],
@@ -3725,6 +3729,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "emojis-list",
         "npm:3.0.0"
+      ],
+      [
+        "emotion",
+        "npm:10.0.27"
       ],
       [
         "emotion-theming",
@@ -9772,6 +9780,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-preset-react-app", "npm:9.1.2"],
             ["core-js", "npm:3.6.5"],
             ["date-fns", "npm:2.16.1"],
+            ["emotion", "npm:10.0.27"],
             ["history", "npm:4.10.1"],
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.1"],
@@ -25899,6 +25908,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["create-emotion", [
+        ["npm:10.0.27", {
+          "packageLocation": "./.yarn/cache/create-emotion-npm-10.0.27-54c90999e2-59581a54fe.zip/node_modules/create-emotion/",
+          "packageDependencies": [
+            ["create-emotion", "npm:10.0.27"],
+            ["@emotion/cache", "npm:10.0.29"],
+            ["@emotion/serialize", "npm:0.11.16"],
+            ["@emotion/sheet", "npm:0.9.4"],
+            ["@emotion/utils", "npm:0.11.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["create-emotion-server", [
         ["npm:10.0.27", {
           "packageLocation": "./.yarn/cache/create-emotion-server-npm-10.0.27-7c01b325aa-bfd2ee523e.zip/node_modules/create-emotion-server/",
@@ -27813,6 +27835,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/emojis-list-npm-3.0.0-7faa48e6fd-a79126b55b.zip/node_modules/emojis-list/",
           "packageDependencies": [
             ["emojis-list", "npm:3.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["emotion", [
+        ["npm:10.0.27", {
+          "packageLocation": "./.yarn/cache/emotion-npm-10.0.27-60fd402cdc-cc542b2df9.zip/node_modules/emotion/",
+          "packageDependencies": [
+            ["emotion", "npm:10.0.27"],
+            ["babel-plugin-emotion", "npm:10.0.33"],
+            ["create-emotion", "npm:10.0.27"]
           ],
           "linkType": "HARD",
         }]

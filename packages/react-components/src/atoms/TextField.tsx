@@ -144,7 +144,7 @@ type TextFieldProps = {
   readonly onChange?: (newValue: string) => void;
 } & Pick<
   InputHTMLAttributes<HTMLInputElement>,
-  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern' | 'role'
+  'id' | 'placeholder' | 'required' | 'maxLength' | 'pattern'
 >;
 const TextField: React.FC<TextFieldProps> = ({
   type = 'text',

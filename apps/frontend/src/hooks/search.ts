@@ -8,7 +8,7 @@ export const useSearch = () => {
   const { resetPagination } = usePaginationParams();
 
   const filters = new Set<string>(currentUrlParams.getAll('filter'));
-  const searchQuery = currentUrlParams.get('searchQuery') || undefined;
+  const searchQuery = currentUrlParams.get('searchQuery') || '';
 
   const searchQueryParams = new URLSearchParams(searchQuery && { searchQuery });
 

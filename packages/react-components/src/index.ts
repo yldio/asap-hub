@@ -71,7 +71,7 @@ export {
   QuestionsSection,
   RadioButtonGroup,
   RichText,
-  SearchControls,
+  SearchAndFilter,
   SharedResearchCard,
   SsoButtons,
   TeamCard,

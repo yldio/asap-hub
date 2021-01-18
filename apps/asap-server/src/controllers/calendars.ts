@@ -19,6 +19,7 @@ export default class Calendars {
     const { total, items: calendars } = await this.calendars.fetch({
       take,
       skip,
+      sort: [{ path: 'data.name.iv', order: 'ascending' }],
     });
 
     return {

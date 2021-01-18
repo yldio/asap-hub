@@ -161,7 +161,6 @@ export const putResponse: RestUser = {
     },
     connections: { iv: [] },
     biography: { iv: 'I do awesome stuff' },
-    department: { iv: 'Awesome Department' },
     questions: { iv: [{ question: 'test' }] },
   },
   created: '2020-09-25T09:42:51Z',

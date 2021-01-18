@@ -134,23 +134,6 @@
         }
       },
       {
-        "name": "department",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Department",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
         "name": "institution",
         "isHidden": false,
         "isLocked": false,

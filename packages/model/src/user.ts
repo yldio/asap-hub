@@ -10,7 +10,6 @@ export interface Invitee {
   lastName: string;
   biography?: string;
   jobTitle?: string;
-  department?: string;
   institution?: string;
   location?: string;
   avatarUrl?: string;
@@ -122,7 +121,6 @@ export interface UserPatchRequest {
   biography?: string;
   jobTitle?: string;
   orcid?: string;
-  department?: string;
   institution?: string;
   degree?: UserDegree;
   location?: string;

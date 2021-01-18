@@ -26,7 +26,6 @@ flatData {
   }
   biography
   degree
-  department
   email
   contactEmail
   firstName

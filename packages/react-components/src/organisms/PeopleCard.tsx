@@ -38,7 +38,6 @@ const moveStyles = css({
 type PeopleCardProps = Pick<
   UserResponse,
   | 'avatarUrl'
-  | 'department'
   | 'displayName'
   | 'firstName'
   | 'institution'
@@ -52,7 +51,6 @@ type PeopleCardProps = Pick<
   readonly teams: ReadonlyArray<UserTeam & { href: string }>;
 };
 const PeopleCard: React.FC<PeopleCardProps> = ({
-  department,
   displayName,
   institution,
   createdDate,
@@ -82,7 +80,6 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
         </div>
         <div css={profileTextStyles}>
           <UserProfilePersonalText
-            department={department}
             institution={institution}
             location={location}
             jobTitle={jobTitle}

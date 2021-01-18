@@ -41,7 +41,6 @@ interface User<
   questions: { question: string }[];
   role: Role;
   skills: string[];
-  department?: string;
   responsibilities?: string;
   reachOut?: string;
   skillsDescription?: string;

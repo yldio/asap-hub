@@ -141,7 +141,6 @@ type UserProfileHeaderProps = Pick<
   UserResponse,
   | 'avatarUrl'
   | 'contactEmail'
-  | 'department'
   | 'email'
   | 'displayName'
   | 'firstName'
@@ -168,7 +167,6 @@ type UserProfileHeaderProps = Pick<
 };
 
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
-  department,
   displayName,
   institution,
   lastModifiedDate,
@@ -201,7 +199,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         <div>
           <Display styleAsHeading={2}>{displayName}</Display>
           <UserProfilePersonalText
-            department={department}
             institution={institution}
             location={location}
             jobTitle={jobTitle}

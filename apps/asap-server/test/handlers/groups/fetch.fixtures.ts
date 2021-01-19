@@ -96,7 +96,6 @@ export const response: { data: ResponseFetchGroups } = {
                       biography:
                         'Filipe is an Engineering Manager who works closely with our clients to ensure process and technical standards improvements. He previously worked at startups and multinational companies, leading tech projects in mobile and web apps, before bringing this gathered experience to YLD.',
                       degree: null,
-                      department: null,
                       email: 'filipe@yld.io',
                       firstName: 'Filipe',
                       institution: 'YLD',
@@ -162,7 +161,6 @@ export const response: { data: ResponseFetchGroups } = {
                       ],
                       biography: null,
                       degree: null,
-                      department: null,
                       email: 'joao.tiago@yld.io',
                       firstName: 'João',
                       institution: 'YLD',

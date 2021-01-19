@@ -23,6 +23,7 @@ const createSignedPayload = (payload: WebHookPayload) =>
   });
 
 const orcid = '0000-0002-9079-593X';
+
 describe('POST /webhook/users/orcid - validation', () => {
   test('returns 204 when event type is not implemented', async () => {
     const res = (await handler(
@@ -64,21 +65,6 @@ describe('POST /webhook/users/orcid', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  test('returns 502 when ORCID returns an error', async () => {
-    nock(config.baseUrl)
-      .get(`/api/content/${config.appName}/users/userId`)
-      .reply(200, fixtures.fetchUserResponse);
-
-    nock('https://pub.orcid.org').get(`/v2.1/${orcid}/works`).reply(500);
-
-    const res = (await handler(
-      createSignedPayload(fixtures.createUserEvent),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(502);
-    expect(nock.isDone()).toBe(true);
-  });
-
   test('returns 404 when user does not exist', async () => {
     const syncNotFoundEvent = JSON.parse(
       JSON.stringify(fixtures.createUserEvent),
@@ -94,6 +80,26 @@ describe('POST /webhook/users/orcid', () => {
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(404);
+  });
+
+  test('returns 200 when ORCID returns an error', async () => {
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users/userId`)
+      .reply(200, fixtures.fetchUserResponse)
+      .patch(`/api/content/${config.appName}/users/userId`)
+      .reply(200, fixtures.fetchUserResponse);
+
+    // persist because got will retry on 5XXs
+    nock('https://pub.orcid.org')
+      .get(`/v2.1/${orcid}/works`)
+      .times(2)
+      .reply(502);
+
+    const res = (await handler(
+      createSignedPayload(fixtures.createUserEvent),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(200);
   });
 
   test('returns 200 when successfully fetches user orcid', async () => {

@@ -46,7 +46,13 @@ describe('Get /calendars', () => {
   test('returns 200 when no calendars are found', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/calendars`)
-      .query({ q: JSON.stringify({ take: 50, skip: 0 }) })
+      .query({
+        q: JSON.stringify({
+          take: 50,
+          skip: 0,
+          sort: [{ path: 'data.name.iv', order: 'ascending' }],
+        }),
+      })
       .reply(200, { total: 0, items: [] });
 
     const res = (await handler(
@@ -65,7 +71,13 @@ describe('Get /calendars', () => {
   test('returns 200 when calendars are found', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/calendars`)
-      .query({ q: JSON.stringify({ take: 20, skip: 10 }) })
+      .query({
+        q: JSON.stringify({
+          take: 20,
+          skip: 10,
+          sort: [{ path: 'data.name.iv', order: 'ascending' }],
+        }),
+      })
       .reply(200, getCalendarsResponse);
 
     const res = (await handler(

@@ -4,17 +4,17 @@ import {
   NetworkPage,
   NetworkTeams,
   NetworkPeople,
+  NetworkGroups,
 } from '@asap-hub/react-components';
 import { action } from '@storybook/addon-actions';
 import { text, number } from '@storybook/addon-knobs';
 import { TeamRole } from '@asap-hub/model';
 
 import { LayoutDecorator } from './layout';
-import { makeFlagDecorator } from './flags';
 
 export default {
   title: 'Pages / Network',
-  decorators: [LayoutDecorator, makeFlagDecorator('Groups Enabled', 'GROUPS')],
+  decorators: [LayoutDecorator],
 };
 
 const member: Omit<
@@ -79,6 +79,24 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
     renderPageHref: (index) => `#${index}`,
   };
 };
+const groupProps = (): ComponentProps<typeof NetworkGroups> => {
+  const numberOfItems = number('Number of Groups', 2, { min: 0 });
+  const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
+  return {
+    groups: Array.from({ length: numberOfItems }, (_, i) => ({
+      id: `p${i}`,
+      href: '#',
+      name: `My Group ${i + 1}`,
+      description: 'Group Description',
+      tags: ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5', 'Tag 6'],
+      numberOfTeams: 3,
+    })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
+    numberOfItems,
+    numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
+    currentPageIndex,
+    renderPageHref: (index) => `#${index}`,
+  };
+};
 
 export const TeamList = () => (
   <StaticRouter location="/teams">
@@ -106,6 +124,21 @@ export const PeopleList = () => (
       onChangeSearch={() => action('search change')}
     >
       <NetworkPeople {...peopleProps()} />
+    </NetworkPage>
+  </StaticRouter>
+);
+
+export const GroupList = () => (
+  <StaticRouter location="/groups">
+    <NetworkPage
+      page="groups"
+      usersHref="/users"
+      teamsHref="/teams"
+      groupsHref="/groups"
+      searchQuery={text('Search Query', '')}
+      onChangeSearch={() => action('search change')}
+    >
+      <NetworkGroups {...groupProps()} />
     </NetworkPage>
   </StaticRouter>
 );

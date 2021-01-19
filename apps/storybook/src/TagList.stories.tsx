@@ -1,6 +1,6 @@
 import React from 'react';
 import { TagList } from '@asap-hub/react-components';
-import { boolean, array } from '@storybook/addon-knobs';
+import { array, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'Molecules / Tag List',
@@ -8,7 +8,8 @@ export default {
 
 export const Normal = () => (
   <TagList
-    summarize={boolean('Summarize', false)}
+    min={number('Minimum number of tags shown on mobile', 3)}
+    max={number('Maximum number of tags shown on desktop', 5)}
     tags={array('Skills', [
       'Neurological Diseases',
       'Clinical Neurology',

@@ -30,7 +30,7 @@ export const handler = async (): Promise<lambda.Response> => {
     outdatedUsers
       .filter(
         (user) =>
-          !user.data.orcidLastSyncDate ||
+          !user.data.orcidLastSyncDate?.iv ||
           Date.now() - Date.parse(user.data.orcidLastSyncDate.iv) > ONE_MONTH,
       )
       .map((user) => limit(() => users.syncOrcidProfile(user.id, user))),

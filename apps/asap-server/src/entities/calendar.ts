@@ -1,8 +1,17 @@
 import { CalendarResponse } from '@asap-hub/model';
-import { RestCalendar } from '@asap-hub/squidex';
+import { RestCalendar, GraphqlCalendar } from '@asap-hub/squidex';
 
 export const parseCalendar = (item: RestCalendar): CalendarResponse => ({
   id: item.data.id.iv,
   color: item.data.color.iv,
   name: item.data.name.iv,
+});
+
+export const parseGraphQLCalendar = (
+  item: GraphqlCalendar,
+): CalendarResponse => ({
+  id: item.flatData?.id || '',
+  // default should never be picked. Field required on CMS
+  color: item.flatData?.color || '#333333',
+  name: item.flatData?.name || '',
 });

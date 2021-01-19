@@ -18,7 +18,7 @@ import {
 import { parseGraphQLTeam } from '../entities';
 import { createURL } from '../utils/squidex';
 
-const GraphQLQueryTeam = `
+export const GraphQLQueryTeam = `
 id
 created
 lastModified

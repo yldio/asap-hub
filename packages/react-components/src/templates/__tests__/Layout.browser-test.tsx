@@ -23,6 +23,7 @@ const props: ComponentProps<typeof Layout> = {
   termsHref: '/terms',
   privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
+  eventsHref: '/events',
 };
 
 afterEach(async () => {

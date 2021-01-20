@@ -2,7 +2,9 @@ export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'USER_PROFILE_EDIT_SKILLS'
   | 'USER_PROFILE_EDIT_WORKS'
-  | 'GROUPS';
+  | 'GROUPS'
+  | 'EVENTS_PAGE';
+
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:

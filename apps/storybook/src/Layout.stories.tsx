@@ -27,6 +27,7 @@ const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
   termsHref: '/terms',
   privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
+  eventsHref: '/events',
 };
 
 export const Normal = () => <Layout {...props}>Content</Layout>;

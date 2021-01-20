@@ -4,7 +4,8 @@ import { CalendarResponse } from '@asap-hub/model';
 
 const iframeStyles = css({
   width: '100%',
-  height: '420px',
+  height: '540px',
+  border: 0,
 });
 
 interface GoogleCalendarProps {

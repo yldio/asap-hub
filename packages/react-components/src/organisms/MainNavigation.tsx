@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { isEnabled } from '@asap-hub/flags';
 
 import {
   perRem,
@@ -9,7 +10,13 @@ import {
   smallDesktopScreen,
 } from '../pixels';
 import { NavigationLink } from '../atoms';
-import { networkIcon, discoverIcon, libraryIcon, newsIcon } from '../icons';
+import {
+  networkIcon,
+  discoverIcon,
+  libraryIcon,
+  newsIcon,
+  calendarIcon,
+} from '../icons';
 
 const containerStyles = css({
   minWidth: `max(${vminLinearCalc(
@@ -47,6 +54,7 @@ export interface MainNavigationProps {
   sharedResearchHref: string;
   networkHref: string;
   newsAndEventsHref: string;
+  eventsHref: string;
 }
 
 const MainNavigation: React.FC<MainNavigationProps> = ({
@@ -54,6 +62,7 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
   sharedResearchHref,
   networkHref,
   newsAndEventsHref,
+  eventsHref,
 }) => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
@@ -69,9 +78,16 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink href={newsAndEventsHref} icon={newsIcon}>
-          News and Events
+          {isEnabled('EVENTS_PAGE') ? 'News' : 'News and Events'}
         </NavigationLink>
       </li>
+      {isEnabled('EVENTS_PAGE') && (
+        <li>
+          <NavigationLink href={eventsHref} icon={calendarIcon}>
+            Calendar and Events
+          </NavigationLink>
+        </li>
+      )}
       <li>
         <NavigationLink href={discoverAsapHref} icon={discoverIcon}>
           Discover ASAP

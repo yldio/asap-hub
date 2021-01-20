@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import { useSetRecoilState, RecoilRoot, useResetRecoilState } from 'recoil';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
+import { isEnabled } from '@asap-hub/flags';
 
 import {
   DISCOVER_PATH,
@@ -10,6 +11,7 @@ import {
   LOGOUT_PATH,
   NEWS_AND_EVENTS_PATH,
   SHARED_RESEARCH_PATH,
+  EVENTS_PATH,
 } from './routes';
 import { auth0State } from './auth/state';
 import Logout from './auth/Logout';
@@ -24,11 +26,14 @@ const loadDashboard = () =>
   import(/* webpackChunkName: "dashboard" */ './dashboard/Dashboard');
 const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Discover');
+const loadEvents = () =>
+  import(/* webpackChunkName: "events" */ './events/Events');
 const NewsAndEvents = React.lazy(loadNewsAndEvents);
 const Network = React.lazy(loadNetwork);
 const SharedResearch = React.lazy(loadSharedResearch);
 const Dashboard = React.lazy(loadDashboard);
 const Discover = React.lazy(loadDiscover);
+const Events = React.lazy(loadEvents);
 
 const GuardedApp: React.FC<Record<string, never>> = () => {
   const auth0 = useAuth0();
@@ -45,7 +50,8 @@ const GuardedApp: React.FC<Record<string, never>> = () => {
       .then(loadNewsAndEvents)
       .then(loadNetwork)
       .then(loadSharedResearch)
-      .then(loadDiscover);
+      .then(loadDiscover)
+      .then(loadEvents);
   }, []);
 
   return (
@@ -68,6 +74,11 @@ const GuardedApp: React.FC<Record<string, never>> = () => {
       <Route path={SHARED_RESEARCH_PATH}>
         <SharedResearch />
       </Route>
+      {isEnabled('EVENTS_PAGE') && (
+        <Route path={EVENTS_PATH}>
+          <Events />
+        </Route>
+      )}
       <Route>
         <NotFoundPage />
       </Route>

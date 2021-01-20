@@ -14,6 +14,7 @@ import {
   SHARED_RESEARCH_PATH,
   NEWS_AND_EVENTS_PATH,
   LOGOUT_PATH,
+  EVENTS_PATH,
 } from './routes';
 import { TEAMS_PATH } from './network/routes';
 import AuthProvider from './auth/AuthProvider';
@@ -50,6 +51,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"
       aboutHref="https://www.parkinsonsroadmap.org/"
+      eventsHref={EVENTS_PATH}
     >
       {children}
     </Layout>

@@ -17,7 +17,7 @@ export const response: { data: ResponseFetchUsers } = {
             contactEmail: 'T@rdy.io',
             firstName: 'Tom',
             lastName: 'Hardy',
-            lastModifiedDate: null,
+            lastModifiedDate: '',
             questions: null,
             skills: null,
             orcid: '123-456-789',

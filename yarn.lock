@@ -75,8 +75,10 @@ __metadata:
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": ^8.10.51
     "@types/chance": ^1.1.0
+    "@types/cors": ^2.8.9
     "@types/date-fns": ^2.6.0
     "@types/debug": ^4.1.5
+    "@types/express": ^4.17.11
     "@types/hapi": ^18.0.3
     "@types/hapi__boom": ^9.0.1
     "@types/hapi__bourne": "workspace:*"
@@ -95,9 +97,11 @@ __metadata:
     aws-lambda: ^1.0.6
     aws-sdk: ^2.745.0
     chance: ^1.1.7
+    cors: ^2.8.5
     csv-parse: ^4.12.0
     date-fns: ^2.16.1
     debug: ^4.2.0
+    express: ^4.17.1
     form-data: ^3.0.0
     got: ^11.6.0
     graphql: ^15.3.0
@@ -114,6 +118,7 @@ __metadata:
     p-limit: ^3.0.2
     parse-data-url: ^3.0.0
     pump: ^3.0.0
+    serverless-http: ^2.6.1
     uuid: ^8.3.0
   languageName: unknown
   linkType: soft
@@ -6081,6 +6086,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/aws-lambda@npm:^8.10.56":
+  version: 8.10.71
+  resolution: "@types/aws-lambda@npm:8.10.71"
+  checksum: 354605f888d08c61a94f49efc756c00845c5daf5a44117b133dee38670ba7916ec468c32aeccc3e1ca65f7c0943adb35722b017c117e8666ea90abc76df49cef
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7, @types/babel__core@npm:^7.0.0, @types/babel__core@npm:^7.1.7":
   version: 7.1.9
   resolution: "@types/babel__core@npm:7.1.9"
@@ -6145,6 +6157,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/body-parser@npm:*":
+  version: 1.19.0
+  resolution: "@types/body-parser@npm:1.19.0"
+  dependencies:
+    "@types/connect": "*"
+    "@types/node": "*"
+  checksum: 4576f3fde5980c1219cadbc7c523bdb1cefc3713300e18bf47ff37bb9b8176342a1dc7519008311fd8fc11413cf188a83931b9b59051aa1c2f095c1e10459369
+  languageName: node
+  linkType: hard
+
 "@types/boom@npm:*":
   version: 7.3.0
   resolution: "@types/boom@npm:7.3.0"
@@ -6205,6 +6227,22 @@ __metadata:
   version: 1.1.1
   resolution: "@types/color-name@npm:1.1.1"
   checksum: 8311db94a9c4ecd247763b81e783ee49d87678b4ce6a7ee502e2bd5cea242b7357804a04855db009f713174bc654cc0c01c7303d40d757e5d710f5ac0368500f
+  languageName: node
+  linkType: hard
+
+"@types/connect@npm:*":
+  version: 3.4.34
+  resolution: "@types/connect@npm:3.4.34"
+  dependencies:
+    "@types/node": "*"
+  checksum: 6f712a0408ed119a42037bcbc38c12e053d3ffe11337221a3966c9e29a21c8455e331fe2116c426361c0b2c0e44cb3fb1f83594326e42ba34ce4723d726b7d30
+  languageName: node
+  linkType: hard
+
+"@types/cors@npm:^2.8.9":
+  version: 2.8.9
+  resolution: "@types/cors@npm:2.8.9"
+  checksum: 903e863c91928209c66a26fdd82ccd0327ed5cded60f19683a155b1b0281e0ad38ecf61dd9f6c23fb9a03ab684e6c2d5690e13473f96d813b8a474dc23dd6c89
   languageName: node
   linkType: hard
 
@@ -6279,6 +6317,29 @@ __metadata:
   version: 3.0.0
   resolution: "@types/events@npm:3.0.0"
   checksum: 1407d79d6d5291caa89f27ef0f180eb133bc5a12f11886bd68f9ef9cffb962a575571d1b4d02d30a7329fe9b85d29b7c10543ed6dc516ad20f9a1e89c1e9c9b8
+  languageName: node
+  linkType: hard
+
+"@types/express-serve-static-core@npm:^4.17.18":
+  version: 4.17.18
+  resolution: "@types/express-serve-static-core@npm:4.17.18"
+  dependencies:
+    "@types/node": "*"
+    "@types/qs": "*"
+    "@types/range-parser": "*"
+  checksum: 329d5ded5c6b77c40bbed136ddf34f6fbae1ec3c43dadb5309fa60cedc3de9508a78fcba756c54e0d6362127d29b114afe4fcc75dc42a44909d48a7114315dc4
+  languageName: node
+  linkType: hard
+
+"@types/express@npm:^4.17.11":
+  version: 4.17.11
+  resolution: "@types/express@npm:4.17.11"
+  dependencies:
+    "@types/body-parser": "*"
+    "@types/express-serve-static-core": ^4.17.18
+    "@types/qs": "*"
+    "@types/serve-static": "*"
+  checksum: 2818120a0fd8b7982215864929cdc6cd14942dd44849f93054fe2a90b4233dff67aadc34c73b5937922a02c688b0263d00a4807aa2e59307ac859a1458d73669
   languageName: node
   linkType: hard
 
@@ -6575,6 +6636,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/mime@npm:^1":
+  version: 1.3.2
+  resolution: "@types/mime@npm:1.3.2"
+  checksum: c354bc135628c2f4ab64801ca3867c3acbd4050611579c4c9f5bdfecfb70db71bb8540bf8611b4319f5ef44139c5f7c5af81254369add5ed59e7e02ce929b96f
+  languageName: node
+  linkType: hard
+
 "@types/mimos@npm:*":
   version: 3.0.2
   resolution: "@types/mimos@npm:3.0.2"
@@ -6726,6 +6794,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/qs@npm:*":
+  version: 6.9.5
+  resolution: "@types/qs@npm:6.9.5"
+  checksum: afe4721a802a4b5fa874a7d6d9fd33c9e812bb0ef90dabb050e8072be4ab2e5e817c0feacb9b4e0771d875de99f4d9738217976aeb8d36b81ccd82ded5e9fdc0
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:^6.9.0":
   version: 6.9.4
   resolution: "@types/qs@npm:6.9.4"
@@ -6739,6 +6814,13 @@ __metadata:
   dependencies:
     ts-toolbelt: ^6.3.3
   checksum: da9388a92c15f8dc8b7c67d3f1f79271efd6e28882d93a9d3d29d1c4a5f48c397a6212f8268a9422be65bcbb22e49b95d10f40aab4544eb159cbeea07ee2fcfa
+  languageName: node
+  linkType: hard
+
+"@types/range-parser@npm:*":
+  version: 1.2.3
+  resolution: "@types/range-parser@npm:1.2.3"
+  checksum: 092fabae0ecbd728d3e4debc938cd043e97cb9f210cfec1c56ff6065c6e91666f376eb586591825d6757a058fd1a1dc4831d34e04ecfbb0800f35b8d86d38635
   languageName: node
   linkType: hard
 
@@ -6935,6 +7017,16 @@ __metadata:
   version: 7.3.4
   resolution: "@types/semver@npm:7.3.4"
   checksum: 7e8588aa55ecb344eda6954674b83a3c568d97d478e70e4617bd3ab22902590ac416ccf2cea48b58fb2f0fbd80f9ad1896332c9b3c3189ffd24e4350ff22094a
+  languageName: node
+  linkType: hard
+
+"@types/serve-static@npm:*":
+  version: 1.13.9
+  resolution: "@types/serve-static@npm:1.13.9"
+  dependencies:
+    "@types/mime": ^1
+    "@types/node": "*"
+  checksum: f261127514057b5c038d76259128d7b765dd92bfeaf769d05b8ddf5f254d066ce6142a935e2fc707bb3009d6544a979591852f0d135d0ed4d0c56db08738df6b
   languageName: node
   linkType: hard
 
@@ -11477,6 +11569,16 @@ __metadata:
   version: 1.0.2
   resolution: "core-util-is@npm:1.0.2"
   checksum: 089015ee3c462dfceba70faa1df83b42a7bb35db26dae6af283247b06fe3216c65fccd9f00eebcaf98300dc31e981d56aae9f90b624f8f6ff1153e235ff88b65
+  languageName: node
+  linkType: hard
+
+"cors@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "cors@npm:2.8.5"
+  dependencies:
+    object-assign: ^4
+    vary: ^1
+  checksum: c83e88c15428b87ff55853ec5ce961b650c7aa3de536aadebbeb2334872d86a8be57165a77996f3b746366c950c2d51624a9b76b88fb7f18d178eca051ca1ae2
   languageName: node
   linkType: hard
 
@@ -21674,7 +21776,7 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4, object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: 66cf021898fc1b13ea573ea8635fbd5a76533f50cecbc2fcd5eee1e8029af41bcebe7023788b6d0e06cbe4401ecea075d972f78ec74467cdc571a0f1a4d1a081
@@ -26132,6 +26234,18 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
+"serverless-http@npm:^2.6.1":
+  version: 2.6.1
+  resolution: "serverless-http@npm:2.6.1"
+  dependencies:
+    "@types/aws-lambda": ^8.10.56
+  dependenciesMeta:
+    "@types/aws-lambda":
+      optional: true
+  checksum: e533713b43e1e24dcc64c36bd35ee755df4726e89c65a646f9327c7ae99049664605aee24ee9b0ce1f773941bbbdfaa9d87e3a9b0c04c3f5484478a589ae8cae
+  languageName: node
+  linkType: hard
+
 "serverless-iam-roles-per-function@npm:^2.0.2":
   version: 2.0.2
   resolution: "serverless-iam-roles-per-function@npm:2.0.2"
@@ -29253,7 +29367,7 @@ typescript@~3.9.7:
   languageName: node
   linkType: hard
 
-"vary@npm:~1.1.2":
+"vary@npm:^1, vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: 591f059f727ac1ba0d97cb7767f8583a03fcbb07db7be2b7dce838ede520ec0e958a41cb19077054769077fdc49a9b9a2dc391c83426bfee89c054b8cc7404bf

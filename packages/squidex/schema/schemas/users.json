@@ -31,7 +31,7 @@
         "name": "contactEmail",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": true,
+        "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",

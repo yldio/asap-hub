@@ -58,6 +58,12 @@ export interface ResponseFetchGroups {
   };
 }
 
+type FetchOptions = {
+  take: number;
+  skip: number;
+  search?: string;
+};
+
 export default class Groups {
   client: InstrumentedSquidexGraphql;
 
@@ -65,11 +71,7 @@ export default class Groups {
     this.client = new InstrumentedSquidexGraphql(ctxHeaders);
   }
 
-  async fetch(options: {
-    take: number;
-    skip: number;
-    search?: string;
-  }): Promise<ListGroupResponse> {
+  async fetch(options: FetchOptions): Promise<ListGroupResponse> {
     const { take, skip, search } = options;
 
     const searchQ = (search || '')
@@ -89,6 +91,27 @@ export default class Groups {
       .join(' and ');
 
     const query = buildGraphQLQueryFetchGroups(searchQ, take, skip);
+
+    const { queryGroupsContentsWithTotal } = await this.client.request<
+      ResponseFetchGroups,
+      unknown
+    >(query);
+    const { total, items } = queryGroupsContentsWithTotal;
+
+    return {
+      total,
+      items: items.map(parseGraphQLGroup),
+    };
+  }
+
+  async fetchByTeamId(
+    teamId: string,
+    options: FetchOptions,
+  ): Promise<ListGroupResponse> {
+    const { take, skip } = options;
+    const filter = `data/teams/iv eq '${teamId}'`;
+
+    const query = buildGraphQLQueryFetchGroups(filter, take, skip);
 
     const { queryGroupsContentsWithTotal } = await this.client.request<
       ResponseFetchGroups,

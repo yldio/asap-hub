@@ -287,6 +287,18 @@ module.exports = {
         },
       ],
     },
+    fetchGroupsByTeamId: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/groups/fetch-by-team-id.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/teams/{id}/groups`,
+          },
+        },
+      ],
+    },
     dashboard: {
       handler: 'apps/asap-server/build-cjs/handlers/dashboard/fetch.handler',
       events: [

@@ -8,5 +8,9 @@ export const appFactory = (): Express => {
   app.use(eventRoutes);
   app.use(errorHandler);
 
+  app.get("*", async (_req, res) => {
+    res.status(404).json("Invalid route");
+  });
+
   return app;
 };

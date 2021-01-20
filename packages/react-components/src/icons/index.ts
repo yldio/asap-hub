@@ -19,6 +19,7 @@ export { default as googleDriveIcon } from './google-drive';
 export { default as googleIcon } from './google';
 export { default as googleScholarIcon } from './google-scholar';
 export { default as googleSigninLightNormalIcon } from './google-signin-light-normal';
+export { default as groupsIcon } from './groups';
 export { default as hidePasswordIcon } from './hide-password';
 export { default as lastPageIcon } from './last-page';
 export { default as libraryIcon } from './shared-research';

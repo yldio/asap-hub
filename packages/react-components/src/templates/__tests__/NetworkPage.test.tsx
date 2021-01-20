@@ -7,6 +7,7 @@ const props: ComponentProps<typeof NetworkPage> = {
   page: 'teams',
   usersHref: '/users',
   teamsHref: '/teams',
+  groupsHref: '/groups',
   searchQuery: '',
 };
 it('renders the header', () => {

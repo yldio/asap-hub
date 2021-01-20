@@ -63,7 +63,7 @@ const styles = css({
 
 type TabNavChildren =
   | React.ReactElement
-  | ReadonlyArray<TabNavChildren | undefined>;
+  | ReadonlyArray<TabNavChildren | null | undefined | boolean>;
 interface TabNavProps {
   readonly children: TabNavChildren;
 }

@@ -5,7 +5,7 @@ import { NetworkPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
 
 import { useSearch } from '../hooks';
-import { TEAMS_PATH, USERS_PATH } from './routes';
+import { TEAMS_PATH, USERS_PATH, GROUPS_PATH } from './routes';
 import { SearchFrame } from '../structure/Frame';
 
 const loadUserList = () =>
@@ -46,6 +46,7 @@ const Network: React.FC<Record<string, never>> = () => {
 
   const usersHref = join(url, USERS_PATH) + searchQueryParamString;
   const teamsHref = join(url, TEAMS_PATH) + searchQueryParamString;
+  const groupsHref = join(url, GROUPS_PATH) + searchQueryParamString;
 
   return (
     <Switch>
@@ -54,6 +55,7 @@ const Network: React.FC<Record<string, never>> = () => {
           page="users"
           usersHref={usersHref}
           teamsHref={teamsHref}
+          groupsHref={groupsHref}
           searchQuery={searchQuery}
           onChangeSearch={setSearchQuery}
           filters={filters}
@@ -70,6 +72,7 @@ const Network: React.FC<Record<string, never>> = () => {
           page="teams"
           usersHref={usersHref}
           teamsHref={teamsHref}
+          groupsHref={groupsHref}
           searchQuery={searchQuery}
           onChangeSearch={setSearchQuery}
         >
@@ -79,6 +82,9 @@ const Network: React.FC<Record<string, never>> = () => {
         </NetworkPage>
       </Route>
       <Route path={`${path}/${TEAMS_PATH}/:id`} component={TeamProfile} />
+      <Route exact path={`${path}/${GROUPS_PATH}`}>
+        TODO
+      </Route>
       <Redirect to={`${path}/${TEAMS_PATH}`} />
     </Switch>
   );

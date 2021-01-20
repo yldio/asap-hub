@@ -10,10 +10,11 @@ import { text, number } from '@storybook/addon-knobs';
 import { TeamRole } from '@asap-hub/model';
 
 import { LayoutDecorator } from './layout';
+import { makeFlagDecorator } from './flags';
 
 export default {
   title: 'Pages / Network',
-  decorators: [LayoutDecorator],
+  decorators: [LayoutDecorator, makeFlagDecorator('Groups Enabled', 'GROUPS')],
 };
 
 const member: Omit<
@@ -85,6 +86,7 @@ export const TeamList = () => (
       page="teams"
       usersHref="/users"
       teamsHref="/teams"
+      groupsHref="/groups"
       searchQuery={text('Search Query', '')}
       onChangeSearch={() => action('search change')}
     >
@@ -99,6 +101,7 @@ export const PeopleList = () => (
       page="users"
       usersHref="/users"
       teamsHref="/teams"
+      groupsHref="/groups"
       searchQuery={text('Search Query', '')}
       onChangeSearch={() => action('search change')}
     >

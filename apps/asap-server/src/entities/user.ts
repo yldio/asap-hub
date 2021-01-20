@@ -107,7 +107,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     orcidWorks: item.flatData?.orcidWorks?.slice(0, 5) || [],
     questions: flatQuestions.map((q) => q.question) || [],
     skills: flatSkills,
-    lastModifiedDate: item.flatData?.lastModifiedDate ?? createdDate,
+    lastModifiedDate: item.flatData?.lastModifiedDate || createdDate,
     teams,
     social,
     avatarUrl: flatAvatar?.length

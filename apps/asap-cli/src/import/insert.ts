@@ -124,6 +124,7 @@ const insertUser = async (
     biography,
     skillsDescription,
     asapRole,
+    social,
   } = data;
 
   const user: RestUser['data'] = {
@@ -164,6 +165,9 @@ const insertUser = async (
     },
     connections: {
       iv: [],
+    },
+    social: {
+      iv: [social],
     },
     role: {
       iv: asapRole,

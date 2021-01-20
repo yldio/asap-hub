@@ -4,9 +4,6 @@ import css from '@emotion/css';
 import { perRem, tabletScreen } from '../pixels';
 import { Tag } from '../atoms';
 
-const NUMBER_OF_TAGS = 5;
-const NUMBER_OF_TAGS_MOBILE = 5;
-
 const listStyles = css({
   padding: 0,
   marginBlockStart: 0,
@@ -28,24 +25,25 @@ const normalListItemStyles = css({
   },
 });
 
-const summarizedListItemStyles = css({
-  counterIncrement: 'tags -1',
-  [`:nth-of-type(n + ${NUMBER_OF_TAGS + 1})`]: {
-    display: 'none',
-    '~ .overflow': {
-      display: 'unset',
-    },
-  },
-
-  [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
-    [`:nth-of-type(n + ${NUMBER_OF_TAGS_MOBILE + 1})`]: {
+const summarizedListItemStyles = (min: number, max: number) =>
+  css({
+    counterIncrement: 'tags -1',
+    [`:nth-of-type(n + ${max + 1})`]: {
       display: 'none',
       '~ .overflow': {
         display: 'unset',
       },
     },
-  },
-});
+
+    [`@media (max-width: ${tabletScreen.min - 1}px)`]: {
+      [`:nth-of-type(n + ${min + 1})`]: {
+        display: 'none',
+        '~ .overflow': {
+          display: 'unset',
+        },
+      },
+    },
+  });
 
 const overflowContentStyles = css({
   '::after': {
@@ -55,28 +53,29 @@ const overflowContentStyles = css({
 
 interface TagListProps {
   tags: string[];
-  summarize?: boolean;
+  min?: number;
+  max?: number;
 }
-const TagList: React.FC<TagListProps> = ({ tags, summarize = false }) =>
+const TagList: React.FC<TagListProps> = ({
+  tags,
+  min = Number.MAX_SAFE_INTEGER,
+  max = Number.MAX_SAFE_INTEGER,
+}) =>
   tags.length ? (
-    <ul
-      css={[listStyles, summarize && { counterReset: `tags ${tags.length}` }]}
-    >
+    <ul css={[listStyles, { counterReset: `tags ${tags.length}` }]}>
       {tags.map((tag, index) => (
         <li
           key={index}
-          css={[normalListItemStyles, summarize && summarizedListItemStyles]}
+          css={[normalListItemStyles, summarizedListItemStyles(min, max)]}
         >
           <Tag>{tag}</Tag>
         </li>
       ))}
-      {summarize && (
-        <li key="overflow" className="overflow">
-          <Tag>
-            <span css={overflowContentStyles}></span>
-          </Tag>
-        </li>
-      )}
+      <li key="overflow" className="overflow">
+        <Tag>
+          <span css={overflowContentStyles}></span>
+        </Tag>
+      </li>
     </ul>
   ) : null;
 

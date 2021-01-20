@@ -39,7 +39,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
       <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
       <Paragraph accent="lead">{projectTitle}</Paragraph>
     </Link>
-    <TagList summarize tags={skills} />
+    <TagList min={5} max={5} tags={skills} />
     <span css={teamMemberStyles}>
       <span css={iconStyles}>{teamIcon} </span>
       {members.length} Team Member

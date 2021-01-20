@@ -2,24 +2,21 @@ import React from 'react';
 import css from '@emotion/css';
 import { CalendarResponse } from '@asap-hub/model';
 
-import { Card, Headline3, Paragraph } from '../atoms';
-import { googleCalendarIcon, plusIcon } from '../icons';
+import { Card, Headline3, Paragraph, Link } from '../atoms';
 import { tabletScreen, perRem } from '../pixels';
-import { ExternalLink } from '../molecules';
+import { CalendarLink } from '../molecules';
 import { steel } from '../colors';
+
+const containerStyles = css({
+  display: 'grid',
+  gridRowGap: `${24 / perRem}em`,
+});
 
 const headerStyles = css({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
-});
-
-const iconHide = css({
-  display: 'none',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'unset',
-  },
 });
 
 const dataGrid = css({
@@ -51,7 +48,7 @@ const orderList = css({
     width: '100%',
     display: 'inline-flex',
   },
-  '& li + li': {
+  '&> li + li': {
     [`@media (max-width: ${tabletScreen.min}px)`]: {
       marginTop: `${12 / perRem}em`,
     },
@@ -66,27 +63,23 @@ const CalendarList: React.FC<CalendarListProps> = ({
   calendars,
   singleGroup = false,
 }) => (
-  <Card>
-    <div css={headerStyles}>
-      <Headline3>
-        Subscribe to {singleGroup ? "this group's" : 'Groups on'} Google
-        Calendar
-      </Headline3>
-      <div css={iconHide}>{googleCalendarIcon}</div>
-    </div>
-    {singleGroup || (
-      <Paragraph accent="lead">
-        Below you can find a list of all the Groups that will present in the
-        future. You can subscribe to each one of them by adding them to your
-        Google calendar via the buttons below.
-      </Paragraph>
-    )}
-    {!!calendars.length && (
-      <ul css={orderList}>
-        {calendars.map(({ id, name, color }) => {
-          const url = new URL('https://calendar.google.com/calendar/r');
-          url.searchParams.set('cid', id);
-          return (
+  <div css={containerStyles}>
+    <Card>
+      <div css={headerStyles}>
+        <Headline3>
+          Subscribe to {singleGroup ? "this group's" : 'Groups on'} calendar
+        </Headline3>
+      </div>
+      {singleGroup || (
+        <Paragraph accent="lead">
+          Below you can find a list of all the Groups that will present in the
+          future. Hitting subscribe will allow you to add them to your own
+          personal calendar.
+        </Paragraph>
+      )}
+      {!!calendars.length && (
+        <ul css={orderList}>
+          {calendars.map(({ id, name, color }) => (
             <li key={id}>
               <div css={dataGrid}>
                 <div css={gridText}>
@@ -100,19 +93,26 @@ const CalendarList: React.FC<CalendarListProps> = ({
                   </Paragraph>
                 </div>
                 <div css={gridButton}>
-                  <ExternalLink
-                    icon={plusIcon}
-                    label="Add to calendar"
-                    href={url.toString()}
-                  />
+                  <CalendarLink id={id} />
                 </div>
               </div>
             </li>
-          );
-        })}
-      </ul>
-    )}
-  </Card>
+          ))}
+        </ul>
+      )}
+    </Card>
+    <Paragraph accent="lead">
+      Having issues? Set up your calendar manually with these instructions for{' '}
+      <Link href="https://support.apple.com/en-us/guide/calendar/icl1022/mac">
+        iCal
+      </Link>{' '}
+      or{' '}
+      <Link href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c">
+        Outlook
+      </Link>
+      .
+    </Paragraph>
+  </div>
 );
 
 export default CalendarList;

@@ -32,6 +32,8 @@ const layoutStyles = css({
 });
 
 const bannerStyles = css(gradientStyles, {
+  borderTopLeftRadius: 'inherit',
+  borderTopRightRadius: 'inherit',
   height: `${36 / perRem}em`,
   padding: `${24 / perRem}em 0`,
 

@@ -25,6 +25,7 @@ import {
   lastPageIcon,
   libraryIcon,
   linkedInIcon,
+  linkIcon,
   locationIcon,
   logoutIcon,
   menuIcon,
@@ -34,12 +35,13 @@ import {
   nextPageIcon,
   orcidIcon,
   orcidSocialIcon,
+  outlookIcon,
   placeholderIcon,
   plusIcon,
   previousPageIcon,
   protocolsIcon,
-  researchGateIcon,
   researcherIdIcon,
+  researchGateIcon,
   searchIcon,
   settingsIcon,
   showPasswordIcon,
@@ -80,6 +82,7 @@ export const GoogleSigninLightNormal = () => googleSigninLightNormalIcon;
 export const Groups = () => groupsIcon;
 export const HidePassword = () => hidePasswordIcon;
 export const LastPage = () => lastPageIcon;
+export const Link = () => linkIcon;
 export const LinkedIn = () => linkedInIcon;
 export const Location = () => locationIcon;
 export const Logout = () => logoutIcon;
@@ -90,12 +93,13 @@ export const NewsPlaceholder = () => newsPlaceholder;
 export const NextPage = () => nextPageIcon;
 export const Orcid = () => orcidIcon;
 export const OrcidSocial = () => orcidSocialIcon;
+export const Outlook = () => outlookIcon;
 export const Placeholder = () => placeholderIcon;
 export const Plus = () => plusIcon;
 export const PreviousPage = () => previousPageIcon;
 export const Protocols = () => protocolsIcon;
-export const ResearchGate = () => researchGateIcon;
 export const ResearcherId = () => researcherIdIcon;
+export const ResearchGate = () => researchGateIcon;
 export const Search = () => searchIcon;
 export const Settings = () => settingsIcon;
 export const SharedResearch = () => libraryIcon;

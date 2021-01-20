@@ -1443,6 +1443,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.4.34"
       ],
       [
+        "@types/cookiejar",
+        "npm:2.1.2"
+      ],
+      [
         "@types/cors",
         "npm:2.8.9"
       ],
@@ -1793,6 +1797,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/stack-utils",
         "npm:2.0.0"
+      ],
+      [
+        "@types/superagent",
+        "npm:4.1.10"
+      ],
+      [
+        "@types/supertest",
+        "npm:2.0.10"
       ],
       [
         "@types/tapable",
@@ -8047,6 +8059,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.8.3"
       ],
       [
+        "supertest",
+        "npm:6.1.1"
+      ],
+      [
         "supports-color",
         "npm:6.1.0"
       ],
@@ -9065,6 +9081,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/mime-types", "npm:2.1.0"],
             ["@types/parse-data-url", "npm:3.0.0"],
             ["@types/pump", "npm:1.1.0"],
+            ["@types/supertest", "npm:2.0.10"],
             ["@types/uuid", "npm:8.0.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -9092,6 +9109,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["parse-data-url", "npm:3.0.0"],
             ["pump", "npm:3.0.0"],
             ["serverless-http", "npm:2.6.1"],
+            ["supertest", "npm:6.1.1"],
             ["uuid", "npm:8.3.0"]
           ],
           "linkType": "SOFT",
@@ -19588,6 +19606,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/cookiejar", [
+        ["npm:2.1.2", {
+          "packageLocation": "./.yarn/cache/@types-cookiejar-npm-2.1.2-2588120a7c-4bb5d0d07e.zip/node_modules/@types/cookiejar/",
+          "packageDependencies": [
+            ["@types/cookiejar", "npm:2.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/cors", [
         ["npm:2.8.9", {
           "packageLocation": "./.yarn/cache/@types-cors-npm-2.8.9-758483771f-903e863c91.zip/node_modules/@types/cors/",
@@ -20533,6 +20560,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-stack-utils-npm-2.0.0-8ded8461bc-662312302e.zip/node_modules/@types/stack-utils/",
           "packageDependencies": [
             ["@types/stack-utils", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/superagent", [
+        ["npm:4.1.10", {
+          "packageLocation": "./.yarn/cache/@types-superagent-npm-4.1.10-56c7076140-6ef5ebd6e0.zip/node_modules/@types/superagent/",
+          "packageDependencies": [
+            ["@types/superagent", "npm:4.1.10"],
+            ["@types/cookiejar", "npm:2.1.2"],
+            ["@types/node", "npm:13.11.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/supertest", [
+        ["npm:2.0.10", {
+          "packageLocation": "./.yarn/cache/@types-supertest-npm-2.0.10-112745dbce-9ceae7e743.zip/node_modules/@types/supertest/",
+          "packageDependencies": [
+            ["@types/supertest", "npm:2.0.10"],
+            ["@types/superagent", "npm:4.1.10"]
           ],
           "linkType": "HARD",
         }]
@@ -40444,6 +40492,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["qs", "npm:6.9.4"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:6.9.6", {
+          "packageLocation": "./.yarn/cache/qs-npm-6.9.6-fee5de1427-853715ab6d.zip/node_modules/qs/",
+          "packageDependencies": [
+            ["qs", "npm:6.9.6"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["query-string", [
@@ -44498,6 +44553,35 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime", "npm:1.6.0"],
             ["qs", "npm:6.9.4"],
             ["readable-stream", "npm:2.3.7"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:6.1.0", {
+          "packageLocation": "./.yarn/cache/superagent-npm-6.1.0-053b76aea5-bc21d32d9d.zip/node_modules/superagent/",
+          "packageDependencies": [
+            ["superagent", "npm:6.1.0"],
+            ["component-emitter", "npm:1.3.0"],
+            ["cookiejar", "npm:2.1.2"],
+            ["debug", "virtual:88c91e718f5c047e706657833016435d9afd204207e38d93790ef921db10dcd422cdb8ab7a565d263b03ce9d79a2098e157c646f2bd38df6ecdb41f52893df49#npm:4.2.0"],
+            ["fast-safe-stringify", "npm:2.0.7"],
+            ["form-data", "npm:3.0.0"],
+            ["formidable", "npm:1.2.2"],
+            ["methods", "npm:1.1.2"],
+            ["mime", "npm:2.4.6"],
+            ["qs", "npm:6.9.6"],
+            ["readable-stream", "npm:3.6.0"],
+            ["semver", "npm:7.3.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["supertest", [
+        ["npm:6.1.1", {
+          "packageLocation": "./.yarn/cache/supertest-npm-6.1.1-f32857c64c-18b03819af.zip/node_modules/supertest/",
+          "packageDependencies": [
+            ["supertest", "npm:6.1.1"],
+            ["methods", "npm:1.1.2"],
+            ["superagent", "npm:6.1.0"]
           ],
           "linkType": "HARD",
         }]

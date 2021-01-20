@@ -5,8 +5,10 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
     return next(err);
   }
 
+  // eslint-disable-next-line no-console
   console.error({ err });
 
   res.status(err.status || err.statusCode || 500);
-  res.json({ error: err.message });
+
+  return res.json({ error: err.message });
 };

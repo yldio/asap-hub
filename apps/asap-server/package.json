@@ -67,7 +67,9 @@
     "@types/lodash.matches": "^4",
     "@types/mime-types": "^2",
     "@types/pump": "^1.1.0",
+    "@types/supertest": "^2.0.10",
     "@types/uuid": "^8.0.0",
-    "jwt-encode": "^1.0.1"
+    "jwt-encode": "^1.0.1",
+    "supertest": "^6.1.1"
   }
 }

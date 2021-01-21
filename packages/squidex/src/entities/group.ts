@@ -20,9 +20,10 @@ interface Group<
   description: string;
   summary: string;
   tools: {
-    slack: string;
+    slack?: string;
     googleDrive?: string;
-  }[];
+    googleCalendar?: string;
+  };
   teams: TTeamConnection[];
   leaders: GroupUserConnection<TUserConnection>[];
   calendars: TCalendar[];

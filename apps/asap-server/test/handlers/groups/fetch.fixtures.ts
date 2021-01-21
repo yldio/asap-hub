@@ -16,11 +16,9 @@ export const response: { data: ResponseFetchGroups } = {
             name: "JT's Group",
             summary: 'A very good group',
             tags: ['coding'],
-            tools: [
-              {
-                slack: 'https://example.com/secure-comms',
-              },
-            ],
+            tools: {
+              slack: 'https://example.com/secure-comms',
+            },
             calendars: [
               {
                 id: 'calendar-id-1',
@@ -198,7 +196,8 @@ export const expectation: ListGroupResponse = {
       summary: 'A very good group',
       tools: {
         slack: 'https://example.com/secure-comms',
-        googleCalendar: "https://calendar.google.com/calendar/r?cid=calendar-id-1",
+        googleCalendar:
+          'https://calendar.google.com/calendar/r?cid=calendar-id-1',
       },
       teams: [
         {

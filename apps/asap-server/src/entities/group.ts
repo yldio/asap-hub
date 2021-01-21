@@ -4,7 +4,7 @@ import {
   TeamResponse,
   CalendarResponse,
   GroupTeam,
-  GroupTool,
+  GroupTools,
 } from '@asap-hub/model';
 import { GraphqlGroup } from '@asap-hub/squidex';
 
@@ -30,9 +30,7 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     }),
   );
 
-  const tools: GroupTool = item.flatData?.tools?.length
-    ? item.flatData?.tools[0]
-    : {};
+  const tools: GroupTools = item.flatData?.tools ? item.flatData?.tools : {};
 
   if (item.flatData?.calendars?.length) {
     const url = new URL('https://calendar.google.com/calendar/r');

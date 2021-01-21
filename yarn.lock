@@ -103,6 +103,7 @@ __metadata:
     date-fns: ^2.16.1
     debug: ^4.2.0
     express: ^4.17.1
+    express-async-errors: ^3.1.1
     form-data: ^3.0.0
     got: ^11.6.0
     graphql: ^15.3.0
@@ -14450,6 +14451,15 @@ __metadata:
     jest-message-util: ^26.6.2
     jest-regex-util: ^26.0.0
   checksum: a4ec4cbafac8b05eb02a8af5f086dede84a3a701abbfdafeadca24a1d286bd07035b32b2864a6ff012a733009beb0b96c10469b40832c5ee0d2dd0bb6b50a5b0
+  languageName: node
+  linkType: hard
+
+"express-async-errors@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "express-async-errors@npm:3.1.1"
+  peerDependencies:
+    express: ^4.16.2
+  checksum: 6ccb390a5ba97e7b6dc5f574463b63af8809bf24409e551e19773fd37fd5b90a7daf417fd6546c0983a3c8e2f1cbc56d318966e0aa3c3703d5bc0d262d13b0a5
   languageName: node
   linkType: hard
 

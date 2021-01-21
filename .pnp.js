@@ -4091,6 +4091,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.17.1"
       ],
       [
+        "express-async-errors",
+        "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:3.1.1"
+      ],
+      [
         "ext",
         "npm:1.4.0"
       ],
@@ -9092,6 +9096,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns", "npm:2.16.1"],
             ["debug", "virtual:f0feb3e35ea1501ece7e5ab053f26574bc8d915dbb18298393edfa9ef10eacc7ab670c7512f7eb86b844e36fbe728c0100a7d3394cb084b17e0e6e48f3ad114f#npm:4.3.0"],
             ["express", "npm:4.17.1"],
+            ["express-async-errors", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:3.1.1"],
             ["form-data", "npm:3.0.0"],
             ["got", "npm:11.6.0"],
             ["graphql", "npm:15.3.0"],
@@ -29541,6 +29546,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["type-is", "npm:1.6.18"],
             ["utils-merge", "npm:1.0.1"],
             ["vary", "npm:1.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["express-async-errors", [
+        ["npm:3.1.1", {
+          "packageLocation": "./.yarn/cache/express-async-errors-npm-3.1.1-c0a6b1e552-6ccb390a5b.zip/node_modules/express-async-errors/",
+          "packageDependencies": [
+            ["express-async-errors", "npm:3.1.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:3.1.1", {
+          "packageLocation": "./.yarn/$$virtual/express-async-errors-virtual-e90c40905f/0/cache/express-async-errors-npm-3.1.1-c0a6b1e552-6ccb390a5b.zip/node_modules/express-async-errors/",
+          "packageDependencies": [
+            ["express-async-errors", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:3.1.1"],
+            ["@types/express", "npm:4.17.11"],
+            ["express", "npm:4.17.1"]
+          ],
+          "packagePeers": [
+            "@types/express",
+            "express"
           ],
           "linkType": "HARD",
         }]

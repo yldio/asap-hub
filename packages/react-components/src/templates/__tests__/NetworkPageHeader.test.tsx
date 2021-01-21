@@ -37,6 +37,15 @@ it('alters the search placeholder based on the tab', () => {
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
+
+  rerender(
+    <MemoryRouter initialEntries={['/current']}>
+      <NetworkPageHeader {...props} page="groups" groupsHref="/current" />
+    </MemoryRouter>,
+  );
+  expect(
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
+  ).toMatchInlineSnapshot(`"Search for a group…"`);
 });
 
 it('shows the filter only on the users tab', () => {

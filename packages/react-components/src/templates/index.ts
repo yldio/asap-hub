@@ -12,6 +12,7 @@ export { default as EventsCalendar } from './EventsCalendar';
 export { default as EventsPage } from './EventsPage';
 export { default as ForgotPasswordPage } from './ForgotPasswordPage';
 export { default as Layout } from './Layout';
+export { default as NetworkGroups } from './NetworkGroups';
 export { default as NetworkPage } from './NetworkPage';
 export { default as NetworkPageHeader } from './NetworkPageHeader';
 export { default as NetworkPeople } from './NetworkPeople';

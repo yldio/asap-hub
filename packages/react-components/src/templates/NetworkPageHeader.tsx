@@ -116,7 +116,11 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           />
         ) : (
           <SearchField
-            placeholder="Enter name, keyword, method, …"
+            placeholder={
+              page === 'teams'
+                ? 'Enter name, keyword, method, …'
+                : 'Search for a group…'
+            }
             value={searchQuery}
             onChange={onChangeSearch}
           />

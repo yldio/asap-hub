@@ -12,9 +12,7 @@ jest.mock('../../../src/utils/validate-token');
 describe('GET /users/{id}', () => {
   test("return 400 when id isn't present", async () => {
     const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-      }),
+      apiGatewayEvent({}),
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(400);
@@ -33,7 +31,6 @@ describe('GET /users/{id}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           id: 'not-found',
         },

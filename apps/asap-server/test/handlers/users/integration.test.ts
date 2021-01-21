@@ -33,7 +33,6 @@ describe('GET /users/{id}', () => {
   test('returns 200 when users exist', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           id: user.id,
         },

@@ -20,13 +20,12 @@ describe('PATCH /users/{id} - validations', () => {
   test('returns 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           jobTitle: 'CEO',
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -36,16 +35,15 @@ describe('PATCH /users/{id} - validations', () => {
   test('returns 401 when method is not bearer', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
         headers: {
           Authorization: 'Basic token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           jobTitle: 'CEO',
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -60,16 +58,15 @@ describe('PATCH /users/{id} - validations', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           jobTitle: 'CEO',
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -79,33 +76,30 @@ describe('PATCH /users/{id} - validations', () => {
   test('returns 400 when payload is invalid', async () => {
     const result1 = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {},
       }),
     )) as APIGatewayProxyResult;
 
     const result2 = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           teams: [
             {
               id: 'team-id-3',
             },
           ],
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -116,16 +110,15 @@ describe('PATCH /users/{id} - validations', () => {
   test('returns 403 when user is changing other user', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'not-me',
         },
-        body: {
+        body: JSON.stringify({
           jobTitle: 'CEO',
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -135,21 +128,20 @@ describe('PATCH /users/{id} - validations', () => {
   test('returns 403 when editing a team he doesnt belong to', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'patch',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           teams: [
             {
               id: 'team-id-1000',
               responsibilities: 'I do stuff',
             },
           ],
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -176,16 +168,15 @@ describe('PATCH /users/{id}', () => {
 
       const result = (await handler(
         apiGatewayEvent({
-          httpMethod: 'patch',
           headers: {
             Authorization: 'Bearer token',
           },
           pathParameters: {
             id: 'userId',
           },
-          body: {
+          body: JSON.stringify({
             jobTitle: 'CEO',
-          },
+          }),
         }),
       )) as APIGatewayProxyResult;
 
@@ -231,14 +222,13 @@ describe('PATCH /users/{id}', () => {
 
       const result = (await handler(
         apiGatewayEvent({
-          httpMethod: 'patch',
           headers: {
             Authorization: 'Bearer token',
           },
           pathParameters: {
             id: 'userId',
           },
-          body: {
+          body: JSON.stringify({
             contactEmail: '',
             biography: 'I do awesome stuff',
             jobTitle: '',
@@ -249,7 +239,7 @@ describe('PATCH /users/{id}', () => {
             skills: [],
             skillsDescription: '',
             questions: [],
-          },
+          }),
         }),
       )) as APIGatewayProxyResult;
 
@@ -291,19 +281,18 @@ describe('PATCH /users/{id}', () => {
 
       const result = (await handler(
         apiGatewayEvent({
-          httpMethod: 'patch',
           headers: {
             Authorization: 'Bearer token',
           },
           pathParameters: {
             id: 'userId',
           },
-          body: {
+          body: JSON.stringify({
             social: { github: 'johnytiago' },
             jobTitle: 'CEO',
             questions: ['To be or not to be?'],
             firstName: undefined, // should be ignored
-          },
+          }),
         }),
       )) as APIGatewayProxyResult;
 
@@ -398,14 +387,13 @@ describe('PATCH /users/{id}', () => {
 
       const result = (await handler(
         apiGatewayEvent({
-          httpMethod: 'patch',
           headers: {
             Authorization: 'Bearer token',
           },
           pathParameters: {
             id: 'userId',
           },
-          body: {
+          body: JSON.stringify({
             teams: [
               {
                 id: 'team-id-3',
@@ -413,7 +401,7 @@ describe('PATCH /users/{id}', () => {
                 approach: 'orthodox',
               },
             ],
-          },
+          }),
         }),
       )) as APIGatewayProxyResult;
 
@@ -542,14 +530,13 @@ describe('PATCH /users/{id}', () => {
 
       const result = (await handler(
         apiGatewayEvent({
-          httpMethod: 'patch',
           headers: {
             Authorization: 'Bearer token',
           },
           pathParameters: {
             id: 'userId',
           },
-          body: {
+          body: JSON.stringify({
             teams: [
               {
                 id: 'team-id-3',
@@ -557,7 +544,7 @@ describe('PATCH /users/{id}', () => {
                 approach: '',
               },
             ],
-          },
+          }),
         }),
       )) as APIGatewayProxyResult;
 

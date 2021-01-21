@@ -36,10 +36,9 @@ describe('POST /webhook/users/connections - validations', () => {
   test('returns 400 when code is not defined', async () => {
     const res = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
-        body: {
+        body: JSON.stringify({
           userId: 'userId',
-        },
+        }),
         headers: {
           Authorization: `Basic ${secret}`,
         },
@@ -52,11 +51,10 @@ describe('POST /webhook/users/connections - validations', () => {
   test('returns 403 when secret doesnt match', async () => {
     const res = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
-        body: {
+        body: JSON.stringify({
           code: 'asap|token',
           userId: 'userId',
-        },
+        }),
         headers: {
           Authorization: 'Basic token',
         },
@@ -87,11 +85,10 @@ describe('POST /webhook/users/connections - success', () => {
 
     const res = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
-        body: {
+        body: JSON.stringify({
           code: 'invalidConnectCode',
           userId: 'userId',
-        },
+        }),
         headers: {
           Authorization: `Basic ${secret}`,
         },
@@ -121,11 +118,10 @@ describe('POST /webhook/users/connections - success', () => {
 
     const res = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
-        body: {
+        body: JSON.stringify({
           code: 'asapWelcomeCode',
           userId,
-        },
+        }),
         headers: {
           Authorization: `Basic ${secret}`,
         },

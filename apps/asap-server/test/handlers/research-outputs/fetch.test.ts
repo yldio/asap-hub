@@ -13,9 +13,7 @@ jest.mock('../../../src/utils/validate-token');
 describe('GET /research-outputs - failure', () => {
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
-      apiGatewayEvent({
-        httpMethod: 'get',
-      }),
+      apiGatewayEvent({}),
     )) as APIGatewayProxyResult;
 
     expect(result.statusCode).toStrictEqual(401);
@@ -24,7 +22,6 @@ describe('GET /research-outputs - failure', () => {
   test('returns 401 when method is not bearer', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Basic token`,
         },
@@ -42,7 +39,6 @@ describe('GET /research-outputs - failure', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -75,7 +71,6 @@ describe('GET /research-outputs - success', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -130,7 +125,6 @@ describe('GET /research-outputs - success', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -232,10 +226,9 @@ describe('GET /research-outputs - success', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         queryStringParameters: {
           search: 'Title',
-          filter: ['Proposal', 'Presentation'],
+          filter: 'Proposal,Presentation',
         },
         headers: {
           Authorization: `Bearer token`,

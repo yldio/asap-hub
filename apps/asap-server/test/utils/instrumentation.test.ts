@@ -43,7 +43,6 @@ describe('Instrumentation', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -70,7 +69,6 @@ describe('Instrumentation', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },

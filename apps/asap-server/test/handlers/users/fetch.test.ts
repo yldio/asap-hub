@@ -35,7 +35,6 @@ describe('GET /users', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -73,7 +72,6 @@ describe('GET /users', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
           filter: 'Lead PI (Core Leadership)',
@@ -112,7 +110,6 @@ describe('GET /users', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         queryStringParameters: {
           search: 'first last',
           filter: 'Lead PI (Core Leadership),anotherFilter',
@@ -144,7 +141,6 @@ describe('GET /users', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -178,7 +174,6 @@ describe('GET /users', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         queryStringParameters: {
           filter: 'Staff',
         },

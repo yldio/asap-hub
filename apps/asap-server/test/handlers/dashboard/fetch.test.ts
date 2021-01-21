@@ -30,7 +30,6 @@ describe('GET /dashboard', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -57,7 +56,6 @@ describe('GET /dashboard', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -114,7 +112,6 @@ describe('GET /dashboard', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: 'Bearer token',
         },

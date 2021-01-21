@@ -35,7 +35,6 @@ describe('GET /teams', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         queryStringParameters: {
           take: '8',
           skip: '8',
@@ -78,7 +77,6 @@ describe('GET /teams', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         queryStringParameters: {
           search: 'Cristiano Ronaldo',
         },
@@ -120,7 +118,6 @@ describe('GET /teams', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: 'Bearer token',
         },

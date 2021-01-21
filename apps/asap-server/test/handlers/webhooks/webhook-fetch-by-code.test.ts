@@ -13,7 +13,6 @@ describe('POST /webhook/users/{code} - validation', () => {
   test("return 400 when code isn't present", async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Basic ${secret}`,
         },
@@ -26,7 +25,6 @@ describe('POST /webhook/users/{code} - validation', () => {
   test('returns 401 when request is not authorized', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           code: 'welcomeCode',
         },
@@ -39,7 +37,6 @@ describe('POST /webhook/users/{code} - validation', () => {
   test('returns 401 when request is not using Basic Auth', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           code: 'welcomeCode',
         },
@@ -55,7 +52,6 @@ describe('POST /webhook/users/{code} - validation', () => {
   test('returns 403 when secret doesnt match', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           code: 'welcomeCode',
         },
@@ -98,7 +94,6 @@ describe('GET /webhook/users/{code}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           code: 'notFound',
         },
@@ -124,7 +119,6 @@ describe('GET /webhook/users/{code}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           code: 'welcomeCode',
         },

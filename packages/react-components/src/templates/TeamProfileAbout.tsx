@@ -4,7 +4,7 @@ import { TeamResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
 import {
-  MembersSection,
+  TeamMembersSection,
   ProfileSkills,
   TeamProfileOverview,
 } from '../organisms';
@@ -18,7 +18,7 @@ const styles = css({
 
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileSkills> &
-  Omit<ComponentProps<typeof MembersSection>, 'title'> &
+  Omit<ComponentProps<typeof TeamMembersSection>, 'title'> &
   Pick<TeamResponse, 'pointOfContact'>;
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
@@ -38,7 +38,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       />
     ) : null}
     {skills.length ? <ProfileSkills skills={skills} /> : null}
-    {members.length ? <MembersSection members={members} /> : null}
+    {members.length ? <TeamMembersSection members={members} /> : null}
     {pointOfContact && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}

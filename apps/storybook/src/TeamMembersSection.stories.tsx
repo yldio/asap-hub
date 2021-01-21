@@ -1,15 +1,13 @@
 import React from 'react';
-import { MembersSection } from '@asap-hub/react-components';
+import { TeamMembersSection } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Members',
+  title: 'Organisms / Team Profile / Members',
 };
 
-export const Empty = () => <MembersSection members={[]} />;
-
 export const Normal = () => (
-  <MembersSection
+  <TeamMembersSection
     title={'Team Members (7)'}
     members={[
       {
@@ -75,3 +73,5 @@ export const Normal = () => (
     ]}
   />
 );
+
+export const Empty = () => <TeamMembersSection members={[]} />;

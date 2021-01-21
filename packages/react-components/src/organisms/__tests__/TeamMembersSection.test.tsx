@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import MembersSection from '../MembersSection';
+import TeamMembersSection from '../TeamMembersSection';
 
 it('renders an header with number of members', () => {
-  const { getByRole } = render(<MembersSection members={[]} />);
+  const { getByRole } = render(<TeamMembersSection members={[]} />);
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
     `"Team Members (0)"`,
   );
@@ -11,7 +11,7 @@ it('renders an header with number of members', () => {
 
 it('renders the content', async () => {
   const { getByText } = render(
-    <MembersSection
+    <TeamMembersSection
       title={'Title'}
       members={[
         {

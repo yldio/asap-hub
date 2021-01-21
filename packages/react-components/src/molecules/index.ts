@@ -12,6 +12,7 @@ export { default as LabeledRadioButton } from './LabeledRadioButton';
 export { default as LabeledTextArea } from './LabeledTextArea';
 export { default as LabeledTextField } from './LabeledTextField';
 export { default as Loading } from './Loading';
+export { default as MembersList } from './MembersList';
 export { default as MenuButton } from './MenuButton';
 export { default as Modal } from './Modal';
 export { default as ModalEditHeader } from './ModalEditHeader';

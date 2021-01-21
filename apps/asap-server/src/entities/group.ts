@@ -1,8 +1,10 @@
+import { URL } from 'url';
 import {
   GroupResponse,
   TeamResponse,
   CalendarResponse,
   GroupTeam,
+  GroupTool,
 } from '@asap-hub/model';
 import { GraphqlGroup } from '@asap-hub/squidex';
 
@@ -28,6 +30,16 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     }),
   );
 
+  const tools: GroupTool = item.flatData?.tools?.length
+    ? item.flatData?.tools[0]
+    : {};
+
+  if (item.flatData?.calendars?.length) {
+    const url = new URL('https://calendar.google.com/calendar/r');
+    url.searchParams.set('cid', item.flatData?.calendars[0].id);
+    tools.googleCalendar = url.toString();
+  }
+
   return {
     id: item.id,
     createdDate,
@@ -35,7 +47,7 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     tags: item.flatData?.tags || [],
     description: item.flatData?.description || '',
     summary: item.flatData?.summary || '',
-    tools: item.flatData?.tools || [],
+    tools,
     teams,
     leaders,
     calendars,

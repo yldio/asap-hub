@@ -9,8 +9,23 @@
     },
     "scripts": {},
     "fieldsInReferences": ["name"],
-    "fieldsInLists": [],
+    "fieldsInLists": ["name"],
     "fields": [
+      {
+        "name": "name",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Name",
+          "isRequired": false
+        }
+      },
       {
         "name": "id",
         "isHidden": false,
@@ -82,21 +97,6 @@
           "inlineEditable": false,
           "editor": "Radio",
           "label": "Color",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "name",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Name",
           "isRequired": false
         }
       }

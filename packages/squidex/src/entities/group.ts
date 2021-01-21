@@ -20,9 +20,8 @@ interface Group<
   description: string;
   summary: string;
   tools: {
-    url: string;
-    description?: string;
-    name: string;
+    slack: string;
+    googleDrive?: string;
   }[];
   teams: TTeamConnection[];
   leaders: GroupUserConnection<TUserConnection>[];

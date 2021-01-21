@@ -16,9 +16,8 @@ flatData {
   summary
   tags
   tools {
-    url
-    name
-    description
+    slack
+    googleDrive
   }
   teams {
   ${GraphQLQueryTeam}

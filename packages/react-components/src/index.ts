@@ -35,6 +35,7 @@ export {
   ErrorCard,
   ExternalLink,
   GoogleSigninButton,
+  GroupTools,
   Header,
   LabeledCheckbox,
   LabeledDateField,

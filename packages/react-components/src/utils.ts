@@ -1,6 +1,12 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { format } from 'date-fns';
+import {
+  googleDriveIcon,
+  protocolsIcon,
+  slackIcon,
+  googleCalendarIcon,
+} from './icons';
 
 /* istanbul ignore next */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -28,3 +34,22 @@ export const formatDateAndTime = (date: Date): string =>
 
 export const isInternalLink = (href: string): boolean =>
   new URL(href, window.location.href).origin === window.location.origin;
+
+const icons = Object.entries({
+  '.slack.com': slackIcon,
+  'protocols.io': protocolsIcon,
+  'drive.google.com': googleDriveIcon,
+  'calendar.google.com': googleCalendarIcon,
+});
+
+export const getIconFromUrl = (url: string): JSX.Element | undefined => {
+  const icon = icons.find(([key]) => {
+    try {
+      const { host } = new URL(url);
+      return host.endsWith(key);
+    } catch {
+      return false;
+    }
+  });
+  return icon?.[1];
+};

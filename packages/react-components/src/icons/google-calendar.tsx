@@ -10,6 +10,7 @@ const googleCalendarIcon = (
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
+    <title>Google Calendar</title>
     <path fill="url(#prefix__pattern0)" d="M0 0h30v30H0z" />
     <defs>
       <pattern

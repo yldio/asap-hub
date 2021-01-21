@@ -82,12 +82,12 @@ const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
               <div css={dataGrid}>
                 <div css={gridText}>
                   <Paragraph accent="charcoal">
-                    <div css={{ display: 'flex' }}>
+                    <span css={{ display: 'flex' }}>
                       <span css={{ color, paddingRight: `${14 / perRem}em` }}>
                         ●
                       </span>
                       <span css={{ fontWeight: 'bold' }}>{name}</span>
-                    </div>
+                    </span>
                   </Paragraph>
                 </div>
                 <div css={gridButton}>

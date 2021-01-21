@@ -112,7 +112,7 @@ describe('when button-styled', () => {
       </Link>,
     );
     const normalHeight = Number(
-      getComputedStyle(getByRole('link')).height.replace(/em$/, ''),
+      getComputedStyle(getByRole('link')).minHeight.replace(/em$/, ''),
     );
 
     rerender(

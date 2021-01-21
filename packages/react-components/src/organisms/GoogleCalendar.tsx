@@ -21,7 +21,11 @@ const GoogleCalendar: React.FC<GoogleCalendarProps> = ({ calendars }) => {
   });
 
   return (
-    <iframe src={iframeSrc.toString()} title="Calendar" css={iframeStyles} />
+    <iframe
+      src={iframeSrc.toString()}
+      title="Google Calendar Iframe"
+      css={iframeStyles}
+    />
   );
 };
 export default GoogleCalendar;

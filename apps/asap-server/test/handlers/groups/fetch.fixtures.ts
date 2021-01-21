@@ -198,6 +198,7 @@ export const expectation: ListGroupResponse = {
       summary: 'A very good group',
       tools: {
         slack: 'https://example.com/secure-comms',
+        googleCalendar: "https://calendar.google.com/calendar/r?cid=calendar-id-1",
       },
       teams: [
         {

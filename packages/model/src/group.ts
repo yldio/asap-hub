@@ -3,7 +3,7 @@ import { TeamResponse } from './team';
 import { UserResponse } from './user';
 import { CalendarResponse } from './calendar';
 
-export type GroupTool = {
+export type GroupTools = {
   slack?: string;
   googleDrive?: string;
   googleCalendar?: string;
@@ -24,7 +24,7 @@ export interface GroupResponse {
   tags: string[];
   description: string;
   summary: string;
-  tools: GroupTool;
+  tools: GroupTools;
   teams: GroupTeam[];
   leaders: GroupLeader[];
   calendars: CalendarResponse[];

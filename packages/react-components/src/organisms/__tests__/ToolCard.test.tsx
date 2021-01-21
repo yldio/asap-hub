@@ -34,24 +34,6 @@ it('renders slack logo from properties', () => {
   expect(getByTitle('Slack')).toBeInTheDocument();
 });
 
-it('renders google drive logo from properties', () => {
-  const { getByTitle } = render(
-    <ToolCard
-      {...props}
-      url="https://drive.google.com/wrong"
-      editHref="/link/0"
-    />,
-  );
-  expect(getByTitle('Google Drive')).toBeInTheDocument();
-});
-
-it('renders protocols from properties', () => {
-  const { getByTitle } = render(
-    <ToolCard {...props} url="https://protocols.io/wrong" editHref="/link/0" />,
-  );
-  expect(getByTitle('Protocols')).toBeInTheDocument();
-});
-
 it('renders default logo from properties', () => {
   const { getByTitle } = render(
     <ToolCard {...props} url="https://example.com" editHref="/link/0" />,

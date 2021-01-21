@@ -97,7 +97,7 @@ it('renders a disabled button', () => {
 it('renders a small button', () => {
   const { getByRole, rerender } = render(<Button />);
   const normalHeight = Number(
-    getComputedStyle(getByRole('button')).height.replace(/em$/, ''),
+    getComputedStyle(getByRole('button')).minHeight.replace(/em$/, ''),
   );
 
   rerender(<Button small />);

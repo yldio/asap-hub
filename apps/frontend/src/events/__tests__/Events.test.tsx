@@ -54,7 +54,7 @@ describe('the events calendar page', () => {
   it('renders a google calendar iframe', async () => {
     mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
     const { getByTitle } = await renderEventsPage();
-    expect(getByTitle(/calendar/i).tagName).toBe('IFRAME');
+    expect(getByTitle(/calendar iframe/i).tagName).toBe('IFRAME');
   });
 
   it('Displays a list of calendars', async () => {
@@ -66,12 +66,9 @@ describe('the events calendar page', () => {
       })),
     });
     const { queryAllByRole } = await renderEventsPage();
-    expect(queryAllByRole('listitem').map((item) => item.textContent))
-      .toMatchInlineSnapshot(`
-      Array [
-        "●Calendar 0Add to calendar",
-        "●Calendar 1Add to calendar",
-      ]
-    `);
+    expect(queryAllByRole('listitem').map((item) => item.textContent)).toEqual([
+      expect.stringMatching(/calendar 0/i),
+      expect.stringMatching(/calendar 1/i),
+    ]);
   });
 });

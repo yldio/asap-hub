@@ -102,7 +102,7 @@ it('renders a small button', () => {
 
   rerender(<Button small />);
   const smallHeight = Number(
-    getComputedStyle(getByRole('button')).height.replace(/em$/, ''),
+    getComputedStyle(getByRole('button')).minHeight.replace(/em$/, ''),
   );
 
   expect(smallHeight).toBeLessThan(normalHeight);

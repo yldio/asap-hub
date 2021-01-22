@@ -3,7 +3,7 @@ import { GroupTools } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Molecules / Group / Tools',
+  title: 'Organisms / Group Profile / Tools',
 };
 
 const props = (): ComponentProps<typeof GroupTools> => ({

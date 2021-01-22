@@ -69,7 +69,7 @@ const largeStyles = css({
   paddingRight: `${(20 - borderWidth) / perRem}em`,
 });
 const smallStyles = css({
-  height: `${36 / perRem}em`,
+  minHeight: `${36 / perRem}em`,
   '> svg': {
     height: `${18 / perRem}em`,
     width: 'auto',
@@ -80,7 +80,7 @@ const smallStyles = css({
   '> span + svg': {
     marginLeft: `${6 / perRem}em`,
   },
-  alignItems: 'center',
+  lineHeight: `${17 / perRem}em`,
 
   marginTop: `${12 / perRem}em`,
   marginBottom: `${12 / perRem}em`,

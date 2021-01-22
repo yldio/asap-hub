@@ -54,7 +54,7 @@ describe('the events calendar page', () => {
   it('renders a google calendar iframe', async () => {
     mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
     const { getByTitle } = await renderEventsPage();
-    expect(getByTitle(/calendar iframe/i).tagName).toBe('IFRAME');
+    expect(getByTitle('Calendar').tagName).toBe('IFRAME');
   });
 
   it('Displays a list of calendars', async () => {

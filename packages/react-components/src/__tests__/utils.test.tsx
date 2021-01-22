@@ -54,22 +54,22 @@ describe('isInternalLink', () => {
 });
 
 describe('getIconFromUrl', () => {
-  describe.each`
+  it.each`
     title                | href
     ${'Google Drive'}    | ${`https://drive.google.com/wrong`}
     ${'Protocols'}       | ${`https://protocols.io/wrong`}
     ${'Slack'}           | ${`https://asap.slack.com/wrong`}
     ${'Google Calendar'} | ${`http://calendar.google.com/r/calendar?12w3`}
-  `('for an $href to render svg with title $title', ({ href, title }) => {
+  `('$href renders a svg with title "$title"', ({ href, title }) => {
     const { getByTitle } = render(<>{getIconFromUrl(href)}</>);
     expect(getByTitle(title)).toBeInTheDocument();
   });
 
-  it('to return undefined for unknown urls', () => {
+  it('returns undefined for unknown urls', () => {
     expect(getIconFromUrl('http://example.com')).toBeUndefined();
   });
 
-  it('to return undefined for invalid urls', () => {
+  it('returns undefined for invalid urls', () => {
     expect(getIconFromUrl('not a url')).toBeUndefined();
   });
 });

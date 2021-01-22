@@ -11,7 +11,7 @@ const googleDriveIcon = (
     xmlns="http://www.w3.org/2000/svg"
   >
     <title>Google Drive</title>
-    <g clipPath="url(#prefix__clip0)">
+    <g clipPath="url(#prefix-google-drive)">
       <path
         d="M2.03 20.57l1.185 2.045c.247.431.6.77 1.016 1.016l4.23-7.323H0c0 .477.123.954.37 1.384l1.66 2.877z"
         fill="#0066DA"
@@ -38,7 +38,7 @@ const googleDriveIcon = (
       />
     </g>
     <defs>
-      <clipPath id="prefix__clip0">
+      <clipPath id="prefix-google-drive">
         <path fill="#fff" d="M0 0h26.861v24H0z" />
       </clipPath>
     </defs>

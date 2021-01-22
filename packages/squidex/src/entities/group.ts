@@ -22,7 +22,6 @@ interface Group<
   tools: {
     slack?: string;
     googleDrive?: string;
-    googleCalendar?: string;
   };
   teams: TTeamConnection[];
   leaders: GroupUserConnection<TUserConnection>[];

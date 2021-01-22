@@ -3,15 +3,15 @@ import React from 'react';
 /* istanbul ignore file */
 const googleCalendarIcon = (
   <svg
-    width={30}
-    height={30}
-    viewBox="0 0 30 30"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
     <title>Google Calendar</title>
-    <path fill="url(#prefix__pattern0)" d="M0 0h30v30H0z" />
+    <path fill="url(#prefix__pattern0)" d="M0 0h24v24H0z" />
     <defs>
       <pattern
         id="prefix__pattern0"

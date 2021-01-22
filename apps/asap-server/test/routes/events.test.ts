@@ -1,10 +1,10 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 
-describe('ASAP server app', () => {
+describe('/events/ routes', () => {
   const app = appFactory();
 
-  describe('/events/', () => {
+  describe('GET /events', () => {
     test('Should fetch an event list', async () => {
       const response = await supertest(app).get('/events/');
 

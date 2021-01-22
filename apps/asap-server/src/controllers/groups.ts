@@ -57,13 +57,17 @@ export interface ResponseFetchGroups {
   };
 }
 
-type FetchOptions = {
+export type FetchOptions = {
   take: number;
   skip: number;
   search?: string;
 };
 
-export default class Groups {
+export interface GroupController {
+  fetch: (options: FetchOptions) => Promise<ListGroupResponse>
+}
+
+export default class Groups implements GroupController {
   client: InstrumentedSquidexGraphql;
 
   constructor(ctxHeaders?: Record<string, string>) {

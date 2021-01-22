@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { Router } from 'express';
-import { appFactory } from '../app';
+import { appFactory } from '../../src/app';
 
 class CustomError extends Error {
   status?: number;
@@ -19,7 +19,7 @@ describe('Error handling', () => {
     throw error;
   });
 
-  const app = appFactory([errorRoutes]);
+  const app = appFactory({ requestHandlers: [errorRoutes] });
 
   test('Should return status 500 and return the error message', async () => {
     const response = await supertest(app).get('/events/error-route');

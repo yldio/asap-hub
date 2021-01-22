@@ -2,18 +2,25 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { errorHandler } from './utils/error-handler';
-import { eventRoutes } from './routes/events.route';
+import { eventRouteFactory } from './routes/events.route';
+import { groupRouteFactory } from './routes/groups.route';
+import Groups, { GroupController } from './controllers/groups';
 
-export const appFactory = (requestHandlers?: RequestHandler[]): Express => {
+export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
+
+  const groupController = libs.groupController || new Groups();
+  const eventRoutes = eventRouteFactory();
+  const groupRoutes = groupRouteFactory(groupController);
 
   app.use(cors());
 
-  if (requestHandlers) {
-    app.use(requestHandlers);
+  if (libs.requestHandlers) {
+    app.use(libs.requestHandlers);
   }
 
   app.use(eventRoutes);
+  app.use(groupRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json('Invalid route');
@@ -22,4 +29,9 @@ export const appFactory = (requestHandlers?: RequestHandler[]): Express => {
   app.use(errorHandler);
 
   return app;
+};
+
+export type Libs = {
+  groupController?: GroupController;
+  requestHandlers?: RequestHandler[]
 };

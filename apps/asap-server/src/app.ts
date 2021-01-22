@@ -1,7 +1,8 @@
 import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
-import { errorHandler } from './utils/error-handler';
+import { errorHandler } from './middleware/error-handler';
+import { authHandler } from './middleware/authentication';
 import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
 import Groups, { GroupController } from './controllers/groups';
@@ -14,6 +15,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupRoutes = groupRouteFactory(groupController);
 
   app.use(cors());
+  app.use(authHandler);
 
   if (libs.requestHandlers) {
     app.use(libs.requestHandlers);

@@ -58,13 +58,13 @@ export interface ResponseFetchGroups {
 }
 
 export type FetchOptions = {
-  take: number;
-  skip: number;
+  take?: number;
+  skip?: number;
   search?: string;
 };
 
 export interface GroupController {
-  fetch: (options: FetchOptions) => Promise<ListGroupResponse>
+  fetch: (options: FetchOptions) => Promise<ListGroupResponse>;
 }
 
 export default class Groups implements GroupController {

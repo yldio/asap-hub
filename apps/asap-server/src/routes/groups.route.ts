@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { GroupController, FetchOptions } from '../controllers/groups';
-import Joi from '@hapi/joi';
 import { framework } from '@asap-hub/services-common';
+import Joi from '@hapi/joi';
+import { GroupController, FetchOptions } from '../controllers/groups';
 
 export const groupRouteFactory = (
   groupsController: GroupController,

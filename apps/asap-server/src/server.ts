@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { appFactory } from './app';
 
 const port = 3333;

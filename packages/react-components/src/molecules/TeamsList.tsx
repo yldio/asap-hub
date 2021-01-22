@@ -1,0 +1,40 @@
+import React from 'react';
+import css from '@emotion/css';
+
+import { Divider, Link } from '../atoms';
+import { perRem } from '../pixels';
+import { teamIcon } from '../icons';
+
+const listStyles = css({
+  display: 'grid',
+  listStyle: 'none',
+  margin: 0,
+  padding: 0,
+});
+const rowStyles = css({
+  padding: `${12 / perRem}em 0`,
+
+  display: 'grid',
+  gridTemplateColumns: 'max-content 1fr',
+  gridColumnGap: `${12 / perRem}em`,
+  alignItems: 'center',
+});
+
+interface TeamsListProps {
+  readonly teams: ReadonlyArray<{ name: string; href: string }>;
+}
+const TeamsList: React.FC<TeamsListProps> = ({ teams }) => (
+  <ul css={listStyles}>
+    {teams.flatMap(({ name, href }, i) => (
+      <li key={`sep-${i}`}>
+        {i > 0 && <Divider />}
+        <div css={rowStyles}>
+          {teamIcon}
+          <Link href={href}>{name}</Link>
+        </div>
+      </li>
+    ))}
+  </ul>
+);
+
+export default TeamsList;

@@ -51,6 +51,7 @@ export {
   SearchField,
   TabNav,
   TagList,
+  TeamsList,
   UserMenuButton,
 } from './molecules';
 export {

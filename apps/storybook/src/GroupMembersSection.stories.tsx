@@ -16,8 +16,11 @@ export const Normal = () => (
       (user, i) => ({
         user,
         role: i % 3 ? 'Lead PI - Chair' : 'Project Manager',
+        href: `#${i}`,
       }),
     )}
-    teams={createListTeamResponse(number('Number of Teams', 6)).items}
+    teams={createListTeamResponse(
+      number('Number of Teams', 6),
+    ).items.map((team, i) => ({ ...team, href: `#${i}` }))}
   />
 );

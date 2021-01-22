@@ -92,6 +92,17 @@ module.exports = {
     },
   },
   functions: {
+    apiHandler: {
+      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
+      events: [
+        {
+          httpApi: {
+            method: '*',
+            path: `/events/{proxy+}`,
+          },
+        },
+      ],
+    },
     uploadUserAvatar: {
       handler:
         'apps/asap-server/build-cjs/handlers/users/update-avatar.handler',

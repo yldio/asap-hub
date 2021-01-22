@@ -3,11 +3,15 @@ import { TeamResponse } from './team';
 import { UserResponse } from './user';
 import { CalendarResponse } from './calendar';
 
-export type GroupRole = 'Lead PI - Chair' | 'Project Manager';
-
 export type GroupTool = { name: string; description?: string; url: string };
 
 export type GroupTeam = Omit<TeamResponse, 'members'>;
+
+export type GroupRole = 'Lead PI - Chair' | 'Project Manager';
+export type GroupLeader = {
+  user: UserResponse;
+  role: GroupRole;
+};
 
 export interface GroupResponse {
   id: string;
@@ -18,10 +22,7 @@ export interface GroupResponse {
   summary: string;
   tools: GroupTool[];
   teams: GroupTeam[];
-  leaders: {
-    user: UserResponse;
-    role: GroupRole;
-  }[];
+  leaders: GroupLeader[];
   calendars: CalendarResponse[];
 }
 

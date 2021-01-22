@@ -4,7 +4,7 @@ import css from '@emotion/css';
 import {
   PagesSection,
   RichText,
-  MembersSection,
+  TeamMembersSection,
   HelpSection,
   NewsAndEventsSection,
 } from '../organisms';
@@ -25,7 +25,7 @@ type DashboardPageBodyProps = Omit<
   ComponentProps<typeof PagesSection>,
   'title'
 > &
-  Omit<ComponentProps<typeof MembersSection>, 'title'> & {
+  Omit<ComponentProps<typeof TeamMembersSection>, 'title'> & {
     readonly aboutUs: string;
     readonly training: ComponentProps<
       typeof NewsAndEventsSection
@@ -56,7 +56,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       </section>
     ) : null}
     {members.length ? (
-      <MembersSection title={'Meet the ASAP team'} members={members} />
+      <TeamMembersSection title={'Meet the ASAP team'} members={members} />
     ) : null}
     <HelpSection />
   </div>

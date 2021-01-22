@@ -32,7 +32,6 @@ describe('GET /teams/{id}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -59,7 +58,6 @@ describe('GET /teams/{id}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -88,7 +86,6 @@ describe('GET /teams/{id}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -117,7 +114,6 @@ describe('GET /teams/{id}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },

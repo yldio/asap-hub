@@ -15,7 +15,6 @@ describe('GET /news-and-events/{id} - validations', () => {
   test('return 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           id,
         },
@@ -28,7 +27,6 @@ describe('GET /news-and-events/{id} - validations', () => {
   test('returns 401 when method is not bearer', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Basic token`,
         },
@@ -49,7 +47,6 @@ describe('GET /news-and-events/{id} - validations', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -87,7 +84,6 @@ describe('GET /news-and-events/{id}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },
@@ -123,7 +119,6 @@ describe('GET /news-and-events/{id}', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer token`,
         },

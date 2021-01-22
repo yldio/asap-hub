@@ -20,11 +20,10 @@ describe('POST /users/{id}/avatar - validations', () => {
   test('returns 401 when Authentication header is not set', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         pathParameters: {
           id: 'userId',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 
@@ -34,14 +33,13 @@ describe('POST /users/{id}/avatar - validations', () => {
   test('returns 401 when method is not bearer', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Basic token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 
@@ -56,14 +54,13 @@ describe('POST /users/{id}/avatar - validations', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 
@@ -73,14 +70,12 @@ describe('POST /users/{id}/avatar - validations', () => {
   test('returns 400 when payload is invalid', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {},
       }),
     )) as APIGatewayProxyResult;
 
@@ -89,16 +84,15 @@ describe('POST /users/{id}/avatar - validations', () => {
   test('returns 400 when payload is not data URL conformant', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           avatar: 'data:video/mp4',
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -108,16 +102,15 @@ describe('POST /users/{id}/avatar - validations', () => {
   test('returns 415 when content type is invalid', async () => {
     const result1 = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           avatar: 'data:video/mp4;base64,some-data',
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -127,18 +120,17 @@ describe('POST /users/{id}/avatar - validations', () => {
   test('returns 413 when avatar is too big', async () => {
     const result1 = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body: {
+        body: JSON.stringify({
           avatar: `data:image/jpeg;base64,${Buffer.alloc(4e6).toString(
             'base64',
           )}`,
-        },
+        }),
       }),
     )) as APIGatewayProxyResult;
 
@@ -148,14 +140,13 @@ describe('POST /users/{id}/avatar - validations', () => {
   test('returns 403 when user is changing other user', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'not-me',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 
@@ -177,14 +168,13 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 
@@ -201,14 +191,13 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 
@@ -228,14 +217,13 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 
@@ -257,14 +245,13 @@ describe('Update user avatar', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'post',
         headers: {
           Authorization: 'Bearer token',
         },
         pathParameters: {
           id: 'userId',
         },
-        body,
+        body: JSON.stringify(body),
       }),
     )) as APIGatewayProxyResult;
 

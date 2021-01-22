@@ -15,11 +15,10 @@ import * as fixtures from './webhook-sync-orcid.fixtures';
 
 const createSignedPayload = (payload: WebHookPayload) =>
   apiGatewayEvent({
-    httpMethod: 'post',
     headers: {
       'x-signature': signPayload(payload),
     },
-    body: payload,
+    body: JSON.stringify(payload),
   });
 
 const orcid = '0000-0002-9079-593X';

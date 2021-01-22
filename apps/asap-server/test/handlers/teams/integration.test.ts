@@ -42,7 +42,6 @@ describe('GET /teams/{id}', () => {
   test('returns 200 when teams exist', async () => {
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: `Bearer Token`,
         },

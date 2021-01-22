@@ -38,7 +38,6 @@ describe('GET /teams/{id}/groups', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           id: teamUUID,
         },
@@ -70,7 +69,6 @@ describe('GET /teams/{id}/groups', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           id: teamUUID,
         },

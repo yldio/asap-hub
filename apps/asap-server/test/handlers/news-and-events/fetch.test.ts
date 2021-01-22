@@ -33,7 +33,6 @@ describe('GET /news-and-events', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -63,7 +62,6 @@ describe('GET /news-and-events', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: 'Bearer token',
         },
@@ -93,7 +91,6 @@ describe('GET /news-and-events', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         headers: {
           Authorization: 'Bearer token',
         },

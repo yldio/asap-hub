@@ -1,5 +1,5 @@
 import { GraphqlGroup } from '@asap-hub/squidex';
-import { ListGroupResponse } from '@asap-hub/model';
+import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { parseGraphQLGroup } from '../entities';
@@ -123,9 +123,33 @@ export default class Groups {
 
   async fetchByUserId(
     userId: string,
+    teamIds: string[],
     options: FetchOptions,
   ): Promise<ListGroupResponse> {
-    const filter = `data/leaders/iv/user eq '${userId}'`;
-    return this.fetchGroups(filter, options);
+    const userFilter = `data/leaders/iv/user eq '${userId}'`;
+    const requests = [this.fetchGroups(userFilter, options)];
+
+    if (teamIds.length) {
+      requests.push(this.fetchByTeamId(teamIds, options));
+    }
+
+    const groupsRes = await Promise.all(requests);
+
+    const dedupMap: Map<string, GroupResponse> = new Map();
+    const items: GroupResponse[] = groupsRes
+      .map((g) => g.items)
+      .flat()
+      .reduce((acc, group: GroupResponse) => {
+        if (!dedupMap.has(group.id)) {
+          dedupMap.set(group.id, group);
+          acc.push(group);
+        }
+        return acc;
+      }, [] as GroupResponse[]);
+
+    return {
+      total: items.length,
+      items,
+    };
   }
 }

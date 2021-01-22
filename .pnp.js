@@ -3472,7 +3472,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "debug",
-        "virtual:735a90362bc082a716435a6ac0e5ef7022b60d6a08bda303ea44c406625e2c27c93e0dd6850224a5af87dec8e3407209e856076b4d14b8948c1c7439292a7f53#npm:4.2.0"
+        "virtual:88c91e718f5c047e706657833016435d9afd204207e38d93790ef921db10dcd422cdb8ab7a565d263b03ce9d79a2098e157c646f2bd38df6ecdb41f52893df49#npm:4.2.0"
       ],
       [
         "decamelize",
@@ -4596,7 +4596,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "has-flag",
-        "npm:3.0.0"
+        "npm:4.0.0"
       ],
       [
         "has-glob",
@@ -8076,7 +8076,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "supports-color",
-        "npm:6.1.0"
+        "npm:8.1.0"
       ],
       [
         "supports-hyperlinks",
@@ -8977,6 +8977,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bundlewatch", "npm:0.3.1"],
             ["codecov", "npm:3.8.0"],
             ["dotenv", "npm:8.2.0"],
+            ["encoding", "npm:0.1.13"],
             ["eslint", "npm:7.17.0"],
             ["eslint-import-resolver-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
             ["eslint-plugin-import", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.22.1"],
@@ -8997,6 +8998,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A."],
             ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["serverless-s3-sync", "npm:1.15.0"],
+            ["supports-color", "npm:8.1.0"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=cc6730"],
             ["webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.1.0"]
           ],
@@ -22600,6 +22602,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bundlewatch", "npm:0.3.1"],
             ["codecov", "npm:3.8.0"],
             ["dotenv", "npm:8.2.0"],
+            ["encoding", "npm:0.1.13"],
             ["eslint", "npm:7.17.0"],
             ["eslint-import-resolver-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
             ["eslint-plugin-import", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.22.1"],
@@ -22620,6 +22623,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-offline", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#patch:serverless-offline@npm%3A6.8.0#./patches/serverless-offline.patch::version=6.8.0&hash=95b858&locator=asap-hub%40workspace%3A."],
             ["serverless-plugin-tree-shake", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["serverless-s3-sync", "npm:1.15.0"],
+            ["supports-color", "npm:8.1.0"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=cc6730"],
             ["webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.1.0"]
           ],
@@ -44670,6 +44674,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/supports-color-npm-7.1.0-df2ba1e338-6130f36b2a.zip/node_modules/supports-color/",
           "packageDependencies": [
             ["supports-color", "npm:7.1.0"],
+            ["has-flag", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:8.1.0", {
+          "packageLocation": "./.yarn/cache/supports-color-npm-8.1.0-f1688888e2-6213162d55.zip/node_modules/supports-color/",
+          "packageDependencies": [
+            ["supports-color", "npm:8.1.0"],
             ["has-flag", "npm:4.0.0"]
           ],
           "linkType": "HARD",

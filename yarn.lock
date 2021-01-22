@@ -8660,6 +8660,7 @@ __metadata:
     bundlewatch: ^0.3.1
     codecov: ^3.8.0
     dotenv: ^8.2.0
+    encoding: ^0.1.13
     eslint: ^7.17.0
     eslint-import-resolver-typescript: ^2.3.0
     eslint-plugin-import: ^2.22.1
@@ -8680,6 +8681,7 @@ __metadata:
     serverless-offline: "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch"
     serverless-plugin-tree-shake: ^1.1.2
     serverless-s3-sync: ^1.15.0
+    supports-color: ^8.1.0
     typescript: ~3.9.7
     webpack: ^5.1.0
   dependenciesMeta:
@@ -27761,6 +27763,15 @@ serverless-offline@^6.8.0:
   dependencies:
     has-flag: ^4.0.0
   checksum: 6130f36b2a71f73014a6ef306bbaa5415d8daa5c0294082762a0505e4fb6800b8a9d037b60ed54f0c69cdfc37860034047d6004481c21f22dd43151b5e9334f0
+  languageName: node
+  linkType: hard
+
+"supports-color@npm:^8.1.0":
+  version: 8.1.0
+  resolution: "supports-color@npm:8.1.0"
+  dependencies:
+    has-flag: ^4.0.0
+  checksum: 6213162d55e33b23562b1b8ec8c93f610fb1a1d2b88bf9b0bbeaed2d5652d5850faa293177890f914c5b5af722387e1b75a818e4496367134aeb9b3c5516eb2f
   languageName: node
   linkType: hard
 

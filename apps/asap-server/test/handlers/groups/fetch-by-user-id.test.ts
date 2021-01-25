@@ -52,7 +52,6 @@ describe('GET /users/{id}/groups', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           id: userUUID,
         },
@@ -92,7 +91,6 @@ describe('GET /users/{id}/groups', () => {
 
     const result = (await handler(
       apiGatewayEvent({
-        httpMethod: 'get',
         pathParameters: {
           id: userUUID,
         },

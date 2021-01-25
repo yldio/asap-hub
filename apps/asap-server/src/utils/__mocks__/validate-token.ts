@@ -37,3 +37,5 @@ const user: Auth0User = {
 
 const decodeToken = jest.fn().mockResolvedValue(user);
 export default decodeToken;
+
+export const auth0UserMock = user;

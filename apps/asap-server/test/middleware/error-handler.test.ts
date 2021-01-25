@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import { Router } from 'express';
 import { appFactory } from '../../src/app';
+import { authHandlerMock } from '../mocks/auth-handler.mock';
 
 class CustomError extends Error {
   status?: number;
@@ -19,7 +20,10 @@ describe('Error handling', () => {
     throw error;
   });
 
-  const app = appFactory({ mockRequestHandlers: [errorRoutes] });
+  const app = appFactory({
+    mockRequestHandlers: [errorRoutes],
+    authHandler: authHandlerMock,
+  });
 
   test('Should return status 500 and return the error message', async () => {
     const response = await supertest(app).get('/events/error-route');

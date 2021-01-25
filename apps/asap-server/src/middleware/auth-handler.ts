@@ -1,10 +1,11 @@
 import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
+import { DecodeToken } from '../utils/validate-token';
 
-import decodeToken from '../utils/validate-token';
-
-export const authHandler: RequestHandler = async (req, _res, next) => {
-  const headers = req.headers;
+export const authHandlerFactory = (
+  decodeToken: DecodeToken,
+): RequestHandler => async (req, _res, next) => {
+  const { headers } = req;
 
   if (!headers.authorization) {
     throw Boom.unauthorized();
@@ -16,11 +17,9 @@ export const authHandler: RequestHandler = async (req, _res, next) => {
     throw Boom.unauthorized();
   }
 
-  await decodeToken(token).catch(() => {
-    return next(Boom.unauthorized());
-  });
+  await decodeToken(token).catch(() => next(Boom.unauthorized()));
 
   next();
 };
 
-export type AuthHandler = typeof authHandler;
+export type AuthHandler = ReturnType<typeof authHandlerFactory>;

@@ -37,3 +37,5 @@ const decodeToken = (token: string): Promise<Auth0User> =>
   });
 
 export default decodeToken;
+
+export type DecodeToken = typeof decodeToken;

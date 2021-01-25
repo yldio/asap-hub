@@ -2,20 +2,17 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { errorHandler } from './middleware/error-handler';
-import {
-  authHandler as authHandlerLib,
-  AuthHandler,
-} from './middleware/auth-handler';
+import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
 import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
 import Groups, { GroupController } from './controllers/groups';
-
+import decodeToken from './utils/validate-token';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
   const groupController = libs.groupController || new Groups();
-  const authHandler = libs.authHandler || authHandlerLib;
+  const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
 

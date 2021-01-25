@@ -48,7 +48,6 @@ const styles = css({
 });
 
 const largeStyles = css({
-  minHeight: `${54 / perRem}em`,
   '> svg': {
     height: `${24 / perRem}em`,
     width: 'auto',
@@ -69,9 +68,10 @@ const largeStyles = css({
   paddingRight: `${(20 - borderWidth) / perRem}em`,
 });
 const smallStyles = css({
-  minHeight: `${36 / perRem}em`,
   '> svg': {
     height: `${18 / perRem}em`,
+    paddingTop: `${3 / perRem}em`,
+    paddingBottom: `${3 / perRem}em`,
     width: 'auto',
   },
   '> svg + span': {
@@ -80,13 +80,12 @@ const smallStyles = css({
   '> span + svg': {
     marginLeft: `${6 / perRem}em`,
   },
-  lineHeight: `${17 / perRem}em`,
 
   marginTop: `${12 / perRem}em`,
   marginBottom: `${12 / perRem}em`,
 
-  paddingTop: `${(9 - borderWidth) / perRem}em`,
-  paddingBottom: `${(9 - borderWidth) / perRem}em`,
+  paddingTop: `${(6 - borderWidth) / perRem}em`,
+  paddingBottom: `${(6 - borderWidth) / perRem}em`,
   paddingLeft: `${(12 - borderWidth) / perRem}em`,
   paddingRight: `${(12 - borderWidth) / perRem}em`,
 });

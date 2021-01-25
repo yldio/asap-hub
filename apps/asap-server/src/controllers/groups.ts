@@ -1,5 +1,6 @@
 import { GraphqlGroup } from '@asap-hub/squidex';
 import { ListGroupResponse } from '@asap-hub/model';
+import uniqBy from 'lodash.uniqby';
 
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { parseGraphQLGroup } from '../entities';
@@ -71,8 +72,26 @@ export default class Groups {
     this.client = new InstrumentedSquidexGraphql(ctxHeaders);
   }
 
+  async fetchGroups(
+    filter = '',
+    options: FetchOptions,
+  ): Promise<ListGroupResponse> {
+    const { take, skip } = options;
+    const query = buildGraphQLQueryFetchGroups(filter, take, skip);
+    const { queryGroupsContentsWithTotal } = await this.client.request<
+      ResponseFetchGroups,
+      unknown
+    >(query);
+    const { total, items } = queryGroupsContentsWithTotal;
+
+    return {
+      total,
+      items: items.map(parseGraphQLGroup),
+    };
+  }
+
   async fetch(options: FetchOptions): Promise<ListGroupResponse> {
-    const { take, skip, search } = options;
+    const { search } = options;
 
     const searchQ = (search || '')
       .split(' ')
@@ -90,38 +109,38 @@ export default class Groups {
       )
       .join(' and ');
 
-    const query = buildGraphQLQueryFetchGroups(searchQ, take, skip);
-
-    const { queryGroupsContentsWithTotal } = await this.client.request<
-      ResponseFetchGroups,
-      unknown
-    >(query);
-    const { total, items } = queryGroupsContentsWithTotal;
-
-    return {
-      total,
-      items: items.map(parseGraphQLGroup),
-    };
+    return this.fetchGroups(searchQ, options);
   }
 
   async fetchByTeamId(
-    teamId: string,
+    teamId: string | string[],
     options: FetchOptions,
   ): Promise<ListGroupResponse> {
-    const { take, skip } = options;
-    const filter = `data/teams/iv eq '${teamId}'`;
+    const filter = Array.isArray(teamId)
+      ? `data/teams/iv in [${teamId.map((id) => `'${id}'`).join(', ')}]`
+      : `data/teams/iv eq '${teamId}'`;
+    return this.fetchGroups(filter, options);
+  }
 
-    const query = buildGraphQLQueryFetchGroups(filter, take, skip);
+  async fetchByUserId(
+    userId: string,
+    teamIds: string[],
+    options: FetchOptions,
+  ): Promise<ListGroupResponse> {
+    const userFilter = `data/leaders/iv/user eq '${userId}'`;
+    const requests = [this.fetchGroups(userFilter, options)];
 
-    const { queryGroupsContentsWithTotal } = await this.client.request<
-      ResponseFetchGroups,
-      unknown
-    >(query);
-    const { total, items } = queryGroupsContentsWithTotal;
+    if (teamIds.length) {
+      requests.push(this.fetchByTeamId(teamIds, options));
+    }
+
+    const groupsRes = await Promise.all(requests);
+    const groups = groupsRes.map((g) => g.items).flat();
+    const items = uniqBy(groups, 'id');
 
     return {
-      total,
-      items: items.map(parseGraphQLGroup),
+      total: items.length,
+      items,
     };
   }
 }

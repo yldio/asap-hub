@@ -89,6 +89,7 @@ __metadata:
     "@types/jwt-encode": "workspace:*"
     "@types/lodash.get": ^4
     "@types/lodash.matches": ^4
+    "@types/lodash.uniqby": ^4
     "@types/mime-types": ^2
     "@types/parse-data-url": ^3.0.0
     "@types/pump": ^1.1.0
@@ -114,6 +115,7 @@ __metadata:
     lightstep-tracer: ^0.30.2
     lodash.get: ^4.4.2
     lodash.matches: ^4.6.0
+    lodash.uniqby: ^4.7.0
     mime-types: ^2.1.27
     nock: ^13.0.4
     opentracing: ^0.14.5
@@ -6597,6 +6599,15 @@ __metadata:
   dependencies:
     "@types/lodash": "*"
   checksum: 4416f3f0746b6f319d830bad0c0cdde1c0c731ced432c8e02fad2e93cf7b4b2722efa30b06949f08c7527f9064d0930acdf07c0f622dc51971ba416b9c13ccf0
+  languageName: node
+  linkType: hard
+
+"@types/lodash.uniqby@npm:^4":
+  version: 4.7.6
+  resolution: "@types/lodash.uniqby@npm:4.7.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 87f6623baf2fea8cd2ce51cb2e779d141e935a7a49c1724acb1d60fc20206b506e434fc4065328cd8539c48b31bbf7029d7b6c6e570a7011a8537bcf6749316c
   languageName: node
   linkType: hard
 
@@ -20381,6 +20392,13 @@ fsevents@^2.1.3:
   version: 4.5.0
   resolution: "lodash.uniq@npm:4.5.0"
   checksum: 47cb25b59bf40ef3bdf441b7b6cb41d0b95ae0ca576be2c206724dd66041fa8aadab55c1210792671aa0b1c9878d5c0be48927bf4d22f3ed50e5f79d3b2e90b7
+  languageName: node
+  linkType: hard
+
+"lodash.uniqby@npm:^4.7.0":
+  version: 4.7.0
+  resolution: "lodash.uniqby@npm:4.7.0"
+  checksum: bea225431a3623f440d8a719d7f0528de7872afe62645442ff37447ace25ef5237d41ed433cd676a345e83e6826836d746b4d629839f7196cf94258dbda81503
   languageName: node
   linkType: hard
 

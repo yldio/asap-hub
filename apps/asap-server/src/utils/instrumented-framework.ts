@@ -28,7 +28,6 @@ if (lightstepToken && NODE_ENV !== 'test') {
 }
 
 export const http = (
-  // eslint-disable-next-line no-unused-vars
   fn: (request: lambda.Request) => Promise<lambda.Response>,
 ) => async (
   event: APIGatewayProxyEventV2,

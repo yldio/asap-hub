@@ -101,6 +101,12 @@ module.exports = {
             path: `/events/{proxy+}`,
           },
         },
+        {
+          httpApi: {
+            method: '*',
+            path: `/events`,
+          },
+        },
       ],
     },
     uploadUserAvatar: {
@@ -294,6 +300,12 @@ module.exports = {
           httpApi: {
             method: 'GET',
             path: `/groups/{proxy+}`,
+          },
+        },
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/groups`,
           },
         },
       ],

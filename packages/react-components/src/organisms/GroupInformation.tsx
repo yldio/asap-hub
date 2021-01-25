@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { GroupResponse } from '@asap-hub/model';
 
 import { Button, Card, Headline3, Paragraph, Divider } from '../atoms';
-import TagList from './TagList';
+import TagList from '../molecules/TagList';
 
-const TRIM_CONTENT = 180;
+const TRIM_CONTENT = 160;
 
 type GroupInformationProps = Pick<GroupResponse, 'description' | 'tags'>;
 const GroupInformation: React.FC<GroupInformationProps> = ({
@@ -16,7 +16,7 @@ const GroupInformation: React.FC<GroupInformationProps> = ({
     <Card>
       <Headline3>Group Description</Headline3>
       <Paragraph accent="lead">
-        <div css={{ whiteSpace: 'pre-line' }}>
+        <span css={{ whiteSpace: 'pre-line' }}>
           {showMore
             ? description
             : description.substring(0, TRIM_CONTENT).trim()}
@@ -25,11 +25,11 @@ const GroupInformation: React.FC<GroupInformationProps> = ({
               {!showMore && '…'}
               <br />
               <Button onClick={() => setShowMore(!showMore)} linkStyle>
-                Show {showMore ? 'less' : 'more'}
+                {showMore ? 'Show less' : 'Show more'}
               </Button>
             </>
           )}
-        </div>
+        </span>
       </Paragraph>
       <Divider />
       <Headline3>Group Expertise</Headline3>

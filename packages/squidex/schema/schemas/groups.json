@@ -9,8 +9,23 @@
     },
     "scripts": {},
     "fieldsInReferences": ["name"],
-    "fieldsInLists": [],
+    "fieldsInLists": ["name"],
     "fields": [
+      {
+        "name": "basicSection",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "General Section",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
       {
         "name": "name",
         "isHidden": false,
@@ -23,19 +38,6 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Name",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "tags",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Tags",
           "isRequired": false
         }
       },
@@ -55,17 +57,49 @@
         }
       },
       {
-        "name": "summary",
+        "name": "tags",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Summary",
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Expertise (Tags)",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "toolsSection",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "Tools Section",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "calendars",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "editor": "List",
+          "schemaIds": ["calendars"],
+          "label": "Calendars",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false
         }
       },
@@ -77,67 +111,55 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Array",
+          "maxItems": 1,
           "label": "External Tools",
           "isRequired": false
         },
         "nested": [
           {
-            "name": "name",
+            "name": "slack",
             "isHidden": false,
             "isLocked": false,
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
+              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "isUnique": false,
               "inlineEditable": false,
               "editor": "Input",
-              "label": "Name",
+              "label": "Slack Link",
               "isRequired": false
             }
           },
           {
-            "name": "description",
+            "name": "googleDrive",
             "isHidden": false,
             "isLocked": false,
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
+              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "isUnique": false,
               "inlineEditable": false,
               "editor": "Input",
-              "label": "Description",
-              "isRequired": false
-            }
-          },
-          {
-            "name": "url",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "URL",
+              "label": "Google Drive Link",
+              "hints": "",
+              "placeholder": "",
               "isRequired": false
             }
           }
         ]
       },
       {
-        "name": "teams",
+        "name": "membersSection",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "References",
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "editor": "List",
-          "schemaIds": ["teams"],
-          "label": "Teams",
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "Members Section",
           "hints": "",
           "placeholder": "",
           "isRequired": false
@@ -194,19 +216,18 @@
         ]
       },
       {
-        "name": "calendars",
+        "name": "teams",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "References",
-          "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
           "editor": "List",
-          "schemaIds": ["calendars"],
-          "label": "Calendars",
+          "schemaIds": ["teams"],
+          "label": "Teams",
           "hints": "",
           "placeholder": "",
           "isRequired": false

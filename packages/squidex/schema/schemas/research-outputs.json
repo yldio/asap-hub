@@ -8,7 +8,7 @@
       "label": "Research Outputs"
     },
     "scripts": {},
-    "fieldsInReferences": ["title"],
+    "fieldsInReferences": ["title", "type"],
     "fieldsInLists": ["title", "type"],
     "fields": [
       {

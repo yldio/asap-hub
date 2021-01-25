@@ -96,16 +96,16 @@ it('renders a disabled button', () => {
 
 it('renders a small button', () => {
   const { getByRole, rerender } = render(<Button />);
-  const normalHeight = Number(
-    getComputedStyle(getByRole('button')).height.replace(/em$/, ''),
+  const normalPaddingTop = Number(
+    getComputedStyle(getByRole('button')).paddingTop.replace(/em$/, ''),
   );
 
   rerender(<Button small />);
-  const smallHeight = Number(
-    getComputedStyle(getByRole('button')).height.replace(/em$/, ''),
+  const smallPaddingTop = Number(
+    getComputedStyle(getByRole('button')).paddingTop.replace(/em$/, ''),
   );
 
-  expect(smallHeight).toBeLessThan(normalHeight);
+  expect(smallPaddingTop).toBeLessThan(normalPaddingTop);
 });
 
 describe('the type', () => {

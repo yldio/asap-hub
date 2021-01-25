@@ -3,23 +3,13 @@ import { css } from '@emotion/core';
 import { TeamTool } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph, Link } from '../atoms';
-import {
-  slackIcon,
-  protocolsIcon,
-  googleDriveIcon,
-  placeholderIcon,
-} from '../icons';
+import { placeholderIcon } from '../icons';
 import { perRem, tabletScreen } from '../pixels';
+import { getIconFromUrl } from '../utils';
 
 type ToolCardProps = Pick<TeamTool, 'description' | 'name' | 'url'> & {
   readonly editHref: string;
 };
-
-const icons = Object.entries({
-  '.slack.com': slackIcon,
-  'protocols.io': protocolsIcon,
-  'drive.google.com': googleDriveIcon,
-});
 
 const containerStyle = css({
   alignItems: 'top',
@@ -44,30 +34,19 @@ const ToolCard: React.FC<ToolCardProps> = ({
   description,
   editHref,
   url,
-}) => {
-  const res = icons.filter(([key]) => {
-    try {
-      const { host } = new URL(url);
-      return host.endsWith(key);
-    } catch {
-      return false;
-    }
-  })[0];
-
-  return (
-    <Card>
-      <div css={containerStyle}>
-        <div css={logoIconStyle}>{res ? res[1] : placeholderIcon}</div>
-        <div css={{ flex: 1 }}>
-          <Link href={url} theme={null}>
-            <Headline3 styleAsHeading={4}>{name}</Headline3>
-            <Paragraph accent="lead">{description}</Paragraph>
-          </Link>
-          <Link href={editHref}>Edit Link</Link>
-        </div>
+}) => (
+  <Card>
+    <div css={containerStyle}>
+      <div css={logoIconStyle}>{getIconFromUrl(url) ?? placeholderIcon}</div>
+      <div css={{ flex: 1 }}>
+        <Link href={url} theme={null}>
+          <Headline3 styleAsHeading={4}>{name}</Headline3>
+          <Paragraph accent="lead">{description}</Paragraph>
+        </Link>
+        <Link href={editHref}>Edit Link</Link>
       </div>
-    </Card>
-  );
-};
+    </div>
+  </Card>
+);
 
 export default ToolCard;

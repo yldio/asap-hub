@@ -9,7 +9,6 @@
   "roles": {
     "Developer": {
       "permissions": [
-        "api",
         "assets",
         "contents.*",
         "patterns",

@@ -24,8 +24,7 @@ const styles = css({
 
   display: 'inline-flex',
   justifyContent: 'center',
-  alignItems: 'center',
-  whiteSpace: 'pre',
+  textAlign: 'center',
 
   maxWidth: `${formTargetWidth / perRem}em`,
 
@@ -49,7 +48,6 @@ const styles = css({
 });
 
 const largeStyles = css({
-  height: `${54 / perRem}em`,
   '> svg': {
     height: `${24 / perRem}em`,
     width: 'auto',
@@ -70,9 +68,10 @@ const largeStyles = css({
   paddingRight: `${(20 - borderWidth) / perRem}em`,
 });
 const smallStyles = css({
-  height: `${36 / perRem}em`,
   '> svg': {
     height: `${18 / perRem}em`,
+    paddingTop: `${3 / perRem}em`,
+    paddingBottom: `${3 / perRem}em`,
     width: 'auto',
   },
   '> svg + span': {
@@ -85,8 +84,8 @@ const smallStyles = css({
   marginTop: `${12 / perRem}em`,
   marginBottom: `${12 / perRem}em`,
 
-  paddingTop: `${(9 - borderWidth) / perRem}em`,
-  paddingBottom: `${(9 - borderWidth) / perRem}em`,
+  paddingTop: `${(6 - borderWidth) / perRem}em`,
+  paddingBottom: `${(6 - borderWidth) / perRem}em`,
   paddingLeft: `${(12 - borderWidth) / perRem}em`,
   paddingRight: `${(12 - borderWidth) / perRem}em`,
 });

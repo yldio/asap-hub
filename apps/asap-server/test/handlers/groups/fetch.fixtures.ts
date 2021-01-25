@@ -14,15 +14,10 @@ export const response: { data: ResponseFetchGroups } = {
           flatData: {
             description: 'A test Group',
             name: "JT's Group",
-            summary: 'A very good group',
             tags: ['coding'],
-            tools: [
-              {
-                url: 'https://example.com/secure-comms',
-                name: 'Slack',
-                description: 'Secret Comms',
-              },
-            ],
+            tools: {
+              slack: 'https://example.com/secure-comms',
+            },
             calendars: [
               {
                 id: 'calendar-id-1',
@@ -197,14 +192,11 @@ export const expectation: ListGroupResponse = {
       name: "JT's Group",
       tags: ['coding'],
       description: 'A test Group',
-      summary: 'A very good group',
-      tools: [
-        {
-          url: 'https://example.com/secure-comms',
-          name: 'Slack',
-          description: 'Secret Comms',
-        },
-      ],
+      tools: {
+        slack: 'https://example.com/secure-comms',
+        googleCalendar:
+          'https://calendar.google.com/calendar/r?cid=calendar-id-1',
+      },
       teams: [
         {
           id: 'team-id-1',

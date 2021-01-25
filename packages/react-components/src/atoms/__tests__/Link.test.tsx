@@ -111,8 +111,8 @@ describe('when button-styled', () => {
         text
       </Link>,
     );
-    const normalHeight = Number(
-      getComputedStyle(getByRole('link')).height.replace(/em$/, ''),
+    const normalPaddingTop = Number(
+      getComputedStyle(getByRole('link')).paddingTop.replace(/em$/, ''),
     );
 
     rerender(
@@ -120,11 +120,11 @@ describe('when button-styled', () => {
         text
       </Link>,
     );
-    const smallHeight = Number(
-      getComputedStyle(getByRole('link')).height.replace(/em$/, ''),
+    const smallPaddingTop = Number(
+      getComputedStyle(getByRole('link')).paddingTop.replace(/em$/, ''),
     );
 
-    expect(smallHeight).toBeLessThan(normalHeight);
+    expect(smallPaddingTop).toBeLessThan(normalPaddingTop);
   });
 
   it('supports disabled button styles', () => {

@@ -62,6 +62,7 @@ export {
   GoogleCalendar,
   GroupCard,
   GroupMembersSection,
+  GroupTools,
   HelpSection,
   MainNavigation,
   MenuHeader,

@@ -14,7 +14,7 @@ interface Group<
   TUserConnection = string,
   TTeamConnection = string,
   TCalendar = string
-  > {
+> {
   name: string;
   tags: string[];
   description: string;
@@ -27,7 +27,7 @@ interface Group<
   calendars: TCalendar[];
 }
 
-export interface RestGroup extends Entity, Rest<Group> { }
+export interface RestGroup extends Entity, Rest<Group> {}
 export interface GraphqlGroup
   extends Entity,
-  Graphql<Group<GraphqlUser, GraphqlTeam, GraphqlCalendar>> { }
+    Graphql<Group<GraphqlUser, GraphqlTeam, GraphqlCalendar>> {}

@@ -2,8 +2,7 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { GroupController, FetchOptions } from '../../src/controllers/groups';
 import * as fixtures from '../handlers/groups/fetch.fixtures';
-
-jest.mock('../../src/utils/validate-token');
+import { authHandlerMock } from '../mocks/auth-handler.mock';
 
 describe('/groups/ route', () => {
   const groupsControllerMock: jest.Mocked<GroupController> = {
@@ -12,6 +11,7 @@ describe('/groups/ route', () => {
 
   const app = appFactory({
     groupController: groupsControllerMock,
+    authHandler: authHandlerMock,
   });
 
   afterEach(() => {
@@ -25,7 +25,7 @@ describe('/groups/ route', () => {
         total: 0,
       });
 
-      const response = await supertest(app).get('/groups/').set("Authorization", "bearer token");
+      const response = await supertest(app).get('/groups/');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -37,7 +37,7 @@ describe('/groups/ route', () => {
     test('Should return the results correctly', async () => {
       groupsControllerMock.fetch.mockResolvedValueOnce(fixtures.expectation);
 
-      const response = await supertest(app).get('/groups/').set("Authorization", "bearer token");
+      const response = await supertest(app).get('/groups/');
 
       expect(response.body).toEqual(fixtures.expectation);
     });
@@ -48,7 +48,7 @@ describe('/groups/ route', () => {
         total: 0,
       });
 
-      await supertest(app).get('/groups/').set("Authorization", "bearer token").query({
+      await supertest(app).get('/groups/').query({
         take: 15,
         skip: 5,
         search: 'something',
@@ -65,8 +65,8 @@ describe('/groups/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app).get('/groups/').set("Authorization", "bearer token").query({
-          take: "invalid param",
+        const response = await supertest(app).get('/groups/').query({
+          take: 'invalid param',
         });
 
         expect(response.status).toBe(400);

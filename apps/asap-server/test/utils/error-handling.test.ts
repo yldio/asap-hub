@@ -19,7 +19,7 @@ describe('Error handling', () => {
     throw error;
   });
 
-  const app = appFactory({ requestHandlers: [errorRoutes] });
+  const app = appFactory({ mockRequestHandlers: [errorRoutes] });
 
   test('Should return status 500 and return the error message', async () => {
     const response = await supertest(app).get('/events/error-route');

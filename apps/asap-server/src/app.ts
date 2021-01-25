@@ -2,7 +2,10 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { errorHandler } from './middleware/error-handler';
-import { authHandler } from './middleware/authentication';
+import {
+  authHandler as authHandlerLib,
+  AuthHandler,
+} from './middleware/authentication';
 import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
 import Groups, { GroupController } from './controllers/groups';
@@ -11,14 +14,15 @@ export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
   const groupController = libs.groupController || new Groups();
+  const authHandler = libs.authHandler || authHandlerLib;
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
 
   app.use(cors());
   app.use(authHandler);
 
-  if (libs.requestHandlers) {
-    app.use(libs.requestHandlers);
+  if (libs.mockRequestHandlers) {
+    app.use(libs.mockRequestHandlers);
   }
 
   app.use(eventRoutes);
@@ -35,5 +39,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
 export type Libs = {
   groupController?: GroupController;
-  requestHandlers?: RequestHandler[]
+  authHandler?: AuthHandler;
+  // extra handlers only for tests and local development
+  mockRequestHandlers?: RequestHandler[];
 };

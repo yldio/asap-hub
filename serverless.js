@@ -288,12 +288,12 @@ module.exports = {
       ],
     },
     fetchGroups: {
-      handler: 'apps/asap-server/build-cjs/handlers/groups/fetch.handler',
+      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
       events: [
         {
           httpApi: {
             method: 'GET',
-            path: `/groups`,
+            path: `/groups/{proxy+}`,
           },
         },
       ],

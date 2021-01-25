@@ -4,23 +4,23 @@ import Boom from '@hapi/boom';
 import decodeToken from '../utils/validate-token';
 
 export const authHandler: RequestHandler = async (req, _res, next) => {
-  const headers = req.headers
+  const headers = req.headers;
 
   if (!headers.authorization) {
-    throw Boom.unauthorized()
+    throw Boom.unauthorized();
   }
 
   const [type, token] = headers.authorization.split(' ');
 
   if (type.toLowerCase() !== 'bearer') {
-    throw Boom.unauthorized()
+    throw Boom.unauthorized();
   }
 
   await decodeToken(token).catch(() => {
-    return next(Boom.unauthorized())
-  })
+    return next(Boom.unauthorized());
+  });
 
-  next()
+  next();
 };
 
 export type AuthHandler = typeof authHandler;

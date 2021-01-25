@@ -5,10 +5,11 @@ import { errorHandler } from './middleware/error-handler';
 import {
   authHandler as authHandlerLib,
   AuthHandler,
-} from './middleware/authentication';
+} from './middleware/auth-handler';
 import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
 import Groups, { GroupController } from './controllers/groups';
+
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();

@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
@@ -44,23 +45,24 @@ const roleStyles = css({
   color: lead.rgb,
 });
 const teamStyles = css({
-  paddingBottom: `${24 / perRem}em`,
+  listStyle: 'none',
+  margin: 0,
+  padding: `0 0 ${24 / perRem}em`,
 });
 
-// TODO pass user href in from outside
 interface MembersListProps {
-  readonly members: ReadonlyArray<{
-    readonly id: string;
-    readonly displayName: string;
-    readonly firstName?: string;
-    readonly lastName?: string;
-    readonly avatarUrl?: string;
-    readonly role: string;
-    readonly team?: {
-      readonly name: string;
-      readonly href: string;
-    };
-  }>;
+  readonly members: ReadonlyArray<
+    Pick<UserResponse, 'id' | 'displayName'> &
+      Partial<Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl'>> & {
+        readonly href: string;
+        readonly role: string;
+        readonly teams: ReadonlyArray<
+          Pick<UserTeam, 'displayName'> & {
+            readonly href: string;
+          }
+        >;
+      }
+  >;
   singleColumn?: boolean;
 }
 const MembersList: React.FC<MembersListProps> = ({
@@ -68,44 +70,46 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(
-      ({ id, displayName, firstName, lastName, avatarUrl, role, team }) => (
-        <li key={id} css={{ display: 'contents' }}>
-          <Link href={`/network/users/${id}`} theme={null} display="contents">
-            <div css={avatarStyles}>
-              <Avatar
-                imageUrl={avatarUrl}
-                firstName={firstName}
-                lastName={lastName}
-              />
-            </div>
-          </Link>
-          <Link href={`/network/users/${id}`} theme={null} display="contents">
-            <div css={nameStyles}>{displayName}</div>
-          </Link>
-          <Link href={`/network/users/${id}`} theme={null} display="contents">
-            <div
-              css={[
-                addToColumnStyles,
-                singleColumn || multiColumnAddToColumnStyles,
-                roleStyles,
-              ]}
-            >
-              {role}
-            </div>
-          </Link>
+    {members.map(({ id, href, displayName, role, teams, ...member }) => (
+      <li key={id} css={{ display: 'contents' }}>
+        <Link href={href} theme={null} display="contents">
+          <div css={avatarStyles}>
+            <Avatar
+              firstName={member.firstName}
+              lastName={member.lastName}
+              imageUrl={member.avatarUrl}
+            />
+          </div>
+        </Link>
+        <Link href={href} theme={null} display="contents">
+          <div css={nameStyles}>{displayName}</div>
+        </Link>
+        <Link href={href} theme={null} display="contents">
           <div
             css={[
               addToColumnStyles,
               singleColumn || multiColumnAddToColumnStyles,
-              teamStyles,
+              roleStyles,
             ]}
           >
-            {team && <Link href={team.href}>{team.name}</Link>}
+            {role}
           </div>
-        </li>
-      ),
-    )}
+        </Link>
+        <ul
+          css={[
+            addToColumnStyles,
+            singleColumn || multiColumnAddToColumnStyles,
+            teamStyles,
+          ]}
+        >
+          {teams.map((team, i) => (
+            <li key={i}>
+              <Link href={team.href}>{team.displayName}</Link>
+            </li>
+          ))}
+        </ul>
+      </li>
+    ))}
   </ul>
 );
 

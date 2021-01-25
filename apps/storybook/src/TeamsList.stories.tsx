@@ -10,7 +10,7 @@ export default {
 export const Normal = () => (
   <TeamsList
     teams={Array.from({ length: number('Number of Teams', 6) }, (_, i) => ({
-      name: `Team ${i + 1}`,
+      displayName: `Team ${i + 1}`,
       href: `#${i}`,
     }))}
   />

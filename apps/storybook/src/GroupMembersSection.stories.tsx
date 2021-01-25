@@ -13,14 +13,20 @@ export default {
 export const Normal = () => (
   <GroupMembersSection
     leaders={createListUserResponse(number('Number of Leaders', 6)).items.map(
-      (user, i) => ({
-        user,
-        role: i % 3 ? 'Lead PI - Chair' : 'Project Manager',
-        href: `#${i}`,
+      (user, userIndex) => ({
+        ...user,
+        role: userIndex % 3 ? 'Lead PI - Chair' : 'Project Manager',
+        href: `#u${userIndex}`,
+        teams: Array(number('Number of Leader Teams', 1))
+          .fill(null)
+          .map((_, teamIndex) => ({
+            displayName: `Team ${teamIndex + 1}`,
+            href: `#t${teamIndex}`,
+          })),
       }),
     )}
     teams={createListTeamResponse(
       number('Number of Teams', 6),
-    ).items.map((team, i) => ({ ...team, href: `#${i}` }))}
+    ).items.map((team, teamIndex) => ({ ...team, href: `#t${teamIndex}` }))}
   />
 );

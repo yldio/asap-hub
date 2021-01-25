@@ -12,20 +12,18 @@ it('renders a list of leaders', async () => {
     <GroupMembersSection
       leaders={[
         {
-          user: {
-            ...createListUserResponse(1).items[0],
-            displayName: 'Bat Man',
-          },
+          ...createListUserResponse(1).items[0],
+          displayName: 'Bat Man',
           role: 'Lead PI - Chair',
           href: '#0',
+          teams: [],
         },
         {
-          user: {
-            ...createListUserResponse(2).items[1],
-            displayName: 'Some One',
-          },
+          ...createListUserResponse(2).items[1],
+          displayName: 'Some One',
           role: 'Project Manager',
           href: '#1',
+          teams: [],
         },
       ]}
       teams={[]}

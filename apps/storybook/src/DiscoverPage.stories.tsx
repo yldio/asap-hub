@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { DiscoverPage, DiscoverPageBody } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './layout';
@@ -8,7 +8,8 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-const commonProps = () => ({
+const commonProps = (): ComponentProps<typeof DiscoverPage> &
+  ComponentProps<typeof DiscoverPageBody> => ({
   pages: [
     {
       id: 'uuid-1',
@@ -45,58 +46,58 @@ const commonProps = () => ({
   members: [
     {
       id: '1',
+      href: '#',
       displayName: 'Daniel Ramirez',
       firstName: 'Daniel',
       lastName: 'Ramirez',
-      email: 'd@niel.com',
       role: 'Staff',
     },
     {
       id: '2',
+      href: '#',
       displayName: 'Peter Venkman',
       firstName: 'Peter',
       lastName: 'Venkman',
-      email: 'peter@venk.com',
       role: 'Staff',
     },
     {
       id: '3',
+      href: '#',
       displayName: 'Tess W. B. Goetz',
       firstName: 'Tess',
       lastName: 'Goetz',
-      email: 'tess@go.com',
       role: 'Staff',
     },
     {
       id: '4',
+      href: '#',
       displayName: 'Robin Peploe',
       firstName: 'Robin',
       lastName: 'Peploe',
-      email: 'robin@pep.com',
       role: 'Staff',
     },
     {
       id: '5',
+      href: '#',
       displayName: 'Alice Lane',
       firstName: 'Alice',
       lastName: 'Lane',
-      email: 'alice@lane.com',
       role: 'Staff',
     },
     {
       id: '6',
+      href: '#',
       displayName: 'Philip Mars',
       firstName: 'Philip',
       lastName: 'Mars',
-      email: 'philip@mars.com',
       role: 'Staff',
     },
     {
       id: '7',
+      href: '#',
       displayName: 'Emmanuel Depay',
       firstName: 'Emanuel',
       lastName: 'Depay',
-      email: 'em@nuel.com',
       role: 'Staff',
     },
   ],

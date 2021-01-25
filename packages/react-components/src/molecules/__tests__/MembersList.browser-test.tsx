@@ -7,9 +7,11 @@ import MembersList from '../MembersList';
 import { largeDesktopScreen } from '../../pixels';
 import { getBoundingClientRect } from '../../browser-test-utils';
 
-const {
-  items: [firstUser, secondUser],
-} = createListUserResponse(2);
+const [firstUser, secondUser] = createListUserResponse(2).items.map((user) => ({
+  ...user,
+  href: '#0',
+  teams: [],
+}));
 
 it('respects the singleColumn prop', async () => {
   page.setViewportSize(largeDesktopScreen);

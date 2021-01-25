@@ -142,7 +142,19 @@ const tools = (): ComponentProps<typeof TeamProfileWorkspace>['tools'] => [
 
 export const AboutTab = () => (
   <TeamProfilePage {...commonProps()} aboutHref="#">
-    <TeamProfileAbout {...commonProps()}></TeamProfileAbout>
+    <TeamProfileAbout
+      {...commonProps()}
+      members={[
+        {
+          id: '1',
+          href: '/wrong',
+          displayName: 'Daniel Ramirez',
+          firstName: 'Daniel',
+          lastName: 'Ramirez',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ]}
+    ></TeamProfileAbout>
   </TeamProfilePage>
 );
 

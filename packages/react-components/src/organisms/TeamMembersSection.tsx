@@ -1,5 +1,4 @@
-import React from 'react';
-import { TeamMember } from '@asap-hub/model';
+import React, { ComponentProps } from 'react';
 
 import { Card, Headline2 } from '../atoms';
 import { MembersList } from '../molecules';
@@ -7,9 +6,7 @@ import { MembersList } from '../molecules';
 type TeamMembersSectionProps = {
   readonly title?: string;
   readonly members: ReadonlyArray<
-    Omit<TeamMember, 'role'> & {
-      role: string;
-    }
+    Omit<ComponentProps<typeof MembersList>['members'][0], 'teams'>
   >;
 };
 
@@ -19,7 +16,9 @@ const TeamMembersSection: React.FC<TeamMembersSectionProps> = ({
 }) => (
   <Card>
     <Headline2 styleAsHeading={3}>{title}</Headline2>
-    <MembersList members={members} />
+    <MembersList
+      members={members.map((member) => ({ ...member, teams: [] }))}
+    />
   </Card>
 );
 

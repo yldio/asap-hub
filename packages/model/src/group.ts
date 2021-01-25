@@ -23,7 +23,6 @@ export interface GroupResponse {
   name: string;
   tags: string[];
   description: string;
-  summary: string;
   tools: GroupTools;
   teams: GroupTeam[];
   leaders: GroupLeader[];

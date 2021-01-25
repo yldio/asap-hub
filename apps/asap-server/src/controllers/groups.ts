@@ -13,7 +13,6 @@ created
 flatData {
   name
   description
-  summary
   tags
   tools {
     slack

@@ -44,7 +44,6 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     name: item.flatData?.name || '',
     tags: item.flatData?.tags || [],
     description: item.flatData?.description || '',
-    summary: item.flatData?.summary || '',
     tools,
     teams,
     leaders,

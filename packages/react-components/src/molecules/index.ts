@@ -22,5 +22,6 @@ export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';
 export { default as TabNav } from './TabNav';
 export { default as TagList } from './TagList';
+export { default as TeamsList } from './TeamsList';
 export { default as UserMenuButton } from './UserMenuButton';
 export { default as UserProfilePersonalText } from './UserProfilePersonalText';

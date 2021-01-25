@@ -47,6 +47,7 @@ const teamStyles = css({
   paddingBottom: `${24 / perRem}em`,
 });
 
+// TODO pass user href in from outside
 interface MembersListProps {
   readonly members: ReadonlyArray<{
     readonly id: string;

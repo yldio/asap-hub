@@ -19,8 +19,8 @@ const containerStyles = css({
 
 const listItemStyle = css({
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr'
-})
+  gridTemplateColumns: '1fr 1fr',
+});
 
 type UserProfileGroupsProps = Pick<UserResponse, 'firstName'> & {
   groups: ReadonlyArray<{

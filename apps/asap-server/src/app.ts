@@ -27,7 +27,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(groupRoutes);
 
   app.get('*', async (_req, res) => {
-    res.status(404).json('Invalid route');
+    res.status(404).json({
+      message: 'Not Found',
+    });
   });
 
   app.use(errorHandler);

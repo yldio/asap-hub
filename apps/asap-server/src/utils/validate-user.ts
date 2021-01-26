@@ -38,8 +38,11 @@ export default async function validateUser(
 
   const user = payload[`${origin}/user`] as User;
 
-  span.setTag('userId', user.id);
-  span.log({ event: 'validated_user', ...user });
+  if (user) {
+    span.setTag('userId', user.id);
+    span.log({ event: 'validated_user', ...user });
+  }
+
   span.finish();
   return user;
 }

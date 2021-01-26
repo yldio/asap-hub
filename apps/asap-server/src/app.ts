@@ -1,7 +1,10 @@
 import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
+import { Tracer } from 'opentracing';
+
 import { errorHandler } from './middleware/error-handler';
+import { tracingHandlerFactory } from './middleware/tracing-handler';
 import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
 import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
@@ -21,7 +24,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupRoutes = groupRouteFactory(groupController);
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(groupController);
+  const tracingHandler = tracingHandlerFactory(libs.tracer);
 
+  app.use(tracingHandler);
   app.use(cors());
   app.use(express.json());
 
@@ -49,6 +54,7 @@ export type Libs = {
   groupController?: GroupController;
   teamController?: TeamController;
   authHandler?: AuthHandler;
+  tracer?: Tracer;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
 };

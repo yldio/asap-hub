@@ -65,6 +65,7 @@ export type FetchOptions = {
 
 export interface GroupController {
   fetch: (options: FetchOptions) => Promise<ListGroupResponse>;
+  fetchByTeamId: (teamId: string | string[], options: FetchOptions) => Promise<ListGroupResponse>;
 }
 
 export default class Groups implements GroupController {

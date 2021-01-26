@@ -311,8 +311,7 @@ module.exports = {
       ],
     },
     fetchGroupsByTeamId: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/groups/fetch-by-team-id.handler',
+      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
       events: [
         {
           httpApi: {

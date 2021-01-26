@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import type { APIGatewayProxyHandlerV2, Context } from 'aws-lambda';
 
 export type Handler = APIGatewayProxyHandlerV2 &

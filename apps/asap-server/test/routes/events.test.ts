@@ -1,10 +1,11 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
+import { authHandlerMock } from '../mocks/auth-handler.mock';
 
-describe('ASAP server app', () => {
-  const app = appFactory();
+describe('/events/ routes', () => {
+  const app = appFactory({ authHandler: authHandlerMock });
 
-  describe('/events/', () => {
+  describe('GET /events', () => {
     test('Should fetch an event list', async () => {
       const response = await supertest(app).get('/events/');
 

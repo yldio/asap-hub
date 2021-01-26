@@ -142,5 +142,9 @@
     "serverless-s3-sync": "^1.15.0",
     "typescript": "~3.9.7",
     "webpack": "^5.1.0"
+  },
+  "dependencies": {
+    "encoding": "^0.1.13",
+    "supports-color": "^8.1.0"
   }
 }

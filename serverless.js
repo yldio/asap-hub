@@ -101,6 +101,12 @@ module.exports = {
             path: `/events/{proxy+}`,
           },
         },
+        {
+          httpApi: {
+            method: '*',
+            path: `/events`,
+          },
+        },
       ],
     },
     uploadUserAvatar: {
@@ -288,8 +294,14 @@ module.exports = {
       ],
     },
     fetchGroups: {
-      handler: 'apps/asap-server/build-cjs/handlers/groups/fetch.handler',
+      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
       events: [
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/groups/{proxy+}`,
+          },
+        },
         {
           httpApi: {
             method: 'GET',

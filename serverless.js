@@ -107,6 +107,24 @@ module.exports = {
             path: `/events`,
           },
         },
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/groups/{proxy+}`,
+          },
+        },
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/groups`,
+          },
+        },
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/teams/{id}/groups`,
+          },
+        },
       ],
     },
     uploadUserAvatar: {
@@ -289,34 +307,6 @@ module.exports = {
           httpApi: {
             method: 'GET',
             path: `/news-and-events/{id}`,
-          },
-        },
-      ],
-    },
-    fetchGroups: {
-      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/groups/{proxy+}`,
-          },
-        },
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/groups`,
-          },
-        },
-      ],
-    },
-    fetchGroupsByTeamId: {
-      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/teams/{id}/groups`,
           },
         },
       ],

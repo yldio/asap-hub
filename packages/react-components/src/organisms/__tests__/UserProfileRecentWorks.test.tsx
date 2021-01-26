@@ -11,17 +11,13 @@ it('renders a header with the number of works', () => {
 });
 
 it('renders the content', async () => {
-  const { getByText } = render(
+  const { queryByText, getByText } = render(
     <UserProfileRecentWorks
       orcidWorks={[
         {
           title: 'Title',
           type: 'BOOK' as const,
-          publicationDate: {
-            year: '2020',
-            month: '05',
-            day: '12',
-          },
+          publicationDate: {},
           lastModifiedDate: '1478865224685',
         },
       ]}
@@ -29,7 +25,7 @@ it('renders the content', async () => {
   );
 
   expect(getByText(/title/i)).toBeVisible();
-  expect(getByText('Publication')).toBeVisible();
+  expect(queryByText(/published/i)).not.toBeInTheDocument();
 });
 
 it('renders content with a link to external resource', async () => {

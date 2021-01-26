@@ -95,25 +95,33 @@ const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
   type,
   publicationDate,
 }) => {
-  const { year, month = '01', day = '01' } = publicationDate;
-  const date = new Date(
-    parseInt(year, 10),
-    parseInt(month, 10) - 1,
-    parseInt(day, 10),
-  );
+  let publishDateComponent = null;
+  if (publicationDate.year) {
+    const { year, month = '01', day = '01' } = publicationDate;
+    const date = new Date(
+      parseInt(year, 10),
+      parseInt(month, 10) - 1,
+      parseInt(day, 10),
+    );
+
+    publishDateComponent = (
+      <Paragraph accent="lead">
+        Originally Published:{' '}
+        {format(
+          date,
+          `${publicationDate.day ? 'do ' : ''}${
+            publicationDate.month ? 'MMMM ' : ''
+          }yyyy`,
+        )}
+      </Paragraph>
+    );
+  }
 
   const elements = (
     <div>
       <TagLabel>{typeMap[type]}</TagLabel>
       <Headline3 styleAsHeading={4}>{title}</Headline3>
-      <Paragraph accent="lead">
-        {`Originally Published: ${format(
-          date,
-          `${publicationDate.day ? 'do ' : ''}${
-            publicationDate.month ? 'MMMM ' : ''
-          }yyyy`,
-        )}`}
-      </Paragraph>
+      {publishDateComponent}
     </div>
   );
 

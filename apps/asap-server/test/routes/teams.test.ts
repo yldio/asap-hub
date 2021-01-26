@@ -5,24 +5,24 @@ import * as fixtures from '../handlers/groups/fetch.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 
-describe('/groups/ route', () => {
+describe('/teams/ route', () => {
   const app = appFactory({
     groupController: groupControllerMock,
     authHandler: authHandlerMock,
   });
 
   afterEach(() => {
-    groupControllerMock.fetch.mockReset();
+    groupControllerMock.fetchByTeamId.mockReset();
   });
 
-  describe('GET /groups', () => {
+  describe('GET /teams/{team_id}/groups', () => {
     test('Should return 200 when no grups exist', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce({
+      groupControllerMock.fetchByTeamId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
 
-      const response = await supertest(app).get('/groups/');
+      const response = await supertest(app).get('/teams/123/groups');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -32,20 +32,23 @@ describe('/groups/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce(fixtures.expectation);
+      groupControllerMock.fetchByTeamId.mockResolvedValueOnce(
+        fixtures.expectation,
+      );
 
-      const response = await supertest(app).get('/groups/');
+      const response = await supertest(app).get('/teams/123/groups');
 
       expect(response.body).toEqual(fixtures.expectation);
     });
 
     test('Should call the controller with the right parameters', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce({
+      groupControllerMock.fetchByTeamId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
+      const teamId = '123abcd';
 
-      await supertest(app).get('/groups/').query({
+      await supertest(app).get(`/teams/${teamId}/groups`).query({
         take: 15,
         skip: 5,
         search: 'something',
@@ -57,12 +60,15 @@ describe('/groups/ route', () => {
         search: 'something',
       };
 
-      expect(groupControllerMock.fetch).toBeCalledWith(expectedParams);
+      expect(groupControllerMock.fetchByTeamId).toBeCalledWith(
+        teamId,
+        expectedParams,
+      );
     });
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app).get('/groups/').query({
+        const response = await supertest(app).get(`/teams/123/groups`).query({
           take: 'invalid param',
         });
 

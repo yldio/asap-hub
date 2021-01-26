@@ -61,6 +61,7 @@ export {
   EmailPasswordSignin,
   GoogleCalendar,
   GroupCard,
+  GroupInformation,
   GroupMembersSection,
   GroupTools,
   HelpSection,

@@ -69,6 +69,11 @@ export interface GroupController {
     teamId: string | string[],
     options: FetchOptions,
   ) => Promise<ListGroupResponse>;
+  fetchByUserId: (
+    userId: string,
+    teamIds: string[],
+    options: FetchOptions,
+  ) => Promise<ListGroupResponse>;
 }
 
 export default class Groups implements GroupController {

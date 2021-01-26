@@ -1,26 +1,28 @@
-import { Auth0User } from '@asap-hub/auth';
+import { Auth0User, User } from '@asap-hub/auth';
 import { origin } from '../../config';
 
+export const userMock: User = {
+  id: 'userId',
+  displayName: 'JT',
+  email: 'joao.tiago@asap.science',
+  firstName: 'Joao',
+  lastName: 'Tiago',
+  teams: [
+    {
+      id: 'team-id-1',
+      displayName: 'Awesome Team',
+      role: 'Project Manager',
+    },
+    {
+      id: 'team-id-3',
+      displayName: 'Zac Torres',
+      role: 'Collaborating PI',
+    },
+  ],
+};
+
 const user: Auth0User = {
-  [`${origin}/user`]: {
-    id: 'userId',
-    displayName: 'JT',
-    email: 'joao.tiago@asap.science',
-    firstName: 'Joao',
-    lastName: 'Tiago',
-    teams: [
-      {
-        id: 'team-id-1',
-        displayName: 'Awesome Team',
-        role: 'Project Manager',
-      },
-      {
-        id: 'team-id-3',
-        displayName: 'Zac Torres',
-        role: 'Collaborating PI',
-      },
-    ],
-  },
+  [`${origin}/user`]: userMock,
   given_name: 'Joao',
   family_name: 'Tiago',
   nickname: 'joao.tiago',
@@ -35,7 +37,7 @@ const user: Auth0User = {
   nonce: 'onlyOnce',
 };
 
+export const auth0UserMock = user;
+
 const decodeToken = jest.fn().mockResolvedValue(user);
 export default decodeToken;
-
-export const auth0UserMock = user;

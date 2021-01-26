@@ -125,6 +125,12 @@ module.exports = {
             path: `/teams/{id}/groups`,
           },
         },
+        {
+          httpApi: {
+            method: 'GET',
+            path: `/user/{id}/groups`,
+          },
+        },
       ],
     },
     uploadUserAvatar: {
@@ -307,18 +313,6 @@ module.exports = {
           httpApi: {
             method: 'GET',
             path: `/news-and-events/{id}`,
-          },
-        },
-      ],
-    },
-    fetchGroupsByUserId: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/groups/fetch-by-user-id.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/user/{id}/groups`,
           },
         },
       ],

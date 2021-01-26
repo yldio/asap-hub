@@ -27,7 +27,7 @@ export const authHandlerFactory = (
 
   const user = payload[`${origin}/user`];
 
-  if (!user || typeof user === "string") {
+  if (!user || typeof user === 'string') {
     throw Boom.unauthorized();
   }
 

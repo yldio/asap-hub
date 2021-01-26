@@ -86,6 +86,7 @@ export {
   UserNavigation,
   UserProfileBackground,
   UserProfileBiography,
+  UserProfileGroups,
   UserProfileRecentWorks,
   UserProfileStaffBackground,
 } from './organisms';

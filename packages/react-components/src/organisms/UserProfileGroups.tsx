@@ -1,32 +1,56 @@
 import React from 'react';
-import { join } from 'path';
-
-import { Card, Headline2, Paragraph, Link, Divider } from '../atoms';
 import { UserResponse } from '@asap-hub/model';
 import css from '@emotion/css';
-import { perRem } from '../pixels';
+import { Card, Headline2, Paragraph, Link, Divider } from '../atoms';
+import { perRem, tabletScreen } from '../pixels';
+import * as colors from '../colors';
 
-const groupHref = '/network/groups';
+const titleStyle = css({
+  fontWeight: 'bold',
+});
+
+const roleStyle = css({
+  color: colors.lead.rgb,
+});
+
 const containerStyles = css({
-  margin: 0,
-  padding: 0,
-
-  listStyle: 'none',
   display: 'grid',
 
   gridColumnGap: `${18 / perRem}em`,
+
+  margin: 0,
+  marginTop: `${24 / perRem}em`,
+
+  padding: 0,
+  listStyle: 'none',
 });
 
 const listItemStyle = css({
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
+
+  gridTemplateColumns: '1fr',
+  gridTemplateRows: '1fr 1fr',
+  gridRowGap: `${12 / perRem}em`,
+
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    gridAutoFlow: 'column',
+    gridTemplateColumns: '1fr 1fr',
+
+    '&:not(:first-of-type)': {
+      gridTemplateRows: '1fr',
+    },
+
+    [`&:not(:first-of-type) > :nth-child(odd)`]: {
+      display: 'none',
+    },
+  },
 });
 
 type UserProfileGroupsProps = Pick<UserResponse, 'firstName'> & {
   groups: ReadonlyArray<{
-    id: string;
     name: string;
     role: 'Leader' | 'Member';
+    href: string;
   }>;
 };
 
@@ -36,18 +60,14 @@ const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
 }) => {
   const groupsComponent = groups.length ? (
     <ul css={[containerStyles]}>
-      <li key="header" css={listItemStyle}>
-        <div css={{ fontWeight: 'bold' }}>Group</div>
-        <div css={{ fontWeight: 'bold' }}>Role</div>
-      </li>
       {groups
-        .flatMap(({ id, name, role }) => [
-          <Divider key={`sep-${id}`} />,
-          <li key={id} css={listItemStyle}>
-            <Link href={join(groupHref, id)}>
-              <Paragraph>{name}</Paragraph>
-            </Link>
-            <Paragraph accent="lead">{role}</Paragraph>
+        .flatMap(({ name, role, href }, idx) => [
+          <Divider key={`sep-${idx}`} />,
+          <li key={idx} css={listItemStyle}>
+            <div css={[titleStyle]}>Group</div>
+            <Link href={href}>{name}</Link>
+            <div css={[titleStyle]}>Role</div>
+            <div css={roleStyle}>{role}</div>
           </li>,
         ])
         .slice(1)}

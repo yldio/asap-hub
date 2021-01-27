@@ -1,5 +1,5 @@
 import React from 'react';
-import { text, array } from '@storybook/addon-knobs';
+import { text, number } from '@storybook/addon-knobs';
 import { UserProfileGroups } from '@asap-hub/react-components';
 
 export default {
@@ -9,9 +9,12 @@ export default {
 export const Normal = () => (
   <UserProfileGroups
     firstName={text('First Name', 'Daniel')}
-    groups={[
-      { id: '1', name: 'Sci 1 - GWAS Functional', role: 'Member' },
-      { id: '2', name: 'Sci 2 - Aging and Progression', role: 'Leader' },
-    ]}
+    groups={Array(number('Number of Groups', 2))
+      .fill(null)
+      .map((_, groupIndex) => ({
+        href: `#${groupIndex}`,
+        name: `Group ${groupIndex + 1}`,
+        role: groupIndex % 2 ? 'Leader' : 'Member',
+      }))}
   />
 );

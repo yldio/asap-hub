@@ -30,7 +30,17 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     }),
   );
 
-  const tools: GroupTools = item.flatData?.tools ? item.flatData?.tools : {};
+  const tools: GroupTools = {};
+  if (item.flatData?.tools) {
+    const [groupTools] = item.flatData?.tools;
+    if (groupTools.slack) {
+      tools.slack = groupTools.slack;
+    }
+
+    if (groupTools.googleDrive) {
+      tools.googleDrive = groupTools.googleDrive;
+    }
+  }
 
   if (item.flatData?.calendars?.length) {
     const url = new URL('https://calendar.google.com/calendar/r');

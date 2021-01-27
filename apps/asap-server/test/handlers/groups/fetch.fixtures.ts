@@ -15,9 +15,11 @@ export const response: { data: ResponseFetchGroups } = {
             description: 'A test Group',
             name: "JT's Group",
             tags: ['coding'],
-            tools: {
-              slack: 'https://example.com/secure-comms',
-            },
+            tools: [
+              {
+                slack: 'https://example.com/secure-comms',
+              },
+            ],
             calendars: [
               {
                 id: 'calendar-id-1',

@@ -1,6 +1,7 @@
 import { ListTeamResponse, TeamResponse } from '@asap-hub/model';
 
-import { GetListOptions, useGetList } from './get-list';
+import { useGetList } from './get-list';
+import { GetListOptions } from '../api-util';
 import { useGetOne } from './get-one';
 
 export const useTeams = (options: GetListOptions) =>

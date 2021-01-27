@@ -4,7 +4,7 @@ import { User } from '@asap-hub/auth';
 import {
   graphQlTeamsResponseSingle,
   usersResponseTeam1,
-  listTeamExpectation,
+  listTeamResponse,
   graphQlTeamsResponse,
   usersResponseTeam2,
   usersResponseTeam3,
@@ -99,7 +99,7 @@ describe('Team controller', () => {
 
       expect(result).toEqual({
         total: 1,
-        items: listTeamExpectation.items.slice(0, 1),
+        items: listTeamResponse.items.slice(0, 1),
       });
     });
 
@@ -127,7 +127,7 @@ describe('Team controller', () => {
 
       const result = await teams.fetch({ take: 8, skip: 0 }, mockUser);
 
-      expect(result).toEqual(listTeamExpectation);
+      expect(result).toEqual(listTeamResponse);
     });
   });
 

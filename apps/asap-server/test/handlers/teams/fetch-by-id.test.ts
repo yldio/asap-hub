@@ -6,7 +6,11 @@ import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { buildGraphQLQueryFetchTeam } from '../../../src/controllers/teams';
-import { fetchTeamByIdExpectation, fetchByIdUserResponse, graphQlTeamResponse } from "../../fixtures/teams.fixtures";
+import {
+  fetchTeamByIdExpectation,
+  fetchByIdUserResponse,
+  graphQlTeamResponse,
+} from '../../fixtures/teams.fixtures';
 
 jest.mock('../../../src/utils/validate-token');
 

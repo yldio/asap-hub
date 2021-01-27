@@ -8,7 +8,7 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import {
   graphQlTeamsResponseSingle,
-  listTeamExpectation,
+  listTeamResponse,
   graphQlTeamsResponse,
   usersResponseTeam1,
   usersResponseTeam2,
@@ -97,7 +97,7 @@ describe('GET /teams', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(body).toStrictEqual({
       total: 1,
-      items: listTeamExpectation.items.slice(0, 1),
+      items: listTeamResponse.items.slice(0, 1),
     });
   });
 
@@ -133,6 +133,6 @@ describe('GET /teams', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(listTeamExpectation);
+    expect(body).toStrictEqual(listTeamResponse);
   });
 });

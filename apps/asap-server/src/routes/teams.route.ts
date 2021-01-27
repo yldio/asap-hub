@@ -1,14 +1,67 @@
 import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
+import Boom from '@hapi/boom';
 import { GroupController, FetchOptions } from '../controllers/groups';
+import { TeamController } from '../controllers/teams';
+import { teamUpdateSchema } from '../entities/team';
+import { TeamPatchRequest } from '@asap-hub/model';
 
-export const teamRouteFactory = (groupsController: GroupController): Router => {
-  const groupRoutes = Router();
+export const teamRouteFactory = (
+  groupsController: GroupController,
+  teamsController: TeamController,
+): Router => {
+  const teamRoutes = Router();
 
-  groupRoutes.get('/teams/:teamId/groups', async (req, res) => {
+  teamRoutes.get('/teams', async (req, res) => {
     const { query } = req;
+
+    const options = (framework.validate(
+      'query',
+      query,
+      fetchQuerySchema,
+    ) as unknown) as {
+      take: number;
+      skip: number;
+      search?: string;
+      filter?: string[] | string;
+    };
+
+    const result = await teamsController.fetch(options, req.loggedUser!);
+
+    res.json(result);
+  });
+
+  teamRoutes.get('/teams/:teamId', async (req, res) => {
     const { params } = req;
+    const { teamId } = framework.validate('parameters', params, paramSchema);
+
+    const result = await teamsController.fetchById(teamId, req.loggedUser!);
+
+    res.json(result);
+  });
+
+  teamRoutes.patch('/teams/:teamId', async (req, res) => {
+    const { body, params } = req;
+
+    const { teamId } = framework.validate('parameters', params, paramSchema);
+    const { tools } = framework.validate(
+      'payload',
+      body,
+      teamUpdateSchema,
+    ) as TeamPatchRequest;
+
+    if (!req.loggedUser!.teams.find(({ id }) => id === teamId)) {
+      throw Boom.forbidden();
+    }
+
+    const result = await teamsController.update(teamId, tools, req.loggedUser!);
+
+    res.json(result);
+  });
+
+  teamRoutes.get('/teams/:teamId/groups', async (req, res) => {
+    const { query, params } = req;
 
     const { teamId } = framework.validate('parameters', params, paramSchema);
     const options = (framework.validate(
@@ -22,7 +75,7 @@ export const teamRouteFactory = (groupsController: GroupController): Router => {
     res.json(result);
   });
 
-  return groupRoutes;
+  return teamRoutes;
 };
 
 const querySchema = Joi.object({
@@ -34,3 +87,10 @@ const querySchema = Joi.object({
 const paramSchema = Joi.object({
   teamId: Joi.string().required(),
 });
+
+const fetchQuerySchema = Joi.object({
+  take: Joi.number(),
+  skip: Joi.number(),
+  search: Joi.string(),
+  filter: Joi.array().items(Joi.string()).single(),
+}).required();

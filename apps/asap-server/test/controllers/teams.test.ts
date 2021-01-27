@@ -8,9 +8,13 @@ import {
   graphQlTeamsResponse,
   usersResponseTeam2,
   usersResponseTeam3,
+  fetchTeamByIdExpectation,
+  graphQlTeamResponse,
+  fetchByIdUserResponse,
 } from '../fixtures/teams.fixtures';
 import Teams, {
   buildGraphQLQueryFetchTeams,
+  buildGraphQLQueryFetchTeam,
 } from '../../src/controllers/teams';
 import { identity } from '../helpers/squidex';
 
@@ -120,6 +124,83 @@ describe('Team controller', () => {
       const result = await teams.fetch({ take: 8, skip: 0 }, mockUser);
 
       expect(result).toEqual(listTeamExpectation);
+    });
+  });
+
+  describe('Fetch-by-id method', () => {
+    test('Should throw a Not Found error when the team is not found', async () => {
+      const teamId = 'not-found';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, {
+          data: {
+            findTeamsContent: null,
+          },
+        });
+
+      await expect(teams.fetchById(teamId, mockUser)).rejects.toThrow(
+        'Not Found',
+      );
+    });
+
+    test('Should return the team even when team members are not found', async () => {
+      const teamId = 'team-id-1';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, graphQlTeamResponse)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(404);
+
+      const result = await teams.fetchById(teamId, mockUser);
+
+      expect(result).toEqual({ ...fetchTeamByIdExpectation, members: [] });
+    });
+
+    test('Should return the team even when team members do not exist', async () => {
+      const teamId = 'team-id-1';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, graphQlTeamResponse)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(200, { total: 0, items: [] });
+
+      const result = await teams.fetchById(teamId, mockUser);
+
+      expect(result).toEqual({ ...fetchTeamByIdExpectation, members: [] });
+    });
+
+    test('Should return the result when the team exists', async () => {
+      const teamId = 'team-id-1';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, graphQlTeamResponse)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(200, fetchByIdUserResponse);
+
+      const result = await teams.fetchById(teamId, mockUser);
+
+      expect(result).toEqual(fetchTeamByIdExpectation);
     });
   });
 });

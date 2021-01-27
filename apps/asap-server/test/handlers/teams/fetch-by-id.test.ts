@@ -6,7 +6,7 @@ import { handler } from '../../../src/handlers/teams/fetch-by-id';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { buildGraphQLQueryFetchTeam } from '../../../src/controllers/teams';
-import * as fixtures from './fetch-by-id.fixtures';
+import { fetchTeamByIdExpectation, fetchByIdUserResponse, graphQlTeamResponse } from "../../fixtures/teams.fixtures";
 
 jest.mock('../../../src/utils/validate-token');
 
@@ -49,7 +49,7 @@ describe('GET /teams/{id}', () => {
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchTeam('team-id-1'),
       })
-      .reply(200, fixtures.graphQlTeamResponse)
+      .reply(200, graphQlTeamResponse)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
@@ -69,7 +69,7 @@ describe('GET /teams/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual({ ...fixtures.expectation, members: [] });
+    expect(body).toStrictEqual({ ...fetchTeamByIdExpectation, members: [] });
   });
 
   test('returns team even when has no members', async () => {
@@ -77,7 +77,7 @@ describe('GET /teams/{id}', () => {
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchTeam('team-id-1'),
       })
-      .reply(200, fixtures.graphQlTeamResponse)
+      .reply(200, graphQlTeamResponse)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
@@ -97,7 +97,7 @@ describe('GET /teams/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual({ ...fixtures.expectation, members: [] });
+    expect(body).toStrictEqual({ ...fetchTeamByIdExpectation, members: [] });
   });
 
   test('returns 200 when team exists', async () => {
@@ -105,12 +105,12 @@ describe('GET /teams/{id}', () => {
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchTeam('team-id-1'),
       })
-      .reply(200, fixtures.graphQlTeamResponse)
+      .reply(200, graphQlTeamResponse)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
       })
-      .reply(200, fixtures.usersResponseTeam1);
+      .reply(200, fetchByIdUserResponse);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -125,6 +125,6 @@ describe('GET /teams/{id}', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(fixtures.expectation);
+    expect(body).toStrictEqual(fetchTeamByIdExpectation);
   });
 });

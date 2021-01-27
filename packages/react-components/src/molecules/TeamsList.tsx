@@ -21,16 +21,16 @@ const rowStyles = css({
 });
 
 interface TeamsListProps {
-  readonly teams: ReadonlyArray<{ name: string; href: string }>;
+  readonly teams: ReadonlyArray<{ displayName: string; href: string }>;
 }
 const TeamsList: React.FC<TeamsListProps> = ({ teams }) => (
   <ul css={listStyles}>
-    {teams.flatMap(({ name, href }, i) => (
+    {teams.flatMap(({ displayName, href }, i) => (
       <li key={`sep-${i}`}>
         {i > 0 && <Divider />}
         <div css={rowStyles}>
           {teamIcon}
-          <Link href={href}>{name}</Link>
+          <Link href={href}>{displayName}</Link>
         </div>
       </li>
     ))}

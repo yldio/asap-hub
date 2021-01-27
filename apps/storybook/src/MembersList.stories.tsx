@@ -11,7 +11,9 @@ export default {
 export const Normal = () => (
   <MembersList
     singleColumn={boolean('Force Single Column', false)}
-    members={createListUserResponse(number('Number of members', 6)).items}
+    members={createListUserResponse(
+      number('Number of members', 6),
+    ).items.map((member) => ({ ...member, href: '#', teams: [] }))}
   />
 );
 
@@ -19,9 +21,12 @@ export const WithTeam = () => (
   <MembersList
     singleColumn={boolean('Force Single Column', false)}
     members={createListUserResponse(number('Number of members', 6)).items.map(
-      (user) => ({
-        ...user,
-        team: { name: "Tom's Team", href: '#team' },
+      (member) => ({
+        ...member,
+        href: '#',
+        teams: Array(number('Number of teams', 1))
+          .fill(null)
+          .map((_, i) => ({ displayName: `Team ${i + 1}`, href: '#' })),
       }),
     )}
   />

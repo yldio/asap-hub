@@ -12,12 +12,16 @@ it('renders name and role for each member', async () => {
           ...createListUserResponse(1).items[0],
           displayName: 'Bat Man',
           role: 'Boss',
+          href: 'https://en.wikipedia.org/wiki/Batman',
+          teams: [],
         },
         {
           ...createListUserResponse(2).items[1],
           id: '1337',
           displayName: 'Some One',
           role: 'Apprentice',
+          href: 'https://example.com',
+          teams: [],
         },
       ]}
     />,
@@ -30,7 +34,7 @@ it('renders name and role for each member', async () => {
   expect(someone).toHaveTextContent('Some One');
   expect(someone).toHaveTextContent('Apprentice');
 });
-it('renders a team link if provided', async () => {
+it('renders a team link for each team provided', async () => {
   const { getByText } = render(
     <MembersList
       members={[
@@ -38,7 +42,17 @@ it('renders a team link if provided', async () => {
           ...createUserResponse(),
           displayName: 'Bat Man',
           role: 'Boss',
-          team: { name: 'Team DC', href: 'http://dccomics.com' },
+          href: 'https://en.wikipedia.org/wiki/Batman',
+          teams: [
+            {
+              displayName: 'Team DC',
+              href: 'http://dccomics.com',
+            },
+            {
+              displayName: 'Team Arkham',
+              href: 'https://en.wikipedia.org/wiki/Gotham_City',
+            },
+          ],
         },
       ]}
     />,
@@ -46,5 +60,9 @@ it('renders a team link if provided', async () => {
   expect(getByText('Team DC').closest('a')).toHaveAttribute(
     'href',
     'http://dccomics.com',
+  );
+  expect(getByText('Team Arkham').closest('a')).toHaveAttribute(
+    'href',
+    'https://en.wikipedia.org/wiki/Gotham_City',
   );
 });

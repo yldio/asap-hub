@@ -2,8 +2,8 @@ import React from 'react';
 import nock from 'nock';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
-import { UserResponse } from '@asap-hub/model';
-import { createPageResponse } from '@asap-hub/fixtures';
+import { DiscoverResponse } from '@asap-hub/model';
+import { createPageResponse, createUserResponse } from '@asap-hub/fixtures';
 import { MemoryRouter, Route } from 'react-router-dom';
 import Discover from '../Discover';
 
@@ -30,7 +30,7 @@ const renderDiscover = async () => {
   return result;
 };
 
-test('renders discover header', async () => {
+it('renders discover header', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -47,7 +47,7 @@ test('renders discover header', async () => {
   expect(getByText(/discover/i, { selector: 'h1' })).toBeVisible();
 });
 
-test('renders discover with guidance, about and members', async () => {
+it('renders discover with guidance, about and members', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -57,49 +57,40 @@ test('renders discover with guidance, about and members', async () => {
       training: [],
       aboutUs: '<h1>About us</h1>',
       pages: [createPageResponse('1'), createPageResponse('2')],
-      members: [
-        {
-          id: 'uuid',
-          displayName: 'John Doe',
-          email: 'john@example.com',
-          firstName: 'John',
-          lastName: 'Doe',
-        } as UserResponse,
-      ],
-    });
+      members: [createUserResponse()],
+    } as DiscoverResponse);
 
   const { queryAllByText, getByText } = await renderDiscover();
   expect(getByText(/about/i, { selector: 'h1' })).toBeVisible();
   expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
 });
 
-test('renders discover with members', async () => {
+it('renders discover with training', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
     .get('/discover')
     .once()
     .reply(200, {
-      training: [],
-      aboutUs: '',
-      pages: [],
-      members: [
+      training: [
         {
-          id: 'uuid',
-          displayName: 'John Doe',
-          email: 'john@example.com',
-          firstName: 'John',
-          jobTitle: 'CEO',
-          lastName: 'Doe',
-        } as UserResponse,
+          id: 't1',
+          title: 'My Training',
+          text: 'This is my training',
+          type: 'Training',
+          created: '2021-01-01',
+        },
       ],
-    });
+      aboutUs: '<h1>About us</h1>',
+      pages: [createPageResponse('1'), createPageResponse('2')],
+      members: [],
+    } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();
-  expect(getByText('John Doe')).toBeVisible();
+  expect(getByText('My Training').closest('a')!.href).toContain('t1');
 });
 
-test('renders discover with members role', async () => {
+it('renders discover with members', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
@@ -111,16 +102,29 @@ test('renders discover with members role', async () => {
       pages: [],
       members: [
         {
+          ...createUserResponse(),
           id: 'uuid',
           displayName: 'John Doe',
-          email: 'john@example.com',
-          firstName: 'John',
-          institution: 'ASAP',
-          jobTitle: 'CEO',
-          lastName: 'Doe',
-        } as UserResponse,
+        },
       ],
-    });
+    } as DiscoverResponse);
+
+  const { getByText } = await renderDiscover();
+  expect(getByText('John Doe').closest('a')!.href).toContain('uuid');
+});
+
+it('sets the member roles to Staff', async () => {
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/discover')
+    .once()
+    .reply(200, {
+      training: [],
+      aboutUs: '',
+      pages: [],
+      members: [{ ...createUserResponse(), role: 'Guest' }],
+    } as DiscoverResponse);
 
   const { getByText } = await renderDiscover();
   expect(getByText('Staff')).toBeVisible();

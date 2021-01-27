@@ -59,6 +59,59 @@ describe('PATCH /teams/{id} - validations', () => {
     expect(result.statusCode).toStrictEqual(401);
   });
 
+  test('returns 401 when token is from a different origin', async () => {
+    const mockDecodeToken = decodeToken as jest.MockedFunction<
+      typeof decodeToken
+    >;
+
+    mockDecodeToken.mockResolvedValueOnce({
+      [`some-other-origin/user`]: {
+        id: 'userId',
+        displayName: 'JT',
+        email: 'joao.tiago@asap.science',
+        firstName: 'Joao',
+        lastName: 'Tiago',
+        teams: [
+          {
+            id: 'team-id-1',
+            displayName: 'Awesome Team',
+            role: 'Project Manager',
+          },
+          {
+            id: 'team-id-3',
+            displayName: 'Zac Torres',
+            role: 'Collaborating PI',
+          },
+        ],
+      },
+      given_name: 'Joao',
+      family_name: 'Tiago',
+      nickname: 'joao.tiago',
+      name: 'Joao Tiago',
+      picture: 'https://lh3.googleusercontent.com/awesomePic',
+      locale: 'en',
+      updated_at: '2020-10-27T17:55:23.418Z',
+      email: 'joao.tiago@asap.science',
+      iss: 'https://asap-hub.us.auth0.com/',
+      sub: 'google-oauth2|awesomeGoogleCode',
+      aud: 'audience',
+      nonce: 'onlyOnce',
+    });
+
+    const result = (await handler(
+      apiGatewayEvent({
+        headers: {
+          Authorization: 'Bearer token',
+        },
+        pathParameters: {
+          id: 'teamId',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(401);
+  });
+
   test('returns 400 when payload is invalid', async () => {
     const result1 = (await handler(
       apiGatewayEvent({

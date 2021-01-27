@@ -36,13 +36,14 @@ export default async function validateUser(
     throw Boom.unauthorized();
   }
 
-  const user = payload[`${origin}/user`] as User;
+  const user = payload[`${origin}/user`];
 
-  if (user) {
-    span.setTag('userId', user.id);
-    span.log({ event: 'validated_user', ...user });
+  if (!user || typeof user === 'string') {
+    throw Boom.unauthorized();
   }
 
+  span.setTag('userId', user.id);
+  span.log({ event: 'validated_user', ...user });
   span.finish();
   return user;
 }

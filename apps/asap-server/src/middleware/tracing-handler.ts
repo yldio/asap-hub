@@ -34,22 +34,20 @@ export const tracingHandlerFactory = (
   // add the span to the request object for handlers to use
   Object.assign(req, { span });
 
-  // finalize the span when the response is completed
-  res.on('close', () => {
-    span.log({ event: 'response_closed' });
-    span.finish();
-  });
-
   res.on('finish', () => {
     span.log({ event: 'response_finished' });
-    const opName = req?.route.path || pathname;
-    span.setOperationName(opName);
+    span.setOperationName(req.route?.path || pathname);
     span.setTag('http.status_code', res.statusCode);
 
     if (res.statusCode >= 500) {
       span.setTag('error', true);
       span.setTag('sampling.priority', 1);
     }
+  });
+
+  res.on('close', () => {
+    span.log({ event: 'response_closed' });
+    span.finish();
   });
 
   next();

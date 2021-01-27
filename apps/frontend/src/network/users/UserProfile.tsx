@@ -17,6 +17,8 @@ import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
 import { TEAMS_PATH } from '../routes';
 import { useUserById, usePatchUserAvatarById } from './state';
 import Frame from '../../structure/Frame';
+import { UserResponse } from '@asap-hub/model';
+import { User as AuthUser } from '@asap-hub/auth';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -35,31 +37,32 @@ const Staff = React.lazy(loadStaff);
 const Editing = React.lazy(loadEditing);
 loadResearch().then(loadStaff);
 
-const User: React.FC<Record<string, never>> = () => {
-  useEffect(() => {
-    loadResearch()
-      .then(loadStaff)
-      .then(loadAbout)
-      .then(loadOutputs)
-      .then(loadEditing);
-  }, []);
-
-  const {
-    url,
-    path,
-    params: { id },
-  } = useRouteMatch();
-  const tab = matchPath<{ tab: string }>(useLocation().pathname, {
-    path: `${path}/:tab`,
-  })?.params?.tab;
-
-  const user = useUserById(id);
-  const currentUser = useCurrentUser();
-
-  const patchUserAvatar = usePatchUserAvatarById(id);
-  const [avatarSaving, setAvatarSaving] = useState(false);
-  const toast = useContext(ToastContext);
-
+const useRenderUser = ({
+  user,
+  tab,
+  avatarSaving,
+  setAvatarSaving,
+  patchUserAvatar,
+  currentUser,
+  toast,
+  userResearch,
+  userAbout,
+  userOutputs,
+  userEditing,
+}: {
+  user: UserResponse | undefined;
+  tab: string | undefined;
+  avatarSaving: boolean;
+  setAvatarSaving: (newVal: boolean) => void;
+  patchUserAvatar: (avatar: string) => Promise<void>;
+  currentUser: AuthUser | null;
+  toast: any;
+  userResearch: () => React.ReactNode;
+  userAbout: () => React.ReactNode;
+  userOutputs: () => React.ReactNode;
+  userEditing: () => React.ReactNode;
+}) => {
+  const { url, path } = useRouteMatch();
   const isOwnProfile = currentUser?.id === user?.id;
 
   if (user) {
@@ -91,7 +94,7 @@ const User: React.FC<Record<string, never>> = () => {
           ? join(url, tab, EDIT_CONTACT_INFO_PATH)
           : undefined,
       onImageSelect:
-        currentUser?.id === id && tab
+        isOwnProfile && tab
           ? (file: File) => {
               setAvatarSaving(true);
               return imageCompression(file, { maxSizeMB: 2 })
@@ -119,19 +122,19 @@ const User: React.FC<Record<string, never>> = () => {
             <>
               <Switch>
                 <Route path={`${path}/research`}>
-                  <Research user={user} teams={teams} />
+                  {userResearch() ?? <Research user={user} teams={teams} />}
                 </Route>
                 <Route path={`${path}/about`}>
-                  <About user={user} />
+                  {userAbout() ?? <About user={user} />}
                 </Route>
                 <Route path={`${path}/outputs`}>
-                  <Outputs />
+                  {userOutputs() ?? <Outputs />}
                 </Route>
                 <Redirect to={join(url, 'research')} />
               </Switch>
               {isOwnProfile && (
                 <Route path={`${path}/:tab`}>
-                  <Editing user={user} />
+                  {userEditing() ?? <Editing user={user} />}
                 </Route>
               )}
             </>
@@ -142,6 +145,41 @@ const User: React.FC<Record<string, never>> = () => {
   }
 
   return <NotFoundPage />;
+};
+
+const User: React.FC<Record<string, never>> = () => {
+  useEffect(() => {
+    loadResearch()
+      .then(loadStaff)
+      .then(loadAbout)
+      .then(loadOutputs)
+      .then(loadEditing);
+  }, []);
+
+  const {
+    path,
+    params: { id },
+  } = useRouteMatch();
+  const tab = matchPath<{ tab: string }>(useLocation().pathname, {
+    path: `${path}/:tab`,
+  })?.params?.tab;
+
+  const user = useUserById(id);
+  const currentUser = useCurrentUser();
+
+  const patchUserAvatar = usePatchUserAvatarById(id);
+  const [avatarSaving, setAvatarSaving] = useState(false);
+  const toast = useContext(ToastContext);
+
+  return useRenderUser({
+    user,
+    tab,
+    avatarSaving,
+    setAvatarSaving,
+    patchUserAvatar,
+    currentUser,
+    toast,
+  });
 };
 
 export default User;

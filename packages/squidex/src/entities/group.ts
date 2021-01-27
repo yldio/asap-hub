@@ -21,7 +21,7 @@ interface Group<
   tools: {
     slack?: string;
     googleDrive?: string;
-  };
+  }[];
   teams: TTeamConnection[];
   leaders: GroupUserConnection<TUserConnection>[];
   calendars: TCalendar[];

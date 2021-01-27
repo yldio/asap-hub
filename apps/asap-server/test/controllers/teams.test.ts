@@ -11,6 +11,10 @@ import {
   fetchTeamByIdExpectation,
   graphQlTeamResponse,
   fetchByIdUserResponse,
+  getUpdateTeamResponse,
+  getGraphQlTeamResponse,
+  updateResponseTeam,
+  updateExpectation,
 } from '../fixtures/teams.fixtures';
 import Teams, {
   buildGraphQLQueryFetchTeams,
@@ -201,6 +205,81 @@ describe('Team controller', () => {
       const result = await teams.fetchById(teamId, mockUser);
 
       expect(result).toEqual(fetchTeamByIdExpectation);
+    });
+  });
+
+  describe('Update method', () => {
+    test('Should throw a Not Found error when the team does not exist', async () => {
+      const teamId = 'team-id-1';
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/teams/${teamId}`)
+        .reply(404);
+
+      await expect(teams.update(teamId, [], mockUser)).rejects.toThrow(
+        'Not Found',
+      );
+    });
+
+    test('Should remove the tools are return the team', async () => {
+      const teamId = 'team-id-1';
+
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+          tools: { iv: [] },
+        })
+        .reply(200, getUpdateTeamResponse()) // response is not used
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, getGraphQlTeamResponse())
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(200, updateResponseTeam);
+
+      const result = await teams.update(teamId, [], mockUser);
+
+      expect(result).toEqual(updateExpectation);
+    });
+
+    test('Should remove a field are return the team', async () => {
+      const teamId = 'team-id-1';
+      const tools = [
+        {
+          url: 'https://example.com',
+          name: 'good link',
+        },
+      ];
+
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/teams/${teamId}`, {
+          tools: { iv: tools },
+        })
+        .reply(200, getUpdateTeamResponse(tools)) // response is not used
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, getGraphQlTeamResponse(tools))
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(200, updateResponseTeam);
+
+      const result = await teams.update(
+        teamId,
+        [
+          {
+            url: 'https://example.com',
+            name: 'good link',
+            description: '',
+          },
+        ],
+        mockUser,
+      );
+
+      expect(result).toEqual({ ...updateExpectation, tools });
     });
   });
 });

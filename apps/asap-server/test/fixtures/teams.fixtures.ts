@@ -1,7 +1,7 @@
 import { ListTeamResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
 import { RestUser } from '@asap-hub/squidex';
-import { ResponseFetchTeams } from '../../../src/controllers/teams';
+import { ResponseFetchTeams } from '../../src/controllers/teams';
 
 export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
   data: {
@@ -238,7 +238,7 @@ export const usersResponseTeam3: { total: number; items: RestUser[] } = {
   ],
 };
 
-export const expectation: ListTeamResponse = {
+export const listTeamExpectation: ListTeamResponse = {
   total: 3,
   items: [
     {

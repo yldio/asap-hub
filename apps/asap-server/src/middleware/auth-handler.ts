@@ -1,6 +1,8 @@
 import { RequestHandler } from 'express';
 import Boom from '@hapi/boom';
+import Intercept from 'apr-intercept';
 import { DecodeToken } from '../utils/validate-token';
+import { origin } from '../config';
 
 export const authHandlerFactory = (
   decodeToken: DecodeToken,
@@ -17,7 +19,19 @@ export const authHandlerFactory = (
     throw Boom.unauthorized();
   }
 
-  await decodeToken(token).catch(() => next(Boom.unauthorized()));
+  const [err, payload] = await Intercept(decodeToken(token));
+
+  if (err) {
+    throw Boom.unauthorized();
+  }
+
+  const user = payload[`${origin}/user`];
+
+  if (!user || typeof user === 'string') {
+    throw Boom.unauthorized();
+  }
+
+  req.loggedUser = user;
 
   next();
 };

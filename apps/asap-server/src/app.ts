@@ -8,6 +8,7 @@ import { groupRouteFactory } from './routes/groups.route';
 import Groups, { GroupController } from './controllers/groups';
 import decodeToken from './utils/validate-token';
 import { teamRouteFactory } from './routes/teams.route';
+import { userRouteFactory } from './routes/user.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -17,6 +18,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
   const teamRoutes = teamRouteFactory(groupController);
+  const userRoutes = userRouteFactory(groupController);
 
   app.use(cors());
   app.use(authHandler);
@@ -28,6 +30,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(eventRoutes);
   app.use(groupRoutes);
   app.use(teamRoutes);
+  app.use(userRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json('Invalid route');

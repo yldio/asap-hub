@@ -1,6 +1,7 @@
 import serverlessHttp from 'serverless-http';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';
+import { User } from '@asap-hub/auth';
 import { appFactory } from '../app';
 
 const app = appFactory();
@@ -20,6 +21,7 @@ declare global {
   namespace Express {
     interface Request {
       context: APIGatewayProxyEventV2['requestContext'];
+      loggedUser?: User;
     }
   }
 }

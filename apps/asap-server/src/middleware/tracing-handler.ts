@@ -50,5 +50,5 @@ export const tracingHandlerFactory = (
     span.finish();
   });
 
-  next();
+  return next();
 };

@@ -2,13 +2,11 @@ import { RequestHandler } from 'express';
 import * as opentracing from 'opentracing';
 import * as url from 'url';
 
-const { NODE_ENV = 'production' } = process.env;
-
 export const tracingHandlerFactory = (
   tracer?: opentracing.Tracer,
 ): RequestHandler => async (req, res, next) => {
   // stop tracing during testing
-  if (!tracer || NODE_ENV === 'test') {
+  if (!tracer || process.env.NODE_ENV === 'test') {
     return next();
   }
 

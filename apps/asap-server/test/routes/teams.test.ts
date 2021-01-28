@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
 import { appFactory } from '../../src/app';
-import { FetchOptions } from '../../src/controllers/groups';
-import * as fixtures from '../handlers/groups/fetch.fixtures';
+import { FetchOptions } from '../../src/utils/types';
+import * as fixtures from '../fixtures/groups.fixtures';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';

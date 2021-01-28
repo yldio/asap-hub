@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { FetchOptions } from '../../src/controllers/groups';
-import * as fixtures from '../handlers/groups/fetch.fixtures';
+import { FetchOptions } from '../../src/utils/types';
+import * as fixtures from '../fixtures/groups.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';

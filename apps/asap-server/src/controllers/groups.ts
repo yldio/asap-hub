@@ -3,6 +3,7 @@ import { ListGroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
+import { FetchOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
 import { GraphQLQueryUser } from './users';
 import { GraphQLQueryTeam } from './teams';
@@ -56,12 +57,6 @@ export interface ResponseFetchGroups {
     items: GraphqlGroup[];
   };
 }
-
-export type FetchOptions = {
-  take?: number;
-  skip?: number;
-  search?: string;
-};
 
 export interface GroupController {
   fetch: (options: FetchOptions) => Promise<ListGroupResponse>;

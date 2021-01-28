@@ -5,9 +5,10 @@ import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
 import { TeamPatchRequest } from '@asap-hub/model';
 
-import { GroupController, FetchOptions } from '../controllers/groups';
 import { TeamController } from '../controllers/teams';
 import { teamUpdateSchema } from '../entities/team';
+import { GroupController } from '../controllers/groups';
+import { FetchOptions } from '../utils/types';
 
 export const teamRouteFactory = (
   groupsController: GroupController,

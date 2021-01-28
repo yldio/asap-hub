@@ -1,6 +1,6 @@
 import { ListGroupResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import { ResponseFetchGroups } from '../../../src/controllers/groups';
+import { ResponseFetchGroups } from '../../src/controllers/groups';
 
 export const response: { data: ResponseFetchGroups } = {
   data: {

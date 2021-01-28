@@ -6,7 +6,7 @@ import { buildGraphQLQueryFetchGroups } from '../../../src/controllers/groups';
 import { handler } from '../../../src/handlers/groups/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import * as fixtures from './fetch.fixtures';
+import * as fixtures from '../../fixtures/groups.fixtures';
 
 jest.mock('../../../src/utils/validate-token');
 

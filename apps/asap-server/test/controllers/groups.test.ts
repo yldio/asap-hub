@@ -3,11 +3,11 @@ import { config } from '@asap-hub/squidex';
 
 import {
   default as Groups,
-  FetchOptions,
   buildGraphQLQueryFetchGroups,
 } from '../../src/controllers/groups';
 import { identity } from '../helpers/squidex';
-import * as fixtures from '../handlers/groups/fetch.fixtures';
+import * as fixtures from '../fixtures/groups.fixtures';
+import { FetchOptions } from '../../src/utils/types';
 
 const groups = new Groups();
 

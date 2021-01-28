@@ -6,7 +6,7 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { handler } from '../../../src/handlers/groups/fetch-by-user-id';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import * as fixtures from './fetch.fixtures';
+import * as fixtures from '../../fixtures/groups.fixtures';
 
 jest.mock('../../../src/utils/validate-token');
 

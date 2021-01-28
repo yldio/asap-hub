@@ -11,7 +11,7 @@ export type GroupTools = {
 
 export type GroupTeam = Omit<TeamResponse, 'members'>;
 
-export type GroupRole = 'Lead PI - Chair' | 'Project Manager';
+export type GroupRole = 'Chair' | 'Project Manager';
 export type GroupLeader = {
   user: UserResponse;
   role: GroupRole;

@@ -68,7 +68,7 @@ export const response: { data: ResponseFetchGroups } = {
             ],
             leaders: [
               {
-                role: 'Lead PI - Chair',
+                role: 'Chair',
                 user: [
                   {
                     id: 'user-id-1',
@@ -254,7 +254,7 @@ export const expectation: ListGroupResponse = {
             avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/asset-id-1`,
             role: 'Guest',
           },
-          role: 'Lead PI - Chair',
+          role: 'Chair',
         },
         {
           user: {

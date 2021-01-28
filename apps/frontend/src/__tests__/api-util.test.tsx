@@ -1,4 +1,5 @@
 import { createListApiUrl } from '../api-util';
+
 describe('createListApiUrl', () => {
   it('handles requests without parameters', async () => {
     expect(

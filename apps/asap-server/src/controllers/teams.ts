@@ -122,7 +122,21 @@ const fetchUsers = async (id: string, client: Got): Promise<RestUser[]> => {
   return res ? res.items : [];
 };
 
-export default class Teams {
+export interface TeamController {
+  update: (id: string, tools: TeamTool[], user: User) => Promise<TeamResponse>;
+  fetch: (
+    options: {
+      take: number;
+      skip: number;
+      search?: string;
+      filter?: string | string[];
+    },
+    user: User,
+  ) => Promise<ListTeamResponse>;
+  fetchById: (teamId: string, user: User) => Promise<TeamResponse>;
+}
+
+export default class Teams implements TeamController {
   teams: InstrumentedSquidex<RestTeam>;
 
   users: InstrumentedSquidex<RestUser>;

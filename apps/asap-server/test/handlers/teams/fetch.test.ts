@@ -6,7 +6,14 @@ import { handler } from '../../../src/handlers/teams/fetch';
 import { buildGraphQLQueryFetchTeams } from '../../../src/controllers/teams';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import * as fixtures from './fetch.fixtures';
+import {
+  graphQlTeamsResponseSingle,
+  listTeamResponse,
+  graphQlTeamsResponse,
+  usersResponseTeam1,
+  usersResponseTeam2,
+  usersResponseTeam3,
+} from '../../fixtures/teams.fixtures';
 
 jest.mock('../../../src/utils/validate-token');
 
@@ -68,12 +75,12 @@ describe('GET /teams', () => {
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchTeams(searchQ),
       })
-      .reply(200, fixtures.graphQlTeamsResponseSingle)
+      .reply(200, graphQlTeamsResponseSingle)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
       })
-      .reply(200, fixtures.usersResponseTeam1);
+      .reply(200, usersResponseTeam1);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -90,7 +97,7 @@ describe('GET /teams', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(body).toStrictEqual({
       total: 1,
-      items: fixtures.expectation.items.slice(0, 1),
+      items: listTeamResponse.items.slice(0, 1),
     });
   });
 
@@ -99,22 +106,22 @@ describe('GET /teams', () => {
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchTeams(),
       })
-      .reply(200, fixtures.graphQlTeamsResponse)
+      .reply(200, graphQlTeamsResponse)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-1'",
       })
-      .reply(200, fixtures.usersResponseTeam1)
+      .reply(200, usersResponseTeam1)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-2'",
       })
-      .reply(200, fixtures.usersResponseTeam2)
+      .reply(200, usersResponseTeam2)
       .get(`/api/content/${config.appName}/users`)
       .query({
         $filter: "data/teams/iv/id eq 'team-id-3'",
       })
-      .reply(200, fixtures.usersResponseTeam3);
+      .reply(200, usersResponseTeam3);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -126,6 +133,6 @@ describe('GET /teams', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(fixtures.expectation);
+    expect(body).toStrictEqual(listTeamResponse);
   });
 });

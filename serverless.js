@@ -121,8 +121,14 @@ module.exports = {
         },
         {
           httpApi: {
-            method: 'GET',
-            path: `/teams/{id}/groups`,
+            method: '*',
+            path: `/teams/{proxy+}`,
+          },
+        },
+        {
+          httpApi: {
+            method: '*',
+            path: `/teams`,
           },
         },
         {
@@ -256,39 +262,6 @@ module.exports = {
           httpApi: {
             method: 'GET',
             path: `/pages/{path+}`,
-          },
-        },
-      ],
-    },
-    fetchTeams: {
-      handler: 'apps/asap-server/build-cjs/handlers/teams/fetch.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/teams`,
-          },
-        },
-      ],
-    },
-    fetchTeamById: {
-      handler: 'apps/asap-server/build-cjs/handlers/teams/fetch-by-id.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/teams/{id}`,
-          },
-        },
-      ],
-    },
-    updateTeam: {
-      handler: 'apps/asap-server/build-cjs/handlers/teams/update.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'PATCH',
-            path: `/teams/{id}`,
           },
         },
       ],

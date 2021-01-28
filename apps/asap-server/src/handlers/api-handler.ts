@@ -6,11 +6,11 @@ import { Span } from 'opentracing';
 import { User } from '@asap-hub/auth';
 
 import { appFactory } from '../app';
-import { lightstepToken } from '../config';
+import { lightstepToken, environment } from '../config';
 
 const lsTracer = new LightStep.Tracer({
   access_token: lightstepToken || '',
-  component_name: 'asap-hub-express-test',
+  component_name: `asap-hub-express-${environment}`,
   nodejs_instrumentation: true,
 });
 

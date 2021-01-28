@@ -41,3 +41,23 @@ it('Correctly generates the subscribe link', () => {
     'https://calendar.google.com/calendar/r?cid=1',
   );
 });
+
+describe('with the singleGroup prop', () => {
+  it('adapts the headline', () => {
+    const { getByRole, rerender } = render(<CalendarList calendars={[]} />);
+    expect(getByRole('heading')).not.toHaveTextContent(/this group/i);
+
+    rerender(<CalendarList singleGroup calendars={[]} />);
+    expect(getByRole('heading')).toHaveTextContent(/this group/i);
+  });
+
+  it('hides the description', () => {
+    const { getByText, queryByText, rerender } = render(
+      <CalendarList calendars={[]} />,
+    );
+    expect(getByText(/list of.+groups/i)).toBeVisible();
+
+    rerender(<CalendarList singleGroup calendars={[]} />);
+    expect(queryByText(/list of.+groups/i)).not.toBeInTheDocument();
+  });
+});

@@ -60,18 +60,27 @@ const orderList = css({
 });
 interface CalendarListProps {
   calendars: ReadonlyArray<CalendarResponse>;
+  singleGroup?: boolean;
 }
-const CalendarList: React.FC<CalendarListProps> = ({ calendars }) => (
+const CalendarList: React.FC<CalendarListProps> = ({
+  calendars,
+  singleGroup = false,
+}) => (
   <Card>
     <div css={headerStyles}>
-      <Headline3>Subscribe to Groups on Google Calendar</Headline3>
+      <Headline3>
+        Subscribe to {singleGroup ? "this group's" : 'Groups on'} Google
+        Calendar
+      </Headline3>
       <div css={iconHide}>{googleCalendarIcon}</div>
     </div>
-    <Paragraph accent="lead">
-      Below you can find a list of all the Groups that will present in the
-      future. You can subscribe to each one of them by adding them to your
-      Google calendar via the buttons below.
-    </Paragraph>
+    {singleGroup || (
+      <Paragraph accent="lead">
+        Below you can find a list of all the Groups that will present in the
+        future. You can subscribe to each one of them by adding them to your
+        Google calendar via the buttons below.
+      </Paragraph>
+    )}
     {!!calendars.length && (
       <ul css={orderList}>
         {calendars.map(({ id, name, color }) => {

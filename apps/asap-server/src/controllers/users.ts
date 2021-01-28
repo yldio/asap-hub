@@ -16,6 +16,7 @@ import {
 } from '../utils/instrumented-client';
 import { parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
+import { FetchOptions } from '../utils/types';
 
 export const GraphQLQueryUser = `
 id
@@ -225,12 +226,7 @@ export default class Users {
     return this.fetchById(id);
   }
 
-  async fetch(options: {
-    take: number;
-    skip: number;
-    search?: string;
-    filter?: string[];
-  }): Promise<ListUserResponse> {
+  async fetch(options: FetchOptions): Promise<ListUserResponse> {
     const { take, skip, search, filter } = options;
 
     const searchQ = [
@@ -253,6 +249,7 @@ export default class Users {
     ].join(' and ');
 
     const filterQ = (filter || [])
+      .filter( word => word !== 'Staff' )
       .reduce(
         (acc: string[], word: string) =>
           acc.concat([`data/teams/iv/role eq '${word}'`]),
@@ -261,7 +258,8 @@ export default class Users {
       .concat(filter?.includes('Staff') ? `data/role/iv eq 'Staff'` : [])
       .join(' or ');
 
-    const $filter = filterQ ? `${filterQ} and (${searchQ})`.trim() : searchQ;
+    const $filter = filterQ ? `(${filterQ}) and (${searchQ})`.trim() : searchQ;
+    console.log($filter)
 
     const query = buildGraphQLQueryFetchUsers($filter, take, skip);
 

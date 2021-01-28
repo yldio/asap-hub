@@ -15,7 +15,7 @@ export const Normal = () => (
     leaders={createListUserResponse(number('Number of Leaders', 6)).items.map(
       (user, userIndex) => ({
         ...user,
-        role: userIndex % 3 ? 'Lead PI - Chair' : 'Project Manager',
+        role: userIndex % 3 ? 'Chair' : 'Project Manager',
         href: `#u${userIndex}`,
         teams: Array(number('Number of Leader Teams', 1))
           .fill(null)

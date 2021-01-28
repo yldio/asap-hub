@@ -205,7 +205,7 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "allowedValues": ["Project Manager", "Lead PI - Chair"],
+              "allowedValues": ["Project Manager", "Chair"],
               "isUnique": false,
               "inlineEditable": false,
               "editor": "Dropdown",

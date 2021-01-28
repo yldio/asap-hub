@@ -14,7 +14,7 @@ it('renders a list of leaders', async () => {
         {
           ...createListUserResponse(1).items[0],
           displayName: 'Bat Man',
-          role: 'Lead PI - Chair',
+          role: 'Chair',
           href: '#0',
           teams: [],
         },
@@ -29,9 +29,7 @@ it('renders a list of leaders', async () => {
       teams={[]}
     />,
   );
-  expect(getByText('Bat Man').closest('li')).toHaveTextContent(
-    'Lead PI - Chair',
-  );
+  expect(getByText('Bat Man').closest('li')).toHaveTextContent('Chair');
   expect(getByText('Some One').closest('li')).toHaveTextContent(
     'Project Manager',
   );

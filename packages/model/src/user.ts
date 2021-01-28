@@ -64,7 +64,7 @@ export interface OrcidWork {
     | 'WORKING_PAPER'
     | 'UNDEFINED';
   publicationDate: {
-    year: string;
+    year?: string;
     month?: string;
     day?: string;
   };

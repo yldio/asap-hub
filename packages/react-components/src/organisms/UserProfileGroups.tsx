@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserResponse } from '@asap-hub/model';
+import { UserResponse, GroupRole } from '@asap-hub/model';
 import css from '@emotion/css';
 import { Card, Headline2, Paragraph, Link, Divider } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
@@ -49,7 +49,7 @@ const listItemStyle = css({
 type UserProfileGroupsProps = Pick<UserResponse, 'firstName'> & {
   groups: ReadonlyArray<{
     name: string;
-    role: 'Leader' | 'Member';
+    role: GroupRole | 'Member';
     href: string;
   }>;
 };
@@ -84,7 +84,7 @@ const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
       >
         <Headline2 styleAsHeading={3}>{firstName}’ Groups</Headline2>
         <Paragraph accent="lead">
-          {firstName}’ team is collaborating with other teams via groups, which
+          {firstName}’s team is collaborating with other teams via groups, which
           meet frequently
         </Paragraph>
         {groupsComponent}

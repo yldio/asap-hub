@@ -13,7 +13,7 @@ it('render a heading', () => {
   expect(
     getByText(/phillip/i, { selector: 'p' }).textContent,
   ).toMatchInlineSnapshot(
-    `"Phillip’ team is collaborating with other teams via groups, which meet frequently"`,
+    `"Phillip’s team is collaborating with other teams via groups, which meet frequently"`,
   );
 });
 
@@ -25,7 +25,7 @@ it('renders one group', () => {
         {
           name: 'Group 1',
           href: '/network/groups/1',
-          role: 'Leader',
+          role: 'Chair',
         },
       ]}
     />,
@@ -43,17 +43,17 @@ it('renders a list of groups', () => {
         {
           name: 'Group 1',
           href: '/network/groups/1',
-          role: 'Leader',
+          role: 'Member',
         },
         {
           name: 'Group 2',
           href: '/network/groups/1',
-          role: 'Leader',
+          role: 'Project Manager',
         },
         {
           name: 'Group 3',
           href: '/network/groups/1',
-          role: 'Leader',
+          role: 'Chair',
         },
       ]}
     />,

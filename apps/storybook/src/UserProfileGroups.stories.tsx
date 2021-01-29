@@ -14,7 +14,7 @@ export const Normal = () => (
       .map((_, groupIndex) => ({
         href: `#${groupIndex}`,
         name: `Group ${groupIndex + 1}`,
-        role: groupIndex % 2 ? 'Leader' : 'Member',
+        role: groupIndex % 2 ? 'Chair' : 'Member',
       }))}
   />
 );

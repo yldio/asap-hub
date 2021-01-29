@@ -8,4 +8,4 @@ find packages/squidex/schema/rules \
 find packages/squidex/schema/rules \
   -type f \( -name "*.json" -not -name "__rule.json" \) \
   -print0 | xargs -t -0 -I @file \
-  sed -i 's/ASAP_API_URL/'"$ASAP_API_URL"'/' @file
+  sed -i 's#ASAP_API_URL#'"$ASAP_API_URL"'#' @file

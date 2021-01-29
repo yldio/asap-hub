@@ -32,6 +32,7 @@ export const authHandlerFactory = (
   }
 
   req.loggedUser = user;
+  req.span?.setBaggageItem('user.id', user.id);
 
   next();
 };

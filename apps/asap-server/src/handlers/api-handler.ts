@@ -1,10 +1,20 @@
 import serverlessHttp from 'serverless-http';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';
+import * as LightStep from 'lightstep-tracer';
+import { Span } from 'opentracing';
 import { User } from '@asap-hub/auth';
-import { appFactory } from '../app';
 
-const app = appFactory();
+import { appFactory } from '../app';
+import { lightstepToken, environment } from '../config';
+
+const lsTracer = new LightStep.Tracer({
+  access_token: lightstepToken || '',
+  component_name: `asap-hub-express-${environment}`,
+  nodejs_instrumentation: true,
+});
+
+const app = appFactory({ tracer: lsTracer });
 
 interface RequestWithContext extends RequestExpress {
   context: APIGatewayProxyEventV2['requestContext'];
@@ -22,6 +32,7 @@ declare global {
     interface Request {
       context: APIGatewayProxyEventV2['requestContext'];
       loggedUser?: User;
+      span?: Span;
     }
   }
 }

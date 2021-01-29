@@ -259,7 +259,6 @@ export default class Users {
       .join(' or ');
 
     const $filter = filterQ ? `(${filterQ}) and (${searchQ})`.trim() : searchQ;
-    console.log($filter)
 
     const query = buildGraphQLQueryFetchUsers($filter, take, skip);
 

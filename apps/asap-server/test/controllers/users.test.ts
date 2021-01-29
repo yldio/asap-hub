@@ -1,9 +1,9 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
 
-import { default as Users, buildGraphQLQueryFetchUsers } from '../../src/controllers/users';
+import { default as Users, buildGraphQLQueryFetchUsers, buildGraphQLQueryFetchUser } from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
-import * as fixtures from '../fixtures/groups.fixtures';
+import * as fixtures from '../fixtures/users.fixtures';
 import { FetchOptions } from '../../src/utils/types';
 
 const users = new Users();
@@ -45,25 +45,177 @@ describe('Users controller', () => {
       };
 
       const filterQuery =
-        "(data/teams/iv/role eq 'role'" +
-        " or data/role/iv eq 'Staff')" +
-        " and ((contains(data/name/iv, 'first')" +
-        " or contains(data/description/iv, 'first')" +
-        " or contains(data/tags/iv, 'first'))" +
+        "(data/teams/iv/role eq 'role' or data/role/iv eq 'Staff')" +
+        " and" +
+        " (data/role/iv ne 'Hidden' and" +
+        " (contains(data/firstName/iv, 'first')" +
+        " or contains(data/lastName/iv, 'first')" +
+        " or contains(data/institution/iv, 'first')" +
+        " or contains(data/skills/iv, 'first'))" +
         ' and' +
-        " (contains(data/name/iv, 'last')" +
-        " or contains(data/description/iv, 'last')" +
-        " or contains(data/tags/iv, 'last')))";
+        " (contains(data/firstName/iv, 'last')" +
+        " or contains(data/lastName/iv, 'last')" +
+        " or contains(data/institution/iv, 'last')" +
+        " or contains(data/skills/iv, 'last')))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(filterQuery, 12, 2),
         })
-        .reply(200, fixtures.response);
+        .reply(200, fixtures.graphQlResponseFetchUsers);
 
       const result = await users.fetch(fetchOptions);
-      expect(result).toEqual(fixtures.expectation);
+      expect(result).toEqual(fixtures.fetchExpectation);
     });
   });
 
+  describe('fetchById', () => {
+    test("Should throw when user is not found", async () => {
+      nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUser('not-found'),
+      })
+      .reply(200, {
+        data: {
+          findUsersContent: null,
+        },
+      });
+
+      await expect(users.fetchById('not-found')).rejects.toThrow('Not Found')
+    });
+
+    test("Should return user when finds it", async () => {
+      nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUser('user-id'),
+      })
+      .reply(200, fixtures.graphQlResponseFetchUser);
+
+      const result = await users.fetchById('user-id');
+      expect(result).toEqual(fixtures.fetchUserExpectation);    });    
+  });
+
+  describe('fetchByCode', () => {
+    const code = "some-uuid-code"
+    const filter = `data/connections/iv/code eq '${code}'`
+
+    test("Should throw when no user", async () => {
+      nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUsers(filter, 1, 0)
+      })
+      .reply(200, {
+        data: {
+          queryUsersContentsWithTotal: {
+            total: 0,
+            items: [],
+          },
+        },
+      });
+
+      await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden')
+    });
+
+    test("Should throw when finds more than one user", async () => {
+      nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUsers(filter, 1, 0)
+      })
+      .reply(200, fixtures.graphQlResponseFetchUsers);
+
+      await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden')
+    });
+
+    test("Should return user when finds it", async () => {
+      nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUsers(filter, 1, 0)
+      })
+      .reply(200, {
+        data: {
+          queryUsersContentsWithTotal: {
+            total: 1,
+            items: [fixtures.graphQlResponseFetchUser.data.findUsersContent],
+          },
+        },
+      });
+
+      const result = await users.fetchByCode(code);
+      expect(result).toEqual(fixtures.fetchUserExpectation);
+    });    
+  });
+
+  describe('updateAvatar', () => {
+    test('Should throw when sync asset fails', async () => {
+      nock(config.baseUrl).post(`/api/apps/${config.appName}/assets`).reply(500);
+
+      await expect(users.updateAvatar('user-id', new Buffer("avatar"), 'image/jpeg')).rejects.toThrow()
+    });
+
+    test('should return 500 when fails to update user', async () => {
+      nock(config.baseUrl)
+        .post(`/api/apps/${config.appName}/assets`)
+        .reply(200, { id: 'squidex-asset-id' })
+        .patch(`/api/content/${config.appName}/users/user-id`, {
+          avatar: { iv: ['squidex-asset-id'] },
+        })
+        .reply(500);
+  
+      await expect(users.updateAvatar('user-id', new Buffer("avatar"), 'image/jpeg')).rejects.toThrow()
+    });
+  
+    test('should return 200 when syncs asset and updates users profile', async () => {
+      nock(config.baseUrl)
+        .post(`/api/apps/${config.appName}/assets`)
+        .reply(200, { id: 'squidex-asset-id' })
+        .patch(`/api/content/${config.appName}/users/user-id`, {
+          avatar: { iv: ['squidex-asset-id'] },
+        })
+        .reply(200, fixtures.patchResponse)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUser('user-id'),
+        })
+        .reply(200, fixtures.graphQlResponseFetchUser);
+  
+      const result = await users.updateAvatar('user-id', new Buffer("avatar"), 'image/jpeg');
+      expect(result).toEqual(fixtures.fetchUserExpectation);
+    });
+  });
+
+  describe.only('connectByCode', () => {
+    test('Throws forbidden when doesn find connection code', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'invalid-code'`,
+        })
+        .reply(404);
+  
+      await expect(users.connectByCode('invalid-code', 'user-id')).rejects.toThrow("Forbidden")
+    });
+
+
+    test('Should connect user', async () => {
+      const userId = 'google-oauth2|token';
+      const patchedUser = JSON.parse(JSON.stringify(fixtures.patchResponse));
+      patchedUser.data.connections.iv = [{ code: userId }];
+  
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [fixtures.patchResponse] })
+        .patch(`/api/content/${config.appName}/users/${fixtures.patchResponse.id}`, {
+          email: { iv: fixtures.patchResponse.data.email.iv },
+          connections: { iv: [{ code: userId }] },
+        })
+        .reply(200, patchedUser);
+
+        const result = await users.connectByCode('asapWelcomeCode', userId);
+        expect(result).toBeDefined();
+    });
+  })
 });

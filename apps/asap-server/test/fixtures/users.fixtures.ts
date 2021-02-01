@@ -1,8 +1,10 @@
 import { ListUserResponse } from '@asap-hub/model';
 import { UserResponse } from '@asap-hub/model';
-import { config } from '@asap-hub/squidex';
-import { RestUser } from '@asap-hub/squidex';
-import { ResponseFetchUsers, ResponseFetchUser } from '../../src/controllers/users';
+import { RestUser, config, GraphqlUser } from '@asap-hub/squidex';
+import {
+  ResponseFetchUsers,
+  ResponseFetchUser,
+} from '../../src/controllers/users';
 
 export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
   data: {
@@ -179,6 +181,92 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
   },
 };
 
+export const buildUserGraphqlResponse = (
+  flatdata: Partial<GraphqlUser['flatData']> = {},
+): { data: ResponseFetchUser } => ({
+  data: {
+    findUsersContent: {
+      id: 'userId',
+      created: '2020-09-25T09:42:51Z',
+      lastModified: '2020-09-25T09:42:51Z',
+      data: null,
+      flatData: {
+        email: 'cristiano@ronaldo.com',
+        contactEmail: 'cristiano@ronaldo.com',
+        firstName: 'Cristiano',
+        lastName: 'Ronaldo',
+        lastModifiedDate: '2020-09-25T09:42:51.132Z',
+        jobTitle: 'Junior',
+        orcid: '363-98-9330',
+        institution: 'Dollar General Corporation',
+        location: 'Zofilte',
+        avatar: [{ id: 'uuid-user-id-1' }],
+        questions: null,
+        skills: null,
+        social: [
+          {
+            github: 'awesome',
+            googleScholar: null,
+            linkedIn: null,
+            researcherId: null,
+            researchGate: null,
+            twitter: null,
+            website1: null,
+            website2: null,
+          },
+        ],
+        teams: [
+          {
+            role: 'Lead PI (Core Leadership)',
+            approach: 'Exact',
+            responsibilities: 'Make sure coverage is high',
+            id: [
+              {
+                id: 'team-id-1',
+                created: '2020-09-23T20:45:22Z',
+                lastModified: '2020-10-26T15:33:18Z',
+                data: null,
+                flatData: {
+                  applicationNumber: 'applicationNumber',
+                  projectTitle: 'Awesome project',
+                  displayName: 'Jackson, M',
+                  proposal: [{ id: 'proposal-id-1' }],
+                  skills: [],
+                  outputs: [],
+                },
+              },
+            ],
+          },
+          {
+            role: 'Collaborating PI',
+            approach: null,
+            responsibilities: null,
+            id: [
+              {
+                id: 'team-id-3',
+                created: '2020-09-23T20:45:22Z',
+                lastModified: '2020-10-26T15:33:18Z',
+                data: null,
+                flatData: {
+                  applicationNumber: 'applicationNumber',
+                  projectTitle: 'Another Awesome project',
+                  displayName: 'Tarantino, M',
+                  proposal: [{ id: 'proposal-id-2' }],
+                  skills: [],
+                  outputs: [],
+                },
+              },
+            ],
+          },
+        ],
+        role: 'Grantee',
+        connections: [],
+        ...flatdata,
+      },
+    },
+  },
+});
+
 export const patchResponse: RestUser = {
   id: 'userId',
   data: {
@@ -214,7 +302,7 @@ export const patchResponse: RestUser = {
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
 };
-export const fetchUserResponse = patchResponse
+export const fetchUserResponse = patchResponse;
 
 export const updateAvatarBody: { avatar: string } = {
   avatar:
@@ -259,7 +347,7 @@ export const updateUserExpectation: UserResponse = {
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
 };
-export const fetchUserExpectation = updateUserExpectation
+export const fetchUserExpectation = updateUserExpectation;
 
 export const fetchExpectation: ListUserResponse = {
   total: 2,

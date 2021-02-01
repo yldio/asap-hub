@@ -214,6 +214,7 @@ export const patchResponse: RestUser = {
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
 };
+export const fetchUserResponse = patchResponse
 
 export const updateAvatarBody: { avatar: string } = {
   avatar:

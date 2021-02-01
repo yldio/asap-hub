@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { Got, RequestError } from 'got';
+import { Got } from 'got';
 import FormData from 'form-data';
 import mime from 'mime-types';
 import { GraphqlUser, RestUser, config } from '@asap-hub/squidex';
@@ -366,11 +366,11 @@ export default class Users {
       fetchOrcidProfile(user!.data.orcid!.iv),
     );
 
-    const err = error as RequestError;
-    if (err && err?.response?.statusCode !== 404) {
-      // eslint-disable-next-line no-console
-      console.log('Error fetching user from ORCID:', err);
-    }
+    //const err = error as RequestError;
+    //if (err && err?.response?.statusCode !== 404) {
+      ////eslint-disable-next-line no-console
+      //console.log('Error fetching user from ORCID:', err);
+    //}
 
     const update: Partial<RestUser['data']> = {
       email: { iv: user.data.email.iv },

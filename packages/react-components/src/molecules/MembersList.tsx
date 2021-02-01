@@ -4,7 +4,7 @@ import { UserResponse, UserTeam } from '@asap-hub/model';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
-import { Link, Avatar } from '../atoms';
+import { Link, Avatar, Anchor } from '../atoms';
 
 const containerStyles = css({
   margin: 0,
@@ -72,7 +72,7 @@ const MembersList: React.FC<MembersListProps> = ({
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
     {members.map(({ id, href, displayName, role, teams, ...member }) => (
       <li key={id} css={{ display: 'contents' }}>
-        <Link href={href} theme={null} display="contents">
+        <Anchor href={href} css={{ display: 'contents' }}>
           <div css={avatarStyles}>
             <Avatar
               firstName={member.firstName}
@@ -80,11 +80,11 @@ const MembersList: React.FC<MembersListProps> = ({
               imageUrl={member.avatarUrl}
             />
           </div>
-        </Link>
-        <Link href={href} theme={null} display="contents">
+        </Anchor>
+        <Anchor href={href} css={{ display: 'contents' }}>
           <div css={nameStyles}>{displayName}</div>
-        </Link>
-        <Link href={href} theme={null} display="contents">
+        </Anchor>
+        <Anchor href={href} css={{ display: 'contents' }}>
           <div
             css={[
               addToColumnStyles,
@@ -94,7 +94,7 @@ const MembersList: React.FC<MembersListProps> = ({
           >
             {role}
           </div>
-        </Link>
+        </Anchor>
         <ul
           css={[
             addToColumnStyles,

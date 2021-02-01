@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Card, Headline2, Paragraph, Link } from '../atoms';
+import { Card, Headline2, Paragraph, Anchor } from '../atoms';
 import { TagList } from '../molecules';
 import { teamIcon } from '../icons';
 import { perRem } from '../pixels';
@@ -26,10 +26,10 @@ const GroupCard: React.FC<GroupCardProps> = ({
   numberOfTeams,
 }) => (
   <Card>
-    <Link theme={null} href={href}>
+    <Anchor href={href}>
       <Headline2 styleAsHeading={4}>{name}</Headline2>
       <Paragraph accent="lead">{description}</Paragraph>
-    </Link>
+    </Anchor>
     <TagList min={2} max={3} tags={tags} />
     <Paragraph>
       <span css={iconStyles}>{teamIcon} </span>

@@ -9,7 +9,7 @@ import {
   TagLabel,
   Divider,
   Paragraph,
-  Link,
+  Anchor,
 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { orcidIcon } from '../icons';
@@ -125,17 +125,7 @@ const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
     </div>
   );
 
-  return (
-    <li>
-      {doi ? (
-        <Link theme={null} href={doi}>
-          {elements}
-        </Link>
-      ) : (
-        elements
-      )}
-    </li>
-  );
+  return <li>{doi ? <Anchor href={doi}>{elements}</Anchor> : elements}</li>;
 };
 
 const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({

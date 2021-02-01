@@ -2,7 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import { TeamMember } from '@asap-hub/model';
 
-import { Card, Link, Paragraph, Headline2 } from '../atoms';
+import { Card, Anchor, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
 import { teamIcon } from '../icons';
 import { TagList } from '../molecules';
@@ -35,10 +35,10 @@ const TeamCard: React.FC<TeamCardProps> = ({
   href,
 }) => (
   <Card>
-    <Link theme={null} href={href}>
+    <Anchor href={href}>
       <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
       <Paragraph accent="lead">{projectTitle}</Paragraph>
-    </Link>
+    </Anchor>
     <TagList min={5} max={5} tags={skills} />
     <span css={teamMemberStyles}>
       <span css={iconStyles}>{teamIcon} </span>

@@ -7,7 +7,7 @@ import {
   mobileScreen,
   largeDesktopScreen,
 } from '../pixels';
-import { Divider, NavigationLink, Caption, Link } from '../atoms';
+import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
 import { teamIcon, userIcon, feedbackIcon, logoutIcon } from '../icons';
 
 const containerStyles = css({
@@ -95,17 +95,11 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
     </ul>
     <div css={bottomLinksStyles}>
       <Caption accent="lead" asParagraph>
-        <Link theme={null} href={termsHref}>
-          Terms of Use
-        </Link>
+        <Anchor href={termsHref}>Terms of Use</Anchor>
         {'  ·  '}
-        <Link theme={null} href={privacyPolicyHref}>
-          Privacy Policy
-        </Link>
+        <Anchor href={privacyPolicyHref}>Privacy Policy</Anchor>
         {'  ·  '}
-        <Link theme={null} href={aboutHref}>
-          About ASAP
-        </Link>
+        <Anchor href={aboutHref}>About ASAP</Anchor>
       </Caption>
     </div>
   </nav>

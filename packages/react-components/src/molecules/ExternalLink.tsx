@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
-import { Link } from '../atoms';
+
+import { Anchor } from '../atoms';
 import { externalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
 import { perRem } from '../pixels';
@@ -45,12 +46,12 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
   label = 'External Link',
 }) => (
   <div css={containerStyles}>
-    <Link theme={null} href={href}>
+    <Anchor href={href}>
       <div css={styles}>
         {icon}
         <div css={textStyles}>{label}</div>
       </div>
-    </Link>
+    </Anchor>
   </div>
 );
 

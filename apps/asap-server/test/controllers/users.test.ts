@@ -182,8 +182,8 @@ describe('Users controller', () => {
     });
   });
 
-  describe.only('connectByCode', () => {
-    test('Throws forbidden when doesn find connection code', async () => {
+  describe('connectByCode', () => {
+    test('Should throw forbidden when doesn find connection code', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users`)
         .query({
@@ -195,6 +195,22 @@ describe('Users controller', () => {
       await expect(users.connectByCode('invalid-code', 'user-id')).rejects.toThrow("Forbidden")
     });
 
+    test('Shouldnt do anything if connecting with existing code', async () => {
+      const userId = 'google-oauth2|token';
+      const connectedUser = JSON.parse(JSON.stringify(fixtures.patchResponse));
+      connectedUser.data.connections.iv = [{ code: userId }];
+  
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [connectedUser] })
+
+        const result = await users.connectByCode('asapWelcomeCode', userId);
+        expect(result).toBeDefined();
+    });
 
     test('Should connect user', async () => {
       const userId = 'google-oauth2|token';

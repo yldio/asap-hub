@@ -1,11 +1,11 @@
 import { API_BASE_URL } from './config';
 
-export interface GetListOptions {
+export type GetListOptions = {
   searchQuery?: string;
   filters?: string[];
   currentPage?: number | null;
   pageSize?: number | null;
-}
+};
 
 export const createListApiUrl = (
   endpoint: string,

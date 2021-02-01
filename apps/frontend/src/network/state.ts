@@ -1,9 +1,4 @@
-import {
-  selectorFamily,
-  useRecoilValue,
-  SerializableParam,
-  atom,
-} from 'recoil';
+import { selectorFamily, useRecoilValue, atom } from 'recoil';
 import { ListGroupResponse } from '@asap-hub/model';
 
 import { getGroups } from './api';
@@ -15,14 +10,14 @@ export const refreshListGroupState = atom<number>({
   default: 0,
 });
 
-const listGroupState = selectorFamily<ListGroupResponse, SerializableParam>({
+const listGroupState = selectorFamily<ListGroupResponse, GetListOptions>({
   key: 'listGroup',
   get: (options) => ({ get }) => {
     get(refreshListGroupState);
     const authorization = get(authorizationState);
-    return getGroups(options as GetListOptions, authorization);
+    return getGroups(options, authorization);
   },
 });
 
 export const useGroups = (options: GetListOptions) =>
-  useRecoilValue(listGroupState(options as SerializableParam));
+  useRecoilValue(listGroupState(options));

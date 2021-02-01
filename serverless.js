@@ -98,6 +98,12 @@ module.exports = {
       events: [
         {
           httpApi: {
+            method: 'GET',
+            path: `/dashboard`,
+          },
+        },
+        {
+          httpApi: {
             method: '*',
             path: `/events/{proxy+}`,
           },
@@ -287,17 +293,6 @@ module.exports = {
           httpApi: {
             method: 'GET',
             path: `/news-and-events/{id}`,
-          },
-        },
-      ],
-    },
-    dashboard: {
-      handler: 'apps/asap-server/build-cjs/handlers/dashboard/fetch.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/dashboard`,
           },
         },
       ],

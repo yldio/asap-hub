@@ -13,13 +13,17 @@ import decodeToken from './utils/validate-token';
 import { teamRouteFactory } from './routes/teams.route';
 import { userRouteFactory } from './routes/user.route';
 import Teams, { TeamController } from './controllers/teams';
+import Dashboard, { DashboardController } from './controllers/dashboard';
+import { dashboardRouteFactory } from './routes/dashboard.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
+  const dashboardController = libs.dashboardController || new Dashboard();
   const groupController = libs.groupController || new Groups();
   const teamController = libs.teamController || new Teams();
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
+  const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
   const teamRoutes = teamRouteFactory(groupController, teamController);
@@ -36,6 +40,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     app.use(libs.mockRequestHandlers);
   }
 
+  app.use(dashboardRoutes);
   app.use(eventRoutes);
   app.use(groupRoutes);
   app.use(teamRoutes);
@@ -51,6 +56,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 };
 
 export type Libs = {
+  dashboardController?: DashboardController;
   groupController?: GroupController;
   teamController?: TeamController;
   authHandler?: AuthHandler;

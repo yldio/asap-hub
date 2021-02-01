@@ -16,17 +16,20 @@ const loadTeamList = () =>
   import(/* webpackChunkName: "network-team-list" */ './TeamList');
 const loadTeamProfile = () =>
   import(/* webpackChunkName: "network-team-profile" */ './teams/TeamProfile');
+const loadGroupList = () =>
+  import(/* webpackChunkName: "network-group-list" */ './GroupList');
 const UserList = React.lazy(loadUserList);
 const UserProfile = React.lazy(loadUserProfile);
 const TeamList = React.lazy(loadTeamList);
 const TeamProfile = React.lazy(loadTeamProfile);
-loadTeamList();
+const GroupList = React.lazy(loadGroupList);
 
 const Network: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadTeamList()
       // Toggle can be pressed very quickly
       .then(loadUserList)
+      .then(loadGroupList)
       // Team can be clicked only after the list has been fetched
       .then(loadTeamProfile)
       // User can be clicked only after clicking the toggle and the list has been fetched
@@ -83,7 +86,18 @@ const Network: React.FC<Record<string, never>> = () => {
       </Route>
       <Route path={`${path}/${TEAMS_PATH}/:id`} component={TeamProfile} />
       <Route exact path={`${path}/${GROUPS_PATH}`}>
-        TODO
+        <NetworkPage
+          page="groups"
+          usersHref={usersHref}
+          teamsHref={teamsHref}
+          groupsHref={groupsHref}
+          searchQuery={searchQuery}
+          onChangeSearch={setSearchQuery}
+        >
+          <SearchFrame>
+            <GroupList searchQuery={searchQueryDebounce} />
+          </SearchFrame>
+        </NetworkPage>
       </Route>
       <Redirect to={`${path}/${TEAMS_PATH}`} />
     </Switch>

@@ -11,7 +11,8 @@ import { useAuth0 } from '@asap-hub/react-context';
 import { API_BASE_URL } from '../config';
 import { useFetchOptions } from './util';
 import { useGetOne } from './get-one';
-import { GetListOptions, useGetList } from './get-list';
+import { useGetList } from './get-list';
+import { GetListOptions } from '../api-util';
 
 export const useCreateResearchOutput = () => {
   const { user } = useAuth0();

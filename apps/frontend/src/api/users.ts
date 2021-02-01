@@ -1,6 +1,7 @@
 import { ListUserResponse } from '@asap-hub/model';
 
-import { GetListOptions, useGetList } from './get-list';
+import { useGetList } from './get-list';
+import { GetListOptions } from '../api-util';
 
 export const useUsers = (options: GetListOptions) =>
   useGetList<ListUserResponse>('users', options);

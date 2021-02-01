@@ -103,6 +103,7 @@ export {
   EventsCalendar,
   EventsPage,
   ForgotPasswordPage,
+  GroupProfileCalendar,
   Layout,
   NetworkGroups,
   NetworkPage,

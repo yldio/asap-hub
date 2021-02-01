@@ -83,14 +83,7 @@ const calendarResponses: CalendarResponse[] = [
   },
 ];
 
-type FixtureOptions = {
-  calendars?: number;
-};
-
-export const createCalendarResponse = (
-  options: FixtureOptions,
-  itemIndex = 0,
-): CalendarResponse => {
+export const createCalendarResponse = (itemIndex = 0): CalendarResponse => {
   if (itemIndex > calendarResponses.length) {
     throw new Error(`Exceeds fixture data limit ${calendarResponses.length}`);
   }
@@ -99,11 +92,10 @@ export const createCalendarResponse = (
 
 export const createListCalendarResponse = (
   items: number = calendarResponses.length,
-  options: FixtureOptions = {},
 ): ListCalendarResponse => ({
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>
-    createCalendarResponse(options, itemIndex),
+    createCalendarResponse(itemIndex),
   ),
 });
 

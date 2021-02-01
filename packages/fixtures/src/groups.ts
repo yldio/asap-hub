@@ -10,13 +10,11 @@ type FixtureOptions = {
   leadPiCount?: number;
   projectManager?: Parameters<typeof createUserResponse>[0];
   projectManagerCount?: number;
-  calendars?: Parameters<typeof createCalendarResponse>[0];
   calendarsCount?: number;
 };
 
 export const createGroupResponseItem = (
   {
-    calendars,
     calendarsCount = 1,
     leadPi,
     leadPiCount = 1,

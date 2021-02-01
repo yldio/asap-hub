@@ -12,15 +12,15 @@ export const query = `
           id
           created
           flatData {
-            title 
-            shortText 
-            text 
-            type 
+            title
+            shortText
+            text
+            type
             thumbnail {
               id
             }
-            link 
-            linkText 
+            link
+            linkText
           }
         }
         pages {
@@ -47,6 +47,10 @@ interface Response {
       pages?: GraphqlPage[];
     };
   }[];
+}
+
+export interface DashboardController {
+  fetch: () => Promise<DashboardResponse>;
 }
 
 export default class Dashboard {

@@ -6395,6 +6395,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.14.5"
       ],
       [
+        "opentracing-express-middleware",
+        "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:0.1.2"
+      ],
+      [
         "opn",
         "npm:5.5.0"
       ],
@@ -9206,6 +9210,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime-types", "npm:2.1.27"],
             ["nock", "npm:13.0.4"],
             ["opentracing", "npm:0.14.5"],
+            ["opentracing-express-middleware", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:0.1.2"],
             ["p-limit", "npm:3.0.2"],
             ["parse-data-url", "npm:3.0.0"],
             ["pump", "npm:3.0.0"],
@@ -38334,6 +38339,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/opentracing-npm-0.14.5-42032bf1f7-2339f1ae0c.zip/node_modules/opentracing/",
           "packageDependencies": [
             ["opentracing", "npm:0.14.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["opentracing-express-middleware", [
+        ["npm:0.1.2", {
+          "packageLocation": "./.yarn/cache/opentracing-express-middleware-npm-0.1.2-fed6f1cf90-9890753a91.zip/node_modules/opentracing-express-middleware/",
+          "packageDependencies": [
+            ["opentracing-express-middleware", "npm:0.1.2"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:0.1.2", {
+          "packageLocation": "./.yarn/$$virtual/opentracing-express-middleware-virtual-6e9be80106/0/cache/opentracing-express-middleware-npm-0.1.2-fed6f1cf90-9890753a91.zip/node_modules/opentracing-express-middleware/",
+          "packageDependencies": [
+            ["opentracing-express-middleware", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:0.1.2"],
+            ["@types/opentracing", null],
+            ["opentracing", "npm:0.14.5"]
+          ],
+          "packagePeers": [
+            "@types/opentracing",
+            "opentracing"
           ],
           "linkType": "HARD",
         }]

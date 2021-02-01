@@ -6,7 +6,7 @@ import { Tracer } from 'opentracing';
 import decodeToken from './utils/validate-token';
 
 import { errorHandler } from './middleware/error-handler';
-import { tracingHandlerFactory } from './middleware/tracing-handler';
+import { tracingHandler } from './middleware/tracing-handler';
 import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
 
 import Groups, { GroupController } from './controllers/groups';
@@ -56,7 +56,6 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   // Handlers
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
-  const tracingHandler = tracingHandlerFactory(libs.tracer);
 
   // Routes
   const calendarRoutes = calendarRouteFactory(calendarController);
@@ -78,7 +77,9 @@ export const appFactory = (libs: Libs = {}): Express => {
    * --- end of dependency inection
    */
 
-  app.use(tracingHandler);
+  if (libs.tracer) {
+    app.use(tracingHandler(libs.tracer));
+  }
   app.use(cors());
   app.use(express.json());
 

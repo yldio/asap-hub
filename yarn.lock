@@ -119,6 +119,7 @@ __metadata:
     mime-types: ^2.1.27
     nock: ^13.0.4
     opentracing: ^0.14.5
+    opentracing-express-middleware: ^0.1.2
     p-limit: ^3.0.2
     parse-data-url: ^3.0.0
     pump: ^3.0.0
@@ -22251,7 +22252,18 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"opentracing@npm:^0.14.4, opentracing@npm:^0.14.5":
+"opentracing-express-middleware@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "opentracing-express-middleware@npm:0.1.2"
+  dependencies:
+    opentracing: ^0.14.0
+  peerDependencies:
+    opentracing: ^0.14.0
+  checksum: 9890753a91c5a2c73cdfbc6b82259280e79b18fcdc9bc2d74f74c0138cadd8cd3a2de0392cc4b346782947b42074f4ac3c2eb1a74fa89c71ec141bb15bd205d1
+  languageName: node
+  linkType: hard
+
+"opentracing@npm:^0.14.0, opentracing@npm:^0.14.4, opentracing@npm:^0.14.5":
   version: 0.14.5
   resolution: "opentracing@npm:0.14.5"
   checksum: 2339f1ae0c561f81adb43de24350bf8139763e94f3e5c507062da2be2d6f10d4e521b723e8a39fb64f8f7afab60691683223647505e858fc3736dc75fd4be8f5

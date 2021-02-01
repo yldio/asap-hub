@@ -44,6 +44,7 @@
     "mime-types": "^2.1.27",
     "nock": "^13.0.4",
     "opentracing": "^0.14.5",
+    "opentracing-express-middleware": "^0.1.2",
     "p-limit": "^3.0.2",
     "parse-data-url": "^3.0.0",
     "pump": "^3.0.0",

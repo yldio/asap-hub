@@ -1,5 +1,5 @@
 import { DashboardResponse } from '@asap-hub/model';
-import { config } from "@asap-hub/squidex";
+import { config } from '@asap-hub/squidex';
 
 export const dashboardResponse: DashboardResponse = {
   newsAndEvents: [

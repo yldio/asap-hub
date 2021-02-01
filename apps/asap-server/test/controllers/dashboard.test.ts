@@ -2,7 +2,7 @@ import nock from 'nock';
 import Dashboard from '../../src/controllers/dashboard';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
-import { dashboardResponse } from "../fixtures/dashboard.fixtures";
+import { dashboardResponse } from '../fixtures/dashboard.fixtures';
 
 describe('Dashboard controller', () => {
   const dashboard = new Dashboard();

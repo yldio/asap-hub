@@ -52,7 +52,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
     };
     context.idToken[new URL('/user', redirect_uri).toString()] = user;
     // Uncomment for dev auth0. This allows pointing to dev api from local FE
-    //context.idToken[new URL('/user', 'https://dev.hub.asap.science').toString()] = user;
+    // context.idToken[new URL('/user', 'https://dev.hub.asap.science').toString()] = user;
 
     return callback(null, auth0User, context);
   } catch (err) {

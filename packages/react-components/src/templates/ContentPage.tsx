@@ -12,7 +12,7 @@ const styles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type ContentPageProps = Omit<PageResponse, 'id' | 'shortText'>;
+type ContentPageProps = Pick<PageResponse, 'text' | 'title'>;
 const ContentPage: React.FC<ContentPageProps> = ({ text, title }) => (
   <article css={styles}>
     <Display>{title}</Display>

@@ -5,7 +5,7 @@ import { SigninPage } from '@asap-hub/react-components';
 import { BasicLayoutDecorator } from './layout';
 
 export default {
-  title: 'Pages / Auth / Sign in',
+  title: 'Templates / Auth / Signin Page',
   component: SigninPage,
   decorators: [BasicLayoutDecorator],
 };

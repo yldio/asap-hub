@@ -3,7 +3,7 @@ import { TeamsList } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Molecules / Profile / Teams List',
+  title: 'Molecules / Group Profile / Teams List',
   component: TeamsList,
 };
 

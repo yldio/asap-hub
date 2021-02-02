@@ -4,7 +4,7 @@ import { text } from '@storybook/addon-knobs';
 import { ToolCard } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Tool Card',
+  title: 'Organisms / Team Profile / Tool Card',
 };
 
 const ToolCardProps = (): ComponentProps<typeof ToolCard> => ({

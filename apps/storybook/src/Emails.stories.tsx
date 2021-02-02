@@ -2,7 +2,7 @@ import React from 'react';
 import { text } from '@storybook/addon-knobs';
 import { messages } from '@asap-hub/react-components';
 
-export default { title: 'Pages / Emails' };
+export default { title: 'Templates / Emails' };
 
 export const Welcome = () => (
   <messages.Welcome

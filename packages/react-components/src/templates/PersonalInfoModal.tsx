@@ -21,7 +21,10 @@ const paddingStyles = css({
   },
 });
 
-type PersonalInfoModalProps = UserPatchRequest & {
+type PersonalInfoModalProps = Pick<
+  UserPatchRequest,
+  'firstName' | 'lastName' | 'degree' | 'institution' | 'location' | 'jobTitle'
+> & {
   onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
 };

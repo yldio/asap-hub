@@ -4,7 +4,7 @@ import { text } from '@storybook/addon-knobs';
 import { SigninForm } from '@asap-hub/react-components';
 
 export default {
-  title: 'Templates / Auth / Sign in',
+  title: 'Templates / Auth / Signin Form',
   component: SigninForm,
 };
 

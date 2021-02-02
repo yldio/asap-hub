@@ -1,35 +1,17 @@
 import React, { ComponentProps } from 'react';
-import { date, text, array, select } from '@storybook/addon-knobs';
-import {
-  UserProfileAbout,
-  UserProfileOutputs,
-  UserProfilePage,
-  UserProfileResearch,
-  UserProfileStaff,
-  BiographyModal,
-  PersonalInfoModal,
-  ContactInfoModal,
-  TeamMembershipModal,
-  OpenQuestionsModal,
-} from '@asap-hub/react-components';
+import { StaticRouter } from 'react-router-dom';
+import { date, text, select, boolean } from '@storybook/addon-knobs';
+import { UserProfilePage } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 
 import { LayoutDecorator } from './layout';
-import { makeFlagDecorator } from './flags';
 
 export default {
-  title: 'Pages / User Profile',
-  decorators: [
-    LayoutDecorator,
-    makeFlagDecorator(
-      'Enable Works Visibility Editing',
-      'USER_PROFILE_EDIT_WORKS',
-    ),
-    makeFlagDecorator('Enable Skills Editing', 'USER_PROFILE_EDIT_SKILLS'),
-  ],
+  title: 'Templates / User Profile / Page',
+  decorators: [LayoutDecorator],
 };
 
-const commonProps = (): Omit<
+const propsViewOnly = (): Omit<
   ComponentProps<typeof UserProfilePage>,
   'children'
 > => ({
@@ -79,148 +61,32 @@ const commonProps = (): Omit<
   outputsHref: '/wrong',
   discoverHref: '/discover',
 });
-const commonPropsEditable = (): ReturnType<typeof commonProps> => ({
-  ...commonProps(),
+const propsEditable = (): ReturnType<typeof propsViewOnly> => ({
+  ...propsViewOnly(),
   editPersonalInfoHref: '/wrong',
   editContactInfoHref: '/wrong',
   onImageSelect: () => {},
 });
 
-const researchTabProps = (): ComponentProps<typeof UserProfileResearch> => ({
-  ...commonProps(),
-  skills: array('Skills', [
-    'Neurological Diseases',
-    'Clinical Neurology',
-    'Adult Neurology',
-    'Neuroimaging',
-    'Neurologic Examination',
-    'Neuroprotection',
-    'Movement Disorders',
-    'Neurodegenerative Diseases',
-    'Neurological Diseases',
-  ]),
-  questions: array('Questions', [
-    'What is the meaning of life?',
-    'Are alpha-synuclein deposits the cause or consequence of somethign deeper wrong with neurons?',
-    'How much do we have to knock down extracellular alpha-synuclein to measurably slow cell to cell transmission?',
-  ]),
-});
+export const Normal = () => {
+  const props = boolean('Editable', false) ? propsEditable() : propsViewOnly();
+  const tab = select('Active Tab', ['About', 'Research', 'Outputs'], 'About');
+  return (
+    <StaticRouter key={tab} location={`/${tab}`}>
+      <UserProfilePage
+        {...props}
+        aboutHref="/About"
+        researchHref="/Research"
+        outputsHref="/Outputs"
+      >
+        Page Content
+      </UserProfilePage>
+    </StaticRouter>
+  );
+};
 
-const aboutTabProps = (): ComponentProps<typeof UserProfileAbout> => ({
-  biography: text(
-    'Biography',
-    'Dr. Randy Schekman is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof.',
-  ),
-  orcidWorks: [
-    {
-      doi: 'https://doi.org/10.7554/elife.07083',
-      title:
-        'Recognizing the importance of new tools and resources for research',
-      type: 'WEBSITE',
-      publicationDate: {
-        year: '2015',
-        month: '3',
-      },
-      lastModifiedDate: '1478865224685',
-    },
-  ],
-});
-
-export const ResearchTabViewOnly = () => (
-  <UserProfilePage {...commonProps()} researchHref="#">
-    <UserProfileResearch {...researchTabProps()} />
-  </UserProfilePage>
-);
-
-export const ResearchTabTeamMembershipModal = () => (
-  <UserProfilePage {...commonProps()} researchHref="#">
-    <UserProfileResearch {...researchTabProps()} />
-    <TeamMembershipModal backHref="#" {...researchTabProps().teams[0]} />
-  </UserProfilePage>
-);
-
-export const ResearchTabOpenQuestionsModal = () => (
-  <UserProfilePage {...commonProps()} researchHref="#">
-    <UserProfileResearch {...researchTabProps()} />
-    <OpenQuestionsModal backHref="#" {...researchTabProps()} />
-  </UserProfilePage>
-);
-export const ResearchTabEditable = () => (
-  <UserProfilePage {...commonPropsEditable()} researchHref="#">
-    <UserProfileResearch
-      {...researchTabProps()}
-      teams={commonProps().teams.map((team) => ({
-        ...team,
-        editHref: `/edit-team-membership/${team.id}`,
-      }))}
-      editSkillsHref="/wrong"
-      editQuestionsHref="/wrong"
-    />
-  </UserProfilePage>
-);
-
-export const AboutTabViewOnly = () => (
-  <UserProfilePage {...commonProps()} aboutHref="#">
-    <UserProfileAbout {...aboutTabProps()} />
-  </UserProfilePage>
-);
-export const AboutTabEditable = () => (
-  <UserProfilePage {...commonPropsEditable()} aboutHref="#">
-    <UserProfileAbout
-      {...aboutTabProps()}
-      editBiographyHref="/wrong"
-      editOrcidWorksHref="/wrong"
-    />
-  </UserProfilePage>
-);
-export const AboutTabEditBiography = () => (
-  <UserProfilePage {...commonPropsEditable()} aboutHref="#">
-    <UserProfileAbout
-      {...aboutTabProps()}
-      editBiographyHref="/wrong"
-      editOrcidWorksHref="/wrong"
-    />
-    <BiographyModal biography={aboutTabProps().biography} backHref="#" />
-  </UserProfilePage>
-);
-
-export const AboutTabEditPersonalInfo = () => (
-  <UserProfilePage {...commonPropsEditable()} aboutHref="#">
-    <UserProfileAbout
-      {...aboutTabProps()}
-      editBiographyHref="/wrong"
-      editOrcidWorksHref="/wrong"
-    />
-    <PersonalInfoModal {...aboutTabProps()} backHref="/wrong" />
-  </UserProfilePage>
-);
-export const AboutTabEditContactInfo = () => (
-  <UserProfilePage {...commonPropsEditable()} aboutHref="#">
-    <UserProfileAbout
-      {...aboutTabProps()}
-      editBiographyHref="/wrong"
-      editOrcidWorksHref="/wrong"
-    />
-    <ContactInfoModal
-      email={commonPropsEditable().contactEmail}
-      fallbackEmail={commonPropsEditable().email}
-      backHref="/wrong"
-    />
-  </UserProfilePage>
-);
-
-export const OutputsTab = () => (
-  <UserProfilePage {...commonProps()} outputsHref="#">
-    <UserProfileOutputs />
-  </UserProfilePage>
-);
-
-export const StaffTab = () => (
-  <UserProfilePage {...commonProps()} role="Staff" aboutHref="#">
-    <UserProfileStaff
-      {...commonProps()}
-      {...researchTabProps()}
-      {...aboutTabProps()}
-    />
+export const Staff = () => (
+  <UserProfilePage {...propsViewOnly()} role="Staff">
+    Page Content
   </UserProfilePage>
 );

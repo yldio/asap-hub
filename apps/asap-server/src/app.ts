@@ -3,24 +3,28 @@ import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { Tracer } from 'opentracing';
 
+import decodeToken from './utils/validate-token';
+
 import { errorHandler } from './middleware/error-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
 import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
-import { eventRouteFactory } from './routes/events.route';
-import { groupRouteFactory } from './routes/groups.route';
+
 import Groups, { GroupController } from './controllers/groups';
-import decodeToken from './utils/validate-token';
-import { teamRouteFactory } from './routes/teams.route';
-import { userRouteFactory } from './routes/user.route';
+import Users, { UserController } from './controllers/users';
 import Teams, { TeamController } from './controllers/teams';
 import Dashboard, { DashboardController } from './controllers/dashboard';
-import { dashboardRouteFactory } from './routes/dashboard.route';
 import Calendars, { CalendarController } from './controllers/calendars';
-import { calendarRouteFactory } from './routes/calendars.route';
 import ResearchOutputs, {
   ResearchOutputController,
 } from './controllers/research-outputs';
+
+import { dashboardRouteFactory } from './routes/dashboard.route';
+import { calendarRouteFactory } from './routes/calendars.route';
 import { researchOutputRouteFactory } from './routes/research-outputs.route';
+import { teamRouteFactory } from './routes/teams.route';
+import { userRouteFactory } from './routes/user.route';
+import { eventRouteFactory } from './routes/events.route';
+import { groupRouteFactory } from './routes/groups.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -31,6 +35,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const researchOutputController =
     libs.researchOutputController || new ResearchOutputs();
   const teamController = libs.teamController || new Teams();
+  const userController = libs.userController || new Users();
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
 
   const calendarRoutes = calendarRouteFactory(calendarController);
@@ -41,7 +46,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     researchOutputController,
   );
   const teamRoutes = teamRouteFactory(groupController, teamController);
-  const userRoutes = userRouteFactory(groupController);
+  const userRoutes = userRouteFactory(userController, groupController);
   const tracingHandler = tracingHandlerFactory(libs.tracer);
 
   app.use(tracingHandler);
@@ -81,6 +86,7 @@ export type Libs = {
   groupController?: GroupController;
   researchOutputController?: ResearchOutputController;
   teamController?: TeamController;
+  userController?: UserController;
   authHandler?: AuthHandler;
   tracer?: Tracer;
   // extra handlers only for tests and local development

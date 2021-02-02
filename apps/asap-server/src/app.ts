@@ -47,7 +47,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(userRoutes);
 
   app.get('*', async (_req, res) => {
-    res.status(404).json('Invalid route');
+    res.status(404).json({
+      statusCode: 404,
+      error: 'Not Found',
+      message: 'Not Found',
+    });
   });
 
   app.use(errorHandler);

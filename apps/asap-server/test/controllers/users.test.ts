@@ -90,7 +90,7 @@ describe('Users controller', () => {
       await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
     });
 
-    test('Should return user when finds it', async () => {
+    test('Should return user when it finds it', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser('user-id'),
@@ -123,7 +123,7 @@ describe('Users controller', () => {
       await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
     });
 
-    test('Should throw when finds more than one user', async () => {
+    test('Should throw when it finds more than one user', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(filter, 1, 0),
@@ -133,7 +133,7 @@ describe('Users controller', () => {
       await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
     });
 
-    test('Should return user when finds it', async () => {
+    test('Should return user when it finds it', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(filter, 1, 0),
@@ -355,7 +355,7 @@ describe('Users controller', () => {
       ).rejects.toThrow();
     });
 
-    test('should return 500 when fails to update user', async () => {
+    test('should throw when fails to update user - squidex error', async () => {
       nock(config.baseUrl)
         .post(`/api/apps/${config.appName}/assets`)
         .reply(200, { id: 'squidex-asset-id' })

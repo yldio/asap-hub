@@ -7,7 +7,7 @@ import { FetchOptions } from '../utils/types';
 export const userRouteFactory = (groupsController: GroupController): Router => {
   const userRoutes = Router();
 
-  userRoutes.get('/user/:userId/groups', async (req, res) => {
+  userRoutes.get('/users/:userId/groups', async (req, res) => {
     const { query } = req;
     const { params } = req;
 

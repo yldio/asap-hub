@@ -141,7 +141,7 @@ module.exports = {
         {
           httpApi: {
             method: 'GET',
-            path: `/user/{id}/groups`,
+            path: `/users/{id}/groups`,
           },
         },
       ],

@@ -3,7 +3,7 @@ import React, { ComponentProps } from 'react';
 
 import WelcomeCard from './WelcomeCard';
 import { Header } from '../molecules';
-import { Link, Paragraph } from '../atoms';
+import { Anchor, Link, Paragraph } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { backgroundNeuronsImage } from '../images';
 import { themes } from '../theme';
@@ -127,9 +127,9 @@ const WelcomePage: React.FC<WelcomePageProps> = ({
         <Toast onClose={onCloseAuthFailedToast}>
           There was a problem with your account. If this issue persists, please
           contact{' '}
-          <Link theme={null} href={mailToSupport()}>
+          <Anchor href={mailToSupport()}>
             <span css={{ textDecoration: 'underline' }}>ASAP Support</span>
-          </Link>
+          </Anchor>
           .
         </Toast>
       )}

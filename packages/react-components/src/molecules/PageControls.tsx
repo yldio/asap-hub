@@ -16,7 +16,7 @@ import {
   previousPageIcon,
   lastPageIcon,
 } from '../icons';
-import { Link } from '../atoms';
+import { Anchor } from '../atoms';
 
 const containerStyles = css({
   display: 'flex',
@@ -194,18 +194,18 @@ const PageControls: React.FC<PageControlsProps> = ({
     <nav css={containerStyles}>
       <ol css={listStyles}>
         <li css={itemStyles}>
-          <Link theme={null} href={firstPageHref}>
+          <Anchor href={firstPageHref}>
             <span css={[textStyles, firstPageHref ?? disabledTextStyles]}>
               {firstPageIcon}
             </span>
-          </Link>
+          </Anchor>
         </li>
         <li css={itemStyles}>
-          <Link theme={null} href={previousPageHref}>
+          <Anchor href={previousPageHref}>
             <span css={[textStyles, previousPageHref ?? disabledTextStyles]}>
               {previousPageIcon}
             </span>
-          </Link>
+          </Anchor>
         </li>
         {shownPages.map(({ index, followsGap, wideScreenOnly }) => {
           const active = index === currentPageIndex;
@@ -218,27 +218,27 @@ const PageControls: React.FC<PageControlsProps> = ({
                 wideScreenOnly ? 'wide-screen-only' : '',
               ].join(' ')}
             >
-              <Link theme={null} href={renderPageHref(index)}>
+              <Anchor href={renderPageHref(index)}>
                 <span css={[textStyles, active && activeTextStyles]}>
                   {index + 1}
                 </span>
-              </Link>
+              </Anchor>
             </li>
           );
         })}
         <li css={itemStyles}>
-          <Link theme={null} href={nextPageHref}>
+          <Anchor href={nextPageHref}>
             <span css={[textStyles, nextPageHref ?? disabledTextStyles]}>
               {nextPageIcon}
             </span>
-          </Link>
+          </Anchor>
         </li>
         <li css={itemStyles}>
-          <Link theme={null} href={lastPageHref}>
+          <Anchor href={lastPageHref}>
             <span css={[textStyles, lastPageHref ?? disabledTextStyles]}>
               {lastPageIcon}
             </span>
-          </Link>
+          </Anchor>
         </li>
       </ol>
     </nav>

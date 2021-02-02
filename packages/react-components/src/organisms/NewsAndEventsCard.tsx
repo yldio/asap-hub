@@ -1,7 +1,14 @@
 import React from 'react';
 import css from '@emotion/css';
 import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
-import { Card, Paragraph, Headline2, TagLabel, Caption, Link } from '../atoms';
+import {
+  Card,
+  Paragraph,
+  Headline2,
+  TagLabel,
+  Caption,
+  Anchor,
+} from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
 import {
@@ -71,9 +78,9 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   href,
 }) => {
   const titleComponent = text ? (
-    <Link theme={null} href={href}>
+    <Anchor href={href}>
       <Headline2 styleAsHeading={4}>{title}</Headline2>
-    </Link>
+    </Anchor>
   ) : (
     <Headline2 styleAsHeading={4}>{title}</Headline2>
   );

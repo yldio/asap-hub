@@ -2,7 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import { serializeError } from 'serialize-error';
 
-import { Card, Link, Button } from '../atoms';
+import { Card, Anchor, Button } from '../atoms';
 import { alertIcon } from '../icons';
 import { perRem } from '../pixels';
 import { mailToSupport } from '../mail';
@@ -76,9 +76,9 @@ const ErrorCard: React.FC<ErrorCardProps> = ({
         {error && (
           <span>
             <br /> If the issue persists, you can{' '}
-            <Link theme={null} href={mailto(error)}>
+            <Anchor href={mailto(error)}>
               <span css={underlineStyles}>contact support</span>
-            </Link>
+            </Anchor>
             .
           </span>
         )}

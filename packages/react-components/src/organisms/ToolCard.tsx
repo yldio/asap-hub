@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/core';
 import { TeamTool } from '@asap-hub/model';
 
-import { Card, Headline3, Paragraph, Link } from '../atoms';
+import { Card, Headline3, Paragraph, Anchor } from '../atoms';
 import { placeholderIcon } from '../icons';
 import { perRem, tabletScreen } from '../pixels';
 import { getIconFromUrl } from '../utils';
@@ -39,11 +39,11 @@ const ToolCard: React.FC<ToolCardProps> = ({
     <div css={containerStyle}>
       <div css={logoIconStyle}>{getIconFromUrl(url) ?? placeholderIcon}</div>
       <div css={{ flex: 1 }}>
-        <Link href={url} theme={null}>
+        <Anchor href={url}>
           <Headline3 styleAsHeading={4}>{name}</Headline3>
           <Paragraph accent="lead">{description}</Paragraph>
-        </Link>
-        <Link href={editHref}>Edit Link</Link>
+        </Anchor>
+        <Anchor href={editHref}>Edit Link</Anchor>
       </div>
     </div>
   </Card>

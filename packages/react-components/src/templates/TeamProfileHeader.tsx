@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { formatDistance } from 'date-fns';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
 
-import { Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
+import { Anchor, Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
@@ -93,13 +93,13 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             .slice(0, MAX_MEMBER_AVATARS)
             .map(({ id, avatarUrl, firstName, lastName }) => (
               <li key={id}>
-                <Link href={`/network/users/${id}`} theme={null}>
+                <Anchor href={`/network/users/${id}`}>
                   <Avatar
                     firstName={firstName}
                     lastName={lastName}
                     imageUrl={avatarUrl}
                   />
-                </Link>
+                </Anchor>
               </li>
             ))}
           <li css={extraUsersStyles}>

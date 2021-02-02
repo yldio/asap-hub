@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import format from 'date-fns/format';
 import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
 
-import { Card, Link, Headline2, Caption, TagLabel } from '../atoms';
+import { Card, Anchor, Headline2, Caption, TagLabel } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon } from '../icons';
@@ -80,9 +80,9 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   const titleComponent = link ? (
     <Headline2 styleAsHeading={4}>{title}</Headline2>
   ) : (
-    <Link theme={null} href={href}>
+    <Anchor href={href}>
       <Headline2 styleAsHeading={4}>{title}</Headline2>
-    </Link>
+    </Anchor>
   );
 
   return (
@@ -99,7 +99,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
           {team && (
             <span css={teamMemberStyles}>
               <span css={iconStyles}>{teamIcon}</span>
-              <Link href={team.href}>Team {team.displayName}</Link>
+              <Anchor href={team.href}>Team {team.displayName}</Anchor>
             </span>
           )}
         </div>

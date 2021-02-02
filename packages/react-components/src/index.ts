@@ -78,6 +78,7 @@ export {
   SharedResearchCard,
   SsoButtons,
   TeamCard,
+  TeamGroupCard,
   TeamMembersSection,
   Toast,
   ToolCard,

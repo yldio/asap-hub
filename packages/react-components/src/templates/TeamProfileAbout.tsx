@@ -19,7 +19,9 @@ const styles = css({
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   ComponentProps<typeof ProfileSkills> &
   Omit<ComponentProps<typeof TeamMembersSection>, 'title'> &
-  Pick<TeamResponse, 'pointOfContact'>;
+  Pick<TeamResponse, 'pointOfContact'> & {
+    teamGroupsCard?: React.ReactNode;
+  };
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   projectTitle,
@@ -28,6 +30,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   pointOfContact,
   members,
   proposalHref,
+  teamGroupsCard,
 }) => (
   <div css={styles}>
     {projectTitle ? (
@@ -39,6 +42,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
     ) : null}
     {skills.length ? <ProfileSkills skills={skills} /> : null}
     {members.length ? <TeamMembersSection members={members} /> : null}
+    {teamGroupsCard}
     {pointOfContact && (
       <CtaCard
         href={createMailTo(pointOfContact.email)}

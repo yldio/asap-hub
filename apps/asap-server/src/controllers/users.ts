@@ -363,11 +363,11 @@ export default class Users {
       fetchOrcidProfile(user!.data.orcid!.iv),
     );
 
-    //const err = error as RequestError;
-    //if (err && err?.response?.statusCode !== 404) {
-    ////eslint-disable-next-line no-console
-    //console.log('Error fetching user from ORCID:', err);
-    //}
+    // const err = error as RequestError;
+    // if (err && err?.response?.statusCode !== 404) {
+    // //eslint-disable-next-line no-console
+    // console.log('Error fetching user from ORCID:', err);
+    // }
 
     const update: Partial<RestUser['data']> = {
       email: { iv: user.data.email.iv },

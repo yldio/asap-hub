@@ -1,9 +1,12 @@
 import nock from 'nock';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  createTeamResponse,
+  createListGroupResponse,
+} from '@asap-hub/fixtures';
 import { TeamResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../../config';
-import { getTeam, patchTeam } from '../api';
+import { getTeam, patchTeam, getTeamGroups } from '../api';
 
 jest.mock('../../../config');
 
@@ -82,6 +85,30 @@ describe('patchTeam', () => {
       patchTeam('42', patch, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update team with id 42. Expected status 2xx. Received status 500."`,
+    );
+  });
+});
+
+describe('getTeamGroups', () => {
+  it('makes an authorized GET request for the team id', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/teams/42/groups')
+      .reply(200, {});
+    await getTeamGroups('42', 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns successfully fetched team groups', async () => {
+    const groups = createListGroupResponse(0);
+    nock(API_BASE_URL).get('/teams/42/groups').reply(200, groups);
+    expect(await getTeamGroups('42', '')).toEqual(groups);
+  });
+  it('errors for status', async () => {
+    nock(API_BASE_URL).get('/teams/42/groups').reply(500);
+    await expect(
+      getTeamGroups('42', ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch team groups with id 42. Expected status 2xx. Received status 500."`,
     );
   });
 });

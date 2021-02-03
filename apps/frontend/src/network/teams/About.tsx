@@ -10,7 +10,7 @@ import Frame from '../../structure/Frame';
 
 const TeamGroup: React.FC<{ id: string }> = ({ id }) => {
   const teamGroups = useTeamGroupsById(id);
-  return <TeamGroupCard {...teamGroups} />;
+  return teamGroups.total > 0 ? <TeamGroupCard {...teamGroups} /> : null;
 };
 
 interface AboutProps {

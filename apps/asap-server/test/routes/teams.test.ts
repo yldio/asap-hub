@@ -112,13 +112,14 @@ describe('/teams/ route', () => {
     test('Should call the controller with the right parameters', async () => {
       teamControllerMock.fetch.mockResolvedValueOnce(listTeamResponse);
 
-      await supertest(app).get('/teams?take=15&skip=5&search=something');
-
       const expectedParams: FetchOptions = {
         take: 15,
         skip: 5,
         search: 'something',
+        filter: ['one', 'two'],
       };
+
+      await supertest(app).get('/teams').query(expectedParams);
 
       expect(teamControllerMock.fetch).toBeCalledWith(expectedParams, userMock);
     });

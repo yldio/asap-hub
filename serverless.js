@@ -141,7 +141,7 @@ module.exports = {
         {
           httpApi: {
             method: '*',
-            path: `/research-outputs/`,
+            path: `/research-outputs`,
           },
         },
         {

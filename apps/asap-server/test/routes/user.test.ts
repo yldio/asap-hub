@@ -1,5 +1,7 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
+import { UserPatchRequest } from '@asap-hub/model';
+
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import * as groupFixtures from '../fixtures/groups.fixtures';
@@ -173,6 +175,100 @@ describe('/users/ route', () => {
         const response = await supertest(app).get('/users/123/groups').query({
           take: 'invalid param',
         });
+
+        expect(response.status).toBe(400);
+      });
+    });
+  });
+
+  describe('PATCH /users/{user_id}', () => {
+    const userId = 'userId';
+
+    test('Should return the results correctly', async () => {
+      userControllerMock.update.mockResolvedValueOnce(
+        fixtures.updateUserExpectation,
+      );
+
+      const response = await supertest(app)
+        .patch(`/users/${userId}`)
+        .send({ jobTitle: 'CEO' });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(fixtures.updateUserExpectation);
+    });
+
+    test('Should return 500 when it fails to update the user', async () => {
+      userControllerMock.update.mockRejectedValueOnce(
+        Boom.badImplementation('squidex', {
+          data: 'Squidex Error Message',
+        }),
+      );
+
+      const response = await supertest(app)
+        .patch(`/users/${userId}`)
+        .send({ jobTitle: 'CEO' });
+
+      expect(response.status).toBe(500);
+    });
+
+    test('Returns 403 when user is changing other user', async () => {
+      const response = await supertest(app)
+        .patch('/users/not-me')
+        .send({ jobTitle: 'CEO' });
+      expect(response.status).toBe(403);
+    });
+
+    test('Returns 403 when user is editing a team he doesnt belong to', async () => {
+      const response = await supertest(app)
+        .patch(`/users/${userId}`)
+        .send({
+          teams: [
+            {
+              id: 'team-id-1000',
+              responsibilities: 'I do stuff',
+            },
+          ],
+        });
+      expect(response.status).toBe(403);
+    });
+
+    test('Should return 404 when user doesnt exist', async () => {
+      userControllerMock.update.mockRejectedValueOnce(Boom.notFound());
+
+      const response = await supertest(app)
+        .patch(`/users/${userId}`)
+        .send({ jobTitle: 'CEO' });
+      expect(response.status).toBe(404);
+    });
+
+    test('Should call the controller method with the correct parameters', async () => {
+      userControllerMock.update.mockResolvedValueOnce(
+        fixtures.updateUserExpectation,
+      );
+
+      await supertest(app)
+        .patch(`/users/${userId}`)
+        .send({
+          social: { github: 'johnytiago' },
+          jobTitle: 'CEO',
+          questions: ['To be or not to be?'],
+          firstName: undefined, // should be ignored
+        });
+
+      const expectedParams: UserPatchRequest = {
+        social: { github: 'johnytiago' },
+        jobTitle: 'CEO',
+        questions: ['To be or not to be?'],
+      };
+
+      expect(userControllerMock.update).toBeCalledWith(userId, expectedParams);
+    });
+
+    describe('Parameter validation', () => {
+      test('Should return a validation error when the arguments are not valid', async () => {
+        const response = await supertest(app)
+          .patch(`/users/${userId}`)
+          .send({ jobTitle: 666 });
 
         expect(response.status).toBe(400);
       });

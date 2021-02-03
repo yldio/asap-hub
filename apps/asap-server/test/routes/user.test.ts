@@ -57,6 +57,7 @@ describe('/users/ route', () => {
 
       const response = await supertest(app).get('/users');
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(fixtures.fetchExpectation);
     });
 
@@ -108,6 +109,7 @@ describe('/users/ route', () => {
 
       const response = await supertest(app).get('/users/123');
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(fixtures.fetchUserExpectation);
     });
   });
@@ -135,6 +137,7 @@ describe('/users/ route', () => {
 
       const response = await supertest(app).get('/users/123/groups');
 
+      expect(response.status).toBe(200);
       expect(response.body).toEqual(groupFixtures.expectation);
     });
 
@@ -172,6 +175,76 @@ describe('/users/ route', () => {
         });
 
         expect(response.status).toBe(400);
+      });
+    });
+  });
+
+  describe('POST /users/{user_id}/avatar', () => {
+    const userId = 'userId';
+
+    test('Should return the results correctly', async () => {
+      userControllerMock.updateAvatar.mockResolvedValueOnce(
+        fixtures.updateUserExpectation,
+      );
+
+      const response = await supertest(app)
+        .post(`/users/${userId}/avatar`)
+        .send(fixtures.updateAvatarBody);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(fixtures.updateUserExpectation);
+    });
+
+    test('Should return 500 when it fails to update the avatar', async () => {
+      userControllerMock.updateAvatar.mockRejectedValueOnce(
+        Boom.badImplementation('squidex', {
+          data: 'Squidex Error Message',
+        }),
+      );
+
+      const response = await supertest(app)
+        .post(`/users/${userId}/avatar`)
+        .send(fixtures.updateAvatarBody);
+
+      expect(response.status).toBe(500);
+    });
+
+    test('Returns 403 when user is changing other user', async () => {
+      const response = await supertest(app)
+        .post('/users/not-me/avatar')
+        .send(fixtures.updateAvatarBody);
+      expect(response.status).toBe(403);
+    });
+
+    describe('Parameter validation', () => {
+      test('Returns 400 when payload is invalid', async () => {
+        const response = await supertest(app).post(`/users/${userId}/avatar`);
+        expect(response.status).toBe(400);
+      });
+
+      test('Returns 400 when payload is not data URL conformant', async () => {
+        const response = await supertest(app)
+          .post(`/users/${userId}/avatar`)
+          .send({ avatar: 'data:video/mp4' });
+        expect(response.status).toBe(400);
+      });
+
+      test('Returns 415 when content type is invalid', async () => {
+        const response = await supertest(app)
+          .post(`/users/${userId}/avatar`)
+          .send({ avatar: 'data:video/mp4;base64,some-data' });
+        expect(response.status).toBe(415);
+      });
+
+      test('Returns 413 when avatar is too big', async () => {
+        const response = await supertest(app)
+          .post(`/users/${userId}/avatar`)
+          .send({
+            avatar: `data:image/jpeg;base64,${Buffer.alloc(4e6).toString(
+              'base64',
+            )}`,
+          });
+        expect(response.status).toBe(413);
       });
     });
   });

@@ -4,7 +4,7 @@ import { ListCalendarResponse } from '@asap-hub/model';
 import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
 
-export default class Calendars {
+export default class Calendars implements CalendarController {
   calendars: InstrumentedSquidex<RestCalendar>;
 
   constructor(ctxHeaders?: Record<string, string>) {
@@ -27,4 +27,11 @@ export default class Calendars {
       items: calendars.map(parseCalendar),
     };
   }
+}
+
+export interface CalendarController {
+  fetch: (options: {
+    take: number;
+    skip: number;
+  }) => Promise<ListCalendarResponse>;
 }

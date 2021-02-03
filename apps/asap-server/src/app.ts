@@ -15,14 +15,19 @@ import { userRouteFactory } from './routes/user.route';
 import Teams, { TeamController } from './controllers/teams';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import { dashboardRouteFactory } from './routes/dashboard.route';
+import Calendars, { CalendarController } from './controllers/calendars';
+import { calendarRouteFactory } from './routes/calendars.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
+  const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
   const groupController = libs.groupController || new Groups();
   const teamController = libs.teamController || new Teams();
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
+
+  const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
@@ -40,6 +45,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     app.use(libs.mockRequestHandlers);
   }
 
+  app.use(calendarRoutes);
   app.use(dashboardRoutes);
   app.use(eventRoutes);
   app.use(groupRoutes);
@@ -47,7 +53,11 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(userRoutes);
 
   app.get('*', async (_req, res) => {
-    res.status(404).json('Invalid route');
+    res.status(404).json({
+      statusCode: 404,
+      error: 'Not Found',
+      message: 'Not Found',
+    });
   });
 
   app.use(errorHandler);
@@ -56,6 +66,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 };
 
 export type Libs = {
+  calendarController?: CalendarController;
   dashboardController?: DashboardController;
   groupController?: GroupController;
   teamController?: TeamController;

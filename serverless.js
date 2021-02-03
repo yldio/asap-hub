@@ -99,6 +99,12 @@ module.exports = {
         {
           httpApi: {
             method: 'GET',
+            path: `/calendars`,
+          },
+        },
+        {
+          httpApi: {
+            method: 'GET',
             path: `/dashboard`,
           },
         },
@@ -223,17 +229,6 @@ module.exports = {
           httpApi: {
             method: 'POST',
             path: `/webhook/users/orcid`,
-          },
-        },
-      ],
-    },
-    fetchCalendars: {
-      handler: 'apps/asap-server/build-cjs/handlers/calendars/fetch.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/calendars`,
           },
         },
       ],

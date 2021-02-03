@@ -1,4 +1,5 @@
 import supertest from 'supertest';
+import Boom from '@hapi/boom';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import * as groupFixtures from '../fixtures/groups.fixtures';
@@ -88,6 +89,26 @@ describe('/users/ route', () => {
 
         expect(response.status).toBe(400);
       });
+    });
+  });
+
+  describe('GET /users/{user_id}', () => {
+    test('Should return 404 when user doesnt exist', async () => {
+      userControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+
+      const response = await supertest(app).get('/users/123');
+
+      expect(response.status).toBe(404);
+    });
+
+    test('Should return the results correctly', async () => {
+      userControllerMock.fetchById.mockResolvedValueOnce(
+        fixtures.fetchUserExpectation,
+      );
+
+      const response = await supertest(app).get('/users/123');
+
+      expect(response.body).toEqual(fixtures.fetchUserExpectation);
     });
   });
 

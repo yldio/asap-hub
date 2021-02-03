@@ -1,8 +1,10 @@
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
-import * as fixtures from '../fixtures/groups.fixtures';
+import * as groupFixtures from '../fixtures/groups.fixtures';
+import * as fixtures from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
+import { userControllerMock } from '../mocks/user-controller.mock';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
 
@@ -25,11 +27,68 @@ describe('/users/ route', () => {
   };
   const app = appFactory({
     groupController: groupControllerMock,
+    userController: userControllerMock,
     authHandler: authHandlerMock,
   });
 
   afterEach(() => {
-    groupControllerMock.fetchByUserId.mockReset();
+    jest.resetAllMocks();
+  });
+
+  describe('GET /users', () => {
+    test('Should return 200 when no users exist', async () => {
+      userControllerMock.fetch.mockResolvedValueOnce({
+        items: [],
+        total: 0,
+      });
+
+      const response = await supertest(app).get('/users');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        total: 0,
+        items: [],
+      });
+    });
+
+    test('Should return the results correctly', async () => {
+      userControllerMock.fetch.mockResolvedValueOnce(fixtures.fetchExpectation);
+
+      const response = await supertest(app).get('/users');
+
+      expect(response.body).toEqual(fixtures.fetchExpectation);
+    });
+
+    test('Should call the controller method with the correct parameters', async () => {
+      userControllerMock.fetch.mockResolvedValueOnce({
+        items: [],
+        total: 0,
+      });
+
+      await supertest(app).get('/users').query({
+        take: 15,
+        skip: 5,
+        search: 'something',
+      });
+
+      const expectedParams: FetchOptions = {
+        take: 15,
+        skip: 5,
+        search: 'something',
+      };
+
+      expect(userControllerMock.fetch).toBeCalledWith(expectedParams);
+    });
+
+    describe('Parameter validation', () => {
+      test('Should return a validation error when the arguments are not valid', async () => {
+        const response = await supertest(app).get('/users').query({
+          take: 'invalid param',
+        });
+
+        expect(response.status).toBe(400);
+      });
+    });
   });
 
   describe('GET /users/{user_id}/groups', () => {
@@ -50,12 +109,12 @@ describe('/users/ route', () => {
 
     test('Should return the results correctly', async () => {
       groupControllerMock.fetchByUserId.mockResolvedValueOnce(
-        fixtures.expectation,
+        groupFixtures.expectation,
       );
 
       const response = await supertest(app).get('/users/123/groups');
 
-      expect(response.body).toEqual(fixtures.expectation);
+      expect(response.body).toEqual(groupFixtures.expectation);
     });
 
     test('Should call the controller method with the correct parameters', async () => {
@@ -87,7 +146,7 @@ describe('/users/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app).get(`/users/123/groups`).query({
+        const response = await supertest(app).get('/users/123/groups').query({
           take: 'invalid param',
         });
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import parseURI from 'parse-data-url';
@@ -48,7 +50,7 @@ export const userRouteFactory = (
       query,
       querySchema,
     ) as unknown) as FetchOptions;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
     const teams = req.loggedUser!.teams.map(({ id }) => id);
 
     const result = await groupsController.fetchByUserId(userId, teams, options);
@@ -64,7 +66,6 @@ export const userRouteFactory = (
     );
 
     // user is trying to update someone else
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (req.loggedUser!.id !== userId) {
       throw Boom.forbidden();
     }
@@ -116,13 +117,11 @@ export const userRouteFactory = (
     ) as UserPatchRequest;
 
     // user is trying to update someone else
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (req.loggedUser!.id !== userId) {
       throw Boom.forbidden();
     }
 
     // user trying to change a team he doesn't belong to
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     if (
       update.teams &&
       !update.teams.every(({ id }) =>

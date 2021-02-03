@@ -113,11 +113,11 @@ export interface ResponseFetchUser {
 }
 
 export interface UserController {
-  update: (id: string, update: UserPatchRequest) => Promise<UserResponse>;
   fetch: (options: FetchOptions) => Promise<ListUserResponse>;
   fetchById: (id: string) => Promise<UserResponse>;
   fetchByCode: (code: string) => Promise<UserResponse>;
   connectByCode: (welcomeCode: string, userId: string) => Promise<UserResponse>;
+  update: (id: string, update: UserPatchRequest) => Promise<UserResponse>;
   updateAvatar: (
     id: string,
     avatar: Buffer,

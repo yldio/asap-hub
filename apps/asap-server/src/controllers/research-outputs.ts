@@ -31,7 +31,7 @@ function transform(
   } as ResearchOutputResponse;
 }
 
-export default class ResearchOutputs {
+export default class ResearchOutputs implements ResearchOutputController {
   researchOutputs: InstrumentedSquidex<RestResearchOutput>;
 
   teams: InstrumentedSquidex<RestTeam>;
@@ -123,4 +123,15 @@ export default class ResearchOutputs {
       ),
     };
   }
+}
+
+export interface ResearchOutputController {
+  fetch: (options: {
+    take: number;
+    skip: number;
+    search?: string;
+    filter?: string[];
+  }) => Promise<ListResearchOutputResponse>;
+
+  fetchById: (id: string) => Promise<ResearchOutputResponse>;
 }

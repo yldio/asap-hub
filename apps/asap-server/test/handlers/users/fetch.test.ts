@@ -52,7 +52,8 @@ describe('GET /users', () => {
 
   test('returns 200 when searching users by name - should allow filter as string', async () => {
     const filter =
-      "data/teams/iv/role eq 'Lead PI (Core Leadership)' and" +
+      "(data/teams/iv/role eq 'Lead PI (Core Leadership)')" +
+      ' and' +
       " (data/role/iv ne 'Hidden' and" +
       " (contains(data/firstName/iv, 'first')" +
       " or contains(data/lastName/iv, 'first')" +
@@ -89,8 +90,9 @@ describe('GET /users', () => {
 
   test('returns 200 when searching users by name', async () => {
     const filter =
-      "data/teams/iv/role eq 'Lead PI (Core Leadership)' or" +
-      " data/teams/iv/role eq 'anotherFilter' and" +
+      "(data/teams/iv/role eq 'Lead PI (Core Leadership)'" +
+      " or data/teams/iv/role eq 'anotherFilter')" +
+      ' and' +
       " (data/role/iv ne 'Hidden' and" +
       " (contains(data/firstName/iv, 'first')" +
       " or contains(data/lastName/iv, 'first')" +
@@ -161,10 +163,7 @@ describe('GET /users', () => {
   });
 
   test('returns 200 when searching for staff members', async () => {
-    const filter =
-      "data/teams/iv/role eq 'Staff' or" +
-      " data/role/iv eq 'Staff' and" +
-      " (data/role/iv ne 'Hidden')";
+    const filter = "(data/role/iv eq 'Staff') and (data/role/iv ne 'Hidden')";
 
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {

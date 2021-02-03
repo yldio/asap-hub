@@ -10,5 +10,5 @@ export type FetchOptions = {
   take?: number;
   skip?: number;
   search?: string;
-  filter?: string;
+  filter?: string[];
 };

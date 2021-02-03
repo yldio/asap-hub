@@ -159,7 +159,7 @@ describe('PATCH /users/{id}', () => {
   });
 
   describe('update user props', () => {
-    test("returns 404 when team doesn't exist", async () => {
+    test("returns 404 when user doesn't exist", async () => {
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/userId`, {
           jobTitle: { iv: 'CEO' },

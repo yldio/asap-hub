@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { Got, RequestError } from 'got';
+import { Got } from 'got';
 import FormData from 'form-data';
 import mime from 'mime-types';
 import { GraphqlUser, RestUser, config } from '@asap-hub/squidex';
@@ -16,6 +16,7 @@ import {
 } from '../utils/instrumented-client';
 import { parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
+import { FetchOptions } from '../utils/types';
 
 export const GraphQLQueryUser = `
 id
@@ -181,7 +182,7 @@ export default class Users {
 
     const user = await this.users.fetchById(id);
 
-    // update only contain the team the user is trying to change
+    // update only contains the team the user is trying to change
     // we need to merge it with the ones on the DB, replacing the updated props
     // and deleting them if update is an empty string.
     /* eslint-disable @typescript-eslint/no-non-null-assertion, no-param-reassign */
@@ -196,16 +197,13 @@ export default class Users {
             const teamUpdates = update.teams!.find(
               ({ id: teamId }) => team.id[0] === teamId,
             );
-            if (teamUpdates?.approach || teamUpdates?.approach?.trim) {
+            if (teamUpdates?.approach?.trim) {
               team.approach =
                 teamUpdates.approach.trim() === ''
                   ? null
                   : teamUpdates.approach;
             }
-            if (
-              teamUpdates?.responsibilities ||
-              teamUpdates?.responsibilities?.trim
-            ) {
+            if (teamUpdates?.responsibilities?.trim) {
               team.responsibilities =
                 teamUpdates.responsibilities.trim() === ''
                   ? null
@@ -225,12 +223,7 @@ export default class Users {
     return this.fetchById(id);
   }
 
-  async fetch(options: {
-    take: number;
-    skip: number;
-    search?: string;
-    filter?: string[];
-  }): Promise<ListUserResponse> {
+  async fetch(options: FetchOptions): Promise<ListUserResponse> {
     const { take, skip, search, filter } = options;
 
     const searchQ = [
@@ -253,6 +246,7 @@ export default class Users {
     ].join(' and ');
 
     const filterQ = (filter || [])
+      .filter((word) => word !== 'Staff')
       .reduce(
         (acc: string[], word: string) =>
           acc.concat([`data/teams/iv/role eq '${word}'`]),
@@ -261,7 +255,7 @@ export default class Users {
       .concat(filter?.includes('Staff') ? `data/role/iv eq 'Staff'` : [])
       .join(' or ');
 
-    const $filter = filterQ ? `${filterQ} and (${searchQ})`.trim() : searchQ;
+    const $filter = filterQ ? `(${filterQ}) and (${searchQ})`.trim() : searchQ;
 
     const query = buildGraphQLQueryFetchUsers($filter, take, skip);
 
@@ -369,11 +363,11 @@ export default class Users {
       fetchOrcidProfile(user!.data.orcid!.iv),
     );
 
-    const err = error as RequestError;
-    if (err && err?.response?.statusCode !== 404) {
-      // eslint-disable-next-line no-console
-      console.log('Error fetching user from ORCID:', err);
-    }
+    // const err = error as RequestError;
+    // if (err && err?.response?.statusCode !== 404) {
+    // //eslint-disable-next-line no-console
+    // console.log('Error fetching user from ORCID:', err);
+    // }
 
     const update: Partial<RestUser['data']> = {
       email: { iv: user.data.email.iv },

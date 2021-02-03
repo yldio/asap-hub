@@ -135,6 +135,18 @@ module.exports = {
         {
           httpApi: {
             method: '*',
+            path: `/research-outputs/{proxy+}`,
+          },
+        },
+        {
+          httpApi: {
+            method: '*',
+            path: `/research-outputs/`,
+          },
+        },
+        {
+          httpApi: {
+            method: '*',
             path: `/teams/{proxy+}`,
           },
         },
@@ -229,30 +241,6 @@ module.exports = {
           httpApi: {
             method: 'POST',
             path: `/webhook/users/orcid`,
-          },
-        },
-      ],
-    },
-    fetchResearchOutputs: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/research-outputs/fetch.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/research-outputs`,
-          },
-        },
-      ],
-    },
-    fetchResearchOutputsById: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/research-outputs/fetch-by-id.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/research-outputs/{id}`,
           },
         },
       ],

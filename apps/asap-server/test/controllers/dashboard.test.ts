@@ -50,7 +50,7 @@ describe('Dashboard controller', () => {
       });
     });
 
-    test('Should return the the dashboard news', async () => {
+    test('Should return the dashboard news', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
         .reply(200, {

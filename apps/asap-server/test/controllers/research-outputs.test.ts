@@ -2,6 +2,7 @@ import nock from 'nock';
 import { config, RestResearchOutput, RestTeam } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import ResearchOutputs from '../../src/controllers/research-outputs';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputs = new ResearchOutputs();
@@ -270,17 +271,18 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
-      expect(result).toEqual({
+      const expectedResult: ResearchOutputResponse = {
         created: '2020-09-23T16:34:26.842Z',
         id: 'uuid',
         text: 'Text',
         title: 'Title',
-        type: 'proposal',
+        type: 'Proposal',
         team: {
           id: 'uuid-team',
           displayName: 'team',
         },
-      });
+      };
+      expect(result).toEqual(expectedResult);
     });
 
     test('Should return the research output without the team', async () => {

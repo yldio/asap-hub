@@ -17,6 +17,10 @@ import Dashboard, { DashboardController } from './controllers/dashboard';
 import { dashboardRouteFactory } from './routes/dashboard.route';
 import Calendars, { CalendarController } from './controllers/calendars';
 import { calendarRouteFactory } from './routes/calendars.route';
+import ResearchOutputs, {
+  ResearchOutputController,
+} from './controllers/research-outputs';
+import { researchOutputRouteFactory } from './routes/research-outputs.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -24,6 +28,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
   const groupController = libs.groupController || new Groups();
+  const researchOutputController =
+    libs.researchOutputController || new ResearchOutputs();
   const teamController = libs.teamController || new Teams();
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
 
@@ -31,6 +37,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
+  const researchOutputsRoutes = researchOutputRouteFactory(
+    researchOutputController,
+  );
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(groupController);
   const tracingHandler = tracingHandlerFactory(libs.tracer);
@@ -49,6 +58,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(dashboardRoutes);
   app.use(eventRoutes);
   app.use(groupRoutes);
+  app.use(researchOutputsRoutes);
   app.use(teamRoutes);
   app.use(userRoutes);
 
@@ -69,6 +79,7 @@ export type Libs = {
   calendarController?: CalendarController;
   dashboardController?: DashboardController;
   groupController?: GroupController;
+  researchOutputController?: ResearchOutputController;
   teamController?: TeamController;
   authHandler?: AuthHandler;
   tracer?: Tracer;

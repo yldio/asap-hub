@@ -10,7 +10,6 @@ import { formatDate } from '../utils';
 import { ExternalLink } from '../molecules';
 
 const containerStyles = css({
-  alignSelf: 'stretch',
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 

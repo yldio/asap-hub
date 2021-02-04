@@ -5,10 +5,6 @@ import { perRem } from '../pixels';
 import DashboardPageHeader from './DashboardPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
-const articleStyles = css({
-  alignSelf: 'stretch',
-});
-
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
@@ -16,7 +12,7 @@ const mainStyles = css({
 type DashboardPageProps = ComponentProps<typeof DashboardPageHeader>;
 
 const Dashboard: React.FC<DashboardPageProps> = ({ firstName, children }) => (
-  <article css={articleStyles}>
+  <article>
     <DashboardPageHeader firstName={firstName} />
     <main css={mainStyles}>{children}</main>
   </article>

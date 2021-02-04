@@ -5,10 +5,6 @@ import { perRem } from '../pixels';
 import NetworkPageHeader from './NetworkPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
-const articleStyles = css({
-  alignSelf: 'stretch',
-});
-
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
@@ -18,7 +14,7 @@ const NetworkPage: React.FC<ComponentProps<typeof NetworkPageHeader>> = ({
 
   ...props
 }) => (
-  <article css={articleStyles}>
+  <article>
     <NetworkPageHeader {...props} />
     <main css={mainStyles}>{children}</main>
   </article>

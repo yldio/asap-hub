@@ -8,7 +8,6 @@ import { RichText } from '../organisms';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const styles = css({
-  alignSelf: 'stretch',
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 

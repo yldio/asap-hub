@@ -67,7 +67,7 @@ const contentStyles = css({
 
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'stretch',
 
   backgroundColor: pearl.rgb,
 });

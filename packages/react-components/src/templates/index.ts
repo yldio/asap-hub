@@ -13,6 +13,7 @@ export { default as EventsPage } from './EventsPage';
 export { default as ForgotPasswordPage } from './ForgotPasswordPage';
 export { default as GroupProfileCalendar } from './GroupProfileCalendar';
 export { default as GroupProfileHeader } from './GroupProfileHeader';
+export { default as GroupProfilePage } from './GroupProfilePage';
 export { default as Layout } from './Layout';
 export { default as NetworkGroups } from './NetworkGroups';
 export { default as NetworkPage } from './NetworkPage';

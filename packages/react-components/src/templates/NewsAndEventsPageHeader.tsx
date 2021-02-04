@@ -7,7 +7,6 @@ import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const containerStyles = css({
-  alignSelf: 'stretch',
   background: paper.rgb,
   boxShadow: `0 2px 4px -2px ${steel.rgb}`,
   marginBottom: '2px',

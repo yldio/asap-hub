@@ -12,10 +12,6 @@ import { Option } from '../organisms/CheckboxGroup';
 import { TabNav, SearchField } from '../molecules';
 import { teamIcon, userIcon, groupsIcon } from '../icons';
 
-const containerStyles = css({
-  alignSelf: 'stretch',
-});
-
 const visualHeaderStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
   marginBottom: `${30 / perRem}em`,
@@ -80,7 +76,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   const { isEnabled } = useFlags();
 
   return (
-    <header css={containerStyles}>
+    <header>
       <div css={visualHeaderStyles}>
         <Display styleAsHeading={2}>Network</Display>
         <div css={textStyles}>

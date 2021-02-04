@@ -24,7 +24,7 @@ const teamsStyles = css({
   color: charcoal.rgb,
   display: 'flex',
   alignItems: 'center',
-  paddingTop: `${18 / perRem}`,
+  paddingTop: `${12 / perRem}em`,
   paddingBottom: vminLinearCalcClamped(
     mobileScreen,
     18,
@@ -38,12 +38,12 @@ const iconStyles = css({
   display: 'inline-block',
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
+  paddingRight: `${15 / perRem}em`,
 });
 
 const listStyles = css({
   margin: 0,
-  padding: `${24 / perRem}em 0 ${6 / perRem}em 0`,
+  padding: `${12 / perRem}em 0 ${6 / perRem}em 0`,
   textIndent: 0,
   listStyleType: 'none',
 });
@@ -60,7 +60,7 @@ const listElementStyles = css({
 const viewMoreStyles = css({
   display: 'flex',
   justifyContent: 'center',
-  paddingBottom: `${18 / perRem}em`,
+  paddingTop: `${6 / perRem}em`,
 });
 
 const TeamGroupCard: React.FC<ListGroupResponse> = ({ items }) => {

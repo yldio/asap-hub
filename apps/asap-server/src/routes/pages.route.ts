@@ -7,7 +7,7 @@ export const pageRouteFactory = (pageController: PageController): Router => {
   pageRoutes.get('/pages/:path', async (req, res) => {
     const { params } = req;
 
-    const result = await pageController.fetchByPath(params.path);
+    const result = await pageController.fetchByPath(`/${params.path}`);
 
     res.json(result);
   });

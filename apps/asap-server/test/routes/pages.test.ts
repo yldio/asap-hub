@@ -1,13 +1,11 @@
 import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { pageControllerMock } from '../mocks/page-controller.mock';
 import { PageResponse } from '@asap-hub/model';
 
 describe('/pages/ route', () => {
   const app = appFactory({
-    authHandler: authHandlerMock,
     pageController: pageControllerMock,
   });
 
@@ -47,7 +45,7 @@ describe('/pages/ route', () => {
 
       await supertest(app).get(`/pages/${path}`);
 
-      expect(pageControllerMock.fetchByPath).toBeCalledWith(path);
+      expect(pageControllerMock.fetchByPath).toBeCalledWith(`/${path}`);
     });
   });
 });

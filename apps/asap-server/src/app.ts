@@ -31,6 +31,10 @@ import { pageRouteFactory } from './routes/pages.route';
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
+  /**
+   * Dependency Injection -->
+   */
+
   // Controllers
   const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
@@ -57,12 +61,29 @@ export const appFactory = (libs: Libs = {}): Express => {
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(userController, groupController);
 
+  /**
+   * --- end of dependency inection
+   */
+
   app.use(tracingHandler);
   app.use(cors());
   app.use(express.json());
 
+  /**
+   * Public routes --->
+   */
+  app.use(pageRoutes);
+
+  /**
+   * --- end of public routes
+   */
+
+  // Auth
   app.use(authHandler);
 
+  /**
+   * Routes requiring authorisation below
+   */
   if (libs.mockRequestHandlers) {
     app.use(libs.mockRequestHandlers);
   }
@@ -71,7 +92,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(dashboardRoutes);
   app.use(eventRoutes);
   app.use(groupRoutes);
-  app.use(pageRoutes);
   app.use(researchOutputsRoutes);
   app.use(teamRoutes);
   app.use(userRoutes);

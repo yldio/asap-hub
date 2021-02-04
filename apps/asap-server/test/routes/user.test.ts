@@ -114,6 +114,14 @@ describe('/users/ route', () => {
       expect(response.status).toBe(200);
       expect(response.body).toEqual(fixtures.fetchUserExpectation);
     });
+
+    test('Should call the controller with the right parameter', async () => {
+      const userId = 'abc123';
+
+      await supertest(app).get(`/users/${userId}`);
+
+      expect(userControllerMock.fetchById).toBeCalledWith(userId);
+    });
   });
 
   describe('GET /users/{user_id}/groups', () => {
@@ -182,7 +190,7 @@ describe('/users/ route', () => {
   });
 
   describe('PATCH /users/{user_id}', () => {
-    const userId = 'userId';
+    const userId = userMock.id;
 
     test('Should return the results correctly', async () => {
       userControllerMock.update.mockResolvedValueOnce(
@@ -276,7 +284,7 @@ describe('/users/ route', () => {
   });
 
   describe('POST /users/{user_id}/avatar', () => {
-    const userId = 'userId';
+    const userId = userMock.id;
 
     test('Should return the results correctly', async () => {
       userControllerMock.updateAvatar.mockResolvedValueOnce(
@@ -310,6 +318,18 @@ describe('/users/ route', () => {
         .post('/users/not-me/avatar')
         .send(fixtures.updateAvatarBody);
       expect(response.status).toBe(403);
+    });
+
+    test('Should call the controller method with the correct parameters', async () => {
+      await supertest(app)
+        .post(`/users/${userId}/avatar`)
+        .send(fixtures.updateAvatarBody);
+
+      expect(userControllerMock.updateAvatar).toBeCalledWith(
+        userId,
+        expect.any(Buffer),
+        'image/jpeg',
+      );
     });
 
     describe('Parameter validation', () => {

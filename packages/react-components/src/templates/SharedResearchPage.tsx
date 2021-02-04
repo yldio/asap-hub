@@ -6,10 +6,6 @@ import { perRem } from '../pixels';
 import SharedResearchPageHeader from './SharedResearchPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
-const articleStyles = css({
-  alignSelf: 'stretch',
-});
-
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
@@ -27,7 +23,7 @@ const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
   onChangeFilter,
   filters,
 }) => (
-  <article css={articleStyles}>
+  <article>
     <SharedResearchPageHeader
       onChangeSearch={onChangeSearch}
       searchQuery={searchQuery}

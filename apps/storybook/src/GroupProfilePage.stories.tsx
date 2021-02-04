@@ -1,18 +1,21 @@
 import React from 'react';
-import { GroupProfileHeader } from '@asap-hub/react-components';
+import { GroupProfilePage } from '@asap-hub/react-components';
 import { text, number, date, select } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 
+import { LayoutDecorator } from './layout';
+
 export default {
-  title: 'Templates / Group Profile / Header',
-  component: GroupProfileHeader,
+  title: 'Templates / Group Profile / Page',
+  component: GroupProfilePage,
+  decorators: [LayoutDecorator],
 };
 
 export const Normal = () => {
   const activeTab = select('Active Tab', ['About', 'Calendar'], 'About');
   return (
     <StaticRouter key={activeTab} location={`/${activeTab}`}>
-      <GroupProfileHeader
+      <GroupProfilePage
         name={text('Name', 'My Group')}
         numberOfTeams={number('Number of Teams', 5)}
         groupTeamsHref="#"

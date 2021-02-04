@@ -18,7 +18,6 @@ import { paper } from '../colors';
 import { editIcon, uploadIcon } from '../icons';
 
 const containerStyles = css({
-  alignSelf: 'stretch',
   backgroundColor: paper.rgb,
   padding: `${12 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
 

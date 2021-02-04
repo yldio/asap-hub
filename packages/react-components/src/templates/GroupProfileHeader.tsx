@@ -10,7 +10,6 @@ import { teamIcon } from '../icons';
 import { TabNav } from '../molecules';
 
 const containerStyles = css({
-  alignSelf: 'stretch',
   backgroundColor: paper.rgb,
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
 });

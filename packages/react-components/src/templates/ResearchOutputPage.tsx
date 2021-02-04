@@ -34,7 +34,6 @@ const iconStyles = css({
 });
 
 const containerStyles = css({
-  alignSelf: 'stretch',
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 

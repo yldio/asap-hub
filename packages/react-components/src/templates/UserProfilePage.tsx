@@ -5,10 +5,6 @@ import UserProfileHeader from './UserProfileHeader';
 import { steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 
-const styles = css({
-  alignSelf: 'stretch',
-});
-
 const contentStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
   padding: `0 ${contentSidePaddingWithNavigation(10)}`,
@@ -22,7 +18,7 @@ const UserProfilePage: React.FC<UserProfilePageProps> = ({
   children,
   ...profile
 }) => (
-  <article css={styles}>
+  <article>
     <UserProfileHeader {...profile} />
     <main css={contentStyles}>{children}</main>
   </article>

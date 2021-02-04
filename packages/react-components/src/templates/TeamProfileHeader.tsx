@@ -13,7 +13,6 @@ import { paper } from '../colors';
 const MAX_MEMBER_AVATARS = 5;
 
 const containerStyles = css({
-  alignSelf: 'stretch',
   backgroundColor: paper.rgb,
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)} 0`,
 });

@@ -100,7 +100,7 @@ export {
   EventsPage,
   ForgotPasswordPage,
   GroupProfileCalendar,
-  GroupProfileHeader, // TODO replace with page
+  GroupProfilePage,
   Layout,
   NetworkGroups,
   NetworkPage,

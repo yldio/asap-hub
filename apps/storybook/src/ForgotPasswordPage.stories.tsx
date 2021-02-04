@@ -4,7 +4,7 @@ import { ForgotPasswordPage } from '@asap-hub/react-components';
 import { BasicLayoutDecorator } from './layout';
 
 export default {
-  title: 'Pages / Auth / Forgot Password / Reset Password',
+  title: 'Templates / Auth / Forgot Password / Reset Password Page',
   component: ForgotPasswordPage,
   decorators: [BasicLayoutDecorator],
 };

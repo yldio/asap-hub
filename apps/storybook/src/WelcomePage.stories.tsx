@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions';
 import { NoPaddingDecorator } from './layout';
 
 export default {
-  title: 'Pages / Auth / Welcome',
+  title: 'Templates / Auth / Welcome Page',
   component: WelcomePage,
   decorators: [NoPaddingDecorator],
 };

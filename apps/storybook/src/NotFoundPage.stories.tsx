@@ -4,7 +4,7 @@ import { NotFoundPage } from '@asap-hub/react-components';
 import { LayoutDecorator } from './layout';
 
 export default {
-  title: 'Pages / Not Found',
+  title: 'Templates / Not Found Page',
   decorators: [LayoutDecorator],
 };
 

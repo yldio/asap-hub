@@ -3,7 +3,7 @@ import { array, text } from '@storybook/addon-knobs';
 import { QuestionsSection } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / Questions',
+  title: 'Organisms / User Profile / Questions',
 };
 
 export const Normal = () => (

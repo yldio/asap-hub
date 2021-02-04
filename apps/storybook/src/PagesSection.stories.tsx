@@ -4,7 +4,7 @@ import { createPageResponse } from '@asap-hub/fixtures';
 import { number, text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Sections / Pages',
+  title: 'Organisms / Pages Section',
 };
 
 export const Normal = () => (

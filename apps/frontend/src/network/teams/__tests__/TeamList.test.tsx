@@ -6,24 +6,24 @@ import {
 } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
-import { createListUserResponse } from '@asap-hub/fixtures';
 import { authTestUtils } from '@asap-hub/react-components';
+import { createListTeamResponse } from '@asap-hub/fixtures';
 
-import UserList from '../UserList';
-import { API_BASE_URL } from '../../config';
+import Teams from '../TeamList';
+import { API_BASE_URL } from '../../../config';
 
 // fetch user by code request
 beforeEach(() => {
   nock.cleanAll();
 });
 
-const renderUserList = async (waitForLoading = true) => {
+const renderTeamList = async (waitForLoading = true) => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/users']}>
-            <Route path="/users" component={UserList} />
+          <MemoryRouter initialEntries={['/teams']}>
+            <Route path="/teams" component={Teams} />
           </MemoryRouter>
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>
@@ -34,7 +34,7 @@ const renderUserList = async (waitForLoading = true) => {
   );
   if (waitForLoading)
     await waitFor(() =>
-      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
+      expect(result.queryByText(/Loading/i)).not.toBeInTheDocument(),
     );
   return result;
 };
@@ -43,34 +43,35 @@ it('renders a loading indicator', async () => {
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
-    .get('/users')
+    .get('/teams')
     .query({ take: 10, skip: 0 })
-    .reply(200, createListUserResponse(2));
+    .reply(200, createListTeamResponse(1));
+  const { getByText } = await renderTeamList(false);
 
-  const { getByText } = await renderUserList(false);
   const loadingIndicator = getByText(/loading/i);
   expect(loadingIndicator).toBeVisible();
 
   await waitForElementToBeRemoved(loadingIndicator);
 });
 
-it('renders a list of people', async () => {
-  const listUserResponse = createListUserResponse(2);
-  const names = ['Person A', 'Person B'];
+it('renders a list of teams information', async () => {
+  const response = createListTeamResponse(2);
   nock(API_BASE_URL, {
     reqheaders: { authorization: 'Bearer token' },
   })
-    .get('/users')
+    .get('/teams')
     .query({ take: 10, skip: 0 })
     .reply(200, {
-      ...listUserResponse,
-      items: listUserResponse.items.map((item, itemIndex) => ({
+      ...response,
+      items: response.items.map((item, index) => ({
         ...item,
-        displayName: names[itemIndex],
+        displayName: `Name Unknown ${index}`,
+        projectTitle: `Project Title Unknown ${index}`,
       })),
     });
-
-  const { container } = await renderUserList();
-  expect(container.textContent).toContain('Person A');
-  expect(container.textContent).toContain('Person B');
+  const { container } = await renderTeamList();
+  expect(container.textContent).toContain('Name Unknown 0');
+  expect(container.textContent).toContain('Project Title Unknown 0');
+  expect(container.textContent).toContain('Name Unknown 1');
+  expect(container.textContent).toContain('Project Title Unknown 1');
 });

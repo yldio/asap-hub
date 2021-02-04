@@ -4,10 +4,10 @@ import { NetworkPeople, Loading } from '@asap-hub/react-components';
 import { join } from 'path';
 import { UserResponse } from '@asap-hub/model';
 
-import { useUsers } from '../api';
-import { usePaginationParams, usePagination } from '../hooks';
-import { NETWORK_PATH } from '../routes';
-import { TEAMS_PATH } from './routes';
+import { useUsers } from '@asap-hub/frontend/src/api';
+import { usePaginationParams, usePagination } from '../../hooks';
+import { NETWORK_PATH } from '../../routes';
+import { TEAMS_PATH } from '../routes';
 
 interface ProfileListProps {
   searchQuery?: string;

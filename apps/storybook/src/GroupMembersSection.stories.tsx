@@ -14,7 +14,10 @@ export const Normal = () => (
   <GroupMembersSection
     leaders={createListUserResponse(number('Number of Leaders', 6)).items.map(
       (user, userIndex) => ({
-        ...user,
+        user: {
+          ...user,
+          teams: user.teams.map((team) => ({ ...team, href: `#t${team.id}` })),
+        },
         role: userIndex % 3 ? 'Chair' : 'Project Manager',
         href: `#u${userIndex}`,
         teams: Array(number('Number of Leader Teams', 1))

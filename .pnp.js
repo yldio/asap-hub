@@ -9388,6 +9388,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__jest-dom", "npm:5.0.3"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
+            ["@types/uuid", "npm:8.0.0"],
             ["browser-image-compression", "npm:1.0.13"],
             ["cross-env", "npm:7.0.2"],
             ["history", "npm:4.10.1"],
@@ -9404,7 +9405,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["recoil", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:0.1.2"],
             ["typescript", "patch:typescript@npm%3A3.9.7#builtin<compat/typescript>::version=3.9.7&hash=cc6730"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"],
-            ["use-http", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.16"]
+            ["use-http", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.16"],
+            ["uuid", "npm:8.3.0"]
           ],
           "linkType": "SOFT",
         }]

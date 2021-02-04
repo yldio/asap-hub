@@ -7,17 +7,22 @@ import { useDebounce } from 'use-debounce';
 import { useSearch } from '../hooks';
 import { TEAMS_PATH, USERS_PATH, GROUPS_PATH } from './routes';
 import { SearchFrame } from '../structure/Frame';
+import GroupProfile from './groups/GroupProfile';
 
 const loadUserList = () =>
-  import(/* webpackChunkName: "network-user-list" */ './UserList');
+  import(/* webpackChunkName: "network-user-list" */ './users/UserList');
 const loadUserProfile = () =>
   import(/* webpackChunkName: "network-user-profile" */ './users/UserProfile');
 const loadTeamList = () =>
-  import(/* webpackChunkName: "network-team-list" */ './TeamList');
+  import(/* webpackChunkName: "network-team-list" */ './teams/TeamList');
 const loadTeamProfile = () =>
   import(/* webpackChunkName: "network-team-profile" */ './teams/TeamProfile');
 const loadGroupList = () =>
-  import(/* webpackChunkName: "network-group-list" */ './GroupList');
+  import(/* webpackChunkName: "network-group-list" */ './groups/GroupList');
+const loadGroupProfile = () =>
+  import(
+    /* webpackChunkName: "network-group-profile" */ './groups/GroupProfile'
+  );
 const UserList = React.lazy(loadUserList);
 const UserProfile = React.lazy(loadUserProfile);
 const TeamList = React.lazy(loadTeamList);
@@ -27,13 +32,14 @@ const GroupList = React.lazy(loadGroupList);
 const Network: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadTeamList()
-      // Toggle can be pressed very quickly
+      // Tab can be changed very quickly
       .then(loadUserList)
       .then(loadGroupList)
-      // Team can be clicked only after the list has been fetched
+      // Can be clicked only after the list has been fetched
       .then(loadTeamProfile)
-      // User can be clicked only after clicking the toggle and the list has been fetched
-      .then(loadUserProfile);
+      // Can be clicked only after changing tabs and the list has been fetched
+      .then(loadUserProfile)
+      .then(loadGroupProfile);
   }, []);
 
   const { path, url } = useRouteMatch();
@@ -99,6 +105,7 @@ const Network: React.FC<Record<string, never>> = () => {
           </SearchFrame>
         </NetworkPage>
       </Route>
+      <Route path={`${path}/${GROUPS_PATH}/:id`} component={GroupProfile} />
       <Redirect to={`${path}/${TEAMS_PATH}`} />
     </Switch>
   );

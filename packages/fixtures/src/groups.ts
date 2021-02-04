@@ -13,7 +13,7 @@ type FixtureOptions = {
   calendarsCount?: number;
 };
 
-export const createGroupResponseItem = (
+export const createGroupResponse = (
   {
     calendarsCount = 1,
     leadPi,
@@ -46,7 +46,7 @@ export const createGroupResponseItem = (
         role: 'Lead PI - Chair' as GroupRole,
       })),
       ...Array.from({ length: projectManagerCount }, (_, index) => ({
-        user: createUserResponse(projectManager, index),
+        user: createUserResponse(projectManager, leadPiCount + index),
         role: 'Project Manager' as GroupRole,
       })),
     ],
@@ -62,7 +62,7 @@ export const createListGroupResponse = (
 ): ListGroupResponse => ({
   total: items,
   items: Array.from({ length: items }, (_, itemIndex) =>
-    createGroupResponseItem(options, itemIndex),
+    createGroupResponse(options, itemIndex),
   ),
 });
 

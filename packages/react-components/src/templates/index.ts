@@ -11,6 +11,7 @@ export { default as DiscoverPageHeader } from './DiscoverPageHeader';
 export { default as EventsCalendar } from './EventsCalendar';
 export { default as EventsPage } from './EventsPage';
 export { default as ForgotPasswordPage } from './ForgotPasswordPage';
+export { default as GroupProfileAbout } from './GroupProfileAbout';
 export { default as GroupProfileCalendar } from './GroupProfileCalendar';
 export { default as GroupProfileHeader } from './GroupProfileHeader';
 export { default as GroupProfilePage } from './GroupProfilePage';

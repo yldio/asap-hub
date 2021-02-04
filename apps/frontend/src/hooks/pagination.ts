@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_SIZE = 10;
 
 export const usePaginationParams = (pageSize = DEFAULT_PAGE_SIZE) => {
   const history = useHistory();

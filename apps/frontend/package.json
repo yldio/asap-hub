@@ -28,7 +28,8 @@
     "react-router-dom": "^5.2.0",
     "recoil": "^0.1.2",
     "use-debounce": "^5.0.1",
-    "use-http": "^1.0.16"
+    "use-http": "^1.0.16",
+    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@asap-hub/dom-test-utils": "workspace:*",
@@ -50,6 +51,7 @@
     "@types/testing-library__jest-dom": "^5.0.3",
     "@types/testing-library__react": "^10.0.1",
     "@types/testing-library__react-hooks": "^3.2.0",
+    "@types/uuid": "^8.0.0",
     "cross-env": "^7.0.2",
     "identity-obj-proxy": "^3.0.0",
     "jose": "^2.0.2",

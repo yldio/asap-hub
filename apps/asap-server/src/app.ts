@@ -25,36 +25,65 @@ import { teamRouteFactory } from './routes/teams.route';
 import { userRouteFactory } from './routes/user.route';
 import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
+import Pages, { PageController } from './controllers/pages';
+import { pageRouteFactory } from './routes/pages.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
 
+  /**
+   * Dependency Injection -->
+   */
+
+  // Controllers
   const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
   const groupController = libs.groupController || new Groups();
+  const pageController = libs.pageController || new Pages();
   const researchOutputController =
     libs.researchOutputController || new ResearchOutputs();
   const teamController = libs.teamController || new Teams();
   const userController = libs.userController || new Users();
-  const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
 
+  // Handlers
+  const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
+  const tracingHandler = tracingHandlerFactory(libs.tracer);
+
+  // Routes
   const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
+  const pageRoutes = pageRouteFactory(pageController);
   const researchOutputsRoutes = researchOutputRouteFactory(
     researchOutputController,
   );
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(userController, groupController);
-  const tracingHandler = tracingHandlerFactory(libs.tracer);
+
+  /**
+   * --- end of dependency inection
+   */
 
   app.use(tracingHandler);
   app.use(cors());
   app.use(express.json());
 
+  /**
+   * Public routes --->
+   */
+  app.use(pageRoutes);
+
+  /**
+   * --- end of public routes
+   */
+
+  // Auth
   app.use(authHandler);
 
+  /**
+   * Routes requiring authorisation below
+   */
   if (libs.mockRequestHandlers) {
     app.use(libs.mockRequestHandlers);
   }
@@ -84,6 +113,7 @@ export type Libs = {
   calendarController?: CalendarController;
   dashboardController?: DashboardController;
   groupController?: GroupController;
+  pageController?: PageController;
   researchOutputController?: ResearchOutputController;
   teamController?: TeamController;
   userController?: UserController;

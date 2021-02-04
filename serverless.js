@@ -140,17 +140,6 @@ module.exports = {
         },
       ],
     },
-    fetchPage: {
-      handler: 'apps/asap-server/build-cjs/handlers/pages/fetch.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/pages/{path+}`,
-          },
-        },
-      ],
-    },
     fetchNewsAndEvents: {
       handler:
         'apps/asap-server/build-cjs/handlers/news-and-events/fetch.handler',

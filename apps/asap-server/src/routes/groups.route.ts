@@ -23,8 +23,21 @@ export const groupRouteFactory = (
     res.json(result);
   });
 
+  groupRoutes.get('/groups/:groupId', async (req, res) => {
+    const { params } = req;
+    const { groupId } = framework.validate('parameters', params, paramSchema);
+
+    const result = await groupsController.fetchById(groupId);
+
+    res.json(result);
+  });
+
   return groupRoutes;
 };
+
+const paramSchema = Joi.object({
+  groupId: Joi.string().required(),
+});
 
 const querySchema = Joi.object({
   take: Joi.number(),

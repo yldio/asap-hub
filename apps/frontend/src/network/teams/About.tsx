@@ -29,7 +29,7 @@ const About: React.FC<AboutProps> = ({ team }) => (
     }
     teamGroupsCard={
       isEnabled('GROUPS') ? (
-        <Frame>
+        <Frame fallback={null}>
           <TeamGroup id={team.id} />
         </Frame>
       ) : null

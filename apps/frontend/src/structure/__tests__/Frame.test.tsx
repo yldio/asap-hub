@@ -29,11 +29,20 @@ it('Passes through error boundary  props', () => {
   expect(container).toHaveTextContent(/specificerror/i);
 });
 
-it('provides a suspense fallback', async () => {
+it('provides a default suspense fallback', async () => {
   const { container } = render(
     <Frame>
       <Suspend />
     </Frame>,
   );
   await waitFor(() => expect(container).toHaveTextContent(/loading/i));
+});
+
+it('passes through a suspense fallback', async () => {
+  const { container } = render(
+    <Frame fallback={'123'}>
+      <Suspend />
+    </Frame>,
+  );
+  await waitFor(() => expect(container).toHaveTextContent('123'));
 });

@@ -5,11 +5,16 @@ import ErrorBoundary from './ErrorBoundary';
 
 type FrameProps = {
   boundaryProps?: Omit<ComponentProps<typeof ErrorBoundary>, 'children'>;
+  fallback?: ComponentProps<typeof Suspense>['fallback'];
 };
 
-const Frame: React.FC<FrameProps> = ({ children, boundaryProps }) => (
+const Frame: React.FC<FrameProps> = ({
+  children,
+  boundaryProps,
+  fallback = <Loading />,
+}) => (
   <ErrorBoundary {...boundaryProps}>
-    <Suspense fallback={<Loading />}>{children}</Suspense>
+    <Suspense fallback={fallback}>{children}</Suspense>
   </ErrorBoundary>
 );
 

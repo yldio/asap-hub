@@ -6,7 +6,7 @@ import { config } from '@asap-hub/squidex';
 import { handler } from '../../../src/handlers/dashboard/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import { listNewsAndEventsResponse } from "../../fixtures/news-and-events.fixtures";
+import { listNewsAndEventsResponse } from '../../fixtures/news-and-events.fixtures';
 
 jest.mock('../../../src/utils/validate-token');
 

@@ -6,6 +6,7 @@ import {
   newsAndEventsSquidexApiResponse,
   listNewsAndEventsResponse,
 } from '../fixtures/news-and-events.fixtures';
+import { NewsOrEventResponse } from '@asap-hub/model';
 
 describe('NewsAndEvents controller', () => {
   const newsAndEvents = new NewsAndEvents();
@@ -108,13 +109,15 @@ describe('NewsAndEvents controller', () => {
 
       const result = await newsAndEvents.fetchById(id);
 
-      expect(result).toEqual({
+      const expectedResponse: NewsOrEventResponse = {
         created: '2020-09-23T16:34:26.842Z',
         id: 'uuid',
         text: 'Text',
         title: 'Title',
         type: 'News',
-      });
+      };
+
+      expect(result).toEqual(expectedResponse);
     });
   });
 });

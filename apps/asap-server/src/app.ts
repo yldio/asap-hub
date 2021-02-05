@@ -27,6 +27,10 @@ import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
 import Pages, { PageController } from './controllers/pages';
 import { pageRouteFactory } from './routes/pages.route';
+import NewsAndEvents, {
+  NewsAndEventsController,
+} from './controllers/news-and-events';
+import { newsAndEventsRouteFactory } from './routes/news-and-events.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -38,6 +42,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Controllers
   const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
+  const newsAndEventsController =
+    libs.newsAndEventsController || new NewsAndEvents();
   const groupController = libs.groupController || new Groups();
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
@@ -52,6 +58,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
+  const newsAndEventsRoutes = newsAndEventsRouteFactory(
+    newsAndEventsController,
+  );
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
   const pageRoutes = pageRouteFactory(pageController);
@@ -91,6 +100,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(calendarRoutes);
   app.use(dashboardRoutes);
   app.use(eventRoutes);
+  app.use(newsAndEventsRoutes);
   app.use(groupRoutes);
   app.use(researchOutputsRoutes);
   app.use(teamRoutes);
@@ -114,6 +124,7 @@ export type Libs = {
   dashboardController?: DashboardController;
   groupController?: GroupController;
   pageController?: PageController;
+  newsAndEventsController?: NewsAndEventsController;
   researchOutputController?: ResearchOutputController;
   teamController?: TeamController;
   userController?: UserController;

@@ -82,7 +82,9 @@ export default class Discover implements DiscoverController {
   }
 
   async fetch(): Promise<DiscoverResponse> {
-    const res = await this.client.request<SquidexDiscoverResponse, unknown>(query);
+    const res = await this.client.request<SquidexDiscoverResponse, unknown>(
+      query,
+    );
     if (res.queryDiscoverContents.length === 0) {
       return {
         aboutUs: '',

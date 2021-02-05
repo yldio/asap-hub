@@ -1,5 +1,5 @@
 import { config } from '@asap-hub/squidex';
-import { DiscoverResponse } from "@asap-hub/model";
+import { DiscoverResponse } from '@asap-hub/model';
 import { SquidexDiscoverResponse } from '../../src/controllers/discover';
 
 export const squidexDiscoverResponse: SquidexDiscoverResponse = {

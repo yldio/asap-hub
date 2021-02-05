@@ -112,6 +112,7 @@ describe('the team group card', () => {
       },
       createListGroupResponse(1),
     );
+    await waitFor(() => expect(mockGetTeamGroups).toHaveBeenCalled());
     expect(queryByText(/team groups/i)).toBeInTheDocument();
   });
 });

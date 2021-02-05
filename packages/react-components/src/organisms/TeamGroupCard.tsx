@@ -42,23 +42,34 @@ const iconStyles = css({
 });
 
 const listStyles = css({
-  padding: `${12 / perRem}em 0 ${6 / perRem}em 0`,
+  padding: `${12 / perRem}em 0 0 0`,
+  margin: 0,
   listStyleType: 'none',
 });
 const listElementStyles = css({
   paddingBottom: vminLinearCalcClamped(
     mobileScreen,
-    18,
+    6,
     smallDesktopScreen,
-    24,
+    12,
     'px',
   ),
+
+  ':last-child': {
+    paddingBottom: 0,
+  },
 });
 
 const viewMoreStyles = css({
   display: 'flex',
+  paddingTop: vminLinearCalcClamped(
+    mobileScreen,
+    6,
+    smallDesktopScreen,
+    12,
+    'px',
+  ),
   justifyContent: 'center',
-  paddingTop: `${6 / perRem}em`,
 });
 
 const TeamGroupCard: React.FC<ListGroupResponse> = ({ items }) => {

@@ -58,5 +58,6 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     teams,
     leaders,
     calendars,
+    lastModifiedDate: parseDate(item.lastModified).toISOString(),
   };
 };

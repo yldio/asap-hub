@@ -27,6 +27,7 @@ export interface GroupResponse {
   teams: GroupTeam[];
   leaders: GroupLeader[];
   calendars: CalendarResponse[];
+  lastModifiedDate: string;
 }
 
 export type ListGroupResponse = ListResponse<GroupResponse>;

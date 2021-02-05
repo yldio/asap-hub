@@ -29,6 +29,7 @@ export const createGroupResponseItem = (
   return {
     id,
     createdDate: '2021-01-12T11:09:04.000Z',
+    lastModifiedDate: '2021-01-12T11:10:04.000Z',
     name: `Group ${itemIndex}`,
     tags: ['Tag'],
     description: `Group description ${itemIndex}`,

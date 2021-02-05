@@ -2,6 +2,7 @@ import React from 'react';
 import { join } from 'path';
 import { TeamProfileAbout, TeamGroupCard } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 
 import { SHARED_RESEARCH_PATH, NETWORK_PATH } from '../../routes';
 import { USERS_PATH } from '../routes';
@@ -27,9 +28,11 @@ const About: React.FC<AboutProps> = ({ team }) => (
       team.proposalURL && join(SHARED_RESEARCH_PATH, team.proposalURL)
     }
     teamGroupsCard={
-      <Frame>
-        <TeamGroup id={team.id} />
-      </Frame>
+      isEnabled('GROUPS') ? (
+        <Frame>
+          <TeamGroup id={team.id} />
+        </Frame>
+      ) : null
     }
   />
 );

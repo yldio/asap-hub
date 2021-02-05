@@ -10,6 +10,7 @@ import {
 } from '@asap-hub/frontend/src/auth/test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { disable } from '@asap-hub/flags';
 
 import About from '../About';
 import { getTeamGroups } from '../api';
@@ -84,6 +85,16 @@ describe('the proposal', () => {
 });
 
 describe('the team group card', () => {
+  it('is not rendered when feature flag disabled (REGRESSION)', async () => {
+    disable('GROUPS');
+    const { queryByText } = await renderTeamAbout(
+      {
+        team: createTeamResponse(),
+      },
+      createListGroupResponse(1),
+    );
+    expect(queryByText(/team groups/i)).not.toBeInTheDocument();
+  });
   it('is not rendered when there are no groups', async () => {
     const { queryByText } = await renderTeamAbout(
       {

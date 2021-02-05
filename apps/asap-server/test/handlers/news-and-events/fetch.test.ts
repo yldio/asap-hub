@@ -6,7 +6,10 @@ import { config } from '@asap-hub/squidex';
 import { handler } from '../../../src/handlers/news-and-events/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import * as fixtures from './fetch.fixtures';
+import {
+  newsAndEventsSquidexApiResponse,
+  listNewsAndEventsResponse,
+} from '../../fixtures/news-and-events.fixtures';
 
 jest.mock('../../../src/utils/validate-token');
 
@@ -87,7 +90,7 @@ describe('GET /news-and-events', () => {
           sort: [{ order: 'descending', path: 'created' }],
         }),
       })
-      .reply(200, fixtures.newsAndEventsResponse);
+      .reply(200, newsAndEventsSquidexApiResponse);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -99,6 +102,6 @@ describe('GET /news-and-events', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(fixtures.expectation);
+    expect(body).toStrictEqual(listNewsAndEventsResponse);
   });
 });

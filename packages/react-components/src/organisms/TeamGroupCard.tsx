@@ -42,9 +42,7 @@ const iconStyles = css({
 });
 
 const listStyles = css({
-  margin: 0,
   padding: `${12 / perRem}em 0 ${6 / perRem}em 0`,
-  textIndent: 0,
   listStyleType: 'none',
 });
 const listElementStyles = css({
@@ -83,16 +81,15 @@ const TeamGroupCard: React.FC<ListGroupResponse> = ({ items }) => {
                 <span css={iconStyles}>{teamIcon} </span>
                 {teams.length} Team{teams.length !== 1 ? 's' : ''}
               </span>
-              {!(
-                index === items.length - 1 && items.length <= LESS_GROUP_LIMIT
-              ) && <Divider />}
+              {(index === items.length - 1 &&
+                items.length <= LESS_GROUP_LIMIT) || <Divider />}
             </li>
           ))}
       </ul>
       {items.length > LESS_GROUP_LIMIT && (
         <div css={viewMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
-            View {showMore ? 'less' : 'more'} groups
+            {showMore ? 'View less' : 'View more'} groups
           </Button>
         </div>
       )}

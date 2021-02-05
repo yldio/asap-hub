@@ -103,7 +103,7 @@ describe('getTeamGroups', () => {
     nock(API_BASE_URL).get('/teams/42/groups').reply(200, groups);
     expect(await getTeamGroups('42', '')).toEqual(groups);
   });
-  it('errors for status', async () => {
+  it('errors for an error status', async () => {
     nock(API_BASE_URL).get('/teams/42/groups').reply(500);
     await expect(
       getTeamGroups('42', ''),

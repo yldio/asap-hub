@@ -3,8 +3,8 @@ import { number, text } from '@storybook/addon-knobs';
 
 import { TeamGroupCard } from '@asap-hub/react-components';
 import {
-  createListGroupResponse,
   createTeamResponse,
+  createGroupResponseItem,
 } from '@asap-hub/fixtures';
 import { ListGroupResponse } from '@asap-hub/model';
 
@@ -15,13 +15,13 @@ export default {
 
 const props = (): ListGroupResponse => {
   const numberOfGroups = number('Number of groups', 5);
-  let groups = createListGroupResponse(numberOfGroups);
-  if (groups.items[0]) {
-    groups = {
-      ...groups,
-      items: [
-        {
-          ...groups.items[0],
+  return {
+    total: numberOfGroups,
+    items: Array.from({ length: numberOfGroups }, (_, index) => {
+      const groupResponseItem = createGroupResponseItem({}, index);
+      if (index === 0) {
+        return {
+          ...groupResponseItem,
           name: text('Group 0 Name', 'Sci 1 - GWAS Functional'),
           description: text(
             'Group 0 Description',
@@ -29,16 +29,15 @@ const props = (): ListGroupResponse => {
           ),
           teams: Array.from(
             { length: number('Group 0 Team Count', 5) },
-            (_, index) => ({
-              ...createTeamResponse({}, index),
+            (__, i) => ({
+              ...createTeamResponse({}, i),
             }),
           ),
-        },
-        ...groups.items.slice(1),
-      ],
-    };
-  }
-  return groups;
+        };
+      }
+      return groupResponseItem;
+    }),
+  };
 };
 
 export const Normal = () => <TeamGroupCard {...props()} />;

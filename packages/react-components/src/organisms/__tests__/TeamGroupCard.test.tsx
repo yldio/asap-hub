@@ -6,13 +6,13 @@ import userEvent from '@testing-library/user-event';
 import TeamGroupTools from '../TeamGroupCard';
 
 it('renders team group tools with 1 group', () => {
-  const { getByRole, queryByRole } = render(
+  const { getByRole, queryByText } = render(
     <TeamGroupTools {...createListGroupResponse(1)} />,
   );
   expect(getByRole('heading', { level: 3 }).textContent).toMatchInlineSnapshot(
     `"Team Groups (1)"`,
   );
-  expect(queryByRole('button')).not.toBeInTheDocument();
+  expect(queryByText(/view (more|less)/i)).not.toBeInTheDocument();
 });
 
 it('renders team group tools with 2 group', () => {
@@ -25,36 +25,36 @@ it('renders team group tools with 2 group', () => {
   expect(queryByRole('button')).not.toBeInTheDocument();
 });
 
-it('renders team group tools with 1 group and 1 team', () => {
+it('renders team group tools with 1 group and 1 team so team is singular', () => {
   const { getByText } = render(
     <TeamGroupTools {...createListGroupResponse(1, { teamsCount: 1 })} />,
   );
 
   expect(getByText('1 Team')).toBeInTheDocument();
 });
-it('renders team group tools with 1 group and 2 teams', () => {
+it('renders team group tools with 1 group and 2 teams so teams is pluralized', () => {
   const { getByText } = render(
     <TeamGroupTools {...createListGroupResponse(1, { teamsCount: 2 })} />,
   );
   expect(getByText('2 Teams')).toBeInTheDocument();
 });
-it('renders team group tools with 3 groups', () => {
-  const { queryByRole } = render(
+it('renders team group tools with 3 groups so view more button is visable', () => {
+  const { queryByText } = render(
     <TeamGroupTools {...createListGroupResponse(3)} />,
   );
-  expect(queryByRole('button')).toBeInTheDocument();
+  expect(queryByText('View more')).toBeVisible();
 });
 
 it('hides and shows expanded team list', () => {
-  const { queryAllByRole, getByRole } = render(
+  const { queryAllByRole, getByText } = render(
     <TeamGroupTools {...createListGroupResponse(5)} />,
   );
   const minimisedCount = queryAllByRole('heading', { level: 4 }).length;
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByText('View more'));
   expect(minimisedCount).toBeLessThan(
     queryAllByRole('heading', { level: 4 }).length,
   );
-  userEvent.click(getByRole('button'));
+  userEvent.click(getByText('View less'));
   expect(minimisedCount).toEqual(
     queryAllByRole('heading', { level: 4 }).length,
   );

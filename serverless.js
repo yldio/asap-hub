@@ -140,17 +140,6 @@ module.exports = {
         },
       ],
     },
-    discover: {
-      handler: 'apps/asap-server/build-cjs/handlers/discover/fetch.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/discover`,
-          },
-        },
-      ],
-    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

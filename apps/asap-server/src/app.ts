@@ -31,6 +31,8 @@ import NewsAndEvents, {
   NewsAndEventsController,
 } from './controllers/news-and-events';
 import { newsAndEventsRouteFactory } from './routes/news-and-events.route';
+import Discover, { DiscoverController } from './controllers/discover';
+import { discoverRouteFactory } from './routes/discover.route';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -44,6 +46,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const dashboardController = libs.dashboardController || new Dashboard();
   const newsAndEventsController =
     libs.newsAndEventsController || new NewsAndEvents();
+  const discoverController = libs.discoverController || new Discover();
   const groupController = libs.groupController || new Groups();
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
@@ -61,6 +64,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsAndEventsRoutes = newsAndEventsRouteFactory(
     newsAndEventsController,
   );
+  const discoverRoutes = discoverRouteFactory(discoverController);
   const eventRoutes = eventRouteFactory();
   const groupRoutes = groupRouteFactory(groupController);
   const pageRoutes = pageRouteFactory(pageController);
@@ -99,6 +103,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 
   app.use(calendarRoutes);
   app.use(dashboardRoutes);
+  app.use(discoverRoutes);
   app.use(eventRoutes);
   app.use(newsAndEventsRoutes);
   app.use(groupRoutes);
@@ -122,6 +127,7 @@ export const appFactory = (libs: Libs = {}): Express => {
 export type Libs = {
   calendarController?: CalendarController;
   dashboardController?: DashboardController;
+  discoverController?: DiscoverController;
   groupController?: GroupController;
   pageController?: PageController;
   newsAndEventsController?: NewsAndEventsController;

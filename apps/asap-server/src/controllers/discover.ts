@@ -57,13 +57,13 @@ export const query = `
             lastModifiedDate
             lastName
           }
-        }  
+        }
       }
     }
-  }  
+  }
 `;
 
-interface Response {
+export interface SquidexDiscoverResponse {
   queryDiscoverContents: {
     flatData: {
       aboutUs: string;
@@ -74,7 +74,7 @@ interface Response {
   }[];
 }
 
-export default class Discover {
+export default class Discover implements DiscoverController {
   client: InstrumentedSquidexGraphql;
 
   constructor(ctxHeaders?: Record<string, string>) {
@@ -82,7 +82,9 @@ export default class Discover {
   }
 
   async fetch(): Promise<DiscoverResponse> {
-    const res = await this.client.request<Response, unknown>(query);
+    const res = await this.client.request<SquidexDiscoverResponse, unknown>(
+      query,
+    );
     if (res.queryDiscoverContents.length === 0) {
       return {
         aboutUs: '',
@@ -100,4 +102,8 @@ export default class Discover {
       pages: content.flatData.pages?.map(parseGraphQLPage) ?? [],
     };
   }
+}
+
+export interface DiscoverController {
+  fetch: () => Promise<DiscoverResponse>;
 }

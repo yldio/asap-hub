@@ -1,7 +1,7 @@
 import { config, RestNewsOrEvent } from '@asap-hub/squidex';
 import { ListNewsAndEventsResponse } from '@asap-hub/model';
 
-export const newsAndEventsResponse: {
+export const newsAndEventsSquidexApiResponse: {
   total: number;
   items: RestNewsOrEvent[];
 } = {
@@ -54,7 +54,7 @@ export const newsAndEventsResponse: {
   ],
 };
 
-export const expectation: ListNewsAndEventsResponse = {
+export const listNewsAndEventsResponse: ListNewsAndEventsResponse = {
   total: 2,
   items: [
     {

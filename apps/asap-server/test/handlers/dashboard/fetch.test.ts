@@ -6,7 +6,7 @@ import { config } from '@asap-hub/squidex';
 import { handler } from '../../../src/handlers/dashboard/fetch';
 import { apiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
-import * as fixtures from '../news-and-events/fetch.fixtures';
+import { listNewsAndEventsResponse } from '../../fixtures/news-and-events.fixtures';
 
 jest.mock('../../../src/utils/validate-token');
 
@@ -122,7 +122,7 @@ describe('GET /dashboard', () => {
     expect(result.statusCode).toStrictEqual(200);
     expect(result.body).toBeDefined();
     expect(body).toStrictEqual({
-      newsAndEvents: fixtures.expectation.items,
+      newsAndEvents: listNewsAndEventsResponse.items,
       pages: [],
     });
   });

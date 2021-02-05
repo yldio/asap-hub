@@ -7,7 +7,7 @@ import { RestNewsOrEvent } from '@asap-hub/squidex';
 import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseNewsAndEvents } from '../entities';
 
-export default class ResearchOutputs {
+export default class NewsAndEvents implements NewsAndEventsController {
   newsAndEvents: InstrumentedSquidex<RestNewsOrEvent>;
 
   constructor(ctxHeaders?: Record<string, string>) {
@@ -38,4 +38,12 @@ export default class ResearchOutputs {
     const result = await this.newsAndEvents.fetchById(id);
     return parseNewsAndEvents(result);
   }
+}
+
+export interface NewsAndEventsController {
+  fetch: (options: {
+    take: number;
+    skip: number;
+  }) => Promise<ListNewsAndEventsResponse>;
+  fetchById: (id: string) => Promise<NewsOrEventResponse>;
 }

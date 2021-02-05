@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom';
 import { GraphqlGroup } from '@asap-hub/squidex';
 import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
@@ -131,11 +132,15 @@ export default class Groups implements GroupController {
   }
 
   async fetchById(groupId: string): Promise<GroupResponse> {
-    const { findGroupsContent } = await this.client.request<
+    const { findGroupsContent: group } = await this.client.request<
       ResponseFetchGroup,
       unknown
     >(buildGraphQLQueryFetchGroup(groupId));
-    return parseGraphQLGroup(findGroupsContent);
+
+    if (!group) {
+      throw Boom.notFound();
+    }
+    return parseGraphQLGroup(group);
   }
 
   async fetchByTeamId(

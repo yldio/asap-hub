@@ -3,6 +3,7 @@ import { config } from '@asap-hub/squidex';
 
 import {
   default as Groups,
+  buildGraphQLQueryFetchGroup,
   buildGraphQLQueryFetchGroups,
 } from '../../src/controllers/groups';
 import { identity } from '../helpers/squidex';
@@ -59,10 +60,39 @@ describe('Group controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchGroups(filterQuery, 12, 2),
         })
-        .reply(200, fixtures.response);
+        .reply(200, fixtures.queryGroupsResponse);
 
       const result = await groups.fetch(fetchOptions);
-      expect(result).toEqual(fixtures.expectation);
+      expect(result).toEqual(fixtures.queryGroupsExpectation);
+    });
+  });
+
+  describe('Fetch by id method', () => {
+    test('Should return an empty result', async () => {
+      const groupId = 'not-found';
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchGroup(groupId),
+        })
+        .reply(200, {
+          data: {
+            findGroupsContent: null,
+          },
+        });
+
+      await expect(groups.fetchById(groupId)).rejects.toThrow('Not Found');
+    });
+
+    test('Should return the group', async () => {
+      const groupId = 'group-id-1';
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchGroup(groupId),
+        })
+        .reply(200, fixtures.findGroupResponse);
+
+      const result = await groups.fetchById(groupId);
+      expect(result).toEqual(fixtures.findGroupExpectation);
     });
   });
 
@@ -102,10 +132,10 @@ describe('Group controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchGroups(filterQuery, 12, 2),
         })
-        .reply(200, fixtures.response);
+        .reply(200, fixtures.queryGroupsResponse);
 
       const result = await groups.fetchByTeamId(teamUUID, fetchOptions);
-      expect(result).toEqual(fixtures.expectation);
+      expect(result).toEqual(fixtures.queryGroupsExpectation);
     });
   });
 
@@ -159,11 +189,11 @@ describe('Group controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchGroups(userFilter),
         })
-        .reply(200, fixtures.response)
+        .reply(200, fixtures.queryGroupsResponse)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchGroups(teamFilter),
         })
-        .reply(200, fixtures.response);
+        .reply(200, fixtures.queryGroupsResponse);
 
       const result = await groups.fetchByUserId(
         userUUID,
@@ -171,7 +201,7 @@ describe('Group controller', () => {
         {},
       );
 
-      expect(result).toEqual(fixtures.expectation);
+      expect(result).toEqual(fixtures.queryGroupsExpectation);
     });
   });
 });

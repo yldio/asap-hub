@@ -85,7 +85,7 @@ const TeamGroupCard: React.FC<ListGroupResponse> = ({ items }) => {
         {items
           .slice(0, showMore ? items.length : LESS_GROUP_LIMIT)
           .map(({ teams, description, name }, index) => (
-            <li css={listElementStyles} key={`group-team-${index}`}>
+            <li css={listElementStyles} key={`team-group-${index}`}>
               <Headline4>{name}</Headline4>
               <Paragraph accent="lead">{description}</Paragraph>
               <span css={teamsStyles}>

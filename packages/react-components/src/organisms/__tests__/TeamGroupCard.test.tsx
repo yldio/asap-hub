@@ -38,11 +38,11 @@ it('renders team group tools with 1 group and 2 teams so teams is pluralized', (
   );
   expect(getByText('2 Teams')).toBeInTheDocument();
 });
-it('renders team group tools with 3 groups so view more button is visable', () => {
-  const { queryByText } = render(
+it('renders team group tools with 3 groups so view more button is visible', () => {
+  const { getByText } = render(
     <TeamGroupTools {...createListGroupResponse(3)} />,
   );
-  expect(queryByText('View more')).toBeVisible();
+  expect(getByText(/more/i)).toBeVisible();
 });
 
 it('hides and shows expanded team list', () => {
@@ -50,11 +50,11 @@ it('hides and shows expanded team list', () => {
     <TeamGroupTools {...createListGroupResponse(5)} />,
   );
   const minimisedCount = queryAllByRole('heading', { level: 4 }).length;
-  userEvent.click(getByText('View more'));
+  userEvent.click(getByText(/more/i));
   expect(minimisedCount).toBeLessThan(
     queryAllByRole('heading', { level: 4 }).length,
   );
-  userEvent.click(getByText('View less'));
+  userEvent.click(getByText(/less/i));
   expect(minimisedCount).toEqual(
     queryAllByRole('heading', { level: 4 }).length,
   );

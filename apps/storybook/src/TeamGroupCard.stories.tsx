@@ -9,7 +9,7 @@ import {
 import { ListGroupResponse } from '@asap-hub/model';
 
 export default {
-  title: 'Organisms / Team Profile/ Group Card',
+  title: 'Organisms / Team Profile / Group Card',
   component: TeamGroupCard,
 };
 

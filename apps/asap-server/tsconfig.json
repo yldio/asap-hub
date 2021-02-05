@@ -3,7 +3,8 @@
   "compilerOptions": {
     "rootDir": ".",
     "resolveJsonModule": true,
-    "outDir": "build"
+    "outDir": "build",
+    "module": "commonjs"
   },
   "include": ["src", "test", "test/**/*.json"],
   "references": [
@@ -11,5 +12,9 @@
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" }
-  ]
+  ],
+  "files": ["@types/express/index.d.ts"],
+  "ts-node": {
+    "files": true
+  }
 }

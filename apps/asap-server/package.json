@@ -8,7 +8,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "start:server": "node ./build-cjs/server.js"
+    "start:server": "tsnd ./src/server.ts"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
@@ -73,6 +73,7 @@
     "@types/supertest": "^2.0.10",
     "@types/uuid": "^8.0.0",
     "jwt-encode": "^1.0.1",
-    "supertest": "^6.1.1"
+    "supertest": "^6.1.1",
+    "ts-node-dev": "^1.1.1"
   }
 }

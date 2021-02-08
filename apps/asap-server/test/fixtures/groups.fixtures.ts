@@ -194,6 +194,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
     {
       id: 'group-id-1',
       createdDate: '2020-12-11T14:33:50.000Z',
+      lastModifiedDate: '2020-12-11T15:06:26.000Z',
       name: "JT's Group",
       tags: ['coding'],
       description: 'A test Group',

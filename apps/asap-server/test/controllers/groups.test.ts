@@ -68,7 +68,7 @@ describe('Group controller', () => {
   });
 
   describe('Fetch by id method', () => {
-    test('Should return an empty result', async () => {
+    test("Should return 404 when the group doesn't exist", async () => {
       const groupId = 'not-found';
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

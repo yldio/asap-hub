@@ -12,6 +12,7 @@ import { GraphQLQueryTeam } from './teams';
 const GraphQLQueryGroup = `
 id
 created
+lastModified
 flatData {
   name
   description

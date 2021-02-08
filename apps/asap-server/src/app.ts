@@ -12,6 +12,7 @@ import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
 import Groups, { GroupController } from './controllers/groups';
 import Users, { UserController } from './controllers/users';
 import Teams, { TeamController } from './controllers/teams';
+import Events, { EventController } from './controllers/events';
 import Dashboard, { DashboardController } from './controllers/dashboard';
 import Calendars, { CalendarController } from './controllers/calendars';
 import ResearchOutputs, {
@@ -47,6 +48,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const newsAndEventsController =
     libs.newsAndEventsController || new NewsAndEvents();
   const discoverController = libs.discoverController || new Discover();
+  const eventController = libs.eventController || new Events();
   const groupController = libs.groupController || new Groups();
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
@@ -65,7 +67,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     newsAndEventsController,
   );
   const discoverRoutes = discoverRouteFactory(discoverController);
-  const eventRoutes = eventRouteFactory();
+  const eventRoutes = eventRouteFactory(eventController);
   const groupRoutes = groupRouteFactory(groupController);
   const pageRoutes = pageRouteFactory(pageController);
   const researchOutputsRoutes = researchOutputRouteFactory(
@@ -128,6 +130,7 @@ export type Libs = {
   calendarController?: CalendarController;
   dashboardController?: DashboardController;
   discoverController?: DiscoverController;
+  eventController?: EventController;
   groupController?: GroupController;
   pageController?: PageController;
   newsAndEventsController?: NewsAndEventsController;

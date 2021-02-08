@@ -32,3 +32,17 @@ it('renders calendar links on modal', () => {
     ]
   `);
 });
+
+it('renders calendar links on modal and hide it on click outside', () => {
+  const { getByRole, getAllByRole, queryAllByRole } = render(
+    <>
+      <h1>Element</h1>
+      <CalendarLink id="123" />
+    </>,
+  );
+
+  fireEvent.click(getByRole('button'));
+  getAllByRole('listitem').forEach((e) => expect(e).toBeVisible());
+  fireEvent.mouseDown(getByRole('heading'));
+  queryAllByRole('listitem').forEach((e) => expect(e).not.toBeVisible());
+});

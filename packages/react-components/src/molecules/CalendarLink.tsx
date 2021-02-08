@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import css from '@emotion/css';
 import { Button, Anchor } from '../atoms';
-import { perRem } from '../pixels';
+import { perRem, tabletScreen, mobileScreen } from '../pixels';
 import {
   chevronUpIcon,
   chevronDownIcon,
@@ -21,9 +21,13 @@ import {
 import { iCalIconImage } from '../images';
 
 const containerStyles = css({
-  alignItems: 'flex-end',
+  alignItems: 'stretch',
   display: 'flex',
   flexDirection: 'column',
+
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    alignItems: 'flex-end',
+  },
 });
 
 const menuWrapperStyles = css({
@@ -44,6 +48,10 @@ const menuContainerStyles = css({
 
   boxSizing: 'border-box',
   padding: `${6 / perRem}em 0`,
+
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    left: `${-6 / perRem}em`,
+  },
 });
 
 const showMenuStyles = css({
@@ -57,7 +65,7 @@ const calendarLinkListStyles = css({
   margin: 0,
   padding: 0,
 
-  '& li': {
+  '& > li': {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'stretch',
@@ -85,9 +93,6 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
   const [menuShown, setMenuShown] = useState(false);
-  useEffect(() => {
-    setMenuShown(false);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: Event) => {
@@ -113,6 +118,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
       id,
     )}/public/basic.ics`,
   );
+
   return (
     <div css={containerStyles} ref={reference}>
       <Button small onClick={handleClick}>
@@ -139,7 +145,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
                     }}
                     src={iCalIconImage}
                   />
-                  Add to iCal
+                  Add to Apple Calendar
                 </div>
               </Anchor>
             </li>

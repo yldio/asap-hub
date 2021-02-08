@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { TeamProfileAbout } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+import { text, boolean } from '@storybook/addon-knobs';
 
 export default {
   title: 'Templates / Team Profile / About',
@@ -21,6 +21,9 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     email: 'peter@ven.com',
     role: 'Project Manager',
   },
+  teamGroupsCard: boolean('Team Groups placeholder toggle', true)
+    ? 'Team Groups Card here'
+    : null,
   members: [
     {
       id: '1',

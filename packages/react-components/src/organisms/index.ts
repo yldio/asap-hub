@@ -26,7 +26,7 @@ export { default as RichText } from './RichText';
 export { default as SearchAndFilter } from './SearchAndFilter';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as TeamCard } from './TeamCard';
-export { default as TeamGroupCard } from './TeamGroupCard';
+export { default as TeamGroupsCard } from './TeamGroupsCard';
 export { default as TeamMembersSection } from './TeamMembersSection';
 export { default as TeamProfileOverview } from './TeamProfileOverview';
 export { default as Toast } from './Toast';

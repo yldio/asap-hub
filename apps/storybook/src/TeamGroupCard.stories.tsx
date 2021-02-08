@@ -1,7 +1,7 @@
 import React from 'react';
 import { number, text } from '@storybook/addon-knobs';
 
-import { TeamGroupCard } from '@asap-hub/react-components';
+import { TeamGroupsCard } from '@asap-hub/react-components';
 import {
   createTeamResponse,
   createGroupResponseItem,
@@ -10,7 +10,7 @@ import { ListGroupResponse } from '@asap-hub/model';
 
 export default {
   title: 'Organisms / Team Profile / Group Card',
-  component: TeamGroupCard,
+  component: TeamGroupsCard,
 };
 
 const props = (): ListGroupResponse => {
@@ -40,4 +40,4 @@ const props = (): ListGroupResponse => {
   };
 };
 
-export const Normal = () => <TeamGroupCard {...props()} />;
+export const Normal = () => <TeamGroupsCard {...props()} />;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { join } from 'path';
-import { TeamProfileAbout, TeamGroupCard } from '@asap-hub/react-components';
+import { TeamProfileAbout, TeamGroupsCard } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
@@ -9,9 +9,9 @@ import { USERS_PATH } from '../routes';
 import { useTeamGroupsById } from './state';
 import Frame from '../../structure/Frame';
 
-const TeamGroup: React.FC<{ id: string }> = ({ id }) => {
+const TeamGroups: React.FC<{ id: string }> = ({ id }) => {
   const teamGroups = useTeamGroupsById(id);
-  return teamGroups.total > 0 ? <TeamGroupCard {...teamGroups} /> : null;
+  return teamGroups.total > 0 ? <TeamGroupsCard {...teamGroups} /> : null;
 };
 
 interface AboutProps {
@@ -30,7 +30,7 @@ const About: React.FC<AboutProps> = ({ team }) => (
     teamGroupsCard={
       isEnabled('GROUPS') ? (
         <Frame fallback={null}>
-          <TeamGroup id={team.id} />
+          <TeamGroups id={team.id} />
         </Frame>
       ) : null
     }

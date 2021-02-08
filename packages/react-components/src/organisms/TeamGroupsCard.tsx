@@ -72,7 +72,7 @@ const viewMoreStyles = css({
   justifyContent: 'center',
 });
 
-const TeamGroupCard: React.FC<ListGroupResponse> = ({ items }) => {
+const TeamGroupsCard: React.FC<ListGroupResponse> = ({ items }) => {
   const [showMore, setShowMore] = useState(false);
   return (
     <Card>
@@ -108,4 +108,4 @@ const TeamGroupCard: React.FC<ListGroupResponse> = ({ items }) => {
   );
 };
 
-export default TeamGroupCard;
+export default TeamGroupsCard;

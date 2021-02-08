@@ -84,7 +84,7 @@ describe('the proposal', () => {
   });
 });
 
-describe('the team group card', () => {
+describe('the team groups card', () => {
   it('is not rendered when feature flag disabled (REGRESSION)', async () => {
     disable('GROUPS');
     const { queryByText } = await renderTeamAbout(
@@ -112,7 +112,8 @@ describe('the team group card', () => {
       },
       createListGroupResponse(1),
     );
-    await waitFor(() => expect(mockGetTeamGroups).toHaveBeenCalled());
-    expect(queryByText(/team groups/i)).toBeInTheDocument();
+    await waitFor(() =>
+      expect(queryByText(/team groups/i)).toBeInTheDocument(),
+    );
   });
 });

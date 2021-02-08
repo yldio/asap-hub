@@ -124,8 +124,19 @@ describe('/users/ route', () => {
     });
   });
 
-  describe('GET /users/{user_id}/groups', () => {
+  describe.only('GET /users/{user_id}/groups', () => {
+    test('Should return 404 when user doesnt exist', async () => {
+      userControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+
+      const response = await supertest(app).get('/users/not-found/groups');
+
+      expect(response.status).toBe(404);
+    });
+
     test('Should return 200 when no grups exist', async () => {
+      userControllerMock.fetchById.mockResolvedValueOnce(
+        fixtures.fetchUserExpectation,
+      );
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
@@ -141,6 +152,9 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
+      userControllerMock.fetchById.mockResolvedValueOnce(
+        fixtures.fetchUserExpectation,
+      );
       groupControllerMock.fetchByUserId.mockResolvedValueOnce(
         groupFixtures.queryGroupsExpectation,
       );
@@ -152,11 +166,14 @@ describe('/users/ route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
+      userControllerMock.fetchById.mockResolvedValueOnce(
+        fixtures.fetchUserExpectation,
+      );
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
-      const teams = ['some-id-1', 'some-id-2'];
+      const teams = ['team-id-1', 'team-id-3'];
       const userId = '123abcd';
 
       await supertest(app).get(`/users/${userId}/groups`).query({

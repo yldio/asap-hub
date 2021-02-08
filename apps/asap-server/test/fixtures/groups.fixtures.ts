@@ -1,8 +1,11 @@
-import { ListGroupResponse } from '@asap-hub/model';
+import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
-import { ResponseFetchGroups } from '../../src/controllers/groups';
+import {
+  ResponseFetchGroups,
+  ResponseFetchGroup,
+} from '../../src/controllers/groups';
 
-export const response: { data: ResponseFetchGroups } = {
+export const queryGroupsResponse: { data: ResponseFetchGroups } = {
   data: {
     queryGroupsContentsWithTotal: {
       total: 1,
@@ -185,7 +188,7 @@ export const response: { data: ResponseFetchGroups } = {
   },
 };
 
-export const expectation: ListGroupResponse = {
+export const queryGroupsExpectation: ListGroupResponse = {
   total: 1,
   items: [
     {
@@ -282,3 +285,13 @@ export const expectation: ListGroupResponse = {
     },
   ],
 };
+
+export const findGroupResponse: { data: ResponseFetchGroup } = {
+  data: {
+    findGroupsContent:
+      queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0],
+  },
+};
+
+export const findGroupExpectation: GroupResponse =
+  queryGroupsExpectation.items[0];

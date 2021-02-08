@@ -83,11 +83,11 @@ describe('GET /users/{id}/groups', () => {
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchGroups(userFilter),
       })
-      .reply(200, fixtures.response)
+      .reply(200, fixtures.queryGroupsResponse)
       .post(`/api/content/${config.appName}/graphql`, {
         query: buildGraphQLQueryFetchGroups(teamFilter),
       })
-      .reply(200, fixtures.response);
+      .reply(200, fixtures.queryGroupsResponse);
 
     const result = (await handler(
       apiGatewayEvent({
@@ -102,6 +102,6 @@ describe('GET /users/{id}/groups', () => {
 
     const body = JSON.parse(result.body);
     expect(result.statusCode).toStrictEqual(200);
-    expect(body).toStrictEqual(fixtures.expectation);
+    expect(body).toStrictEqual(fixtures.queryGroupsExpectation);
   });
 });

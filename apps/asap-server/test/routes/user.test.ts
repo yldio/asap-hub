@@ -142,13 +142,13 @@ describe('/users/ route', () => {
 
     test('Should return the results correctly', async () => {
       groupControllerMock.fetchByUserId.mockResolvedValueOnce(
-        groupFixtures.expectation,
+        groupFixtures.queryGroupsExpectation,
       );
 
       const response = await supertest(app).get('/users/123/groups');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(groupFixtures.expectation);
+      expect(response.body).toEqual(groupFixtures.queryGroupsExpectation);
     });
 
     test('Should call the controller method with the correct parameters', async () => {

@@ -1,4 +1,5 @@
 import supertest from 'supertest';
+import Boom from '@hapi/boom';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import * as fixtures from '../fixtures/groups.fixtures';
@@ -32,11 +33,13 @@ describe('/groups/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      groupControllerMock.fetch.mockResolvedValueOnce(fixtures.expectation);
+      groupControllerMock.fetch.mockResolvedValueOnce(
+        fixtures.queryGroupsExpectation,
+      );
 
       const response = await supertest(app).get('/groups/');
 
-      expect(response.body).toEqual(fixtures.expectation);
+      expect(response.body).toEqual(fixtures.queryGroupsExpectation);
     });
 
     test('Should call the controller with the right parameters', async () => {
@@ -68,6 +71,26 @@ describe('/groups/ route', () => {
 
         expect(response.status).toBe(400);
       });
+    });
+  });
+
+  describe('GET /groups/{groupId}', () => {
+    test('Should return 404 when no group exist', async () => {
+      groupControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+
+      const response = await supertest(app).get('/groups/123');
+
+      expect(response.status).toBe(404);
+    });
+
+    test('Should return the results correctly', async () => {
+      groupControllerMock.fetchById.mockResolvedValueOnce(
+        fixtures.findGroupExpectation,
+      );
+
+      const response = await supertest(app).get('/groups/123');
+
+      expect(response.body).toEqual(fixtures.findGroupExpectation);
     });
   });
 });

@@ -1,5 +1,6 @@
+import Boom from '@hapi/boom';
 import { GraphqlGroup } from '@asap-hub/squidex';
-import { ListGroupResponse } from '@asap-hub/model';
+import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
@@ -51,6 +52,13 @@ export const buildGraphQLQueryFetchGroups = (
   }
 }`;
 
+export const buildGraphQLQueryFetchGroup = (id: string): string =>
+  `{
+  findGroupsContent(id: "${id}") {
+      ${GraphQLQueryGroup}
+  }
+}`;
+
 export interface ResponseFetchGroups {
   queryGroupsContentsWithTotal: {
     total: number;
@@ -58,8 +66,13 @@ export interface ResponseFetchGroups {
   };
 }
 
+export interface ResponseFetchGroup {
+  findGroupsContent: GraphqlGroup;
+}
+
 export interface GroupController {
   fetch: (options: FetchOptions) => Promise<ListGroupResponse>;
+  fetchById: (groupId: string) => Promise<GroupResponse>;
   fetchByTeamId: (
     teamId: string | string[],
     options: FetchOptions,
@@ -116,6 +129,18 @@ export default class Groups implements GroupController {
       .join(' and ');
 
     return this.fetchGroups(searchQ, options);
+  }
+
+  async fetchById(groupId: string): Promise<GroupResponse> {
+    const { findGroupsContent: group } = await this.client.request<
+      ResponseFetchGroup,
+      unknown
+    >(buildGraphQLQueryFetchGroup(groupId));
+
+    if (!group) {
+      throw Boom.notFound();
+    }
+    return parseGraphQLGroup(group);
   }
 
   async fetchByTeamId(

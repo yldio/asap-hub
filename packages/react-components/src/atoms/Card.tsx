@@ -34,7 +34,6 @@ const containerStyles = css({
   borderWidth: 1,
 
   borderRadius: `${6 / perRem}em`,
-  overflow: 'hidden', // for round corners
 });
 
 interface CardProps {

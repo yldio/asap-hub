@@ -31,6 +31,7 @@ export {
   Toggle,
 } from './atoms';
 export {
+  CalendarLink,
   CtaCard,
   ErrorCard,
   ExternalLink,

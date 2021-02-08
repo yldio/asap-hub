@@ -18,7 +18,7 @@ import {
   lead,
   pine,
 } from '../colors';
-import { iCalIconImage } from '../images';
+import { appleCalendarIconImage } from '../images';
 
 const containerStyles = css({
   alignItems: 'stretch',
@@ -85,6 +85,19 @@ const calendarLinkStyles = css({
   },
 });
 
+const resetButtonStyles = css({
+  padding: 0,
+  margin: 0,
+  border: 0,
+  background: 'none',
+  cursor: 'pointer',
+
+  ':focus': {
+    outline: 'none',
+    boxShadow: 'none',
+  },
+});
+
 type CalendarLinkProps = {
   readonly id: string;
 };
@@ -143,7 +156,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
                       width: `${24 / perRem}em`,
                       height: `${24 / perRem}em`,
                     }}
-                    src={iCalIconImage}
+                    src={appleCalendarIconImage}
                   />
                   Add to Apple Calendar
                 </div>
@@ -155,8 +168,8 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
               </Anchor>
             </li>
             <li>
-              <Anchor
-                href={webcal.toString()}
+              <button
+                css={resetButtonStyles}
                 onClick={(event) => {
                   event.preventDefault();
                   window.navigator.clipboard.writeText(webcal.toString());
@@ -165,7 +178,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
                 <div css={calendarLinkStyles}>
                   {linkIcon}Copy link (Manual setup)
                 </div>
-              </Anchor>
+              </button>
             </li>
           </ul>
         </div>

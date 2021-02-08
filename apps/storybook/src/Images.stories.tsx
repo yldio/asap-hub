@@ -6,7 +6,7 @@ import {
   asapPaddedWhiteImage,
   backgroundBrainsImage,
   backgroundNeuronsImage,
-  iCalIconImage,
+  appleCalendarIconImage,
   loadingImage,
   validTickGreenImage,
   validTickWhiteImage,
@@ -24,7 +24,9 @@ export const BackgroundBrains = () => (
 export const BackgroundNeurons = () => (
   <img alt="Background Neurons" src={backgroundNeuronsImage} />
 );
-export const ICalIconImage = () => <img alt="ICal Icon" src={iCalIconImage} />;
+export const AppleCalendarIconImage = () => (
+  <img alt="Apple Calendar Icon" src={appleCalendarIconImage} />
+);
 export const ValidTickGreen = () => (
   <img alt="Valid Tick" src={validTickGreenImage} />
 );

@@ -104,7 +104,7 @@ const CalendarList: React.FC<CalendarListProps> = ({
     <Paragraph accent="lead">
       Having issues? Set up your calendar manually with these instructions for{' '}
       <Link href="https://support.apple.com/en-us/guide/calendar/icl1022/mac">
-        iCal
+        Apple Calendar
       </Link>{' '}
       or{' '}
       <Link href="https://support.microsoft.com/en-us/office/import-or-subscribe-to-a-calendar-in-outlook-com-cff1429c-5af6-41ec-a5b4-74f2c278e98c">

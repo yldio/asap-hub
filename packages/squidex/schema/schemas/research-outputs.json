@@ -107,6 +107,21 @@
           "label": "Publish Date",
           "isRequired": false
         }
+      },
+      {
+        "name": "tags",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Tags",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
       }
     ],
     "previewUrls": {

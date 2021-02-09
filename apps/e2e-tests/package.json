@@ -1,0 +1,10 @@
+{
+  "name": "@asap-hub/e2e-tests",
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.8",
+    "node-fetch": "^2.6.1"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.12.13"
+  }
+}

@@ -67,6 +67,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:apps/auth0-rules"
       },
       {
+        "name": "@asap-hub/e2e-tests",
+        "reference": "workspace:apps/e2e-tests"
+      },
+      {
         "name": "@asap-hub/frontend",
         "reference": "workspace:apps/frontend"
       },
@@ -132,6 +136,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/auth-frontend", ["workspace:apps/auth-frontend"]],
       ["@asap-hub/auth0-rules", ["workspace:apps/auth0-rules"]],
       ["@asap-hub/dom-test-utils", ["workspace:packages/dom-test-utils"]],
+      ["@asap-hub/e2e-tests", ["workspace:apps/e2e-tests"]],
       ["@asap-hub/eslint-config-asap-hub", ["workspace:packages/eslint-config-asap-hub"]],
       ["@asap-hub/fixtures", ["workspace:packages/fixtures"]],
       ["@asap-hub/flags", ["workspace:packages/flags"]],
@@ -185,6 +190,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/dom-test-utils",
         "workspace:packages/dom-test-utils"
+      ],
+      [
+        "@asap-hub/e2e-tests",
+        "workspace:apps/e2e-tests"
       ],
       [
         "@asap-hub/eslint-config-asap-hub",
@@ -1648,7 +1657,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/node-fetch",
-        "npm:2.5.7"
+        "npm:2.5.8"
       ],
       [
         "@types/normalize-package-data",
@@ -9311,6 +9320,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@asap-hub/e2e-tests", [
+        ["workspace:apps/e2e-tests", {
+          "packageLocation": "./apps/e2e-tests/",
+          "packageDependencies": [
+            ["@asap-hub/e2e-tests", "workspace:apps/e2e-tests"],
+            ["@babel/runtime-corejs3", "npm:7.12.13"],
+            ["@types/node-fetch", "npm:2.5.8"],
+            ["node-fetch", "npm:2.6.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@asap-hub/eslint-config-asap-hub", [
         ["workspace:packages/eslint-config-asap-hub", {
           "packageLocation": "./packages/eslint-config-asap-hub/",
@@ -16274,6 +16295,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
+        ["npm:7.12.13", {
+          "packageLocation": "./.yarn/cache/@babel-runtime-corejs3-npm-7.12.13-f1154f8b31-8e50a564cf.zip/node_modules/@babel/runtime-corejs3/",
+          "packageDependencies": [
+            ["@babel/runtime-corejs3", "npm:7.12.13"],
+            ["core-js-pure", "npm:3.6.5"],
+            ["regenerator-runtime", "npm:0.13.7"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:7.12.5", {
           "packageLocation": "./.yarn/cache/@babel-runtime-corejs3-npm-7.12.5-204fea2510-254511bc71.zip/node_modules/@babel/runtime-corejs3/",
           "packageDependencies": [
@@ -20264,6 +20294,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-fetch-npm-2.5.7-fd8c51e56f-101f6e8474.zip/node_modules/@types/node-fetch/",
           "packageDependencies": [
             ["@types/node-fetch", "npm:2.5.7"],
+            ["@types/node", "npm:13.11.1"],
+            ["form-data", "npm:3.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.5.8", {
+          "packageLocation": "./.yarn/cache/@types-node-fetch-npm-2.5.8-d946aa06c6-608cdd6aed.zip/node_modules/@types/node-fetch/",
+          "packageDependencies": [
+            ["@types/node-fetch", "npm:2.5.8"],
             ["@types/node", "npm:13.11.1"],
             ["form-data", "npm:3.0.0"]
           ],

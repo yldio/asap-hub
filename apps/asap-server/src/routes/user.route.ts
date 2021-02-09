@@ -51,8 +51,8 @@ export const userRouteFactory = (
       querySchema,
     ) as unknown) as FetchOptions;
 
-    const teams = req.loggedUser!.teams.map(({ id }) => id);
-
+    const user = await userController.fetchById(userId);
+    const teams = user.teams.map((t) => t.id);
     const result = await groupsController.fetchByUserId(userId, teams, options);
 
     res.json(result);

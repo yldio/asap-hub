@@ -12,8 +12,9 @@ import nock from 'nock';
 
 import GroupList from '../GroupList';
 import { getGroups } from '../api';
-import { refreshListGroupState } from '../state';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL } from '../../../config';
+import { groupsState } from '../state';
+import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 
@@ -24,7 +25,9 @@ const renderGroupList = async (listGroupResponse: ListGroupResponse) => {
 
   const result = render(
     <RecoilRoot
-      initializeState={({ set }) => set(refreshListGroupState, Math.random())}
+      initializeState={({ reset }) =>
+        reset(groupsState({ currentPage: 0, pageSize: DEFAULT_PAGE_SIZE }))
+      }
     >
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>

@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { NavHashLink } from 'react-router-hash-link';
+import { NavLink } from 'react-router-dom';
 import css from '@emotion/css';
 
 import { layoutStyles } from '../text';
@@ -32,14 +32,13 @@ interface TabLinkProps {
 const TabLink: React.FC<TabLinkProps> = ({ href, children }) => {
   if (useHasRouter()) {
     return (
-      <NavHashLink
+      <NavLink
         to={href}
         activeClassName={activeClassName}
         css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
-        smooth
       >
         <p css={layoutStyles}>{children}</p>
-      </NavHashLink>
+      </NavLink>
     );
   }
 

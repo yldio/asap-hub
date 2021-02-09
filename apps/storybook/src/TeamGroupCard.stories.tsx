@@ -2,10 +2,7 @@ import React from 'react';
 import { number, text } from '@storybook/addon-knobs';
 
 import { TeamGroupsCard } from '@asap-hub/react-components';
-import {
-  createTeamResponse,
-  createGroupResponseItem,
-} from '@asap-hub/fixtures';
+import { createTeamResponse, createGroupResponse } from '@asap-hub/fixtures';
 import { ListGroupResponse } from '@asap-hub/model';
 
 export default {
@@ -18,7 +15,7 @@ const props = (): ListGroupResponse => {
   return {
     total: numberOfGroups,
     items: Array.from({ length: numberOfGroups }, (_, index) => {
-      const groupResponseItem = createGroupResponseItem({}, index);
+      const groupResponseItem = createGroupResponse({}, index);
       if (index === 0) {
         return {
           ...groupResponseItem,

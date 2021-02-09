@@ -3,9 +3,9 @@ import { NetworkGroups } from '@asap-hub/react-components';
 import { join } from 'path';
 
 import { useGroups } from './state';
-import { usePaginationParams, usePagination } from '../hooks';
-import { GROUPS_PATH } from './routes';
-import { NETWORK_PATH } from '../routes';
+import { usePaginationParams, usePagination } from '../../hooks';
+import { GROUPS_PATH } from '../routes';
+import { NETWORK_PATH } from '../../routes';
 
 interface NetworkGroupListProps {
   searchQuery?: string;

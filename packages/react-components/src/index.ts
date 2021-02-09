@@ -101,6 +101,7 @@ export {
   EventsCalendar,
   EventsPage,
   ForgotPasswordPage,
+  GroupProfileAbout,
   GroupProfileCalendar,
   GroupProfilePage,
   Layout,

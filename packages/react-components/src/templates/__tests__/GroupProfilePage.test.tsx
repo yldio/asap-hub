@@ -1,11 +1,11 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { createGroupResponseItem } from '@asap-hub/fixtures';
+import { createGroupResponse } from '@asap-hub/fixtures';
 
 import GroupProfilePage from '../GroupProfilePage';
 
 const props: ComponentProps<typeof GroupProfilePage> = {
-  ...createGroupResponseItem(),
+  ...createGroupResponse(),
   aboutHref: '#about',
   calendarHref: '#calendar',
   groupTeamsHref: '#teams',

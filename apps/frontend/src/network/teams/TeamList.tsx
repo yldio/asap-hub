@@ -3,10 +3,10 @@ import { NetworkTeams, Loading } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
 import { join } from 'path';
 
-import { useTeams } from '../api';
-import { usePaginationParams, usePagination } from '../hooks';
-import { NETWORK_PATH } from '../routes';
-import { TEAMS_PATH } from './routes';
+import { useTeams } from '@asap-hub/frontend/src/api';
+import { usePaginationParams, usePagination } from '../../hooks';
+import { NETWORK_PATH } from '../../routes';
+import { TEAMS_PATH } from '../routes';
 
 interface NetworkTeamListProps {
   searchQuery?: string;

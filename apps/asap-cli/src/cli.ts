@@ -6,20 +6,27 @@
 'use strict';
 
 import yargs from 'yargs/yargs';
-import { importUsers } from './import';
+import * as importers from './import';
 import { inviteUsers } from './invite';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(process.argv.slice(2))
   .command({
-    command: 'import <path>',
-    describe: 'import data to squidex from csv',
+    command: 'import <entity> <path>',
+    describe: 'import entities data to squidex from csv',
     builder: (cli) =>
-      cli.positional('path', {
-        describe: 'path to csv file',
-        type: 'string',
-      }),
-    handler: async ({ path }) => importUsers(path as string),
+      cli
+        .positional('entity', {
+          describe: 'specific an entity to import',
+          type: 'string',
+          choices: ['users', 'protocols'],
+        })
+        .positional('path', {
+          describe: 'path to csv file',
+          type: 'string',
+        }),
+    handler: async ({ path, entity }) =>
+      importers[entity as 'users' | 'protocols'](path as string),
   })
   .command({
     command: 'invite <role>',

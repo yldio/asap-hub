@@ -9,6 +9,7 @@ export interface ResearchOutput {
   text: string;
   link?: string;
   publishDate?: string;
+  tags: string[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

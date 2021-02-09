@@ -124,7 +124,7 @@ describe('/users/ route', () => {
     });
   });
 
-  describe.only('GET /users/{user_id}/groups', () => {
+  describe('GET /users/{user_id}/groups', () => {
     test('Should return 404 when user doesnt exist', async () => {
       userControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
 

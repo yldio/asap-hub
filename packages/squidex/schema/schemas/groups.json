@@ -38,7 +38,7 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Name",
-          "isRequired": false
+          "isRequired": true
         }
       },
       {
@@ -51,9 +51,9 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
-          "editor": "Input",
+          "editor": "TextArea",
           "label": "Description",
-          "isRequired": false
+          "isRequired": true
         }
       },
       {

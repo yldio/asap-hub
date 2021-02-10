@@ -31,7 +31,7 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   );
 
   const tools: GroupTools = {};
-  if (item.flatData?.tools) {
+  if (item.flatData?.tools?.length) {
     const [groupTools] = item.flatData?.tools;
     if (groupTools.slack) {
       tools.slack = groupTools.slack;

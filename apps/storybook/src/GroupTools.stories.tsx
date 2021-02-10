@@ -7,11 +7,8 @@ export default {
 };
 
 const props = (): ComponentProps<typeof GroupTools> => ({
+  calendarId: text('Calendar', 'hub@asap.science'),
   tools: {
-    googleCalendar: text(
-      'Google Calendar',
-      'http://calendar.google.com/r/calendar?12w3',
-    ),
     googleDrive: text('Google Drive', 'http://drive.google.com/123'),
     slack: text('Slack', 'http://test.slack.com'),
   },

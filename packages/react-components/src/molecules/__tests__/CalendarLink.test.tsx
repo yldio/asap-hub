@@ -10,6 +10,13 @@ it('renders a subscribe button', () => {
   expect(link.textContent).toContain('Subscribe');
 });
 
+it('renders a subscribe button with custom text', () => {
+  const { getByRole } = render(<CalendarLink id="123">Text</CalendarLink>);
+
+  const link = getByRole('button');
+  expect(link.textContent).toContain('Text');
+});
+
 it('renders a modal on click', () => {
   const { getByRole, getAllByRole } = render(<CalendarLink id="123" />);
 

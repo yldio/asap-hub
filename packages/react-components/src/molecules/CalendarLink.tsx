@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import css from '@emotion/css';
 import { Button, Anchor } from '../atoms';
-import { perRem, tabletScreen, mobileScreen } from '../pixels';
+import { perRem, mobileScreen } from '../pixels';
 import {
   chevronUpIcon,
   chevronDownIcon,
@@ -19,14 +19,14 @@ import {
   pine,
 } from '../colors';
 import { appleCalendarIconImage } from '../images';
+import { TextChildren } from '../text';
 
 const containerStyles = css({
-  alignItems: 'stretch',
   display: 'flex',
   flexDirection: 'column',
 
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    alignItems: 'flex-end',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    width: '100%',
   },
 });
 
@@ -99,10 +99,14 @@ const resetButtonStyles = css({
 });
 
 type CalendarLinkProps = {
+  readonly children?: TextChildren;
   readonly id: string;
 };
 
-const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
+const CalendarLink: React.FC<CalendarLinkProps> = ({
+  id,
+  children = 'Subscribe',
+}) => {
   const reference = useRef<HTMLDivElement>(null);
   const handleClick = () => setMenuShown(!menuShown);
   const [menuShown, setMenuShown] = useState(false);
@@ -135,7 +139,7 @@ const CalendarLink: React.FC<CalendarLinkProps> = ({ id }) => {
   return (
     <div css={containerStyles} ref={reference}>
       <Button small onClick={handleClick}>
-        Subscribe {menuShown ? chevronUpIcon : chevronDownIcon}
+        {children} {menuShown ? chevronUpIcon : chevronDownIcon}
       </Button>
       <div css={menuWrapperStyles}>
         <div css={[menuContainerStyles, menuShown && showMenuStyles]}>

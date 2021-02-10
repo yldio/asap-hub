@@ -77,6 +77,6 @@ it('generates a different deep link every time to avoid conflicts', async () => 
 
 it('switches to the calendar tab', async () => {
   const { findByText } = await renderGroupProfile(createGroupResponse());
-  userEvent.click(await findByText(/calendar/i));
-  expect(await findByText(/group.+calendar/i)).toBeVisible();
+  userEvent.click(await findByText(/^calendar/i));
+  expect(await findByText(/subscribe/i, { selector: 'h3' })).toBeVisible();
 });

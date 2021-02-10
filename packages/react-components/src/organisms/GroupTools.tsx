@@ -4,32 +4,36 @@ import { GroupResponse } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph, Link } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
-import { slackIcon, googleDriveIcon, googleCalendarIcon } from '../icons';
+import { slackIcon, googleDriveIcon } from '../icons';
+import { CalendarLink } from '../molecules';
 
-const BUTTON_SPACING = 28 / perRem;
+const BUTTON_SPACING = 12 / perRem;
 const buttons = css({
   display: 'flex',
   flexFlow: 'wrap',
   width: `calc(100% + ${BUTTON_SPACING}em)`,
   listStyle: 'none',
-  margin: `${18 / perRem}em 0 0 0`,
+  margin: `${12 / perRem}em 0 0 0`,
   padding: 0,
 });
 
 const button = css({
   display: 'flex',
   marginRight: `${BUTTON_SPACING}em`,
-  marginTop: `-${18 / perRem}em`,
   flexGrow: 1,
+
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     flexGrow: 0,
   },
 });
 
-type GroupToolsProps = Pick<GroupResponse, 'tools'>;
+type GroupToolsProps = Pick<GroupResponse, 'tools'> & {
+  readonly calendarId?: GroupResponse['calendars'][0]['id'];
+};
 
 const GroupTools: React.FC<GroupToolsProps> = ({
-  tools: { googleCalendar, slack, googleDrive },
+  calendarId,
+  tools: { slack, googleDrive },
 }) => (
   <Card>
     <Headline3>Group Tools</Headline3>
@@ -40,23 +44,21 @@ const GroupTools: React.FC<GroupToolsProps> = ({
     <ul css={buttons}>
       {slack && (
         <li css={button}>
-          <Link href={slack} buttonStyle>
+          <Link href={slack} buttonStyle small>
             {slackIcon} Join Slack Channel
           </Link>
         </li>
       )}
       {googleDrive && (
         <li css={button}>
-          <Link href={googleDrive} buttonStyle>
+          <Link href={googleDrive} buttonStyle small>
             {googleDriveIcon} Access Google Drive
           </Link>
         </li>
       )}
-      {googleCalendar && (
+      {calendarId && (
         <li css={button}>
-          <Link href={googleCalendar} buttonStyle>
-            {googleCalendarIcon} Subscribe to Google Calendar
-          </Link>
+          <CalendarLink id={calendarId}>Subscribe to Calendar</CalendarLink>
         </li>
       )}
     </ul>

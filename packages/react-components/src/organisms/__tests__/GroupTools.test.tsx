@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 
 import GroupTools from '../GroupTools';
 
@@ -31,17 +31,21 @@ it('renders a google drive tool', () => {
   );
 });
 
-it('renders a google calendar tool', () => {
-  const { getByRole, getByTitle, getByText } = render(
-    <GroupTools
-      tools={{ googleCalendar: 'http://calendar.google.com/r/calendar?12w3' }}
-    />,
+it('renders the subscribe button', () => {
+  const { getByText, queryAllByRole } = render(
+    <GroupTools calendarId="12w3" tools={{}} />,
   );
 
-  expect(getByText(/subscribe to google/i)).toBeVisible();
-  expect(getByTitle('Google Calendar')).toBeInTheDocument();
-  expect(getByRole('link')).toHaveAttribute(
-    'href',
-    'http://calendar.google.com/r/calendar?12w3',
-  );
+  const subscribe = getByText(/subscribe/i);
+  expect(subscribe).toBeVisible();
+  fireEvent.click(subscribe);
+
+  expect(queryAllByRole('link').map((s) => s.getAttribute('href')))
+    .toMatchInlineSnapshot(`
+    Array [
+      "https://calendar.google.com/calendar/r?cid=12w3",
+      "webcal://calendar.google.com/calendar/ical/12w3/public/basic.ics",
+      "webcal://calendar.google.com/calendar/ical/12w3/public/basic.ics",
+    ]
+  `);
 });

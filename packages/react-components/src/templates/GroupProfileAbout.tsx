@@ -16,7 +16,7 @@ const styles = css({
 
 type GroupProfileAboutProps = Pick<
   GroupResponse,
-  'tags' | 'description' | 'tools'
+  'tags' | 'description' | 'tools' | 'calendars'
 > &
   Pick<ComponentProps<typeof GroupMembersSection>, 'teams' | 'leaders'> & {
     membersSectionId?: string;
@@ -26,6 +26,7 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
   description,
 
   tools,
+  calendars,
 
   teams,
   leaders,
@@ -34,7 +35,7 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
 }) => (
   <div css={styles}>
     <GroupInformation tags={tags} description={description} />
-    <GroupTools tools={tools} />
+    <GroupTools calendarId={calendars[0] && calendars[0].id} tools={tools} />
     <div id={membersSectionId}>
       <GroupMembersSection teams={teams} leaders={leaders} />
     </div>

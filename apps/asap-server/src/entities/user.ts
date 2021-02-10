@@ -54,8 +54,14 @@ export const parseGraphQLUserTeamConnection = (
   return {
     id: team.id,
     role: item.role,
-    approach: item.approach ? item.approach : undefined,
-    responsibilities: item.responsibilities ? item.responsibilities : undefined,
+    approach:
+      item.approach !== 'null' && item.approach !== null // Squidex bug: nulls converted to string
+        ? item.approach
+        : undefined,
+    responsibilities:
+      item.responsibilities !== 'null' && item.responsibilities !== null
+        ? item.responsibilities
+        : undefined,
     proposal: proposal?.length ? proposal[0].id : undefined,
     displayName: displayName || '',
   };

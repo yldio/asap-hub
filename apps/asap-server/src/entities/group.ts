@@ -11,7 +11,7 @@ import { GraphqlGroup } from '@asap-hub/squidex';
 import { parseGraphQLTeam } from './team';
 import { parseGraphQLUser } from './user';
 import { parseGraphQLCalendar } from './calendar';
-import { parseDate } from '../utils/squidex';
+import { parseDate, isNull } from '../utils/squidex';
 
 export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
@@ -33,11 +33,11 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const tools: GroupTools = {};
   if (item.flatData?.tools?.length) {
     const [groupTools] = item.flatData?.tools;
-    if (groupTools.slack) {
+    if (!isNull(groupTools.slack)) {
       tools.slack = groupTools.slack;
     }
 
-    if (groupTools.googleDrive) {
+    if (!isNull(groupTools.googleDrive)) {
       tools.googleDrive = groupTools.googleDrive;
     }
   }

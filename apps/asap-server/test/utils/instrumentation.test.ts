@@ -4,9 +4,11 @@ import { config } from '@asap-hub/squidex';
 import { Context } from 'aws-lambda';
 
 import { buildGraphQLQueryFetchUsers } from '../../src/controllers/users';
-import { handler } from '../../src/handlers/users/fetch';
+import { auth0SharedSecret as secret } from '../../src/config';
+import { handler } from '../../src/handlers/webhooks/webhook-fetch-by-code';
 import { apiGatewayEvent } from '../helpers/events';
 import { identity } from '../helpers/squidex';
+import { fetchUserResponse } from '../handlers/webhooks/webhook-fetch-by-code.fixtures';
 
 jest.mock('../../src/utils/validate-token');
 
@@ -37,26 +39,11 @@ describe('Instrumentation', () => {
   test('marks span as ERROR, when statusCode is >= 400', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
-        query: buildGraphQLQueryFetchUsers("data/role/iv ne 'Hidden'"),
-      })
-      .reply(502);
-
-    const result = (await handler(
-      apiGatewayEvent({
-        headers: {
-          Authorization: `Bearer token`,
-        },
-      }),
-      context,
-    )) as APIGatewayProxyResult;
-
-    expect(result.body).toBeDefined();
-  });
-
-  test('returns 200 when no users exist', async () => {
-    nock(config.baseUrl)
-      .post(`/api/content/${config.appName}/graphql`, {
-        query: buildGraphQLQueryFetchUsers("data/role/iv ne 'Hidden'"),
+        query: buildGraphQLQueryFetchUsers(
+          `data/connections/iv/code eq 'notFound'`,
+          1,
+          0,
+        ),
       })
       .reply(200, {
         data: {
@@ -69,12 +56,42 @@ describe('Instrumentation', () => {
 
     const result = (await handler(
       apiGatewayEvent({
+        pathParameters: {
+          code: 'notFound',
+        },
         headers: {
-          Authorization: `Bearer token`,
+          Authorization: `Basic ${secret}`,
         },
       }),
+      context,
     )) as APIGatewayProxyResult;
 
-    expect(result.body).toBeDefined();
+    expect(result.statusCode).toStrictEqual(403);
+  });
+
+  test('returns 200 when user exists', async () => {
+    nock(config.baseUrl)
+      .post(`/api/content/${config.appName}/graphql`, {
+        query: buildGraphQLQueryFetchUsers(
+          `data/connections/iv/code eq 'welcomeCode'`,
+          1,
+          0,
+        ),
+      })
+      .reply(200, fetchUserResponse);
+
+    const result = (await handler(
+      apiGatewayEvent({
+        pathParameters: {
+          code: 'welcomeCode',
+        },
+        headers: {
+          Authorization: `Basic ${secret}`,
+        },
+      }),
+      context,
+    )) as APIGatewayProxyResult;
+
+    expect(result.statusCode).toStrictEqual(200);
   });
 });

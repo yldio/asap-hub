@@ -42,6 +42,7 @@ export { default as TeamProfileOutputs } from './TeamProfileOutputs';
 export { default as TeamProfilePage } from './TeamProfilePage';
 export { default as TeamProfileWorkspace } from './TeamProfileWorkspace';
 export { default as ToolModal } from './ToolModal';
+export { default as UnsupportedBrowserPage } from './UnsupportedBrowserPage';
 export { default as UserProfileAbout } from './UserProfileAbout';
 export { default as UserProfileHeader } from './UserProfileHeader';
 export { default as UserProfileOutputs } from './UserProfileOutputs';

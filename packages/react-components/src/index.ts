@@ -128,6 +128,7 @@ export {
   TeamProfilePage,
   TeamProfileWorkspace,
   ToolModal,
+  UnsupportedBrowserPage,
   UserProfileAbout,
   UserProfileOutputs,
   UserProfilePage,

@@ -5,7 +5,7 @@ import { render } from '@testing-library/react';
 
 import PasswordResetEmailSentPage from '../PasswordResetEmailSentPage';
 
-it('renders a level 1 heading', () => {
+it('renders a heading', () => {
   const { getByRole } = render(
     <PasswordResetEmailSentPage signInHref="/signin" />,
   );

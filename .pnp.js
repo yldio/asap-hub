@@ -9227,7 +9227,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/runtime-corejs3", "npm:7.12.5"],
             ["@types/jest", "npm:26.0.20"],
-            ["@types/node", "npm:12.12.55"]
+            ["@types/node", "npm:14.14.25"]
           ],
           "linkType": "SOFT",
         }]
@@ -9380,7 +9380,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/nock", "npm:11.1.0"],
-            ["@types/node", "npm:12.12.55"],
+            ["@types/node", "npm:14.14.25"],
             ["@types/react", "npm:17.0.0"],
             ["@types/react-dom", "npm:17.0.0"],
             ["@types/react-router-dom", "npm:5.1.5"],
@@ -20229,17 +20229,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/node", [
-        ["npm:12.12.55", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-12.12.55-f768389375-2ebf7e2ae6.zip/node_modules/@types/node/",
-          "packageDependencies": [
-            ["@types/node", "npm:12.12.55"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:13.11.1", {
           "packageLocation": "./.yarn/cache/@types-node-npm-13.11.1-ea46d1204d-0ced8498fb.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:13.11.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:14.14.25", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-14.14.25-cd44243469-64c42730f4.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:14.14.25"]
           ],
           "linkType": "HARD",
         }]

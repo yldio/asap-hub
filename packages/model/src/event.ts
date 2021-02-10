@@ -8,8 +8,8 @@ export interface EventResponse {
   startDate: string;
   endDate: string;
   calendar: CalendarResponse;
-  group?: GroupResponse;
-  eventLink?: string;
+  groups: GroupResponse[];
+  meetingLink?: string;
   lastModifiedDate: string;
 }
 

@@ -9,7 +9,6 @@ interface Event<TCalendar = string> {
   startDate: string;
   endDate: string;
   status: GoogleEventStatus;
-  eventLink: string;
   meetingLink?: string;
   calendar: TCalendar[];
   tags: string[];

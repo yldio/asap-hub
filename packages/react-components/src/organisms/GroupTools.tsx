@@ -38,8 +38,7 @@ const GroupTools: React.FC<GroupToolsProps> = ({
   <Card>
     <Headline3>Group Tools</Headline3>
     <Paragraph accent="lead">
-      You can join the group’s Slack channel to chat with other members or
-      explore the group’s private and secure Google Drive.
+      Use these tools to connect with your group.
     </Paragraph>
     <ul css={buttons}>
       {slack && (

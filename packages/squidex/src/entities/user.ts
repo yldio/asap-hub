@@ -8,18 +8,25 @@ import {
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 
-export interface UserTeamConnection<T = string> {
-  role: TeamRole;
-  approach?: string | null;
-  responsibilities?: string | null;
-  id: T[];
-}
+export type UserTeamConnection<T = string> = T extends string
+  ? {
+      approach?: string;
+      responsibilities?: string;
+      role: TeamRole;
+      id: T[];
+    }
+  : {
+      approach?: string | null;
+      responsibilities?: string | null;
+      role: TeamRole;
+      id: T[];
+    };
 
 type OrNull<T> = { [K in keyof T]: T[K] | null };
 
 interface User<
   TAvatar = string,
-  TConnection = string,
+  TConnection = UserTeamConnection,
   TSocial = Omit<UserSocialLinks, 'orcid'>
 > {
   avatar: TAvatar[];
@@ -44,7 +51,7 @@ interface User<
   responsibilities?: string;
   reachOut?: string;
   skillsDescription?: string;
-  teams: UserTeamConnection<TConnection>[];
+  teams: TConnection[];
   social?: TSocial[];
 }
 
@@ -52,5 +59,9 @@ export interface RestUser extends Entity, Rest<User> {}
 export interface GraphqlUser
   extends Entity,
     Graphql<
-      User<{ id: string }, GraphqlTeam, OrNull<Omit<UserSocialLinks, 'orcid'>>>
+      User<
+        { id: string },
+        UserTeamConnection<GraphqlTeam>,
+        OrNull<Omit<UserSocialLinks, 'orcid'>>
+      >
     > {}

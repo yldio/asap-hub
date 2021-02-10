@@ -14,3 +14,6 @@ export const parseDate = (date: string): Date => new Date(date);
 
 export const formatDate = (date: Date): string =>
   format(date, "yyyy-MM-dd'T'HH:mm:ssX");
+
+export const isNull = (prop: string | null | undefined): boolean =>
+  prop === null || prop === 'null';

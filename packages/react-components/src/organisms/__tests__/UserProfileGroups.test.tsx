@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { createGroupResponse } from '@asap-hub/fixtures';
+
 import UserProfileGroups from '../UserProfileGroups';
+
+const props: ComponentProps<typeof UserProfileGroups> = {
+  firstName: '',
+  id: '',
+  groups: [],
+};
 
 it('render a heading', () => {
   const { getByText } = render(
-    <UserProfileGroups firstName="Phillip" groups={[]} />,
+    <UserProfileGroups {...props} firstName="Phillip" />,
   );
 
   expect(
@@ -20,12 +28,12 @@ it('render a heading', () => {
 it('renders one group', () => {
   const { getByRole } = render(
     <UserProfileGroups
-      firstName="Phillip"
+      {...props}
       groups={[
         {
+          ...createGroupResponse({}, 1),
           name: 'Group 1',
           href: '/network/groups/1',
-          role: 'Chair',
         },
       ]}
     />,
@@ -38,24 +46,11 @@ it('renders one group', () => {
 it('renders a list of groups', () => {
   const { getAllByRole } = render(
     <UserProfileGroups
-      firstName="Phillip"
-      groups={[
-        {
-          name: 'Group 1',
-          href: '/network/groups/1',
-          role: 'Member',
-        },
-        {
-          name: 'Group 2',
-          href: '/network/groups/1',
-          role: 'Project Manager',
-        },
-        {
-          name: 'Group 3',
-          href: '/network/groups/1',
-          role: 'Chair',
-        },
-      ]}
+      {...props}
+      groups={Array.from({ length: 3 }).map((_, i) => ({
+        ...createGroupResponse({}, i),
+        href: '',
+      }))}
     />,
   );
 

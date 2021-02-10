@@ -3,22 +3,15 @@ import { StaticRouter, MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  createUserResponse,
-  createListGroupResponse,
-} from '@asap-hub/fixtures';
-import { disable } from '@asap-hub/flags';
-
+import { createUserResponse } from '@asap-hub/fixtures';
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
+
 import About from '../About';
-import { patchUser, getUserGroups } from '../api';
+import { patchUser } from '../api';
 
 jest.mock('../api');
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
-const mockGetUserGroups = getUserGroups as jest.MockedFunction<
-  typeof getUserGroups
->;
 
 const wrapper: React.FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
@@ -124,44 +117,5 @@ describe('when editing the biography', () => {
       { biography: 'My Bio 2' },
       expect.any(String),
     );
-  });
-});
-
-describe('user groups card', () => {
-  it('is not rendered when feature flag disabled (REGRESSION)', async () => {
-    disable('GROUPS');
-    const { queryByText } = render(
-      <About user={{ ...createUserResponse(), firstName: 'test' }} />,
-      { wrapper },
-    );
-    mockGetUserGroups.mockResolvedValue(createListGroupResponse(1));
-    await waitFor(() => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-    });
-    expect(queryByText(/test’ groups/i)).not.toBeInTheDocument();
-  });
-  it('is not rendered when there are no groups', async () => {
-    const { queryByText } = render(
-      <About user={{ ...createUserResponse(), firstName: 'test' }} />,
-      { wrapper },
-    );
-    mockGetUserGroups.mockResolvedValue(createListGroupResponse(0));
-    await waitFor(() => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-    });
-
-    expect(queryByText(/test’ groups/i)).not.toBeInTheDocument();
-  });
-
-  it('is rendered when there are groups', async () => {
-    const { queryByText } = render(
-      <About user={{ ...createUserResponse(), firstName: 'test' }} />,
-      { wrapper },
-    );
-    mockGetUserGroups.mockResolvedValue(createListGroupResponse(1));
-    await waitFor(() => {
-      expect(queryByText(/loading/i)).not.toBeInTheDocument();
-      expect(queryByText(/test’ groups/i)).toBeInTheDocument();
-    });
   });
 });

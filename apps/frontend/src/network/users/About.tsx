@@ -1,33 +1,14 @@
 import React from 'react';
 import { join } from 'path';
 import { useRouteMatch, Route } from 'react-router-dom';
-import {
-  UserProfileAbout,
-  BiographyModal,
-  UserProfileGroups,
-} from '@asap-hub/react-components';
+import { UserProfileAbout, BiographyModal } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { isEnabled } from '@asap-hub/flags';
 
-import { usePatchUserById, useUserGroupsById } from './state';
+import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
-import { GROUPS_PATH } from '../routes';
-import { NETWORK_PATH } from '../../routes';
-
-const UserGroups: React.FC<{ user: UserResponse }> = ({ user }) => {
-  const groups = useUserGroupsById(user.id);
-
-  return groups.total ? (
-    <UserProfileGroups
-      {...user}
-      groups={groups.items.map((group) => ({
-        ...group,
-        href: join('/', NETWORK_PATH, GROUPS_PATH, group.id),
-      }))}
-    />
-  ) : null;
-};
+import UserGroups from './Groups';
 
 type AboutProps = {
   user: UserResponse;

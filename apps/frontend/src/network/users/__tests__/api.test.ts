@@ -148,7 +148,7 @@ describe('getUserGroups', () => {
     await expect(
       getUserGroups('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch user with id 42 groups. Expected status 2xx. Received status 500."`,
+      `"Failed to fetch groups for user with id 42. Expected status 2xx. Received status 500."`,
     );
   });
 });

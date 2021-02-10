@@ -76,7 +76,7 @@ export const getUserGroups = async (
   });
   if (!resp.ok) {
     throw new Error(
-      `Failed to fetch user with id ${id} groups. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+      `Failed to fetch groups for user with id ${id}. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

@@ -49,20 +49,21 @@ const editButtonStyles = css({
   justifySelf: 'end',
 });
 
+type CardData = {
+  card: ReactNode;
+  editLink?: {
+    href: string;
+    label: string;
+    enabled?: boolean;
+  };
+};
 interface ProfileCardListProps {
-  children: ReadonlyArray<{
-    card: ReactNode;
-    editLink?: {
-      href: string;
-      label: string;
-      enabled?: boolean;
-    };
-  }>;
+  children: ReadonlyArray<CardData | ReactNode>;
 }
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
   <div css={styles(children.length)}>
     {children
-      .filter(({ card }) => Boolean(card))
+      .filter((cardData): cardData is CardData => Boolean(cardData))
       .flatMap(({ card, editLink }, index) => [
         <div
           key={`card-${index}`}

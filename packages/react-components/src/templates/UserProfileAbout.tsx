@@ -41,7 +41,7 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
                 label: 'Edit biography',
               },
       }}
-      {{
+      {userProfileGroupsCard && {
         card: userProfileGroupsCard,
       }}
       {{

@@ -138,17 +138,6 @@ test:browser:
     - build:ts
     - build:native
 
-#test:integration:
-#<<: *tmpl_test
-#cache:
-#paths:
-#- '.jest-cache'
-#script:
-#- yarn run test:integration
-#needs:
-#- build:ts
-#- build:native
-
 ################
 # stage deploy #
 ################
@@ -218,5 +207,4 @@ deploy:sls:production:
     - build:native
     - test:unit
     - test:browser
-    - test:integration
     - sync:squidex:production

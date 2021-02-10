@@ -49,3 +49,27 @@ it('disables the link if requested', () => {
   );
   expect(getByLabelText('Edit card 1')).not.toHaveAttribute('href');
 });
+
+it('filters falsy cards', () => {
+  const { queryByLabelText } = render(
+    <ProfileCardList>
+      {[
+        {
+          card: 'card1',
+          editLink: { href: '/edit1', label: 'Edit card 1', enabled: false },
+        },
+        {
+          card: undefined,
+          editLink: { href: '/edit2', label: 'Edit card 2', enabled: false },
+        },
+        {
+          card: 'card3',
+          editLink: { href: '/edit3', label: 'Edit card 3', enabled: false },
+        },
+      ]}
+    </ProfileCardList>,
+  );
+  expect(queryByLabelText('Edit card 1')).toBeInTheDocument();
+  expect(queryByLabelText('Edit card 2')).not.toBeInTheDocument();
+  expect(queryByLabelText('Edit card 3')).toBeInTheDocument();
+});

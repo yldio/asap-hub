@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { createGroupResponse } from '@asap-hub/fixtures';
+import { createGroupResponse, createUserResponse } from '@asap-hub/fixtures';
 
 import UserProfileGroups from '../UserProfileGroups';
 
@@ -55,4 +55,48 @@ it('renders a list of groups', () => {
   );
 
   expect(getAllByRole('listitem').length).toEqual(3);
+});
+
+it('displays member role when not defined as leader', () => {
+  const { getByRole } = render(
+    <UserProfileGroups
+      {...props}
+      groups={[
+        {
+          ...createGroupResponse({}),
+          href: '',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByRole('listitem').textContent).toMatch(/member/i);
+});
+
+it('displays member role when defined as leader', () => {
+  const group = createGroupResponse();
+  const { getByRole } = render(
+    <UserProfileGroups
+      {...props}
+      id={'12'}
+      groups={[
+        {
+          ...group,
+          leaders: [
+            {
+              ...group.leaders[0],
+              role: 'Project Manager',
+              user: {
+                ...createUserResponse(),
+                id: '12',
+              },
+            },
+          ],
+          href: '',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByRole('listitem').textContent).toMatch(/project manager/i);
 });

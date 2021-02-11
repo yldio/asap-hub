@@ -57,7 +57,7 @@ export const createGroupResponse = (
 };
 
 export const createListGroupResponse = (
-  items: number,
+  items = 1,
   options: FixtureOptions = {},
 ): ListGroupResponse => ({
   total: items,

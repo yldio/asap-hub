@@ -49,43 +49,48 @@ const editButtonStyles = css({
   justifySelf: 'end',
 });
 
+type CardData = {
+  card: ReactNode;
+  editLink?: {
+    href: string;
+    label: string;
+    enabled?: boolean;
+  };
+};
 interface ProfileCardListProps {
-  children: ReadonlyArray<{
-    card: ReactNode;
-    editLink?: {
-      href: string;
-      label: string;
-      enabled?: boolean;
-    };
-  }>;
+  children: ReadonlyArray<CardData | boolean | null | undefined>;
 }
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
   <div css={styles(children.length)}>
-    {children.flatMap(({ card, editLink }, index) => [
-      <div
-        key={`card-${index}`}
-        css={[cardStyles, { gridArea: `${index + 1} card / card` }]}
-      >
-        {card}
-      </div>,
-      editLink?.href !== undefined && (
+    {children
+      .filter(
+        (child): child is CardData => !!child && typeof child === 'object',
+      )
+      .flatMap(({ card, editLink }, index) => [
         <div
-          key={`edit-${index}`}
-          css={[editButtonStyles, { gridArea: `${index + 1} edit / edit` }]}
+          key={`card-${index}`}
+          css={[cardStyles, { gridArea: `${index + 1} card / card` }]}
         >
-          <Link
-            buttonStyle
-            small
-            primary
-            href={editLink.href}
-            label={editLink.label}
-            enabled={editLink.enabled}
+          {card}
+        </div>,
+        editLink?.href !== undefined && (
+          <div
+            key={`edit-${index}`}
+            css={[editButtonStyles, { gridArea: `${index + 1} edit / edit` }]}
           >
-            {editIcon}
-          </Link>
-        </div>
-      ),
-    ])}
+            <Link
+              buttonStyle
+              small
+              primary
+              href={editLink.href}
+              label={editLink.label}
+              enabled={editLink.enabled}
+            >
+              {editIcon}
+            </Link>
+          </div>
+        ),
+      ])}
   </div>
 );
 

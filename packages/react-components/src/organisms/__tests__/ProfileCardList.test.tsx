@@ -49,3 +49,22 @@ it('disables the link if requested', () => {
   );
   expect(getByLabelText('Edit card 1')).not.toHaveAttribute('href');
 });
+
+it('filters falsy children', () => {
+  const { container } = render(
+    <ProfileCardList>
+      {[
+        {
+          card: 'card1',
+        },
+        false,
+        undefined,
+        null,
+        {
+          card: 'card2',
+        },
+      ]}
+    </ProfileCardList>,
+  );
+  expect(container.querySelectorAll('body > div > div > div')).toHaveLength(2);
+});

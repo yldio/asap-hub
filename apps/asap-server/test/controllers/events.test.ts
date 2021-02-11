@@ -1,4 +1,5 @@
 import nock from 'nock';
+import { Settings } from 'luxon';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import Events, {
@@ -104,17 +105,28 @@ describe('Event controller', () => {
   });
 
   describe('Event link', () => {
-    const fakeDate = jest.fn<number, []>();
-    Date.now = fakeDate;
+    let fakeDate: jest.MockedFunction<typeof Date.now>;
+    const realDate = Date.now.bind(Date);
+
+    beforeAll(() => {
+      fakeDate = jest.fn<number, []>();
+      Settings.now = fakeDate;
+    });
+
+    afterAll(() => {
+      Settings.now = realDate;
+    });
+
+    afterEach(() => {
+      fakeDate.mockClear();
+    });
 
     test('Should reveal the event link when the event starts in less than 24h from now', async () => {
       const event = graphqlEvent;
       event.flatData!.meetingLink = 'some-link';
 
       // mock todays date to year 06/06/2020
-      fakeDate.mockReturnValueOnce(
-        new Date('2020-06-06T13:00:00.000Z').getTime(),
-      );
+      fakeDate.mockReturnValue(new Date('2020-06-06T13:00:00.000Z').getTime());
       // change event start date to 06/06/2020, one hour from the above
       event.flatData!.startDate = '2020-06-06T14:00:00Z';
 

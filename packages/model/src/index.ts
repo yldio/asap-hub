@@ -8,3 +8,4 @@ export * from './team';
 export * from './user';
 export * from './calendar';
 export * from './group';
+export * from './event';

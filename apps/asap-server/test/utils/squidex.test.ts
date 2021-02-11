@@ -1,4 +1,4 @@
-import { parseDate, formatDate, createURL } from '../../src/utils/squidex';
+import { parseDate, createURL } from '../../src/utils/squidex';
 import { config } from '@asap-hub/squidex';
 
 describe('generate asset url from cms assets list', () => {
@@ -14,12 +14,6 @@ describe('dates from squidex', () => {
   test('parse return Date type', async () => {
     expect(parseDate('2020-09-08T03:05:08Z')).toEqual(
       new Date('2020-09-08T03:05:08.000Z'),
-    );
-  });
-
-  test('format returns string type', async () => {
-    expect(formatDate(new Date('2020-09-08T03:05:08.000Z'))).toEqual(
-      '2020-09-08T03:05:08Z',
     );
   });
 });

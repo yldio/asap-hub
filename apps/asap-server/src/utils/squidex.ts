@@ -1,5 +1,5 @@
+import { DateTime } from 'luxon';
 import { URL } from 'url';
-import { format } from 'date-fns';
 import { config } from '@asap-hub/squidex';
 
 export const createURL = (assets: string[]): string[] =>
@@ -10,10 +10,8 @@ export const createURL = (assets: string[]): string[] =>
     ).toString(),
   );
 
-export const parseDate = (date: string): Date => new Date(date);
-
-export const formatDate = (date: Date): string =>
-  format(date, "yyyy-MM-dd'T'HH:mm:ssX");
+export const parseDate = (date: string): Date =>
+  DateTime.fromISO(date).toJSDate();
 
 export const isNull = (prop: string | null | undefined): boolean =>
   prop === null || prop === 'null';

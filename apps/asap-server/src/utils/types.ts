@@ -6,9 +6,12 @@ export type Handler = APIGatewayProxyHandlerV2 &
     context?: Context,
   ) => ReturnType<APIGatewayProxyHandlerV2>);
 
-export type FetchOptions = {
+export type FetchPaginationOptions = {
   take?: number;
   skip?: number;
+};
+
+export type FetchOptions = {
   search?: string;
   filter?: string[];
-};
+} & FetchPaginationOptions;

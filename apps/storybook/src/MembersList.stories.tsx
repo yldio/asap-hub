@@ -26,7 +26,7 @@ export const WithTeam = () => (
         href: '#',
         teams: Array(number('Number of teams', 1))
           .fill(null)
-          .map((_, i) => ({ displayName: `Team ${i + 1}`, href: '#' })),
+          .map((_, i) => ({ displayName: `${i + 1}`, href: '#' })),
       }),
     )}
   />

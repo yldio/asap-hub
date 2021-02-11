@@ -45,11 +45,11 @@ it('renders a team link for each team provided', async () => {
           href: 'https://en.wikipedia.org/wiki/Batman',
           teams: [
             {
-              displayName: 'Team DC',
+              displayName: 'DC',
               href: 'http://dccomics.com',
             },
             {
-              displayName: 'Team Arkham',
+              displayName: 'Arkham',
               href: 'https://en.wikipedia.org/wiki/Gotham_City',
             },
           ],
@@ -57,11 +57,11 @@ it('renders a team link for each team provided', async () => {
       ]}
     />,
   );
-  expect(getByText('Team DC').closest('a')).toHaveAttribute(
+  expect(getByText(/team.dc/i).closest('a')).toHaveAttribute(
     'href',
     'http://dccomics.com',
   );
-  expect(getByText('Team Arkham').closest('a')).toHaveAttribute(
+  expect(getByText(/team.arkham/i).closest('a')).toHaveAttribute(
     'href',
     'https://en.wikipedia.org/wiki/Gotham_City',
   );

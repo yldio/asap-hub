@@ -23,7 +23,7 @@ export const Normal = () => (
         teams: Array(number('Number of Leader Teams', 1))
           .fill(null)
           .map((_, teamIndex) => ({
-            displayName: `Team ${teamIndex + 1}`,
+            displayName: `${teamIndex + 1}`,
             href: `#t${teamIndex}`,
           })),
       }),

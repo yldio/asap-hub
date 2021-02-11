@@ -12,7 +12,7 @@ const sdk = lightstep.configureOpenTelemetry({
 // the SDK must be started before any
 // other packages are loaded.
 sdk.start().then(() => {
-  require('./server');
+  require('./handlers/api-handler');
 });
 
 // Shutdown flushes any remaining spans before exit.

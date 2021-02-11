@@ -58,7 +58,7 @@ it('links to the group leader teams', () => {
       }}
     />,
   );
-  expect(getByText('Cool Team').closest('a')).toHaveAttribute(
+  expect(getByText(/cool.team/i).closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/\D42/),
   );
@@ -80,7 +80,7 @@ it('links to the group teams', () => {
       }}
     />,
   );
-  expect(getByText('Cool Team').closest('a')).toHaveAttribute(
+  expect(getByText(/cool.team/i).closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/\D42/),
   );

@@ -104,7 +104,7 @@ const MembersList: React.FC<MembersListProps> = ({
         >
           {teams.map((team, i) => (
             <li key={i}>
-              <Link href={team.href}>{team.displayName}</Link>
+              <Link href={team.href}>Team {team.displayName}</Link>
             </li>
           ))}
         </ul>

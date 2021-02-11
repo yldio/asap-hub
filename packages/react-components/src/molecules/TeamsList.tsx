@@ -30,7 +30,7 @@ const TeamsList: React.FC<TeamsListProps> = ({ teams }) => (
         {i > 0 && <Divider />}
         <div css={rowStyles}>
           {teamIcon}
-          <Link href={href}>{displayName}</Link>
+          <Link href={href}>Team {displayName}</Link>
         </div>
       </li>
     ))}

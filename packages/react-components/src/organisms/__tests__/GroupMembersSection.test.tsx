@@ -57,18 +57,18 @@ it('renders a list of teams', async () => {
       teams={[
         {
           ...createListTeamResponse(1).items[0],
-          displayName: 'Team 0',
+          displayName: 'One',
           href: '#0',
         },
         {
           ...createListTeamResponse(2).items[1],
-          displayName: 'Team 1',
+          displayName: 'Two',
           href: '#1',
         },
       ]}
       leaders={[]}
     />,
   );
-  expect(getByText('Team 0').closest('a')).toHaveAttribute('href', '#0');
-  expect(getByText('Team 1').closest('a')).toHaveAttribute('href', '#1');
+  expect(getByText(/team.one/i).closest('a')).toHaveAttribute('href', '#0');
+  expect(getByText(/team.two/i).closest('a')).toHaveAttribute('href', '#1');
 });

@@ -58,12 +58,14 @@ type CardData = {
   };
 };
 interface ProfileCardListProps {
-  children: ReadonlyArray<CardData | ReactNode>;
+  children: ReadonlyArray<CardData | boolean | null | undefined>;
 }
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
   <div css={styles(children.length)}>
     {children
-      .filter((child): child is CardData => child && typeof child === 'object')
+      .filter(
+        (child): child is CardData => !!child && typeof child === 'object',
+      )
       .flatMap(({ card, editLink }, index) => [
         <div
           key={`card-${index}`}

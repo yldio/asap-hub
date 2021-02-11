@@ -242,6 +242,8 @@ export const queryGroupsExpectation: ListGroupResponse = {
             orcidWorks: [],
             questions: ['What is the meaning of life?', 'Question 2'],
             skills: ['React'],
+            skillsDescription:
+              "In addition to his expertise in not for profit management, Todd has scientific experience in animal models and the cell biology of Parkinson's disease.",
             lastModifiedDate: '2020-12-11T14:33:50.000Z',
             teams: [
               {

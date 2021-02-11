@@ -24,7 +24,8 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             lastName: 'Hardy',
             lastModifiedDate: '',
             questions: null,
-            skills: null,
+            skills: ['React'],
+            skillsDescription: null,
             orcid: '123-456-789',
             social: null,
             teams: [
@@ -67,6 +68,7 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             lastName: 'Schwatzneger',
             questions: [],
             skills: [],
+            skillsDescription: 'Amazing person',
             social: [
               {
                 github: 'awesome',
@@ -356,7 +358,7 @@ export const fetchExpectation: ListUserResponse = {
       id: 'userId1',
       createdDate: '2020-09-23T20:45:22.000Z',
       questions: [],
-      skills: [],
+      skills: ['React'],
       displayName: 'Tom Hardy',
       email: 'H@rdy.io',
       contactEmail: 'T@rdy.io',
@@ -383,6 +385,7 @@ export const fetchExpectation: ListUserResponse = {
       createdDate: '2020-09-23T20:45:22.000Z',
       questions: [],
       skills: [],
+      skillsDescription: 'Amazing person',
       displayName: 'Arnold Schwatzneger',
       email: 'iwillbeback@arnold.com',
       firstName: 'Arnold',

@@ -4,7 +4,7 @@ The script ignores the first line as it is considered the header of the file.
 
 ## users
 
-The package purpose is to automate the process of inserting bulk user and team information.
+The command purpose is to automate the process of inserting bulk user and team information.
 
 `yarn node apps/asap-cli/build-cjs/cli.js import users </path/to/file>.csv`
 
@@ -42,6 +42,10 @@ The csv format needs to respect the following structure:
 - twitter
 
 ## protocols
+
+The command purpose is to automate the process of inserting bulk protocols.
+
+`yarn node apps/asap-cli/build-cjs/cli.js import protocols </path/to/file>.csv`
 
 - teamLeadPILastName
 - linkToProtocols

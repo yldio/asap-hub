@@ -8,20 +8,13 @@ import {
   UserTeamConnection,
 } from '@asap-hub/squidex';
 import { Data } from './parse';
+import { HTTPError } from 'got';
 
 const teams = new Squidex<RestTeam>('teams');
 const users = new Squidex<RestUser>('users');
 
 interface Cache {
   [key: string]: Promise<RestTeam | RestUser>;
-}
-
-interface HTTPError extends Error {
-  data: unknown;
-  response?: {
-    statusCode: number;
-    body: string;
-  };
 }
 
 const insertMembership = (
@@ -261,7 +254,7 @@ export default ({
       console.error({
         op: `update '${data.email}'`,
         message: err3.message,
-        body: err3.response?.body || err3.data,
+        body: err3.response?.body,
       });
     }
   }

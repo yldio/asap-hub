@@ -51,9 +51,12 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
   client: typeof Got;
   collection: string;
 
-  constructor(collection: string) {
+  constructor(
+    collection: string,
+    options?: Parameters<typeof createClient>[0],
+  ) {
     this.collection = collection;
-    this.client = createClient();
+    this.client = createClient(options);
   }
 
   async fetch(query: ODataQuery | Query = {}): Promise<Results<T>> {

@@ -1513,6 +1513,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.3.0"
       ],
       [
+        "@types/got",
+        "npm:9.6.11"
+      ],
+      [
         "@types/graceful-fs",
         "npm:4.1.3"
       ],
@@ -9182,6 +9186,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/runtime-corejs3", "npm:7.12.5"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/babel__core", "npm:7.1.9"],
+            ["@types/got", "npm:9.6.11"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/jwt-decode", "npm:2.2.1"],
             ["@types/jwt-encode", "workspace:@types/jwt-encode"],
@@ -9194,6 +9199,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["async-sema", "npm:3.1.0"],
             ["aws-sdk", "npm:2.745.0"],
             ["csv-parse", "npm:4.12.0"],
+            ["got", "npm:11.6.0"],
             ["jwt-encode", "npm:1.0.1"],
             ["nock", "npm:13.0.4"],
             ["pump", "npm:3.0.0"],
@@ -20000,6 +20006,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-glob-base-npm-0.3.0-7caf6f4f12-ce8e357510.zip/node_modules/@types/glob-base/",
           "packageDependencies": [
             ["@types/glob-base", "npm:0.3.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/got", [
+        ["npm:9.6.11", {
+          "packageLocation": "./.yarn/cache/@types-got-npm-9.6.11-52363b432f-f0c0becccd.zip/node_modules/@types/got/",
+          "packageDependencies": [
+            ["@types/got", "npm:9.6.11"],
+            ["@types/node", "npm:13.11.1"],
+            ["@types/tough-cookie", "npm:4.0.0"],
+            ["form-data", "npm:2.5.1"]
           ],
           "linkType": "HARD",
         }]

@@ -8,7 +8,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "start:server": "tsnd ./src/server.ts"
+    "start:server": "tsnd ./src/init-instrumentation.ts"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
@@ -19,6 +19,8 @@
     "@hapi/boom": "^9.1.0",
     "@hapi/bourne": "^2.0.0",
     "@hapi/joi": "^17.1.1",
+    "@opentelemetry/plugin-dns": "^0.13.1",
+    "@opentelemetry/sdk-node": "^0.16.0",
     "@types/date-fns": "^2.6.0",
     "@types/parse-data-url": "^3.0.0",
     "apr-intercept": "^3.0.4",
@@ -37,6 +39,7 @@
     "graphql-tag": "^2.11.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^2.2.0",
+    "lightstep-opentelemetry-launcher-node": "^0.13.1",
     "lightstep-tracer": "^0.30.2",
     "lodash.get": "^4.4.2",
     "lodash.matches": "^4.6.0",

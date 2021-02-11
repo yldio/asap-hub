@@ -1023,6 +1023,126 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.1"
       ],
       [
+        "@opentelemetry/api",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/api-metrics",
+        "npm:0.16.0"
+      ],
+      [
+        "@opentelemetry/context-async-hooks",
+        "npm:0.16.0"
+      ],
+      [
+        "@opentelemetry/context-base",
+        "npm:0.16.0"
+      ],
+      [
+        "@opentelemetry/core",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/exporter-collector",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/host-metrics",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/metrics",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/node",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/plugin-dns",
+        "npm:0.13.1"
+      ],
+      [
+        "@opentelemetry/plugin-express",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/plugin-grpc",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/plugin-grpc-js",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/plugin-http",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/plugin-https",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/plugin-ioredis",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/plugin-mongodb",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/plugin-mysql",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/plugin-pg",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/plugin-pg-pool",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/plugin-redis",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/plugins-node-core",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/plugins-node-core-and-contrib",
+        "npm:0.12.1"
+      ],
+      [
+        "@opentelemetry/propagator-b3",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/resource-detector-aws",
+        "npm:0.16.0"
+      ],
+      [
+        "@opentelemetry/resource-detector-gcp",
+        "npm:0.16.0"
+      ],
+      [
+        "@opentelemetry/resources",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/sdk-node",
+        "npm:0.16.0"
+      ],
+      [
+        "@opentelemetry/semantic-conventions",
+        "npm:0.14.0"
+      ],
+      [
+        "@opentelemetry/tracing",
+        "npm:0.14.0"
+      ],
+      [
         "@panva/asn1.js",
         "npm:1.0.0"
       ],
@@ -2047,6 +2167,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.1"
       ],
       [
+        "abort-controller",
+        "npm:3.0.0"
+      ],
+      [
         "abortcontroller-polyfill",
         "npm:1.4.0"
       ],
@@ -2689,6 +2813,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "big.js",
         "npm:5.2.2"
+      ],
+      [
+        "bignumber.js",
+        "npm:9.0.1"
       ],
       [
         "binary-extensions",
@@ -4083,6 +4211,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.3.5"
       ],
       [
+        "event-target-shim",
+        "npm:5.0.1"
+      ],
+      [
         "eventemitter3",
         "npm:4.0.0"
       ],
@@ -4453,6 +4585,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "gauge",
         "npm:2.7.4"
+      ],
+      [
+        "gaxios",
+        "npm:4.1.0"
+      ],
+      [
+        "gcp-metadata",
+        "npm:4.2.1"
       ],
       [
         "gensync",
@@ -5507,6 +5647,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.5.2"
       ],
       [
+        "json-bigint",
+        "npm:1.0.0"
+      ],
+      [
         "json-buffer",
         "npm:3.0.1"
       ],
@@ -5681,6 +5825,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "lie",
         "npm:3.3.0"
+      ],
+      [
+        "lightstep-opentelemetry-launcher-node",
+        "npm:0.13.1"
       ],
       [
         "lightstep-tracer",
@@ -6081,6 +6229,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "mkdirp",
         "npm:0.5.5"
+      ],
+      [
+        "module-details-from-path",
+        "npm:1.0.3"
       ],
       [
         "moment",
@@ -7491,6 +7643,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.2"
       ],
       [
+        "require-in-the-middle",
+        "npm:5.1.0"
+      ],
+      [
         "require-main-filename",
         "npm:2.0.0"
       ],
@@ -7785,6 +7941,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "shellwords",
         "npm:0.1.1"
+      ],
+      [
+        "shimmer",
+        "npm:1.2.1"
       ],
       [
         "shortid",
@@ -8165,6 +8325,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "symbol.prototype.description",
         "npm:1.0.2"
+      ],
+      [
+        "systeminformation",
+        "npm:4.34.9"
       ],
       [
         "table",
@@ -9163,6 +9327,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.0"],
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
+            ["@opentelemetry/plugin-dns", "npm:0.13.1"],
+            ["@opentelemetry/sdk-node", "npm:0.16.0"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.53"],
             ["@types/chance", "npm:1.1.0"],
@@ -9203,6 +9369,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:8.5.1"],
             ["jwt-decode", "npm:2.2.0"],
             ["jwt-encode", "npm:1.0.1"],
+            ["lightstep-opentelemetry-launcher-node", "npm:0.13.1"],
             ["lightstep-tracer", "npm:0.30.2"],
             ["lodash.get", "npm:4.4.2"],
             ["lodash.matches", "npm:4.6.0"],
@@ -17754,6 +17921,532 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@opentelemetry/api", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-api-npm-0.14.0-32418757fd-ce601aba39.zip/node_modules/@opentelemetry/api/",
+          "packageDependencies": [
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/context-base", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.15.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-api-npm-0.15.0-abf22c4ec3-00f19967ed.zip/node_modules/@opentelemetry/api/",
+          "packageDependencies": [
+            ["@opentelemetry/api", "npm:0.15.0"],
+            ["@opentelemetry/context-base", "npm:0.15.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-api-npm-0.16.0-1f41175594-44f20c3f1a.zip/node_modules/@opentelemetry/api/",
+          "packageDependencies": [
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/context-base", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/api-metrics", [
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-api-metrics-npm-0.16.0-543207c522-0f08a2b8fe.zip/node_modules/@opentelemetry/api-metrics/",
+          "packageDependencies": [
+            ["@opentelemetry/api-metrics", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/context-async-hooks", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-context-async-hooks-npm-0.14.0-92c9afeb91-7ff4f6b44e.zip/node_modules/@opentelemetry/context-async-hooks/",
+          "packageDependencies": [
+            ["@opentelemetry/context-async-hooks", "npm:0.14.0"],
+            ["@opentelemetry/context-base", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-context-async-hooks-npm-0.16.0-24186c6ea3-7b5502c4b3.zip/node_modules/@opentelemetry/context-async-hooks/",
+          "packageDependencies": [
+            ["@opentelemetry/context-async-hooks", "npm:0.16.0"],
+            ["@opentelemetry/context-base", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/context-base", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-context-base-npm-0.14.0-4989dcd15f-f1e637a191.zip/node_modules/@opentelemetry/context-base/",
+          "packageDependencies": [
+            ["@opentelemetry/context-base", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.15.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-context-base-npm-0.15.0-1affa63c82-0c9ac79a89.zip/node_modules/@opentelemetry/context-base/",
+          "packageDependencies": [
+            ["@opentelemetry/context-base", "npm:0.15.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-context-base-npm-0.16.0-4e309a7c38-3847952688.zip/node_modules/@opentelemetry/context-base/",
+          "packageDependencies": [
+            ["@opentelemetry/context-base", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/core", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-core-npm-0.14.0-9586426771-48a81b6e93.zip/node_modules/@opentelemetry/core/",
+          "packageDependencies": [
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/context-base", "npm:0.14.0"],
+            ["semver", "npm:7.3.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.15.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-core-npm-0.15.0-b7989229ce-c43e95c442.zip/node_modules/@opentelemetry/core/",
+          "packageDependencies": [
+            ["@opentelemetry/core", "npm:0.15.0"],
+            ["@opentelemetry/api", "npm:0.15.0"],
+            ["@opentelemetry/context-base", "npm:0.15.0"],
+            ["semver", "npm:7.3.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-core-npm-0.16.0-1998d384fe-433dfaef98.zip/node_modules/@opentelemetry/core/",
+          "packageDependencies": [
+            ["@opentelemetry/core", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/context-base", "npm:0.16.0"],
+            ["semver", "npm:7.3.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/exporter-collector", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-exporter-collector-npm-0.14.0-286411b94a-6d3e2ab9df.zip/node_modules/@opentelemetry/exporter-collector/",
+          "packageDependencies": [
+            ["@opentelemetry/exporter-collector", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/metrics", "npm:0.14.0"],
+            ["@opentelemetry/resources", "npm:0.14.0"],
+            ["@opentelemetry/tracing", "npm:0.14.0"],
+            ["axios", "npm:0.21.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/host-metrics", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-host-metrics-npm-0.12.1-7f5247ddae-37e26b2335.zip/node_modules/@opentelemetry/host-metrics/",
+          "packageDependencies": [
+            ["@opentelemetry/host-metrics", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/metrics", "npm:0.14.0"],
+            ["systeminformation", "npm:4.34.9"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/metrics", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-metrics-npm-0.14.0-403aaac265-b9a6a72726.zip/node_modules/@opentelemetry/metrics/",
+          "packageDependencies": [
+            ["@opentelemetry/metrics", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/resources", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-metrics-npm-0.16.0-956f829f8d-60531ee7c6.zip/node_modules/@opentelemetry/metrics/",
+          "packageDependencies": [
+            ["@opentelemetry/metrics", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/api-metrics", "npm:0.16.0"],
+            ["@opentelemetry/core", "npm:0.16.0"],
+            ["@opentelemetry/resources", "npm:0.16.0"],
+            ["lodash.merge", "npm:4.6.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/node", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-node-npm-0.14.0-df5fea3c6d-d82cc0cccc.zip/node_modules/@opentelemetry/node/",
+          "packageDependencies": [
+            ["@opentelemetry/node", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/context-async-hooks", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/tracing", "npm:0.14.0"],
+            ["require-in-the-middle", "npm:5.1.0"],
+            ["semver", "npm:7.3.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-node-npm-0.16.0-0bf6a807cf-e4ab3f70d5.zip/node_modules/@opentelemetry/node/",
+          "packageDependencies": [
+            ["@opentelemetry/node", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/context-async-hooks", "npm:0.16.0"],
+            ["@opentelemetry/core", "npm:0.16.0"],
+            ["@opentelemetry/tracing", "npm:0.16.0"],
+            ["require-in-the-middle", "npm:5.1.0"],
+            ["semver", "npm:7.3.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-dns", [
+        ["npm:0.13.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-dns-npm-0.13.1-cf9c62ae7e-475bdb8ea1.zip/node_modules/@opentelemetry/plugin-dns/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-dns", "npm:0.13.1"],
+            ["@opentelemetry/api", "npm:0.15.0"],
+            ["@opentelemetry/core", "npm:0.15.0"],
+            ["semver", "npm:7.3.2"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-express", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-express-npm-0.12.1-99505c2e5d-6971cd3087.zip/node_modules/@opentelemetry/plugin-express/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-express", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-grpc", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-grpc-npm-0.14.0-a0e3e193df-762307efd1.zip/node_modules/@opentelemetry/plugin-grpc/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-grpc", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/semantic-conventions", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-grpc-js", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-grpc-js-npm-0.14.0-fa0c2a3c82-e8a8657f57.zip/node_modules/@opentelemetry/plugin-grpc-js/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-grpc-js", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/semantic-conventions", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-http", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-http-npm-0.14.0-a698a594bc-62767bf036.zip/node_modules/@opentelemetry/plugin-http/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-http", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/semantic-conventions", "npm:0.14.0"],
+            ["semver", "npm:7.3.2"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-https", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-https-npm-0.14.0-9277194b4e-af5ffdc9ae.zip/node_modules/@opentelemetry/plugin-https/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-https", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/plugin-http", "npm:0.14.0"],
+            ["@opentelemetry/semantic-conventions", "npm:0.14.0"],
+            ["semver", "npm:7.3.2"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-ioredis", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-ioredis-npm-0.12.1-0143a6651f-4a3c6a4687.zip/node_modules/@opentelemetry/plugin-ioredis/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-ioredis", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-mongodb", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-mongodb-npm-0.12.1-93931ba745-407458981f.zip/node_modules/@opentelemetry/plugin-mongodb/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-mongodb", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-mysql", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-mysql-npm-0.12.1-144d1237ce-c3638a179d.zip/node_modules/@opentelemetry/plugin-mysql/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-mysql", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-pg", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-pg-npm-0.12.1-0b6d0049de-9c2e9bff31.zip/node_modules/@opentelemetry/plugin-pg/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-pg", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-pg-pool", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-pg-pool-npm-0.12.1-aa59eaeb49-621488cca5.zip/node_modules/@opentelemetry/plugin-pg-pool/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-pg-pool", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugin-redis", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugin-redis-npm-0.12.1-dd1725a78d-f8e449d185.zip/node_modules/@opentelemetry/plugin-redis/",
+          "packageDependencies": [
+            ["@opentelemetry/plugin-redis", "npm:0.12.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["shimmer", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugins-node-core", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugins-node-core-npm-0.14.0-ee6ba445ce-3ed834298c.zip/node_modules/@opentelemetry/plugins-node-core/",
+          "packageDependencies": [
+            ["@opentelemetry/plugins-node-core", "npm:0.14.0"],
+            ["@opentelemetry/plugin-grpc", "npm:0.14.0"],
+            ["@opentelemetry/plugin-grpc-js", "npm:0.14.0"],
+            ["@opentelemetry/plugin-http", "npm:0.14.0"],
+            ["@opentelemetry/plugin-https", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/plugins-node-core-and-contrib", [
+        ["npm:0.12.1", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-plugins-node-core-and-contrib-npm-0.12.1-05d11b12f0-408b65ee40.zip/node_modules/@opentelemetry/plugins-node-core-and-contrib/",
+          "packageDependencies": [
+            ["@opentelemetry/plugins-node-core-and-contrib", "npm:0.12.1"],
+            ["@opentelemetry/plugin-express", "npm:0.12.1"],
+            ["@opentelemetry/plugin-ioredis", "npm:0.12.1"],
+            ["@opentelemetry/plugin-mongodb", "npm:0.12.1"],
+            ["@opentelemetry/plugin-mysql", "npm:0.12.1"],
+            ["@opentelemetry/plugin-pg", "npm:0.12.1"],
+            ["@opentelemetry/plugin-pg-pool", "npm:0.12.1"],
+            ["@opentelemetry/plugin-redis", "npm:0.12.1"],
+            ["@opentelemetry/plugins-node-core", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/propagator-b3", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-propagator-b3-npm-0.14.0-7310806012-298d81f985.zip/node_modules/@opentelemetry/propagator-b3/",
+          "packageDependencies": [
+            ["@opentelemetry/propagator-b3", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/resource-detector-aws", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-resource-detector-aws-npm-0.14.0-9885348717-2d1ab9b2b8.zip/node_modules/@opentelemetry/resource-detector-aws/",
+          "packageDependencies": [
+            ["@opentelemetry/resource-detector-aws", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/resources", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-resource-detector-aws-npm-0.16.0-1814653927-7b1a5adae8.zip/node_modules/@opentelemetry/resource-detector-aws/",
+          "packageDependencies": [
+            ["@opentelemetry/resource-detector-aws", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/core", "npm:0.16.0"],
+            ["@opentelemetry/resources", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/resource-detector-gcp", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-resource-detector-gcp-npm-0.14.0-ddb15cdae0-dcf3cf0455.zip/node_modules/@opentelemetry/resource-detector-gcp/",
+          "packageDependencies": [
+            ["@opentelemetry/resource-detector-gcp", "npm:0.14.0"],
+            ["@opentelemetry/resources", "npm:0.14.0"],
+            ["gcp-metadata", "npm:4.2.1"],
+            ["semver", "npm:7.3.4"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-resource-detector-gcp-npm-0.16.0-85ae21a08d-5d07116a0c.zip/node_modules/@opentelemetry/resource-detector-gcp/",
+          "packageDependencies": [
+            ["@opentelemetry/resource-detector-gcp", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/resources", "npm:0.16.0"],
+            ["gcp-metadata", "npm:4.2.1"],
+            ["semver", "npm:7.3.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/resources", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-resources-npm-0.14.0-dcb2c4ce61-6b7dd582c2.zip/node_modules/@opentelemetry/resources/",
+          "packageDependencies": [
+            ["@opentelemetry/resources", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-resources-npm-0.16.0-8139322049-0a21db7f23.zip/node_modules/@opentelemetry/resources/",
+          "packageDependencies": [
+            ["@opentelemetry/resources", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/core", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/sdk-node", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-sdk-node-npm-0.14.0-9dde4f3359-1960686108.zip/node_modules/@opentelemetry/sdk-node/",
+          "packageDependencies": [
+            ["@opentelemetry/sdk-node", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/context-base", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/metrics", "npm:0.14.0"],
+            ["@opentelemetry/node", "npm:0.14.0"],
+            ["@opentelemetry/resource-detector-aws", "npm:0.14.0"],
+            ["@opentelemetry/resource-detector-gcp", "npm:0.14.0"],
+            ["@opentelemetry/resources", "npm:0.14.0"],
+            ["@opentelemetry/tracing", "npm:0.14.0"],
+            ["nock", "npm:12.0.3"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-sdk-node-npm-0.16.0-26b000fe4c-419229a6d8.zip/node_modules/@opentelemetry/sdk-node/",
+          "packageDependencies": [
+            ["@opentelemetry/sdk-node", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/api-metrics", "npm:0.16.0"],
+            ["@opentelemetry/context-base", "npm:0.16.0"],
+            ["@opentelemetry/core", "npm:0.16.0"],
+            ["@opentelemetry/metrics", "npm:0.16.0"],
+            ["@opentelemetry/node", "npm:0.16.0"],
+            ["@opentelemetry/resource-detector-aws", "npm:0.16.0"],
+            ["@opentelemetry/resource-detector-gcp", "npm:0.16.0"],
+            ["@opentelemetry/resources", "npm:0.16.0"],
+            ["@opentelemetry/tracing", "npm:0.16.0"],
+            ["nock", "npm:12.0.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/semantic-conventions", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-semantic-conventions-npm-0.14.0-ae4d193f9a-1b88cdc4af.zip/node_modules/@opentelemetry/semantic-conventions/",
+          "packageDependencies": [
+            ["@opentelemetry/semantic-conventions", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-semantic-conventions-npm-0.16.0-83ef52cc8a-b64615dbd7.zip/node_modules/@opentelemetry/semantic-conventions/",
+          "packageDependencies": [
+            ["@opentelemetry/semantic-conventions", "npm:0.16.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@opentelemetry/tracing", [
+        ["npm:0.14.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-tracing-npm-0.14.0-c6f66bb4a3-69bbd25a95.zip/node_modules/@opentelemetry/tracing/",
+          "packageDependencies": [
+            ["@opentelemetry/tracing", "npm:0.14.0"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/context-base", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/resources", "npm:0.14.0"],
+            ["@opentelemetry/semantic-conventions", "npm:0.14.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.16.0", {
+          "packageLocation": "./.yarn/cache/@opentelemetry-tracing-npm-0.16.0-5f77f4c178-61ba6cd6e2.zip/node_modules/@opentelemetry/tracing/",
+          "packageDependencies": [
+            ["@opentelemetry/tracing", "npm:0.16.0"],
+            ["@opentelemetry/api", "npm:0.16.0"],
+            ["@opentelemetry/context-base", "npm:0.16.0"],
+            ["@opentelemetry/core", "npm:0.16.0"],
+            ["@opentelemetry/resources", "npm:0.16.0"],
+            ["@opentelemetry/semantic-conventions", "npm:0.16.0"],
+            ["lodash.merge", "npm:4.6.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@panva/asn1.js", [
         ["npm:1.0.0", {
           "packageLocation": "./.yarn/cache/@panva-asn1.js-npm-1.0.0-2bf51df722-0563c1372d.zip/node_modules/@panva/asn1.js/",
@@ -21650,6 +22343,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["abort-controller", [
+        ["npm:3.0.0", {
+          "packageLocation": "./.yarn/cache/abort-controller-npm-3.0.0-2f3a9a2bcb-cc53ad8df9.zip/node_modules/abort-controller/",
+          "packageDependencies": [
+            ["abort-controller", "npm:3.0.0"],
+            ["event-target-shim", "npm:5.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["abortcontroller-polyfill", [
         ["npm:1.4.0", {
           "packageLocation": "./.yarn/cache/abortcontroller-polyfill-npm-1.4.0-d2ba6da917-81c8aa38a6.zip/node_modules/abortcontroller-polyfill/",
@@ -24134,6 +24837,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/big.js-npm-5.2.2-e147c30820-ea33d7d256.zip/node_modules/big.js/",
           "packageDependencies": [
             ["big.js", "npm:5.2.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["bignumber.js", [
+        ["npm:9.0.1", {
+          "packageLocation": "./.yarn/cache/bignumber.js-npm-9.0.1-270d0c8a55-605e9639c4.zip/node_modules/bignumber.js/",
+          "packageDependencies": [
+            ["bignumber.js", "npm:9.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -29519,6 +30231,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["event-target-shim", [
+        ["npm:5.0.1", {
+          "packageLocation": "./.yarn/cache/event-target-shim-npm-5.0.1-cb48709025-d176477a31.zip/node_modules/event-target-shim/",
+          "packageDependencies": [
+            ["event-target-shim", "npm:5.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["eventemitter3", [
         ["npm:1.1.1", {
           "packageLocation": "./.yarn/cache/eventemitter3-npm-1.1.1-d08a8a198c-c089e5d3be.zip/node_modules/eventemitter3/",
@@ -31061,6 +31782,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["string-width", "npm:1.0.2"],
             ["strip-ansi", "npm:3.0.1"],
             ["wide-align", "npm:1.1.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["gaxios", [
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/gaxios-npm-4.1.0-0ace8881c8-d54423e28d.zip/node_modules/gaxios/",
+          "packageDependencies": [
+            ["gaxios", "npm:4.1.0"],
+            ["abort-controller", "npm:3.0.0"],
+            ["extend", "npm:3.0.2"],
+            ["https-proxy-agent", "npm:5.0.0"],
+            ["is-stream", "npm:2.0.0"],
+            ["node-fetch", "npm:2.6.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["gcp-metadata", [
+        ["npm:4.2.1", {
+          "packageLocation": "./.yarn/cache/gcp-metadata-npm-4.2.1-eb87d88ba5-53a976ad1d.zip/node_modules/gcp-metadata/",
+          "packageDependencies": [
+            ["gcp-metadata", "npm:4.2.1"],
+            ["gaxios", "npm:4.1.0"],
+            ["json-bigint", "npm:1.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -35477,6 +36223,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["json-bigint", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/json-bigint-npm-1.0.0-8e35bcb143-f6c550e09f.zip/node_modules/json-bigint/",
+          "packageDependencies": [
+            ["json-bigint", "npm:1.0.0"],
+            ["bignumber.js", "npm:9.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["json-buffer", [
         ["npm:3.0.0", {
           "packageLocation": "./.yarn/cache/json-buffer-npm-3.0.0-21c267a314-09b53ecc8f.zip/node_modules/json-buffer/",
@@ -36052,6 +36808,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["lie", "npm:3.3.0"],
             ["immediate", "npm:3.0.6"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["lightstep-opentelemetry-launcher-node", [
+        ["npm:0.13.1", {
+          "packageLocation": "./.yarn/cache/lightstep-opentelemetry-launcher-node-npm-0.13.1-185cf856c4-e9c7faa630.zip/node_modules/lightstep-opentelemetry-launcher-node/",
+          "packageDependencies": [
+            ["lightstep-opentelemetry-launcher-node", "npm:0.13.1"],
+            ["@opentelemetry/api", "npm:0.14.0"],
+            ["@opentelemetry/core", "npm:0.14.0"],
+            ["@opentelemetry/exporter-collector", "npm:0.14.0"],
+            ["@opentelemetry/host-metrics", "npm:0.12.1"],
+            ["@opentelemetry/node", "npm:0.14.0"],
+            ["@opentelemetry/plugins-node-core-and-contrib", "npm:0.12.1"],
+            ["@opentelemetry/propagator-b3", "npm:0.14.0"],
+            ["@opentelemetry/resources", "npm:0.14.0"],
+            ["@opentelemetry/sdk-node", "npm:0.14.0"]
           ],
           "linkType": "HARD",
         }]
@@ -37309,6 +38083,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["module-details-from-path", [
+        ["npm:1.0.3", {
+          "packageLocation": "./.yarn/cache/module-details-from-path-npm-1.0.3-396d5203b4-bf25f3d009.zip/node_modules/module-details-from-path/",
+          "packageDependencies": [
+            ["module-details-from-path", "npm:1.0.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["moment", [
         ["npm:2.27.0", {
           "packageLocation": "./.yarn/cache/moment-npm-2.27.0-0e670d438d-72d9a7d8db.zip/node_modules/moment/",
@@ -37591,6 +38374,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["nock", [
+        ["npm:12.0.3", {
+          "packageLocation": "./.yarn/cache/nock-npm-12.0.3-6acd5fc71e-135b0be475.zip/node_modules/nock/",
+          "packageDependencies": [
+            ["nock", "npm:12.0.3"],
+            ["debug", "virtual:88c91e718f5c047e706657833016435d9afd204207e38d93790ef921db10dcd422cdb8ab7a565d263b03ce9d79a2098e157c646f2bd38df6ecdb41f52893df49#npm:4.2.0"],
+            ["json-stringify-safe", "npm:5.0.1"],
+            ["lodash", "npm:4.17.20"],
+            ["propagate", "npm:2.0.1"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:13.0.4", {
           "packageLocation": "./.yarn/cache/nock-npm-13.0.4-d232d43721-cc76d95178.zip/node_modules/nock/",
           "packageDependencies": [
@@ -42642,6 +43436,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["require-in-the-middle", [
+        ["npm:5.1.0", {
+          "packageLocation": "./.yarn/cache/require-in-the-middle-npm-5.1.0-f676386762-8dada31c27.zip/node_modules/require-in-the-middle/",
+          "packageDependencies": [
+            ["require-in-the-middle", "npm:5.1.0"],
+            ["debug", "virtual:88c91e718f5c047e706657833016435d9afd204207e38d93790ef921db10dcd422cdb8ab7a565d263b03ce9d79a2098e157c646f2bd38df6ecdb41f52893df49#npm:4.2.0"],
+            ["module-details-from-path", "npm:1.0.3"],
+            ["resolve", "patch:resolve@npm%3A1.18.1#builtin<compat/resolve>::version=1.18.1&hash=3388aa"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["require-main-filename", [
         ["npm:2.0.0", {
           "packageLocation": "./.yarn/cache/require-main-filename-npm-2.0.0-03eef65c84-8d3633149a.zip/node_modules/require-main-filename/",
@@ -43805,6 +44611,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/shellwords-npm-0.1.1-a091a78197-3559ff5509.zip/node_modules/shellwords/",
           "packageDependencies": [
             ["shellwords", "npm:0.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["shimmer", [
+        ["npm:1.2.1", {
+          "packageLocation": "./.yarn/cache/shimmer-npm-1.2.1-8b50bf3206-23431fc4c5.zip/node_modules/shimmer/",
+          "packageDependencies": [
+            ["shimmer", "npm:1.2.1"]
           ],
           "linkType": "HARD",
         }]
@@ -45127,6 +45942,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["symbol.prototype.description", "npm:1.0.2"],
             ["es-abstract", "npm:1.17.5"],
             ["has-symbols", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["systeminformation", [
+        ["npm:4.34.9", {
+          "packageLocation": "./.yarn/cache/systeminformation-npm-4.34.9-7eb882d97e-f2712028d5.zip/node_modules/systeminformation/",
+          "packageDependencies": [
+            ["systeminformation", "npm:4.34.9"]
           ],
           "linkType": "HARD",
         }]

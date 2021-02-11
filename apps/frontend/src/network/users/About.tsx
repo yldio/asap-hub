@@ -4,11 +4,8 @@ import { useRouteMatch, Route } from 'react-router-dom';
 import { UserProfileAbout, BiographyModal } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
-import { isEnabled } from '@asap-hub/flags';
 
 import { usePatchUserById } from './state';
-import Frame from '../../structure/Frame';
-import UserGroups from './Groups';
 
 type AboutProps = {
   user: UserResponse;
@@ -24,13 +21,6 @@ const About: React.FC<AboutProps> = ({ user }) => {
     <>
       <UserProfileAbout
         {...user}
-        userProfileGroupsCard={
-          isEnabled('GROUPS') ? (
-            <Frame fallback={null}>
-              <UserGroups user={user} />
-            </Frame>
-          ) : undefined
-        }
         editBiographyHref={
           id === user.id ? join(url, 'edit-biography') : undefined
         }

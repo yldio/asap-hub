@@ -140,3 +140,13 @@ it('create mailto for contactEmail', () => {
     'mailto:contactEmail@example.com',
   );
 });
+
+it('renders user profile groups card', () => {
+  const { getByText } = render(
+    <UserProfileResearch
+      {...commonProps}
+      userProfileGroupsCard={'UserProfileGroups'}
+    />,
+  );
+  expect(getByText(/userprofilegroups/i)).toBeVisible();
+});

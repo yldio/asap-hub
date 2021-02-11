@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { UserProfileAbout } from '@asap-hub/react-components';
-import { text, boolean } from '@storybook/addon-knobs';
+import { text } from '@storybook/addon-knobs';
 import { makeFlagDecorator } from './flags';
 
 export default {
@@ -33,9 +33,6 @@ const props = (): ComponentProps<typeof UserProfileAbout> => ({
       lastModifiedDate: '1478865224685',
     },
   ],
-  userProfileGroupsCard: boolean('User Profile Groups Placeholder', true)
-    ? 'User Profile Groups Placeholder'
-    : undefined,
 });
 
 export const ViewOnly = () => <UserProfileAbout {...props()} />;

@@ -12,7 +12,6 @@ export interface UserProfileAboutProps {
   biosketch?: ComponentProps<typeof UserProfileBiography>['biosketch'];
   orcidWorks?: ComponentProps<typeof UserProfileRecentWorks>['orcidWorks'];
 
-  userProfileGroupsCard?: React.ReactNode;
   editBiographyHref?: string;
   editOrcidWorksHref?: string;
 }
@@ -21,7 +20,6 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
   biography,
   biosketch,
   orcidWorks,
-  userProfileGroupsCard,
   editBiographyHref,
   editOrcidWorksHref,
 }) => {
@@ -40,9 +38,6 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
                 href: editBiographyHref,
                 label: 'Edit biography',
               },
-      }}
-      {userProfileGroupsCard !== undefined && {
-        card: userProfileGroupsCard,
       }}
       {{
         card:

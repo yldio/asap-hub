@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { UserProfileResearch } from '@asap-hub/react-components';
-import { array, text } from '@storybook/addon-knobs';
+import { array, text, boolean } from '@storybook/addon-knobs';
 import { TeamRole } from '@asap-hub/model';
 import { makeFlagDecorator } from './flags';
 
@@ -49,6 +49,9 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
     'Are alpha-synuclein deposits the cause or consequence of somethign deeper wrong with neurons?',
     'How much do we have to knock down extracellular alpha-synuclein to measurably slow cell to cell transmission?',
   ]),
+  userProfileGroupsCard: boolean('User Profile Groups Placeholder', true)
+    ? 'User Profile Groups Placeholder'
+    : undefined,
 });
 
 export const ViewOnly = () => <UserProfileResearch {...props()} />;

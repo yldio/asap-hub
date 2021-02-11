@@ -94,7 +94,7 @@ module.exports = {
   },
   functions: {
     apiHandler: {
-      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
+      handler: 'apps/asap-server/build-cjs/init-instrumentation.handler',
       events: [
         {
           httpApi: {

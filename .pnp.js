@@ -1607,6 +1607,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.0.1"
       ],
       [
+        "@types/luxon",
+        "npm:1.25.1"
+      ],
+      [
         "@types/markdown-to-jsx",
         "npm:6.11.1"
       ],
@@ -5872,7 +5876,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "luxon",
-        "npm:1.24.1"
+        "npm:1.25.0"
       ],
       [
         "lz-string",
@@ -9177,6 +9181,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/lodash.get", "npm:4.4.6"],
             ["@types/lodash.matches", "npm:4.6.6"],
             ["@types/lodash.uniqby", "npm:4.7.6"],
+            ["@types/luxon", "npm:1.25.1"],
             ["@types/mime-types", "npm:2.1.0"],
             ["@types/parse-data-url", "npm:3.0.0"],
             ["@types/pump", "npm:1.1.0"],
@@ -9203,6 +9208,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["lodash.get", "npm:4.4.2"],
             ["lodash.matches", "npm:4.6.0"],
             ["lodash.uniqby", "npm:4.7.0"],
+            ["luxon", "npm:1.25.0"],
             ["mime-types", "npm:2.1.27"],
             ["nock", "npm:13.0.4"],
             ["opentracing", "npm:0.14.5"],
@@ -20148,6 +20154,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-long-npm-4.0.1-022c8b6e77-ed2a125330.zip/node_modules/@types/long/",
           "packageDependencies": [
             ["@types/long", "npm:4.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/luxon", [
+        ["npm:1.25.1", {
+          "packageLocation": "./.yarn/cache/@types-luxon-npm-1.25.1-6ff94d71b7-5767c3d4b1.zip/node_modules/@types/luxon/",
+          "packageDependencies": [
+            ["@types/luxon", "npm:1.25.1"]
           ],
           "linkType": "HARD",
         }]
@@ -36605,6 +36620,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/luxon-npm-1.24.1-4ed266bac4-3e5a9599e1.zip/node_modules/luxon/",
           "packageDependencies": [
             ["luxon", "npm:1.24.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:1.25.0", {
+          "packageLocation": "./.yarn/cache/luxon-npm-1.25.0-9f380ab196-3f0d64355b.zip/node_modules/luxon/",
+          "packageDependencies": [
+            ["luxon", "npm:1.25.0"]
           ],
           "linkType": "HARD",
         }]

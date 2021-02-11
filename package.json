@@ -8,7 +8,7 @@
     "@types/*"
   ],
   "engines": {
-    "node": "12.18.x"
+    "node": "14.15.x"
   },
   "repository": {
     "type": "git",

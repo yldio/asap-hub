@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { Link } from '../atoms';
 import { silver } from '../colors';
 import { asapImage } from '../images';
-import { gradientStyles } from '../appearance';
+import { ceruleanFernGradientStyles } from '../appearance';
 
 const containerStyles = css({
   maxWidth: '600px',
@@ -52,7 +52,10 @@ const EmailLayout: React.FC<LayoutProps> = ({
 }) => (
   <>
     <div css={containerStyles}>
-      <div role="presentation" css={[gradientStyles, coloredLineStyles]} />
+      <div
+        role="presentation"
+        css={[ceruleanFernGradientStyles, coloredLineStyles]}
+      />
       <div
         css={css({
           paddingLeft: '24px',

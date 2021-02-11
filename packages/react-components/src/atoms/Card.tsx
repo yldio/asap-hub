@@ -4,7 +4,7 @@ import css, { CSSObject } from '@emotion/css';
 import * as colors from '../colors';
 import { perRem } from '../pixels';
 import { themes } from '../theme';
-import { paddingStyles } from '../card';
+import { paddingStyles, borderRadius } from '../card';
 
 export type AccentVariant = 'default' | 'red' | 'green';
 
@@ -33,7 +33,7 @@ const containerStyles = css({
   borderStyle: 'solid',
   borderWidth: 1,
 
-  borderRadius: `${6 / perRem}em`,
+  borderRadius: `${borderRadius / perRem}em`,
 });
 
 interface CardProps {

@@ -1,5 +1,5 @@
+/* istanbul ignore file */
 /* eslint-disable max-classes-per-file */
-
 import * as opentracing from 'opentracing';
 import { SpanContext, Span } from 'opentracing';
 import { Squidex, SquidexGraphql } from '@asap-hub/squidex';

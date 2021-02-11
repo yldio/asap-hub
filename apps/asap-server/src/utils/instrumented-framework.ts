@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import * as opentracing from 'opentracing';
 import lightstep from 'lightstep-tracer';
 import { promisify } from 'util';

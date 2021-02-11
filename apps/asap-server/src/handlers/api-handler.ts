@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import serverlessHttp from 'serverless-http';
 import { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';

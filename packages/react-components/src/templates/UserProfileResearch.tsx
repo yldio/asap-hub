@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import React, { ComponentProps, ReactNode } from 'react';
 import { UserResponse } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 
@@ -24,6 +24,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
       }
     >;
   } & {
+    userProfileGroupsCard?: ReactNode;
     editSkillsHref?: string;
     editQuestionsHref?: string;
   };
@@ -38,6 +39,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   skillsDescription,
   questions,
 
+  userProfileGroupsCard,
   editSkillsHref,
   editQuestionsHref,
 }) => {
@@ -61,6 +63,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                 }
               : undefined,
         })),
+        userProfileGroupsCard !== undefined && {
+          card: userProfileGroupsCard,
+        },
         {
           card: skills.length ? (
             <ProfileSkills

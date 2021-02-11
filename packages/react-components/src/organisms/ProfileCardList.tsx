@@ -63,7 +63,7 @@ interface ProfileCardListProps {
 const ProfileCardList: React.FC<ProfileCardListProps> = ({ children }) => (
   <div css={styles(children.length)}>
     {children
-      .filter((cardData): cardData is CardData => Boolean(cardData))
+      .filter((child): child is CardData => child && typeof child === 'object')
       .flatMap(({ card, editLink }, index) => [
         <div
           key={`card-${index}`}

@@ -5,13 +5,20 @@ import { TeamResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
 import { SHARED_RESEARCH_PATH, NETWORK_PATH } from '../../routes';
-import { USERS_PATH } from '../routes';
+import { USERS_PATH, GROUPS_PATH } from '../routes';
 import { useTeamGroupsById } from './state';
 import Frame from '../../structure/Frame';
 
 const TeamGroups: React.FC<{ id: string }> = ({ id }) => {
-  const teamGroups = useTeamGroupsById(id);
-  return teamGroups.total > 0 ? <TeamGroupsCard {...teamGroups} /> : null;
+  const { items, total } = useTeamGroupsById(id);
+  return total > 0 ? (
+    <TeamGroupsCard
+      groups={items.map((group) => ({
+        ...group,
+        href: join('/', NETWORK_PATH, GROUPS_PATH, group.id),
+      }))}
+    />
+  ) : null;
 };
 
 interface AboutProps {

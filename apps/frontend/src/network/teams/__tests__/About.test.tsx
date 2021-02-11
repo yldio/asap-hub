@@ -3,6 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import {
   createTeamResponse,
   createListGroupResponse,
+  createGroupResponse,
 } from '@asap-hub/fixtures';
 import {
   Auth0Provider,
@@ -115,5 +116,23 @@ describe('the team groups card', () => {
     await waitFor(() =>
       expect(queryByText(/team groups/i)).toBeInTheDocument(),
     );
+  });
+
+  it('renders link for group', async () => {
+    const { queryByText, getByText } = await renderTeamAbout(
+      {
+        team: createTeamResponse(),
+      },
+      {
+        items: [{ ...createGroupResponse(), name: 'example group', id: 'g1' }],
+        total: 1,
+      },
+    );
+    await waitFor(() =>
+      expect(queryByText(/team groups/i)).toBeInTheDocument(),
+    );
+    expect(
+      getByText(/example group/i, { selector: 'h4' }).parentElement,
+    ).toHaveAttribute('href', '/network/groups/g1');
   });
 });

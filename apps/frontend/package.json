@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "cross-env TSC_COMPILE_ON_ERROR=true react-scripts start",
-    "build": "react-scripts build",
+    "build": "node ./scripts/build-unsupported-browser-page.js && react-scripts build",
     "typecheck": "tsc",
     "test": "echo Run the workspace root script instead",
     "eject": "react-scripts eject"
@@ -18,6 +18,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
+    "@asap-hub/unsupported-browser-page": "workspace:*",
     "@auth0/auth0-spa-js": "^1.9.0",
     "browser-image-compression": "^1.0.13",
     "history": "^4",
@@ -52,10 +53,12 @@
     "@types/testing-library__react": "^10.0.1",
     "@types/testing-library__react-hooks": "^3.2.0",
     "@types/uuid": "^8.0.0",
+    "browserslist-useragent-regexp": "^3.0.0",
     "cross-env": "^7.0.2",
     "identity-obj-proxy": "^3.0.0",
     "jose": "^2.0.2",
     "nock": "^13.0.4",
+    "pirates": "^4.0.1",
     "react-scripts": "^4.0.1",
     "react-test-renderer": "^17.0.1",
     "typescript": "~3.9.7"

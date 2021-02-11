@@ -61,6 +61,7 @@ module.exports = {
         '@typescript-eslint/no-empty-function': 'off',
         'no-var': 'off',
         'no-new-func': 'off',
+        'no-eval': 'off',
       },
     },
   ],

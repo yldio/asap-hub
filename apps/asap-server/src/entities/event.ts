@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { GraphqlEvent } from '@asap-hub/squidex';
 import { EventBaseResponse } from '../controllers/events';
 import { parseGraphQLCalendar } from './calendar';

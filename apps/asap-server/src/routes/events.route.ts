@@ -1,8 +1,8 @@
 import { Router, Response } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
-import { EventController, FetchEventsOptions } from '../controllers/events';
 import { ListEventResponse } from '@asap-hub/model';
+import { EventController, FetchEventsOptions } from '../controllers/events';
 
 export const eventRouteFactory = (eventController: EventController): Router => {
   const eventRoutes = Router();

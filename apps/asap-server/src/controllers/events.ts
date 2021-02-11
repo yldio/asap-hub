@@ -55,7 +55,9 @@ export default class Events implements EventController {
 
 export const GraphQLQueryEvent = `
 id
-created flatData{
+lastModified
+created
+flatData{
   description
   endDate
   startDate
@@ -74,7 +76,7 @@ created flatData{
 }`;
 
 export const buildGraphQLQueryFetchEvents = (
-  filter = '',
+  filter: string,
   top = 10,
   skip = 0,
 ): string =>

@@ -199,7 +199,7 @@ __metadata:
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/runtime-corejs3": ^7.12.5
     "@types/jest": ^26.0.20
-    "@types/node": ^12.12.0
+    "@types/node": ^14.14.0
   languageName: unknown
   linkType: soft
 
@@ -281,7 +281,7 @@ __metadata:
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.20
     "@types/nock": ^11.1.0
-    "@types/node": ^12.12.0
+    "@types/node": ^14.14.0
     "@types/react": ^17.0.0
     "@types/react-dom": ^17.0.0
     "@types/react-router-dom": ^5.1.5
@@ -7219,10 +7219,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^12.12.0":
-  version: 12.12.55
-  resolution: "@types/node@npm:12.12.55"
-  checksum: 2ebf7e2ae6726975f96b27f17ce666b61478862c95e8b35f3e891582e4230e63ddc3c369dcb9625776a51359ee14ba6004222908af7720f3356311a302d4fbdb
+"@types/node@npm:^14.14.0":
+  version: 14.14.25
+  resolution: "@types/node@npm:14.14.25"
+  checksum: 64c42730f4169e49ec378870622ef06c5d820b31340e224cc1b45bf06c8b0cfa28daa587b4ae2b8ea1f712ef049bae4d9c92925b157ba9ba7cde3b22ff552513
   languageName: node
   linkType: hard
 

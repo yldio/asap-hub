@@ -34,7 +34,7 @@ module.exports = {
   plugins,
   provider: {
     name: 'aws',
-    runtime: 'nodejs12.x',
+    runtime: 'nodejs14.x',
     timeout: 16,
     memorySize: 512,
     region: AWS_REGION,

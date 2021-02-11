@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "engines": {
-    "node": "12.18.x"
+    "node": "14.15.x"
   },
   "peerDependencies": {
     "react": "^17.0.1",

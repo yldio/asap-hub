@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import aws from 'aws-sdk';
 import { sesEndpoint } from '../config';
 

@@ -33,6 +33,23 @@ describe('Dashboard controller', () => {
       });
     });
 
+    test('Should return an empty result when the client returns an empty array of data', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .reply(200, {
+          data: {
+            queryDashboardContents: [],
+          },
+        });
+
+      const result = await dashboard.fetch();
+
+      expect(result).toEqual({
+        newsAndEvents: [],
+        pages: [],
+      });
+    });
+
     test('Should return an empty result when the client returns nulls', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, (body) => body.query)

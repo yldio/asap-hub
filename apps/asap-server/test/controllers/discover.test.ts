@@ -42,6 +42,26 @@ describe('Discover controller', () => {
       expect(result).toEqual(expectedResponse);
     });
 
+    test('Should return an empty result when no resource doesnt exist', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .reply(200, {
+          data: {
+            queryDiscoverContents: [],
+          },
+        });
+
+      const result = await discover.fetch();
+
+      const expectedResponse: DiscoverResponse = {
+        aboutUs: '',
+        training: [],
+        members: [],
+        pages: [],
+      };
+      expect(result).toEqual(expectedResponse);
+    });
+
     test('Should return the discover information', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, (body) => body.query)

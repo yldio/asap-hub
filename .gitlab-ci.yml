@@ -50,6 +50,7 @@ stages:
   - test
   - prepare
   - deploy
+  - verify
 
 ###############
 # stage build #
@@ -208,3 +209,15 @@ deploy:sls:production:
     - test:unit
     - test:browser
     - sync:squidex:production
+
+################
+# stage verify #
+################
+
+verify:branch:
+  <<: *tmpl_branch
+  stage: verify
+  needs:
+    - deploy:sls:branch
+  script:
+    - yarn test:e2e

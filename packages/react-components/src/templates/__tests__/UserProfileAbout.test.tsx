@@ -66,3 +66,13 @@ it('disables the edit button for the recent works visibility (REGRESSION)', () =
   );
   expect(getByLabelText(/edit.+recent.+visib/i)).not.toHaveAttribute('href');
 });
+
+it('renders user profile groups card', () => {
+  const { getByText } = render(
+    <UserProfileAbout
+      orcidWorks={[]}
+      userProfileGroupsCard={'UserProfileGroups'}
+    />,
+  );
+  expect(getByText(/userprofilegroups/i)).toBeVisible();
+});

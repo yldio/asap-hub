@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserResponse, GroupRole } from '@asap-hub/model';
+import { UserResponse, GroupResponse } from '@asap-hub/model';
 import css from '@emotion/css';
 import { Card, Headline2, Paragraph, Link, Divider } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
@@ -46,51 +46,46 @@ const listItemStyle = css({
   },
 });
 
-type UserProfileGroupsProps = Pick<UserResponse, 'firstName'> & {
-  groups: ReadonlyArray<{
-    name: string;
-    role: GroupRole | 'Member';
-    href: string;
-  }>;
+type UserProfileGroupsProps = Pick<UserResponse, 'firstName' | 'id'> & {
+  groups: (GroupResponse & { href: string })[];
 };
 
 const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
   firstName,
+  id,
   groups,
-}) => {
-  const groupsComponent = groups.length ? (
-    <ul css={[containerStyles]}>
-      {groups
-        .flatMap(({ name, role, href }, idx) => [
-          <Divider key={`sep-${idx}`} />,
-          <li key={idx} css={listItemStyle}>
-            <div css={[titleStyle]}>Group</div>
-            <Link href={href}>{name}</Link>
-            <div css={[titleStyle]}>Role</div>
-            <div css={roleStyle}>{role}</div>
-          </li>,
-        ])
-        .slice(1)}
-    </ul>
-  ) : null;
-
-  return (
-    <Card>
-      <div
-        css={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Headline2 styleAsHeading={3}>{firstName}’ Groups</Headline2>
-        <Paragraph accent="lead">
-          {firstName}’s team is collaborating with other teams via groups, which
-          meet frequently
-        </Paragraph>
-        {groupsComponent}
-      </div>
-    </Card>
-  );
-};
-
+}) => (
+  <Card>
+    <div
+      css={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <Headline2 styleAsHeading={3}>{firstName}’ Groups</Headline2>
+      <Paragraph accent="lead">
+        {firstName}’s team is collaborating with other teams via groups, which
+        meet frequently
+      </Paragraph>
+      {!!groups.length && (
+        <ul css={[containerStyles]}>
+          {groups.map(({ name, leaders, href }, idx) => (
+            <React.Fragment key={`group-${idx}`}>
+              {idx === 0 || <Divider />}
+              <li key={idx} css={listItemStyle}>
+                <div css={[titleStyle]}>Group</div>
+                <Link href={href}>{name}</Link>
+                <div css={[titleStyle]}>Role</div>
+                <div css={roleStyle}>
+                  {leaders.find((test) => test.user.id === id)?.role ??
+                    'Member'}
+                </div>
+              </li>
+            </React.Fragment>
+          ))}
+        </ul>
+      )}
+    </div>
+  </Card>
+);
 export default UserProfileGroups;

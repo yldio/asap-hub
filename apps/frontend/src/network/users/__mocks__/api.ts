@@ -1,8 +1,12 @@
-import { createUserResponse } from '@asap-hub/fixtures';
+import {
+  createUserResponse,
+  createListGroupResponse,
+} from '@asap-hub/fixtures';
 import {
   UserPatchRequest,
   UserResponse,
   UserAvatarPostRequest,
+  ListGroupResponse,
 } from '@asap-hub/model';
 
 export const getUser = jest.fn(
@@ -30,4 +34,8 @@ export const postUserAvatar = jest.fn(
       avatarUrl: `url: ${post.avatar}`,
     };
   },
+);
+
+export const getUserGroups = jest.fn(
+  async (id: string): Promise<ListGroupResponse> => createListGroupResponse(1),
 );

@@ -4,8 +4,8 @@ import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
-
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
+
 import About from '../About';
 import { patchUser } from '../api';
 

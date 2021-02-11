@@ -218,6 +218,8 @@ verify:branch:
   <<: *tmpl_branch
   stage: verify
   needs:
+    - build:ts
+    - build:native
     - deploy:sls:branch
   script:
     - yarn test:e2e

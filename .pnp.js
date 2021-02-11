@@ -9325,9 +9325,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./apps/e2e-tests/",
           "packageDependencies": [
             ["@asap-hub/e2e-tests", "workspace:apps/e2e-tests"],
-            ["@babel/runtime-corejs3", "npm:7.12.13"],
+            ["@babel/runtime-corejs3", "npm:7.12.5"],
             ["@types/node-fetch", "npm:2.5.8"],
-            ["node-fetch", "npm:2.6.1"]
+            ["node-fetch", "npm:3.0.0-beta.8"]
           ],
           "linkType": "SOFT",
         }]
@@ -16290,15 +16290,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@babel-runtime-corejs3-npm-7.11.2-d01c1c1d2e-151da4e97b.zip/node_modules/@babel/runtime-corejs3/",
           "packageDependencies": [
             ["@babel/runtime-corejs3", "npm:7.11.2"],
-            ["core-js-pure", "npm:3.6.5"],
-            ["regenerator-runtime", "npm:0.13.7"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:7.12.13", {
-          "packageLocation": "./.yarn/cache/@babel-runtime-corejs3-npm-7.12.13-f1154f8b31-8e50a564cf.zip/node_modules/@babel/runtime-corejs3/",
-          "packageDependencies": [
-            ["@babel/runtime-corejs3", "npm:7.12.13"],
             ["core-js-pure", "npm:3.6.5"],
             ["regenerator-runtime", "npm:0.13.7"]
           ],

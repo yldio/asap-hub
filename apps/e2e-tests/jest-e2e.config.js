@@ -13,5 +13,5 @@ module.exports = {
   rootDir: __dirname,
   displayName: 'e2e-tests',
 
-  testMatch: ["<rootDir>/tests/**/*.test.ts"],
+  testMatch: ['<rootDir>/tests/**/*.test.ts'],
 };

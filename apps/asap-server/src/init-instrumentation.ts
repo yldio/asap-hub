@@ -1,21 +1,19 @@
 /* istanbul ignore file */
 import { lightstep } from 'lightstep-opentelemetry-launcher-node';
 import { lightstepToken } from './config';
-import {Handler} from 'serverless-http';
+import { Handler } from 'serverless-http';
 
 const sdk = lightstep.configureOpenTelemetry({
   accessToken: lightstepToken,
   serviceName: 'test-server',
   serviceVersion: 'v0.0.1',
 });
+const starter = sdk.start();
 
-export let handler: Handler;
-// For auto-instrumentation to work,
-// the SDK must be started before any
-// other packages are loaded.
-sdk.start().then(() => {
-  handler = require('./handlers/api-handler').apiHandler;
-});
+export const handler: Handler = async (...args) => {
+  await starter;
+  return require('./handlers/api-handler').apiHandler(...args);
+};
 
 // Shutdown flushes any remaining spans before exit.
 function shutdown() {

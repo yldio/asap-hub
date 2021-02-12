@@ -94,7 +94,8 @@ module.exports = {
   },
   functions: {
     apiHandler: {
-      handler: 'apps/asap-server/build-cjs/init-instrumentation.handler',
+      handler:
+        'apps/asap-server/build-cjs/init-instrumentation/api-handler.handler',
       events: [
         {
           httpApi: {
@@ -104,55 +105,55 @@ module.exports = {
         },
       ],
     },
-    auth0FetchByCode: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-fetch-by-code.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'GET',
-            path: `/webhook/users/{code}`,
-          },
-        },
-      ],
-    },
-    auth0ConnectByCode: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-connect-by-code.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: `/webhook/users/connections`,
-          },
-        },
-      ],
-    },
-    syncUserOrcid: {
-      handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-orcid.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: `/webhook/users/orcid`,
-          },
-        },
-      ],
-    },
-    ...(NODE_ENV === 'production'
-      ? {
-          cronjobSyncOrcid: {
-            handler:
-              'apps/asap-server/build-cjs/handlers/webhooks/cronjob-sync-orcid.handler',
-            events: [
-              {
-                schedule: 'rate(1 hour)', // run every hour
-              },
-            ],
-          },
-        }
-      : {}),
+    //auth0FetchByCode: {
+    //handler:
+    //'apps/asap-server/build-cjs/handlers/webhooks/webhook-fetch-by-code.handler',
+    //events: [
+    //{
+    //httpApi: {
+    //method: 'GET',
+    //path: `/webhook/users/{code}`,
+    //},
+    //},
+    //],
+    //},
+    //auth0ConnectByCode: {
+    //handler:
+    //'apps/asap-server/build-cjs/handlers/webhooks/webhook-connect-by-code.handler',
+    //events: [
+    //{
+    //httpApi: {
+    //method: 'POST',
+    //path: `/webhook/users/connections`,
+    //},
+    //},
+    //],
+    //},
+    //syncUserOrcid: {
+    //handler:
+    //'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-orcid.handler',
+    //events: [
+    //{
+    //httpApi: {
+    //method: 'POST',
+    //path: `/webhook/users/orcid`,
+    //},
+    //},
+    //],
+    //},
+    //...(NODE_ENV === 'production'
+    //? {
+    //cronjobSyncOrcid: {
+    //handler:
+    //'apps/asap-server/build-cjs/handlers/webhooks/cronjob-sync-orcid.handler',
+    //events: [
+    //{
+    //schedule: 'rate(1 hour)', // run every hour
+    //},
+    //],
+    //},
+    //}
+    //: {}),
   },
   resources: {
     Resources: {

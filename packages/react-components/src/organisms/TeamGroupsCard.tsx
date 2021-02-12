@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import css from '@emotion/css';
-import { ListGroupResponse } from '@asap-hub/model';
+import { GroupResponse } from '@asap-hub/model';
 import {
   Card,
   Paragraph,
@@ -8,6 +8,7 @@ import {
   Button,
   Divider,
   Headline4,
+  Anchor,
 } from '../atoms';
 import {
   perRem,
@@ -72,32 +73,38 @@ const viewMoreStyles = css({
   justifyContent: 'center',
 });
 
-const TeamGroupsCard: React.FC<ListGroupResponse> = ({ items }) => {
+type TeamGroupsCardProps = {
+  groups: Array<GroupResponse & { href: string }>;
+};
+
+const TeamGroupsCard: React.FC<TeamGroupsCardProps> = ({ groups }) => {
   const [showMore, setShowMore] = useState(false);
   return (
     <Card>
-      <Headline3>Team Groups ({items.length})</Headline3>
+      <Headline3>Team Groups ({groups.length})</Headline3>
       <Paragraph accent={'lead'}>
         This team is collaborating with other teams via groups, which meet
         frequently
       </Paragraph>
       <ul css={listStyles}>
-        {items
-          .slice(0, showMore ? items.length : LESS_GROUP_LIMIT)
-          .map(({ teams, description, name }, index) => (
+        {groups
+          .slice(0, showMore ? groups.length : LESS_GROUP_LIMIT)
+          .map(({ teams, description, name, href }, index) => (
             <li css={listElementStyles} key={`team-group-${index}`}>
-              <Headline4>{name}</Headline4>
+              <Anchor href={href}>
+                <Headline4>{name}</Headline4>
+              </Anchor>
               <Paragraph accent="lead">{description}</Paragraph>
               <span css={teamsStyles}>
                 <span css={iconStyles}>{teamIcon} </span>
                 {teams.length} Team{teams.length !== 1 ? 's' : ''}
               </span>
-              {(index === items.length - 1 &&
-                items.length <= LESS_GROUP_LIMIT) || <Divider />}
+              {(index === groups.length - 1 &&
+                groups.length <= LESS_GROUP_LIMIT) || <Divider />}
             </li>
           ))}
       </ul>
-      {items.length > LESS_GROUP_LIMIT && (
+      {groups.length > LESS_GROUP_LIMIT && (
         <div css={viewMoreStyles}>
           <Button linkStyle onClick={() => setShowMore(!showMore)}>
             {showMore ? 'View less' : 'View more'} groups

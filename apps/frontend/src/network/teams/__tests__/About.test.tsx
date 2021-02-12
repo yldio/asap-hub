@@ -133,6 +133,6 @@ describe('the team groups card', () => {
     );
     expect(
       getByText(/example group/i, { selector: 'h4' }).parentElement,
-    ).toHaveAttribute('href', '/network/groups/g1');
+    ).toHaveAttribute('href', expect.stringMatching(/g1$/));
   });
 });

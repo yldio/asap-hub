@@ -6,6 +6,7 @@ import { parseGraphQLEvent } from '../entities/event';
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventBaseResponse>;
+  fetchById: (eventId: string) => Promise<EventBaseResponse>;
 }
 
 export type EventBaseResponse = Omit<EventResponse, 'groups'>;

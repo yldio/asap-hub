@@ -218,13 +218,13 @@ verify:branch:
   <<: *tmpl_branch
   stage: verify
   variables:
-    ASAP_API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
   needs:
     - build:ts
     - build:native
     - deploy:sls:branch
   script:
-    - yarn test:e2e
+    - ASAP_API_URL=$API_URL yarn test:e2e
 
 verify:development:
   <<: *tmpl_master

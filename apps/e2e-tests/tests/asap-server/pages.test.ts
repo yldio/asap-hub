@@ -3,6 +3,7 @@ import { config } from '../../config';
 
 describe('Pages endpoints', () => {
   test('Should get the privacy-policy page', async () => {
+    console.log({ origin: config.appOrigin });
     const response = await nodeFetch(
       `${config.appOrigin}/pages/privacy-policy`,
     );

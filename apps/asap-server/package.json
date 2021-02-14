@@ -8,7 +8,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "start:server": "tsnd ./src/server.ts"
+    "start:server": "tsnd --transpile-only ./src/server.ts"
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",

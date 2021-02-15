@@ -61,6 +61,7 @@ export {
   CheckboxGroup,
   ComingSoon,
   EmailPasswordSignin,
+  EventCard,
   GoogleCalendar,
   GroupCard,
   GroupInformation,

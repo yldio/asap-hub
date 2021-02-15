@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom';
 import { ListResponse, EventResponse } from '@asap-hub/model';
 import { GraphqlEvent } from '@asap-hub/squidex';
 import { FetchPaginationOptions } from '../utils/types';
@@ -6,6 +7,7 @@ import { parseGraphQLEvent } from '../entities/event';
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventBaseResponse>;
+  fetchById: (eventId: string) => Promise<EventBaseResponse>;
 }
 
 export type EventBaseResponse = Omit<EventResponse, 'groups'>;
@@ -51,6 +53,20 @@ export default class Events implements EventController {
       items,
     };
   }
+
+  async fetchById(eventId: string): Promise<EventBaseResponse> {
+    const query = buildGraphQLQueryFetchEvent(eventId);
+    const { findEventsContent: event } = await this.client.request<
+      ResponseFetchEvent,
+      unknown
+    >(query);
+
+    if (!event) {
+      throw Boom.notFound();
+    }
+
+    return parseGraphQLEvent(event);
+  }
 }
 
 export const GraphQLQueryEvent = `
@@ -89,11 +105,23 @@ export const buildGraphQLQueryFetchEvents = (
   }
 }`;
 
+export const buildGraphQLQueryFetchEvent = (eventId: string): string => `
+  {
+    findEventsContent(id: "${eventId}") {
+        ${GraphQLQueryEvent}
+    }
+  }
+`;
+
 export interface ResponseFetchEvents {
   queryEventsContentsWithTotal: {
     total: number;
     items: GraphqlEvent[];
   };
+}
+
+export interface ResponseFetchEvent {
+  findEventsContent: GraphqlEvent;
 }
 
 export type FetchEventsOptions = (

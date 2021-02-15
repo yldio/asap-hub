@@ -1,9 +1,13 @@
+import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
-import { ListEventResponse } from '@asap-hub/model';
-import { FetchEventsOptions } from '../../src/controllers/events';
+import { ListEventResponse, EventResponse } from '@asap-hub/model';
+import {
+  FetchEventsOptions,
+  EventBaseResponse,
+} from '../../src/controllers/events';
 
 describe('/events/ routes', () => {
   const app = appFactory({
@@ -135,6 +139,43 @@ describe('/events/ routes', () => {
         });
         expect(response.status).toBe(400);
       });
+    });
+  });
+
+  describe('GET /events/{event_id}', () => {
+    test('Should return 404 when no event exist', async () => {
+      eventControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
+
+      const response = await supertest(app).get('/events/123');
+
+      expect(response.status).toBe(404);
+    });
+
+    test('Should return the results correctly', async () => {
+      const eventBaseResponse: EventBaseResponse = {
+        id: 'event-id-1',
+        title: 'example event title',
+        startDate: '2020-12-11T14:33:50Z',
+        endDate: '2020-12-11T14:33:50Z',
+        calendar: {
+          id: 'calendar-id-1',
+          name: 'Example calendar',
+          color: '#333333',
+        },
+        meetingLink: 'https://sample.event.link/123456',
+        lastModifiedDate: '2020-12-11T14:33:50Z',
+      };
+
+      eventControllerMock.fetchById.mockResolvedValueOnce(eventBaseResponse);
+
+      const response = await supertest(app).get('/events/123');
+
+      const expectedResponse: EventResponse = {
+        ...eventBaseResponse,
+        groups: [],
+      };
+
+      expect(response.body).toEqual(expectedResponse);
     });
   });
 });

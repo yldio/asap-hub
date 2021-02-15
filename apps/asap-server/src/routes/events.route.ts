@@ -11,7 +11,7 @@ export const eventRouteFactory = (eventController: EventController): Router => {
     const query = (framework.validate(
       'query',
       req.query,
-      querySchema,
+      eventQuerySchema,
     ) as unknown) as FetchEventsOptions;
 
     const result = await eventController.fetch(query);
@@ -52,7 +52,7 @@ const querySchemaBase = {
   skip: Joi.number(),
 };
 
-const querySchema = Joi.object({
+export const eventQuerySchema = Joi.object({
   before: Joi.date().iso().raw(),
   after: Joi.date().iso().raw(),
 })

@@ -4,6 +4,7 @@ import { GraphqlEvent } from '@asap-hub/squidex';
 import { FetchPaginationOptions } from '../utils/types';
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { parseGraphQLEvent } from '../entities/event';
+import { ResponseFetchGroup } from './groups';
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventBaseResponse>;
@@ -21,7 +22,7 @@ export default class Events implements EventController {
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventBaseResponse> {
-    const { take, skip, before, after } = options;
+    const { take, skip, before, after, groupId } = options;
 
     const filters = [];
 
@@ -31,6 +32,24 @@ export default class Events implements EventController {
 
     if (before) {
       filters.push(`data/startDate/iv lt ${before}`);
+    }
+
+    if (groupId) {
+      const { findGroupsContent } = await this.client.request<
+        ResponseFetchGroup,
+        unknown
+      >(buildGraphQLQueryFetchGroup(groupId));
+
+      if (!findGroupsContent) {
+        throw Boom.notFound();
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const calendarIds = findGroupsContent.flatData!.calendars!.map(
+        (calendar) => `'${calendar.id}'`,
+      );
+
+      filters.push(`data/calendar/iv in [${calendarIds.join(', ')}]`);
     }
 
     const query = buildGraphQLQueryFetchEvents(
@@ -109,6 +128,18 @@ export const buildGraphQLQueryFetchEvent = (eventId: string): string => `
   {
     findEventsContent(id: "${eventId}") {
         ${GraphQLQueryEvent}
+    }
+  }
+`;
+
+export const buildGraphQLQueryFetchGroup = (groupId: string): string => `
+  {
+    findGroupsContent(id: "${groupId}") {
+      flatData {
+        calendars {
+          id
+        }
+      }
     }
   }
 `;

@@ -7,6 +7,7 @@ import Events, {
   ResponseFetchEvents,
   buildGraphQLQueryFetchEvent,
   ResponseFetchEvent,
+  buildGraphQLQueryFetchGroup,
 } from '../../src/controllers/events';
 import { ListEventResponse } from '@asap-hub/model';
 import {
@@ -65,7 +66,7 @@ describe('Event controller', () => {
       expect(result).toEqual(listEventBaseResponse);
     });
 
-    describe('Query', () => {
+    describe('Date filters', () => {
       test('Should apply the "after" filter', async () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -107,6 +108,63 @@ describe('Event controller', () => {
         await events.fetch({
           after: 'after-date',
           before: 'before-date',
+        });
+      });
+    });
+
+    describe('Group filter', () => {
+      const groupId = 'some-group-id';
+
+      test('Should throw a Not Found error when the event is not found', async () => {
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, /findGroupsContent/)
+          .reply(200, {
+            data: {
+              findGroupsContent: null,
+            },
+          });
+
+        await expect(
+          events.fetch({
+            after: 'after-date',
+            groupId,
+          }),
+        ).rejects.toThrow('Not Found');
+      });
+
+      test('Should apply the "groupId" filter', async () => {
+        const findGroupResponse = {
+          data: {
+            findGroupsContent: {
+              flatData: {
+                calendars: [
+                  {
+                    id: 'calendar-id-1',
+                  },
+                ],
+              },
+            },
+          },
+        };
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchGroup(groupId),
+          })
+          .reply(200, findGroupResponse);
+
+        const expectedFilter =
+          "data/endDate/iv gt after-date and data/calendar/iv in ['calendar-id-1']";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(expectedFilter),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          groupId,
         });
       });
     });

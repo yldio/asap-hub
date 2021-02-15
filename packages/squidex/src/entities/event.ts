@@ -1,7 +1,8 @@
+import { EventStatus } from '@asap-hub/model';
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlCalendar } from './calendar';
 
-type GoogleEventStatus = 'confirmed' | 'tentative' | 'cancelled';
+type GoogleEventStatus = EventStatus;
 
 interface Event<TCalendar = string> {
   title: string;

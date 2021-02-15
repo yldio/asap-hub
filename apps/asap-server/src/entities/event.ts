@@ -23,7 +23,8 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventBaseResponse => {
     lastModifiedDate: parseDate(item.lastModified).toISOString(),
     title: item.flatData!.title!,
     meetingLink,
-
+    status: item.flatData!.status!,
+    tags: item.flatData!.tags!,
     calendar,
   };
 };

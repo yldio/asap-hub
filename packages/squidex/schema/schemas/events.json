@@ -118,7 +118,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["confirmed", "tentative", "cancelled"],
+          "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Dropdown",
@@ -160,7 +160,7 @@
       }
     ],
     "previewUrls": {},
-    "category": "Content",
+    "category": "Storage",
     "isPublished": true
   }
 }

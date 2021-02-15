@@ -21,8 +21,8 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
             endDate: '2009-12-24T16:20:14Z',
             startDate: '2009-12-02T16:19:31Z',
             meetingLink: 'https://zoom.com/room/123',
-            status: 'confirmed',
-            tags: [],
+            status: 'Cancelled',
+            tags: ['A'],
             title: 'Example Event',
             calendar: [
               {
@@ -47,8 +47,8 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
             endDate: '2021-02-08T16:20:32Z',
             startDate: '2021-02-08T16:20:32Z',
             meetingLink: null,
-            status: null,
-            tags: [],
+            status: 'Confirmed',
+            tags: ['B'],
             title: 'This is another event',
             calendar: [
               {
@@ -79,6 +79,8 @@ export const listEventBaseResponse: ListEventBaseResponse = {
       endDate: '2009-12-24T16:20:14.000Z',
       lastModifiedDate: '2021-02-08T16:22:12.000Z',
       meetingLink: 'https://zoom.com/room/123',
+      status: 'Cancelled',
+      tags: ['A'],
       calendar: {
         id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
         color: '#125A12',
@@ -91,6 +93,8 @@ export const listEventBaseResponse: ListEventBaseResponse = {
       startDate: '2021-02-08T16:20:32.000Z',
       endDate: '2021-02-08T16:20:32.000Z',
       lastModifiedDate: '2021-02-08T16:20:35.000Z',
+      status: 'Confirmed',
+      tags: ['B'],
       calendar: {
         id: 'c_v8ma9lsbsjf90rk30ougr54iig@group.calendar.google.com',
         color: '#7A367A',
@@ -107,6 +111,8 @@ export const eventBaseResponse: EventBaseResponse = {
   endDate: '2009-12-24T16:20:14.000Z',
   lastModifiedDate: '2021-02-08T16:22:12.000Z',
   meetingLink: 'https://zoom.com/room/123',
+  tags: ['A'],
+  status: 'Cancelled',
   calendar: {
     id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
     color: '#125A12',
@@ -123,7 +129,7 @@ export const graphqlEvent: GraphqlEvent = {
     endDate: '2009-12-24T16:20:14Z',
     startDate: '2009-12-02T16:19:31Z',
     meetingLink: 'https://zoom.com/room/123',
-    status: 'confirmed',
+    status: 'Confirmed',
     tags: [],
     title: 'Example Event',
     calendar: [

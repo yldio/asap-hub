@@ -9,11 +9,11 @@ import validateRequest from '../../utils/validate-squidex-request';
 export interface WebhookPayload {
   type: string;
   timestamp: string;
-  payload: RestCalendar & { dataOld?: RestCalendar['data'] } & {
+  payload: {
     type: string;
     $type: string;
-    [key: string]: string | number;
-  };
+    [key: string]: string | number | unknown;
+  } & RestCalendar & { dataOld?: RestCalendar['data'] };
 }
 
 export const handler: Handler = http(

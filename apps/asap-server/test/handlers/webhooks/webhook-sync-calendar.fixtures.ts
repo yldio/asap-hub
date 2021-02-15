@@ -12,10 +12,10 @@ export const createCalendarEvent: WebhookPayload = {
     lastModifiedBy: 'subject:5ff5f26d7c171c647fd68bb4',
     data: {
       name: {
-        iv: 'ola',
+        iv: 'Awesome Calendar',
       },
       id: {
-        iv: 'olaID',
+        iv: 'calendar-id',
       },
       color: {
         iv: '#691426',

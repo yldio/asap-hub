@@ -133,5 +133,4 @@ export type FetchEventsOptions = (
       after: string;
       before?: string;
     }
-) &
-  FetchPaginationOptions;
+) & { groupId?: string } & FetchPaginationOptions;

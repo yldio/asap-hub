@@ -68,7 +68,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const discoverRoutes = discoverRouteFactory(discoverController);
   const eventRoutes = eventRouteFactory(eventController);
-  const groupRoutes = groupRouteFactory(groupController);
+  const groupRoutes = groupRouteFactory(groupController, eventController);
   const pageRoutes = pageRouteFactory(pageController);
   const researchOutputsRoutes = researchOutputRouteFactory(
     researchOutputController,

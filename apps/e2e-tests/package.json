@@ -1,0 +1,11 @@
+{
+  "name": "@asap-hub/e2e-tests",
+  "private": true,
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.8",
+    "node-fetch": "^3.0.0-beta.8"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.12.5"
+  }
+}

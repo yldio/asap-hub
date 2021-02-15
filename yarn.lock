@@ -211,6 +211,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/e2e-tests@workspace:apps/e2e-tests":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/e2e-tests@workspace:apps/e2e-tests"
+  dependencies:
+    "@babel/runtime-corejs3": ^7.12.5
+    "@types/node-fetch": ^2.5.8
+    node-fetch: ^3.0.0-beta.8
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/eslint-config-asap-hub@workspace:*, @asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub":
   version: 0.0.0-use.local
   resolution: "@asap-hub/eslint-config-asap-hub@workspace:packages/eslint-config-asap-hub"
@@ -6708,6 +6718,16 @@ __metadata:
     "@types/node": "*"
     form-data: ^3.0.0
   checksum: 101f6e8474407f957dfe1750d82aa0bcaa56347d09c8ba8634e6a901d07032533c0a578860691d915ff8fa230355700c41c04ae7e505840b5d6ff8cc3ece7741
+  languageName: node
+  linkType: hard
+
+"@types/node-fetch@npm:^2.5.8":
+  version: 2.5.8
+  resolution: "@types/node-fetch@npm:2.5.8"
+  dependencies:
+    "@types/node": "*"
+    form-data: ^3.0.0
+  checksum: 608cdd6aed2c6a44a26406eb63475d4bfb8f63f78f22f747e30dd7cda309b86dc019e4427b9092011541da95d83ef03e2e6558c37d39221c0931617f32d3c4e1
   languageName: node
   linkType: hard
 

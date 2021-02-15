@@ -50,6 +50,7 @@ stages:
   - test
   - prepare
   - deploy
+  - verify
 
 ###############
 # stage build #
@@ -208,3 +209,45 @@ deploy:sls:production:
     - test:unit
     - test:browser
     - sync:squidex:production
+
+################
+# stage verify #
+################
+
+verify:branch:
+  <<: *tmpl_branch
+  stage: verify
+  variables:
+    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+  needs:
+    - build:ts
+    - build:native
+    - deploy:sls:branch
+  script:
+    - ASAP_API_URL=$API_URL yarn test:e2e
+
+verify:development:
+  <<: *tmpl_master
+  stage: verify
+  environment:
+    name: dev
+    url: $ASAP_APP_URL
+  needs:
+    - build:ts
+    - build:native
+    - deploy:sls:development
+  script:
+    - yarn test:e2e
+
+verify:production:
+  <<: *tmpl_master
+  stage: verify
+  environment:
+    name: production
+    url: $ASAP_APP_URL
+  needs:
+    - build:ts
+    - build:native
+    - deploy:sls:production
+  script:
+    - yarn test:e2e

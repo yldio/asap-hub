@@ -2,7 +2,7 @@ import { ResearchOutputType } from '@asap-hub/model';
 
 import { Rest, Entity, Graphql } from './common';
 
-interface ResearchOutput {
+export interface ResearchOutput {
   type: ResearchOutputType;
   title: string;
   shortText: string;

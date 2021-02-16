@@ -24,7 +24,7 @@ export type UserTeamConnection<T = string> = T extends string
 
 type OrNull<T> = { [K in keyof T]: T[K] | null };
 
-interface User<
+export interface User<
   TAvatar = string,
   TConnection = UserTeamConnection,
   TSocial = Omit<UserSocialLinks, 'orcid'>

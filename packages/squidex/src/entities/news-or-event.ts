@@ -2,7 +2,7 @@ import { Rest, Entity, Graphql } from './common';
 
 export type NewsOrEventType = 'News' | 'Event' | 'Training';
 
-interface NewsOrEvent<TThumbnail = string> {
+export interface NewsOrEvent<TThumbnail = string> {
   type: NewsOrEventType;
   title: string;
   shortText: string;

@@ -1,10 +1,9 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
-import { WebhookPayload, User } from '@asap-hub/squidex';
+import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import { http } from '../../utils/instrumented-framework';
 
 import { Handler } from '../../utils/types';
-import Users from '../../controllers/users';
 import validateRequest from '../../utils/validate-squidex-request';
 
 export const handler: Handler = http(
@@ -14,9 +13,7 @@ export const handler: Handler = http(
     const bodySchema = Joi.object({
       type: Joi.string().required(),
       payload: Joi.object({
-        id: Joi.string().required(),
         data: Joi.object().required(),
-        dataOld: Joi.object(),
       })
         .unknown()
         .required(),
@@ -28,28 +25,16 @@ export const handler: Handler = http(
       'body',
       request.payload,
       bodySchema,
-    ) as WebhookPayload<User>;
+    ) as WebhookPayload<Calendar>;
 
-    const users = new Users(request.headers);
-    const { id } = payload;
-    const newOrcid = payload.data.orcid?.iv;
+    // eslint-disable-next-line no-console
+    console.log('Received:', JSON.stringify(request.payload));
 
-    if (event === 'UsersCreated') {
-      if (newOrcid) {
-        return {
-          statusCode: 200,
-          payload: await users.syncOrcidProfile(id),
-        };
-      }
-    }
-
-    if (event === 'UsersUpdated') {
-      if (newOrcid && newOrcid !== payload.dataOld?.orcid?.iv) {
-        return {
-          statusCode: 200,
-          payload: await users.syncOrcidProfile(id),
-        };
-      }
+    if (['CalendarsCreated'].includes(event)) {
+      return {
+        statusCode: 200,
+        payload: payload.data.id,
+      };
     }
 
     return { statusCode: 204 };

@@ -1,19 +1,16 @@
 import nock from 'nock';
 import matches from 'lodash.matches';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config } from '@asap-hub/squidex';
+import { config, WebhookPayload, User } from '@asap-hub/squidex';
 
-import {
-  handler,
-  WebHookPayload,
-} from '../../../src/handlers/webhooks/webhook-sync-orcid';
+import { handler } from '../../../src/handlers/webhooks/webhook-sync-orcid';
 import { apiGatewayEvent } from '../../helpers/events';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
 import { identity } from '../../helpers/squidex';
 
 import * as fixtures from './webhook-sync-orcid.fixtures';
 
-const createSignedPayload = (payload: WebHookPayload) =>
+const createSignedPayload = (payload: WebhookPayload<User>) =>
   apiGatewayEvent({
     headers: {
       'x-signature': signPayload(payload),

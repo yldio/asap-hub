@@ -137,6 +137,7 @@ describe('/groups/ route', () => {
             title: 'example event title',
             startDate: '2020-12-11T14:33:50Z',
             endDate: '2020-12-11T14:33:50Z',
+            description: 'Description',
             calendar: {
               id: 'calendar-id-1',
               name: 'Example calendar',

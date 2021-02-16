@@ -18,6 +18,7 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventBaseResponse => {
 
   return {
     id: item.id,
+    description: item.flatData?.description || '',
     startDate: startDate.toUTC().toString(),
     endDate: parseDate(item.flatData!.endDate!).toISOString(),
     lastModifiedDate: parseDate(item.lastModified).toISOString(),

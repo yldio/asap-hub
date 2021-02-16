@@ -123,7 +123,7 @@ module.exports = {
         {
           httpApi: {
             method: 'POST',
-            path: `/webhook/users/connections`,
+            path: '/webhook/users/connections',
           },
         },
       ],
@@ -135,7 +135,19 @@ module.exports = {
         {
           httpApi: {
             method: 'POST',
-            path: `/webhook/users/orcid`,
+            path: '/webhook/users/orcid',
+          },
+        },
+      ],
+    },
+    syncCalendar: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-calendar.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/calendar',
           },
         },
       ],

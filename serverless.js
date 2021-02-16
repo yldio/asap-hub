@@ -152,6 +152,18 @@ module.exports = {
         },
       ],
     },
+    receiveCalendarUpdates: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-receive-calendar-updates.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/webhook/calendar-updates`,
+          },
+        },
+      ],
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

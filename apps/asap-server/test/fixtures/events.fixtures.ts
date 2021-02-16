@@ -77,6 +77,7 @@ export const listEventBaseResponse: ListEventBaseResponse = {
       title: 'Example Event',
       startDate: '2009-12-02T16:19:31.000Z',
       endDate: '2009-12-24T16:20:14.000Z',
+      description: 'This event is awesome',
       lastModifiedDate: '2021-02-08T16:22:12.000Z',
       meetingLink: 'https://zoom.com/room/123',
       status: 'Cancelled',
@@ -90,6 +91,7 @@ export const listEventBaseResponse: ListEventBaseResponse = {
     {
       id: 'a820b5b7-8f7a-4297-a5a5-cf48b53ba3f7',
       title: 'This is another event',
+      description: '',
       startDate: '2021-02-08T16:20:32.000Z',
       endDate: '2021-02-08T16:20:32.000Z',
       lastModifiedDate: '2021-02-08T16:20:35.000Z',
@@ -107,6 +109,7 @@ export const listEventBaseResponse: ListEventBaseResponse = {
 export const eventBaseResponse: EventBaseResponse = {
   id: 'afcee0ec-fcd5-479c-9809-e397636f815a',
   title: 'Example Event',
+  description: 'This event is awesome',
   startDate: '2009-12-02T16:19:31.000Z',
   endDate: '2009-12-24T16:20:14.000Z',
   lastModifiedDate: '2021-02-08T16:22:12.000Z',

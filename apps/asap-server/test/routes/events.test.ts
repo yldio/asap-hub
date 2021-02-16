@@ -48,6 +48,7 @@ describe('/events/ routes', () => {
             endDate: '2020-12-11T14:33:50Z',
             status: 'Confirmed',
             tags: [],
+            description: 'Description example event title',
             calendar: {
               id: 'calendar-id-1',
               name: 'Example calendar',
@@ -159,6 +160,7 @@ describe('/events/ routes', () => {
         title: 'example event title',
         startDate: '2020-12-11T14:33:50Z',
         endDate: '2020-12-11T14:33:50Z',
+        description: 'Description of event title',
         calendar: {
           id: 'calendar-id-1',
           name: 'Example calendar',

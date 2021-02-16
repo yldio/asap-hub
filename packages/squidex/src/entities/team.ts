@@ -1,7 +1,7 @@
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlResearchOutput } from './research-output';
 
-interface Team<T = string> {
+export interface Team<T = string> {
   applicationNumber: string;
   displayName: string;
   projectSummary?: string;

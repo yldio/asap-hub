@@ -1,6 +1,6 @@
-import { WebhookPayload } from '../../../src/handlers/webhooks/webhook-sync-calendar';
+import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 
-export const createCalendarEvent: WebhookPayload = {
+export const createCalendarEvent: WebhookPayload<Calendar> = {
   type: 'CalendarsCreated',
   payload: {
     $type: 'EnrichedContentEvent',

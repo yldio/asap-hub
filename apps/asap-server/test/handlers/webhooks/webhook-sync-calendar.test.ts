@@ -1,15 +1,13 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
+import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 
-import {
-  handler,
-  WebhookPayload,
-} from '../../../src/handlers/webhooks/webhook-sync-calendar';
+import { handler } from '../../../src/handlers/webhooks/webhook-sync-calendar';
 import { apiGatewayEvent } from '../../helpers/events';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
 
 import * as fixtures from './webhook-sync-calendar.fixtures';
 
-const createSignedPayload = (payload: WebhookPayload) =>
+const createSignedPayload = (payload: WebhookPayload<Calendar>) =>
   apiGatewayEvent({
     headers: {
       'x-signature': signPayload(payload),

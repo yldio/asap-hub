@@ -1,6 +1,6 @@
 import { Rest, Entity, Graphql } from './common';
 
-interface Page {
+export interface Page {
   path: string;
   title: string;
   shortText?: string;

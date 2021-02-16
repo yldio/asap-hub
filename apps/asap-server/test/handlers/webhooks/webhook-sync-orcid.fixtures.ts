@@ -1,17 +1,6 @@
 import { OrcidWork } from '@asap-hub/model';
-import { RestUser } from '@asap-hub/squidex';
+import { WebhookPayload, User, RestUser } from '@asap-hub/squidex';
 import { ORCIDWorksResponse } from '../../../src/utils/fetch-orcid';
-
-interface SquidexEventPayload extends RestUser {
-  $type: string;
-  type: string;
-  dataOld?: RestUser['data'];
-}
-
-interface SquidexEvent {
-  type: string;
-  payload: SquidexEventPayload;
-}
 
 export const fetchUserResponse: RestUser = {
   id: 'userId',
@@ -39,8 +28,9 @@ export const fetchUserResponse: RestUser = {
   lastModified: '2020-08-31T13:57:51Z',
 };
 
-export const updateUserEvent: SquidexEvent = {
+export const updateUserEvent: WebhookPayload<User> = {
   type: 'UsersUpdated',
+  timestamp: '2021-02-15T13:11:25Z',
   payload: {
     $type: 'EnrichedContentEvent',
     type: 'Updated',
@@ -104,8 +94,9 @@ export const updateUserEvent: SquidexEvent = {
   },
 };
 
-export const createUserEvent: SquidexEvent = {
+export const createUserEvent: WebhookPayload<User> = {
   type: 'UsersCreated',
+  timestamp: '2021-02-15T13:11:25Z',
   payload: {
     $type: 'EnrichedContentEvent',
     type: 'Created',

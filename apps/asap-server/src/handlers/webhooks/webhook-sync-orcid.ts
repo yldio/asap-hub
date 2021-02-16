@@ -1,16 +1,11 @@
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
-import { RestUser } from '@asap-hub/squidex';
+import { WebhookPayload, User } from '@asap-hub/squidex';
 import { http } from '../../utils/instrumented-framework';
 
 import { Handler } from '../../utils/types';
 import Users from '../../controllers/users';
 import validateRequest from '../../utils/validate-squidex-request';
-
-export interface WebHookPayload {
-  type: string;
-  payload: RestUser & { dataOld?: RestUser['data'] };
-}
 
 export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
@@ -33,7 +28,7 @@ export const handler: Handler = http(
       'body',
       request.payload,
       bodySchema,
-    ) as WebHookPayload;
+    ) as WebhookPayload<User>;
 
     const users = new Users(request.headers);
     const { id } = payload;

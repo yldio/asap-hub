@@ -3,7 +3,7 @@ import { GraphqlCalendar } from './calendar';
 
 type GoogleEventStatus = 'confirmed' | 'tentative' | 'cancelled';
 
-interface Event<TCalendar = string> {
+export interface Event<TCalendar = string> {
   title: string;
   description: string;
   startDate: string;

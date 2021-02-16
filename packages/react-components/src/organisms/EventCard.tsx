@@ -1,19 +1,23 @@
 import React from 'react';
 import { EventResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
-
-import { Headline4, Link } from '../atoms';
-import { ToastCard, TagList } from '../molecules';
 import css from '@emotion/css';
+
+import { Headline4, Link, Anchor } from '../atoms';
+import { ToastCard, TagList } from '../molecules';
 import { perRem, smallDesktopScreen } from '../pixels';
-import { groupsIcon, eventsPlaceholder } from '../icons';
+import { groupsIcon, eventsPlaceholder, calendarIcon } from '../icons';
+import { lead } from '../colors';
+
+const TITLE_LIMIT = 55;
 
 const imageContainerStyle = css({
   flexShrink: 0,
   borderRadius: `${12 / perRem}em`,
-  height: `${184 / perRem}em`,
+  height: `${102 / perRem}em`,
   marginRight: `${24 / perRem}em`,
-  width: `${184 / perRem}em`,
+  marginTop: `${12 / perRem}em`,
+  width: `${102 / perRem}em`,
   overflow: 'hidden',
 
   [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
@@ -26,10 +30,18 @@ const cardStyles = css({
   flexDirection: 'row',
 });
 
+const dateStyles = css({
+  color: lead.rgb,
+  display: 'flex',
+  flexWrap: 'wrap',
+  whiteSpace: 'pre',
+});
+
 const groupsStyles = css({
   display: 'flex',
   alignItems: 'center',
   padding: `${12 / perRem}em 0`,
+  color: lead.rgb,
 });
 
 const iconStyles = css({
@@ -39,10 +51,12 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
-type EventCardProps = Pick<EventResponse, 'startDate' | 'endDate' | 'title'> & {
-  status?: 'cancelled';
+type EventCardProps = Pick<
+  EventResponse,
+  'startDate' | 'endDate' | 'title' | 'tags' | 'status'
+> & {
   groups: (EventResponse['groups'][0] & { href: string })[];
-  tags: string[];
+  href?: string;
 };
 const EventCard: React.FC<EventCardProps> = ({
   status,
@@ -51,28 +65,51 @@ const EventCard: React.FC<EventCardProps> = ({
   title,
   tags,
   groups,
+  href,
 }) => (
   <ToastCard
     toastText={
-      status === 'cancelled' ? 'This event has been cancelled' : undefined
+      status === 'Cancelled' ? 'This event has been cancelled' : undefined
     }
   >
     <div css={cardStyles}>
       <div css={imageContainerStyle}>{eventsPlaceholder}</div>
-      <div>
-        <Headline4>{title}</Headline4>
-        {format(new Date(startDate), 'E, d MMM	y').toUpperCase()} ∙{' '}
-        {format(new Date(startDate), 'h:mm a')}-{' '}
-        {format(new Date(endDate), 'h:mm a').toUpperCase()} (GMT)
+      <div
+        css={{
+          overflow: 'hidden',
+          maxWidth: '100%',
+        }}
+      >
+        <Anchor href={href}>
+          <Headline4>
+            {title.substr(0, TITLE_LIMIT)}
+            {title.length > TITLE_LIMIT ? '…' : undefined}
+          </Headline4>
+        </Anchor>
+        <div css={dateStyles}>
+          <div>
+            {format(new Date(startDate), 'E, d MMM y').toUpperCase()} ∙{' '}
+          </div>
+          <div>
+            {format(new Date(startDate), 'h:mm a')} -{' '}
+            {format(new Date(endDate), 'h:mm a').toUpperCase()} (UTC)
+          </div>
+        </div>
         <span css={groupsStyles}>
-          <span css={iconStyles}>{groupsIcon}</span>
-          {groups.map(({ name, href }) => (
-            <Link href={href}>{name}</Link>
-          ))}
+          <span css={iconStyles}>
+            {groups.length ? groupsIcon : calendarIcon}
+          </span>
+          {groups.length
+            ? groups.map(({ name, href: groupHref, id }) => (
+                <div css={{ whiteSpace: 'pre' }} key={`group-${id}`}>
+                  <Link href={groupHref}>{name}</Link>{' '}
+                </div>
+              ))
+            : 'ASAP Event'}
         </span>
-        <TagList tags={tags} max={3} />
       </div>
     </div>
+    <TagList tags={tags} max={3} />
   </ToastCard>
 );
 

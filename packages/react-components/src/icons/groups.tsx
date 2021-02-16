@@ -10,6 +10,7 @@ const groups = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Group</title>
     <g id="General / Groups">
       <rect width="24" height="24" fill="white" />
       <g id="Frame">

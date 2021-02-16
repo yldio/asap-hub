@@ -1,6 +1,7 @@
 import React from 'react';
+import { EventStatus } from '@asap-hub/model';
 
-import { date, text, number, array } from '@storybook/addon-knobs';
+import { date, text, number, array, select } from '@storybook/addon-knobs';
 import { EventCard } from '@asap-hub/react-components';
 import { createGroupResponse } from '@asap-hub/fixtures';
 
@@ -19,6 +20,11 @@ const props = () => ({
     ...createGroupResponse({}, index),
     href: '#',
   })),
+  status: select<EventStatus>(
+    'Status',
+    ['Cancelled', 'Confirmed', 'Tentative'],
+    'Confirmed',
+  ),
   tags: array('Skills', [
     'Neurological Diseases',
     'Clinical Neurology',
@@ -33,5 +39,3 @@ const props = () => ({
 });
 
 export const Normal = () => <EventCard {...props()} />;
-
-export const Cancelled = () => <EventCard status="cancelled" {...props()} />;

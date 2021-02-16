@@ -142,6 +142,8 @@ describe('/groups/ route', () => {
               name: 'Example calendar',
               color: '#333333',
             },
+            tags: [],
+            status: 'Confirmed',
             groups: [],
             meetingLink: 'https://sample.event.link/123456',
             lastModifiedDate: '2020-12-11T14:33:50Z',

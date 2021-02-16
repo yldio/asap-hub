@@ -46,6 +46,8 @@ describe('/events/ routes', () => {
             title: 'example event title',
             startDate: '2020-12-11T14:33:50Z',
             endDate: '2020-12-11T14:33:50Z',
+            status: 'Confirmed',
+            tags: [],
             calendar: {
               id: 'calendar-id-1',
               name: 'Example calendar',
@@ -162,6 +164,8 @@ describe('/events/ routes', () => {
           name: 'Example calendar',
           color: '#333333',
         },
+        status: 'Confirmed',
+        tags: [],
         meetingLink: 'https://sample.event.link/123456',
         lastModifiedDate: '2020-12-11T14:33:50Z',
       };

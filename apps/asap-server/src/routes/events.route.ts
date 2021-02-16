@@ -50,6 +50,7 @@ const paramSchema = Joi.object({
 const querySchemaBase = {
   take: Joi.number(),
   skip: Joi.number(),
+  search: Joi.string(),
 };
 
 export const eventQuerySchema = Joi.object({

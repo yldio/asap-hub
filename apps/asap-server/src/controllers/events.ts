@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom';
 import { ListResponse, EventResponse } from '@asap-hub/model';
 import { GraphqlEvent } from '@asap-hub/squidex';
-import { FetchPaginationOptions } from '../utils/types';
+import { FetchOptions } from '../utils/types';
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { parseGraphQLEvent } from '../entities/event';
 import { ResponseFetchGroup } from './groups';
@@ -22,9 +22,21 @@ export default class Events implements EventController {
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventBaseResponse> {
-    const { take, skip, before, after, groupId } = options;
+    const { take, skip, before, after, groupId, search } = options;
 
-    const filters = [];
+    const filters = (search || '')
+      .split(' ')
+      .filter(Boolean)
+      .reduce(
+        (acc: string[], word: string) =>
+          acc.concat(
+            `(${[
+              [`contains(data/title/iv, '${word}')`],
+              [`contains(data/tags/iv, '${word}')`],
+            ].join(' or ')})`,
+          ),
+        [],
+      );
 
     if (after) {
       filters.push(`data/endDate/iv gt ${after}`);
@@ -164,4 +176,4 @@ export type FetchEventsOptions = (
       after: string;
       before?: string;
     }
-) & { groupId?: string } & FetchPaginationOptions;
+) & { groupId?: string } & FetchOptions;

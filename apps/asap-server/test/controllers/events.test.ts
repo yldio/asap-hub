@@ -110,6 +110,22 @@ describe('Event controller', () => {
           before: 'before-date',
         });
       });
+
+      test('Should apply search query params', async () => {
+        const expectedFilter =
+          "(contains(data/title/iv, 'a') or contains(data/tags/iv, 'a')) and data/endDate/iv gt after-date";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(expectedFilter),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          search: 'a',
+        });
+      });
     });
 
     describe('Group filter', () => {

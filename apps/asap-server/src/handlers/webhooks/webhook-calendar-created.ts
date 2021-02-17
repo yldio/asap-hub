@@ -40,3 +40,52 @@ export const handler: Handler = http(
     return { statusCode: 204 };
   },
 );
+
+export const webhookCalendarCreatedHandlerFactory = (
+  subscribe: SubscribeToEventChanges,
+): Handler =>
+  http(
+    async (request: lambda.Request): Promise<lambda.Response> => {
+      await validateRequest(request);
+
+      const bodySchema = Joi.object({
+        type: Joi.string().required(),
+        payload: Joi.object({
+          data: Joi.object().required(),
+        })
+          .unknown()
+          .required(),
+      })
+        .unknown()
+        .required();
+
+      const { payload, type: event } = lambda.validate(
+        'body',
+        request.payload,
+        bodySchema,
+      ) as WebhookPayload<Calendar>;
+
+      // eslint-disable-next-line no-console
+      console.log('Received:', JSON.stringify(request.payload));
+
+      if (['CalendarsCreated'].includes(event)) {
+        await subscribe(payload.data.id.iv);
+
+        return {
+          statusCode: 200,
+          payload: payload.data.id,
+        };
+      }
+
+      return { statusCode: 204 };
+    },
+  );
+
+export const subscribeToEventChanges = async (
+  calendarId: string,
+): Promise<void> => {
+  // eslint-disable-next-line no-console
+  console.log(calendarId);
+};
+
+export type SubscribeToEventChanges = typeof subscribeToEventChanges;

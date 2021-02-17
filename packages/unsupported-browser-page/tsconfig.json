@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build",
+
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "jsx": "react"
+  },
+  "include": ["src"],
+  "references": [{ "path": "../react-components" }]
+}

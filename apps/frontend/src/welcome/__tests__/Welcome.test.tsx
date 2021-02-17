@@ -14,11 +14,6 @@ beforeEach(() => {
   nock(API_BASE_URL).get('/users/invites/42').reply(200, {});
 });
 
-// storage
-afterEach(() => {
-  window.sessionStorage.clear();
-});
-
 // redirect
 const { mockAssign } = mockLocation();
 

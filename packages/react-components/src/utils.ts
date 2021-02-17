@@ -33,7 +33,8 @@ export const formatDateAndTime = (date: Date): string =>
   format(date, "d/M/y 'at' HH:mm");
 
 export const isInternalLink = (href: string): boolean =>
-  new URL(href, window.location.href).origin === window.location.origin;
+  globalThis.location &&
+  new URL(href, globalThis.location.href).origin === globalThis.location.origin;
 
 const icons = Object.entries({
   '.slack.com': slackIcon,

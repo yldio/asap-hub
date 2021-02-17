@@ -12,6 +12,3 @@ export const createURL = (assets: string[]): string[] =>
 
 export const parseDate = (date: string): Date =>
   DateTime.fromISO(date).toJSDate();
-
-export const isNull = (prop: string | null | undefined): boolean =>
-  prop === null || prop === 'null';

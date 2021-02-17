@@ -26,12 +26,14 @@ export const useFetchOptions = (
         }
 
         /* eslint-disable no-underscore-dangle */
+        const idToken = (await getIdTokenClaims()).__raw;
+
         return overrideRequestInterceptor({
           ...args,
           options: {
             ...options,
             headers: {
-              authorization: `Bearer ${(await getIdTokenClaims()).__raw}`,
+              authorization: `Bearer ${idToken}`,
               ...headers,
             },
           },

@@ -1,19 +1,20 @@
 import React from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
   ResearchOutputPage,
   NotFoundPage,
   Loading,
 } from '@asap-hub/react-components';
+
+import { useBackHref } from '../hooks';
 import { useResearchOutputById } from '../api';
-import { NETWORK_PATH } from '../routes';
+import { NETWORK_PATH, SHARED_RESEARCH_PATH } from '../routes';
 import { TEAMS_PATH } from '../network/routes';
 
 const ResearchOutput: React.FC = () => {
   const { id } = useParams();
   const { loading, data: researchOutputData } = useResearchOutputById(id);
-  // TODO don't do this elsewhere, this is a not ideal, if you come straight to this page you'll go back to about:blank leaving the hub
-  const { goBack } = useHistory();
+  const backHref = useBackHref() ?? SHARED_RESEARCH_PATH;
 
   if (loading) {
     return <Loading />;
@@ -28,8 +29,7 @@ const ResearchOutput: React.FC = () => {
             href: `${NETWORK_PATH}/${TEAMS_PATH}/${researchOutputData.team.id}`,
           }
         : undefined,
-      userProfileHref: '#',
-      goBack,
+      backHref,
     };
     return <ResearchOutputPage {...researchOutput} />;
   }

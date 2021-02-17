@@ -7337,6 +7337,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:2.2.2"
       ],
       [
+        "react-router-last-location",
+        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.0.1"
+      ],
+      [
         "react-scripts",
         "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:4.0.1"
       ],
@@ -9485,6 +9489,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.1"],
             ["react-error-boundary", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.3.2"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["react-router-last-location", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.0.1"],
             ["react-scripts", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:4.0.1"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.1"],
             ["recoil", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:0.1.2"],
@@ -41824,6 +41829,40 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [
             "@types/react-router-dom",
             "@types/react",
+            "react-router-dom",
+            "react"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["react-router-last-location", [
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/react-router-last-location-npm-2.0.1-9762e948c3-eac05a2159.zip/node_modules/react-router-last-location/",
+          "packageDependencies": [
+            ["react-router-last-location", "npm:2.0.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.0.1", {
+          "packageLocation": "./.yarn/$$virtual/react-router-last-location-virtual-5e7a926abd/0/cache/react-router-last-location-npm-2.0.1-9762e948c3-eac05a2159.zip/node_modules/react-router-last-location/",
+          "packageDependencies": [
+            ["react-router-last-location", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.0.1"],
+            ["@types/prop-types", null],
+            ["@types/react", "npm:17.0.0"],
+            ["@types/react-dom", "npm:17.0.0"],
+            ["@types/react-router-dom", "npm:5.1.5"],
+            ["prop-types", null],
+            ["react", "npm:17.0.1"],
+            ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.1"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"]
+          ],
+          "packagePeers": [
+            "@types/prop-types",
+            "@types/react-dom",
+            "@types/react-router-dom",
+            "@types/react",
+            "prop-types",
+            "react-dom",
             "react-router-dom",
             "react"
           ],

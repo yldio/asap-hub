@@ -13,7 +13,7 @@ import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../utils';
 import {
   newsPlaceholder,
-  eventsPlaceholder,
+  newsEventPlaceholder,
   trainingPlaceholderIcon,
 } from '../icons';
 import { ExternalLink } from '../molecules';
@@ -60,7 +60,7 @@ const footerStyles = css({
 
 const placeholders: Record<NewsAndEventsType, JSX.Element> = {
   News: newsPlaceholder,
-  Event: eventsPlaceholder,
+  Event: newsEventPlaceholder,
   Training: trainingPlaceholderIcon,
 };
 

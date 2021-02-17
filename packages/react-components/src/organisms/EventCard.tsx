@@ -5,7 +5,7 @@ import css from '@emotion/css';
 import { Headline4, Link, Anchor } from '../atoms';
 import { ToastCard, TagList } from '../molecules';
 import { perRem, smallDesktopScreen } from '../pixels';
-import { groupsIcon, eventsPlaceholder, calendarIcon } from '../icons';
+import { groupsIcon, eventPlaceholder, calendarIcon } from '../icons';
 import { lead } from '../colors';
 import { formatUtcToLocalTimezone } from '../utils';
 
@@ -73,7 +73,7 @@ const EventCard: React.FC<EventCardProps> = ({
     }
   >
     <div css={cardStyles}>
-      <div css={imageContainerStyle}>{eventsPlaceholder}</div>
+      <div css={imageContainerStyle}>{eventPlaceholder}</div>
       <div
         css={{
           overflow: 'hidden',

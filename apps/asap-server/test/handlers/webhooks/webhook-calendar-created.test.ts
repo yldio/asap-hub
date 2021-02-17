@@ -1,7 +1,7 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 
-import { handler } from '../../../src/handlers/webhooks/webhook-sync-calendar';
+import { handler } from '../../../src/handlers/webhooks/webhook-calendar-created';
 import { apiGatewayEvent } from '../../helpers/events';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
 

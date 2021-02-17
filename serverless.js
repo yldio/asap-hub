@@ -140,9 +140,9 @@ module.exports = {
         },
       ],
     },
-    syncCalendar: {
+    calendarCreated: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-calendar.handler',
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-calendar-created.handler',
       events: [
         {
           httpApi: {
@@ -152,14 +152,14 @@ module.exports = {
         },
       ],
     },
-    receiveCalendarUpdates: {
+    eventsUpdated: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-receive-calendar-updates.handler',
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-events-updated.handler',
       events: [
         {
           httpApi: {
             method: 'POST',
-            path: `/webhook/calendar-updates`,
+            path: `/webhook/events`,
           },
         },
       ],

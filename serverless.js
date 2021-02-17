@@ -58,6 +58,7 @@ module.exports = {
       SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,
       SQUIDEX_CLIENT_SECRET: `\${env:SQUIDEX_CLIENT_SECRET}`,
       SQUIDEX_SHARED_SECRET: `\${env:SQUIDEX_SHARED_SECRET}`,
+      REGION: `\${env:AWS_REGION}`,
     },
     iamRoleStatements: [
       {
@@ -71,7 +72,7 @@ module.exports = {
               { Ref: 'AWS::Region' },
               { Ref: 'AWS::AccountId' },
               'secret',
-              'google-api-credentials-${self:provider.stage}*',
+              `google-api-credentials-${SLS_STAGE === 'production' ? 'prod' : 'dev'}*`,
             ],
           ],
         },
@@ -169,6 +170,11 @@ module.exports = {
           },
         },
       ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }`,
+      },
     },
     eventsUpdated: {
       handler:
@@ -181,6 +187,11 @@ module.exports = {
           },
         },
       ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }`,
+      },
     },
     ...(NODE_ENV === 'production'
       ? {

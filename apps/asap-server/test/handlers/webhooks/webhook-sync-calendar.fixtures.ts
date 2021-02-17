@@ -15,7 +15,7 @@ export const createCalendarEvent: WebhookPayload<Calendar> = {
         iv: 'Awesome Calendar',
       },
       id: {
-        iv: 'calendar-id',
+        iv: 'calendar-id@group.calendar.google.com',
       },
       color: {
         iv: '#691426',

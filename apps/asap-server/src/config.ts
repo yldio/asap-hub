@@ -8,6 +8,8 @@ const {
   SQUIDEX_SHARED_SECRET,
   LIGHTSTEP_TOKEN,
   ENVIRONMENT,
+  REGION,
+  GOOGLE_API_CREDENTIALS_SECRET_ID,
 } = process.env;
 
 export const globalToken = GLOBAL_TOKEN || 'change_me_when_we_have_admins';
@@ -20,3 +22,7 @@ export const environment = ENVIRONMENT
 export const auth0SharedSecret = AUTH0_SHARED_SECRET || 'auth0_shared_secret';
 export const squidexSharedSecret =
   SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';
+export const googleApiUrl = 'https://www.googleapis.com/';
+export const region = REGION || 'eu-west-1';
+export const googleApiCredentialsSecretId =
+  GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';

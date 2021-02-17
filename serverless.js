@@ -59,6 +59,24 @@ module.exports = {
       SQUIDEX_CLIENT_SECRET: `\${env:SQUIDEX_CLIENT_SECRET}`,
       SQUIDEX_SHARED_SECRET: `\${env:SQUIDEX_SHARED_SECRET}`,
     },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: 'secretsmanager:*',
+        Resource: {
+          'Fn::Join': [
+            ':',
+            [
+              'arn:aws:secretsmanager',
+              { Ref: 'AWS::Region' },
+              { Ref: 'AWS::AccountId' },
+              'secret',
+              'google-api-credentials-${self:provider.stage}*',
+            ],
+          ],
+        },
+      },
+    ],
   },
   package: {
     individually: true,

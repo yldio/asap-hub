@@ -1,6 +1,5 @@
 import React from 'react';
 import { EventResponse } from '@asap-hub/model';
-import format from 'date-fns/format';
 import css from '@emotion/css';
 
 import { Headline4, Link, Anchor } from '../atoms';
@@ -8,6 +7,7 @@ import { ToastCard, TagList } from '../molecules';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { groupsIcon, eventsPlaceholder, calendarIcon } from '../icons';
 import { lead } from '../colors';
+import { formatUtcToLocalTimezone } from '../utils';
 
 const TITLE_LIMIT = 55;
 
@@ -88,11 +88,11 @@ const EventCard: React.FC<EventCardProps> = ({
         </Anchor>
         <div css={dateStyles}>
           <div>
-            {format(new Date(startDate), 'E, d MMM y').toUpperCase()} ∙{' '}
+            {formatUtcToLocalTimezone(startDate, 'E, d MMM y').toUpperCase()} ∙{' '}
           </div>
           <div>
-            {format(new Date(startDate), 'h:mm a')} -{' '}
-            {format(new Date(endDate), 'h:mm a').toUpperCase()} (UTC)
+            {formatUtcToLocalTimezone(startDate, 'h:mm a')} -{' '}
+            {formatUtcToLocalTimezone(endDate, 'h:mm a (zzz)').toUpperCase()}
           </div>
         </div>
         <span css={groupsStyles}>

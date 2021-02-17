@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { format } from 'date-fns';
+import { format, utcToZonedTime } from 'date-fns-tz';
 import {
   googleDriveIcon,
   protocolsIcon,
@@ -54,3 +54,12 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   });
   return icon?.[1];
 };
+
+export const formatUtcToLocalTimezone = (
+  date: Parameters<typeof utcToZonedTime>[0],
+  form: string,
+): string =>
+  format(
+    utcToZonedTime(date, Intl.DateTimeFormat().resolvedOptions().timeZone),
+    form,
+  );

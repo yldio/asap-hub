@@ -7,8 +7,8 @@ import {
   RestResearchOutput,
   RestTeam,
 } from '@asap-hub/squidex';
-import { Protocol } from './parse';
 import { HTTPError } from 'got';
+import { Protocol } from './parse';
 
 const users = new Squidex<RestUser>('users', { unpublished: true });
 const teams = new Squidex<RestTeam>('teams', { unpublished: true });

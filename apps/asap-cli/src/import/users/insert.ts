@@ -7,8 +7,8 @@ import {
   RestUser,
   UserTeamConnection,
 } from '@asap-hub/squidex';
-import { Data } from './parse';
 import { HTTPError } from 'got';
+import { Data } from './parse';
 
 const teams = new Squidex<RestTeam>('teams');
 const users = new Squidex<RestUser>('users');

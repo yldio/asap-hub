@@ -5,6 +5,8 @@ export interface Calendar {
   id: string;
   color: GoogleLegacyCalendarColor;
   name: string;
+  syncToken?: string;
+  resourceId?: string;
 }
 
 export interface RestCalendar extends Entity, Rest<Calendar> {}

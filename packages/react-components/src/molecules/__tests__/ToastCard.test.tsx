@@ -8,6 +8,11 @@ it('renders a toast card with children', () => {
   expect(getByText('content')).toBeVisible();
 });
 
+it('does not render a toast when no message is provided', () => {
+  const { queryByTitle } = render(<ToastCard>content</ToastCard>);
+  expect(queryByTitle('Alert')).not.toBeInTheDocument();
+});
+
 it('renders a toast card with alert', () => {
   const { getByTitle, getByText } = render(
     <ToastCard toastText="Warning">content</ToastCard>,

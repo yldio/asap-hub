@@ -2,12 +2,12 @@ import React from 'react';
 import { EventResponse } from '@asap-hub/model';
 import css from '@emotion/css';
 
-import { Headline4, Link, Anchor } from '../atoms';
+import { Headline3, Link, Anchor } from '../atoms';
 import { ToastCard, TagList } from '../molecules';
 import { perRem, smallDesktopScreen } from '../pixels';
-import { groupsIcon, eventPlaceholder, calendarIcon } from '../icons';
+import { groupsIcon, eventPlaceholderIcon, calendarIcon } from '../icons';
 import { lead } from '../colors';
-import { formatUtcToLocalTimezone } from '../utils';
+import { formatTimezoneToLocalTimezone } from '../utils';
 
 const TITLE_LIMIT = 55;
 
@@ -73,7 +73,7 @@ const EventCard: React.FC<EventCardProps> = ({
     }
   >
     <div css={cardStyles}>
-      <div css={imageContainerStyle}>{eventPlaceholder}</div>
+      <div css={imageContainerStyle}>{eventPlaceholderIcon}</div>
       <div
         css={{
           overflow: 'hidden',
@@ -81,18 +81,25 @@ const EventCard: React.FC<EventCardProps> = ({
         }}
       >
         <Anchor href={href}>
-          <Headline4>
+          <Headline3 styleAsHeading={4}>
             {title.substr(0, TITLE_LIMIT)}
             {title.length > TITLE_LIMIT ? '…' : undefined}
-          </Headline4>
+          </Headline3>
         </Anchor>
         <div css={dateStyles}>
           <div>
-            {formatUtcToLocalTimezone(startDate, 'E, d MMM y').toUpperCase()} ∙{' '}
+            {formatTimezoneToLocalTimezone(
+              startDate,
+              'E, d MMM y',
+            ).toUpperCase()}{' '}
+            ∙{' '}
           </div>
           <div>
-            {formatUtcToLocalTimezone(startDate, 'h:mm a')} -{' '}
-            {formatUtcToLocalTimezone(endDate, 'h:mm a (zzz)').toUpperCase()}
+            {formatTimezoneToLocalTimezone(startDate, 'h:mm a')} -{' '}
+            {formatTimezoneToLocalTimezone(
+              endDate,
+              'h:mm a (zzz)',
+            ).toUpperCase()}
           </div>
         </div>
         <span css={groupsStyles}>

@@ -12,7 +12,7 @@ const props: ComponentProps<typeof EventCard> = {
 
 it('Renders an event', () => {
   const { getByRole } = render(<EventCard {...props} title="My Event" />);
-  expect(getByRole('heading', { level: 4 })).toHaveTextContent('My Event');
+  expect(getByRole('heading', { level: 3 })).toHaveTextContent('My Event');
 });
 
 it('truncates long event titles', () => {
@@ -20,7 +20,7 @@ it('truncates long event titles', () => {
     <EventCard {...props} title={'blablablha'.repeat(100)} />,
   );
 
-  expect(getByRole('heading', { level: 4 }).textContent).toMatch(/…$/i);
+  expect(getByRole('heading', { level: 3 }).textContent).toMatch(/…$/i);
 });
 
 it('renders the group name linking to the group and icon', () => {
@@ -40,7 +40,7 @@ it('renders the group name linking to the group and icon', () => {
   expect(getByTitle('Group')).toBeInTheDocument();
 });
 
-it('shows the the event is run by ASAP when there is no group', () => {
+it('shows that the event is run by ASAP when there is no group', () => {
   const { getByText, getByTitle } = render(
     <EventCard {...props} groups={[]} />,
   );

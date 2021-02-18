@@ -6,7 +6,7 @@ import { TagLabel, Display, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { formatDate } from '../utils';
+import { formatDate } from '../date';
 import { ExternalLink } from '../molecules';
 
 const containerStyles = css({

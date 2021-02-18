@@ -3,7 +3,13 @@ import { render } from '@testing-library/react';
 import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
 
 import EventCard from '../EventCard';
+import { getLocalTimezone } from '../../localization';
 
+jest.mock('../../localization');
+
+const mockedGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
+  typeof getLocalTimezone
+>;
 const props: ComponentProps<typeof EventCard> = {
   ...createEventResponse(),
   groups: [],
@@ -54,4 +60,33 @@ it('shows that an event has been cancelled', () => {
   );
   expect(getByTitle('Alert')).toBeInTheDocument();
   expect(getByText(/cancelled/i)).toBeVisible();
+});
+
+it('to show a properly formatted date', () => {
+  const { getByTestId } = render(
+    <EventCard
+      {...props}
+      id={'1'}
+      startDate={new Date(2021, 8, 6, 18).toISOString()}
+      endDate={new Date(2021, 8, 6, 20).toISOString()}
+    />,
+  );
+  expect(getByTestId('1-date').textContent).toMatchInlineSnapshot(
+    `"MON, 6 SEP 2021 ∙ 6:00 PM - 8:00 PM (GMT+1)"`,
+  );
+});
+
+it('to show a properly formatted date in users local timezone', () => {
+  mockedGetLocalTimezone.mockReturnValue('America/New_York');
+  const { getByTestId } = render(
+    <EventCard
+      {...props}
+      id={'1'}
+      startDate={new Date(2021, 8, 6, 18).toISOString()}
+      endDate={new Date(2021, 8, 6, 20).toISOString()}
+    />,
+  );
+  expect(getByTestId('1-date').textContent).toMatchInlineSnapshot(
+    `"MON, 6 SEP 2021 ∙ 12:00 AM - 2:00 AM (EDT)"`,
+  );
 });

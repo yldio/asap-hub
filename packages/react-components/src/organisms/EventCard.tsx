@@ -7,7 +7,7 @@ import { ToastCard, TagList } from '../molecules';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { groupsIcon, eventPlaceholderIcon, calendarIcon } from '../icons';
 import { lead } from '../colors';
-import { formatTimezoneToLocalTimezone } from '../utils';
+import { formatTimezoneToLocalTimezone } from '../date';
 
 const TITLE_LIMIT = 55;
 
@@ -53,7 +53,7 @@ const iconStyles = css({
 
 type EventCardProps = Pick<
   EventResponse,
-  'startDate' | 'endDate' | 'title' | 'tags' | 'status'
+  'startDate' | 'endDate' | 'title' | 'tags' | 'status' | 'id'
 > & {
   groups: (EventResponse['groups'][0] & { href: string })[];
   href?: string;
@@ -65,6 +65,7 @@ const EventCard: React.FC<EventCardProps> = ({
   title,
   tags,
   groups,
+  id: eventId,
   href,
 }) => (
   <ToastCard
@@ -86,7 +87,7 @@ const EventCard: React.FC<EventCardProps> = ({
             {title.length > TITLE_LIMIT ? '…' : undefined}
           </Headline3>
         </Anchor>
-        <div css={dateStyles}>
+        <div css={dateStyles} data-testid={`${eventId}-date`}>
           <div>
             {formatTimezoneToLocalTimezone(
               startDate,
@@ -96,10 +97,7 @@ const EventCard: React.FC<EventCardProps> = ({
           </div>
           <div>
             {formatTimezoneToLocalTimezone(startDate, 'h:mm a')} -{' '}
-            {formatTimezoneToLocalTimezone(
-              endDate,
-              'h:mm a (zzz)',
-            ).toUpperCase()}
+            {formatTimezoneToLocalTimezone(endDate, 'h:mm a (z)').toUpperCase()}
           </div>
         </div>
         <span css={groupsStyles}>

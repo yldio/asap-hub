@@ -1,6 +1,5 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { format, toDate } from 'date-fns-tz';
 import {
   googleDriveIcon,
   protocolsIcon,
@@ -28,10 +27,6 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
   return width / height;
 };
 
-export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');
-export const formatDateAndTime = (date: Date): string =>
-  format(date, "d/M/y 'at' HH:mm");
-
 export const isInternalLink = (href: string): boolean =>
   globalThis.location &&
   new URL(href, globalThis.location.href).origin === globalThis.location.origin;
@@ -54,11 +49,3 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   });
   return icon?.[1];
 };
-
-export const formatTimezoneToLocalTimezone = (
-  date: Parameters<typeof toDate>[0],
-  form: string,
-): string =>
-  format(toDate(date), form, {
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  });

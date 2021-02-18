@@ -6,7 +6,7 @@ import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';
 import { perRem, mobileScreen } from '../pixels';
 import { ToolCard } from '../organisms';
 import { mailToSupport, createMailTo } from '../mail';
-import { formatDateAndTime } from '../utils';
+import { formatDateAndTime } from '../date';
 
 const containerStyles = css({
   display: 'grid',

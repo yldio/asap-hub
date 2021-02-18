@@ -10,7 +10,7 @@ import {
   Anchor,
 } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
-import { formatDate } from '../utils';
+import { formatDate } from '../date';
 import {
   newsPlaceholder,
   newsEventPlaceholderIcon,

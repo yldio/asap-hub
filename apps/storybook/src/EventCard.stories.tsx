@@ -11,6 +11,7 @@ export default {
 };
 
 const props = () => ({
+  id: '1',
   startDate: new Date(
     date('Start Date', new Date(2021, 8, 6, 18)),
   ).toISOString(),

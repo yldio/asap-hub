@@ -1,21 +1,24 @@
-import { useRecoilValue, atom, selector } from 'recoil';
-import { ListCalendarResponse } from '@asap-hub/model';
+import { atomFamily, selectorFamily, useRecoilValue } from 'recoil';
+import { EventResponse } from '@asap-hub/model';
 
 import { authorizationState } from '../auth/state';
-import { getCalendars } from './api';
+import { getEvent } from './api';
 
-export const refreshCalendarState = atom({
-  key: 'refreshCalendars',
+export const refreshEventState = atomFamily<number, string>({
+  key: 'refreshEvent',
   default: 0,
 });
-
-const calendarState = selector<ListCalendarResponse>({
-  key: 'calendars',
-  get: async ({ get }) => {
-    get(refreshCalendarState);
+const fetchEventState = selectorFamily<EventResponse | undefined, string>({
+  key: 'fetchEvent',
+  get: (id) => async ({ get }) => {
+    get(refreshEventState(id));
     const authorization = get(authorizationState);
-    return getCalendars(authorization);
+    return getEvent(id, authorization);
   },
 });
+const eventState = atomFamily<EventResponse | undefined, string>({
+  key: 'event',
+  default: fetchEventState,
+});
 
-export const useCalendars = () => useRecoilValue(calendarState);
+export const useEventById = (id: string) => useRecoilValue(eventState(id));

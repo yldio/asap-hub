@@ -45,12 +45,20 @@ export const getAccessToken = async (): Promise<string> => {
   throw Boom.badImplementation();
 };
 
-export default function create(): typeof Got {
+const create = (
+  clientOptions: { unpublished: boolean } = { unpublished: false },
+): typeof Got => {
+  const headers: Record<string, string> = {
+    'content-type': 'application/json',
+  };
+
+  if (clientOptions.unpublished) {
+    headers['X-Unpublished'] = 'true';
+  }
+
   return Got.extend({
     prefixUrl: `${squidex.baseUrl}/api/content/${squidex.appName}/`,
-    headers: {
-      'content-type': 'application/json',
-    },
+    headers,
     hooks: {
       beforeRequest: [
         async (options): Promise<void> => {
@@ -65,4 +73,6 @@ export default function create(): typeof Got {
       ],
     },
   });
-}
+};
+
+export default create;

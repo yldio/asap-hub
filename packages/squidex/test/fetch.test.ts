@@ -95,4 +95,45 @@ describe('squidex wrapper', () => {
     const result = await client.fetch();
     expect(result).toEqual({ total: 0, items: [] });
   });
+
+  it('returns draft documents', async () => {
+    nock(config.baseUrl, {
+      reqheaders: {
+        'X-Unpublished': 'true',
+      },
+    })
+      .get(
+        `/api/content/${config.appName}/${collection}?q=${JSON.stringify({
+          take: 8,
+        })}`,
+      )
+      .reply(200, {
+        total: 1,
+        items: [
+          {
+            id: '42',
+            data: {
+              string: {
+                iv: 'value',
+              },
+            },
+          },
+        ],
+      });
+
+    const client = new Squidex<Content>(collection, {
+      unpublished: true,
+    });
+    const result = await client.fetch();
+    expect(result.items).toEqual([
+      {
+        id: '42',
+        data: {
+          string: {
+            iv: 'value',
+          },
+        },
+      },
+    ]);
+  });
 });

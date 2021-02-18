@@ -1,8 +1,12 @@
-# Import data
+# Import
 
-The package purpose is to automate the process of inserting bulk user and team information.
+The script ignores the first line as it is considered the header of the file.
 
-`yarn node apps/asap-cli/build-cjs/cli.js import </path/to/file>.csv`
+## users
+
+The command purpose is to automate the process of inserting bulk user and team information.
+
+`yarn node apps/asap-cli/build-cjs/cli.js import users </path/to/file>.csv`
 
 The csv format needs to respect the following structure:
 
@@ -37,7 +41,21 @@ The csv format needs to respect the following structure:
 - researcherId
 - twitter
 
-The script ignores the first line as it is considered the header of the file.
+## protocols
+
+The command purpose is to automate the process of inserting bulk protocols.
+
+`yarn node apps/asap-cli/build-cjs/cli.js import protocols </path/to/file>.csv`
+
+- teamLeadPILastName
+- linkToProtocols
+- name
+- version
+- protocolAuthors
+- createdDate
+- contact
+- keywords
+- abstract
 
 ## Environment Variables
 

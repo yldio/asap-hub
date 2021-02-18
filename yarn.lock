@@ -37,6 +37,7 @@ __metadata:
     "@babel/runtime-corejs3": ^7.12.5
     "@types/apr-intercept": "workspace:*"
     "@types/babel__core": ^7
+    "@types/got": ^9.6.11
     "@types/jest": ^26.0.20
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
@@ -49,6 +50,7 @@ __metadata:
     async-sema: ^3.1.0
     aws-sdk: ^2.745.0
     csv-parse: ^4.12.0
+    got: ^11.6.0
     jwt-encode: ^1.0.1
     nock: ^13.0.4
     pump: ^3.0.0
@@ -6437,6 +6439,17 @@ __metadata:
     "@types/minimatch": "*"
     "@types/node": "*"
   checksum: f74ae67cb205302da0d452e925529f817a253c4dce5d59ae6077d592238b921db750da143b8a5f8427a5011e202937d8a7b264f7d14b0ddc7f8137ca5e1af1b6
+  languageName: node
+  linkType: hard
+
+"@types/got@npm:^9.6.11":
+  version: 9.6.11
+  resolution: "@types/got@npm:9.6.11"
+  dependencies:
+    "@types/node": "*"
+    "@types/tough-cookie": "*"
+    form-data: ^2.5.0
+  checksum: f0c0becccd69329146014b4179bca0ee1fb45ad937e165ab77cfeae3a623051eb7cfd1c6d71202e82ae35a3e89d95f1f6a1c567a9dd300c991e75e816fd29f9f
   languageName: node
   linkType: hard
 

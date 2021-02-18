@@ -1,21 +1,24 @@
-import parser from 'csv-parse';
+import csvParse from 'csv-parse';
 import pump from 'pump';
 import through from 'through2-concurrent';
 import { createReadStream } from 'fs';
-import insert from './insert';
-import parseData, { Data } from './parse-data';
+import insertUsers from './users/insert';
+import parseUsers from './users/parse';
+import insertProtocols from './protocols/insert';
+import parseProtocols from './protocols/parse';
 
-// complaining about `data` here is a lint rule bug
-// eslint-disable-next-line no-unused-vars
-const parse = (transform: (data: Data) => Promise<void>) => (
-  src: string,
-): Promise<void> =>
+/* eslint-disable no-unused-vars */
+const parse = <T>(
+  parser: (arg: string[]) => T,
+  transformer: (arg: T) => Promise<void>,
+) => (src: string): Promise<void> =>
+  /* eslint-enable no-unused-vars */
   new Promise((resolve, reject) => {
     pump(
       createReadStream(src),
-      parser({ from_line: 2 }),
+      csvParse({ from_line: 2 }),
       through.obj({ maxConcurrency: 10 }, async (chunk, _, callback) => {
-        await transform(parseData(chunk));
+        await transformer(parser(chunk));
         return callback(null);
       }),
       (err: Error) => {
@@ -27,8 +30,13 @@ const parse = (transform: (data: Data) => Promise<void>) => (
     );
   });
 
-export const importUsers = parse(
-  insert({
+const users = parse(
+  parseUsers,
+  insertUsers({
     upsert: true,
   }),
 );
+
+const protocols = parse(parseProtocols, insertProtocols);
+
+export { users, protocols };

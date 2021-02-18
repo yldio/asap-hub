@@ -1,4 +1,4 @@
-const { presets, ...base } = require('./babel-base.config.js');
+const { presets, plugins, ...base } = require('./babel-base.config.js');
 
 module.exports = {
   ...base,
@@ -10,6 +10,7 @@ module.exports = {
     ],
   ],
   plugins: [
+    ...plugins,
     // Force this transform because otherwise Webpack 4 (used in CRA) fails to parse:
     // https://github.com/webpack/webpack/issues/10227
     // Workaround forcing higher acorn major version causes other failures

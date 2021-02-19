@@ -26,11 +26,10 @@
     "sls": "node serverless/link-plugins.js && yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "test:unit": "jest",
-    "test:integration": "jest --config=apps/asap-server/jest-integration.config.js",
-    "test:e2e": "jest --config=apps/e2e-tests/jest-e2e.config.js",
-    "test:browser": "jest --config=packages/react-components/jest-browser.config.js",
-    "test": "jest"
+    "test:integration": "yarn test --config=apps/asap-server/jest-integration.config.js",
+    "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",
+    "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
+    "test": "LANG=en_US TZ=UTC jest"
   },
   "resolutions": {
     "encoding": "0.1.13"

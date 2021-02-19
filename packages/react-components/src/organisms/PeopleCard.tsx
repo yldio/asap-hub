@@ -5,7 +5,7 @@ import { UserResponse, UserTeam } from '@asap-hub/model';
 import { Card, Anchor, Headline2, Avatar, Caption } from '../atoms';
 import { UserProfilePersonalText } from '../molecules';
 import { tabletScreen } from '../pixels';
-import { formatDate } from '../utils';
+import { formatDate } from '../date';
 
 const containerStyles = css({
   display: 'grid',

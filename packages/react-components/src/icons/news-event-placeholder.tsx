@@ -2,7 +2,7 @@ import React from 'react';
 
 /* istanbul ignore file */
 
-const newsPlaceholder = (
+const newsEventPlaceholder = (
   <svg
     viewBox="0 0 184 184"
     version="1.1"
@@ -72,4 +72,4 @@ const newsPlaceholder = (
   </svg>
 );
 
-export default newsPlaceholder;
+export default newsEventPlaceholder;

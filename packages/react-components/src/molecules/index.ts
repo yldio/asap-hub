@@ -1,5 +1,6 @@
 export { default as AgreeToTerms } from './AgreeToTerms';
 export { default as BannerCard } from './BannerCard';
+export { default as ToastCard } from './ToastCard';
 export { default as CalendarLink } from './CalendarLink';
 export { default as CtaCard } from './CtaCard';
 export { default as ErrorCard } from './ErrorCard';

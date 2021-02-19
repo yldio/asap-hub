@@ -1,6 +1,5 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { format } from 'date-fns';
 import {
   googleDriveIcon,
   protocolsIcon,
@@ -27,10 +26,6 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
   const { width, height } = svg.viewBox.baseVal;
   return width / height;
 };
-
-export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');
-export const formatDateAndTime = (date: Date): string =>
-  format(date, "d/M/y 'at' HH:mm");
 
 export const isInternalLink = (href: string): boolean =>
   globalThis.location &&

@@ -387,6 +387,7 @@ __metadata:
     "@types/uuid": ^8.0.0
     core-js: ^3.6.5
     date-fns: ^2.16.1
+    date-fns-tz: ^1.1.1
     dom-to-playwright: ^0.1.2
     emotion-normalize: ^10.1.0
     expect-playwright: ^0.3.0
@@ -12485,6 +12486,15 @@ __metadata:
     whatwg-mimetype: ^2.3.0
     whatwg-url: ^8.0.0
   checksum: 42239927c6a202e2d02b7f41c94ca53e3cea036898b97b8bf6120ed1b25e0dd11c48ec7aa5c84cf807c2cb9f3a637df9fb50f3ca25a52863186a4ac46254726b
+  languageName: node
+  linkType: hard
+
+"date-fns-tz@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "date-fns-tz@npm:1.1.1"
+  peerDependencies:
+    date-fns: ">=2.0.0-alpha.13"
+  checksum: 51bef0d92a81c9b1c1dfc7e776d5c85d26a2739698788976f638c2dcfd3b8512c5403922ca5bfa41403d276e2be775d5862a24f2f6ae8feecf7e3034008d79e4
   languageName: node
   linkType: hard
 

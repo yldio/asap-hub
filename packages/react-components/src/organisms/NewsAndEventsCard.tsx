@@ -10,10 +10,10 @@ import {
   Anchor,
 } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
-import { formatDate } from '../utils';
+import { formatDate } from '../date';
 import {
   newsPlaceholder,
-  eventsPlaceholder,
+  newsEventPlaceholderIcon,
   trainingPlaceholderIcon,
 } from '../icons';
 import { ExternalLink } from '../molecules';
@@ -60,7 +60,7 @@ const footerStyles = css({
 
 const placeholders: Record<NewsAndEventsType, JSX.Element> = {
   News: newsPlaceholder,
-  Event: eventsPlaceholder,
+  Event: newsEventPlaceholderIcon,
   Training: trainingPlaceholderIcon,
 };
 

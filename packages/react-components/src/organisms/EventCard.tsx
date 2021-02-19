@@ -53,7 +53,7 @@ const iconStyles = css({
 
 type EventCardProps = Pick<
   EventResponse,
-  'startDate' | 'endDate' | 'title' | 'tags' | 'status' | 'id'
+  'startDate' | 'endDate' | 'title' | 'tags' | 'status'
 > & {
   groups: (EventResponse['groups'][0] & { href: string })[];
   href?: string;
@@ -65,7 +65,6 @@ const EventCard: React.FC<EventCardProps> = ({
   title,
   tags,
   groups,
-  id: eventId,
   href,
 }) => (
   <ToastCard
@@ -87,7 +86,7 @@ const EventCard: React.FC<EventCardProps> = ({
             {title.length > TITLE_LIMIT ? '…' : undefined}
           </Headline3>
         </Anchor>
-        <div css={dateStyles} data-testid={`${eventId}-date`}>
+        <div css={dateStyles}>
           <div>
             {formatDateToLocalTimezone(startDate, 'E, d MMM y').toUpperCase()} ∙{' '}
           </div>

@@ -63,7 +63,74 @@ describe('Dashboard controller', () => {
       });
     });
   });
+
+  describe('Update method', () => {
+    test('Should throw when calendar does not exist', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/calendars/calendar-not-found`)
+        .reply(404);
+
+      await expect(calendars.update('calendar-not-found', {})).rejects.toThrow(
+        'Not Found',
+      );
+    });
+
+    test('Should return the calendars', async () => {
+      const syncToken = 'google-sync-token';
+      const calendarId = 'calendar-id';
+
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/calendars/${calendarId}`, {
+          syncToken: { iv: syncToken },
+        })
+        .reply(200, updateCalendarResponse);
+
+      const result = await calendars.update(calendarId, { syncToken });
+
+      expect(result).toEqual({
+        id: 'calendar-id-1',
+        color: '#5C1158',
+        name: 'Kubernetes Meetups',
+      });
+    });
+  });
+
+  describe('getSyncToken method', () => {
+    test('Should throw when calendar does not exist', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/calendars/calendar-not-found`)
+        .reply(404);
+
+      await expect(
+        calendars.getSyncToken('calendar-not-found'),
+      ).rejects.toThrow('Not Found');
+    });
+
+    test('Should return the syncToken', async () => {
+      const calendarId = 'calendar-id';
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/calendars/${calendarId}`)
+        .reply(200, updateCalendarResponse);
+
+      const result = await calendars.getSyncToken(calendarId);
+
+      expect(result).toEqual('google-sync-token');
+    });
+  });
 });
+
+const updateCalendarResponse = {
+  id: 'cms-calendar-id-1',
+  data: {
+    id: { iv: 'calendar-id-1' },
+    color: { iv: '#5C1158' },
+    name: { iv: 'Kubernetes Meetups' },
+    syncToken: { iv: 'google-sync-token' },
+  },
+  created: '2021-01-07T16:44:09Z',
+  lastModified: '2021-01-07T16:44:09Z',
+};
 
 const getCalendarsResponse: Results<RestCalendar> = {
   total: 2,

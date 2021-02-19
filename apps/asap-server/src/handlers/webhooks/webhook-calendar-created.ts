@@ -3,15 +3,22 @@ import Joi from '@hapi/joi';
 import { auth, JWTInput, JWT } from 'google-auth-library';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
-import { region, googleApiCredentialsSecretId } from '../../config';
+import {
+  region,
+  googleApiCredentialsSecretId,
+  googleApiUrl,
+  asapApiUrl,
+} from '../../config';
 import { http } from '../../utils/instrumented-framework';
 
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-squidex-request';
+import Calendars, { CalendarController } from '../../controllers/calendars';
 
 export const webhookCalendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
   unsubscribe: UnsubscribeFromEventChanges,
+  calendarController: CalendarController,
 ): Handler =>
   http(
     async (request: lambda.Request): Promise<lambda.Response> => {
@@ -34,12 +41,35 @@ export const webhookCalendarCreatedHandlerFactory = (
         bodySchema,
       ) as WebhookPayload<Calendar>;
 
-      // eslint-disable-next-line no-console
-      console.log('Received:', JSON.stringify(request.payload));
+      if (event === 'CalendarsUpdated') {
+        if (
+          !payload.dataOld ||
+          !payload.dataOld.id ||
+          payload.dataOld.id.iv === payload.data.id.iv
+        ) {
+          return {
+            statusCode: 200,
+            payload: payload.data.id,
+          };
+        }
 
-      if (['CalendarsCreated'].includes(event)) {
+        if (payload.dataOld.resourceId) {
+          try {
+            await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.error(error);
+          }
+        }
+      }
+
+      if (['CalendarsCreated', 'CalendarsUpdated'].includes(event)) {
         try {
-          await subscribe(payload.data.id.iv, payload.id);
+          const resourceId = await subscribe(payload.data.id.iv, payload.id);
+
+          await calendarController.update(payload.id, {
+            resourceId,
+          });
         } catch (error) {
           return {
             statusCode: 400,
@@ -61,7 +91,7 @@ export const webhookCalendarCreatedHandlerFactory = (
 
 export const subscribeToEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
-) => async (calendarId: string, subscriptionId: string): Promise<void> => {
+) => async (calendarId: string, subscriptionId: string): Promise<string> => {
   const creds = await getJWTCredentials();
   const client = auth.fromJSON(creds) as JWT;
 
@@ -69,21 +99,27 @@ export const subscribeToEventChangesFactory = (
     'https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.events',
   ];
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/watch`;
+  const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
   const data = {
     id: subscriptionId,
     type: 'web_hook',
-    address: 'https://api-646.hub.asap.science/webhook/calendar-updates',
+    address: `${asapApiUrl}/webhook/events`,
     params: {
       // 30 days, which is a maximum TTL
       ttl: 2592000,
     },
   };
 
-  const response = await client.request({ url, method: 'POST', data });
+  const response = await client.request<{ resourceId: string }>({
+    url,
+    method: 'POST',
+    data,
+  });
 
   // eslint-disable-next-line no-console
   console.log(JSON.stringify(response, null, 2));
+
+  return response.data.resourceId;
 };
 
 export type SubscribeToEventChanges = ReturnType<
@@ -92,7 +128,25 @@ export type SubscribeToEventChanges = ReturnType<
 
 export const unsubscribeFromEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
-) => async (resourceId: string): Promise<void> => {};
+) => async (resourceId: string, channelId: string): Promise<void> => {
+  const creds = await getJWTCredentials();
+  const client = auth.fromJSON(creds) as JWT;
+
+  client.scopes = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
+  ];
+  const url = `${googleApiUrl}calendar/v3/channels/stop`;
+  const data = {
+    id: channelId,
+    resourceId,
+  };
+
+  const response = await client.request({ url, method: 'POST', data });
+
+  // eslint-disable-next-line no-console
+  console.log(JSON.stringify(response, null, 2));
+};
 
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
@@ -117,4 +171,5 @@ export type GetJWTCredentials = () => Promise<JWTInput>;
 export const handler: Handler = webhookCalendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentials),
   unsubscribeFromEventChangesFactory(getJWTCredentials),
+  new Calendars(),
 );

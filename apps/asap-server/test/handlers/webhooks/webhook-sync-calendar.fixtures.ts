@@ -48,6 +48,9 @@ export const updateCalendarEvent: WebhookPayload<Calendar> = {
       color: {
         iv: '#691426',
       },
+      resourceId: {
+        iv: 'resource-id',
+      },
     },
   },
 };

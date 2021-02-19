@@ -121,7 +121,7 @@ test:unit:
     paths:
       - '.jest-cache'
   script:
-    - yarn run test:unit --coverage
+    - yarn run test --coverage
     - yarn codecov
   needs:
     - build:ts

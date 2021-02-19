@@ -10,6 +10,7 @@ const {
   ENVIRONMENT,
   REGION,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
+  ASAP_API_URL,
 } = process.env;
 
 export const globalToken = GLOBAL_TOKEN || 'change_me_when_we_have_admins';
@@ -26,3 +27,4 @@ export const googleApiUrl = 'https://www.googleapis.com/';
 export const region = REGION || 'eu-west-1';
 export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
+export const asapApiUrl = ASAP_API_URL || 'http://localhost:3333';

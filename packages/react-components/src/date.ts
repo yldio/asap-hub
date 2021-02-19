@@ -1,5 +1,4 @@
-import { format, toDate } from 'date-fns-tz';
-import { enUS } from 'date-fns/locale';
+import { format, utcToZonedTime } from 'date-fns-tz';
 
 import { getLocalTimezone } from './localization';
 
@@ -7,16 +6,12 @@ export const formatDate = (date: Date): string => format(date, 'do MMMM yyyy');
 export const formatDateAndTime = (date: Date): string =>
   format(date, "d/M/y 'at' HH:mm");
 
-export const formatTimezoneToLocalTimezone = (
+export const formatDateToLocalTimezone = (
   date: string,
   form: string,
 ): string => {
-  const parsedDate = toDate(
-    date,
-    { timeZone: 'Etc/UTC' }, // Default if no timezone is provided in date
-  );
-  return format(parsedDate, form, {
+  const zonedDate = utcToZonedTime(date, getLocalTimezone(), { timeZone: 'Z' });
+  return format(zonedDate, form, {
     timeZone: getLocalTimezone(),
-    locale: enUS,
   });
 };

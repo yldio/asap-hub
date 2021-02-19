@@ -7,7 +7,7 @@ import { ToastCard, TagList } from '../molecules';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { groupsIcon, eventPlaceholderIcon, calendarIcon } from '../icons';
 import { lead } from '../colors';
-import { formatTimezoneToLocalTimezone } from '../date';
+import { formatDateToLocalTimezone } from '../date';
 
 const TITLE_LIMIT = 55;
 
@@ -89,15 +89,11 @@ const EventCard: React.FC<EventCardProps> = ({
         </Anchor>
         <div css={dateStyles} data-testid={`${eventId}-date`}>
           <div>
-            {formatTimezoneToLocalTimezone(
-              startDate,
-              'E, d MMM y',
-            ).toUpperCase()}{' '}
-            ∙{' '}
+            {formatDateToLocalTimezone(startDate, 'E, d MMM y').toUpperCase()} ∙{' '}
           </div>
           <div>
-            {formatTimezoneToLocalTimezone(startDate, 'h:mm a')} -{' '}
-            {formatTimezoneToLocalTimezone(endDate, 'h:mm a (z)').toUpperCase()}
+            {formatDateToLocalTimezone(startDate, 'h:mm a')} -{' '}
+            {formatDateToLocalTimezone(endDate, 'h:mm a (z)').toUpperCase()}
           </div>
         </div>
         <span css={groupsStyles}>

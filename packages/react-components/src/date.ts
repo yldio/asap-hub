@@ -10,7 +10,7 @@ export const formatDateToLocalTimezone = (
   date: string,
   form: string,
 ): string => {
-  const zonedDate = utcToZonedTime(date, getLocalTimezone(), { timeZone: 'Z' });
+  const zonedDate = utcToZonedTime(date, getLocalTimezone());
   return format(zonedDate, form, {
     timeZone: getLocalTimezone(),
   });

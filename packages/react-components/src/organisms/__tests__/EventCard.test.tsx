@@ -63,16 +63,16 @@ it('shows that an event has been cancelled', () => {
 });
 
 it('to show a properly formatted date in users local timezone', () => {
-  mockedGetLocalTimezone.mockReturnValue('Europe/Tallinn');
+  mockedGetLocalTimezone.mockReturnValue('America/New_York');
   const { getByTestId } = render(
     <EventCard
       {...props}
       id={'1'}
-      startDate={new Date(2021, 8, 6, 18).toISOString()}
-      endDate={new Date(2021, 8, 6, 20).toISOString()}
+      startDate={new Date('2021-08-06T18:00:00Z').toISOString()}
+      endDate={new Date('2021-08-06T20:00:00Z').toISOString()}
     />,
   );
   expect(getByTestId('1-date').textContent).toMatchInlineSnapshot(
-    `"MON, 6 SEP 2021 ∙ 9:00 PM - 11:00 PM (EEST)"`,
+    `"FRI, 6 AUG 2021 ∙ 2:00 PM - 4:00 PM (EDT)"`,
   );
 });

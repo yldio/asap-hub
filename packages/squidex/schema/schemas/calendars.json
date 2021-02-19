@@ -1,124 +1,154 @@
 {
-  "properties": {
-    "label": "Calendars"
-  },
-  "category": "Content",
-  "scripts": {},
-  "fieldsInLists": [],
-  "fieldsInReferences": ["name"],
-  "fields": [
-    {
-      "name": "name",
-      "properties": {
-        "isRequiredOnPublish": true,
-        "fieldType": "String",
-        "editor": "Input",
-        "contentType": "Unspecified",
-        "label": "Name"
-      },
-      "partitioning": "invariant"
+  "$schema": "./../__json/schema.json",
+  "name": "calendars",
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "Calendars"
     },
-    {
-      "name": "id",
-      "properties": {
-        "isRequiredOnPublish": true,
-        "fieldType": "String",
-        "editor": "Input",
-        "isUnique": true,
-        "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
-        "contentType": "Unspecified",
-        "label": "Google Calendar ID"
+    "scripts": {},
+    "fieldsInReferences": ["name"],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "name",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Name",
+          "isRequired": false
+        }
       },
-      "partitioning": "invariant"
-    },
-    {
-      "name": "color",
-      "properties": {
-        "isRequiredOnPublish": true,
-        "fieldType": "String",
-        "editor": "Radio",
-        "allowedValues": [
-          "#B1365F",
-          "#5C1158",
-          "#711616",
-          "#691426",
-          "#BE6D00",
-          "#B1440E",
-          "#853104",
-          "#8C500B",
-          "#754916",
-          "#88880E",
-          "#AB8B00",
-          "#856508",
-          "#28754E",
-          "#1B887A",
-          "#28754E",
-          "#0D7813",
-          "#528800",
-          "#125A12",
-          "#2F6309",
-          "#2F6213",
-          "#0F4B38",
-          "#5F6B02",
-          "#4A716C",
-          "#6E6E41",
-          "#29527A",
-          "#2952A3",
-          "#4E5D6C",
-          "#5A6986",
-          "#182C57",
-          "#060D5E",
-          "#113F47",
-          "#7A367A",
-          "#5229A3",
-          "#865A5A",
-          "#705770",
-          "#23164E",
-          "#5B123B",
-          "#42104A",
-          "#875509",
-          "#8D6F47",
-          "#6B3304",
-          "#333333"
-        ],
-        "contentType": "Unspecified",
-        "label": "Color"
+      {
+        "name": "id",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "isUnique": true,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Google Calendar ID",
+          "isRequired": false
+        }
       },
-      "partitioning": "invariant"
-    },
-    {
-      "name": "syncToken",
-      "properties": {
-        "fieldType": "String",
-        "editor": "Input",
-        "contentType": "Unspecified",
-        "label": "Google Last Sync Token"
+      {
+        "name": "color",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": [
+            "#B1365F",
+            "#5C1158",
+            "#711616",
+            "#691426",
+            "#BE6D00",
+            "#B1440E",
+            "#853104",
+            "#8C500B",
+            "#754916",
+            "#88880E",
+            "#AB8B00",
+            "#856508",
+            "#28754E",
+            "#1B887A",
+            "#28754E",
+            "#0D7813",
+            "#528800",
+            "#125A12",
+            "#2F6309",
+            "#2F6213",
+            "#0F4B38",
+            "#5F6B02",
+            "#4A716C",
+            "#6E6E41",
+            "#29527A",
+            "#2952A3",
+            "#4E5D6C",
+            "#5A6986",
+            "#182C57",
+            "#060D5E",
+            "#113F47",
+            "#7A367A",
+            "#5229A3",
+            "#865A5A",
+            "#705770",
+            "#23164E",
+            "#5B123B",
+            "#42104A",
+            "#875509",
+            "#8D6F47",
+            "#6B3304",
+            "#333333"
+          ],
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Radio",
+          "label": "Color",
+          "isRequired": false
+        }
       },
-      "isDisabled": true,
-      "partitioning": "invariant"
-    },
-    {
-      "name": "resourceId",
-      "properties": {
-        "fieldType": "String",
-        "editor": "Input",
-        "contentType": "Unspecified",
-        "label": "Google resource ID"
+      {
+        "name": "syncToken",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Google Last Sync Token",
+          "isRequired": false
+        }
       },
-      "isDisabled": true,
-      "partitioning": "invariant"
-    },
-    {
-      "name": "expirationDate",
-      "properties": {
-        "fieldType": "String",
-        "editor": "Input",
-        "contentType": "Unspecified",
-        "label": "Google subscription expiration date"
+      {
+        "name": "resourceId",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Google resource ID",
+          "isRequired": false
+        }
       },
-      "isDisabled": true,
-      "partitioning": "invariant"
-    }
-  ],
-  "isPublished": true
+      {
+        "name": "expirationDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "editor": "Input",
+          "label": "Google subscription expiration date",
+          "isRequired": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Content",
+    "isPublished": true
+  }
 }

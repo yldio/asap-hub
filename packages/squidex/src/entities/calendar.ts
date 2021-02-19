@@ -7,6 +7,7 @@ export interface Calendar {
   name: string;
   syncToken?: string;
   resourceId?: string;
+  expirationDate?: string;
 }
 
 export interface RestCalendar extends Entity, Rest<Calendar> {}

@@ -4626,7 +4626,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "google-auth-library",
-        "npm:7.0.2"
+        "npm:6.1.6"
       ],
       [
         "google-p12-pem",
@@ -4638,11 +4638,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "googleapis",
-        "npm:67.1.0"
+        "npm:67.0.0"
       ],
       [
         "googleapis-common",
-        "npm:5.0.1"
+        "npm:4.4.3"
       ],
       [
         "got",
@@ -9313,7 +9313,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.17.1"],
             ["express-async-errors", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:3.1.1"],
             ["form-data", "npm:3.0.0"],
-            ["googleapis", "npm:67.1.0"],
+            ["googleapis", "npm:67.0.0"],
             ["got", "npm:11.6.0"],
             ["graphql", "npm:15.3.0"],
             ["graphql-tag", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.11.0"],
@@ -31802,10 +31802,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["google-auth-library", [
-        ["npm:7.0.2", {
-          "packageLocation": "./.yarn/cache/google-auth-library-npm-7.0.2-b03343febd-f001ab5aeb.zip/node_modules/google-auth-library/",
+        ["npm:6.1.6", {
+          "packageLocation": "./.yarn/cache/google-auth-library-npm-6.1.6-58e29c36a6-2f54874f93.zip/node_modules/google-auth-library/",
           "packageDependencies": [
-            ["google-auth-library", "npm:7.0.2"],
+            ["google-auth-library", "npm:6.1.6"],
             ["arrify", "npm:2.0.1"],
             ["base64-js", "npm:1.3.1"],
             ["ecdsa-sig-formatter", "npm:1.0.11"],
@@ -31839,24 +31839,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["googleapis", [
-        ["npm:67.1.0", {
-          "packageLocation": "./.yarn/cache/googleapis-npm-67.1.0-818213db01-dd8709a016.zip/node_modules/googleapis/",
+        ["npm:67.0.0", {
+          "packageLocation": "./.yarn/cache/googleapis-npm-67.0.0-fde31ecbb4-47e89ee52e.zip/node_modules/googleapis/",
           "packageDependencies": [
-            ["googleapis", "npm:67.1.0"],
-            ["google-auth-library", "npm:7.0.2"],
-            ["googleapis-common", "npm:5.0.1"]
+            ["googleapis", "npm:67.0.0"],
+            ["google-auth-library", "npm:6.1.6"],
+            ["googleapis-common", "npm:4.4.3"]
           ],
           "linkType": "HARD",
         }]
       ]],
       ["googleapis-common", [
-        ["npm:5.0.1", {
-          "packageLocation": "./.yarn/cache/googleapis-common-npm-5.0.1-c13a787b4c-0c557ce77b.zip/node_modules/googleapis-common/",
+        ["npm:4.4.3", {
+          "packageLocation": "./.yarn/cache/googleapis-common-npm-4.4.3-d7baadf3ff-398fd246c2.zip/node_modules/googleapis-common/",
           "packageDependencies": [
-            ["googleapis-common", "npm:5.0.1"],
+            ["googleapis-common", "npm:4.4.3"],
             ["extend", "npm:3.0.2"],
             ["gaxios", "npm:4.1.0"],
-            ["google-auth-library", "npm:7.0.2"],
+            ["google-auth-library", "npm:6.1.6"],
             ["qs", "npm:6.9.4"],
             ["url-template", "npm:2.0.8"],
             ["uuid", "npm:8.3.0"]

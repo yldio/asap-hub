@@ -11,6 +11,7 @@ import validateRequest from '../../utils/validate-squidex-request';
 
 export const webhookCalendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
+  unsubscribe: UnsubscribeFromEventChanges,
 ): Handler =>
   http(
     async (request: lambda.Request): Promise<lambda.Response> => {
@@ -37,7 +38,16 @@ export const webhookCalendarCreatedHandlerFactory = (
       console.log('Received:', JSON.stringify(request.payload));
 
       if (['CalendarsCreated'].includes(event)) {
-        await subscribe(payload.data.id.iv, payload.id);
+        try {
+          await subscribe(payload.data.id.iv, payload.id);
+        } catch (error) {
+          return {
+            statusCode: 400,
+            payload: {
+              message: error.message,
+            },
+          };
+        }
 
         return {
           statusCode: 200,
@@ -48,8 +58,6 @@ export const webhookCalendarCreatedHandlerFactory = (
       return { statusCode: 204 };
     },
   );
-
-export type GetJWTCredentials = () => Promise<JWTInput>;
 
 export const subscribeToEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
@@ -66,6 +74,10 @@ export const subscribeToEventChangesFactory = (
     id: subscriptionId,
     type: 'web_hook',
     address: 'https://api-646.hub.asap.science/webhook/calendar-updates',
+    params: {
+      // 30 days, which is a maximum TTL
+      ttl: 2592000,
+    },
   };
 
   const response = await client.request({ url, method: 'POST', data });
@@ -73,6 +85,18 @@ export const subscribeToEventChangesFactory = (
   // eslint-disable-next-line no-console
   console.log(JSON.stringify(response, null, 2));
 };
+
+export type SubscribeToEventChanges = ReturnType<
+  typeof subscribeToEventChangesFactory
+>;
+
+export const unsubscribeFromEventChangesFactory = (
+  getJWTCredentials: GetJWTCredentials,
+) => async (resourceId: string): Promise<void> => {};
+
+export type UnsubscribeFromEventChanges = ReturnType<
+  typeof unsubscribeFromEventChangesFactory
+>;
 
 const getJWTCredentials: GetJWTCredentials = async () => {
   const client = new AWS.SecretsManager({ region });
@@ -88,10 +112,9 @@ const getJWTCredentials: GetJWTCredentials = async () => {
   return JSON.parse(secret.SecretString);
 };
 
-export type SubscribeToEventChanges = ReturnType<
-  typeof subscribeToEventChangesFactory
->;
+export type GetJWTCredentials = () => Promise<JWTInput>;
 
 export const handler: Handler = webhookCalendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentials),
+  unsubscribeFromEventChangesFactory(getJWTCredentials),
 );

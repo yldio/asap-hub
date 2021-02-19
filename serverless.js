@@ -72,7 +72,9 @@ module.exports = {
               { Ref: 'AWS::Region' },
               { Ref: 'AWS::AccountId' },
               'secret',
-              `google-api-credentials-${SLS_STAGE === 'production' ? 'prod' : 'dev'}*`,
+              `google-api-credentials-${
+                SLS_STAGE === 'production' ? 'prod' : 'dev'
+              }*`,
             ],
           ],
         },

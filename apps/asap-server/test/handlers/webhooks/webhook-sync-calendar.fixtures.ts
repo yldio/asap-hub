@@ -32,3 +32,22 @@ export const createCalendarEvent: WebhookPayload<Calendar> = {
   },
   timestamp: '2021-02-15T13:11:25Z',
 };
+
+export const updateCalendarEvent: WebhookPayload<Calendar> = {
+  ...createCalendarEvent,
+  type: 'CalendarsUpdated',
+  payload: {
+    ...createCalendarEvent.payload,
+    dataOld: {
+      name: {
+        iv: 'Awesome Calendar',
+      },
+      id: {
+        iv: 'old-calendar-id@group.calendar.google.com',
+      },
+      color: {
+        iv: '#691426',
+      },
+    },
+  },
+};

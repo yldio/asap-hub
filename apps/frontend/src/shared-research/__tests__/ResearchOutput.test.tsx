@@ -4,7 +4,6 @@ import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import nock from 'nock';
 import { authTestUtils } from '@asap-hub/react-components';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import userEvent from '@testing-library/user-event';
 
 import ResearchOutput from '../ResearchOutput';
 import { API_BASE_URL } from '../../config';
@@ -87,15 +86,4 @@ it('renders the 404 page for a missing research output', async () => {
     .reply(404);
   const { getByText } = await renderComponent('42');
   expect(getByText(/sorry.+page/i)).toBeVisible();
-});
-
-it('has a button to go back in browser history', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/research-outputs/42')
-    .reply(200, researchOutput);
-  const { getByText } = await renderComponent('42');
-  userEvent.click(getByText(/back/i));
-  expect(getByText('Previous Page')).toBeVisible();
 });

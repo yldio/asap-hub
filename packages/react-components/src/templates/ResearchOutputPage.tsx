@@ -3,15 +3,7 @@ import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
 
-import {
-  TagLabel,
-  Display,
-  Link,
-  Paragraph,
-  Card,
-  Caption,
-  Button,
-} from '../atoms';
+import { TagLabel, Display, Link, Paragraph, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
@@ -27,7 +19,8 @@ const teamMemberStyles = css({
 });
 
 const iconStyles = css({
-  display: 'inline-block',
+  display: 'inline-grid',
+  verticalAlign: 'middle',
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
   paddingRight: `${15 / perRem}em`,
@@ -40,11 +33,6 @@ const containerStyles = css({
 const backContainerStyles = css({
   alignSelf: 'flex-start',
   padding: `${30 / perRem}em 0 `,
-});
-
-const backButtonStyles = css({
-  display: 'flex',
-  alignItems: 'center',
 });
 
 const visibilityStyles = css({
@@ -63,7 +51,7 @@ type ResearchOutputPageProps = Pick<
   team?: {
     href: string;
   };
-  goBack: () => void;
+  backHref: string;
 };
 
 const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
@@ -73,15 +61,13 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   text,
   title,
   type,
-  goBack,
+  backHref,
 }) => (
   <div css={containerStyles}>
     <div css={backContainerStyles}>
-      <Button linkStyle onClick={goBack}>
-        <div css={backButtonStyles}>
-          <span css={iconStyles}>{chevronCircleLeftIcon}</span> Back
-        </div>
-      </Button>
+      <Link href={backHref}>
+        <span css={iconStyles}>{chevronCircleLeftIcon}</span>Back
+      </Link>
     </div>
     <Card>
       <TagLabel>{type}</TagLabel>

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
+import { LastLocationProvider } from 'react-router-last-location';
 import {
   Layout,
   BasicLayout,
@@ -69,30 +70,32 @@ const App: React.FC<Record<string, never>> = () => {
     <Frame>
       <AuthProvider>
         <Router history={history}>
-          <Frame>
-            <Switch>
-              <Route path="/welcome">
-                <Welcome />
-              </Route>
+          <LastLocationProvider>
+            <Frame>
+              <Switch>
+                <Route path="/welcome">
+                  <Welcome />
+                </Route>
 
-              <Route exact path="/terms-and-conditions">
-                <Content layoutComponent={ConfiguredLayout} />
-              </Route>
-              <Route exact path="/privacy-policy">
-                <Content layoutComponent={ConfiguredLayout} />
-              </Route>
+                <Route exact path="/terms-and-conditions">
+                  <Content layoutComponent={ConfiguredLayout} />
+                </Route>
+                <Route exact path="/privacy-policy">
+                  <Content layoutComponent={ConfiguredLayout} />
+                </Route>
 
-              <Route>
-                <CheckAuth>
-                  <ConfiguredLayout>
-                    <Frame>
-                      <GuardedApp />
-                    </Frame>
-                  </ConfiguredLayout>
-                </CheckAuth>
-              </Route>
-            </Switch>
-          </Frame>
+                <Route>
+                  <CheckAuth>
+                    <ConfiguredLayout>
+                      <Frame>
+                        <GuardedApp />
+                      </Frame>
+                    </ConfiguredLayout>
+                  </CheckAuth>
+                </Route>
+              </Switch>
+            </Frame>
+          </LastLocationProvider>
         </Router>
       </AuthProvider>
     </Frame>

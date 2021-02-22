@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ComponentProps } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Location } from 'history';
+import { Location, History } from 'history';
 import css from '@emotion/css';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
@@ -8,6 +8,7 @@ import { MenuHeader, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
+import { usePrevious } from '../hooks';
 
 const UserMenuButton = React.lazy(
   () =>
@@ -163,10 +164,14 @@ const Layout: React.FC<LayoutProps> = ({
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
+  let prevLocation: Location | undefined;
   // This hook *is* called unconditionally despite what rules-of-hooks says
   /* eslint-disable react-hooks/rules-of-hooks */
   try {
     location = useLocation();
+    prevLocation = usePrevious<Location<History.PoorMansUnknown> | undefined>(
+      location,
+    );
   } catch {
     // If there is no router, fine, never auto-close the menu
   }
@@ -175,6 +180,12 @@ const Layout: React.FC<LayoutProps> = ({
   useEffect(() => {
     setMenuShown(false);
   }, [location]);
+  useEffect(() => {
+    if (location?.pathname !== prevLocation?.pathname) {
+      const main = document.querySelector('main');
+      main && main.scrollTo(0, 0);
+    }
+  }, [location, prevLocation]);
 
   return (
     <ToastStack>

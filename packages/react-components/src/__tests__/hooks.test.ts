@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { useGifReplay } from '../hooks';
+import { useGifReplay, usePrevious } from '../hooks';
 
 describe('useGifReplay', () => {
   it('returns the same GIF URL apart from the fragment', () => {
@@ -36,5 +36,24 @@ describe('useGifReplay', () => {
     const newFragment = new URL(result.current, window.location.href).hash;
 
     expect(newFragment).toEqual(oldFragment);
+  });
+});
+
+describe('usePrevious', () => {
+  it('Initially returns undefined', () => {
+    const { result } = renderHook(({ value }) => usePrevious(value), {
+      initialProps: { value: 1 },
+    });
+    expect(result.current).toEqual(undefined);
+  });
+
+  it('Returns previous result', () => {
+    const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
+      initialProps: { value: 1 },
+    });
+    rerender({ value: 2 });
+    expect(result.current).toEqual(1);
+    rerender({ value: 3 });
+    expect(result.current).toEqual(2);
   });
 });

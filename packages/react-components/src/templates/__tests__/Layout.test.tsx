@@ -75,6 +75,8 @@ it('closes the drawer when clicking the overlay', async () => {
 });
 
 it('closes the drawer on navigation', async () => {
+  Element.prototype.scrollTo = jest.fn();
+
   const { getByLabelText, getAllByText } = render(
     <MemoryRouter initialEntries={['/']}>
       <Layout {...props} />
@@ -85,4 +87,17 @@ it('closes the drawer on navigation', async () => {
 
   userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
   expect(getByLabelText(/close/i)).not.toBeVisible();
+});
+
+it('Scrolls to top between page navigations', async () => {
+  const scrollToMock = jest.fn();
+  Element.prototype.scrollTo = scrollToMock;
+
+  const { getAllByText } = render(
+    <MemoryRouter initialEntries={['/']}>
+      <Layout {...props} />
+    </MemoryRouter>,
+  );
+  userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
+  expect(scrollToMock).toHaveBeenCalled();
 });

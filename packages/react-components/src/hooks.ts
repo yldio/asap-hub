@@ -1,4 +1,4 @@
-import { useState, useEffect, DependencyList } from 'react';
+import { useState, useEffect, DependencyList, useRef } from 'react';
 
 export const useGifReplay = (
   url: string,
@@ -9,4 +9,12 @@ export const useGifReplay = (
     setRand(Math.random());
   }, dependencies); // eslint-disable-line react-hooks/exhaustive-deps
   return `${url}#${rand}`;
+};
+
+export const usePrevious = <T extends unknown>(value: T): T | undefined => {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 };

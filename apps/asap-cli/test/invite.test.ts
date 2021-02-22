@@ -41,7 +41,7 @@ describe('Invite user', () => {
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'data.connections.iv', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[2]] });
@@ -64,7 +64,7 @@ describe('Invite user', () => {
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'data.connections.iv', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, fetchUsersResponse)
@@ -108,7 +108,7 @@ describe('Invite user', () => {
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'data.connections.iv', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })
@@ -140,7 +140,7 @@ describe('Invite user', () => {
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'data.connections.iv', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })

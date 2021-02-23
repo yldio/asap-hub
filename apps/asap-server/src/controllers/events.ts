@@ -1,14 +1,18 @@
 import Boom from '@hapi/boom';
 import { ListResponse, EventResponse } from '@asap-hub/model';
-import { GraphqlEvent } from '@asap-hub/squidex';
+import { GraphqlEvent, RestEvent, Event } from '@asap-hub/squidex';
 import { FetchOptions } from '../utils/types';
-import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
+import {
+  InstrumentedSquidexGraphql,
+  InstrumentedSquidex,
+} from '../utils/instrumented-client';
 import { parseGraphQLEvent } from '../entities/event';
 import { ResponseFetchGroup } from './groups';
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventBaseResponse>;
   fetchById: (eventId: string) => Promise<EventBaseResponse>;
+  upsert: (eventId: string, data: Event) => Promise<void>;
 }
 
 export type EventBaseResponse = Omit<EventResponse, 'groups'>;
@@ -17,8 +21,11 @@ export type ListEventBaseResponse = ListResponse<EventBaseResponse>;
 export default class Events implements EventController {
   client: InstrumentedSquidexGraphql;
 
+  events: InstrumentedSquidex<RestEvent>;
+
   constructor() {
     this.client = new InstrumentedSquidexGraphql();
+    this.events = new InstrumentedSquidex('events');
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventBaseResponse> {
@@ -97,6 +104,16 @@ export default class Events implements EventController {
     }
 
     return parseGraphQLEvent(event);
+  }
+
+  // This function is used by the google sync calendar script
+  // For simplicity and performancepurposes it doesnt return and EventResponse
+  async upsert(eventId: string, data: Event): Promise<void> {
+    const update = Object.entries(data).reduce((acc, [key, value]) => {
+      acc[key] = { iv: value };
+      return acc;
+    }, {} as { [key: string]: { iv: unknown } }) as RestEvent['data'];
+    await this.events.upsert(eventId, update);
   }
 }
 

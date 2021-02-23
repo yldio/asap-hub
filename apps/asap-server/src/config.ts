@@ -8,7 +8,7 @@ const {
   SQUIDEX_SHARED_SECRET,
   LIGHTSTEP_TOKEN,
   ENVIRONMENT,
-  REGION,
+  AWS_REGION,
   GOOGLE_API_CREDENTIALS_SECRET_ID,
   ASAP_API_URL,
 } = process.env;
@@ -24,7 +24,7 @@ export const auth0SharedSecret = AUTH0_SHARED_SECRET || 'auth0_shared_secret';
 export const squidexSharedSecret =
   SQUIDEX_SHARED_SECRET || 'squidex_shared_secret';
 export const googleApiUrl = 'https://www.googleapis.com/';
-export const region = REGION || 'eu-west-1';
+export const awsRegion = AWS_REGION || 'us-east-1';
 export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
 export const asapApiUrl = ASAP_API_URL || 'http://localhost:3333';

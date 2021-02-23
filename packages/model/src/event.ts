@@ -8,7 +8,9 @@ export interface EventResponse {
   id: string;
   title: string;
   startDate: string;
+  startDateTimeZone: string;
   endDate: string;
+  endDateTimeZone: string;
   description: string;
   calendar: CalendarResponse;
   groups: GroupResponse[];

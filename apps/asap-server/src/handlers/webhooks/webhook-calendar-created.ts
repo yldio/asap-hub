@@ -22,12 +22,14 @@ export const webhookCalendarCreatedHandlerFactory = (
 ): Handler =>
   http(
     async (request: lambda.Request): Promise<lambda.Response> => {
-      await validateRequest(request);
+      validateRequest(request);
 
       const bodySchema = Joi.object({
         type: Joi.string().required(),
         payload: Joi.object({
+          id: Joi.string().required(),
           data: Joi.object().required(),
+          dataOld: Joi.object(),
         })
           .unknown()
           .required(),

@@ -102,6 +102,7 @@ export {
   DiscoverPageBody,
   EventsCalendar,
   EventsPage,
+  EventsUpcoming,
   ForgotPasswordPage,
   GroupProfileAbout,
   GroupProfileCalendar,

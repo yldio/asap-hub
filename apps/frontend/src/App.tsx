@@ -21,6 +21,7 @@ import { TEAMS_PATH } from './network/routes';
 import AuthProvider from './auth/AuthProvider';
 import CheckAuth from './auth/CheckAuth';
 import Frame from './structure/Frame';
+import { EVENTS_CALENDAR_PATH } from './events/routes';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
@@ -52,7 +53,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"
       aboutHref="https://www.parkinsonsroadmap.org/"
-      eventsHref={EVENTS_PATH}
+      eventsHref={`${EVENTS_PATH}/${EVENTS_CALENDAR_PATH}`}
     >
       {children}
     </Layout>

@@ -168,7 +168,7 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
     }
   }
 
-  async upsert(json: T['data'], id: string, publish = true): Promise<T> {
+  async upsert(id: string, json: T['data'], publish = true): Promise<T> {
     try {
       const res = await this.client
         .post(`${this.collection}/${id}`, {

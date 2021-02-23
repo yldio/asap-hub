@@ -38,6 +38,7 @@ describe('squidex wrapper - upsert', () => {
     // JSON parse/stringify so TS won't complain
     await expect(() =>
       client.upsert(
+        contentId,
         JSON.parse(
           JSON.stringify({
             array: {
@@ -45,7 +46,6 @@ describe('squidex wrapper - upsert', () => {
             },
           }),
         ),
-        contentId,
       ),
     ).rejects.toThrow('Bad Request');
   });
@@ -62,14 +62,11 @@ describe('squidex wrapper - upsert', () => {
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.upsert(
-        {
-          string: {
-            iv: 'value',
-          },
+      client.upsert(contentId, {
+        string: {
+          iv: 'value',
         },
-        contentId,
-      ),
+      }),
     ).rejects.toThrow('Unauthorized');
   });
 
@@ -85,14 +82,11 @@ describe('squidex wrapper - upsert', () => {
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.upsert(
-        {
-          string: {
-            iv: 'value',
-          },
+      client.upsert(contentId, {
+        string: {
+          iv: 'value',
         },
-        contentId,
-      ),
+      }),
     ).rejects.toThrow('Conflict');
   });
 
@@ -104,14 +98,11 @@ describe('squidex wrapper - upsert', () => {
     const client = new Squidex<Content>(collection);
 
     await expect(() =>
-      client.upsert(
-        {
-          string: {
-            iv: 'value',
-          },
+      client.upsert(contentId, {
+        string: {
+          iv: 'value',
         },
-        contentId,
-      ),
+      }),
     ).rejects.toThrow('squidex');
   });
 
@@ -135,14 +126,11 @@ describe('squidex wrapper - upsert', () => {
       });
 
     const client = new Squidex<Content>(collection);
-    const result = await client.upsert(
-      {
-        string: {
-          iv: 'value',
-        },
+    const result = await client.upsert(contentId, {
+      string: {
+        iv: 'value',
       },
-      contentId,
-    );
+    });
 
     expect(result).toEqual({
       id: '42',
@@ -175,12 +163,12 @@ describe('squidex wrapper - upsert', () => {
 
     const client = new Squidex<Content>(collection);
     const result = await client.upsert(
+      contentId,
       {
         string: {
           iv: 'value',
         },
       },
-      contentId,
       false,
     );
 

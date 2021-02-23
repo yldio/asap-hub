@@ -206,6 +206,43 @@ describe('Team controller', () => {
 
       expect(result).toEqual(fetchTeamByIdExpectation);
     });
+
+    test('Should return team information when user is part of the team', async () => {
+      const teamId = 'team-id-1';
+
+      const tools = [
+        {
+          url: 'https://example.com',
+          name: 'good link',
+          // squidex graphql api typings aren't perfect
+          description: (null as unknown) as undefined,
+        },
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, getGraphQlTeamResponse(tools))
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(200, fetchByIdUserResponse);
+
+      const result = await teams.fetchById(teamId, mockUser);
+
+      console.log(fetchTeamByIdExpectation);
+      expect(result).toEqual({
+        ...fetchTeamByIdExpectation,
+        tools: [
+          {
+            url: 'https://example.com',
+            name: 'good link',
+          },
+        ],
+      });
+    });
   });
 
   describe('Update method', () => {

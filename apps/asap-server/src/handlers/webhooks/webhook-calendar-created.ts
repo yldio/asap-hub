@@ -1,3 +1,4 @@
+import debug from 'debug';
 import AWS from 'aws-sdk';
 import Joi from '@hapi/joi';
 import { Auth } from 'googleapis';
@@ -10,10 +11,11 @@ import {
   asapApiUrl,
 } from '../../config';
 import { http } from '../../utils/instrumented-framework';
-
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-squidex-request';
 import Calendars, { CalendarController } from '../../controllers/calendars';
+
+const logger = debug('asap-server');
 
 export const webhookCalendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
@@ -59,8 +61,7 @@ export const webhookCalendarCreatedHandlerFactory = (
           try {
             await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
           } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error(error);
+            logger(error);
           }
         }
       }
@@ -118,8 +119,7 @@ export const subscribeToEventChangesFactory = (
     data,
   });
 
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify(response, null, 2));
+  logger(JSON.stringify(response, null, 2));
 
   return response.data.resourceId;
 };
@@ -146,8 +146,7 @@ export const unsubscribeFromEventChangesFactory = (
 
   const response = await client.request({ url, method: 'POST', data });
 
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify(response, null, 2));
+  logger(JSON.stringify(response, null, 2));
 };
 
 export type UnsubscribeFromEventChanges = ReturnType<

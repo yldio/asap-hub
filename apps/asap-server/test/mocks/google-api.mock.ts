@@ -1,6 +1,6 @@
-import { JWTInput } from 'google-auth-library';
+import { Auth } from 'googleapis';
 
-export const googleApiAuthJWTCredentials: JWTInput = {
+export const googleApiAuthJWTCredentials: Auth.JWTInput = {
   type: 'service_account',
   project_id: 'scenic-firefly-303116',
   private_key_id: '249ab9d7bc03e07cef3493b618cfb96c7de00c94',

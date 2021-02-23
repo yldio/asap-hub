@@ -58,7 +58,7 @@ module.exports = {
       SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,
       SQUIDEX_CLIENT_SECRET: `\${env:SQUIDEX_CLIENT_SECRET}`,
       SQUIDEX_SHARED_SECRET: `\${env:SQUIDEX_SHARED_SECRET}`,
-      AWS_REGION: `\${env:AWS_REGION}`,
+      REGION: `\${env:AWS_REGION}`,
       ASAP_API_URL: `\${env:ASAP_API_URL}`,
     },
     iamRoleStatements: [

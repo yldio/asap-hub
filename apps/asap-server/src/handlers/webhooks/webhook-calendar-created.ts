@@ -5,7 +5,7 @@ import { Auth } from 'googleapis';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import {
-  awsRegion,
+  region,
   googleApiCredentialsSecretId,
   googleApiUrl,
   asapApiUrl,
@@ -157,7 +157,7 @@ export type UnsubscribeFromEventChanges = ReturnType<
 >;
 
 const getJWTCredentials: GetJWTCredentials = async () => {
-  const client = new AWS.SecretsManager({ region: awsRegion });
+  const client = new AWS.SecretsManager({ region });
 
   const secret = await client
     .getSecretValue({ SecretId: googleApiCredentialsSecretId })

@@ -1,5 +1,7 @@
 import { google, calendar_v3, Auth } from 'googleapis';
+import { join } from 'path';
 import { CalendarController } from '../controllers/calendars';
+import logger from './logger';
 
 // Try to get syncToken from squidex
 // - if syncToken => set that in the params
@@ -16,7 +18,7 @@ export const syncCalendarFactory = (
   calendarsController: CalendarController,
 ) => async (calendarId: string): Promise<void> => {
   const auth = new google.auth.GoogleAuth({
-    keyFile: '../google-credentials.json',
+    keyFile: join(__dirname, '../google-credentials.json'), // TODO: use AWS secret-manager
     scopes: [
       'https://www.googleapis.com/auth/calendar',
       'https://www.googleapis.com/auth/calendar.events',
@@ -26,27 +28,28 @@ export const syncCalendarFactory = (
   const syncToken = await calendarsController
     .getSyncToken(calendarId)
     .catch((err) => {
-      console.log('Error fetching syncToken', err);
+      logger('Error fetching syncToken', err);
       return undefined;
     });
 
-  const nextSyncToken = await listEvents(
+  const nextSyncToken = await fetchEvents(
     calendarId,
     auth,
     syncEvent,
     syncToken,
   );
 
+  /* istanbul ignore else */
   if (nextSyncToken) {
     await calendarsController
       .update(calendarId, { syncToken: nextSyncToken })
       .catch((err) => {
-        console.log('Error updated syncToken', err);
+        logger('Error updated syncToken', err);
       });
   }
 };
 
-const listEvents = async (
+const fetchEvents = async (
   calendarId: string,
   auth: Auth.GoogleAuth,
   syncEvent: Function,
@@ -70,22 +73,22 @@ const listEvents = async (
   const calendar = google.calendar({ version: 'v3', auth });
   const res = await calendar.events.list(params).catch((err) => {
     if (err.code === '410') {
-      console.log('Token is Gone, doing full sync', err);
-      return listEvents(calendarId, auth, syncEvent); // syncToken "Gone", do full sync
+      logger('Token is Gone, doing full sync', err);
+      return fetchEvents(calendarId, auth, syncEvent); // syncToken "Gone", do full sync
     }
-    console.log('The API returned an error: ', err);
+    logger('The API returned an error: ', err);
     throw err;
   });
 
   if (res && typeof res === 'object') {
     const eventItems = res.data.items ?? [];
     await Promise.all(eventItems.map((e) => syncEvent(e))).catch((e) => {
-      console.log('Error updating event:', e);
+      logger('Error updating event:', e);
     });
 
     if (res.data.nextPageToken) {
       // get next page
-      return listEvents(
+      return fetchEvents(
         calendarId,
         auth,
         syncEvent,
@@ -97,5 +100,6 @@ const listEvents = async (
     return res.data.nextSyncToken;
   }
 
+  // return the syncToken from a previous iteration
   return res;
 };

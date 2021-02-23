@@ -1,4 +1,4 @@
-import { google, calendar_v3, Auth } from 'googleapis';
+import { google, calendar_v3 as calendarV3, Auth } from 'googleapis';
 import { join } from 'path';
 import { CalendarController } from '../controllers/calendars';
 import logger from './logger';
@@ -14,7 +14,7 @@ import logger from './logger';
 // Finally store nextSyncToken on squidex calendar
 
 export const syncCalendarFactory = (
-  syncEvent: (event: calendar_v3.Schema$Event) => Promise<void>,
+  syncEvent: (event: calendarV3.Schema$Event) => Promise<void>,
   calendarsController: CalendarController,
 ) => async (calendarId: string): Promise<void> => {
   const auth = new google.auth.GoogleAuth({
@@ -52,11 +52,11 @@ export const syncCalendarFactory = (
 const fetchEvents = async (
   calendarId: string,
   auth: Auth.GoogleAuth,
-  syncEvent: Function,
+  syncEvent: (event: calendarV3.Schema$Event) => Promise<void>,
   syncToken?: string,
   pageToken?: string,
 ): Promise<string | undefined | null> => {
-  const params: calendar_v3.Params$Resource$Events$List = {
+  const params: calendarV3.Params$Resource$Events$List = {
     pageToken: pageToken || undefined,
     calendarId,
     singleEvents: true, // recurring events come returned as single events

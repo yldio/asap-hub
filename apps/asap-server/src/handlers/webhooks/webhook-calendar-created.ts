@@ -61,7 +61,7 @@ export const webhookCalendarCreatedHandlerFactory = (
           try {
             await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
           } catch (error) {
-            logger(error);
+            logger('Error during unsubscribing from the calendar', error);
           }
         }
       }
@@ -75,7 +75,7 @@ export const webhookCalendarCreatedHandlerFactory = (
           });
         } catch (error) {
           return {
-            statusCode: 400,
+            statusCode: 502,
             payload: {
               message: error.message,
             },
@@ -119,7 +119,7 @@ export const subscribeToEventChangesFactory = (
     data,
   });
 
-  logger(JSON.stringify(response, null, 2));
+  logger('Google API subscription response', JSON.stringify(response, null, 2));
 
   return response.data.resourceId;
 };
@@ -146,7 +146,10 @@ export const unsubscribeFromEventChangesFactory = (
 
   const response = await client.request({ url, method: 'POST', data });
 
-  logger(JSON.stringify(response, null, 2));
+  logger(
+    'Google API unsubscribing response',
+    JSON.stringify(response, null, 2),
+  );
 };
 
 export type UnsubscribeFromEventChanges = ReturnType<

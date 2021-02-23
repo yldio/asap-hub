@@ -78,7 +78,7 @@ describe('Calendar Webhook', () => {
       );
     });
 
-    test('Should return 400 when the subscription was unsuccessful', async () => {
+    test('Should return 502 when the subscription was unsuccessful', async () => {
       const errorMessage =
         'Channel id 238c6b46-706e-11eb-9439-0242ac130002 not unique';
       subscribe.mockRejectedValueOnce(new Error(errorMessage));
@@ -87,7 +87,7 @@ describe('Calendar Webhook', () => {
         createSignedPayload(createCalendarEvent),
       )) as APIGatewayProxyResult;
 
-      expect(res.statusCode).toStrictEqual(400);
+      expect(res.statusCode).toStrictEqual(502);
       expect(res.body).toContain(errorMessage);
     });
   });

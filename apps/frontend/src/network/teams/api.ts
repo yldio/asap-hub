@@ -30,7 +30,7 @@ export const patchTeam = async (
 ): Promise<TeamResponse> => {
   const resp = await fetch(`${API_BASE_URL}/teams/${id}`, {
     method: 'PATCH',
-    headers: { authorization },
+    headers: { authorization, 'content-type': 'application/json' },
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {

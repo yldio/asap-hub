@@ -104,7 +104,11 @@ const transformGraphQLTeam = (
 ): TeamResponse => ({
   ...parseGraphQLTeam(team, members),
   tools: user?.teams.find(({ id }) => id === team.id)
-    ? team.flatData?.tools || []
+    ? team.flatData?.tools?.map(({ name, description, url }) => ({
+        name,
+        url,
+        description: description ?? undefined,
+      })) || []
     : undefined,
 });
 

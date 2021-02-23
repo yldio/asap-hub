@@ -82,7 +82,8 @@ const createAuth0 = (
 };
 
 export const Auth0Provider: React.FC<{
-  readonly user?: Partial<User>;
+  // no property ommission, only explicit undefined allowed if you really want the 'user-not-yet-fetched' state
+  readonly user: Partial<User> | undefined;
   readonly children: React.ReactNode;
   readonly auth0Overrides?: (
     auth0Client?: Auth0Client,

@@ -9,10 +9,10 @@ import {
 import { createListCalendarResponse } from '@asap-hub/fixtures';
 
 import Events from '../Events';
-import { refreshCalendarState } from '../state';
-import { getCalendars } from '../api';
+import { refreshCalendarsState } from '../calendar/state';
+import { getCalendars } from '../calendar/api';
 
-jest.mock('../api');
+jest.mock('../calendar/api');
 
 const mockGetCalendars = getCalendars as jest.MockedFunction<
   typeof getCalendars
@@ -21,7 +21,7 @@ const mockGetCalendars = getCalendars as jest.MockedFunction<
 const renderEventsPage = async () => {
   const result = render(
     <RecoilRoot
-      initializeState={({ set }) => set(refreshCalendarState, Math.random())}
+      initializeState={({ set }) => set(refreshCalendarsState, Math.random())}
     >
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>

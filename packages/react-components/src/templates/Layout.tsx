@@ -1,6 +1,6 @@
-import React, { useState, useEffect, ComponentProps } from 'react';
+import React, { useState, useEffect, ComponentProps, createRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Location, History } from 'history';
+import { Location } from 'history';
 import css from '@emotion/css';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
@@ -165,13 +165,12 @@ const Layout: React.FC<LayoutProps> = ({
 
   let location: Location | undefined;
   let prevLocation: Location | undefined;
+  const mainRef = createRef<HTMLDivElement>();
   // This hook *is* called unconditionally despite what rules-of-hooks says
   /* eslint-disable react-hooks/rules-of-hooks */
   try {
     location = useLocation();
-    prevLocation = usePrevious<Location<History.PoorMansUnknown> | undefined>(
-      location,
-    );
+    prevLocation = usePrevious(location);
   } catch {
     // If there is no router, fine, never auto-close the menu
   }
@@ -181,11 +180,10 @@ const Layout: React.FC<LayoutProps> = ({
     setMenuShown(false);
   }, [location]);
   useEffect(() => {
-    if (location?.pathname !== prevLocation?.pathname) {
-      const main = document.querySelector('main');
-      main && main.scrollTo(0, 0);
+    if (location?.pathname !== prevLocation?.pathname && mainRef.current) {
+      mainRef.current.scrollTo(0, 0);
     }
-  }, [location, prevLocation]);
+  }, [location, prevLocation, mainRef]);
 
   return (
     <ToastStack>
@@ -205,7 +203,9 @@ const Layout: React.FC<LayoutProps> = ({
             />
           </React.Suspense>
         </div>
-        <main css={contentStyles}>{children}</main>
+        <main ref={mainRef} css={contentStyles}>
+          {children}
+        </main>
         <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
           <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
         </div>

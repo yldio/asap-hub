@@ -90,9 +90,10 @@ it('closes the drawer on navigation', async () => {
 });
 
 it('Scrolls to top between page navigations', async () => {
-  const scrollToMock = jest.fn();
+  const scrollToMock = jest.fn(function meh(this: HTMLElement) {
+    expect(this.tagName).toBe('MAIN');
+  });
   Element.prototype.scrollTo = scrollToMock;
-
   const { getAllByText } = render(
     <MemoryRouter initialEntries={['/']}>
       <Layout {...props} />

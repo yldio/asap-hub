@@ -18,9 +18,10 @@ interface HTTPError extends Error {
 const squidex: Squidex<RestUser> = new Squidex('users');
 
 const limiter = RateLimit(10);
-
+const uuidMatch = /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
 export const inviteUsers = async (
   role: string,
+  reinvite = false,
   take = 20,
   skip = 0,
 ): Promise<void> => {
@@ -32,40 +33,56 @@ export const inviteUsers = async (
       op: 'eq',
       value: role,
     },
-    sort: [{ path: 'data.connections.iv', order: 'ascending' }],
+    sort: [{ path: 'created', order: 'ascending' }],
   });
 
-  const usersWithoutConnections = items.filter(
-    (u) => !u.data.connections || !u.data.connections.iv.length,
-  );
+  const usersToInvite = items.filter((u) => {
+    const connections = u.data.connections.iv;
+    if (connections.length === 0) {
+      return true;
+    }
+
+    const authConnections = connections.filter((c) => !c.code.match(uuidMatch));
+    if (reinvite && authConnections.length === 0) {
+      return true;
+    }
+
+    return false;
+  });
 
   await Promise.all(
-    usersWithoutConnections.map(async (user) => {
+    usersToInvite.map(async (user) => {
       await limiter();
 
-      const code = uuidV4();
-      const [err1] = await Intercept(
-        squidex.patch(user.id, {
-          email: user.data.email,
-          connections: {
-            iv: [{ code }],
-          },
-        }),
-      );
+      let code = user.data.connections.iv
+        .map((c) => c.code)
+        .find((c) => c.match(uuidMatch));
 
-      const error = err1 as HTTPError;
-      if (error) {
-        console.log({
-          op: `patch '${user.id}'`,
-          message: error.message,
-          statusCode: error.response?.statusCode,
-          body: error.response?.body,
-        });
-        throw err1;
+      if (!code) {
+        code = uuidV4();
+        console.log(`create invite code for ${user.data.email.iv}`);
+        const [err1] = await Intercept(
+          squidex.patch(user.id, {
+            email: user.data.email,
+            connections: {
+              iv: [{ code }],
+            },
+          }),
+        );
+
+        const error = err1 as HTTPError;
+        if (error) {
+          console.log({
+            op: `patch '${user.id}'`,
+            message: error.message,
+            statusCode: error.response?.statusCode,
+            body: error.response?.body,
+          });
+          throw err1;
+        }
       }
 
       const link = new url.URL(path.join(`/welcome/${code}`), origin);
-
       const [err2] = await Intercept(
         sendEmail({
           to: [user.data.email.iv],
@@ -93,11 +110,12 @@ export const inviteUsers = async (
     }),
   );
 
-  if (usersWithoutConnections.length === take) {
-    await inviteUsers(role, take, skip);
+  if (items.length < take) {
+    console.log('Found no more uninvited users');
     return;
   }
-  console.log('Found no more uninvited users');
+
+  await inviteUsers(role, reinvite, take, skip + take);
 };
 
 export default inviteUsers;

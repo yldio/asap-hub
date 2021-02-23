@@ -32,12 +32,20 @@ yargs(process.argv.slice(2))
     command: 'invite <role>',
     describe: 'invite people to the ASAP Hub',
     builder: (cli) =>
-      cli.positional('role', {
-        describe: 'specific a role to invite',
-        type: 'string',
-        choices: ['Staff', 'Grantee', 'Guest'],
-      }),
-    handler: async ({ role }) => inviteUsers(role as string),
+      cli
+        .positional('role', {
+          describe: 'specific a role to invite',
+          type: 'string',
+          choices: ['Staff', 'Grantee', 'Guest'],
+        })
+        .positional('reinvite', {
+          describe:
+            "flag to reinvite users that didn't complete the registration process",
+          type: 'boolean',
+        }),
+    handler: async ({ role, reinvite }) => {
+      inviteUsers(role as string, Boolean(reinvite));
+    },
   })
   .demandCommand(1)
   .help('h')

@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import Joi from '@hapi/joi';
-import { auth, JWTInput, JWT } from 'google-auth-library';
+import { Auth } from 'googleapis';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import {
@@ -93,7 +93,7 @@ export const subscribeToEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
 ) => async (calendarId: string, subscriptionId: string): Promise<string> => {
   const creds = await getJWTCredentials();
-  const client = auth.fromJSON(creds) as JWT;
+  const client = Auth.auth.fromJSON(creds) as Auth.JWT;
 
   client.scopes = [
     'https://www.googleapis.com/auth/calendar',
@@ -130,7 +130,7 @@ export const unsubscribeFromEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
 ) => async (resourceId: string, channelId: string): Promise<void> => {
   const creds = await getJWTCredentials();
-  const client = auth.fromJSON(creds) as JWT;
+  const client = Auth.auth.fromJSON(creds) as Auth.JWT;
 
   client.scopes = [
     'https://www.googleapis.com/auth/calendar',
@@ -166,7 +166,7 @@ const getJWTCredentials: GetJWTCredentials = async () => {
   return JSON.parse(secret.SecretString);
 };
 
-export type GetJWTCredentials = () => Promise<JWTInput>;
+export type GetJWTCredentials = () => Promise<Auth.JWTInput>;
 
 export const handler: Handler = webhookCalendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentials),

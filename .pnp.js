@@ -4637,6 +4637,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.6.1"
       ],
       [
+        "googleapis",
+        "npm:67.1.0"
+      ],
+      [
+        "googleapis-common",
+        "npm:5.0.1"
+      ],
+      [
         "got",
         "npm:11.6.0"
       ],
@@ -8713,6 +8721,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.0.0"
       ],
       [
+        "url-template",
+        "npm:2.0.8"
+      ],
+      [
         "url-to-options",
         "npm:1.0.1"
       ],
@@ -9301,7 +9313,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["express", "npm:4.17.1"],
             ["express-async-errors", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:3.1.1"],
             ["form-data", "npm:3.0.0"],
-            ["google-auth-library", "npm:7.0.2"],
+            ["googleapis", "npm:67.1.0"],
             ["got", "npm:11.6.0"],
             ["graphql", "npm:15.3.0"],
             ["graphql-tag", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:2.11.0"],
@@ -31826,6 +31838,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["googleapis", [
+        ["npm:67.1.0", {
+          "packageLocation": "./.yarn/cache/googleapis-npm-67.1.0-818213db01-dd8709a016.zip/node_modules/googleapis/",
+          "packageDependencies": [
+            ["googleapis", "npm:67.1.0"],
+            ["google-auth-library", "npm:7.0.2"],
+            ["googleapis-common", "npm:5.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["googleapis-common", [
+        ["npm:5.0.1", {
+          "packageLocation": "./.yarn/cache/googleapis-common-npm-5.0.1-c13a787b4c-0c557ce77b.zip/node_modules/googleapis-common/",
+          "packageDependencies": [
+            ["googleapis-common", "npm:5.0.1"],
+            ["extend", "npm:3.0.2"],
+            ["gaxios", "npm:4.1.0"],
+            ["google-auth-library", "npm:7.0.2"],
+            ["qs", "npm:6.9.4"],
+            ["url-template", "npm:2.0.8"],
+            ["uuid", "npm:8.3.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["got", [
         ["npm:11.6.0", {
           "packageLocation": "./.yarn/cache/got-npm-11.6.0-67ed1fbeeb-85c79e7fc0.zip/node_modules/got/",
@@ -47248,6 +47286,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["url-parse-lax", "npm:3.0.0"],
             ["prepend-http", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["url-template", [
+        ["npm:2.0.8", {
+          "packageLocation": "./.yarn/cache/url-template-npm-2.0.8-5d44a47d46-55f59a311a.zip/node_modules/url-template/",
+          "packageDependencies": [
+            ["url-template", "npm:2.0.8"]
           ],
           "linkType": "HARD",
         }]

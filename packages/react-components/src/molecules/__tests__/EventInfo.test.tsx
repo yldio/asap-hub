@@ -54,14 +54,26 @@ it('shows that the event is run by ASAP when there is no group', () => {
   expect(getByTitle('Calendar')).toBeInTheDocument();
 });
 
-it('to show a properly formatted date in users local timezone', () => {
+it("shows the date in the user's local timezone", () => {
   mockGetLocalTimezone.mockReturnValue('America/New_York');
   const { container } = render(
     <EventInfo
       {...props}
-      startDate={new Date('2021-08-06T18:00:00Z').toISOString()}
-      endDate={new Date('2021-08-06T20:00:00Z').toISOString()}
+      startDate={new Date('2021-08-25T18:00:00Z').toISOString()}
+      endDate={new Date('2021-08-25T20:00:00Z').toISOString()}
     />,
   );
-  expect(container).toHaveTextContent(/2021.+2:00 PM - 4:00 PM.+EDT/);
+  expect(container).toHaveTextContent(/\D25\D.+2:00 PM - 4:00 PM.+EDT/);
+});
+
+it('shows start and end day for a multi-day event', () => {
+  mockGetLocalTimezone.mockReturnValue('America/New_York');
+  const { container } = render(
+    <EventInfo
+      {...props}
+      startDate={new Date('2021-08-25T18:00:00Z').toISOString()}
+      endDate={new Date('2021-08-26T20:00:00Z').toISOString()}
+    />,
+  );
+  expect(container).toHaveTextContent(/\D25\D.*\D26\D/);
 });

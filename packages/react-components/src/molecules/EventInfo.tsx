@@ -27,6 +27,7 @@ const imageContainerStyle = css({
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
+  alignItems: 'center',
 });
 
 const dateStyles = css({
@@ -42,13 +43,15 @@ const groupsStyles = css({
   margin: 0,
   padding: `${12 / perRem}em 0`,
   gridRowGap: `${12 / perRem}em`,
-
-  color: lead.rgb,
 });
 const asapEventStyles = css({
   padding: `${12 / perRem}em 0`,
-
+});
+const eventOwnerStyles = css({
   color: lead.rgb,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
 });
 
 const iconStyles = css({
@@ -83,12 +86,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   return (
     <div css={cardStyles}>
       <div css={imageContainerStyle}>{eventPlaceholderIcon}</div>
-      <div
-        css={{
-          overflow: 'hidden',
-          maxWidth: '100%',
-        }}
-      >
+      <div>
         <Anchor href={href}>
           <Headline3 styleAsHeading={4}>
             {title.substr(0, TITLE_LIMIT)}
@@ -106,7 +104,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
         {groups.length ? (
           <ul css={groupsStyles}>
             {groups.map(({ name, href: groupHref, id }) => (
-              <li key={id}>
+              <li key={id} css={eventOwnerStyles}>
                 <Link href={groupHref}>
                   <span css={iconStyles}>{groupsIcon}</span>
                   {name}
@@ -115,7 +113,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
             ))}
           </ul>
         ) : (
-          <div css={asapEventStyles}>
+          <div css={[asapEventStyles, eventOwnerStyles]}>
             <span css={iconStyles}>{calendarIcon}</span>ASAP Event
           </div>
         )}

@@ -35,6 +35,7 @@ export {
   CalendarLink,
   CtaCard,
   ErrorCard,
+  EventInfo,
   ExternalLink,
   GoogleSigninButton,
   Header,

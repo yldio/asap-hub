@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter, Route } from 'react-router-dom';
 import { render } from '@testing-library/react';
-import { createEventResponse } from '@asap-hub/fixtures';
+import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
 
 import {
   Auth0Provider,
@@ -50,6 +50,27 @@ it('displays the event with given id', async () => {
   const { findByText } = render(<Event />, { wrapper });
   expect(await findByText('Kool Event', { exact: false })).toBeVisible();
   expect(mockGetEvent.mock.calls).toEqual([[id, expect.anything()]]);
+});
+
+it('generates the back href', async () => {
+  const { findByText } = render(<Event />, { wrapper });
+  expect((await findByText(/back/i)).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/events$/),
+  );
+});
+
+it('generates the group hrefs', async () => {
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+    id,
+    groups: [{ ...createGroupResponse(), id: 'grp42', name: 'Kool Group' }],
+  });
+  const { findByText } = render(<Event />, { wrapper });
+  expect((await findByText('Kool Group')).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/grp42$/),
+  );
 });
 
 it('falls back to the not found page for a missing event', async () => {

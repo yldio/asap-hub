@@ -3,7 +3,7 @@ import { EventResponse } from '@asap-hub/model';
 import css from '@emotion/css';
 
 import { Headline3, Link, Anchor } from '../atoms';
-import { perRem, smallDesktopScreen } from '../pixels';
+import { perRem, largeDesktopScreen } from '../pixels';
 import { groupsIcon, eventPlaceholderIcon, calendarIcon } from '../icons';
 import { lead } from '../colors';
 import { formatDateToLocalTimezone } from '../date';
@@ -19,7 +19,7 @@ const imageContainerStyle = css({
   width: `${102 / perRem}em`,
   overflow: 'hidden',
 
-  [`@media (max-width: ${smallDesktopScreen.min}px)`]: {
+  [`@media (max-width: ${largeDesktopScreen.min}px)`]: {
     display: 'none',
   },
 });

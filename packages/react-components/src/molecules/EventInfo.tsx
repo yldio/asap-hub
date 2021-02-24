@@ -70,48 +70,58 @@ const EventInfo: React.FC<EventInfoProps> = ({
   title,
   groups,
   href,
-}) => (
-  <div css={cardStyles}>
-    <div css={imageContainerStyle}>{eventPlaceholderIcon}</div>
-    <div
-      css={{
-        overflow: 'hidden',
-        maxWidth: '100%',
-      }}
-    >
-      <Anchor href={href}>
-        <Headline3 styleAsHeading={4}>
-          {title.substr(0, TITLE_LIMIT)}
-          {title.length > TITLE_LIMIT ? '…' : undefined}
-        </Headline3>
-      </Anchor>
-      <div css={dateStyles}>
-        <div>
-          {formatDateToLocalTimezone(startDate, 'E, d MMM y').toUpperCase()} ∙{' '}
+}) => {
+  const formattedStartDay = formatDateToLocalTimezone(
+    startDate,
+    'E, d MMM y',
+  ).toUpperCase();
+  const formattedEndDay = formatDateToLocalTimezone(
+    endDate,
+    'E, d MMM y',
+  ).toUpperCase();
+
+  return (
+    <div css={cardStyles}>
+      <div css={imageContainerStyle}>{eventPlaceholderIcon}</div>
+      <div
+        css={{
+          overflow: 'hidden',
+          maxWidth: '100%',
+        }}
+      >
+        <Anchor href={href}>
+          <Headline3 styleAsHeading={4}>
+            {title.substr(0, TITLE_LIMIT)}
+            {title.length > TITLE_LIMIT ? '…' : undefined}
+          </Headline3>
+        </Anchor>
+        <div css={dateStyles}>
+          <div>{formattedStartDay} ∙ </div>
+          <div>
+            {formatDateToLocalTimezone(startDate, 'h:mm a')} -{' '}
+            {formattedEndDay !== formattedStartDay && `${formattedEndDay} ∙ `}
+            {formatDateToLocalTimezone(endDate, 'h:mm a (z)').toUpperCase()}
+          </div>
         </div>
-        <div>
-          {formatDateToLocalTimezone(startDate, 'h:mm a')} -{' '}
-          {formatDateToLocalTimezone(endDate, 'h:mm a (z)').toUpperCase()}
-        </div>
+        {groups.length ? (
+          <ul css={groupsStyles}>
+            {groups.map(({ name, href: groupHref, id }) => (
+              <li key={id}>
+                <Link href={groupHref}>
+                  <span css={iconStyles}>{groupsIcon}</span>
+                  {name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div css={asapEventStyles}>
+            <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+          </div>
+        )}
       </div>
-      {groups.length ? (
-        <ul css={groupsStyles}>
-          {groups.map(({ name, href: groupHref, id }) => (
-            <li key={id}>
-              <Link href={groupHref}>
-                <span css={iconStyles}>{groupsIcon}</span>
-                {name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <div css={asapEventStyles}>
-          <span css={iconStyles}>{calendarIcon}</span>ASAP Event
-        </div>
-      )}
     </div>
-  </div>
-);
+  );
+};
 
 export default EventInfo;

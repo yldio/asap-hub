@@ -44,4 +44,5 @@ if (typeof document === 'object') {
 
   // scrollIntoView polyfill
   Element.prototype.scrollIntoView = jest.fn();
+  Element.prototype.scrollTo = jest.fn();
 }

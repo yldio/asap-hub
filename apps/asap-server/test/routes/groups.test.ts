@@ -136,7 +136,9 @@ describe('/groups/ route', () => {
             id: 'event-id-1',
             title: 'example event title',
             startDate: '2020-12-11T14:33:50Z',
+            startDateTimeZone: 'Europe/London',
             endDate: '2020-12-11T14:33:50Z',
+            endDateTimeZone: 'Europe/London',
             description: 'Description',
             calendar: {
               id: 'calendar-id-1',

@@ -61,6 +61,23 @@
         }
       },
       {
+        "name": "startDateTimeZone",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Start Date Time Zone",
+          "isRequired": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "endDate",
         "isHidden": false,
         "isLocked": false,
@@ -73,6 +90,23 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false
+        }
+      },
+      {
+        "name": "endDateTimeZone",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "End Date Time Zone",
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {

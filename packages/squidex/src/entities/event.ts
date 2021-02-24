@@ -8,7 +8,9 @@ export interface Event<TCalendar = string> {
   title: string;
   description: string;
   startDate: string;
+  startDateTimeZone: string;
   endDate: string;
+  endDateTimeZone: string;
   status: GoogleEventStatus;
   meetingLink?: string;
   calendar: TCalendar[];

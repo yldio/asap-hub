@@ -193,4 +193,4 @@ export type FetchEventsOptions = (
       after: string;
       before?: string;
     }
-) & { groupId?: string } & FetchOptions;
+) & { groupId?: string, sort?: string } & FetchOptions;

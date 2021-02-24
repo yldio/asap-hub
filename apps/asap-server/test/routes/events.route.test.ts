@@ -81,6 +81,7 @@ describe('/events/ routes', () => {
         skip: 5,
         before: '2021-02-08T14:29:59.895Z',
         after: '2021-02-08T14:13:37.138Z',
+        sort: 'startDate:desc'
       });
 
       const expectedParams: FetchEventsOptions = {
@@ -88,6 +89,7 @@ describe('/events/ routes', () => {
         skip: 5,
         before: '2021-02-08T14:29:59.895Z',
         after: '2021-02-08T14:13:37.138Z',
+        sort: 'startDate:desc'
       };
 
       expect(eventControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -143,6 +145,58 @@ describe('/events/ routes', () => {
           take: 'invalid-parameter',
         });
         expect(response.status).toBe(400);
+      });
+
+      test('Should return a validation error when the sort column is not supported ', async () => {
+        const response = await supertest(app).get('/events').query({
+          before: '2021-02-08T14:13:37.138Z',
+          sort: 'lastModifiedDate:desc',
+        });
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return a validation error when the sort order is not supported ', async () => {
+        const response = await supertest(app).get('/events').query({
+          before: '2021-02-08T14:13:37.138Z',
+          sort: 'startDate:up',
+        });
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return a validation error when the sort order is not given ', async () => {
+        const response = await supertest(app).get('/events').query({
+          before: '2021-02-08T14:13:37.138Z',
+          sort: 'startDate',
+        });
+        expect(response.status).toBe(400);
+      });
+
+      test('Should return 200 when sorting by the end date in descending order', async () => {
+        eventControllerMock.fetch.mockResolvedValueOnce({
+          items: [],
+          total: 0,
+        });
+
+        const response = await supertest(app).get('/events').query({
+          before: '2021-02-08T14:13:37.138Z',
+          sort: 'endDate:desc',
+        });
+
+        expect(response.status).toBe(200);
+      });
+
+      test('Should return 200 when sorting by the start date in ascending order', async () => {
+        eventControllerMock.fetch.mockResolvedValueOnce({
+          items: [],
+          total: 0,
+        });
+
+        const response = await supertest(app).get('/events').query({
+          before: '2021-02-08T14:13:37.138Z',
+          sort: 'startDate:asc',
+        });
+
+        expect(response.status).toBe(200);
       });
     });
   });

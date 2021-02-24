@@ -1,9 +1,6 @@
 const { join } = require('path');
 
-const testPathIgnorePatterns = [
-  '\\.browser-test\\.(js|jsx|ts|tsx)$',
-  'integration\\.test\\.(js|jsx|ts|tsx)$',
-];
+const testPathIgnorePatterns = ['\\.browser-test\\.(js|jsx|ts|tsx)$'];
 
 module.exports = {
   testRunner: require.resolve('jest-circus/runner'),

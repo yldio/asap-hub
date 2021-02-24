@@ -1,6 +1,11 @@
 import { APIGatewayProxyHandlerV2 } from 'aws-lambda';
+import debug from 'debug';
 
-export const handler: APIGatewayProxyHandlerV2 = (event, context) => {
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify({ event, context }, null, 2));
+const logger = debug('asap-server');
+
+export const handler: APIGatewayProxyHandlerV2<void> = async (
+  event,
+  context,
+) => {
+  logger('Request received', JSON.stringify({ event, context }, null, 2));
 };

@@ -37,14 +37,23 @@ const dateStyles = css({
 });
 
 const groupsStyles = css({
-  display: 'flex',
-  alignItems: 'center',
+  display: 'grid',
+  listStyle: 'none',
+  margin: 0,
   padding: `${12 / perRem}em 0`,
+  gridRowGap: `${12 / perRem}em`,
+
+  color: lead.rgb,
+});
+const asapEventStyles = css({
+  padding: `${12 / perRem}em 0`,
+
   color: lead.rgb,
 });
 
 const iconStyles = css({
-  display: 'inline-block',
+  display: 'inline-grid',
+  verticalAlign: 'middle',
   width: `${24 / perRem}em`,
   height: `${24 / perRem}em`,
   paddingRight: `${15 / perRem}em`,
@@ -85,18 +94,22 @@ const EventInfo: React.FC<EventInfoProps> = ({
           {formatDateToLocalTimezone(endDate, 'h:mm a (z)').toUpperCase()}
         </div>
       </div>
-      <span css={groupsStyles}>
-        <span css={iconStyles}>
-          {groups.length ? groupsIcon : calendarIcon}
-        </span>
-        {groups.length
-          ? groups.map(({ name, href: groupHref, id }) => (
-              <div css={{ whiteSpace: 'pre' }} key={`group-${id}`}>
-                <Link href={groupHref}>{name}</Link>{' '}
-              </div>
-            ))
-          : 'ASAP Event'}
-      </span>
+      {groups.length ? (
+        <ul css={groupsStyles}>
+          {groups.map(({ name, href: groupHref, id }) => (
+            <li key={id}>
+              <Link href={groupHref}>
+                <span css={iconStyles}>{groupsIcon}</span>
+                {name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div css={asapEventStyles}>
+          <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+        </div>
+      )}
     </div>
   </div>
 );

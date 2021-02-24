@@ -90,6 +90,27 @@ describe('Calendar Webhook', () => {
       expect(res.statusCode).toStrictEqual(502);
       expect(res.body).toContain(errorMessage);
     });
+
+    test('Should unsubscribe and skip the subscription if the calendar ID was set to an empty string', async () => {
+      const res = (await handler(
+        createSignedPayload({
+          ...updateCalendarEvent,
+          payload: {
+            ...updateCalendarEvent.payload,
+            data: {
+              ...updateCalendarEvent.payload.data,
+              id: {
+                iv: '',
+              },
+            },
+          },
+        }),
+      )) as APIGatewayProxyResult;
+
+      expect(res.statusCode).toStrictEqual(200);
+      expect(unsubscribe).toHaveBeenCalled();
+      expect(subscribe).not.toHaveBeenCalled();
+    });
   });
 
   describe('Calendar Update trigger', () => {
@@ -116,7 +137,7 @@ describe('Calendar Webhook', () => {
       )) as APIGatewayProxyResult;
 
       expect(res.statusCode).toStrictEqual(200);
-      expect(subscribe).not.toHaveBeenCalled();
+      expect(unsubscribe).not.toHaveBeenCalled();
       expect(subscribe).not.toHaveBeenCalled();
     });
 

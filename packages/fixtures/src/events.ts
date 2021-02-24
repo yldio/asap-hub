@@ -13,7 +13,9 @@ export const createEventResponse = (
   id: `event-${itemIndex}`,
   calendar: createCalendarResponse(itemIndex),
   startDate: new Date().toISOString(),
+  startDateTimeZone: 'Europe/London',
   endDate: new Date().toISOString(),
+  endDateTimeZone: 'Europe/London',
   groups: Array.from({ length: groupCount }).map((_, index) =>
     createGroupResponse({}, index),
   ),

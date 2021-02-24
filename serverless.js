@@ -58,7 +58,29 @@ module.exports = {
       SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,
       SQUIDEX_CLIENT_SECRET: `\${env:SQUIDEX_CLIENT_SECRET}`,
       SQUIDEX_SHARED_SECRET: `\${env:SQUIDEX_SHARED_SECRET}`,
+      REGION: `\${env:AWS_REGION}`,
+      ASAP_API_URL: `\${env:ASAP_API_URL}`,
     },
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: 'secretsmanager:*',
+        Resource: {
+          'Fn::Join': [
+            ':',
+            [
+              'arn:aws:secretsmanager',
+              { Ref: 'AWS::Region' },
+              { Ref: 'AWS::AccountId' },
+              'secret',
+              `google-api-credentials-${
+                SLS_STAGE === 'production' ? 'prod' : 'dev'
+              }*`,
+            ],
+          ],
+        },
+      },
+    ],
   },
   package: {
     individually: true,
@@ -140,9 +162,9 @@ module.exports = {
         },
       ],
     },
-    syncCalendar: {
+    calendarCreated: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-calendar.handler',
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-calendar-created.handler',
       events: [
         {
           httpApi: {
@@ -151,6 +173,28 @@ module.exports = {
           },
         },
       ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }`,
+      },
+    },
+    eventsUpdated: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-events-updated.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/webhook/events`,
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }`,
+      },
     },
     ...(NODE_ENV === 'production'
       ? {

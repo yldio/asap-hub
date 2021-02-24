@@ -86,3 +86,14 @@ it('closes the drawer on navigation', async () => {
   userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
   expect(getByLabelText(/close/i)).not.toBeVisible();
 });
+
+it('scrolls to top between page navigations', async () => {
+  const { getByRole, getAllByText } = render(
+    <MemoryRouter initialEntries={['/']}>
+      <Layout {...props} />
+    </MemoryRouter>,
+  );
+
+  userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
+  expect(getByRole('main').scrollTo).toHaveBeenCalled();
+});

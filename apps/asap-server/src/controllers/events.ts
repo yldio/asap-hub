@@ -1,11 +1,11 @@
 import Boom from '@hapi/boom';
 import { ListResponse, EventResponse } from '@asap-hub/model';
 import { GraphqlEvent, RestEvent, Event } from '@asap-hub/squidex';
-import { FetchOptions } from '../utils/types';
 import {
   InstrumentedSquidexGraphql,
   InstrumentedSquidex,
 } from '../utils/instrumented-client';
+import { FetchOptions, AllOrNone } from '../utils/types';
 import { parseGraphQLEvent } from '../entities/event';
 import { ResponseFetchGroup } from './groups';
 
@@ -29,7 +29,16 @@ export default class Events implements EventController {
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventBaseResponse> {
-    const { take, skip, before, after, groupId, search } = options;
+    const {
+      take,
+      skip,
+      before,
+      after,
+      groupId,
+      search,
+      sortBy,
+      sortOrder,
+    } = options;
 
     const filters = (search || '')
       .split(' ')
@@ -51,6 +60,12 @@ export default class Events implements EventController {
 
     if (before) {
       filters.push(`data/startDate/iv lt ${before}`);
+    }
+
+    let orderby = '';
+
+    if (sortBy && sortOrder) {
+      orderby = `data/${sortBy}/iv ${sortOrder}`;
     }
 
     if (groupId) {
@@ -75,6 +90,7 @@ export default class Events implements EventController {
       filters.join(' and '),
       take,
       skip,
+      orderby,
     );
 
     const { queryEventsContentsWithTotal } = await this.client.request<
@@ -143,9 +159,10 @@ export const buildGraphQLQueryFetchEvents = (
   filter: string,
   top = 10,
   skip = 0,
+  orderby = '',
 ): string =>
   `{
-  queryEventsContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}"){
+  queryEventsContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "${orderby}"){
     total,
     items{
       ${GraphQLQueryEvent}
@@ -196,9 +213,7 @@ export type FetchEventsOptions = (
 ) & { groupId?: string } & SortOptions &
   FetchOptions;
 
-type SortOptions =
-  | {
-      sortBy: 'startDate' | 'endDate';
-      sortOrder: 'asc' | 'desc';
-    }
-  | {};
+type SortOptions = AllOrNone<{
+  sortBy: 'startDate' | 'endDate';
+  sortOrder: 'asc' | 'desc';
+}>;

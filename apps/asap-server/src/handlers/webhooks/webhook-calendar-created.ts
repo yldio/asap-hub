@@ -66,6 +66,15 @@ export const webhookCalendarCreatedHandlerFactory = (
         }
       }
 
+      if (payload.data.id.iv === '') {
+        return {
+          statusCode: 200,
+          payload: {
+            message: 'Subscription skipped due to missing Calendar ID',
+          },
+        };
+      }
+
       if (['CalendarsCreated', 'CalendarsUpdated'].includes(event)) {
         try {
           const resourceId = await subscribe(payload.data.id.iv, payload.id);

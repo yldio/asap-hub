@@ -64,6 +64,65 @@ describe('Dashboard controller', () => {
     });
   });
 
+  describe.only('FetchByResourceId method', () => {
+    const resourceId = 'resource-id';
+    test('Should throw Bad Gateway when squidex throws an error', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/calendars`)
+        .query({
+          $top: 1,
+          $filter: `data/resourceId/iv eq '${resourceId}'`,
+        })
+        .reply(500);
+
+      await expect(calendars.fetchByResouceId(resourceId)).rejects.toThrow(
+        'Bad Gateway',
+      );
+    });
+
+    test('Should throw Not Found when squidex throws an error', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/calendars`)
+        .query({
+          $top: 1,
+          $filter: `data/resourceId/iv eq '${resourceId}'`,
+        })
+        .reply(200, { total: 0, items: [] });
+
+      await expect(calendars.fetchByResouceId(resourceId)).rejects.toThrow(
+        'Not Found',
+      );
+    });
+
+    test('Should return the calendar when finds it', async () => {
+      const rawCalendarResponse = {
+        id: 'cms-calendar-id-1',
+        data: {
+          id: { iv: 'calendar-id-1' },
+          color: { iv: '#5C1158' },
+          name: { iv: 'Kubernetes Meetups' },
+          syncToken: { iv: 'google-sync-token' },
+          resourceId: { iv: resourceId },
+          expirationDate: { iv: '2021-01-07T16:44:09Z' },
+        },
+        created: '2021-01-07T16:44:09Z',
+        lastModified: '2021-01-07T16:44:09Z',
+      };
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/calendars`)
+        .query({
+          $top: 1,
+          $filter: `data/resourceId/iv eq '${resourceId}'`,
+        })
+        .reply(200, { total: 1, items: [rawCalendarResponse] });
+
+      const result = await calendars.fetchByResouceId(resourceId);
+
+      expect(result).toEqual(rawCalendarResponse);
+    });
+  });
+
   describe('Update method', () => {
     test('Should throw when calendar does not exist', async () => {
       nock(config.baseUrl)

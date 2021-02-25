@@ -10,7 +10,9 @@ const props: ComponentProps<typeof EventsPage> = {
 
 it('renders the header', () => {
   const { getByRole } = render(<EventsPage {...props} />);
-  expect(getByRole('heading')).toBeVisible();
+  expect(getByRole('heading', { level: 1 })).toHaveTextContent(
+    'Calendar and Events',
+  );
 });
 
 it('renders the children', () => {

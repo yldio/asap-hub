@@ -25,22 +25,20 @@ const Events: React.FC<Record<string, never>> = () => {
 
   return (
     <EventsPage calendarHref={calendarHref} upcomingHref={upcomingHref}>
-      <Switch>
-        <Route exact path={calendarHref}>
-          <Frame>
+      <Frame>
+        <Switch>
+          <Route exact path={calendarHref}>
             <Calendars />
-          </Frame>
-        </Route>
-        <Route exact path={upcomingHref}>
-          <Frame>
+          </Route>
+          <Route exact path={upcomingHref}>
             <Upcoming time={time} />
-          </Frame>
-        </Route>
-        <Route path={`${path}/:id`}>
-          <Event />
-        </Route>
-        <Redirect to={calendarHref} />
-      </Switch>
+          </Route>
+          <Route path={`${path}/:id`}>
+            <Event />
+          </Route>
+          <Redirect to={calendarHref} />
+        </Switch>
+      </Frame>
     </EventsPage>
   );
 };

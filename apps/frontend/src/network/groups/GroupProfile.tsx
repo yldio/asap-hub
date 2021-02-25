@@ -46,6 +46,9 @@ const GroupProfile: React.FC = () => {
             <Route path={`${path}/calendar`}>
               <Calendar calendars={group.calendars} />
             </Route>
+            <Route path={`${path}/calendar`}>
+              <Calendar calendars={group.calendars} />
+            </Route>
             <Redirect to={`${path}/about`} />
           </Switch>
         </Frame>

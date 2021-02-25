@@ -141,7 +141,7 @@ describe('Calendar Webhook', () => {
       expect(subscribe).not.toHaveBeenCalled();
     });
 
-    test('Should unsubscribe first and then resubscribe if the calendar ID changed', async () => {
+    test('Should unsubscribe and remove the resourceId then resubscribe if the calendar ID changed', async () => {
       const res = (await handler(
         createSignedPayload(updateCalendarEvent),
       )) as APIGatewayProxyResult;
@@ -150,6 +150,12 @@ describe('Calendar Webhook', () => {
       expect(unsubscribe).toHaveBeenCalledWith(
         updateCalendarEvent.payload.dataOld!.resourceId!.iv,
         updateCalendarEvent.payload.id,
+      );
+      expect(calendarControllerMock.update).toHaveBeenCalledWith(
+        createCalendarEvent.payload.id,
+        {
+          resourceId: null,
+        },
       );
       expect(subscribe).toHaveBeenCalled();
     });

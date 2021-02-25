@@ -6,7 +6,7 @@ export interface Calendar {
   color: GoogleLegacyCalendarColor;
   name: string;
   syncToken?: string;
-  resourceId?: string;
+  resourceId?: string | null;
   expirationDate?: string;
 }
 

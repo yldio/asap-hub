@@ -61,6 +61,10 @@ export const webhookCalendarCreatedHandlerFactory = (
         if (payload.dataOld.resourceId) {
           try {
             await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
+
+            await calendarController.update(payload.id, {
+              resourceId: null,
+            });
           } catch (error) {
             logger('Error during unsubscribing from the calendar', error);
           }

@@ -64,7 +64,7 @@ describe('Dashboard controller', () => {
     });
   });
 
-  describe.only('FetchByResourceId method', () => {
+  describe('FetchByResourceId method', () => {
     const resourceId = 'resource-id';
     test('Should throw Bad Gateway when squidex throws an error', async () => {
       nock(config.baseUrl)

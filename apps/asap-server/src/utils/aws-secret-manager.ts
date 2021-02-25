@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import AWS from 'aws-sdk';
 import { Auth } from 'googleapis';
 

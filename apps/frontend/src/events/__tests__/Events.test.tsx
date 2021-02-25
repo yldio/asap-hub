@@ -62,13 +62,11 @@ describe('the events calendar page', () => {
       ...createListCalendarResponse(2),
       items: createListCalendarResponse(2).items.map((item, index) => ({
         ...item,
-        name: `Calendar ${index}`,
+        name: `Calendar title ${index}`,
       })),
     });
-    const { queryAllByRole } = await renderEventsPage();
-    expect(queryAllByRole('listitem').map((item) => item.textContent)).toEqual([
-      expect.stringMatching(/calendar 0/i),
-      expect.stringMatching(/calendar 1/i),
-    ]);
+    const { getByText } = await renderEventsPage();
+    expect(getByText(/calendar title 0/i)).toBeVisible();
+    expect(getByText(/calendar title 1/i)).toBeVisible();
   });
 });

@@ -1,11 +1,11 @@
 import React from 'react';
 import css from '@emotion/css';
+import { isEnabled } from '@asap-hub/flags';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { isEnabled } from '@asap-hub/flags';
 import { TabNav } from '../molecules';
 
 const visualHeaderStyles = css({

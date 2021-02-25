@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import { calendar_v3 as calendarV3, Auth } from 'googleapis';
 import { framework as lambda } from '@asap-hub/services-common';
 

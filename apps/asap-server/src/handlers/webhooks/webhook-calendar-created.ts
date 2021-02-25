@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';

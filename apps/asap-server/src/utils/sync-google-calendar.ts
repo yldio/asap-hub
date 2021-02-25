@@ -12,11 +12,8 @@ export const syncCalendarFactory: SyncCalendarFactory = (
   syncEvent: (event: calendarV3.Schema$Event) => Promise<void>,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
 ) => {
-  const syncCalendar = async (
-    googleCalendarId: string,
-  ): Promise<string | undefined | null> => {
-    return fetchEvents(googleCalendarId, auth, syncEvent, syncToken);
-  };
+  const syncCalendar = async (googleCalendarId: string) =>
+    fetchEvents(googleCalendarId, auth, syncEvent, syncToken);
 
   return syncCalendar;
 };

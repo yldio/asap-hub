@@ -51,13 +51,13 @@ const querySchemaBase = {
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),
-  sortBy: Joi.string().valid('startDate', 'endDate').default('startDate'),
-  sortOrder: Joi.string().valid('asc', 'desc').default('asc'),
 };
 
 export const eventQuerySchema = Joi.object({
   before: Joi.date().iso().raw(),
   after: Joi.date().iso().raw(),
+  sortBy: Joi.string().valid('startDate', 'endDate').default('startDate'),
+  sortOrder: Joi.string().valid('asc', 'desc').default('asc'),
 })
   .or('before', 'after')
   .append(querySchemaBase);

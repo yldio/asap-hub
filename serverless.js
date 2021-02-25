@@ -177,6 +177,9 @@ module.exports = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
       },
     },
     eventsUpdated: {
@@ -194,6 +197,9 @@ module.exports = {
         GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
       },
     },
     ...(NODE_ENV === 'production'

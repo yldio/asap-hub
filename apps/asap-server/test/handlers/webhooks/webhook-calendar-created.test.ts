@@ -16,7 +16,7 @@ import {
   createCalendarEvent,
   updateCalendarEvent,
 } from './webhook-sync-calendar.fixtures';
-import { googleApiUrl, asapApiUrl } from '../../../src/config';
+import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../src/config';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 
@@ -206,6 +206,7 @@ describe('Subscription', () => {
       })
       .post(`/calendar/v3/calendars/${calendarId}/events/watch`, {
         id: createCalendarEvent.payload.id,
+        token: googleApiToken,
         type: 'web_hook',
         address: `${asapApiUrl}/webhook/events`,
         params: {

@@ -168,6 +168,39 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
     }
   }
 
+  async upsert(id: string, json: T['data'], publish = true): Promise<T> {
+    try {
+      const res = await this.client
+        .post(`${this.collection}/${id}`, {
+          json,
+          searchParams: {
+            publish,
+          },
+        })
+        .json();
+      return res as T;
+    } catch (err) {
+      if (err.response?.statusCode === 409) {
+        throw Boom.conflict();
+      }
+
+      if (
+        err.response?.statusCode === 400 &&
+        err.response?.body.includes('invalid_client')
+      ) {
+        throw Boom.unauthorized();
+      }
+
+      if (err.response?.statusCode === 400) {
+        throw Boom.badRequest(err, err.response?.body);
+      }
+
+      throw Boom.badImplementation('squidex', {
+        data: err.response?.body || err,
+      });
+    }
+  }
+
   async patch(id: string, json: Partial<T['data']>): Promise<T> {
     try {
       const res = await this.client

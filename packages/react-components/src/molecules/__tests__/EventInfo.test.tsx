@@ -29,6 +29,28 @@ it('truncates long event titles', () => {
   expect(getByRole('heading', { level: 3 }).textContent).toMatch(/…$/i);
 });
 
+it('renders event thumbnail', () => {
+  const { getByAltText } = render(
+    <EventInfo
+      {...props}
+      thumbnail={'https://placeholder/40x40'}
+      title={'blablablha'}
+    />,
+  );
+
+  expect(getByAltText(/thumbnail/i).getAttribute('src')).toEqual(
+    'https://placeholder/40x40',
+  );
+});
+
+it('renders placeholder event thumbnail', () => {
+  const { getByText } = render(
+    <EventInfo {...props} title={'blablablha'.repeat(100)} />,
+  );
+
+  expect(getByText(/placeholder/i)).toBeInTheDocument();
+});
+
 it('renders the group name linking to the group and icon', () => {
   const { getByText, getByTitle } = render(
     <EventInfo

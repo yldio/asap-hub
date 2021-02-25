@@ -70,6 +70,25 @@
         }
       },
       {
+        "name": "thumbnail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Assets",
+          "maxItems": 1,
+          "mustBeImage": false,
+          "resolveFirst": true,
+          "resolveImage": true,
+          "allowDuplicates": false,
+          "label": "Thumbnail",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        }
+      },
+      {
         "name": "toolsSection",
         "isHidden": false,
         "isLocked": false,

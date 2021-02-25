@@ -64,17 +64,15 @@
         "name": "startDateTimeZone",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
-          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Start Date Time Zone",
-          "isRequired": false,
-          "isHalfWidth": false
+          "isRequired": false
         }
       },
       {
@@ -96,17 +94,15 @@
         "name": "endDateTimeZone",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
-          "contentType": "Unspecified",
           "editor": "Input",
           "label": "End Date Time Zone",
-          "isRequired": false,
-          "isHalfWidth": false
+          "isRequired": false
         }
       },
       {
@@ -172,6 +168,25 @@
           "fieldType": "Tags",
           "editor": "Tags",
           "label": "Tags",
+          "isRequired": false
+        }
+      },
+      {
+        "name": "thumbnail",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Assets",
+          "maxItems": 1,
+          "mustBeImage": false,
+          "resolveFirst": true,
+          "resolveImage": true,
+          "allowDuplicates": false,
+          "label": "Thumbnail",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false
         }
       },

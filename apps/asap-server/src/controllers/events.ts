@@ -193,4 +193,12 @@ export type FetchEventsOptions = (
       after: string;
       before?: string;
     }
-) & { groupId?: string, sort?: string } & FetchOptions;
+) & { groupId?: string } & SortOptions &
+  FetchOptions;
+
+type SortOptions =
+  | {
+      sortBy: 'startDate' | 'endDate';
+      sortOrder: 'asc' | 'desc';
+    }
+  | {};

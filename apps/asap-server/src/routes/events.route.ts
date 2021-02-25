@@ -51,7 +51,8 @@ const querySchemaBase = {
   take: Joi.number(),
   skip: Joi.number(),
   search: Joi.string(),
-  sort: Joi.string().regex(/^(startDate|endDate):(asc|desc)$/),
+  sortBy: Joi.string().valid('startDate', 'endDate').default('startDate'),
+  sortOrder: Joi.string().valid('asc', 'desc').default('asc'),
 };
 
 export const eventQuerySchema = Joi.object({

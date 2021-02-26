@@ -19,7 +19,7 @@ export const createEventResponse = (
   groups: Array.from({ length: groupCount }).map((_, index) =>
     createGroupResponse({}, index),
   ),
-  description: '',
+  description: `Event ${itemIndex} description`,
   status: 'Confirmed',
   tags: [],
   title: `Event ${itemIndex}`,

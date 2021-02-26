@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
@@ -9,9 +9,11 @@ const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-const EventsPage: React.FC = ({ children }) => (
+type EventsPageProps = ComponentProps<typeof EventsPageHeader>;
+
+const EventsPage: React.FC<EventsPageProps> = ({ children, ...props }) => (
   <article>
-    <EventsPageHeader />
+    <EventsPageHeader {...props} />
     <main css={mainStyles}>{children}</main>
   </article>
 );

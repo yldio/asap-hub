@@ -3,7 +3,8 @@ export type Flag =
   | 'USER_PROFILE_EDIT_SKILLS'
   | 'USER_PROFILE_EDIT_WORKS'
   | 'GROUPS'
-  | 'EVENTS_PAGE';
+  | 'EVENTS_PAGE'
+  | 'UPCOMING_EVENTS';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {

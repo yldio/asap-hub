@@ -17,7 +17,10 @@ import { getCalendars } from '../calendar/api';
 import { EVENTS_CALENDAR_PATH, EVENTS_UPCOMING_PATH } from '../routes';
 import { getEvents } from '../api';
 import { EVENTS_PATH } from '../../routes';
+import { eventsState } from '../state';
+import { DEFAULT_PAGE_SIZE } from '../../hooks';
 
+jest.useFakeTimers('modern');
 jest.mock('../calendar/api');
 jest.mock('../api');
 
@@ -29,7 +32,16 @@ const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 const renderEventsPage = async (pathname = `/${EVENTS_PATH}`) => {
   const result = render(
     <RecoilRoot
-      initializeState={({ set }) => set(refreshCalendarsState, Math.random())}
+      initializeState={({ set, reset }) => {
+        set(refreshCalendarsState, Math.random());
+        reset(
+          eventsState({
+            currentPage: 0,
+            pageSize: DEFAULT_PAGE_SIZE,
+            after: new Date().toISOString(),
+          }),
+        );
+      }}
     >
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>

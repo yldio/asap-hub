@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import {
   atomFamily,
   selectorFamily,
@@ -14,14 +13,14 @@ import { GetListOptions } from '../api-util';
 
 const eventIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions
+  GetListOptions & BeforeOrAfter
 >({
   key: 'eventIndex',
   default: undefined,
 });
 export const eventsState = selectorFamily<
   ListEventResponse | Error | undefined,
-  GetListOptions
+  GetListOptions & BeforeOrAfter
 >({
   key: 'events',
   get: (options) => ({ get }) => {

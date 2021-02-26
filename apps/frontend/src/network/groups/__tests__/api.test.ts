@@ -23,13 +23,13 @@ describe('getGroups', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  it('returns a successfully fetched group', async () => {
-    const group = createListGroupResponse(1);
+  it('returns a successfully fetched groups', async () => {
+    const groups = createListGroupResponse(1);
     nock(API_BASE_URL)
       .get('/groups')
       .query({ take: '10', skip: '0' })
-      .reply(200, group);
-    expect(await getGroups({}, '')).toEqual(group);
+      .reply(200, groups);
+    expect(await getGroups({}, '')).toEqual(groups);
   });
 
   it('errors for error status', async () => {

@@ -9,6 +9,7 @@ import {
   googleApiCredentialsSecretId,
   googleApiUrl,
   asapApiUrl,
+  googleApiToken,
 } from '../../config';
 import { http } from '../../utils/instrumented-framework';
 import { Handler } from '../../utils/types';
@@ -60,6 +61,10 @@ export const webhookCalendarCreatedHandlerFactory = (
         if (payload.dataOld.resourceId) {
           try {
             await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
+
+            await calendarController.update(payload.id, {
+              resourceId: null,
+            });
           } catch (error) {
             logger('Error during unsubscribing from the calendar', error);
           }
@@ -114,6 +119,7 @@ export const subscribeToEventChangesFactory = (
   const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
   const data = {
     id: subscriptionId,
+    token: googleApiToken,
     type: 'web_hook',
     address: `${asapApiUrl}/webhook/events`,
     params: {

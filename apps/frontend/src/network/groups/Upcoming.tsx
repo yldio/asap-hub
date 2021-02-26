@@ -20,7 +20,6 @@ const Upcoming: React.FC<UpcomingProps> = ({ time }) => {
     currentPage,
     pageSize,
   });
-  console.log(items);
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (

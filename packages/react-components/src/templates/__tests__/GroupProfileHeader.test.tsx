@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
+import { disable } from '@asap-hub/flags';
 
 import GroupProfileHeader from '../GroupProfileHeader';
 
@@ -44,4 +45,19 @@ it('shows the last updated date', () => {
   expect(getByText(/1 year/).textContent).toMatchInlineSnapshot(
     `"Last updated: about 1 year ago"`,
   );
+});
+
+it('renders the navigation  (REGRESSION)', () => {
+  disable('GROUP_UPCOMING_EVENTS');
+  const { getAllByRole } = render(<GroupProfileHeader {...props} />);
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Calendar']);
+});
+
+it('renders the navigation', () => {
+  const { getAllByRole } = render(<GroupProfileHeader {...props} />);
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Calendar', 'Upcoming Events']);
 });

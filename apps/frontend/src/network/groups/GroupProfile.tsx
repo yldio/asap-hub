@@ -20,7 +20,7 @@ loadAbout();
 
 const GroupProfile: React.FC = () => {
   useEffect(() => {
-    loadAbout().then(loadCalendar);
+    loadAbout().then(loadCalendar).then(loadUpcoming);
   }, []);
 
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);

@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
+import { isEnabled } from '@asap-hub/flags';
 
 import { paper, lead } from '../colors';
 import { perRem } from '../pixels';
@@ -8,7 +9,6 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { Display, Link, TabLink } from '../atoms';
 import { teamIcon } from '../icons';
 import { TabNav } from '../molecules';
-import { isEnabled } from '@asap-hub/flags';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,

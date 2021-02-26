@@ -7,7 +7,7 @@ import { NETWORK_PATH, EVENTS_PATH } from '../routes';
 import { GROUPS_PATH } from '../network/routes';
 
 type UpcomingProps = {
-  time: string;
+  readonly time: string;
 };
 const Upcoming: React.FC<UpcomingProps> = ({ time }) => {
   const { currentPage, pageSize } = usePaginationParams();

@@ -36,9 +36,9 @@ export const eventsState = selectorFamily<
   },
   set: (options) => ({ get, set, reset }, newEvents) => {
     if (newEvents === undefined || newEvents instanceof DefaultValue) {
-      const oldGroups = get(eventIndexState(options));
-      if (!(oldGroups instanceof Error)) {
-        oldGroups?.ids?.forEach((id) => reset(eventState(id)));
+      const oldEvents = get(eventIndexState(options));
+      if (!(oldEvents instanceof Error)) {
+        oldEvents?.ids?.forEach((id) => reset(eventState(id)));
       }
       reset(eventIndexState(options));
     } else if (newEvents instanceof Error) {

@@ -7,7 +7,7 @@ import Event from './Event';
 import { EVENTS_UPCOMING_PATH, EVENTS_CALENDAR_PATH } from './routes';
 
 const loadCalendars = () =>
-  import(/* webpackChunkName: "events-calendar" */ './calendar/Calendars');
+  import(/* webpackChunkName: "events-calendars" */ './calendar/Calendars');
 const loadUpcoming = () =>
   import(/* webpackChunkName: "events-upcoming" */ './Upcoming');
 

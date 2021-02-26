@@ -52,8 +52,6 @@ describe('Event Webhook', () => {
     syncCalendarFactoryMock,
   );
 
-  calendarControllerMock.getSyncToken.mockResolvedValue('next-sync-token');
-
   test('Should return 400 when x-goog-resource-id is not set', async () => {
     const res = (await handler(
       apiGatewayEvent({
@@ -91,27 +89,6 @@ describe('Event Webhook', () => {
     expect(res.statusCode).toStrictEqual(502);
   });
 
-  test('Should return 200 and do full synk when it fails to fetch the synkToken from squidex', async () => {
-    calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
-      fetchCalendarRawResponse,
-    );
-    calendarControllerMock.getSyncToken.mockRejectedValueOnce(
-      new Error('Squidex Error'),
-    );
-    getJWTCredentialsMock.mockResolvedValueOnce({
-      client_email: 'random-data',
-      private_key: 'random-data',
-    });
-
-    const res = (await handler(
-      apiGatewayEvent(googlePayload),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(200);
-    const [syncToken] = syncCalendarFactoryMock.mock.calls[0];
-    expect(syncToken).toEqual(undefined);
-  });
-
   test('Should return 200 and save nextSyncToken to squidex when receives one', async () => {
     calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
       fetchCalendarRawResponse,
@@ -131,6 +108,21 @@ describe('Event Webhook', () => {
         syncToken: 'next-sync-token-1234',
       },
     );
+  });
+
+  test('Should return 200 event when doesnt receive a syncToken', async () => {
+    calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
+      fetchCalendarRawResponse,
+    );
+    syncCalendarMock.mockResolvedValueOnce(undefined);
+    calendarControllerMock.update.mockResolvedValueOnce(updateCalendarResponse);
+
+    const res = (await handler(
+      apiGatewayEvent(googlePayload),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(200);
+    expect(calendarControllerMock.update).toHaveBeenCalledTimes(0);
   });
 
   test('Should return 200 even when fails to save nextSyncToken to squidex', async () => {

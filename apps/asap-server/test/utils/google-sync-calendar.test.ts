@@ -69,6 +69,21 @@ describe('Sync calendar util hook', () => {
     expect(syncEvent).toBeCalledTimes(2);
   });
 
+  test('Should call syncEvent with the google events', async () => {
+    mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
+
+    await syncCalendarHandler(calendarId);
+
+    expect(mockList).toHaveBeenCalledTimes(1);
+    expect(syncEvent).toBeCalledTimes(2);
+    expect(syncEvent).toHaveBeenCalledWith(
+      fixtures.listEventsResponse.items![0],
+    );
+    expect(syncEvent).toHaveBeenCalledWith(
+      fixtures.listEventsResponse.items![1],
+    );
+  });
+
   test('Should trigger fetch more events if nextPageToken is set', async () => {
     mockList.mockResolvedValueOnce({
       data: {

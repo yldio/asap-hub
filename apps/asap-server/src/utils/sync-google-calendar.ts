@@ -44,7 +44,7 @@ const fetchEvents = async (
 
   if (res && typeof res === 'object') {
     const eventItems = res.data.items ?? [];
-    await Promise.all(eventItems.map((e) => syncEvent(e))).catch((e) => {
+    await Promise.allSettled(eventItems.map((e) => syncEvent(e))).catch((e) => {
       logger('Error updating event:', e);
     });
 

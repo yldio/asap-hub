@@ -40,18 +40,13 @@ export const webhookEventUpdatedHandlerFactory = (
           return undefined;
         });
 
-      if (!calendar?.id) {
+      if (!calendar) {
         return { statusCode: 502 };
       }
+
       const squidexCalendarId = calendar.id;
       const googleCalendarId = calendar.data.id.iv;
-
-      const syncToken = await calendars
-        .getSyncToken(squidexCalendarId)
-        .catch((err) => {
-          logger('Error fetching syncToken', err);
-          return undefined;
-        });
+      const syncToken = calendar.data.syncToken?.iv;
 
       const credentials = await getJWTCredentials().catch((err) => {
         logger('Error fetching AWS credentials', err);

@@ -46,15 +46,14 @@ export const syncEventFactory = (
       description: googleEvent.description,
       startDate:
         googleEvent.start.dateTime ||
-        googleEvent.start.date ||
-        new Date(0).toISOString(),
+        new Date(googleEvent.start.date || 0).toISOString(),
       startDateTimeZone: googleEvent.start.timeZone || defaultTimezone,
       endDate:
         googleEvent.end.dateTime ||
-        googleEvent.end.date ||
-        new Date(0).toISOString(),
+        new Date(googleEvent.end.date || 0).toISOString(),
       endDateTimeZone: googleEvent.end.timeZone || defaultTimezone,
-      status: googleEvent.status,
+      status: (googleEvent.status.charAt(0).toUpperCase() +
+        googleEvent.status.slice(1)) as EventStatus,
       calendar: [calendarId],
       tags: [],
     };

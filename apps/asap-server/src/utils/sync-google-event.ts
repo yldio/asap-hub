@@ -42,16 +42,20 @@ export const syncEventFactory = (
     const googleEvent = value as GoogleEvent;
     logger('google event', googleEvent);
 
+    const getEventDate = (
+      eventDate: calendarV3.Schema$EventDateTime,
+    ): string => {
+      if (eventDate.dateTime) return new Date(eventDate.dateTime).toISOString();
+
+      return new Date(eventDate.date || 0).toISOString();
+    };
+
     const squidexEvent = {
       title: googleEvent.summary,
       description: googleEvent.description,
-      startDate:
-        googleEvent.start.dateTime ||
-        new Date(googleEvent.start.date || 0).toISOString(),
+      startDate: getEventDate(googleEvent.start),
       startDateTimeZone: googleEvent.start.timeZone || defaultTimezone,
-      endDate:
-        googleEvent.end.dateTime ||
-        new Date(googleEvent.end.date || 0).toISOString(),
+      endDate: getEventDate(googleEvent.end),
       endDateTimeZone: googleEvent.end.timeZone || defaultTimezone,
       status: (googleEvent.status.charAt(0).toUpperCase() +
         googleEvent.status.slice(1)) as EventStatus,

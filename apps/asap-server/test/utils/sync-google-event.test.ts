@@ -48,8 +48,37 @@ describe('Sync calendar util hook', () => {
         description: 'Event Description',
         startDate: '2021-02-27T00:00:00.000Z',
         startDateTimeZone: 'Europe/Lisbon',
-        endDate: '2021-02-27T10:00:00Z',
+        endDate: '2021-02-27T10:00:00.000Z',
         endDateTimeZone: 'Europe/London',
+        status: 'Confirmed',
+        calendar: ['squidex-calendar-id'],
+        tags: [],
+      },
+    );
+  });
+
+  test('Should upsert event - converts dates to UTC', async () => {
+    await syncEvent(
+      {
+        ...event,
+        end: {
+          dateTime: '2040-09-13T13:30:00-04:00',
+          timeZone: 'America/New_York',
+        },
+      },
+      defaultCalendarTimezone,
+    );
+
+    expect(eventControllerMock.upsert).toHaveBeenCalledTimes(1);
+    expect(eventControllerMock.upsert).toHaveBeenCalledWith(
+      '04rteq6hj3gfq9g3i8v2oqetvd',
+      {
+        title: 'Event Title',
+        description: 'Event Description',
+        startDate: '2021-02-27T00:00:00.000Z',
+        startDateTimeZone: 'Europe/Lisbon',
+        endDate: '2040-09-13T17:30:00.000Z',
+        endDateTimeZone: 'America/New_York',
         status: 'Confirmed',
         calendar: ['squidex-calendar-id'],
         tags: [],

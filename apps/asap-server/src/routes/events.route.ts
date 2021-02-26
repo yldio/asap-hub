@@ -16,13 +16,7 @@ export const eventRouteFactory = (eventController: EventController): Router => {
 
     const result = await eventController.fetch(query);
 
-    res.json({
-      total: result.total,
-      items: result.items.map((item) => ({
-        ...item,
-        groups: [],
-      })),
-    });
+    res.json(result);
   });
 
   eventRoutes.get(
@@ -33,10 +27,7 @@ export const eventRouteFactory = (eventController: EventController): Router => {
 
       const result = await eventController.fetchById(eventId);
 
-      res.json({
-        ...result,
-        groups: [],
-      });
+      res.json(result);
     },
   );
 

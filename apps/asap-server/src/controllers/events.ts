@@ -1,9 +1,5 @@
 import Boom from '@hapi/boom';
-import {
-  ListResponse,
-  EventResponse,
-  ListEventResponse,
-} from '@asap-hub/model';
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { GraphqlEvent, RestEvent, Event } from '@asap-hub/squidex';
 import {
   InstrumentedSquidexGraphql,
@@ -18,9 +14,6 @@ export interface EventController {
   fetchById: (eventId: string) => Promise<EventResponse>;
   upsert: (eventId: string, data: Event) => Promise<void>;
 }
-
-export type EventBaseResponse = Omit<EventResponse, 'groups'>;
-export type ListEventBaseResponse = ListResponse<EventBaseResponse>;
 
 export default class Events implements EventController {
   client: InstrumentedSquidexGraphql;

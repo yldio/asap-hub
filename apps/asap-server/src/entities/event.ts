@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DateTime, Duration } from 'luxon';
 import { GraphqlEvent } from '@asap-hub/squidex';
-import { EventBaseResponse } from '../controllers/events';
 import { parseGraphQLCalendar } from './calendar';
 import { parseDate } from '../utils/squidex';
+import { parseGraphQLGroup } from './group';
+import { EventResponse } from '@asap-hub/model';
 
-export const parseGraphQLEvent = (item: GraphqlEvent): EventBaseResponse => {
+export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   const calendar = parseGraphQLCalendar(item.flatData!.calendar![0]);
+  const groups =
+    item.flatData!.calendar![0].referencingGroupsContents?.map((group) =>
+      parseGraphQLGroup(group),
+    ) || [];
   const startDate = DateTime.fromISO(item.flatData!.startDate!);
   const now = DateTime.local();
   const oneDayDuration = Duration.fromObject({ day: 1 });
@@ -29,5 +34,6 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventBaseResponse => {
     status: item.flatData!.status!,
     tags: item.flatData!.tags!,
     calendar,
+    groups,
   };
 };

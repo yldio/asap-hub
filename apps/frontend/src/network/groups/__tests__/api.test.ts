@@ -23,7 +23,7 @@ describe('getGroups', () => {
     expect(nock.isDone()).toBe(true);
   });
 
-  it('returns a successfully fetched groups', async () => {
+  it('returns successfully fetched groups', async () => {
     const groups = createListGroupResponse(1);
     nock(API_BASE_URL)
       .get('/groups')

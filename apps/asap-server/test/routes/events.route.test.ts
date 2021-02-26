@@ -3,11 +3,8 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
-import { ListEventResponse, EventResponse } from '@asap-hub/model';
-import {
-  FetchEventsOptions,
-  EventBaseResponse,
-} from '../../src/controllers/events';
+import { FetchEventsOptions } from '../../src/controllers/events';
+import { eventResponse, listEventResponse } from '../fixtures/events.fixtures';
 
 describe('/events/ routes', () => {
   const app = appFactory({
@@ -37,31 +34,6 @@ describe('/events/ routes', () => {
     });
 
     test('Should return results correctly', async () => {
-      const listEventResponse: ListEventResponse = {
-        total: 1,
-        items: [
-          {
-            id: 'event-id-1',
-            title: 'example event title',
-            startDate: '2020-12-11T14:33:50Z',
-            startDateTimeZone: 'Europe/London',
-            endDate: '2020-12-11T14:33:50Z',
-            endDateTimeZone: 'Europe/London',
-            status: 'Confirmed',
-            tags: [],
-            description: 'Description example event title',
-            calendar: {
-              id: 'calendar-id-1',
-              name: 'Example calendar',
-              color: '#333333',
-            },
-            groups: [],
-            meetingLink: 'https://sample.event.link/123456',
-            lastModifiedDate: '2020-12-11T14:33:50Z',
-          },
-        ],
-      };
-
       eventControllerMock.fetch.mockResolvedValueOnce(listEventResponse);
       const response = await supertest(app).get('/events').query(query);
 
@@ -262,35 +234,11 @@ describe('/events/ routes', () => {
     });
 
     test('Should return the results correctly', async () => {
-      const eventBaseResponse: EventBaseResponse = {
-        id: 'event-id-1',
-        title: 'example event title',
-        startDate: '2020-12-11T14:33:50Z',
-        startDateTimeZone: 'Europe/London',
-        endDate: '2020-12-11T14:33:50Z',
-        endDateTimeZone: 'Europe/London',
-        description: 'Description of event title',
-        calendar: {
-          id: 'calendar-id-1',
-          name: 'Example calendar',
-          color: '#333333',
-        },
-        status: 'Confirmed',
-        tags: [],
-        meetingLink: 'https://sample.event.link/123456',
-        lastModifiedDate: '2020-12-11T14:33:50Z',
-      };
-
-      eventControllerMock.fetchById.mockResolvedValueOnce(eventBaseResponse);
+      eventControllerMock.fetchById.mockResolvedValueOnce(eventResponse);
 
       const response = await supertest(app).get('/events/123');
 
-      const expectedResponse: EventResponse = {
-        ...eventBaseResponse,
-        groups: [],
-      };
-
-      expect(response.body).toEqual(expectedResponse);
+      expect(response.body).toEqual(eventResponse);
     });
   });
 });

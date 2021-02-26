@@ -9,7 +9,7 @@ import { parseGraphQLGroup } from '../entities';
 import { GraphQLQueryUser } from './users';
 import { GraphQLQueryTeam } from './teams';
 
-const GraphQLQueryGroup = `
+export const GraphQLQueryGroup = `
 id
 created
 lastModified

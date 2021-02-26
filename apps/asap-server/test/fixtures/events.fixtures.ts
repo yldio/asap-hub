@@ -1,11 +1,15 @@
 // import { ListEventsResponse } from '@asap-hub/model';
 import {
   ResponseFetchEvents,
-  ListEventBaseResponse,
   ResponseFetchEvent,
-  EventBaseResponse,
 } from '../../src/controllers/events';
 import { GraphqlEvent } from '@asap-hub/squidex';
+import { queryGroupsExpectation, queryGroupsResponse } from './groups.fixtures';
+import {
+  ListEventResponse,
+  GroupResponse,
+  EventResponse,
+} from '@asap-hub/model';
 
 export const fetchEventsResponse: { data: ResponseFetchEvents } = {
   data: {
@@ -36,6 +40,8 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
                   color: '#125A12',
                   name: 'Tech 1 - Sequencing/omics',
                 },
+                referencingGroupsContents:
+                  queryGroupsResponse.data.queryGroupsContentsWithTotal.items,
               },
             ],
           },
@@ -64,6 +70,8 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
                   color: '#7A367A',
                   name: 'Tech 3 - Structural Biology',
                 },
+                referencingGroupsContents:
+                  queryGroupsResponse.data.queryGroupsContentsWithTotal.items,
               },
             ],
           },
@@ -73,7 +81,7 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
   },
 };
 
-export const listEventBaseResponse: ListEventBaseResponse = {
+export const listEventResponse: ListEventResponse = {
   total: 2,
   items: [
     {
@@ -93,6 +101,7 @@ export const listEventBaseResponse: ListEventBaseResponse = {
         color: '#125A12',
         name: 'Tech 1 - Sequencing/omics',
       },
+      groups: queryGroupsExpectation.items as GroupResponse[],
     },
     {
       id: 'a820b5b7-8f7a-4297-a5a5-cf48b53ba3f7',
@@ -110,11 +119,12 @@ export const listEventBaseResponse: ListEventBaseResponse = {
         color: '#7A367A',
         name: 'Tech 3 - Structural Biology',
       },
+      groups: queryGroupsExpectation.items as GroupResponse[],
     },
   ],
 };
 
-export const eventBaseResponse: EventBaseResponse = {
+export const eventResponse: EventResponse = {
   id: 'afcee0ec-fcd5-479c-9809-e397636f815a',
   title: 'Example Event',
   description: 'This event is awesome',
@@ -131,6 +141,7 @@ export const eventBaseResponse: EventBaseResponse = {
     color: '#125A12',
     name: 'Tech 1 - Sequencing/omics',
   },
+  groups: queryGroupsExpectation.items as GroupResponse[],
 };
 
 export const graphqlEvent: GraphqlEvent = {

@@ -1,5 +1,5 @@
 import Boom from '@hapi/boom';
-import { ListResponse, EventResponse } from '@asap-hub/model';
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { GraphqlEvent, RestEvent, Event } from '@asap-hub/squidex';
 import {
   InstrumentedSquidexGraphql,
@@ -7,16 +7,13 @@ import {
 } from '../utils/instrumented-client';
 import { FetchOptions, AllOrNone } from '../utils/types';
 import { parseGraphQLEvent } from '../entities/event';
-import { ResponseFetchGroup } from './groups';
+import { ResponseFetchGroup, GraphQLQueryGroup } from './groups';
 
 export interface EventController {
-  fetch: (options: FetchEventsOptions) => Promise<ListEventBaseResponse>;
-  fetchById: (eventId: string) => Promise<EventBaseResponse>;
+  fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;
+  fetchById: (eventId: string) => Promise<EventResponse>;
   upsert: (eventId: string, data: Event) => Promise<void>;
 }
-
-export type EventBaseResponse = Omit<EventResponse, 'groups'>;
-export type ListEventBaseResponse = ListResponse<EventBaseResponse>;
 
 export default class Events implements EventController {
   client: InstrumentedSquidexGraphql;
@@ -28,7 +25,7 @@ export default class Events implements EventController {
     this.events = new InstrumentedSquidex('events');
   }
 
-  async fetch(options: FetchEventsOptions): Promise<ListEventBaseResponse> {
+  async fetch(options: FetchEventsOptions): Promise<ListEventResponse> {
     const {
       take,
       skip,
@@ -108,7 +105,7 @@ export default class Events implements EventController {
     };
   }
 
-  async fetchById(eventId: string): Promise<EventBaseResponse> {
+  async fetchById(eventId: string): Promise<EventResponse> {
     const query = buildGraphQLQueryFetchEvent(eventId);
     const { findEventsContent: event } = await this.client.request<
       ResponseFetchEvent,
@@ -151,6 +148,9 @@ flatData{
       id
       color
       name
+    }
+    referencingGroupsContents {
+      ${GraphQLQueryGroup}
     }
   }
 }`;

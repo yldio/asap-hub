@@ -12,10 +12,10 @@ import Events, {
 import { ListEventResponse, EventStatus } from '@asap-hub/model';
 import {
   fetchEventsResponse,
-  listEventBaseResponse,
+  listEventResponse,
   graphqlEvent,
   findEventResponse,
-  eventBaseResponse,
+  eventResponse,
 } from '../fixtures/events.fixtures';
 
 describe('Event controller', () => {
@@ -63,7 +63,7 @@ describe('Event controller', () => {
         before: 'before',
       });
 
-      expect(result).toEqual(listEventBaseResponse);
+      expect(result).toEqual(listEventResponse);
     });
 
     describe('Date filters', () => {
@@ -387,7 +387,7 @@ describe('Event controller', () => {
         .reply(200, findEventResponse);
 
       const result = await events.fetchById(eventId);
-      expect(result).toEqual(eventBaseResponse);
+      expect(result).toEqual(eventResponse);
     });
 
     describe('Event link', () => {

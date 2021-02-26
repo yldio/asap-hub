@@ -66,7 +66,7 @@ const fetchEventState = selectorFamily<EventResponse | undefined, string>({
     return getEvent(id, authorization);
   },
 });
-const eventState = atomFamily<EventResponse | undefined, string>({
+export const eventState = atomFamily<EventResponse | undefined, string>({
   key: 'event',
   default: fetchEventState,
 });

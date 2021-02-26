@@ -8,6 +8,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { Display, Link, TabLink } from '../atoms';
 import { teamIcon } from '../icons';
 import { TabNav } from '../molecules';
+import { isEnabled } from '@asap-hub/flags';
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
@@ -31,6 +32,7 @@ interface GroupProfileHeaderProps {
 
   aboutHref: string;
   calendarHref: string;
+  upcomingHref: string;
 }
 const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   name,
@@ -39,6 +41,7 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   lastModifiedDate,
   aboutHref,
   calendarHref,
+  upcomingHref,
 }) => (
   <header css={containerStyles}>
     <Display styleAsHeading={2}>{name}</Display>
@@ -77,6 +80,9 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
     <TabNav>
       <TabLink href={aboutHref}>About</TabLink>
       <TabLink href={calendarHref}>Calendar</TabLink>
+      {isEnabled('GROUP_UPCOMING_EVENTS') && (
+        <TabLink href={upcomingHref}>Upcoming Events</TabLink>
+      )}
     </TabNav>
   </header>
 );

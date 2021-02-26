@@ -11,6 +11,7 @@ const props: ComponentProps<typeof GroupProfileHeader> = {
   lastModifiedDate: '2021-01-01',
   aboutHref: '/about',
   calendarHref: '/calendar',
+  upcomingHref: '/upcoming',
 };
 
 it('renders the name as a heading', () => {

@@ -3,13 +3,19 @@ import logger from './logger';
 
 export type SyncCalendarFactory = (
   syncToken: string | undefined,
-  syncEvent: (event: calendarV3.Schema$Event) => Promise<void>,
+  syncEvent: (
+    event: calendarV3.Schema$Event,
+    defaultCalendarTimezone: string,
+  ) => Promise<void>,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
 ) => (googleCalendarId: string) => Promise<string | undefined | null>;
 
 export const syncCalendarFactory: SyncCalendarFactory = (
   syncToken: string | undefined,
-  syncEvent: (event: calendarV3.Schema$Event) => Promise<void>,
+  syncEvent: (
+    event: calendarV3.Schema$Event,
+    defaultCalendarTimezone: string,
+  ) => Promise<void>,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
 ) => {
   const syncCalendar = async (googleCalendarId: string) =>
@@ -21,7 +27,10 @@ export const syncCalendarFactory: SyncCalendarFactory = (
 const fetchEvents = async (
   googleCalendarId: string,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
-  syncEvent: (event: calendarV3.Schema$Event) => Promise<void>,
+  syncEvent: (
+    event: calendarV3.Schema$Event,
+    defaultCalendarTimezone: string,
+  ) => Promise<void>,
   syncToken: string | undefined,
   pageToken?: string,
 ): Promise<string | undefined | null> => {
@@ -44,7 +53,10 @@ const fetchEvents = async (
 
   if (res && typeof res === 'object') {
     const eventItems = res.data.items ?? [];
-    await Promise.allSettled(eventItems.map((e) => syncEvent(e))).catch((e) => {
+    const defaultCalendarTimezone = res.data.timeZone || 'America/New_York';
+    await Promise.allSettled(
+      eventItems.map((e) => syncEvent(e, defaultCalendarTimezone)),
+    ).catch((e) => {
       logger('Error updating event:', e);
     });
 

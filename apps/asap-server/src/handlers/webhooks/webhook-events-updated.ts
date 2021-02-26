@@ -1,14 +1,16 @@
 /* eslint-disable no-shadow */
-import { calendar_v3 as calendarV3, Auth } from 'googleapis';
+import { Auth } from 'googleapis';
 import { framework as lambda } from '@asap-hub/services-common';
 
 import { Handler } from '../../utils/types';
 import { http } from '../../utils/instrumented-framework';
 import Calendars, { CalendarController } from '../../controllers/calendars';
+import Events from '../../controllers/events';
 import {
   syncCalendarFactory,
   SyncCalendarFactory,
 } from '../../utils/sync-google-calendar';
+import { syncEventFactory } from '../../utils/sync-google-event';
 import getJWTCredentials, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
@@ -66,7 +68,7 @@ export const webhookEventUpdatedHandlerFactory = (
 
       const syncCalendar = syncCalendarFactory(
         syncToken,
-        syncEventFactory(squidexCalendarId),
+        syncEventFactory(new Events(), squidexCalendarId),
         auth,
       );
       const nextSyncToken = await syncCalendar(googleCalendarId);
@@ -90,11 +92,3 @@ export const handler: Handler = webhookEventUpdatedHandlerFactory(
   getJWTCredentials,
   syncCalendarFactory,
 );
-
-const syncEventFactory = (calendarId: string) => {
-  /* istanbul ignore next */
-  const syncEvent = async (event: calendarV3.Schema$Event): Promise<void> => {
-    logger('Request received', JSON.stringify({ calendarId, event }, null, 2));
-  };
-  return syncEvent;
-};

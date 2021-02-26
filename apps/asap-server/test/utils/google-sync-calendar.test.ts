@@ -27,6 +27,7 @@ describe('Sync calendar util hook', () => {
   );
 
   const calendarId = 'google-calendar-id';
+  const defaultCalendarTimezone = 'Europe/Lisbon';
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -78,9 +79,11 @@ describe('Sync calendar util hook', () => {
     expect(syncEvent).toBeCalledTimes(2);
     expect(syncEvent).toHaveBeenCalledWith(
       fixtures.listEventsResponse.items![0],
+      defaultCalendarTimezone,
     );
     expect(syncEvent).toHaveBeenCalledWith(
       fixtures.listEventsResponse.items![1],
+      defaultCalendarTimezone,
     );
   });
 

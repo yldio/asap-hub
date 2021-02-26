@@ -5,6 +5,7 @@ export { default as ToastCard } from './ToastCard';
 export { default as CalendarLink } from './CalendarLink';
 export { default as CtaCard } from './CtaCard';
 export { default as ErrorCard } from './ErrorCard';
+export { default as EventDescription } from './EventDescription';
 export { default as EventInfo } from './EventInfo';
 export { default as ExternalLink } from './ExternalLink';
 export { default as GoogleSigninButton } from './GoogleSigninButton';

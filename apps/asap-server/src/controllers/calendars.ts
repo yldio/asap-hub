@@ -1,8 +1,11 @@
+import Boom from '@hapi/boom';
+import Intercept from 'apr-intercept';
 import { RestCalendar, Calendar } from '@asap-hub/squidex';
 import { ListCalendarResponse, CalendarResponse } from '@asap-hub/model';
 
 import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
+import logger from '../utils/logger';
 
 export default class Calendars implements CalendarController {
   calendars: InstrumentedSquidex<RestCalendar>;
@@ -28,6 +31,30 @@ export default class Calendars implements CalendarController {
     };
   }
 
+  async fetchByResouceId(resourceId: string): Promise<RestCalendar> {
+    const [err, res] = await Intercept(
+      this.calendars.client
+        .get('calendars', {
+          searchParams: {
+            $top: 1,
+            $filter: `data/resourceId/iv eq '${resourceId}'`,
+          },
+        })
+        .json() as Promise<{ items: RestCalendar[] }>,
+    );
+
+    if (err) {
+      logger('Error fetching calendar by resourceId:', err);
+      throw Boom.badGateway();
+    }
+
+    if (res.items.length === 0) {
+      throw Boom.notFound();
+    }
+
+    return res.items[0];
+  }
+
   async getSyncToken(calendarId: string): Promise<string | undefined> {
     const res = await this.calendars.fetchById(calendarId);
     return res.data.syncToken?.iv;
@@ -51,6 +78,7 @@ export interface CalendarController {
     take: number;
     skip: number;
   }) => Promise<ListCalendarResponse>;
+  fetchByResouceId: (resourceId: string) => Promise<RestCalendar>;
   getSyncToken: (calendarId: string) => Promise<string | undefined>;
   update: (
     calendarId: string,

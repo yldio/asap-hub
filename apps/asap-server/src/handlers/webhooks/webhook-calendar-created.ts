@@ -1,22 +1,18 @@
-import debug from 'debug';
-import AWS from 'aws-sdk';
+/* eslint-disable no-shadow */
 import Joi from '@hapi/joi';
-import { Auth } from 'googleapis';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
-import {
-  region,
-  googleApiCredentialsSecretId,
-  googleApiUrl,
-  asapApiUrl,
-  googleApiToken,
-} from '../../config';
+import { Auth } from 'googleapis';
+
+import { googleApiUrl, asapApiUrl, googleApiToken } from '../../config';
 import { http } from '../../utils/instrumented-framework';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-squidex-request';
 import Calendars, { CalendarController } from '../../controllers/calendars';
-
-const logger = debug('asap-server');
+import getJWTCredentials, {
+  GetJWTCredentials,
+} from '../../utils/aws-secret-manager';
+import logger from '../../utils/logger';
 
 export const webhookCalendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
@@ -170,22 +166,6 @@ export const unsubscribeFromEventChangesFactory = (
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
-
-const getJWTCredentials: GetJWTCredentials = async () => {
-  const client = new AWS.SecretsManager({ region });
-
-  const secret = await client
-    .getSecretValue({ SecretId: googleApiCredentialsSecretId })
-    .promise();
-
-  if (!('SecretString' in secret) || !secret.SecretString) {
-    throw new Error('Invalid credentials');
-  }
-
-  return JSON.parse(secret.SecretString);
-};
-
-export type GetJWTCredentials = () => Promise<Auth.JWTInput>;
 
 export const handler: Handler = webhookCalendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentials),

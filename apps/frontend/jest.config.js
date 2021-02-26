@@ -31,6 +31,7 @@ module.exports = {
   moduleNameMapper: {
     '^.+\\.module\\.(css|sass|scss)$': require.resolve('identity-obj-proxy'),
   },
+  modulePathIgnorePatterns: ['<rootDir>/.*/__mocks__'],
 
   displayName: 'test-frontend',
 };

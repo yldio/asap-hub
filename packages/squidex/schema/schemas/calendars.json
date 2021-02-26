@@ -125,7 +125,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "isUnique": false,
+          "isUnique": true,
           "inlineEditable": false,
           "editor": "Input",
           "label": "Google resource ID",

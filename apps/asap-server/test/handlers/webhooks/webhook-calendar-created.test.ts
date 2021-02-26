@@ -5,7 +5,6 @@ import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import {
   SubscribeToEventChanges,
   webhookCalendarCreatedHandlerFactory,
-  GetJWTCredentials,
   subscribeToEventChangesFactory,
   UnsubscribeFromEventChanges,
   unsubscribeFromEventChangesFactory,
@@ -19,6 +18,7 @@ import {
 import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../src/config';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
+import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
 
 const createSignedPayload = (payload: WebhookPayload<Calendar>) =>
   apiGatewayEvent({

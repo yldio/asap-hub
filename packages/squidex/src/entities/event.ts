@@ -6,7 +6,7 @@ type GoogleEventStatus = EventStatus;
 
 export interface Event<TCalendar = string> {
   title: string;
-  description: string;
+  description?: string;
   startDate: string;
   startDateTimeZone: string;
   endDate: string;

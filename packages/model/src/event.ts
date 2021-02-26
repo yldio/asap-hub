@@ -11,7 +11,7 @@ export interface EventResponse {
   startDateTimeZone: string;
   endDate: string;
   endDateTimeZone: string;
-  description: string;
+  description?: string;
   calendar: CalendarResponse;
   groups: GroupResponse[];
   status: EventStatus;

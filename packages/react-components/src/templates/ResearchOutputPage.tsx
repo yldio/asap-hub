@@ -8,7 +8,8 @@ import { RichText } from '../organisms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { teamIcon, chevronCircleLeftIcon } from '../icons';
+import { teamIcon } from '../icons';
+import { BackLink } from '../molecules';
 
 const teamMemberStyles = css({
   color: lead.rgb,
@@ -28,11 +29,6 @@ const iconStyles = css({
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
-});
-
-const backContainerStyles = css({
-  alignSelf: 'flex-start',
-  padding: `${30 / perRem}em 0 `,
 });
 
 const visibilityStyles = css({
@@ -64,11 +60,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   backHref,
 }) => (
   <div css={containerStyles}>
-    <div css={backContainerStyles}>
-      <Link href={backHref}>
-        <span css={iconStyles}>{chevronCircleLeftIcon}</span>Back
-      </Link>
-    </div>
+    <BackLink href={backHref} />
     <Card>
       <TagLabel>{type}</TagLabel>
       <Display styleAsHeading={3}>{title}</Display>

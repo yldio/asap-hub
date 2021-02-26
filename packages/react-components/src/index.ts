@@ -31,6 +31,7 @@ export {
   Toggle,
 } from './atoms';
 export {
+  BackLink,
   BannerCard,
   CalendarLink,
   CtaCard,
@@ -101,6 +102,7 @@ export {
   DashboardPageBody,
   DiscoverPage,
   DiscoverPageBody,
+  EventPage,
   EventsCalendar,
   EventsPage,
   ForgotPasswordPage,

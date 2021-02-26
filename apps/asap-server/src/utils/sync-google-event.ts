@@ -2,12 +2,15 @@ import Joi from '@hapi/joi';
 import { EventStatus } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { EventController } from '../controllers/events';
-import logger from '../utils/logger';
+import logger from './logger';
 
 export const syncEventFactory = (
   eventsController: EventController,
   calendarId: string,
-) => {
+): ((
+  event: calendarV3.Schema$Event,
+  defaultTimezone: string,
+) => Promise<void>) => {
   const syncEvent = async (
     event: calendarV3.Schema$Event,
     defaultTimezone: string,
@@ -56,7 +59,7 @@ export const syncEventFactory = (
       tags: [],
     };
 
-    return await eventsController.upsert(googleEvent.id, squidexEvent);
+    return eventsController.upsert(googleEvent.id, squidexEvent);
   };
   return syncEvent;
 };

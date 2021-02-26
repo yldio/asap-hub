@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DateTime, Duration } from 'luxon';
 import { GraphqlEvent } from '@asap-hub/squidex';
+import { EventResponse } from '@asap-hub/model';
 import { parseGraphQLCalendar } from './calendar';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLGroup } from './group';
-import { EventResponse } from '@asap-hub/model';
 
 export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   const calendar = parseGraphQLCalendar(item.flatData!.calendar![0]);

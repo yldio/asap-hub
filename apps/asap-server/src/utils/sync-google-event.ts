@@ -40,6 +40,7 @@ export const syncEventFactory = (
     }
 
     const googleEvent = value as GoogleEvent;
+    console.log('google event', googleEvent);
 
     const squidexEvent = {
       title: googleEvent.summary,
@@ -57,6 +58,7 @@ export const syncEventFactory = (
       calendar: [calendarId],
       tags: [],
     };
+    console.log('squidex payload', googleEvent.id, squidexEvent);
 
     return eventsController.upsert(googleEvent.id, squidexEvent);
   };

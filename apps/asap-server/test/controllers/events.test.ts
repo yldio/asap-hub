@@ -185,6 +185,71 @@ describe('Event controller', () => {
       });
     });
 
+    describe('Sorting', () => {
+      const expectedFilter = 'data/endDate/iv gt after-date';
+
+      test('Should apply the "orderBy" option using the startDate field and ascending order', async () => {
+        const expectedOrder = 'data/startDate/iv asc';
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(
+              expectedFilter,
+              undefined,
+              undefined,
+              expectedOrder,
+            ),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          sortBy: 'startDate',
+          sortOrder: 'asc',
+        });
+      });
+
+      test('Should apply the "orderBy" option using the endDate field and descending order', async () => {
+        const expectedOrder = 'data/endDate/iv desc';
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(
+              expectedFilter,
+              undefined,
+              undefined,
+              expectedOrder,
+            ),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          sortBy: 'endDate',
+          sortOrder: 'desc',
+        });
+      });
+
+      test('Should not apply any order if the parameters are not provided', async () => {
+        const expectedOrder = '';
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(
+              expectedFilter,
+              undefined,
+              undefined,
+              expectedOrder,
+            ),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+        });
+      });
+    });
+
     describe('Event link', () => {
       let fakeDate: jest.MockedFunction<typeof Date.now>;
       const realDate = Date.now.bind(Date);

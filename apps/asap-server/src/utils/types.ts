@@ -15,3 +15,5 @@ export type FetchOptions = {
   search?: string;
   filter?: string[];
 } & FetchPaginationOptions;
+
+export type AllOrNone<T> = T | { [K in keyof T]?: never };

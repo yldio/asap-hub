@@ -518,19 +518,22 @@ describe('Event controller', () => {
 
     test('Should create or update the event', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/events/${eventId}?publish=true`, {
-          title: { iv: 'Event Tittle' },
-          description: { iv: 'This event will be good' },
-          startDate: { iv: '2021-02-23T19:32:00Z' },
-          startDateTimeZone: { iv: 'Europe/Lisbon' },
-          endDate: { iv: '2021-02-23T19:32:00Z' },
-          endDateTimeZone: { iv: 'Europe/Lisbon' },
-          calendar: { iv: [calendarId] },
-          eventLink: { iv: 'event-link' },
-          status: { iv: 'confirmed' },
-          tags: { iv: [] },
-          meetingLink: { iv: 'https://meetings.com' },
-        })
+        .patch(
+          `/api/content/${config.appName}/events/${eventId}?publish=true`,
+          {
+            title: { iv: 'Event Tittle' },
+            description: { iv: 'This event will be good' },
+            startDate: { iv: '2021-02-23T19:32:00Z' },
+            startDateTimeZone: { iv: 'Europe/Lisbon' },
+            endDate: { iv: '2021-02-23T19:32:00Z' },
+            endDateTimeZone: { iv: 'Europe/Lisbon' },
+            calendar: { iv: [calendarId] },
+            eventLink: { iv: 'event-link' },
+            status: { iv: 'confirmed' },
+            tags: { iv: [] },
+            meetingLink: { iv: 'https://meetings.com' },
+          },
+        )
         .reply(200, eventResponse);
 
       await events.upsert(eventId, eventData);

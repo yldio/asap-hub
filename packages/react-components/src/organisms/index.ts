@@ -11,6 +11,7 @@ export { default as GroupInformation } from './GroupInformation';
 export { default as GroupMembersSection } from './GroupMembersSection';
 export { default as GroupTools } from './GroupTools';
 export { default as HelpSection } from './HelpSection';
+export { default as JoinEvent } from './JoinEvent';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MenuHeader } from './MenuHeader';
 export { default as NewsAndEventsCard } from './NewsAndEventsCard';

@@ -7,12 +7,14 @@ import { EventInfo, BackLink } from '../molecules';
 import { Card, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
+import { JoinEvent } from '../organisms';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
 type EventPageProps = ComponentProps<typeof EventInfo> &
+  ComponentProps<typeof JoinEvent> &
   Pick<EventResponse, 'lastModifiedDate'> & { readonly backHref: string };
 const EventPage: React.FC<EventPageProps> = ({
   backHref,
@@ -29,6 +31,7 @@ const EventPage: React.FC<EventPageProps> = ({
           ago
         </small>
       </Paragraph>
+      <JoinEvent {...props} />
     </Card>
   </div>
 );

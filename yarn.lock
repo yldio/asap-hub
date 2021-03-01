@@ -303,6 +303,7 @@ __metadata:
     browser-image-compression: ^1.0.13
     browserslist-useragent-regexp: ^3.0.0
     cross-env: ^7.0.2
+    date-fns: ^2.16.1
     history: ^4
     identity-obj-proxy: ^3.0.0
     jose: ^2.0.2
@@ -327,6 +328,8 @@ __metadata:
 "@asap-hub/model@workspace:*, @asap-hub/model@workspace:packages/model":
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
+  dependencies:
+    "@babel/runtime-corejs3": ^7.12.5
   languageName: unknown
   linkType: soft
 

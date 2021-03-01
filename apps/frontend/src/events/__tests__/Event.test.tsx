@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter, Route } from 'react-router-dom';
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
 
 import {
@@ -12,6 +12,7 @@ import Event from '../Event';
 import { getEvent } from '../api';
 import { refreshEventState } from '../state';
 
+jest.useFakeTimers('modern');
 jest.mock('../api');
 
 const id = '42';
@@ -77,4 +78,30 @@ it('falls back to the not found page for a missing event', async () => {
   mockGetEvent.mockResolvedValue(undefined);
   const { findByText } = render(<Event />, { wrapper });
   expect(await findByText(/sorry.+page/i)).toBeVisible();
+});
+
+// TODO
+// eslint-disable-next-line jest/no-disabled-tests
+it.skip('refreshes the event to fetch the meeting link', async () => {
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+    id,
+    meetingLink: undefined,
+    startDate: new Date().toISOString(),
+    title: 'Kool Event',
+  });
+  const { findByText } = render(<Event />, { wrapper });
+  expect(await findByText('Kool Event', { exact: false })).toBeVisible();
+
+  mockGetEvent.mockResolvedValue({
+    ...createEventResponse(),
+    id,
+    meetingLink: 'https://example.com/meeting',
+    startDate: new Date().toISOString(),
+    title: 'New Title',
+  });
+  act(() => {
+    jest.advanceTimersByTime(5 * 60 * 1000);
+  });
+  expect(await findByText('New Title', { exact: false })).toBeVisible();
 });

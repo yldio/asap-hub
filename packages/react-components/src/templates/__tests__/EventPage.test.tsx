@@ -34,6 +34,11 @@ it('renders the last updated date', () => {
   expect(getByText(/update/i)).toHaveTextContent(/2 year/i);
 });
 
+it('renders the event description', () => {
+  const { getByText } = render(<EventPage {...props} description="My Desc" />);
+  expect(getByText('My Desc')).toBeVisible();
+});
+
 it('renders the join event section', () => {
   const { getAllByText } = render(<EventPage {...props} />);
   expect(getAllByText(/join/i)).not.toHaveLength(0);

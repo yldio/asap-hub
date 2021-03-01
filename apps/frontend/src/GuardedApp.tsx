@@ -74,11 +74,9 @@ const GuardedApp: React.FC<Record<string, never>> = () => {
       <Route path={SHARED_RESEARCH_PATH}>
         <SharedResearch />
       </Route>
-      {isEnabled('EVENTS_PAGE') && (
-        <Route path={EVENTS_PATH}>
-          <Events />
-        </Route>
-      )}
+      <Route path={EVENTS_PATH}>
+        <Events />
+      </Route>
       <Route>
         <NotFoundPage />
       </Route>

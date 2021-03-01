@@ -2,7 +2,6 @@ import React, { ComponentProps } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
-import { disable } from '@asap-hub/flags';
 
 import NetworkPageHeader from '../NetworkPageHeader';
 
@@ -120,11 +119,6 @@ it('renders the tab links', async () => {
   expect(
     getByText(/groups/i, { selector: 'nav a *' }).closest('a'),
   ).toHaveAttribute('href', '/groups');
-});
-it('does not show the groups tab (REGRESSION)', () => {
-  disable('GROUPS');
-  const { queryByText } = render(<NetworkPageHeader {...props} />);
-  expect(queryByText(/groups/i)).not.toBeInTheDocument();
 });
 
 it('Passes query correctly', () => {

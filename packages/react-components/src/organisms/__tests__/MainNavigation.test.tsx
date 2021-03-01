@@ -12,19 +12,6 @@ const props: ComponentProps<typeof MainNavigation> = {
   eventsHref: '/events',
 };
 
-it('does not render a calendar navigation items (REGRESSION)', () => {
-  disable('EVENTS_PAGE');
-  const { getAllByRole } = render(<MainNavigation {...props} />);
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual([
-    expect.stringMatching(/network/i),
-    expect.stringMatching(/research/i),
-    expect.stringMatching(/news and events/i),
-    expect.stringMatching(/discover/i),
-  ]);
-});
-
 it('renders the navigation items', () => {
   const { getAllByRole } = render(<MainNavigation {...props} />);
   expect(

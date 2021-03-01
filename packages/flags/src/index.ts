@@ -2,16 +2,12 @@ export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'USER_PROFILE_EDIT_SKILLS'
   | 'USER_PROFILE_EDIT_WORKS'
-  | 'GROUPS'
-  | 'EVENTS_PAGE'
   | 'UPCOMING_EVENTS';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  GROUPS: true,
-  EVENTS_PAGE: true,
   UPCOMING_EVENTS: true,
 };
 

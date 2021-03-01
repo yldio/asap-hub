@@ -46,6 +46,7 @@ module.exports = {
     'no-useless-constructor': 'off',
     'no-multi-assign': 'off',
     'no-nested-ternary': 'off',
+    '@typescript-eslint/no-inferrable-types': 'off',
   },
   overrides: [
     {

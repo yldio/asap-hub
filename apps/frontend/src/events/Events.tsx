@@ -21,7 +21,7 @@ const Events: React.FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   const calendarHref = `${path}/${EVENTS_CALENDAR_PATH}`;
   const upcomingHref = `${path}/${EVENTS_UPCOMING_PATH}`;
-  const [time] = useState(new Date().toISOString());
+  const [time] = useState(new Date());
 
   return (
     <Switch>
@@ -36,7 +36,7 @@ const Events: React.FC<Record<string, never>> = () => {
       <Route exact path={upcomingHref}>
         <EventsPage calendarHref={calendarHref} upcomingHref={upcomingHref}>
           <Frame>
-            <Upcoming time={time} />
+            <Upcoming currentTime={time} />
           </Frame>
         </EventsPage>
       </Route>

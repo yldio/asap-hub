@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { EventPage, NotFoundPage } from '@asap-hub/react-components';
 import { join } from 'path';
 
-import { useEventById } from './state';
+import { useEventById, useRefreshEventById } from './state';
 import { NETWORK_PATH, EVENTS_PATH } from '../routes';
 import { GROUPS_PATH } from '../network/routes';
 import { useBackHref } from '../hooks';
@@ -11,6 +11,8 @@ import { useBackHref } from '../hooks';
 const Event: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const event = useEventById(id);
+  const refreshEvent = useRefreshEventById(id);
+
   const backHref = useBackHref() ?? EVENTS_PATH;
 
   if (event) {
@@ -22,6 +24,7 @@ const Event: React.FC = () => {
           href: join(NETWORK_PATH, GROUPS_PATH, group.id),
         }))}
         backHref={backHref}
+        onRefresh={refreshEvent}
       />
     );
   }

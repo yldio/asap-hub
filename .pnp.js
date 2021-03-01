@@ -9526,6 +9526,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["browser-image-compression", "npm:1.0.13"],
             ["browserslist-useragent-regexp", "npm:3.0.0"],
             ["cross-env", "npm:7.0.2"],
+            ["date-fns", "npm:2.16.1"],
             ["history", "npm:4.10.1"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jose", "npm:2.0.2"],
@@ -9552,7 +9553,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         ["workspace:packages/model", {
           "packageLocation": "./packages/model/",
           "packageDependencies": [
-            ["@asap-hub/model", "workspace:packages/model"]
+            ["@asap-hub/model", "workspace:packages/model"],
+            ["@babel/runtime-corejs3", "npm:7.12.5"]
           ],
           "linkType": "SOFT",
         }]

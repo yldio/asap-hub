@@ -4,6 +4,8 @@ import {
   useRecoilValue,
   useRecoilState,
   DefaultValue,
+  useSetRecoilState,
+  useResetRecoilState,
 } from 'recoil';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 
@@ -70,6 +72,15 @@ const eventState = atomFamily<EventResponse | undefined, string>({
 });
 
 export const useEventById = (id: string) => useRecoilValue(eventState(id));
+export const useRefreshEventById = (id: string) => {
+  const setRefreshEvent = useSetRecoilState(refreshEventState(id));
+  const resetEvent = useResetRecoilState(eventState(id));
+  return () => {
+    setRefreshEvent(Math.random());
+    resetEvent();
+  };
+};
+
 export const useEvents = (options: GetListOptions & BeforeOrAfter) => {
   const authorization = useRecoilValue(authorizationState);
   const [events, setEvents] = useRecoilState(eventsState(options));

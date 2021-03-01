@@ -69,6 +69,7 @@ export {
   GroupInformation,
   GroupMembersSection,
   GroupTools,
+  JoinEvent,
   MainNavigation,
   MenuHeader,
   NewsAndEventsCard,

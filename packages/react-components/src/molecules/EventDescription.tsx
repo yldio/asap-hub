@@ -2,21 +2,21 @@ import React from 'react';
 import { EventResponse } from '@asap-hub/model';
 import TagList from './TagList';
 import { RichText } from '../organisms';
-import { Headline4, Divider } from '../atoms';
+import { Headline2, Divider } from '../atoms';
 
 type EventInfoProps = Pick<EventResponse, 'tags' | 'description'>;
 
 const EventDescription: React.FC<EventInfoProps> = ({ tags, description }) => {
   const descriptionComponent = description ? (
     <div>
-      <Headline4>About this event</Headline4>
+      <Headline2 styleAsHeading={4}>About this event</Headline2>
       <RichText text={description} toc={false} />
     </div>
   ) : null;
 
   const tagsComponent = tags.length ? (
     <div>
-      <Headline4>Event tags</Headline4>
+      <Headline2 styleAsHeading={4}>Event tags</Headline2>
       <TagList tags={tags} />
     </div>
   ) : null;

@@ -4,17 +4,19 @@ import { createEventResponse } from '@asap-hub/fixtures';
 
 import EventDescription from '../EventDescription';
 
-jest.mock('../../localization');
-
 const props: ComponentProps<typeof EventDescription> = {
   ...createEventResponse(),
 };
 
 it('renders event description', () => {
   const { getByRole, getByText } = render(
-    <EventDescription {...props} description={'<p>description</p>'} />,
+    <EventDescription
+      {...props}
+      tags={[]}
+      description={'<p>description</p>'}
+    />,
   );
-  expect(getByRole('heading', { level: 4 })).toHaveTextContent(
+  expect(getByRole('heading', { level: 2 })).toHaveTextContent(
     'About this event',
   );
   expect(getByText(/description/i)).toBeInTheDocument();
@@ -22,7 +24,7 @@ it('renders event description', () => {
 
 it('renders event tags', () => {
   const { getByRole } = render(
-    <EventDescription {...props} tags={['a', 'b']} />,
+    <EventDescription {...props} description={undefined} tags={['a', 'b']} />,
   );
-  expect(getByRole('heading', { level: 4 })).toHaveTextContent('Event tags');
+  expect(getByRole('heading', { level: 2 })).toHaveTextContent('Event tags');
 });

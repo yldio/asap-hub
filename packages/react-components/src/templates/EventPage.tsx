@@ -3,7 +3,8 @@ import css from '@emotion/css';
 import { EventResponse } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
-import { EventInfo, EventDescription, BackLink } from '../molecules';
+import { EventInfo, BackLink } from '../molecules';
+import EventDescription from '../molecules/EventDescription';
 import { Card, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';

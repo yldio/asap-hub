@@ -3,7 +3,6 @@ import { Switch, Route } from 'react-router-dom';
 import { useSetRecoilState, RecoilRoot, useResetRecoilState } from 'recoil';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
-import { isEnabled } from '@asap-hub/flags';
 
 import {
   DISCOVER_PATH,

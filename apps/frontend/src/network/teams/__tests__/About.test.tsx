@@ -11,7 +11,6 @@ import {
 } from '@asap-hub/frontend/src/auth/test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
-import { disable } from '@asap-hub/flags';
 
 import About from '../About';
 import { getTeamGroups } from '../api';

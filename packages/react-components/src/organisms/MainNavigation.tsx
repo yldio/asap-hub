@@ -1,6 +1,5 @@
 import React from 'react';
 import css from '@emotion/css';
-import { isEnabled } from '@asap-hub/flags';
 
 import {
   perRem,

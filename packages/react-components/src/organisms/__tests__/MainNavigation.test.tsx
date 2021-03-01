@@ -1,6 +1,5 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { disable } from '@asap-hub/flags';
 
 import MainNavigation from '../MainNavigation';
 

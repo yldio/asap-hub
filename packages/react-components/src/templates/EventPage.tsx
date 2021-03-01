@@ -3,8 +3,7 @@ import css from '@emotion/css';
 import { EventResponse } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
-import { EventInfo, BackLink } from '../molecules';
-import EventDescription from '../molecules/EventDescription';
+import { EventInfo, EventDescription, BackLink } from '../molecules';
 import { Card, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -19,8 +18,6 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
   ComponentProps<typeof EventDescription> &
   Pick<EventResponse, 'lastModifiedDate'> & { readonly backHref: string };
 const EventPage: React.FC<EventPageProps> = ({
-  tags,
-  description,
   backHref,
   lastModifiedDate,
   ...props

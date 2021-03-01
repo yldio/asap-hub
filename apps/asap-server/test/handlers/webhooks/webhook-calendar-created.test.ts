@@ -59,7 +59,8 @@ describe('Calendar Webhook', () => {
   describe('Create and Update events', () => {
     test('Should subscribe with the correct data, save the resource ID and return 200 when the subscription was successful', async () => {
       const resourceId = 'some-resource-id';
-      subscribe.mockResolvedValueOnce(resourceId);
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
 
       const res = (await handler(
         createSignedPayload(createCalendarEvent),
@@ -74,6 +75,7 @@ describe('Calendar Webhook', () => {
         createCalendarEvent.payload.id,
         {
           resourceId,
+          expirationDate: expiration,
         },
       );
     });
@@ -142,6 +144,10 @@ describe('Calendar Webhook', () => {
     });
 
     test('Should unsubscribe and remove the resourceId then resubscribe if the calendar ID changed', async () => {
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
       const res = (await handler(
         createSignedPayload(updateCalendarEvent),
       )) as APIGatewayProxyResult;
@@ -161,6 +167,10 @@ describe('Calendar Webhook', () => {
     });
 
     test('Should not unsubscribe if the old resource ID was not defined', async () => {
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
+
       const res = (await handler(
         createSignedPayload({
           ...updateCalendarEvent,
@@ -180,6 +190,9 @@ describe('Calendar Webhook', () => {
     });
 
     test('Should continue to subscription even if unsubscribing failed', async () => {
+      const resourceId = 'some-resource-id';
+      const expiration = 123456;
+      subscribe.mockResolvedValueOnce({ resourceId, expiration });
       unsubscribe.mockRejectedValueOnce(new Error());
 
       const res = (await handler(
@@ -202,6 +215,8 @@ describe('Subscription', () => {
   test('Should subscribe to the calendar events notifications and return the resourceId', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
 
+    const expiration = 1617196357000;
+
     nock(googleApiUrl)
       .post('/oauth2/v4/token')
       .reply(200, {
@@ -222,6 +237,7 @@ describe('Subscription', () => {
       })
       .reply(200, {
         resourceId: 'some-resource-id',
+        expiration,
       });
 
     const result = await subscribeToEventChanges(
@@ -229,7 +245,10 @@ describe('Subscription', () => {
       createCalendarEvent.payload.id,
     );
 
-    expect(result).toBe('some-resource-id');
+    expect(result).toEqual({
+      resourceId: 'some-resource-id',
+      expiration,
+    });
     expect(nock.isDone()).toBe(true);
   });
 });

@@ -78,10 +78,14 @@ export const webhookCalendarCreatedHandlerFactory = (
 
       if (['CalendarsCreated', 'CalendarsUpdated'].includes(event)) {
         try {
-          const resourceId = await subscribe(payload.data.id.iv, payload.id);
+          const { resourceId, expiration } = await subscribe(
+            payload.data.id.iv,
+            payload.id,
+          );
 
           await calendarController.update(payload.id, {
             resourceId,
+            expirationDate: expiration,
           });
         } catch (error) {
           return {
@@ -104,7 +108,13 @@ export const webhookCalendarCreatedHandlerFactory = (
 
 export const subscribeToEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
-) => async (calendarId: string, subscriptionId: string): Promise<string> => {
+) => async (
+  calendarId: string,
+  subscriptionId: string,
+): Promise<{
+  resourceId: string;
+  expiration: number;
+}> => {
   const creds = await getJWTCredentials();
   const client = Auth.auth.fromJSON(creds) as Auth.JWT;
 
@@ -113,6 +123,7 @@ export const subscribeToEventChangesFactory = (
     'https://www.googleapis.com/auth/calendar.events',
   ];
   const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
+  const ttl = 2592000;
   const data = {
     id: subscriptionId,
     token: googleApiToken,
@@ -120,11 +131,14 @@ export const subscribeToEventChangesFactory = (
     address: `${asapApiUrl}/webhook/events`,
     params: {
       // 30 days, which is a maximum TTL
-      ttl: 2592000,
+      ttl,
     },
   };
 
-  const response = await client.request<{ resourceId: string }>({
+  const response = await client.request<{
+    resourceId: string;
+    expiration: number;
+  }>({
     url,
     method: 'POST',
     data,
@@ -132,7 +146,10 @@ export const subscribeToEventChangesFactory = (
 
   logger('Google API subscription response', JSON.stringify(response, null, 2));
 
-  return response.data.resourceId;
+  return {
+    resourceId: response.data.resourceId,
+    expiration: response.data.expiration,
+  };
 };
 
 export type SubscribeToEventChanges = ReturnType<

@@ -66,7 +66,7 @@ describe('Event Webhook', () => {
     expect(res.statusCode).toStrictEqual(401);
   });
 
-  test('Should return 403 when x-goog-channel-token is not set', async () => {
+  test('Should return 403 when x-goog-channel-token is not the same', async () => {
     const res = (await handler(
       apiGatewayEvent({
         ...googlePayload,

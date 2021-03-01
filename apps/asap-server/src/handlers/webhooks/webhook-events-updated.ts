@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import { Auth } from 'googleapis';
+import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
 
 import { Handler } from '../../utils/types';
@@ -15,6 +16,7 @@ import getJWTCredentials, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
+import { googleApiToken } from '../../config';
 
 export const webhookEventUpdatedHandlerFactory = (
   calendars: CalendarController,
@@ -23,16 +25,17 @@ export const webhookEventUpdatedHandlerFactory = (
 ): Handler =>
   http(
     async (request: lambda.Request): Promise<lambda.Response> => {
-      // TODO: validate google request auth
+      const channelToken = request.headers['x-goog-channel-token'];
+      if (!channelToken) {
+        throw Boom.unauthorized('Missing x-goog-channel-token header');
+      }
+      if (channelToken !== googleApiToken) {
+        throw Boom.forbidden('Channel token doesnt match');
+      }
 
       const resourceId = request.headers['x-goog-resource-id'];
       if (!resourceId) {
-        return {
-          statusCode: 400,
-          payload: {
-            message: 'Missing x-goog-resource-id header',
-          },
-        };
+        throw Boom.badRequest('Missing x-goog-resource-id header');
       }
 
       const calendar = await calendars
@@ -43,7 +46,7 @@ export const webhookEventUpdatedHandlerFactory = (
         });
 
       if (!calendar) {
-        return { statusCode: 502 };
+        throw Boom.badGateway();
       }
 
       const squidexCalendarId = calendar.id;
@@ -56,7 +59,7 @@ export const webhookEventUpdatedHandlerFactory = (
       });
 
       if (!credentials) {
-        return { statusCode: 502 };
+        throw Boom.badGateway();
       }
 
       const auth = new Auth.GoogleAuth({

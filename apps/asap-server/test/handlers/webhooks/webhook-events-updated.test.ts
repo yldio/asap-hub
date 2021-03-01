@@ -52,11 +52,41 @@ describe('Event Webhook', () => {
     syncCalendarFactoryMock,
   );
 
+  test('Should return 401 when x-goog-channel-token is not set', async () => {
+    const res = (await handler(
+      apiGatewayEvent({
+        ...googlePayload,
+        headers: {
+          ...googlePayload.headers,
+          'x-goog-channel-token': undefined,
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(401);
+  });
+
+  test('Should return 403 when x-goog-channel-token is not the same', async () => {
+    const res = (await handler(
+      apiGatewayEvent({
+        ...googlePayload,
+        headers: {
+          ...googlePayload.headers,
+          'x-goog-channel-token': 'not-the-same-token',
+        },
+      }),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(403);
+  });
   test('Should return 400 when x-goog-resource-id is not set', async () => {
     const res = (await handler(
       apiGatewayEvent({
         ...googlePayload,
-        headers: {},
+        headers: {
+          ...googlePayload.headers,
+          'x-goog-resource-id': undefined,
+        },
       }),
     )) as APIGatewayProxyResult;
 
@@ -165,6 +195,7 @@ const googlePayload = {
     'x-forwarded-for': '66.102.8.222',
     'x-forwarded-port': '443',
     'x-forwarded-proto': 'https',
+    'x-goog-channel-token': 'asap-google-api-token',
     'x-goog-channel-expiration': 'Fri, 26 Mar 2021 15:51:47 GMT',
     'x-goog-channel-id': 'aa760553-8aa4-45d3-824a-8e167bcaa630',
     'x-goog-message-number': '1',

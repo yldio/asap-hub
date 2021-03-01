@@ -8,7 +8,6 @@ import {
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
-import { isEnabled } from '@asap-hub/flags';
 
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
@@ -30,11 +29,9 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
       <UserProfileResearch
         {...user}
         userProfileGroupsCard={
-          isEnabled('GROUPS') ? (
-            <Frame fallback={null}>
-              <UserGroups user={user} />
-            </Frame>
-          ) : undefined
+          <Frame fallback={null}>
+            <UserGroups user={user} />
+          </Frame>
         }
         teams={teams.map((team) => ({
           ...team,

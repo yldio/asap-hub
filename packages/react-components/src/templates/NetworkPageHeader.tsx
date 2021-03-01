@@ -1,7 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
 import { TeamRole, Role } from '@asap-hub/model';
-import { useFlags } from '@asap-hub/react-context';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
@@ -72,58 +71,52 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   onChangeFilter,
   searchQuery,
   filters,
-}) => {
-  const { isEnabled } = useFlags();
-
-  return (
-    <header>
-      <div css={visualHeaderStyles}>
-        <Display styleAsHeading={2}>Network</Display>
-        <div css={textStyles}>
-          <Paragraph accent="lead">
-            Explore the ASAP Network and collaborate! Search for teams or
-            individuals by keyword or name.
-          </Paragraph>
-        </div>
-        <TabNav>
-          <TabLink href={usersHref}>
-            <span css={iconStyles}>{userIcon}</span>People
-          </TabLink>
-          <TabLink href={teamsHref}>
-            <span css={iconStyles}>{teamIcon}</span>Teams
-          </TabLink>
-          {isEnabled('GROUPS') && (
-            <TabLink href={groupsHref}>
-              <span css={iconStyles}>{groupsIcon}</span>Groups
-            </TabLink>
-          )}
-        </TabNav>
+}) => (
+  <header>
+    <div css={visualHeaderStyles}>
+      <Display styleAsHeading={2}>Network</Display>
+      <div css={textStyles}>
+        <Paragraph accent="lead">
+          Explore the ASAP Network and collaborate! Search for teams or
+          individuals by keyword or name.
+        </Paragraph>
       </div>
-      <div css={controlsStyles}>
-        {page === 'users' ? (
-          <SearchAndFilter
-            onChangeSearch={onChangeSearch}
-            searchPlaceholder="Enter name, keyword, institution, …"
-            searchQuery={searchQuery}
-            onChangeFilter={onChangeFilter}
-            filterOptions={userFilters}
-            filterTitle="TEAM ROLES"
-            filters={filters}
-          />
-        ) : (
-          <SearchField
-            placeholder={
-              page === 'teams'
-                ? 'Enter name, keyword, method, …'
-                : 'Search for a group…'
-            }
-            value={searchQuery}
-            onChange={onChangeSearch}
-          />
-        )}
-      </div>
-    </header>
-  );
-};
+      <TabNav>
+        <TabLink href={usersHref}>
+          <span css={iconStyles}>{userIcon}</span>People
+        </TabLink>
+        <TabLink href={teamsHref}>
+          <span css={iconStyles}>{teamIcon}</span>Teams
+        </TabLink>
+        <TabLink href={groupsHref}>
+          <span css={iconStyles}>{groupsIcon}</span>Groups
+        </TabLink>
+      </TabNav>
+    </div>
+    <div css={controlsStyles}>
+      {page === 'users' ? (
+        <SearchAndFilter
+          onChangeSearch={onChangeSearch}
+          searchPlaceholder="Enter name, keyword, institution, …"
+          searchQuery={searchQuery}
+          onChangeFilter={onChangeFilter}
+          filterOptions={userFilters}
+          filterTitle="TEAM ROLES"
+          filters={filters}
+        />
+      ) : (
+        <SearchField
+          placeholder={
+            page === 'teams'
+              ? 'Enter name, keyword, method, …'
+              : 'Search for a group…'
+          }
+          value={searchQuery}
+          onChange={onChangeSearch}
+        />
+      )}
+    </div>
+  </header>
+);
 
 export default NetworkPageHeader;

@@ -1,6 +1,5 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { disable } from '@asap-hub/flags';
 
 import MainNavigation from '../MainNavigation';
 
@@ -11,19 +10,6 @@ const props: ComponentProps<typeof MainNavigation> = {
   newsAndEventsHref: '/news-and-events',
   eventsHref: '/events',
 };
-
-it('does not render a calendar navigation items (REGRESSION)', () => {
-  disable('EVENTS_PAGE');
-  const { getAllByRole } = render(<MainNavigation {...props} />);
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual([
-    expect.stringMatching(/network/i),
-    expect.stringMatching(/research/i),
-    expect.stringMatching(/news and events/i),
-    expect.stringMatching(/discover/i),
-  ]);
-});
 
 it('renders the navigation items', () => {
   const { getAllByRole } = render(<MainNavigation {...props} />);

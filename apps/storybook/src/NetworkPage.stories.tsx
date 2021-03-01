@@ -4,11 +4,10 @@ import { NetworkPage } from '@asap-hub/react-components';
 import { text, select } from '@storybook/addon-knobs';
 
 import { LayoutDecorator } from './layout';
-import { makeFlagDecorator } from './flags';
 
 export default {
   title: 'Templates / Network / Page',
-  decorators: [LayoutDecorator, makeFlagDecorator('Groups Enabled', 'GROUPS')],
+  decorators: [LayoutDecorator],
 };
 
 export const Normal = () => {

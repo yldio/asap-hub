@@ -1,6 +1,5 @@
 import React from 'react';
 import css from '@emotion/css';
-import { isEnabled } from '@asap-hub/flags';
 
 import {
   perRem,
@@ -78,16 +77,14 @@ const MainNavigation: React.FC<MainNavigationProps> = ({
       </li>
       <li>
         <NavigationLink href={newsAndEventsHref} icon={newsIcon}>
-          {isEnabled('EVENTS_PAGE') ? 'News' : 'News and Events'}
+          News
         </NavigationLink>
       </li>
-      {isEnabled('EVENTS_PAGE') && (
-        <li>
-          <NavigationLink href={eventsHref} icon={calendarIcon}>
-            Calendar and Events
-          </NavigationLink>
-        </li>
-      )}
+      <li>
+        <NavigationLink href={eventsHref} icon={calendarIcon}>
+          Calendar and Events
+        </NavigationLink>
+      </li>
       <li>
         <NavigationLink href={discoverAsapHref} icon={discoverIcon}>
           Discover ASAP

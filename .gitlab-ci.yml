@@ -117,9 +117,6 @@ test:unit:
     expire_in: 5 day
     paths:
       - coverage
-  cache:
-    paths:
-      - '.jest-cache'
   script:
     - yarn run test --coverage
     - yarn codecov
@@ -130,9 +127,6 @@ test:unit:
 test:browser:
   <<: *tmpl_test
   image: mcr.microsoft.com/playwright:bionic
-  cache:
-    paths:
-      - '.jest-cache'
   script:
     - yarn run test:browser
   needs:

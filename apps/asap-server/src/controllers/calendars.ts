@@ -78,6 +78,11 @@ export interface CalendarController {
     take: number;
     skip: number;
   }) => Promise<ListCalendarResponse>;
+  fetchRaw: (options: {
+    take: number;
+    skip: number;
+    maxExpiration: number;
+  }) => Promise<CalendarRaw[]>;
   fetchByResouceId: (resourceId: string) => Promise<RestCalendar>;
   getSyncToken: (calendarId: string) => Promise<string | undefined>;
   update: (
@@ -85,3 +90,7 @@ export interface CalendarController {
     data: Partial<Calendar>,
   ) => Promise<CalendarResponse>;
 }
+
+export type CalendarRaw = Calendar & {
+  googleCalendarId: string;
+};

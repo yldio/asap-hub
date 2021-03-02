@@ -8,15 +8,15 @@ import { NETWORK_PATH, EVENTS_PATH } from '../../routes';
 import { GROUPS_PATH } from '../routes';
 
 type UpcomingProps = {
-  readonly time: string;
+  readonly currentTime: Date;
 };
-const Upcoming: React.FC<UpcomingProps> = ({ time }) => {
+const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const {
     params: { id },
   } = useRouteMatch<{ id: string }>();
   const { items, total } = useGroupEvents(id, {
-    after: time,
+    after: currentTime.toISOString(),
     currentPage,
     pageSize,
   });

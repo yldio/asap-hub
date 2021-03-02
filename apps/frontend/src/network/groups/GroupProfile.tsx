@@ -30,7 +30,7 @@ const GroupProfile: React.FC = () => {
     params: { id },
   } = useRouteMatch<{ id: string }>();
   const group = useGroupById(id);
-  const [time] = useState(new Date().toISOString());
+  const [currentTime] = useState(new Date());
 
   if (group) {
     return (
@@ -52,7 +52,7 @@ const GroupProfile: React.FC = () => {
               <Calendar calendars={group.calendars} />
             </Route>
             <Route path={`${path}/upcoming`}>
-              <Upcoming time={time} />
+              <Upcoming currentTime={currentTime} />
             </Route>
             <Redirect to={`${path}/about`} />
           </Switch>

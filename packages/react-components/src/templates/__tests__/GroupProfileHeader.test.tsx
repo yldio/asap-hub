@@ -48,7 +48,7 @@ it('shows the last updated date', () => {
 });
 
 it('renders the navigation  (REGRESSION)', () => {
-  disable('GROUP_UPCOMING_EVENTS');
+  disable('UPCOMING_EVENTS');
   const { getAllByRole } = render(<GroupProfileHeader {...props} />);
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),

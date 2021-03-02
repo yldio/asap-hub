@@ -80,7 +80,7 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
     <TabNav>
       <TabLink href={aboutHref}>About</TabLink>
       <TabLink href={calendarHref}>Calendar</TabLink>
-      {isEnabled('GROUP_UPCOMING_EVENTS') && (
+      {isEnabled('UPCOMING_EVENTS') && (
         <TabLink href={upcomingHref}>Upcoming Events</TabLink>
       )}
     </TabNav>

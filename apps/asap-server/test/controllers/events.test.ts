@@ -502,6 +502,7 @@ describe('Event controller', () => {
   describe('Create method', () => {
     const calendarId = 'squidex-calendar-id';
     const eventData: Event = {
+      googleId: 'google-event-id',
       title: 'Event Tittle',
       description: 'This event will be good',
       startDate: '2021-02-23T19:32:00Z',
@@ -516,6 +517,7 @@ describe('Event controller', () => {
     test('Should create or update the event', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/events?publish=true`, {
+          googleId: { iv: 'google-event-id' },
           title: { iv: 'Event Tittle' },
           description: { iv: 'This event will be good' },
           startDate: { iv: '2021-02-23T19:32:00Z' },

@@ -194,6 +194,7 @@ export const restEvent: RestEvent = {
   created: '2021-02-23T19:32:00Z',
   lastModified: '2021-02-23T19:32:00Z',
   data: {
+    googleId: { iv: 'google-event-id' },
     title: { iv: 'Event Tittle' },
     description: { iv: 'This event will be good' },
     startDate: { iv: '2021-02-23T19:32:00Z' },

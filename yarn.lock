@@ -312,7 +312,7 @@ __metadata:
     react: ^17.0.1
     react-app-polyfill: ^1.0.6
     react-dom: ^17.0.1
-    react-error-boundary: ^2.0.0
+    react-error-boundary: ^3.1.1
     react-router-dom: ^5.2.0
     react-router-last-location: ^2.0.1
     react-scripts: ^4.0.1
@@ -25095,14 +25095,14 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^2.0.0":
-  version: 2.3.2
-  resolution: "react-error-boundary@npm:2.3.2"
+"react-error-boundary@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "react-error-boundary@npm:3.1.1"
   dependencies:
-    "@babel/runtime": ^7.11.2
+    "@babel/runtime": ^7.12.5
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 9e6d4ad197fd7d22e0a8fb9c7d7004282276ff2d6fda9ab0cb109ac72ffb324571f392776161af1a9ecc0e650aa08d97b403534110e53f0fd221a6091f0a99cb
+  checksum: 8860975e5ab2cf85c50713a18cabadd862b8d9ac694f53fdff7d2f51ec92fec2a7ea839b1379cad7ad3fec8f49122dd4e4a2fc7b0fc5776671acff860dbad691
   languageName: node
   linkType: hard
 

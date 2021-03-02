@@ -94,7 +94,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   ).toUpperCase();
 
   const imageComponent = thumbnail ? (
-    <img alt={`"${title}"'s thumbnail`} src={thumbnail} css={[imageStyle]} />
+    <img alt={`Thumbnail for "${title}"`} src={thumbnail} css={imageStyle} />
   ) : (
     eventPlaceholderIcon
   );

@@ -45,7 +45,11 @@ it('renders event thumbnail', () => {
 
 it('renders placeholder event thumbnail', () => {
   const { getByText } = render(
-    <EventInfo {...props} title={'blablablha'.repeat(100)} />,
+    <EventInfo
+      {...props}
+      thumbnail={undefined}
+      title={'blablablha'.repeat(100)}
+    />,
   );
 
   expect(getByText(/placeholder/i)).toBeInTheDocument();

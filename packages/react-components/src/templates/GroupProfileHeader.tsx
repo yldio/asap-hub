@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
+import { isEnabled } from '@asap-hub/flags';
 
 import { paper, lead } from '../colors';
 import { perRem } from '../pixels';
@@ -31,6 +32,7 @@ interface GroupProfileHeaderProps {
 
   aboutHref: string;
   calendarHref: string;
+  upcomingHref: string;
 }
 const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   name,
@@ -39,6 +41,7 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   lastModifiedDate,
   aboutHref,
   calendarHref,
+  upcomingHref,
 }) => (
   <header css={containerStyles}>
     <Display styleAsHeading={2}>{name}</Display>
@@ -77,6 +80,9 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
     <TabNav>
       <TabLink href={aboutHref}>About</TabLink>
       <TabLink href={calendarHref}>Calendar</TabLink>
+      {isEnabled('UPCOMING_EVENTS') && (
+        <TabLink href={upcomingHref}>Upcoming Events</TabLink>
+      )}
     </TabNav>
   </header>
 );

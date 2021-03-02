@@ -11,13 +11,16 @@ const loadAbout = () =>
   import(/* webpackChunkName: "network-group-about" */ './About');
 const loadCalendar = () =>
   import(/* webpackChunkName: "network-group-calendar" */ './Calendar');
+const loadUpcoming = () =>
+  import(/* webpackChunkName: "network-group-upcoming" */ './Upcoming');
 const About = React.lazy(loadAbout);
 const Calendar = React.lazy(loadCalendar);
+const Upcoming = React.lazy(loadUpcoming);
 loadAbout();
 
 const GroupProfile: React.FC = () => {
   useEffect(() => {
-    loadAbout().then(loadCalendar);
+    loadAbout().then(loadCalendar).then(loadUpcoming);
   }, []);
 
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
@@ -27,6 +30,7 @@ const GroupProfile: React.FC = () => {
     params: { id },
   } = useRouteMatch<{ id: string }>();
   const group = useGroupById(id);
+  const [currentTime] = useState(new Date());
 
   if (group) {
     return (
@@ -37,6 +41,7 @@ const GroupProfile: React.FC = () => {
         aboutHref={join(url, 'about')}
         calendarHref={join(url, 'calendar')}
         groupTeamsHref={`${join(url, 'about')}#${groupTeamsElementId}`}
+        upcomingHref={join(url, 'upcoming')}
       >
         <Frame>
           <Switch>
@@ -46,8 +51,8 @@ const GroupProfile: React.FC = () => {
             <Route path={`${path}/calendar`}>
               <Calendar calendars={group.calendars} />
             </Route>
-            <Route path={`${path}/calendar`}>
-              <Calendar calendars={group.calendars} />
+            <Route path={`${path}/upcoming`}>
+              <Upcoming currentTime={currentTime} />
             </Route>
             <Redirect to={`${path}/about`} />
           </Switch>

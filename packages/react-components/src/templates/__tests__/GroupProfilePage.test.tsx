@@ -9,6 +9,7 @@ const props: ComponentProps<typeof GroupProfilePage> = {
   aboutHref: '#about',
   calendarHref: '#calendar',
   groupTeamsHref: '#teams',
+  upcomingHref: '#upcoming',
   lastModifiedDate: '2021-01-01',
   numberOfTeams: 1,
 };

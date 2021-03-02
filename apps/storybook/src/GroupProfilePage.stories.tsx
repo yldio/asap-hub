@@ -22,6 +22,7 @@ export const Normal = () => {
         lastModifiedDate={new Date(date('Last update')).toISOString()}
         aboutHref="/About"
         calendarHref="/Calendar"
+        upcomingHref="/upcoming"
       />
     </StaticRouter>
   );

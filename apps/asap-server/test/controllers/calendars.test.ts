@@ -80,7 +80,7 @@ describe('Dashboard controller', () => {
       );
     });
 
-    test('Should throw Not Found when squidex throws an error', async () => {
+    test('Should throw Not Found when squidex returns an empty array', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/calendars`)
         .query({

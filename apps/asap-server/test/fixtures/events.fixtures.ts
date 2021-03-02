@@ -3,12 +3,13 @@ import {
   ResponseFetchEvents,
   ResponseFetchEvent,
 } from '../../src/controllers/events';
-import { GraphqlEvent, config } from '@asap-hub/squidex';
+import { GraphqlEvent, RestEvent, config } from '@asap-hub/squidex';
 import { queryGroupsExpectation, queryGroupsResponse } from './groups.fixtures';
 import {
   ListEventResponse,
   GroupResponse,
   EventResponse,
+  EventStatus,
 } from '@asap-hub/model';
 
 export const fetchEventsResponse: { data: ResponseFetchEvents } = {
@@ -185,5 +186,23 @@ export const findEventResponse: { data: ResponseFetchEvent } = {
   data: {
     findEventsContent:
       fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
+  },
+};
+
+export const restEvent: RestEvent = {
+  id: 'squidex-event-id',
+  created: '2021-02-23T19:32:00Z',
+  lastModified: '2021-02-23T19:32:00Z',
+  data: {
+    title: { iv: 'Event Tittle' },
+    description: { iv: 'This event will be good' },
+    startDate: { iv: '2021-02-23T19:32:00Z' },
+    startDateTimeZone: { iv: 'Europe/Lisbon' },
+    endDate: { iv: '2021-02-23T19:32:00Z' },
+    endDateTimeZone: { iv: 'Europe/Lisbon' },
+    calendar: { iv: ['squidex-calendar-id'] },
+    status: { iv: 'confirmed' as EventStatus },
+    tags: { iv: [] },
+    meetingLink: { iv: 'https://meetings.com' },
   },
 };

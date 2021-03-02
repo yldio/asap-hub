@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { Settings } from 'luxon';
-import { config } from '@asap-hub/squidex';
+import { config, Event } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import Events, {
   buildGraphQLQueryFetchEvents,
@@ -16,6 +16,7 @@ import {
   graphqlEvent,
   findEventResponse,
   eventResponse,
+  restEvent,
 } from '../fixtures/events.fixtures';
 
 describe('Event controller', () => {
@@ -498,10 +499,9 @@ describe('Event controller', () => {
     });
   });
 
-  describe('Upsert method', () => {
-    const eventId = 'event-id';
-    const calendarId = 'calendar-id';
-    const eventData = {
+  describe('Create method', () => {
+    const calendarId = 'squidex-calendar-id';
+    const eventData: Event = {
       title: 'Event Tittle',
       description: 'This event will be good',
       startDate: '2021-02-23T19:32:00Z',
@@ -509,46 +509,105 @@ describe('Event controller', () => {
       endDate: '2021-02-23T19:32:00Z',
       endDateTimeZone: 'Europe/Lisbon',
       calendar: [calendarId],
-      eventLink: 'event-link',
       status: 'confirmed' as EventStatus,
       tags: [],
-      meetingLink: 'https://meetings.com',
-    };
-
-    // TODO: create responses on squidex don't contain `iv`
-    const eventResponse: Record<
-      string,
-      string | Record<string, string | string[]>
-    > = {
-      id: eventId,
-      created: '2021-02-23T19:32:00Z',
-      createdBy: 'jt',
-      lastModified: '2021-02-23T19:32:00Z',
-      lastModifiedBy: 'jt',
-      data: eventData,
     };
 
     test('Should create or update the event', async () => {
       nock(config.baseUrl)
-        .patch(
-          `/api/content/${config.appName}/events/${eventId}?publish=true`,
-          {
-            title: { iv: 'Event Tittle' },
-            description: { iv: 'This event will be good' },
-            startDate: { iv: '2021-02-23T19:32:00Z' },
-            startDateTimeZone: { iv: 'Europe/Lisbon' },
-            endDate: { iv: '2021-02-23T19:32:00Z' },
-            endDateTimeZone: { iv: 'Europe/Lisbon' },
-            calendar: { iv: [calendarId] },
-            eventLink: { iv: 'event-link' },
-            status: { iv: 'confirmed' },
-            tags: { iv: [] },
-            meetingLink: { iv: 'https://meetings.com' },
-          },
-        )
-        .reply(200, eventResponse);
+        .post(`/api/content/${config.appName}/events?publish=true`, {
+          title: { iv: 'Event Tittle' },
+          description: { iv: 'This event will be good' },
+          startDate: { iv: '2021-02-23T19:32:00Z' },
+          startDateTimeZone: { iv: 'Europe/Lisbon' },
+          endDate: { iv: '2021-02-23T19:32:00Z' },
+          endDateTimeZone: { iv: 'Europe/Lisbon' },
+          calendar: { iv: [calendarId] },
+          status: { iv: 'confirmed' },
+          tags: { iv: [] },
+        })
+        .reply(200, restEvent);
 
-      await events.upsert(eventId, eventData);
+      await events.create(eventData);
+    });
+
+    test('Should throw when squidex return an error', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/events?publish=true`)
+        .reply(404);
+
+      await expect(events.create(eventData)).rejects.toThrow();
+    });
+  });
+
+  describe('Update method', () => {
+    const eventId = 'event-id';
+    const eventData: Partial<Event> = {
+      tags: ['kubernetes'],
+      meetingLink: 'https://zweem.com',
+    };
+
+    test('Should update the event', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/events/${eventId}`, {
+          tags: { iv: ['kubernetes'] },
+          meetingLink: { iv: 'https://zweem.com' },
+        })
+        .reply(200, restEvent);
+
+      const result = await events.update(eventId, eventData);
+      expect(result).toStrictEqual(restEvent);
+    });
+
+    test('Should throw when squidex return an error', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/events/${eventId}`)
+        .reply(404);
+
+      await expect(events.update(eventId, eventData)).rejects.toThrow();
+    });
+  });
+
+  describe('fetchByGoogleId method', () => {
+    const googleId = 'google-event-id';
+    const filter = `data/googleId/iv eq '${googleId}'`;
+
+    test('Should throw when gets an error from squidex', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/events`)
+        .query({
+          $top: 1,
+          $filter: filter,
+        })
+        .reply(500);
+
+      await expect(events.fetchByGoogleId(googleId)).rejects.toThrow();
+    });
+
+    test('Should return null when squidex returns an empty array', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/events`)
+        .query({
+          $top: 1,
+          $filter: filter,
+        })
+        .reply(200, { total: 0, items: [] });
+
+      const result = await events.fetchByGoogleId(googleId);
+      expect(result).toBeNull;
+    });
+
+    test('Should return the event when finds it', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/events`)
+        .query({
+          $top: 1,
+          $filter: filter,
+        })
+        .reply(200, { total: 1, items: [restEvent] });
+
+      const result = await events.fetchByGoogleId(googleId);
+      expect(result).toEqual(restEvent);
     });
   });
 });

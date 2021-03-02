@@ -66,6 +66,18 @@ describe('Event controller', () => {
       expect(result).toEqual(listEventResponse);
     });
 
+    test('Should return event thumbnail', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .reply(200, fetchEventsResponse);
+
+      const result = await events.fetch({
+        before: 'before',
+      });
+
+      expect(result).toEqual(listEventResponse);
+    });
+
     describe('Date filters', () => {
       test('Should apply the "after" filter', async () => {
         nock(config.baseUrl)

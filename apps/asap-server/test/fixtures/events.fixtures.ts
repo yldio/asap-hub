@@ -3,7 +3,7 @@ import {
   ResponseFetchEvents,
   ResponseFetchEvent,
 } from '../../src/controllers/events';
-import { GraphqlEvent } from '@asap-hub/squidex';
+import { GraphqlEvent, config } from '@asap-hub/squidex';
 import { queryGroupsExpectation, queryGroupsResponse } from './groups.fixtures';
 import {
   ListEventResponse,
@@ -26,6 +26,13 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
             endDateTimeZone: 'Europe/London',
             startDate: '2009-12-02T16:19:31Z',
             startDateTimeZone: 'Europe/London',
+            thumbnail: [
+              {
+                id: 'uuid-thumbnail-2',
+                created: '2021-02-08T16:04:56Z',
+                lastModified: '2021-02-08T16:22:12Z',
+              },
+            ],
             meetingLink: 'https://zoom.com/room/123',
             status: 'Cancelled',
             tags: ['A'],
@@ -92,6 +99,7 @@ export const listEventResponse: ListEventResponse = {
       endDate: '2009-12-24T16:20:14.000Z',
       endDateTimeZone: 'Europe/London',
       description: 'This event is awesome',
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid-thumbnail-2`,
       lastModifiedDate: '2021-02-08T16:22:12.000Z',
       meetingLink: 'https://zoom.com/room/123',
       status: 'Cancelled',
@@ -111,6 +119,7 @@ export const listEventResponse: ListEventResponse = {
       startDateTimeZone: 'Europe/London',
       endDate: '2021-02-08T16:20:32.000Z',
       endDateTimeZone: 'Europe/London',
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid-thumbnail-1`,
       lastModifiedDate: '2021-02-08T16:20:35.000Z',
       status: 'Confirmed',
       tags: ['B'],
@@ -132,6 +141,7 @@ export const eventResponse: EventResponse = {
   startDateTimeZone: 'Europe/London',
   endDate: '2009-12-24T16:20:14.000Z',
   endDateTimeZone: 'Europe/London',
+  thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid-thumbnail-2`,
   lastModifiedDate: '2021-02-08T16:22:12.000Z',
   meetingLink: 'https://zoom.com/room/123',
   tags: ['A'],

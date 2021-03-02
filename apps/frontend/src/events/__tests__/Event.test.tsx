@@ -80,9 +80,7 @@ it('falls back to the not found page for a missing event', async () => {
   expect(await findByText(/sorry.+page/i)).toBeVisible();
 });
 
-// TODO
-// eslint-disable-next-line jest/no-disabled-tests
-it.skip('refreshes the event to fetch the meeting link', async () => {
+it('refreshes the event to fetch the meeting link', async () => {
   mockGetEvent.mockResolvedValue({
     ...createEventResponse(),
     id,

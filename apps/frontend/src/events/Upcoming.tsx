@@ -1,7 +1,7 @@
 import React from 'react';
+import { subHours } from 'date-fns';
 import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
 import { EventsUpcoming } from '@asap-hub/react-components';
-import addHours from 'date-fns/addHours';
 
 import { useEvents } from './state';
 import { usePagination, usePaginationParams } from '../hooks';
@@ -15,7 +15,7 @@ const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const { items, total } = useEvents({
-    after: addHours(
+    after: subHours(
       currentTime,
       EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
     ).toISOString(),
@@ -41,4 +41,5 @@ const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
   );
 };
 
+// TODO test
 export default Upcoming;

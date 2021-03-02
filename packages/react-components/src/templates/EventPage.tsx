@@ -32,8 +32,8 @@ const EventPage: React.FC<EventPageProps> = ({
           ago
         </small>
       </Paragraph>
-      <EventDescription {...props} />
       <JoinEvent {...props} />
+      <EventDescription {...props} />
     </Card>
   </div>
 );

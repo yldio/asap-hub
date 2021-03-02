@@ -1,14 +1,12 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
-import { subMinutes, addMinutes, addDays } from 'date-fns';
+import { subMinutes, addMinutes, addDays, subHours } from 'date-fns';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import JoinEvent from '../JoinEvent';
 import { silver } from '../../colors';
 
 jest.useFakeTimers('modern');
-// TODO
-/* eslint-disable jest/no-disabled-tests */
 
 it('renders a link to the meeting', () => {
   const { getByText } = render(
@@ -62,67 +60,67 @@ it('informs you when to expect a link way before the event', () => {
   expect(getByText(/link will be available/i)).toBeVisible();
 });
 
-it.skip('refreshes when the link should become available', () => {
+it('refreshes when the link should become available', () => {
   const handleRefresh = jest.fn();
   render(
     <JoinEvent
-      startDate={addMinutes(new Date(), 10_000).toISOString()}
-      endDate={addMinutes(new Date(), 10_100).toISOString()}
+      startDate={addMinutes(new Date(), 10).toISOString()}
+      endDate={addMinutes(new Date(), 11).toISOString()}
       onRefresh={handleRefresh}
     />,
   );
 
   act(() => {
-    jest.advanceTimersByTime(9_999 * 60 * 1000);
+    jest.advanceTimersByTime(5 * 60 * 1000);
   });
   expect(handleRefresh).toHaveBeenCalled();
 });
-it.skip("warns when the event should be available but isn't", () => {
+it("warns when the event should be available but isn't", () => {
   const { getByText } = render(
     <JoinEvent
-      startDate={addMinutes(new Date(), 10_000).toISOString()}
-      endDate={addMinutes(new Date(), 10_100).toISOString()}
+      startDate={addMinutes(new Date(), 10).toISOString()}
+      endDate={addMinutes(new Date(), 11).toISOString()}
     />,
   );
 
   act(() => {
-    jest.advanceTimersByTime(9_999 * 60 * 1000);
+    jest.advanceTimersByTime(5 * 60 * 1000);
   });
-  expect(getByText(/couldn't find.+link/i)).toBeVisible();
+  expect(getByText(/couldn’t find.+link/i)).toBeVisible();
 });
-it.skip('does not refresh is there is already a link', () => {
+it('does not refresh is there is already a link', () => {
   const handleRefresh = jest.fn();
   render(
     <JoinEvent
-      startDate={addMinutes(new Date(), 10_000).toISOString()}
-      endDate={addMinutes(new Date(), 10_100).toISOString()}
+      startDate={addMinutes(new Date(), 10).toISOString()}
+      endDate={addMinutes(new Date(), 11).toISOString()}
       onRefresh={handleRefresh}
       meetingLink="https://example.com/meeting"
     />,
   );
 
   act(() => {
-    jest.advanceTimersByTime(9_999 * 60 * 1000);
+    jest.advanceTimersByTime(5 * 60 * 1000);
   });
   expect(handleRefresh).not.toHaveBeenCalled();
 });
-it.skip('does not refresh way before the event', () => {
+it('does not refresh way before the event', () => {
   const handleRefresh = jest.fn();
   render(
     <JoinEvent
       startDate={addMinutes(new Date(), 10_000).toISOString()}
-      endDate={addMinutes(new Date(), 10_100).toISOString()}
+      endDate={addMinutes(new Date(), 11_000).toISOString()}
       onRefresh={handleRefresh}
     />,
   );
 
   act(() => {
-    jest.advanceTimersByTime(9_999 * 60 * 1000);
+    jest.advanceTimersByTime(5 * 60 * 1000);
   });
   expect(handleRefresh).not.toHaveBeenCalled();
 });
 
-it.skip('informs you when the event has started', () => {
+it('informs you when the event has started', () => {
   const { getByText } = render(
     <JoinEvent
       startDate={addMinutes(new Date(), 1).toISOString()}
@@ -137,17 +135,17 @@ it.skip('informs you when the event has started', () => {
   expect(getByText(/currently happening/i)).toBeVisible();
 });
 
-it.skip('renders nothing after the event has ended', () => {
+it('renders nothing after the event has ended', () => {
   const { container } = render(
     <JoinEvent
-      startDate={addMinutes(new Date(), 1).toISOString()}
-      endDate={addMinutes(new Date(), 10).toISOString()}
+      startDate={subHours(new Date(), 5).toISOString()}
+      endDate={subHours(new Date(), 4).toISOString()}
       meetingLink="https://example.com/meeting"
     />,
   );
 
   act(() => {
-    jest.advanceTimersByTime(11 * 60 * 1000);
+    jest.advanceTimersByTime(5 * 60 * 1000);
   });
-  expect(container).toHaveTextContent('');
+  expect(container).toBeEmptyDOMElement();
 });

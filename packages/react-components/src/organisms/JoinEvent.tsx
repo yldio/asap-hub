@@ -9,7 +9,7 @@ import { noop } from '../utils';
 import { Headline2, Paragraph, Anchor, Link } from '../atoms';
 import { alertIcon } from '../icons';
 import { layoutStyles } from '../text';
-import { perRem } from '../pixels';
+import { perRem, mobileScreen } from '../pixels';
 import { mailToSupport } from '../mail';
 
 const REFRESH_INTERVAL_SECONDS = 60;
@@ -112,8 +112,14 @@ const JoinEvent: React.FC<JoinEventProps> = ({
         >
           <div css={layoutStyles}>{alertIcon}</div>
           <Paragraph accent="ember">
-            We’re sorry but we couldn’t find the link to this event.
-            <br />
+            We’re sorry but we couldn’t find the link to this event.{' '}
+            <br
+              css={{
+                [`@media (max-width: ${mobileScreen.max}px)`]: {
+                  display: 'none',
+                },
+              }}
+            />
             Please{' '}
             <Anchor href={mailToSupport()}>
               <span css={{ textDecoration: 'underline' }}>contact ASAP</span>

@@ -1,6 +1,8 @@
 import React from 'react';
-import { EventsUpcoming } from '@asap-hub/react-components';
 import { useRouteMatch } from 'react-router-dom';
+import { subHours } from 'date-fns';
+import { EventsUpcoming } from '@asap-hub/react-components';
+import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
 
 import { useGroupEvents } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
@@ -16,7 +18,10 @@ const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
     params: { id },
   } = useRouteMatch<{ id: string }>();
   const { items, total } = useGroupEvents(id, {
-    after: currentTime.toISOString(),
+    after: subHours(
+      currentTime,
+      EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+    ).toISOString(),
     currentPage,
     pageSize,
   });

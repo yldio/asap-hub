@@ -1854,7 +1854,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/testing-library__jest-dom",
-        "npm:5.0.3"
+        "npm:5.9.5"
       ],
       [
         "@types/testing-library__react",
@@ -9375,7 +9375,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:17.0.0"],
             ["@types/react-dom", "npm:17.0.0"],
             ["@types/react-router-dom", "npm:5.1.5"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["auth0-js", "npm:9.13.4"],
             ["camelcase", "npm:6.0.0"],
@@ -9519,7 +9519,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:17.0.0"],
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/react-test-renderer", "npm:17.0.0"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
             ["@types/uuid", "npm:8.0.0"],
@@ -9614,7 +9614,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:17.0.0"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
             ["@types/uuid", "npm:8.0.0"],
@@ -9700,7 +9700,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:17.0.0"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
             ["@types/uuid", "npm:8.0.0"],
@@ -9781,7 +9781,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:17.0.0"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
             ["@types/uuid", "npm:8.0.0"],
@@ -9865,7 +9865,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-select", "npm:3.0.14"],
             ["@types/react-test-renderer", "npm:17.0.0"],
             ["@types/rehype-slug", "workspace:@types/rehype-slug"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
             ["@types/uuid", "npm:8.0.0"],
@@ -9920,7 +9920,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:4.0.1"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/react", "npm:17.0.0"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
             ["core-js", "npm:3.6.5"],
@@ -9949,7 +9949,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:4.0.1"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/react", "npm:17.0.0"],
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
+            ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.3.0"],
             ["core-js", "npm:3.6.5"],
@@ -20988,14 +20988,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/testing-library__jest-dom", [
-        ["npm:5.0.3", {
-          "packageLocation": "./.yarn/cache/@types-testing-library__jest-dom-npm-5.0.3-92b384b6ed-3af40a6930.zip/node_modules/@types/testing-library__jest-dom/",
-          "packageDependencies": [
-            ["@types/testing-library__jest-dom", "npm:5.0.3"],
-            ["@types/jest", "npm:26.0.3"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:5.9.5", {
           "packageLocation": "./.yarn/cache/@types-testing-library__jest-dom-npm-5.9.5-5a42b58918-32aa324a83.zip/node_modules/@types/testing-library__jest-dom/",
           "packageDependencies": [

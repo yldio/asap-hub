@@ -3,6 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import {
   createListEventResponse,
   createGroupResponse,
+  createEventResponse,
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -84,9 +85,20 @@ it('renders a list of event cards', async () => {
   `);
 });
 
-it('generates a group link', async () => {
+it('generates the event link', async () => {
   const { getByText } = await renderGroupUpcoming({
-    ...createListEventResponse(2),
+    ...createListEventResponse(1),
+    items: [{ ...createEventResponse(), id: '42', title: 'My Event' }],
+  });
+  expect(getByText('My Event').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/42$/),
+  );
+});
+
+it('generates group links', async () => {
+  const { getByText } = await renderGroupUpcoming({
+    ...createListEventResponse(1),
     items: createListEventResponse(1).items.map((item, index) => ({
       ...item,
       groups: [{ ...createGroupResponse(), name: `group ${index}`, id: '123' }],
@@ -97,16 +109,13 @@ it('generates a group link', async () => {
   );
 });
 
-it('calls the api with after parameter', async () => {
-  const currentTime = new Date(2021, 3, 2);
-  await renderGroupUpcoming(undefined, currentTime);
+it('sets after to an hour before now', async () => {
+  await renderGroupUpcoming(undefined, new Date('2020-01-01T12:00:00Z'));
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
     id,
-    {
-      after: currentTime.toISOString(),
-      currentPage: 0,
-      pageSize: 10,
-    },
-    'Bearer id_token',
+    expect.objectContaining({
+      after: new Date('2020-01-01T11:00:00Z').toISOString(),
+    }),
+    expect.anything(),
   );
 });

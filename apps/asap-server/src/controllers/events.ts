@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom';
+import Intercept from 'apr-intercept';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { GraphqlEvent, RestEvent, Event } from '@asap-hub/squidex';
 import {
@@ -12,7 +13,9 @@ import { ResponseFetchGroup, GraphQLQueryGroup } from './groups';
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;
   fetchById: (eventId: string) => Promise<EventResponse>;
-  upsert: (eventId: string, data: Event) => Promise<void>;
+  create: (event: Event) => Promise<RestEvent>;
+  fetchByGoogleId: (googleId: string) => Promise<RestEvent | null>;
+  update: (eventId: string, data: Partial<Event>) => Promise<RestEvent>;
 }
 
 export default class Events implements EventController {
@@ -119,16 +122,43 @@ export default class Events implements EventController {
     return parseGraphQLEvent(event);
   }
 
-  // This function is used by the google sync calendar script
-  // For simplicity and performancepurposes it doesnt return and EventResponse
-  async upsert(eventId: string, data: Event): Promise<void> {
-    const update = Object.entries(data).reduce((acc, [key, value]) => {
-      acc[key] = { iv: value };
-      return acc;
-    }, {} as { [key: string]: { iv: unknown } }) as RestEvent['data'];
-    await this.events.upsert(eventId, update);
+  // This functions are used by the sync google events script
+  // and return RestEvents for the sake of simplicity
+  async create(event: Event): Promise<RestEvent> {
+    return this.events.create(toEventData(event));
+  }
+
+  async update(eventId: string, event: Partial<Event>): Promise<RestEvent> {
+    return this.events.patch(eventId, toEventData(event));
+  }
+
+  async fetchByGoogleId(googleId: string): Promise<RestEvent | null> {
+    const [err, res] = await Intercept(
+      this.events.client
+        .get('events', {
+          searchParams: {
+            $top: 1,
+            $filter: `data/googleId/iv eq '${googleId}'`,
+          },
+        })
+        .json() as Promise<{ items: RestEvent[] }>,
+    );
+
+    if (err) {
+      throw err;
+    }
+
+    const [event] = res.items;
+    return event ? event : null;
   }
 }
+
+const toEventData = (data: Partial<Event>): RestEvent['data'] => {
+  return Object.entries(data).reduce((acc, [key, value]) => {
+    acc[key] = { iv: value };
+    return acc;
+  }, {} as { [key: string]: { iv: unknown } }) as RestEvent['data'];
+};
 
 export const GraphQLQueryEvent = `
 id

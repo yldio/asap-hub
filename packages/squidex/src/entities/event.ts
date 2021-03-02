@@ -5,6 +5,7 @@ import { GraphqlCalendar } from './calendar';
 type GoogleEventStatus = EventStatus;
 
 export interface Event<TCalendar = string> {
+  googleId: string;
   title: string;
   description?: string;
   startDate: string;

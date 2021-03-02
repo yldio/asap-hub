@@ -1,43 +1,36 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import {
-  createListEventResponse,
-  createGroupResponse,
-  createEventResponse,
-} from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
-import { MemoryRouter, Route } from 'react-router-dom';
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+import {
+  createListEventResponse,
+  createEventResponse,
+} from '@asap-hub/fixtures';
+import { MemoryRouter, Route } from 'react-router-dom';
 
-import Upcoming from '../Upcoming';
-import { getGroupEvents } from '../api';
-import { groupEventsState } from '../state';
-import { DEFAULT_PAGE_SIZE } from '../../../hooks';
+import { refreshCalendarsState } from '../calendar/state';
+import { getEvents } from '../api';
+import { eventsState } from '../state';
+import { DEFAULT_PAGE_SIZE } from '../../hooks';
+import Past from '../Past';
 
 jest.mock('../api');
 
-const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
-  typeof getGroupEvents
->;
-const id = '42';
-const renderGroupUpcoming = async (
-  groupEventsResponse = createListEventResponse(1),
-  currentTime = new Date(),
-) => {
-  mockGetGroupEvents.mockResolvedValue(groupEventsResponse);
+const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
+const renderEventsPastPage = async (currentTime = new Date()) => {
   const result = render(
     <RecoilRoot
       initializeState={({ set, reset }) => {
+        set(refreshCalendarsState, Math.random());
         reset(
-          groupEventsState({
+          eventsState({
             currentPage: 0,
             pageSize: DEFAULT_PAGE_SIZE,
             after: new Date().toISOString(),
-            id,
           }),
         );
       }}
@@ -45,9 +38,9 @@ const renderGroupUpcoming = async (
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[`/${id}/upcoming`]}>
-              <Route path="/:id/upcoming">
-                <Upcoming currentTime={currentTime} />
+            <MemoryRouter initialEntries={[{ pathname: '/' }]}>
+              <Route path="/">
+                <Past currentTime={currentTime} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -60,15 +53,16 @@ const renderGroupUpcoming = async (
   );
   return result;
 };
-
 it('renders a list of event cards', async () => {
-  const { getAllByRole } = await renderGroupUpcoming({
+  mockGetEvents.mockResolvedValue({
     ...createListEventResponse(2),
     items: createListEventResponse(2).items.map((item, index) => ({
       ...item,
       title: `Event title ${index}`,
     })),
   });
+
+  const { getAllByRole } = await renderEventsPastPage();
   expect(
     getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent),
   ).toEqual(['Event title 0', 'Event title 1']);
@@ -85,36 +79,29 @@ it('renders a list of event cards', async () => {
 });
 
 it('generates the event link', async () => {
-  const { getByText } = await renderGroupUpcoming({
+  mockGetEvents.mockResolvedValue({
     ...createListEventResponse(1),
     items: [{ ...createEventResponse(), id: '42', title: 'My Event' }],
   });
+  const { getByText } = await renderEventsPastPage();
   expect(getByText('My Event').closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/42$/),
   );
 });
 
-it('generates group links', async () => {
-  const { getByText } = await renderGroupUpcoming({
-    ...createListEventResponse(1),
-    items: createListEventResponse(1).items.map((item, index) => ({
-      ...item,
-      groups: [{ ...createGroupResponse(), name: `group ${index}`, id: '123' }],
-    })),
-  });
-  expect(getByText('group 0').closest('a')?.href).toEqual(
-    'http://localhost/network/groups/123',
-  );
-});
-
-it('sets after to an hour before now', async () => {
-  await renderGroupUpcoming(undefined, new Date('2020-01-01T12:00:00Z'));
-  expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-    id,
-    expect.objectContaining({
-      after: new Date('2020-01-01T11:00:00Z').toISOString(),
-    }),
+it('sets before to an hour before date provided', async () => {
+  await renderEventsPastPage(new Date('2020-01-01T12:00:00Z'));
+  expect(mockGetEvents).toHaveBeenLastCalledWith(
+    {
+      before: new Date('2020-01-01T11:00:00Z').toISOString(),
+      currentPage: 0,
+      pageSize: 10,
+      sort: {
+        sortBy: 'endDate',
+        sortOrder: 'desc',
+      },
+    },
     expect.anything(),
   );
 });

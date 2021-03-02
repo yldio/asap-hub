@@ -48,17 +48,25 @@ it('shows the last updated date', () => {
   );
 });
 
-it('renders the navigation  (REGRESSION)', () => {
+it('renders the navigation without upcoming events  (REGRESSION)', () => {
   disable('UPCOMING_EVENTS');
   const { getAllByRole } = render(<GroupProfileHeader {...props} />);
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Calendar']);
+  ).toEqual(['About', 'Calendar', 'Past Events']);
+});
+
+it('renders the navigation without past events  (REGRESSION)', () => {
+  disable('PAST_EVENTS');
+  const { getAllByRole } = render(<GroupProfileHeader {...props} />);
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['About', 'Calendar', 'Upcoming Events']);
 });
 
 it('renders the navigation', () => {
   const { getAllByRole } = render(<GroupProfileHeader {...props} />);
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Calendar', 'Upcoming Events']);
+  ).toEqual(['About', 'Calendar', 'Upcoming Events', 'Past Events']);
 });

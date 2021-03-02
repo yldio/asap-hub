@@ -23,7 +23,7 @@ const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
   typeof getGroupEvents
 >;
 const id = '42';
-const renderGroupUpcoming = async (
+const renderGroupPast = async (
   groupEventsResponse = createListEventResponse(1),
   currentTime = new Date(),
 ) => {
@@ -45,8 +45,8 @@ const renderGroupUpcoming = async (
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[`/${id}/upcoming`]}>
-              <Route path="/:id/upcoming">
+            <MemoryRouter initialEntries={[`/${id}/past`]}>
+              <Route path="/:id/past">
                 <Upcoming currentTime={currentTime} />
               </Route>
             </MemoryRouter>
@@ -62,7 +62,7 @@ const renderGroupUpcoming = async (
 };
 
 it('renders a list of event cards', async () => {
-  const { getAllByRole } = await renderGroupUpcoming({
+  const { getAllByRole } = await renderGroupPast({
     ...createListEventResponse(2),
     items: createListEventResponse(2).items.map((item, index) => ({
       ...item,
@@ -85,7 +85,7 @@ it('renders a list of event cards', async () => {
 });
 
 it('generates the event link', async () => {
-  const { getByText } = await renderGroupUpcoming({
+  const { getByText } = await renderGroupPast({
     ...createListEventResponse(1),
     items: [{ ...createEventResponse(), id: '42', title: 'My Event' }],
   });
@@ -96,7 +96,7 @@ it('generates the event link', async () => {
 });
 
 it('generates group links', async () => {
-  const { getByText } = await renderGroupUpcoming({
+  const { getByText } = await renderGroupPast({
     ...createListEventResponse(1),
     items: createListEventResponse(1).items.map((item, index) => ({
       ...item,
@@ -108,8 +108,8 @@ it('generates group links', async () => {
   );
 });
 
-it('sets after to an hour before now', async () => {
-  await renderGroupUpcoming(undefined, new Date('2020-01-01T12:00:00Z'));
+it('sets before to an hour before now', async () => {
+  await renderGroupPast(undefined, new Date('2020-01-01T12:00:00Z'));
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
     id,
     expect.objectContaining({

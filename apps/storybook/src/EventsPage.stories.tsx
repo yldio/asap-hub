@@ -9,7 +9,7 @@ export default {
 };
 
 export const Normal = () => (
-  <EventsPage calendarHref="" upcomingHref="">
+  <EventsPage calendarHref="" upcomingHref="" pastHref="">
     Page Content
   </EventsPage>
 );

@@ -12,7 +12,11 @@ export default {
 };
 
 export const Normal = () => {
-  const activeTab = select('Active Tab', ['About', 'Calendar'], 'About');
+  const activeTab = select(
+    'Active Tab',
+    ['About', 'Calendar', 'Upcoming', 'Past'],
+    'About',
+  );
   return (
     <StaticRouter key={activeTab} location={`/${activeTab}`}>
       <GroupProfilePage
@@ -22,7 +26,8 @@ export const Normal = () => {
         lastModifiedDate={new Date(date('Last update')).toISOString()}
         aboutHref="/About"
         calendarHref="/Calendar"
-        upcomingHref="/upcoming"
+        upcomingHref="/Upcoming"
+        pastHref="/Past"
       />
     </StaticRouter>
   );

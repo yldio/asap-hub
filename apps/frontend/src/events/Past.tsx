@@ -1,31 +1,31 @@
 import React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 import { subHours } from 'date-fns';
-import { EventsList } from '@asap-hub/react-components';
 import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
+import { EventsList } from '@asap-hub/react-components';
 
-import { useGroupEvents } from './state';
-import { usePaginationParams, usePagination } from '../../hooks';
-import { NETWORK_PATH, EVENTS_PATH } from '../../routes';
-import { GROUPS_PATH } from '../routes';
+import { useEvents } from './state';
+import { usePagination, usePaginationParams } from '../hooks';
+import { NETWORK_PATH, EVENTS_PATH } from '../routes';
+import { GROUPS_PATH } from '../network/routes';
 
-type UpcomingProps = {
+type PastProps = {
   readonly currentTime: Date;
 };
-const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
+const Past: React.FC<PastProps> = ({ currentTime }) => {
   const { currentPage, pageSize } = usePaginationParams();
-  const {
-    params: { id },
-  } = useRouteMatch<{ id: string }>();
-  const { items, total } = useGroupEvents(id, {
-    after: subHours(
+
+  const { items, total } = useEvents({
+    before: subHours(
       currentTime,
       EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
     ).toISOString(),
     currentPage,
     pageSize,
+    sort: {
+      sortBy: 'endDate',
+      sortOrder: 'desc',
+    },
   });
-
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
     <EventsList
@@ -45,4 +45,4 @@ const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
   );
 };
 
-export default Upcoming;
+export default Past;

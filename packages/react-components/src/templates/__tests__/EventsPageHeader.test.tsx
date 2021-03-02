@@ -7,6 +7,7 @@ import EventsPageHeader from '../EventsPageHeader';
 const props: ComponentProps<typeof EventsPageHeader> = {
   calendarHref: '',
   upcomingHref: '',
+  pastHref: '',
 };
 
 it('renders the heading', () => {

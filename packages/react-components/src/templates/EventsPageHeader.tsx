@@ -21,10 +21,12 @@ const textStyles = css({
 interface EventsPageHeaderProps {
   calendarHref: string;
   upcomingHref: string;
+  pastHref: string;
 }
 const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
   calendarHref,
   upcomingHref,
+  pastHref,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
@@ -39,6 +41,9 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
           <TabLink href={calendarHref}>Calendar</TabLink>
           {isEnabled('UPCOMING_EVENTS') && (
             <TabLink href={upcomingHref}>Upcoming Events</TabLink>
+          )}
+          {isEnabled('PAST_EVENTS') && (
+            <TabLink href={pastHref}>Past Events</TabLink>
           )}
         </TabNav>
       </div>

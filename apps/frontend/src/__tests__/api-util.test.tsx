@@ -30,4 +30,12 @@ describe('createListApiUrl', () => {
     const url = createListApiUrl('test', { filters: ['123', '456'] });
     expect(url.searchParams.getAll('filter')).toEqual(['123', '456']);
   });
+
+  it('handles requests with sort parameters', async () => {
+    const url = createListApiUrl('test', {
+      sort: { sortBy: 'name', sortOrder: 'asc' },
+    });
+    expect(url.searchParams.get('sortBy')).toEqual('name');
+    expect(url.searchParams.get('sortOrder')).toEqual('asc');
+  });
 });

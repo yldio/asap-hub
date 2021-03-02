@@ -9,21 +9,25 @@ import { usePaginationParams, usePagination } from '../../hooks';
 import { NETWORK_PATH, EVENTS_PATH } from '../../routes';
 import { GROUPS_PATH } from '../routes';
 
-type UpcomingProps = {
+type PastProps = {
   readonly currentTime: Date;
 };
-const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
+const Past: React.FC<PastProps> = ({ currentTime }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const {
     params: { id },
   } = useRouteMatch<{ id: string }>();
   const { items, total } = useGroupEvents(id, {
-    after: subHours(
+    before: subHours(
       currentTime,
       EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
     ).toISOString(),
     currentPage,
     pageSize,
+    sort: {
+      sortBy: 'endDate',
+      sortOrder: 'desc',
+    },
   });
 
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
@@ -45,4 +49,4 @@ const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
   );
 };
 
-export default Upcoming;
+export default Past;

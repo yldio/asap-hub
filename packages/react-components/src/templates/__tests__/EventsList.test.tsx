@@ -2,11 +2,11 @@ import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createEventResponse } from '@asap-hub/fixtures';
 
-import EventsUpcoming from '../EventsUpcoming';
+import EventsList from '../EventsList';
 
 const props = (
-  events: ComponentProps<typeof EventsUpcoming>['events'],
-): ComponentProps<typeof EventsUpcoming> => ({
+  events: ComponentProps<typeof EventsList>['events'],
+): ComponentProps<typeof EventsList> => ({
   events,
   numberOfItems: events.length,
   numberOfPages: 1,
@@ -16,7 +16,7 @@ const props = (
 
 it('renders multiple event cards', () => {
   const { getAllByRole } = render(
-    <EventsUpcoming
+    <EventsList
       {...props([
         {
           ...createEventResponse({}, 0),

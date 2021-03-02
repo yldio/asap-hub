@@ -13,6 +13,7 @@ const props: ComponentProps<typeof GroupProfileHeader> = {
   aboutHref: '/about',
   calendarHref: '/calendar',
   upcomingHref: '/upcoming',
+  pastHref: '/past',
 };
 
 it('renders the name as a heading', () => {

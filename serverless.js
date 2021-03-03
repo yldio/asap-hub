@@ -48,6 +48,7 @@ module.exports = {
     },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
+      DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',
       AUTH0_CLIENT_ID: `\${env:AUTH0_CLIENT_ID}`,
       AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
       NODE_ENV: `\${env:NODE_ENV}`,
@@ -183,6 +184,7 @@ module.exports = {
       },
     },
     eventsUpdated: {
+      timeout: 300,
       handler:
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-events-updated.handler',
       events: [

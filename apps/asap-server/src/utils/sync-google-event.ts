@@ -37,7 +37,7 @@ export const syncEventFactory = (
 
     if (error) {
       logger('Ignored event update, validation error:', error);
-      return Promise.reject(new Error('Invalid event body format received'));
+      return Promise.reject(error);
     }
 
     const googleEvent = value as GoogleEvent;

@@ -9,10 +9,9 @@ export type SyncCalendarFactory = (
 ) => (googleCalendarId: string) => Promise<string | undefined | null>;
 
 interface SyncEvent {
-  (
-    event: calendarV3.Schema$Event,
-    defaultCalendarTimezone: string,
-  ): Promise<unknown>;
+  (event: calendarV3.Schema$Event, defaultCalendarTimezone: string): Promise<
+    unknown
+  >;
 }
 
 export const syncCalendarFactory: SyncCalendarFactory = (

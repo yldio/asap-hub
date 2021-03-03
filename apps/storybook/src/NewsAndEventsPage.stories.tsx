@@ -4,7 +4,7 @@ import { NewsAndEventsPage } from '@asap-hub/react-components';
 import { LayoutDecorator } from './layout';
 
 export default {
-  title: 'Templates / News and Events / Page',
+  title: 'Templates / News / Page',
   decorators: [LayoutDecorator],
 };
 

@@ -4,7 +4,7 @@ import { text } from '@storybook/addon-knobs';
 import { NewsAndEventsCard } from '@asap-hub/react-components';
 
 export default {
-  title: 'Organisms / News and Events / Card',
+  title: 'Organisms / News / Card',
 };
 
 const newsProps = () => ({

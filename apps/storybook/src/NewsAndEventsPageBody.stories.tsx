@@ -2,7 +2,7 @@ import React, { ComponentProps } from 'react';
 import { NewsAndEventsPageBody } from '@asap-hub/react-components';
 
 export default {
-  title: 'Templates / News and Events / Page Body',
+  title: 'Templates / News / Page Body',
 };
 
 const props = (): ComponentProps<typeof NewsAndEventsPageBody> => ({

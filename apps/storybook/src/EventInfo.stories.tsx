@@ -4,7 +4,7 @@ import { date, number, text } from '@storybook/addon-knobs';
 import { createGroupResponse } from '@asap-hub/fixtures';
 
 export default {
-  title: 'Molecules / Event Info',
+  title: 'Molecules / Events / Info',
   component: EventInfo,
 };
 

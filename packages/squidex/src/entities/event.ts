@@ -4,7 +4,7 @@ import { GraphqlCalendar } from './calendar';
 
 type GoogleEventStatus = EventStatus;
 
-export interface Event<TCalendar = string> {
+export interface Event<TCalendar = string, TThumbnail = string> {
   title: string;
   description?: string;
   startDate: string;
@@ -13,9 +13,12 @@ export interface Event<TCalendar = string> {
   endDateTimeZone: string;
   status: GoogleEventStatus;
   meetingLink?: string;
+  thumbnail?: TThumbnail[];
   calendar: TCalendar[];
   tags: string[];
 }
 
 export interface RestEvent extends Entity, Rest<Event> {}
-export interface GraphqlEvent extends Entity, Graphql<Event<GraphqlCalendar>> {}
+export interface GraphqlEvent
+  extends Entity,
+    Graphql<Event<GraphqlCalendar, Entity>> {}

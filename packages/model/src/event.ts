@@ -20,6 +20,7 @@ export interface EventResponse {
   status: EventStatus;
   meetingLink?: string;
   lastModifiedDate: string;
+  thumbnail?: string;
   tags: string[];
 }
 

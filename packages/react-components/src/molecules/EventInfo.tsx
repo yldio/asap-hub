@@ -54,6 +54,12 @@ const eventOwnerStyles = css({
   textOverflow: 'ellipsis',
 });
 
+const imageStyle = css({
+  objectFit: 'cover',
+  width: '100%',
+  height: '100%',
+});
+
 const iconStyles = css({
   display: 'inline-grid',
   verticalAlign: 'middle',
@@ -62,7 +68,10 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
-type EventInfoProps = Pick<EventResponse, 'startDate' | 'endDate' | 'title'> & {
+type EventInfoProps = Pick<
+  EventResponse,
+  'startDate' | 'endDate' | 'title' | 'thumbnail'
+> & {
   groups: (EventResponse['groups'][0] & { href: string })[];
   href?: string;
 };
@@ -71,6 +80,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   startDate,
   endDate,
   title,
+  thumbnail,
   groups,
   href,
 }) => {
@@ -83,9 +93,15 @@ const EventInfo: React.FC<EventInfoProps> = ({
     'E, d MMM y',
   ).toUpperCase();
 
+  const imageComponent = thumbnail ? (
+    <img alt={`Thumbnail for "${title}"`} src={thumbnail} css={imageStyle} />
+  ) : (
+    eventPlaceholderIcon
+  );
+
   return (
     <div css={cardStyles}>
-      <div css={imageContainerStyle}>{eventPlaceholderIcon}</div>
+      <div css={imageContainerStyle}>{imageComponent}</div>
       <div>
         <Anchor href={href}>
           <Headline3 styleAsHeading={4}>

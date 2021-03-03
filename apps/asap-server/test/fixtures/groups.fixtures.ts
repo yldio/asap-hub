@@ -8,7 +8,7 @@ import {
 export const queryGroupsResponse: { data: ResponseFetchGroups } = {
   data: {
     queryGroupsContentsWithTotal: {
-      total: 1,
+      total: 2,
       items: [
         {
           id: 'group-id-1',
@@ -18,6 +18,13 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
             description: 'A test Group',
             name: "JT's Group",
             tags: ['coding'],
+            thumbnail: [
+              {
+                id: 'uuid-thumbnail-1',
+                created: '2020-12-11T14:33:50Z',
+                lastModified: '2020-12-11T15:06:26Z',
+              },
+            ],
             tools: [
               {
                 slack: 'https://example.com/secure-comms',
@@ -183,13 +190,43 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
             ],
           },
         },
+        {
+          id: 'group-id-2',
+          created: '2020-12-11T14:33:50Z',
+          lastModified: '2020-12-11T15:06:26Z',
+          flatData: {
+            description: 'A test Group',
+            name: "FP's Group",
+            tags: ['coding'],
+            thumbnail: [],
+            tools: [
+              {
+                slack: 'https://example.com/secure-comms',
+              },
+            ],
+            calendars: [
+              {
+                id: 'calendar-id-1',
+                created: '2020-12-11T14:33:50Z',
+                lastModified: '2020-12-11T15:06:26Z',
+                flatData: {
+                  color: '#B1365F',
+                  id: 'hub@asap.science',
+                  name: 'ASAP Hub',
+                },
+              },
+            ],
+            teams: [],
+            leaders: [],
+          },
+        },
       ],
     },
   },
 };
 
 export const queryGroupsExpectation: ListGroupResponse = {
-  total: 1,
+  total: 2,
   items: [
     {
       id: 'group-id-1',
@@ -197,6 +234,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
       lastModifiedDate: '2020-12-11T15:06:26.000Z',
       name: "JT's Group",
       tags: ['coding'],
+      thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid-thumbnail-1`,
       description: 'A test Group',
       tools: {
         slack: 'https://example.com/secure-comms',
@@ -282,6 +320,24 @@ export const queryGroupsExpectation: ListGroupResponse = {
           role: 'Project Manager',
         },
       ],
+      calendars: [
+        { id: 'hub@asap.science', color: '#B1365F', name: 'ASAP Hub' },
+      ],
+    },
+    {
+      id: 'group-id-2',
+      createdDate: '2020-12-11T14:33:50.000Z',
+      lastModifiedDate: '2020-12-11T15:06:26.000Z',
+      name: "FP's Group",
+      tags: ['coding'],
+      description: 'A test Group',
+      tools: {
+        slack: 'https://example.com/secure-comms',
+        googleCalendar:
+          'https://calendar.google.com/calendar/r?cid=calendar-id-1',
+      },
+      teams: [],
+      leaders: [],
       calendars: [
         { id: 'hub@asap.science', color: '#B1365F', name: 'ASAP Hub' },
       ],

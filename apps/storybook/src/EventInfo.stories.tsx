@@ -9,6 +9,7 @@ export default {
 };
 
 const props = (): ComponentProps<typeof EventInfo> => ({
+  thumbnail: text('Thumbnail', 'https://via.placeholder.com/150'),
   startDate: new Date(
     date('Start Date', new Date(2021, 8, 6, 18)),
   ).toISOString(),

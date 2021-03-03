@@ -28,6 +28,7 @@ export interface GroupResponse {
   leaders: GroupLeader[];
   calendars: CalendarResponse[];
   lastModifiedDate: string;
+  thumbnail?: string;
 }
 
 export type ListGroupResponse = ListResponse<GroupResponse>;

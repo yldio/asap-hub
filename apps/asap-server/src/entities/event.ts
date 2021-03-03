@@ -6,7 +6,7 @@ import {
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
 } from '@asap-hub/model';
 import { parseGraphQLCalendar } from './calendar';
-import { parseDate } from '../utils/squidex';
+import { parseDate, createURL } from '../utils/squidex';
 import { parseGraphQLGroup } from './group';
 
 export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
@@ -26,6 +26,13 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
       ? item.flatData!.meetingLink || undefined
       : undefined;
 
+  // fallback to group thumbnail
+  const thumbnail = item.flatData?.thumbnail?.length
+    ? createURL(item.flatData.thumbnail.map((t) => t.id))[0]
+    : groups.length
+    ? groups[0].thumbnail
+    : undefined;
+
   return {
     id: item.id,
     description: item.flatData?.description || '',
@@ -35,6 +42,7 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     endDateTimeZone: item.flatData!.endDateTimeZone!,
     lastModifiedDate: parseDate(item.lastModified).toISOString(),
     title: item.flatData!.title!,
+    thumbnail,
     meetingLink,
     status: item.flatData!.status!,
     tags: item.flatData!.tags!,

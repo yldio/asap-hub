@@ -4,6 +4,7 @@ import React from 'react';
 
 const eventPlaceholder = (
   <svg viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <title>Event placeholder</title>
     <path fill="#8C4E9F" d="M0 0h102v102H0z" />
     <path
       d="M24.826 76.178a1 1 0 001 1h50.356a1 1 0 001-1V32.225a1 1 0 00-1-1H25.826a1 1 0 00-1 1v43.953z"

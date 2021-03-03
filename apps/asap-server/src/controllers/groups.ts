@@ -37,6 +37,9 @@ flatData {
       name
     }
   }
+  thumbnail {
+    id
+  }
 }`;
 
 export const buildGraphQLQueryFetchGroups = (

@@ -153,6 +153,9 @@ flatData{
       ${GraphQLQueryGroup}
     }
   }
+  thumbnail {
+    id
+  }
 }`;
 
 export const buildGraphQLQueryFetchEvents = (

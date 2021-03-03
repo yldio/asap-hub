@@ -13,7 +13,8 @@ export interface GroupUserConnection<T = string> {
 export interface Group<
   TUserConnection = string,
   TTeamConnection = string,
-  TCalendar = string
+  TCalendar = string,
+  TThumbnail = string
 > {
   name: string;
   tags: string[];
@@ -25,9 +26,10 @@ export interface Group<
   teams: TTeamConnection[];
   leaders: GroupUserConnection<TUserConnection>[];
   calendars: TCalendar[];
+  thumbnail: TThumbnail[];
 }
 
 export interface RestGroup extends Entity, Rest<Group> {}
 export interface GraphqlGroup
   extends Entity,
-    Graphql<Group<GraphqlUser, GraphqlTeam, GraphqlCalendar>> {}
+    Graphql<Group<GraphqlUser, GraphqlTeam, GraphqlCalendar, Entity>> {}

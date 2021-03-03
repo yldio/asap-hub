@@ -30,7 +30,7 @@ export const parseGraphQLNewsAndEvents = (
     link: item.flatData?.link || undefined,
     linkText: item.flatData?.linkText || undefined,
     type: item.flatData?.type || 'News',
-    thumbnail: item.flatData?.thumbnail
+    thumbnail: item.flatData?.thumbnail?.length
       ? createURL(item.flatData.thumbnail.map((t) => t.id))[0]
       : undefined,
   };

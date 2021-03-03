@@ -149,16 +149,15 @@ export default class Events implements EventController {
     }
 
     const [event] = res.items;
-    return event ? event : null;
+    return event || null;
   }
 }
 
-const toEventData = (data: Partial<Event>): RestEvent['data'] => {
-  return Object.entries(data).reduce((acc, [key, value]) => {
+const toEventData = (data: Partial<Event>): RestEvent['data'] =>
+  Object.entries(data).reduce((acc, [key, value]) => {
     acc[key] = { iv: value };
     return acc;
   }, {} as { [key: string]: { iv: unknown } }) as RestEvent['data'];
-};
 
 export const GraphQLQueryEvent = `
 id

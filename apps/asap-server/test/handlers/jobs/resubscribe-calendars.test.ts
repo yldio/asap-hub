@@ -9,7 +9,10 @@ import {
   UnsubscribeFromEventChanges,
   SubscribeToEventChanges,
 } from '../../../src/handlers/webhooks/webhook-calendar-created';
-import { apiGatewayEvent } from '../../helpers/events';
+import {
+  createEventBridgeEventMock,
+  createHandlerContext,
+} from '../../helpers/events';
 
 describe('Resubscribe calendar handler', () => {
   const unsubscribeMock: jest.MockedFunction<UnsubscribeFromEventChanges> = jest.fn();
@@ -19,9 +22,13 @@ describe('Resubscribe calendar handler', () => {
     unsubscribeMock,
     subscribeMock,
   );
+  const invokeHandler = () =>
+    resubscribeCalendarsHandler(
+      createEventBridgeEventMock(),
+      createHandlerContext(),
+    );
 
   const fakeNow = 1614697798681;
-
   const realDate = Date.now.bind(Date);
 
   beforeAll(() => {
@@ -39,7 +46,7 @@ describe('Resubscribe calendar handler', () => {
   test('Should get the list of calendars expiring within 24h', async () => {
     calendarControllerMock.fetchRaw.mockResolvedValueOnce([]);
 
-    await resubscribeCalendarsHandler(apiGatewayEvent({}));
+    await invokeHandler();
 
     expect(calendarControllerMock.fetchRaw).toHaveBeenCalledWith({
       maxExpiration: fakeNow + 24 * 60 * 60 * 1000,
@@ -65,7 +72,7 @@ describe('Resubscribe calendar handler', () => {
     const expiration = 123456;
     subscribeMock.mockResolvedValue({ resourceId, expiration });
 
-    await resubscribeCalendarsHandler(apiGatewayEvent({}));
+    await invokeHandler();
 
     expect(unsubscribeMock).toHaveBeenCalledWith(
       calendarRaw1.resourceId,
@@ -103,7 +110,7 @@ describe('Resubscribe calendar handler', () => {
     const expiration = 123456;
     subscribeMock.mockResolvedValueOnce({ resourceId, expiration });
 
-    await resubscribeCalendarsHandler(apiGatewayEvent({}));
+    await invokeHandler();
 
     expect(subscribeMock).toHaveBeenCalledTimes(2);
     expect(subscribeMock).toHaveBeenCalledWith(
@@ -122,7 +129,7 @@ describe('Resubscribe calendar handler', () => {
     const expiration = 123456;
     subscribeMock.mockResolvedValueOnce({ resourceId, expiration });
 
-    await resubscribeCalendarsHandler(apiGatewayEvent({}));
+    await invokeHandler();
 
     expect(unsubscribeMock).toHaveBeenCalled();
     expect(calendarControllerMock.update).toHaveBeenCalledWith(calendarRaw.id, {
@@ -142,7 +149,7 @@ describe('Resubscribe calendar handler', () => {
     const expiration = 123456;
     subscribeMock.mockResolvedValueOnce({ resourceId, expiration });
 
-    await resubscribeCalendarsHandler(apiGatewayEvent({}));
+    await invokeHandler();
 
     expect(calendarControllerMock.update).not.toHaveBeenCalledWith(
       calendarRaw.id,
@@ -173,7 +180,7 @@ describe('Resubscribe calendar handler', () => {
     const expiration = 123456;
     subscribeMock.mockResolvedValueOnce({ resourceId, expiration });
 
-    await resubscribeCalendarsHandler(apiGatewayEvent({}));
+    await invokeHandler();
 
     expect(subscribeMock).toHaveBeenCalled();
     expect(calendarControllerMock.update).toHaveBeenCalledWith(calendarRaw.id, {
@@ -194,7 +201,7 @@ describe('Resubscribe calendar handler', () => {
     const expiration = 123456;
     subscribeMock.mockResolvedValueOnce({ resourceId, expiration });
 
-    await resubscribeCalendarsHandler(apiGatewayEvent({}));
+    await invokeHandler();
 
     expect(unsubscribeMock).not.toHaveBeenCalled();
     expect(subscribeMock).toHaveBeenCalled();

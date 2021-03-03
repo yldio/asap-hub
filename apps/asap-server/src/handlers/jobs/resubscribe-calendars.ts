@@ -8,13 +8,13 @@ import {
 } from '../webhooks/webhook-calendar-created';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
-import { ScheduledHandler } from 'aws-lambda';
+import { ScheduledHandlerAsync } from '../../utils/types';
 
 export const resubscribeCalendarsHandlerFactory = (
   calendarController: CalendarController,
   unsubscribe: UnsubscribeFromEventChanges,
   subscribe: SubscribeToEventChanges,
-): ScheduledHandler => async () => {
+): ScheduledHandlerAsync => async () => {
   const now = DateTime.local();
   const duration24h = Duration.fromObject({ day: 1 });
   const calendars = await calendarController.fetchRaw({

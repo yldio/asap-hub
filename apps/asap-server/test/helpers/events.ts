@@ -1,4 +1,9 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import {
+  APIGatewayProxyEventV2,
+  EventBridgeEvent,
+  ScheduledEvent,
+  Context,
+} from 'aws-lambda';
 import { URLSearchParams } from 'url';
 
 type RecursivePartial<T> = {
@@ -42,3 +47,30 @@ export const apiGatewayEvent = (
         : event.body,
   } as APIGatewayProxyEventV2;
 };
+
+export const createEventBridgeEventMock = (): EventBridgeEvent<
+  'Scheduled Event',
+  ScheduledEvent
+> => ({
+  id: 'some-id',
+  version: 'some-version',
+  account: 'some-account',
+  time: 'some-time',
+  region: 'eu-west-1',
+  resources: [],
+  source: 'some-source',
+  'detail-type': 'Scheduled Event',
+  detail: {} as any,
+});
+
+export const createHandlerContext = () =>
+  ({
+    callbackWaitsForEmptyEventLoop: false,
+    functionName: 'function-name',
+    functionVersion: 'function-version',
+    invokedFunctionArn: 'invoked-function-arn',
+    memoryLimitInMB: '1024MB',
+    awsRequestId: 'aws-request-id',
+    logGroupName: 'some-log-group',
+    logStreamName: 'some-log-stream',
+  } as Context);

@@ -23,6 +23,9 @@ export const resubscribeCalendarsHandlerFactory = (
     skip: 0,
   });
 
+  const calendarIds = calendars.map((calendar) => calendar.id);
+  logger(`Received the following calendars to resubscribe`, calendarIds);
+
   await Promise.allSettled(
     calendars.map(async (calendar) => {
       if (calendar.resourceId) {

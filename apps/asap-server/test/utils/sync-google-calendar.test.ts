@@ -1,5 +1,4 @@
 import { Auth } from 'googleapis';
-import { DateTime } from 'luxon';
 
 import { syncCalendarFactory } from '../../src/utils/sync-google-calendar';
 import * as fixtures from '../fixtures/google-events.fixtures';

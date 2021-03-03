@@ -37,12 +37,9 @@ const fetchEvents = async (
     pageToken: pageToken || undefined,
     calendarId: googleCalendarId,
     singleEvents: true, // recurring events come returned as single events
+    timeMin: new Date('2020-10-01').toISOString(),
+    timeMax: DateTime.utc().plus({ months: 6 }).toISO(),
   };
-
-  if (!syncToken) {
-    params.timeMin = new Date('2020-10-01').toISOString();
-    params.timeMax = DateTime.utc().plus({ months: 6 }).toISO();
-  }
 
   const calendar = google.calendar({ version: 'v3', auth });
 

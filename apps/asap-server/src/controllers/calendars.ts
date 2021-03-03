@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { RestCalendar, Calendar } from '@asap-hub/squidex';
+import { RestCalendar, Calendar, Query } from '@asap-hub/squidex';
 import { ListCalendarResponse, CalendarResponse } from '@asap-hub/model';
 
 import { InstrumentedSquidex } from '../utils/instrumented-client';
@@ -29,6 +29,42 @@ export default class Calendars implements CalendarController {
       total,
       items: calendars.map(parseCalendar),
     };
+  }
+
+  async fetchRaw(options: {
+    maxExpiration?: number;
+    take: number;
+    skip: number;
+  }): Promise<CalendarRaw[]> {
+    const { maxExpiration, take, skip } = options;
+
+    const query: Query = {
+      take,
+      skip,
+      sort: [{ path: 'data.name.iv', order: 'ascending' }],
+    };
+
+    if (maxExpiration) {
+      query.filter = {
+        path: 'data.expirationDate.iv',
+        op: 'lt',
+        value: maxExpiration,
+      };
+    }
+
+    const { items: calendars } = await this.calendars.fetch(query);
+
+    return calendars.map(
+      (restCalendar): CalendarRaw => ({
+        id: restCalendar.id,
+        googleCalendarId: restCalendar.data.id.iv,
+        color: restCalendar.data.color.iv,
+        name: restCalendar.data.name.iv,
+        expirationDate: restCalendar.data.expirationDate?.iv,
+        resourceId: restCalendar.data.resourceId?.iv,
+        syncToken: restCalendar.data.syncToken?.iv,
+      }),
+    );
   }
 
   async fetchByResouceId(resourceId: string): Promise<RestCalendar> {

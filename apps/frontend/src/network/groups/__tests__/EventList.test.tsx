@@ -7,12 +7,9 @@ import {
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  Auth0Provider,
-  WhenReady,
-} from '@asap-hub/frontend/src/auth/test-utils';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 
-import Upcoming from '../Upcoming';
+import EventList from '../EventList';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
 import { DEFAULT_PAGE_SIZE } from '../../../hooks';
@@ -23,9 +20,10 @@ const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
   typeof getGroupEvents
 >;
 const id = '42';
-const renderGroupUpcoming = async (
+const renderGroupEventList = async (
   groupEventsResponse = createListEventResponse(1),
   currentTime = new Date(),
+  past?: boolean,
 ) => {
   mockGetGroupEvents.mockResolvedValue(groupEventsResponse);
 
@@ -45,9 +43,9 @@ const renderGroupUpcoming = async (
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[`/${id}/upcoming`]}>
-              <Route path="/:id/upcoming">
-                <Upcoming currentTime={currentTime} />
+            <MemoryRouter initialEntries={[`/${id}`]}>
+              <Route path="/:id">
+                <EventList past={past} currentTime={currentTime} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -62,7 +60,7 @@ const renderGroupUpcoming = async (
 };
 
 it('renders a list of event cards', async () => {
-  const { getAllByRole } = await renderGroupUpcoming({
+  const { getAllByRole } = await renderGroupEventList({
     ...createListEventResponse(2),
     items: createListEventResponse(2).items.map((item, index) => ({
       ...item,
@@ -72,20 +70,27 @@ it('renders a list of event cards', async () => {
   expect(
     getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent),
   ).toEqual(['Event title 0', 'Event title 1']);
+});
+it('generates event links', async () => {
+  const { getAllByRole } = await renderGroupEventList({
+    ...createListEventResponse(2),
+    items: createListEventResponse(2).items.map((item, index) => ({
+      ...item,
+      id: `event-${index}`,
+    })),
+  });
   expect(
     getAllByRole('heading', { level: 3 }).map(
       (heading) => heading.closest('a')?.href,
     ),
-  ).toMatchInlineSnapshot(`
-    Array [
-      "http://localhost/events/event-0",
-      "http://localhost/events/event-1",
-    ]
-  `);
+  ).toEqual([
+    expect.stringMatching(/event-0/i),
+    expect.stringMatching(/event-1/i),
+  ]);
 });
 
 it('generates the event link', async () => {
-  const { getByText } = await renderGroupUpcoming({
+  const { getByText } = await renderGroupEventList({
     ...createListEventResponse(1),
     items: [{ ...createEventResponse(), id: '42', title: 'My Event' }],
   });
@@ -96,7 +101,7 @@ it('generates the event link', async () => {
 });
 
 it('generates group links', async () => {
-  const { getByText } = await renderGroupUpcoming({
+  const { getByText } = await renderGroupEventList({
     ...createListEventResponse(1),
     items: createListEventResponse(1).items.map((item, index) => ({
       ...item,
@@ -108,12 +113,24 @@ it('generates group links', async () => {
   );
 });
 
-it('sets after to an hour before now', async () => {
-  await renderGroupUpcoming(undefined, new Date('2020-01-01T12:00:00Z'));
+it('sets after to an hour before now for upcoming events', async () => {
+  await renderGroupEventList(undefined, new Date('2020-01-01T12:00:00Z'));
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
     id,
     expect.objectContaining({
       after: new Date('2020-01-01T11:00:00Z').toISOString(),
+    }),
+    expect.anything(),
+  );
+});
+
+it('sets before to an hour before now and sort parameters for past events', async () => {
+  await renderGroupEventList(undefined, new Date('2020-01-01T12:00:00Z'), true);
+  expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
+    id,
+    expect.objectContaining({
+      before: new Date('2020-01-01T11:00:00.000Z').toISOString(),
+      sort: { sortBy: 'endDate', sortOrder: 'desc' },
     }),
     expect.anything(),
   );

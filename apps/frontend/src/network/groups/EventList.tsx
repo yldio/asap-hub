@@ -9,19 +9,33 @@ import { usePaginationParams, usePagination } from '../../hooks';
 import { NETWORK_PATH, EVENTS_PATH } from '../../routes';
 import { GROUPS_PATH } from '../routes';
 
-type UpcomingProps = {
+type EventListProps = {
   readonly currentTime: Date;
+  readonly past?: boolean;
 };
-const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
+const EventList: React.FC<EventListProps> = ({ currentTime, past }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const {
     params: { id },
   } = useRouteMatch<{ id: string }>();
+
+  const time = subHours(
+    currentTime,
+    EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+  ).toISOString();
+
   const { items, total } = useGroupEvents(id, {
-    after: subHours(
-      currentTime,
-      EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-    ).toISOString(),
+    ...(past
+      ? {
+          before: time,
+          sort: {
+            sortBy: 'endDate',
+            sortOrder: 'desc' as const,
+          },
+        }
+      : {
+          after: time,
+        }),
     currentPage,
     pageSize,
   });
@@ -45,4 +59,4 @@ const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
   );
 };
 
-export default Upcoming;
+export default EventList;

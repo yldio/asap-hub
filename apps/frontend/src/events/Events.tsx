@@ -12,17 +12,15 @@ import {
 
 const loadCalendars = () =>
   import(/* webpackChunkName: "events-calendars" */ './calendar/Calendars');
-const loadUpcoming = () =>
-  import(/* webpackChunkName: "events-upcoming" */ './Upcoming');
-const loadPast = () => import(/* webpackChunkName: "events-past" */ './Past');
+const loadEventList = () =>
+  import(/* webpackChunkName: "events-list" */ './EventList');
 
 const Calendars = React.lazy(loadCalendars);
-const Upcoming = React.lazy(loadUpcoming);
-const Past = React.lazy(loadPast);
+const EventList = React.lazy(loadEventList);
 
 const Events: React.FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadCalendars().then(loadUpcoming).then(loadPast);
+    loadCalendars().then(loadEventList);
   }, []);
   const { path } = useRouteMatch();
   const calendarHref = `${path}/${EVENTS_CALENDAR_PATH}`;
@@ -51,7 +49,7 @@ const Events: React.FC<Record<string, never>> = () => {
           pastHref={pastHref}
         >
           <Frame>
-            <Upcoming currentTime={time} />
+            <EventList currentTime={time} />
           </Frame>
         </EventsPage>
       </Route>
@@ -62,7 +60,7 @@ const Events: React.FC<Record<string, never>> = () => {
           pastHref={pastHref}
         >
           <Frame>
-            <Past currentTime={time} />
+            <EventList past currentTime={time} />
           </Frame>
         </EventsPage>
       </Route>

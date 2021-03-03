@@ -1,4 +1,5 @@
 import { Auth } from 'googleapis';
+import { DateTime } from 'luxon';
 
 import { syncCalendarFactory } from '../../src/utils/sync-google-calendar';
 import * as fixtures from '../fixtures/google-events.fixtures';
@@ -13,6 +14,16 @@ jest.mock('googleapis', () => ({
       events: {
         list: mockList,
       },
+    }),
+  },
+}));
+
+jest.mock('luxon', () => ({
+  DateTime: {
+    utc: () => ({
+      plus: () => ({
+        toISO: () => 'six-months-from-now',
+      }),
     }),
   },
 }));
@@ -46,6 +57,15 @@ describe('Sync calendar util hook', () => {
 
     const result = await syncCalendarHandler(calendarId);
 
+    const googleParams = {
+      calendarId: 'google-calendar-id',
+      singleEvents: true,
+      timeMin: '2020-10-01T00:00:00.000Z',
+      timeMax: 'six-months-from-now',
+      pageToken: undefined,
+    };
+
+    expect(mockList).toHaveBeenCalledWith(googleParams);
     expect(syncEvent).toBeCalledTimes(2);
     expect(result).toStrictEqual('next-sync-token-1');
   });

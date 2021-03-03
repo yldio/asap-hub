@@ -1,4 +1,5 @@
 import { google, calendar_v3 as calendarV3, Auth } from 'googleapis';
+import { DateTime } from 'luxon';
 import logger from './logger';
 
 export type SyncCalendarFactory = (
@@ -8,9 +9,10 @@ export type SyncCalendarFactory = (
 ) => (googleCalendarId: string) => Promise<string | undefined | null>;
 
 interface SyncEvent {
-  (event: calendarV3.Schema$Event, defaultCalendarTimezone: string): Promise<
-    unknown
-  >;
+  (
+    event: calendarV3.Schema$Event,
+    defaultCalendarTimezone: string,
+  ): Promise<unknown>;
 }
 
 export const syncCalendarFactory: SyncCalendarFactory = (
@@ -36,6 +38,11 @@ const fetchEvents = async (
     calendarId: googleCalendarId,
     singleEvents: true, // recurring events come returned as single events
   };
+
+  if (!syncToken) {
+    params.timeMin = new Date('2020-10-01').toISOString();
+    params.timeMax = DateTime.utc().plus({ months: 6 }).toISO();
+  }
 
   const calendar = google.calendar({ version: 'v3', auth });
 

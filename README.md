@@ -33,7 +33,7 @@ For a list of individual package and particularly app scripts, look inside the r
 
 ## Editor setup
 
-Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler in this repository.
+Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler and ESLint linter in this repository. You will also need to set up your editor to run ESLint with the same CLI options that the scripts do—they are in [this file](jest-runner-eslint.config.js).
 
 ## Further documentation
 

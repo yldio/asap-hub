@@ -65,9 +65,10 @@ export const syncEventFactory = (
     logger('squidex payload', googleEvent.id, squidexEvent);
 
     try {
-      await eventsController.upsert(googleEvent.id, squidexEvent);
+      return await eventsController.upsert(googleEvent.id, squidexEvent);
     } catch (err) {
       logger('Error writting to Squidex:', err);
+      return undefined;
     }
   };
   return syncEvent;

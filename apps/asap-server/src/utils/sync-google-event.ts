@@ -9,11 +9,11 @@ export const syncEventFactory = (
   eventsController: EventController,
   calendarId: string,
 ): ((
-  event: calendarV3.Schema$Event,
+  eventPayload: calendarV3.Schema$Event,
   defaultTimezone: string,
 ) => Promise<RestEvent>) => {
   const syncEvent = async (
-    event: calendarV3.Schema$Event,
+    eventPayload: calendarV3.Schema$Event,
     defaultTimezone: string,
   ): Promise<RestEvent> => {
     const schema = Joi.object({
@@ -33,7 +33,7 @@ export const syncEventFactory = (
       }).or('date', 'dateTime'),
     }).unknown();
 
-    const { error, value } = schema.validate(event);
+    const { error, value } = schema.validate(eventPayload);
 
     if (error) {
       logger('Ignored event update, validation error:', error);

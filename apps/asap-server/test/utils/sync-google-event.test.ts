@@ -54,19 +54,25 @@ describe('Sync calendar util hook', () => {
     );
   });
 
-  test('Should throw when a remote operation throws', async () => {
-    eventControllerMock.fetchByGoogleId.mockRejectedValueOnce(
-      new Error('Squidex'),
-    );
-    await expect(syncEvent(event, defaultCalendarTimezone)).rejects.toThrow();
+  describe('Should throw when a remote operation throws', () => {
+    test('fetchByGoogleId', async () => {
+      eventControllerMock.fetchByGoogleId.mockRejectedValueOnce(
+        new Error('Squidex'),
+      );
+      await expect(syncEvent(event, defaultCalendarTimezone)).rejects.toThrow();
+    });
 
-    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(restEvent);
-    eventControllerMock.update.mockRejectedValueOnce(new Error('Squidex'));
-    await expect(syncEvent(event, defaultCalendarTimezone)).rejects.toThrow();
+    test('update', async () => {
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(restEvent);
+      eventControllerMock.update.mockRejectedValueOnce(new Error('Squidex'));
+      await expect(syncEvent(event, defaultCalendarTimezone)).rejects.toThrow();
+    });
 
-    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    eventControllerMock.create.mockRejectedValueOnce(new Error('Squidex'));
-    await expect(syncEvent(event, defaultCalendarTimezone)).rejects.toThrow();
+    test('create', async () => {
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
+      eventControllerMock.create.mockRejectedValueOnce(new Error('Squidex'));
+      await expect(syncEvent(event, defaultCalendarTimezone)).rejects.toThrow();
+    });
   });
 
   test('Should create event - with dateTime', async () => {
@@ -131,10 +137,13 @@ describe('Sync calendar util hook', () => {
       await expect(syncEvent({}, defaultCalendarTimezone)).rejects.toThrow();
     });
 
-    test('Should reject when validation fails - missing fields', async () => {
+    test('Should reject when validation fails - missing fields: id', async () => {
       await expect(
         syncEvent({ ...event, id: undefined }, defaultCalendarTimezone),
       ).rejects.toThrow();
+    });
+
+    test('Should reject when validation fails - missing fields: summary', async () => {
       await expect(
         syncEvent({ ...event, summary: undefined }, defaultCalendarTimezone),
       ).rejects.toThrow();

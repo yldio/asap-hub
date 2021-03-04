@@ -237,7 +237,7 @@ describe('Subscription', () => {
       })
       .reply(200, {
         resourceId: 'some-resource-id',
-        expiration,
+        expiration: `${expiration}`,
       });
 
     const result = await subscribeToEventChanges(

@@ -137,7 +137,7 @@ export const subscribeToEventChangesFactory = (
 
   const response = await client.request<{
     resourceId: string;
-    expiration: number;
+    expiration: string;
   }>({
     url,
     method: 'POST',
@@ -148,7 +148,7 @@ export const subscribeToEventChangesFactory = (
 
   return {
     resourceId: response.data.resourceId,
-    expiration: response.data.expiration,
+    expiration: parseInt(response.data.expiration, 10),
   };
 };
 

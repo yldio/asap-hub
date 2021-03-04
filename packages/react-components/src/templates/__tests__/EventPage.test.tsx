@@ -43,3 +43,8 @@ it('renders the join event section', () => {
   const { getAllByText } = render(<EventPage {...props} />);
   expect(getAllByText(/join/i)).not.toHaveLength(0);
 });
+
+it('renders the event notes', () => {
+  const { getByText } = render(<EventPage {...props} notes="My Notes" />);
+  expect(getByText('My Notes')).toBeVisible();
+});

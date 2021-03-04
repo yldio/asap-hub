@@ -4,7 +4,7 @@ import { date, text } from '@storybook/addon-knobs';
 import { subHours, addHours } from 'date-fns';
 
 export default {
-  title: 'Organisms / Event / Join',
+  title: 'Organisms / Events / Join',
   component: JoinEvent,
 };
 

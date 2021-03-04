@@ -9,19 +9,25 @@ export type EventStatus = 'Confirmed' | 'Tentative' | 'Cancelled';
 
 export interface EventResponse {
   id: string;
-  title: string;
+
   startDate: string;
   startDateTimeZone: string;
   endDate: string;
   endDateTimeZone: string;
+
+  title: string;
   description?: string;
-  calendar: CalendarResponse;
-  groups: GroupResponse[];
   status: EventStatus;
-  meetingLink?: string;
   lastModifiedDate: string;
   thumbnail?: string;
   tags: string[];
+
+  // These are typically added around the date when the event happens
+  meetingLink?: string;
+  notes?: string;
+
+  calendar: CalendarResponse;
+  groups: GroupResponse[];
 }
 
 export type ListEventResponse = ListResponse<EventResponse>;

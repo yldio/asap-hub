@@ -24,7 +24,8 @@ export const createEventResponse = (
   tags: [],
   title: `Event ${itemIndex}`,
   lastModifiedDate: new Date().toISOString(),
-  meetingLink: '',
+  meetingLink: 'https://example.com/meeting',
+  notes: 'Meeting notes go here',
 });
 
 export const createListEventResponse = (

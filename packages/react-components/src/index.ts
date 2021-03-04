@@ -64,6 +64,7 @@ export {
   ComingSoon,
   EmailPasswordSignin,
   EventCard,
+  EventNotes,
   GoogleCalendar,
   GroupCard,
   GroupInformation,

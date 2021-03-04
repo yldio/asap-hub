@@ -6,7 +6,7 @@ import { EventCard } from '@asap-hub/react-components';
 import { createGroupResponse, createEventResponse } from '@asap-hub/fixtures';
 
 export default {
-  title: 'Organisms / Event Card',
+  title: 'Organisms / Events / Card',
   component: EventCard,
 };
 

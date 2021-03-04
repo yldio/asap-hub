@@ -44,7 +44,8 @@ export const resubscribeCalendarsHandlerFactory = (
           calendar.googleCalendarId,
           calendar.id,
         );
-        calendarController.update(calendar.id, {
+
+        await calendarController.update(calendar.id, {
           resourceId,
           expirationDate: expiration,
         });

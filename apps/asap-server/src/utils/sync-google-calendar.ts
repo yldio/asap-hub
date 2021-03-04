@@ -1,21 +1,22 @@
 import { google, calendar_v3 as calendarV3, Auth } from 'googleapis';
+import { DateTime } from 'luxon';
 import logger from './logger';
 
 export type SyncCalendarFactory = (
   syncToken: string | undefined,
-  syncEvent: (
-    event: calendarV3.Schema$Event,
-    defaultCalendarTimezone: string,
-  ) => Promise<void>,
+  syncEvent: SyncEvent,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
 ) => (googleCalendarId: string) => Promise<string | undefined | null>;
 
+interface SyncEvent {
+  (event: calendarV3.Schema$Event, defaultCalendarTimezone: string): Promise<
+    unknown
+  >;
+}
+
 export const syncCalendarFactory: SyncCalendarFactory = (
   syncToken: string | undefined,
-  syncEvent: (
-    event: calendarV3.Schema$Event,
-    defaultCalendarTimezone: string,
-  ) => Promise<void>,
+  syncEvent: SyncEvent,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
 ) => {
   const syncCalendar = async (googleCalendarId: string) =>
@@ -27,10 +28,7 @@ export const syncCalendarFactory: SyncCalendarFactory = (
 const fetchEvents = async (
   googleCalendarId: string,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
-  syncEvent: (
-    event: calendarV3.Schema$Event,
-    defaultCalendarTimezone: string,
-  ) => Promise<void>,
+  syncEvent: SyncEvent,
   syncToken: string | undefined,
   pageToken?: string,
 ): Promise<string | undefined | null> => {
@@ -39,6 +37,11 @@ const fetchEvents = async (
     calendarId: googleCalendarId,
     singleEvents: true, // recurring events come returned as single events
   };
+
+  if (!syncToken) {
+    params.timeMin = new Date('2020-10-01').toISOString();
+    params.timeMax = DateTime.utc().plus({ months: 6 }).toISO();
+  }
 
   const calendar = google.calendar({ version: 'v3', auth });
 
@@ -54,11 +57,11 @@ const fetchEvents = async (
   if (res && typeof res === 'object') {
     const eventItems = res.data.items ?? [];
     const defaultCalendarTimezone = res.data.timeZone || 'America/New_York';
-    await Promise.allSettled(
+
+    const syncResults = await Promise.allSettled(
       eventItems.map((e) => syncEvent(e, defaultCalendarTimezone)),
-    ).catch((e) => {
-      logger('Error updating event:', e);
-    });
+    );
+    logger('Sync events results:', syncResults);
 
     if (res.data.nextPageToken) {
       // get next page

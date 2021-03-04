@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import { RestEvent, Event } from '@asap-hub/squidex';
 import { EventStatus } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { EventController } from '../controllers/events';
@@ -8,13 +9,13 @@ export const syncEventFactory = (
   eventsController: EventController,
   calendarId: string,
 ): ((
-  event: calendarV3.Schema$Event,
+  eventPayload: calendarV3.Schema$Event,
   defaultTimezone: string,
-) => Promise<void>) => {
+) => Promise<RestEvent>) => {
   const syncEvent = async (
-    event: calendarV3.Schema$Event,
+    eventPayload: calendarV3.Schema$Event,
     defaultTimezone: string,
-  ): Promise<void> => {
+  ): Promise<RestEvent> => {
     const schema = Joi.object({
       id: Joi.string().required(),
       summary: Joi.string().required(),
@@ -32,11 +33,11 @@ export const syncEventFactory = (
       }).or('date', 'dateTime'),
     }).unknown();
 
-    const { error, value } = schema.validate(event);
+    const { error, value } = schema.validate(eventPayload);
 
     if (error) {
       logger('Ignored event update, validation error:', error);
-      return Promise.resolve();
+      return Promise.reject(error);
     }
 
     const googleEvent = value as GoogleEvent;
@@ -50,7 +51,8 @@ export const syncEventFactory = (
       return new Date(eventDate.date || 0).toISOString();
     };
 
-    const squidexEvent = {
+    const squidexEvent: Omit<Event, 'tags'> = {
+      googleId: googleEvent.id,
       title: googleEvent.summary,
       description: googleEvent.description,
       startDate: getEventDate(googleEvent.start),
@@ -58,19 +60,27 @@ export const syncEventFactory = (
       endDate: getEventDate(googleEvent.end),
       endDateTimeZone: googleEvent.end.timeZone || defaultTimezone,
       status: (googleEvent.status.charAt(0).toUpperCase() +
-        googleEvent.status.slice(1)) as EventStatus,
+        googleEvent.status.slice(1)) as EventStatus, // TODO: use lowercase
       calendar: [calendarId],
-      tags: [],
     };
-    logger('squidex payload', googleEvent.id, squidexEvent);
 
     try {
-      return await eventsController.upsert(googleEvent.id, squidexEvent);
+      logger('Searching for event: ', googleEvent.id);
+      const event = await eventsController.fetchByGoogleId(googleEvent.id);
+
+      if (event) {
+        logger('Found event. Updating.', event.id, squidexEvent);
+        return await eventsController.update(event.id, squidexEvent);
+      }
+
+      logger('Event not found. Creating.', googleEvent.id, squidexEvent);
+      return await eventsController.create({ ...squidexEvent, tags: [] });
     } catch (err) {
-      logger('Error writting to Squidex:', err);
-      return undefined;
+      logger('Error syncing event:', err);
+      throw err;
     }
   };
+
   return syncEvent;
 };
 

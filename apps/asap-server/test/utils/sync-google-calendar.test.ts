@@ -41,11 +41,22 @@ describe('Sync calendar util hook', () => {
   });
 
   test('Should trigger full sync when syncToken is invalidated', async () => {
+    // Mock time to be 2023
+    jest.spyOn(global.Date, 'now').mockImplementationOnce(() => 1677926270000);
     mockList.mockRejectedValueOnce({ code: '410' });
     mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
 
     const result = await syncCalendarHandler(calendarId);
 
+    const googleParams = {
+      calendarId: 'google-calendar-id',
+      singleEvents: true,
+      timeMin: '2020-10-01T00:00:00.000Z',
+      timeMax: '2023-09-04T10:37:50.000Z',
+      pageToken: undefined,
+    };
+
+    expect(mockList).toHaveBeenCalledWith(googleParams);
     expect(syncEvent).toBeCalledTimes(2);
     expect(result).toStrictEqual('next-sync-token-1');
   });

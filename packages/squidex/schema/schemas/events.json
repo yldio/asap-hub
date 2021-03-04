@@ -206,6 +206,26 @@
           "placeholder": "",
           "isRequired": false
         }
+      },
+      {
+        "name": "googleId",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": true,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Input",
+          "inlineEditable": false,
+          "isUnique": true,
+          "contentType": "Unspecified",
+          "label": "Google Id",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
       }
     ],
     "previewUrls": {},

@@ -9,7 +9,7 @@
     },
     "scripts": {},
     "fieldsInReferences": [],
-    "fieldsInLists": [],
+    "fieldsInLists": ["title"],
     "fields": [
       {
         "name": "futureEventsData",
@@ -21,7 +21,8 @@
           "fieldType": "UI",
           "editor": "Separator",
           "label": "Future Events Data",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -34,7 +35,8 @@
           "fieldType": "Tags",
           "editor": "Tags",
           "label": "Tags",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -47,11 +49,13 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Meeting Link",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -62,6 +66,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Assets",
+          "previewMode": "ImageAndFileName",
           "maxItems": 1,
           "mustBeImage": false,
           "resolveFirst": true,
@@ -70,7 +75,8 @@
           "label": "Thumbnail",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -84,23 +90,135 @@
           "editor": "Separator",
           "label": "Meeting Materials",
           "hints": "This will only show for past events - if you add upfront it won't show",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
         "name": "notes",
-        "isHidden": false,
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "RichText",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Notes"
+        },
         "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "videoRecording",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "RichText",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Video Recording"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "presentation",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "RichText",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Presentation"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "meetingMaterials",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Array",
+          "label": "Additional Meeting Materials",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
         "isDisabled": false,
         "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "RichText",
-          "label": "Notes",
-          "isRequired": false
-        }
+        "nested": [
+          {
+            "name": "title",
+            "properties": {
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "String",
+              "editor": "Input",
+              "inlineEditable": false,
+              "isUnique": false,
+              "contentType": "Unspecified",
+              "label": "Title",
+              "hints": "",
+              "placeholder": ""
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          },
+          {
+            "name": "url",
+            "properties": {
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "String",
+              "editor": "Input",
+              "inlineEditable": false,
+              "isUnique": false,
+              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+              "contentType": "Unspecified",
+              "label": "URL"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          },
+          {
+            "name": "label",
+            "properties": {
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "String",
+              "editor": "Input",
+              "inlineEditable": false,
+              "isUnique": false,
+              "contentType": "Unspecified",
+              "label": "Label"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          }
+        ]
       },
       {
         "name": "APIdata",
@@ -113,7 +231,8 @@
           "editor": "Separator",
           "label": "API data (not changeable)",
           "hints": "if you want to edit this, go to google cal",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -126,11 +245,13 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
           "hints": "",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": true,
+          "isHalfWidth": false
         }
       },
       {
@@ -143,11 +264,13 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Description",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -162,7 +285,8 @@
           "label": "Start Date",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -175,9 +299,11 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Start Date Time Zone",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -192,7 +318,8 @@
           "label": "End Date",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -205,9 +332,11 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "End Date Time Zone",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -225,7 +354,8 @@
           "editor": "List",
           "schemaIds": ["calendars"],
           "label": "Calendar",
-          "isRequired": true
+          "isRequired": true,
+          "isHalfWidth": false
         }
       },
       {
@@ -238,11 +368,13 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Event Link",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -255,11 +387,13 @@
           "fieldType": "String",
           "isUnique": true,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Id",
           "hints": "",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": true,
+          "isHalfWidth": false
         }
       },
       {
@@ -273,89 +407,13 @@
           "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Status",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "meetingMaterials",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "label": "Additional Meeting Materials",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        },
-        "nested": [
-          {
-            "name": "title",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Title",
-              "hints": "",
-              "placeholder": "",
-              "isRequired": true
-            }
-          },
-          {
-            "name": "url",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "URL",
-              "isRequired": true
-            }
-          },
-          {
-            "name": "label",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "editor": "Input",
-              "label": "Label",
-              "isRequired": false
-            }
-          }
-        ]
-      },
-      {
-        "name": "Hidden",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "defaultValue": false,
-          "inlineEditable": false,
-          "editor": "Checkbox",
-          "label": "Hidden",
-          "hints": "Should the event be hidden in the HUB",
-          "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isHalfWidth": false
         }
       }
     ],

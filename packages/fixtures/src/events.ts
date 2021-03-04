@@ -26,6 +26,7 @@ export const createEventResponse = (
   lastModifiedDate: new Date().toISOString(),
   meetingLink: 'https://example.com/meeting',
   notes: 'Meeting notes go here',
+  meetingMaterials: [],
 });
 
 export const createListEventResponse = (

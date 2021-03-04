@@ -150,6 +150,7 @@ describe('/groups/ route', () => {
             groups: [],
             meetingLink: 'https://sample.event.link/123456',
             lastModifiedDate: '2020-12-11T14:33:50Z',
+            meetingMaterials: [],
           },
         ],
       };

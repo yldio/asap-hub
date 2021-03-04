@@ -23,8 +23,17 @@ export interface EventResponse {
   tags: string[];
 
   // These are typically added around the date when the event happens
+  notes?: string | null;
+  videoRecording?: string | null;
+  presentation?: string | null;
+  meetingMaterials:
+    | {
+        title: string;
+        url: string;
+        label?: string;
+      }[]
+    | null;
   meetingLink?: string;
-  notes?: string;
 
   calendar: CalendarResponse;
   groups: GroupResponse[];

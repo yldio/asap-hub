@@ -71,23 +71,6 @@ it('renders a list of event cards', async () => {
     getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent),
   ).toEqual(['Event title 0', 'Event title 1']);
 });
-it('generates event links', async () => {
-  const { getAllByRole } = await renderGroupEventList({
-    ...createListEventResponse(2),
-    items: createListEventResponse(2).items.map((item, index) => ({
-      ...item,
-      id: `event-${index}`,
-    })),
-  });
-  expect(
-    getAllByRole('heading', { level: 3 }).map(
-      (heading) => heading.closest('a')?.href,
-    ),
-  ).toEqual([
-    expect.stringMatching(/event-0/i),
-    expect.stringMatching(/event-1/i),
-  ]);
-});
 
 it('generates the event link', async () => {
   const { getByText } = await renderGroupEventList({
@@ -103,13 +86,16 @@ it('generates the event link', async () => {
 it('generates group links', async () => {
   const { getByText } = await renderGroupEventList({
     ...createListEventResponse(1),
-    items: createListEventResponse(1).items.map((item, index) => ({
-      ...item,
-      groups: [{ ...createGroupResponse(), name: `group ${index}`, id: '123' }],
-    })),
+    items: [
+      {
+        ...createEventResponse(),
+        groups: [{ ...createGroupResponse(), id: 'g0', name: 'My Group' }],
+      },
+    ],
   });
-  expect(getByText('group 0').closest('a')?.href).toEqual(
-    'http://localhost/network/groups/123',
+  expect(getByText('My Group').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/g0/),
   );
 });
 

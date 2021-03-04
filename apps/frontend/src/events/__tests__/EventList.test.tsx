@@ -4,6 +4,7 @@ import { RecoilRoot } from 'recoil';
 import {
   createListEventResponse,
   createEventResponse,
+  createGroupResponse,
 } from '@asap-hub/fixtures';
 import { MemoryRouter, Route } from 'react-router-dom';
 
@@ -53,6 +54,7 @@ const renderEventsListPage = async (
   );
   return result;
 };
+
 it('renders a list of event cards', async () => {
   mockGetEvents.mockResolvedValue({
     ...createListEventResponse(2),
@@ -68,25 +70,6 @@ it('renders a list of event cards', async () => {
   ).toEqual(['Event title 0', 'Event title 1']);
 });
 
-it('generates event links', async () => {
-  mockGetEvents.mockResolvedValue({
-    ...createListEventResponse(2),
-    items: createListEventResponse(2).items.map((item, index) => ({
-      ...item,
-      id: `event-${index}`,
-    })),
-  });
-  const { getAllByRole } = await renderEventsListPage();
-  expect(
-    getAllByRole('heading', { level: 3 }).map(
-      (heading) => heading.closest('a')?.href,
-    ),
-  ).toEqual([
-    expect.stringMatching(/event-0/i),
-    expect.stringMatching(/event-1/i),
-  ]);
-});
-
 it('generates the event link', async () => {
   mockGetEvents.mockResolvedValue({
     ...createListEventResponse(1),
@@ -96,6 +79,23 @@ it('generates the event link', async () => {
   expect(getByText('My Event').closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/42$/),
+  );
+});
+
+it('generates group links', async () => {
+  mockGetEvents.mockResolvedValue({
+    ...createListEventResponse(1),
+    items: [
+      {
+        ...createEventResponse(),
+        groups: [{ ...createGroupResponse(), id: 'g0', name: 'My Group' }],
+      },
+    ],
+  });
+  const { getByText } = await renderEventsListPage();
+  expect(getByText('My Group').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/g0/),
   );
 });
 

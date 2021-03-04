@@ -12,173 +12,63 @@
     "fieldsInLists": ["title"],
     "fields": [
       {
-        "name": "title",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
+        "name": "futureEventsData",
         "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Title",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": true
-        }
-      },
-      {
-        "name": "description",
-        "isHidden": false,
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "Future Events Data"
+        },
         "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Description",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "startDate",
         "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "DateTime",
-          "editor": "DateTime",
-          "label": "Start Date",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "startDateTimeZone",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Start Date Time Zone",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "endDate",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "DateTime",
-          "editor": "DateTime",
-          "label": "End Date",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "endDateTimeZone",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "End Date Time Zone",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "calendar",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "minItems": 1,
-          "maxItems": 1,
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "editor": "List",
-          "schemaIds": ["calendars"],
-          "label": "Calendar",
-          "isRequired": true
-        }
-      },
-      {
-        "name": "eventLink",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Input",
-          "label": "Google Event Link",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
-      },
-      {
-        "name": "status",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
-          "isUnique": false,
-          "inlineEditable": false,
-          "editor": "Dropdown",
-          "label": "Status",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "tags",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
           "fieldType": "Tags",
           "editor": "Tags",
-          "label": "Tags",
-          "isRequired": false
-        }
+          "label": "Tags"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "meetingLink",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Input",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Meeting Link",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "thumbnail",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
           "fieldType": "Assets",
+          "previewMode": "ImageAndFileName",
           "maxItems": 1,
           "mustBeImage": false,
           "resolveFirst": true,
@@ -186,26 +76,179 @@
           "allowDuplicates": false,
           "label": "Thumbnail",
           "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
-        "name": "meetingLink",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
+        "name": "apiData",
         "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "API data (not changeable)",
+          "hints": "if you want to edit this, go to google cal"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "title",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
           "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
           "editor": "Input",
-          "label": "Meeting Link",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Title",
           "hints": "",
-          "placeholder": "",
-          "isRequired": false
-        }
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "description",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Input",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Description",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "startDate",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Start Date",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "startDateTimeZone",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Input",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Start Date Time Zone"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "endDate",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "End Date",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "endDateTimeZone",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Input",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "End Date Time Zone"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "calendar",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "References",
+          "editor": "List",
+          "minItems": 1,
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "schemaIds": ["92d15359-5c27-47e7-8e05-6e85eee8455c"],
+          "label": "Calendar"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "eventLink",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Input",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Google Event Link",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
       },
       {
         "name": "googleId",
@@ -219,6 +262,27 @@
           "isUnique": true,
           "contentType": "Unspecified",
           "label": "Google Id",
+          "hints": "",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": true,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "status",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Dropdown",
+          "inlineEditable": false,
+          "isUnique": false,
+          "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
+          "contentType": "Unspecified",
+          "label": "Status",
           "hints": "",
           "placeholder": ""
         },

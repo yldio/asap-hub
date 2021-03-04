@@ -33,6 +33,13 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     ? groups[0].thumbnail
     : undefined;
 
+  const meetingMaterials =
+    item.flatData?.meetingMaterials?.map(({ title, url, label }) => ({
+      title,
+      url,
+      label: label ?? undefined,
+    })) || [];
+
   return {
     id: item.id,
     description: item.flatData?.description || '',
@@ -42,6 +49,10 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     endDateTimeZone: item.flatData!.endDateTimeZone!,
     lastModifiedDate: parseDate(item.lastModified).toISOString(),
     title: item.flatData!.title!,
+    notes: item.flatData!.notes ?? undefined,
+    videoRecording: item.flatData!.videoRecording ?? undefined,
+    presentation: item.flatData!.presentation ?? undefined,
+    meetingMaterials,
     thumbnail,
     meetingLink,
     status: item.flatData!.status!,

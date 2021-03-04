@@ -13,6 +13,14 @@ export interface Event<TCalendar = string, TThumbnail = string> {
   endDate: string;
   endDateTimeZone: string;
   status: GoogleEventStatus;
+  notes?: string;
+  videoRecording?: string;
+  presentation?: string;
+  meetingMaterials?: {
+    title: string;
+    url: string;
+    label?: string;
+  }[];
   meetingLink?: string;
   thumbnail?: TThumbnail[];
   calendar: TCalendar[];

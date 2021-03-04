@@ -6,6 +6,7 @@ import EventsPage from '../EventsPage';
 const props: ComponentProps<typeof EventsPage> = {
   calendarHref: '',
   upcomingHref: '',
+  pastHref: '',
 };
 
 it('renders the header', () => {

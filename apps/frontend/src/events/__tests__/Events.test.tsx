@@ -20,7 +20,6 @@ import { EVENTS_PATH } from '../../routes';
 import { eventsState } from '../state';
 import { DEFAULT_PAGE_SIZE } from '../../hooks';
 
-jest.useFakeTimers('modern');
 jest.mock('../calendar/api');
 jest.mock('../api');
 

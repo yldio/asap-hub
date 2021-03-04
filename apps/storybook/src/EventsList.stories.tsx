@@ -1,13 +1,13 @@
 import React, { ComponentProps } from 'react';
-import { EventsUpcoming } from '@asap-hub/react-components';
+import { EventsList } from '@asap-hub/react-components';
 import { createEventResponse } from '@asap-hub/fixtures';
 import { number } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Templates / Events / Upcoming',
+  title: 'Templates / Events / List',
 };
 
-const props = (): ComponentProps<typeof EventsUpcoming> => {
+const props = (): ComponentProps<typeof EventsList> => {
   const numberOfItems = number('Number of Events', 16, { min: 0, max: 16 });
   const currentPageIndex = number('Current Page', 1, { min: 1, max: 2 }) - 1;
 
@@ -34,4 +34,4 @@ const props = (): ComponentProps<typeof EventsUpcoming> => {
   };
 };
 
-export const Normal = () => <EventsUpcoming {...props()} />;
+export const Normal = () => <EventsList {...props()} />;

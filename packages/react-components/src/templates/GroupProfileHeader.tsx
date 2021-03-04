@@ -33,6 +33,7 @@ interface GroupProfileHeaderProps {
   aboutHref: string;
   calendarHref: string;
   upcomingHref: string;
+  pastHref: string;
 }
 const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   name,
@@ -42,6 +43,7 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
   aboutHref,
   calendarHref,
   upcomingHref,
+  pastHref,
 }) => (
   <header css={containerStyles}>
     <Display styleAsHeading={2}>{name}</Display>
@@ -82,6 +84,9 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
       <TabLink href={calendarHref}>Calendar</TabLink>
       {isEnabled('UPCOMING_EVENTS') && (
         <TabLink href={upcomingHref}>Upcoming Events</TabLink>
+      )}
+      {isEnabled('PAST_EVENTS') && (
+        <TabLink href={pastHref}>Past Events</TabLink>
       )}
     </TabNav>
   </header>

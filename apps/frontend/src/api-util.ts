@@ -5,6 +5,10 @@ export type GetListOptions = {
   filters?: string[];
   currentPage?: number | null;
   pageSize?: number | null;
+  sort?: {
+    sortBy: string; // column name ie startDate or endDate
+    sortOrder: 'asc' | 'desc';
+  };
 };
 
 export const createListApiUrl = (
@@ -14,6 +18,7 @@ export const createListApiUrl = (
     filters = [],
     currentPage = 0,
     pageSize = 10,
+    sort,
   }: GetListOptions = {},
 ): URL => {
   const url = new URL(endpoint, `${API_BASE_URL}/`);
@@ -24,6 +29,11 @@ export const createListApiUrl = (
       url.searchParams.set('skip', String(currentPage * pageSize));
     }
   }
+  if (sort) {
+    url.searchParams.set('sortBy', sort.sortBy);
+    url.searchParams.set('sortOrder', sort.sortOrder);
+  }
   filters.forEach((filter) => url.searchParams.append('filter', filter));
+
   return url;
 };

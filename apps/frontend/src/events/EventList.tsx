@@ -1,30 +1,42 @@
 import React from 'react';
 import { subHours } from 'date-fns';
 import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
-import { EventsUpcoming } from '@asap-hub/react-components';
+import { EventsList } from '@asap-hub/react-components';
 
 import { useEvents } from './state';
 import { usePagination, usePaginationParams } from '../hooks';
 import { NETWORK_PATH, EVENTS_PATH } from '../routes';
 import { GROUPS_PATH } from '../network/routes';
 
-type UpcomingProps = {
+type EventListProps = {
   readonly currentTime: Date;
+  readonly past?: boolean;
 };
-const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
+const EventList: React.FC<EventListProps> = ({ currentTime, past }) => {
   const { currentPage, pageSize } = usePaginationParams();
+  const time = subHours(
+    currentTime,
+    EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+  ).toISOString();
 
   const { items, total } = useEvents({
-    after: subHours(
-      currentTime,
-      EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-    ).toISOString(),
+    ...(past
+      ? {
+          before: time,
+          sort: {
+            sortBy: 'endDate',
+            sortOrder: 'desc' as const,
+          },
+        }
+      : {
+          after: time,
+        }),
     currentPage,
     pageSize,
   });
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
-    <EventsUpcoming
+    <EventsList
       currentPageIndex={currentPage}
       numberOfItems={total}
       renderPageHref={renderPageHref}
@@ -41,5 +53,4 @@ const Upcoming: React.FC<UpcomingProps> = ({ currentTime }) => {
   );
 };
 
-// TODO test
-export default Upcoming;
+export default EventList;

@@ -10,10 +10,7 @@ const containerStyles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-type EventsUpcomingProps = Omit<
-  ComponentProps<typeof ResultList>,
-  'children'
-> & {
+type EventsListProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
   events: Array<
     Omit<EventResponse, 'groups'> & {
       href: string;
@@ -22,10 +19,7 @@ type EventsUpcomingProps = Omit<
   >;
 };
 
-const EventsUpcomingPage: React.FC<EventsUpcomingProps> = ({
-  events,
-  ...props
-}) => (
+const EventsListPage: React.FC<EventsListProps> = ({ events, ...props }) => (
   <div css={containerStyles}>
     <ResultList {...props}>
       {events.map(({ id, ...event }) => (
@@ -36,4 +30,4 @@ const EventsUpcomingPage: React.FC<EventsUpcomingProps> = ({
     </ResultList>
   </div>
 );
-export default EventsUpcomingPage;
+export default EventsListPage;

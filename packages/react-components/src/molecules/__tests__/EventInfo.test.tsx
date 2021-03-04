@@ -29,6 +29,14 @@ it('truncates long event titles', () => {
   expect(getByRole('heading', { level: 3 }).textContent).toMatch(/…$/i);
 });
 
+it('does not truncate long event titles when limit is null', () => {
+  const { getByRole } = render(
+    <EventInfo {...props} titleLimit={null} title={'blablablha'.repeat(100)} />,
+  );
+
+  expect(getByRole('heading', { level: 3 }).textContent).not.toMatch(/…$/i);
+});
+
 it('renders event thumbnail', () => {
   const { getByAltText } = render(
     <EventInfo

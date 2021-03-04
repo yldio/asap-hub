@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { EventStatus } from '@asap-hub/model';
 
-import { array, select } from '@storybook/addon-knobs';
+import { array, select, text } from '@storybook/addon-knobs';
 import { EventCard } from '@asap-hub/react-components';
 import { createGroupResponse, createEventResponse } from '@asap-hub/fixtures';
 
@@ -12,6 +12,7 @@ export default {
 
 const props = (): ComponentProps<typeof EventCard> => ({
   ...createEventResponse(),
+  title: text('Event Name', 'Example Event'),
   groups: createEventResponse().groups.map((_, index) => ({
     ...createGroupResponse({}, index),
     href: '#',

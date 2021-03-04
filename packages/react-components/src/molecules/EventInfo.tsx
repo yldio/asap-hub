@@ -27,7 +27,6 @@ const imageContainerStyle = css({
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
-  alignItems: 'center',
 });
 
 const dateStyles = css({
@@ -74,6 +73,7 @@ type EventInfoProps = Pick<
 > & {
   groups: (EventResponse['groups'][0] & { href: string })[];
   href?: string;
+  titleLimit?: number | null;
 };
 
 const EventInfo: React.FC<EventInfoProps> = ({
@@ -83,6 +83,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   thumbnail,
   groups,
   href,
+  titleLimit = TITLE_LIMIT,
 }) => {
   const formattedStartDay = formatDateToLocalTimezone(
     startDate,
@@ -105,8 +106,8 @@ const EventInfo: React.FC<EventInfoProps> = ({
       <div>
         <Anchor href={href}>
           <Headline3 styleAsHeading={4}>
-            {title.substr(0, TITLE_LIMIT)}
-            {title.length > TITLE_LIMIT ? '…' : undefined}
+            {title.substr(0, titleLimit ?? undefined)}
+            {titleLimit && title.length > titleLimit ? '…' : undefined}
           </Headline3>
         </Anchor>
         <div css={dateStyles}>

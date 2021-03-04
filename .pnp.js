@@ -43,6 +43,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:@types/hapi__bourne"
       },
       {
+        "name": "@types/hast-util-sanitize",
+        "reference": "workspace:@types/hast-util-sanitize"
+      },
+      {
         "name": "@types/jwt-encode",
         "reference": "workspace:@types/jwt-encode"
       },
@@ -159,6 +163,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@types/asap-hub__auth0-rule", ["workspace:@types/asap-hub__auth0-rule"]],
       ["@types/asap-hub__inline-environment", ["workspace:@types/asap-hub__inline-environment"]],
       ["@types/hapi__bourne", ["workspace:@types/hapi__bourne"]],
+      ["@types/hast-util-sanitize", ["workspace:@types/hast-util-sanitize"]],
       ["@types/jwt-encode", ["workspace:@types/jwt-encode"]],
       ["@types/rehype-slug", ["workspace:@types/rehype-slug"]],
       ["asap-hub", ["workspace:."]]
@@ -1541,6 +1546,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.3.1"
       ],
       [
+        "@types/hast-util-sanitize",
+        "workspace:@types/hast-util-sanitize"
+      ],
+      [
         "@types/history",
         "npm:4.7.6"
       ],
@@ -2063,6 +2072,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@yarnpkg/shell",
         "npm:2.3.0"
+      ],
+      [
+        "_original",
+        [
+          "hast-util-sanitize",
+          "npm:3.0.2"
+        ]
       ],
       [
         "abab",
@@ -4789,8 +4805,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.4"
       ],
       [
-        "hast-util-is-element",
-        "npm:1.1.0"
+        "hast-util-heading-rank",
+        "npm:1.0.1"
       ],
       [
         "hast-util-parse-selector",
@@ -4798,7 +4814,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "hast-util-sanitize",
-        "npm:3.0.0"
+        "npm:3.0.2"
       ],
       [
         "hast-util-to-string",
@@ -7518,7 +7534,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "rehype-react",
-        "npm:6.1.0"
+        "npm:6.2.0"
       ],
       [
         "rehype-sanitize",
@@ -7526,7 +7542,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "rehype-slug",
-        "npm:3.0.0"
+        "npm:4.0.1"
       ],
       [
         "rehype-toc",
@@ -9604,6 +9620,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:12.6.0"],
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],
             ["@types/asap-hub__react-context", null],
+            ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/ramda", "npm:0.27.20"],
@@ -9626,6 +9643,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "virtual:33da6a9a07614d64f3452adc5be9cb9a4d7530008c92b33c0aab0ab8664476c7bb7988b5b2e809058bfbcf2719076fa4d90a890457b565afb5e2d9a28de2f4ba#npm:0.3.0"],
             ["fast-check", "npm:2.5.0"],
             ["fast-deep-equal", "npm:3.1.3"],
+            ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "npm:1.4.4"],
@@ -9640,9 +9658,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.1"],
             ["regenerator-runtime", "npm:0.13.7"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.1.0"],
+            ["rehype-react", "npm:6.2.0"],
             ["rehype-sanitize", "npm:4.0.0"],
-            ["rehype-slug", "npm:3.0.0"],
+            ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
@@ -9690,6 +9708,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:12.6.0"],
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],
             ["@types/asap-hub__react-context", null],
+            ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/ramda", "npm:0.27.20"],
@@ -9712,6 +9731,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "virtual:33da6a9a07614d64f3452adc5be9cb9a4d7530008c92b33c0aab0ab8664476c7bb7988b5b2e809058bfbcf2719076fa4d90a890457b565afb5e2d9a28de2f4ba#npm:0.3.0"],
             ["fast-check", "npm:2.5.0"],
             ["fast-deep-equal", "npm:3.1.3"],
+            ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "npm:1.4.4"],
@@ -9726,9 +9746,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.1"],
             ["regenerator-runtime", "npm:0.13.7"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.1.0"],
+            ["rehype-react", "npm:6.2.0"],
             ["rehype-sanitize", "npm:4.0.0"],
-            ["rehype-slug", "npm:3.0.0"],
+            ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
@@ -9771,6 +9791,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:12.6.0"],
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],
             ["@types/asap-hub__react-context", null],
+            ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/ramda", "npm:0.27.20"],
@@ -9793,6 +9814,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "virtual:33da6a9a07614d64f3452adc5be9cb9a4d7530008c92b33c0aab0ab8664476c7bb7988b5b2e809058bfbcf2719076fa4d90a890457b565afb5e2d9a28de2f4ba#npm:0.3.0"],
             ["fast-check", "npm:2.5.0"],
             ["fast-deep-equal", "npm:3.1.3"],
+            ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "npm:1.4.4"],
@@ -9807,9 +9829,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.1"],
             ["regenerator-runtime", "npm:0.13.7"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.1.0"],
+            ["rehype-react", "npm:6.2.0"],
             ["rehype-sanitize", "npm:4.0.0"],
-            ["rehype-slug", "npm:3.0.0"],
+            ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
@@ -9855,6 +9877,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/react-hooks", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:4.0.1"],
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:12.6.0"],
             ["@types/asap-hub__assets", "workspace:@types/asap-hub__assets"],
+            ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/ramda", "npm:0.27.20"],
@@ -9877,6 +9900,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["expect-playwright", "virtual:33da6a9a07614d64f3452adc5be9cb9a4d7530008c92b33c0aab0ab8664476c7bb7988b5b2e809058bfbcf2719076fa4d90a890457b565afb5e2d9a28de2f4ba#npm:0.3.0"],
             ["fast-check", "npm:2.5.0"],
             ["fast-deep-equal", "npm:3.1.3"],
+            ["hast-util-sanitize", "npm:3.0.2"],
             ["history", "npm:4.10.1"],
             ["jest-playwright-jsdom", "npm:0.0.4"],
             ["jest-playwright-preset", "npm:1.4.4"],
@@ -9891,9 +9915,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.1"],
             ["regenerator-runtime", "npm:0.13.7"],
             ["rehype-parse", "npm:7.0.1"],
-            ["rehype-react", "npm:6.1.0"],
+            ["rehype-react", "npm:6.2.0"],
             ["rehype-sanitize", "npm:4.0.0"],
-            ["rehype-slug", "npm:3.0.0"],
+            ["rehype-slug", "npm:4.0.1"],
             ["rehype-toc", "npm:3.0.2"],
             ["serialize-error", "npm:7.0.1"],
             ["unified", "npm:9.2.0"],
@@ -20147,6 +20171,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/unist", "npm:2.0.3"]
           ],
           "linkType": "HARD",
+        }]
+      ]],
+      ["@types/hast-util-sanitize", [
+        ["workspace:@types/hast-util-sanitize", {
+          "packageLocation": "./@types/hast-util-sanitize/",
+          "packageDependencies": [
+            ["@types/hast-util-sanitize", "workspace:@types/hast-util-sanitize"],
+            ["_original", [
+              "hast-util-sanitize",
+              "npm:3.0.2"
+            ]]
+          ],
+          "linkType": "SOFT",
         }]
       ]],
       ["@types/history", [
@@ -32356,11 +32393,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["hast-util-is-element", [
-        ["npm:1.1.0", {
-          "packageLocation": "./.yarn/cache/hast-util-is-element-npm-1.1.0-be10e62fa7-fb8241c9a0.zip/node_modules/hast-util-is-element/",
+      ["hast-util-heading-rank", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/hast-util-heading-rank-npm-1.0.1-704b5c299d-41313004fe.zip/node_modules/hast-util-heading-rank/",
           "packageDependencies": [
-            ["hast-util-is-element", "npm:1.1.0"]
+            ["hast-util-heading-rank", "npm:1.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -32379,6 +32416,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/hast-util-sanitize-npm-3.0.0-965702b39e-80ac5a73d5.zip/node_modules/hast-util-sanitize/",
           "packageDependencies": [
             ["hast-util-sanitize", "npm:3.0.0"],
+            ["xtend", "npm:4.0.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.0.2", {
+          "packageLocation": "./.yarn/cache/hast-util-sanitize-npm-3.0.2-33fdc075da-4189e9b1b1.zip/node_modules/hast-util-sanitize/",
+          "packageDependencies": [
+            ["hast-util-sanitize", "npm:3.0.2"],
             ["xtend", "npm:4.0.2"]
           ],
           "linkType": "HARD",
@@ -42808,10 +42853,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["rehype-react", [
-        ["npm:6.1.0", {
-          "packageLocation": "./.yarn/cache/rehype-react-npm-6.1.0-5621e9edec-bf8f737463.zip/node_modules/rehype-react/",
+        ["npm:6.2.0", {
+          "packageLocation": "./.yarn/cache/rehype-react-npm-6.2.0-0dfcb9e949-503786c07d.zip/node_modules/rehype-react/",
           "packageDependencies": [
-            ["rehype-react", "npm:6.1.0"],
+            ["rehype-react", "npm:6.2.0"],
             ["@mapbox/hast-util-table-cell-style", "npm:0.1.3"],
             ["hast-to-hyperscript", "npm:9.0.0"]
           ],
@@ -42829,13 +42874,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["rehype-slug", [
-        ["npm:3.0.0", {
-          "packageLocation": "./.yarn/cache/rehype-slug-npm-3.0.0-c21ff61123-f30bb097c3.zip/node_modules/rehype-slug/",
+        ["npm:4.0.1", {
+          "packageLocation": "./.yarn/cache/rehype-slug-npm-4.0.1-6e567702bd-8059de7826.zip/node_modules/rehype-slug/",
           "packageDependencies": [
-            ["rehype-slug", "npm:3.0.0"],
+            ["rehype-slug", "npm:4.0.1"],
             ["github-slugger", "npm:1.3.0"],
             ["hast-util-has-property", "npm:1.0.4"],
-            ["hast-util-is-element", "npm:1.1.0"],
+            ["hast-util-heading-rank", "npm:1.0.1"],
             ["hast-util-to-string", "npm:1.0.4"],
             ["unist-util-visit", "npm:2.0.3"]
           ],

@@ -12,6 +12,7 @@ import rehypeSanitize from 'rehype-sanitize';
 import rehypeSlug from 'rehype-slug';
 import rehypeToc from 'rehype-toc';
 import rehypeReact, { ComponentLike } from 'rehype-react';
+import githubSanitizationSchema from 'hast-util-sanitize/lib/github';
 
 import { Paragraph, Headline4, Headline5, Headline6, Link } from '../atoms';
 import { isTextChildren, isAllowedChildren } from '../text';
@@ -101,7 +102,6 @@ const components = {
 
 interface RichTextProps {
   readonly toc?: boolean;
-  readonly sanitize?: boolean;
   readonly text: string;
 }
 
@@ -115,16 +115,41 @@ const styles = css`
   }
 `;
 
-const RichText: React.FC<RichTextProps> = ({
-  sanitize = true,
-  toc = false,
-  text,
-}) => {
+const RichText: React.FC<RichTextProps> = ({ toc = false, text }) => {
   let processor = unified().use(rehypeHtml, { fragment: true });
 
-  if (sanitize) {
-    processor = processor.use(rehypeSanitize);
-  }
+  processor = processor.use(rehypeSanitize, {
+    tagNames: [
+      ...Object.keys(components),
+      // text modifiers with default UA styling
+      'strong',
+      'em',
+      'sub',
+      'sup',
+      'i',
+      'b',
+      // lists with default UA styling
+      'ul',
+      'ol',
+      'li',
+      // media
+      'img',
+      'iframe',
+      // rehype-toc
+      'nav',
+    ],
+    attributes: {
+      ...githubSanitizationSchema.attributes,
+      iframe: [
+        'src',
+        'title',
+        'width',
+        'height',
+        'frameborder',
+        'allowfullscreen',
+      ],
+    },
+  });
 
   if (toc) {
     processor = processor.use(rehypeSlug).use(rehypeToc);

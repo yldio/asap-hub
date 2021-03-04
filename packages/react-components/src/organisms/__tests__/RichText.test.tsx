@@ -9,22 +9,10 @@ it('renders <p> as a paragraph', () => {
 });
 
 it('renders <iframe>', () => {
-  const { getByTestId } = render(
-    <RichText
-      sanitize={false}
-      text={'<iframe title="iframe" data-testid="embed"/>'}
-    />,
+  const { getByTitle } = render(
+    <RichText text={'<iframe title="Some Frame" />'} />,
   );
-
-  expect(getByTestId('embed')).toBeInTheDocument();
-});
-
-it('sanitize <iframe>', () => {
-  const { queryByTestId } = render(
-    <RichText text={'<iframe title="iframe" data-testid="embed"/>'} />,
-  );
-
-  expect(queryByTestId('embed')).not.toBeInTheDocument();
+  expect(getByTitle('Some Frame')).toBeInTheDocument();
 });
 
 it('renders <a> as a link', () => {
@@ -40,7 +28,7 @@ it('displays error when <a> without an href', () => {
   expect(container.textContent).toContain('"anchor" is missing href');
 });
 
-it('Displays error when styling applied within <a>', () => {
+it('displays error when styling applied within <a>', () => {
   const { container } = render(
     <RichText
       text={'<a href="https://localhost/"><strong>anchor</strong></a>'}
@@ -82,10 +70,8 @@ it.each([1, 2, 3])(
 );
 
 it('passes through image props', () => {
-  const { getByRole } = render(
-    <RichText sanitize={false} text={'<img data-test="test123"></img>'} />,
-  );
-  expect(getByRole('img')).toHaveAttribute('data-test', 'test123');
+  const { getByRole } = render(<RichText text={'<img width="100%" />'} />);
+  expect(getByRole('img')).toHaveAttribute('width', '100%');
 });
 
 it('sets images max-width to 100%', () => {

@@ -412,7 +412,85 @@
           "label": "Status",
           "hints": "",
           "placeholder": "",
-          "isRequired": false,
+          "isRequired": false
+        }
+      },
+      {
+        "name": "meetingMaterials",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Array",
+          "label": "Additional Meeting Materials",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false
+        },
+        "nested": [
+          {
+            "name": "title",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Title",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "url",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "URL",
+              "isRequired": true
+            }
+          },
+          {
+            "name": "label",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "editor": "Input",
+              "label": "Label",
+              "isRequired": false
+            }
+          }
+        ]
+      },
+      {
+        "name": "hidden",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": false,
+          "editor": "Checkbox",
+          "label": "Hidden",
+          "hints": "Should the event be hidden in the HUB",
+          "placeholder": "",
+          "isRequired": true,
           "isHalfWidth": false
         }
       }

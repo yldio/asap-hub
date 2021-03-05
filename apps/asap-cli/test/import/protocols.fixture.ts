@@ -7,7 +7,7 @@ export const createProtocolsRequest: RestResearchOutput['data'] = {
   publishDate: { iv: '2020-10-16T01:11:49.000Z' },
   text: {
     iv:
-      'From Team team and authors: author 1, author 2. Keywords: neutrophil, isolation, neutrophil isolation, whole blood',
+      'From Team team and authors: author 1, author 2. Keywords: a, b, c d, e.',
   },
   link: {
     iv: 'https://www.protocols.io/view/link1',

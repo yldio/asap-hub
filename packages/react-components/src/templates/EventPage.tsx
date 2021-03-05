@@ -31,7 +31,7 @@ const EventPage: React.FC<EventPageProps> = ({
     <BackLink href={backHref} />
     <div css={cardsStyles}>
       <Card>
-        <EventInfo {...props} />
+        <EventInfo {...props} titleLimit={null} />
         <Paragraph accent="lead">
           <small>
             Last updated:{' '}

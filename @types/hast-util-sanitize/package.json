@@ -1,0 +1,12 @@
+{
+  "name": "@types/hast-util-sanitize",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "14.15.x"
+  },
+  "types": "index.d.ts",
+  "dependencies": {
+    "_original": "npm:hast-util-sanitize@^3.0.2"
+  }
+}

@@ -56,7 +56,7 @@ const NewsOrEventPage: React.FC<NewsOrEventPageProps> = ({
         <Display styleAsHeading={3}>{title}</Display>
         {publishDateComponent}
         <div css={richTextContainer}>
-          <RichText text={text} sanitize={false} />
+          <RichText text={text} />
         </div>
         {attachmentComponent}
         <div css={footerContainer}>{publishDateComponent}</div>

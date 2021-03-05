@@ -374,6 +374,7 @@ __metadata:
     "@testing-library/react-hooks": ^4.0.1
     "@testing-library/user-event": ^12.6.0
     "@types/asap-hub__assets": "workspace:*"
+    "@types/hast-util-sanitize": "workspace:*"
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.20
     "@types/ramda": ^0
@@ -396,6 +397,7 @@ __metadata:
     expect-playwright: ^0.3.0
     fast-check: ^2.5.0
     fast-deep-equal: ^3.1.3
+    hast-util-sanitize: ^3.0.2
     history: ^4
     jest-playwright-jsdom: ^0.0.4
     jest-playwright-preset: ^1.4.4
@@ -410,9 +412,9 @@ __metadata:
     react-test-renderer: ^17.0.1
     regenerator-runtime: ^0.13.7
     rehype-parse: ^7.0.1
-    rehype-react: ^6.1.0
+    rehype-react: ^6.2.0
     rehype-sanitize: ^4.0.0
-    rehype-slug: ^3.0.0
+    rehype-slug: ^4.0.1
     rehype-toc: ^3.0.2
     serialize-error: ^7.0.1
     unified: ^9.2.0
@@ -6504,6 +6506,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/hast-util-sanitize@workspace:*, @types/hast-util-sanitize@workspace:@types/hast-util-sanitize":
+  version: 0.0.0-use.local
+  resolution: "@types/hast-util-sanitize@workspace:@types/hast-util-sanitize"
+  dependencies:
+    _original: "npm:hast-util-sanitize@^3.0.2"
+  languageName: unknown
+  linkType: soft
+
 "@types/hast@npm:^2.0.0":
   version: 2.3.1
   resolution: "@types/hast@npm:2.3.1"
@@ -7900,6 +7910,15 @@ __metadata:
   bin:
     shell: ./lib/cli.js
   checksum: 6175b6631917495180eff41755cc0b38f0c37b88f9afde4243748253b3225bee6c045cfed7b64ff8e420a5f558aeb761323f9ed6f7d00e5f525c8a58f8a66eee
+  languageName: node
+  linkType: hard
+
+"_original@npm:hast-util-sanitize@^3.0.2, hast-util-sanitize@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "hast-util-sanitize@npm:3.0.2"
+  dependencies:
+    xtend: ^4.0.0
+  checksum: 4189e9b1b1e6a0f918efc5388ccce91da492a4932ad82e3c861d9b1e0ad16e3486c51addcbd6f7eb5af4e50099259fc6e691f851916d3cf2329696698bfecc94
   languageName: node
   linkType: hard
 
@@ -16732,10 +16751,10 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"hast-util-is-element@npm:^1.0.0":
-  version: 1.1.0
-  resolution: "hast-util-is-element@npm:1.1.0"
-  checksum: fb8241c9a0ef166f4fc812f30148573e80db44f0c99dedbcff69016800edcb7c9383abf0789d8cd1389c0ec8a75efd078bbdb75254db9aec6cb5d599c7672244
+"hast-util-heading-rank@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "hast-util-heading-rank@npm:1.0.1"
+  checksum: 41313004fe574bf56beac4f66f84fabd8af9df4861257a13424f67cf4a27c4dc8efecacf4fefde2301fe30da7043803f3817d12cf2db64d56ac5e003dc5bad45
   languageName: node
   linkType: hard
 
@@ -25855,13 +25874,13 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"rehype-react@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "rehype-react@npm:6.1.0"
+"rehype-react@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "rehype-react@npm:6.2.0"
   dependencies:
     "@mapbox/hast-util-table-cell-style": ^0.1.3
     hast-to-hyperscript: ^9.0.0
-  checksum: bf8f737463729eda807dca0f224c62314043e82855650f852bf943e71c919f295dd2114496e5a48a1c21c7e845ea76d4e153bafbd9a56e8ad5373b28351f5909
+  checksum: 503786c07d66c2b057e70979240941d6e880e42ee8e33a88723abaf3c16cca6e9b247c5a9bf942242ac072c7af0aca164fec35c62bf531369ebce54dfd6482a6
   languageName: node
   linkType: hard
 
@@ -25874,16 +25893,16 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"rehype-slug@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "rehype-slug@npm:3.0.0"
+"rehype-slug@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "rehype-slug@npm:4.0.1"
   dependencies:
     github-slugger: ^1.1.1
     hast-util-has-property: ^1.0.0
-    hast-util-is-element: ^1.0.0
+    hast-util-heading-rank: ^1.0.0
     hast-util-to-string: ^1.0.0
     unist-util-visit: ^2.0.0
-  checksum: f30bb097c3db966cd2aafe40e2edf01acd734973a8f49441182ceba7133f9b55118c42047924865791ba37295de6ed7ddc23b587a1eed62ee6acea362ea79e55
+  checksum: 8059de78262eca3ba6404b44ded5a09af17360ee493dedb5d0cf73c568df1337731b47c4a7181137100db5d9e07957d53e8435d235856869ddbd7fe19f9db307
   languageName: node
   linkType: hard
 

@@ -34,7 +34,7 @@ include:
     <<: *tmpl_branch_variables
     GIT_CHECKOUT: 0
 
-image: node:14.15
+image: node:14.15-alpine
 
 workflow:
   rules:

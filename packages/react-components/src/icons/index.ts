@@ -1,6 +1,8 @@
 export { default as alertIcon } from './alert';
 export { default as calendarIcon } from './calendar';
+export { default as chevronCircleDownIcon } from './chevron-circle-down';
 export { default as chevronCircleLeftIcon } from './chevron-circle-left';
+export { default as chevronCircleUpIcon } from './chevron-circle-up';
 export { default as chevronDownIcon } from './chevron-down';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as crossIcon } from './cross';

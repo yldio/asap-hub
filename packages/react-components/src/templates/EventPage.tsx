@@ -3,11 +3,11 @@ import css from '@emotion/css';
 import { EventResponse } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 
-import { EventInfo, EventDescription, BackLink } from '../molecules';
+import { EventInfo, BackLink } from '../molecules';
 import { Card, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { JoinEvent, RichTextCard } from '../organisms';
+import { JoinEvent, EventAbout, RichTextCard } from '../organisms';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -19,7 +19,7 @@ const cardsStyles = css({
 
 type EventPageProps = ComponentProps<typeof EventInfo> &
   ComponentProps<typeof JoinEvent> &
-  ComponentProps<typeof EventDescription> &
+  ComponentProps<typeof EventAbout> &
   Pick<
     EventResponse,
     'lastModifiedDate' | 'notes' | 'videoRecording' | 'presentation'
@@ -46,7 +46,7 @@ const EventPage: React.FC<EventPageProps> = ({
           </small>
         </Paragraph>
         <JoinEvent {...props} />
-        <EventDescription {...props} />
+        <EventAbout {...props} />
       </Card>
       <RichTextCard text={notes} title="Meeting materials" />
       <RichTextCard text={videoRecording} title="Video recording" />

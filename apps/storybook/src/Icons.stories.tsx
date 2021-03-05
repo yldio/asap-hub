@@ -4,7 +4,9 @@ export default { title: 'Atoms / Icons' };
 
 export const Alert = () => components.alertIcon;
 export const Calendar = () => components.calendarIcon;
+export const ChevronCircleDown = () => components.chevronCircleDownIcon;
 export const ChevronCircleLeft = () => components.chevronCircleLeftIcon;
+export const ChevronCircleUp = () => components.chevronCircleUpIcon;
 export const ChevronDown = () => components.chevronDownIcon;
 export const ChevronUp = () => components.chevronUpIcon;
 export const Cross = () => components.crossIcon;

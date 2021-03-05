@@ -4,7 +4,7 @@ import React from 'react';
 
 const chevronCircleLeft = (
   <svg width={24} height={24} viewBox="0 0 24 24">
-    <title>Chevron Circle Left</title>
+    <title>Chevron Left</title>
     <g transform="translate(-2 -1)" fill="none" fillRule="evenodd">
       <rect
         stroke="#DFE5EA"

@@ -31,6 +31,27 @@ For a list of individual package and particularly app scripts, look inside the r
 - `yarn test` - This will lint and test all packages and apps in the repository. You may want to run this with `--watch` or other [Jest CLI options](https://jestjs.io/docs/en/cli.html).
 - `yarn test:*` - There are further test configurations being run on CI that are usually slower or more specific and thus not suitable to run during day-to-day development. You can execute those scripts manually. Some of them may require installing native modules via `yarn rebuild` first.
 
+## Setting up your development environment
+
+For you, a newcomer, to be running your development setup, you'll need to complete the following steps:
+#### Create a new user
+- Log in to https://cloud.squidex.io/app/asap-hub-dev
+- In `Content/Users`, create a new user
+- While creating, or editing the user, on `Functional/Connections`, add a new item to store your UUID (you can generate a random one [here](https://www.uuidgenerator.net/version4)) and save that (the save button is the blue one on top!). You'll need that UUID later, so save it.
+
+#### Get everything running
+- create a `.env` file and update it with the necessary details (ask someone for this)
+- You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
+- `yarn watch:babel`: to have babel watching and compiling for you
+- `yarn watch:typecheck`: well... for types checking
+- `yarn start:backend`: to run the backend
+- `yarn start:frontend`: to run the frontend 
+
+#### Now that everything's up
+- On localhost:3000 you should have the hub running. You'll need to get your profile created.
+- Get your UUID from the previous step, and use it on https://dev.hub.asap.science/welcome/{uuid}
+- Reload localhost:3000 and you should now have an account and be logged in.
+
 ## Editor setup
 
 Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler and ESLint linter in this repository. You will also need to set up your editor to run ESLint with the same CLI options that the scripts do—they are in [this file](jest-runner-eslint.config.js).

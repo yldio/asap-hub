@@ -10,6 +10,7 @@ let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
   UPCOMING_EVENTS: true,
+  PAST_EVENTS: true,
 };
 
 const envDefaults: Record<string, boolean> = {

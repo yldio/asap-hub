@@ -96,17 +96,17 @@ build:native:
   needs: []
   stage: test
 
-test:packages:
+check:packages:
   <<: *tmpl_test
   script:
     - yarn install --immutable --immutable-cache
 
-test:constraints:
+check:constraints:
   <<: *tmpl_test
   script:
     - yarn constraints
 
-test:format:
+check:format:
   <<: *tmpl_test
   script:
     - yarn run lint:format
@@ -120,9 +120,6 @@ test:unit:
   script:
     - yarn run test --coverage
     - yarn codecov
-  needs:
-    - build:ts
-    - build:native
 
 test:browser:
   <<: *tmpl_test
@@ -130,8 +127,14 @@ test:browser:
   script:
     - yarn run test:browser
   needs:
-    - build:ts
     - build:native
+
+test:build-output:
+  <<: *tmpl_test
+  script:
+    - yarn run test:build-output
+  needs:
+    - build:ts
 
 ################
 # stage deploy #
@@ -202,6 +205,7 @@ deploy:sls:production:
     - build:native
     - test:unit
     - test:browser
+    - test:build-output
     - sync:squidex:production
 
 ################

@@ -6,12 +6,7 @@ const testFiles = [...testMatch, '**/*{t,T}est*.{js,jsx,ts,tsx}'];
 module.exports = {
   parser: '@typescript-eslint/parser',
   settings: {
-    'import/resolver': {
-      typescript: {
-        alwaysTryTypes: true,
-        project: ['packages/*/tsconfig.json', 'apps/*/tsconfig.json'],
-      },
-    },
+    'import/resolver': require.resolve('./import-resolver'),
     jest: {
       version: require('jest-config/package.json').version,
     },

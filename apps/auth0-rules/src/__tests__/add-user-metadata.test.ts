@@ -1,6 +1,6 @@
 import nock from 'nock';
-import type { User, RuleContext } from '@asap-hub/auth0-rule';
 import { UserResponse } from '@asap-hub/model';
+import type { User, RuleContext } from '../types';
 import addUserMetadata from '../add-user-metadata';
 
 declare global {

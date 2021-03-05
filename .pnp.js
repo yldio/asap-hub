@@ -31,10 +31,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:@types/asap-hub__assets"
       },
       {
-        "name": "@types/asap-hub__auth0-rule",
-        "reference": "workspace:@types/asap-hub__auth0-rule"
-      },
-      {
         "name": "@types/asap-hub__inline-environment",
         "reference": "workspace:@types/asap-hub__inline-environment"
       },
@@ -160,7 +156,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/unsupported-browser-page", ["workspace:packages/unsupported-browser-page"]],
       ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
       ["@types/asap-hub__assets", ["workspace:@types/asap-hub__assets"]],
-      ["@types/asap-hub__auth0-rule", ["workspace:@types/asap-hub__auth0-rule"]],
       ["@types/asap-hub__inline-environment", ["workspace:@types/asap-hub__inline-environment"]],
       ["@types/hapi__bourne", ["workspace:@types/hapi__bourne"]],
       ["@types/hast-util-sanitize", ["workspace:@types/hast-util-sanitize"]],
@@ -1380,10 +1375,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/asap-hub__assets",
         "workspace:@types/asap-hub__assets"
-      ],
-      [
-        "@types/asap-hub__auth0-rule",
-        "workspace:@types/asap-hub__auth0-rule"
       ],
       [
         "@types/asap-hub__inline-environment",
@@ -4038,7 +4029,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "escape-string-regexp",
-        "npm:1.0.5"
+        "npm:4.0.0"
       ],
       [
         "escodegen",
@@ -4066,7 +4057,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "eslint-import-resolver-typescript",
-        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"
+        "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.3.0"
       ],
       [
         "eslint-module-utils",
@@ -9197,9 +9188,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bundlewatch", "npm:0.3.1"],
             ["codecov", "npm:3.8.0"],
             ["dotenv", "npm:8.2.0"],
+            ["escape-string-regexp", "npm:4.0.0"],
             ["eslint", "npm:7.17.0"],
-            ["eslint-import-resolver-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
-            ["eslint-plugin-import", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.22.1"],
             ["hyperform", "npm:0.12.0"],
             ["jest", "npm:26.6.3"],
             ["jest-circus", "npm:26.6.3"],
@@ -9422,7 +9412,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-env", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.12.11"],
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.12.7"],
             ["@babel/runtime-corejs3", "npm:7.12.5"],
-            ["@types/asap-hub__auth0-rule", "workspace:@types/asap-hub__auth0-rule"],
             ["@types/jest", "npm:26.0.20"],
             ["got", "npm:11.6.0"],
             ["nock", "npm:13.0.4"]
@@ -9466,6 +9455,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-config-airbnb-base", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:14.2.1"],
             ["eslint-config-prettier", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:7.1.0"],
             ["eslint-config-react-app", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:6.0.0"],
+            ["eslint-import-resolver-typescript", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.3.0"],
             ["eslint-plugin-flowtype", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:5.2.0"],
             ["eslint-plugin-import", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.22.1"],
             ["eslint-plugin-jest", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:24.1.3"],
@@ -9522,6 +9512,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/unsupported-browser-page", "workspace:packages/unsupported-browser-page"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
+            ["@babel/runtime-corejs3", "npm:7.12.5"],
             ["@testing-library/dom", "npm:7.29.4"],
             ["@testing-library/jest-dom", "npm:5.11.9"],
             ["@testing-library/react", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:11.2.3"],
@@ -19726,15 +19717,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
-      ["@types/asap-hub__auth0-rule", [
-        ["workspace:@types/asap-hub__auth0-rule", {
-          "packageLocation": "./@types/asap-hub__auth0-rule/",
-          "packageDependencies": [
-            ["@types/asap-hub__auth0-rule", "workspace:@types/asap-hub__auth0-rule"]
-          ],
-          "linkType": "SOFT",
-        }]
-      ]],
       ["@types/asap-hub__inline-environment", [
         ["workspace:@types/asap-hub__inline-environment", {
           "packageLocation": "./@types/asap-hub__inline-environment/",
@@ -23019,9 +23001,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["bundlewatch", "npm:0.3.1"],
             ["codecov", "npm:3.8.0"],
             ["dotenv", "npm:8.2.0"],
+            ["escape-string-regexp", "npm:4.0.0"],
             ["eslint", "npm:7.17.0"],
-            ["eslint-import-resolver-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
-            ["eslint-plugin-import", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.22.1"],
             ["hyperform", "npm:0.12.0"],
             ["jest", "npm:26.6.3"],
             ["jest-circus", "npm:26.6.3"],
@@ -29090,6 +29071,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["escape-string-regexp", "npm:2.0.0"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:4.0.0", {
+          "packageLocation": "./.yarn/cache/escape-string-regexp-npm-4.0.0-4b531d8d59-c747be8d5f.zip/node_modules/escape-string-regexp/",
+          "packageDependencies": [
+            ["escape-string-regexp", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["escodegen", [
@@ -29339,10 +29327,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0", {
-          "packageLocation": "./.yarn/$$virtual/eslint-import-resolver-typescript-virtual-e8a51af4d8/0/cache/eslint-import-resolver-typescript-npm-2.3.0-9992efe47c-2d2c9e8528.zip/node_modules/eslint-import-resolver-typescript/",
+        ["virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.3.0", {
+          "packageLocation": "./.yarn/$$virtual/eslint-import-resolver-typescript-virtual-5e7defd94f/0/cache/eslint-import-resolver-typescript-npm-2.3.0-9992efe47c-2d2c9e8528.zip/node_modules/eslint-import-resolver-typescript/",
           "packageDependencies": [
-            ["eslint-import-resolver-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:2.3.0"],
+            ["eslint-import-resolver-typescript", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:2.3.0"],
             ["@types/eslint", null],
             ["@types/eslint-plugin-import", null],
             ["debug", "virtual:88c91e718f5c047e706657833016435d9afd204207e38d93790ef921db10dcd422cdb8ab7a565d263b03ce9d79a2098e157c646f2bd38df6ecdb41f52893df49#npm:4.2.0"],

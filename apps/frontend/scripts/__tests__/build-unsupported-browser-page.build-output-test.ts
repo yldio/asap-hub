@@ -1,3 +1,4 @@
+/** @jest-environment jsdom */
 import { mockLocation } from '@asap-hub/dom-test-utils';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';

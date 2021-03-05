@@ -9,7 +9,6 @@ import {
   ListEventResponse,
   GroupResponse,
   EventResponse,
-  EventStatus,
 } from '@asap-hub/model';
 
 export const fetchEventsResponse: { data: ResponseFetchEvents } = {

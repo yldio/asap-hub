@@ -22,7 +22,8 @@ export interface EventResponse {
   thumbnail?: string;
   tags: string[];
 
-  // These are typically added around the date when the event happens
+  // These are typically added around the date when the event happens.
+  // `null` means it is not intended to add materials to the event in the future.
   notes?: string | null;
   videoRecording?: string | null;
   presentation?: string | null;

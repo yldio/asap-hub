@@ -5,6 +5,7 @@ export { default as CheckboxGroup } from './CheckboxGroup';
 export { default as ComingSoon } from './ComingSoon';
 export { default as EditModal } from './EditModal';
 export { default as EventCard } from './EventCard';
+export { default as EventAbout } from './EventAbout';
 export { default as GoogleCalendar } from './GoogleCalendar';
 export { default as GroupCard } from './GroupCard';
 export { default as GroupInformation } from './GroupInformation';

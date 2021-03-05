@@ -33,6 +33,8 @@ const iframeContainer = css({
     left: 0,
     width: '100%',
     height: '100%',
+
+    border: 0,
   },
 });
 
@@ -145,7 +147,7 @@ const RichText: React.FC<RichTextProps> = ({ toc = false, text }) => {
         'title',
         'width',
         'height',
-        'frameborder',
+        ['allow', 'fullscreen'],
         'allowfullscreen',
       ],
     },

@@ -13,7 +13,7 @@ $ sq config use asap-hub-dev
 To update the schema run this script on the root folder.
 
 ```
-$ sq sync out packages/squidex/schema
+$ sq sync out packages/squidex/schema -t schemas
 ```
 
 To ensure consistency run the `fix:format` script before looking at the unstaged changes.

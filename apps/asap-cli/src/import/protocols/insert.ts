@@ -99,7 +99,7 @@ export default async (data: Protocol): Promise<void> => {
     text: {
       iv: `From Team ${data.team} and authors: ${data.authors.join(
         ', ',
-      )}. Keywords: neutrophil, isolation, neutrophil isolation, whole blood`,
+      )}. Keywords: ${data.keywords.join(', ')}.`,
     },
     tags: {
       iv: data.keywords,

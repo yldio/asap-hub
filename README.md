@@ -34,9 +34,9 @@ For a list of individual package and particularly app scripts, look inside the r
 ## Setting up your development environment
 
 For you, a newcomer, to be running your development setup, you'll need to complete the following steps:
-### Create a new user
+### Create a new user on Squidex
 - Log in to https://cloud.squidex.io/app/asap-hub-dev
-- In `Content/Users`, create a new user
+- In `Content/Users`, create a new user (or edit if already created)
 - While creating, or editing the user, on `Functional/Connections`, add a new item to store your UUID (you can generate a random one [here](https://www.uuidgenerator.net/version4)) and save that (the save button is the blue one on top!). You'll need that UUID later, so save it.
 
 ### Get everything running

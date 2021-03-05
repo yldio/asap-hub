@@ -1,16 +1,17 @@
 import React from 'react';
 
-import { EventNotes } from '@asap-hub/react-components';
+import { RichTextCard } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Organisms / Events / Notes',
-  component: EventNotes,
+  title: 'Organisms / Rich Text Card',
+  component: RichTextCard,
 };
 
 export const Normal = () => (
-  <EventNotes
-    notes={text(
+  <RichTextCard
+    title={text('Title', 'My RTF Embed')}
+    text={text(
       'Rich Text Notes',
       `
       <h1>How to Leverage PPMI?</h1>

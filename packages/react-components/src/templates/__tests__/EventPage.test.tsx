@@ -48,3 +48,17 @@ it('renders the event notes', () => {
   const { getByText } = render(<EventPage {...props} notes="My Notes" />);
   expect(getByText('My Notes')).toBeVisible();
 });
+
+it('renders the video recording', () => {
+  const { getByText } = render(
+    <EventPage {...props} videoRecording="My Video" />,
+  );
+  expect(getByText('My Video')).toBeVisible();
+});
+
+it('renders the presentation', () => {
+  const { getByText } = render(
+    <EventPage {...props} presentation="My Presentation" />,
+  );
+  expect(getByText('My Presentation')).toBeVisible();
+});

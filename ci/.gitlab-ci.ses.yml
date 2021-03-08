@@ -3,7 +3,7 @@ deploy:ses:master:
     - if: $CI_COMMIT_BRANCH == 'master'
   script:
     - yarn node apps/react-templates/lib/deploy.js
-  stage: deploy
+  stage: deploy-prod
   dependencies:
     - build:ts
   variables:

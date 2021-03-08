@@ -3,31 +3,24 @@ import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
-import {
-  createTeamResponse,
-  createListGroupResponse,
-} from '@asap-hub/fixtures';
+import { createTeamResponse } from '@asap-hub/fixtures';
 
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
 import TeamProfile from '../TeamProfile';
-import { getTeam, getTeamGroups } from '../api';
+import { getTeam } from '../api';
 import { refreshTeamState } from '../state';
 
 jest.mock('../api');
+jest.mock('../groups/api');
 
 const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
-const mockGetTeamGroups = getTeamGroups as jest.MockedFunction<
-  typeof getTeamGroups
->;
 const renderTeamProfile = async (
   teamResponse = createTeamResponse(),
   { routeProfileId = teamResponse.id } = {},
 ) => {
-  mockGetTeamGroups.mockResolvedValue(createListGroupResponse(0));
-
   mockGetTeam.mockImplementation(async (id) =>
     id === teamResponse.id ? teamResponse : undefined,
   );

@@ -5,9 +5,9 @@ import { EventsList } from '@asap-hub/react-components';
 import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
 
 import { useGroupEvents } from './state';
-import { usePaginationParams, usePagination } from '../../hooks';
-import { NETWORK_PATH, EVENTS_PATH } from '../../routes';
-import { GROUPS_PATH } from '../routes';
+import { usePaginationParams, usePagination } from '../../../hooks';
+import { NETWORK_PATH, EVENTS_PATH } from '../../../routes';
+import { GROUPS_PATH } from '../../routes';
 
 type EventListProps = {
   readonly currentTime: Date;

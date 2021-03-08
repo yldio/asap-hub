@@ -10,6 +10,7 @@ import Research from '../Research';
 import { patchUser } from '../api';
 
 jest.mock('../api');
+jest.mock('../groups/api');
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 

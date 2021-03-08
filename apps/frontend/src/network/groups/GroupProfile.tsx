@@ -12,7 +12,9 @@ const loadAbout = () =>
 const loadCalendar = () =>
   import(/* webpackChunkName: "network-group-calendar" */ './Calendar');
 const loadEventList = () =>
-  import(/* webpackChunkName: "network-group-event-list" */ './EventList');
+  import(
+    /* webpackChunkName: "network-group-event-list" */ './events/EventList'
+  );
 
 const About = React.lazy(loadAbout);
 const Calendar = React.lazy(loadCalendar);

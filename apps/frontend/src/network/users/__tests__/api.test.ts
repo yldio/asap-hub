@@ -4,12 +4,9 @@ import {
   UserResponse,
   UserAvatarPostRequest,
 } from '@asap-hub/model';
-import {
-  createUserResponse,
-  createListGroupResponse,
-} from '@asap-hub/fixtures';
+import { createUserResponse } from '@asap-hub/fixtures';
 
-import { getUser, patchUser, postUserAvatar, getUserGroups } from '../api';
+import { getUser, patchUser, postUserAvatar } from '../api';
 import { API_BASE_URL } from '../../../config';
 
 jest.mock('../../../config');
@@ -125,30 +122,6 @@ describe('postUserAvatar', () => {
       postUserAvatar('42', post, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to update avatar for user with id 42. Expected status 2xx. Received status 500."`,
-    );
-  });
-});
-
-describe('getUserGroups', () => {
-  it('makes an authorized GET request for the user id', async () => {
-    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
-      .get('/users/42/groups')
-      .reply(200, {});
-    await getUserGroups('42', 'Bearer x');
-    expect(nock.isDone()).toBe(true);
-  });
-
-  it('returns a successfully fetched user', async () => {
-    const groups = createListGroupResponse();
-    nock(API_BASE_URL).get('/users/42/groups').reply(200, groups);
-    expect(await getUserGroups('42', '')).toEqual(groups);
-  });
-  it('errors for error status', async () => {
-    nock(API_BASE_URL).get('/users/42/groups').reply(500);
-    await expect(
-      getUserGroups('42', ''),
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch groups for user with id 42. Expected status 2xx. Received status 500."`,
     );
   });
 });

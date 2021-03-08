@@ -4,8 +4,8 @@ import { UserResponse } from '@asap-hub/model';
 import { join } from 'path';
 
 import { useUserGroupsById } from './state';
-import { NETWORK_PATH } from '../../routes';
-import { GROUPS_PATH } from '../routes';
+import { NETWORK_PATH } from '../../../routes';
+import { GROUPS_PATH } from '../../routes';
 
 const UserGroups: React.FC<{ user: UserResponse }> = ({ user }) => {
   const groups = useUserGroupsById(user.id);

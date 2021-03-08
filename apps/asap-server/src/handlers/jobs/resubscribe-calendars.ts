@@ -1,4 +1,4 @@
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import {
   UnsubscribeFromEventChanges,
@@ -16,9 +16,8 @@ export const resubscribeCalendarsHandlerFactory = (
   subscribe: SubscribeToEventChanges,
 ): ScheduledHandlerAsync => async () => {
   const now = DateTime.local();
-  const duration24h = Duration.fromObject({ day: 1 });
   const calendars = await calendarController.fetchRaw({
-    maxExpiration: now.plus(duration24h).toMillis(),
+    maxExpiration: now.plus({ days: 1 }).toMillis(),
     take: 100,
     skip: 0,
   });

@@ -205,6 +205,7 @@ module.exports = {
     resubscribeCalendars: {
       handler:
         'apps/asap-server/build-cjs/handlers/jobs/resubscribe-calendars.handler',
+      timeout: 120,
       events: [
         {
           schedule: {

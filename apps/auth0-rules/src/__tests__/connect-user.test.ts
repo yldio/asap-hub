@@ -1,5 +1,5 @@
 import nock from 'nock';
-import type { User, RuleContext } from '@asap-hub/auth0-rule';
+import type { User, RuleContext } from '../types';
 import connectUser from '../connect-user';
 
 declare global {

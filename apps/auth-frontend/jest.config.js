@@ -1,5 +1,6 @@
 const {
   setupFilesAfterEnv,
+  moduleNameMapper,
   ...baseConfig
 } = require('../../jest/jest-base.config.js');
 
@@ -29,6 +30,7 @@ module.exports = {
     '^.+\\.module\\.(css|sass|scss)$',
   ],
   moduleNameMapper: {
+    ...moduleNameMapper,
     '^.+\\.module\\.(css|sass|scss)$': require.resolve('identity-obj-proxy'),
   },
 

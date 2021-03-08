@@ -1,9 +1,0 @@
-{
-  "name": "@types/asap-hub__auth0-rule",
-  "private": true,
-  "version": "0.1.0",
-  "engines": {
-    "node": "14.15.x"
-  },
-  "types": "index.d.ts"
-}

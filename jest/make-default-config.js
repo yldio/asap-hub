@@ -11,15 +11,9 @@ const makeDefaultConfig = (parentDir, packageName) => {
   const rootDir = resolve(parentDir, packageName);
   const displayName = `test-${packageName}`;
 
-  const transform = {
-    '^.+\\.[jt]sx?$': [
-      'babel-jest',
-      { configFile: require.resolve('../babel-cjs.config.js') },
-    ],
-  };
-
   let testEnvironment = 'node';
   const setupFilesAfterEnv = [...(baseConfig.setupFilesAfterEnv || [])];
+  const transform = { ...baseConfig.transform };
 
   const tsconfigPath = resolve(rootDir, 'tsconfig.json');
   const packageTsLibs = existsSync(tsconfigPath)

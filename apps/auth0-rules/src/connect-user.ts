@@ -1,5 +1,5 @@
-import type { Rule } from '@asap-hub/auth0-rule';
 import got from 'got';
+import type { Rule } from './types';
 
 const connectUser: Rule<{ invitation_code: string }> = async (
   user,

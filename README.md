@@ -42,8 +42,8 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 ### Get everything running
 - create a `.env` file and update it with the necessary details (ask someone for this)
 - You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
-- `yarn watch:babel`: to have babel watching and compiling for you
-- `yarn watch:typecheck`: well... for types checking
+- `yarn watch:babel`: to have babel watching and compiling for you (you'll need this running most of the time)
+- `yarn watch:typecheck`: well... for types checking (you'll need this running most of the time)
 - `yarn start:backend`: to run the backend
 - `yarn start:frontend`: to run the frontend 
 - `yarn start:storybook`: to run storybook 

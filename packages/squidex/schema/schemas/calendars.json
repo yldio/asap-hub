@@ -139,7 +139,7 @@
         "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "String",
+          "fieldType": "Number",
           "isUnique": false,
           "inlineEditable": false,
           "editor": "Input",

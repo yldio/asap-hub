@@ -204,6 +204,26 @@ module.exports = {
         }}`,
       },
     },
+    resubscribeCalendars: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/jobs/resubscribe-calendars.handler',
+      timeout: 120,
+      events: [
+        {
+          schedule: {
+            rate: `cron(0 1 * * ? *)`,
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+      },
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

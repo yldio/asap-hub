@@ -42,6 +42,10 @@ export const webhookCalendarCreatedHandlerFactory = (
         bodySchema,
       ) as WebhookPayload<Calendar>;
 
+      logger(
+        `Received a '${event}' event for the calendar ${payload.data.id.iv}`,
+      );
+
       if (event === 'CalendarsUpdated') {
         if (
           !payload.dataOld ||
@@ -62,7 +66,7 @@ export const webhookCalendarCreatedHandlerFactory = (
               resourceId: null,
             });
           } catch (error) {
-            logger('Error during unsubscribing from the calendar', error);
+            logger('Error during unsubscribing from the calendar: %o', error);
           }
         }
       }
@@ -78,12 +82,18 @@ export const webhookCalendarCreatedHandlerFactory = (
 
       if (['CalendarsCreated', 'CalendarsUpdated'].includes(event)) {
         try {
-          const resourceId = await subscribe(payload.data.id.iv, payload.id);
+          const { resourceId, expiration } = await subscribe(
+            payload.data.id.iv,
+            payload.id,
+          );
 
           await calendarController.update(payload.id, {
             resourceId,
+            expirationDate: expiration,
           });
         } catch (error) {
+          logger('Error subscribing to the calendar: %o', error);
+
           return {
             statusCode: 502,
             payload: {
@@ -104,7 +114,13 @@ export const webhookCalendarCreatedHandlerFactory = (
 
 export const subscribeToEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
-) => async (calendarId: string, subscriptionId: string): Promise<string> => {
+) => async (
+  calendarId: string,
+  subscriptionId: string,
+): Promise<{
+  resourceId: string;
+  expiration: number;
+}> => {
   const creds = await getJWTCredentials();
   const client = Auth.auth.fromJSON(creds) as Auth.JWT;
 
@@ -113,6 +129,7 @@ export const subscribeToEventChangesFactory = (
     'https://www.googleapis.com/auth/calendar.events',
   ];
   const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
+  const ttl = 2592000; // 30 days
   const data = {
     id: subscriptionId,
     token: googleApiToken,
@@ -120,19 +137,25 @@ export const subscribeToEventChangesFactory = (
     address: `${asapApiUrl}/webhook/events`,
     params: {
       // 30 days, which is a maximum TTL
-      ttl: 2592000,
+      ttl,
     },
   };
 
-  const response = await client.request<{ resourceId: string }>({
+  const response = await client.request<{
+    resourceId: string;
+    expiration: string;
+  }>({
     url,
     method: 'POST',
     data,
   });
 
-  logger('Google API subscription response', JSON.stringify(response, null, 2));
+  logger('Google API subscription response %j', response);
 
-  return response.data.resourceId;
+  return {
+    resourceId: response.data.resourceId,
+    expiration: parseInt(response.data.expiration, 10),
+  };
 };
 
 export type SubscribeToEventChanges = ReturnType<
@@ -157,10 +180,7 @@ export const unsubscribeFromEventChangesFactory = (
 
   const response = await client.request({ url, method: 'POST', data });
 
-  logger(
-    'Google API unsubscribing response',
-    JSON.stringify(response, null, 2),
-  );
+  logger('Google API unsubscribing response %j', response);
 };
 
 export type UnsubscribeFromEventChanges = ReturnType<

@@ -3,7 +3,7 @@ import Calendars from '../../src/controllers/calendars';
 import { identity } from '../helpers/squidex';
 import { config, Results, RestCalendar } from '@asap-hub/squidex';
 
-describe('Dashboard controller', () => {
+describe('Calendars controller', () => {
   const calendars = new Calendars();
 
   beforeAll(() => {
@@ -61,6 +61,72 @@ describe('Dashboard controller', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('FetchRaw method', () => {
+    test('Should return an empty result when the no calendars are found', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/calendars`)
+        .query({
+          q: JSON.stringify({
+            take: 50,
+            skip: 0,
+            sort: [{ path: 'data.name.iv', order: 'ascending' }],
+          }),
+        })
+        .reply(200, { total: 0, items: [] });
+
+      const result = await calendars.fetchRaw({ take: 50, skip: 0 });
+
+      expect(result).toEqual([]);
+    });
+
+    test('Should query calendars by expiration date and return them', async () => {
+      const maxExpiration = 1614697798681;
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/calendars`)
+        .query({
+          q: JSON.stringify({
+            take: 50,
+            skip: 0,
+            sort: [{ path: 'data.name.iv', order: 'ascending' }],
+            filter: {
+              path: 'data.expirationDate.iv',
+              op: 'lt',
+              value: maxExpiration,
+            },
+          }),
+        })
+        .reply(200, getCalendarsResponse);
+
+      const result = await calendars.fetchRaw({
+        take: 50,
+        skip: 0,
+        maxExpiration,
+      });
+
+      expect(result).toEqual([
+        {
+          id: 'cms-calendar-id-1',
+          googleCalendarId: 'calendar-id-1',
+          color: '#5C1158',
+          name: 'Kubernetes Meetups',
+          resourceId: 'resource-id',
+          syncToken: 'sync-token',
+          expirationDate: 1614697798681,
+        },
+        {
+          id: 'cms-calendar-id-2',
+          googleCalendarId: 'calendar-id-2',
+          color: '#B1365F',
+          name: 'Service Mesh Conferences',
+          resourceId: 'resource-id-2',
+          syncToken: 'sync-token-2',
+          expirationDate: 1614697621081,
+        },
+      ]);
     });
   });
 
@@ -200,6 +266,9 @@ const getCalendarsResponse: Results<RestCalendar> = {
         id: { iv: 'calendar-id-1' },
         color: { iv: '#5C1158' },
         name: { iv: 'Kubernetes Meetups' },
+        resourceId: { iv: 'resource-id' },
+        syncToken: { iv: 'sync-token' },
+        expirationDate: { iv: 1614697798681 },
       },
       created: '2021-01-07T16:44:09Z',
       lastModified: '2021-01-07T16:44:09Z',
@@ -210,6 +279,9 @@ const getCalendarsResponse: Results<RestCalendar> = {
         id: { iv: 'calendar-id-2' },
         color: { iv: '#B1365F' },
         name: { iv: 'Service Mesh Conferences' },
+        resourceId: { iv: 'resource-id-2' },
+        syncToken: { iv: 'sync-token-2' },
+        expirationDate: { iv: 1614697621081 },
       },
       created: '2021-01-07T16:44:09Z',
       lastModified: '2021-01-07T16:44:09Z',

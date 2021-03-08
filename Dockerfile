@@ -13,7 +13,7 @@ RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.4.asc | apt-key add -
     apt-get update && \
     apt-get install -y mongodb-org
 
-RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v5.2/linux-x64.zip && \
+RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v6.2/linux-x64.zip && \
     unzip linux-x64.zip && \
     mv sq /bin
 

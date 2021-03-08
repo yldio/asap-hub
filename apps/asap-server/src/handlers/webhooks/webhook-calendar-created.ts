@@ -92,7 +92,7 @@ export const webhookCalendarCreatedHandlerFactory = (
             expirationDate: expiration,
           });
         } catch (error) {
-          logger('Error during subscribing to the calendar: %o', error);
+          logger('Error subscribing to the calendar: %o', error);
 
           return {
             statusCode: 502,

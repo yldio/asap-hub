@@ -94,12 +94,6 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
         };
       }
 
-      // eslint-disable-next-line no-console
-      console.log({
-        error: JSON.stringify(err, null, 2),
-        response: err.response,
-      });
-
       throw Boom.badImplementation('squidex', {
         data: err,
       });

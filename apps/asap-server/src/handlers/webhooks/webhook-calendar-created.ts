@@ -129,7 +129,7 @@ export const subscribeToEventChangesFactory = (
     'https://www.googleapis.com/auth/calendar.events',
   ];
   const url = `${googleApiUrl}calendar/v3/calendars/${calendarId}/events/watch`;
-  const ttl = 2592000;
+  const ttl = 2592000; // 30 days
   const data = {
     id: subscriptionId,
     token: googleApiToken,

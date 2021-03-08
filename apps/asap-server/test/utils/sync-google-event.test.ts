@@ -2,6 +2,7 @@ import { calendar_v3 as calendarV3 } from 'googleapis';
 import { syncEventFactory } from '../../src/utils/sync-google-event';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { restEvent } from '../fixtures/events.fixtures';
+import { RestEvent } from '@asap-hub/squidex';
 
 describe('Sync calendar util hook', () => {
   const calendarId = 'squidex-calendar-id';
@@ -29,6 +30,7 @@ describe('Sync calendar util hook', () => {
       status: 'Confirmed',
       calendar: ['squidex-calendar-id'],
       tags: [],
+      hidden: false,
     });
   });
 
@@ -50,8 +52,156 @@ describe('Sync calendar util hook', () => {
         endDateTimeZone: 'Europe/Lisbon',
         status: 'Confirmed',
         calendar: ['squidex-calendar-id'],
+        hidden: false,
       },
     );
+  });
+
+  describe('Hidden flag', () => {
+    test('Should update to hidden when the event status changes to cancelled', async () => {
+      const existingEvent: RestEvent = {
+        ...restEvent,
+        data: {
+          ...restEvent.data,
+          status: { iv: 'Confirmed' },
+        },
+      };
+
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
+
+      const updatedEvent = {
+        ...event,
+        status: 'cancelled',
+      };
+      await syncEvent(updatedEvent, defaultCalendarTimezone);
+
+      expect(eventControllerMock.update).toHaveBeenCalledWith(
+        'squidex-event-id',
+        {
+          googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+          title: 'Event Title',
+          description: 'Event Description',
+          startDate: '2021-02-27T00:00:00.000Z',
+          startDateTimeZone: 'Europe/Lisbon',
+          endDate: '2021-02-28T00:00:00.000Z',
+          endDateTimeZone: 'Europe/Lisbon',
+          status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
+          hidden: true,
+        },
+      );
+    });
+
+    test('Should remain hidden when the event status remains cancelled', async () => {
+      const existingEvent: RestEvent = {
+        ...restEvent,
+        data: {
+          ...restEvent.data,
+          status: { iv: 'Cancelled' },
+          hidden: {
+            iv: true,
+          },
+        },
+      };
+
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
+
+      const updatedEvent = {
+        ...event,
+        status: 'cancelled',
+      };
+      await syncEvent(updatedEvent, defaultCalendarTimezone);
+
+      expect(eventControllerMock.update).toHaveBeenCalledWith(
+        'squidex-event-id',
+        {
+          googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+          title: 'Event Title',
+          description: 'Event Description',
+          startDate: '2021-02-27T00:00:00.000Z',
+          startDateTimeZone: 'Europe/Lisbon',
+          endDate: '2021-02-28T00:00:00.000Z',
+          endDateTimeZone: 'Europe/Lisbon',
+          status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
+          hidden: true,
+        },
+      );
+    });
+
+    test('Should remain visible (ie not hidden) when the event status remains cancelled', async () => {
+      const existingEvent: RestEvent = {
+        ...restEvent,
+        data: {
+          ...restEvent.data,
+          status: { iv: 'Cancelled' },
+          hidden: {
+            iv: false,
+          },
+        },
+      };
+
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
+
+      const updatedEvent = {
+        ...event,
+        status: 'cancelled',
+      };
+      await syncEvent(updatedEvent, defaultCalendarTimezone);
+
+      expect(eventControllerMock.update).toHaveBeenCalledWith(
+        'squidex-event-id',
+        {
+          googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+          title: 'Event Title',
+          description: 'Event Description',
+          startDate: '2021-02-27T00:00:00.000Z',
+          startDateTimeZone: 'Europe/Lisbon',
+          endDate: '2021-02-28T00:00:00.000Z',
+          endDateTimeZone: 'Europe/Lisbon',
+          status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
+          hidden: false,
+        },
+      );
+    });
+
+    test('Should remain hidden when the status changes from confirmed to tentative', async () => {
+      const existingEvent: RestEvent = {
+        ...restEvent,
+        data: {
+          ...restEvent.data,
+          status: { iv: 'Confirmed' },
+          hidden: {
+            iv: true,
+          },
+        },
+      };
+
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
+
+      const updatedEvent = {
+        ...event,
+        status: 'tentative',
+      };
+      await syncEvent(updatedEvent, defaultCalendarTimezone);
+
+      expect(eventControllerMock.update).toHaveBeenCalledWith(
+        'squidex-event-id',
+        {
+          googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+          title: 'Event Title',
+          description: 'Event Description',
+          startDate: '2021-02-27T00:00:00.000Z',
+          startDateTimeZone: 'Europe/Lisbon',
+          endDate: '2021-02-28T00:00:00.000Z',
+          endDateTimeZone: 'Europe/Lisbon',
+          status: 'Tentative',
+          calendar: ['squidex-calendar-id'],
+          hidden: true,
+        },
+      );
+    });
   });
 
   describe('Should throw when a remote operation throws', () => {
@@ -99,6 +249,7 @@ describe('Sync calendar util hook', () => {
       status: 'Confirmed',
       calendar: ['squidex-calendar-id'],
       tags: [],
+      hidden: false,
     });
   });
 
@@ -129,6 +280,7 @@ describe('Sync calendar util hook', () => {
       status: 'Confirmed',
       calendar: ['squidex-calendar-id'],
       tags: [],
+      hidden: false,
     });
   });
 

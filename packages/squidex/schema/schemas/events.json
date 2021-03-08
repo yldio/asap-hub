@@ -412,7 +412,24 @@
           "label": "Status",
           "hints": "",
           "placeholder": "",
-          "isRequired": false,
+          "isRequired": false
+        }
+      },
+      {
+        "name": "hidden",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": false,
+          "editor": "Checkbox",
+          "label": "Hidden",
+          "hints": "Should the event be hidden in the HUB",
+          "placeholder": "",
+          "isRequired": true,
           "isHalfWidth": false
         }
       }

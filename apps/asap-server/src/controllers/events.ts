@@ -54,6 +54,8 @@ export default class Events implements EventController {
         [],
       );
 
+    filters.push('data/hidden/iv ne true');
+
     if (after) {
       filters.push(`data/endDate/iv gt ${after}`);
     }

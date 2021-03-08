@@ -79,12 +79,26 @@ describe('Event controller', () => {
       expect(result).toEqual(listEventResponse);
     });
 
+    test('Should apply the filter to remove hidden events by default', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvents(
+            'data/hidden/iv ne true and data/endDate/iv gt after-date',
+          ),
+        })
+        .reply(200, fetchEventsResponse);
+
+      await events.fetch({
+        after: 'after-date',
+      });
+    });
+
     describe('Date filters', () => {
       test('Should apply the "after" filter', async () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
             query: buildGraphQLQueryFetchEvents(
-              'data/endDate/iv gt after-date',
+              'data/hidden/iv ne true and data/endDate/iv gt after-date',
             ),
           })
           .reply(200, fetchEventsResponse);
@@ -98,7 +112,7 @@ describe('Event controller', () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
             query: buildGraphQLQueryFetchEvents(
-              'data/startDate/iv lt before-date',
+              'data/hidden/iv ne true and data/startDate/iv lt before-date',
             ),
           })
           .reply(200, fetchEventsResponse);
@@ -110,7 +124,7 @@ describe('Event controller', () => {
 
       test('Should apply both the "after" and "before" filters', async () => {
         const expectedFilter =
-          'data/endDate/iv gt after-date and data/startDate/iv lt before-date';
+          'data/hidden/iv ne true and data/endDate/iv gt after-date and data/startDate/iv lt before-date';
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -126,7 +140,7 @@ describe('Event controller', () => {
 
       test('Should apply search query params', async () => {
         const expectedFilter =
-          "(contains(data/title/iv, 'a') or contains(data/tags/iv, 'a')) and data/endDate/iv gt after-date";
+          "(contains(data/title/iv, 'a') or contains(data/tags/iv, 'a')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -183,7 +197,7 @@ describe('Event controller', () => {
           .reply(200, findGroupResponse);
 
         const expectedFilter =
-          "data/endDate/iv gt after-date and data/calendar/iv in ['calendar-id-1']";
+          "data/hidden/iv ne true and data/endDate/iv gt after-date and data/calendar/iv in ['calendar-id-1']";
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -199,7 +213,8 @@ describe('Event controller', () => {
     });
 
     describe('Sorting', () => {
-      const expectedFilter = 'data/endDate/iv gt after-date';
+      const expectedFilter =
+        'data/hidden/iv ne true and data/endDate/iv gt after-date';
 
       test('Should apply the "orderBy" option using the startDate field and ascending order', async () => {
         const expectedOrder = 'data/startDate/iv asc';
@@ -512,6 +527,7 @@ describe('Event controller', () => {
       calendar: [calendarId],
       status: 'confirmed' as EventStatus,
       tags: [],
+      hidden: false,
     };
 
     test('Should create or update the event', async () => {
@@ -527,6 +543,7 @@ describe('Event controller', () => {
           calendar: { iv: [calendarId] },
           status: { iv: 'confirmed' },
           tags: { iv: [] },
+          hidden: { iv: false },
         })
         .reply(200, restEvent);
 

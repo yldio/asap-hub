@@ -25,7 +25,7 @@ setup:squidex-image:
   script:
     - sq config add asap-hub $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
     - sq config use asap-hub
-    - sq sync in packages/squidex/schema
+    - sq sync in packages/squidex/schema -t schemas -t rules
   stage: prepare
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'

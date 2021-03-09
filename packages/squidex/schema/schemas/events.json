@@ -129,8 +129,8 @@
           "fieldType": "Boolean",
           "editor": "Checkbox",
           "inlineEditable": false,
-          "label": "Lock Notes Field",
-          "hints": "This flag denotes there will be no Notes for this event",
+          "label": "Mark Notes as permanently unavailable",
+          "hints": "This flag denotes there will be no Notes coming for this event.",
           "placeholder": ""
         },
         "isLocked": false,
@@ -165,8 +165,8 @@
           "fieldType": "Boolean",
           "editor": "Checkbox",
           "inlineEditable": false,
-          "label": "Lock Video Recording Field",
-          "hints": "This flag denotes there will be no Video Recording for this event",
+          "label": "Mark Video Recording as permanently unavailable",
+          "hints": "This flag denotes there will be no Video Recording coming for this event.",
           "placeholder": ""
         },
         "isLocked": false,
@@ -201,8 +201,8 @@
           "fieldType": "Boolean",
           "editor": "Checkbox",
           "inlineEditable": false,
-          "label": "Lock Presentation Field",
-          "hints": "This flag denotes there will be no Presentation for this event",
+          "label": "Mark Presentation as permanently unavailable",
+          "hints": "This flag denotes there will be no Presentation coming for this event.",
           "placeholder": ""
         },
         "isLocked": false,
@@ -237,8 +237,8 @@
           "fieldType": "Boolean",
           "editor": "Checkbox",
           "inlineEditable": false,
-          "label": "Lock Additional Meeting Materials Field",
-          "hints": "This flag denotes there will be no Additional MM for this event",
+          "label": "Mark Additional Meeting Materials as permanently unavailable",
+          "hints": "This flag denotes there will be no Additional Meeting Materials coming for this event.",
           "placeholder": ""
         },
         "isLocked": false,

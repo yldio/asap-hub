@@ -40,7 +40,6 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
               {
                 title: 'My additional link',
                 url: 'https://link.pt/additional-material',
-                label: 'Use this to know more stuff',
               },
             ],
             meetingLink: 'https://zoom.com/room/123',
@@ -122,7 +121,6 @@ export const listEventResponse: ListEventResponse = {
         {
           title: 'My additional link',
           url: 'https://link.pt/additional-material',
-          label: 'Use this to know more stuff',
         },
       ],
       meetingLink: 'https://zoom.com/room/123',
@@ -179,7 +177,6 @@ export const eventResponse: EventResponse = {
     {
       title: 'My additional link',
       url: 'https://link.pt/additional-material',
-      label: 'Use this to know more stuff',
     },
   ],
   tags: ['A'],

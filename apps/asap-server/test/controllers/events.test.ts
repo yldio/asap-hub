@@ -390,7 +390,7 @@ describe('Event controller', () => {
     });
   });
 
-  describe('Locked states', () => {
+  describe('Past event materials states', () => {
     const eventId = 'group-id-1';
     const eventBase = JSON.parse(
       JSON.stringify(
@@ -445,6 +445,36 @@ describe('Event controller', () => {
         videoRecording: null,
         presentation: null,
         meetingMaterials: null,
+      });
+    });
+
+    test('Should return empty (undefined) details if empty but the event is fresh', async () => {
+      const now = new Date().toISOString();
+      const emptyEvent = eventBase;
+      emptyEvent.flatData!.endDate = now;
+      emptyEvent.flatData!.notes = null;
+      emptyEvent.flatData!.videoRecording = null;
+      emptyEvent.flatData!.presentation = null;
+      emptyEvent.flatData!.meetingMaterials = null;
+      emptyEvent.flatData!.notesLocked = null;
+      emptyEvent.flatData!.videoRecordingLocked = null;
+      emptyEvent.flatData!.presentationLocked = null;
+      emptyEvent.flatData!.meetingMaterialsLocked = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, { data: { findEventsContent: emptyEvent } });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual({
+        ...eventResponse,
+        endDate: now,
+        notes: undefined,
+        videoRecording: undefined,
+        presentation: undefined,
+        meetingMaterials: [],
       });
     });
   });

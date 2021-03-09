@@ -21,6 +21,7 @@ import { getUser, patchUser, postUserAvatar } from '../api';
 import { refreshUserState } from '../state';
 
 jest.mock('../api');
+jest.mock('../groups/api');
 jest.mock('browser-image-compression');
 
 const imageCompressionMock = imageCompression as jest.MockedFunction<

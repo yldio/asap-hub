@@ -1,10 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import {
-  createTeamResponse,
-  createListGroupResponse,
-  createGroupResponse,
-} from '@asap-hub/fixtures';
+import { createTeamResponse } from '@asap-hub/fixtures';
 import {
   Auth0Provider,
   WhenReady,
@@ -13,20 +9,11 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 
 import About from '../About';
-import { getTeamGroups } from '../api';
 import { refreshTeamState } from '../state';
 
 jest.mock('../api');
 
-const mockGetTeamGroups = getTeamGroups as jest.MockedFunction<
-  typeof getTeamGroups
->;
-
-const renderTeamAbout = async (
-  aboutProps: ComponentProps<typeof About>,
-  getTeamGroupResponse = createListGroupResponse(0),
-) => {
-  mockGetTeamGroups.mockResolvedValue(getTeamGroupResponse);
+const renderTeamAbout = async (aboutProps: ComponentProps<typeof About>) => {
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
@@ -81,47 +68,5 @@ describe('the proposal', () => {
       team: { ...createTeamResponse(), proposalURL: 'someproposal' },
     });
     expect(getByText(/proposal/i).closest('a')!.href).toMatch(/someproposal$/);
-  });
-});
-
-describe('the team groups card', () => {
-  it('is not rendered when there are no groups', async () => {
-    const { queryByText } = await renderTeamAbout(
-      {
-        team: createTeamResponse(),
-      },
-      createListGroupResponse(0),
-    );
-    expect(queryByText(/team groups/i)).not.toBeInTheDocument();
-  });
-
-  it('is rendered when there are groups', async () => {
-    const { queryByText } = await renderTeamAbout(
-      {
-        team: createTeamResponse(),
-      },
-      createListGroupResponse(1),
-    );
-    await waitFor(() =>
-      expect(queryByText(/team groups/i)).toBeInTheDocument(),
-    );
-  });
-
-  it('renders link for group', async () => {
-    const { queryByText, getByText } = await renderTeamAbout(
-      {
-        team: createTeamResponse(),
-      },
-      {
-        items: [{ ...createGroupResponse(), name: 'example group', id: 'g1' }],
-        total: 1,
-      },
-    );
-    await waitFor(() =>
-      expect(queryByText(/team groups/i)).toBeInTheDocument(),
-    );
-    expect(
-      getByText(/example group/i, { selector: 'h4' }).parentElement,
-    ).toHaveAttribute('href', expect.stringMatching(/g1$/));
   });
 });

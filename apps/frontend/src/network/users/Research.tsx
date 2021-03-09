@@ -11,7 +11,7 @@ import { useCurrentUser } from '@asap-hub/react-context';
 
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
-import UserGroups from './Groups';
+import Groups from './groups/Groups';
 
 type ResearchProps = {
   user: UserResponse;
@@ -30,7 +30,7 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
         {...user}
         userProfileGroupsCard={
           <Frame fallback={null}>
-            <UserGroups user={user} />
+            <Groups user={user} />
           </Frame>
         }
         teams={teams.map((team) => ({

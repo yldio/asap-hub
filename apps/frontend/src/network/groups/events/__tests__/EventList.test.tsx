@@ -7,12 +7,12 @@ import {
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { Auth0Provider, WhenReady } from '../../../../auth/test-utils';
 
 import EventList from '../EventList';
+import { DEFAULT_PAGE_SIZE } from '../../../../hooks';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
-import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 

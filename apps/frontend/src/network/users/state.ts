@@ -4,15 +4,11 @@ import {
   useSetRecoilState,
   useRecoilValue,
 } from 'recoil';
-import {
-  UserResponse,
-  UserPatchRequest,
-  ListGroupResponse,
-} from '@asap-hub/model';
+import { UserResponse, UserPatchRequest } from '@asap-hub/model';
 import { useAuth0 } from '@asap-hub/react-context';
 
 import { authorizationState } from '@asap-hub/frontend/src/auth/state';
-import { getUser, patchUser, postUserAvatar, getUserGroups } from './api';
+import { getUser, patchUser, postUserAvatar } from './api';
 
 export const refreshUserState = atomFamily<number, string>({
   key: 'refreshUser',
@@ -36,15 +32,6 @@ const userState = selectorFamily<UserResponse | undefined, string>({
   key: 'user',
   get: (id) => ({ get }) =>
     get(patchedUserState(id)) ?? get(initialUserState(id)),
-});
-
-const userGroupsState = selectorFamily<ListGroupResponse, string>({
-  key: 'userGroups',
-  get: (id) => async ({ get }) => {
-    get(refreshUserState(id));
-    const authorization = get(authorizationState);
-    return getUserGroups(id, authorization);
-  },
 });
 
 export const useUserById = (id: string) => useRecoilValue(userState(id));
@@ -75,6 +62,3 @@ export const usePatchUserAvatarById = (id: string) => {
     setSetPatchedUserState(user);
   };
 };
-
-export const useUserGroupsById = (id: string) =>
-  useRecoilValue(userGroupsState(id));

@@ -1,6 +1,6 @@
 # ASAP Hub and Squidex
 
-Github is the source of truth for Squidex schemas. All the schemas and rules are stored [here](https://github.com/yldio/asap-hub/tree/master/packages/squidex/schema).  
+Github is the source of truth for Squidex schemas. All the schemas and rules are stored [here](https://github.com/yldio/asap-hub/tree/master/packages/squidex/schema).
 
 We commit the squidex schema with the code, we then have a CI job that will sync the schemas with to the different environments.
 We use [squidex-cli](https://github.com/Squidex/squidex-samples/releases) to interact with Squidex.

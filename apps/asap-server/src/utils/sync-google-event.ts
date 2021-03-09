@@ -78,7 +78,7 @@ export const syncEventFactory = (
         ) {
           newEvent.hidden = true;
         } else {
-          newEvent.hidden = existingEvent.data.hidden.iv;
+          newEvent.hidden = existingEvent.data.hidden?.iv || false;
         }
         logger('Found event. Updating.', existingEvent.id, newEvent);
         return await eventsController.update(existingEvent.id, newEvent);

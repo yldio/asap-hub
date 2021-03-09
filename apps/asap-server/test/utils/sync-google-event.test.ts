@@ -166,6 +166,41 @@ describe('Sync calendar util hook', () => {
       );
     });
 
+    test('Should remain visible (ie not hidden) when the event hidden flag is missing', async () => {
+      const existingEvent: RestEvent = {
+        ...restEvent,
+        data: {
+          ...restEvent.data,
+          status: { iv: 'Cancelled' },
+        },
+      };
+      delete existingEvent.data.hidden;
+
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
+
+      const updatedEvent = {
+        ...event,
+        status: 'cancelled',
+      };
+      await syncEvent(updatedEvent, defaultCalendarTimezone);
+
+      expect(eventControllerMock.update).toHaveBeenCalledWith(
+        'squidex-event-id',
+        {
+          googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+          title: 'Event Title',
+          description: 'Event Description',
+          startDate: '2021-02-27T00:00:00.000Z',
+          startDateTimeZone: 'Europe/Lisbon',
+          endDate: '2021-02-28T00:00:00.000Z',
+          endDateTimeZone: 'Europe/Lisbon',
+          status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
+          hidden: false,
+        },
+      );
+    });
+
     test('Should remain hidden when the status changes from confirmed to tentative', async () => {
       const existingEvent: RestEvent = {
         ...restEvent,

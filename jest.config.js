@@ -38,11 +38,7 @@ const lintConfigs = [
   runner: require.resolve('jest-runner-eslint'),
   testMatch: ['<rootDir>/src/**/*.{js,jsx,ts,tsx}'],
 
-  modulePathIgnorePatterns: [
-    '<rootDir>/build([^/]*)/',
-    '<rootDir>/coverage/',
-    '<rootDir>/.*/__mocks__',
-  ],
+  modulePathIgnorePatterns: ['<rootDir>/build(-cjs)?/'],
 
   displayName: `lint-${packageOrApp}`,
 }));

@@ -29,6 +29,7 @@ export {
   TabLink,
   TagLabel,
   Toggle,
+  Tooltip,
 } from './atoms';
 export {
   BackLink,
@@ -41,6 +42,7 @@ export {
   ExternalLink,
   GoogleSigninButton,
   Header,
+  Info,
   LabeledCheckbox,
   LabeledDateField,
   LabeledDropdown,

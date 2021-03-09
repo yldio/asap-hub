@@ -1,0 +1,13 @@
+import React from 'react';
+import { Info } from '@asap-hub/react-components';
+import { text } from '@storybook/addon-knobs';
+
+import { CenterDecorator } from './layout';
+
+export default {
+  title: 'Molecules / Info',
+  component: Info,
+  decorators: [CenterDecorator],
+};
+
+export const Normal = () => <Info>{text('Tooltip text', 'Tooltip text')}</Info>;

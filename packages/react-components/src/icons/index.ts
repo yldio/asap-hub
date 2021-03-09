@@ -23,6 +23,7 @@ export { default as googleScholarIcon } from './google-scholar';
 export { default as googleSigninLightNormalIcon } from './google-signin-light-normal';
 export { default as groupsIcon } from './groups';
 export { default as hidePasswordIcon } from './hide-password';
+export { default as infoIcon } from './info';
 export { default as lastPageIcon } from './last-page';
 export { default as libraryIcon } from './shared-research';
 export { default as linkIcon } from './link';

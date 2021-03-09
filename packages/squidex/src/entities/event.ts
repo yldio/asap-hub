@@ -25,7 +25,7 @@ export interface Event<TCalendar = string, TThumbnail = string> {
   thumbnail?: TThumbnail[];
   calendar: TCalendar[];
   tags: string[];
-  hidden: boolean;
+  hidden?: boolean;
 }
 
 export interface RestEvent extends Entity, Rest<Event> {}

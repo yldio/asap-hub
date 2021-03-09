@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "research-outputs",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Research Outputs"
+      "label": "Research Outputs",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": ["title", "type"],
@@ -21,9 +24,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -37,11 +43,14 @@
           "allowedValues": ["Proposal", "Presentation", "Protocol"],
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Type",
           "hints": "",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -54,9 +63,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Short Text",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -69,11 +81,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Text",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -86,11 +101,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -103,9 +121,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Publish Date",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -120,7 +141,9 @@
           "label": "Tags",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       }
     ],

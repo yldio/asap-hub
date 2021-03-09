@@ -9,6 +9,7 @@
   },
   "action": {
     "actionType": "Webhook",
-    "url": "https://squidex.io"
+    "url": "https://squidex.io",
+    "method": "POST"
   }
 }

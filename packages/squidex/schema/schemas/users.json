@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "users",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Users"
+      "label": "Users",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": ["email"],
@@ -22,9 +25,12 @@
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "isUnique": true,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Email",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -37,11 +43,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Correspondence Email",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -54,11 +63,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "First Name",
           "hints": "",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -71,11 +83,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Last Name",
           "hints": "",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -86,6 +101,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Assets",
+          "previewMode": "ImageAndFileName",
           "minItems": 0,
           "maxItems": 1,
           "mustBeImage": true,
@@ -95,7 +111,9 @@
           "label": "Avatar",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -108,11 +126,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Job Title",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -126,11 +147,14 @@
           "allowedValues": ["BA", "BSc", "MD", "MSc", "PhD, MD", "PhD"],
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Degree",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -143,11 +167,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Institution",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -160,11 +187,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Location",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -177,11 +207,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Biography",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -194,9 +227,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Expertise and Resources Description",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -209,7 +245,9 @@
           "fieldType": "Tags",
           "editor": "Tags",
           "label": "Expertise and Resources",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -225,7 +263,9 @@
           "label": "Open Questions",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         },
         "nested": [
           {
@@ -237,11 +277,14 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Question",
               "hints": "",
               "placeholder": "",
-              "isRequired": true
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           }
         ]
@@ -256,11 +299,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Last Modified Date",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -273,11 +319,14 @@
           "fieldType": "String",
           "isUnique": true,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -290,11 +339,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID Last Sync Date",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -307,11 +359,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID Last Modified Date",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -325,7 +380,9 @@
           "label": "ORCID Works",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         },
         "nested": [
           {
@@ -337,11 +394,14 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "ID",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -353,11 +413,14 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "DOI",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -369,11 +432,14 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Title",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -385,11 +451,14 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Type",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -401,11 +470,14 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Last Modified Date",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -418,7 +490,9 @@
               "label": "Publication Date",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           }
         ]
@@ -434,7 +508,9 @@
           "label": "Teams",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         },
         "nested": [
           {
@@ -448,12 +524,15 @@
               "maxItems": 1,
               "allowDuplicates": false,
               "resolveReference": false,
+              "mustBePublished": false,
               "editor": "List",
               "schemaIds": ["teams"],
               "label": "ID",
               "hints": "",
               "placeholder": "",
-              "isRequired": true
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -472,9 +551,12 @@
               ],
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",
-              "isRequired": true
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -486,9 +568,12 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Main Research Interests",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -500,11 +585,14 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Responsibilities",
               "hints": "",
               "placeholder": "",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           }
         ]
@@ -521,11 +609,14 @@
           "allowedValues": ["Staff", "Grantee", "Guest", "Hidden"],
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "ASAP Hub Role",
           "hints": "Role on the ASAP Hub",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -538,10 +629,13 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Responsibilities",
           "hints": "Responsibilities on the ASAP Hub (only relevant for \"Staff\" users)",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -554,11 +648,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Reach Out",
           "hints": "Reach out reasons (only relevant for \"Staff\" users)",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -572,7 +669,9 @@
           "label": "Connections",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         },
         "nested": [
           {
@@ -584,94 +683,167 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": true,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Code",
               "hints": "",
               "placeholder": "",
-              "isRequired": true
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           }
         ]
       },
       {
         "name": "social",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
           "fieldType": "Array",
           "maxItems": 1,
-          "label": "Social Links"
+          "label": "Social Links",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         },
-        "partitioning": "invariant",
         "nested": [
           {
             "name": "linkedIn",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "LinkedIn"
+              "editor": "Input",
+              "label": "LinkedIn",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
             "name": "researcherId",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "Researcher ID"
+              "editor": "Input",
+              "label": "Researcher ID",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
             "name": "twitter",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "Twitter"
+              "editor": "Input",
+              "label": "Twitter",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
             "name": "github",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "Github"
+              "editor": "Input",
+              "label": "Github",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
             "name": "googleScholar",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "Google Scholar"
+              "editor": "Input",
+              "label": "Google Scholar",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
             "name": "researchGate",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "Research Gate"
+              "editor": "Input",
+              "label": "Research Gate",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
             "name": "website1",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "Website 1"
+              "editor": "Input",
+              "label": "Website 1",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
             "name": "website2",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "editor": "Input",
+              "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
-              "label": "Website 2"
+              "editor": "Input",
+              "label": "Website 2",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           }
         ]

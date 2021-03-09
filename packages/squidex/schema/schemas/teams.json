@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "teams",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Teams"
+      "label": "Teams",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": ["displayName"],
@@ -21,9 +24,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Display Name",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -36,9 +42,12 @@
           "fieldType": "String",
           "isUnique": true,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Application Number",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -51,9 +60,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Title",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -66,9 +78,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Summary",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -82,10 +97,13 @@
           "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "Dropdown",
           "schemaIds": ["research-outputs"],
           "label": "Proposal",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -98,10 +116,13 @@
           "fieldType": "References",
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["research-outputs"],
           "label": "Shared Research",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -114,7 +135,9 @@
           "fieldType": "Tags",
           "editor": "Tags",
           "label": "Expertise and Resources",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -126,7 +149,9 @@
         "properties": {
           "fieldType": "Array",
           "label": "External Tools",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         },
         "nested": [
           {
@@ -138,9 +163,12 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Name",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -152,9 +180,12 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "Description",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           },
           {
@@ -166,9 +197,12 @@
               "fieldType": "String",
               "isUnique": false,
               "inlineEditable": false,
+              "contentType": "Unspecified",
               "editor": "Input",
               "label": "URL",
-              "isRequired": false
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
             }
           }
         ]

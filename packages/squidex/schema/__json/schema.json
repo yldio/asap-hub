@@ -5,6 +5,12 @@
     "name": {
       "type": ["null", "string"]
     },
+    "isSingleton": {
+      "type": "boolean"
+    },
+    "isPublished": {
+      "type": "boolean"
+    },
     "schema": {
       "oneOf": [
         {
@@ -84,6 +90,18 @@
           "type": ["null", "string"],
           "maxLength": 1000,
           "minLength": 0
+        },
+        "contentsSidebarUrl": {
+          "type": ["null", "string"]
+        },
+        "contentSidebarUrl": {
+          "type": ["null", "string"]
+        },
+        "contentEditorUrl": {
+          "type": ["null", "string"]
+        },
+        "validateOnPublish": {
+          "type": "boolean"
         },
         "tags": {
           "type": ["array", "null"],
@@ -166,6 +184,12 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
@@ -200,6 +224,12 @@
           "minLength": 0
         },
         "isRequired": {
+          "type": "boolean"
+        },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
           "type": "boolean"
         },
         "editorUrl": {
@@ -246,10 +276,24 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
         "tags": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "previewMode": {},
+        "defaultValues": {},
+        "defaultValue": {
           "type": ["array", "null"],
           "items": {
             "type": "string"
@@ -302,7 +346,9 @@
           "type": "boolean"
         },
         "resolveImage": {
-          "type": "boolean"
+          "type": "boolean",
+          "x-deprecated": true,
+          "x-deprecatedMessage": "Use ResolveFirst now"
         },
         "allowedExtensions": {
           "type": ["array", "null"],
@@ -317,6 +363,16 @@
           "type": "string"
         }
       }
+    },
+    "AssetPreviewMode": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": ["ImageAndFileName", "Image", "FileName"],
+      "enum": ["ImageAndFileName", "Image", "FileName"]
+    },
+    "LocalizedValueOfStringOf": {
+      "type": "object",
+      "additionalProperties": false
     },
     "BooleanFieldPropertiesDto": {
       "type": "object",
@@ -340,6 +396,12 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
@@ -349,6 +411,7 @@
             "type": "string"
           }
         },
+        "defaultValues": {},
         "defaultValue": {
           "type": ["boolean", "null"]
         },
@@ -360,6 +423,10 @@
           "type": "string"
         }
       }
+    },
+    "LocalizedValueOfNullableBoolean": {
+      "type": "object",
+      "additionalProperties": false
     },
     "BooleanFieldEditor": {
       "type": "string",
@@ -389,6 +456,12 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
@@ -398,6 +471,7 @@
             "type": "string"
           }
         },
+        "defaultValues": {},
         "defaultValue": {
           "type": ["null", "string"],
           "format": "date-time"
@@ -423,6 +497,10 @@
           "type": "string"
         }
       }
+    },
+    "LocalizedValueOfNullableInstant": {
+      "type": "object",
+      "additionalProperties": false
     },
     "DateTimeFieldEditor": {
       "type": "string",
@@ -458,6 +536,12 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
@@ -466,9 +550,6 @@
           "items": {
             "type": "string"
           }
-        },
-        "defaultValue": {
-          "type": ["boolean", "null"]
         },
         "editor": {},
         "fieldType": {
@@ -502,6 +583,12 @@
           "minLength": 0
         },
         "isRequired": {
+          "type": "boolean"
+        },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
           "type": "boolean"
         },
         "editorUrl": {
@@ -540,6 +627,12 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
@@ -549,6 +642,7 @@
             "type": "string"
           }
         },
+        "defaultValues": {},
         "defaultValue": {
           "type": ["null", "number"],
           "format": "double"
@@ -580,6 +674,10 @@
         }
       }
     },
+    "LocalizedValueOfNullableDouble": {
+      "type": "object",
+      "additionalProperties": false
+    },
     "NumberFieldEditor": {
       "type": "string",
       "description": "",
@@ -608,10 +706,23 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
         "tags": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "defaultValues": {},
+        "defaultValue": {
           "type": ["array", "null"],
           "items": {
             "type": "string"
@@ -631,6 +742,9 @@
         "resolveReference": {
           "type": "boolean"
         },
+        "mustBePublished": {
+          "type": "boolean"
+        },
         "editor": {},
         "schemaIds": {
           "type": ["array", "null"],
@@ -646,8 +760,8 @@
     "ReferencesFieldEditor": {
       "type": "string",
       "description": "",
-      "x-enumNames": ["List", "Dropdown", "Tags"],
-      "enum": ["List", "Dropdown", "Tags"]
+      "x-enumNames": ["List", "Dropdown", "Tags", "Checkboxes"],
+      "enum": ["List", "Dropdown", "Tags", "Checkboxes"]
     },
     "StringFieldPropertiesDto": {
       "type": "object",
@@ -671,6 +785,12 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
@@ -680,6 +800,7 @@
             "type": "string"
           }
         },
+        "defaultValues": {},
         "defaultValue": {
           "type": ["null", "string"]
         },
@@ -697,6 +818,22 @@
           "type": ["integer", "null"],
           "format": "int32"
         },
+        "minCharacters": {
+          "type": ["integer", "null"],
+          "format": "int32"
+        },
+        "maxCharacters": {
+          "type": ["integer", "null"],
+          "format": "int32"
+        },
+        "minWords": {
+          "type": ["integer", "null"],
+          "format": "int32"
+        },
+        "maxWords": {
+          "type": ["integer", "null"],
+          "format": "int32"
+        },
         "allowedValues": {
           "type": ["array", "null"],
           "items": {
@@ -709,11 +846,22 @@
         "inlineEditable": {
           "type": "boolean"
         },
+        "contentType": {},
         "editor": {},
         "fieldType": {
           "type": "string"
         }
       }
+    },
+    "LocalizedValueOfString": {
+      "type": "object",
+      "additionalProperties": false
+    },
+    "StringContentType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": ["Unspecified", "Html", "Markdown"],
+      "enum": ["Unspecified", "Html", "Markdown"]
     },
     "StringFieldEditor": {
       "type": "string",
@@ -765,10 +913,23 @@
         "isRequired": {
           "type": "boolean"
         },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
         "editorUrl": {
           "type": ["null", "string"]
         },
         "tags": {
+          "type": ["array", "null"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "defaultValues": {},
+        "defaultValue": {
           "type": ["array", "null"],
           "items": {
             "type": "string"
@@ -820,6 +981,12 @@
           "minLength": 0
         },
         "isRequired": {
+          "type": "boolean"
+        },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
           "type": "boolean"
         },
         "editorUrl": {

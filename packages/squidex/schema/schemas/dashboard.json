@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "dashboard",
+  "isSingleton": true,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Dashboard"
+      "label": "Dashboard",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": [],
@@ -21,10 +24,13 @@
           "fieldType": "References",
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["news-and-events"],
           "label": "Latest News from ASAP",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -37,10 +43,13 @@
           "fieldType": "References",
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["pages"],
           "label": "Where to Start",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       }
     ],

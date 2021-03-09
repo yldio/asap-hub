@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "events",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Events"
+      "label": "Events",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": [],
@@ -22,6 +25,7 @@
           "editor": "Separator",
           "label": "Future Events Data",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -36,6 +40,7 @@
           "editor": "Tags",
           "label": "Tags",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -55,6 +60,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -76,6 +82,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -91,132 +98,133 @@
           "label": "Meeting Materials",
           "hints": "This will only show for past events - if you add upfront it won't show",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
       {
         "name": "notes",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "RichText",
+          "label": "Notes",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false,
-          "fieldType": "String",
-          "editor": "RichText",
-          "inlineEditable": false,
-          "isUnique": false,
-          "contentType": "Unspecified",
-          "label": "Notes"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant"
+          "isHalfWidth": false
+        }
       },
       {
         "name": "videoRecording",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "RichText",
+          "label": "Video Recording",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false,
-          "fieldType": "String",
-          "editor": "RichText",
-          "inlineEditable": false,
-          "isUnique": false,
-          "contentType": "Unspecified",
-          "label": "Video Recording"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant"
+          "isHalfWidth": false
+        }
       },
       {
         "name": "presentation",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "RichText",
+          "label": "Presentation",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false,
-          "fieldType": "String",
-          "editor": "RichText",
-          "inlineEditable": false,
-          "isUnique": false,
-          "contentType": "Unspecified",
-          "label": "Presentation"
-        },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant"
+          "isHalfWidth": false
+        }
       },
       {
         "name": "meetingMaterials",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
         "properties": {
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false,
           "fieldType": "Array",
           "label": "Additional Meeting Materials",
           "hints": "",
-          "placeholder": ""
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         },
-        "isLocked": false,
-        "isHidden": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
         "nested": [
           {
             "name": "title",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
-              "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": false,
               "fieldType": "String",
-              "editor": "Input",
-              "inlineEditable": false,
               "isUnique": false,
+              "inlineEditable": false,
               "contentType": "Unspecified",
+              "editor": "Input",
               "label": "Title",
               "hints": "",
-              "placeholder": ""
-            },
-            "isLocked": false,
-            "isHidden": false,
-            "isDisabled": false
+              "placeholder": "",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false
+            }
           },
           {
             "name": "url",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
+              "fieldType": "String",
+              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+              "isUnique": false,
+              "inlineEditable": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "URL",
               "isRequired": true,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false,
-              "fieldType": "String",
-              "editor": "Input",
-              "inlineEditable": false,
-              "isUnique": false,
-              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
-              "contentType": "Unspecified",
-              "label": "URL"
-            },
-            "isLocked": false,
-            "isHidden": false,
-            "isDisabled": false
+              "isHalfWidth": false
+            }
           },
           {
             "name": "label",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
             "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": false,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Label",
               "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false,
-              "fieldType": "String",
-              "editor": "Input",
-              "inlineEditable": false,
-              "isUnique": false,
-              "contentType": "Unspecified",
-              "label": "Label"
-            },
-            "isLocked": false,
-            "isHidden": false,
-            "isDisabled": false
+              "isHalfWidth": false
+            }
           }
         ]
       },
@@ -232,6 +240,7 @@
           "label": "API data (not changeable)",
           "hints": "if you want to edit this, go to google cal",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -251,6 +260,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": true,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -270,6 +280,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -286,6 +297,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -303,6 +315,7 @@
           "editor": "Input",
           "label": "Start Date Time Zone",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -319,6 +332,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -336,6 +350,7 @@
           "editor": "Input",
           "label": "End Date Time Zone",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -351,10 +366,12 @@
           "maxItems": 1,
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["calendars"],
           "label": "Calendar",
           "isRequired": true,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -374,6 +391,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -393,6 +411,7 @@
           "hints": "",
           "placeholder": "",
           "isRequired": true,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       },
@@ -412,7 +431,9 @@
           "label": "Status",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -430,6 +451,7 @@
           "hints": "Should the event be hidden in the HUB",
           "placeholder": "",
           "isRequired": true,
+          "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
       }

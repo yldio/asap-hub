@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "my-schema",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "My Schema"
+      "label": "My Schema",
+      "validateOnPublish": false
     },
     "fields": [
       {
@@ -18,8 +21,11 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       }
     ],

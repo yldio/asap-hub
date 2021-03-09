@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "calendars",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Calendars"
+      "label": "Calendars",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": ["name"],
@@ -21,9 +24,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -38,9 +44,12 @@
           "minLength": 8,
           "isUnique": true,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Calendar ID",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -97,9 +106,12 @@
           ],
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Radio",
           "label": "Color",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -112,9 +124,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Last Sync Token",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -127,9 +142,12 @@
           "fieldType": "String",
           "isUnique": true,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google resource ID",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -144,7 +162,9 @@
           "inlineEditable": false,
           "editor": "Input",
           "label": "Google subscription expiration date",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       }
     ],

@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "discover",
+  "isSingleton": true,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Discover ASAP"
+      "label": "Discover ASAP",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": [],
@@ -21,10 +24,13 @@
           "fieldType": "References",
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["pages"],
           "label": "Grantee Guidance",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -37,10 +43,13 @@
           "fieldType": "References",
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["news-and-events"],
           "label": "Training",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -53,9 +62,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "RichText",
           "label": "About Us",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -68,10 +80,13 @@
           "fieldType": "References",
           "allowDuplicates": false,
           "resolveReference": false,
+          "mustBePublished": false,
           "editor": "List",
           "schemaIds": ["users"],
           "label": "Members",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       }
     ],

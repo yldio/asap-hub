@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "pages",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "Pages"
+      "label": "Pages",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": ["title"],
@@ -21,9 +24,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -36,11 +42,14 @@
           "fieldType": "String",
           "isUnique": true,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Path",
           "hints": "",
           "placeholder": "",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -53,11 +62,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Short Text",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -70,11 +82,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Text",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -88,9 +103,12 @@
           "pattern": "",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -103,11 +121,14 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link Text",
           "hints": "",
           "placeholder": "",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       }
     ],

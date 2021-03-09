@@ -1,11 +1,14 @@
 {
   "$schema": "./../__json/schema.json",
   "name": "news-and-events",
+  "isSingleton": false,
+  "isPublished": false,
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "News and Events"
+      "label": "News and Events",
+      "validateOnPublish": false
     },
     "scripts": {},
     "fieldsInReferences": ["title"],
@@ -21,9 +24,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -37,9 +43,12 @@
           "allowedValues": ["News", "Event", "Training"],
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Type",
-          "isRequired": true
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -52,10 +61,13 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "Short Text",
           "hints": "The text visible on the card version of News and Events",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -66,12 +78,15 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Assets",
+          "previewMode": "ImageAndFileName",
           "mustBeImage": true,
           "resolveFirst": false,
           "resolveImage": false,
           "allowDuplicates": false,
           "label": "Thumbnail",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -85,9 +100,12 @@
           "pattern": "",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -100,10 +118,13 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link Text",
           "hints": "Leave this empty to show \"Open External Link\"",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -117,7 +138,9 @@
           "editor": "DateTime",
           "label": "Event Date",
           "hints": "Property only used on Event type items",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       },
       {
@@ -130,9 +153,12 @@
           "fieldType": "String",
           "isUnique": false,
           "inlineEditable": false,
+          "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Text",
-          "isRequired": false
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
         }
       }
     ],

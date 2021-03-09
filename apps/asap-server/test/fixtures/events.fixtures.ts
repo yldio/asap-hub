@@ -146,7 +146,10 @@ export const listEventResponse: ListEventResponse = {
       thumbnail: `${config.baseUrl}/api/assets/${config.appName}/uuid-thumbnail-1`,
       lastModifiedDate: '2021-02-08T16:20:35.000Z',
       status: 'Confirmed',
-      meetingMaterials: [],
+      notes: null,
+      videoRecording: null,
+      presentation: null,
+      meetingMaterials: null,
       tags: ['B'],
       calendar: {
         id: 'c_v8ma9lsbsjf90rk30ougr54iig@group.calendar.google.com',

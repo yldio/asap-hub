@@ -390,6 +390,65 @@ describe('Event controller', () => {
     });
   });
 
+  describe('Locked states', () => {
+    const eventId = 'group-id-1';
+    const eventBase = JSON.parse(
+      JSON.stringify(
+        fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
+      ),
+    );
+
+    test('Should return locked details if details are locked on the CMS', async () => {
+      const lockedEventResponse = eventBase;
+      lockedEventResponse.flatData!.notesLocked = true;
+      lockedEventResponse.flatData!.videoRecordingLocked = true;
+      lockedEventResponse.flatData!.presentationLocked = true;
+      lockedEventResponse.flatData!.meetingMaterialsLocked = true;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, { data: { findEventsContent: lockedEventResponse } });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual({
+        ...eventResponse,
+        notes: null,
+        videoRecording: null,
+        presentation: null,
+        meetingMaterials: null,
+      });
+    });
+
+    test('Should return locked details if it enough time as passed and details are empty', async () => {
+      const emptyEvent = eventBase;
+      emptyEvent.flatData!.notes = null;
+      emptyEvent.flatData!.videoRecording = null;
+      emptyEvent.flatData!.presentation = null;
+      emptyEvent.flatData!.meetingMaterials = null;
+      emptyEvent.flatData!.notesLocked = null;
+      emptyEvent.flatData!.videoRecordingLocked = null;
+      emptyEvent.flatData!.presentationLocked = null;
+      emptyEvent.flatData!.meetingMaterialsLocked = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, { data: { findEventsContent: emptyEvent } });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual({
+        ...eventResponse,
+        notes: null,
+        videoRecording: null,
+        presentation: null,
+        meetingMaterials: null,
+      });
+    });
+  });
+
   describe('Fetch by id method', () => {
     test('Should throw a Not Found error when the event is not found', async () => {
       const eventId = 'not-found';

@@ -15,7 +15,7 @@
     "fieldsInLists": ["title"],
     "fields": [
       {
-        "name": "futureEventsData",
+        "name": "separatorFutureEventsData",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -87,7 +87,7 @@
         }
       },
       {
-        "name": "MeetingMaterials",
+        "name": "separatorMeetingMaterials",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -101,6 +101,24 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "notesLocked",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Lock Notes Field",
+          "hints": "This flag denotes there will be no Notes for this event",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "notes",
@@ -121,6 +139,24 @@
         }
       },
       {
+        "name": "videoRecordingLocked",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Lock Video Recording Field",
+          "hints": "This flag denotes there will be no Video Recording for this event",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
         "name": "videoRecording",
         "isHidden": false,
         "isLocked": false,
@@ -139,6 +175,24 @@
         }
       },
       {
+        "name": "presentationLocked",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Lock Presentation Field",
+          "hints": "This flag denotes there will be no Presentation for this event",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
         "name": "presentation",
         "isHidden": false,
         "isLocked": false,
@@ -155,6 +209,24 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "meetingMaterialsLocked",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Lock Additional Meeting Materials Field",
+          "hints": "This flag denotes there will be no Additional MM for this event",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "meetingMaterials",

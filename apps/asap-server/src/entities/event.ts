@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 import { GraphqlEvent } from '@asap-hub/squidex';
 import {
   EventResponse,
@@ -16,13 +16,10 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
       parseGraphQLGroup(group),
     ) || [];
   const startDate = DateTime.fromISO(item.flatData!.startDate!);
-  const now = DateTime.local();
-  const exposeMeetingLinkBeforeStartDuration = Duration.fromObject({
-    hours: MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
-  });
+  const now = DateTime.utc();
 
   const meetingLink =
-    now.plus(exposeMeetingLinkBeforeStartDuration) > startDate
+    now.plus({ hours: MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT }) > startDate
       ? item.flatData!.meetingLink || undefined
       : undefined;
 
@@ -33,26 +30,58 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     ? groups[0].thumbnail
     : undefined;
 
-  const meetingMaterials =
-    item.flatData?.meetingMaterials?.map(({ title, url, label }) => ({
+  const endDate = DateTime.fromISO(item.flatData!.endDate!);
+  const isStale = endDate.diffNow('days').get('days') < -10; // 10 days have passed after the event
+
+  const {
+    notesLocked,
+    videoRecordingLocked,
+    presentationLocked,
+    meetingMaterialsLocked,
+    notes,
+    videoRecording,
+    presentation,
+    meetingMaterials,
+  } = item.flatData!;
+
+  const notesRes =
+    notesLocked || (!notes && isStale)
+      ? null
+      : item.flatData!.notes ?? undefined;
+
+  const videoRecordingRes =
+    videoRecordingLocked || (!videoRecording && isStale)
+      ? null
+      : item.flatData!.videoRecording ?? undefined;
+
+  const presentationRes =
+    presentationLocked || (!presentation && isStale)
+      ? null
+      : item.flatData!.presentation ?? undefined;
+
+  const materials =
+    meetingMaterials?.map(({ title, url, label }) => ({
       title,
       url,
       label: label ?? undefined,
     })) || [];
+
+  const meetingMaterialsRes =
+    meetingMaterialsLocked || (!meetingMaterials && isStale) ? null : materials;
 
   return {
     id: item.id,
     description: item.flatData?.description || '',
     startDate: startDate.toUTC().toString(),
     startDateTimeZone: item.flatData!.startDateTimeZone!,
-    endDate: parseDate(item.flatData!.endDate!).toISOString(),
+    endDate: endDate.toUTC().toString(),
     endDateTimeZone: item.flatData!.endDateTimeZone!,
     lastModifiedDate: parseDate(item.lastModified).toISOString(),
     title: item.flatData!.title!,
-    notes: item.flatData!.notes ?? undefined,
-    videoRecording: item.flatData!.videoRecording ?? undefined,
-    presentation: item.flatData!.presentation ?? undefined,
-    meetingMaterials,
+    notes: notesRes,
+    videoRecording: videoRecordingRes,
+    presentation: presentationRes,
+    meetingMaterials: meetingMaterialsRes,
     thumbnail,
     meetingLink,
     status: item.flatData!.status!,

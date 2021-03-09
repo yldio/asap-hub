@@ -34,21 +34,25 @@ For a list of individual package and particularly app scripts, look inside the r
 ## Setting up your development environment
 
 For you, a newcomer, to be running your development setup, you'll need to complete the following steps:
+
 ### Create a new user on Squidex
+
 - Log in to https://cloud.squidex.io/app/asap-hub-dev
 - In `Content/Users`, create a new user (or edit if already created)
 - While creating, or editing the user, on `Functional/Connections`, add a new item to store your UUID (you can generate a random one [here](https://www.uuidgenerator.net/version4)) and save that (the save button is the blue one on top!). You'll need that UUID later, so save it.
 
 ### Get everything running
+
 - create a `.env` file and update it with the necessary details (ask someone for this)
 - You can run all apps in the project with a simple `yarn start` on the project's root. It will load up everything, but you don't need to run everything. Depending on what you're doing, you only need some apps up
 - `yarn watch:babel`: to have babel watching and compiling for you (you'll need this running most of the time)
 - `yarn watch:typecheck`: well... for types checking (you'll need this running most of the time)
 - `yarn start:backend`: to run the backend
-- `yarn start:frontend`: to run the frontend 
-- `yarn start:storybook`: to run storybook 
+- `yarn start:frontend`: to run the frontend
+- `yarn start:storybook`: to run storybook
 
 ### Now that everything's up
+
 - On localhost:3000 you should have the hub running. You'll need to get your profile created.
 - Get your UUID from the previous step, and use it on https://dev.hub.asap.science/welcome/{uuid}
 - Reload localhost:3000 and you should now have an account and be logged in.

@@ -18,7 +18,6 @@ include:
 .tmpl:deploy: &tmpl_deploy
   script:
     - yarn sls deploy --verbose
-  stage: deploy
   variables: &tmpl_deploy_variables
     NODE_ENV: production
   dependencies:
@@ -49,8 +48,10 @@ stages:
   - build
   - test
   - prepare
-  - deploy
-  - verify
+  - deploy-dev
+  - verify-dev
+  - deploy-prod
+  - verify-prod
 
 ###############
 # stage build #
@@ -136,9 +137,9 @@ test:build-output:
   needs:
     - build:ts
 
-################
-# stage deploy #
-################
+####################
+# stage deploy-dev #
+####################
 
 deploy:sls:branch:
   <<: *tmpl_branch
@@ -153,6 +154,7 @@ deploy:sls:branch:
   variables:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables
+  stage: deploy-dev
   needs:
     - build:ts
     - build:native
@@ -166,9 +168,9 @@ deploy:sls:branch_remove:
   script:
     - git checkout $CI_COMMIT_SHA # the branch may not exist
     - yarn sls remove --verbose
+  stage: deploy-dev
   needs:
     - build:native
-  stage: deploy
 
 deploy:sls:development:
   <<: *tmpl_master
@@ -180,9 +182,43 @@ deploy:sls:development:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
     SLS_STAGE: 'dev'
+  stage: deploy-dev
   needs:
     - build:ts
     - build:native
+
+####################
+# stage verify-dev #
+####################
+
+verify:branch:
+  <<: *tmpl_branch
+  stage: verify-dev
+  variables:
+    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+  needs:
+    - build:ts
+    - build:native
+    - deploy:sls:branch
+  script:
+    - ASAP_API_URL=$API_URL yarn test:e2e
+
+verify:development:
+  <<: *tmpl_master
+  stage: verify-dev
+  environment:
+    name: dev
+    url: $ASAP_APP_URL
+  needs:
+    - build:ts
+    - build:native
+    - deploy:sls:development
+  script:
+    - yarn test:e2e
+
+#####################
+# stage deploy-prod #
+#####################
 
 deploy:sls:production:
   <<: *tmpl_master
@@ -200,6 +236,7 @@ deploy:sls:production:
   variables:
     <<: *tmpl_master_variables
     <<: *tmpl_deploy_variables
+  stage: deploy-prod
   needs:
     - build:ts
     - build:native
@@ -207,39 +244,15 @@ deploy:sls:production:
     - test:browser
     - test:build-output
     - sync:squidex:production
+    - verify:development
 
-################
-# stage verify #
-################
-
-verify:branch:
-  <<: *tmpl_branch
-  stage: verify
-  variables:
-    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
-  needs:
-    - build:ts
-    - build:native
-    - deploy:sls:branch
-  script:
-    - ASAP_API_URL=$API_URL yarn test:e2e
-
-verify:development:
-  <<: *tmpl_master
-  stage: verify
-  environment:
-    name: dev
-    url: $ASAP_APP_URL
-  needs:
-    - build:ts
-    - build:native
-    - deploy:sls:development
-  script:
-    - yarn test:e2e
+#####################
+# stage verify-prod #
+#####################
 
 verify:production:
   <<: *tmpl_master
-  stage: verify
+  stage: verify-prod
   environment:
     name: production
     url: $ASAP_APP_URL

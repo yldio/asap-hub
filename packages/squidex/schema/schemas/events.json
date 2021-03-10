@@ -121,7 +121,7 @@
         }
       },
       {
-        "name": "notesLocked",
+        "name": "notesPermanentlyUnavailable",
         "properties": {
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -157,7 +157,7 @@
         }
       },
       {
-        "name": "videoRecordingLocked",
+        "name": "videoRecordingPermanentlyUnavailable",
         "properties": {
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -193,7 +193,7 @@
         }
       },
       {
-        "name": "presentationLocked",
+        "name": "presentationPermanentlyUnavailable",
         "properties": {
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -229,7 +229,7 @@
         }
       },
       {
-        "name": "meetingMaterialsLocked",
+        "name": "meetingMaterialsPermanentlyUnavailable",
         "properties": {
           "isRequired": false,
           "isRequiredOnPublish": false,

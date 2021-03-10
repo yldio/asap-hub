@@ -18,13 +18,13 @@ export interface Event<TCalendar = string, TThumbnail = string> {
   hidden?: boolean;
 
   // Past event details
-  notesLocked?: boolean;
+  notesPermanentlyUnavailable?: boolean;
   notes?: string;
-  videoRecordingLocked?: boolean;
+  videoRecordingPermanentlyUnavailable?: boolean;
   videoRecording?: string;
-  presentationLocked?: boolean;
+  presentationPermanentlyUnavailable?: boolean;
   presentation?: string;
-  meetingMaterialsLocked?: boolean;
+  meetingMaterialsPermanentlyUnavailable?: boolean;
   meetingMaterials?: {
     title: string;
     url: string;

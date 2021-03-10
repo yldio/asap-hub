@@ -174,13 +174,13 @@ flatData{
   status
   tags
   title
-  notesLocked
+  notesPermanentlyUnavailable
   notes
-  videoRecordingLocked
+  videoRecordingPermanentlyUnavailable
   videoRecording
-  presentationLocked
+  presentationPermanentlyUnavailable
   presentation
-  meetingMaterialsLocked
+  meetingMaterialsPermanentlyUnavailable
   meetingMaterials {
     url
     label

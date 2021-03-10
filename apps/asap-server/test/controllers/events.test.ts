@@ -398,18 +398,20 @@ describe('Event controller', () => {
       ),
     );
 
-    test('Should return locked details if details are locked on the CMS', async () => {
-      const lockedEventResponse = eventBase;
-      lockedEventResponse.flatData!.notesLocked = true;
-      lockedEventResponse.flatData!.videoRecordingLocked = true;
-      lockedEventResponse.flatData!.presentationLocked = true;
-      lockedEventResponse.flatData!.meetingMaterialsLocked = true;
+    test('Should return permanentlyUnavailable details if details are permanentlyUnavailable on the CMS', async () => {
+      const pUnavailableEventRes = eventBase;
+      pUnavailableEventRes.flatData!.notesPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.videoRecordingPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.presentationPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.meetingMaterialsPermanentlyUnavailable = true;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchEvent(eventId),
         })
-        .reply(200, { data: { findEventsContent: lockedEventResponse } });
+        .reply(200, {
+          data: { findEventsContent: pUnavailableEventRes },
+        });
 
       const result = await events.fetchById(eventId);
       expect(result).toEqual({
@@ -421,16 +423,16 @@ describe('Event controller', () => {
       });
     });
 
-    test('Should return locked details if it enough time as passed and details are empty', async () => {
+    test('Should return permanentlyUnavailable details if it enough time as passed and details are empty', async () => {
       const emptyEvent = eventBase;
       emptyEvent.flatData!.notes = null;
       emptyEvent.flatData!.videoRecording = null;
       emptyEvent.flatData!.presentation = null;
       emptyEvent.flatData!.meetingMaterials = null;
-      emptyEvent.flatData!.notesLocked = null;
-      emptyEvent.flatData!.videoRecordingLocked = null;
-      emptyEvent.flatData!.presentationLocked = null;
-      emptyEvent.flatData!.meetingMaterialsLocked = null;
+      emptyEvent.flatData!.notesPermanentlyUnavailable = null;
+      emptyEvent.flatData!.videoRecordingPermanentlyUnavailable = null;
+      emptyEvent.flatData!.presentationPermanentlyUnavailable = null;
+      emptyEvent.flatData!.meetingMaterialsPermanentlyUnavailable = null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -456,10 +458,10 @@ describe('Event controller', () => {
       emptyEvent.flatData!.videoRecording = null;
       emptyEvent.flatData!.presentation = null;
       emptyEvent.flatData!.meetingMaterials = null;
-      emptyEvent.flatData!.notesLocked = null;
-      emptyEvent.flatData!.videoRecordingLocked = null;
-      emptyEvent.flatData!.presentationLocked = null;
-      emptyEvent.flatData!.meetingMaterialsLocked = null;
+      emptyEvent.flatData!.notesPermanentlyUnavailable = null;
+      emptyEvent.flatData!.videoRecordingPermanentlyUnavailable = null;
+      emptyEvent.flatData!.presentationPermanentlyUnavailable = null;
+      emptyEvent.flatData!.meetingMaterialsPermanentlyUnavailable = null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

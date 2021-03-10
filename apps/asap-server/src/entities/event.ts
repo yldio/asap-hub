@@ -34,10 +34,10 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   const isStale = endDate.diffNow('days').get('days') < -10; // 10 days have passed after the event
 
   const {
-    notesLocked,
-    videoRecordingLocked,
-    presentationLocked,
-    meetingMaterialsLocked,
+    notesPermanentlyUnavailable,
+    videoRecordingPermanentlyUnavailable,
+    presentationPermanentlyUnavailable,
+    meetingMaterialsPermanentlyUnavailable,
     notes,
     videoRecording,
     presentation,
@@ -45,17 +45,17 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   } = item.flatData!;
 
   const notesRes =
-    notesLocked || (!notes && isStale)
+    notesPermanentlyUnavailable || (!notes && isStale)
       ? null
       : item.flatData!.notes ?? undefined;
 
   const videoRecordingRes =
-    videoRecordingLocked || (!videoRecording && isStale)
+    videoRecordingPermanentlyUnavailable || (!videoRecording && isStale)
       ? null
       : item.flatData!.videoRecording ?? undefined;
 
   const presentationRes =
-    presentationLocked || (!presentation && isStale)
+    presentationPermanentlyUnavailable || (!presentation && isStale)
       ? null
       : item.flatData!.presentation ?? undefined;
 
@@ -67,7 +67,9 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     })) || [];
 
   const meetingMaterialsRes =
-    meetingMaterialsLocked || (!meetingMaterials && isStale) ? null : materials;
+    meetingMaterialsPermanentlyUnavailable || (!meetingMaterials && isStale)
+      ? null
+      : materials;
 
   return {
     id: item.id,

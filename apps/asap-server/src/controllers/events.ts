@@ -174,8 +174,20 @@ flatData{
   status
   tags
   title
-  calendar{
-    flatData{
+  notesPermanentlyUnavailable
+  notes
+  videoRecordingPermanentlyUnavailable
+  videoRecording
+  presentationPermanentlyUnavailable
+  presentation
+  meetingMaterialsPermanentlyUnavailable
+  meetingMaterials {
+    url
+    label
+    title
+  }
+  calendar {
+    flatData {
       id
       color
       name

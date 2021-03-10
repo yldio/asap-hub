@@ -390,6 +390,132 @@ describe('Event controller', () => {
     });
   });
 
+  describe('Past event materials states', () => {
+    const eventId = 'group-id-1';
+    const eventBase = JSON.parse(
+      JSON.stringify(
+        fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
+      ),
+    );
+
+    test('Should return permanentlyUnavailable details if details are permanentlyUnavailable on the CMS', async () => {
+      const pUnavailableEventRes = eventBase;
+      pUnavailableEventRes.flatData!.endDate = '2009-12-24T16:20:14Z';
+      pUnavailableEventRes.flatData!.notesPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.videoRecordingPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.presentationPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.meetingMaterialsPermanentlyUnavailable = true;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, {
+          data: { findEventsContent: pUnavailableEventRes },
+        });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual({
+        ...eventResponse,
+        notes: null,
+        videoRecording: null,
+        presentation: null,
+        meetingMaterials: null,
+      });
+    });
+
+    test('Should return permanentlyUnavailable details if enough time has passed and details are empty', async () => {
+      const emptyEvent = eventBase;
+      emptyEvent.flatData!.notes = null;
+      emptyEvent.flatData!.videoRecording = null;
+      emptyEvent.flatData!.presentation = null;
+      emptyEvent.flatData!.meetingMaterials = null;
+      emptyEvent.flatData!.notesPermanentlyUnavailable = null;
+      emptyEvent.flatData!.videoRecordingPermanentlyUnavailable = null;
+      emptyEvent.flatData!.presentationPermanentlyUnavailable = null;
+      emptyEvent.flatData!.meetingMaterialsPermanentlyUnavailable = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, { data: { findEventsContent: emptyEvent } });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual({
+        ...eventResponse,
+        notes: null,
+        videoRecording: null,
+        presentation: null,
+        meetingMaterials: null,
+      });
+    });
+
+    test('Should return empty (undefined) details if empty but the event is fresh', async () => {
+      const now = new Date().toISOString();
+      const emptyEvent = eventBase;
+      emptyEvent.flatData!.endDate = now;
+      emptyEvent.flatData!.notes = null;
+      emptyEvent.flatData!.videoRecording = null;
+      emptyEvent.flatData!.presentation = null;
+      emptyEvent.flatData!.meetingMaterials = null;
+      emptyEvent.flatData!.notesPermanentlyUnavailable = null;
+      emptyEvent.flatData!.videoRecordingPermanentlyUnavailable = null;
+      emptyEvent.flatData!.presentationPermanentlyUnavailable = null;
+      emptyEvent.flatData!.meetingMaterialsPermanentlyUnavailable = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, { data: { findEventsContent: emptyEvent } });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual({
+        ...eventResponse,
+        endDate: now,
+        notes: undefined,
+        videoRecording: undefined,
+        presentation: undefined,
+        meetingMaterials: [],
+      });
+    });
+
+    test('Should return meeting details if these are not marked as permanently unavailable', async () => {
+      const eventResponse = eventBase;
+      eventResponse.flatData!.notes = 'These are the notes from the meeting';
+      eventResponse.flatData!.videoRecording = '<embeded>video</embeded>';
+      eventResponse.flatData!.presentation = '<embeded>presentation</embeded>';
+      eventResponse.flatData!.meetingMaterials = [
+        {
+          title: 'My additional link',
+          url: 'https://link.pt/additional-material',
+        },
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, { data: { findEventsContent: eventResponse } });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual(
+        expect.objectContaining({
+          notes: 'These are the notes from the meeting',
+          videoRecording: '<embeded>video</embeded>',
+          presentation: '<embeded>presentation</embeded>',
+          meetingMaterials: [
+            {
+              title: 'My additional link',
+              url: 'https://link.pt/additional-material',
+            },
+          ],
+        }),
+      );
+    });
+  });
+
   describe('Fetch by id method', () => {
     test('Should throw a Not Found error when the event is not found', async () => {
       const eventId = 'not-found';

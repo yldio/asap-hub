@@ -13,19 +13,28 @@ export interface Event<TCalendar = string, TThumbnail = string> {
   endDate: string;
   endDateTimeZone: string;
   status: GoogleEventStatus;
+  calendar: TCalendar[];
+
+  hidden?: boolean;
+
+  // Past event details
+  notesPermanentlyUnavailable?: boolean;
   notes?: string;
+  videoRecordingPermanentlyUnavailable?: boolean;
   videoRecording?: string;
+  presentationPermanentlyUnavailable?: boolean;
   presentation?: string;
+  meetingMaterialsPermanentlyUnavailable?: boolean;
   meetingMaterials?: {
     title: string;
     url: string;
     label?: string;
   }[];
+
+  // Future event details
   meetingLink?: string;
   thumbnail?: TThumbnail[];
-  calendar: TCalendar[];
   tags: string[];
-  hidden?: boolean;
 }
 
 export interface RestEvent extends Entity, Rest<Event> {}

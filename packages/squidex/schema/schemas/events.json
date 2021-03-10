@@ -15,7 +15,25 @@
     "fieldsInLists": ["title"],
     "fields": [
       {
-        "name": "futureEventsData",
+        "name": "hidden",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": false,
+          "editor": "Checkbox",
+          "label": "Hide Event",
+          "hints": "Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here)",
+          "placeholder": "",
+          "isRequired": true,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "separatorFutureEventsData",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -87,7 +105,7 @@
         }
       },
       {
-        "name": "MeetingMaterials",
+        "name": "separatorMeetingMaterials",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,
@@ -101,6 +119,24 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "notesPermanentlyUnavailable",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Mark Notes as permanently unavailable",
+          "hints": "This flag denotes there will be no Notes coming for this event.",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "notes",
@@ -121,6 +157,24 @@
         }
       },
       {
+        "name": "videoRecordingPermanentlyUnavailable",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Mark Video Recording as permanently unavailable",
+          "hints": "This flag denotes there will be no Video Recording coming for this event.",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
         "name": "videoRecording",
         "isHidden": false,
         "isLocked": false,
@@ -139,6 +193,24 @@
         }
       },
       {
+        "name": "presentationPermanentlyUnavailable",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Mark Presentation as permanently unavailable",
+          "hints": "This flag denotes there will be no Presentation coming for this event.",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
         "name": "presentation",
         "isHidden": false,
         "isLocked": false,
@@ -155,6 +227,24 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "meetingMaterialsPermanentlyUnavailable",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Boolean",
+          "editor": "Checkbox",
+          "inlineEditable": false,
+          "label": "Mark Additional Meeting Materials as permanently unavailable",
+          "hints": "This flag denotes there will be no Additional Meeting Materials coming for this event.",
+          "placeholder": ""
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
       },
       {
         "name": "meetingMaterials",
@@ -432,25 +522,6 @@
           "hints": "",
           "placeholder": "",
           "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "hidden",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "defaultValue": false,
-          "inlineEditable": false,
-          "editor": "Checkbox",
-          "label": "Hidden",
-          "hints": "Should the event be hidden in the HUB",
-          "placeholder": "",
-          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }

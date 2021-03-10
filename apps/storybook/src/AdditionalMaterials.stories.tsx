@@ -4,7 +4,7 @@ import { number, text } from '@storybook/addon-knobs';
 import { createEventResponse } from '@asap-hub/fixtures';
 
 export default {
-  title: 'Organisms / Additional Materials',
+  title: 'Organisms / Events / Additional Materials',
 };
 
 export const Normal = () => {

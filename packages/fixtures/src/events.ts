@@ -30,8 +30,8 @@ export const createEventResponse = (
   presentation: 'Presentation',
   videoRecording: 'Video Recording',
   meetingMaterials: Array.from({ length: meetingMaterials }).map((_, i) => ({
-    title: `Material ${i}`,
-    url: '#wrong',
+    title: `Material ${i + 1}`,
+    url: 'https://example.com/materials/${i}',
   })),
 });
 

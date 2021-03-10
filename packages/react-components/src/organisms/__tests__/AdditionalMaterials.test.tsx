@@ -38,12 +38,12 @@ it('Does not render when meeting materials is empty', () => {
   const { queryByRole } = render(
     <AdditionalMaterials {...props} meetingMaterials={[]} />,
   );
-  expect(queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
+  expect(queryByRole('heading')).not.toBeInTheDocument();
 });
 
 it('Does not render when additional materials is null', () => {
   const { queryByRole } = render(
     <AdditionalMaterials {...props} meetingMaterials={null} />,
   );
-  expect(queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
+  expect(queryByRole('heading')).not.toBeInTheDocument();
 });

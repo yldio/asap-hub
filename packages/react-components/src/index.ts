@@ -60,6 +60,7 @@ export {
   UserMenuButton,
 } from './molecules';
 export {
+  AdditionalMaterials,
   CalendarList,
   CheckboxGroup,
   ComingSoon,

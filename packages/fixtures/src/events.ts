@@ -4,10 +4,11 @@ import { createGroupResponse } from './groups';
 
 interface FixtureOptions {
   groupCount?: number;
+  meetingMaterials?: number;
 }
 
 export const createEventResponse = (
-  { groupCount = 1 }: FixtureOptions = {},
+  { groupCount = 1, meetingMaterials = 1 }: FixtureOptions = {},
   itemIndex = 0,
 ): EventResponse => ({
   id: `event-${itemIndex}`,
@@ -26,9 +27,12 @@ export const createEventResponse = (
   lastModifiedDate: new Date().toISOString(),
   meetingLink: 'https://example.com/meeting',
   notes: 'Meeting notes go here',
-  presentation: 'presentation',
+  presentation: 'Presentation',
   videoRecording: 'Video Recording',
-  meetingMaterials: [],
+  meetingMaterials: Array.from({ length: meetingMaterials }).map((_, i) => ({
+    title: `Material ${i}`,
+    url: '#wrong',
+  })),
 });
 
 export const createListEventResponse = (

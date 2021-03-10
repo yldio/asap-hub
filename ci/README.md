@@ -18,11 +18,8 @@
 | SQUIDEX_APP_NAME           |                                  | \*                           | \*                               |
 | SQUIDEX_CLIENT_ID          |                                  | \*                           | \*                               |
 | SQUIDEX_CLIENT_SECRET      |                                  | \*                           | \*                               |
-| SQUIDEX_TEST_APP_NAME      |                                  |                              | \*                               |
-| SQUIDEX_TEST_CLIENT_ID     |                                  |                              | \*                               |
-| SQUIDEX_TEST_CLIENT_SECRET |                                  |                              | \*                               |
 
-\* Variables set by `ci/env-create.sh` script.
+\* Variables set by `ci/env-setup.sh` script.
 
 # Environments
 

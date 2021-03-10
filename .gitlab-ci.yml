@@ -47,9 +47,10 @@ variables:
 stages:
   - build
   - test
-  - prepare
+  - prepare-dev
   - deploy-dev
   - verify-dev
+  - prepare-prod
   - deploy-prod
   - verify-prod
 
@@ -186,6 +187,7 @@ deploy:sls:development:
   needs:
     - build:ts
     - build:native
+    - sync:squidex:dev
 
 ####################
 # stage verify-dev #

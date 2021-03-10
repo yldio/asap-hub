@@ -33,7 +33,7 @@ setup:squidex-image:
 sync:squidex:dev:
   <<: *tmpl_sync
   rules:
-      when: manual
+    - when: manual
       allow_failure: true
 
 sync:squidex:production:

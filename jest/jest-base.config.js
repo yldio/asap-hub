@@ -27,9 +27,9 @@ module.exports = {
     '^@asap-hub/([^/]+)$': '@asap-hub/$1/src',
   },
   modulePathIgnorePatterns: [
-    join(regexpEscape(root), '(/(apps|packages)/([^/]+))?/build(-cjs)?/'),
-    join(regexpEscape(root), 'coverage'),
-    join(regexpEscape(root), '/packages/services-common/src/cms/'),
+    regexpEscape(root) + '(/(apps|packages)/[^/]+)?/build(-cjs)?/',
+    regexpEscape(root) + '/coverage/',
+    regexpEscape(root) + '/packages/services-common/src/cms/',
   ],
   testPathIgnorePatterns,
 

@@ -9,6 +9,7 @@ export { default as EventInfo } from './EventInfo';
 export { default as ExternalLink } from './ExternalLink';
 export { default as GoogleSigninButton } from './GoogleSigninButton';
 export { default as Header } from './Header';
+export { default as Info } from './Info';
 export { default as LabeledCheckbox } from './LabeledCheckbox';
 export { default as LabeledDateField } from './LabeledDateField';
 export { default as LabeledDropdown } from './LabeledDropdown';

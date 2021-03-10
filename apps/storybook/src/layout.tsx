@@ -14,6 +14,20 @@ export const NoPaddingDecorator: DecoratorFn = (storyFn) => (
   </>
 );
 
+const centerStyles = `
+  #root {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+  }
+`;
+export const CenterDecorator: DecoratorFn = (storyFn) => (
+  <div>
+    <style>{centerStyles}</style>
+    {storyFn()}
+  </div>
+);
+
 export const BasicLayoutDecorator: DecoratorFn = (storyFn, context) =>
   NoPaddingDecorator(() => <BasicLayout>{storyFn()}</BasicLayout>, context);
 export const LayoutDecorator: DecoratorFn = (storyFn, context) =>

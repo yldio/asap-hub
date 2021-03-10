@@ -31,7 +31,7 @@ export const createEventResponse = (
   videoRecording: 'Video Recording',
   meetingMaterials: Array.from({ length: meetingMaterials }).map((_, i) => ({
     title: `Material ${i + 1}`,
-    url: 'https://example.com/materials/${i}',
+    url: `https://example.com/materials/${i}`,
   })),
 });
 

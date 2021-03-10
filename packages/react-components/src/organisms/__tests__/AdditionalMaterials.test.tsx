@@ -15,7 +15,7 @@ it('renders a meeting material', () => {
       meetingMaterials={[{ title: 'test', url: 'http://example.com' }]}
     />,
   );
-  expect(getByRole('heading', { level: 4 }).textContent).toEqual('test');
+  expect(getByRole('heading', { level: 3 }).textContent).toEqual('test');
   expect(getByRole('link')).toHaveAttribute('href', 'http://example.com');
 });
 
@@ -30,7 +30,7 @@ it('renders multiple meeting materials', () => {
     />,
   );
   expect(
-    getAllByRole('heading', { level: 4 }).map(({ textContent }) => textContent),
+    getAllByRole('heading', { level: 3 }).map(({ textContent }) => textContent),
   ).toEqual(['test', 'test2']);
 });
 

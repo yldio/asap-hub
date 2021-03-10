@@ -20,7 +20,6 @@ export const Normal = () => {
                 ? {
                     title: text('title', 'Material 0'),
                     url: text('url', 'http://example.com'),
-                    label: text('label', ''),
                   }
                 : material,
             )

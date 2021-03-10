@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { EventResponse } from '@asap-hub/model';
 import css from '@emotion/css';
 
@@ -6,7 +6,7 @@ import { Headline3, Link, Anchor } from '../atoms';
 import { perRem, largeDesktopScreen } from '../pixels';
 import { groupsIcon, eventPlaceholderIcon, calendarIcon } from '../icons';
 import { lead } from '../colors';
-import { formatDateToLocalTimezone } from '../date';
+import { EventTime } from '.';
 
 const TITLE_LIMIT = 55;
 
@@ -27,13 +27,6 @@ const imageContainerStyle = css({
 const cardStyles = css({
   display: 'flex',
   flexDirection: 'row',
-});
-
-const dateStyles = css({
-  color: lead.rgb,
-  display: 'flex',
-  flexWrap: 'wrap',
-  whiteSpace: 'pre',
 });
 
 const groupsStyles = css({
@@ -67,33 +60,21 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
-type EventInfoProps = Pick<
-  EventResponse,
-  'startDate' | 'endDate' | 'title' | 'thumbnail'
-> & {
-  groups: (EventResponse['groups'][0] & { href: string })[];
-  href?: string;
-  titleLimit?: number | null;
-};
+type EventInfoProps = ComponentProps<typeof EventTime> &
+  Pick<EventResponse, 'title' | 'thumbnail'> & {
+    groups: (EventResponse['groups'][0] & { href: string })[];
+    href?: string;
+    titleLimit?: number | null;
+  };
 
 const EventInfo: React.FC<EventInfoProps> = ({
-  startDate,
-  endDate,
   title,
   thumbnail,
   groups,
   href,
   titleLimit = TITLE_LIMIT,
+  ...props
 }) => {
-  const formattedStartDay = formatDateToLocalTimezone(
-    startDate,
-    'E, d MMM y',
-  ).toUpperCase();
-  const formattedEndDay = formatDateToLocalTimezone(
-    endDate,
-    'E, d MMM y',
-  ).toUpperCase();
-
   const imageComponent = thumbnail ? (
     <img alt={`Thumbnail for "${title}"`} src={thumbnail} css={imageStyle} />
   ) : (
@@ -110,14 +91,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
             {titleLimit && title.length > titleLimit ? '…' : undefined}
           </Headline3>
         </Anchor>
-        <div css={dateStyles}>
-          <div>{formattedStartDay} ∙ </div>
-          <div>
-            {formatDateToLocalTimezone(startDate, 'h:mm a')} -{' '}
-            {formattedEndDay !== formattedStartDay && `${formattedEndDay} ∙ `}
-            {formatDateToLocalTimezone(endDate, 'h:mm a (z)').toUpperCase()}
-          </div>
-        </div>
+        <EventTime {...props} />
         {groups.length ? (
           <ul css={groupsStyles}>
             {groups.map(({ name, href: groupHref, id }) => (

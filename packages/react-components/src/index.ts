@@ -39,6 +39,7 @@ export {
   CtaCard,
   ErrorCard,
   EventInfo,
+  EventTime,
   ExternalLink,
   GoogleSigninButton,
   Header,

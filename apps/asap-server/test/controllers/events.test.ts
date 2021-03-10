@@ -400,6 +400,7 @@ describe('Event controller', () => {
 
     test('Should return permanentlyUnavailable details if details are permanentlyUnavailable on the CMS', async () => {
       const pUnavailableEventRes = eventBase;
+      pUnavailableEventRes.flatData!.endDate = '2009-12-24T16:20:14Z';
       pUnavailableEventRes.flatData!.notesPermanentlyUnavailable = true;
       pUnavailableEventRes.flatData!.videoRecordingPermanentlyUnavailable = true;
       pUnavailableEventRes.flatData!.presentationPermanentlyUnavailable = true;
@@ -423,7 +424,7 @@ describe('Event controller', () => {
       });
     });
 
-    test('Should return permanentlyUnavailable details if it enough time as passed and details are empty', async () => {
+    test('Should return permanentlyUnavailable details if enough time has passed and details are empty', async () => {
       const emptyEvent = eventBase;
       emptyEvent.flatData!.notes = null;
       emptyEvent.flatData!.videoRecording = null;
@@ -478,6 +479,40 @@ describe('Event controller', () => {
         presentation: undefined,
         meetingMaterials: [],
       });
+    });
+
+    test('Should return meeting details if these are not marked as permanently unavailable', async () => {
+      const eventResponse = eventBase;
+      eventResponse.flatData!.notes = 'These are the notes from the meeting';
+      eventResponse.flatData!.videoRecording = '<embeded>video</embeded>';
+      eventResponse.flatData!.presentation = '<embeded>presentation</embeded>';
+      eventResponse.flatData!.meetingMaterials = [
+        {
+          title: 'My additional link',
+          url: 'https://link.pt/additional-material',
+        },
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, { data: { findEventsContent: eventResponse } });
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual(
+        expect.objectContaining({
+          notes: 'These are the notes from the meeting',
+          videoRecording: '<embeded>video</embeded>',
+          presentation: '<embeded>presentation</embeded>',
+          meetingMaterials: [
+            {
+              title: 'My additional link',
+              url: 'https://link.pt/additional-material',
+            },
+          ],
+        }),
+      );
     });
   });
 

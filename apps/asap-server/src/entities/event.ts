@@ -44,20 +44,14 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     meetingMaterials,
   } = item.flatData!;
 
-  const notesRes =
-    notesPermanentlyUnavailable || (!notes && isStale)
-      ? null
-      : item.flatData!.notes ?? undefined;
-
-  const videoRecordingRes =
-    videoRecordingPermanentlyUnavailable || (!videoRecording && isStale)
-      ? null
-      : item.flatData!.videoRecording ?? undefined;
-
-  const presentationRes =
-    presentationPermanentlyUnavailable || (!presentation && isStale)
-      ? null
-      : item.flatData!.presentation ?? undefined;
+  const getMeetingDetail = <O = undefined, T = string>(
+    isPermanentlyUnavailable: boolean | null | undefined,
+    detail: T | null,
+    emptyState: O,
+  ): T | O | null => {
+    if (isPermanentlyUnavailable || (!notes && isStale)) return null;
+    return detail ?? emptyState;
+  };
 
   const materials =
     meetingMaterials?.map(({ title, url, label }) => ({
@@ -66,10 +60,26 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
       label: label ?? undefined,
     })) || [];
 
-  const meetingMaterialsRes =
-    meetingMaterialsPermanentlyUnavailable || (!meetingMaterials && isStale)
-      ? null
-      : materials;
+  const meetingMaterialsRes = getMeetingDetail(
+    meetingMaterialsPermanentlyUnavailable,
+    materials,
+    [],
+  );
+  const notesRes = getMeetingDetail(
+    notesPermanentlyUnavailable,
+    notes,
+    undefined,
+  );
+  const videoRecordingRes = getMeetingDetail(
+    videoRecordingPermanentlyUnavailable,
+    videoRecording,
+    undefined,
+  );
+  const presentationRes = getMeetingDetail(
+    presentationPermanentlyUnavailable,
+    presentation,
+    undefined,
+  );
 
   return {
     id: item.id,

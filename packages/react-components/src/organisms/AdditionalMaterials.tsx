@@ -43,7 +43,7 @@ const AdditionalMaterials: React.FC<AdditionalMaterialsProps> = ({
       <ul css={orderList}>
         {meetingMaterials.map(({ title, url }, index) => (
           <li key={`material-${index}`} css={listElement}>
-            <Headline3 styleAsHeading={4}>{title}</Headline3>
+            <Headline3 styleAsHeading={5}>{title}</Headline3>
             <ExternalLink href={url} />
           </li>
         ))}

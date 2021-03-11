@@ -1,9 +1,11 @@
-import { createUserResponse } from '@asap-hub/fixtures';
+import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
 import {
   UserPatchRequest,
   UserResponse,
   UserAvatarPostRequest,
+  ListUserResponse,
 } from '@asap-hub/model';
+import { GetListOptions } from '../../../api-util';
 
 export const getUser = jest.fn(
   async (id: string): Promise<UserResponse> => ({
@@ -30,4 +32,9 @@ export const postUserAvatar = jest.fn(
       avatarUrl: `url: ${post.avatar}`,
     };
   },
+);
+
+export const getUsers = jest.fn(
+  async ({ pageSize }: GetListOptions): Promise<ListUserResponse> =>
+    createListUserResponse(pageSize ?? 10),
 );

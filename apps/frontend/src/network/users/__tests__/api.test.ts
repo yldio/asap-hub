@@ -4,15 +4,45 @@ import {
   UserResponse,
   UserAvatarPostRequest,
 } from '@asap-hub/model';
-import { createUserResponse } from '@asap-hub/fixtures';
+import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
 
-import { getUser, patchUser, postUserAvatar } from '../api';
+import { getUser, patchUser, postUserAvatar, getUsers } from '../api';
 import { API_BASE_URL } from '../../../config';
 
 jest.mock('../../../config');
 
 afterEach(() => {
   nock.cleanAll();
+});
+
+describe('getUsers', () => {
+  it('makes an authorized GET request for users', async () => {
+    nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
+      .get('/users')
+      .query({ take: '10', skip: '0' })
+      .reply(200, {});
+    await getUsers({}, 'Bearer x');
+    expect(nock.isDone()).toBe(true);
+  });
+
+  it('returns successfully fetched users', async () => {
+    const users = createListUserResponse(1);
+    nock(API_BASE_URL)
+      .get('/users')
+      .query({ take: '10', skip: '0' })
+      .reply(200, users);
+    expect(await getUsers({}, '')).toEqual(users);
+  });
+
+  it('errors for error status', async () => {
+    nock(API_BASE_URL)
+      .get('/users')
+      .query({ take: '10', skip: '0' })
+      .reply(500);
+    await expect(getUsers({}, '')).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Failed to fetch user list. Expected status 2xx. Received status 500."`,
+    );
+  });
 });
 
 describe('getUser', () => {

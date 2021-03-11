@@ -2,62 +2,46 @@ import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import nock from 'nock';
-import { ClientRequest } from 'http';
-import { authTestUtils } from '@asap-hub/react-components';
+import { RecoilRoot } from 'recoil';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/frontend/src/auth/test-utils';
 
 import Network from '../Network';
-import { API_BASE_URL } from '../../config';
-import teamsResponse from '../../fixtures/teams';
-import usersResponse from '../../fixtures/users';
+import { getUsers } from '../users/api';
+import { getTeams } from '../teams/api';
+
+jest.mock('../users/api');
+jest.mock('../teams/api');
+
+const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
+const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 
 const renderNetworkPage = async (pathname: string, query = '') => {
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-            <Route path={'/network'}>
-              <Network />
-            </Route>
-          </MemoryRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
-  );
-  await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+    <RecoilRoot>
+      <React.Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={[{ pathname, search: query }]}>
+              <Route path={'/network'}>
+                <Network />
+              </Route>
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </React.Suspense>
+    </RecoilRoot>,
   );
 
   await waitFor(() =>
-    expect(result.queryByText(/Loading/i)).not.toBeInTheDocument(),
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   return result;
 };
 
 describe('the network page', () => {
-  let teamsReq!: ClientRequest;
-  let usersReq!: ClientRequest;
-  beforeEach(() => {
-    nock.cleanAll();
-    nock(API_BASE_URL, {
-      reqheaders: { authorization: 'Bearer token' },
-    })
-      .get('/teams')
-      .query(true)
-      .reply(200, function handleRequest(url, body, cb) {
-        teamsReq = this.req;
-        cb(null, teamsResponse);
-      })
-      .get('/users')
-      .query(true)
-      .reply(200, function handleRequest(url, body, cb) {
-        usersReq = this.req;
-        cb(null, usersResponse);
-      })
-      .persist();
-  });
-
   describe('when toggling from teams to users', () => {
     it('changes the placeholder', async () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
@@ -91,10 +75,14 @@ describe('the network page', () => {
       const toggle = getByText(/people/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
-      await waitFor(() => {
-        const { searchParams } = new URL(usersReq!.path, 'http://api');
-        expect(searchParams.get('search')).toBe('test123');
-      });
+      await waitFor(() =>
+        expect(mockGetUsers).toHaveBeenLastCalledWith(
+          expect.not.objectContaining({
+            filters: expect.anything(),
+          }),
+          expect.anything(),
+        ),
+      );
     });
   });
 
@@ -111,7 +99,7 @@ describe('the network page', () => {
       const toggle = getByText(/teams/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       await waitFor(() =>
-        expect(queryByText(/Loading/i)).not.toBeInTheDocument(),
+        expect(queryByText(/loading/i)).not.toBeInTheDocument(),
       );
 
       expect(
@@ -130,10 +118,14 @@ describe('the network page', () => {
       const toggle = getByText(/teams/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
-      await waitFor(() => {
-        const { searchParams } = new URL(teamsReq!.path, 'http://api');
-        expect(searchParams.get('search')).toBe('test123');
-      });
+      await waitFor(() =>
+        expect(mockGetTeams).toHaveBeenLastCalledWith(
+          expect.not.objectContaining({
+            filters: expect.anything(),
+          }),
+          expect.anything(),
+        ),
+      );
     });
   });
 
@@ -156,10 +148,12 @@ describe('the network page', () => {
 
     userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
-    await waitFor(() => {
-      const { searchParams } = new URL(usersReq!.path, 'http://api');
-      expect(searchParams.get('filter')).toBe('Lead PI (Core Leadership)');
-    });
+    await waitFor(() =>
+      expect(mockGetUsers).toHaveBeenLastCalledWith(
+        expect.objectContaining({ filters: ['Lead PI (Core Leadership)'] }),
+        expect.anything(),
+      ),
+    );
   });
 
   it('reads filters from url', async () => {
@@ -171,9 +165,11 @@ describe('the network page', () => {
     userEvent.click(getByText('Filters'));
     const checkbox = getByLabelText('Lead PI');
     expect(checkbox).toBeChecked();
-    await waitFor(() => {
-      const { searchParams } = new URL(usersReq!.path, 'http://api');
-      expect(searchParams.get('filter')).toBe('Lead PI (Core Leadership)');
-    });
+    await waitFor(() =>
+      expect(mockGetUsers).toHaveBeenLastCalledWith(
+        expect.objectContaining({ filters: ['Lead PI (Core Leadership)'] }),
+        expect.anything(),
+      ),
+    );
   });
 });

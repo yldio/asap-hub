@@ -1,5 +1,10 @@
-import { TeamResponse, TeamPatchRequest } from '@asap-hub/model';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  TeamResponse,
+  TeamPatchRequest,
+  ListTeamResponse,
+} from '@asap-hub/model';
+import { createTeamResponse, createListTeamResponse } from '@asap-hub/fixtures';
+import { GetListOptions } from '../../../api-util';
 
 export const getTeam = jest.fn(
   async (id: string): Promise<TeamResponse> => ({
@@ -16,4 +21,9 @@ export const patchTeam = jest.fn(
       ...patch,
     };
   },
+);
+
+export const getTeams = jest.fn(
+  async ({ pageSize }: GetListOptions): Promise<ListTeamResponse> =>
+    createListTeamResponse(pageSize ?? 10),
 );

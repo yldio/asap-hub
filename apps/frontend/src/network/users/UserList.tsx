@@ -1,20 +1,20 @@
 import React from 'react';
 
-import { NetworkPeople, Loading } from '@asap-hub/react-components';
+import { NetworkPeople } from '@asap-hub/react-components';
 import { join } from 'path';
 import { UserResponse } from '@asap-hub/model';
 
-import { useUsers } from '@asap-hub/frontend/src/api';
+import { useUsers } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
 import { NETWORK_PATH } from '../../routes';
 import { TEAMS_PATH } from '../routes';
 
-interface ProfileListProps {
+interface UserListProps {
   searchQuery?: string;
   filters?: Set<string>;
 }
 
-const ProfileList: React.FC<ProfileListProps> = ({
+const UserList: React.FC<UserListProps> = ({
   searchQuery,
   filters = new Set(),
 }) => {
@@ -26,15 +26,11 @@ const ProfileList: React.FC<ProfileListProps> = ({
     pageSize,
   });
   const { numberOfPages, renderPageHref } = usePagination(
-    result.data?.total ?? 0,
+    result.total ?? 0,
     pageSize,
   );
 
-  if (result.loading) {
-    return <Loading />;
-  }
-
-  const users = result.data.items.map((user: UserResponse) => ({
+  const users = result.items.map((user: UserResponse) => ({
     ...user,
     href: join(`${NETWORK_PATH}/users`, user.id),
     teams: user.teams.map((team) => ({
@@ -45,7 +41,7 @@ const ProfileList: React.FC<ProfileListProps> = ({
   return (
     <NetworkPeople
       people={users}
-      numberOfItems={result.data.total}
+      numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
@@ -53,4 +49,4 @@ const ProfileList: React.FC<ProfileListProps> = ({
   );
 };
 
-export default ProfileList;
+export default UserList;

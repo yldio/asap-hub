@@ -288,7 +288,7 @@
             "isDisabled": false,
             "properties": {
               "fieldType": "String",
-              "pattern": "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+              "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "isUnique": false,
               "inlineEditable": false,
               "contentType": "Unspecified",

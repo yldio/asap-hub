@@ -23,8 +23,8 @@ setup:squidex-image:
   before_script:
     - ./ci/config-squidex-rules.sh
   script:
-    - sq config add asap-hub $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
-    - sq config use asap-hub
+    - sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+    - sq config use $SQUIDEX_APP_NAME
     - sq sync in packages/squidex/schema -t schemas -t rules
   stage: prepare
   rules:

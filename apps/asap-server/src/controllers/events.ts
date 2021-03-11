@@ -168,7 +168,9 @@ created
 flatData{
   description
   endDate
+  endDateTimeZone
   startDate
+  startDateTimeZone
   meetingLink
   eventLink
   status

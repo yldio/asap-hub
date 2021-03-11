@@ -19,6 +19,7 @@ const styles = css({
   border: `1px solid ${fern.rgb}`,
   padding: `0 ${11 / perRem}em`,
   margin: `${12 / perRem}em 0`,
+  width: 'max-content',
   svg: {
     stroke: fern.rgb,
     width: `${17.8 / perRem}em`,

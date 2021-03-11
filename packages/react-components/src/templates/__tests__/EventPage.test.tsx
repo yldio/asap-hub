@@ -62,3 +62,15 @@ it('renders the presentation', () => {
   );
   expect(getByText('My Presentation')).toBeVisible();
 });
+
+it('renders additional materials', () => {
+  const { getByText } = render(
+    <EventPage
+      {...props}
+      meetingMaterials={[
+        { title: 'Example Material', url: 'http://example.com' },
+      ]}
+    />,
+  );
+  expect(getByText('Example Material')).toBeVisible();
+});

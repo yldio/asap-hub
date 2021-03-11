@@ -1,15 +1,18 @@
 import { ErrorRequestHandler } from 'express';
-import debug from 'debug';
 import { isBoom } from '@hapi/boom';
+import { Logger } from 'winston';
 
-const logger = debug('asap-server');
-
-export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const errorHandlerFactory = (logger: Logger): ErrorRequestHandler => (
+  err,
+  req,
+  res,
+  next,
+) => {
   if (res.headersSent) {
     return next(err);
   }
 
-  logger(err.message, err);
+  logger.error(err.message, err);
 
   // add error to the trace
   req.span?.log({ 'error.error': err });

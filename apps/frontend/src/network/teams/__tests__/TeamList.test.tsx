@@ -10,6 +10,8 @@ import {
 
 import Teams from '../TeamList';
 import { getTeams } from '../api';
+import { teamsState } from '../state';
+import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 
@@ -17,7 +19,16 @@ const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 
 const renderTeamList = async () => {
   const result = render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ set, reset }) => {
+        reset(
+          teamsState({
+            currentPage: 0,
+            pageSize: DEFAULT_PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

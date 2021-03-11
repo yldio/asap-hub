@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import { createTeamResponse, createGroupResponse } from '@asap-hub/fixtures';
 import {
   Auth0Provider,
   WhenReady,
@@ -10,8 +10,13 @@ import { RecoilRoot } from 'recoil';
 
 import About from '../About';
 import { refreshTeamState } from '../state';
+import { getTeamGroups } from '../groups/api';
 
 jest.mock('../api');
+jest.mock('../groups/api');
+const mockedGetTeamGroups = getTeamGroups as jest.MockedFunction<
+  typeof getTeamGroups
+>;
 
 const renderTeamAbout = async (aboutProps: ComponentProps<typeof About>) => {
   const result = render(
@@ -69,4 +74,21 @@ describe('the proposal', () => {
     });
     expect(getByText(/proposal/i).closest('a')!.href).toMatch(/someproposal$/);
   });
+});
+
+it('renders the team groups card when a group is present', async () => {
+  mockedGetTeamGroups.mockResolvedValue({
+    items: [
+      {
+        ...createGroupResponse(),
+        name: 'Example Group 123',
+      },
+    ],
+    total: 1,
+  });
+  const { getByText } = await renderTeamAbout({
+    team: { ...createTeamResponse(), proposalURL: undefined },
+  });
+  await waitFor(() => expect(mockedGetTeamGroups).toHaveBeenCalled());
+  expect(getByText('Example Group 123')).toBeVisible();
 });

@@ -10,13 +10,24 @@ import {
 
 import UserList from '../UserList';
 import { getUsers } from '../api';
+import { usersState } from '../state';
+import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 
 const renderUserList = async () => {
   const result = render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ set, reset }) => {
+        reset(
+          usersState({
+            currentPage: 0,
+            pageSize: DEFAULT_PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>

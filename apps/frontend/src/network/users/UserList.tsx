@@ -26,7 +26,7 @@ const UserList: React.FC<UserListProps> = ({
     pageSize,
   });
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total ?? 0,
+    result.total,
     pageSize,
   );
 

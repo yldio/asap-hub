@@ -30,9 +30,9 @@ export const createGroupResponse = (
     id,
     createdDate: '2021-01-12T11:09:04.000Z',
     lastModifiedDate: '2021-01-12T11:10:04.000Z',
-    name: `Group ${itemIndex}`,
+    name: `Group ${itemIndex + 1}`,
     tags: ['Tag'],
-    description: `Group description ${itemIndex}`,
+    description: `Group description ${itemIndex + 1}`,
     tools: {
       slack: 'http://slack.slack.com',
       googleDrive: 'http://drive.google.com/123',

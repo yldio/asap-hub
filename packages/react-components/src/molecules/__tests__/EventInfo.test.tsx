@@ -3,13 +3,9 @@ import { render } from '@testing-library/react';
 import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
 
 import EventInfo from '../EventInfo';
-import { getLocalTimezone } from '../../localization';
 
 jest.mock('../../localization');
 
-const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
-  typeof getLocalTimezone
->;
 const props: ComponentProps<typeof EventInfo> = {
   ...createEventResponse(),
   groups: [],
@@ -88,26 +84,13 @@ it('shows that the event is run by ASAP when there is no group', () => {
   expect(getByTitle('Calendar')).toBeInTheDocument();
 });
 
-it("shows the date in the user's local timezone", () => {
-  mockGetLocalTimezone.mockReturnValue('America/New_York');
-  const { container } = render(
+it('shows the event time', () => {
+  const { getByText } = render(
     <EventInfo
       {...props}
-      startDate={new Date('2021-08-25T18:00:00Z').toISOString()}
-      endDate={new Date('2021-08-25T20:00:00Z').toISOString()}
+      startDate="2021-01-01T08:00:00Z"
+      startDateTimeZone="Europe/Tallinn"
     />,
   );
-  expect(container).toHaveTextContent(/\D25\D.+2:00 PM - 4:00 PM.+EDT/);
-});
-
-it('shows start and end day for a multi-day event', () => {
-  mockGetLocalTimezone.mockReturnValue('America/New_York');
-  const { container } = render(
-    <EventInfo
-      {...props}
-      startDate={new Date('2021-08-25T18:00:00Z').toISOString()}
-      endDate={new Date('2021-08-26T20:00:00Z').toISOString()}
-    />,
-  );
-  expect(container).toHaveTextContent(/\D25\D.*\D26\D/);
+  expect(getByText(/8:00/)).toBeVisible();
 });

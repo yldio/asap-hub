@@ -1,26 +1,35 @@
-import { formatDateToLocalTimezone } from '../date';
+import { formatDateToTimezone } from '../date';
 import { getLocalTimezone } from '../localization';
 
 jest.mock('../localization');
 
-const mockedGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
+const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
   typeof getLocalTimezone
 >;
+beforeEach(() => {
+  mockGetLocalTimezone.mockReturnValue('UTC');
+});
 
-describe('formatTimezoneToLocalTimezone', () => {
+describe('formatDateToTimezone', () => {
   const FORMAT = 'yyyy-MM-dd HH:mm:ss XXX';
   it('converts UTC to non-UTC', () => {
-    mockedGetLocalTimezone.mockReturnValue('Europe/Tallinn');
-    const date = '2014-06-25T10:46:20Z';
-    expect(formatDateToLocalTimezone(date, FORMAT)).toMatchInlineSnapshot(
-      `"2014-06-25 13:46:20 +03:00"`,
+    mockGetLocalTimezone.mockReturnValue('Europe/Tallinn');
+    const date = '2014-01-25T10:46:20Z';
+    expect(formatDateToTimezone(date, FORMAT)).toMatchInlineSnapshot(
+      `"2014-01-25 12:46:20 +02:00"`,
     );
   });
   it('converts non-UTC to non-UTC', () => {
-    const date = '2014-06-25T12:46:20+02:00';
-    mockedGetLocalTimezone.mockReturnValue('Europe/Tallinn');
-    expect(formatDateToLocalTimezone(date, FORMAT)).toMatchInlineSnapshot(
-      `"2014-06-25 13:46:20 +03:00"`,
+    const date = '2014-01-25T12:46:20+02:00';
+    mockGetLocalTimezone.mockReturnValue('Europe/Tallinn');
+    expect(formatDateToTimezone(date, FORMAT)).toMatchInlineSnapshot(
+      `"2014-01-25 12:46:20 +02:00"`,
     );
+  });
+  it('accepts a target timezone override', () => {
+    const date = '2014-01-25T10:46:20Z';
+    expect(
+      formatDateToTimezone(date, FORMAT, 'Europe/Berlin'),
+    ).toMatchInlineSnapshot(`"2014-01-25 11:46:20 +01:00"`);
   });
 });

@@ -243,6 +243,42 @@ describe('Team controller', () => {
         ],
       });
     });
+
+    test('Should parse the team user correctly when the avatar is null', async () => {
+      const teamId = 'team-id-1';
+      const user = fetchByIdUserResponse.items[0];
+      user.data.avatar.iv = null as any;
+
+      const userResponse = {
+        total: 1,
+        items: [user],
+      };
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, graphQlTeamResponse)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(200, userResponse);
+
+      const result = await teams.fetchById(teamId, mockUser);
+
+      const expectedResponse = {
+        ...fetchTeamByIdExpectation,
+        members: [
+          {
+            ...fetchTeamByIdExpectation.members[0],
+            avatarUrl: null,
+          },
+        ],
+      };
+
+      expect(result).toEqual(expectedResponse);
+    });
   });
 
   describe('Update method', () => {

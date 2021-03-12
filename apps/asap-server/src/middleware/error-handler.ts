@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from 'express';
 import { isBoom } from '@hapi/boom';
-import { Logger } from 'winston';
+import { Logger } from 'pino';
 
 export const errorHandlerFactory = (logger: Logger): ErrorRequestHandler => (
   err,

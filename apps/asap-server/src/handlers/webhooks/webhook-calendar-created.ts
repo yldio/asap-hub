@@ -3,7 +3,7 @@ import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import { Auth } from 'googleapis';
-import { Logger } from 'winston';
+import { Logger } from 'pino';
 
 import { googleApiUrl, asapApiUrl, googleApiToken } from '../../config';
 import { http } from '../../utils/instrumented-framework';

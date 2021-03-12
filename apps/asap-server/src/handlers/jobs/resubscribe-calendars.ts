@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Logger } from 'winston';
+import { Logger } from 'pino';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import {
   UnsubscribeFromEventChanges,

@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 import { Auth } from 'googleapis';
-import { Logger } from 'winston';
+import { Logger } from 'pino';
 import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
 

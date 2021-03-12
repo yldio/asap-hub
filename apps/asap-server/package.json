@@ -48,9 +48,10 @@
     "opentracing": "^0.14.5",
     "p-limit": "^3.0.2",
     "parse-data-url": "^3.0.0",
+    "pino": "^6.11.2",
+    "pino-http": "^5.5.0",
     "pump": "^3.0.0",
-    "serverless-http": "^2.6.1",
-    "winston": "^3.3.3"
+    "serverless-http": "^2.6.1"
   },
   "devDependencies": {
     "@types/apr-intercept": "workspace:*",
@@ -72,9 +73,10 @@
     "@types/lodash.uniqby": "^4",
     "@types/luxon": "^1.25.1",
     "@types/mime-types": "^2",
+    "@types/pino": "^6",
+    "@types/pino-http": "^5",
     "@types/pump": "^1.1.0",
     "@types/supertest": "^2.0.10",
-    "@types/winston": "^2.4.4",
     "jwt-encode": "^1.0.1",
     "supertest": "^6.1.1",
     "ts-node-dev": "^1.1.1"

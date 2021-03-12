@@ -1,6 +1,6 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
-import { Logger } from 'winston';
+import { Logger } from 'pino';
 import { RestCalendar, Calendar, Query } from '@asap-hub/squidex';
 import { ListCalendarResponse, CalendarResponse } from '@asap-hub/model';
 

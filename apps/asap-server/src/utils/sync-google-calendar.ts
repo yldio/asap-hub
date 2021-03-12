@@ -1,6 +1,6 @@
 import { google, calendar_v3 as calendarV3, Auth } from 'googleapis';
 import { DateTime } from 'luxon';
-import { Logger } from 'winston';
+import { Logger } from 'pino';
 
 export type SyncCalendarFactory = (
   syncToken: string | undefined,

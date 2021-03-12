@@ -2,7 +2,8 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { Tracer } from 'opentracing';
-import { Logger } from 'winston';
+import { Logger } from 'pino';
+import pinoHttp from 'pino-http';
 
 import decodeToken from './utils/validate-token';
 
@@ -45,6 +46,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    */
   // Libs
   const logger = libs.logger || loggerFactory();
+  const httpLogger = pinoHttp({ logger });
 
   // Middleware
   const errorHandler = errorHandlerFactory(logger);
@@ -87,6 +89,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    * --- end of dependency inection
    */
 
+  app.use(httpLogger);
   app.use(tracingHandler);
   app.use(cors());
   app.use(express.json());

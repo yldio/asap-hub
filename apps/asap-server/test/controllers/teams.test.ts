@@ -272,7 +272,43 @@ describe('Team controller', () => {
         members: [
           {
             ...fetchTeamByIdExpectation.members[0],
-            avatarUrl: null,
+            avatarUrl: undefined,
+          },
+        ],
+      };
+
+      expect(result).toEqual(expectedResponse);
+    });
+
+    test('Should parse the team user correctly when the avatar is undefined', async () => {
+      const teamId = 'team-id-1';
+      const user = fetchByIdUserResponse.items[0];
+      delete user.data.avatar;
+
+      const userResponse = {
+        total: 1,
+        items: [user],
+      };
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(teamId),
+        })
+        .reply(200, graphQlTeamResponse)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: `data/teams/iv/id eq '${teamId}'`,
+        })
+        .reply(200, userResponse);
+
+      const result = await teams.fetchById(teamId, mockUser);
+
+      const expectedResponse = {
+        ...fetchTeamByIdExpectation,
+        members: [
+          {
+            ...fetchTeamByIdExpectation.members[0],
+            avatarUrl: undefined,
           },
         ],
       };

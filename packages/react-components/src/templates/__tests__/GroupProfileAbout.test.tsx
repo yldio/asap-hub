@@ -58,3 +58,28 @@ it('assigns given id to the members section for deep linking', () => {
     /members/i,
   );
 });
+
+it('renders a call to action button, when a PM is defined on the group', () => {
+  const { getByText } = render(
+    <GroupProfileAbout
+      {...props}
+      leaders={[
+        {
+          user: {
+            ...createUserResponse(),
+            displayName: 'John',
+            teams: [],
+            email: 'test@test.com',
+          },
+          role: 'Project Manager',
+          href: '',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
+    'href',
+    'mailto:test@test.com',
+  );
+});

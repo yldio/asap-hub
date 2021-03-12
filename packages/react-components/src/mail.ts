@@ -4,12 +4,13 @@ interface MailOptions {
 }
 
 export const createMailTo = (
-  email: string,
+  emails: string | string[],
   { subject, body }: MailOptions = {},
 ): string => {
-  const mailTo = new URL(
-    `mailto:${email.split('@').map(encodeURIComponent).join('@')}`,
-  );
+  const mailTo =
+    typeof emails === 'string'
+      ? convertEmailToMailTo(emails)
+      : convertEmailListToMailTo(emails);
 
   if (subject) mailTo.searchParams.set('subject', subject);
   if (body) mailTo.searchParams.set('body', body);
@@ -34,3 +35,14 @@ export const mailToSupport = (overrides?: MailOptions): string =>
     subject: 'ASAP Hub: Tech support',
     ...overrides,
   });
+
+export const convertEmailToMailTo = (email: string): URL =>
+  new URL(`mailto:${email.split('@').map(encodeURIComponent).join('@')}`);
+
+export const convertEmailListToMailTo = (list: string[]): URL => {
+  const href = list.reduce(
+    (a, e) => `${a}${e.split('@').map(encodeURIComponent).join('@')},`,
+    '',
+  );
+  return new URL(`mailto:${href}`);
+};

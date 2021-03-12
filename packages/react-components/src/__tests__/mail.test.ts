@@ -6,8 +6,18 @@ import {
 } from '../mail';
 
 describe('createMailTo', () => {
-  it('generates a mailto link', () => {
-    expect(new URL(createMailTo('test@example.com')).protocol).toBe('mailto:');
+  it('generates a mailto link, when an single email is provided', () => {
+    const mailTo = new URL(createMailTo('test@example.com'));
+    expect(mailTo.protocol).toBe('mailto:');
+    expect(mailTo.href).toBe('mailto:test@example.com');
+  });
+
+  it('generates a mailto link, when multiple emails are provided', () => {
+    const mailTo = new URL(
+      createMailTo(['test@example.com', 'test@example.com']),
+    );
+    expect(mailTo.protocol).toBe('mailto:');
+    expect(mailTo.href).toBe('mailto:test@example.com,test@example.com,');
   });
 
   it('escapes the email address', () => {

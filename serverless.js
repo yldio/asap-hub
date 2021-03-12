@@ -61,6 +61,7 @@ module.exports = {
       SQUIDEX_SHARED_SECRET: `\${env:SQUIDEX_SHARED_SECRET}`,
       REGION: `\${env:AWS_REGION}`,
       ASAP_API_URL: `\${env:ASAP_API_URL}`,
+      LOG_LEVEL: `\${env:LOG_LEVEL}`,
     },
     iamRoleStatements: [
       {

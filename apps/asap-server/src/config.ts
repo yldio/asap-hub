@@ -12,6 +12,7 @@ const {
   GOOGLE_API_CREDENTIALS_SECRET_ID,
   ASAP_API_URL,
   GOOGLE_API_TOKEN,
+  LOG_LEVEL,
 } = process.env;
 
 export const globalToken = GLOBAL_TOKEN || 'change_me_when_we_have_admins';
@@ -30,3 +31,4 @@ export const googleApiCredentialsSecretId =
   GOOGLE_API_CREDENTIALS_SECRET_ID || 'google-api-credentials-dev';
 export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';
 export const asapApiUrl = ASAP_API_URL || 'http://localhost:3333';
+export const logLevel = LOG_LEVEL || 'info';

@@ -11,7 +11,7 @@ import { useNewsOrEvent } from '../api';
 const NewsOrEvent: React.FC<Record<string, never>> = () => {
   const {
     params: { id },
-  } = useRouteMatch();
+  } = useRouteMatch<{ id: string }>();
   const { loading, data: newsOrEvent } = useNewsOrEvent(id);
 
   if (loading) {

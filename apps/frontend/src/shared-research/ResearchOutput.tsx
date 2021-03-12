@@ -12,7 +12,7 @@ import { NETWORK_PATH, SHARED_RESEARCH_PATH } from '../routes';
 import { TEAMS_PATH } from '../network/routes';
 
 const ResearchOutput: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const { loading, data: researchOutputData } = useResearchOutputById(id);
   const backHref = useBackHref() ?? SHARED_RESEARCH_PATH;
 

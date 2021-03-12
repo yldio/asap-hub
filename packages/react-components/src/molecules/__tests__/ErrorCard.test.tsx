@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { mockLocation } from '@asap-hub/dom-test-utils';
 
 import ErrorCard from '../ErrorCard';
 
@@ -77,27 +78,17 @@ describe('when passed an error', () => {
 
     expect(errorInfo2).not.toEqual(errorInfo1);
   });
+
   describe('refresh link', () => {
-    const { location } = window;
-    const reloadMock = jest.fn();
-    beforeEach(() => {
-      delete window.location;
-      globalThis.location = {
-        ...location,
-        reload: reloadMock,
-      };
-    });
-    afterEach(() => {
-      globalThis.location = location;
-      jest.resetAllMocks();
-    });
+    const { mockReload } = mockLocation();
+
     it('includes a refresh link', () => {
       const { getByText } = render(
         <ErrorCard error={makeDeterministicError()} refreshLink />,
       );
       const reloadLink = getByText(/reload/i);
       userEvent.click(reloadLink);
-      expect(window.location.reload).toHaveBeenCalled();
+      expect(mockReload).toHaveBeenCalled();
     });
   });
 });

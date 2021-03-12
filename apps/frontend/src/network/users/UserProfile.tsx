@@ -48,7 +48,7 @@ const User: React.FC<Record<string, never>> = () => {
     url,
     path,
     params: { id },
-  } = useRouteMatch();
+  } = useRouteMatch<{ id: string }>();
   const tab = matchPath<{ tab: string }>(useLocation().pathname, {
     path: `${path}/:tab`,
   })?.params?.tab;

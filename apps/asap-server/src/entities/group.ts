@@ -1,7 +1,6 @@
 import { URL } from 'url';
 import {
   GroupResponse,
-  TeamResponse,
   CalendarResponse,
   GroupTeam,
   GroupTools,
@@ -16,8 +15,8 @@ import { parseDate, createURL } from '../utils/squidex';
 export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
   const teams: GroupTeam[] = (item.flatData?.teams || []).map((t) => {
-    const team: TeamResponse = parseGraphQLTeam(t, []);
-    delete team.members;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { members, ...team } = parseGraphQLTeam(t, []);
     return team;
   });
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(

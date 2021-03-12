@@ -22,7 +22,7 @@ const TeamProfile: React.FC<Record<string, never>> = () => {
     url,
     path,
     params: { id },
-  } = useRouteMatch();
+  } = useRouteMatch<{ id: string }>();
 
   const team = useTeamById(id);
 

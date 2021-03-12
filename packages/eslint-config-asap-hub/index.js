@@ -42,6 +42,8 @@ module.exports = {
     'no-multi-assign': 'off',
     'no-nested-ternary': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
+
+    'lines-between-class-members': 'off',
   },
   overrides: [
     {

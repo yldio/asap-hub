@@ -85,7 +85,7 @@ describe('when saving', () => {
 
     beforeEach(() => {
       handleSave = jest.fn().mockReturnValue(
-        new Promise((resolve, reject) => {
+        new Promise<void>((resolve, reject) => {
           resolveSave = resolve;
           rejectSave = reject;
         }),

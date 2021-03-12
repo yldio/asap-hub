@@ -94,11 +94,9 @@ const transformRestTeamMember = (
     role: get(user, 'data.teams.iv', []).find(
       (t: { id: string[] }) => t.id[0] === teamId,
     ).role,
-    avatarUrl:
-      (user.data.avatar &&
-        user.data.avatar.iv &&
-        createURL(user.data.avatar.iv)[0]) ||
-      undefined,
+    avatarUrl: user.data.avatar?.iv
+      ? createURL(user.data.avatar.iv)[0]
+      : undefined,
   }));
 
 const transformGraphQLTeam = (

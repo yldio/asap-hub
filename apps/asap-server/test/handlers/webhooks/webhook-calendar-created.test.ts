@@ -19,6 +19,7 @@ import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../src/config';
 import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
 import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
+import { loggerMock } from '../../mocks/logger.mock';
 
 const createSignedPayload = (payload: WebhookPayload<Calendar>) =>
   apiGatewayEvent({
@@ -35,6 +36,7 @@ describe('Calendar Webhook', () => {
     subscribe,
     unsubscribe,
     calendarControllerMock,
+    loggerMock,
   );
 
   afterEach(() => {

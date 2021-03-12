@@ -5,11 +5,13 @@ import { newsAndEventsControllerMock } from '../mocks/news-and-events-controller
 import supertest from 'supertest';
 import { listNewsAndEventsResponse } from '../fixtures/news-and-events.fixtures';
 import { NewsOrEventResponse } from '@asap-hub/model';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/news-and-events/ route', () => {
   const app = appFactory({
     newsAndEventsController: newsAndEventsControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

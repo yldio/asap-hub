@@ -1,16 +1,18 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
+import { Logger } from 'winston';
 import { RestCalendar, Calendar, Query } from '@asap-hub/squidex';
 import { ListCalendarResponse, CalendarResponse } from '@asap-hub/model';
 
 import { InstrumentedSquidex } from '../utils/instrumented-client';
 import { parseCalendar } from '../entities';
-import logger from '../utils/logger';
 
 export default class Calendars implements CalendarController {
   calendars: InstrumentedSquidex<RestCalendar>;
+  logger: Logger;
 
-  constructor(ctxHeaders?: Record<string, string>) {
+  constructor(logger: Logger, ctxHeaders?: Record<string, string>) {
+    this.logger = logger;
     this.calendars = new InstrumentedSquidex('calendars', ctxHeaders);
   }
 
@@ -80,7 +82,7 @@ export default class Calendars implements CalendarController {
     );
 
     if (err) {
-      logger('Error fetching calendar by resourceId:', err);
+      this.logger.error('Error fetching calendar by resourceId:', err);
       throw Boom.badGateway();
     }
 

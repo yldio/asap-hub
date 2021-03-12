@@ -8,12 +8,14 @@ import { groupControllerMock } from '../mocks/group-controller.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';
 import { listTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/teams/ route', () => {
   const app = appFactory({
     groupController: groupControllerMock,
     teamController: teamControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

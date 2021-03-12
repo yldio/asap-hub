@@ -10,6 +10,7 @@ import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {
@@ -32,6 +33,7 @@ describe('/users/ route', () => {
     groupController: groupControllerMock,
     userController: userControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

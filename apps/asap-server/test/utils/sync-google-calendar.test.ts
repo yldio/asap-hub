@@ -2,6 +2,7 @@ import { Auth } from 'googleapis';
 
 import { syncCalendarFactory } from '../../src/utils/sync-google-calendar';
 import * as fixtures from '../fixtures/google-events.fixtures';
+import { loggerMock } from '../mocks/logger.mock';
 
 const mockList = jest.fn();
 jest.mock('googleapis', () => ({
@@ -24,6 +25,7 @@ describe('Sync calendar util hook', () => {
     syncToken,
     syncEvent,
     {} as Auth.GoogleAuth,
+    loggerMock,
   );
 
   const calendarId = 'google-calendar-id';

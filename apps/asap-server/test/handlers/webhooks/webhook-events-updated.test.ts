@@ -7,6 +7,7 @@ import { apiGatewayEvent } from '../../helpers/events';
 import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import { RestCalendar } from '@asap-hub/squidex';
 import { SyncCalendarFactory } from '../../../src/utils/sync-google-calendar';
+import { loggerMock } from '../../mocks/logger.mock';
 
 const googleCalendarId = 'calendar-id@group.calendar.google.com';
 const squidexCalendarId = 'squidex-calendar-id';
@@ -50,6 +51,7 @@ describe('Event Webhook', () => {
     calendarControllerMock,
     getJWTCredentialsMock,
     syncCalendarFactoryMock,
+    loggerMock,
   );
 
   test('Should return 401 when x-goog-channel-token is not set', async () => {

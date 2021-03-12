@@ -7,11 +7,13 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/research-outputs/ route', () => {
   const app = appFactory({
     researchOutputController: researchOutputControllerMock,
     authHandler: authHandlerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

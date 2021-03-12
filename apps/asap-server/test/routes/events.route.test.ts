@@ -5,11 +5,13 @@ import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { FetchEventsOptions } from '../../src/controllers/events';
 import { eventResponse, listEventResponse } from '../fixtures/events.fixtures';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/events/ routes', () => {
   const app = appFactory({
     authHandler: authHandlerMock,
     eventController: eventControllerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

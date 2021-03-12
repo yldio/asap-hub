@@ -3,10 +3,12 @@ import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { pageControllerMock } from '../mocks/page-controller.mock';
 import { PageResponse } from '@asap-hub/model';
+import { loggerMock } from '../mocks/logger.mock';
 
 describe('/pages/ route', () => {
   const app = appFactory({
     pageController: pageControllerMock,
+    logger: loggerMock,
   });
 
   afterEach(() => {

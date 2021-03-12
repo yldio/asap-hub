@@ -7,7 +7,6 @@ import TeamProfileWorkspace from '../TeamProfileWorkspace';
 const team: ComponentProps<typeof TeamProfileWorkspace> = {
   ...createTeamResponse({ teamMembers: 1, tools: 0 }),
   tools: [],
-  newToolHref: '/wrong',
 };
 it('renders the team workspace page', () => {
   const { getByRole } = render(<TeamProfileWorkspace {...team} tools={[]} />);
@@ -55,7 +54,6 @@ it('Renders tools when provided', () => {
           name: 'Mr Trump',
           description: 'The President',
           url: 'https://www.whitehouse.gov',
-          editHref: '/wrong',
         },
       ]}
     />,

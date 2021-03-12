@@ -26,12 +26,15 @@ it('generates a link back to the team', async () => {
           outputs={[
             {
               ...createResearchOutputResponse(),
-              team: { id: '0', displayName: 'Some Team' },
+              team: { id: '42', displayName: 'Some Team' },
             },
           ]}
         />
       </Route>
     </StaticRouter>,
   );
-  expect(getByText(/Some Team/).closest('a')).toHaveAttribute('href', '/team');
+  expect(getByText(/Some Team/).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/42$/),
+  );
 });

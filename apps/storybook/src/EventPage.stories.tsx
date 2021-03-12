@@ -11,12 +11,5 @@ export default {
 };
 
 export const Normal = () => (
-  <EventPage
-    {...createEventResponse()}
-    backHref="#"
-    groups={createEventResponse().groups.map((group) => ({
-      ...group,
-      href: '#',
-    }))}
-  />
+  <EventPage {...createEventResponse()} backHref="#" />
 );

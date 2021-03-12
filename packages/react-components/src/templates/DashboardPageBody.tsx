@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
+import { discover, network, news, sharedResearch } from '@asap-hub/routing';
 
 import { PagesSection, NewsAndEventsSection, HelpSection } from '../organisms';
 import { perRem } from '../pixels';
@@ -20,25 +21,15 @@ type DashboardPageBodyProps = Omit<
   'title'
 > &
   Omit<ComponentProps<typeof NewsAndEventsSection>, 'title'> & {
-    readonly hrefDiscoverAsap: string;
-    readonly hrefNewsAndEvents: string;
-    readonly hrefProfile: string;
-    readonly hrefSharedResearch: string;
-    readonly hrefTeamsNetwork: string;
-    readonly hrefTeamWorkspace: string | undefined;
-    readonly hrefUsersNetwork: string;
+    readonly userId: string;
+    readonly teamId?: string;
   };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   pages,
   newsAndEvents,
-  hrefDiscoverAsap,
-  hrefNewsAndEvents,
-  hrefProfile,
-  hrefSharedResearch,
-  hrefTeamsNetwork,
-  hrefTeamWorkspace,
-  hrefUsersNetwork,
+  userId,
+  teamId,
 }) => (
   <div css={styles}>
     {pages.length ? (
@@ -58,38 +49,46 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             <li>
               <Paragraph primary accent="lead">
                 Check out grantee profiles and team pages in the{' '}
-                <Link href={hrefUsersNetwork}>Network</Link>
+                <Link href={network({}).users({}).$}>Network</Link>
               </Paragraph>
             </li>
             <li>
               <Paragraph primary accent="lead">
                 Read team proposals in{' '}
-                <Link href={hrefSharedResearch}>Shared Research</Link>
+                <Link href={sharedResearch({}).$}>Shared Research</Link>
               </Paragraph>
             </li>
             <li>
               <Paragraph primary accent="lead">
                 Meet the ASAP team in{' '}
-                <Link href={hrefDiscoverAsap}>Discover ASAP</Link>
+                <Link href={discover({}).$}>Discover ASAP</Link>
               </Paragraph>
             </li>
             <li>
               <Paragraph primary accent="lead">
-                Stay up date with{' '}
-                <Link href={hrefNewsAndEvents}>News and Events</Link>
+                Stay up date with <Link href={news({}).$}>News and Events</Link>
               </Paragraph>
             </li>
-            {hrefTeamWorkspace ? (
+            {teamId ? (
               <li>
                 <Paragraph primary accent="lead">
                   Add important links to your private{' '}
-                  <Link href={hrefTeamWorkspace}>Team Workspace</Link>
+                  <Link
+                    href={
+                      network({}).teams({}).team({ teamId }).workspace({}).$
+                    }
+                  >
+                    Team Workspace
+                  </Link>
                 </Paragraph>
               </li>
             ) : null}
             <li>
               <Paragraph primary accent="lead">
-                View and edit your own <Link href={hrefProfile}>Profile</Link>
+                View and edit your own{' '}
+                <Link href={network({}).users({}).user({ userId }).$}>
+                  Profile
+                </Link>
               </Paragraph>
             </li>
           </ul>

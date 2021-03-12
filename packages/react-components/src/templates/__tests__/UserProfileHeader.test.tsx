@@ -7,11 +7,6 @@ import UserProfileHeader from '../UserProfileHeader';
 
 const boilerplateProps: ComponentProps<typeof UserProfileHeader> = {
   ...createUserResponse(),
-  teams: [],
-  aboutHref: './about',
-  researchHref: './research',
-  outputsHref: './outputs',
-  discoverHref: '/discover',
   role: 'Grantee',
 };
 

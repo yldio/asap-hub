@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Switch } from 'react-router-dom';
 import nock from 'nock';
 import { authTestUtils } from '@asap-hub/react-components';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import { sharedResearch } from '@asap-hub/routing';
 
 import ResearchOutput from '../ResearchOutput';
 import { API_BASE_URL } from '../../config';
@@ -23,10 +24,22 @@ const renderComponent = async (id: string) => {
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/prev', `/${id}/`]} initialIndex={1}>
+          <MemoryRouter
+            initialEntries={[
+              '/prev',
+              sharedResearch({}).researchOutput({ researchOutputId: id }).$,
+            ]}
+            initialIndex={1}
+          >
             <Switch>
               <Route path="/prev">Previous Page</Route>
-              <Route path="/:id" component={ResearchOutput} />
+              <Route
+                path={
+                  sharedResearch.template +
+                  sharedResearch({}).researchOutput.template
+                }
+                component={ResearchOutput}
+              />
             </Switch>
           </MemoryRouter>
         </authTestUtils.LoggedIn>

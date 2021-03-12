@@ -22,7 +22,6 @@ it('renders the role on ASAP', () => {
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
-          href: '/network/teams/42',
         },
       ]}
     />,
@@ -77,7 +76,6 @@ it('renders an edit button for the role on the team', () => {
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
-          href: '/network/teams/42',
           editHref: '/edit-team-membership/42',
         },
       ]}
@@ -85,7 +83,7 @@ it('renders an edit button for the role on the team', () => {
   );
   expect(getByLabelText(/edit.+role.+team/i)).toHaveAttribute(
     'href',
-    '/edit-team-membership/42',
+    expect.stringMatching(/42$/),
   );
 });
 it('renders an edit button for the skills list', () => {

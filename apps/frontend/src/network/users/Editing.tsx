@@ -5,28 +5,29 @@ import {
   ContactInfoModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
-import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
 import { usePatchUserById } from './state';
 
 interface EditingProps {
   user: UserResponse;
 }
 const Editing: React.FC<EditingProps> = ({ user }) => {
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
+  const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
 
   return (
     <>
-      <Route exact path={`${path}/${EDIT_PERSONAL_INFO_PATH}`}>
-        <PersonalInfoModal {...user} backHref={url} onSave={patchUser} />
+      <Route exact path={path + route.editPersonalInfo.template}>
+        <PersonalInfoModal {...user} backHref={route.$} onSave={patchUser} />
       </Route>
-      <Route exact path={`${path}/${EDIT_CONTACT_INFO_PATH}`}>
+      <Route exact path={path + route.editContactInfo.template}>
         <ContactInfoModal
           email={user.contactEmail}
           fallbackEmail={user.email}
-          backHref={url}
+          backHref={route.$}
           onSave={(newContactEmail) =>
             patchUser({
               contactEmail: newContactEmail,

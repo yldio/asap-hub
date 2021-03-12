@@ -12,7 +12,6 @@ export const Normal = () => (
     members={[
       {
         id: '1',
-        href: '#1',
         displayName: 'Daniel Ramirez',
         firstName: 'Daniel',
         lastName: 'Ramirez',
@@ -20,7 +19,6 @@ export const Normal = () => (
       },
       {
         id: '2',
-        href: '#2',
         displayName: 'Peter Venkman',
         firstName: 'Peter',
         lastName: 'Venkman',
@@ -32,7 +30,6 @@ export const Normal = () => (
       },
       {
         id: '3',
-        href: '#3',
         displayName: 'Tess W. B. Goetz',
         firstName: 'Tess',
         lastName: 'Goetz',
@@ -40,7 +37,6 @@ export const Normal = () => (
       },
       {
         id: '4',
-        href: '#4',
         displayName: 'Robin Peploe',
         firstName: 'Robin',
         lastName: 'Peploe',
@@ -48,7 +44,6 @@ export const Normal = () => (
       },
       {
         id: '5',
-        href: '#5',
         displayName: 'Alice Lane',
         firstName: 'Alice',
         lastName: 'Lane',
@@ -56,7 +51,6 @@ export const Normal = () => (
       },
       {
         id: '6',
-        href: '#6',
         displayName: 'Philip Mars',
         firstName: 'Philip',
         lastName: 'Mars',
@@ -64,7 +58,6 @@ export const Normal = () => (
       },
       {
         id: '7',
-        href: '#7',
         displayName: 'Emmanuel Depay',
         firstName: 'Emanuel',
         lastName: 'Depay',

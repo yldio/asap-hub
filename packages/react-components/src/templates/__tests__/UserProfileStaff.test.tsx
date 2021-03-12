@@ -1,16 +1,10 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { createUserResponse } from '@asap-hub/fixtures';
 
 import UserProfileStaff from '../UserProfileStaff';
 
-const boilerplateProps: ComponentProps<typeof UserProfileStaff> = {
-  firstName: 'John',
-  teams: [],
-  email: 'test@test.com',
-  questions: [],
-  skills: [],
-  discoverHref: '/discover',
-};
+const boilerplateProps: ComponentProps<typeof UserProfileStaff> = createUserResponse();
 
 it('renders the biography', () => {
   const { getByText } = render(
@@ -62,11 +56,11 @@ it('renders orcid section', () => {
 });
 
 it('renders teams section', () => {
-  const { getByText } = render(
+  const { getByText, getAllByText } = render(
     <UserProfileStaff {...boilerplateProps} responsibilities={'responsible'} />,
   );
 
-  expect(getByText(/role\son\sasap/i)).toBeVisible();
+  expect(getAllByText(/role\son\sasap/i)).not.toHaveLength(0);
   expect(getByText(/responsible/i)).toBeVisible();
 });
 
@@ -80,7 +74,6 @@ it('renders extra teams section', () => {
           id: 'uuid',
           displayName: 'Awesome',
           role: 'Project Manager',
-          href: '/uuid',
         },
       ]}
     />,

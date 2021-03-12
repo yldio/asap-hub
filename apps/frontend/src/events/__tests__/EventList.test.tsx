@@ -1,11 +1,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
-import {
-  createListEventResponse,
-  createEventResponse,
-  createGroupResponse,
-} from '@asap-hub/fixtures';
+import { createListEventResponse } from '@asap-hub/fixtures';
 import { MemoryRouter, Route } from 'react-router-dom';
 
 import { refreshCalendarsState } from '../calendar/state';
@@ -68,35 +64,6 @@ it('renders a list of event cards', async () => {
   expect(
     getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent),
   ).toEqual(['Event title 0', 'Event title 1']);
-});
-
-it('generates the event link', async () => {
-  mockGetEvents.mockResolvedValue({
-    ...createListEventResponse(1),
-    items: [{ ...createEventResponse(), id: '42', title: 'My Event' }],
-  });
-  const { getByText } = await renderEventsListPage();
-  expect(getByText('My Event').closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/42$/),
-  );
-});
-
-it('generates group links', async () => {
-  mockGetEvents.mockResolvedValue({
-    ...createListEventResponse(1),
-    items: [
-      {
-        ...createEventResponse(),
-        groups: [{ ...createGroupResponse(), id: 'g0', name: 'My Group' }],
-      },
-    ],
-  });
-  const { getByText } = await renderEventsListPage();
-  expect(getByText('My Group').closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/g0/),
-  );
 });
 
 it('sets after to an hour before date provided for upcoming events', async () => {

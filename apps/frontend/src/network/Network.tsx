@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
-import { join } from 'path';
 import { NetworkPage } from '@asap-hub/react-components';
+import { network } from '@asap-hub/routing';
 import { useDebounce } from 'use-debounce';
 
 import { useSearch } from '../hooks';
-import { TEAMS_PATH, USERS_PATH, GROUPS_PATH } from './routes';
 import { SearchFrame } from '../structure/Frame';
 import GroupProfile from './groups/GroupProfile';
 
@@ -42,7 +41,7 @@ const Network: React.FC<Record<string, never>> = () => {
       .then(loadGroupProfile);
   }, []);
 
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
   const {
     searchQuery,
     searchQueryParams,
@@ -53,13 +52,13 @@ const Network: React.FC<Record<string, never>> = () => {
   const [searchQueryDebounce] = useDebounce(searchQuery, 400);
   const searchQueryParamString = `?${searchQueryParams.toString()}`;
 
-  const usersHref = join(url, USERS_PATH) + searchQueryParamString;
-  const teamsHref = join(url, TEAMS_PATH) + searchQueryParamString;
-  const groupsHref = join(url, GROUPS_PATH) + searchQueryParamString;
+  const usersHref = network({}).users({}).$ + searchQueryParamString;
+  const teamsHref = network({}).teams({}).$ + searchQueryParamString;
+  const groupsHref = network({}).groups({}).$ + searchQueryParamString;
 
   return (
     <Switch>
-      <Route exact path={`${path}/${USERS_PATH}`}>
+      <Route exact path={path + network({}).users.template}>
         <NetworkPage
           page="users"
           usersHref={usersHref}
@@ -75,8 +74,15 @@ const Network: React.FC<Record<string, never>> = () => {
           </SearchFrame>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/${USERS_PATH}/:id`} component={UserProfile} />
-      <Route exact path={`${path}/${TEAMS_PATH}`}>
+      <Route
+        path={
+          path +
+          network({}).users.template +
+          network({}).users({}).user.template
+        }
+        component={UserProfile}
+      />
+      <Route exact path={path + network({}).teams.template}>
         <NetworkPage
           page="teams"
           usersHref={usersHref}
@@ -90,8 +96,15 @@ const Network: React.FC<Record<string, never>> = () => {
           </SearchFrame>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/${TEAMS_PATH}/:id`} component={TeamProfile} />
-      <Route exact path={`${path}/${GROUPS_PATH}`}>
+      <Route
+        path={
+          path +
+          network({}).teams.template +
+          network({}).teams({}).team.template
+        }
+        component={TeamProfile}
+      />
+      <Route exact path={path + network({}).groups.template}>
         <NetworkPage
           page="groups"
           usersHref={usersHref}
@@ -105,8 +118,15 @@ const Network: React.FC<Record<string, never>> = () => {
           </SearchFrame>
         </NetworkPage>
       </Route>
-      <Route path={`${path}/${GROUPS_PATH}/:id`} component={GroupProfile} />
-      <Redirect to={`${path}/${TEAMS_PATH}`} />
+      <Route
+        path={
+          path +
+          network({}).groups.template +
+          network({}).groups({}).group.template
+        }
+        component={GroupProfile}
+      />
+      <Redirect to={network({}).teams({}).$} />
     </Switch>
   );
 };

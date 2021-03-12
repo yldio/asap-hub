@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { TeamResponse } from '@asap-hub/model';
+import { sharedResearch } from '@asap-hub/routing';
 
 import { Display, Card, Link, Paragraph, Headline2 } from '../atoms';
 import { mobileScreen } from '../pixels';
@@ -14,24 +15,32 @@ const stretchOnMobile = css({
 
 type TeamProfileOverviewProps = Pick<
   TeamResponse,
-  'projectTitle' | 'projectSummary'
+  'projectTitle' | 'projectSummary' | 'proposalURL'
 > & {
-  readonly proposalHref?: string;
+  readonly proposalURL?: string;
 };
 
 const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
   projectSummary,
   projectTitle,
-  proposalHref,
+  proposalURL,
 }) => (
   <Card>
     <div>
       <Display styleAsHeading={2}>Project Overview</Display>
       <Headline2 styleAsHeading={3}>{projectTitle}</Headline2>
       <Paragraph>{projectSummary}</Paragraph>
-      {proposalHref ? (
+      {proposalURL ? (
         <div css={stretchOnMobile}>
-          <Link buttonStyle primary href={proposalHref}>
+          <Link
+            buttonStyle
+            primary
+            href={
+              sharedResearch({}).researchOutput({
+                researchOutputId: proposalURL,
+              }).$
+            }
+          >
             Read Full Proposal
           </Link>
         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import TeamCard from '../TeamCard';
@@ -11,14 +11,11 @@ const member = {
   displayName: 'Birdie Romeo',
   role: 'Lead PI (Core Leadership)' as const,
 };
-const teamCardProps = {
+const teamCardProps: ComponentProps<typeof TeamCard> = {
   id: 'ee98d044-79a7-4028-915d-7f88793e3190',
   displayName: 'A Barnes',
-  applicationNumber: 'P9gr6',
   projectTitle:
     'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-  projectSummary:
-    'Guj ge te reh hiditzec suw uki cu ziiku tisabe wiwuvev sor jec to gip onrof. Tul edzec zomivbu gotum lakgilzo hip hemgit agzo ew egirub hecguci kistozat hitfankij fiiw muhanti motec eb. Zepo av zimilo jekeker ekrud oti lanidwe peceru faprivsi led sicew sogure ni. Vanbo so fizam wibup hipuh fumuz me agapazcov ucotohfo liwwu ge ki wekezot.',
   skills: [
     'Neurological Diseases',
     'Clinical Neurology',
@@ -30,8 +27,6 @@ const teamCardProps = {
     'autophagy',
   ],
   members: [member],
-  lastModifiedDate: '2020-07-31T11:45:14Z',
-  href: 'http://localhost/teams/ee98d044-79a7-4028-915d-7f88793e3190',
 };
 
 it('renders the title', () => {

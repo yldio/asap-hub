@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { GroupTeam, UserTeam, UserResponse, GroupRole } from '@asap-hub/model';
+import { GroupResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Headline3 } from '../atoms';
 import { MembersList, TeamsList } from '../molecules';
@@ -15,16 +15,7 @@ const gridStyles = css({
   },
 });
 
-interface GroupMembersSectionProps {
-  readonly leaders: ReadonlyArray<{
-    readonly role: GroupRole;
-    readonly href: string;
-    readonly user: Omit<UserResponse, 'teams'> & {
-      readonly teams: ReadonlyArray<UserTeam & { readonly href: string }>;
-    };
-  }>;
-  readonly teams: ReadonlyArray<GroupTeam & { readonly href: string }>;
-}
+type GroupMembersSectionProps = Pick<GroupResponse, 'leaders' | 'teams'>;
 const GroupMembersSection: React.FC<GroupMembersSectionProps> = ({
   leaders,
   teams,
@@ -35,10 +26,9 @@ const GroupMembersSection: React.FC<GroupMembersSectionProps> = ({
       <Headline3 styleAsHeading={4}>Group Leaders</Headline3>
       <MembersList
         singleColumn
-        members={leaders.map(({ user, role, href }) => ({
+        members={leaders.map(({ user, role }) => ({
           ...user,
           role,
-          href,
         }))}
       />
       <Headline3 styleAsHeading={4}>Teams ({teams.length})</Headline3>

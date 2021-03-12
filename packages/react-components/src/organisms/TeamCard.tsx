@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
-import { TeamMember } from '@asap-hub/model';
+import { TeamResponse } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import { Card, Anchor, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
@@ -20,22 +21,20 @@ const iconStyles = css({
   paddingRight: `${6 / perRem}em`,
 });
 
-interface TeamCardProps {
-  readonly displayName: string;
-  readonly projectTitle: string;
-  readonly skills: string[];
-  readonly members: TeamMember[];
-  readonly href: string;
-}
+type TeamCardProps = Pick<
+  TeamResponse,
+  'id' | 'displayName' | 'projectTitle' | 'skills' | 'members'
+>;
+
 const TeamCard: React.FC<TeamCardProps> = ({
+  id,
   displayName,
   projectTitle,
   skills,
   members,
-  href,
 }) => (
   <Card>
-    <Anchor href={href}>
+    <Anchor href={network({}).teams({}).team({ teamId: id }).$}>
       <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
       <Paragraph accent="lead">{projectTitle}</Paragraph>
     </Anchor>

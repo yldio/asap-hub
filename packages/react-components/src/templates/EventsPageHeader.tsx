@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { isEnabled } from '@asap-hub/flags';
+import { events } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
@@ -18,16 +19,7 @@ const textStyles = css({
   maxWidth: `${610 / perRem}em`,
 });
 
-interface EventsPageHeaderProps {
-  calendarHref: string;
-  upcomingHref: string;
-  pastHref: string;
-}
-const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
-  calendarHref,
-  upcomingHref,
-  pastHref,
-}) => (
+const EventsPageHeader: React.FC = () => (
   <header>
     <div css={visualHeaderStyles}>
       <Display styleAsHeading={2}>Calendar and Events</Display>
@@ -38,12 +30,12 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
           updated.
         </Paragraph>
         <TabNav>
-          <TabLink href={calendarHref}>Calendar</TabLink>
+          <TabLink href={events({}).calendar({}).$}>Calendar</TabLink>
           {isEnabled('UPCOMING_EVENTS') && (
-            <TabLink href={upcomingHref}>Upcoming Events</TabLink>
+            <TabLink href={events({}).upcoming({}).$}>Upcoming Events</TabLink>
           )}
           {isEnabled('PAST_EVENTS') && (
-            <TabLink href={pastHref}>Past Events</TabLink>
+            <TabLink href={events({}).past({}).$}>Past Events</TabLink>
           )}
         </TabNav>
       </div>

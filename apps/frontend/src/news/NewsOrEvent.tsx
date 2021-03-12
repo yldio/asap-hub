@@ -1,18 +1,16 @@
 import React from 'react';
-
-import { useRouteMatch } from 'react-router-dom';
 import {
   Loading,
   NotFoundPage,
   NewsOrEventPage,
 } from '@asap-hub/react-components';
+import { news, useRouteParams } from '@asap-hub/routing';
+
 import { useNewsOrEvent } from '../api';
 
 const NewsOrEvent: React.FC<Record<string, never>> = () => {
-  const {
-    params: { id },
-  } = useRouteMatch<{ id: string }>();
-  const { loading, data: newsOrEvent } = useNewsOrEvent(id);
+  const { articleId } = useRouteParams(news({}).article);
+  const { loading, data: newsOrEvent } = useNewsOrEvent(articleId);
 
   if (loading) {
     return <Loading />;

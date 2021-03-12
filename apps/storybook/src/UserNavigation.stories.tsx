@@ -31,9 +31,6 @@ export const Normal = () => {
           name,
           href: `/team-${i + 1}`,
         }))}
-        settingsHref="/settings"
-        feedbackHref="/feedback"
-        logoutHref="/logout"
         termsHref="/terms"
         privacyPolicyHref="/privacy-policy"
         aboutHref="/about"

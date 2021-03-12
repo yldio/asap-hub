@@ -15,6 +15,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@asap-hub/react-context": "workspace:*",
+    "@asap-hub/routing": "workspace:*",
     "@storybook/addon-actions": "^6.1.11",
     "@storybook/addon-knobs": "^6.1.11",
     "@storybook/addon-viewport": "^6.1.11",

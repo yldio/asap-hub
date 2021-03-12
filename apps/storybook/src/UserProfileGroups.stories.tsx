@@ -16,10 +16,7 @@ const props = (): ComponentProps<typeof UserProfileGroups> => {
     firstName: text('First Name', 'Daniel'),
     id: '12',
     groups: Array.from({ length: numberOfGroups }, (_, index) => {
-      const groupResponseItem = {
-        ...createGroupResponse({}, index),
-        href: '#',
-      };
+      const groupResponseItem = createGroupResponse({}, index);
       if (index === 0) {
         return {
           ...groupResponseItem,

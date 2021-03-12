@@ -1,12 +1,12 @@
 import React from 'react';
 import css from '@emotion/css';
 import { UserResponse } from '@asap-hub/model';
+import { discover } from '@asap-hub/routing';
 
 import { Card, Headline2, Headline3, Link, Paragraph } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 
 type UserProfileStaffBackgroundProps = Pick<UserResponse, 'firstName'> & {
-  readonly discoverHref: string;
   readonly reachOut?: string;
   readonly responsibilities?: string;
 };
@@ -40,7 +40,6 @@ const UserProfileStaffBackground: React.FC<UserProfileStaffBackgroundProps> = ({
   firstName,
   reachOut = '',
   responsibilities = '',
-  discoverHref,
 }) => (
   <Card>
     <Headline2 styleAsHeading={3}>{firstName}'s Role on ASAP Network</Headline2>
@@ -48,7 +47,7 @@ const UserProfileStaffBackground: React.FC<UserProfileStaffBackgroundProps> = ({
       <div css={dynamicContainerStyles}>
         <div css={teamContentStyle}>
           <Headline3 styleAsHeading={5}>Team</Headline3>
-          <Link href={discoverHref}>Team ASAP</Link>
+          <Link href={discover({}).$}>Team ASAP</Link>
         </div>
         <div css={teamContentStyle}>
           <Headline3 styleAsHeading={5}>Role</Headline3>
@@ -73,7 +72,7 @@ const UserProfileStaffBackground: React.FC<UserProfileStaffBackgroundProps> = ({
       )}
     </div>
     <div css={linksContainer}>
-      <Link buttonStyle href={discoverHref}>
+      <Link buttonStyle href={discover({}).$}>
         Meet the Team
       </Link>
     </div>

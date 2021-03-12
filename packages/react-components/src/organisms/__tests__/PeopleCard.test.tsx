@@ -1,26 +1,10 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route } from 'react-router-dom';
+import { createUserResponse } from '@asap-hub/fixtures';
 
 import PeopleCard from '../PeopleCard';
 
-const props: ComponentProps<typeof PeopleCard> = {
-  displayName: 'Jane Doe',
-  firstName: 'Jane',
-  lastName: 'Doe',
-  teams: [
-    {
-      id: '321',
-      displayName: 'Team 321',
-      role: 'Collaborating PI',
-      href: 'http://localhost/teams/321',
-    },
-  ],
-  createdDate: new Date(2020, 6, 12, 14, 32).toISOString(),
-  role: 'Grantee',
-  href: 'http://localhost/users/321',
-};
+const props: ComponentProps<typeof PeopleCard> = createUserResponse();
 
 it('renders the display name', () => {
   const { getByRole } = render(
@@ -31,22 +15,21 @@ it('renders the display name', () => {
 });
 
 it('renders the date in the correct format', () => {
-  const { getByText } = render(<PeopleCard {...props} />);
+  const { getByText } = render(
+    <PeopleCard {...props} createdDate="2021-01-01" />,
+  );
   expect(getByText(/joined/i).textContent).toMatchInlineSnapshot(
-    `"Joined: 12th July 2020"`,
+    `"Joined: 1st January 2021"`,
   );
 });
 
 it('links to the profile', () => {
   const { getByText } = render(
-    <MemoryRouter initialEntries={['/card']}>
-      <Route path="/card">
-        <PeopleCard {...props} displayName="John Doe" href="/profile" />,
-      </Route>
-      <Route path="/profile">Full Profile</Route>
-    </MemoryRouter>,
+    <PeopleCard {...props} displayName="John Doe" id="42" />,
   );
 
-  userEvent.click(getByText('John Doe'));
-  expect(getByText('Full Profile')).toBeVisible();
+  expect(getByText('John Doe').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/42$/),
+  );
 });

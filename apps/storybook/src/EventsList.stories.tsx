@@ -15,17 +15,12 @@ const props = (): ComponentProps<typeof EventsList> => {
     events: Array.from({
       length: numberOfItems,
     })
-      .map((_, i) => {
-        const event = createEventResponse(
+      .map((_, i) =>
+        createEventResponse(
           { groupCount: number('Number of event groups', 1) },
           i,
-        );
-        return {
-          ...event,
-          groups: event.groups.map((group) => ({ ...group, href: '#' })),
-          href: '#',
-        };
-      })
+        ),
+      )
       .slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

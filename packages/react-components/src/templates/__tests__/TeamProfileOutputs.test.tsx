@@ -20,11 +20,9 @@ it('renders output cards', () => {
           created: new Date().toISOString(),
           publishDate: new Date().toISOString(),
           title: 'Title',
-          href: '/shared-research/uuid-output',
           team: {
             id: 'uuid-team',
             displayName: 'Unknown',
-            href: '/network/teams/uuid-team',
           },
         },
       ]}
@@ -38,6 +36,9 @@ it('renders output cards', () => {
   expect(titleLink.textContent).toMatchInlineSnapshot(`"Title"`);
   expect(teamLink.textContent).toMatchInlineSnapshot(`"Team Unknown"`);
 
-  expect(titleLink).toHaveAttribute('href', '/shared-research/uuid-output');
-  expect(teamLink).toHaveAttribute('href', '/network/teams/uuid-team');
+  expect(titleLink).toHaveAttribute(
+    'href',
+    expect.stringMatching(/uuid-output$/),
+  );
+  expect(teamLink).toHaveAttribute('href', expect.stringMatching(/uuid-team$/));
 });

@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { formatISO, subDays } from 'date-fns';
 import { text, select } from '@storybook/addon-knobs';
 import { TeamProfilePage } from '@asap-hub/react-components';
+import { network } from '@asap-hub/routing';
 
 import { LayoutDecorator } from './layout';
 
@@ -92,23 +93,22 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
       role: 'Collaborating PI',
     },
   ],
-  aboutHref: '/wrong',
-  outputsHref: '/wrong',
-  workspaceHref: '/wrong',
 });
 
 export const Normal = () => {
-  const tab = select('Active Tab', ['About', 'Outputs', 'Workspace'], 'About');
+  const route = network({}).teams({}).team({ teamId: props().id });
+  const tab = select(
+    'Active Tab',
+    {
+      About: route.about({}).$,
+      Outputs: route.outputs({}).$,
+      Workspace: route.workspace({}).$,
+    },
+    route.about({}).$,
+  );
   return (
-    <StaticRouter key={tab} location={`/${tab}`}>
-      <TeamProfilePage
-        {...props()}
-        aboutHref="/About"
-        outputsHref="/Outputs"
-        workspaceHref="/Workspace"
-      >
-        Page Content
-      </TeamProfilePage>
+    <StaticRouter key={tab} location={route}>
+      <TeamProfilePage {...props()}>Page Content</TeamProfilePage>
     </StaticRouter>
   );
 };

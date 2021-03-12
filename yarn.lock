@@ -281,6 +281,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
     "@asap-hub/unsupported-browser-page": "workspace:*"
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/runtime-corejs3": ^7.12.5
@@ -361,6 +362,7 @@ __metadata:
     "@asap-hub/flags": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
     "@auth0/auth0-spa-js": ^1.9.0
     "@babel/core": ^7.12.10
     "@babel/preset-react": ^7.12.10
@@ -498,6 +500,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/routing@workspace:*, @asap-hub/routing@workspace:packages/routing":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/routing@workspace:packages/routing"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@babel/runtime-corejs3": ^7.12.5
+    "@types/qs": ^6
+    "@types/react-router-dom": ^5.1.5
+    qs: ^6.9.6
+    typesafe-routes: ^7.0.1
+  peerDependencies:
+    react-router-dom: ^5.2.0
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/services-common@workspace:*, @asap-hub/services-common@workspace:packages/services-common":
   version: 0.0.0-use.local
   resolution: "@asap-hub/services-common@workspace:packages/services-common"
@@ -574,6 +591,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
+    "@asap-hub/routing": "workspace:*"
     "@babel/core": ^7.12.10
     "@storybook/addon-actions": ^6.1.11
     "@storybook/addon-knobs": ^6.1.11
@@ -6941,10 +6959,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*":
+"@types/qs@npm:*, @types/qs@npm:6.9.5":
   version: 6.9.5
   resolution: "@types/qs@npm:6.9.5"
   checksum: afe4721a802a4b5fa874a7d6d9fd33c9e812bb0ef90dabb050e8072be4ab2e5e817c0feacb9b4e0771d875de99f4d9738217976aeb8d36b81ccd82ded5e9fdc0
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:^6":
+  version: 6.9.6
+  resolution: "@types/qs@npm:6.9.6"
+  checksum: a5f3c4f6ad6de2692e710302f5f82fe8db3ec0de1a75ada02a432f75f64025a6e38d28fcc4ed146d3145017e1312cc5cb3d81a0f41a798ec0463b5f47f017963
   languageName: node
   linkType: hard
 
@@ -24713,14 +24738,14 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.5.1, qs@npm:^6.6.0, qs@npm:^6.7.0":
+"qs@npm:6.9.4, qs@npm:^6.5.1, qs@npm:^6.6.0, qs@npm:^6.7.0":
   version: 6.9.4
   resolution: "qs@npm:6.9.4"
   checksum: beba62d1e1c66e9888cc08a488eb95771c252a92289a96bff4b767a49e4e7afe9487d7ee3269b856292d8281b855ac5eac927c2e77f845e407ee4fe54743fea7
   languageName: node
   linkType: hard
 
-"qs@npm:^6.9.4":
+"qs@npm:^6.9.4, qs@npm:^6.9.6":
   version: 6.9.6
   resolution: "qs@npm:6.9.6"
   checksum: 853715ab6d685aad829c984997f4c7dc90665a8b652478d2e3c06be6968846e5d04adaf1eb2f4977ef544a194a376f0fa65734ee27a4d535e1ed8cb205bf5cce
@@ -29274,6 +29299,22 @@ serverless-offline@^6.8.0:
   version: 0.0.6
   resolution: "typedarray@npm:0.0.6"
   checksum: c9ef0176aaf32593514c31e5c6edc1db970847aff6e1f0a0570a6ac0cc996335792f394c2fcec59cc76691d22a01888ea073a2f3c6930cfcf7c519addf4e2ad7
+  languageName: node
+  linkType: hard
+
+"typesafe-routes@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "typesafe-routes@npm:7.0.1"
+  dependencies:
+    "@types/qs": 6.9.5
+    qs: 6.9.4
+  peerDependencies:
+    react-router-dom: ^5.2.0
+    typescript: ^4.1.0
+  peerDependenciesMeta:
+    react-router-dom:
+      optional: true
+  checksum: 4105e92fc7d8065c994826f9e7cbf2c31ffd8f55b4fe963cf969aab92c8c0d0a16a3b75f0ac32910cdc51e2eff13eeec6fc66109cbe630aeffc47f628434cc6b
   languageName: node
   linkType: hard
 

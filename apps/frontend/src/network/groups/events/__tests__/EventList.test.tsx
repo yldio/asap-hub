@@ -7,10 +7,14 @@ import {
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { Auth0Provider, WhenReady } from '../../../../auth/test-utils';
+import { network } from '@asap-hub/routing';
 
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/frontend/src/auth/test-utils';
+import { DEFAULT_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
 import EventList from '../EventList';
-import { DEFAULT_PAGE_SIZE } from '../../../../hooks';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
 
@@ -29,7 +33,7 @@ const renderGroupEventList = async (
 
   const result = render(
     <RecoilRoot
-      initializeState={({ set, reset }) => {
+      initializeState={({ reset }) => {
         reset(
           groupEventsState({
             currentPage: 0,
@@ -44,7 +48,7 @@ const renderGroupEventList = async (
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[`/${id}`]}>
-              <Route path="/:id">
+              <Route path={network({}).groups({}).group.template}>
                 <EventList past={past} currentTime={currentTime} />
               </Route>
             </MemoryRouter>

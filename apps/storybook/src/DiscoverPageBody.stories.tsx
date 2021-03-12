@@ -37,13 +37,11 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       shortText:
         'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
       thumbnail: 'https://picsum.photos/200',
-      href: '#',
     },
   ],
   members: [
     {
       id: '1',
-      href: '#',
       displayName: 'Daniel Ramirez',
       firstName: 'Daniel',
       lastName: 'Ramirez',
@@ -51,7 +49,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
     },
     {
       id: '2',
-      href: '#',
       displayName: 'Peter Venkman',
       firstName: 'Peter',
       lastName: 'Venkman',
@@ -59,7 +56,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
     },
     {
       id: '3',
-      href: '#',
       displayName: 'Tess W. B. Goetz',
       firstName: 'Tess',
       lastName: 'Goetz',
@@ -67,7 +63,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
     },
     {
       id: '4',
-      href: '#',
       displayName: 'Robin Peploe',
       firstName: 'Robin',
       lastName: 'Peploe',
@@ -75,7 +70,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
     },
     {
       id: '5',
-      href: '#',
       displayName: 'Alice Lane',
       firstName: 'Alice',
       lastName: 'Lane',
@@ -83,7 +77,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
     },
     {
       id: '6',
-      href: '#',
       displayName: 'Philip Mars',
       firstName: 'Philip',
       lastName: 'Mars',
@@ -91,7 +84,6 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
     },
     {
       id: '7',
-      href: '#',
       displayName: 'Emmanuel Depay',
       firstName: 'Emanuel',
       lastName: 'Depay',

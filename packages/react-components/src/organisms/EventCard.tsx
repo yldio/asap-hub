@@ -11,7 +11,7 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => (
       status === 'Cancelled' ? 'This event has been cancelled' : undefined
     }
   >
-    <EventInfo {...props} />
+    <EventInfo {...props} status={status} />
     <TagList tags={tags} max={3} />
   </ToastCard>
 );

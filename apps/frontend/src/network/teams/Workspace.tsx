@@ -1,34 +1,33 @@
 import React from 'react';
 import { useRouteMatch, Route } from 'react-router-dom';
-import { join } from 'path';
-import { TeamProfileWorkspace, ToolModal } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  TeamProfileWorkspace,
+  ToolModal,
+} from '@asap-hub/react-components';
 import { TeamTool, TeamResponse } from '@asap-hub/model';
+import { network, useRouteParams } from '@asap-hub/routing';
+
 import { usePatchTeamById } from './state';
 
 interface WorkspaceProps {
   readonly team: TeamResponse & Required<Pick<TeamResponse, 'tools'>>;
 }
 const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
-  const { path, url } = useRouteMatch();
+  const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
+  const { path } = useRouteMatch();
 
   const patchTeam = usePatchTeamById(team.id);
 
   return (
     <>
       <Route path={path}>
-        <TeamProfileWorkspace
-          {...team}
-          newToolHref={join(url, 'tools')}
-          tools={team.tools.map((tool, index) => ({
-            ...tool,
-            editHref: join(url, 'tools', String(index)),
-          }))}
-        />
+        <TeamProfileWorkspace {...team} tools={team.tools} />
       </Route>
-      <Route exact path={`${path}/tools`}>
+      <Route exact path={path + route.tools.template}>
         <ToolModal
           title="Add Link"
-          backHref={url}
+          backHref={route.$}
           onSave={(data: TeamTool) =>
             patchTeam({
               tools: [...(team.tools ?? []), data],
@@ -36,21 +35,42 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
           }
         />
       </Route>
-      {team.tools.map((tool, i) => (
-        <Route key={`tool-${i}`} exact path={`${path}/tools/${i}`}>
-          <ToolModal
-            {...tool}
-            title="Edit Link"
-            backHref={url}
-            onSave={(data: TeamTool) =>
-              patchTeam({
-                tools: Object.assign([], team.tools, { [i]: data }),
-              })
-            }
-          />
-        </Route>
-      ))}
+      <Route
+        exact
+        path={path + route.tools.template + route.tools({}).tool.template}
+      >
+        <EditTool teamId={team.id} tools={team.tools} />
+      </Route>
     </>
+  );
+};
+
+const EditTool: React.FC<{
+  readonly teamId: TeamResponse['id'];
+  readonly tools: ReadonlyArray<TeamTool>;
+}> = ({ teamId, tools }) => {
+  const { toolIndex } = useRouteParams(
+    network({}).teams({}).team({ teamId }).workspace({}).tools({}).tool,
+  );
+  const tool = tools[toolIndex];
+
+  const patchTeam = usePatchTeamById(teamId);
+
+  if (!tool) {
+    return <NotFoundPage />;
+  }
+
+  return (
+    <ToolModal
+      {...tool}
+      title="Edit Link"
+      backHref={network({}).teams({}).team({ teamId }).workspace({}).$}
+      onSave={(data: TeamTool) =>
+        patchTeam({
+          tools: Object.assign([], tools, { [toolIndex]: data }),
+        })
+      }
+    />
   );
 };
 

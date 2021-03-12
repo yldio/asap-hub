@@ -1,11 +1,8 @@
 import React, { ComponentProps } from 'react';
 import { NetworkGroups } from '@asap-hub/react-components';
-import { join } from 'path';
 
 import { useGroups } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
-import { GROUPS_PATH } from '../routes';
-import { NETWORK_PATH } from '../../routes';
 
 interface NetworkGroupListProps {
   searchQuery?: string;
@@ -30,7 +27,6 @@ const NetworkGroupList: React.FC<NetworkGroupListProps> = ({ searchQuery }) => {
   >['groups'] = result.items.map((group) => ({
     ...group,
     numberOfTeams: group.teams.length,
-    href: join(`${NETWORK_PATH}/${GROUPS_PATH}`, group.id),
   }));
 
   return (

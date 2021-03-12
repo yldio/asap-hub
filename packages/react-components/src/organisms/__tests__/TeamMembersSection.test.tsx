@@ -16,7 +16,6 @@ it('renders the content', async () => {
       members={[
         {
           id: '42',
-          href: '#42',
           firstName: 'Phillip',
           lastName: 'Mars',
           displayName: 'Phillip Mars, PhD',

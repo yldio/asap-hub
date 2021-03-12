@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
-import { join } from 'path';
+import { network, useRouteParams } from '@asap-hub/routing';
 
 import { useTeamById } from './state';
 import Frame from '../../structure/Frame';
@@ -18,13 +18,11 @@ const Workspace = React.lazy(loadWorkspace);
 loadAbout();
 
 const TeamProfile: React.FC<Record<string, never>> = () => {
-  const {
-    url,
-    path,
-    params: { id },
-  } = useRouteMatch<{ id: string }>();
+  const route = network({}).teams({}).team;
+  const { path } = useRouteMatch();
+  const { teamId } = useRouteParams(route);
 
-  const team = useTeamById(id);
+  const team = useTeamById(teamId);
 
   useEffect(() => {
     loadAbout()
@@ -33,29 +31,22 @@ const TeamProfile: React.FC<Record<string, never>> = () => {
   }, [team]);
 
   if (team) {
-    const teamPageProps = {
-      ...team,
-      aboutHref: join(url, 'about'),
-      outputsHref: join(url, 'outputs'),
-      workspaceHref: join(url, 'workspace'),
-    };
-
     return (
-      <TeamProfilePage {...teamPageProps}>
+      <TeamProfilePage {...team}>
         <Frame>
           <Switch>
-            <Route path={`${path}/about`}>
+            <Route path={path + route({ teamId }).about.template}>
               <About team={team} />
             </Route>
-            <Route path={`${path}/outputs`}>
+            <Route path={path + route({ teamId }).outputs.template}>
               <Outputs outputs={team.outputs} />
             </Route>
             {team.tools && (
-              <Route path={`${path}/workspace`}>
+              <Route path={path + route({ teamId }).workspace.template}>
                 <Workspace team={{ ...team, tools: team.tools }} />
               </Route>
             )}
-            <Redirect to={join(url, 'about')} />
+            <Redirect to={route({ teamId }).about({}).$} />
           </Switch>
         </Frame>
       </TeamProfilePage>

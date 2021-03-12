@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { join } from 'path';
 import { v4 as uuid } from 'uuid';
 import { GroupProfilePage, NotFoundPage } from '@asap-hub/react-components';
+import { network, useRouteParams } from '@asap-hub/routing';
 
 import { useGroupById } from './state';
 import Frame from '../../structure/Frame';
@@ -27,41 +27,39 @@ const GroupProfile: React.FC = () => {
   }, []);
 
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
-  const {
-    url,
-    path,
-    params: { id },
-  } = useRouteMatch<{ id: string }>();
-  const group = useGroupById(id);
   const [currentTime] = useState(new Date());
+
+  const route = network({}).groups({}).group;
+  const { groupId } = useRouteParams(route);
+  const { path } = useRouteMatch();
+  const group = useGroupById(groupId);
 
   if (group) {
     return (
       <GroupProfilePage
+        id={group.id}
         name={group.name}
         lastModifiedDate={group.lastModifiedDate}
         numberOfTeams={group.teams.length}
-        aboutHref={join(url, 'about')}
-        calendarHref={join(url, 'calendar')}
-        groupTeamsHref={`${join(url, 'about')}#${groupTeamsElementId}`}
-        upcomingHref={join(url, 'upcoming')}
-        pastHref={join(url, 'past')}
+        groupTeamsHref={`${
+          route({ groupId }).about({}).$
+        }#${groupTeamsElementId}`}
       >
         <Frame>
           <Switch>
-            <Route path={`${path}/about`}>
+            <Route path={path + route({ groupId }).about.template}>
               <About group={group} groupTeamsElementId={groupTeamsElementId} />
             </Route>
-            <Route path={`${path}/calendar`}>
+            <Route path={path + route({ groupId }).calendar.template}>
               <Calendar calendars={group.calendars} />
             </Route>
-            <Route path={`${path}/upcoming`}>
+            <Route path={path + route({ groupId }).upcoming.template}>
               <EventList currentTime={currentTime} />
             </Route>
-            <Route path={`${path}/past`}>
+            <Route path={path + route({ groupId }).past.template}>
               <EventList past currentTime={currentTime} />
             </Route>
-            <Redirect to={`${path}/about`} />
+            <Redirect to={route({ groupId }).about({}).$} />
           </Switch>
         </Frame>
       </GroupProfilePage>

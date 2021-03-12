@@ -17,9 +17,7 @@ const researchOutput: Omit<
   team: {
     id: '123',
     displayName: 'A Barnes',
-    href: '#',
   },
-  href: '#',
 };
 
 const props = (): ComponentProps<typeof SharedResearchPageBody> => {

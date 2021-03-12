@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { SharedResearchPage } from '@asap-hub/react-components';
 import { useDebounce } from 'use-debounce';
+import { sharedResearch } from '@asap-hub/routing';
 
 import { useSearch } from '../hooks';
 import { SearchFrame } from '../structure/Frame';
@@ -27,7 +28,7 @@ const SharedResearch: React.FC<Record<string, never>> = () => {
 
   return (
     <Switch>
-      <Route exact path={`${path}`}>
+      <Route exact path={path}>
         <SharedResearchPage
           onChangeSearch={setSearchQuery}
           searchQuery={searchQuery}
@@ -42,7 +43,7 @@ const SharedResearch: React.FC<Record<string, never>> = () => {
           </SearchFrame>
         </SharedResearchPage>
       </Route>
-      <Route path={`${path}/:id`}>
+      <Route path={path + sharedResearch({}).researchOutput.template}>
         <ResearchOutput />
       </Route>
     </Switch>

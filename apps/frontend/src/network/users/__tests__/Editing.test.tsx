@@ -4,62 +4,68 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
 
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import Editing from '../Editing';
-import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from '../routes';
 import { patchUser } from '../api';
 
 jest.mock('../api');
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
+const id = '42';
+
 const wrapper: React.FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
     <React.Suspense fallback="loading">
-      <Auth0Provider user={{ id: '42' }}>{children}</Auth0Provider>
+      <Auth0Provider user={{ id }}>{children}</Auth0Provider>
     </React.Suspense>
   </RecoilRoot>
 );
+const aboutRoute = network({}).users({}).user({ userId: id }).about;
+const aboutPath =
+  network.template +
+  network({}).users.template +
+  network({}).users({}).user.template +
+  aboutRoute.template;
+const { editPersonalInfo, editContactInfo } = aboutRoute({});
 
-describe.each([EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH])(
-  'the %s modal',
-  (path) => {
-    it('goes back when closed', async () => {
-      const { findByText, findByTitle } = render(
-        <MemoryRouter initialEntries={[`/profile/${path}`]}>
-          <Route path="/profile">
-            <Route exact path="/profile">
-              Profile
-            </Route>
-            <Editing user={createUserResponse()} />
+describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
+  it('goes back when closed', async () => {
+    const { findByText, findByTitle } = render(
+      <MemoryRouter initialEntries={[route({}).$]}>
+        <Route path={aboutPath}>
+          <Route exact path={aboutPath}>
+            Profile
           </Route>
-        </MemoryRouter>,
-        { wrapper },
-      );
+          <Editing user={createUserResponse()} />
+        </Route>
+      </MemoryRouter>,
+      { wrapper },
+    );
 
-      userEvent.click(await findByTitle(/close/i));
-      expect(await findByText('Profile')).toBeVisible();
-    });
+    userEvent.click(await findByTitle(/close/i));
+    expect(await findByText('Profile')).toBeVisible();
+  });
 
-    it('goes back when saved', async () => {
-      const { findByText } = render(
-        <MemoryRouter initialEntries={[`/profile/${path}`]}>
-          <Route path="/profile">
-            <Route exact path="/profile">
-              Profile
-            </Route>
-            <Editing user={createUserResponse()} />
+  it('goes back when saved', async () => {
+    const { findByText } = render(
+      <MemoryRouter initialEntries={[route({}).$]}>
+        <Route path={aboutPath}>
+          <Route exact path={aboutPath}>
+            Profile
           </Route>
-        </MemoryRouter>,
-        { wrapper },
-      );
+          <Editing user={createUserResponse()} />
+        </Route>
+      </MemoryRouter>,
+      { wrapper },
+    );
 
-      userEvent.click(await findByText(/save/i));
-      expect(await findByText('Profile')).toBeVisible();
-    });
-  },
-);
+    userEvent.click(await findByText(/save/i));
+    expect(await findByText('Profile')).toBeVisible();
+  });
+});
 
 describe('the personal info modal', () => {
   it('saves changes', async () => {
@@ -70,13 +76,13 @@ describe('the personal info modal', () => {
       queryByText,
       queryByDisplayValue,
     } = render(
-      <Auth0Provider user={{ id: '42' }}>
-        <MemoryRouter initialEntries={[`/profile/${EDIT_PERSONAL_INFO_PATH}`]}>
-          <Route path="/profile">
+      <Auth0Provider user={{ id }}>
+        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+          <Route path={aboutPath}>
             <Editing
               user={{
                 ...createUserResponse(),
-                id: '42',
+                id,
                 location: 'York',
               }}
             />
@@ -86,7 +92,7 @@ describe('the personal info modal', () => {
       { wrapper },
     );
 
-    await userEvent.type(await findByLabelText(/location/i), 'shire');
+    userEvent.type(await findByLabelText(/location/i), 'shire');
     expect(getByDisplayValue('Yorkshire')).toBeVisible();
 
     userEvent.click(await findByText(/save/i));
@@ -95,7 +101,7 @@ describe('the personal info modal', () => {
       expect(queryByDisplayValue('Yorkshire')).not.toBeInTheDocument();
     });
     expect(mockPatchUser).toHaveBeenLastCalledWith(
-      '42',
+      id,
       expect.objectContaining({
         location: 'Yorkshire',
       }),
@@ -107,8 +113,8 @@ describe('the personal info modal', () => {
 describe('the contact info modal', () => {
   it('uses the contact email as the email value', async () => {
     const { findByLabelText } = render(
-      <MemoryRouter initialEntries={[`/profile/${EDIT_CONTACT_INFO_PATH}`]}>
-        <Route path="/profile">
+      <MemoryRouter initialEntries={[editContactInfo({}).$]}>
+        <Route path={aboutPath}>
           <Editing
             user={{
               ...createUserResponse(),
@@ -133,13 +139,13 @@ describe('the contact info modal', () => {
       queryByText,
       queryByDisplayValue,
     } = render(
-      <Auth0Provider user={{ id: '42' }}>
-        <MemoryRouter initialEntries={[`/profile/${EDIT_CONTACT_INFO_PATH}`]}>
+      <Auth0Provider user={{ id }}>
+        <MemoryRouter initialEntries={[`/profile${editContactInfo.template}`]}>
           <Route path="/profile">
             <Editing
               user={{
                 ...createUserResponse(),
-                id: '42',
+                id,
                 contactEmail: 'contact@example.com',
               }}
             />
@@ -149,7 +155,7 @@ describe('the contact info modal', () => {
       { wrapper },
     );
 
-    await userEvent.type(await findByLabelText(/e-?mail/i), 'm');
+    userEvent.type(await findByLabelText(/e-?mail/i), 'm');
     expect(getByDisplayValue('contact@example.comm')).toBeVisible();
 
     userEvent.click(await findByText(/save/i));
@@ -158,7 +164,7 @@ describe('the contact info modal', () => {
       expect(queryByDisplayValue('Yorkshire')).not.toBeInTheDocument();
     });
     expect(mockPatchUser).toHaveBeenLastCalledWith(
-      '42',
+      id,
       { contactEmail: 'contact@example.comm' },
       expect.any(String),
     );

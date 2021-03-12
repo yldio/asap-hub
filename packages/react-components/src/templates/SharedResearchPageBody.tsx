@@ -16,8 +16,8 @@ const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
-    {researchOutputs.map(({ id, ...output }) => (
-      <div key={id}>
+    {researchOutputs.map((output) => (
+      <div key={output.id}>
         <SharedResearchCard {...output} />
       </div>
     ))}

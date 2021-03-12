@@ -7,10 +7,7 @@ import {
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 
-import { join } from 'path';
 import { useDashboard } from '../api';
-import { DISCOVER_PATH, NETWORK_PATH, NEWS_AND_EVENTS_PATH } from '../routes';
-import { TEAMS_PATH } from '../network/routes';
 import Frame from '../structure/Frame';
 
 const loadBody = () =>
@@ -19,7 +16,12 @@ const Body = React.lazy(loadBody);
 loadBody();
 
 const Dashboard: React.FC<Record<string, never>> = () => {
-  const { firstName, id, teams = [] } = useCurrentUser() ?? {};
+  const currentUser = useCurrentUser();
+  if (!currentUser) {
+    throw new Error('Failed to find out who is currently logged in');
+  }
+
+  const { firstName, id, teams } = currentUser;
   const { loading, data: dashboard } = useDashboard();
 
   if (loading) {
@@ -27,27 +29,10 @@ const Dashboard: React.FC<Record<string, never>> = () => {
   }
 
   if (dashboard) {
-    const data = {
-      ...dashboard,
-      newsAndEvents: dashboard.newsAndEvents.map((n) => ({
-        ...n,
-        href: join(NEWS_AND_EVENTS_PATH, n.id),
-      })),
-      hrefDiscoverAsap: DISCOVER_PATH,
-      hrefSharedResearch: '/shared-research',
-      hrefNewsAndEvents: NEWS_AND_EVENTS_PATH,
-      hrefProfile: `${NETWORK_PATH}/users/${id}`,
-      hrefTeamsNetwork: `${NETWORK_PATH}/${TEAMS_PATH}`,
-      hrefTeamWorkspace:
-        teams?.length > 0
-          ? `${NETWORK_PATH}/${TEAMS_PATH}/${teams[0].id}`
-          : undefined,
-      hrefUsersNetwork: `${NETWORK_PATH}/users`,
-    };
     return (
       <DashboardPage firstName={firstName}>
         <Frame>
-          <Body {...data} />
+          <Body {...dashboard} userId={id} teamId={teams[0]?.id} />
         </Frame>
       </DashboardPage>
     );

@@ -1,15 +1,10 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import SharedResearchCard from '../SharedResearchCard';
 
-const libraryCardProps: ComponentProps<typeof SharedResearchCard> = {
-  title: 'Output 1',
-  type: 'Proposal',
-  href: '#',
-  publishDate: new Date().toISOString(),
-  created: new Date().toISOString(),
-};
+const libraryCardProps: ComponentProps<typeof SharedResearchCard> = createResearchOutputResponse();
 
 it('renders the title', () => {
   const { getByRole } = render(
@@ -52,12 +47,13 @@ it('displays team information when present', () => {
       team={{
         id: '123',
         displayName: 'A',
-        href: '/network/teams/123',
       }}
     />,
   );
-  const link = getByText('Team A', { selector: 'a' }) as HTMLAnchorElement;
-  expect(link.href).toEqual('http://localhost/network/teams/123');
+  expect(getByText('Team A').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/123$/),
+  );
 });
 
 it('displays link component when link property present', () => {

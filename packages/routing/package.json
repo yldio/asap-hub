@@ -1,0 +1,28 @@
+{
+  "name": "@asap-hub/routing",
+  "private": true,
+  "version": "0.1.0",
+  "engines": {
+    "node": "14.15.x"
+  },
+  "module": "build/index.js",
+  "main": "build-cjs/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.12.5",
+    "qs": "^6.9.6",
+    "typesafe-routes": "^7.0.1"
+  },
+  "peerDependencies": {
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
+    "@types/qs": "^6",
+    "@types/react-router-dom": "^5.1.5"
+  }
+}

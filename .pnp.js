@@ -119,6 +119,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:packages/react-context"
       },
       {
+        "name": "@asap-hub/routing",
+        "reference": "workspace:packages/routing"
+      },
+      {
         "name": "@asap-hub/services-common",
         "reference": "workspace:packages/services-common"
       },
@@ -150,6 +154,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/react-components", ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components", "virtual:6b16901317bbf82c02ae3bcae29b5893b6e826cd09655789efdb8fd1062cadce911b7d0ecb8757fa5931069d18153edc842886686fbae7c22495d49c2e0084fa#workspace:packages/react-components", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#workspace:packages/react-components", "workspace:packages/react-components"]],
       ["@asap-hub/react-context", ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context", "workspace:packages/react-context"]],
       ["@asap-hub/react-templates", ["workspace:apps/react-templates"]],
+      ["@asap-hub/routing", ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing", "workspace:packages/routing"]],
       ["@asap-hub/services-common", ["workspace:packages/services-common"]],
       ["@asap-hub/squidex", ["workspace:packages/squidex"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
@@ -235,6 +240,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/react-templates",
         "workspace:apps/react-templates"
+      ],
+      [
+        "@asap-hub/routing",
+        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"
       ],
       [
         "@asap-hub/services-common",
@@ -8572,6 +8581,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.1.5"
       ],
       [
+        "typesafe-routes",
+        "virtual:d68e5ca297f0ac6d93babf592d45956725ab3db06dbae0fc674a3d1544ddd9ac11910af84dccf440c26f6926c22813cad9fbc1ba06caf50de441ea5271219a4b#npm:7.0.1"
+      ],
+      [
         "typescript",
         "patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=cc6730"
       ],
@@ -9494,6 +9507,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-components", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
             ["@asap-hub/unsupported-browser-page", "workspace:packages/unsupported-browser-page"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/runtime-corejs3", "npm:7.12.5"],
@@ -9580,6 +9594,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/flags", "workspace:packages/flags"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/core", "npm:7.12.10"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.12.10"],
@@ -9668,6 +9683,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/flags", "workspace:packages/flags"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/core", "npm:7.12.10"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.12.10"],
@@ -9751,6 +9767,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/flags", "workspace:packages/flags"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/core", "npm:7.12.10"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.12.10"],
@@ -9838,6 +9855,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/flags", "workspace:packages/flags"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
             ["@auth0/auth0-spa-js", "npm:1.9.0"],
             ["@babel/core", "npm:7.12.10"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.12.10"],
@@ -9998,6 +10016,39 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@asap-hub/routing", [
+        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing", {
+          "packageLocation": "./.yarn/$$virtual/@asap-hub-routing-virtual-e1cee4276c/1/packages/routing/",
+          "packageDependencies": [
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.12.5"],
+            ["@types/qs", "npm:6.9.6"],
+            ["@types/react-router-dom", "npm:5.1.5"],
+            ["qs", "npm:6.9.6"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["typesafe-routes", "virtual:e1cee4276ceadbdccd38e69066355085328b14240ccdb9ef0b6eb3e47aa1355ef92cee33d89abbc2a41f7102f990b83e360440abc8183e8715906b1d4dd42039#npm:7.0.1"]
+          ],
+          "packagePeers": [
+            "@types/react-router-dom",
+            "react-router-dom"
+          ],
+          "linkType": "SOFT",
+        }],
+        ["workspace:packages/routing", {
+          "packageLocation": "./packages/routing/",
+          "packageDependencies": [
+            ["@asap-hub/routing", "workspace:packages/routing"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.12.5"],
+            ["@types/qs", "npm:6.9.6"],
+            ["@types/react-router-dom", "npm:5.1.5"],
+            ["qs", "npm:6.9.6"],
+            ["typesafe-routes", "virtual:d68e5ca297f0ac6d93babf592d45956725ab3db06dbae0fc674a3d1544ddd9ac11910af84dccf440c26f6926c22813cad9fbc1ba06caf50de441ea5271219a4b#npm:7.0.1"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
       ["@asap-hub/services-common", [
         ["workspace:packages/services-common", {
           "packageLocation": "./packages/services-common/",
@@ -10079,6 +10130,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-components", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#workspace:packages/react-components"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
+            ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
             ["@babel/core", "npm:7.12.10"],
             ["@storybook/addon-actions", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#npm:6.1.11"],
             ["@storybook/addon-knobs", "virtual:3016480270f08d8eae4681cf19c46f958ad5ec604547263cfa73ce1c2d986d52bbb3c77ab8b499f742827046a7fed09dd2f1a3d66e70b4f6c98f3e8d7f130005#npm:6.1.11"],
@@ -20689,6 +20741,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.5-98e83ee762-afe4721a80.zip/node_modules/@types/qs/",
           "packageDependencies": [
             ["@types/qs", "npm:6.9.5"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:6.9.6", {
+          "packageLocation": "./.yarn/cache/@types-qs-npm-6.9.6-2fc5ce36d4-a5f3c4f6ad.zip/node_modules/@types/qs/",
+          "packageDependencies": [
+            ["@types/qs", "npm:6.9.6"]
           ],
           "linkType": "HARD",
         }]
@@ -46740,6 +46799,53 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["typedarray-to-buffer", "npm:3.1.5"],
             ["is-typedarray", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["typesafe-routes", [
+        ["npm:7.0.1", {
+          "packageLocation": "./.yarn/cache/typesafe-routes-npm-7.0.1-1e3a4998db-4105e92fc7.zip/node_modules/typesafe-routes/",
+          "packageDependencies": [
+            ["typesafe-routes", "npm:7.0.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:d68e5ca297f0ac6d93babf592d45956725ab3db06dbae0fc674a3d1544ddd9ac11910af84dccf440c26f6926c22813cad9fbc1ba06caf50de441ea5271219a4b#npm:7.0.1", {
+          "packageLocation": "./.yarn/$$virtual/typesafe-routes-virtual-4ca99fffc5/0/cache/typesafe-routes-npm-7.0.1-1e3a4998db-4105e92fc7.zip/node_modules/typesafe-routes/",
+          "packageDependencies": [
+            ["typesafe-routes", "virtual:d68e5ca297f0ac6d93babf592d45956725ab3db06dbae0fc674a3d1544ddd9ac11910af84dccf440c26f6926c22813cad9fbc1ba06caf50de441ea5271219a4b#npm:7.0.1"],
+            ["@types/qs", "npm:6.9.5"],
+            ["@types/react-router-dom", "npm:5.1.5"],
+            ["@types/typescript", null],
+            ["qs", "npm:6.9.4"],
+            ["react-router-dom", null],
+            ["typescript", null]
+          ],
+          "packagePeers": [
+            "@types/react-router-dom",
+            "@types/typescript",
+            "react-router-dom",
+            "typescript"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e1cee4276ceadbdccd38e69066355085328b14240ccdb9ef0b6eb3e47aa1355ef92cee33d89abbc2a41f7102f990b83e360440abc8183e8715906b1d4dd42039#npm:7.0.1", {
+          "packageLocation": "./.yarn/$$virtual/typesafe-routes-virtual-d86a982a6f/0/cache/typesafe-routes-npm-7.0.1-1e3a4998db-4105e92fc7.zip/node_modules/typesafe-routes/",
+          "packageDependencies": [
+            ["typesafe-routes", "virtual:e1cee4276ceadbdccd38e69066355085328b14240ccdb9ef0b6eb3e47aa1355ef92cee33d89abbc2a41f7102f990b83e360440abc8183e8715906b1d4dd42039#npm:7.0.1"],
+            ["@types/qs", "npm:6.9.5"],
+            ["@types/react-router-dom", "npm:5.1.5"],
+            ["@types/typescript", null],
+            ["qs", "npm:6.9.4"],
+            ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["typescript", null]
+          ],
+          "packagePeers": [
+            "@types/react-router-dom",
+            "@types/typescript",
+            "react-router-dom",
+            "typescript"
           ],
           "linkType": "HARD",
         }]

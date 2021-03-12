@@ -3,6 +3,7 @@ import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
 import userEvent from '@testing-library/user-event';
@@ -78,8 +79,19 @@ const renderUserProfile = async (
             auth0Overrides={auth0Overrides}
           >
             <WhenReady>
-              <MemoryRouter initialEntries={[`/${routeProfileId}/`]}>
-                <Route path="/:id" component={UserProfile} />
+              <MemoryRouter
+                initialEntries={[
+                  network({}).users({}).user({ userId: routeProfileId }).$,
+                ]}
+              >
+                <Route
+                  path={
+                    network.template +
+                    network({}).users.template +
+                    network({}).users({}).user.template
+                  }
+                  component={UserProfile}
+                />
               </MemoryRouter>
             </WhenReady>
           </Auth0Provider>
@@ -236,7 +248,7 @@ describe('a header edit button', () => {
     } = await renderUserProfile(userProfile);
 
     userEvent.click(await findByLabelText(/edit.+personal/i));
-    await userEvent.type(await findByDisplayValue('York'), 'shire');
+    userEvent.type(await findByDisplayValue('York'), 'shire');
     expect(await findByDisplayValue('Yorkshire')).toBeVisible();
 
     userEvent.click(getByText(/save/i));
@@ -262,7 +274,7 @@ describe('a header edit button', () => {
     } = await renderUserProfile(userProfile);
 
     userEvent.click(await findByLabelText(/edit.+contact/i));
-    await userEvent.type(await findByDisplayValue('contact@example.com'), 'm');
+    userEvent.type(await findByDisplayValue('contact@example.com'), 'm');
     expect(await findByDisplayValue('contact@example.comm')).toBeVisible();
 
     userEvent.click(getByText(/save/i));

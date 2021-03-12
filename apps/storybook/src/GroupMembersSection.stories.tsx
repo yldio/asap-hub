@@ -16,16 +16,15 @@ export const Normal = () => (
       (user, userIndex) => ({
         user: {
           ...user,
-          teams: user.teams.map((team) => ({ ...team, href: `#t${team.id}` })),
+          teams: Array(number('Number of Leader Teams', 1))
+            .fill(null)
+            .map((_, teamIndex) => ({
+              id: `#t${teamIndex}`,
+              displayName: `${teamIndex + 1}`,
+              role: 'Key Personnel',
+            })),
         },
         role: userIndex % 3 ? 'Chair' : 'Project Manager',
-        href: `#u${userIndex}`,
-        teams: Array(number('Number of Leader Teams', 1))
-          .fill(null)
-          .map((_, teamIndex) => ({
-            displayName: `${teamIndex + 1}`,
-            href: `#t${teamIndex}`,
-          })),
       }),
     )}
     teams={createListTeamResponse(

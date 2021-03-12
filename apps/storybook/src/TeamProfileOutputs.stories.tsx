@@ -10,12 +10,8 @@ export default {
 
 export const Normal = () => (
   <TeamProfileOutputs
-    outputs={createListResearchOutputResponse(
-      number('Number of outputs', 2),
-    ).items.map(({ team, ...output }) => ({
-      ...output,
-      href: '#output',
-      team: team && { ...team, href: '#team' },
-    }))}
+    outputs={
+      createListResearchOutputResponse(number('Number of outputs', 2)).items
+    }
   />
 );

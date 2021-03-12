@@ -42,7 +42,6 @@ it('renders group members', () => {
             teams: [],
           },
           role: 'Chair',
-          href: '',
         },
       ]}
     />,

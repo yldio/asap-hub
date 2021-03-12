@@ -2,6 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import format from 'date-fns/format';
 import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
+import { network, sharedResearch } from '@asap-hub/routing';
 
 import { Card, Anchor, Headline2, Caption, TagLabel } from '../atoms';
 import { perRem } from '../pixels';
@@ -49,13 +50,8 @@ const typeStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
-  'created' | 'publishDate' | 'team' | 'title' | 'type' | 'link'
-> & {
-  href: string;
-  team?: {
-    href: string;
-  };
-};
+  'id' | 'created' | 'publishDate' | 'team' | 'title' | 'type' | 'link'
+>;
 
 const labels: Record<ResearchOutputType, string> = {
   Proposal: 'Open External Link',
@@ -69,8 +65,8 @@ const labels: Record<ResearchOutputType, string> = {
 };
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
+  id,
   created,
-  href,
   link,
   publishDate,
   team,
@@ -80,7 +76,9 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   const titleComponent = link ? (
     <Headline2 styleAsHeading={4}>{title}</Headline2>
   ) : (
-    <Anchor href={href}>
+    <Anchor
+      href={sharedResearch({}).researchOutput({ researchOutputId: id }).$}
+    >
       <Headline2 styleAsHeading={4}>{title}</Headline2>
     </Anchor>
   );
@@ -99,7 +97,9 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
           {team && (
             <span css={teamMemberStyles}>
               <span css={iconStyles}>{teamIcon}</span>
-              <Anchor href={team.href}>Team {team.displayName}</Anchor>
+              <Anchor href={network({}).teams({}).team({ teamId: team.id }).$}>
+                Team {team.displayName}
+              </Anchor>
             </span>
           )}
         </div>

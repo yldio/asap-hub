@@ -1,27 +1,14 @@
 import React, { useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
-import {
-  Layout,
-  BasicLayout,
-  mailToFeedback,
-} from '@asap-hub/react-components';
+import { Layout, BasicLayout } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
+import { network, welcome } from '@asap-hub/routing';
 
 import history from './history';
-import {
-  DISCOVER_PATH,
-  NETWORK_PATH,
-  SHARED_RESEARCH_PATH,
-  NEWS_AND_EVENTS_PATH,
-  LOGOUT_PATH,
-  EVENTS_PATH,
-} from './routes';
-import { TEAMS_PATH } from './network/routes';
 import AuthProvider from './auth/AuthProvider';
 import CheckAuth from './auth/CheckAuth';
 import Frame from './structure/Frame';
-import { EVENTS_CALENDAR_PATH } from './events/routes';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
@@ -38,22 +25,14 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   const user = useCurrentUser();
   return isAuthenticated && user ? (
     <Layout
-      discoverAsapHref={DISCOVER_PATH}
-      sharedResearchHref={SHARED_RESEARCH_PATH}
-      networkHref={`${NETWORK_PATH}/${TEAMS_PATH}`}
-      newsAndEventsHref={NEWS_AND_EVENTS_PATH}
-      userProfileHref={`${NETWORK_PATH}/users/${user.id}`}
+      userProfileHref={network({}).users({}).user({ userId: user.id }).$}
       teams={user.teams.map(({ id, displayName = '' }) => ({
         name: displayName,
-        href: `${NETWORK_PATH}/${TEAMS_PATH}/${id}`,
+        href: network({}).teams({}).team({ teamId: id }).$,
       }))}
-      settingsHref="/settings"
-      feedbackHref={mailToFeedback()}
-      logoutHref={LOGOUT_PATH}
       termsHref="/terms-and-conditions"
       privacyPolicyHref="/privacy-policy"
       aboutHref="https://www.parkinsonsroadmap.org/"
-      eventsHref={`${EVENTS_PATH}/${EVENTS_CALENDAR_PATH}`}
     >
       {children}
     </Layout>
@@ -74,7 +53,7 @@ const App: React.FC<Record<string, never>> = () => {
           <LastLocationProvider>
             <Frame>
               <Switch>
-                <Route path="/welcome">
+                <Route path={welcome.template}>
                   <Welcome />
                 </Route>
 

@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createTeamResponse } from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
 
 import {
   Auth0Provider,
@@ -17,16 +18,30 @@ import Workspace from '../Workspace';
 import { patchTeam } from '../api';
 
 jest.mock('../api');
-
 const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
+
+const id = '42';
 
 const wrapper: React.FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
     <React.Suspense fallback="loading">
       <Auth0Provider user={{}}>
         <WhenReady>
-          <MemoryRouter initialEntries={['/team/workspace']}>
-            <Route path="/team/workspace">{children}</Route>
+          <MemoryRouter
+            initialEntries={[
+              network({}).teams({}).team({ teamId: id }).workspace({}).$,
+            ]}
+          >
+            <Route
+              path={
+                network.template +
+                network({}).teams.template +
+                network({}).teams({}).team.template +
+                network({}).teams({}).team({ teamId: id }).workspace.template
+              }
+            >
+              {children}
+            </Route>
           </MemoryRouter>
         </WhenReady>
       </Auth0Provider>
@@ -46,7 +61,7 @@ describe('the add tool dialog', () => {
       findByText,
       findByTitle,
     } = render(
-      <Workspace team={{ ...createTeamResponse(), id: '42', tools: [] }} />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
       { wrapper },
     );
     userEvent.click(await findByText(/add/i));
@@ -63,7 +78,7 @@ describe('the add tool dialog', () => {
       findByText,
       findByLabelText,
     } = render(
-      <Workspace team={{ ...createTeamResponse(), id: '42', tools: [] }} />,
+      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
       { wrapper },
     );
     userEvent.click(await findByText(/add/i));
@@ -77,7 +92,7 @@ describe('the add tool dialog', () => {
       expect(queryByDisplayValue('tool')).not.toBeInTheDocument();
     });
     expect(mockPatchTeam).toHaveBeenLastCalledWith(
-      '42',
+      id,
       {
         tools: [
           {
@@ -98,7 +113,7 @@ describe('the edit tool dialog', () => {
       <Workspace
         team={{
           ...createTeamResponse(),
-          id: '42',
+          id,
           tools: [
             {
               name: 'tool',
@@ -127,7 +142,7 @@ describe('the edit tool dialog', () => {
       <Workspace
         team={{
           ...createTeamResponse(),
-          id: '42',
+          id,
           tools: [
             {
               name: 'tool 1',
@@ -157,7 +172,7 @@ describe('the edit tool dialog', () => {
       expect(queryByDisplayValue('tool 2 new')).not.toBeInTheDocument();
     });
     expect(mockPatchTeam).toHaveBeenLastCalledWith(
-      '42',
+      id,
       {
         tools: [
           expect.objectContaining({ name: 'tool 1' }),

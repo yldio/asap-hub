@@ -1,6 +1,8 @@
 import React from 'react';
 import { UserResponse, GroupResponse } from '@asap-hub/model';
 import css from '@emotion/css';
+import { network } from '@asap-hub/routing';
+
 import { Card, Headline2, Paragraph, Link, Divider } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import * as colors from '../colors';
@@ -47,9 +49,8 @@ const listItemStyle = css({
 });
 
 type UserProfileGroupsProps = Pick<UserResponse, 'firstName' | 'id'> & {
-  groups: (GroupResponse & { href: string })[];
+  readonly groups: ReadonlyArray<GroupResponse>;
 };
-
 const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
   firstName,
   id,
@@ -69,16 +70,20 @@ const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
       </Paragraph>
       {!!groups.length && (
         <ul css={[containerStyles]}>
-          {groups.map(({ name, leaders, href }, idx) => (
+          {groups.map((group, idx) => (
             <React.Fragment key={`group-${idx}`}>
               {idx === 0 || <Divider />}
               <li key={idx} css={listItemStyle}>
                 <div css={[titleStyle]}>Group</div>
-                <Link href={href}>{name}</Link>
+                <Link
+                  href={network({}).groups({}).group({ groupId: group.id }).$}
+                >
+                  {group.name}
+                </Link>
                 <div css={[titleStyle]}>Role</div>
                 <div css={roleStyle}>
-                  {leaders.find((test) => test.user.id === id)?.role ??
-                    'Member'}
+                  {group.leaders.find((leader) => leader.user.id === id)
+                    ?.role ?? 'Member'}
                 </div>
               </li>
             </React.Fragment>

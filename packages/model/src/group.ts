@@ -4,31 +4,31 @@ import { UserResponse } from './user';
 import { CalendarResponse } from './calendar';
 
 export type GroupTools = {
-  slack?: string;
-  googleDrive?: string;
-  googleCalendar?: string;
+  readonly slack?: string;
+  readonly googleDrive?: string;
+  readonly googleCalendar?: string;
 };
 
 export type GroupTeam = Omit<TeamResponse, 'members'>;
 
 export type GroupRole = 'Chair' | 'Project Manager';
 export type GroupLeader = {
-  user: UserResponse;
-  role: GroupRole;
+  readonly user: UserResponse;
+  readonly role: GroupRole;
 };
 
 export interface GroupResponse {
-  id: string;
-  createdDate: string;
-  name: string;
-  tags: string[];
-  description: string;
-  tools: GroupTools;
-  teams: GroupTeam[];
-  leaders: GroupLeader[];
-  calendars: CalendarResponse[];
-  lastModifiedDate: string;
-  thumbnail?: string;
+  readonly id: string;
+  readonly createdDate: string;
+  readonly name: string;
+  readonly tags: ReadonlyArray<string>;
+  readonly description: string;
+  readonly tools: GroupTools;
+  readonly teams: ReadonlyArray<GroupTeam>;
+  readonly leaders: ReadonlyArray<GroupLeader>;
+  readonly calendars: ReadonlyArray<CalendarResponse>;
+  readonly lastModifiedDate: string;
+  readonly thumbnail?: string;
 }
 
 export type ListGroupResponse = ListResponse<GroupResponse>;

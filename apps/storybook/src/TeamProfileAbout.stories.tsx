@@ -27,7 +27,6 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
   members: [
     {
       id: '1',
-      href: '#memeber',
       displayName: 'Daniel Ramirez',
       firstName: 'Daniel',
       lastName: 'Ramirez',
@@ -35,7 +34,6 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
     {
       id: '2',
-      href: '#memeber',
       displayName: 'Peter Venkman',
       firstName: 'Peter',
       lastName: 'Venkman',
@@ -47,7 +45,6 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
     {
       id: '3',
-      href: '#memeber',
       displayName: 'Tess W. B. Goetz',
       firstName: 'Tess',
       lastName: 'Goetz',
@@ -55,7 +52,6 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
     {
       id: '4',
-      href: '#memeber',
       displayName: 'Robin Peploe',
       firstName: 'Robin',
       lastName: 'Peploe',
@@ -63,7 +59,6 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
     {
       id: '5',
-      href: '#memeber',
       displayName: 'Alice Lane',
       firstName: 'Alice',
       lastName: 'Lane',
@@ -71,7 +66,6 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
     {
       id: '6',
-      href: '#memeber',
       displayName: 'Philip Mars',
       firstName: 'Philip',
       lastName: 'Mars',
@@ -79,7 +73,6 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
     },
     {
       id: '7',
-      href: '#memeber',
       displayName: 'Emmanuel Depay',
       firstName: 'Emanuel',
       lastName: 'Depay',

@@ -29,13 +29,13 @@ it('renders a proposal with team information', () => {
     <ResearchOutputPage
       {...props}
       team={{
-        id: '1',
+        id: '42',
         displayName: 'Test',
-        href: '#',
       }}
     />,
   );
-  const element = getByText('Team Test') as HTMLAnchorElement;
-  expect(element).toBeVisible();
-  expect(element.href).toEqual('http://localhost/#');
+  expect(getByText('Team Test').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/42$/),
+  );
 });

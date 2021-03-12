@@ -20,7 +20,6 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   teams: [
     {
       id: '42',
-      href: '#42',
       role: text('Role', 'Researcher') as TeamRole,
       displayName: text('Team Name', 'Ferguson, M'),
       approach: text(

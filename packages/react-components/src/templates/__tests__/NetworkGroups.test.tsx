@@ -7,7 +7,6 @@ const props: ComponentProps<typeof NetworkGroups> = {
   groups: [
     {
       id: '0',
-      href: '/0',
       name: 'Group 0',
       tags: [],
       description: 'Desc 0',
@@ -15,7 +14,6 @@ const props: ComponentProps<typeof NetworkGroups> = {
     },
     {
       id: '1',
-      href: '/1',
       name: 'Group 1',
       tags: [],
       description: 'Desc 1',

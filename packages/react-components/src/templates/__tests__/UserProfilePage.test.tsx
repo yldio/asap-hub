@@ -1,26 +1,13 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { createUserResponse } from '@asap-hub/fixtures';
 
 import UserProfilePage from '../UserProfilePage';
 
 const boilerplateProps: Omit<
   ComponentProps<typeof UserProfilePage>,
   'children'
-> = {
-  firstName: 'John',
-  lastName: 'Doe',
-  displayName: 'John Doe',
-  lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
-  teams: [],
-  email: 'test@test.com',
-  aboutHref: '#',
-  outputsHref: '#',
-  researchHref: '#',
-  discoverHref: '#',
-  role: 'Grantee',
-  social: {},
-};
-
+> = createUserResponse();
 it('renders the header', () => {
   const { getByText } = render(
     <UserProfilePage {...boilerplateProps} displayName="John Doe">

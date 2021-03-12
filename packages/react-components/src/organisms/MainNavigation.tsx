@@ -1,5 +1,12 @@
 import React from 'react';
 import css from '@emotion/css';
+import {
+  discover,
+  network,
+  sharedResearch,
+  news,
+  events,
+} from '@asap-hub/routing';
 
 import {
   perRem,
@@ -48,45 +55,31 @@ const listStyles = css({
   )})`,
 });
 
-export interface MainNavigationProps {
-  discoverAsapHref: string;
-  sharedResearchHref: string;
-  networkHref: string;
-  newsAndEventsHref: string;
-  eventsHref: string;
-}
-
-const MainNavigation: React.FC<MainNavigationProps> = ({
-  discoverAsapHref,
-  sharedResearchHref,
-  networkHref,
-  newsAndEventsHref,
-  eventsHref,
-}) => (
+const MainNavigation: React.FC = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={networkHref} icon={networkIcon}>
+        <NavigationLink href={network({}).teams({}).$} icon={networkIcon}>
           Network
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={sharedResearchHref} icon={libraryIcon}>
+        <NavigationLink href={sharedResearch({}).$} icon={libraryIcon}>
           Shared Research
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={newsAndEventsHref} icon={newsIcon}>
+        <NavigationLink href={news({}).$} icon={newsIcon}>
           News
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={eventsHref} icon={calendarIcon}>
+        <NavigationLink href={events({}).$} icon={calendarIcon}>
           Calendar and Events
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={discoverAsapHref} icon={discoverIcon}>
+        <NavigationLink href={discover({}).$} icon={discoverIcon}>
           Discover ASAP
         </NavigationLink>
       </li>

@@ -2,6 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
+import { network } from '@asap-hub/routing';
 
 import { TagLabel, Display, Link, Paragraph, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
@@ -44,9 +45,6 @@ type ResearchOutputPageProps = Pick<
   ResearchOutputResponse,
   'created' | 'publishDate' | 'team' | 'text' | 'title' | 'type'
 > & {
-  team?: {
-    href: string;
-  };
   backHref: string;
 };
 
@@ -67,7 +65,9 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
       {team && (
         <span css={teamMemberStyles}>
           <span css={iconStyles}>{teamIcon} </span>
-          <Link href={team.href}>Team {team.displayName}</Link>
+          <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+            Team {team.displayName}
+          </Link>
         </span>
       )}
       <RichText toc text={text} />

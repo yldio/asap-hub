@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
-import { UserResponse, UserTeam } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import { Card, Anchor, Headline2, Avatar, Caption } from '../atoms';
 import { UserProfilePersonalText } from '../molecules';
@@ -37,6 +38,7 @@ const moveStyles = css({
 
 type PeopleCardProps = Pick<
   UserResponse,
+  | 'id'
   | 'avatarUrl'
   | 'displayName'
   | 'firstName'
@@ -46,56 +48,47 @@ type PeopleCardProps = Pick<
   | 'lastName'
   | 'location'
   | 'role'
-> & {
-  readonly href: string;
-  readonly teams: ReadonlyArray<UserTeam & { href: string }>;
-};
+  | 'teams'
+>;
 const PeopleCard: React.FC<PeopleCardProps> = ({
+  id,
   displayName,
-  institution,
   createdDate,
   firstName,
   lastName,
-  location,
-  teams,
-  jobTitle,
   avatarUrl,
-  href,
-  role,
-}) => (
-  <Card>
-    <div css={[containerStyles]}>
-      <Anchor href={href}>
-        <Avatar
-          imageUrl={avatarUrl}
-          firstName={firstName}
-          lastName={lastName}
-        />
-      </Anchor>
-      <div css={textContainerStyles}>
-        <div css={moveStyles}>
-          <Anchor href={href}>
-            <Headline2 styleAsHeading={4}>{displayName}</Headline2>
-          </Anchor>
-        </div>
-        <div css={profileTextStyles}>
-          <UserProfilePersonalText
-            institution={institution}
-            location={location}
-            jobTitle={jobTitle}
-            teams={teams}
-            role={role}
-            discoverHref={'/discover'}
+  ...props
+}) => {
+  const userHref = network({}).users({}).user({ userId: id }).$;
+
+  return (
+    <Card>
+      <div css={[containerStyles]}>
+        <Anchor href={userHref}>
+          <Avatar
+            imageUrl={avatarUrl}
+            firstName={firstName}
+            lastName={lastName}
           />
-        </div>
-        <div css={moveStyles}>
-          <Caption accent={'lead'} asParagraph>
-            Joined: {formatDate(new Date(createdDate))}
-          </Caption>
+        </Anchor>
+        <div css={textContainerStyles}>
+          <div css={moveStyles}>
+            <Anchor href={userHref}>
+              <Headline2 styleAsHeading={4}>{displayName}</Headline2>
+            </Anchor>
+          </div>
+          <div css={profileTextStyles}>
+            <UserProfilePersonalText {...props} />
+          </div>
+          <div css={moveStyles}>
+            <Caption accent={'lead'} asParagraph>
+              Joined: {formatDate(new Date(createdDate))}
+            </Caption>
+          </div>
         </div>
       </div>
-    </div>
-  </Card>
-);
+    </Card>
+  );
+};
 
 export default PeopleCard;

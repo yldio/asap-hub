@@ -13,7 +13,6 @@ const groupsProps = (): ComponentProps<typeof NetworkGroups> => {
   return {
     groups: Array.from({ length: numberOfItems }, (_, i) => ({
       id: `p${i}`,
-      href: '#',
       name: `My Group ${i + 1}`,
       description: 'Group Description',
       tags: ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5', 'Tag 6'],

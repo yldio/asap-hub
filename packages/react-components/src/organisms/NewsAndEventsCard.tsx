@@ -1,6 +1,8 @@
 import React from 'react';
 import css from '@emotion/css';
 import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
+import { news } from '@asap-hub/routing';
+
 import {
   Card,
   Paragraph,
@@ -64,9 +66,10 @@ const placeholders: Record<NewsAndEventsType, JSX.Element> = {
   Training: trainingPlaceholderIcon,
 };
 
-type NewsAndEventsCardProps = NewsOrEventResponse & { href: string };
+type NewsAndEventsCardProps = NewsOrEventResponse;
 
 const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
+  id,
   type,
   title,
   thumbnail,
@@ -75,10 +78,9 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   linkText,
   shortText,
   created,
-  href,
 }) => {
   const titleComponent = text ? (
-    <Anchor href={href}>
+    <Anchor href={news({}).article({ articleId: id }).$}>
       <Headline2 styleAsHeading={4}>{title}</Headline2>
     </Anchor>
   ) : (

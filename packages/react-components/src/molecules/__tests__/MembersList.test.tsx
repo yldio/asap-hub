@@ -12,7 +12,6 @@ it('renders name and role for each member', async () => {
           ...createListUserResponse(1).items[0],
           displayName: 'Bat Man',
           role: 'Boss',
-          href: 'https://en.wikipedia.org/wiki/Batman',
           teams: [],
         },
         {
@@ -20,7 +19,6 @@ it('renders name and role for each member', async () => {
           id: '1337',
           displayName: 'Some One',
           role: 'Apprentice',
-          href: 'https://example.com',
           teams: [],
         },
       ]}
@@ -42,15 +40,14 @@ it('renders a team link for each team provided', async () => {
           ...createUserResponse(),
           displayName: 'Bat Man',
           role: 'Boss',
-          href: 'https://en.wikipedia.org/wiki/Batman',
           teams: [
             {
               displayName: 'DC',
-              href: 'http://dccomics.com',
+              id: 'dc',
             },
             {
               displayName: 'Arkham',
-              href: 'https://en.wikipedia.org/wiki/Gotham_City',
+              id: 'arkham',
             },
           ],
         },
@@ -59,10 +56,10 @@ it('renders a team link for each team provided', async () => {
   );
   expect(getByText(/team.dc/i).closest('a')).toHaveAttribute(
     'href',
-    'http://dccomics.com',
+    expect.stringMatching(/dc$/),
   );
   expect(getByText(/team.arkham/i).closest('a')).toHaveAttribute(
     'href',
-    'https://en.wikipedia.org/wiki/Gotham_City',
+    expect.stringMatching(/arkham$/),
   );
 });

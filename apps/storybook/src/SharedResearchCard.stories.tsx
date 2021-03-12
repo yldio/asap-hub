@@ -9,6 +9,7 @@ export default {
 
 export const Normal = () => (
   <SharedResearchCard
+    id="r42"
     link={text('Link', 'https://hub.asap.science')}
     title={text(
       'Title',
@@ -24,8 +25,6 @@ export const Normal = () => (
     team={{
       id: text('Team Id', '123'),
       displayName: text('Team Name', 'Barnes, A.'),
-      href: '#',
     }}
-    href="#"
   />
 );

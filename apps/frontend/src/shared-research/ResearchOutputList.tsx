@@ -1,11 +1,8 @@
 import React from 'react';
 import { SharedResearchPageBody, Loading } from '@asap-hub/react-components';
-import { join } from 'path';
 
 import { useResearchOutputs } from '../api';
 import { usePaginationParams, usePagination } from '../hooks';
-import { NETWORK_PATH } from '../routes';
-import { TEAMS_PATH } from '../network/routes';
 
 interface SharedResearchListProps {
   searchQuery?: string;
@@ -32,17 +29,9 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   if (result.loading) {
     return <Loading />;
   }
-  const researchOutputs = result.data.items.map((output) => ({
-    ...output,
-    href: join('/shared-research', output.id),
-    team: output.team && {
-      ...output.team,
-      href: join(`${NETWORK_PATH}/${TEAMS_PATH}`, output.team.id),
-    },
-  }));
   return (
     <SharedResearchPageBody
-      researchOutputs={researchOutputs}
+      researchOutputs={result.data.items}
       numberOfItems={result.data.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}

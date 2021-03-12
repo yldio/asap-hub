@@ -10,15 +10,16 @@ import {
   createListCalendarResponse,
   createListEventResponse,
 } from '@asap-hub/fixtures';
+import { events } from '@asap-hub/routing';
 
 import Events from '../Events';
 import { refreshCalendarsState } from '../calendar/state';
 import { getCalendars } from '../calendar/api';
-import { EVENTS_CALENDAR_PATH, EVENTS_UPCOMING_PATH } from '../routes';
 import { getEvents } from '../api';
-import { EVENTS_PATH } from '../../routes';
 import { eventsState } from '../state';
 import { DEFAULT_PAGE_SIZE } from '../../hooks';
+
+jest.useFakeTimers('modern');
 
 jest.mock('../calendar/api');
 jest.mock('../api');
@@ -28,7 +29,7 @@ const mockGetCalendars = getCalendars as jest.MockedFunction<
 >;
 const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
-const renderEventsPage = async (pathname = `/${EVENTS_PATH}`) => {
+const renderEventsPage = async (pathname = events({}).$) => {
   const result = render(
     <RecoilRoot
       initializeState={({ set, reset }) => {
@@ -46,7 +47,7 @@ const renderEventsPage = async (pathname = `/${EVENTS_PATH}`) => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname }]}>
-              <Route path={`/${EVENTS_PATH}`}>
+              <Route path={events.template}>
                 <Events />
               </Route>
             </MemoryRouter>
@@ -78,9 +79,7 @@ it('Defaults to the calendar page', async () => {
 describe('the events calendar page', () => {
   it('renders a google calendar iframe', async () => {
     mockGetCalendars.mockResolvedValue(createListCalendarResponse(0));
-    const { getByTitle } = await renderEventsPage(
-      `/${EVENTS_PATH}/${EVENTS_CALENDAR_PATH}`,
-    );
+    const { getByTitle } = await renderEventsPage(events({}).calendar({}).$);
     expect(getByTitle('Calendar').tagName).toBe('IFRAME');
   });
 
@@ -92,9 +91,7 @@ describe('the events calendar page', () => {
         name: `Calendar title ${index}`,
       })),
     });
-    const { getByText } = await renderEventsPage(
-      `/${EVENTS_PATH}/${EVENTS_CALENDAR_PATH}`,
-    );
+    const { getByText } = await renderEventsPage(events({}).calendar({}).$);
     expect(getByText(/calendar title 0/i)).toBeVisible();
     expect(getByText(/calendar title 1/i)).toBeVisible();
   });
@@ -109,9 +106,7 @@ describe('the events upcoming page', () => {
         title: `Event title ${index}`,
       })),
     });
-    const { getAllByRole } = await renderEventsPage(
-      `/${EVENTS_PATH}/${EVENTS_UPCOMING_PATH}`,
-    );
+    const { getAllByRole } = await renderEventsPage(events({}).upcoming({}).$);
     expect(
       getAllByRole('heading', { level: 3 }).map(
         (heading) => heading.textContent,

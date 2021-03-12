@@ -3,6 +3,7 @@ import { StaticRouter } from 'react-router-dom';
 import { date, text, select, boolean } from '@storybook/addon-knobs';
 import { UserProfilePage } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import { LayoutDecorator } from './layout';
 
@@ -15,6 +16,7 @@ const propsViewOnly = (): Omit<
   ComponentProps<typeof UserProfilePage>,
   'children'
 > => ({
+  id: 'u42',
   displayName: text('Display Name', 'Phillip Mars, PhD'),
   institution: text('Institution', 'Yale University'),
   lastModifiedDate: new Date(
@@ -27,8 +29,7 @@ const propsViewOnly = (): Omit<
   location: text('Location', 'New Haven, Connecticut'),
   teams: [
     {
-      id: '42',
-      href: '#42',
+      id: 't42',
       role: text('Role', 'Researcher') as TeamRole,
       displayName: text('Team Name', 'Ferguson, M'),
       approach: text(
@@ -56,10 +57,6 @@ const propsViewOnly = (): Omit<
     researchGate: text('Research Gate', '123'),
     researcherId: text('Researcher Id', '123'),
   },
-  aboutHref: '/wrong',
-  researchHref: '/wrong',
-  outputsHref: '/wrong',
-  discoverHref: '/discover',
 });
 const propsEditable = (): ReturnType<typeof propsViewOnly> => ({
   ...propsViewOnly(),
@@ -70,17 +67,21 @@ const propsEditable = (): ReturnType<typeof propsViewOnly> => ({
 
 export const Normal = () => {
   const props = boolean('Editable', false) ? propsEditable() : propsViewOnly();
-  const tab = select('Active Tab', ['About', 'Research', 'Outputs'], 'About');
+
+  const tabRoutes = network({}).users({}).user({ userId: props.id });
+  const tab = select(
+    'Active Tab',
+    {
+      About: tabRoutes.about({}).$,
+      Research: tabRoutes.research({}).$,
+      Outputs: tabRoutes.outputs({}).$,
+    },
+    'About',
+  );
+
   return (
-    <StaticRouter key={tab} location={`/${tab}`}>
-      <UserProfilePage
-        {...props}
-        aboutHref="/About"
-        researchHref="/Research"
-        outputsHref="/Outputs"
-      >
-        Page Content
-      </UserProfilePage>
+    <StaticRouter key={tab} location={tab}>
+      <UserProfilePage {...props}>Page Content</UserProfilePage>
     </StaticRouter>
   );
 };

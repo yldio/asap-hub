@@ -22,9 +22,12 @@ type EventsListProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
 const EventsListPage: React.FC<EventsListProps> = ({ events, ...props }) => (
   <div css={containerStyles}>
     <ResultList {...props}>
-      {events.map(({ id, ...event }) => (
+      {events.map(({ id, href, ...event }) => (
         <React.Fragment key={id}>
-          <EventCard {...event} />
+          <EventCard
+            {...event}
+            href={event.status !== 'Cancelled' ? href : undefined}
+          />
         </React.Fragment>
       ))}
     </ResultList>

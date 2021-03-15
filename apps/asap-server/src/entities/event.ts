@@ -31,7 +31,7 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     : undefined;
 
   const endDate = DateTime.fromISO(item.flatData!.endDate!);
-  const isStale = endDate.diffNow('days').get('days') < -10; // 10 days have passed after the event
+  const isStale = endDate.diffNow('days').get('days') < -14; // 14 days have passed after the event
 
   const {
     notesPermanentlyUnavailable,

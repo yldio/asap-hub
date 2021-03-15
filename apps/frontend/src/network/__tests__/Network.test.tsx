@@ -79,7 +79,10 @@ describe('the network page', () => {
         expect(mockGetUsers).toHaveBeenLastCalledWith(
           expect.not.objectContaining({
             filters: expect.anything(),
-          }),
+          }) &&
+            expect.objectContaining({
+              searchQuery: 'test123',
+            }),
           expect.anything(),
         ),
       );
@@ -122,7 +125,10 @@ describe('the network page', () => {
         expect(mockGetTeams).toHaveBeenLastCalledWith(
           expect.not.objectContaining({
             filters: expect.anything(),
-          }),
+          }) &&
+            expect.objectContaining({
+              searchQuery: 'test123',
+            }),
           expect.anything(),
         ),
       );

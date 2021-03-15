@@ -491,6 +491,10 @@ describe('Event controller', () => {
           title: 'My additional link',
           url: 'https://link.pt/additional-material',
         },
+        {
+          title: 'My other additional link',
+          url: 'https://link.pt/additional-material-2',
+        },
       ];
 
       nock(config.baseUrl)
@@ -509,6 +513,10 @@ describe('Event controller', () => {
             {
               title: 'My additional link',
               url: 'https://link.pt/additional-material',
+            },
+            {
+              title: 'My other additional link',
+              url: 'https://link.pt/additional-material-2',
             },
           ],
         }),

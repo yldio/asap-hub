@@ -82,3 +82,25 @@ it('renders a call to action button, when a PM is defined on the group', () => {
     'mailto:test@test.com',
   );
 });
+
+it('does not render a call to action button, when a PM is NOT defined on the group', () => {
+  const { queryByText } = render(
+    <GroupProfileAbout
+      {...props}
+      leaders={[
+        {
+          user: {
+            ...createUserResponse(),
+            displayName: 'John',
+            teams: [],
+            email: 'test@test.com',
+          },
+          role: 'Chair',
+          href: '',
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+});

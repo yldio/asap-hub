@@ -12,6 +12,12 @@ describe('createMailTo', () => {
     expect(mailTo.href).toBe('mailto:test@example.com');
   });
 
+  it('generates a mailto link, when a list with a single email is provided', () => {
+    const mailTo = new URL(createMailTo(['test@example.com']));
+    expect(mailTo.protocol).toBe('mailto:');
+    expect(mailTo.href).toBe('mailto:test@example.com');
+  });
+
   it('generates a mailto link, when multiple emails are provided', () => {
     const mailTo = new URL(
       createMailTo(['test@example.com', 'test@example.com']),

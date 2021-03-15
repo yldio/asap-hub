@@ -7,10 +7,9 @@ export const createMailTo = (
   emails: string | string[],
   { subject, body }: MailOptions = {},
 ): string => {
-  const mailTo =
-    typeof emails === 'string'
-      ? convertEmailToMailTo(emails)
-      : convertEmailListToMailTo(emails);
+
+  const list = typeof emails === 'string' ? new Array(emails) : [...emails];
+  const mailTo = convertEmailListToMailToUrl(list);
 
   if (subject) mailTo.searchParams.set('subject', subject);
   if (body) mailTo.searchParams.set('body', body);
@@ -36,12 +35,12 @@ export const mailToSupport = (overrides?: MailOptions): string =>
     ...overrides,
   });
 
-export const convertEmailToMailTo = (email: string): URL =>
-  new URL(`mailto:${email.split('@').map(encodeURIComponent).join('@')}`);
-
-export const convertEmailListToMailTo = (list: string[]): URL => {
+export const convertEmailListToMailToUrl = (list: string[]): URL => {
   const href = list.reduce(
-    (a, e) => `${a}${e.split('@').map(encodeURIComponent).join('@')},`,
+    (a, e, i) => {
+      const suffix = i === list.length - 1 ? '' : ',';
+      return `${a}${e.split('@').map(encodeURIComponent).join('@')}${suffix}`;
+    },
     '',
   );
   return new URL(`mailto:${href}`);

@@ -283,7 +283,7 @@ describe('Team controller', () => {
     test('Should parse the team user correctly when the avatar is undefined', async () => {
       const teamId = 'team-id-1';
       const user = fetchByIdUserResponse.items[0];
-      delete user.data.avatar;
+      delete (user.data as any).avatar;
 
       const userResponse = {
         total: 1,

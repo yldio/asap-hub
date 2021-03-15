@@ -7565,11 +7565,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vercel/nft@npm:^0.9.3":
-  version: 0.9.4
-  resolution: "@vercel/nft@npm:0.9.4"
+"@vercel/nft@npm:^0.9.6":
+  version: 0.9.6
+  resolution: "@vercel/nft@npm:0.9.6"
   dependencies:
-    acorn: ^7.1.1
+    acorn: ^7.4.1
     acorn-class-fields: ^0.3.2
     acorn-export-ns-from: ^0.1.0
     acorn-import-meta: ^1.1.0
@@ -7587,7 +7587,7 @@ __metadata:
     rollup-pluginutils: ^2.8.2
   bin:
     nft: out/cli.js
-  checksum: 08446659850ef4bd60f7dce5ea5537cad936bcdf5fa2685684e64591f8831135660cacbc798e7c1a13708380b672e86af7ec83426eaebf6ffb8c7ab76dde5295
+  checksum: 946a0222373599e71c09b7429bc4f919b0107dccc0fa75ee152c4318e1e68286684c4150c31aac8ae08fbb005c15d65f5c12831b6eaa298236e02c8b5ed773e9
   languageName: node
   linkType: hard
 
@@ -8063,7 +8063,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn@npm:^7.1.0, acorn@npm:^7.1.1, acorn@npm:^7.4.0":
+"acorn@npm:^7.1.0, acorn@npm:^7.1.1, acorn@npm:^7.4.0, acorn@npm:^7.4.1":
   version: 7.4.1
   resolution: "acorn@npm:7.4.1"
   bin:
@@ -8558,18 +8558,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"archiver@npm:^5.0.2":
-  version: 5.0.2
-  resolution: "archiver@npm:5.0.2"
+"archiver@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "archiver@npm:5.3.0"
   dependencies:
     archiver-utils: ^2.1.0
     async: ^3.2.0
     buffer-crc32: ^0.2.1
     readable-stream: ^3.6.0
     readdir-glob: ^1.0.0
-    tar-stream: ^2.1.4
-    zip-stream: ^4.0.0
-  checksum: 648dc644b33d464e75ff2c9b0f07b438402048a3feb22711ed77c16b14b84d3cefc806b0b3206db6ac94b9b407945ab47de023a007caaef572bed97d9811d2e2
+    tar-stream: ^2.2.0
+    zip-stream: ^4.1.0
+  checksum: f5968876eef0591a59351ea1f1162c402945e60067be4d0a18a4a2ce418956313866be1f0ae9d9b1802effd0221cd84944e6fa09ae8380532b7077b03e8ccebb
   languageName: node
   linkType: hard
 
@@ -8840,7 +8840,7 @@ __metadata:
     serverless: ^1.81.1
     serverless-iam-roles-per-function: ^2.0.2
     serverless-offline: "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch"
-    serverless-plugin-tree-shake: ^1.1.2
+    serverless-plugin-tree-shake: ^1.1.8
     serverless-s3-sync: ^1.15.0
     typescript: ~4.1.0
     webpack: ^5.1.0
@@ -11489,15 +11489,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"compress-commons@npm:^4.0.0":
-  version: 4.0.1
-  resolution: "compress-commons@npm:4.0.1"
+"compress-commons@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "compress-commons@npm:4.1.0"
   dependencies:
     buffer-crc32: ^0.2.13
-    crc32-stream: ^4.0.0
+    crc32-stream: ^4.0.1
     normalize-path: ^3.0.0
     readable-stream: ^3.6.0
-  checksum: e393278a2e29dee244c6f839dd687cee981d862604059d4a5848dc79d454e1663c8a5b840c4d39ac513e04d68a75a8a1fea32d79671e129a5766a78232bb6ffe
+  checksum: 5f7ed51d563bda1db61e1978cd449b908f008fdccfc5cd8bcafe76e894406001459b444696637757a47e80a274058b94653c976648012b5dfb61799f95e38f79
   languageName: node
   linkType: hard
 
@@ -11839,6 +11839,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"crc-32@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "crc-32@npm:1.2.0"
+  dependencies:
+    exit-on-epipe: ~1.0.1
+    printj: ~1.1.0
+  bin:
+    crc32: ./bin/crc32.njs
+  checksum: 5a283cacfce357fec1f4fefce7c2293887b49acad3034c2a35928522e6c8a85504ed51f211681400faf390081b619dfa8e1878458517921cdcf736c48d0555d9
+  languageName: node
+  linkType: hard
+
 "crc32-stream@npm:^3.0.1":
   version: 3.0.1
   resolution: "crc32-stream@npm:3.0.1"
@@ -11849,13 +11861,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crc32-stream@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "crc32-stream@npm:4.0.0"
+"crc32-stream@npm:^4.0.1":
+  version: 4.0.2
+  resolution: "crc32-stream@npm:4.0.2"
   dependencies:
-    crc: ^3.4.4
+    crc-32: ^1.2.0
     readable-stream: ^3.4.0
-  checksum: 1e823682dc2d3a629ccce890d051afad8dd0178c4e439faa0254ef545eb3d3491c7208f1b7c8772c1357d353f06675bab98d86cdcba4059bd604666147928e08
+  checksum: a92944dd68a5f16426143f3998c972cb5a73d74816e6fc50d29981a7697584ec6f832520bf616055fa2f5aca591beff73368813ab53031f45d8dbdab05bd0236
   languageName: node
   linkType: hard
 
@@ -14619,6 +14631,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"exit-on-epipe@npm:~1.0.1":
+  version: 1.0.1
+  resolution: "exit-on-epipe@npm:1.0.1"
+  checksum: 24b604747458c0c9b719934d2af91bc78dc381e9296b8ee3887dd68e8f35500090b453335e9f0b392c0295562da1873c05dcbc77d29e6eea75a32bbef19adf53
+  languageName: node
+  linkType: hard
+
 "exit@npm:^0.1.2":
   version: 0.1.2
   resolution: "exit@npm:0.1.2"
@@ -16209,6 +16228,20 @@ fsevents@^2.1.3:
     merge2: ^1.2.3
     slash: ^3.0.0
   checksum: 53924c2b46f104d99a6b15da92b9f9f1e9f004bce745fdf56cf985afd615897bd6fd8fe01303f5758943e643c0885e8abaae0b5a596c13523c9431bf071c3f23
+  languageName: node
+  linkType: hard
+
+"globby@npm:^11.0.2":
+  version: 11.0.2
+  resolution: "globby@npm:11.0.2"
+  dependencies:
+    array-union: ^2.1.0
+    dir-glob: ^3.0.1
+    fast-glob: ^3.1.1
+    ignore: ^5.1.4
+    merge2: ^1.3.0
+    slash: ^3.0.0
+  checksum: d23f2a6b8897b97fb27422cde243e0fd406ebbaa821929293b27c977d169884f8112494cda4f456a51d0ec1e133e3ac703ec24bfed484e327305ea34a665eb06
   languageName: node
   linkType: hard
 
@@ -24343,6 +24376,15 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
+"printj@npm:~1.1.0":
+  version: 1.1.2
+  resolution: "printj@npm:1.1.2"
+  bin:
+    printj: ./bin/printj.njs
+  checksum: ee774aa5957a57474f078fca1e9a41a10aac35e9b1ce9b2e2ecdb832f58fd21b1601075441dca633f582c881cca6c60308bf8505e6ab06305181be241bd47241
+  languageName: node
+  linkType: hard
+
 "prismjs@npm:^1.21.0, prismjs@npm:~1.23.0":
   version: 1.23.0
   resolution: "prismjs@npm:1.23.0"
@@ -26856,16 +26898,16 @@ serverless-offline@^6.8.0:
   languageName: node
   linkType: hard
 
-"serverless-plugin-tree-shake@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "serverless-plugin-tree-shake@npm:1.1.2"
+"serverless-plugin-tree-shake@npm:^1.1.8":
+  version: 1.1.8
+  resolution: "serverless-plugin-tree-shake@npm:1.1.8"
   dependencies:
-    "@vercel/nft": ^0.9.3
+    "@vercel/nft": ^0.9.6
     apr-find: ^3.0.3
     apr-map: ^3.0.3
     apr-parallel: ^3.0.3
-    archiver: ^5.0.2
-    globby: ^11.0.1
+    archiver: ^5.3.0
+    globby: ^11.0.2
     lodash.flatten: ^4.4.0
     lodash.sortby: ^4.7.0
     lodash.topairs: ^4.3.0
@@ -26878,7 +26920,7 @@ serverless-offline@^6.8.0:
   peerDependencies:
     serverless: ^1.71.3
     typescript: ^3.9.3
-  checksum: d9ffb61385ab62ee4380db18bc0cfaddc1b10c12631984dbb86001e28e2a23e87ff03925a61b55c52cabe21b7058c86dc04caf8d0943e1866064cadc90fe5e70
+  checksum: 8eb459056ee5602d5e252ce239d10d4123dad20af7440cadc52ba6d7f4cf0af3d3b2d0e71ade7549f37e4672039cf3835e9a5c0db87b479e025fbe9de16ad981
   languageName: node
   linkType: hard
 
@@ -28342,7 +28384,7 @@ serverless-offline@^6.8.0:
   languageName: node
   linkType: hard
 
-"tar-stream@npm:^2.0.1, tar-stream@npm:^2.1.4":
+"tar-stream@npm:^2.0.1":
   version: 2.1.4
   resolution: "tar-stream@npm:2.1.4"
   dependencies:
@@ -28365,6 +28407,19 @@ serverless-offline@^6.8.0:
     inherits: ^2.0.3
     readable-stream: ^3.1.1
   checksum: 4e70c5ba62147613fe302c6cf7e372df9bebb9e83928f0d866495702c23c1e02dd951612f94488027d590ef29fdb74ca3705e85df8ccaeaa187e5ab7f52cf376
+  languageName: node
+  linkType: hard
+
+"tar-stream@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "tar-stream@npm:2.2.0"
+  dependencies:
+    bl: ^4.0.3
+    end-of-stream: ^1.4.1
+    fs-constants: ^1.0.0
+    inherits: ^2.0.3
+    readable-stream: ^3.1.1
+  checksum: 7eec0a7fc8d0337729c1c2356d567a7527141d6ba0dd4804db979e17fc6389163e70fd4abdb855fc5ab54b944aeff7988e35e95ab6cee34a4156ca2d42980576
   languageName: node
   linkType: hard
 
@@ -31318,13 +31373,13 @@ typescript@~4.1.0:
   languageName: node
   linkType: hard
 
-"zip-stream@npm:^4.0.0":
-  version: 4.0.2
-  resolution: "zip-stream@npm:4.0.2"
+"zip-stream@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "zip-stream@npm:4.1.0"
   dependencies:
     archiver-utils: ^2.1.0
-    compress-commons: ^4.0.0
+    compress-commons: ^4.1.0
     readable-stream: ^3.6.0
-  checksum: eb6ed1e5a056516e03aed9b114d9ffd58a292f846e5230010f02c86408934ba6b851a120aa141a1d1f8ff073c6ad443c686f1840b882730945fa55fac7e4f61e
+  checksum: a2338731e721d05f37989d2284d7850a3923072c5836cfc71bdedb168afa0ecd020b45b4ca09b48ae8bc489a20e5ca46cd9e0928235a8a6fda181d5ed2876919
   languageName: node
   linkType: hard

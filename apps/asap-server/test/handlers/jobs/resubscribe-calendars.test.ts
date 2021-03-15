@@ -13,7 +13,6 @@ import {
   createEventBridgeEventMock,
   createHandlerContext,
 } from '../../helpers/events';
-import { loggerMock } from '../../mocks/logger.mock';
 
 describe('Resubscribe calendar handler', () => {
   const unsubscribeMock: jest.MockedFunction<UnsubscribeFromEventChanges> = jest.fn();
@@ -22,7 +21,6 @@ describe('Resubscribe calendar handler', () => {
     calendarControllerMock,
     unsubscribeMock,
     subscribeMock,
-    loggerMock,
   );
   const invokeHandler = () =>
     resubscribeCalendarsHandler(

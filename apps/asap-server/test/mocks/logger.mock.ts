@@ -5,5 +5,5 @@ export const loggerMock = ({
   info: jest.fn(),
   debug: jest.fn(),
   warn: jest.fn(),
-  child: () => loggerMock
+  child: () => loggerMock,
 } as unknown) as jest.Mocked<Logger>;

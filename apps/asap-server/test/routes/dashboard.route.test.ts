@@ -3,13 +3,11 @@ import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { dashboardControllerMock } from '../mocks/dashboard-controller.mock';
 import supertest from 'supertest';
 import { dashboardResponse } from '../fixtures/dashboard.fixtures';
-import { loggerMock } from '../mocks/logger.mock';
 
 describe('/dashboard/ route', () => {
   const app = appFactory({
     dashboardController: dashboardControllerMock,
     authHandler: authHandlerMock,
-    logger: loggerMock,
   });
 
   describe('GET /dashboard', () => {

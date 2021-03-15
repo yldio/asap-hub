@@ -3,13 +3,11 @@ import { authHandlerMock } from '../mocks/auth-handler.mock';
 import supertest from 'supertest';
 import { discoverControllerMock } from '../mocks/discover-controller.mock';
 import { discoverResponse } from '../fixtures/discover.fixtures';
-import { loggerMock } from '../mocks/logger.mock';
 
 describe('/discover/ route', () => {
   const app = appFactory({
     discoverController: discoverControllerMock,
     authHandler: authHandlerMock,
-    logger: loggerMock,
   });
 
   describe('GET /discover', () => {

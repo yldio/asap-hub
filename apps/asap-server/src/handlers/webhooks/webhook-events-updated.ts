@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
 import { Auth } from 'googleapis';
-import { Logger } from 'pino';
 import Boom from '@hapi/boom';
 import { framework as lambda } from '@asap-hub/services-common';
 
@@ -16,14 +15,13 @@ import { syncEventFactory } from '../../utils/sync-google-event';
 import getJWTCredentials, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
-import { loggerFactory } from '../../utils/logger';
+import logger from '../../utils/logger';
 import { googleApiToken } from '../../config';
 
 export const webhookEventUpdatedHandlerFactory = (
   calendars: CalendarController,
   getJWTCredentials: GetJWTCredentials,
   syncCalendarFactory: SyncCalendarFactory,
-  logger: Logger,
 ): Handler =>
   http(
     async (request: lambda.Request): Promise<lambda.Response> => {
@@ -75,7 +73,6 @@ export const webhookEventUpdatedHandlerFactory = (
         syncToken,
         syncEventFactory(new Events(), squidexCalendarId),
         auth,
-        logger,
       );
       const nextSyncToken = await syncCalendar(googleCalendarId);
 
@@ -83,7 +80,7 @@ export const webhookEventUpdatedHandlerFactory = (
         await calendars
           .update(squidexCalendarId, { syncToken: nextSyncToken })
           .catch((err) => {
-            logger.error('Error updated syncToken', err);
+            logger.error('Error updating syncToken', err);
           });
       }
 
@@ -93,11 +90,8 @@ export const webhookEventUpdatedHandlerFactory = (
     },
   );
 
-const logger = loggerFactory();
-
 export const handler: Handler = webhookEventUpdatedHandlerFactory(
-  new Calendars(logger),
+  new Calendars(),
   getJWTCredentials,
   syncCalendarFactory,
-  logger,
 );

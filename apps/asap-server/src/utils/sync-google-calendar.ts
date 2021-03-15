@@ -1,12 +1,11 @@
 import { google, calendar_v3 as calendarV3, Auth } from 'googleapis';
 import { DateTime } from 'luxon';
-import { Logger } from 'pino';
+import logger from './logger';
 
 export type SyncCalendarFactory = (
   syncToken: string | undefined,
   syncEvent: SyncEvent,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
-  logger: Logger,
 ) => (googleCalendarId: string) => Promise<string | undefined | null>;
 
 interface SyncEvent {
@@ -19,16 +18,14 @@ export const syncCalendarFactory: SyncCalendarFactory = (
   syncToken: string | undefined,
   syncEvent: SyncEvent,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
-  logger: Logger,
 ) => {
   const syncCalendar = async (googleCalendarId: string) =>
-    fetchEvents(logger, googleCalendarId, auth, syncEvent, syncToken);
+    fetchEvents(googleCalendarId, auth, syncEvent, syncToken);
 
   return syncCalendar;
 };
 
 const fetchEvents = async (
-  logger: Logger,
   googleCalendarId: string,
   auth: Auth.GoogleAuth | Auth.OAuth2Client,
   syncEvent: SyncEvent,
@@ -50,8 +47,8 @@ const fetchEvents = async (
 
   const res = await calendar.events.list(params).catch((err) => {
     if (err.code === '410') {
-      logger.info('Token is Gone, doing full sync', err);
-      return fetchEvents(logger, googleCalendarId, auth, syncEvent, undefined); // syncToken "Gone", do full sync
+      logger.warn('Token is Gone, doing full sync', err);
+      return fetchEvents(googleCalendarId, auth, syncEvent, undefined); // syncToken "Gone", do full sync
     }
     logger.error('The API returned an error: ', err);
     throw err;
@@ -64,12 +61,11 @@ const fetchEvents = async (
     const syncResults = await Promise.allSettled(
       eventItems.map((e) => syncEvent(e, defaultCalendarTimezone)),
     );
-    logger.info('Sync events results:', syncResults);
+    logger.debug('Sync events results:', syncResults);
 
     if (res.data.nextPageToken) {
       // get next page
       return fetchEvents(
-        logger,
         googleCalendarId,
         auth,
         syncEvent,

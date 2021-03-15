@@ -8,14 +8,12 @@ import { groupControllerMock } from '../mocks/group-controller.mock';
 import { eventControllerMock } from '../mocks/event-controller.mock';
 import { ListEventResponse } from '@asap-hub/model';
 import { FetchEventsOptions } from '../../src/controllers/events';
-import { loggerMock } from '../mocks/logger.mock';
 
 describe('/groups/ route', () => {
   const app = appFactory({
     eventController: eventControllerMock,
     groupController: groupControllerMock,
     authHandler: authHandlerMock,
-    logger: loggerMock,
   });
 
   afterEach(() => {

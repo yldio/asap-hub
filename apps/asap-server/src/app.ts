@@ -50,7 +50,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const errorHandler = errorHandlerFactory(logger);
 
   // Controllers
-  const calendarController = libs.calendarController || new Calendars(logger);
+  const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
   const newsAndEventsController =
     libs.newsAndEventsController || new NewsAndEvents();

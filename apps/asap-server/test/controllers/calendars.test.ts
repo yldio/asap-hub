@@ -2,10 +2,9 @@ import nock from 'nock';
 import Calendars from '../../src/controllers/calendars';
 import { identity } from '../helpers/squidex';
 import { config, Results, RestCalendar } from '@asap-hub/squidex';
-import { loggerMock } from '../mocks/logger.mock';
 
 describe('Calendars controller', () => {
-  const calendars = new Calendars(loggerMock);
+  const calendars = new Calendars();
 
   beforeAll(() => {
     identity();

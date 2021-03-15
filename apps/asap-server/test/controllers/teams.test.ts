@@ -232,6 +232,7 @@ describe('Team controller', () => {
 
       const result = await teams.fetchById(teamId, mockUser);
 
+      console.log(fetchTeamByIdExpectation);
       expect(result).toEqual({
         ...fetchTeamByIdExpectation,
         tools: [

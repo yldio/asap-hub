@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { Logger } from 'pino';
 import Calendars, { CalendarController } from '../../controllers/calendars';
 import {
   UnsubscribeFromEventChanges,
@@ -8,14 +7,13 @@ import {
   unsubscribeFromEventChangesFactory,
 } from '../webhooks/webhook-calendar-created';
 import getJWTCredentials from '../../utils/aws-secret-manager';
-import { loggerFactory } from '../../utils/logger';
+import logger from '../../utils/logger';
 import { ScheduledHandlerAsync } from '../../utils/types';
 
 export const resubscribeCalendarsHandlerFactory = (
   calendarController: CalendarController,
   unsubscribe: UnsubscribeFromEventChanges,
   subscribe: SubscribeToEventChanges,
-  logger: Logger,
 ): ScheduledHandlerAsync => async () => {
   const now = DateTime.local();
   const calendars = await calendarController.fetchRaw({
@@ -25,10 +23,7 @@ export const resubscribeCalendarsHandlerFactory = (
   });
 
   const calendarIds = calendars.map((calendar) => calendar.id);
-  logger.info(
-    `Received the following calendars to resubscribe: %o`,
-    calendarIds,
-  );
+  logger.info(`Received the following calendars to resubscribe`, calendarIds);
 
   await Promise.allSettled(
     calendars.map(async (calendar) => {
@@ -39,10 +34,7 @@ export const resubscribeCalendarsHandlerFactory = (
             resourceId: null,
           });
         } catch (error) {
-          logger.error(
-            'Error during unsubscribing from the calendar: %o',
-            error,
-          );
+          logger.error('Error during unsubscribing from the calendar', error);
         }
       }
 
@@ -58,17 +50,14 @@ export const resubscribeCalendarsHandlerFactory = (
         });
         logger.info(`Successfully resubscribed the calendar '${calendar.id}`);
       } catch (error) {
-        logger.error('Error during subscribing to the calendar: %o', error);
+        logger.error('Error during subscribing to the calendar', error);
       }
     }),
   );
 };
 
-const logger = loggerFactory();
-
 export const handler = resubscribeCalendarsHandlerFactory(
-  new Calendars(logger),
+  new Calendars(),
   unsubscribeFromEventChangesFactory(getJWTCredentials),
   subscribeToEventChangesFactory(getJWTCredentials),
-  logger,
 );

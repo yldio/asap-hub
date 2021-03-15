@@ -3,7 +3,6 @@ import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import { Auth } from 'googleapis';
-import { Logger } from 'pino';
 
 import { googleApiUrl, asapApiUrl, googleApiToken } from '../../config';
 import { http } from '../../utils/instrumented-framework';
@@ -13,13 +12,12 @@ import Calendars, { CalendarController } from '../../controllers/calendars';
 import getJWTCredentials, {
   GetJWTCredentials,
 } from '../../utils/aws-secret-manager';
-import { loggerFactory } from '../../utils/logger';
+import logger from '../../utils/logger';
 
 export const webhookCalendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
   unsubscribe: UnsubscribeFromEventChanges,
   calendarController: CalendarController,
-  logger: Logger,
 ): Handler =>
   http(
     async (request: lambda.Request): Promise<lambda.Response> => {
@@ -68,10 +66,7 @@ export const webhookCalendarCreatedHandlerFactory = (
               resourceId: null,
             });
           } catch (error) {
-            logger.error(
-              'Error during unsubscribing from the calendar: %o',
-              error,
-            );
+            logger.error('Error during unsubscribing from the calendar', error);
           }
         }
       }
@@ -97,7 +92,7 @@ export const webhookCalendarCreatedHandlerFactory = (
             expirationDate: expiration,
           });
         } catch (error) {
-          logger.error('Error subscribing to the calendar: %o', error);
+          logger.error('Error subscribing to the calendar', error);
 
           return {
             statusCode: 502,
@@ -155,7 +150,7 @@ export const subscribeToEventChangesFactory = (
     data,
   });
 
-  logger.info('Google API subscription response %j', response);
+  logger.debug('Google API subscription response', response);
 
   return {
     resourceId: response.data.resourceId,
@@ -185,18 +180,15 @@ export const unsubscribeFromEventChangesFactory = (
 
   const response = await client.request({ url, method: 'POST', data });
 
-  logger.info('Google API unsubscribing response %j', response);
+  logger.debug('Google API unsubscribing response', response);
 };
 
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
 
-const logger = loggerFactory();
-
 export const handler: Handler = webhookCalendarCreatedHandlerFactory(
   subscribeToEventChangesFactory(getJWTCredentials),
   unsubscribeFromEventChangesFactory(getJWTCredentials),
-  new Calendars(logger),
-  logger,
+  new Calendars(),
 );

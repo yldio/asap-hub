@@ -23,7 +23,7 @@ describe('createMailTo', () => {
       createMailTo(['test@example.com', 'test@example.com']),
     );
     expect(mailTo.protocol).toBe('mailto:');
-    expect(mailTo.href).toBe('mailto:test@example.com,test@example.com,');
+    expect(mailTo.href).toBe('mailto:test@example.com,test@example.com');
   });
 
   it('escapes the email address', () => {

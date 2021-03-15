@@ -122,6 +122,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   });
 
   app.use(errorHandler);
+  app.disable('x-powered-by');
 
   return app;
 };

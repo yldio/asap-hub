@@ -1,10 +1,10 @@
-name: SLS Teardown
+name: Remove Environment
 on:
   pull_request:
     types: [closed]
 jobs:
   sls_teardown:
-    runs-on: node:14.15-alpine
+    runs-on: ubuntu-latest
     env: 
       NODE_ENV: 'production'
       SLS_STAGE: ${{github.event.number}}
@@ -12,11 +12,10 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-
-      - name: free cloudformation stack
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Remove CF Stack
         run: |
-          echo Just making sure we point to the right commit hash by default
+          echo "Just making sure we point to the right commit hash by default"
           echo $GITHUB_SHA
           echo $SLS_STAGE

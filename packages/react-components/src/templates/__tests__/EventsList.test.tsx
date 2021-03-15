@@ -37,3 +37,31 @@ it('renders multiple event cards', () => {
     getAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['FirstEvent', 'SecondEvent']);
 });
+
+it('only links to events that are not cancelled', () => {
+  const { getByRole } = render(
+    <EventsList
+      {...props([
+        {
+          ...createEventResponse({}, 0),
+          href: 'http://example.com',
+          title: 'FirstEvent',
+          groups: [],
+        },
+        {
+          ...createEventResponse({}, 1),
+          href: 'http://example.com',
+          title: 'SecondEvent',
+          groups: [],
+          status: 'Cancelled',
+        },
+      ])}
+    />,
+  );
+  expect(
+    getByRole('heading', { name: 'FirstEvent' }).closest('a'),
+  ).toHaveAttribute('href', 'http://example.com');
+  expect(
+    getByRole('heading', { name: 'SecondEvent' }).closest('a'),
+  ).not.toHaveAttribute('href');
+});

@@ -37,7 +37,7 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
   membersSectionId,
 }) => {
   const pmsEmails = leaders
-    .filter(({ role }) => role.match(/project manager/i))
+    .filter(({ role }) => role ==== "Project Manager" as const)
     .map(({ user }) => user.email);
 
   return (

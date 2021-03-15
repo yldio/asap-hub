@@ -47,6 +47,7 @@ it('only links to events that are not cancelled', () => {
           href: 'http://example.com',
           title: 'FirstEvent',
           groups: [],
+          status: 'Confirmed',
         },
         {
           ...createEventResponse({}, 1),

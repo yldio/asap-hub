@@ -15,7 +15,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Remove CF Stack
-        run: |
-          echo "Just making sure we point to the right commit hash by default"
-          echo $GITHUB_SHA
-          echo $SLS_STAGE
+        run: yarn sls remove --verbose

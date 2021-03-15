@@ -18,5 +18,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Rebuild dependencies
+        run: yarn rebuild
       - name: Remove CF Stack
         run: yarn sls remove --verbose

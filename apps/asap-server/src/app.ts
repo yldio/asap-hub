@@ -2,7 +2,6 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { Tracer } from 'opentracing';
-import { Logger } from 'pino';
 import pinoHttp from 'pino-http';
 
 import decodeToken from './utils/validate-token';
@@ -36,7 +35,7 @@ import NewsAndEvents, {
 import { newsAndEventsRouteFactory } from './routes/news-and-events.route';
 import Discover, { DiscoverController } from './controllers/discover';
 import { discoverRouteFactory } from './routes/discover.route';
-import { loggerFactory } from './utils/logger';
+import logger from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -45,7 +44,6 @@ export const appFactory = (libs: Libs = {}): Express => {
    * Dependency Injection -->
    */
   // Libs
-  const logger = libs.logger || loggerFactory();
   const httpLogger = pinoHttp({ logger });
 
   // Middleware
@@ -152,5 +150,4 @@ export type Libs = {
   tracer?: Tracer;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
-  logger?: Logger;
 };

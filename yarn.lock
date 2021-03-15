@@ -129,6 +129,7 @@ __metadata:
     parse-data-url: ^3.0.0
     pino: ^6.11.2
     pino-http: ^5.5.0
+    pino-lambda: ^1.2.3
     pump: ^3.0.0
     serverless-http: ^2.6.1
     supertest: ^6.1.1
@@ -23332,6 +23333,15 @@ fsevents@^2.1.3:
     pino: ^6.0.0
     pino-std-serializers: ^2.4.0
   checksum: 6ee96d9e9036bf11a1a03646b28f58fc30ece6524d4035a498e3c8ff4988192fdc6f297ab739753cc889f70aca7fd578343fc18d514ef823f54dd25a89a6cb45
+  languageName: node
+  linkType: hard
+
+"pino-lambda@npm:^1.2.3":
+  version: 1.2.3
+  resolution: "pino-lambda@npm:1.2.3"
+  peerDependencies:
+    pino: ^6.0.0
+  checksum: 5683f5fa0f2618e3dfc6ceb99815eaf37fb3fe42f2dec58d070bca2d72ea124c8c0c424c67e69a6479b6977c0314e83c1964d41106cd0baac92696ed9610838d
   languageName: node
   linkType: hard
 

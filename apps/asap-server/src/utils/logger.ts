@@ -1,12 +1,5 @@
-import debug from 'debug';
-import createLogger, { Logger } from 'pino';
-import { logLevel } from '../config';
+import pino from 'pino-lambda';
 
-const logger = debug('asap-server');
+const logger = pino();
+
 export default logger;
-
-export const loggerFactory = (): Logger =>
-  createLogger({
-    level: logLevel,
-    useLevelLabels: true,
-  });

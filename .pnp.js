@@ -6768,6 +6768,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:5.5.0"
       ],
       [
+        "pino-lambda",
+        "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:1.2.3"
+      ],
+      [
         "pino-std-serializers",
         "npm:3.2.0"
       ],
@@ -9388,6 +9392,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["parse-data-url", "npm:3.0.0"],
             ["pino", "npm:6.11.2"],
             ["pino-http", "npm:5.5.0"],
+            ["pino-lambda", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:1.2.3"],
             ["pump", "npm:3.0.0"],
             ["serverless-http", "npm:2.6.1"],
             ["supertest", "npm:6.1.1"],
@@ -39784,6 +39789,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["fast-url-parser", "npm:1.1.3"],
             ["pino", "npm:6.11.2"],
             ["pino-std-serializers", "npm:2.5.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["pino-lambda", [
+        ["npm:1.2.3", {
+          "packageLocation": "./.yarn/cache/pino-lambda-npm-1.2.3-40c4586d47-5683f5fa0f.zip/node_modules/pino-lambda/",
+          "packageDependencies": [
+            ["pino-lambda", "npm:1.2.3"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:1.2.3", {
+          "packageLocation": "./.yarn/$$virtual/pino-lambda-virtual-5d5f06b6ae/0/cache/pino-lambda-npm-1.2.3-40c4586d47-5683f5fa0f.zip/node_modules/pino-lambda/",
+          "packageDependencies": [
+            ["pino-lambda", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:1.2.3"],
+            ["@types/pino", "npm:6.3.6"],
+            ["pino", "npm:6.11.2"]
+          ],
+          "packagePeers": [
+            "@types/pino",
+            "pino"
           ],
           "linkType": "HARD",
         }]

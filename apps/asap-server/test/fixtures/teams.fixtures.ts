@@ -285,7 +285,6 @@ export const listTeamResponse: ListTeamResponse = {
           avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
         },
       ],
-      applicationNumber: 'ASAP-000420',
       projectTitle:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -300,7 +299,6 @@ export const listTeamResponse: ListTeamResponse = {
     {
       id: 'team-id-2',
       displayName: 'John T.',
-      applicationNumber: 'ASAP-000463',
       projectTitle:
         'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
       skills: [],
@@ -330,7 +328,6 @@ export const listTeamResponse: ListTeamResponse = {
     {
       id: 'team-id-3',
       displayName: 'Zac T.',
-      applicationNumber: 'ASAP-000312',
       skills: [],
       outputs: [],
       members: [
@@ -506,7 +503,6 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       role: 'Lead PI (Core Leadership)',
     },
   ],
-  applicationNumber: 'ASAP-000420',
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -662,7 +658,6 @@ export const updateExpectation: TeamResponse = {
       role: 'Lead PI (Core Leadership)',
     },
   ],
-  applicationNumber: 'ASAP-000420',
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

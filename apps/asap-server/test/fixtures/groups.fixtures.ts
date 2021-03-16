@@ -257,7 +257,6 @@ export const queryGroupsExpectation: ListGroupResponse = {
               team: { id: 'team-id-1', displayName: 'Lee, M' },
             },
           ],
-          applicationNumber: 'ASAP-000592',
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
           proposalURL: 'output-id-1',

@@ -32,7 +32,8 @@ export interface TeamMember {
   avatarUrl?: string;
 }
 
-export interface TeamResponse extends TeamCreateRequest {
+export interface TeamResponse
+  extends Omit<TeamCreateRequest, 'applicationNumber'> {
   id: string;
   skills: string[];
   members: TeamMember[];

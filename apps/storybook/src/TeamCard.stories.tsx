@@ -21,7 +21,6 @@ const teamCardProps = () => {
   return {
     id: 'ee98d044-79a7-4028-915d-7f88793e3190',
     displayName: text('Display Name', 'Barnes, A.'),
-    applicationNumber: 'P9gr6',
     projectTitle:
       'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
 

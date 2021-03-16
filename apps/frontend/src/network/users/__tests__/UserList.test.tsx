@@ -1,74 +1,61 @@
-import React from 'react';
-import {
-  render,
-  waitFor,
-  waitForElementToBeRemoved,
-} from '@testing-library/react';
+import React, { Suspense } from 'react';
+import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import nock from 'nock';
 import { createListUserResponse } from '@asap-hub/fixtures';
-import { authTestUtils } from '@asap-hub/react-components';
+import { RecoilRoot } from 'recoil';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/frontend/src/auth/test-utils';
 
 import UserList from '../UserList';
-import { API_BASE_URL } from '../../../config';
+import { getUsers } from '../api';
+import { usersState } from '../state';
+import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
-// fetch user by code request
-beforeEach(() => {
-  nock.cleanAll();
-});
+jest.mock('../api');
+const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 
-const renderUserList = async (waitForLoading = true) => {
+const renderUserList = async () => {
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/users']}>
-            <Route path="/users" component={UserList} />
-          </MemoryRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
+    <RecoilRoot
+      initializeState={({ set, reset }) => {
+        reset(
+          usersState({
+            currentPage: 0,
+            pageSize: DEFAULT_PAGE_SIZE,
+          }),
+        );
+      }}
+    >
+      <Suspense fallback="loading">
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <MemoryRouter initialEntries={['/users']}>
+              <Route path="/users" component={UserList} />
+            </MemoryRouter>
+          </WhenReady>
+        </Auth0Provider>
+      </Suspense>
+    </RecoilRoot>,
   );
+
   await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+    expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
-  if (waitForLoading)
-    await waitFor(() =>
-      expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
-    );
   return result;
 };
-
-it('renders a loading indicator', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/users')
-    .query({ take: 10, skip: 0 })
-    .reply(200, createListUserResponse(2));
-
-  const { getByText } = await renderUserList(false);
-  const loadingIndicator = getByText(/loading/i);
-  expect(loadingIndicator).toBeVisible();
-
-  await waitForElementToBeRemoved(loadingIndicator);
-});
 
 it('renders a list of people', async () => {
   const listUserResponse = createListUserResponse(2);
   const names = ['Person A', 'Person B'];
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/users')
-    .query({ take: 10, skip: 0 })
-    .reply(200, {
-      ...listUserResponse,
-      items: listUserResponse.items.map((item, itemIndex) => ({
-        ...item,
-        displayName: names[itemIndex],
-      })),
-    });
+  mockGetUsers.mockResolvedValue({
+    ...listUserResponse,
+    items: listUserResponse.items.map((item, itemIndex) => ({
+      ...item,
+      displayName: names[itemIndex],
+    })),
+  });
 
   const { container } = await renderUserList();
   expect(container.textContent).toContain('Person A');

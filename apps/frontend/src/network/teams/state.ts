@@ -3,12 +3,60 @@ import {
   selectorFamily,
   useRecoilValue,
   useSetRecoilState,
+  DefaultValue,
+  useRecoilState,
 } from 'recoil';
-import { TeamResponse, TeamPatchRequest } from '@asap-hub/model';
+import {
+  TeamResponse,
+  TeamPatchRequest,
+  ListTeamResponse,
+} from '@asap-hub/model';
 
-import { getTeam, patchTeam } from './api';
+import { getTeam, patchTeam, getTeams } from './api';
 import { authorizationState } from '../../auth/state';
+import { GetListOptions } from '../../api-util';
 
+const teamIndexState = atomFamily<
+  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
+  GetListOptions
+>({
+  key: 'teamIndex',
+  default: undefined,
+});
+export const teamsState = selectorFamily<
+  ListTeamResponse | Error | undefined,
+  GetListOptions
+>({
+  key: 'teams',
+  get: (options) => ({ get }) => {
+    const index = get(teamIndexState(options));
+    if (index === undefined || index instanceof Error) return index;
+    const teams: TeamResponse[] = [];
+    for (const id of index.ids) {
+      const team = get(teamState(id));
+      if (team === undefined) return undefined;
+      teams.push(team);
+    }
+    return { total: index.total, items: teams };
+  },
+  set: (options) => ({ get, set, reset }, newTeams) => {
+    if (newTeams === undefined || newTeams instanceof DefaultValue) {
+      const oldTeams = get(teamIndexState(options));
+      if (!(oldTeams instanceof Error)) {
+        oldTeams?.ids?.forEach((id) => reset(patchedTeamState(id)));
+      }
+      reset(teamIndexState(options));
+    } else if (newTeams instanceof Error) {
+      set(teamIndexState(options), newTeams);
+    } else {
+      newTeams?.items.forEach((team) => set(patchedTeamState(team.id), team));
+      set(teamIndexState(options), {
+        total: newTeams.total,
+        ids: newTeams.items.map((team) => team.id),
+      });
+    }
+  },
+});
 export const refreshTeamState = atomFamily<number, string>({
   key: 'refreshTeam',
   default: 0,
@@ -32,6 +80,18 @@ const teamState = selectorFamily<TeamResponse | undefined, string>({
   get: (id) => ({ get }) =>
     get(patchedTeamState(id)) ?? get(initialTeamState(id)),
 });
+
+export const useTeams = (options: GetListOptions) => {
+  const authorization = useRecoilValue(authorizationState);
+  const [teams, setTeams] = useRecoilState(teamsState(options));
+  if (teams === undefined) {
+    throw getTeams(options, authorization).then(setTeams).catch(setTeams);
+  }
+  if (teams instanceof Error) {
+    throw teams;
+  }
+  return teams;
+};
 
 export const useTeamById = (id: string) => useRecoilValue(teamState(id));
 export const usePatchTeamById = (id: string) => {

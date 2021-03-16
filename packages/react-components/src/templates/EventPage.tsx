@@ -58,7 +58,7 @@ const EventPage: React.FC<EventPageProps> = ({
         <JoinEvent {...props} />
         <EventAbout {...props} />
       </Card>
-      <RichTextCard text={notes} title="Meeting materials" />
+      <RichTextCard text={notes} title="Notes" />
       <RichTextCard text={videoRecording} title="Video recording" />
       <RichTextCard text={presentation} title="Presentation" />
       <AdditionalMaterials meetingMaterials={meetingMaterials} />

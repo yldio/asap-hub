@@ -2,9 +2,11 @@ import {
   UserResponse,
   UserPatchRequest,
   UserAvatarPostRequest,
+  ListUserResponse,
 } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
+import { GetListOptions, createListApiUrl } from '../../api-util';
 
 export const getUser = async (
   id: string,
@@ -19,6 +21,22 @@ export const getUser = async (
     }
     throw new Error(
       `Failed to fetch user with id ${id}. Expected status 2xx or 404. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
+export const getUsers = async (
+  options: GetListOptions,
+  authorization: string,
+): Promise<ListUserResponse> => {
+  const resp = await fetch(createListApiUrl('users', options).toString(), {
+    headers: { authorization },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch user list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
     );
   }
   return resp.json();

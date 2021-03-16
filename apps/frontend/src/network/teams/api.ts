@@ -1,5 +1,10 @@
-import { TeamResponse, TeamPatchRequest } from '@asap-hub/model';
+import {
+  TeamResponse,
+  TeamPatchRequest,
+  ListTeamResponse,
+} from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
+import { GetListOptions, createListApiUrl } from '../../api-util';
 
 export const getTeam = async (
   id: string,
@@ -18,6 +23,23 @@ export const getTeam = async (
   }
   return resp.json();
 };
+
+export const getTeams = async (
+  options: GetListOptions,
+  authorization: string,
+): Promise<ListTeamResponse> => {
+  const resp = await fetch(createListApiUrl('teams', options).toString(), {
+    headers: { authorization },
+  });
+
+  if (!resp.ok) {
+    throw new Error(
+      `Failed to fetch team list. Expected status 2xx. Received status ${`${resp.status} ${resp.statusText}`.trim()}.`,
+    );
+  }
+  return resp.json();
+};
+
 export const patchTeam = async (
   id: string,
   patch: TeamPatchRequest,

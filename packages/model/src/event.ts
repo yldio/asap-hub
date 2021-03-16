@@ -31,7 +31,6 @@ export interface EventResponse {
     | {
         title: string;
         url: string;
-        label?: string;
       }[]
     | null;
   meetingLink?: string;

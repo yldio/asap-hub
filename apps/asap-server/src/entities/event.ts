@@ -54,10 +54,9 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   };
 
   const materials =
-    meetingMaterials?.map(({ title, url, label }) => ({
+    meetingMaterials?.map(({ title, url }) => ({
       title,
       url,
-      label: label ?? undefined,
     })) || [];
 
   const meetingMaterialsRes = getMeetingDetail(

@@ -57,7 +57,6 @@ export const parseGraphQLTeam = (
     outputs,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
-    applicationNumber: team.flatData?.applicationNumber || '',
     projectTitle: team.flatData?.projectTitle || '',
     projectSummary: team.flatData?.projectSummary || undefined,
     proposalURL: team.flatData?.proposal

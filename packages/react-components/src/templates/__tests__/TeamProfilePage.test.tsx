@@ -5,7 +5,6 @@ import TeamProfilePage from '../TeamProfilePage';
 
 const boilerplateProps = {
   id: '42',
-  applicationNumber: 'Unknown',
   projectTitle: 'Unknown',
   displayName: 'Doe, J',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),

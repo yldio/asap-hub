@@ -9,7 +9,6 @@ const boilerplateProps = {
   id: '42',
   displayName: 'John, D',
   projectTitle: 'Unknown',
-  applicationNumber: 'Unknown',
   members: [],
   skills: [],
   outputs: [],

@@ -75,17 +75,13 @@ describe('the network page', () => {
       const toggle = getByText(/people/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
-      await waitFor(() =>
-        expect(mockGetUsers).toHaveBeenLastCalledWith(
-          expect.not.objectContaining({
-            filters: expect.anything(),
-          }) &&
-            expect.objectContaining({
-              searchQuery: 'test123',
-            }),
-          expect.anything(),
-        ),
-      );
+      await waitFor(() => {
+        const [[options]] = mockGetUsers.mock.calls.slice(-1);
+        expect(options).toMatchObject({
+          searchQuery: 'test123',
+          filters: [],
+        });
+      });
     });
   });
 
@@ -121,17 +117,13 @@ describe('the network page', () => {
       const toggle = getByText(/teams/i, { selector: 'nav a *' });
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
-      await waitFor(() =>
-        expect(mockGetTeams).toHaveBeenLastCalledWith(
-          expect.not.objectContaining({
-            filters: expect.anything(),
-          }) &&
-            expect.objectContaining({
-              searchQuery: 'test123',
-            }),
-          expect.anything(),
-        ),
-      );
+      await waitFor(() => {
+        const [[options]] = mockGetTeams.mock.calls.slice(-1);
+        expect(options).toMatchObject({
+          searchQuery: 'test123',
+        });
+        expect(options).not.toHaveProperty('filters');
+      });
     });
   });
 
@@ -139,7 +131,7 @@ describe('the network page', () => {
     const { getByRole } = await renderNetworkPage('/network/users');
     const searchBox = getByRole('searchbox') as HTMLInputElement;
 
-    await userEvent.type(searchBox, 'test123');
+    userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
   });
 

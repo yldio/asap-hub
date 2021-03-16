@@ -41,7 +41,7 @@ export const webhookEventUpdatedHandlerFactory = (
       const calendar = await calendars
         .fetchByResouceId(resourceId)
         .catch((err) => {
-          logger('Error fetching calendar', err);
+          logger.error('Error fetching calendar', err);
           return undefined;
         });
 
@@ -54,7 +54,7 @@ export const webhookEventUpdatedHandlerFactory = (
       const syncToken = calendar.data.syncToken?.iv;
 
       const credentials = await getJWTCredentials().catch((err) => {
-        logger('Error fetching AWS credentials', err);
+        logger.error('Error fetching AWS credentials', err);
         return undefined;
       });
 
@@ -80,7 +80,7 @@ export const webhookEventUpdatedHandlerFactory = (
         await calendars
           .update(squidexCalendarId, { syncToken: nextSyncToken })
           .catch((err) => {
-            logger('Error updated syncToken', err);
+            logger.error('Error updating syncToken', err);
           });
       }
 

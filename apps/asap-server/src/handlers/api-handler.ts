@@ -5,6 +5,7 @@ import { Request as RequestExpress } from 'express';
 import * as LightStep from 'lightstep-tracer';
 import { appFactory } from '../app';
 import { lightstepToken, environment } from '../config';
+import logger from '../utils/logger';
 
 const lsTracer = new LightStep.Tracer({
   access_token: lightstepToken || '',
@@ -19,7 +20,12 @@ interface RequestWithContext extends RequestExpress {
 }
 
 export const apiHandler = serverlessHttp(app, {
-  request(request: RequestWithContext, event: APIGatewayProxyEventV2) {
+  request(
+    request: RequestWithContext,
+    event: APIGatewayProxyEventV2,
+    context: { awsRequestId: string },
+  ) {
     request.context = event.requestContext;
+    logger.withRequest(event, context);
   },
 });

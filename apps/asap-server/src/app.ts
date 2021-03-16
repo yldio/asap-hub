@@ -2,10 +2,12 @@ import 'express-async-errors';
 import cors from 'cors';
 import express, { Express, RequestHandler } from 'express';
 import { Tracer } from 'opentracing';
+import { Logger } from 'pino';
+import pinoHttp from 'pino-http';
 
 import decodeToken from './utils/validate-token';
 
-import { errorHandler } from './middleware/error-handler';
+import { errorHandlerFactory } from './middleware/error-handler';
 import { tracingHandlerFactory } from './middleware/tracing-handler';
 import { authHandlerFactory, AuthHandler } from './middleware/auth-handler';
 
@@ -34,6 +36,7 @@ import NewsAndEvents, {
 import { newsAndEventsRouteFactory } from './routes/news-and-events.route';
 import Discover, { DiscoverController } from './controllers/discover';
 import { discoverRouteFactory } from './routes/discover.route';
+import pinoLogger, { redaction } from './utils/logger';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -41,6 +44,12 @@ export const appFactory = (libs: Libs = {}): Express => {
   /**
    * Dependency Injection -->
    */
+  // Libs
+  const logger = libs.logger || pinoLogger;
+
+  // Middleware
+  const httpLogger = pinoHttp({ logger, serializers: redaction });
+  const errorHandler = errorHandlerFactory(logger);
 
   // Controllers
   const calendarController = libs.calendarController || new Calendars();
@@ -80,6 +89,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    * --- end of dependency inection
    */
 
+  app.use(httpLogger);
   app.use(tracingHandler);
   app.use(cors());
   app.use(express.json());
@@ -140,6 +150,7 @@ export type Libs = {
   userController?: UserController;
   authHandler?: AuthHandler;
   tracer?: Tracer;
+  logger?: Logger;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
 };

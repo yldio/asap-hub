@@ -6,14 +6,13 @@
     "outDir": "build",
     "module": "commonjs"
   },
-  "include": ["src", "test", "test/**/*.json"],
+  "include": ["src", "test", "test/**/*.json", "@types/**/*.d.ts"],
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" }
   ],
-  "files": ["@types/express/index.d.ts"],
   "ts-node": {
     "files": true
   }

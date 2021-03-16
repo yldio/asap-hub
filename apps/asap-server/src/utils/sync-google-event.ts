@@ -36,12 +36,12 @@ export const syncEventFactory = (
     const { error, value } = schema.validate(eventPayload);
 
     if (error) {
-      logger('Ignored event update, validation error:', error);
+      logger.error('Ignored event update, validation error:', error);
       return Promise.reject(error);
     }
 
     const googleEvent = value as GoogleEvent;
-    logger('google event', googleEvent);
+    logger.debug('google event', googleEvent);
 
     const getEventDate = (
       eventDate: calendarV3.Schema$EventDateTime,
@@ -66,7 +66,7 @@ export const syncEventFactory = (
     };
 
     try {
-      logger('Searching for event: ', googleEvent.id);
+      logger.info('Searching for event: ', googleEvent.id);
       const existingEvent = await eventsController.fetchByGoogleId(
         googleEvent.id,
       );
@@ -80,14 +80,14 @@ export const syncEventFactory = (
         } else {
           newEvent.hidden = existingEvent.data.hidden?.iv || false;
         }
-        logger('Found event. Updating.', existingEvent.id, newEvent);
+        logger.info('Found event. Updating.', existingEvent.id, newEvent);
         return await eventsController.update(existingEvent.id, newEvent);
       }
 
-      logger('Event not found. Creating.', googleEvent.id, newEvent);
+      logger.info('Event not found. Creating.', googleEvent.id, newEvent);
       return await eventsController.create({ ...newEvent, tags: [] });
     } catch (err) {
-      logger('Error syncing event:', err);
+      logger.error('Error syncing event:', err);
       throw err;
     }
   };

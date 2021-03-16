@@ -129,7 +129,7 @@
     "serverless": "^1.81.1",
     "serverless-iam-roles-per-function": "^2.0.2",
     "serverless-offline": "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch",
-    "serverless-plugin-tree-shake": "^1.1.2",
+    "serverless-plugin-tree-shake": "^1.1.7",
     "serverless-s3-sync": "^1.15.0",
     "typescript": "~4.1.0",
     "webpack": "^5.1.0"

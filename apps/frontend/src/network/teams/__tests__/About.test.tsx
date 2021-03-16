@@ -89,6 +89,8 @@ it('renders the team groups card when a group is present', async () => {
   const { getByText } = await renderTeamAbout({
     team: { ...createTeamResponse(), proposalURL: undefined },
   });
-  await waitFor(() => expect(mockedGetTeamGroups).toHaveBeenCalled());
-  expect(await getByText('Example Group 123')).toBeVisible();
+  await waitFor(() => {
+    expect(mockedGetTeamGroups).toHaveBeenCalled();
+    expect(getByText('Example Group 123')).toBeVisible();
+  });
 });

@@ -1,31 +1,27 @@
-import React, { ComponentProps } from 'react';
+import React, { Fragment } from 'react';
 import { Card, Headline2 } from '../atoms';
 import RichText from './RichText';
-import { ConditionalCollapsible } from '../molecules/Collapsible';
+import { Collapsible } from '../molecules';
 
 type RichTextCardProps = {
   readonly title: string;
   readonly text?: string | null;
-  readonly collapsible?: ComponentProps<
-    typeof ConditionalCollapsible
-  >['condition'];
-} & Pick<ComponentProps<typeof ConditionalCollapsible>, 'initiallyExpanded'>;
+  readonly collapsible?: boolean;
+};
 const RichTextCard: React.FC<RichTextCardProps> = ({
   title,
   text,
-  collapsible,
-  initiallyExpanded,
-}) =>
-  text ? (
+  collapsible = false,
+}) => {
+  const Wrapper = collapsible ? Collapsible : Fragment;
+  return text ? (
     <Card>
       <Headline2 styleAsHeading={3}>{title}</Headline2>
-      <ConditionalCollapsible
-        condition={collapsible}
-        initiallyExpanded={initiallyExpanded}
-      >
+      <Wrapper>
         <RichText text={text} />
-      </ConditionalCollapsible>
+      </Wrapper>
     </Card>
   ) : null;
+};
 
 export default RichTextCard;

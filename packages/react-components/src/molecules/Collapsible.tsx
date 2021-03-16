@@ -4,17 +4,6 @@ import { Button } from '../atoms';
 import { chevronCircleDownIcon, chevronCircleUpIcon } from '../icons';
 import { perRem } from '../pixels';
 
-export const ConditionalCollapsible: React.FC<
-  CollapsibleProps & {
-    readonly condition?: boolean;
-  }
-> = ({ condition = false, children, ...props }) =>
-  condition ? (
-    <Collapsible {...props}>{children}</Collapsible>
-  ) : (
-    <>{children}</>
-  );
-
 interface CollapsibleProps {
   readonly initiallyExpanded?: boolean;
   readonly children: React.ReactNode;

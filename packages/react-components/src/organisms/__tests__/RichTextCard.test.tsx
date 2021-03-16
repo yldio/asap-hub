@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import RichTextCard from '../RichTextCard';
+import userEvent from '@testing-library/user-event';
 
 const props: ComponentProps<typeof RichTextCard> = {
   title: '',
@@ -30,4 +31,16 @@ it('renders the rich text notes', () => {
     />,
   );
   expect(getByText('Google').tagName).toBe('A');
+});
+
+it('is collapsible when condition true', () => {
+  const { getByText, queryByText } = render(
+    <RichTextCard {...props} collapsible>
+      text
+    </RichTextCard>,
+  );
+  expect(queryByText('text')).toEqual(null);
+
+  userEvent.click(getByText(/show/i));
+  expect(getByText('text')).toBeVisible();
 });

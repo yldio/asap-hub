@@ -29,22 +29,22 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     }),
   );
 
-  const tools: GroupTools = {};
+  let tools: GroupTools = {};
   if (item.flatData?.tools?.length) {
     const [groupTools] = item.flatData?.tools;
     if (groupTools.slack) {
-      tools.slack = groupTools.slack;
+      tools = { ...tools, slack: groupTools.slack };
     }
 
     if (groupTools.googleDrive) {
-      tools.googleDrive = groupTools.googleDrive;
+      tools = { ...tools, googleDrive: groupTools.googleDrive };
     }
   }
 
   if (item.flatData?.calendars?.length) {
     const url = new URL('https://calendar.google.com/calendar/r');
     url.searchParams.set('cid', item.flatData?.calendars[0].id);
-    tools.googleCalendar = url.toString();
+    tools = { ...tools, googleCalendar: url.toString() };
   }
 
   return {

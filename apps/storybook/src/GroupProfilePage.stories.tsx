@@ -2,6 +2,7 @@ import React from 'react';
 import { GroupProfilePage } from '@asap-hub/react-components';
 import { text, number, date, select } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
+import { network } from '@asap-hub/routing';
 
 import { LayoutDecorator } from './layout';
 
@@ -12,22 +13,25 @@ export default {
 };
 
 export const Normal = () => {
+  const route = network({}).groups({}).group({ groupId: '42' });
   const activeTab = select(
     'Active Tab',
-    ['About', 'Calendar', 'Upcoming', 'Past'],
-    'About',
+    {
+      About: route.about({}).$,
+      Calendar: route.calendar({}).$,
+      Upcoming: route.upcoming({}).$,
+      Past: route.past({}).$,
+    },
+    route.about({}).$,
   );
   return (
-    <StaticRouter key={activeTab} location={`/${activeTab}`}>
+    <StaticRouter key={activeTab} location={activeTab}>
       <GroupProfilePage
+        id="42"
         name={text('Name', 'My Group')}
         numberOfTeams={number('Number of Teams', 5)}
         groupTeamsHref="#"
         lastModifiedDate={new Date(date('Last update')).toISOString()}
-        aboutHref="/About"
-        calendarHref="/Calendar"
-        upcomingHref="/Upcoming"
-        pastHref="/Past"
       />
     </StaticRouter>
   );

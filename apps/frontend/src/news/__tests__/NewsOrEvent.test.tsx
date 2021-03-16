@@ -4,11 +4,12 @@ import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { NewsOrEventResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
+import { news } from '@asap-hub/routing';
 
 import NewsOrEvent from '../NewsOrEvent';
 import { API_BASE_URL } from '../../config';
 
-const newsAndEvents: NewsOrEventResponse = {
+const newsOrEvent: NewsOrEventResponse = {
   id: '55724942-3408-4ad6-9a73-14b92226ffb6',
   created: '2020-09-07T17:36:54Z',
   title: 'News Title',
@@ -21,11 +22,9 @@ const renderPage = async () => {
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
           <MemoryRouter
-            initialEntries={[
-              '/news-and-events/55724942-3408-4ad6-9a73-14b92226ffb6',
-            ]}
+            initialEntries={[news({}).article({ articleId: newsOrEvent.id }).$]}
           >
-            <Route path="/news-and-events/:id">
+            <Route path={news.template + news({}).article.template}>
               <NewsOrEvent />
             </Route>
           </MemoryRouter>
@@ -56,7 +55,7 @@ describe('news and events detail page', () => {
   });
 
   it('renders title', async () => {
-    nockInterceptor.reply(200, newsAndEvents);
+    nockInterceptor.reply(200, newsOrEvent);
 
     const { getByRole } = await renderPage();
 

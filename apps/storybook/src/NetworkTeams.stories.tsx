@@ -32,7 +32,6 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
         { ...member, id: 'm0' },
         { ...member, id: 'm1' },
       ],
-      href: '#',
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),

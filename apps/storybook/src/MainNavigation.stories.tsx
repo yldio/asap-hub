@@ -2,6 +2,8 @@ import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { select } from '@storybook/addon-knobs';
 import { MainNavigation } from '@asap-hub/react-components';
+import { discover, network, news, sharedResearch } from '@asap-hub/routing';
+
 import { NoPaddingDecorator } from './layout';
 
 export default {
@@ -11,26 +13,20 @@ export default {
 };
 
 export const Normal = () => {
-  const path = `/${select(
+  const path = select(
     'Active Section',
     {
-      Network: 'network',
-      'Shared Research': 'shared-research',
-      'News and Events': 'news-and-events',
-      'Discover ASAP': 'discover',
-      None: 'none',
+      Network: network({}).teams({}).$,
+      'Shared Research': sharedResearch({}).$,
+      'News and Events': news({}).$,
+      'Discover ASAP': discover({}).$,
+      None: '/none',
     },
     'network',
-  )}`;
+  );
   return (
     <StaticRouter key={path} location={path}>
-      <MainNavigation
-        discoverAsapHref="/discover"
-        networkHref="/network"
-        sharedResearchHref="/shared-research"
-        newsAndEventsHref="/news-and-events"
-        eventsHref="/events"
-      />
+      <MainNavigation />
     </StaticRouter>
   );
 };

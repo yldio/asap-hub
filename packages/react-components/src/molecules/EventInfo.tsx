@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
-import { EventResponse } from '@asap-hub/model';
 import css from '@emotion/css';
+import { EventResponse } from '@asap-hub/model';
+import { events, network } from '@asap-hub/routing';
 
 import { Headline3, Link, Anchor } from '../atoms';
 import { perRem, largeDesktopScreen } from '../pixels';
@@ -61,17 +62,16 @@ const iconStyles = css({
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<EventResponse, 'title' | 'thumbnail'> & {
-    groups: (EventResponse['groups'][0] & { href: string })[];
-    href?: string;
+  Pick<EventResponse, 'id' | 'title' | 'thumbnail' | 'groups' | 'status'> & {
     titleLimit?: number | null;
   };
 
 const EventInfo: React.FC<EventInfoProps> = ({
+  id,
   title,
   thumbnail,
   groups,
-  href,
+  status,
   titleLimit = TITLE_LIMIT,
   ...props
 }) => {
@@ -85,7 +85,13 @@ const EventInfo: React.FC<EventInfoProps> = ({
     <div css={cardStyles}>
       <div css={imageContainerStyle}>{imageComponent}</div>
       <div>
-        <Anchor href={href}>
+        <Anchor
+          href={
+            status === 'Cancelled'
+              ? undefined
+              : events({}).event({ eventId: id }).$
+          }
+        >
           <Headline3 styleAsHeading={4}>
             {title.substr(0, titleLimit ?? undefined)}
             {titleLimit && title.length > titleLimit ? '…' : undefined}
@@ -94,11 +100,13 @@ const EventInfo: React.FC<EventInfoProps> = ({
         <EventTime {...props} />
         {groups.length ? (
           <ul css={groupsStyles}>
-            {groups.map(({ name, href: groupHref, id }) => (
-              <li key={id} css={eventOwnerStyles}>
-                <Link href={groupHref}>
+            {groups.map((group) => (
+              <li key={group.id} css={eventOwnerStyles}>
+                <Link
+                  href={network({}).groups({}).group({ groupId: group.id }).$}
+                >
                   <span css={iconStyles}>{groupsIcon}</span>
-                  {name}
+                  {group.name}
                 </Link>
               </li>
             ))}

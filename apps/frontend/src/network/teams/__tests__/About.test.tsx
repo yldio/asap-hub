@@ -7,6 +7,7 @@ import {
 } from '@asap-hub/frontend/src/auth/test-utils';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
+import { network } from '@asap-hub/routing';
 
 import About from '../About';
 import { refreshTeamState } from '../state';
@@ -18,6 +19,8 @@ const mockedGetTeamGroups = getTeamGroups as jest.MockedFunction<
   typeof getTeamGroups
 >;
 
+const teamId = '42';
+
 const renderTeamAbout = async (aboutProps: ComponentProps<typeof About>) => {
   const result = render(
     <RecoilRoot
@@ -28,8 +31,19 @@ const renderTeamAbout = async (aboutProps: ComponentProps<typeof About>) => {
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={['/team/about']}>
-              <Route path="/team/about">
+            <MemoryRouter
+              initialEntries={[
+                network({}).teams({}).team({ teamId }).about({}).$,
+              ]}
+            >
+              <Route
+                path={
+                  network.template +
+                  network({}).teams.template +
+                  network({}).teams({}).team.template +
+                  network({}).teams({}).team({ teamId }).about.template
+                }
+              >
                 <About {...aboutProps} />
               </Route>
             </MemoryRouter>
@@ -51,7 +65,7 @@ it('renders the member links', async () => {
       members: [
         {
           ...createTeamResponse({ teamMembers: 1 }).members[0],
-          id: '42',
+          id: teamId,
           displayName: 'Mem',
         },
       ],

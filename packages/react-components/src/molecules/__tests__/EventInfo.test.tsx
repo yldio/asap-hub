@@ -9,7 +9,6 @@ jest.mock('../../localization');
 const props: ComponentProps<typeof EventInfo> = {
   ...createEventResponse(),
   groups: [],
-  href: '',
 };
 
 it('renders an event', () => {
@@ -66,13 +65,16 @@ it('renders the group name linking to the group and icon', () => {
       groups={[
         {
           ...createGroupResponse(),
+          id: 'grp',
           name: 'My Group',
-          href: '/my-group',
         },
       ]}
     />,
   );
-  expect(getByText('My Group')).toHaveAttribute('href', '/my-group');
+  expect(getByText('My Group')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/grp$/),
+  );
   expect(getByTitle('Group')).toBeInTheDocument();
 });
 
@@ -93,4 +95,18 @@ it('shows the event time', () => {
     />,
   );
   expect(getByText(/8:00/)).toBeVisible();
+});
+
+it('only links to events that are not cancelled', () => {
+  const { getByRole, rerender } = render(
+    <EventInfo {...props} status="Tentative" />,
+  );
+  expect(getByRole('heading', { level: 3 }).closest('a')).toHaveAttribute(
+    'href',
+  );
+
+  rerender(<EventInfo {...props} status="Cancelled" />);
+  expect(getByRole('heading', { level: 3 }).closest('a')).not.toHaveAttribute(
+    'href',
+  );
 });

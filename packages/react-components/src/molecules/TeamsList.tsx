@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { network } from '@asap-hub/routing';
 
 import { Divider, Link } from '../atoms';
 import { perRem } from '../pixels';
@@ -21,16 +22,18 @@ const rowStyles = css({
 });
 
 interface TeamsListProps {
-  readonly teams: ReadonlyArray<{ displayName: string; href: string }>;
+  readonly teams: ReadonlyArray<{ id: string; displayName: string }>;
 }
 const TeamsList: React.FC<TeamsListProps> = ({ teams }) => (
   <ul css={listStyles}>
-    {teams.flatMap(({ displayName, href }, i) => (
+    {teams.flatMap(({ id, displayName }, i) => (
       <li key={`sep-${i}`}>
         {i > 0 && <Divider />}
         <div css={rowStyles}>
           {teamIcon}
-          <Link href={href}>Team {displayName}</Link>
+          <Link href={network({}).teams({}).team({ teamId: id }).$}>
+            Team {displayName}
+          </Link>
         </div>
       </li>
     ))}

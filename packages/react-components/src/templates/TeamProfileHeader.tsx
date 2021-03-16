@@ -2,6 +2,7 @@ import React from 'react';
 import css from '@emotion/css';
 import { formatDistance } from 'date-fns';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import { Anchor, Link, TabLink, Display, Paragraph, Avatar } from '../atoms';
 import { TabNav } from '../molecules';
@@ -69,74 +70,76 @@ const extraUsersStyles = css({
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
-  readonly aboutHref: string;
-  readonly outputsHref: string;
-  readonly workspaceHref: string;
 };
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
+  id,
   displayName,
   lastModifiedDate,
   members,
   pointOfContact,
-  aboutHref,
-  outputsHref,
-  workspaceHref,
   tools,
-}) => (
-  <header css={containerStyles}>
-    <Display styleAsHeading={2}>Team {displayName}</Display>
-    <section css={sectionStyles}>
-      <div css={membersContainerStyles}>
-        <ul css={membersListStyles}>
-          {members
-            .slice(0, MAX_MEMBER_AVATARS)
-            .map(({ id, avatarUrl, firstName, lastName }) => (
-              <li key={id}>
-                <Anchor href={`/network/users/${id}`}>
-                  <Avatar
-                    firstName={firstName}
-                    lastName={lastName}
-                    imageUrl={avatarUrl}
-                  />
-                </Anchor>
-              </li>
-            ))}
-          <li css={extraUsersStyles}>
-            {members.length > MAX_MEMBER_AVATARS && (
-              <Avatar placeholder={`+${members.length - MAX_MEMBER_AVATARS}`} />
-            )}
-          </li>
-        </ul>
-      </div>
-      {pointOfContact && (
-        <div css={pointOfContactStyles}>
-          <Link
-            buttonStyle
-            small
-            primary
-            href={`${createMailTo(pointOfContact.email)}`}
-          >
-            Contact PM
-          </Link>
+}) => {
+  const route = network({}).teams({}).team({ teamId: id });
+  return (
+    <header css={containerStyles}>
+      <Display styleAsHeading={2}>Team {displayName}</Display>
+      <section css={sectionStyles}>
+        <div css={membersContainerStyles}>
+          <ul css={membersListStyles}>
+            {members
+              .slice(0, MAX_MEMBER_AVATARS)
+              .map(({ id: memberId, avatarUrl, firstName, lastName }) => (
+                <li key={memberId}>
+                  <Anchor href={network({}).users({ userId: memberId }).$}>
+                    <Avatar
+                      firstName={firstName}
+                      lastName={lastName}
+                      imageUrl={avatarUrl}
+                    />
+                  </Anchor>
+                </li>
+              ))}
+            <li css={extraUsersStyles}>
+              {members.length > MAX_MEMBER_AVATARS && (
+                <Avatar
+                  placeholder={`+${members.length - MAX_MEMBER_AVATARS}`}
+                />
+              )}
+            </li>
+          </ul>
         </div>
-      )}
-      {lastModifiedDate && (
-        <div css={updateContainerStyles}>
-          <Paragraph accent="lead">
-            <small>
-              Last updated:{' '}
-              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-            </small>
-          </Paragraph>
-        </div>
-      )}
-    </section>
-    <TabNav>
-      <TabLink href={aboutHref}>About</TabLink>
-      {tools && <TabLink href={workspaceHref}>Team Workspace</TabLink>}
-      <TabLink href={outputsHref}>Team Outputs</TabLink>
-    </TabNav>
-  </header>
-);
+        {pointOfContact && (
+          <div css={pointOfContactStyles}>
+            <Link
+              buttonStyle
+              small
+              primary
+              href={`${createMailTo(pointOfContact.email)}`}
+            >
+              Contact PM
+            </Link>
+          </div>
+        )}
+        {lastModifiedDate && (
+          <div css={updateContainerStyles}>
+            <Paragraph accent="lead">
+              <small>
+                Last updated:{' '}
+                {formatDistance(new Date(), new Date(lastModifiedDate))} ago
+              </small>
+            </Paragraph>
+          </div>
+        )}
+      </section>
+      <TabNav>
+        <TabLink href={route.about({}).$}>About</TabLink>
+        {tools && (
+          <TabLink href={route.workspace({}).$}>Team Workspace</TabLink>
+        )}
+        <TabLink href={route.outputs({}).$}>Team Outputs</TabLink>
+      </TabNav>
+    </header>
+  );
+};
 
 export default TeamProfileHeader;

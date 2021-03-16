@@ -2,7 +2,8 @@ import React, { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter, Route } from 'react-router-dom';
 import { render, act } from '@testing-library/react';
-import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
+import { createEventResponse } from '@asap-hub/fixtures';
+import { events } from '@asap-hub/routing';
 
 import {
   Auth0Provider,
@@ -30,15 +31,17 @@ const wrapper: React.FC = ({ children }) => (
   <RecoilRoot
     initializeState={({ set }) => set(refreshEventState(id), Math.random())}
   >
-    <StaticRouter location={`/${id}`}>
-      <Auth0Provider user={{}}>
-        <WhenReady>
-          <Suspense fallback="Loading...">
-            <Route path="/:id">{children}</Route>
-          </Suspense>
-        </WhenReady>
-      </Auth0Provider>
-    </StaticRouter>
+    <Auth0Provider user={{}}>
+      <WhenReady>
+        <Suspense fallback="Loading...">
+          <StaticRouter location={events({}).event({ eventId: id }).$}>
+            <Route path={events.template + events({}).event.template}>
+              {children}
+            </Route>
+          </StaticRouter>
+        </Suspense>
+      </WhenReady>
+    </Auth0Provider>
   </RecoilRoot>
 );
 
@@ -58,19 +61,6 @@ it('generates the back href', async () => {
   expect((await findByText(/back/i)).closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/events$/),
-  );
-});
-
-it('generates the group hrefs', async () => {
-  mockGetEvent.mockResolvedValue({
-    ...createEventResponse(),
-    id,
-    groups: [{ ...createGroupResponse(), id: 'grp42', name: 'Kool Group' }],
-  });
-  const { findByText } = render(<Event />, { wrapper });
-  expect((await findByText('Kool Group')).closest('a')).toHaveAttribute(
-    'href',
-    expect.stringMatching(/grp42$/),
   );
 });
 

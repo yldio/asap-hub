@@ -16,8 +16,8 @@ const NetworkPeople: React.FC<NetworkPeopleProps> = ({
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
-    {people.map(({ id, ...person }) => (
-      <React.Fragment key={id}>
+    {people.map((person) => (
+      <React.Fragment key={person.id}>
         <PeopleCard {...person} />
       </React.Fragment>
     ))}

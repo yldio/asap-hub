@@ -1,5 +1,8 @@
 import React from 'react';
 import css from '@emotion/css';
+import { GroupResponse } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
+
 import { Card, Headline2, Paragraph, Anchor } from '../atoms';
 import { TagList } from '../molecules';
 import { teamIcon } from '../icons';
@@ -11,22 +14,21 @@ const iconStyles = css({
   paddingRight: `${15 / perRem}em`,
 });
 
-interface GroupCardProps {
-  name: string;
-  href: string;
-  description: string;
-  tags: string[];
-  numberOfTeams: number;
-}
+type GroupCardProps = Pick<
+  GroupResponse,
+  'id' | 'name' | 'description' | 'tags'
+> & {
+  readonly numberOfTeams: number;
+};
 const GroupCard: React.FC<GroupCardProps> = ({
+  id,
   name,
-  href,
   description,
   tags,
   numberOfTeams,
 }) => (
   <Card>
-    <Anchor href={href}>
+    <Anchor href={network({}).groups({}).group({ groupId: id }).$}>
       <Headline2 styleAsHeading={4}>{name}</Headline2>
       <Paragraph accent="lead">{description}</Paragraph>
     </Anchor>

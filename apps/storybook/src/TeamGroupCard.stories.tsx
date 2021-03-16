@@ -13,10 +13,7 @@ const props = (): ComponentProps<typeof TeamGroupsCard> => {
   const numberOfGroups = number('Number of groups', 5);
   return {
     groups: Array.from({ length: numberOfGroups }, (_, index) => {
-      const groupResponseItem = {
-        ...createGroupResponse({}, index),
-        href: '#',
-      };
+      const groupResponseItem = createGroupResponse({}, index);
       if (index === 0) {
         return {
           ...groupResponseItem,

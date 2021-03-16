@@ -13,8 +13,8 @@ const NetworkTeams: React.FC<NetworkTeamsProps> = ({
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
-    {teams.map(({ id, ...team }) => (
-      <React.Fragment key={id}>
+    {teams.map((team) => (
+      <React.Fragment key={team.id}>
         <TeamCard {...team} />
       </React.Fragment>
     ))}

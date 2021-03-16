@@ -17,7 +17,7 @@ it('does not show read proposal if no proposal avaiilable', () => {
     <TeamProfileOverview
       projectTitle="Title"
       projectSummary="Summary"
-      proposalHref="https://localhost/"
+      proposalURL="42"
     />,
   );
   expect(queryByText('Read Proposal')).toBeDefined();

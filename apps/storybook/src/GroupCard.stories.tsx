@@ -8,7 +8,7 @@ export default {
 
 export const Normal = () => (
   <GroupCard
-    href="#group"
+    id="42"
     name={text('Name', 'My Group')}
     description={text('Description', 'Group Description')}
     tags={array('Tags', ['Tag 1', 'Tag 2'])}

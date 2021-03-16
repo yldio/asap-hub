@@ -13,6 +13,7 @@
     { "path": "../dom-test-utils" },
     { "path": "../fixtures" },
     { "path": "../model" },
-    { "path": "../react-context" }
+    { "path": "../react-context" },
+    { "path": "../routing" }
   ]
 }

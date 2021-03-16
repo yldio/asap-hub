@@ -7,7 +7,6 @@ import EventCard from '../EventCard';
 const props: ComponentProps<typeof EventCard> = {
   ...createEventResponse(),
   groups: [],
-  href: '',
   tags: [],
 };
 

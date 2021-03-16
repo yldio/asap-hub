@@ -1,9 +1,9 @@
 import React from 'react';
-import { join } from 'path';
 import { useRouteMatch, Route } from 'react-router-dom';
 import { UserProfileAbout, BiographyModal } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
 
 import { usePatchUserById } from './state';
 
@@ -13,7 +13,8 @@ type AboutProps = {
 const About: React.FC<AboutProps> = ({ user }) => {
   const { id } = useCurrentUser() ?? {};
 
-  const { path, url } = useRouteMatch();
+  const { path } = useRouteMatch();
+  const route = network({}).users({}).user({ userId: user.id }).about({});
 
   const patchUser = usePatchUserById(user.id);
 
@@ -22,16 +23,14 @@ const About: React.FC<AboutProps> = ({ user }) => {
       <UserProfileAbout
         {...user}
         editBiographyHref={
-          id === user.id ? join(url, 'edit-biography') : undefined
+          id === user.id ? route.editBiography({}).$ : undefined
         }
-        editOrcidWorksHref={
-          id === user.id ? join(url, 'edit-works') : undefined
-        }
+        editOrcidWorksHref={id === user.id ? route.editWorks({}).$ : undefined}
       />
-      <Route exact path={`${path}/edit-biography`}>
+      <Route exact path={path + route.editBiography.template}>
         <BiographyModal
           biography={user.biography}
-          backHref={url}
+          backHref={route.$}
           onSave={(newBiography) =>
             patchUser({
               biography: newBiography,

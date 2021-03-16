@@ -4,24 +4,15 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
 import Layout from '../Layout';
-import { createMailTo } from '../../mail';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
-  discoverAsapHref: '/discover',
-  sharedResearchHref: '/shared-research',
-  networkHref: '/network',
-  newsAndEventsHref: '/news-and-events',
 
   userProfileHref: '/profile',
   teams: [],
-  settingsHref: '/settings',
-  feedbackHref: createMailTo('test@test.science'),
-  logoutHref: '/logout',
   termsHref: '/terms',
   privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
-  eventsHref: '/events',
 };
 
 it('renders an ASAP logo', () => {

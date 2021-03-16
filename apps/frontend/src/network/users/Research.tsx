@@ -1,6 +1,5 @@
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { useRouteMatch, Route, Redirect } from 'react-router-dom';
-import { join } from 'path';
 import {
   UserProfileResearch,
   TeamMembershipModal,
@@ -8,6 +7,7 @@ import {
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { network } from '@asap-hub/routing';
 
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
@@ -15,12 +15,12 @@ import Groups from './groups/Groups';
 
 type ResearchProps = {
   user: UserResponse;
-  teams: ComponentProps<typeof UserProfileResearch>['teams'];
 };
-const Research: React.FC<ResearchProps> = ({ user, teams }) => {
+const Research: React.FC<ResearchProps> = ({ user }) => {
   const { id } = useCurrentUser() ?? {};
 
-  const { url, path } = useRouteMatch();
+  const { path } = useRouteMatch();
+  const route = network({}).users({}).user({ userId: user.id }).research({});
 
   const patchUser = usePatchUserById(user.id);
 
@@ -33,43 +33,47 @@ const Research: React.FC<ResearchProps> = ({ user, teams }) => {
             <Groups user={user} />
           </Frame>
         }
-        teams={teams.map((team) => ({
+        teams={user.teams.map((team) => ({
           ...team,
           editHref:
             id === user.id
-              ? join(url, 'edit-team-membership', team.id)
+              ? route.editTeamMembership({ teamId: team.id }).$
               : undefined,
         }))}
-        editSkillsHref={id === user.id ? join(url, 'edit-skills') : undefined}
+        editSkillsHref={id === user.id ? route.editSkills({}).$ : undefined}
         editQuestionsHref={
-          id === user.id ? join(url, 'edit-questions') : undefined
+          id === user.id ? route.editQuestions({}).$ : undefined
         }
       />
       {id === user.id && (
         <>
           <Route
-            path={`${path}/edit-team-membership/:teamId`}
+            path={path + route.editTeamMembership.template}
             render={({
               match: {
                 params: { teamId },
               },
             }) => {
-              const team = teams.find(
+              const team = user.teams.find(
                 ({ id: currentTeamId }) => currentTeamId === teamId,
               );
               return team ? (
                 <TeamMembershipModal
                   {...team}
-                  backHref={url}
+                  backHref={route.$}
                   onSave={patchUser}
                 />
               ) : (
-                <Redirect to={url} />
+                <Redirect to={route.$} />
               );
             }}
           />
-          <Route path={`${path}/edit-questions`}>
-            <OpenQuestionsModal {...user} backHref={url} onSave={patchUser} />
+          <Route path={path + route.editQuestions.template}>
+            <OpenQuestionsModal
+              {...user}
+              backHref={route.$}
+              onSave={patchUser}
+            />
           </Route>
         </>
       )}

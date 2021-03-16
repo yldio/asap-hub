@@ -19,7 +19,6 @@ const newsProps = () => ({
     'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
   ),
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),
-  href: '#',
 });
 
 const eventProps = () => ({
@@ -31,7 +30,6 @@ const eventProps = () => ({
     'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
   ),
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),
-  href: '#',
 });
 
 export const News = () => <NewsAndEventsCard {...newsProps()} />;

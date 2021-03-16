@@ -9,7 +9,6 @@ const team: ComponentProps<typeof NetworkTeams>['teams'][0] = {
   projectTitle: 'Unknown Project Title',
   members: [],
   skills: [],
-  href: 'http://localhost/teams/42',
 };
 const teams = [team, { ...team, id: '43', displayName: 'Unknown 2' }];
 const props: ComponentProps<typeof NetworkTeams> = {

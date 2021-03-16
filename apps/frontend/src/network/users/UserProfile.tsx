@@ -4,17 +4,14 @@ import {
   Route,
   useRouteMatch,
   Redirect,
-  matchPath,
   useLocation,
 } from 'react-router-dom';
-import { join } from 'path';
+import { relative } from 'path';
 import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser, ToastContext } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
+import { network, RouteNode, useRouteParams } from '@asap-hub/routing';
 
-import { DISCOVER_PATH, NETWORK_PATH } from '@asap-hub/frontend/src/routes';
-import { EDIT_PERSONAL_INFO_PATH, EDIT_CONTACT_INFO_PATH } from './routes';
-import { TEAMS_PATH } from '../routes';
 import { useUserById, usePatchUserAvatarById } from './state';
 import Frame from '../../structure/Frame';
 
@@ -44,54 +41,56 @@ const User: React.FC<Record<string, never>> = () => {
       .then(loadEditing);
   }, []);
 
-  const {
-    url,
-    path,
-    params: { id },
-  } = useRouteMatch<{ id: string }>();
-  const tab = matchPath<{ tab: string }>(useLocation().pathname, {
-    path: `${path}/:tab`,
-  })?.params?.tab;
+  const route = network({}).users({}).user;
+  const { path } = useRouteMatch();
+  const { userId } = useRouteParams(route);
+  const { pathname } = useLocation();
 
-  const user = useUserById(id);
+  const tabRoutes = route({ userId });
+  const tabRoute = ([
+    tabRoutes.about,
+    tabRoutes.research,
+    tabRoutes.outputs,
+  ] as ReadonlyArray<
+    RouteNode<
+      string,
+      Record<string, never>,
+      {
+        editPersonalInfo: typeof tabRoutes.about.children.editPersonalInfo;
+        editContactInfo: typeof tabRoutes.about.children.editContactInfo;
+      }
+    >
+  >).find(
+    (possibleTabRoute) =>
+      !relative(possibleTabRoute({}).$, pathname).startsWith('..'),
+  );
+
+  const user = useUserById(userId);
   const currentUser = useCurrentUser();
 
-  const patchUserAvatar = usePatchUserAvatarById(id);
+  const patchUserAvatar = usePatchUserAvatarById(userId);
   const [avatarSaving, setAvatarSaving] = useState(false);
   const toast = useContext(ToastContext);
 
   const isOwnProfile = currentUser?.id === user?.id;
 
   if (user) {
-    const teams = user.teams.map(({ proposal, ...team }) => ({
-      ...team,
-      href: `${NETWORK_PATH}/${TEAMS_PATH}/${team.id}`,
-      proposalHref: proposal ? `/shared-research/${proposal}` : undefined,
-    }));
-
     const profilePageProps: Omit<
       ComponentProps<typeof UserProfilePage>,
       'children'
     > = {
       ...user,
-      teams,
-
-      discoverHref: DISCOVER_PATH,
-
-      aboutHref: join(url, 'about'),
-      researchHref: join(url, 'research'),
-      outputsHref: join(url, 'outputs'),
 
       editPersonalInfoHref:
-        isOwnProfile && tab
-          ? join(url, tab, EDIT_PERSONAL_INFO_PATH)
+        isOwnProfile && tabRoute
+          ? tabRoute({}).editPersonalInfo({}).$
           : undefined,
       editContactInfoHref:
-        isOwnProfile && tab
-          ? join(url, tab, EDIT_CONTACT_INFO_PATH)
+        isOwnProfile && tabRoute
+          ? tabRoute({}).editContactInfo({}).$
           : undefined,
       onImageSelect:
-        currentUser?.id === id && tab
+        isOwnProfile && tabRoute
           ? (file: File) => {
               setAvatarSaving(true);
               return imageCompression(file, { maxSizeMB: 2 })
@@ -114,23 +113,23 @@ const User: React.FC<Record<string, never>> = () => {
       <UserProfilePage {...profilePageProps}>
         <Frame>
           {user.role === 'Staff' ? (
-            <Staff user={user} teams={teams} />
+            <Staff {...user} />
           ) : (
             <>
               <Switch>
-                <Route path={`${path}/research`}>
-                  <Research user={user} teams={teams} />
+                <Route path={path + tabRoutes.research.template}>
+                  <Research user={user} />
                 </Route>
-                <Route path={`${path}/about`}>
+                <Route path={path + tabRoutes.about.template}>
                   <About user={user} />
                 </Route>
-                <Route path={`${path}/outputs`}>
+                <Route path={path + tabRoutes.outputs.template}>
                   <Outputs />
                 </Route>
-                <Redirect to={join(url, 'research')} />
+                <Redirect to={tabRoutes.research({}).$} />
               </Switch>
-              {isOwnProfile && (
-                <Route path={`${path}/:tab`}>
+              {isOwnProfile && tabRoute && (
+                <Route path={path + tabRoute.template}>
                   <Editing user={user} />
                 </Route>
               )}

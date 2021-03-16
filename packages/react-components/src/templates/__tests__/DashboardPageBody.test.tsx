@@ -11,24 +11,17 @@ const props: ComponentProps<typeof DashboardPageBody> = {
       created: '2020-09-07T17:36:54Z',
       title: 'News Title',
       type: 'News',
-      href: '/news-and-events/55724942-3408-4ad6-9a73-14b92226ffb6',
     },
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb77',
       created: '2020-09-07T17:36:54Z',
       title: 'Event Title',
       type: 'Event',
-      href: '/news-and-events/55724942-3408-4ad6-9a73-14b92226ffb77',
     },
   ],
   pages: [createPageResponse('1'), createPageResponse('2')],
-  hrefDiscoverAsap: '/discover',
-  hrefSharedResearch: '/shared-research',
-  hrefNewsAndEvents: '/news-and-events',
-  hrefProfile: '/network/users/uuid',
-  hrefTeamsNetwork: '/network/teams',
-  hrefTeamWorkspace: '/network/teams/uuid',
-  hrefUsersNetwork: '/network/users',
+  userId: '42',
+  teamId: '1337',
 };
 
 it('renders multiple news cards', () => {

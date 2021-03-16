@@ -7,6 +7,7 @@ import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+import { network } from '@asap-hub/routing';
 
 import Network from '../Network';
 import { getUsers } from '../users/api';
@@ -25,7 +26,7 @@ const renderNetworkPage = async (pathname: string, query = '') => {
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
-              <Route path={'/network'}>
+              <Route path={network.template}>
                 <Network />
               </Route>
             </MemoryRouter>
@@ -45,7 +46,7 @@ describe('the network page', () => {
   describe('when toggling from teams to users', () => {
     it('changes the placeholder', async () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
-        '/network/teams',
+        network({}).teams({}).$,
       );
 
       expect(
@@ -65,7 +66,7 @@ describe('the network page', () => {
 
     it('preserves only the query text', async () => {
       const { getByText, getByRole } = await renderNetworkPage(
-        '/network/teams',
+        network({}).teams({}).$,
         '?searchQuery=test123&filter=123',
       );
       const searchBox = getByRole('searchbox') as HTMLInputElement;
@@ -88,7 +89,7 @@ describe('the network page', () => {
   describe('when toggling from users to teams', () => {
     it('changes the placeholder', async () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
-        '/network/users',
+        network({}).users({}).$,
       );
 
       expect(
@@ -107,7 +108,7 @@ describe('the network page', () => {
     });
     it('preserves only query text', async () => {
       const { getByText, getByRole } = await renderNetworkPage(
-        '/network/users',
+        network({}).users({}).$,
         'searchQuery=test123&filter=123',
       );
       const searchBox = getByRole('searchbox') as HTMLInputElement;
@@ -128,7 +129,7 @@ describe('the network page', () => {
   });
 
   it('allows typing in search queries', async () => {
-    const { getByRole } = await renderNetworkPage('/network/users');
+    const { getByRole } = await renderNetworkPage(network({}).users({}).$);
     const searchBox = getByRole('searchbox') as HTMLInputElement;
 
     userEvent.type(searchBox, 'test123');
@@ -137,7 +138,7 @@ describe('the network page', () => {
 
   it('allows selection of filters', async () => {
     const { getByText, getByLabelText } = await renderNetworkPage(
-      '/network/users',
+      network({}).users({}).$,
     );
 
     userEvent.click(getByText('Filters'));
@@ -156,7 +157,7 @@ describe('the network page', () => {
 
   it('reads filters from url', async () => {
     const { getByText, getByLabelText } = await renderNetworkPage(
-      '/network/users',
+      network({}).users({}).$,
       '?filter=Lead+PI+(Core Leadership)',
     );
 

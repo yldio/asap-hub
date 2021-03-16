@@ -1,5 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
+import { logout } from '@asap-hub/routing';
 
 import {
   perRem,
@@ -9,6 +10,7 @@ import {
 } from '../pixels';
 import { Divider, NavigationLink, Caption, Anchor } from '../atoms';
 import { teamIcon, userIcon, feedbackIcon, logoutIcon } from '../icons';
+import { mailToFeedback } from '../mail';
 
 const containerStyles = css({
   minWidth: '312px',
@@ -44,9 +46,6 @@ const bottomLinksStyles = css({
 export interface UserNavigationProps {
   readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
-  readonly settingsHref: string;
-  readonly feedbackHref: string;
-  readonly logoutHref: string;
   readonly termsHref: string;
   readonly privacyPolicyHref: string;
   readonly aboutHref: string;
@@ -54,8 +53,6 @@ export interface UserNavigationProps {
 const UserNavigation: React.FC<UserNavigationProps> = ({
   userProfileHref,
   teams,
-  feedbackHref,
-  logoutHref,
   termsHref,
   privacyPolicyHref,
   aboutHref,
@@ -77,18 +74,14 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
     </ul>
     <Divider />
     <ul css={listStyles}>
-      {/* <li>
-        <NavigationLink href={settingsHref} icon={settingsIcon}>
-          Settings
-        </NavigationLink>
-      </li> */}
+      {/* settings could go here */}
       <li>
-        <NavigationLink href={feedbackHref} icon={feedbackIcon}>
+        <NavigationLink href={mailToFeedback()} icon={feedbackIcon}>
           Give Feedback
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={logoutHref} icon={logoutIcon}>
+        <NavigationLink href={logout({}).$} icon={logoutIcon}>
           Log Out
         </NavigationLink>
       </li>

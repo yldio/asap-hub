@@ -10,12 +10,10 @@ export default {
 export const Normal = () => (
   <TeamProfileWorkspace
     {...createTeamResponse()}
-    newToolHref="#"
     tools={[
       {
         name: 'My Tool',
         url: 'https://example.com/tool',
-        editHref: '#',
         description: 'Tool Description',
       },
     ]}

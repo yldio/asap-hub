@@ -25,7 +25,6 @@ type UserProfileStaffProps = ComponentProps<typeof UserProfileStaffBackground> &
     readonly teams: ReadonlyArray<
       Omit<ComponentProps<typeof UserProfileBackground>, 'firstName'>
     >;
-    readonly discoverHref: string;
   };
 
 const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
@@ -36,7 +35,6 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
   skillsDescription,
   orcidWorks,
   questions,
-  discoverHref,
   reachOut,
   responsibilities,
 }) => (
@@ -45,7 +43,6 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
       card: (
         <UserProfileStaffBackground
           firstName={firstName}
-          discoverHref={discoverHref}
           reachOut={reachOut}
           responsibilities={responsibilities}
         />

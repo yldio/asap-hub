@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
-import { UserResponse, UserTeam } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
+import { discover, network } from '@asap-hub/routing';
 
 import { Link, Paragraph } from '../atoms';
 import { locationIcon } from '../icons';
@@ -29,20 +30,14 @@ const paragraphStyles = css({
 
 type UserProfilePersonalTextProps = Pick<
   UserResponse,
-  'institution' | 'jobTitle' | 'location'
-> & {
-  readonly discoverHref: string;
-  readonly role: UserResponse['role'];
-  readonly teams: ReadonlyArray<UserTeam & { href: string }>;
-};
-
+  'institution' | 'jobTitle' | 'location' | 'teams' | 'role'
+>;
 const UserProfilePersonalText: React.FC<UserProfilePersonalTextProps> = ({
   institution,
   location,
   jobTitle,
   teams,
   role,
-  discoverHref,
 }) => (
   <div>
     <p css={paragraphStyles}>
@@ -52,13 +47,16 @@ const UserProfilePersonalText: React.FC<UserProfilePersonalTextProps> = ({
       {role === 'Staff' ? (
         <>
           <br />
-          ASAP Staff on <Link href={discoverHref}>Team ASAP</Link>
+          ASAP Staff on <Link href={discover({}).$}>Team ASAP</Link>
         </>
       ) : null}
-      {teams.map(({ id, role: teamRole, href, displayName }) => (
+      {teams.map(({ id, role: teamRole, displayName }) => (
         <React.Fragment key={id}>
           <br />
-          {teamRole} on <Link href={href}>Team {displayName}</Link>
+          {teamRole} on{' '}
+          <Link href={network({}).teams({}).team({ teamId: id }).$}>
+            Team {displayName}
+          </Link>
         </React.Fragment>
       ))}
     </p>

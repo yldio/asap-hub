@@ -13,7 +13,7 @@ export const Normal = () => (
     singleColumn={boolean('Force Single Column', false)}
     members={createListUserResponse(
       number('Number of members', 6),
-    ).items.map((member) => ({ ...member, href: '#', teams: [] }))}
+    ).items.map((member) => ({ ...member, teams: [] }))}
   />
 );
 
@@ -23,10 +23,9 @@ export const WithTeam = () => (
     members={createListUserResponse(number('Number of members', 6)).items.map(
       (member) => ({
         ...member,
-        href: '#',
         teams: Array(number('Number of teams', 1))
           .fill(null)
-          .map((_, i) => ({ displayName: `${i + 1}`, href: '#' })),
+          .map((_, i) => ({ id: `${i}`, displayName: `${i + 1}` })),
       }),
     )}
   />

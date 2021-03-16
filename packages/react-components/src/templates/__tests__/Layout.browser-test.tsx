@@ -4,26 +4,16 @@ import userEvent from '@testing-library/user-event';
 import domToPlaywright from 'dom-to-playwright';
 
 import Layout from '../Layout';
-import { createMailTo } from '../../mail';
 import { largeDesktopScreen } from '../../pixels';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
 
-  sharedResearchHref: '/shared-research',
-  networkHref: '/network',
-  newsAndEventsHref: '/news-and-events',
-  discoverAsapHref: '/discover',
-
   userProfileHref: '/profile',
   teams: [],
-  settingsHref: '/settings',
-  feedbackHref: createMailTo('test@test.science'),
-  logoutHref: '/logout',
   termsHref: '/terms',
   privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
-  eventsHref: '/events',
 };
 
 afterEach(async () => {

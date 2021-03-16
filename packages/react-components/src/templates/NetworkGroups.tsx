@@ -16,8 +16,8 @@ const NetworkGroups: React.FC<NetworkGroupsProps> = ({
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
-    {groups.map(({ id, ...group }) => (
-      <React.Fragment key={id}>
+    {groups.map((group) => (
+      <React.Fragment key={group.id}>
         <GroupCard {...group} />
       </React.Fragment>
     ))}

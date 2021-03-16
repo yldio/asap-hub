@@ -9,6 +9,7 @@ export default {
 
 export const Normal = () => (
   <PeopleCard
+    id="u42"
     displayName={text('Display Name', 'Phillip Mars, PhD')}
     createdDate={new Date(
       date('Created Date', new Date(2020, 6, 12, 14, 32)),
@@ -18,8 +19,7 @@ export const Normal = () => (
     lastName={text('Last Name', 'Mars')}
     location={text('Location', 'New Haven, Connecticut')}
     teams={Array(number('Number of Teams', 1)).fill({
-      id: '42',
-      href: '#42',
+      id: 't42',
       role: text('Role', 'Researcher'),
       displayName: text('Team Name', 'A'),
     })}
@@ -28,7 +28,6 @@ export const Normal = () => (
       'Avatar URL',
       'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
     )}
-    href="#"
     role={select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee')}
   />
 );

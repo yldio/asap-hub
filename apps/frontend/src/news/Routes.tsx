@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { NewsAndEventsPage } from '@asap-hub/react-components';
+import { news } from '@asap-hub/routing';
 
 import Frame from '../structure/Frame';
 
@@ -24,7 +25,10 @@ const NewsAndEvents: React.FC<Record<string, never>> = () => {
           </Frame>
         </NewsAndEventsPage>
       </Route>
-      <Route path={`${path}/:id`} component={NewsOrEventPage} />
+      <Route
+        path={path + news({}).article.template}
+        component={NewsOrEventPage}
+      />
     </Switch>
   );
 };

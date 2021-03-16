@@ -3,15 +3,15 @@ import { Switch, Route } from 'react-router-dom';
 import { useSetRecoilState, RecoilRoot, useResetRecoilState } from 'recoil';
 import { NotFoundPage } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
-
 import {
-  DISCOVER_PATH,
-  NETWORK_PATH,
-  LOGOUT_PATH,
-  NEWS_AND_EVENTS_PATH,
-  SHARED_RESEARCH_PATH,
-  EVENTS_PATH,
-} from './routes';
+  network,
+  discover,
+  sharedResearch,
+  logout,
+  news,
+  events,
+} from '@asap-hub/routing';
+
 import { auth0State } from './auth/state';
 import Logout from './auth/Logout';
 
@@ -58,22 +58,22 @@ const GuardedApp: React.FC<Record<string, never>> = () => {
       <Route exact path="/">
         <Dashboard />
       </Route>
-      <Route path={LOGOUT_PATH}>
+      <Route path={logout.template}>
         <Logout />
       </Route>
-      <Route path={DISCOVER_PATH}>
+      <Route path={discover.template}>
         <Discover />
       </Route>
-      <Route path={NEWS_AND_EVENTS_PATH}>
+      <Route path={news.template}>
         <NewsAndEvents />
       </Route>
-      <Route path={NETWORK_PATH}>
+      <Route path={network.template}>
         <Network />
       </Route>
-      <Route path={SHARED_RESEARCH_PATH}>
+      <Route path={sharedResearch.template}>
         <SharedResearch />
       </Route>
-      <Route path={EVENTS_PATH}>
+      <Route path={events.template}>
         <Events />
       </Route>
       <Route>

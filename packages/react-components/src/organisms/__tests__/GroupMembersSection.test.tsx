@@ -18,7 +18,6 @@ it('renders a list of leaders', async () => {
             teams: [],
           },
           role: 'Chair',
-          href: '#0',
         },
         {
           user: {
@@ -27,7 +26,6 @@ it('renders a list of leaders', async () => {
             teams: [],
           },
           role: 'Project Manager',
-          href: '#1',
         },
       ]}
       teams={[]}
@@ -43,10 +41,7 @@ it('shows the number of teams', async () => {
   const { getByText } = render(
     <GroupMembersSection
       leaders={[]}
-      teams={createListTeamResponse(1).items.map((team) => ({
-        ...team,
-        href: team.id,
-      }))}
+      teams={createListTeamResponse(1).items}
     />,
   );
   expect(getByText(/teams/i).textContent).toMatchInlineSnapshot(`"Teams (1)"`);
@@ -58,17 +53,23 @@ it('renders a list of teams', async () => {
         {
           ...createListTeamResponse(1).items[0],
           displayName: 'One',
-          href: '#0',
+          id: 't0',
         },
         {
           ...createListTeamResponse(2).items[1],
           displayName: 'Two',
-          href: '#1',
+          id: 't1',
         },
       ]}
       leaders={[]}
     />,
   );
-  expect(getByText(/team.one/i).closest('a')).toHaveAttribute('href', '#0');
-  expect(getByText(/team.two/i).closest('a')).toHaveAttribute('href', '#1');
+  expect(getByText(/team.one/i).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/t0$/),
+  );
+  expect(getByText(/team.two/i).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/t1$/),
+  );
 });

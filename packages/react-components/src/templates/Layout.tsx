@@ -152,15 +152,7 @@ type LayoutProps = {
   readonly children: React.ReactNode;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
-const Layout: React.FC<LayoutProps> = ({
-  children,
-  discoverAsapHref,
-  sharedResearchHref,
-  networkHref,
-  newsAndEventsHref,
-  eventsHref,
-  ...userNavProps
-}) => {
+const Layout: React.FC<LayoutProps> = ({ children, ...userNavProps }) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -213,13 +205,7 @@ const Layout: React.FC<LayoutProps> = ({
           css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}
         >
           <React.Suspense fallback={<Loading />}>
-            <MainNavigation
-              discoverAsapHref={discoverAsapHref}
-              sharedResearchHref={sharedResearchHref}
-              networkHref={networkHref}
-              newsAndEventsHref={newsAndEventsHref}
-              eventsHref={eventsHref}
-            />
+            <MainNavigation />
           </React.Suspense>
         </div>
         <div

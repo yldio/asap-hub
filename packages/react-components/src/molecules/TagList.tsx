@@ -52,7 +52,7 @@ const overflowContentStyles = css({
 });
 
 interface TagListProps {
-  tags: string[];
+  tags: ReadonlyArray<string>;
   min?: number;
   max?: number;
 }

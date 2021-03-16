@@ -1,31 +1,49 @@
 import React from 'react';
-import { StaticRouter, MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
+import { network } from '@asap-hub/routing';
 
 import About from '../About';
 import { patchUser } from '../api';
 
 jest.mock('../api');
-
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
-const wrapper: React.FC<Record<string, never>> = ({ children }) => (
+const id = '42';
+const makeWrapper = (
+  userId = id,
+  currentUserId = userId,
+): React.FC<Record<string, never>> => ({ children }) => (
   <RecoilRoot>
     <React.Suspense fallback="loading">
-      <Auth0Provider user={{ id: '42' }}>
-        <StaticRouter>{children}</StaticRouter>
+      <Auth0Provider user={{ id: currentUserId }}>
+        <MemoryRouter
+          initialEntries={[network({}).users({}).user({ userId }).about({}).$]}
+        >
+          <Route
+            path={
+              network.template +
+              network({}).users.template +
+              network({}).users({}).user.template +
+              network({}).users({}).user({ userId }).about.template
+            }
+          >
+            {children}
+          </Route>
+        </MemoryRouter>
       </Auth0Provider>
     </React.Suspense>
   </RecoilRoot>
 );
+const wrapper = makeWrapper();
 
 it('renders the profile about section', async () => {
   const { findByText } = render(
-    <About user={{ ...createUserResponse(), biography: 'Some Bio' }} />,
+    <About user={{ ...createUserResponse(), id, biography: 'Some Bio' }} />,
     { wrapper },
   );
   expect(await findByText('Some Bio')).toBeVisible();
@@ -33,10 +51,8 @@ it('renders the profile about section', async () => {
 
 it("does not allow editing somebody else's profile", async () => {
   const { queryByText, queryByLabelText } = render(
-    <Auth0Provider user={{ id: '42' }}>
-      <About user={{ ...createUserResponse(), id: '1337' }} />
-    </Auth0Provider>,
-    { wrapper },
+    <About user={{ ...createUserResponse(), id }} />,
+    { wrapper: makeWrapper(id, '1337') },
   );
   await waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument());
   expect(queryByLabelText(/edit/i)).not.toBeInTheDocument();
@@ -44,9 +60,7 @@ it("does not allow editing somebody else's profile", async () => {
 
 it('allows editing your own profile', async () => {
   const { findAllByLabelText } = render(
-    <Auth0Provider user={{ id: '42' }}>
-      <About user={{ ...createUserResponse(), id: '42' }} />
-    </Auth0Provider>,
+    <About user={{ ...createUserResponse(), id }} />,
     { wrapper },
   );
   expect(await findAllByLabelText(/edit/i)).not.toHaveLength(0);
@@ -55,22 +69,13 @@ it('allows editing your own profile', async () => {
 describe('when editing the biography', () => {
   const user = {
     ...createUserResponse(),
-    id: '42',
+    id,
     biography: 'My Bio',
   };
 
   let result!: RenderResult;
   beforeEach(async () => {
-    result = render(
-      <Auth0Provider user={{ id: '42' }}>
-        <MemoryRouter initialEntries={['/about']}>
-          <Route path="/about">
-            <About user={user} />
-          </Route>
-        </MemoryRouter>
-      </Auth0Provider>,
-      { wrapper },
-    );
+    result = render(<About user={user} />, { wrapper });
 
     await result.findAllByLabelText(/edit/i);
   });
@@ -104,7 +109,7 @@ describe('when editing the biography', () => {
     } = result;
 
     userEvent.click(getByLabelText(/edit.+bio/i));
-    await userEvent.type(getByDisplayValue('My Bio'), ' 2');
+    userEvent.type(getByDisplayValue('My Bio'), ' 2');
     expect(getByDisplayValue('My Bio 2')).toBeVisible();
 
     userEvent.click(getByText(/save/i));

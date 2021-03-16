@@ -1,10 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { WelcomePage } from '@asap-hub/react-components';
 import { useAuth0 } from '@asap-hub/react-context';
+import { useRouteParams, welcome } from '@asap-hub/routing';
 
 const Welcome: React.FC<Record<string, never>> = () => {
-  const { code } = useParams<{ code: string }>();
+  const { code } = useRouteParams(welcome({}).invited);
 
   const { loginWithRedirect } = useAuth0();
 

@@ -12,7 +12,6 @@ const props = (): ComponentProps<typeof NewsAndEventsPageBody> => ({
       created: new Date().toISOString(),
       type: 'News' as const,
       title: "Coordinating different approaches into Parkinson's",
-      href: '#',
     },
     {
       id: 'uuid-2',
@@ -20,7 +19,6 @@ const props = (): ComponentProps<typeof NewsAndEventsPageBody> => ({
       type: 'Event' as const,
       title:
         'Welcome to the ASAP Collaborative Initiative: The Science & the scientists',
-      href: '#',
     },
   ],
 });

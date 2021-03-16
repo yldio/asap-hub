@@ -6,14 +6,11 @@ import { disable } from '@asap-hub/flags';
 import GroupProfileHeader from '../GroupProfileHeader';
 
 const props: ComponentProps<typeof GroupProfileHeader> = {
+  id: '42',
   name: 'Group Name',
   numberOfTeams: 2,
-  groupTeamsHref: '#teams',
   lastModifiedDate: '2021-01-01',
-  aboutHref: '/about',
-  calendarHref: '/calendar',
-  upcomingHref: '/upcoming',
-  pastHref: '/past',
+  groupTeamsHref: '#teams',
 };
 
 it('renders the name as a heading', () => {

@@ -8,8 +8,4 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-export const Normal = () => (
-  <EventsPage calendarHref="" upcomingHref="" pastHref="">
-    Page Content
-  </EventsPage>
-);
+export const Normal = () => <EventsPage>Page Content</EventsPage>;

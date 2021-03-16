@@ -3,20 +3,17 @@ import nock from 'nock';
 import { User } from '@asap-hub/auth';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
-import { MemoryRouter, Route } from 'react-router-dom';
 
 import Dashboard from '../Dashboard';
 
 import { API_BASE_URL } from '../../config';
 
-const renderDashboard = async (user?: Partial<User>) => {
+const renderDashboard = async (user: Partial<User>) => {
   const result = render(
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={user}>
-          <MemoryRouter initialEntries={['/']}>
-            <Route exact path="/" component={Dashboard} />
-          </MemoryRouter>
+          <Dashboard />
         </authTestUtils.LoggedIn>
       </authTestUtils.WhenReady>
     </authTestUtils.Auth0Provider>,
@@ -41,7 +38,7 @@ test('renders dashboard header', async () => {
       pages: [],
     });
 
-  const { getByText } = await renderDashboard();
+  const { getByText } = await renderDashboard({});
   expect(getByText(/welcome/i, { selector: 'h1' })).toBeVisible();
 });
 
@@ -74,37 +71,4 @@ test('renders dashboard with news and events', async () => {
   });
   expect(getByText(/john/i, { selector: 'h1' })).toBeVisible();
   expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
-});
-
-test('renders dashboard with correct links', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/dashboard')
-    .once()
-    .reply(200, {
-      newsAndEvents: [],
-      pages: [],
-    });
-
-  const { queryAllByRole } = await renderDashboard({
-    teams: [
-      {
-        id: 'uuid',
-        displayName: 'Team',
-        role: 'Lead PI (Core Leadership)',
-      },
-    ],
-  });
-
-  expect(queryAllByRole('link').map((a) => a.getAttribute('href'))).toEqual([
-    '/network/users',
-    '/shared-research',
-    '/discover',
-    '/news-and-events',
-    '/network/teams/uuid',
-    '/network/users/testuserid',
-    'mailto:grants@parkinsonsroadmap.org?subject=ASAP+Hub%3A+Grant+support',
-    'mailto:techsupport@asap.science?subject=ASAP+Hub%3A+Tech+support',
-  ]);
 });

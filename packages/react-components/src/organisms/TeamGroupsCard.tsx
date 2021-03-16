@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import css from '@emotion/css';
 import { GroupResponse } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
+
 import {
   Card,
   Paragraph,
@@ -74,7 +76,7 @@ const viewMoreStyles = css({
 });
 
 type TeamGroupsCardProps = {
-  groups: Array<GroupResponse & { href: string }>;
+  readonly groups: ReadonlyArray<GroupResponse>;
 };
 
 const TeamGroupsCard: React.FC<TeamGroupsCardProps> = ({ groups }) => {
@@ -89,9 +91,9 @@ const TeamGroupsCard: React.FC<TeamGroupsCardProps> = ({ groups }) => {
       <ul css={listStyles}>
         {groups
           .slice(0, showMore ? groups.length : LESS_GROUP_LIMIT)
-          .map(({ teams, description, name, href }, index) => (
+          .map(({ id, teams, description, name }, index) => (
             <li css={listElementStyles} key={`team-group-${index}`}>
-              <Anchor href={href}>
+              <Anchor href={network({}).groups({}).group({ groupId: id }).$}>
                 <Headline4>{name}</Headline4>
               </Anchor>
               <Paragraph accent="lead">{description}</Paragraph>

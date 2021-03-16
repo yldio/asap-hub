@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { UserResponse, UserTeam } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
@@ -54,13 +55,8 @@ interface MembersListProps {
   readonly members: ReadonlyArray<
     Pick<UserResponse, 'id' | 'displayName'> &
       Partial<Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl'>> & {
-        readonly href: string;
         readonly role: string;
-        readonly teams: ReadonlyArray<
-          Pick<UserTeam, 'displayName'> & {
-            readonly href: string;
-          }
-        >;
+        readonly teams: ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
       }
   >;
   singleColumn?: boolean;
@@ -70,46 +66,52 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(({ id, href, displayName, role, teams, ...member }) => (
-      <li key={id} css={{ display: 'contents' }}>
-        <Anchor href={href} css={{ display: 'contents' }}>
-          <div css={avatarStyles}>
-            <Avatar
-              firstName={member.firstName}
-              lastName={member.lastName}
-              imageUrl={member.avatarUrl}
-            />
-          </div>
-        </Anchor>
-        <Anchor href={href} css={{ display: 'contents' }}>
-          <div css={nameStyles}>{displayName}</div>
-        </Anchor>
-        <Anchor href={href} css={{ display: 'contents' }}>
-          <div
+    {members.map(({ id, displayName, role, teams, ...member }) => {
+      const href = network({}).users({}).user({ userId: id }).$;
+
+      return (
+        <li key={id} css={{ display: 'contents' }}>
+          <Anchor href={href} css={{ display: 'contents' }}>
+            <div css={avatarStyles}>
+              <Avatar
+                firstName={member.firstName}
+                lastName={member.lastName}
+                imageUrl={member.avatarUrl}
+              />
+            </div>
+          </Anchor>
+          <Anchor href={href} css={{ display: 'contents' }}>
+            <div css={nameStyles}>{displayName}</div>
+          </Anchor>
+          <Anchor href={href} css={{ display: 'contents' }}>
+            <div
+              css={[
+                addToColumnStyles,
+                singleColumn || multiColumnAddToColumnStyles,
+                roleStyles,
+              ]}
+            >
+              {role}
+            </div>
+          </Anchor>
+          <ul
             css={[
               addToColumnStyles,
               singleColumn || multiColumnAddToColumnStyles,
-              roleStyles,
+              teamStyles,
             ]}
           >
-            {role}
-          </div>
-        </Anchor>
-        <ul
-          css={[
-            addToColumnStyles,
-            singleColumn || multiColumnAddToColumnStyles,
-            teamStyles,
-          ]}
-        >
-          {teams.map((team, i) => (
-            <li key={i}>
-              <Link href={team.href}>Team {team.displayName}</Link>
-            </li>
-          ))}
-        </ul>
-      </li>
-    ))}
+            {teams.map((team) => (
+              <li key={team.id}>
+                <Link href={network({}).teams({}).team({ teamId: team.id }).$}>
+                  Team {team.displayName}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </li>
+      );
+    })}
   </ul>
 );
 

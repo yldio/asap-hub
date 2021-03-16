@@ -5,7 +5,6 @@ import * as authTestUtils from './auth-test-utils';
 
 export { messages, pixels, text, authTestUtils };
 
-export * from './mail';
 export * from './icons';
 export * from './images';
 export * from './theme';

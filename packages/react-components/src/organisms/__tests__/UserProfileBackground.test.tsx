@@ -10,7 +10,6 @@ it('generates a heading', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      href="/network/teams/42"
     />,
   );
   expect(getByText(/role.on.asap/i).tagName).toBe('H2');
@@ -23,7 +22,6 @@ it('renders links to team page twice', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      href="/network/teams/42"
     />,
   );
 
@@ -45,7 +43,6 @@ it('renders proposal if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      href="/network/teams/42"
     />,
   );
 
@@ -58,8 +55,7 @@ it('renders proposal if present', () => {
       displayName="Phillip, M"
       role="Collaborating PI"
       approach="text"
-      href="/network/teams/42"
-      proposalHref="/shared-research/uuid"
+      proposal="42"
     />,
   );
 
@@ -73,7 +69,6 @@ it('renders responsibilities if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      href="/network/teams/42"
     />,
   );
   expect(queryAllByText(/responsibilities/i)).toHaveLength(0);
@@ -85,7 +80,6 @@ it('renders responsibilities if present', () => {
       displayName="Phillip, M"
       role="Collaborating PI"
       responsibilities="text"
-      href="/network/teams/42"
     />,
   );
 
@@ -99,7 +93,6 @@ it('renders approach if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      href="/network/teams/42"
     />,
   );
 
@@ -112,7 +105,6 @@ it('renders approach if present', () => {
       displayName="Phillip, M"
       role="Collaborating PI"
       approach="text"
-      href="/network/teams/42"
     />,
   );
 

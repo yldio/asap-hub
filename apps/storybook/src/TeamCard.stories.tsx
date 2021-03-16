@@ -32,7 +32,6 @@ const teamCardProps = () => {
     skills: [...Array(numberOfSkills).fill(skill, 0, numberOfSkills)],
     members: [...Array(numberOfMembers).fill(member, 0, numberOfMembers)],
     lastModifiedDate: '2020-07-31T11:45:14Z',
-    href: '#',
   };
 };
 

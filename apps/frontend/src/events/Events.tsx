@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { EventsPage } from '@asap-hub/react-components';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
+import { events } from '@asap-hub/routing';
 
 import Frame from '../structure/Frame';
 import Event from './Event';
-import {
-  EVENTS_UPCOMING_PATH,
-  EVENTS_CALENDAR_PATH,
-  EVENTS_PAST_PATH,
-} from './routes';
 
 const loadCalendars = () =>
   import(/* webpackChunkName: "events-calendars" */ './calendar/Calendars');
@@ -22,54 +18,40 @@ const Events: React.FC<Record<string, never>> = () => {
   useEffect(() => {
     loadCalendars().then(loadEventList);
   }, []);
+
   const { path } = useRouteMatch();
-  const calendarHref = `${path}/${EVENTS_CALENDAR_PATH}`;
-  const upcomingHref = `${path}/${EVENTS_UPCOMING_PATH}`;
-  const pastHref = `${path}/${EVENTS_PAST_PATH}`;
   const [time] = useState(new Date());
 
   return (
     <Switch>
-      <Route exact path={calendarHref}>
-        <EventsPage
-          calendarHref={calendarHref}
-          upcomingHref={upcomingHref}
-          pastHref={pastHref}
-        >
+      <Route exact path={path + events({}).calendar.template}>
+        <EventsPage>
           <Frame>
             <Calendars />
           </Frame>
         </EventsPage>
       </Route>
 
-      <Route exact path={upcomingHref}>
-        <EventsPage
-          calendarHref={calendarHref}
-          upcomingHref={upcomingHref}
-          pastHref={pastHref}
-        >
+      <Route exact path={path + events({}).upcoming.template}>
+        <EventsPage>
           <Frame>
             <EventList currentTime={time} />
           </Frame>
         </EventsPage>
       </Route>
-      <Route exact path={pastHref}>
-        <EventsPage
-          calendarHref={calendarHref}
-          upcomingHref={upcomingHref}
-          pastHref={pastHref}
-        >
+      <Route exact path={path + events({}).past.template}>
+        <EventsPage>
           <Frame>
             <EventList past currentTime={time} />
           </Frame>
         </EventsPage>
       </Route>
-      <Route path={`${path}/:id`}>
+      <Route path={path + events({}).event.template}>
         <Frame>
           <Event />
         </Frame>
       </Route>
-      <Redirect to={calendarHref} />
+      <Redirect to={events({}).calendar({}).$} />
     </Switch>
   );
 };

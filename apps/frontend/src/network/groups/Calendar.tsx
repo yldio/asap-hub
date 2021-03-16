@@ -1,8 +1,5 @@
 import { GroupProfileCalendar } from '@asap-hub/react-components';
-import { ComponentProps } from 'react';
 
-const Calendar: React.FC<ComponentProps<
-  typeof GroupProfileCalendar
->> = GroupProfileCalendar;
+const Calendar = GroupProfileCalendar;
 
 export default Calendar;

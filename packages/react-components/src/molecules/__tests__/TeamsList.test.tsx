@@ -7,8 +7,8 @@ it('generates an entry for each team', () => {
   const { getAllByRole } = render(
     <TeamsList
       teams={[
-        { displayName: 'One', href: '#0' },
-        { displayName: 'Two', href: '#1' },
+        { displayName: 'One', id: 't0' },
+        { displayName: 'Two', id: 't1' },
       ]}
     />,
   );
@@ -22,7 +22,10 @@ it('generates an entry for each team', () => {
 
 it('links to the teams', () => {
   const { getByText } = render(
-    <TeamsList teams={[{ displayName: 'One', href: '#0' }]} />,
+    <TeamsList teams={[{ displayName: 'One', id: 't0' }]} />,
   );
-  expect(getByText(/team.one/i).closest('a')).toHaveAttribute('href', '#0');
+  expect(getByText(/team.one/i).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/t0$/),
+  );
 });

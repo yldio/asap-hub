@@ -29,7 +29,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   skills,
   pointOfContact,
   members,
-  proposalHref,
+  proposalURL,
   teamGroupsCard,
 }) => (
   <div css={styles}>
@@ -37,7 +37,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       <TeamProfileOverview
         projectTitle={projectTitle}
         projectSummary={projectSummary}
-        proposalHref={proposalHref}
+        proposalURL={proposalURL}
       />
     ) : null}
     {skills.length ? <ProfileSkills skills={skills} /> : null}

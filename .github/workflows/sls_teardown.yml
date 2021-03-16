@@ -21,4 +21,5 @@ jobs:
       - name: Rebuild dependencies
         run: yarn rebuild
       - name: Remove CF Stack
+        if: ${{ env.SLS_STAGE != 'production' }}
         run: yarn sls remove --verbose

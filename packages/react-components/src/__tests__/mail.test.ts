@@ -9,13 +9,13 @@ describe('createMailTo', () => {
   it('generates a mailto link, when an single email is provided', () => {
     const mailTo = new URL(createMailTo('test@example.com'));
     expect(mailTo.protocol).toBe('mailto:');
-    expect(mailTo.href).toBe('mailto:test@example.com');
+    expect(mailTo.pathname).toBe('test@example.com');
   });
 
   it('generates a mailto link, when a list with a single email is provided', () => {
     const mailTo = new URL(createMailTo(['test@example.com']));
     expect(mailTo.protocol).toBe('mailto:');
-    expect(mailTo.href).toBe('mailto:test@example.com');
+    expect(mailTo.pathname).toBe('test@example.com');
   });
 
   it('generates a mailto link, when multiple emails are provided', () => {
@@ -23,7 +23,7 @@ describe('createMailTo', () => {
       createMailTo(['test@example.com', 'test@example.com']),
     );
     expect(mailTo.protocol).toBe('mailto:');
-    expect(mailTo.href).toBe('mailto:test@example.com,test@example.com');
+    expect(mailTo.pathname).toBe('test@example.com,test@example.com');
   });
 
   it('escapes the email address', () => {

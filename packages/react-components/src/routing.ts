@@ -1,5 +1,16 @@
 import { History } from 'history';
 import { useHistory, useLocation } from 'react-router-dom';
+import { searchQueryParam } from '@asap-hub/routing';
+
+export const queryParamString = (searchQuery: string | undefined): string => {
+  let searchQueryParamString = '';
+  if (searchQuery) {
+    searchQueryParamString = `?${new URLSearchParams({
+      [searchQueryParam]: searchQuery,
+    }).toString()}`;
+  }
+  return searchQueryParamString;
+};
 
 export const useHasRouter = (): boolean => {
   try {

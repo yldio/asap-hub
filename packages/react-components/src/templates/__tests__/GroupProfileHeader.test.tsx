@@ -1,4 +1,6 @@
 import React, { ComponentProps } from 'react';
+import { StaticRouter } from 'react-router-dom';
+import { network, searchQueryParam } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
 import { disable } from '@asap-hub/flags';
@@ -66,4 +68,19 @@ it('renders the navigation', () => {
   expect(
     getAllByRole('listitem').map(({ textContent }) => textContent),
   ).toEqual(['About', 'Calendar', 'Upcoming Events', 'Past Events']);
+});
+
+it('preserves the search query when navigating', () => {
+  const { getByText } = render(
+    <StaticRouter
+      location={network({}).groups({}).group({ groupId: '42' }).upcoming({}).$}
+    >
+      <GroupProfileHeader {...props} searchQuery="searchterm" />
+    </StaticRouter>,
+  );
+  expect(
+    new URL(getByText(/past/i).closest('a')!.href).searchParams.get(
+      searchQueryParam,
+    ),
+  ).toBe('searchterm');
 });

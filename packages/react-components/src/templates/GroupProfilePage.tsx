@@ -4,10 +4,8 @@ import css from '@emotion/css';
 import GroupProfileHeader from './GroupProfileHeader';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { steel } from '../colors';
 
 const mainStyles = css({
-  borderTop: `1px solid ${steel.rgb}`,
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(10)}`,
 });
 

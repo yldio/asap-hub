@@ -24,13 +24,9 @@ export const Normal = () => {
   };
   return (
     <StaticRouter key={activeTab} location={routes[activeTab]}>
-      <NetworkPage
-        page={activeTab}
-        usersHref={routes.users}
-        teamsHref={routes.teams}
-        groupsHref={routes.groups}
-        searchQuery={text('Search Query', '')}
-      />
+      <NetworkPage page={activeTab} searchQuery={text('Search Query', '')}>
+        Page Content
+      </NetworkPage>
     </StaticRouter>
   );
 };

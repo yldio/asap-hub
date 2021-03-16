@@ -9,15 +9,23 @@ import { usePagination, usePaginationParams } from '../hooks';
 type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
+
+  readonly searchQuery: string;
 };
-const EventList: React.FC<EventListProps> = ({ currentTime, past }) => {
-  const { currentPage, pageSize } = usePaginationParams();
+const EventList: React.FC<EventListProps> = ({
+  currentTime,
+  past,
+  searchQuery,
+}) => {
   const time = subHours(
     currentTime,
     EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
   ).toISOString();
 
+  const { currentPage, pageSize } = usePaginationParams();
+
   const { items, total } = useEvents({
+    searchQuery,
     ...(past
       ? {
           before: time,

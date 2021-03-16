@@ -1,4 +1,5 @@
 import { useHistory, useLocation } from 'react-router-dom';
+import { searchQueryParam } from '@asap-hub/routing';
 import { usePaginationParams } from './pagination';
 
 export const useSearch = () => {
@@ -8,9 +9,7 @@ export const useSearch = () => {
   const { resetPagination } = usePaginationParams();
 
   const filters = new Set<string>(currentUrlParams.getAll('filter'));
-  const searchQuery = currentUrlParams.get('searchQuery') || '';
-
-  const searchQueryParams = new URLSearchParams(searchQuery && { searchQuery });
+  const searchQuery = currentUrlParams.get(searchQueryParam) || '';
 
   const toggleFilter = (filter: string) => {
     resetPagination();
@@ -28,14 +27,13 @@ export const useSearch = () => {
 
     const newUrlParams = new URLSearchParams(history.location.search);
     newSearchQuery
-      ? newUrlParams.set('searchQuery', newSearchQuery)
-      : newUrlParams.delete('searchQuery');
+      ? newUrlParams.set(searchQueryParam, newSearchQuery)
+      : newUrlParams.delete(searchQueryParam);
 
     history.replace({ search: newUrlParams.toString() });
   };
   return {
     searchQuery,
-    searchQueryParams,
     setSearchQuery,
     filters,
     toggleFilter,

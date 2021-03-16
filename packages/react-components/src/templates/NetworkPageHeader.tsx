@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import { TeamRole, Role } from '@asap-hub/model';
+import { network } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
 import { perRem } from '../pixels';
@@ -10,6 +11,7 @@ import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
 import { TabNav, SearchField } from '../molecules';
 import { teamIcon, userIcon, groupsIcon } from '../icons';
+import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
@@ -44,12 +46,8 @@ type NetworkPageHeaderProps = (
   | NetworkTeamsOrGroupsPageHeaderProps
   | NetworkPeoplePageHeaderProps
 ) & {
-  teamsHref: string;
-  usersHref: string;
-  groupsHref: string;
-
   searchQuery: string;
-  onChangeSearch?: (newQuery: string) => void;
+  onChangeSearchQuery?: (newSearchQuery: string) => void;
 };
 
 const userFilters: Option<TeamRole | Role>[] = [
@@ -63,14 +61,12 @@ const userFilters: Option<TeamRole | Role>[] = [
 
 const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
   page,
-  teamsHref,
-  usersHref,
-  groupsHref,
 
-  onChangeSearch,
-  onChangeFilter,
   searchQuery,
+  onChangeSearchQuery,
+
   filters,
+  onChangeFilter,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
@@ -82,13 +78,15 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
         </Paragraph>
       </div>
       <TabNav>
-        <TabLink href={usersHref}>
+        <TabLink href={network({}).users({}).$ + queryParamString(searchQuery)}>
           <span css={iconStyles}>{userIcon}</span>People
         </TabLink>
-        <TabLink href={teamsHref}>
+        <TabLink href={network({}).teams({}).$ + queryParamString(searchQuery)}>
           <span css={iconStyles}>{teamIcon}</span>Teams
         </TabLink>
-        <TabLink href={groupsHref}>
+        <TabLink
+          href={network({}).groups({}).$ + queryParamString(searchQuery)}
+        >
           <span css={iconStyles}>{groupsIcon}</span>Groups
         </TabLink>
       </TabNav>
@@ -96,7 +94,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
     <div css={controlsStyles}>
       {page === 'users' ? (
         <SearchAndFilter
-          onChangeSearch={onChangeSearch}
+          onChangeSearch={onChangeSearchQuery}
           searchPlaceholder="Enter name, keyword, institution, …"
           searchQuery={searchQuery}
           onChangeFilter={onChangeFilter}
@@ -112,7 +110,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
               : 'Search for a group…'
           }
           value={searchQuery}
-          onChange={onChangeSearch}
+          onChange={onChangeSearchQuery}
         />
       )}
     </div>

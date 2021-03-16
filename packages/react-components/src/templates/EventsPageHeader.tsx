@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 import { isEnabled } from '@asap-hub/flags';
 import { events } from '@asap-hub/routing';
@@ -8,6 +8,8 @@ import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { TabNav } from '../molecules';
+import { EventSearch } from '../organisms';
+import { queryParamString } from '../routing';
 
 const visualHeaderStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} 0`,
@@ -19,7 +21,15 @@ const textStyles = css({
   maxWidth: `${610 / perRem}em`,
 });
 
-const EventsPageHeader: React.FC = () => (
+const controlsStyles = css({
+  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
+});
+
+type EventsPageHeaderProps = ComponentProps<typeof EventSearch>;
+const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
+  searchQuery,
+  onChangeSearchQuery,
+}) => (
   <header>
     <div css={visualHeaderStyles}>
       <Display styleAsHeading={2}>Calendar and Events</Display>
@@ -32,13 +42,27 @@ const EventsPageHeader: React.FC = () => (
         <TabNav>
           <TabLink href={events({}).calendar({}).$}>Calendar</TabLink>
           {isEnabled('UPCOMING_EVENTS') && (
-            <TabLink href={events({}).upcoming({}).$}>Upcoming Events</TabLink>
+            <TabLink
+              href={events({}).upcoming({}).$ + queryParamString(searchQuery)}
+            >
+              Upcoming Events
+            </TabLink>
           )}
           {isEnabled('PAST_EVENTS') && (
-            <TabLink href={events({}).past({}).$}>Past Events</TabLink>
+            <TabLink
+              href={events({}).past({}).$ + queryParamString(searchQuery)}
+            >
+              Past Events
+            </TabLink>
           )}
         </TabNav>
       </div>
+    </div>
+    <div css={controlsStyles}>
+      <EventSearch
+        searchQuery={searchQuery}
+        onChangeSearchQuery={onChangeSearchQuery}
+      />
     </div>
   </header>
 );

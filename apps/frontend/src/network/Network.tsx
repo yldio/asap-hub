@@ -42,35 +42,21 @@ const Network: React.FC<Record<string, never>> = () => {
   }, []);
 
   const { path } = useRouteMatch();
-  const {
-    searchQuery,
-    searchQueryParams,
-    setSearchQuery,
-    filters,
-    toggleFilter,
-  } = useSearch();
-  const [searchQueryDebounce] = useDebounce(searchQuery, 400);
-  const searchQueryParamString = `?${searchQueryParams.toString()}`;
-
-  const usersHref = network({}).users({}).$ + searchQueryParamString;
-  const teamsHref = network({}).teams({}).$ + searchQueryParamString;
-  const groupsHref = network({}).groups({}).$ + searchQueryParamString;
+  const { searchQuery, setSearchQuery, filters, toggleFilter } = useSearch();
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 400);
 
   return (
     <Switch>
       <Route exact path={path + network({}).users.template}>
         <NetworkPage
           page="users"
-          usersHref={usersHref}
-          teamsHref={teamsHref}
-          groupsHref={groupsHref}
           searchQuery={searchQuery}
-          onChangeSearch={setSearchQuery}
+          onChangeSearchQuery={setSearchQuery}
           filters={filters}
           onChangeFilter={toggleFilter}
         >
           <SearchFrame>
-            <UserList filters={filters} searchQuery={searchQueryDebounce} />
+            <UserList filters={filters} searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
       </Route>
@@ -85,14 +71,11 @@ const Network: React.FC<Record<string, never>> = () => {
       <Route exact path={path + network({}).teams.template}>
         <NetworkPage
           page="teams"
-          usersHref={usersHref}
-          teamsHref={teamsHref}
-          groupsHref={groupsHref}
           searchQuery={searchQuery}
-          onChangeSearch={setSearchQuery}
+          onChangeSearchQuery={setSearchQuery}
         >
           <SearchFrame>
-            <TeamList searchQuery={searchQueryDebounce} />
+            <TeamList searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
       </Route>
@@ -107,14 +90,11 @@ const Network: React.FC<Record<string, never>> = () => {
       <Route exact path={path + network({}).groups.template}>
         <NetworkPage
           page="groups"
-          usersHref={usersHref}
-          teamsHref={teamsHref}
-          groupsHref={groupsHref}
           searchQuery={searchQuery}
-          onChangeSearch={setSearchQuery}
+          onChangeSearchQuery={setSearchQuery}
         >
           <SearchFrame>
-            <GroupList searchQuery={searchQueryDebounce} />
+            <GroupList searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
       </Route>

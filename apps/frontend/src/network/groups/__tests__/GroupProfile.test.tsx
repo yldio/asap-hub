@@ -3,23 +3,35 @@ import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createGroupResponse } from '@asap-hub/fixtures';
+import {
+  createGroupResponse,
+  createListEventResponse,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
 import GroupProfile from '../GroupProfile';
 import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { refreshGroupState } from '../state';
 import { getGroup } from '../api';
+import { getGroupEvents } from '../events/api';
 
 jest.mock('../api');
+jest.mock('../events/api');
 
 const mockGetGroup = getGroup as jest.MockedFunction<typeof getGroup>;
+const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
+  typeof getGroupEvents
+>;
+
 const renderGroupProfile = async (
   groupResponse = createGroupResponse(),
   { groupId = groupResponse.id } = {},
 ) => {
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,
+  );
+  mockGetGroupEvents.mockImplementation(async () =>
+    createListEventResponse(5, { groupCount: 1 }),
   );
 
   const result = render(
@@ -85,10 +97,56 @@ it('generates a different deep link every time to avoid conflicts', async () => 
   expect(href2).not.toEqual(href1);
 });
 
-it('switches to the calendar tab', async () => {
-  const { findByText, findAllByText } = await renderGroupProfile(
-    createGroupResponse(),
-  );
-  userEvent.click(await findByText(/calendar/i, { selector: 'nav a *' }));
-  expect(await findAllByText(/subscribe/i)).not.toHaveLength(0);
+describe('the calendar tab', () => {
+  it('can be switched to', async () => {
+    const { findByText, findAllByText } = await renderGroupProfile(
+      createGroupResponse(),
+    );
+    userEvent.click(await findByText(/calendar/i, { selector: 'nav a *' }));
+    expect(await findAllByText(/subscribe/i)).not.toHaveLength(0);
+  });
+});
+
+describe('the upcoming events tab', () => {
+  it('can be switched to', async () => {
+    const { findByText } = await renderGroupProfile();
+    userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
+    expect(await findByText(/results/i)).toBeVisible();
+  });
+
+  it('can search for events', async () => {
+    const { findByRole, findByText } = await renderGroupProfile({
+      ...createGroupResponse(),
+      id: '42',
+    });
+    userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
+    userEvent.type(await findByRole('searchbox'), 'searchterm');
+    await waitFor(() =>
+      expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
+        '42',
+        expect.objectContaining({ searchQuery: 'searchterm' }),
+        expect.anything(),
+      ),
+    );
+  });
+});
+
+describe('the past events tab', () => {
+  it('can be switched to', async () => {
+    const { findByText } = await renderGroupProfile();
+    userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
+    expect(await findByText(/results/i)).toBeVisible();
+  });
+
+  it('preserves the search query from another tab', async () => {
+    const { findByRole, findByText } = await renderGroupProfile();
+
+    userEvent.click(await findByText(/upcoming/i, { selector: 'nav a *' }));
+    userEvent.type(await findByRole('searchbox'), 'searchterm');
+
+    userEvent.click(await findByText(/past/i, { selector: 'nav a *' }));
+    expect(await findByText(/results/i)).toBeVisible();
+
+    expect(await findByRole('searchbox')).toHaveValue('searchterm');
+  });
 });

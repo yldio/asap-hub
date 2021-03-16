@@ -298,23 +298,6 @@
               "isRequiredOnPublish": false,
               "isHalfWidth": false
             }
-          },
-          {
-            "name": "label",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Label",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": false
-            }
           }
         ]
       },

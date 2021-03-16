@@ -28,7 +28,6 @@ export interface Event<TCalendar = string, TThumbnail = string> {
   meetingMaterials?: {
     title: string;
     url: string;
-    label?: string;
   }[];
 
   // Future event details

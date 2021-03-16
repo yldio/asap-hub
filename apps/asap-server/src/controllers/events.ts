@@ -185,7 +185,6 @@ flatData{
   meetingMaterialsPermanentlyUnavailable
   meetingMaterials {
     url
-    label
     title
   }
   calendar {

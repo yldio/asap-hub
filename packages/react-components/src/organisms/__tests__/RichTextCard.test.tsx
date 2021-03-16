@@ -33,7 +33,7 @@ it('renders the rich text notes', () => {
   expect(getByText('Google').tagName).toBe('A');
 });
 
-it('is collapsible when condition true', () => {
+it('is collapsible when prop set', () => {
   const { getByText, queryByText } = render(
     <RichTextCard {...props} collapsible>
       text

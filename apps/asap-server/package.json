@@ -51,6 +51,7 @@
     "pino": "^6.11.2",
     "pino-http": "^5.5.0",
     "pino-lambda": "^1.2.3",
+    "pino-noir": "^2.2.1",
     "pump": "^3.0.0",
     "serverless-http": "^2.6.1"
   },

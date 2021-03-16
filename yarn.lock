@@ -130,6 +130,7 @@ __metadata:
     pino: ^6.11.2
     pino-http: ^5.5.0
     pino-lambda: ^1.2.3
+    pino-noir: ^2.2.1
     pump: ^3.0.0
     serverless-http: ^2.6.1
     supertest: ^6.1.1
@@ -23342,6 +23343,13 @@ fsevents@^2.1.3:
   peerDependencies:
     pino: ^6.0.0
   checksum: 5683f5fa0f2618e3dfc6ceb99815eaf37fb3fe42f2dec58d070bca2d72ea124c8c0c424c67e69a6479b6977c0314e83c1964d41106cd0baac92696ed9610838d
+  languageName: node
+  linkType: hard
+
+"pino-noir@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "pino-noir@npm:2.2.1"
+  checksum: e6312db9a642857581b6ae5b1a855e85fc297b9f20b5e9cf6a027f768aaf900d15a040e4dbe9b2801bd7d839c3604db8929feb2f5d99529b7752a191e5f44125
   languageName: node
   linkType: hard
 

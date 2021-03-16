@@ -6772,6 +6772,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:1.2.3"
       ],
       [
+        "pino-noir",
+        "npm:2.2.1"
+      ],
+      [
         "pino-std-serializers",
         "npm:3.2.0"
       ],
@@ -9393,6 +9397,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino", "npm:6.11.2"],
             ["pino-http", "npm:5.5.0"],
             ["pino-lambda", "virtual:5da02b4ff6be3989fced9b33ba119621a222905804e80c6b3a354a870cef3430f0670c2e53f419bfbda91736139b31cb94d90c5ba2d1d9c3b767365fdfac250f#npm:1.2.3"],
+            ["pino-noir", "npm:2.2.1"],
             ["pump", "npm:3.0.0"],
             ["serverless-http", "npm:2.6.1"],
             ["supertest", "npm:6.1.1"],
@@ -39811,6 +39816,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packagePeers": [
             "@types/pino",
             "pino"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["pino-noir", [
+        ["npm:2.2.1", {
+          "packageLocation": "./.yarn/cache/pino-noir-npm-2.2.1-976abf8b98-e6312db9a6.zip/node_modules/pino-noir/",
+          "packageDependencies": [
+            ["pino-noir", "npm:2.2.1"]
           ],
           "linkType": "HARD",
         }]

@@ -6,7 +6,8 @@ import { Tag } from '../atoms';
 
 const listStyles = css({
   padding: 0,
-  marginBlockStart: 0,
+  margin: 0,
+
   listStyle: 'none',
 
   display: 'flex',

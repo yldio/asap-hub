@@ -29,7 +29,9 @@ interface ToastCardProps {
 }
 const ToastCard: React.FC<ToastCardProps> = ({ children, toastText }) => (
   <Card padding={false}>
-    <div css={paddingStyles}>{children}</div>
+    <div css={[paddingStyles, toastText && { paddingBottom: 0 }]}>
+      {children}
+    </div>
     {toastText && (
       <>
         <Divider />

@@ -28,7 +28,7 @@ const imageStyle = css({
 
 const imageContainerStyle = css({
   flexShrink: 0,
-  borderRadius: `${12 / perRem}em`,
+  borderRadius: `${6 / perRem}em`,
   height: `${184 / perRem}em`,
   marginRight: `${24 / perRem}em`,
   width: `${184 / perRem}em`,

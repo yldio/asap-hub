@@ -13,7 +13,7 @@ const TITLE_LIMIT = 55;
 
 const imageContainerStyle = css({
   flexShrink: 0,
-  borderRadius: `${12 / perRem}em`,
+  borderRadius: `${6 / perRem}em`,
   height: `${102 / perRem}em`,
   marginRight: `${24 / perRem}em`,
   marginTop: `${12 / perRem}em`,

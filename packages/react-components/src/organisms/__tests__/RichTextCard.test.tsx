@@ -1,5 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import RichTextCard from '../RichTextCard';
 
 const props: ComponentProps<typeof RichTextCard> = {
@@ -30,4 +32,14 @@ it('renders the rich text notes', () => {
     />,
   );
   expect(getByText('Google').tagName).toBe('A');
+});
+
+it('is collapsible when prop set', () => {
+  const { getByText, queryByText } = render(
+    <RichTextCard {...props} text="example text" collapsible />,
+  );
+  expect(queryByText('example text')).not.toBeVisible();
+
+  userEvent.click(getByText(/show/i));
+  expect(getByText('example text')).toBeVisible();
 });

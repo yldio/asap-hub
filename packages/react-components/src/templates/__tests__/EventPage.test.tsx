@@ -45,8 +45,8 @@ it('renders the join event section', () => {
 });
 
 it('renders the event notes', () => {
-  const { getByText } = render(<EventPage {...props} notes="My Notes" />);
-  expect(getByText('My Notes')).toBeVisible();
+  const { getByRole } = render(<EventPage {...props} notes="My Notes" />);
+  expect(getByRole('heading', { name: 'Notes', level: 2 })).toBeVisible();
 });
 
 it('renders the video recording', () => {

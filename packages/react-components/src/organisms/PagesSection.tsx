@@ -24,7 +24,7 @@ const gridContainerStyles = css({
 
 const Pages: React.FC<PagesProps> = ({ title, pages }) => (
   <section>
-    <Display styleAsHeading={2}>{title}</Display>
+    <Display styleAsHeading={3}>{title}</Display>
     <div css={gridContainerStyles}>
       {pages.map((page, idx) => (
         <PageCard key={`page-${idx}`} {...page} />

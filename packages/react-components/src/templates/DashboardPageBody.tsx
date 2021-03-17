@@ -42,7 +42,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       />
     ) : null}
     <section>
-      <Display styleAsHeading={2}>You may want to try</Display>
+      <Display styleAsHeading={3}>You may want to try</Display>
       <div css={containerStyles}>
         <Card>
           <ul>

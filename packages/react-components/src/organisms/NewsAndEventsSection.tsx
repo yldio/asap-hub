@@ -24,7 +24,7 @@ const NewsAndEventsSection: React.FC<LatestNewsProps> = ({
   title,
 }) => (
   <section>
-    <Display styleAsHeading={2}>{title}</Display>
+    <Display styleAsHeading={3}>{title}</Display>
     <div css={styles}>
       {newsAndEvents.map((newsAndEvent) => (
         <NewsAndEventsCard key={newsAndEvent.id} {...newsAndEvent} />

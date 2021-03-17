@@ -3,7 +3,6 @@ import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { GroupProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
-import { useDebounce } from 'use-debounce';
 
 import { useGroupById } from './state';
 import Frame from '../../structure/Frame';
@@ -31,8 +30,7 @@ const GroupProfile: React.FC = () => {
   const [groupTeamsElementId] = useState(`group-teams-${uuid()}`);
   const [currentTime] = useState(new Date());
 
-  const { searchQuery, setSearchQuery } = useSearch();
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 400);
+  const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   const route = network({}).groups({}).group;
   const { groupId } = useRouteParams(route);

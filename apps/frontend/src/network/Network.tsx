@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
-import { useDebounce } from 'use-debounce';
 
 import { useSearch } from '../hooks';
 import { SearchFrame } from '../structure/Frame';
@@ -42,8 +41,13 @@ const Network: React.FC<Record<string, never>> = () => {
   }, []);
 
   const { path } = useRouteMatch();
-  const { searchQuery, setSearchQuery, filters, toggleFilter } = useSearch();
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 400);
+  const {
+    searchQuery,
+    debouncedSearchQuery,
+    setSearchQuery,
+    filters,
+    toggleFilter,
+  } = useSearch();
 
   return (
     <Switch>

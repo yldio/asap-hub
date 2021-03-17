@@ -1,5 +1,6 @@
 import { useHistory, useLocation } from 'react-router-dom';
 import { searchQueryParam } from '@asap-hub/routing';
+import { useDebounce } from 'use-debounce';
 import { usePaginationParams } from './pagination';
 
 export const useSearch = () => {
@@ -32,8 +33,12 @@ export const useSearch = () => {
 
     history.replace({ search: newUrlParams.toString() });
   };
+
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 400);
+
   return {
     searchQuery,
+    debouncedSearchQuery,
     setSearchQuery,
     filters,
     toggleFilter,

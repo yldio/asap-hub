@@ -47,10 +47,10 @@ const fetchEvents = async (
 
   const res = await calendar.events.list(params).catch((err) => {
     if (err.code === '410') {
-      logger.warn('Token is Gone, doing full sync', err);
+      logger.warn(err, 'Token is Gone, doing full sync');
       return fetchEvents(googleCalendarId, auth, syncEvent, undefined); // syncToken "Gone", do full sync
     }
-    logger.error('The API returned an error: ', err);
+    logger.error(err, 'The API returned an error');
     throw err;
   });
 
@@ -61,7 +61,7 @@ const fetchEvents = async (
     const syncResults = await Promise.allSettled(
       eventItems.map((e) => syncEvent(e, defaultCalendarTimezone)),
     );
-    logger.debug('Sync events results:', syncResults);
+    logger.debug({ syncResults }, 'Sync events results');
 
     if (res.data.nextPageToken) {
       // get next page

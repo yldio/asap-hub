@@ -2,7 +2,6 @@ import React, {
   createElement,
   HTMLAttributes,
   AnchorHTMLAttributes,
-  ImgHTMLAttributes,
 } from 'react';
 import css from '@emotion/css';
 
@@ -18,6 +17,7 @@ import { Paragraph, Headline4, Headline5, Headline6, Link } from '../atoms';
 import { isTextChildren, isAllowedChildren } from '../text';
 import { ErrorCard } from '../molecules';
 import { perRem } from '../pixels';
+import { charcoal, lead } from '../colors';
 
 const headline1Spacing = css({ paddingTop: `${24 / perRem}em` });
 const iframeContainer = css({
@@ -40,7 +40,7 @@ const iframeContainer = css({
 
 const components = {
   p: ({ children }: HTMLAttributes<HTMLParagraphElement>) => (
-    <Paragraph>{children}</Paragraph>
+    <Paragraph accent="lead">{children}</Paragraph>
   ),
   iframe: (props: HTMLAttributes<HTMLIFrameElement>) => (
     <span css={iframeContainer}>
@@ -95,11 +95,6 @@ const components = {
     }
     return <Link href={href}>{children}</Link>;
   },
-  img: ({ ...props }: ImgHTMLAttributes<HTMLImageElement>) => (
-    // Set in Tiny/Squidex and up to editor discretion
-    // eslint-disable-next-line jsx-a11y/alt-text
-    <img {...props} css={{ height: 'auto', maxWidth: '100%' }} />
-  ),
 } as Record<string, ComponentLike<ReturnType<typeof createElement>>>;
 
 interface RichTextProps {
@@ -107,15 +102,19 @@ interface RichTextProps {
   readonly text: string;
 }
 
-const styles = css`
-  .toc-level {
-    list-style: none;
-  }
-
-  .toc-level-1 {
-    padding: 0;
-  }
-`;
+const styles = css({
+  color: lead.rgb,
+  '.toc-level': {
+    listStyle: 'none',
+  },
+  '.toc-level-1': {
+    padding: 0,
+  },
+  'p > strong, h4, h5, h6': {
+    color: charcoal.rgb,
+  },
+  img: { height: 'auto', maxWidth: '100%' },
+});
 
 const RichText: React.FC<RichTextProps> = ({ toc = false, text }) => {
   let processor = unified().use(rehypeHtml, { fragment: true });

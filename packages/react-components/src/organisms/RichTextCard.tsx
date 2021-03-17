@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+
 import { Card, Headline2 } from '../atoms';
 import RichText from './RichText';
 import { Collapsible } from '../molecules';

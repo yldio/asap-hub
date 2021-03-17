@@ -66,7 +66,7 @@ export const webhookCalendarCreatedHandlerFactory = (
               resourceId: null,
             });
           } catch (error) {
-            logger.error('Error during unsubscribing from the calendar', error);
+            logger.error(error, 'Error during unsubscribing from the calendar');
           }
         }
       }
@@ -92,7 +92,7 @@ export const webhookCalendarCreatedHandlerFactory = (
             expirationDate: expiration,
           });
         } catch (error) {
-          logger.error('Error subscribing to the calendar', error);
+          logger.error(error, 'Error subscribing to the calendar');
 
           return {
             statusCode: 502,
@@ -150,7 +150,7 @@ export const subscribeToEventChangesFactory = (
     data,
   });
 
-  logger.debug('Google API subscription response', response);
+  logger.debug({ response }, 'Google API subscription response');
 
   return {
     resourceId: response.data.resourceId,
@@ -180,7 +180,7 @@ export const unsubscribeFromEventChangesFactory = (
 
   const response = await client.request({ url, method: 'POST', data });
 
-  logger.debug('Google API unsubscribing response', response);
+  logger.debug({ response }, 'Google API unsubscribing response');
 };
 
 export type UnsubscribeFromEventChanges = ReturnType<

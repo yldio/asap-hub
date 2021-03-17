@@ -35,19 +35,13 @@ describe('Error handling', () => {
       status: 'ERROR',
       message: 'error message',
     });
-    expect(loggerMock.error).toHaveBeenCalledWith(
-      'error message',
-      expect.any(Error),
-    );
+    expect(loggerMock.error).toHaveBeenCalledWith(expect.any(Error));
   });
 
   test('Should log the error and return a custom error status code', async () => {
     const response = await supertest(app).get('/events/custom-error-route');
 
     expect(response.status).toBe(422);
-    expect(loggerMock.error).toHaveBeenCalledWith(
-      'some custom error message',
-      expect.any(CustomError),
-    );
+    expect(loggerMock.error).toHaveBeenCalledWith(expect.any(CustomError));
   });
 });

@@ -16,6 +16,10 @@ const containerStyles = css({
   marginTop: `${24 / perRem}em`,
 });
 
+const listStyles = css({
+  paddingLeft: `${18 / perRem}em`,
+});
+
 type DashboardPageBodyProps = Omit<
   ComponentProps<typeof PagesSection>,
   'title'
@@ -45,7 +49,7 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
       <Display styleAsHeading={3}>You may want to try</Display>
       <div css={containerStyles}>
         <Card>
-          <ul>
+          <ul css={listStyles}>
             <li>
               <Paragraph primary accent="lead">
                 Check out grantee profiles and team pages in the{' '}

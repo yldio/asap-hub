@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import * as opentracing from 'opentracing';
 import lightstep from 'lightstep-tracer';
+import { PinoLambdaLogger } from 'pino-lambda';
 import { promisify } from 'util';
 import {
   APIGatewayProxyStructuredResultV2,
@@ -30,10 +31,14 @@ if (lightstepToken && NODE_ENV !== 'test') {
 
 export const http = (
   fn: (request: lambda.Request) => Promise<lambda.Response>,
+  logger?: PinoLambdaLogger,
 ) => async (
   event: APIGatewayProxyEventV2,
   context?: Context,
 ): Promise<APIGatewayProxyResultV2> => {
+  if (logger) {
+    logger.withRequest(event, context || { awsRequestId: 'none' });
+  }
   if (!context) {
     return lambda.http(fn)(event);
   }

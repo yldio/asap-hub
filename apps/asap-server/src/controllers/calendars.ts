@@ -80,7 +80,7 @@ export default class Calendars implements CalendarController {
     );
 
     if (err) {
-      logger.error('Error fetching calendar by resourceId:', err);
+      logger.error(err, 'Error fetching calendar by resourceId');
       throw Boom.badGateway();
     }
 

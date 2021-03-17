@@ -19,98 +19,96 @@ export const webhookCalendarCreatedHandlerFactory = (
   unsubscribe: UnsubscribeFromEventChanges,
   calendarController: CalendarController,
 ): Handler =>
-  http(
-    async (request: lambda.Request): Promise<lambda.Response> => {
-      validateRequest(request);
+  http(async (request: lambda.Request): Promise<lambda.Response> => {
+    validateRequest(request);
 
-      const bodySchema = Joi.object({
-        type: Joi.string().required(),
-        payload: Joi.object({
-          id: Joi.string().required(),
-          data: Joi.object().required(),
-          dataOld: Joi.object(),
-        })
-          .unknown()
-          .required(),
+    const bodySchema = Joi.object({
+      type: Joi.string().required(),
+      payload: Joi.object({
+        id: Joi.string().required(),
+        data: Joi.object().required(),
+        dataOld: Joi.object(),
       })
         .unknown()
-        .required();
+        .required(),
+    })
+      .unknown()
+      .required();
 
-      const { payload, type: event } = lambda.validate(
-        'body',
-        request.payload,
-        bodySchema,
-      ) as WebhookPayload<Calendar>;
+    const { payload, type: event } = lambda.validate(
+      'body',
+      request.payload,
+      bodySchema,
+    ) as WebhookPayload<Calendar>;
 
-      logger.info(
-        `Received a '${event}' event for the calendar ${payload.data.id.iv}`,
-      );
+    logger.info(
+      `Received a '${event}' event for the calendar ${payload.data.id.iv}`,
+    );
 
-      if (event === 'CalendarsUpdated') {
-        if (
-          !payload.dataOld ||
-          !payload.dataOld.id ||
-          payload.dataOld.id.iv === payload.data.id.iv
-        ) {
-          return {
-            statusCode: 200,
-            payload: payload.data.id,
-          };
-        }
-
-        if (payload.dataOld.resourceId) {
-          try {
-            await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
-
-            await calendarController.update(payload.id, {
-              resourceId: null,
-            });
-          } catch (error) {
-            logger.error('Error during unsubscribing from the calendar', error);
-          }
-        }
-      }
-
-      if (payload.data.id.iv === '') {
-        return {
-          statusCode: 200,
-          payload: {
-            message: 'Subscription skipped due to missing Calendar ID',
-          },
-        };
-      }
-
-      if (['CalendarsCreated', 'CalendarsUpdated'].includes(event)) {
-        try {
-          const { resourceId, expiration } = await subscribe(
-            payload.data.id.iv,
-            payload.id,
-          );
-
-          await calendarController.update(payload.id, {
-            resourceId,
-            expirationDate: expiration,
-          });
-        } catch (error) {
-          logger.error('Error subscribing to the calendar', error);
-
-          return {
-            statusCode: 502,
-            payload: {
-              message: error.message,
-            },
-          };
-        }
-
+    if (event === 'CalendarsUpdated') {
+      if (
+        !payload.dataOld ||
+        !payload.dataOld.id ||
+        payload.dataOld.id.iv === payload.data.id.iv
+      ) {
         return {
           statusCode: 200,
           payload: payload.data.id,
         };
       }
 
-      return { statusCode: 204 };
-    },
-  );
+      if (payload.dataOld.resourceId) {
+        try {
+          await unsubscribe(payload.dataOld.resourceId?.iv, payload.id);
+
+          await calendarController.update(payload.id, {
+            resourceId: null,
+          });
+        } catch (error) {
+          logger.error(error, 'Error during unsubscribing from the calendar');
+        }
+      }
+    }
+
+    if (payload.data.id.iv === '') {
+      return {
+        statusCode: 200,
+        payload: {
+          message: 'Subscription skipped due to missing Calendar ID',
+        },
+      };
+    }
+
+    if (['CalendarsCreated', 'CalendarsUpdated'].includes(event)) {
+      try {
+        const { resourceId, expiration } = await subscribe(
+          payload.data.id.iv,
+          payload.id,
+        );
+
+        await calendarController.update(payload.id, {
+          resourceId,
+          expirationDate: expiration,
+        });
+      } catch (error) {
+        logger.error(error, 'Error subscribing to the calendar');
+
+        return {
+          statusCode: 502,
+          payload: {
+            message: error.message,
+          },
+        };
+      }
+
+      return {
+        statusCode: 200,
+        payload: payload.data.id,
+      };
+    }
+
+    return { statusCode: 204 };
+  }, logger);
 
 export const subscribeToEventChangesFactory = (
   getJWTCredentials: GetJWTCredentials,
@@ -150,7 +148,7 @@ export const subscribeToEventChangesFactory = (
     data,
   });
 
-  logger.debug('Google API subscription response', response);
+  logger.debug({ response }, 'Google API subscription response');
 
   return {
     resourceId: response.data.resourceId,
@@ -180,7 +178,7 @@ export const unsubscribeFromEventChangesFactory = (
 
   const response = await client.request({ url, method: 'POST', data });
 
-  logger.debug('Google API unsubscribing response', response);
+  logger.debug({ response }, 'Google API unsubscribing response');
 };
 
 export type UnsubscribeFromEventChanges = ReturnType<

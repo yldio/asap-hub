@@ -12,7 +12,7 @@ export const errorHandlerFactory = (logger: Logger): ErrorRequestHandler => (
     return next(err);
   }
 
-  logger.error(err.message, err);
+  logger.error(err);
 
   // add error to the trace
   req.span?.log({ 'error.error': err });

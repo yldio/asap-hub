@@ -23,72 +23,70 @@ export const webhookEventUpdatedHandlerFactory = (
   getJWTCredentials: GetJWTCredentials,
   syncCalendarFactory: SyncCalendarFactory,
 ): Handler =>
-  http(
-    async (request: lambda.Request): Promise<lambda.Response> => {
-      const channelToken = request.headers['x-goog-channel-token'];
-      if (!channelToken) {
-        throw Boom.unauthorized('Missing x-goog-channel-token header');
-      }
-      if (channelToken !== googleApiToken) {
-        throw Boom.forbidden('Channel token doesnt match');
-      }
+  http(async (request: lambda.Request): Promise<lambda.Response> => {
+    const channelToken = request.headers['x-goog-channel-token'];
+    if (!channelToken) {
+      throw Boom.unauthorized('Missing x-goog-channel-token header');
+    }
+    if (channelToken !== googleApiToken) {
+      throw Boom.forbidden('Channel token doesnt match');
+    }
 
-      const resourceId = request.headers['x-goog-resource-id'];
-      if (!resourceId) {
-        throw Boom.badRequest('Missing x-goog-resource-id header');
-      }
+    const resourceId = request.headers['x-goog-resource-id'];
+    if (!resourceId) {
+      throw Boom.badRequest('Missing x-goog-resource-id header');
+    }
 
-      const calendar = await calendars
-        .fetchByResouceId(resourceId)
-        .catch((err) => {
-          logger.error(err, 'Error fetching calendar');
-          return undefined;
-        });
-
-      if (!calendar) {
-        throw Boom.badGateway();
-      }
-
-      const squidexCalendarId = calendar.id;
-      const googleCalendarId = calendar.data.id.iv;
-      const syncToken = calendar.data.syncToken?.iv;
-
-      const credentials = await getJWTCredentials().catch((err) => {
-        logger.error(err, 'Error fetching AWS credentials');
+    const calendar = await calendars
+      .fetchByResouceId(resourceId)
+      .catch((err) => {
+        logger.error(err, 'Error fetching calendar');
         return undefined;
       });
 
-      if (!credentials) {
-        throw Boom.badGateway();
-      }
+    if (!calendar) {
+      throw Boom.badGateway();
+    }
 
-      const auth = new Auth.GoogleAuth({
-        scopes: [
-          'https://www.googleapis.com/auth/calendar',
-          'https://www.googleapis.com/auth/calendar.events',
-        ],
-      }).fromJSON(credentials) as Auth.JWT;
+    const squidexCalendarId = calendar.id;
+    const googleCalendarId = calendar.data.id.iv;
+    const syncToken = calendar.data.syncToken?.iv;
 
-      const syncCalendar = syncCalendarFactory(
-        syncToken,
-        syncEventFactory(new Events(), squidexCalendarId),
-        auth,
-      );
-      const nextSyncToken = await syncCalendar(googleCalendarId);
+    const credentials = await getJWTCredentials().catch((err) => {
+      logger.error(err, 'Error fetching AWS credentials');
+      return undefined;
+    });
 
-      if (nextSyncToken) {
-        await calendars
-          .update(squidexCalendarId, { syncToken: nextSyncToken })
-          .catch((err) => {
-            logger.error(err, 'Error updating syncToken');
-          });
-      }
+    if (!credentials) {
+      throw Boom.badGateway();
+    }
 
-      return {
-        statusCode: 200,
-      };
-    },
-  );
+    const auth = new Auth.GoogleAuth({
+      scopes: [
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/calendar.events',
+      ],
+    }).fromJSON(credentials) as Auth.JWT;
+
+    const syncCalendar = syncCalendarFactory(
+      syncToken,
+      syncEventFactory(new Events(), squidexCalendarId),
+      auth,
+    );
+    const nextSyncToken = await syncCalendar(googleCalendarId);
+
+    if (nextSyncToken) {
+      await calendars
+        .update(squidexCalendarId, { syncToken: nextSyncToken })
+        .catch((err) => {
+          logger.error(err, 'Error updating syncToken');
+        });
+    }
+
+    return {
+      statusCode: 200,
+    };
+  }, logger);
 
 export const handler: Handler = webhookEventUpdatedHandlerFactory(
   new Calendars(),

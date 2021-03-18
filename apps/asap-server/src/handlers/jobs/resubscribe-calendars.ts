@@ -23,7 +23,10 @@ export const resubscribeCalendarsHandlerFactory = (
   });
 
   const calendarIds = calendars.map((calendar) => calendar.id);
-  logger.info(`Received the following calendars to resubscribe`, calendarIds);
+  logger.info(
+    { calendarIds },
+    `Received the following calendars to resubscribe`,
+  );
 
   await Promise.allSettled(
     calendars.map(async (calendar) => {
@@ -34,7 +37,7 @@ export const resubscribeCalendarsHandlerFactory = (
             resourceId: null,
           });
         } catch (error) {
-          logger.error('Error during unsubscribing from the calendar', error);
+          logger.error(error, 'Error during unsubscribing from the calendar');
         }
       }
 
@@ -50,7 +53,7 @@ export const resubscribeCalendarsHandlerFactory = (
         });
         logger.info(`Successfully resubscribed the calendar '${calendar.id}`);
       } catch (error) {
-        logger.error('Error during subscribing to the calendar', error);
+        logger.error(error, 'Error during subscribing to the calendar');
       }
     }),
   );

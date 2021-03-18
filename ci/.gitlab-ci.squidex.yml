@@ -26,18 +26,15 @@ setup:squidex-image:
     - sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
     - sq config use $SQUIDEX_APP_NAME
     - sq sync in packages/squidex/schema -t schemas -t rules
-  stage: prepare
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
 
 sync:squidex:dev:
   <<: *tmpl_sync
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-      when: manual
-      allow_failure: true
+  stage: prepare-dev
 
 sync:squidex:production:
   <<: *tmpl_sync
+  stage: prepare-prod
   environment:
     name: production

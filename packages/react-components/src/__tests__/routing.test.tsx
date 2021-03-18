@@ -2,8 +2,26 @@ import React from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 import { renderHook } from '@testing-library/react-hooks';
 import { createMemoryHistory } from 'history';
+import { searchQueryParam } from '@asap-hub/routing';
 
-import { useHasRouter, usePushFromHere, usePushFromPathname } from '../routing';
+import {
+  queryParamString,
+  useHasRouter,
+  usePushFromHere,
+  usePushFromPathname,
+} from '../routing';
+
+describe('queryParamString', () => {
+  it('appends the search query param', () => {
+    expect(
+      new URLSearchParams(queryParamString('searchterm')).get(searchQueryParam),
+    ).toBe('searchterm');
+  });
+
+  it('returns an empty string if no query params needed', () => {
+    expect(queryParamString(undefined)).toBe('');
+  });
+});
 
 describe('useHasRouter', () => {
   it('returns false if there is no Router context', () => {

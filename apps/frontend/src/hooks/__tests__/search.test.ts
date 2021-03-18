@@ -45,34 +45,6 @@ describe('useSearch', () => {
     expect(result.current.filters).toEqual(new Set(['test123', 'test456']));
   });
 
-  it('returns the search query params', () => {
-    const { result } = renderHook(useSearch, {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: ['/test?searchQuery=test123'],
-      },
-    });
-    expect(result.current.searchQueryParams.get('searchQuery')).toBe('test123');
-  });
-  it('returns empty search query params if no search query set', () => {
-    const { result } = renderHook(useSearch, {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: ['/test'],
-      },
-    });
-    expect(result.current.searchQueryParams.has('searchQuery')).toBe(false);
-  });
-  it('does not include filter in the search query params', () => {
-    const { result } = renderHook(useSearch, {
-      wrapper: MemoryRouter,
-      initialProps: {
-        initialEntries: ['/test?searchQuery=test123&filter=test123'],
-      },
-    });
-    expect(result.current.searchQueryParams.has('filter')).toBe(false);
-  });
-
   it('adds filter', () => {
     const { result } = renderHook(() => useSearch(), {
       wrapper: MemoryRouter,

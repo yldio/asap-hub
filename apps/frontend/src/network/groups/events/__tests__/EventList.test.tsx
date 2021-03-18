@@ -8,6 +8,8 @@ import {
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
+import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
+import { subHours } from 'date-fns';
 
 import {
   Auth0Provider,
@@ -19,27 +21,45 @@ import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
 
 jest.mock('../api');
-
 const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
   typeof getGroupEvents
 >;
+
 const id = '42';
+
 const renderGroupEventList = async (
   groupEventsResponse = createListEventResponse(1),
+  searchQuery = '',
   currentTime = new Date(),
   past?: boolean,
 ) => {
-  mockGetGroupEvents.mockResolvedValue(groupEventsResponse);
+  mockGetGroupEvents.mockClear().mockResolvedValue(groupEventsResponse);
 
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
         reset(
           groupEventsState({
+            id,
+            searchQuery,
             currentPage: 0,
             pageSize: DEFAULT_PAGE_SIZE,
-            after: new Date().toISOString(),
+            after: subHours(
+              currentTime,
+              EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+            ).toISOString(),
+          }),
+        );
+        reset(
+          groupEventsState({
             id,
+            searchQuery,
+            currentPage: 0,
+            pageSize: DEFAULT_PAGE_SIZE,
+            before: subHours(
+              currentTime,
+              EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+            ).toISOString(),
           }),
         );
       }}
@@ -47,9 +67,29 @@ const renderGroupEventList = async (
       <React.Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
-            <MemoryRouter initialEntries={[`/${id}`]}>
-              <Route path={network({}).groups({}).group.template}>
-                <EventList past={past} currentTime={currentTime} />
+            <MemoryRouter
+              initialEntries={[
+                network({})
+                  .groups({})
+                  .group({ groupId: id })
+                  [past ? 'past' : 'upcoming']({}).$,
+              ]}
+            >
+              <Route
+                path={
+                  network.template +
+                  network({}).groups.template +
+                  network({}).groups({}).group.template +
+                  network({}).groups({}).group({ groupId: id })[
+                    past ? 'past' : 'upcoming'
+                  ].template
+                }
+              >
+                <EventList
+                  past={past}
+                  currentTime={currentTime}
+                  searchQuery={searchQuery}
+                />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -103,8 +143,19 @@ it('generates group links', async () => {
   );
 });
 
+it('can search for events', async () => {
+  await renderGroupEventList(undefined, 'searchterm');
+  expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
+    id,
+    expect.objectContaining({
+      searchQuery: 'searchterm',
+    }),
+    expect.anything(),
+  );
+});
+
 it('sets after to an hour before now for upcoming events', async () => {
-  await renderGroupEventList(undefined, new Date('2020-01-01T12:00:00Z'));
+  await renderGroupEventList(undefined, '', new Date('2020-01-01T12:00:00Z'));
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
     id,
     expect.objectContaining({
@@ -115,7 +166,12 @@ it('sets after to an hour before now for upcoming events', async () => {
 });
 
 it('sets before to an hour before now and sort parameters for past events', async () => {
-  await renderGroupEventList(undefined, new Date('2020-01-01T12:00:00Z'), true);
+  await renderGroupEventList(
+    undefined,
+    '',
+    new Date('2020-01-01T12:00:00Z'),
+    true,
+  );
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
     id,
     expect.objectContaining({

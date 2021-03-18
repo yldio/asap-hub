@@ -1,6 +1,6 @@
 import React from 'react';
 import { GroupProfilePage } from '@asap-hub/react-components';
-import { text, number, date, select } from '@storybook/addon-knobs';
+import { select, text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 
@@ -17,21 +17,32 @@ export const Normal = () => {
   const activeTab = select(
     'Active Tab',
     {
-      About: route.about({}).$,
-      Calendar: route.calendar({}).$,
-      Upcoming: route.upcoming({}).$,
-      Past: route.past({}).$,
+      About: 'about',
+      Calendar: 'calendar',
+      Upcoming: 'upcoming',
+      Past: 'past',
     },
-    route.about({}).$,
+    'about',
   );
+  const routes = {
+    about: route.about({}).$,
+    calendar: route.calendar({}).$,
+    upcoming: route.upcoming({}).$,
+    past: route.past({}).$,
+  };
   return (
-    <StaticRouter key={activeTab} location={activeTab}>
+    <StaticRouter key={activeTab} location={routes[activeTab]}>
       <GroupProfilePage
         id="42"
-        name={text('Name', 'My Group')}
-        numberOfTeams={number('Number of Teams', 5)}
+        name="My Group"
+        numberOfTeams={5}
         groupTeamsHref="#"
-        lastModifiedDate={new Date(date('Last update')).toISOString()}
+        lastModifiedDate="2021-01-01"
+        searchQuery={
+          activeTab === 'upcoming' || activeTab === 'past'
+            ? text('Search Query', '')
+            : undefined
+        }
       />
     </StaticRouter>
   );

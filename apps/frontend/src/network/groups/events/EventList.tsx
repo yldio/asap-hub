@@ -10,8 +10,14 @@ import { usePaginationParams, usePagination } from '../../../hooks';
 type EventListProps = {
   readonly currentTime: Date;
   readonly past?: boolean;
+
+  readonly searchQuery: string;
 };
-const EventList: React.FC<EventListProps> = ({ currentTime, past }) => {
+const EventList: React.FC<EventListProps> = ({
+  currentTime,
+  past,
+  searchQuery,
+}) => {
   const groupRoute = network({}).groups({}).group;
   const { groupId } = useRouteParams(groupRoute);
   const { currentPage, pageSize } = usePaginationParams();
@@ -22,6 +28,7 @@ const EventList: React.FC<EventListProps> = ({ currentTime, past }) => {
   ).toISOString();
 
   const { items, total } = useGroupEvents(groupId, {
+    searchQuery,
     ...(past
       ? {
           before: time,

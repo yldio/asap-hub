@@ -1,15 +1,13 @@
 import React, { ComponentProps } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { network } from '@asap-hub/routing';
 
 import NetworkPageHeader from '../NetworkPageHeader';
 
 const props: ComponentProps<typeof NetworkPageHeader> = {
   page: 'teams',
-  usersHref: '/users',
-  teamsHref: '/teams',
-  groupsHref: '/groups',
 
   searchQuery: '',
 };
@@ -20,8 +18,8 @@ it('renders the header', () => {
 
 it('alters the search placeholder based on the tab', () => {
   const { getByRole, rerender } = render(
-    <MemoryRouter initialEntries={['/current']}>
-      <NetworkPageHeader {...props} page="teams" teamsHref="/current" />
+    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
+      <NetworkPageHeader {...props} page="teams" />
     </MemoryRouter>,
   );
   expect(
@@ -29,8 +27,8 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, method, …"`);
 
   rerender(
-    <MemoryRouter initialEntries={['/current']}>
-      <NetworkPageHeader {...props} page="users" usersHref="/current" />
+    <MemoryRouter initialEntries={[network({}).users({}).$]}>
+      <NetworkPageHeader {...props} page="users" />
     </MemoryRouter>,
   );
   expect(
@@ -38,8 +36,8 @@ it('alters the search placeholder based on the tab', () => {
   ).toMatchInlineSnapshot(`"Enter name, keyword, institution, …"`);
 
   rerender(
-    <MemoryRouter initialEntries={['/current']}>
-      <NetworkPageHeader {...props} page="groups" groupsHref="/current" />
+    <MemoryRouter initialEntries={[network({}).groups({}).$]}>
+      <NetworkPageHeader {...props} page="groups" />
     </MemoryRouter>,
   );
   expect(
@@ -49,15 +47,15 @@ it('alters the search placeholder based on the tab', () => {
 
 it('shows the filter only on the users tab', () => {
   const { getByText, queryByText, rerender } = render(
-    <MemoryRouter initialEntries={['/current']}>
-      <NetworkPageHeader {...props} page="teams" teamsHref="/current" />
+    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
+      <NetworkPageHeader {...props} page="teams" />
     </MemoryRouter>,
   );
   expect(queryByText(/filters/i)).not.toBeInTheDocument();
 
   rerender(
-    <MemoryRouter initialEntries={['/current']}>
-      <NetworkPageHeader {...props} page="users" usersHref="/current" />
+    <MemoryRouter initialEntries={[network({}).users({}).$]}>
+      <NetworkPageHeader {...props} page="users" />
     </MemoryRouter>,
   );
   expect(getByText(/filters/i)).toBeInTheDocument();
@@ -65,9 +63,9 @@ it('shows the filter only on the users tab', () => {
 
 it('highlights the current tab', () => {
   const { getByText, rerender } = render(
-    <MemoryRouter initialEntries={['/current']}>
-      <NetworkPageHeader {...props} page="teams" teamsHref="/current" />
-    </MemoryRouter>,
+    <StaticRouter key="teams" location={network({}).teams({}).$}>
+      <NetworkPageHeader {...props} page="teams" />
+    </StaticRouter>,
   );
   expect(
     findParentWithStyle(
@@ -83,9 +81,9 @@ it('highlights the current tab', () => {
   ).not.toBe('bold');
 
   rerender(
-    <MemoryRouter initialEntries={['/current']}>
-      <NetworkPageHeader {...props} page="users" usersHref="/current" />
-    </MemoryRouter>,
+    <StaticRouter key="users" location={network({}).users({}).$}>
+      <NetworkPageHeader {...props} page="users" />
+    </StaticRouter>,
   );
   expect(
     findParentWithStyle(
@@ -101,27 +99,19 @@ it('highlights the current tab', () => {
   ).toBe('bold');
 });
 
-it('renders the tab links', async () => {
+it('renders tab links preserving the search query', async () => {
   const { getByText } = render(
-    <NetworkPageHeader
-      {...props}
-      usersHref="/users"
-      teamsHref="/teams"
-      groupsHref="/groups"
-    />,
+    <NetworkPageHeader {...props} searchQuery="searchterm" />,
   );
   expect(
-    getByText(/people/i, { selector: 'nav a *' }).closest('a'),
-  ).toHaveAttribute('href', '/users');
-  expect(
-    getByText(/teams/i, { selector: 'nav a *' }).closest('a'),
-  ).toHaveAttribute('href', '/teams');
-  expect(
-    getByText(/groups/i, { selector: 'nav a *' }).closest('a'),
-  ).toHaveAttribute('href', '/groups');
+    new URL(getByText(/groups/i, { selector: 'nav a *' }).closest('a')!.href),
+  ).toMatchObject({
+    pathname: expect.stringMatching(/groups$/),
+    searchParams: new URLSearchParams({ searchQuery: 'searchterm' }),
+  });
 });
 
-it('Passes query correctly', () => {
+it('renders a search box with the search query', () => {
   const { getByRole } = render(
     <NetworkPageHeader {...props} searchQuery={'test123'} />,
   );

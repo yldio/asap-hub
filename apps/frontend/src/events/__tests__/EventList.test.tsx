@@ -11,11 +11,14 @@ import { eventsState } from '../state';
 import { DEFAULT_PAGE_SIZE } from '../../hooks';
 import EventList from '../EventList';
 
+jest.useFakeTimers();
+
 jest.mock('../api');
 
 const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
 
 const renderEventsListPage = async (
+  searchQuery = '',
   currentTime = new Date(),
   past?: boolean,
 ) => {
@@ -26,6 +29,7 @@ const renderEventsListPage = async (
         reset(
           eventsState({
             currentPage: 0,
+            searchQuery,
             pageSize: DEFAULT_PAGE_SIZE,
             after: new Date().toISOString(),
           }),
@@ -37,7 +41,11 @@ const renderEventsListPage = async (
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
               <Route path="/">
-                <EventList past={past} currentTime={currentTime} />
+                <EventList
+                  searchQuery={searchQuery}
+                  currentTime={currentTime}
+                  past={past}
+                />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -66,8 +74,18 @@ it('renders a list of event cards', async () => {
   ).toEqual(['Event title 0', 'Event title 1']);
 });
 
+it('can search for events', async () => {
+  await renderEventsListPage('searchterm');
+  expect(mockGetEvents).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      searchQuery: 'searchterm',
+    }),
+    expect.anything(),
+  );
+});
+
 it('sets after to an hour before date provided for upcoming events', async () => {
-  await renderEventsListPage(new Date('2020-01-01T12:00:00Z'));
+  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'));
   expect(mockGetEvents).toHaveBeenLastCalledWith(
     expect.objectContaining({
       after: new Date('2020-01-01T11:00:00Z').toISOString(),
@@ -77,7 +95,7 @@ it('sets after to an hour before date provided for upcoming events', async () =>
 });
 
 it('sets before to an hour before date provided for past events', async () => {
-  await renderEventsListPage(new Date('2020-01-01T12:00:00Z'), true);
+  await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'), true);
   expect(mockGetEvents).toHaveBeenLastCalledWith(
     expect.objectContaining({
       before: new Date('2020-01-01T11:00:00Z').toISOString(),

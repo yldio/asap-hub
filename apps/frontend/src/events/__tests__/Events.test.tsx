@@ -11,6 +11,7 @@ import {
   createListEventResponse,
 } from '@asap-hub/fixtures';
 import { events } from '@asap-hub/routing';
+import userEvent from '@testing-library/user-event';
 
 import Events from '../Events';
 import { refreshCalendarsState } from '../calendar/state';
@@ -112,5 +113,16 @@ describe('the events upcoming page', () => {
         (heading) => heading.textContent,
       ),
     ).toEqual(['Event title 0', 'Event title 1']);
+  });
+
+  it('can search for events', async () => {
+    const { getByRole } = await renderEventsPage(events({}).upcoming({}).$);
+    userEvent.type(getByRole('searchbox'), 'searchterm');
+    await waitFor(() =>
+      expect(mockGetEvents).toHaveBeenLastCalledWith(
+        expect.objectContaining({ searchQuery: 'searchterm' }),
+        expect.anything(),
+      ),
+    );
   });
 });

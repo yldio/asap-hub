@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import CalendarList from '../CalendarList';
 
+const props: ComponentProps<typeof CalendarList> = {
+  calendars: [],
+  page: 'calendar',
+};
 it('Renders calender list', () => {
-  const { getByRole } = render(<CalendarList calendars={[]} />);
+  const { getByRole } = render(<CalendarList {...props} />);
   expect(getByRole('heading').textContent).toMatch(/subscribe/i);
 });
 
 it('Renders calender list item with colour', () => {
   const { getByText } = render(
     <CalendarList
+      {...props}
       calendars={[
         {
           color: '#0D7813',
@@ -27,6 +32,7 @@ it('Renders calender list item with colour', () => {
 it('Correctly generates the subscribe link', () => {
   const { getAllByRole } = render(
     <CalendarList
+      {...props}
       calendars={[
         {
           color: '#113F47',
@@ -46,22 +52,18 @@ it('Correctly generates the subscribe link', () => {
   `);
 });
 
-describe('with the singleGroup prop', () => {
-  it('adapts the headline', () => {
-    const { getByRole, rerender } = render(<CalendarList calendars={[]} />);
-    expect(getByRole('heading')).not.toHaveTextContent(/this group/i);
+it('adapts for group page', () => {
+  const { getByRole } = render(<CalendarList {...props} page="group" />);
+  expect(getByRole('heading')).toHaveTextContent(/this group/i);
+});
 
-    rerender(<CalendarList singleGroup calendars={[]} />);
-    expect(getByRole('heading')).toHaveTextContent(/this group/i);
-  });
+it('adapts the headline for event page', () => {
+  const { getByRole } = render(<CalendarList {...props} page="event" />);
+  expect(getByRole('heading')).toHaveTextContent(/this event/i);
+});
 
-  it('hides the description', () => {
-    const { getByText, queryByText, rerender } = render(
-      <CalendarList calendars={[]} />,
-    );
-    expect(getByText(/list of.+groups/i)).toBeVisible();
-
-    rerender(<CalendarList singleGroup calendars={[]} />);
-    expect(queryByText(/list of.+groups/i)).not.toBeInTheDocument();
-  });
+it('adapts the headline and adds a description for calendar page', () => {
+  const { getByText } = render(<CalendarList {...props} page="calendar" />);
+  expect(getByText(/groups on/i)).toBeVisible();
+  expect(getByText(/list of.+groups/i)).toBeVisible();
 });

@@ -13,6 +13,10 @@ const teamMemberStyles = css({
   color: lead.rgb,
   display: 'flex',
   alignItems: 'center',
+  padding: `${12 / perRem}em 0`,
+});
+const tagsPadding = css({
+  paddingBottom: `${12 / perRem}em`,
 });
 const iconStyles = css({
   display: 'inline-block',
@@ -38,7 +42,12 @@ const TeamCard: React.FC<TeamCardProps> = ({
       <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
       <Paragraph accent="lead">{projectTitle}</Paragraph>
     </Anchor>
-    <TagList min={5} max={5} tags={skills} />
+    {!!skills.length && (
+      <div css={tagsPadding}>
+        <TagList min={5} max={5} tags={skills} />
+      </div>
+    )}
+
     <span css={teamMemberStyles}>
       <span css={iconStyles}>{teamIcon} </span>
       {members.length} Team Member

@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 
 import { CalendarList } from '@asap-hub/react-components';
-import { text } from '@storybook/addon-knobs';
+import { select, text } from '@storybook/addon-knobs';
 
 import { googleLegacyCalendarColor } from './colors';
 
@@ -12,6 +12,11 @@ export default {
 
 export const Normal = () => (
   <CalendarList
+    page={select<ComponentProps<typeof CalendarList>['page']>(
+      'Page',
+      ['event', 'calendar', 'group'],
+      'calendar',
+    )}
     calendars={[
       {
         color: googleLegacyCalendarColor('Calendar 1 Color'),

@@ -7,7 +7,12 @@ import { EventInfo, BackLink } from '../molecules';
 import { Card, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { EventMaterials, JoinEvent, EventAbout } from '../organisms';
+import {
+  EventMaterials,
+  JoinEvent,
+  EventAbout,
+  CalendarList,
+} from '../organisms';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -20,13 +25,21 @@ const cardsStyles = css({
 type EventPageProps = ComponentProps<typeof EventInfo> &
   ComponentProps<typeof JoinEvent> &
   ComponentProps<typeof EventAbout> &
-  ComponentProps<typeof EventMaterials> &
-  Pick<EventResponse, 'lastModifiedDate'> & {
+  Pick<
+    EventResponse,
+    | 'lastModifiedDate'
+    | 'notes'
+    | 'videoRecording'
+    | 'presentation'
+    | 'meetingMaterials'
+    | 'calendar'
+  > & {
     readonly backHref: string;
   };
 const EventPage: React.FC<EventPageProps> = ({
   backHref,
   lastModifiedDate,
+  calendar,
   ...props
 }) => (
   <div css={containerStyles}>
@@ -44,6 +57,7 @@ const EventPage: React.FC<EventPageProps> = ({
         <EventAbout {...props} />
       </Card>
       <EventMaterials {...props} />
+      <CalendarList page="event" calendars={[calendar]} />
     </div>
   </div>
 );

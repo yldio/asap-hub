@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { EventsPage } from '@asap-hub/react-components';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { events } from '@asap-hub/routing';
-import { useDebounce } from 'use-debounce';
 
 import Frame from '../structure/Frame';
 import Event from './Event';
@@ -24,8 +23,7 @@ const Events: React.FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
   const [time] = useState(new Date());
 
-  const { searchQuery, setSearchQuery } = useSearch();
-  const [debouncedSearchQuery] = useDebounce(searchQuery, 400);
+  const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
   return (
     <Switch>

@@ -59,11 +59,6 @@ build:ts:
     - source ci/env-setup.sh
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - yarn run build
-
-    - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
-    - export CI_REPO_NAME="$CI_PROJECT_NAME"
-    - export CI_BRANCH="$CI_COMMIT_BRANCH"
-    - yarn bundlewatch
   needs:
     - []
   stage: build
@@ -88,6 +83,16 @@ build:native:
     - echo "no script property found"
   needs: []
   stage: test
+
+check:bundlewatch:
+  <<: *tmpl_test
+  script:
+    - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
+    - export CI_REPO_NAME="$CI_PROJECT_NAME"
+    - export CI_BRANCH="$CI_COMMIT_BRANCH"
+    - yarn bundlewatch
+  needs:
+    - build:ts
 
 check:packages:
   <<: *tmpl_test

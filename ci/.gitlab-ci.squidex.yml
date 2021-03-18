@@ -32,10 +32,6 @@ setup:squidex-image:
 sync:squidex:dev:
   <<: *tmpl_sync
   stage: prepare-dev
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
-      when: manual
-      allow_failure: true
 
 sync:squidex:production:
   <<: *tmpl_sync

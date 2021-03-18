@@ -3,7 +3,6 @@ import {
   vminLinearCalcClamped,
   mobileScreen,
   tabletScreen,
-  vminLinearCalc,
   largeDesktopScreen,
 } from './pixels';
 
@@ -17,7 +16,7 @@ export const paddingStyles = css({
     24,
     'px',
   )}`,
-  paddingRight: `${vminLinearCalc(
+  paddingRight: `${vminLinearCalcClamped(
     mobileScreen,
     24,
     largeDesktopScreen,
@@ -31,7 +30,7 @@ export const paddingStyles = css({
     24,
     'px',
   )}`,
-  paddingLeft: `${vminLinearCalc(
+  paddingLeft: `${vminLinearCalcClamped(
     mobileScreen,
     24,
     largeDesktopScreen,

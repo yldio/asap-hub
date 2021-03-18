@@ -12,9 +12,13 @@ const PageCard: React.FC<PageCardProps> = ({
   linkText,
 }) => (
   <Card>
-    <Headline2 styleAsHeading={3}>{title}</Headline2>
+    <Headline2 styleAsHeading={5}>{title}</Headline2>
     <Paragraph accent="lead">{shortText}</Paragraph>
-    {link ? <Link href={link}>{linkText || 'Read more'}</Link> : null}
+    {link ? (
+      <Paragraph>
+        <Link href={link}>{linkText || 'Read more'}</Link>
+      </Paragraph>
+    ) : null}
   </Card>
 );
 

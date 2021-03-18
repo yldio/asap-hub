@@ -16,7 +16,10 @@ export const Normal = () => (
         ? createGroupResponse({
             leadPiCount: 2,
             projectManagerCount: 2,
-          }).leaders
+          }).leaders.map(({ user }) => ({
+            user,
+            role: boolean('Has PMs', true) ? 'Project Manager' : 'Chair',
+          }))
         : []
     }
     teams={

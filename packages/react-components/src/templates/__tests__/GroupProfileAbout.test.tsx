@@ -57,3 +57,57 @@ it('assigns given id to the members section for deep linking', () => {
     /members/i,
   );
 });
+
+it('renders a call to action button, when PMs are defined on the group', () => {
+  const { getByText } = render(
+    <GroupProfileAbout
+      {...props}
+      leaders={[
+        {
+          user: {
+            ...createUserResponse(),
+            displayName: 'John',
+            teams: [],
+            email: 'test1@test.com',
+          },
+          role: 'Project Manager',
+        },
+        {
+          user: {
+            ...createUserResponse(),
+            displayName: 'Johnny',
+            teams: [],
+            email: 'test2@test.com',
+          },
+          role: 'Project Manager',
+        },
+      ]}
+    />,
+  );
+
+  expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
+    'href',
+    'mailto:test1@test.com,test2@test.com',
+  );
+});
+
+it('does not render a call to action button, when a PM is NOT defined on the group', () => {
+  const { queryByText } = render(
+    <GroupProfileAbout
+      {...props}
+      leaders={[
+        {
+          user: {
+            ...createUserResponse(),
+            displayName: 'John',
+            teams: [],
+            email: 'test@test.com',
+          },
+          role: 'Chair',
+        },
+      ]}
+    />,
+  );
+
+  expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+});

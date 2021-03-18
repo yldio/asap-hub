@@ -7,6 +7,9 @@ import {
   GroupMembersSection,
   GroupTools,
 } from '../organisms';
+import { CtaCard } from '../molecules';
+
+import { createMailTo } from '../mail';
 import { perRem } from '../pixels';
 
 const styles = css({
@@ -32,14 +35,26 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
   leaders,
 
   membersSectionId,
-}) => (
-  <div css={styles}>
-    <GroupInformation tags={tags} description={description} />
-    <GroupTools calendarId={calendars[0] && calendars[0].id} tools={tools} />
-    <div id={membersSectionId}>
-      <GroupMembersSection teams={teams} leaders={leaders} />
+}) => {
+  const pmsEmails = leaders
+    .filter(({ role }) => role === 'Project Manager')
+    .map(({ user }) => user.email);
+
+  return (
+    <div css={styles}>
+      <GroupInformation tags={tags} description={description} />
+      <GroupTools calendarId={calendars[0] && calendars[0].id} tools={tools} />
+      <div id={membersSectionId}>
+        <GroupMembersSection teams={teams} leaders={leaders} />
+      </div>
+      {pmsEmails.length !== 0 && (
+        <CtaCard href={createMailTo(pmsEmails)} buttonText="Contact PM">
+          <strong>Interested in what you have seen?</strong>
+          <br /> Reach out to this group and see how you can collaborate
+        </CtaCard>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 export default GroupProfileAbout;

@@ -4,11 +4,14 @@ interface MailOptions {
 }
 
 export const createMailTo = (
-  email: string,
+  emailOrList: string | string[],
   { subject, body }: MailOptions = {},
 ): string => {
+  const emails = typeof emailOrList === 'string' ? [emailOrList] : emailOrList;
   const mailTo = new URL(
-    `mailto:${email.split('@').map(encodeURIComponent).join('@')}`,
+    `mailto:${emails
+      .map((email) => email.split('@').map(encodeURIComponent).join('@'))
+      .join(',')}`,
   );
 
   if (subject) mailTo.searchParams.set('subject', subject);

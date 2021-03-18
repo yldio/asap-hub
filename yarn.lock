@@ -8889,7 +8889,7 @@ __metadata:
     babel-plugin-lodash: ^3.3.4
     babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
     babel-preset-react-app: ^9.1.2
-    bundlewatch: ^0.3.1
+    bundlewatch: ^0.3.2
     codecov: ^3.8.0
     dotenv: ^8.2.0
     escape-string-regexp: ^4.0.0
@@ -9212,7 +9212,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.19.0, axios@npm:^0.19.2":
+"axios@npm:^0.19.2":
   version: 0.19.2
   resolution: "axios@npm:0.19.2"
   dependencies:
@@ -10494,11 +10494,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bundlewatch@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "bundlewatch@npm:0.3.1"
+"bundlewatch@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "bundlewatch@npm:0.3.2"
   dependencies:
-    axios: ^0.19.0
+    axios: ^0.21.1
     bytes: ^3.0.0
     chalk: ^4.0.0
     ci-env: ^1.14.0
@@ -10510,7 +10510,7 @@ __metadata:
     read-pkg-up: ^7.0.1
   bin:
     bundlewatch: lib/bin/index.js
-  checksum: dfe0999a2854c48cc102274b5de071fac54f78f97ba436b1d9662d6ed6d53fa61010704dba48daf4096af83ad43ee9d5643476e28398d40c3b2c6014c6668163
+  checksum: 52d59a28347982024bed602f9ee2533648c6e95f9214d6520113b5a281293322f99590d0cfad6394432ec2095240f1d7b187b1521cf127a5cd0b3b2b9c4548fb
   languageName: node
   linkType: hard
 

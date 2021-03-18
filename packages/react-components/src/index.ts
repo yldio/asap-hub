@@ -69,6 +69,7 @@ export {
   EmailPasswordSignin,
   EventAbout,
   EventCard,
+  EventMaterials,
   GoogleCalendar,
   GroupCard,
   GroupInformation,

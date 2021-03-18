@@ -15,10 +15,6 @@ it('renders a heading at level 2', () => {
   expect(getByRole('heading').tagName).toBe('H2');
   expect(getByRole('heading').textContent).toEqual('Meeting materials');
 });
-it('does not render a heading if there is undefined text', () => {
-  const { queryByRole } = render(<RichTextCard {...props} text={undefined} />);
-  expect(queryByRole('heading')).not.toBeInTheDocument();
-});
 it('does not render a heading if there is null text', () => {
   const { queryByRole } = render(<RichTextCard {...props} text={null} />);
   expect(queryByRole('heading')).not.toBeInTheDocument();

@@ -8,6 +8,7 @@ export { default as EditModal } from './EditModal';
 export { default as EventAbout } from './EventAbout';
 export { default as EventCard } from './EventCard';
 export { default as EventSearch } from './EventSearch';
+export { default as EventMaterials } from './EventMaterials';
 export { default as GoogleCalendar } from './GoogleCalendar';
 export { default as GroupCard } from './GroupCard';
 export { default as GroupInformation } from './GroupInformation';

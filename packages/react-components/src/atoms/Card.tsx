@@ -6,7 +6,16 @@ import { perRem } from '../pixels';
 import { themes } from '../theme';
 import { paddingStyles, borderRadius } from '../card';
 
-export type AccentVariant = 'default' | 'red' | 'green';
+const containerStyles = css({
+  boxSizing: 'border-box',
+  maxWidth: '100%',
+
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderRadius: `${borderRadius / perRem}em`,
+});
+
+export type AccentVariant = 'default' | 'red' | 'green' | 'placeholder';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
@@ -24,17 +33,12 @@ export const accents: Record<AccentVariant, CSSObject> = {
     color: colors.pine.rgb,
     borderColor: colors.pine.rgb,
   },
+  placeholder: {
+    ...themes.light,
+    border: `2px dotted ${colors.tin.rgb}`,
+    borderRadius: 0,
+  },
 };
-
-const containerStyles = css({
-  boxSizing: 'border-box',
-  maxWidth: '100%',
-
-  borderStyle: 'solid',
-  borderWidth: 1,
-
-  borderRadius: `${borderRadius / perRem}em`,
-});
 
 interface CardProps {
   readonly accent?: AccentVariant;

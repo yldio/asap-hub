@@ -17,13 +17,8 @@ export const Normal = () => (
             leadPiCount: 2,
             projectManagerCount: 2,
           }).leaders.map(({ user }) => ({
-            user: {
-              ...user,
-              teams: user.teams.map((team) => ({ ...team, href: '#' })),
-            },
+            user,
             role: boolean('Has PMs', true) ? 'Project Manager' : 'Chair',
-            href: '#',
-            teams: user.teams.map((team) => ({ ...team, href: '#' })),
           }))
         : []
     }

@@ -71,7 +71,6 @@ it('renders a call to action button, when PMs are defined on the group', () => {
             email: 'test1@test.com',
           },
           role: 'Project Manager',
-          href: '',
         },
         {
           user: {
@@ -81,7 +80,6 @@ it('renders a call to action button, when PMs are defined on the group', () => {
             email: 'test2@test.com',
           },
           role: 'Project Manager',
-          href: '',
         },
       ]}
     />,
@@ -106,7 +104,6 @@ it('does not render a call to action button, when a PM is NOT defined on the gro
             email: 'test@test.com',
           },
           role: 'Chair',
-          href: '',
         },
       ]}
     />,

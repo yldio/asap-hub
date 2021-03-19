@@ -1,7 +1,10 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { formatISO, subYears } from 'date-fns';
-import { createEventResponse } from '@asap-hub/fixtures';
+import {
+  createCalendarResponse,
+  createEventResponse,
+} from '@asap-hub/fixtures';
 
 import EventPage from '../EventPage';
 
@@ -73,4 +76,14 @@ it('renders additional materials', () => {
     />,
   );
   expect(getByText('Example Material')).toBeVisible();
+});
+
+it('renders calendar list', () => {
+  const { getByText } = render(
+    <EventPage
+      {...props}
+      calendar={{ ...createCalendarResponse(), name: 'Event Calendar' }}
+    />,
+  );
+  expect(getByText('Event Calendar')).toBeVisible();
 });

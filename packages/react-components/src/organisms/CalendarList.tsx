@@ -43,7 +43,7 @@ const gridButton = css({
 const orderList = css({
   listStyle: 'none',
   paddingLeft: 0,
-  marginBottom: 0,
+  margin: 0,
   li: {
     width: '100%',
     display: 'inline-flex',
@@ -57,20 +57,23 @@ const orderList = css({
 });
 interface CalendarListProps {
   calendars: ReadonlyArray<CalendarResponse>;
-  singleGroup?: boolean;
+  page: 'calendar' | 'event' | 'group';
 }
-const CalendarList: React.FC<CalendarListProps> = ({
-  calendars,
-  singleGroup = false,
-}) => (
+const CalendarList: React.FC<CalendarListProps> = ({ calendars, page }) => (
   <div css={containerStyles}>
     <Card>
       <div css={headerStyles}>
         <Headline3>
-          Subscribe to {singleGroup ? "this group's" : 'Groups on'} calendar
+          Subscribe to{' '}
+          {page === 'group'
+            ? "this group's"
+            : page === 'event'
+            ? "this event's"
+            : 'Groups on'}{' '}
+          calendar
         </Headline3>
       </div>
-      {singleGroup || (
+      {page === 'calendar' && (
         <Paragraph accent="lead">
           Below you can find a list of all the Groups that will present in the
           future. Hitting subscribe will allow you to add them to your own

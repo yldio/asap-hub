@@ -14,5 +14,15 @@ it('renders the welcome template with name and link', () => {
   );
 
   const heading = getByRole('heading');
+  const cta = getByRole('link', {
+    name: /activate account/i,
+  }) as HTMLAnchorElement;
+  const mailToSupport = getByRole('link', {
+    name: /get in touch/i,
+  }) as HTMLAnchorElement;
+
   expect(heading.textContent).toContain('John Doe');
+  expect(cta.href).toBe('https://example.com/');
+  expect(mailToSupport.protocol).toBe('mailto:');
+  expect(mailToSupport.pathname).toBe('techsupport@asap.science');
 });

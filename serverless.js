@@ -46,6 +46,10 @@ module.exports = {
         allowCredentials: true,
       },
     },
+    tracing: {
+      awsGateway: true,
+      lambda: true,
+    },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',

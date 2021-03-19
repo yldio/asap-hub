@@ -6,7 +6,7 @@ import { Collapsible } from '../molecules';
 
 type RichTextCardProps = {
   readonly title: string;
-  readonly text?: string | null;
+  readonly text: string | null;
   readonly collapsible?: boolean;
 };
 const RichTextCard: React.FC<RichTextCardProps> = ({

@@ -23,10 +23,8 @@ describe('welcome email template', () => {
   });
 
   it('renders the correct link on the Activate Account CTA', () => {
-    const cta = result.getByRole('link', {
-      name: /activate account/i,
-    }) as HTMLAnchorElement;
-    expect(cta.href).toBe('https://example.com/');
+    const cta = result.getByText(/activate account/i);
+    expect(cta.closest('a')).toHaveAttribute('href', 'https://example.com');
   });
 
   it('renders the correct mail to on the get in touch mailto link', () => {

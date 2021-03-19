@@ -1,7 +1,6 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
-import { isEnabled } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
 
 import { paper, lead, steel } from '../colors';
@@ -91,18 +90,12 @@ const GroupProfileHeader: React.FC<GroupProfileHeaderProps> = ({
         <TabNav>
           <TabLink href={route.about({}).$}>About</TabLink>
           <TabLink href={route.calendar({}).$}>Calendar</TabLink>
-          {isEnabled('UPCOMING_EVENTS') && (
-            <TabLink
-              href={route.upcoming({}).$ + queryParamString(searchQuery)}
-            >
-              Upcoming Events
-            </TabLink>
-          )}
-          {isEnabled('PAST_EVENTS') && (
-            <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
-              Past Events
-            </TabLink>
-          )}
+          <TabLink href={route.upcoming({}).$ + queryParamString(searchQuery)}>
+            Upcoming Events
+          </TabLink>
+          <TabLink href={route.past({}).$ + queryParamString(searchQuery)}>
+            Past Events
+          </TabLink>
         </TabNav>
       </div>
       <div css={controlsStyles}>

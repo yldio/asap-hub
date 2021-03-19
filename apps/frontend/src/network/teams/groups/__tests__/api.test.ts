@@ -24,12 +24,17 @@ describe('getTeamGroups', () => {
     nock(API_BASE_URL).get('/teams/42/groups').reply(200, groups);
     expect(await getTeamGroups('42', '')).toEqual(groups);
   });
+
+  it('returns undefined for a 404', async () => {
+    nock(API_BASE_URL).get('/teams/42/groups').reply(404);
+    expect(await getTeamGroups('42', '')).toBe(undefined);
+  });
   it('errors for an error status', async () => {
     nock(API_BASE_URL).get('/teams/42/groups').reply(500);
     await expect(
       getTeamGroups('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch team groups with id 42. Expected status 2xx. Received status 500."`,
+      `"Failed to fetch team groups with id 42. Expected status 2xx or 404. Received status 500."`,
     );
   });
 });

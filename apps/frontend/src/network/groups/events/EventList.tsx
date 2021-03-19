@@ -27,7 +27,7 @@ const EventList: React.FC<EventListProps> = ({
     EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
   ).toISOString();
 
-  const { items, total } = useGroupEvents(groupId, {
+  const events = useGroupEvents(groupId, {
     searchQuery,
     ...(past
       ? {
@@ -44,14 +44,23 @@ const EventList: React.FC<EventListProps> = ({
     pageSize,
   });
 
-  const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
+  if (events === 'noSuchGroup') {
+    throw new Error(
+      `Failed to fetch events for group with id ${groupId}. Group does not exist.`,
+    );
+  }
+
+  const { numberOfPages, renderPageHref } = usePagination(
+    events.total,
+    pageSize,
+  );
   return (
     <EventsList
       currentPageIndex={currentPage}
-      numberOfItems={total}
+      numberOfItems={events.total}
       renderPageHref={renderPageHref}
       numberOfPages={numberOfPages}
-      events={items}
+      events={events.items}
     />
   );
 };

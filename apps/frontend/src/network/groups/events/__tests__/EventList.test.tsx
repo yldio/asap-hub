@@ -10,12 +10,14 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
 import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
 import { subHours } from 'date-fns';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
 import { DEFAULT_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
+import ErrorBoundary from '@asap-hub/frontend/src/structure/ErrorBoundary';
 import EventList from '../EventList';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
@@ -25,22 +27,23 @@ const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
   typeof getGroupEvents
 >;
 
-const id = '42';
+mockConsoleError();
+
+const groupId = '42';
+beforeEach(() => {
+  mockGetGroupEvents.mockClear().mockResolvedValue(createListEventResponse(1));
+});
 
 const renderGroupEventList = async (
-  groupEventsResponse = createListEventResponse(1),
-  searchQuery = '',
-  currentTime = new Date(),
-  past?: boolean,
+  { searchQuery = '', currentTime = new Date(), past = false } = {},
+  wrapper?: React.ComponentType,
 ) => {
-  mockGetGroupEvents.mockClear().mockResolvedValue(groupEventsResponse);
-
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) => {
         reset(
           groupEventsState({
-            id,
+            groupId,
             searchQuery,
             currentPage: 0,
             pageSize: DEFAULT_PAGE_SIZE,
@@ -52,7 +55,7 @@ const renderGroupEventList = async (
         );
         reset(
           groupEventsState({
-            id,
+            groupId,
             searchQuery,
             currentPage: 0,
             pageSize: DEFAULT_PAGE_SIZE,
@@ -71,7 +74,7 @@ const renderGroupEventList = async (
               initialEntries={[
                 network({})
                   .groups({})
-                  .group({ groupId: id })
+                  .group({ groupId })
                   [past ? 'past' : 'upcoming']({}).$,
               ]}
             >
@@ -80,7 +83,7 @@ const renderGroupEventList = async (
                   network.template +
                   network({}).groups.template +
                   network({}).groups({}).group.template +
-                  network({}).groups({}).group({ groupId: id })[
+                  network({}).groups({}).group({ groupId })[
                     past ? 'past' : 'upcoming'
                   ].template
                 }
@@ -96,6 +99,7 @@ const renderGroupEventList = async (
         </Auth0Provider>
       </React.Suspense>
     </RecoilRoot>,
+    { wrapper },
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
@@ -104,23 +108,25 @@ const renderGroupEventList = async (
 };
 
 it('renders a list of event cards', async () => {
-  const { getAllByRole } = await renderGroupEventList({
+  mockGetGroupEvents.mockResolvedValue({
     ...createListEventResponse(2),
     items: createListEventResponse(2).items.map((item, index) => ({
       ...item,
       title: `Event title ${index}`,
     })),
   });
+  const { getAllByRole } = await renderGroupEventList();
   expect(
     getAllByRole('heading', { level: 3 }).map((heading) => heading.textContent),
   ).toEqual(['Event title 0', 'Event title 1']);
 });
 
 it('generates the event link', async () => {
-  const { getByText } = await renderGroupEventList({
+  mockGetGroupEvents.mockResolvedValue({
     ...createListEventResponse(1),
     items: [{ ...createEventResponse(), id: '42', title: 'My Event' }],
   });
+  const { getByText } = await renderGroupEventList();
   expect(getByText('My Event').closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/42$/),
@@ -128,7 +134,7 @@ it('generates the event link', async () => {
 });
 
 it('generates group links', async () => {
-  const { getByText } = await renderGroupEventList({
+  mockGetGroupEvents.mockResolvedValue({
     ...createListEventResponse(1),
     items: [
       {
@@ -137,6 +143,7 @@ it('generates group links', async () => {
       },
     ],
   });
+  const { getByText } = await renderGroupEventList();
   expect(getByText('My Group').closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/g0/),
@@ -144,9 +151,9 @@ it('generates group links', async () => {
 });
 
 it('can search for events', async () => {
-  await renderGroupEventList(undefined, 'searchterm');
+  await renderGroupEventList({ searchQuery: 'searchterm' });
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-    id,
+    groupId,
     expect.objectContaining({
       searchQuery: 'searchterm',
     }),
@@ -155,9 +162,12 @@ it('can search for events', async () => {
 });
 
 it('sets after to an hour before now for upcoming events', async () => {
-  await renderGroupEventList(undefined, '', new Date('2020-01-01T12:00:00Z'));
+  await renderGroupEventList({
+    searchQuery: '',
+    currentTime: new Date('2020-01-01T12:00:00Z'),
+  });
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-    id,
+    groupId,
     expect.objectContaining({
       after: new Date('2020-01-01T11:00:00Z').toISOString(),
     }),
@@ -166,18 +176,26 @@ it('sets after to an hour before now for upcoming events', async () => {
 });
 
 it('sets before to an hour before now and sort parameters for past events', async () => {
-  await renderGroupEventList(
-    undefined,
-    '',
-    new Date('2020-01-01T12:00:00Z'),
-    true,
-  );
+  await renderGroupEventList({
+    searchQuery: '',
+    currentTime: new Date('2020-01-01T12:00:00Z'),
+    past: true,
+  });
   expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
-    id,
+    groupId,
     expect.objectContaining({
       before: new Date('2020-01-01T11:00:00.000Z').toISOString(),
       sort: { sortBy: 'endDate', sortOrder: 'desc' },
     }),
     expect.anything(),
   );
+});
+
+it('throws if the group does not exist', async () => {
+  mockGetGroupEvents.mockResolvedValue(undefined);
+  const errorWrapper: React.FC = ({ children }) => (
+    <ErrorBoundary>{children}</ErrorBoundary>
+  );
+  const { getByText } = await renderGroupEventList({}, errorWrapper);
+  expect(getByText(/failed.+group.+exist/i)).toBeVisible();
 });

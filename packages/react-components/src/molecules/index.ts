@@ -7,6 +7,7 @@ export { default as CtaCard } from './CtaCard';
 export { default as ErrorCard } from './ErrorCard';
 export { default as EventInfo } from './EventInfo';
 export { default as EventMaterialComingSoon } from './EventMaterialComingSoon';
+export { default as EventMaterialUnavailable } from './EventMaterialUnavailable';
 export { default as EventTime } from './EventTime';
 export { default as ExternalLink } from './ExternalLink';
 export { default as GoogleSigninButton } from './GoogleSigninButton';

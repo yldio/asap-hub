@@ -1,8 +1,11 @@
-import { formatDateToTimezone } from '../date';
+import { act, renderHook } from '@testing-library/react-hooks';
+import { addSeconds, subSeconds } from 'date-fns';
+import { formatDateToTimezone, useDateHasPassed } from '../date';
 import { getLocalTimezone } from '../localization';
 
-jest.mock('../localization');
+jest.useFakeTimers('modern');
 
+jest.mock('../localization');
 const mockGetLocalTimezone = getLocalTimezone as jest.MockedFunction<
   typeof getLocalTimezone
 >;
@@ -31,5 +34,31 @@ describe('formatDateToTimezone', () => {
     expect(
       formatDateToTimezone(date, FORMAT, 'Europe/Berlin'),
     ).toMatchInlineSnapshot(`"2014-01-25 11:46:20 +01:00"`);
+  });
+});
+
+describe('useDateHasPassed', () => {
+  it('returns false before given date', () => {
+    const { result } = renderHook(() =>
+      useDateHasPassed(addSeconds(new Date(), 5)),
+    );
+    expect(result.current).toBe(false);
+  });
+
+  it('returns true after given date', () => {
+    const { result } = renderHook(() =>
+      useDateHasPassed(subSeconds(new Date(), 5)),
+    );
+    expect(result.current).toBe(true);
+  });
+
+  it('changes to true when given date elapses', async () => {
+    const { result } = renderHook(() =>
+      useDateHasPassed(addSeconds(new Date(), 5)),
+    );
+    act(() => {
+      jest.advanceTimersByTime(30 * 1000);
+    });
+    expect(result.current).toBe(true);
   });
 });

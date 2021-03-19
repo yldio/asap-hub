@@ -1,6 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { formatISO, subYears } from 'date-fns';
+import { addDays, formatISO, subDays, subYears } from 'date-fns';
 import {
   createCalendarResponse,
   createEventResponse,
@@ -43,25 +43,41 @@ it('renders the event description', () => {
 });
 
 it('renders the join event section', () => {
-  const { getAllByText } = render(<EventPage {...props} />);
+  const { getAllByText } = render(
+    <EventPage {...props} endDate={addDays(new Date(), 100).toISOString()} />,
+  );
   expect(getAllByText(/join/i)).not.toHaveLength(0);
 });
 
 it('renders the event notes', () => {
-  const { getByRole } = render(<EventPage {...props} notes="My Notes" />);
+  const { getByRole } = render(
+    <EventPage
+      {...props}
+      endDate={subDays(new Date(), 100).toISOString()}
+      notes="My Notes"
+    />,
+  );
   expect(getByRole('heading', { name: 'Notes', level: 2 })).toBeVisible();
 });
 
 it('renders the video recording', () => {
   const { getByText } = render(
-    <EventPage {...props} videoRecording="My Video" />,
+    <EventPage
+      {...props}
+      endDate={subDays(new Date(), 100).toISOString()}
+      videoRecording="My Video"
+    />,
   );
   expect(getByText('My Video')).toBeVisible();
 });
 
 it('renders the presentation', () => {
   const { getByText } = render(
-    <EventPage {...props} presentation="My Presentation" />,
+    <EventPage
+      {...props}
+      endDate={subDays(new Date(), 100).toISOString()}
+      presentation="My Presentation"
+    />,
   );
   expect(getByText('My Presentation')).toBeVisible();
 });
@@ -70,6 +86,7 @@ it('renders additional materials', () => {
   const { getByText } = render(
     <EventPage
       {...props}
+      endDate={subDays(new Date(), 100).toISOString()}
       meetingMaterials={[
         { title: 'Example Material', url: 'http://example.com' },
       ]}

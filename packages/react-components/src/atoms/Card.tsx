@@ -19,7 +19,6 @@ export type AccentVariant = 'default' | 'red' | 'green' | 'placeholder';
 
 export const accents: Record<AccentVariant, CSSObject> = {
   default: {
-    ...themes.light,
     borderColor: colors.steel.rgb,
     boxShadow: `0px 2px 4px ${colors.steel.rgb}`,
   },
@@ -34,7 +33,8 @@ export const accents: Record<AccentVariant, CSSObject> = {
     borderColor: colors.pine.rgb,
   },
   placeholder: {
-    ...themes.light,
+    backgroundColor: 'transparent',
+    color: colors.charcoal.rgb,
     border: `2px dotted ${colors.tin.rgb}`,
     borderRadius: 0,
   },

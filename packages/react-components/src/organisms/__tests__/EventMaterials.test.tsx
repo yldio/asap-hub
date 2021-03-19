@@ -2,16 +2,28 @@ import React, { ComponentProps } from 'react';
 import { createEventResponse } from '@asap-hub/fixtures';
 import { EventResponse } from '@asap-hub/model';
 import { render } from '@testing-library/react';
+import { subDays } from 'date-fns';
 
 import EventMaterials from '../EventMaterials';
 
 type EventMaterialsProps = ComponentProps<typeof EventMaterials>;
+const props: EventMaterialsProps = {
+  ...createEventResponse(),
+  endDate: subDays(new Date(), 100).toISOString(),
+};
 const meetingMaterials: EventResponse['meetingMaterials'] = [
   {
     title: 'My additional material',
     url: 'https://example.com/material',
   },
 ];
+
+it('renders nothing until an event is over', () => {
+  const { container } = render(
+    <EventMaterials {...props} endDate={new Date().toISOString()} />,
+  );
+  expect(container).toBeEmptyDOMElement();
+});
 
 describe.each`
   type                  | typeText               | presentValue            | presentExpectedText          | missingValue
@@ -36,23 +48,26 @@ describe.each`
   }) => {
     it('is rendered when present', () => {
       const { getByText } = render(
-        <EventMaterials
-          {...createEventResponse()}
-          {...{ [type]: presentValue }}
-        />,
+        <EventMaterials {...props} {...{ [type]: presentValue }} />,
       );
       expect(getByText(presentExpectedText)).toBeInTheDocument();
     });
 
     it('is rendered as coming soon when missing', () => {
       const { getByText } = render(
-        <EventMaterials
-          {...createEventResponse()}
-          {...{ [type]: missingValue }}
-        />,
+        <EventMaterials {...props} {...{ [type]: missingValue }} />,
       );
       expect(
         getByText(new RegExp(`${typeText}.+coming soon`, 'i')),
+      ).toBeInTheDocument();
+    });
+
+    it('is rendered as unavailable when null', () => {
+      const { getByText } = render(
+        <EventMaterials {...props} {...{ [type]: null }} />,
+      );
+      expect(
+        getByText(new RegExp(`(^|\\W)no.+${typeText}`, 'i')),
       ).toBeInTheDocument();
     });
   },

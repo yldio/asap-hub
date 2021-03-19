@@ -66,6 +66,7 @@ it('renders a call to action button, when PMs are defined on the group', () => {
         {
           user: {
             ...createUserResponse(),
+            id: 'u0',
             displayName: 'John',
             teams: [],
             email: 'test1@test.com',
@@ -75,6 +76,7 @@ it('renders a call to action button, when PMs are defined on the group', () => {
         {
           user: {
             ...createUserResponse(),
+            id: 'u1',
             displayName: 'Johnny',
             teams: [],
             email: 'test2@test.com',

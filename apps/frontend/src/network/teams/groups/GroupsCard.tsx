@@ -6,7 +6,7 @@ import { useTeamGroupsById } from './state';
 const GroupsCard: React.FC<{ id: string }> = ({ id }) => {
   const groups = useTeamGroupsById(id);
 
-  if (!groups) {
+  if (groups === 'noSuchTeam') {
     throw new Error(
       `Failed to fetch groups for team with id ${id}. Team does not exist.`,
     );

@@ -65,7 +65,7 @@ const fetchGroupState = selectorFamily<GroupResponse | undefined, string>({
     return getGroup(id, authorization);
   },
 });
-const groupState = atomFamily<GroupResponse | undefined, string>({
+export const groupState = atomFamily<GroupResponse | undefined, string>({
   key: 'group',
   default: fetchGroupState,
 });

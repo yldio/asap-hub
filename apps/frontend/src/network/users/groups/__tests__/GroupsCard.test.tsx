@@ -15,7 +15,7 @@ import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import ErrorBoundary from '@asap-hub/frontend/src/structure/ErrorBoundary';
 import GroupsCard from '../GroupsCard';
 import { getUserGroups } from '../api';
-import { refreshUserState } from '../../state';
+import { userGroupsState } from '../state';
 
 jest.mock('../api');
 const mockGetUserGroups = getUserGroups as jest.MockedFunction<
@@ -27,9 +27,7 @@ mockConsoleError();
 const userId = 'u42';
 
 const wrapper: React.FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ set }) => set(refreshUserState(userId), Math.random())}
-  >
+  <RecoilRoot initializeState={({ reset }) => reset(userGroupsState(userId))}>
     <React.Suspense fallback="loading">
       <Auth0Provider user={{ id: '42' }}>
         <WhenReady>

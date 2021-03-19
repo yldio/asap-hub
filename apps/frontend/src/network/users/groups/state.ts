@@ -5,7 +5,7 @@ import { authorizationState } from '@asap-hub/frontend/src/auth/state';
 import { refreshUserState } from '../state';
 import { getUserGroups } from './api';
 
-const userGroupsState = selectorFamily<ListGroupResponse, string>({
+const userGroupsState = selectorFamily<ListGroupResponse | undefined, string>({
   key: 'userGroups',
   get: (id) => async ({ get }) => {
     get(refreshUserState(id));

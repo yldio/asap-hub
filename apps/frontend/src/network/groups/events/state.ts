@@ -14,7 +14,10 @@ import { authorizationState } from '@asap-hub/frontend/src/auth/state';
 import { getGroupEvents } from './api';
 
 const groupEventIndexState = atomFamily<
-  { ids: ReadonlyArray<string>; total: number } | Error | undefined,
+  | { ids: ReadonlyArray<string>; total: number }
+  | Error
+  | 'noSuchGroup'
+  | undefined,
   GetListOptions & BeforeOrAfter
 >({
   key: 'groupEventIndex',
@@ -22,13 +25,18 @@ const groupEventIndexState = atomFamily<
 });
 
 export const groupEventsState = selectorFamily<
-  ListEventResponse | Error | undefined,
-  GetListOptions & BeforeOrAfter & { id: string }
+  ListEventResponse | Error | 'noSuchGroup' | undefined,
+  GetListOptions & BeforeOrAfter & { groupId: string }
 >({
   key: 'groupEvents',
   get: (options) => ({ get }) => {
     const index = get(groupEventIndexState(options));
-    if (index === undefined || index instanceof Error) return index;
+    if (
+      index === undefined ||
+      index === 'noSuchGroup' ||
+      index instanceof Error
+    )
+      return index;
     const events: EventResponse[] = [];
     for (const id of index.ids) {
       const event = get(eventState(id));
@@ -40,11 +48,17 @@ export const groupEventsState = selectorFamily<
   set: (options) => ({ get, set, reset }, newEvents) => {
     if (newEvents === undefined || newEvents instanceof DefaultValue) {
       const oldEvents = get(groupEventIndexState(options));
-      if (!(oldEvents instanceof Error)) {
-        oldEvents?.ids?.forEach((id) => reset(eventState(id)));
+      if (
+        !(
+          oldEvents === undefined ||
+          oldEvents === 'noSuchGroup' ||
+          oldEvents instanceof Error
+        )
+      ) {
+        oldEvents.ids.forEach((id) => reset(eventState(id)));
       }
       reset(groupEventIndexState(options));
-    } else if (newEvents instanceof Error) {
+    } else if (newEvents instanceof Error || newEvents === 'noSuchGroup') {
       set(groupEventIndexState(options), newEvents);
     } else {
       newEvents?.items.forEach((event) => set(eventState(event.id), event));
@@ -62,11 +76,11 @@ export const useGroupEvents = (
 ) => {
   const authorization = useRecoilValue(authorizationState);
   const [groupEvents, setGroupEvents] = useRecoilState(
-    groupEventsState({ ...options, id }),
+    groupEventsState({ ...options, groupId: id }),
   );
   if (groupEvents === undefined) {
     throw getGroupEvents(id, options, authorization)
-      .then(setGroupEvents)
+      .then((newGroupEvents) => setGroupEvents(newGroupEvents ?? 'noSuchGroup'))
       .catch(setGroupEvents);
   }
   if (groupEvents instanceof Error) {

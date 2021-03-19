@@ -24,12 +24,17 @@ describe('getUserGroups', () => {
     nock(API_BASE_URL).get('/users/42/groups').reply(200, groups);
     expect(await getUserGroups('42', '')).toEqual(groups);
   });
+
+  it('returns undefined for a 404', async () => {
+    nock(API_BASE_URL).get('/users/42/groups').reply(404);
+    expect(await getUserGroups('42', '')).toBe(undefined);
+  });
   it('errors for error status', async () => {
     nock(API_BASE_URL).get('/users/42/groups').reply(500);
     await expect(
       getUserGroups('42', ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `"Failed to fetch groups for user with id 42. Expected status 2xx. Received status 500."`,
+      `"Failed to fetch groups for user with id 42. Expected status 2xx or 404. Received status 500."`,
     );
   });
 });

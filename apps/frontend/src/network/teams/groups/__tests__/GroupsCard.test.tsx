@@ -3,20 +3,23 @@ import { RecoilRoot } from 'recoil';
 import { StaticRouter } from 'react-router-dom';
 import { createGroupResponse } from '@asap-hub/fixtures';
 import { render, waitFor } from '@testing-library/react';
+import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
+import ErrorBoundary from '@asap-hub/frontend/src/structure/ErrorBoundary';
 import { getTeamGroups } from '../api';
 import GroupsCard from '../GroupsCard';
 import { refreshTeamState } from '../../state';
 
 jest.mock('../api');
-
 const mockGetTeamGroups = getTeamGroups as jest.MockedFunction<
   typeof getTeamGroups
 >;
+
+mockConsoleError();
 
 const id = 't42';
 
@@ -74,4 +77,14 @@ it('links to the group', async () => {
     'href',
     expect.stringMatching(/g1$/),
   );
+});
+
+it('throws if the team does not exist', async () => {
+  mockGetTeamGroups.mockResolvedValue(undefined);
+  const errorWrapper: React.FC = ({ children }) =>
+    React.createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
+  const { findByText } = render(<GroupsCard id={id} />, {
+    wrapper: errorWrapper,
+  });
+  expect(await findByText(/failed.+team.+exist/i)).toBeVisible();
 });

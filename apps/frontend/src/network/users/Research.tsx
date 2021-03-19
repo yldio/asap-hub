@@ -11,7 +11,7 @@ import { network } from '@asap-hub/routing';
 
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
-import Groups from './groups/Groups';
+import GroupsCard from './groups/GroupsCard';
 
 type ResearchProps = {
   user: UserResponse;
@@ -30,7 +30,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
         {...user}
         userProfileGroupsCard={
           <Frame fallback={null}>
-            <Groups user={user} />
+            <GroupsCard user={user} />
           </Frame>
         }
         teams={user.teams.map((team) => ({

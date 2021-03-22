@@ -32,8 +32,8 @@ const buttonTextStyles = css({
 const dropdownContainer = css({
   position: 'absolute',
   width: `${222 / perRem}em`,
-  right: 0,
-  top: '-10px',
+  right: `-${6 / perRem}em`,
+  top: `-${6 / perRem}em`,
 
   backgroundColor: paper.rgb,
   border: `1px solid ${steel.rgb}`,
@@ -43,9 +43,9 @@ const dropdownContainer = css({
   flexDirection: 'column',
 
   boxSizing: 'border-box',
-  padding: `${12 / perRem}em ${12 / perRem}em ${vminLinearCalc(
+  padding: `${6 / perRem}em ${18 / perRem}em ${vminLinearCalc(
     mobileScreen,
-    8,
+    6,
     largeDesktopScreen,
     12,
     'px',

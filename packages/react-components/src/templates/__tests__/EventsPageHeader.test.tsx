@@ -1,6 +1,5 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { disable } from '@asap-hub/flags';
 import { events, searchQueryParam } from '@asap-hub/routing';
 import { StaticRouter } from 'react-router-dom';
 
@@ -11,22 +10,6 @@ it('renders the heading', () => {
   expect(getByRole('heading', { level: 1 })).toHaveTextContent(
     'Calendar and Events',
   );
-});
-
-it('renders the navigation without upcoming events (REGRESSION)', () => {
-  disable('UPCOMING_EVENTS');
-  const { getAllByRole } = render(<EventsPageHeader />);
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Calendar', 'Past Events']);
-});
-
-it('renders the navigation without past events (REGRESSION)', () => {
-  disable('PAST_EVENTS');
-  const { getAllByRole } = render(<EventsPageHeader />);
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['Calendar', 'Upcoming Events']);
 });
 
 it('renders the navigation', () => {

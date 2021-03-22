@@ -3,7 +3,6 @@ import { StaticRouter } from 'react-router-dom';
 import { network, searchQueryParam } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
 import subYears from 'date-fns/subYears';
-import { disable } from '@asap-hub/flags';
 
 import GroupProfileHeader from '../GroupProfileHeader';
 
@@ -45,22 +44,6 @@ it('shows the last updated date', () => {
   expect(getByText(/1 year/).textContent).toMatchInlineSnapshot(
     `"Last updated: about 1 year ago"`,
   );
-});
-
-it('renders the navigation without upcoming events  (REGRESSION)', () => {
-  disable('UPCOMING_EVENTS');
-  const { getAllByRole } = render(<GroupProfileHeader {...props} />);
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Calendar', 'Past Events']);
-});
-
-it('renders the navigation without past events  (REGRESSION)', () => {
-  disable('PAST_EVENTS');
-  const { getAllByRole } = render(<GroupProfileHeader {...props} />);
-  expect(
-    getAllByRole('listitem').map(({ textContent }) => textContent),
-  ).toEqual(['About', 'Calendar', 'Upcoming Events']);
 });
 
 it('renders the navigation', () => {

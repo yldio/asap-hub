@@ -1,6 +1,5 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
-import { isEnabled } from '@asap-hub/flags';
 import { events } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';
@@ -41,20 +40,14 @@ const EventsPageHeader: React.FC<EventsPageHeaderProps> = ({
         </Paragraph>
         <TabNav>
           <TabLink href={events({}).calendar({}).$}>Calendar</TabLink>
-          {isEnabled('UPCOMING_EVENTS') && (
-            <TabLink
-              href={events({}).upcoming({}).$ + queryParamString(searchQuery)}
-            >
-              Upcoming Events
-            </TabLink>
-          )}
-          {isEnabled('PAST_EVENTS') && (
-            <TabLink
-              href={events({}).past({}).$ + queryParamString(searchQuery)}
-            >
-              Past Events
-            </TabLink>
-          )}
+          <TabLink
+            href={events({}).upcoming({}).$ + queryParamString(searchQuery)}
+          >
+            Upcoming Events
+          </TabLink>
+          <TabLink href={events({}).past({}).$ + queryParamString(searchQuery)}>
+            Past Events
+          </TabLink>
         </TabNav>
       </div>
     </div>

@@ -39,13 +39,6 @@ module.exports = {
     memorySize: 512,
     region: AWS_REGION,
     stage: SLS_STAGE,
-    httpApi: {
-      payload: '2.0',
-      cors: {
-        allowedOrigins: [ASAP_APP_URL],
-        allowCredentials: true,
-      },
-    },
     tracing: {
       awsGateway: true,
       lambda: true,
@@ -121,23 +114,12 @@ module.exports = {
     },
   },
   functions: {
-    apiHandler: {
-      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
-      events: [
-        {
-          httpApi: {
-            method: '*',
-            path: '*',
-          },
-        },
-      ],
-    },
     auth0FetchByCode: {
       handler:
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-fetch-by-code.handler',
       events: [
         {
-          httpApi: {
+          http: {
             method: 'GET',
             path: `/webhook/users/{code}`,
           },
@@ -149,7 +131,7 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-connect-by-code.handler',
       events: [
         {
-          httpApi: {
+          http: {
             method: 'POST',
             path: '/webhook/users/connections',
           },
@@ -161,7 +143,7 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-orcid.handler',
       events: [
         {
-          httpApi: {
+          http: {
             method: 'POST',
             path: '/webhook/users/orcid',
           },
@@ -173,7 +155,7 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-calendar-created.handler',
       events: [
         {
-          httpApi: {
+          http: {
             method: 'POST',
             path: '/webhook/calendar',
           },
@@ -194,7 +176,7 @@ module.exports = {
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-events-updated.handler',
       events: [
         {
-          httpApi: {
+          http: {
             method: 'POST',
             path: `/webhook/events`,
           },
@@ -242,6 +224,17 @@ module.exports = {
           },
         }
       : {}),
+    apiHandler: {
+      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
+      events: [
+        {
+          http: {
+            method: 'ANY',
+            path: '/{param+}',
+          },
+        },
+      ],
+    },
   },
   resources: {
     Resources: {

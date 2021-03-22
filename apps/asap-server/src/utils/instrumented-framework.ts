@@ -4,10 +4,9 @@ import lightstep from 'lightstep-tracer';
 import { PinoLambdaLogger } from 'pino-lambda';
 import { promisify } from 'util';
 import {
-  APIGatewayProxyStructuredResultV2,
-  APIGatewayProxyResultV2,
-  APIGatewayProxyEventV2,
+  APIGatewayProxyResult,
   Context,
+  APIGatewayProxyEvent,
 } from 'aws-lambda';
 import { framework as lambda } from '@asap-hub/services-common';
 
@@ -33,9 +32,9 @@ export const http = (
   fn: (request: lambda.Request) => Promise<lambda.Response>,
   logger?: PinoLambdaLogger,
 ) => async (
-  event: APIGatewayProxyEventV2,
+  event: APIGatewayProxyEvent,
   context?: Context,
-): Promise<APIGatewayProxyResultV2> => {
+): Promise<APIGatewayProxyResult> => {
   if (logger) {
     logger.withRequest(event, context || { awsRequestId: 'none' });
   }
@@ -56,9 +55,7 @@ export const http = (
   // eslint-disable-next-line no-param-reassign
   event.headers = { ...event.headers, ...headersCarrier };
 
-  const response = (await lambda.http(fn)(
-    event,
-  )) as APIGatewayProxyStructuredResultV2;
+  const response = (await lambda.http(fn)(event)) as APIGatewayProxyResult;
 
   if (response.statusCode && response.statusCode >= 400) {
     const { statusCode, body } = response;

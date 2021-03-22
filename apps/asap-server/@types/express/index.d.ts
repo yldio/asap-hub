@@ -1,4 +1,4 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { Context } from 'aws-lambda';
 import { Span } from 'opentracing';
 import { User } from '@asap-hub/auth';
 
@@ -8,7 +8,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {
     interface Request {
-      context: APIGatewayProxyEventV2['requestContext'];
+      context: Context;
       loggedUser?: User;
       span?: Span;
     }

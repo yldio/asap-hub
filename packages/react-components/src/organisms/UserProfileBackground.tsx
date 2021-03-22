@@ -29,8 +29,21 @@ const linksContainer = css({
   },
 });
 
+const noMarginTextStyle = css({
+  h3: {
+    marginBottom: 0,
+  },
+  p: {
+    marginTop: 0,
+  },
+});
+
 const teamContentStyle = css({
   flex: 1,
+});
+
+const detailsContentStyle = css({
+  marginBottom: `${24 / perRem}em`,
 });
 
 const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
@@ -52,23 +65,23 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
       </Headline2>
       <div>
         <div css={dynamicContainerStyles}>
-          <div css={teamContentStyle}>
+          <div css={[teamContentStyle, noMarginTextStyle]}>
             <Headline3 styleAsHeading={5}>Team</Headline3>
             <Link href={teamHref}>Team {displayName}</Link>
           </div>
-          <div css={teamContentStyle}>
+          <div css={[teamContentStyle, noMarginTextStyle]}>
             <Headline3 styleAsHeading={5}>Role</Headline3>
             <Paragraph>{role}</Paragraph>
           </div>
         </div>
         {approach && (
-          <div>
+          <div css={[detailsContentStyle, noMarginTextStyle]}>
             <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
             <Paragraph>{approach}</Paragraph>
           </div>
         )}
         {responsibilities && (
-          <div>
+          <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>
               {firstName}'s Responsibilities
             </Headline3>

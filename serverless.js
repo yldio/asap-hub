@@ -250,14 +250,22 @@ module.exports = {
           ],
         },
       },
-      HttpApiApiMapping: {
-        Type: 'AWS::ApiGatewayV2::ApiMapping',
-        DependsOn: ['HttpApiDomain'],
+      ApiGatewayDeployment: {
+        Type: 'AWS::ApiGateway::Deployment',
         Properties: {
-          ApiId: { Ref: 'HttpApi' },
-          ApiMappingKey: '',
+          Description: '${opt:stage} Environment',
+          RestApiId: { Ref: 'ApiGatewayRestApi' },
+          StageName: '${self:custom.stage}',
+        },
+        DependsOn: ['HttpApiDomain'],
+      },
+      RestApiApiMapping: {
+        Type: 'AWS::ApiGateway::BasePathMapping',
+        DependsOn: ['ApiGatewayDeployment'],
+        Properties: {
+          RestApiId: { Ref: 'ApiGatewayRestApi' },
           DomainName: `\${self:custom.apiHostname}`,
-          Stage: { Ref: 'HttpApiStage' },
+          Stage: '${self:provider.stage}',
         },
       },
       HttpApiRecordSetGroup: {
@@ -499,7 +507,7 @@ module.exports = {
                   'Fn::Join': [
                     '.',
                     [
-                      { Ref: 'HttpApi' },
+                      { Ref: 'ApiGatewayRestApi' },
                       'execute-api',
                       { Ref: 'AWS::Region' },
                       { Ref: 'AWS::URLSuffix' },

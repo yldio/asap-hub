@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
-import { subHours, parseISO, isAfter, addSeconds, addHours } from 'date-fns';
+import { subHours, parseISO, addSeconds, addHours } from 'date-fns';
 
 import { noop } from '../utils';
 import { Headline2, Paragraph, Anchor, Link } from '../atoms';
@@ -11,9 +11,9 @@ import { alertIcon } from '../icons';
 import { layoutStyles } from '../text';
 import { perRem, mobileScreen } from '../pixels';
 import { mailToSupport } from '../mail';
+import { useDateHasPassed } from '../date';
 
 const REFRESH_INTERVAL_SECONDS = 60;
-const UPDATE_INTERVAL_SECONDS = 10;
 
 interface JoinEventProps {
   readonly meetingLink?: string;
@@ -27,10 +27,6 @@ const JoinEvent: React.FC<JoinEventProps> = ({
   endDate,
   onRefresh = noop,
 }) => {
-  const [linkMissing, setLinkMissing] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [hasEnded, setHasEnded] = useState(false);
-
   const startRefreshingAfter = subHours(
     parseISO(startDate),
     MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
@@ -41,41 +37,24 @@ const JoinEvent: React.FC<JoinEventProps> = ({
     EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
   );
 
-  useEffect(() => {
-    const update = () => {
-      setLinkMissing(
-        !meetingLink &&
-          isAfter(
-            new Date(),
-            // two refresh durations tolerance to not show an error message straight away in case of unsynced time, or a pending refresh
-            addSeconds(startRefreshingAfter, 2 * REFRESH_INTERVAL_SECONDS),
-          ),
-      );
-      setHasStarted(isAfter(new Date(), considerStartedAfter));
-      setHasEnded(isAfter(new Date(), considerEndedAfter));
-    };
-    update();
-    const updateInterval = globalThis.setInterval(() => {
-      update();
-    }, UPDATE_INTERVAL_SECONDS);
-    return () => globalThis.clearInterval(updateInterval);
-  }, [
-    startRefreshingAfter,
-    considerStartedAfter,
-    considerEndedAfter,
-    meetingLink,
-  ]);
+  const startRefreshing = useDateHasPassed(startRefreshingAfter);
+  const linkMissing =
+    useDateHasPassed(
+      addSeconds(startRefreshingAfter, 2 * REFRESH_INTERVAL_SECONDS),
+    ) && !meetingLink;
+  const hasStarted = useDateHasPassed(considerStartedAfter);
+  const hasEnded = useDateHasPassed(considerEndedAfter);
 
   useEffect(() => {
     const refreshInterval = globalThis.setInterval(() => {
-      if (!meetingLink && isAfter(new Date(), startRefreshingAfter)) {
+      if (!meetingLink && startRefreshing) {
         onRefresh();
       }
     }, REFRESH_INTERVAL_SECONDS * 1000);
     return () => {
       globalThis.clearInterval(refreshInterval);
     };
-  }, [startRefreshingAfter, meetingLink, onRefresh]);
+  }, [startRefreshing, meetingLink, onRefresh]);
 
   if (hasEnded) {
     return null;

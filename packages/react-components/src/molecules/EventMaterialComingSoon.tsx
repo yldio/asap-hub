@@ -15,7 +15,7 @@ const EventMaterialComingSoon: React.FC<EventMaterialComingSoonProps> = ({
 }) => (
   <Card accent="placeholder">
     <Headline2 styleAsHeading={3}>{materialType}</Headline2>
-    <Paragraph>
+    <Paragraph accent="lead">
       {materialType} for this event will be coming soon - usually within a week
       after the event.{' '}
       <strong css={{ color: charcoal.rgb }}>Please check back later.</strong>

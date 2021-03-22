@@ -1,7 +1,8 @@
 import React from 'react';
 import { EventMaterials } from '@asap-hub/react-components';
-import { number, text } from '@storybook/addon-knobs';
+import { boolean, date, number, text } from '@storybook/addon-knobs';
 import { createEventResponse } from '@asap-hub/fixtures';
+import { subDays } from 'date-fns';
 
 export default {
   title: 'Organisms / Events / Materials',
@@ -10,16 +11,27 @@ export default {
 
 export const Normal = () => (
   <EventMaterials
-    notes={text('Notes', '')}
-    videoRecording={text(
-      'Video recording',
-      '<iframe src="https://player.vimeo.com/video/507828845" width="640" height="400" frameborder="0" allowfullscreen="allowfullscreen"></iframe>',
-    )}
-    presentation={text('Presentation', '')}
+    endDate={new Date(date('End Date', subDays(new Date(), 1))).toISOString()}
+    notes={boolean('Notes Unavailable', false) ? null : text('Notes', '')}
+    videoRecording={
+      boolean('Video recording unavailable', false)
+        ? null
+        : text(
+            'Video recording',
+            '<iframe src="https://player.vimeo.com/video/507828845" width="640" height="400" frameborder="0" allowfullscreen="allowfullscreen"></iframe>',
+          )
+    }
+    presentation={
+      boolean('Presentation unavailable', true)
+        ? null
+        : text('Presentation', '')
+    }
     meetingMaterials={
-      createEventResponse({
-        meetingMaterials: number('Number of additional materials', 2),
-      }).meetingMaterials
+      boolean('Additional materials unavailable', false)
+        ? null
+        : createEventResponse({
+            meetingMaterials: number('Number of additional materials', 2),
+          }).meetingMaterials
     }
   />
 );

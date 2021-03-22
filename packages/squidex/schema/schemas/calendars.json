@@ -15,6 +15,23 @@
     "fieldsInLists": [],
     "fields": [
       {
+        "name": "calendarData",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "Calendar Information",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "name",
         "isHidden": false,
         "isLocked": false,
@@ -27,7 +44,7 @@
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
-          "isRequired": false,
+          "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
@@ -109,6 +126,23 @@
           "contentType": "Unspecified",
           "editor": "Radio",
           "label": "Color",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "apiData",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "UI",
+          "editor": "Separator",
+          "label": "API Data (not changeable)",
+          "hints": "",
+          "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

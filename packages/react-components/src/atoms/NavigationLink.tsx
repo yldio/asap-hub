@@ -2,6 +2,14 @@ import React from 'react';
 import { NavHashLink } from 'react-router-hash-link';
 import css from '@emotion/css';
 
+import {
+  discover,
+  network,
+  sharedResearch,
+  news,
+  events,
+} from '@asap-hub/routing';
+
 import { TextChildren } from '../text';
 import { useHasRouter } from '../routing';
 import { lead } from '../colors';
@@ -79,6 +87,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         activeClassName={activeClassName}
         css={[styles, { [`&.${activeClassName}`]: activePrimaryStyles }]}
         smooth
+        isActive={(match, _) => !!match}
       >
         <p css={textStyles}>
           <span css={iconStyles}>{icon}</span>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { DecoratorFn } from '@storybook/react';
-import { Layout, BasicLayout } from '@asap-hub/react-components';
+import { Layout, BasicLayout, MessageLayout } from '@asap-hub/react-components';
 
 const noPaddingStyles = `
   body {
@@ -45,6 +45,15 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
       >
         {storyFn()}
       </Layout>
+    ),
+    context,
+  );
+export const MessageLayoutDecorator: DecoratorFn = (storyFn, context) =>
+  NoPaddingDecorator(
+    () => (
+      <MessageLayout termsHref="/terms" privacyPolicyHref="/privacy-policy">
+        {storyFn()}
+      </MessageLayout>
     ),
     context,
   );

@@ -8,12 +8,7 @@ describe('welcome email template', () => {
 
   beforeEach(() => {
     result = render(
-      <Welcome
-        firstName="John Doe"
-        link="https://example.com"
-        privacyPolicyHref={'https://hub.asap.science/privacy-policy'}
-        termsHref={'https://hub.asap.science/terms-and-conditions'}
-      />,
+      <Welcome firstName="John Doe" link="https://example.com" />,
     );
   });
 

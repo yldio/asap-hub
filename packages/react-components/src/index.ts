@@ -1,9 +1,8 @@
-import * as messages from './messages';
 import * as pixels from './pixels';
 import * as text from './text';
 import * as authTestUtils from './auth-test-utils';
 
-export { messages, pixels, text, authTestUtils };
+export { pixels, text, authTestUtils };
 
 export * from './icons';
 export * from './images';
@@ -149,3 +148,4 @@ export {
   UserProfileStaff,
   WelcomePage,
 } from './templates';
+export { MessageLayout, WelcomeMessage } from './messages';

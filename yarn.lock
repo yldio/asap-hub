@@ -28,6 +28,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-cli@workspace:apps/asap-cli"
   dependencies:
+    "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
@@ -333,6 +334,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/message-templates@workspace:*, @asap-hub/message-templates@workspace:packages/message-templates":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/message-templates@workspace:packages/message-templates"
+  dependencies:
+    "@babel/runtime-corejs3": ^7.12.5
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/model@workspace:*, @asap-hub/model@workspace:packages/model":
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
@@ -470,39 +479,28 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/react-templates@workspace:apps/react-templates"
   dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/react-components": "workspace:*"
     "@babel/core": ^7.12.10
-    "@babel/plugin-transform-modules-commonjs": ^7.12.1
-    "@babel/plugin-transform-runtime": ^7.12.10
+    "@babel/preset-react": ^7.12.10
     "@babel/runtime-corejs3": ^7.12.5
-    "@emotion/babel-preset-css-prop": ^10.0.27
     "@emotion/cache": ^10.0.29
     "@emotion/core": ^10.0.28
     "@types/babel__core": ^7
-    "@types/babel__plugin-transform-runtime": ^7
-    "@types/babel__preset-env": ^7
-    "@types/jest": ^26.0.20
     "@types/react": ^17.0.0
     "@types/react-dom": ^17.0.0
-    "@types/testing-library__react-hooks": ^3.2.0
-    "@types/webpack": ^4
-    "@yarnpkg/pnpify": ^2.2.1
     aws-sdk: ^2.745.0
     babel-loader: ^8.1.0
     babel-preset-react-app: ^9.1.2
     core-js: ^3.6.5
     create-emotion-server: ^10.0.27
     juice: ^7.0.0
-    pnp-webpack-plugin: ^1.6.4
     react: ^17.0.1
     react-dom: ^17.0.1
-    react-test-renderer: ^17.0.1
     title-case: ^3.0.2
     url-loader: ^4.1.0
     webpack: ^5.1.0
-  peerDependencies:
-    react: ^17.0.1
-    react-dom: ^17.0.1
   languageName: unknown
   linkType: soft
 
@@ -6224,20 +6222,6 @@ __metadata:
   dependencies:
     "@babel/types": ^7.0.0
   checksum: d9f19e0e47fe7df97e41029b656ca85e66124509b36b0ccaa5cc68617fe243240bd4431246b8928b9f08abf3818bbd6c94ba934cc7f88faaa2e32a38f5b728a8
-  languageName: node
-  linkType: hard
-
-"@types/babel__plugin-transform-runtime@npm:^7":
-  version: 7.9.0
-  resolution: "@types/babel__plugin-transform-runtime@npm:7.9.0"
-  checksum: 029411aa862b104f17d21945924e7c51aad1941d087380277c3724a64090260780b174dee6053bd1143705dc935b27ac193c0f7e26fa0d55145796850a1813b2
-  languageName: node
-  linkType: hard
-
-"@types/babel__preset-env@npm:^7":
-  version: 7.9.0
-  resolution: "@types/babel__preset-env@npm:7.9.0"
-  checksum: a6a5b05b27441202bb370f305b8460fb0df20337294776b1dca1b05920293502a8dd346b8e438a118984732fdffce3d8bff05de8f085dc5393e4c09d96ea1d84
   languageName: node
   linkType: hard
 
@@ -23514,7 +23498,7 @@ fsevents@^2.1.3:
   languageName: node
   linkType: hard
 
-"pnp-webpack-plugin@npm:1.6.4, pnp-webpack-plugin@npm:^1.6.4":
+"pnp-webpack-plugin@npm:1.6.4":
   version: 1.6.4
   resolution: "pnp-webpack-plugin@npm:1.6.4"
   dependencies:

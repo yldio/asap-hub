@@ -1,7 +1,7 @@
-const aws = require('aws-sdk');
+import aws from 'aws-sdk';
 
 const ses = new aws.SES({ apiVersion: '2010-12-01' });
-module.exports = async (src) => {
+const syncTemplate = async (src: string): Promise<void> => {
   const template = require(src);
   const templateName = template.TemplateName;
 
@@ -30,3 +30,5 @@ module.exports = async (src) => {
     throw err;
   }
 };
+
+export default syncTemplate;

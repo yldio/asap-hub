@@ -1,10 +1,6 @@
 import aws from 'aws-sdk';
+import { welcome } from '@asap-hub/message-templates';
 import { grantsFromEmail } from '../config';
-
-export interface Welcome {
-  displayName: string;
-  link: string;
-}
 
 const ses = new aws.SES({ apiVersion: '2010-12-01', region: 'us-east-1' });
 export const sendEmail = async ({
@@ -14,7 +10,7 @@ export const sendEmail = async ({
 }: {
   to: string[];
   template: 'Welcome';
-  values: unknown;
+  values: typeof welcome;
 }): Promise<unknown> => {
   const params = {
     Destination: {

@@ -5,42 +5,35 @@
   "engines": {
     "node": "14.15.x"
   },
-  "peerDependencies": {
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+  "scripts": {
+    "build:babel": "../../scripts/build-babel.sh build",
+    "watch:babel": "../../scripts/build-babel.sh watch",
+    "deploy": "node build-cjs/deploy"
   },
   "dependencies": {
+    "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
     "@babel/core": "^7.12.10",
+    "@babel/preset-react": "^7.12.10",
+    "@babel/runtime-corejs3": "^7.12.5",
     "@emotion/cache": "^10.0.29",
     "@emotion/core": "^10.0.28",
     "aws-sdk": "^2.745.0",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react-app": "^9.1.2",
     "core-js": "^3.6.5",
     "create-emotion-server": "^10.0.27",
     "juice": "^7.0.0",
-    "pnp-webpack-plugin": "^1.6.4",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "title-case": "^3.0.2",
+    "url-loader": "^4.1.0",
     "webpack": "^5.1.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/runtime-corejs3": "^7.12.5",
-    "@emotion/babel-preset-css-prop": "^10.0.27",
+    "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@types/babel__core": "^7",
-    "@types/babel__plugin-transform-runtime": "^7",
-    "@types/babel__preset-env": "^7",
-    "@types/jest": "^26.0.20",
     "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/testing-library__react-hooks": "^3.2.0",
-    "@types/webpack": "^4",
-    "@yarnpkg/pnpify": "^2.2.1",
-    "babel-loader": "^8.1.0",
-    "babel-preset-react-app": "^9.1.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-test-renderer": "^17.0.1",
-    "url-loader": "^4.1.0"
+    "@types/react-dom": "^17.0.0"
   }
 }

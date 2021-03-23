@@ -1,16 +1,20 @@
-const createCache = require('@emotion/cache').default;
-const createEmotionServer = require('create-emotion-server').default;
-const juice = require('juice');
-const path = require('path');
-const React = require('react');
-const { CacheProvider } = require('@emotion/core');
-const { promises: fs } = require('fs');
-const { renderToStaticMarkup } = require('react-dom/server');
-const { titleCase } = require('title-case');
+import createCache from '@emotion/cache';
+import createEmotionServer from 'create-emotion-server';
+import juice from 'juice';
+import path from 'path';
+import React from 'react';
+import { CacheProvider } from '@emotion/core';
+import { promises as fs } from 'fs';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { titleCase } from 'title-case';
+import { Compiler, Stats } from 'webpack';
+import { URL } from 'url';
+
+import { APP_ORIGIN } from './config';
 
 const htmlTemplate = (
-  title,
-  content,
+  title: string,
+  content: string,
 ) => `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="https://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
     xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -32,31 +36,53 @@ const htmlTemplate = (
 </body>
 </html>`;
 
-const apply = async (stats, origin) => {
+const apply = async (stats: Stats) => {
   const outputDir = stats.compilation.outputOptions.path;
+  if (!outputDir) {
+    throw new Error('Cannot determine output dir');
+  }
+
   const files = await fs.readdir(outputDir);
   const tasks = files
-    .filter((f) => f.endsWith('.js'))
-    .map(async (f) => {
+    .filter((file) => path.extname(file) === '.js')
+    .map(async (file) => {
       const cache = createCache();
       const { extractCritical } = createEmotionServer(cache);
-      const pkg = require(path.resolve(outputDir, f));
-      const Component = pkg.default;
+      const template = require(path.resolve(outputDir, file)) as Record<
+        string,
+        unknown
+      >;
+      const { name } = path.parse(file);
 
-      const { name } = path.parse(f);
-      const subject = pkg.subject ? pkg.subject : titleCase(name);
+      const reactElement = template.default as React.ReactElement;
+      if (
+        typeof reactElement === 'object' &&
+        !React.isValidElement(reactElement)
+      ) {
+        throw new Error(
+          `Template ${file} does not default export a valid React element`,
+        );
+      }
+
+      const subject = template.subject as string | undefined;
+      if (!(typeof subject === 'string')) {
+        throw new Error(`Template ${file} does not export a subject string`);
+      }
 
       const element = React.createElement(
         CacheProvider,
         { value: cache },
-        React.createElement(Component),
+        reactElement,
       );
 
       const { html, css } = extractCritical(renderToStaticMarkup(element));
       const s3Html = Object.keys(stats.compilation.assets).reduce(
         (res, asset) => {
           const { base } = path.parse(asset);
-          return res.replace(asset, `${origin}/static/media/${base}`);
+          return res.replace(
+            asset,
+            new URL(`/.messages-static/${base}`, APP_ORIGIN).toString(),
+          );
         },
         html,
       );
@@ -78,16 +104,12 @@ const apply = async (stats, origin) => {
   return Promise.all(tasks);
 };
 
-module.exports = class TemplatePlugin {
-  constructor(options = {}) {
-    this.origin = options.origin;
-  }
-
-  apply(compiler) {
-    compiler.hooks.done.tapAsync('TemplatePlugin', async (stats, callback) => {
-      return apply(stats, this.origin)
-        .then((res) => callback(null, res))
-        .catch((err) => callback(err));
-    });
-  }
+const plugin = (compiler: Compiler): void => {
+  compiler.hooks.done.tapAsync('TemplatePlugin', async (stats, callback) =>
+    apply(stats)
+      .then(() => callback(null))
+      .catch((err) => callback(err)),
+  );
 };
+
+export default plugin;

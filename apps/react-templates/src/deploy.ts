@@ -1,12 +1,13 @@
-const path = require('path');
-const webpack = require('webpack');
-const { promises: fs } = require('fs');
-const webpackConfig = require('./webpack.config');
-const syncTemplate = require('./sync-template');
+import path from 'path';
+import webpack, { Configuration, Stats } from 'webpack';
+import { promises as fs } from 'fs';
+
+import webpackConfig from './webpack.config';
+import syncTemplate from './sync-template';
 
 // required by babel-preset-react-app
 process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-const compile = (config) => {
+const compile = (config: Configuration): Promise<Stats | undefined> => {
   const compiler = webpack(config);
   return new Promise((resolve, reject) => {
     compiler.run((err, res) => {
@@ -18,15 +19,13 @@ const compile = (config) => {
   });
 };
 
-const syncTemplates = async (templates) => {
-  const tasks = templates.map((template) => {
-    return syncTemplate(template);
-  });
+const syncTemplates = async (templates: string[]) => {
+  const tasks = templates.map(syncTemplate);
   return Promise.all(tasks);
 };
 
 const main = async () => {
-  const templatesDir = path.resolve(__dirname, '..', 'templates');
+  const templatesDir = path.resolve(__dirname, 'templates');
   const templates = await fs.readdir(templatesDir);
   const res = await compile({
     entry: templates.reduce((entries, template) => {
@@ -38,8 +37,14 @@ const main = async () => {
     }, {}),
     ...webpackConfig,
   });
-
+  if (!res) {
+    throw new Error('Missing webpack compilation stats');
+  }
   const outputPath = res.compilation.outputOptions.path;
+  if (!outputPath) {
+    throw new Error('Cannot determine output dir');
+  }
+
   const files = await fs.readdir(outputPath);
   const templatesJson = files
     .filter((f) => f.endsWith('.json'))
@@ -47,4 +52,7 @@ const main = async () => {
   await syncTemplates(templatesJson);
 };
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

@@ -98,6 +98,7 @@ const apply = async (stats: Stats) => {
           TextPart: '',
         }),
       );
+      console.log(`Template ${name} written.`);
       return content;
     });
 

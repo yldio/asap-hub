@@ -44,6 +44,8 @@ const syncTemplates = async () => {
     .filter((file) => path.extname(file) === '.json')
     .map((file) => path.resolve(outputDir, file));
 
+  console.log('Available templates:', templates);
+
   const tasks = templates.map(syncTemplate);
   return Promise.all(tasks);
 };

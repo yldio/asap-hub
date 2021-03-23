@@ -51,6 +51,7 @@ describe('Sync calendar util hook', () => {
     const googleParams = {
       calendarId: 'google-calendar-id',
       singleEvents: true,
+      showDeleted: true,
       timeMin: '2020-10-01T00:00:00.000Z',
       timeMax: '2023-09-04T10:37:50.000Z',
       pageToken: undefined,

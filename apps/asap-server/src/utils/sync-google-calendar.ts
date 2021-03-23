@@ -36,6 +36,7 @@ const fetchEvents = async (
     pageToken: pageToken || undefined,
     calendarId: googleCalendarId,
     singleEvents: true, // recurring events come returned as single events
+    showDeleted: true,
   };
 
   if (!syncToken) {

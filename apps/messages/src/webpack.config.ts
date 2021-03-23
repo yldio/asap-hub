@@ -3,7 +3,7 @@ import { Configuration } from 'webpack';
 import TemplatePlugin from './template-plugin';
 
 const outputDir = path.resolve(
-  require.resolve('@asap-hub/react-templates/package.json'),
+  require.resolve('@asap-hub/messages/package.json'),
   '../build-templates',
 );
 const config: Configuration = {

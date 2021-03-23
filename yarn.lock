@@ -342,6 +342,35 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@asap-hub/messages@workspace:apps/messages":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/messages@workspace:apps/messages"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@asap-hub/message-templates": "workspace:*"
+    "@asap-hub/react-components": "workspace:*"
+    "@babel/core": ^7.12.10
+    "@babel/preset-react": ^7.12.10
+    "@babel/runtime-corejs3": ^7.12.5
+    "@emotion/cache": ^10.0.29
+    "@emotion/core": ^10.0.28
+    "@types/babel__core": ^7
+    "@types/react": ^17.0.0
+    "@types/react-dom": ^17.0.0
+    aws-sdk: ^2.745.0
+    babel-loader: ^8.1.0
+    babel-preset-react-app: ^9.1.2
+    core-js: ^3.6.5
+    create-emotion-server: ^10.0.27
+    juice: ^7.0.0
+    react: ^17.0.1
+    react-dom: ^17.0.1
+    title-case: ^3.0.2
+    url-loader: ^4.1.0
+    webpack: ^5.1.0
+  languageName: unknown
+  linkType: soft
+
 "@asap-hub/model@workspace:*, @asap-hub/model@workspace:packages/model":
   version: 0.0.0-use.local
   resolution: "@asap-hub/model@workspace:packages/model"
@@ -472,35 +501,6 @@ __metadata:
     react-test-renderer: ^17.0.1
   peerDependencies:
     react: ^17.0.1
-  languageName: unknown
-  linkType: soft
-
-"@asap-hub/react-templates@workspace:apps/react-templates":
-  version: 0.0.0-use.local
-  resolution: "@asap-hub/react-templates@workspace:apps/react-templates"
-  dependencies:
-    "@asap-hub/eslint-config-asap-hub": "workspace:*"
-    "@asap-hub/message-templates": "workspace:*"
-    "@asap-hub/react-components": "workspace:*"
-    "@babel/core": ^7.12.10
-    "@babel/preset-react": ^7.12.10
-    "@babel/runtime-corejs3": ^7.12.5
-    "@emotion/cache": ^10.0.29
-    "@emotion/core": ^10.0.28
-    "@types/babel__core": ^7
-    "@types/react": ^17.0.0
-    "@types/react-dom": ^17.0.0
-    aws-sdk: ^2.745.0
-    babel-loader: ^8.1.0
-    babel-preset-react-app: ^9.1.2
-    core-js: ^3.6.5
-    create-emotion-server: ^10.0.27
-    juice: ^7.0.0
-    react: ^17.0.1
-    react-dom: ^17.0.1
-    title-case: ^3.0.2
-    url-loader: ^4.1.0
-    webpack: ^5.1.0
   languageName: unknown
   linkType: soft
 

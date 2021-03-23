@@ -2,7 +2,7 @@ deploy:ses:master:
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
   script:
-    - yarn workspace @asap-hub/react-templates deploy
+    - yarn workspace @asap-hub/messages deploy
   stage: deploy-prod
   dependencies:
     - build:ts

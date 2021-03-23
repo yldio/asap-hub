@@ -55,9 +55,9 @@ const membersContainerStyles = css({
 
   display: 'grid',
   gridAutoFlow: 'column',
-  gridTemplateColumns: `repeat(${MAX_MEMBER_AVATARS}, minmax(auto, 60px)) ${
+  gridTemplateColumns: `repeat(${MAX_MEMBER_AVATARS}, minmax(auto, 36px)) ${
     6 / perRem
-  }em minmax(auto, 60px)`,
+  }em minmax(auto, 36px)`,
 });
 const membersListStyles = css({
   display: 'contents',
@@ -66,6 +66,11 @@ const membersListStyles = css({
 const extraUsersStyles = css({
   display: 'block',
   gridColumnEnd: '-1',
+});
+const listItemStyles = css({
+  border: '1px solid white',
+  borderRadius: '50%',
+  position: 'relative',
 });
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
@@ -88,13 +93,17 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
           <ul css={membersListStyles}>
             {members
               .slice(0, MAX_MEMBER_AVATARS)
-              .map(({ id: memberId, avatarUrl, firstName, lastName }) => (
-                <li key={memberId}>
+              .map(({ id: memberId, avatarUrl, firstName, lastName }, i) => (
+                <li
+                  key={memberId}
+                  css={[listItemStyles, { left: `-${i * 3}px` }]}
+                >
                   <Anchor href={network({}).users({ userId: memberId }).$}>
                     <Avatar
                       firstName={firstName}
                       lastName={lastName}
                       imageUrl={avatarUrl}
+                      // border
                     />
                   </Anchor>
                 </li>

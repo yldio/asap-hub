@@ -15,8 +15,9 @@ import {
   berry,
   lavender,
   mauve,
-  charcoal,
   paper,
+  lead,
+  steel,
 } from '../colors';
 import { perRem } from '../pixels';
 import { headlineStyles, fontStyles } from '../text';
@@ -59,7 +60,7 @@ const placeholderStyle = css({
   borderWidth: '1px',
   borderStyle: 'solid',
   borderRadius: '50%',
-  borderColor: charcoal.rgb,
+  borderColor: steel.rgb,
 });
 
 const circleStyle = css({
@@ -87,7 +88,7 @@ const textStyle = css(fontStyles, headlineStyles[3], {
 
 const placeholderColorStyle = css({
   backgroundColor: paper.rgb,
-  fill: charcoal.rgb,
+  fill: lead.rgb,
 });
 const colorStyles = [
   css({ backgroundColor: mint.rgb, fill: pine.rgb }),

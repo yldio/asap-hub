@@ -250,22 +250,13 @@ module.exports = {
           ],
         },
       },
-      ApiGatewayDeployment: {
-        Type: 'AWS::ApiGateway::Deployment',
-        Properties: {
-          Description: '${opt:stage} Environment',
-          RestApiId: { Ref: 'ApiGatewayRestApi' },
-          StageName: '${self:custom.stage}',
-        },
-        DependsOn: ['HttpApiDomain'],
-      },
-      RestApiApiMapping: {
+      HttpApiApiMapping: {
         Type: 'AWS::ApiGateway::BasePathMapping',
-        DependsOn: ['ApiGatewayDeployment'],
+        DependsOn: [`ApiGatewayDeployment\${sls:instanceId}`],
         Properties: {
           RestApiId: { Ref: 'ApiGatewayRestApi' },
           DomainName: `\${self:custom.apiHostname}`,
-          Stage: '${self:provider.stage}',
+          Stage: `\${self:provider.stage}`,
         },
       },
       HttpApiRecordSetGroup: {

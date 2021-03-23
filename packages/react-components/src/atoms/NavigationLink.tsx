@@ -2,14 +2,6 @@ import React from 'react';
 import { NavHashLink } from 'react-router-hash-link';
 import css from '@emotion/css';
 
-import {
-  discover,
-  network,
-  sharedResearch,
-  news,
-  events,
-} from '@asap-hub/routing';
-
 import { TextChildren } from '../text';
 import { useHasRouter } from '../routing';
 import { lead } from '../colors';

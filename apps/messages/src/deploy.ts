@@ -45,6 +45,9 @@ const syncTemplates = async () => {
     .map((file) => path.resolve(outputDir, file));
 
   console.log('Available templates:', templates);
+  if (!templates.length) {
+    process.exit(1);
+  }
 
   const tasks = templates.map(syncTemplate);
   return Promise.all(tasks);

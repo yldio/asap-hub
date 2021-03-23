@@ -4,7 +4,7 @@ deploy:ses:master:
   script:
     - yarn workspace @asap-hub/messages deploy
   stage: deploy-prod
-  dependencies:
+  needs:
     - build:ts
   variables:
     SLS_STAGE: production

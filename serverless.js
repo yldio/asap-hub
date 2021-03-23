@@ -238,47 +238,47 @@ module.exports = {
   },
   resources: {
     Resources: {
-      // HttpApiDomain: {
-      //   Type: 'AWS::ApiGatewayV2::DomainName',
-      //   Properties: {
-      //     DomainName: `\${self:custom.apiHostname}`,
-      //     DomainNameConfigurations: [
-      //       {
-      //         CertificateArn: AWS_ACM_CERTIFICATE_ARN,
-      //         EndpointType: 'REGIONAL',
-      //       },
-      //     ],
-      //   },
-      // },
-      // HttpApiApiMapping: {
-      //   Type: 'AWS::ApiGateway::BasePathMapping',
-      //   DependsOn: [`ApiGatewayDeployment\${sls:instanceId}`],
-      //   Properties: {
-      //     RestApiId: { Ref: 'ApiGatewayRestApi' },
-      //     DomainName: `\${self:custom.apiHostname}`,
-      //     Stage: `\${self:provider.stage}`,
-      //   },
-      // },
-      // HttpApiRecordSetGroup: {
-      //   Type: 'AWS::Route53::RecordSetGroup',
-      //   Properties: {
-      //     HostedZoneName: `${ASAP_HOSTNAME}.`,
-      //     RecordSets: [
-      //       {
-      //         Name: `\${self:custom.apiHostname}`,
-      //         Type: 'A',
-      //         AliasTarget: {
-      //           DNSName: {
-      //             'Fn::GetAtt': ['HttpApiDomain', 'RegionalDomainName'],
-      //           },
-      //           HostedZoneId: {
-      //             'Fn::GetAtt': ['HttpApiDomain', 'RegionalHostedZoneId'],
-      //           },
-      //         },
-      //       },
-      //     ],
-      //   },
-      // },
+      HttpApiDomain: {
+        Type: 'AWS::ApiGatewayV2::DomainName',
+        Properties: {
+          DomainName: `\${self:custom.apiHostname}`,
+          DomainNameConfigurations: [
+            {
+              CertificateArn: AWS_ACM_CERTIFICATE_ARN,
+              EndpointType: 'REGIONAL',
+            },
+          ],
+        },
+      },
+      HttpApiApiMapping: {
+        Type: 'AWS::ApiGateway::BasePathMapping',
+        DependsOn: [`ApiGatewayDeployment\${sls:instanceId}`],
+        Properties: {
+          RestApiId: { Ref: 'ApiGatewayRestApi' },
+          DomainName: `\${self:custom.apiHostname}`,
+          Stage: `\${self:provider.stage}`,
+        },
+      },
+      HttpApiRecordSetGroup: {
+        Type: 'AWS::Route53::RecordSetGroup',
+        Properties: {
+          HostedZoneName: `${ASAP_HOSTNAME}.`,
+          RecordSets: [
+            {
+              Name: `\${self:custom.apiHostname}`,
+              Type: 'A',
+              AliasTarget: {
+                DNSName: {
+                  'Fn::GetAtt': ['HttpApiDomain', 'RegionalDomainName'],
+                },
+                HostedZoneId: {
+                  'Fn::GetAtt': ['HttpApiDomain', 'RegionalHostedZoneId'],
+                },
+              },
+            },
+          ],
+        },
+      },
       FrontendBucket: {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',

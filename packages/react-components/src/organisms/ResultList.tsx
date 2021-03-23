@@ -12,8 +12,6 @@ import {
 
 const headerStyles = css({
   justifySelf: 'start',
-  paddingTop: `${(12 - 1) / perRem}em`,
-  paddingBottom: `${(12 + 1) / perRem}em`,
 });
 const mainStyles = css({
   justifySelf: 'stretch',

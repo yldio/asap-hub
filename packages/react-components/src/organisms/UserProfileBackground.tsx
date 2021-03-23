@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 
-import { Card, Headline2, Headline3, Link, Paragraph } from '../atoms';
+import { Card, Headline2, Headline3, Link } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 
 type UserProfileBackgroundProps = UserTeam & Pick<UserResponse, 'firstName'>;
@@ -33,6 +33,14 @@ const teamContentStyle = css({
   flex: 1,
 });
 
+const detailsContentStyle = css({
+  marginBottom: `${24 / perRem}em`,
+});
+
+const textStyle = css({
+  margin: 0,
+});
+
 const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   id,
   displayName,
@@ -58,21 +66,21 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
           </div>
           <div css={teamContentStyle}>
             <Headline3 styleAsHeading={5}>Role</Headline3>
-            <Paragraph>{role}</Paragraph>
+            <p>{role}</p>
           </div>
         </div>
         {approach && (
-          <div>
+          <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
-            <Paragraph>{approach}</Paragraph>
+            <p css={textStyle}>{approach}</p>
           </div>
         )}
         {responsibilities && (
-          <div>
+          <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>
               {firstName}'s Responsibilities
             </Headline3>
-            <Paragraph>{responsibilities}</Paragraph>
+            <p css={textStyle}>{responsibilities}</p>
           </div>
         )}
       </div>

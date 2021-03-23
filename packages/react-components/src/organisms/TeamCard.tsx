@@ -5,9 +5,9 @@ import { network } from '@asap-hub/routing';
 
 import { Card, Anchor, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
+import { lead } from '../colors';
 import { teamIcon } from '../icons';
 import { TagList } from '../molecules';
-import { lead } from '../colors';
 
 const teamMemberStyles = css({
   color: lead.rgb,
@@ -19,10 +19,9 @@ const tagsPadding = css({
   paddingBottom: `${12 / perRem}em`,
 });
 const iconStyles = css({
-  display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${6 / perRem}em`,
+  display: 'inline-grid',
+  verticalAlign: 'middle',
+  paddingRight: `${15 / perRem}em`,
 });
 
 type TeamCardProps = Pick<
@@ -51,7 +50,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
     <span css={teamMemberStyles}>
       <span css={iconStyles}>{teamIcon} </span>
       {members.length} Team Member
-      {members.length !== 1 ? 's' : ''}
+      {members.length === 1 ? '' : 's'}
     </span>
   </Card>
 );

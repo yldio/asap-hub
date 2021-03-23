@@ -30,6 +30,8 @@ const imageContainerStyle = css({
   flexShrink: 0,
   borderRadius: `${6 / perRem}em`,
   height: `${184 / perRem}em`,
+  marginTop: `${12 / perRem}em`,
+  marginBottom: `${12 / perRem}em`,
   marginRight: `${24 / perRem}em`,
   width: `${184 / perRem}em`,
   overflow: 'hidden',

@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 
-import { Card, Headline2, Headline3, Link, Paragraph } from '../atoms';
+import { Card, Headline2, Headline3, Link } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 
 type UserProfileBackgroundProps = UserTeam & Pick<UserResponse, 'firstName'>;

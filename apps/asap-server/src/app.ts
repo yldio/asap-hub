@@ -90,10 +90,6 @@ export const appFactory = (libs: Libs = {}): Express => {
    * --- end of dependency inection
    */
 
-  if (libs.xRay) {
-    app.use(libs.xRay.express.openSegment('default'));
-    libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
-  }
 
   app.use(httpLogger);
   app.use(tracingHandler);
@@ -136,10 +132,6 @@ export const appFactory = (libs: Libs = {}): Express => {
       message: 'Not Found',
     });
   });
-
-  if (libs.xRay) {
-    app.use(libs.xRay.express.closeSegment());
-  }
 
   app.use(errorHandler);
   app.disable('x-powered-by');

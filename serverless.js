@@ -107,6 +107,12 @@ module.exports = {
         bucketPrefix: '.storybook',
         localDir: 'apps/storybook/build',
       },
+      {
+        bucketName: `\${self:service}-\${self:provider.stage}-messages-static`,
+        deleteRemoved: false,
+        bucketPrefix: '.messages-static',
+        localDir: 'apps/messages/build-templates/static',
+      },
     ],
     webpack: {
       config: 'serverless/webpack.config.js',
@@ -340,6 +346,24 @@ module.exports = {
           },
         },
       },
+      MessagesStaticBucket: {
+        Type: 'AWS::S3::Bucket',
+        DeletionPolicy: 'Delete',
+        Properties: {
+          BucketName: `\${self:service}-\${self:provider.stage}-messages-static`,
+          AccessControl: 'PublicRead',
+          CorsConfiguration: {
+            CorsRules: [
+              {
+                AllowedMethods: ['GET', 'HEAD'],
+                AllowedHeaders: ['*'],
+                AllowedOrigins: ['*'],
+                MaxAge: 3000,
+              },
+            ],
+          },
+        },
+      },
       BucketPolicyFrontend: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
@@ -403,6 +427,27 @@ module.exports = {
           },
         },
       },
+      BucketPolicyMessagesStatic: {
+        Type: 'AWS::S3::BucketPolicy',
+        Properties: {
+          Bucket: `\${self:service}-\${self:provider.stage}-messages-static`,
+          PolicyDocument: {
+            Statement: [
+              {
+                Action: ['s3:GetObject'],
+                Effect: 'Allow',
+                Principal: '*',
+                Resource: {
+                  'Fn::Join': [
+                    '',
+                    [{ 'Fn::GetAtt': ['MessagesStaticBucket', 'Arn'] }, '/*'],
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
       CloudFrontOriginAccessIdentityFrontend: {
         Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
         Properties: {
@@ -427,9 +472,22 @@ module.exports = {
           },
         },
       },
+      CloudFrontOriginAccessIdentityMessagesStatic: {
+        Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity',
+        Properties: {
+          CloudFrontOriginAccessIdentityConfig: {
+            Comment: { Ref: 'MessagesStaticBucket' },
+          },
+        },
+      },
       CloudFrontDistribution: {
         Type: 'AWS::CloudFront::Distribution',
-        DependsOn: ['FrontendBucket', 'AuthFrontendBucket', 'StorybookBucket'],
+        DependsOn: [
+          'FrontendBucket',
+          'AuthFrontendBucket',
+          'StorybookBucket',
+          'MessagesStaticBucket',
+        ],
         Properties: {
           DistributionConfig: {
             Aliases: [`\${self:custom.appHostname}`],
@@ -495,6 +553,23 @@ module.exports = {
                 Id: 's3origin-storybook',
               },
               {
+                DomainName: {
+                  'Fn::GetAtt': ['MessagesStaticBucket', 'RegionalDomainName'],
+                },
+                Id: 's3origin-messages-static',
+                S3OriginConfig: {
+                  OriginAccessIdentity: {
+                    'Fn::Join': [
+                      '/',
+                      [
+                        'origin-access-identity/cloudfront',
+                        { Ref: 'CloudFrontOriginAccessIdentityAuthFrontend' },
+                      ],
+                    ],
+                  },
+                },
+              },
+              {
                 CustomOriginConfig: {
                   OriginProtocolPolicy: 'https-only',
                 },
@@ -555,6 +630,21 @@ module.exports = {
                 },
                 PathPattern: '.storybook/*',
                 TargetOriginId: 's3origin-storybook',
+                ViewerProtocolPolicy: 'redirect-to-https',
+              },
+              {
+                AllowedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                CachedMethods: ['GET', 'HEAD', 'OPTIONS'],
+                Compress: true,
+                DefaultTTL: 3600,
+                ForwardedValues: {
+                  Cookies: {
+                    Forward: 'none',
+                  },
+                  QueryString: false,
+                },
+                PathPattern: '.messages-static/*',
+                TargetOriginId: 's3origin-messages-static',
                 ViewerProtocolPolicy: 'redirect-to-https',
               },
             ],

@@ -1,46 +1,49 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import css from '@emotion/css';
+
 import { Link } from '../atoms';
 import { silver } from '../colors';
 import { asapImage } from '../images';
 import { ceruleanFernGradientStyles } from '../appearance';
+import { perRem } from '../pixels';
 
 const containerStyles = css({
-  maxWidth: '600px',
+  maxWidth: `${600 / perRem}em`,
   marginLeft: 'auto',
   marginRight: 'auto',
 });
 
 const coloredLineStyles = css({
-  height: '6px',
+  height: `${6 / perRem}em`,
 });
 
 const imageContainerStyle = css({
-  height: '32px',
-  paddingTop: '6px',
-  marginTop: '24px',
-  marginBottom: '24px',
+  height: `${32 / perRem}em`,
+  paddingTop: `${6 / perRem}em`,
+  marginTop: `${24 / perRem}em`,
+  marginBottom: `${24 / perRem}em`,
 });
 
 const contentContainerStyles = css({
-  marginTop: '72px',
-  marginBottom: '72px',
+  paddingLeft: `${24 / perRem}em`,
+  marginTop: `${72 / perRem}em`,
+  marginBottom: `${72 / perRem}em`,
 });
 
 const footerContainerStyles = css({
   backgroundColor: silver.rgb,
-  paddingTop: '12px',
-  paddingBottom: '12px',
+  padding: `${12 / perRem}em`,
 });
 
 const footerContentContainerStyles = css({
-  display: 'flex',
-  gridGap: '16px',
-
-  margin: silver.rgb,
+  display: 'grid',
+  gridAutoFlow: 'column',
+  justifyContent: 'start',
+  columnGap: '16px',
 });
 
 interface LayoutProps {
+  readonly children: ReactNode;
   readonly termsHref: string;
   readonly privacyPolicyHref: string;
 }
@@ -56,14 +59,10 @@ const EmailLayout: React.FC<LayoutProps> = ({
         role="presentation"
         css={[ceruleanFernGradientStyles, coloredLineStyles]}
       />
-      <div
-        css={css({
-          paddingLeft: '24px',
-        })}
-      >
+      <div css={{ paddingLeft: '24px' }}>
         <img alt="ASAP Hub logo" css={imageContainerStyle} src={asapImage} />
-        <div css={contentContainerStyles}>{children}</div>
       </div>
+      <main css={contentContainerStyles}>{children}</main>
     </div>
     <div css={footerContainerStyles}>
       <ul css={[containerStyles, footerContentContainerStyles]}>

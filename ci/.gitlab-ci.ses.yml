@@ -2,9 +2,9 @@ deploy:ses:master:
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
   script:
-    - yarn node apps/react-templates/lib/deploy.js
+    - yarn workspace @asap-hub/messages deploy
   stage: deploy-prod
-  dependencies:
+  needs:
     - build:ts
   variables:
     SLS_STAGE: production

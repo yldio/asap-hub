@@ -12,7 +12,7 @@ import {
 import ErrorBoundary from '@asap-hub/frontend/src/structure/ErrorBoundary';
 import { getTeamGroups } from '../api';
 import GroupsCard from '../GroupsCard';
-import { refreshTeamState } from '../../state';
+import { teamGroupsState } from '../state';
 
 jest.mock('../api');
 const mockGetTeamGroups = getTeamGroups as jest.MockedFunction<
@@ -24,9 +24,7 @@ mockConsoleError();
 const id = 't42';
 
 const wrapper: React.FC<Record<string, never>> = ({ children }) => (
-  <RecoilRoot
-    initializeState={({ set }) => set(refreshTeamState(id), Math.random())}
-  >
+  <RecoilRoot initializeState={({ reset }) => reset(teamGroupsState(id))}>
     <React.Suspense fallback="loading">
       <Auth0Provider user={{ id: 'u42' }}>
         <WhenReady>

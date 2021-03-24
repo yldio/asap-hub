@@ -7,7 +7,7 @@ import { useUserGroupsById } from './state';
 const GroupsCard: React.FC<{ user: UserResponse }> = ({ user }) => {
   const groups = useUserGroupsById(user.id);
 
-  if (!groups) {
+  if (groups === 'noSuchUser') {
     throw new Error(
       `Failed to fetch groups for user with id ${user.id}. User does not exist.`,
     );

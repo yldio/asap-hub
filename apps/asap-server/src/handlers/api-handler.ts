@@ -33,6 +33,13 @@ export const apiHandler = serverlessHttp(app, {
     event: APIGatewayProxyEvent,
     context: Context,
   ) {
+    logger.debug({ event }, 'Event');
+    logger.debug({ context }, 'Context');
+    const segment = AWSXray.getSegment();
+
+    logger.debug({ segment }, 'Segment');
+
+
     request.context = context;
     logger.withRequest(event, context);
   },

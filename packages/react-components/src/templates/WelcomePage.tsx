@@ -13,15 +13,12 @@ import { mailToSupport } from '../mail';
 const values = {
   signup: {
     title: 'Join the ASAP Hub',
-    content: 'Confirm your account and start exploring the ASAP Network.',
-    buttonText: 'Create account',
+    content: 'Activate your account and start exploring the ASAP Network.',
+    buttonText: 'Activate account',
     footer: () => (
       <>
         <Paragraph accent="lead">
-          Already have an account? <Link href="/">Sign in</Link>
-        </Paragraph>
-        <Paragraph accent="lead">
-          By creating your account you are agreeing to the{' '}
+          By proceeding you are agreeing to the{' '}
           <Link href="/terms-and-conditions">Terms and Conditions</Link> of the
           ASAP Hub.
         </Paragraph>

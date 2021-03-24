@@ -39,7 +39,7 @@ it('renders a headline', async () => {
 it('renders one button', async () => {
   const { getByRole } = await renderWelcome();
   expect(getByRole('button').textContent).toMatchInlineSnapshot(
-    `"Create account"`,
+    `"Activate account"`,
   );
 });
 

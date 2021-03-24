@@ -40,12 +40,12 @@ const Signin: React.FC<SigninProps> = ({
   <article css={styles}>
     <header css={[headerStyles, ignoreWidthStyles]}>
       <Display styleAsHeading={2}>
-        {signup ? 'Create your account' : 'Sign in to the ASAP Hub'}
+        {signup ? 'Choose a login method' : 'Sign in to the ASAP Hub'}
       </Display>
       {signup ? (
         <Paragraph primary accent="lead">
-          The log in method you choose will be the one you'll have to use in the
-          future
+          Please remember your choice, you'll need it to log in to the Hub in
+          the future.
         </Paragraph>
       ) : null}
     </header>

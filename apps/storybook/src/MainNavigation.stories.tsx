@@ -16,7 +16,7 @@ export const Normal = () => {
   const path = select(
     'Active Section',
     {
-      Network: network({}).teams({}).$,
+      Network: network({}).$,
       'Shared Research': sharedResearch({}).$,
       'News and Events': news({}).$,
       'Discover ASAP': discover({}).$,

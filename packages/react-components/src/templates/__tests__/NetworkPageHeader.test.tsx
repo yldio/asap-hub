@@ -18,7 +18,7 @@ it('renders the header', () => {
 
 it('alters the search placeholder based on the tab', () => {
   const { getByRole, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
+    <MemoryRouter initialEntries={[network({}).$]}>
       <NetworkPageHeader {...props} page="teams" />
     </MemoryRouter>,
   );
@@ -47,7 +47,7 @@ it('alters the search placeholder based on the tab', () => {
 
 it('shows the filter only on the users tab', () => {
   const { getByText, queryByText, rerender } = render(
-    <MemoryRouter initialEntries={[network({}).teams({}).$]}>
+    <MemoryRouter initialEntries={[network({}).$]}>
       <NetworkPageHeader {...props} page="teams" />
     </MemoryRouter>,
   );
@@ -63,7 +63,7 @@ it('shows the filter only on the users tab', () => {
 
 it('highlights the current tab', () => {
   const { getByText, rerender } = render(
-    <StaticRouter key="teams" location={network({}).teams({}).$}>
+    <StaticRouter key="teams" location={network({}).$}>
       <NetworkPageHeader {...props} page="teams" />
     </StaticRouter>,
   );

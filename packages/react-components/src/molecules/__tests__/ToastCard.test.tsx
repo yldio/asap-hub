@@ -22,11 +22,11 @@ it('renders a toast card with a link', () => {
   expect(getByRole('link')).toHaveAttribute('href', 'http://example.com');
 });
 
-it('renders a toast card with alert', () => {
+it('renders a toast card with alert icon by default', () => {
   const { getByTitle, getByText } = render(
     <ToastCard toastContent="Warning">content</ToastCard>,
   );
-  expect(getByTitle('Alert')).toBeInTheDocument();
+  expect(getByTitle(/alert/i)).toBeInTheDocument();
   expect(getByText('Warning')).toBeVisible();
 });
 
@@ -36,7 +36,7 @@ it('renders a toast card with paper clip icon', () => {
       content
     </ToastCard>,
   );
-  expect(getByTitle('Paper Clip')).toBeInTheDocument();
+  expect(getByTitle(/paper ?clip/i)).toBeInTheDocument();
   expect(getByText('explanation text')).toBeVisible();
 });
 

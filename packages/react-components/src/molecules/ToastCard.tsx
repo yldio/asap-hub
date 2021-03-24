@@ -41,7 +41,7 @@ const iconMap: Record<Type, ReactNode> = {
 
 interface ToastCardProps {
   readonly children: ReactNode;
-  readonly toastContent?: string | ReactNode;
+  readonly toastContent?: ReactNode;
   readonly type?: Type;
 }
 const ToastCard: React.FC<ToastCardProps> = ({

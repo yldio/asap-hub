@@ -1,0 +1,34 @@
+# https://gitlab.com/yldio/asap-hub/-/ci/lint
+
+variables:
+  INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
+
+setup:integration-image:
+  image: docker:19.03.12
+  stage: .pre
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
+    - docker push $INTEGRATION_DOCKER_IMAGE
+  only:
+    changes:
+      - ci/integration/Dockerfile
+
+test:integration:
+  image: $INTEGRATION_DOCKER_IMAGE
+  variables:
+    # For now only run on PRs. Eventually use the commit SHA + job ID when
+    # merged to master
+    SQUIDEX_APP_NAME: $CI_EXTERNAL_PULL_REQUEST_IID
+  before_script:
+    - pip install -r ci/integration/scripts/requirements.txt
+    - python ci/integration/scripts/create-app.py
+  script:
+    - echo "Your integration tests run here"
+  after_script:
+    - python ci/integration/scripts/delete-app.py
+  stage: test
+  rules:
+    - if: $CI_COMMIT_BRANCH != 'master'

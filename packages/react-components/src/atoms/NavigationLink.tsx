@@ -79,6 +79,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
         activeClassName={activeClassName}
         css={[styles, { [`&.${activeClassName}`]: activePrimaryStyles }]}
         smooth
+        isActive={(match, _) => !!match}
       >
         <p css={textStyles}>
           <span css={iconStyles}>{icon}</span>

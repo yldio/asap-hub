@@ -59,7 +59,7 @@ const MainNavigation: React.FC = () => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={network({}).teams({}).$} icon={networkIcon}>
+        <NavigationLink href={network({}).$} icon={networkIcon}>
           Network
         </NavigationLink>
       </li>

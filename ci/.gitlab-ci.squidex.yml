@@ -10,13 +10,13 @@ setup:squidex-image:
     - docker:19.03.12-dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $SQUIDEX_SYNC_DOCKER_IMAGE .
+    - docker build -t $SQUIDEX_SYNC_DOCKER_IMAGE . -f dev/Dockerfile
     - docker push $SQUIDEX_SYNC_DOCKER_IMAGE
   only:
     refs:
       - master
     changes:
-      - Dockerfile
+      - dev/Dockerfile
 
 .tmpl:sync: &tmpl_sync
   image: $SQUIDEX_SYNC_DOCKER_IMAGE

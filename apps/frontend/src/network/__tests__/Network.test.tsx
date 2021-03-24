@@ -46,7 +46,7 @@ describe('the network page', () => {
   describe('when toggling from teams to users', () => {
     it('changes the placeholder', async () => {
       const { getByText, queryByText, getByRole } = await renderNetworkPage(
-        network({}).$,
+        network({}).teams({}).$,
       );
 
       expect(

@@ -36,9 +36,16 @@ export const apiHandler = serverlessHttp(app, {
     logger.debug({ event }, 'Event');
     logger.debug({ context }, 'Context');
     const segment = AWSXray.getSegment();
-
     logger.debug({ segment }, 'Segment');
 
+    if (segment) {
+      const subsegment = segment?.addNewSubsegment('some subsegment');
+      subsegment.addAnnotation('some-key', 'some-val');
+      logger.debug('doing something');
+      subsegment.close();
+    }
+
+    logger.debug({ segment }, 'Segment');
 
     request.context = context;
     logger.withRequest(event, context);

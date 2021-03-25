@@ -13,7 +13,7 @@ it('renders different headlines in signin and signup mode', () => {
 
   rerender(<SigninForm signup email="" password="" forgotPasswordHref="#" />);
   expect(getByRole('heading').textContent).toMatchInlineSnapshot(
-    `"Create your account"`,
+    `"Choose a login method"`,
   );
 });
 

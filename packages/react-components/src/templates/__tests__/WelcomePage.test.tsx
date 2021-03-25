@@ -16,7 +16,7 @@ it('renders the signup page', () => {
     <WelcomePage allowSignup onClick={handleClick} />,
   );
   expect(getByRole('button').textContent).toMatchInlineSnapshot(
-    `"Create account"`,
+    `"Activate account"`,
   );
 });
 

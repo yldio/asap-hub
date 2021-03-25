@@ -41,7 +41,7 @@ it('renders the form in signup mode', () => {
     ),
   );
   const { getByText } = render(<Login email="" setEmail={() => {}} />);
-  expect(getByText(/create.+account/i, { selector: 'h1' })).toBeVisible();
+  expect(getByText(/choose.+login.+method/i, { selector: 'h1' })).toBeVisible();
   expect(getByText(/continue$/i, { selector: 'button *' })).toBeVisible();
 });
 

@@ -30,7 +30,7 @@ bin
 
 # misc
 .DS_Store
-.env
+.env*
 
 npm-debug.log*
 yarn-debug.log*

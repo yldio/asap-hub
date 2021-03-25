@@ -1,9 +1,9 @@
 import React, { ComponentProps } from 'react';
 import { EventStatus } from '@asap-hub/model';
-import { array, boolean, select, text } from '@storybook/addon-knobs';
+import { array, boolean, date, select, text } from '@storybook/addon-knobs';
 import { EventCard } from '@asap-hub/react-components';
 import { createEventResponse } from '@asap-hub/fixtures';
-import { subHours, addHours } from 'date-fns';
+import { addHours } from 'date-fns';
 
 import { CenterDecorator } from './layout';
 
@@ -13,15 +13,10 @@ export default {
   decorators: [CenterDecorator],
 };
 
-const meetingMaterialOption = ['Yes', 'No', 'Coming Soon'];
+const meetingMaterialOptions = ['Yes', 'No', 'Coming Soon'];
 const meetingMaterialValue = (option: string) =>
   option === 'Yes' ? 'example' : option === 'No' ? null : undefined;
 const props = (): ComponentProps<typeof EventCard> => {
-  const meetingDates = select(
-    'Meeting Dates',
-    ['future', 'now', 'past'],
-    'future',
-  );
   const meetingMaterials = select(
     'Meeting Materials',
     ['Yes', 'No', 'Coming Soon'],
@@ -51,18 +46,23 @@ const props = (): ComponentProps<typeof EventCard> => {
     presentation: meetingMaterialValue(
       select(
         'Presentation',
-        meetingMaterialOption,
+        meetingMaterialOptions,
         'Coming Soon',
         'Meeting Material',
       ),
     ),
     notes: meetingMaterialValue(
-      select('Notes', meetingMaterialOption, 'Coming Soon', 'Meeting Material'),
+      select(
+        'Notes',
+        meetingMaterialOptions,
+        'Coming Soon',
+        'Meeting Material',
+      ),
     ),
     videoRecording: meetingMaterialValue(
       select(
         'Video Recording',
-        meetingMaterialOption,
+        meetingMaterialOptions,
         'Coming Soon',
         'Meeting Material',
       ),
@@ -76,20 +76,11 @@ const props = (): ComponentProps<typeof EventCard> => {
         : meetingMaterials === 'Coming Soon'
         ? []
         : null,
-    ...(meetingDates === 'future'
-      ? {
-          startDate: addHours(new Date(), 23).toISOString(),
-          endDate: addHours(new Date(), 24).toISOString(),
-        }
-      : meetingDates === 'now'
-      ? {
-          startDate: subHours(new Date(), 1).toISOString(),
-          endDate: addHours(new Date(), 1).toISOString(),
-        }
-      : {
-          startDate: subHours(new Date(), 24).toISOString(),
-          endDate: subHours(new Date(), 23).toISOString(),
-        }),
+
+    startDate: new Date(
+      date('Start Date', addHours(new Date(), 23)),
+    ).toISOString(),
+    endDate: new Date(date('End Date', addHours(new Date(), 24))).toISOString(),
   };
 };
 

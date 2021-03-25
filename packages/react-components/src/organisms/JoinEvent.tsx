@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import {
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+  EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
 } from '@asap-hub/model';
-import { subHours, parseISO, addSeconds, addHours } from 'date-fns';
+import { subHours, parseISO, addSeconds, addHours, subMinutes } from 'date-fns';
 
 import { noop } from '../utils';
 import { Headline2, Paragraph, Anchor, Link } from '../atoms';
@@ -31,7 +32,10 @@ const JoinEvent: React.FC<JoinEventProps> = ({
     parseISO(startDate),
     MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   );
-  const considerStartedAfter = parseISO(startDate);
+  const considerStartedAfter = subMinutes(
+    parseISO(startDate),
+    EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
+  );
   const considerEndedAfter = addHours(
     parseISO(endDate),
     EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,

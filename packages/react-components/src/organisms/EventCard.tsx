@@ -1,11 +1,14 @@
 import React, { ComponentProps } from 'react';
-import { EventResponse } from '@asap-hub/model';
-import { isAfter, isBefore, subMinutes } from 'date-fns';
+import {
+  EventResponse,
+  EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
+  EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+} from '@asap-hub/model';
+import { addHours, subMinutes, parseISO } from 'date-fns';
 
 import { ToastCard, TagList, EventInfo } from '../molecules';
 import { Link } from '../atoms';
-
-const EVENT_CONSIDERED_IN_PROGRESS_BEFORE_MINUTES: number = 5;
+import { useDateHasPassed } from '../date';
 
 const materials: Array<keyof EventCardProps> = [
   'notes',
@@ -26,23 +29,25 @@ type EventCardProps = ComponentProps<typeof EventInfo> &
     | 'meetingMaterials'
   >;
 const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
+  const considerStartedAfter = subMinutes(
+    parseISO(props.startDate),
+    EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
+  );
+  const considerEndedAfter = addHours(
+    parseISO(props.endDate),
+    EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
+  );
+
+  const started = useDateHasPassed(considerStartedAfter);
+  const finished = useDateHasPassed(considerEndedAfter);
   const toastCardProps = (): Omit<
     ComponentProps<typeof ToastCard>,
     'children'
   > => {
-    const currentTime = new Date();
-    const consideredStarted = subMinutes(
-      new Date(props.startDate),
-      EVENT_CONSIDERED_IN_PROGRESS_BEFORE_MINUTES,
-    );
-    const consideredEnded = new Date(props.endDate);
     if (status === 'Cancelled') {
       return { toastContent: 'This event has been cancelled', type: 'alert' };
     }
-    if (
-      isAfter(currentTime, consideredStarted) &&
-      isBefore(currentTime, consideredEnded)
-    ) {
+    if (started && !finished) {
       return {
         type: 'live',
         toastContent: (
@@ -55,14 +60,17 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
         ),
       };
     }
-    if (isAfter(currentTime, consideredEnded)) {
-      const materialCount = materials.filter((key) => {
+    if (finished) {
+      const materialCount = materials.reduce((count, key) => {
         const value = props[key as keyof typeof props];
-        return (
-          (Array.isArray(value) && value.length) ||
-          (!Array.isArray(value) && value)
-        );
-      }).length;
+        if (Array.isArray(value)) {
+          return count + value.length;
+        }
+        if (value) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
       if (materialCount > 0) {
         return {
           type: 'attachment',

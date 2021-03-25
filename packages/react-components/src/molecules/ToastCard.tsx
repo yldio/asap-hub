@@ -39,6 +39,12 @@ const iconMap: Record<Type, ReactNode> = {
   live: clockIcon,
 };
 
+const accentMap: Record<Type, ReactNode> = {
+  alert: emberStyles,
+  attachment: leadStyles,
+  live: leadStyles,
+};
+
 interface ToastCardProps {
   readonly children: ReactNode;
   readonly toastContent?: ReactNode;
@@ -56,15 +62,7 @@ const ToastCard: React.FC<ToastCardProps> = ({
     {toastContent && (
       <>
         <Divider />
-        <span
-          css={[
-            paddingStyles,
-            toastStyles,
-            type === 'alert' && emberStyles,
-            type === 'attachment' && leadStyles,
-            type === 'live' && leadStyles,
-          ]}
-        >
+        <span css={[paddingStyles, toastStyles, accentMap[type]]}>
           <span css={iconStyles}>{iconMap[type]}</span>
           {toastContent}
         </span>

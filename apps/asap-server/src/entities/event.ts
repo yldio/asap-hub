@@ -12,8 +12,8 @@ import { parseGraphQLGroup } from './group';
 export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   const calendar = parseGraphQLCalendar(item.flatData!.calendar![0]);
   const group =
-    item.flatData!.calendar![0].referencingGroupsContents?.map((group) =>
-      parseGraphQLGroup(group),
+    item.flatData!.calendar![0].referencingGroupsContents?.map((calGroup) =>
+      parseGraphQLGroup(calGroup),
     )[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData!.startDate!);
   const now = DateTime.utc();

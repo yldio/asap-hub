@@ -90,8 +90,10 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
                   color: '#7A367A',
                   name: 'Tech 3 - Structural Biology',
                 },
-                referencingGroupsContents:
-                  queryGroupsResponse.data.queryGroupsContentsWithTotal.items,
+                referencingGroupsContents: [
+                  queryGroupsResponse.data.queryGroupsContentsWithTotal
+                    .items[0],
+                ],
               },
             ],
           },

@@ -119,6 +119,21 @@ it('does not refresh way before the event', () => {
   });
   expect(handleRefresh).not.toHaveBeenCalled();
 });
+it('does not refresh after the event', () => {
+  const handleRefresh = jest.fn();
+  render(
+    <JoinEvent
+      startDate={subMinutes(new Date(), 11_000).toISOString()}
+      endDate={subMinutes(new Date(), 10_000).toISOString()}
+      onRefresh={handleRefresh}
+    />,
+  );
+
+  act(() => {
+    jest.advanceTimersByTime(5 * 60 * 1000);
+  });
+  expect(handleRefresh).not.toHaveBeenCalled();
+});
 
 it('informs you when the event has started', () => {
   const { getByText } = render(

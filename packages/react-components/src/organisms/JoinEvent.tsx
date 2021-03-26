@@ -51,14 +51,14 @@ const JoinEvent: React.FC<JoinEventProps> = ({
 
   useEffect(() => {
     const refreshInterval = globalThis.setInterval(() => {
-      if (!meetingLink && startRefreshing) {
+      if (!meetingLink && startRefreshing && !hasEnded) {
         onRefresh();
       }
     }, REFRESH_INTERVAL_SECONDS * 1000);
     return () => {
       globalThis.clearInterval(refreshInterval);
     };
-  }, [startRefreshing, meetingLink, onRefresh]);
+  }, [meetingLink, startRefreshing, hasEnded, onRefresh]);
 
   if (hasEnded) {
     return null;

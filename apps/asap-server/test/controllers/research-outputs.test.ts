@@ -99,7 +99,7 @@ describe('ResearchOutputs controller', () => {
           $orderby: 'created desc',
           $filter: [
             "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation')",
-            "(contains(data/title/iv, 'Title'))",
+            "(contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))",
           ].join(' and '),
         })
         .reply(200, {
@@ -201,6 +201,74 @@ describe('ResearchOutputs controller', () => {
           {
             created: '2020-09-23T16:34:26.842Z',
             id: 'uuid-3',
+            text: 'Text',
+            title: 'Title',
+            type: 'Proposal',
+            team: {
+              id: 'uuid-team-1',
+              displayName: 'Team 1',
+            },
+          },
+        ],
+      });
+    });
+
+    test('Should return the list of research outputs when using search with multiple words', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/research-outputs`)
+        .query({
+          $top: 8,
+          $skip: 0,
+          $orderby: 'created desc',
+          $filter:
+            "(contains(data/title/iv, 'some') or contains(data/tags/iv, 'some') or contains(data/title/iv, 'words') or contains(data/tags/iv, 'words'))",
+        })
+        .reply(200, {
+          total: 1,
+          items: [
+            {
+              id: 'uuid-1',
+              created: '2020-09-23T16:34:26.842Z',
+              data: {
+                type: { iv: 'Proposal' },
+                title: { iv: 'Title' },
+                text: { iv: 'Text' },
+              },
+            },
+          ],
+        } as { total: number; items: RestResearchOutput[] })
+        .get(`/api/content/${config.appName}/teams`)
+        .query(() => true)
+        .reply(200, {
+          total: 1,
+          items: [
+            {
+              id: 'uuid-team-1',
+              created: '2020-09-23T16:34:26.842Z',
+              lastModified: '2020-09-23T16:34:26.842Z',
+              data: {
+                displayName: { iv: 'Team 1' },
+                applicationNumber: { iv: 'APP' },
+                outputs: {
+                  iv: ['uuid-1', 'uuid-3'],
+                },
+              },
+            },
+          ],
+        } as { total: number; items: RestTeam[] });
+
+      const result = await researchOutputs.fetch({
+        take: 8,
+        skip: 0,
+        search: 'some words',
+      });
+
+      expect(result).toEqual({
+        total: 1,
+        items: [
+          {
+            created: '2020-09-23T16:34:26.842Z',
+            id: 'uuid-1',
             text: 'Text',
             title: 'Title',
             type: 'Proposal',

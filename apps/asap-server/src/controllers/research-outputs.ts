@@ -72,7 +72,9 @@ export default class ResearchOutputs implements ResearchOutputController {
       .filter(Boolean)
       .reduce(
         (acc: string[], word: string) =>
-          acc.concat(`contains(data/title/iv, '${word}')`),
+          acc.concat(
+            `contains(data/title/iv, '${word}') or contains(data/tags/iv, '${word}')`,
+          ),
         [],
       )
       .join(' or ');

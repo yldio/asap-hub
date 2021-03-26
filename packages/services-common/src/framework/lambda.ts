@@ -3,11 +3,7 @@ import Boom from '@hapi/boom';
 import Bourne from '@hapi/bourne';
 import Debug from 'debug';
 import Joi from '@hapi/joi';
-import {
-  APIGatewayProxyResultV2,
-  APIGatewayProxyEventV2,
-  APIGatewayProxyStructuredResultV2,
-} from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { origin } from '../config';
 
 const debug = Debug('http');
@@ -42,8 +38,8 @@ interface HTTPError extends Error {
 }
 
 export const response = (
-  res: APIGatewayProxyStructuredResultV2,
-): APIGatewayProxyResultV2 => ({
+  res: APIGatewayProxyResult,
+): APIGatewayProxyResult => ({
   ...res,
   headers: {
     'Access-Control-Allow-Origin': origin,
@@ -67,7 +63,7 @@ export const validate = <T>(
   return res;
 };
 
-const handlerError = (error: Error): APIGatewayProxyResultV2 => {
+const handlerError = (error: Error): APIGatewayProxyResult => {
   debug('Error caught on request', error);
 
   // Squidex errors
@@ -117,8 +113,8 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 // complaining about `request` here is a lint rule bug
 // eslint-disable-next-line no-unused-vars
 export const http = (fn: (request: Request) => Promise<Response>) => async (
-  event: APIGatewayProxyEventV2,
-): Promise<APIGatewayProxyResultV2> => {
+  event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
   // we assume the body is json
   let body;
   try {
@@ -150,7 +146,7 @@ export const http = (fn: (request: Request) => Promise<Response>) => async (
   );
 
   const request = {
-    method: event.requestContext.http.method.toLocaleLowerCase(),
+    method: event.requestContext.httpMethod.toLocaleLowerCase(),
     headers,
     params: event.pathParameters,
     payload: body,

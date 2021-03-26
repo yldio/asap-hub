@@ -1,8 +1,11 @@
 /* istanbul ignore file */
 import serverlessHttp from 'serverless-http';
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import { Request as RequestExpress } from 'express';
 import * as LightStep from 'lightstep-tracer';
+import AWSXray from 'aws-xray-sdk';
+import http from 'http';
+import https from 'https';
 import { appFactory } from '../app';
 import { lightstepToken, environment } from '../config';
 import logger from '../utils/logger';
@@ -13,19 +16,25 @@ const lsTracer = new LightStep.Tracer({
   nodejs_instrumentation: true,
 });
 
-const app = appFactory({ tracer: lsTracer });
+AWSXray.captureHTTPsGlobal(http, true);
+AWSXray.captureHTTPsGlobal(https, true);
+AWSXray.capturePromise();
+
+const app = appFactory({
+  tracer: lsTracer,
+});
 
 interface RequestWithContext extends RequestExpress {
-  context: APIGatewayProxyEventV2['requestContext'];
+  context: Context;
 }
 
 export const apiHandler = serverlessHttp(app, {
   request(
     request: RequestWithContext,
-    event: APIGatewayProxyEventV2,
-    context: { awsRequestId: string },
+    event: APIGatewayProxyEvent,
+    context: Context,
   ) {
-    request.context = event.requestContext;
+    request.context = context;
     logger.withRequest(event, context);
   },
 });

@@ -1,15 +1,15 @@
 import type {
-  APIGatewayProxyHandlerV2,
+  APIGatewayProxyHandler,
   Context,
   EventBridgeEvent,
   ScheduledEvent,
 } from 'aws-lambda';
 
-export type Handler = APIGatewayProxyHandlerV2 &
+export type Handler = APIGatewayProxyHandler &
   ((
-    event: Parameters<APIGatewayProxyHandlerV2>[0],
+    event: Parameters<APIGatewayProxyHandler>[0],
     context?: Context,
-  ) => ReturnType<APIGatewayProxyHandlerV2>);
+  ) => ReturnType<APIGatewayProxyHandler>);
 
 export type FetchPaginationOptions = {
   take?: number;

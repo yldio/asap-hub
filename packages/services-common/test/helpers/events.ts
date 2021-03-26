@@ -1,25 +1,27 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 import { URLSearchParams } from 'url';
 
-export const apiGatewayEvent = (event: Object): APIGatewayProxyEventV2 => {
-  return {
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: '*/*',
-      ...event.headers,
-    },
-    requestContext: {
-      http: {
-        method: 'GET',
-        path: '/api',
-      },
-    },
-    pathParameters: null,
-    rawQueryString: new URLSearchParams(event.queryStringParameters).toString(),
-    ...event,
-    body:
-      typeof event.body === 'object'
-        ? JSON.stringify(event.body || {})
-        : event.body,
-  };
+export const apiGatewayEvent = (
+  event: RecursivePartial<APIGatewayProxyEvent>,
+): APIGatewayProxyEvent => ({
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: '*/*',
+    ...event.headers,
+  },
+  requestContext: {
+    httpMethod: 'GET',
+    path: '/api',
+    ...event.requestContext,
+  },
+  pathParameters: null,
+  ...(event as APIGatewayProxyEvent),
+  body:
+    typeof event.body === 'object'
+      ? JSON.stringify(event.body || {})
+      : event.body,
+});
+
+type RecursivePartial<T> = {
+  [P in keyof T]?: RecursivePartial<T[P]>;
 };

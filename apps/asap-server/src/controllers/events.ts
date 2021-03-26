@@ -61,7 +61,7 @@ export default class Events implements EventController {
     }
 
     if (before) {
-      filters.push(`data/startDate/iv lt ${before}`);
+      filters.push(`data/endDate/iv lt ${before}`);
     }
 
     let orderby = '';

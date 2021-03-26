@@ -94,7 +94,7 @@ describe('Event controller', () => {
     });
 
     describe('Date filters', () => {
-      test('Should apply the "after" filter', async () => {
+      test('Should apply the "after" filter to the end-date', async () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
             query: buildGraphQLQueryFetchEvents(
@@ -108,11 +108,11 @@ describe('Event controller', () => {
         });
       });
 
-      test('Should apply the "before" filter', async () => {
+      test('Should apply the "before" filter to the end-date', async () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
             query: buildGraphQLQueryFetchEvents(
-              'data/hidden/iv ne true and data/startDate/iv lt before-date',
+              'data/hidden/iv ne true and data/endDate/iv lt before-date',
             ),
           })
           .reply(200, fetchEventsResponse);
@@ -124,7 +124,7 @@ describe('Event controller', () => {
 
       test('Should apply both the "after" and "before" filters', async () => {
         const expectedFilter =
-          'data/hidden/iv ne true and data/endDate/iv gt after-date and data/startDate/iv lt before-date';
+          'data/hidden/iv ne true and data/endDate/iv gt after-date and data/endDate/iv lt before-date';
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {

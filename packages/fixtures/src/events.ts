@@ -5,12 +5,11 @@ import { createCalendarResponse } from './calendars';
 import { createGroupResponse } from './groups';
 
 interface FixtureOptions {
-  groupCount?: number;
   meetingMaterials?: number;
 }
 
 export const createEventResponse = (
-  { groupCount = 1, meetingMaterials = 1 }: FixtureOptions = {},
+  { meetingMaterials = 1 }: FixtureOptions = {},
   itemIndex = 0,
 ): EventResponse => ({
   id: `event-${itemIndex}`,
@@ -19,9 +18,7 @@ export const createEventResponse = (
   startDateTimeZone: 'Europe/London',
   endDate: addHours(new Date(), 1).toISOString(),
   endDateTimeZone: 'Europe/London',
-  groups: Array.from({ length: groupCount }).map((_, index) =>
-    createGroupResponse({}, index),
-  ),
+  group: createGroupResponse({}),
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',
   tags: [],

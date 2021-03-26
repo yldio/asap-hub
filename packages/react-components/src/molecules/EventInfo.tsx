@@ -62,7 +62,7 @@ const iconStyles = css({
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<EventResponse, 'id' | 'title' | 'thumbnail' | 'groups' | 'status'> & {
+  Pick<EventResponse, 'id' | 'title' | 'thumbnail' | 'group' | 'status'> & {
     titleLimit?: number | null;
   };
 
@@ -70,7 +70,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   id,
   title,
   thumbnail,
-  groups,
+  group,
   status,
   titleLimit = TITLE_LIMIT,
   ...props
@@ -98,18 +98,17 @@ const EventInfo: React.FC<EventInfoProps> = ({
           </Headline3>
         </Anchor>
         <EventTime {...props} />
-        {groups.length ? (
+        {group ? (
           <ul css={groupsStyles}>
-            {groups.map((group) => (
-              <li key={group.id} css={eventOwnerStyles}>
-                <Link
-                  href={network({}).groups({}).group({ groupId: group.id }).$}
-                >
-                  <span css={iconStyles}>{groupsIcon}</span>
-                  {group.name}
-                </Link>
-              </li>
-            ))}
+            <li key={group.id} css={eventOwnerStyles}>
+              <Link
+                href={network({}).groups({}).group({ groupId: group.id }).$}
+              >
+                <span css={iconStyles}>{groupsIcon}</span>
+                {group.name}
+              </Link>
+            </li>
+            )
           </ul>
         ) : (
           <div css={[asapEventStyles, eventOwnerStyles]}>

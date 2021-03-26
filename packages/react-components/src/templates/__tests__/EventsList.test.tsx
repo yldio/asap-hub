@@ -21,12 +21,12 @@ it('renders multiple event cards', () => {
         {
           ...createEventResponse({}, 0),
           title: 'FirstEvent',
-          groups: [],
+          group: undefined,
         },
         {
           ...createEventResponse({}, 1),
           title: 'SecondEvent',
-          groups: [],
+          group: undefined,
         },
       ])}
     />,

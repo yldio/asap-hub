@@ -12,6 +12,7 @@ import {
   JoinEvent,
   EventAbout,
   CalendarList,
+  EventConversation,
 } from '../organisms';
 
 const containerStyles = css({
@@ -33,6 +34,7 @@ type EventPageProps = ComponentProps<typeof EventInfo> &
     | 'presentation'
     | 'meetingMaterials'
     | 'calendar'
+    | 'group'
   > & {
     readonly backHref: string;
   };
@@ -57,6 +59,7 @@ const EventPage: React.FC<EventPageProps> = ({
         <EventAbout {...props} />
       </Card>
       <EventMaterials {...props} />
+      {props.group && <EventConversation {...props.group} />}
       <CalendarList page="event" calendars={[calendar]} />
     </div>
   </div>

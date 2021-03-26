@@ -5,7 +5,7 @@ export interface Protocol {
   version: string;
   authors: string[];
   created: string;
-  contact: string;
+  owner: string;
   keywords: string[];
   abstract: string;
 }
@@ -16,10 +16,10 @@ export default (data: string[]): Protocol => {
     link,
     name,
     version,
-    authors,
     created,
-    contact,
+    authors,
     keywords,
+    owner,
     abstract,
   ] = data.map((s) => s.trim());
 
@@ -33,7 +33,7 @@ export default (data: string[]): Protocol => {
       .map((s) => s.trim())
       .filter(Boolean),
     created,
-    contact,
+    owner,
     keywords: keywords
       .split(',')
       .map((s) => s.trim())

@@ -72,3 +72,16 @@ describe.each`
     });
   },
 );
+
+it('renders a special placeholder when all materials unavailable', () => {
+  const { getByText } = render(
+    <EventMaterials
+      {...props}
+      notes={null}
+      presentation={null}
+      videoRecording={null}
+      meetingMaterials={null}
+    />,
+  );
+  expect(getByText(/no .* material/i)).toBeVisible();
+});

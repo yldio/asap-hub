@@ -11,6 +11,7 @@ import { perRem } from '../pixels';
 import {
   EventMaterialComingSoon,
   EventMaterialUnavailable,
+  EventMaterialsUnavailable,
 } from '../molecules';
 import { useDateHasPassed } from '../date';
 
@@ -35,6 +36,14 @@ const EventMaterials: React.FC<EventMaterialsProps> = ({
   );
   if (!hasEnded) {
     return null;
+  }
+
+  if (
+    [notes, videoRecording, presentation, meetingMaterials].every(
+      (material) => material === null,
+    )
+  ) {
+    return <EventMaterialsUnavailable />;
   }
 
   return (

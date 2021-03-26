@@ -37,7 +37,7 @@ export interface EventResponse {
   meetingLink?: string;
 
   calendar: CalendarResponse;
-  groups: GroupResponse[];
+  group?: GroupResponse;
 }
 
 export type ListEventResponse = ListResponse<EventResponse>;

@@ -131,7 +131,7 @@ export const listEventResponse: ListEventResponse = {
         color: '#125A12',
         name: 'Tech 1 - Sequencing/omics',
       },
-      groups: queryGroupsExpectation.items as GroupResponse[],
+      group: queryGroupsExpectation.items[0] as GroupResponse,
     },
     {
       id: 'a820b5b7-8f7a-4297-a5a5-cf48b53ba3f7',
@@ -154,7 +154,7 @@ export const listEventResponse: ListEventResponse = {
         color: '#7A367A',
         name: 'Tech 3 - Structural Biology',
       },
-      groups: queryGroupsExpectation.items as GroupResponse[],
+      group: queryGroupsExpectation.items[0] as GroupResponse,
     },
   ],
 };
@@ -186,7 +186,7 @@ export const eventResponse: EventResponse = {
     color: '#125A12',
     name: 'Tech 1 - Sequencing/omics',
   },
-  groups: queryGroupsExpectation.items as GroupResponse[],
+  group: queryGroupsExpectation.items[0] as GroupResponse,
 };
 
 export const graphqlEvent: GraphqlEvent = {

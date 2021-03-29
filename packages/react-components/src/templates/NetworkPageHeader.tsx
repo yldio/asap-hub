@@ -107,7 +107,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
           placeholder={
             page === 'teams'
               ? 'Enter name, keyword, method, …'
-              : 'Search for a group…'
+              : 'Enter a group, keyword, …'
           }
           value={searchQuery}
           onChange={onChangeSearchQuery}

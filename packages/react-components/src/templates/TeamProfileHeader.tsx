@@ -103,7 +103,6 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                       firstName={firstName}
                       lastName={lastName}
                       imageUrl={avatarUrl}
-                      // border
                     />
                   </Anchor>
                 </li>

@@ -7,7 +7,7 @@ export interface Protocol {
   created: string;
   owner: string;
   keywords: string[];
-  abstract: string;
+  abstract?: string;
 }
 
 export default (data: string[]): Protocol => {
@@ -38,6 +38,8 @@ export default (data: string[]): Protocol => {
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean),
-    abstract: abstract === '(private protocol)' ? '' : abstract,
+    abstract: ['(private protocol)', 'Abstract crypted'].includes(abstract)
+      ? undefined
+      : abstract,
   };
 };

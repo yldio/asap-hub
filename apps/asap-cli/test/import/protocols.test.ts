@@ -60,6 +60,52 @@ describe('Import protocol', () => {
     await importProtocols(join(__dirname, 'protocols.fixture.csv'));
   });
 
+  test('create research output in squidex - with abstract', async () => {
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/research-outputs`)
+      .query({
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            op: 'eq',
+            path: 'data.link.iv',
+            value: 'https://www.protocols.io/view/link1',
+          },
+        }),
+      })
+      .reply(200, {
+        total: 0,
+        items: [],
+      })
+      .get(`/api/content/${config.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 1,
+          filter: {
+            op: 'eq',
+            path: 'data.lastName.iv',
+            value: 'team',
+          },
+        }),
+      })
+      .reply(200, {
+        total: 0,
+        items: [],
+      })
+      .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
+        ...createProtocolsRequest,
+        text: {
+          iv:
+            'Abstract text here\nFrom Team team and authors: author 1, author 2.',
+        },
+      })
+      .reply(200);
+
+    await importProtocols(
+      join(__dirname, 'protocols-with-abstract.fixture.csv'),
+    );
+  });
+
   test('update research output in squidex', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/research-outputs`)

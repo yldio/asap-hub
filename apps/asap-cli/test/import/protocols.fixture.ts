@@ -3,11 +3,9 @@ import { RestResearchOutput, RestUser, RestTeam } from '@asap-hub/squidex';
 export const createProtocolsRequest: RestResearchOutput['data'] = {
   type: { iv: 'Protocol' },
   title: { iv: 'title 1' },
-  shortText: { iv: 'From Team team and authors: author 1, author 2' },
   publishDate: { iv: '2020-10-16T01:11:49.000Z' },
   text: {
-    iv:
-      'From Team team and authors: author 1, author 2. Keywords: a, b, c d, e.',
+    iv: 'From Team team and authors: author 1, author 2.',
   },
   link: {
     iv: 'https://www.protocols.io/view/link1',

@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import {
+  eventMaterialTypes,
   EventResponse,
   EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
@@ -9,13 +10,6 @@ import { addHours, subMinutes, parseISO } from 'date-fns';
 import { ToastCard, TagList, EventInfo } from '../molecules';
 import { Link } from '../atoms';
 import { useDateHasPassed } from '../date';
-
-const materials: Array<keyof EventCardProps> = [
-  'notes',
-  'videoRecording',
-  'presentation',
-  'meetingMaterials',
-];
 
 type EventCardProps = ComponentProps<typeof EventInfo> &
   Pick<
@@ -61,8 +55,8 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
       };
     }
     if (finished) {
-      const materialCount = materials.reduce((count, key) => {
-        const value = props[key as keyof typeof props];
+      const materialCount = eventMaterialTypes.reduce((count, key) => {
+        const value = props[key];
         if (Array.isArray(value)) {
           return count + value.length;
         }
@@ -77,10 +71,7 @@ const EventCard: React.FC<EventCardProps> = ({ status, tags, ...props }) => {
           toastContent: `Meeting materials (${materialCount})`,
         };
       }
-      if (
-        materials.filter((value) => props[value as keyof typeof props] === null)
-          .length === materials.length
-      ) {
+      if (eventMaterialTypes.every((value) => props[value] === null)) {
         return {
           type: 'attachment',
           toastContent: 'No meeting materials available',

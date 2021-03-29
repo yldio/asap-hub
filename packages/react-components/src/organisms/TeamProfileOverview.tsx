@@ -27,8 +27,8 @@ const TeamProfileOverview: React.FC<TeamProfileOverviewProps> = ({
 }) => (
   <Card>
     <div>
-      <Display styleAsHeading={2}>Project Overview</Display>
-      <Headline2 styleAsHeading={3}>{projectTitle}</Headline2>
+      <Display styleAsHeading={3}>Project Overview</Display>
+      <Headline2 styleAsHeading={4}>{projectTitle}</Headline2>
       <Paragraph>{projectSummary}</Paragraph>
       {proposalURL ? (
         <div css={stretchOnMobile}>

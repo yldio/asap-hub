@@ -124,6 +124,7 @@ const primaryStyles = css({
     backgroundColor: pine.rgb,
     borderColor: pine.rgb,
     boxShadow: 'none',
+    color: paper.rgb,
   },
 });
 const secondaryStyles = css({
@@ -142,7 +143,7 @@ const secondaryStyles = css({
   },
 });
 const disabledStyles = css({
-  color: tin.rgb,
+  color: lead.rgb,
   backgroundColor: silver.rgb,
   borderColor: steel.rgb,
   boxShadow: 'none',
@@ -150,6 +151,7 @@ const disabledStyles = css({
   cursor: 'unset',
 
   svg: {
+    filter: 'grayscale(1)',
     stroke: tin.rgb,
   },
 });

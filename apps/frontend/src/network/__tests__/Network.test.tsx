@@ -80,7 +80,7 @@ describe('the network page', () => {
         const [[options]] = mockGetUsers.mock.calls.slice(-1);
         expect(options).toMatchObject({
           searchQuery: 'test123',
-          filters: [],
+          filters: new Set(),
         });
       });
     });
@@ -122,8 +122,8 @@ describe('the network page', () => {
         const [[options]] = mockGetTeams.mock.calls.slice(-1);
         expect(options).toMatchObject({
           searchQuery: 'test123',
+          filters: new Set(),
         });
-        expect(options).not.toHaveProperty('filters');
       });
     });
   });
@@ -149,7 +149,9 @@ describe('the network page', () => {
     expect(checkbox).toBeChecked();
     await waitFor(() =>
       expect(mockGetUsers).toHaveBeenLastCalledWith(
-        expect.objectContaining({ filters: ['Lead PI (Core Leadership)'] }),
+        expect.objectContaining({
+          filters: new Set(['Lead PI (Core Leadership)']),
+        }),
         expect.anything(),
       ),
     );
@@ -166,7 +168,9 @@ describe('the network page', () => {
     expect(checkbox).toBeChecked();
     await waitFor(() =>
       expect(mockGetUsers).toHaveBeenLastCalledWith(
-        expect.objectContaining({ filters: ['Lead PI (Core Leadership)'] }),
+        expect.objectContaining({
+          filters: new Set(['Lead PI (Core Leadership)']),
+        }),
         expect.anything(),
       ),
     );

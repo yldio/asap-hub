@@ -8,6 +8,8 @@ import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
 
 import { getUser, patchUser, postUserAvatar, getUsers } from '../api';
 import { API_BASE_URL } from '../../../config';
+import { GetListOptions } from '../../../api-util';
+import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../../../config');
 
@@ -15,13 +17,20 @@ afterEach(() => {
   nock.cleanAll();
 });
 
+const options: GetListOptions = {
+  filters: new Set(),
+  pageSize: DEFAULT_PAGE_SIZE,
+  currentPage: 0,
+  searchQuery: '',
+};
+
 describe('getUsers', () => {
   it('makes an authorized GET request for users', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/users')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getUsers({}, 'Bearer x');
+    await getUsers(options, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -31,7 +40,7 @@ describe('getUsers', () => {
       .get('/users')
       .query({ take: '10', skip: '0' })
       .reply(200, users);
-    expect(await getUsers({}, '')).toEqual(users);
+    expect(await getUsers(options, '')).toEqual(users);
   });
 
   it('errors for error status', async () => {
@@ -39,7 +48,9 @@ describe('getUsers', () => {
       .get('/users')
       .query({ take: '10', skip: '0' })
       .reply(500);
-    await expect(getUsers({}, '')).rejects.toThrowErrorMatchingInlineSnapshot(
+    await expect(
+      getUsers(options, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch user list. Expected status 2xx. Received status 500."`,
     );
   });

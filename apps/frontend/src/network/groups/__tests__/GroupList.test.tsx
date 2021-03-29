@@ -26,7 +26,14 @@ const renderGroupList = async (
   const result = render(
     <RecoilRoot
       initializeState={({ reset }) =>
-        reset(groupsState({ currentPage: 0, pageSize: DEFAULT_PAGE_SIZE }))
+        reset(
+          groupsState({
+            currentPage: 0,
+            pageSize: DEFAULT_PAGE_SIZE,
+            filters: new Set(),
+            searchQuery: '',
+          }),
+        )
       }
     >
       <React.Suspense fallback="loading">

@@ -6,6 +6,8 @@ import {
 
 import { API_BASE_URL } from '../../../config';
 import { getGroups, getGroup } from '../api';
+import { GetListOptions } from '../../../api-util';
+import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../../../config');
 
@@ -13,13 +15,20 @@ afterEach(() => {
   nock.cleanAll();
 });
 
+const options: GetListOptions = {
+  filters: new Set(),
+  pageSize: DEFAULT_PAGE_SIZE,
+  currentPage: 0,
+  searchQuery: '',
+};
+
 describe('getGroups', () => {
   it('makes an authorized GET request for groups', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/groups')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getGroups({}, 'Bearer x');
+    await getGroups(options, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -29,7 +38,7 @@ describe('getGroups', () => {
       .get('/groups')
       .query({ take: '10', skip: '0' })
       .reply(200, groups);
-    expect(await getGroups({}, '')).toEqual(groups);
+    expect(await getGroups(options, '')).toEqual(groups);
   });
 
   it('errors for error status', async () => {
@@ -37,7 +46,9 @@ describe('getGroups', () => {
       .get('/groups')
       .query({ take: '10', skip: '0' })
       .reply(500);
-    await expect(getGroups({}, '')).rejects.toThrowErrorMatchingInlineSnapshot(
+    await expect(
+      getGroups(options, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch group list. Expected status 2xx. Received status 500."`,
     );
   });

@@ -11,13 +11,13 @@ interface UserListProps {
 }
 
 const UserList: React.FC<UserListProps> = ({
-  searchQuery,
+  searchQuery = '',
   filters = new Set(),
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const result = useUsers({
     searchQuery,
-    filters: [...filters],
+    filters,
     currentPage,
     pageSize,
   });

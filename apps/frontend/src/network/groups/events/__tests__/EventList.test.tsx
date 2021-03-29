@@ -8,19 +8,17 @@ import {
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { network } from '@asap-hub/routing';
-import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
-import { subHours } from 'date-fns';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
 import {
   Auth0Provider,
   WhenReady,
 } from '@asap-hub/frontend/src/auth/test-utils';
-import { DEFAULT_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
 import ErrorBoundary from '@asap-hub/frontend/src/structure/ErrorBoundary';
 import EventList from '../EventList';
 import { getGroupEvents } from '../api';
 import { groupEventsState } from '../state';
+import { getEventListOptions } from '../../../../events/options';
 
 jest.mock('../api');
 const mockGetGroupEvents = getGroupEvents as jest.MockedFunction<
@@ -43,26 +41,14 @@ const renderGroupEventList = async (
       initializeState={({ reset }) => {
         reset(
           groupEventsState({
+            ...getEventListOptions(currentTime, false),
             groupId,
-            searchQuery,
-            currentPage: 0,
-            pageSize: DEFAULT_PAGE_SIZE,
-            after: subHours(
-              currentTime,
-              EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-            ).toISOString(),
           }),
         );
         reset(
           groupEventsState({
+            ...getEventListOptions(currentTime, true),
             groupId,
-            searchQuery,
-            currentPage: 0,
-            pageSize: DEFAULT_PAGE_SIZE,
-            before: subHours(
-              currentTime,
-              EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-            ).toISOString(),
           }),
         );
       }}
@@ -152,7 +138,7 @@ it('generates group links', async () => {
 
 it('can search for events', async () => {
   await renderGroupEventList({ searchQuery: 'searchterm' });
-  expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
+  expect(mockGetGroupEvents).toHaveBeenCalledWith(
     groupId,
     expect.objectContaining({
       searchQuery: 'searchterm',
@@ -166,7 +152,7 @@ it('sets after to an hour before now for upcoming events', async () => {
     searchQuery: '',
     currentTime: new Date('2020-01-01T12:00:00Z'),
   });
-  expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
+  expect(mockGetGroupEvents).toHaveBeenCalledWith(
     groupId,
     expect.objectContaining({
       after: new Date('2020-01-01T11:00:00Z').toISOString(),
@@ -181,7 +167,7 @@ it('sets before to an hour before now and sort parameters for past events', asyn
     currentTime: new Date('2020-01-01T12:00:00Z'),
     past: true,
   });
-  expect(mockGetGroupEvents).toHaveBeenLastCalledWith(
+  expect(mockGetGroupEvents).toHaveBeenCalledWith(
     groupId,
     expect.objectContaining({
       before: new Date('2020-01-01T11:00:00.000Z').toISOString(),

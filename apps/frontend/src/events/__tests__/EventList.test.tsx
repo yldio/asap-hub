@@ -16,6 +16,9 @@ jest.useFakeTimers();
 jest.mock('../api');
 
 const mockGetEvents = getEvents as jest.MockedFunction<typeof getEvents>;
+afterEach(() => {
+  mockGetEvents.mockClear().mockResolvedValue(createListEventResponse(1));
+});
 
 const renderEventsListPage = async (
   searchQuery = '',
@@ -28,9 +31,10 @@ const renderEventsListPage = async (
         set(refreshCalendarsState, Math.random());
         reset(
           eventsState({
-            currentPage: 0,
             searchQuery,
+            currentPage: 0,
             pageSize: DEFAULT_PAGE_SIZE,
+            filters: new Set(),
             after: new Date().toISOString(),
           }),
         );
@@ -76,7 +80,7 @@ it('renders a list of event cards', async () => {
 
 it('can search for events', async () => {
   await renderEventsListPage('searchterm');
-  expect(mockGetEvents).toHaveBeenLastCalledWith(
+  expect(mockGetEvents).toHaveBeenCalledWith(
     expect.objectContaining({
       searchQuery: 'searchterm',
     }),
@@ -86,7 +90,7 @@ it('can search for events', async () => {
 
 it('sets after to an hour before date provided for upcoming events', async () => {
   await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'));
-  expect(mockGetEvents).toHaveBeenLastCalledWith(
+  expect(mockGetEvents).toHaveBeenCalledWith(
     expect.objectContaining({
       after: new Date('2020-01-01T11:00:00Z').toISOString(),
     }),
@@ -96,7 +100,7 @@ it('sets after to an hour before date provided for upcoming events', async () =>
 
 it('sets before to an hour before date provided for past events', async () => {
   await renderEventsListPage('', new Date('2020-01-01T12:00:00Z'), true);
-  expect(mockGetEvents).toHaveBeenLastCalledWith(
+  expect(mockGetEvents).toHaveBeenCalledWith(
     expect.objectContaining({
       before: new Date('2020-01-01T11:00:00Z').toISOString(),
       sort: {

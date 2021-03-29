@@ -21,7 +21,7 @@ const Events: React.FC<Record<string, never>> = () => {
   }, []);
 
   const { path } = useRouteMatch();
-  const [time] = useState(new Date());
+  const [currentTime] = useState(new Date());
 
   const { searchQuery, setSearchQuery, debouncedSearchQuery } = useSearch();
 
@@ -30,7 +30,7 @@ const Events: React.FC<Record<string, never>> = () => {
       <Route exact path={path + events({}).calendar.template}>
         <EventsPage>
           <Frame>
-            <Calendars />
+            <Calendars currentTime={currentTime} />
           </Frame>
         </EventsPage>
       </Route>
@@ -41,7 +41,10 @@ const Events: React.FC<Record<string, never>> = () => {
           onChangeSearchQuery={setSearchQuery}
         >
           <Frame>
-            <EventList currentTime={time} searchQuery={debouncedSearchQuery} />
+            <EventList
+              currentTime={currentTime}
+              searchQuery={debouncedSearchQuery}
+            />
           </Frame>
         </EventsPage>
       </Route>
@@ -53,7 +56,7 @@ const Events: React.FC<Record<string, never>> = () => {
           <Frame>
             <EventList
               past
-              currentTime={time}
+              currentTime={currentTime}
               searchQuery={debouncedSearchQuery}
             />
           </Frame>

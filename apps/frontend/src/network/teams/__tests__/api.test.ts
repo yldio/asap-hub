@@ -4,6 +4,8 @@ import { TeamResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../../config';
 import { getTeam, patchTeam, getTeams } from '../api';
+import { GetListOptions } from '../../../api-util';
+import { DEFAULT_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../../../config');
 
@@ -11,13 +13,20 @@ afterEach(() => {
   nock.cleanAll();
 });
 
+const options: GetListOptions = {
+  filters: new Set(),
+  pageSize: DEFAULT_PAGE_SIZE,
+  currentPage: 0,
+  searchQuery: '',
+};
+
 describe('getTeams', () => {
   it('makes an authorized GET request for teams', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/teams')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getTeams({}, 'Bearer x');
+    await getTeams(options, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -27,7 +36,7 @@ describe('getTeams', () => {
       .get('/teams')
       .query({ take: '10', skip: '0' })
       .reply(200, teams);
-    expect(await getTeams({}, '')).toEqual(teams);
+    expect(await getTeams(options, '')).toEqual(teams);
   });
 
   it('errors for error status', async () => {
@@ -35,7 +44,9 @@ describe('getTeams', () => {
       .get('/teams')
       .query({ take: '10', skip: '0' })
       .reply(500);
-    await expect(getTeams({}, '')).rejects.toThrowErrorMatchingInlineSnapshot(
+    await expect(
+      getTeams(options, ''),
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch team list. Expected status 2xx. Received status 500."`,
     );
   });

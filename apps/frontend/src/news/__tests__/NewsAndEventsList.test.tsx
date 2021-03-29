@@ -61,7 +61,7 @@ describe('news and events page', () => {
       },
     })
       .get('/news-and-events')
-      .query({ take: 10, skip: 0 });
+      .query(true);
   });
 
   it('renders title', async () => {

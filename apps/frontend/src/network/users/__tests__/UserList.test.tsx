@@ -24,6 +24,8 @@ const renderUserList = async () => {
           usersState({
             currentPage: 0,
             pageSize: DEFAULT_PAGE_SIZE,
+            filters: new Set(),
+            searchQuery: '',
           }),
         );
       }}

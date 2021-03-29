@@ -8,12 +8,18 @@ import nock from 'nock';
 import { useGetList, ListResult } from '../get-list';
 import { GetListOptions } from '../../api-util';
 import { API_BASE_URL } from '../../config';
+import { DEFAULT_PAGE_SIZE } from '../../hooks';
 
 jest.mock('../../config');
 
 const helperToExtractReturnType = () =>
-  renderHook<GetListOptions, ListResult<string[]>>(() =>
-    useGetList('/endpoint'),
+  renderHook<Partial<GetListOptions>, ListResult<string[]>>(() =>
+    useGetList('/endpoint', {
+      currentPage: 0,
+      pageSize: DEFAULT_PAGE_SIZE,
+      filters: new Set(),
+      searchQuery: '',
+    }),
   );
 type RenderUseGetListResult = ReturnType<typeof helperToExtractReturnType>;
 
@@ -28,7 +34,7 @@ describe('useGetList', () => {
     </authTestUtils.Auth0Provider>
   );
   const renderUseGetList = async (
-    hookFn: (props: GetListOptions) => ListResult<string[]>,
+    hookFn: (props: Partial<GetListOptions>) => ListResult<string[]>,
   ) => {
     let renderedHook!: RenderUseGetListResult;
     await act(async () => {
@@ -61,15 +67,24 @@ describe('useGetList', () => {
   it('requests from given URL', async () => {
     const {
       result: { current },
-    } = await renderUseGetList(() => useGetList('users'));
+    } = await renderUseGetList(() =>
+      useGetList('users', {
+        currentPage: 0,
+        pageSize: DEFAULT_PAGE_SIZE,
+        filters: new Set([]),
+        searchQuery: '',
+      }),
+    );
     expect(current.data).toEqual([]);
   });
 
   it('uses the given filter and search', async () => {
     await renderUseGetList(() =>
       useGetList('users', {
-        filters: ['admin', 'superuser'],
+        filters: new Set(['admin', 'superuser']),
         searchQuery: 'john',
+        pageSize: DEFAULT_PAGE_SIZE,
+        currentPage: 0,
       }),
     );
     const { searchParams } = new URL(req!.path, API_BASE_URL);
@@ -78,11 +93,13 @@ describe('useGetList', () => {
   });
 
   it('re-fetches when the search query changes', async () => {
-    const {
-      rerender,
-    } = await renderUseGetList(
-      ({ searchQuery }: { searchQuery?: string } = {}) =>
-        useGetList('users', { searchQuery }),
+    const { rerender } = await renderUseGetList(({ searchQuery = '' } = {}) =>
+      useGetList('users', {
+        searchQuery,
+        filters: new Set(),
+        pageSize: DEFAULT_PAGE_SIZE,
+        currentPage: 0,
+      }),
     );
 
     let { searchParams } = new URL(req!.path, API_BASE_URL);
@@ -100,8 +117,15 @@ describe('useGetList', () => {
   it('throws if the request errors', async () => {
     nock.cleanAll();
     nock(API_BASE_URL).get('/users').query(true).reply(500, 'nope');
-    await expect(renderUseGetList(() => useGetList('users'))).rejects.toThrow(
-      /500/,
-    );
+    await expect(
+      renderUseGetList(() =>
+        useGetList('users', {
+          searchQuery: '',
+          currentPage: 0,
+          pageSize: DEFAULT_PAGE_SIZE,
+          filters: new Set(),
+        }),
+      ),
+    ).rejects.toThrow(/500/);
   });
 });

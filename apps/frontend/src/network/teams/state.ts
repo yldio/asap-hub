@@ -1,3 +1,4 @@
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
   selectorFamily,
@@ -81,6 +82,15 @@ const teamState = selectorFamily<TeamResponse | undefined, string>({
     get(patchedTeamState(id)) ?? get(initialTeamState(id)),
 });
 
+export const usePrefetchTeams = (options: GetListOptions) => {
+  const authorization = useRecoilValue(authorizationState);
+  const [teams, setTeams] = useRecoilState(teamsState(options));
+  useDeepCompareEffect(() => {
+    if (teams === undefined) {
+      getTeams(options, authorization).then(setTeams).catch();
+    }
+  }, [options, authorization, teams, setTeams]);
+};
 export const useTeams = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [teams, setTeams] = useRecoilState(teamsState(options));

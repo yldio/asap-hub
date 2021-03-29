@@ -8,7 +8,7 @@ export type ListResult<T> = Omit<UseFetchObjectReturn<T>, 'error'> &
   ({ loading: true; data: T | undefined } | { loading: false; data: T });
 export const useGetList = <T>(
   endpoint: string,
-  parameters?: GetListOptions,
+  parameters: GetListOptions,
 ): ListResult<T> => {
   const url = createListApiUrl(endpoint, parameters).toString();
   const { error, ...result } = useSafeFetch<T>(url, useFetchOptions());

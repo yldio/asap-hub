@@ -25,6 +25,8 @@ const renderTeamList = async () => {
           teamsState({
             currentPage: 0,
             pageSize: DEFAULT_PAGE_SIZE,
+            filters: new Set(),
+            searchQuery: '',
           }),
         );
       }}

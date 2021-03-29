@@ -1,17 +1,14 @@
 import { ListEventResponse } from '@asap-hub/model';
 
-import {
-  GetListOptions,
-  createListApiUrl,
-} from '@asap-hub/frontend/src/api-util';
-import { BeforeOrAfter } from '@asap-hub/frontend/src/events/api';
+import { createListApiUrl } from '@asap-hub/frontend/src/api-util';
+import { GetEventListOptions } from '@asap-hub/frontend/src/events/options';
 
 export const getGroupEvents = async (
   id: string,
-  options: GetListOptions & BeforeOrAfter,
+  options: GetEventListOptions,
   authorization: string,
 ): Promise<ListEventResponse | undefined> => {
-  const url = createListApiUrl(`groups/${id}/events`);
+  const url = createListApiUrl(`groups/${id}/events`, options);
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);
 

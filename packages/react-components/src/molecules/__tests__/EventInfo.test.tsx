@@ -78,7 +78,7 @@ it('renders the group name linking to the group and icon', () => {
 
 it('shows that the event is run by ASAP when there is no group', () => {
   const { getByText, getByTitle } = render(
-    <EventInfo {...props} groups={undefined} />,
+    <EventInfo {...props} group={undefined} />,
   );
   expect(getByText(/asap event/i)).not.toHaveAttribute('href');
   expect(getByTitle('Calendar')).toBeInTheDocument();

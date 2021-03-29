@@ -59,7 +59,7 @@ const EventPage: React.FC<EventPageProps> = ({
         <EventAbout {...props} />
       </Card>
       <EventMaterials {...props} />
-      {props.group && <EventConversation {...props.group} />}
+      <EventConversation {...props} />
       <CalendarList page="event" calendars={[calendar]} />
     </div>
   </div>

@@ -94,15 +94,15 @@ it('renders additional materials', () => {
 });
 
 it('renders continue the event conversation when group with slack provided', () => {
-  const { queryByText, rerender } = render(
+  const { queryByTitle, rerender } = render(
     <EventPage
       {...props}
       group={{ ...createGroupResponse(), tools: { slack: 'http://slack.com' } }}
     />,
   );
-  expect(queryByText(/slack/i)).toBeVisible();
+  expect(queryByTitle(/slack/i)).toBeInTheDocument();
   rerender(<EventPage {...props} group={undefined} />);
-  expect(queryByText(/slack/i)).not.toBeInTheDocument();
+  expect(queryByTitle(/slack/i)).not.toBeInTheDocument();
 });
 
 it('renders calendar list', () => {

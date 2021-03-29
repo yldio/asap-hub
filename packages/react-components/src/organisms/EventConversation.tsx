@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { GroupResponse } from '@asap-hub/model';
+import { EventResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Card, Headline3, Paragraph, Link } from '../atoms';
@@ -27,13 +27,12 @@ const button = css({
   },
 });
 
-type EventConversationProps = Pick<GroupResponse, 'tools' | 'id'>;
+type EventConversationProps = Pick<EventResponse, 'group'>;
 
 const EventConversation: React.FC<EventConversationProps> = ({
-  id,
-  tools: { slack },
+  group: { id, tools: { slack } } = { tools: {} },
 }) =>
-  slack ? (
+  id && slack ? (
     <Card>
       <Headline3>Continue the conversation</Headline3>
       <Paragraph accent="lead">

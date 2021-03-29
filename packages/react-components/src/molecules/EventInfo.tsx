@@ -31,20 +31,14 @@ const cardStyles = css({
 });
 
 const groupsStyles = css({
-  display: 'grid',
-  listStyle: 'none',
-  margin: 0,
   padding: `${12 / perRem}em 0`,
-  gridRowGap: `${12 / perRem}em`,
-});
-const asapEventStyles = css({
-  padding: `${12 / perRem}em 0`,
-});
-const eventOwnerStyles = css({
   color: lead.rgb,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+});
+const widthStyles = css({
+  display: 'grid',
 });
 
 const imageStyle = css({
@@ -98,23 +92,22 @@ const EventInfo: React.FC<EventInfoProps> = ({
           </Headline3>
         </Anchor>
         <EventTime {...props} />
-        {group ? (
-          <ul css={groupsStyles}>
-            <li key={group.id} css={eventOwnerStyles}>
+        <div css={widthStyles}>
+          <div css={groupsStyles}>
+            {group ? (
               <Link
                 href={network({}).groups({}).group({ groupId: group.id }).$}
               >
                 <span css={iconStyles}>{groupsIcon}</span>
                 {group.name}
               </Link>
-            </li>
-            )
-          </ul>
-        ) : (
-          <div css={[asapEventStyles, eventOwnerStyles]}>
-            <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+            ) : (
+              <>
+                <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

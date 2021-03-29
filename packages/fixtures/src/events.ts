@@ -18,7 +18,7 @@ export const createEventResponse = (
   startDateTimeZone: 'Europe/London',
   endDate: addHours(new Date(), 1).toISOString(),
   endDateTimeZone: 'Europe/London',
-  group: createGroupResponse({}),
+  group: createGroupResponse(),
   description: `Event ${itemIndex} description`,
   status: 'Confirmed',
   tags: [],

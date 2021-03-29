@@ -152,7 +152,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.11.9
     "@testing-library/react": ^11.2.3
     "@testing-library/user-event": ^12.6.0
-    "@types/auth0-js": ^9
+    "@types/auth0-js": ^9.14.3
     "@types/history": ^4.7.6
     "@types/jest": ^26.0.20
     "@types/jsdom": ^16
@@ -162,7 +162,7 @@ __metadata:
     "@types/react-router-dom": ^5.1.5
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
-    auth0-js: ^9.13.4
+    auth0-js: ^9.15.0
     camelcase: ^6.0.0
     cross-env: ^7.0.2
     history: ^4
@@ -6182,10 +6182,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/auth0-js@npm:^9":
-  version: 9.13.1
-  resolution: "@types/auth0-js@npm:9.13.1"
-  checksum: ccf71133839ccb745affa3409caef16dabae33742ad1ab190be94bf049cbcff3ba82a979f3e5a5dfedc15cc19a0c287fb414a39cd425cb02aa1850591bf5e4be
+"@types/auth0-js@npm:^9.14.3":
+  version: 9.14.3
+  resolution: "@types/auth0-js@npm:9.14.3"
+  checksum: 63afc0dd1af6b1e98ef8360e8d2724465a011e1bd44c7633493b95ee13735585a2b7d1142563119f0d3394068c759659cee90986f1dbf35221bf378b3f901493
   languageName: node
   linkType: hard
 
@@ -9096,18 +9096,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"auth0-js@npm:^9.13.4":
-  version: 9.13.4
-  resolution: "auth0-js@npm:9.13.4"
+"auth0-js@npm:^9.15.0":
+  version: 9.15.0
+  resolution: "auth0-js@npm:9.15.0"
   dependencies:
     base64-js: ^1.3.0
     idtoken-verifier: ^2.0.3
     js-cookie: ^2.2.0
     qs: ^6.7.0
-    superagent: ^3.8.3
+    superagent: ^5.3.1
     url-join: ^4.0.1
     winchan: ^0.2.2
-  checksum: 82f29dd1389c823f1f0cfe209cc419ea55ce576afe63cfb6bf88c30e13c57cad8efd2c55001e0bd61d21db602087accaac50aa1575a016985ece56bde831f79a
+  checksum: e27a16e54ad6c011354e2d63cf0a80b3b823bf5db6e4f8dbef6f736637fbfa445cfc6c4f81684f22143bc4688caa0b92833359084f2dbcbd1c5ee99e40d4102b
   languageName: node
   linkType: hard
 
@@ -28356,6 +28356,25 @@ serverless-offline@^6.8.0:
     qs: ^6.5.1
     readable-stream: ^2.3.5
   checksum: 6a2151f7c41356083834ec1d4ba93b9e43b76d1691f7172c01e61c33755967d9f2fa664198988cc8e3de6cee8b63351585ba2d6161cd5e54f26003c818e5d5fc
+  languageName: node
+  linkType: hard
+
+"superagent@npm:^5.3.1":
+  version: 5.3.1
+  resolution: "superagent@npm:5.3.1"
+  dependencies:
+    component-emitter: ^1.3.0
+    cookiejar: ^2.1.2
+    debug: ^4.1.1
+    fast-safe-stringify: ^2.0.7
+    form-data: ^3.0.0
+    formidable: ^1.2.2
+    methods: ^1.1.2
+    mime: ^2.4.6
+    qs: ^6.9.4
+    readable-stream: ^3.6.0
+    semver: ^7.3.2
+  checksum: 369d3727aa400b590854481a4811d7ed4a8224f3ce3ec4a1dac92f573345d3785f173c7cb822560b8a799b9981dcef16c19d1bf175f5e72cc555695d20588e16
   languageName: node
   linkType: hard
 

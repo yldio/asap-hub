@@ -16,10 +16,13 @@ export type WebAuthError = Auth0Error & {
   readonly description?: null | string | { rules: ReadonlyArray<Auth0Rule> };
 };
 
+const knownErrorCodeMessages: Record<string, string> = {
+  invalid_user_password:
+    'Your e-mail or password is incorrect. Ensure this is the log in method you used to set up your account.',
+};
+
 // Auth0 API has very inconsistent error formats
-export const extractRuleErrorMessage = (
-  rules: ReadonlyArray<Auth0Rule>,
-): string =>
+const extractRuleErrorMessage = (rules: ReadonlyArray<Auth0Rule>): string =>
   rules
     .filter(({ verified }) => !verified)
     .flatMap(
@@ -33,6 +36,7 @@ export const extractRuleErrorMessage = (
     )
     .join('\n');
 export const extractErrorMessage = (error: WebAuthError | Error): string =>
+  ('code' in error && error.code && knownErrorCodeMessages[error.code]) ||
   ('error_description' in error && error.error_description) ||
   ('errorDescription' in error && error.errorDescription) ||
   ('description' in error &&

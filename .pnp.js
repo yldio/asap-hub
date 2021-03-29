@@ -1408,7 +1408,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@types/auth0-js",
-        "npm:9.13.1"
+        "npm:9.14.3"
       ],
       [
         "@types/aws-lambda",
@@ -2475,7 +2475,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "auth0-js",
-        "npm:9.13.4"
+        "npm:9.15.0"
       ],
       [
         "autoprefixer",
@@ -9450,7 +9450,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/jest-dom", "npm:5.11.9"],
             ["@testing-library/react", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:11.2.3"],
             ["@testing-library/user-event", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:12.6.0"],
-            ["@types/auth0-js", "npm:9.13.1"],
+            ["@types/auth0-js", "npm:9.14.3"],
             ["@types/history", "npm:4.7.6"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/jsdom", "npm:16.2.3"],
@@ -9460,7 +9460,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-router-dom", "npm:5.1.5"],
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
-            ["auth0-js", "npm:9.13.4"],
+            ["auth0-js", "npm:9.15.0"],
             ["camelcase", "npm:6.0.0"],
             ["cross-env", "npm:7.0.2"],
             ["history", "npm:4.10.1"],
@@ -19926,10 +19926,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/auth0-js", [
-        ["npm:9.13.1", {
-          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.13.1-cc57224c02-ccf7113383.zip/node_modules/@types/auth0-js/",
+        ["npm:9.14.3", {
+          "packageLocation": "./.yarn/cache/@types-auth0-js-npm-9.14.3-9cc0530b08-63afc0dd1a.zip/node_modules/@types/auth0-js/",
           "packageDependencies": [
-            ["@types/auth0-js", "npm:9.13.1"]
+            ["@types/auth0-js", "npm:9.14.3"]
           ],
           "linkType": "HARD",
         }]
@@ -23437,15 +23437,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["auth0-js", [
-        ["npm:9.13.4", {
-          "packageLocation": "./.yarn/cache/auth0-js-npm-9.13.4-8297afdd85-82f29dd138.zip/node_modules/auth0-js/",
+        ["npm:9.15.0", {
+          "packageLocation": "./.yarn/cache/auth0-js-npm-9.15.0-92fee29978-e27a16e54a.zip/node_modules/auth0-js/",
           "packageDependencies": [
-            ["auth0-js", "npm:9.13.4"],
+            ["auth0-js", "npm:9.15.0"],
             ["base64-js", "npm:1.3.1"],
             ["idtoken-verifier", "npm:2.0.3"],
             ["js-cookie", "npm:2.2.1"],
             ["qs", "npm:6.9.4"],
-            ["superagent", "npm:3.8.3"],
+            ["superagent", "npm:5.3.1"],
             ["url-join", "npm:4.0.1"],
             ["winchan", "npm:0.2.2"]
           ],
@@ -45759,6 +45759,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime", "npm:1.6.0"],
             ["qs", "npm:6.9.4"],
             ["readable-stream", "npm:2.3.7"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:5.3.1", {
+          "packageLocation": "./.yarn/cache/superagent-npm-5.3.1-6885809125-369d3727aa.zip/node_modules/superagent/",
+          "packageDependencies": [
+            ["superagent", "npm:5.3.1"],
+            ["component-emitter", "npm:1.3.0"],
+            ["cookiejar", "npm:2.1.2"],
+            ["debug", "virtual:88c91e718f5c047e706657833016435d9afd204207e38d93790ef921db10dcd422cdb8ab7a565d263b03ce9d79a2098e157c646f2bd38df6ecdb41f52893df49#npm:4.2.0"],
+            ["fast-safe-stringify", "npm:2.0.7"],
+            ["form-data", "npm:3.0.0"],
+            ["formidable", "npm:1.2.2"],
+            ["methods", "npm:1.1.2"],
+            ["mime", "npm:2.4.6"],
+            ["qs", "npm:6.9.6"],
+            ["readable-stream", "npm:3.6.0"],
+            ["semver", "npm:7.3.2"]
           ],
           "linkType": "HARD",
         }],

@@ -8,7 +8,7 @@ const props: ComponentProps<typeof EventConversation> = {
   ...createGroupResponse(),
 };
 
-it('renders when group with slack tool is provided', () => {
+it('renders the card only when group with slack tool is provided', () => {
   const { queryByRole, getByRole, rerender } = render(
     <EventConversation {...props} tools={{}} />,
   );

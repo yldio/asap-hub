@@ -100,9 +100,9 @@ it('renders continue the event conversation when group with slack provided', () 
       group={{ ...createGroupResponse(), tools: { slack: 'http://slack.com' } }}
     />,
   );
-  expect(queryByText(/continue the conversation/i)).toBeVisible();
+  expect(queryByText(/slack/i)).toBeVisible();
   rerender(<EventPage {...props} group={undefined} />);
-  expect(queryByText(/continue the conversation/i)).not.toBeInTheDocument();
+  expect(queryByText(/slack/i)).not.toBeInTheDocument();
 });
 
 it('renders calendar list', () => {

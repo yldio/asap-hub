@@ -49,6 +49,7 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
       <div css={fieldsContainerStyles}>
         <LabeledTextField
           required
+          indicateValid={false}
           type="email"
           title="Email"
           value={email}

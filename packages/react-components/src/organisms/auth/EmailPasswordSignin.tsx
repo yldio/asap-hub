@@ -54,6 +54,7 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
           title="Email"
           value={email}
           onChange={onChangeEmail}
+          customValidationMessage={customValidationMessage}
         />
         <LabeledPasswordField
           required

@@ -16,6 +16,15 @@ describe('extractErrorMessage', () => {
     expect(extractErrorMessage(error)).toContain('oopsie');
   });
 
+  it('returns a custom message for a known error', () => {
+    const error = new Error() as any;
+    error.code = 'invalid_user_password';
+
+    expect(extractErrorMessage(error)).toMatch(
+      /e-?mail or password.+incorrect/i,
+    );
+  });
+
   it.each(errorKeys)('ignores a missing %s', (errorKey) => {
     const error = new Error() as any;
     error[errorKey] = null;

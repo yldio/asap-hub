@@ -847,6 +847,27 @@
             }
           }
         ]
+      },
+      {
+        "name": "labs",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": true,
+          "editor": "List",
+          "schemaIds": ["labs"],
+          "label": "Labs",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       }
     ],
     "previewUrls": {

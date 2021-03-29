@@ -63,7 +63,6 @@ it('renders a button that emits signin events', () => {
   userEvent.click(getByText(/sign.*in/i));
   expect(handleSignin).toHaveBeenCalled();
 });
-
 it('does not emit a signin event without input', () => {
   const handleSignin = jest.fn();
   const { getByText } = render(
@@ -76,4 +75,15 @@ it('does not emit a signin event without input', () => {
   );
   userEvent.click(getByText(/sign.*in/i));
   expect(handleSignin).not.toHaveBeenCalled();
+});
+
+it('shows a custom validation message on both fields', () => {
+  const { getAllByText } = render(
+    <EmailPasswordSignin
+      email=""
+      password=""
+      customValidationMessage="valmsg"
+    />,
+  );
+  expect(getAllByText('valmsg')).toHaveLength(2);
 });

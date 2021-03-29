@@ -151,6 +151,7 @@ const disabledStyles = css({
   cursor: 'unset',
 
   svg: {
+    filter: 'grayscale(1)',
     stroke: tin.rgb,
   },
 });

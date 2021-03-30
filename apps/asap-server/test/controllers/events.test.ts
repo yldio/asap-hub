@@ -652,7 +652,7 @@ describe('Event controller', () => {
   describe('Event groups', () => {
     const eventId = 'group-id-1';
 
-    test('Should return one group when event calendar is referenced by multiple groups', async () => {
+    test('Should return the first group when event calendar is referenced by multiple groups', async () => {
       const findEventResponseMultiRef = {
         data: {
           findEventsContent:

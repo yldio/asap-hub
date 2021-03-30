@@ -5,11 +5,7 @@ import {
 } from '../../src/controllers/events';
 import { GraphqlEvent, RestEvent, config } from '@asap-hub/squidex';
 import { queryGroupsExpectation, queryGroupsResponse } from './groups.fixtures';
-import {
-  ListEventResponse,
-  GroupResponse,
-  EventResponse,
-} from '@asap-hub/model';
+import { ListEventResponse, EventResponse } from '@asap-hub/model';
 
 export const fetchEventsResponse: { data: ResponseFetchEvents } = {
   data: {
@@ -133,7 +129,7 @@ export const listEventResponse: ListEventResponse = {
         color: '#125A12',
         name: 'Tech 1 - Sequencing/omics',
       },
-      group: queryGroupsExpectation.items[0] as GroupResponse,
+      group: queryGroupsExpectation.items[0],
     },
     {
       id: 'a820b5b7-8f7a-4297-a5a5-cf48b53ba3f7',
@@ -156,7 +152,7 @@ export const listEventResponse: ListEventResponse = {
         color: '#7A367A',
         name: 'Tech 3 - Structural Biology',
       },
-      group: queryGroupsExpectation.items[0] as GroupResponse,
+      group: queryGroupsExpectation.items[0],
     },
   ],
 };
@@ -188,7 +184,7 @@ export const eventResponse: EventResponse = {
     color: '#125A12',
     name: 'Tech 1 - Sequencing/omics',
   },
-  group: queryGroupsExpectation.items[0] as GroupResponse,
+  group: queryGroupsExpectation.items[0],
 };
 
 export const graphqlEvent: GraphqlEvent = {

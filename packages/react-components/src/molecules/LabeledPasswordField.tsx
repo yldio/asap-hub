@@ -15,8 +15,8 @@ const forgotPasswordStyles = css({
 });
 
 const showPasswordIndicatorStyles = css({
-  display: 'grid', // force the button to fill
-
+  display: 'flex',
+  height: '100%',
   // because our indicator is just text,
   // move it down from the center to align with the field text that is also below center
   paddingTop: `${1 / perRem}em`,

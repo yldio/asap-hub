@@ -92,9 +92,9 @@ export default async (data: Protocol): Promise<void> => {
       iv: new Date(data.created).toISOString(),
     },
     text: {
-      iv: `${data.abstract ? data.abstract + '\n' : ''}From Team ${
+      iv: `${data.abstract ? data.abstract + '\n || ' : ''}From Team ${
         data.team
-      } and authors: ${data.authors.join(', ')}.`,
+      } || Authors: ${data.authors.join(', ')}.`,
     },
     tags: {
       iv: data.keywords,

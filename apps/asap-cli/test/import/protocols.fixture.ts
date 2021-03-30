@@ -3,7 +3,7 @@ import { RestResearchOutput, RestUser, RestTeam } from '@asap-hub/squidex';
 export const createProtocolsRequest: RestResearchOutput['data'] = {
   type: { iv: 'Protocol' },
   title: { iv: 'title 1' },
-  publishDate: { iv: '2020-10-16T01:11:49.000Z' },
+  publishDate: { iv: '2020-11-27T10:26:00.000Z' },
   text: {
     iv: 'From Team team and authors: author 1, author 2.',
   },

@@ -41,3 +41,10 @@ export interface EventResponse {
 }
 
 export type ListEventResponse = ListResponse<EventResponse>;
+
+export const eventMaterialTypes: ReadonlyArray<
+  keyof Pick<
+    EventResponse,
+    'notes' | 'videoRecording' | 'presentation' | 'meetingMaterials'
+  >
+> = ['notes', 'videoRecording', 'presentation', 'meetingMaterials'];

@@ -1,6 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import {
+  eventMaterialTypes,
   EventResponse,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
 } from '@asap-hub/model';
@@ -11,6 +12,7 @@ import { perRem } from '../pixels';
 import {
   EventMaterialComingSoon,
   EventMaterialUnavailable,
+  EventMaterialsUnavailable,
 } from '../molecules';
 import { useDateHasPassed } from '../date';
 
@@ -25,10 +27,7 @@ type EventMaterialsProps = Pick<
 >;
 const EventMaterials: React.FC<EventMaterialsProps> = ({
   endDate,
-  notes = '',
-  videoRecording = '',
-  presentation = '',
-  meetingMaterials,
+  ...materials
 }) => {
   const hasEnded = useDateHasPassed(
     addHours(parseISO(endDate), EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT),
@@ -37,25 +36,31 @@ const EventMaterials: React.FC<EventMaterialsProps> = ({
     return null;
   }
 
+  if (eventMaterialTypes.every((material) => materials[material] === null)) {
+    return <EventMaterialsUnavailable />;
+  }
+
+  const { notes, videoRecording, presentation, meetingMaterials } = materials;
+
   return (
     <div css={cardsStyles}>
       {notes === null ? (
         <EventMaterialUnavailable materialType="Notes" />
-      ) : notes === '' ? (
+      ) : !notes ? (
         <EventMaterialComingSoon materialType="Notes" />
       ) : (
         <RichTextCard collapsible text={notes} title="Notes" />
       )}
       {videoRecording === null ? (
         <EventMaterialUnavailable materialType="Video recording" />
-      ) : videoRecording === '' ? (
+      ) : !videoRecording ? (
         <EventMaterialComingSoon materialType="Video recording" />
       ) : (
         <RichTextCard text={videoRecording} title="Video recording" />
       )}
       {presentation === null ? (
         <EventMaterialUnavailable materialType="Presentation" />
-      ) : presentation === '' ? (
+      ) : !presentation ? (
         <EventMaterialComingSoon materialType="Presentation" />
       ) : (
         <RichTextCard text={presentation} title="Presentation" />

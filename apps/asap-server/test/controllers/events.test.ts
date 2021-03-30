@@ -18,6 +18,7 @@ import {
   eventResponse,
   restEvent,
 } from '../fixtures/events.fixtures';
+import { queryGroupsResponse } from '../fixtures/groups.fixtures';
 
 describe('Event controller', () => {
   const events = new Events();
@@ -645,6 +646,70 @@ describe('Event controller', () => {
         const response = await events.fetchById(event.id);
         expect(response.meetingLink).toBeUndefined();
       });
+    });
+  });
+
+  describe('Event groups', () => {
+    const eventId = 'group-id-1';
+
+    test('Should return one group when event calendar is referenced by multiple groups', async () => {
+      const findEventResponseMultiRef = {
+        data: {
+          findEventsContent:
+            fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
+        },
+      };
+      findEventResponseMultiRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents =
+        queryGroupsResponse.data.queryGroupsContentsWithTotal.items;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, findEventResponseMultiRef);
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual(eventResponse);
+    });
+
+    test('Should return one group when event calendar is referenced by single group', async () => {
+      const findEventResponseSingleRef = {
+        data: {
+          findEventsContent:
+            fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
+        },
+      };
+      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents = [
+        queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0],
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, findEventResponseSingleRef);
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual(eventResponse);
+    });
+
+    test('Should return not return group when event calendar is not referenced by any group', async () => {
+      const findEventResponseSingleRef = {
+        data: {
+          findEventsContent:
+            fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
+        },
+      };
+      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents = [];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvent(eventId),
+        })
+        .reply(200, findEventResponse);
+
+      const result = await events.fetchById(eventId);
+      expect(result).toEqual({ ...eventResponse, group: undefined });
     });
   });
 

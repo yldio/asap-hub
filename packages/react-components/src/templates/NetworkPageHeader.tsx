@@ -73,8 +73,7 @@ const NetworkPageHeader: React.FC<NetworkPageHeaderProps> = ({
       <Display styleAsHeading={2}>Network</Display>
       <div css={textStyles}>
         <Paragraph accent="lead">
-          Explore the ASAP Network and collaborate! Search for teams or
-          individuals by keyword or name.
+          Explore the ASAP Network and collaborate!
         </Paragraph>
       </div>
       <TabNav>

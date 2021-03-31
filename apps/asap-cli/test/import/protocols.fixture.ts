@@ -7,6 +7,10 @@ export const createProtocolsRequest: RestResearchOutput['data'] = {
   text: {
     iv: 'From Team team || Authors: author 1, author 2.',
   },
+  description: {
+    iv:
+      'From Team team and authors: author 1, author 2. Keywords: a, b, c d, e.',
+  },
   link: {
     iv: 'https://www.protocols.io/view/link1',
   },

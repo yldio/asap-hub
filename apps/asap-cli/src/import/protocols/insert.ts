@@ -97,6 +97,11 @@ export default async (data: Protocol): Promise<void> => {
         data.team
       } || Authors: ${data.authors.join(', ')}.`,
     },
+    description: {
+      iv: `From Team ${data.team} and authors: ${data.authors.join(
+        ', ',
+      )}. Keywords: ${data.keywords.join(', ')}.`,
+    },
     tags: {
       iv: data.keywords,
     },

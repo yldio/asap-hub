@@ -231,6 +231,32 @@ module.exports = {
         }}`,
       },
     },
+    runMigrations: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-run-migrations.run',
+      timeout: 120,
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/webhook/run-migrations`,
+          },
+        },
+      ],
+    },
+    rollbackMigrations: {
+      handler:
+        'apps/asap-server/build-cjs/handlers/webhooks/webhook-run-migrations.rollback',
+      timeout: 120,
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: `/webhook/rollback-migrations`,
+          },
+        },
+      ],
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

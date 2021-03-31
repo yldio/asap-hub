@@ -8,7 +8,7 @@ jest.mock('../../localization');
 
 const props: ComponentProps<typeof EventInfo> = {
   ...createEventResponse(),
-  groups: [],
+  group: undefined,
 };
 
 it('renders an event', () => {
@@ -62,13 +62,11 @@ it('renders the group name linking to the group and icon', () => {
   const { getByText, getByTitle } = render(
     <EventInfo
       {...props}
-      groups={[
-        {
-          ...createGroupResponse(),
-          id: 'grp',
-          name: 'My Group',
-        },
-      ]}
+      group={{
+        ...createGroupResponse(),
+        id: 'grp',
+        name: 'My Group',
+      }}
     />,
   );
   expect(getByText('My Group')).toHaveAttribute(
@@ -80,7 +78,7 @@ it('renders the group name linking to the group and icon', () => {
 
 it('shows that the event is run by ASAP when there is no group', () => {
   const { getByText, getByTitle } = render(
-    <EventInfo {...props} groups={[]} />,
+    <EventInfo {...props} group={undefined} />,
   );
   expect(getByText(/asap event/i)).not.toHaveAttribute('href');
   expect(getByTitle('Calendar')).toBeInTheDocument();

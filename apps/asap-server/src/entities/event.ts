@@ -11,10 +11,10 @@ import { parseGraphQLGroup } from './group';
 
 export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   const calendar = parseGraphQLCalendar(item.flatData!.calendar![0]);
-  const groups =
-    item.flatData!.calendar![0].referencingGroupsContents?.map((group) =>
-      parseGraphQLGroup(group),
-    ) || [];
+  const group =
+    item.flatData!.calendar![0].referencingGroupsContents?.map((calGroup) =>
+      parseGraphQLGroup(calGroup),
+    )[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData!.startDate!);
   const now = DateTime.utc();
 
@@ -26,9 +26,7 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   // fallback to group thumbnail
   const thumbnail = item.flatData?.thumbnail?.length
     ? createURL(item.flatData.thumbnail.map((t) => t.id))[0]
-    : groups.length
-    ? groups[0].thumbnail
-    : undefined;
+    : group?.thumbnail;
 
   const endDate = DateTime.fromISO(item.flatData!.endDate!);
   const isStale = endDate.diffNow('days').get('days') < -14; // 14 days have passed after the event
@@ -98,6 +96,6 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     status: item.flatData!.status!,
     tags: item.flatData!.tags!,
     calendar,
-    groups,
+    group,
   };
 };

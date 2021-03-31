@@ -31,20 +31,14 @@ const cardStyles = css({
 });
 
 const groupsStyles = css({
-  display: 'grid',
-  listStyle: 'none',
-  margin: 0,
   padding: `${12 / perRem}em 0`,
-  gridRowGap: `${12 / perRem}em`,
-});
-const asapEventStyles = css({
-  padding: `${12 / perRem}em 0`,
-});
-const eventOwnerStyles = css({
   color: lead.rgb,
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+});
+const widthStyles = css({
+  display: 'grid',
 });
 
 const imageStyle = css({
@@ -62,7 +56,7 @@ const iconStyles = css({
 });
 
 type EventInfoProps = ComponentProps<typeof EventTime> &
-  Pick<EventResponse, 'id' | 'title' | 'thumbnail' | 'groups' | 'status'> & {
+  Pick<EventResponse, 'id' | 'title' | 'thumbnail' | 'group' | 'status'> & {
     titleLimit?: number | null;
   };
 
@@ -70,7 +64,7 @@ const EventInfo: React.FC<EventInfoProps> = ({
   id,
   title,
   thumbnail,
-  groups,
+  group,
   status,
   titleLimit = TITLE_LIMIT,
   ...props
@@ -98,24 +92,22 @@ const EventInfo: React.FC<EventInfoProps> = ({
           </Headline3>
         </Anchor>
         <EventTime {...props} />
-        {groups.length ? (
-          <ul css={groupsStyles}>
-            {groups.map((group) => (
-              <li key={group.id} css={eventOwnerStyles}>
-                <Link
-                  href={network({}).groups({}).group({ groupId: group.id }).$}
-                >
-                  <span css={iconStyles}>{groupsIcon}</span>
-                  {group.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div css={[asapEventStyles, eventOwnerStyles]}>
-            <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+        <div css={widthStyles}>
+          <div css={groupsStyles}>
+            {group ? (
+              <Link
+                href={network({}).groups({}).group({ groupId: group.id }).$}
+              >
+                <span css={iconStyles}>{groupsIcon}</span>
+                {group.name}
+              </Link>
+            ) : (
+              <>
+                <span css={iconStyles}>{calendarIcon}</span>ASAP Event
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

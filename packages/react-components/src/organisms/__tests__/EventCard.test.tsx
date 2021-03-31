@@ -7,7 +7,7 @@ import EventCard from '../EventCard';
 
 const props: ComponentProps<typeof EventCard> = {
   ...createEventResponse(),
-  groups: [],
+  group: undefined,
   tags: [],
 };
 it('shows that an event has been cancelled', () => {

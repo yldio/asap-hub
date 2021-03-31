@@ -30,9 +30,7 @@ const renderGroupProfile = async (
   mockGetGroup.mockImplementation(async (id) =>
     id === groupResponse.id ? groupResponse : undefined,
   );
-  mockGetGroupEvents.mockImplementation(async () =>
-    createListEventResponse(5, { groupCount: 1 }),
-  );
+  mockGetGroupEvents.mockImplementation(async () => createListEventResponse(5));
 
   const result = render(
     <RecoilRoot

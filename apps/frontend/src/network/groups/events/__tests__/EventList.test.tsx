@@ -139,7 +139,7 @@ it('generates group links', async () => {
     items: [
       {
         ...createEventResponse(),
-        groups: [{ ...createGroupResponse(), id: 'g0', name: 'My Group' }],
+        group: { ...createGroupResponse(), id: 'g0', name: 'My Group' },
       },
     ],
   });

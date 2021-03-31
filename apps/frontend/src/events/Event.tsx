@@ -14,12 +14,7 @@ const Event: React.FC = () => {
 
   if (event) {
     return (
-      <EventPage
-        {...event}
-        groups={event.groups}
-        backHref={backHref}
-        onRefresh={refreshEvent}
-      />
+      <EventPage {...event} backHref={backHref} onRefresh={refreshEvent} />
     );
   }
 

@@ -4,16 +4,14 @@ import { addDays, formatISO, subDays, subYears } from 'date-fns';
 import {
   createCalendarResponse,
   createEventResponse,
+  createGroupResponse,
 } from '@asap-hub/fixtures';
 
 import EventPage from '../EventPage';
 
 const props: ComponentProps<typeof EventPage> = {
   ...createEventResponse(),
-  groups: createEventResponse().groups.map((group) => ({
-    ...group,
-    href: '#',
-  })),
+  group: createGroupResponse(),
   backHref: '/prev',
 };
 
@@ -93,6 +91,18 @@ it('renders additional materials', () => {
     />,
   );
   expect(getByText('Example Material')).toBeVisible();
+});
+
+it('renders continue the event conversation when group with slack provided', () => {
+  const { queryByTitle, rerender } = render(
+    <EventPage
+      {...props}
+      group={{ ...createGroupResponse(), tools: { slack: 'http://slack.com' } }}
+    />,
+  );
+  expect(queryByTitle(/slack/i)).toBeInTheDocument();
+  rerender(<EventPage {...props} group={undefined} />);
+  expect(queryByTitle(/slack/i)).not.toBeInTheDocument();
 });
 
 it('renders calendar list', () => {

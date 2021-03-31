@@ -17,7 +17,7 @@ include:
 
 .tmpl:deploy: &tmpl_deploy
   script:
-    - yarn sls deploy --stage=$SLS_STAGE --verbose
+    - yarn sls deploy --verbose
   variables: &tmpl_deploy_variables
     NODE_ENV: production
   dependencies:

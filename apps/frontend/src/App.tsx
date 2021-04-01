@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
-import { Layout, BasicLayout } from '@asap-hub/react-components';
+import {
+  Layout,
+  BasicLayout,
+  GoogleTagManager,
+} from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { network, welcome } from '@asap-hub/routing';
 
@@ -9,6 +13,7 @@ import history from './history';
 import AuthProvider from './auth/AuthProvider';
 import CheckAuth from './auth/CheckAuth';
 import Frame from './structure/Frame';
+import { GTM_CONTAINER_ID } from './config';
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
@@ -48,6 +53,7 @@ const App: React.FC<Record<string, never>> = () => {
 
   return (
     <Frame>
+      <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       <AuthProvider>
         <Router history={history}>
           <LastLocationProvider>

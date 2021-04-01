@@ -13,6 +13,8 @@ export { default as EventsCalendar } from './EventsCalendar';
 export { default as EventsPage } from './EventsPage';
 export { default as EventsList } from './EventsList';
 export { default as ForgotPasswordPage } from './ForgotPasswordPage';
+export { default as GlobalStyles } from './GlobalStyles';
+export { default as GoogleTagManager } from './GoogleTagManager';
 export { default as GroupProfileAbout } from './GroupProfileAbout';
 export { default as GroupProfileCalendar } from './GroupProfileCalendar';
 export { default as GroupProfileHeader } from './GroupProfileHeader';

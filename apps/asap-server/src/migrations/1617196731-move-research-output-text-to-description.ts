@@ -1,7 +1,7 @@
 import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 
-export default class MoveResearchOutputTextToDescription implements Migration {
+export default class MoveResearchOutputTextToDescription extends Migration {
   up = async (): Promise<void> => {
     const squidexClient = new Squidex<RestResearchOutput>('research-outputs');
 
@@ -21,5 +21,6 @@ export default class MoveResearchOutputTextToDescription implements Migration {
     } while (pointer < result.total);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   down = async (): Promise<void> => {};
 }

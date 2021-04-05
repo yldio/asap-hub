@@ -92,6 +92,7 @@ export default async (data: Protocol): Promise<void> => {
       iv: new Date(data.created).toISOString(),
     },
     text: {
+      // eslint-disable-next-line prefer-template
       iv: `${data.abstract ? data.abstract + '\n || ' : ''}From Team ${
         data.team
       } || Authors: ${data.authors.join(', ')}.`,

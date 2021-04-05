@@ -5,7 +5,7 @@ export const createProtocolsRequest: RestResearchOutput['data'] = {
   title: { iv: 'title 1' },
   publishDate: { iv: '2020-11-27T10:26:00.000Z' },
   text: {
-    iv: 'From Team team and authors: author 1, author 2.',
+    iv: 'From Team team || Authors: author 1, author 2.',
   },
   link: {
     iv: 'https://www.protocols.io/view/link1',

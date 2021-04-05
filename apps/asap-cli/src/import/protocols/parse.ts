@@ -25,15 +25,21 @@ export default (data: string[]): Protocol => {
 
   const [day, month, yearAndTime] = created.split('.');
 
-  const abstractText = ['(private protocol)', 'Abstract crypted'].includes(
-    abstract,
-  )
-    ? undefined
-    : JSON.parse(abstract)
-        .blocks.reduce((acc: string[], block: { text: string }) => {
-          return acc.concat(block.text);
-        }, [])
-        .join('\n');
+  let abstractText;
+
+  // try to parse string as JSON or fail gracefully
+  try {
+    abstractText = ['(private protocol)', 'Abstract crypted'].includes(abstract)
+      ? undefined
+      : JSON.parse(abstract)
+          .blocks.reduce(
+            (acc: string[], block: { text: string }) => acc.concat(block.text),
+            [],
+          )
+          .join('\n');
+  } catch (e) {
+    abstractText = abstract;
+  }
 
   return {
     team,

@@ -19,19 +19,16 @@ setup:integration-image:
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE
   before_script:
-    # APP is named after PR Nr. or branch + jobId in case no present (master?)
+    # APP is named after PR Nr. or Branch + JobId otherwise (master?)
     - export SQUIDEX_TEST_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID:-$CI_COMMIT_BRANCH-$CI_JOB_ID}
-    #- pip install -r ci/integration/scripts/requirements.txt
-    #- python ci/integration/scripts/create-app.py
+    - pip install -r ci/integration/scripts/requirements.txt
+    - python ci/integration/scripts/create-app.py
   script:
-    - echo "Your integration tests run here"
+    - echo "Running Integration tests against $SQUIDEX_TEST_APP_NAME"
     - echo $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID
     - echo $SQUIDEX_TEST_APP_NAME $SQUIDEX_TEST_CLIENT_ID
-    #- yarn test --testPathPattern=e2e-tests
-  after_script:
+    - yarn test --testPathPattern=e2e-tests
     - echo "Delete would run here"
-    - echo $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID
-    - echo $SQUIDEX_TEST_APP_NAME $SQUIDEX_TEST_CLIENT_ID
   environment:
     name: test
   stage: test

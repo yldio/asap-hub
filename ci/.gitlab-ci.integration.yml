@@ -18,16 +18,18 @@ setup:integration-image:
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE
-  variables:
-    # For now only run on PRs. Eventually use the commit SHA + job ID when
-    # merged to master
-    SQUIDEX_TEST_APP_NAME: $CI_EXTERNAL_PULL_REQUEST_IID
-    SQUIDEX_APP_NAME: $CI_EXTERNAL_PULL_REQUEST_IID
-  #before_script:
+  before_script:
+    # APP is named after PR Nr. or branch + jobId in case no present (master?)
+    - export SQUIDEX_TEST_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID:-$CI_COMMIT_BRANCH-$CI_JOB_ID}
     #- pip install -r ci/integration/scripts/requirements.txt
     #- python ci/integration/scripts/create-app.py
   script:
     - echo "Your integration tests run here"
+    - echo $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID
+    - echo $SQUIDEX_TEST_APP_NAME $SQUIDEX_TEST_CLIENT_ID
+    #- yarn test --testPathPattern=e2e-tests
+  after_script:
+    - echo "Delete would run here"
     - echo $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID
     - echo $SQUIDEX_TEST_APP_NAME $SQUIDEX_TEST_CLIENT_ID
   environment:

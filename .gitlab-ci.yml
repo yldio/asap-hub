@@ -88,6 +88,8 @@ build:native:
   script:
     - echo "no script property found"
   needs: []
+  environment:
+    name: test
   stage: test
 
 check:packages:
@@ -112,7 +114,7 @@ test:unit:
     paths:
       - coverage
   script:
-    - yarn run test --coverage
+    - yarn run test --coverage --testPathIgnorePattern=e2e-tests
     - yarn codecov
 
 test:browser:

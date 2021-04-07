@@ -6,7 +6,7 @@ const root = dirname(require.resolve('asap-hub/package.json'), '..');
 const testPathIgnorePatterns = [
   '\\.build-output-test\\.(js|jsx|ts|tsx)$',
   '\\.browser-test\\.(js|jsx|ts|tsx)$',
-  '\\.e2e\\.(js|jsx|ts|tsx)$',
+  '\\.e2e-tests\\.(js|jsx|ts|tsx)$',
 ];
 
 module.exports = {

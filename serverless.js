@@ -34,6 +34,7 @@ module.exports = {
   plugins,
   provider: {
     name: 'aws',
+    endpointType: 'REGIONAL',
     runtime: 'nodejs14.x',
     timeout: 16,
     memorySize: 512,

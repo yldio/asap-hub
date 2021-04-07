@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { listViewParam } from '@asap-hub/routing';
+import { viewParam, listViewValue } from '@asap-hub/routing';
 
 export const DETAILS_VIEW_PAGE_SIZE = 10;
 export const LIST_VIEW_PAGE_SIZE = 20;
@@ -13,11 +13,11 @@ export const usePaginationParams = () => {
   const resetPaginationSearchParams = new URLSearchParams(searchParams);
   resetPaginationSearchParams.delete('currentPage');
 
-  const listView = !!searchParams.get(listViewParam);
+  const listView = searchParams.get(viewParam) === listViewValue;
   const listViewParams = new URLSearchParams(resetPaginationSearchParams);
-  listViewParams.set(listViewParam, 'true');
+  listViewParams.set(viewParam, listViewValue);
   const detailsViewParams = new URLSearchParams(resetPaginationSearchParams);
-  detailsViewParams.delete(listViewParam);
+  detailsViewParams.delete(viewParam);
 
   const resetPagination = () => {
     history.replace({ search: resetPaginationSearchParams.toString() });

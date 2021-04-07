@@ -51,35 +51,33 @@ const ListControls: React.FC<ListControlsProps> = ({
   listView,
   listViewHref,
   detailsViewHref,
-}) => {
-  return (
-    <div css={containerStyles}>
-      <NavHashLink
-        to={detailsViewHref}
-        activeClassName={activeClassName}
-        css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
-        smooth
-        isActive={() => !listView}
-      >
-        <p css={textStyles}>
-          <span css={iconStyles}>{detailViewIcon}</span>
-          Details View
-        </p>
-      </NavHashLink>
-      <NavHashLink
-        to={listViewHref}
-        activeClassName={activeClassName}
-        css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
-        smooth
-        isActive={() => listView}
-      >
-        <p css={textStyles}>
-          <span css={iconStyles}>{listViewIcon}</span>
-          List View
-        </p>
-      </NavHashLink>
-    </div>
-  );
-};
+}) => (
+  <div css={containerStyles}>
+    <NavHashLink
+      to={detailsViewHref}
+      activeClassName={activeClassName}
+      css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
+      smooth
+      isActive={() => !listView}
+    >
+      <p css={textStyles}>
+        <span css={iconStyles}>{detailViewIcon}</span>
+        Details View
+      </p>
+    </NavHashLink>
+    <NavHashLink
+      to={listViewHref}
+      activeClassName={activeClassName}
+      css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
+      smooth
+      isActive={() => listView}
+    >
+      <p css={textStyles}>
+        <span css={iconStyles}>{listViewIcon}</span>
+        List View
+      </p>
+    </NavHashLink>
+  </div>
+);
 
 export default ListControls;

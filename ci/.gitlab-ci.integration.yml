@@ -31,8 +31,4 @@ test:integration:
     - yarn test --testPathPattern=integration
     - echo "Deleting $SQUIDEX_TEST_APP_NAME"
     #- python ci/integration/scripts/delete-app.py
-  environment:
-    name: test
   stage: test
-  rules:
-    - if: $CI_COMMIT_BRANCH != 'master'

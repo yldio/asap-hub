@@ -32,6 +32,8 @@ const props = (): ComponentProps<typeof SharedResearchPageBody> => {
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
     currentPageIndex,
     renderPageHref: (index) => `#${index}`,
+    listViewParams: '',
+    detailsViewParams: '',
   };
 };
 

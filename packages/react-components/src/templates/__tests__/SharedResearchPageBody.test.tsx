@@ -20,6 +20,8 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
       created: new Date().toISOString(),
     },
   ],
+  listViewParams: '',
+  detailsViewParams: '',
   numberOfItems: 2,
   numberOfPages: 1,
   currentPageIndex: 0,

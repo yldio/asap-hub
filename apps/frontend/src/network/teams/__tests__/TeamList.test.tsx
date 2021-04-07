@@ -11,7 +11,7 @@ import {
 import Teams from '../TeamList';
 import { getTeams } from '../api';
 import { teamsState } from '../state';
-import { DEFAULT_PAGE_SIZE } from '../../../hooks';
+import { DETAILS_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 
@@ -24,7 +24,7 @@ const renderTeamList = async () => {
         reset(
           teamsState({
             currentPage: 0,
-            pageSize: DEFAULT_PAGE_SIZE,
+            pageSize: DETAILS_VIEW_PAGE_SIZE,
             filters: new Set(),
             searchQuery: '',
           }),

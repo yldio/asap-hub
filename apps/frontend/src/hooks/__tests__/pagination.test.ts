@@ -1,7 +1,13 @@
+import { listViewParam } from '@asap-hub/routing';
 import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
-import { usePaginationParams, usePagination } from '../pagination';
+import {
+  usePaginationParams,
+  usePagination,
+  LIST_VIEW_PAGE_SIZE,
+  DETAILS_VIEW_PAGE_SIZE,
+} from '../pagination';
 
 const urlSearchParamsToObject = (queryString: string) =>
   Object.fromEntries(new URLSearchParams(queryString));
@@ -12,7 +18,7 @@ describe('usePaginationParams', () => {
       wrapper: MemoryRouter,
     });
     expect(result.current.currentPage).toBe(0);
-    expect(result.current.pageSize).toBe(10);
+    expect(result.current.pageSize).toBe(DETAILS_VIEW_PAGE_SIZE);
   });
 
   it('returns current page', () => {
@@ -25,11 +31,14 @@ describe('usePaginationParams', () => {
     expect(result.current.currentPage).toBe(1);
   });
 
-  it('returns provided page size', () => {
-    const { result } = renderHook(() => usePaginationParams(12), {
+  it('returns list view page size', () => {
+    const { result } = renderHook(() => usePaginationParams(), {
       wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: [{ search: `?${listViewParam}=true` }],
+      },
     });
-    expect(result.current.pageSize).toBe(12);
+    expect(result.current.pageSize).toBe(LIST_VIEW_PAGE_SIZE);
   });
 
   it('removes pagination parameters from url', () => {

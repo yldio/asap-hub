@@ -8,7 +8,7 @@ import { refreshCalendarsState } from '../calendar/state';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getEvents } from '../api';
 import { eventsState } from '../state';
-import { DEFAULT_PAGE_SIZE } from '../../hooks';
+import { DETAILS_VIEW_PAGE_SIZE } from '../../hooks';
 import EventList from '../EventList';
 
 jest.useFakeTimers();
@@ -33,8 +33,8 @@ const renderEventsListPage = async (
           eventsState({
             searchQuery,
             currentPage: 0,
-            pageSize: DEFAULT_PAGE_SIZE,
             filters: new Set(),
+            pageSize: DETAILS_VIEW_PAGE_SIZE,
             after: new Date().toISOString(),
           }),
         );

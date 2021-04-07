@@ -1,7 +1,7 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
-import { PageControls } from '../molecules';
+import { ListControls, PageControls } from '../molecules';
 import { Paragraph } from '../atoms';
 import {
   perRem,
@@ -11,7 +11,9 @@ import {
 } from '../pixels';
 
 const headerStyles = css({
-  justifySelf: 'start',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
 });
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -35,11 +37,16 @@ const pageControlsStyles = css({
 
 type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
-
+  readonly listView?: boolean;
+  readonly detailsViewHref?: string;
+  readonly listViewHref?: string;
   readonly children: React.ReactNode;
 };
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
+  listView = false,
+  detailsViewHref,
+  listViewHref,
   children,
   ...pageControlsProps
 }) => (
@@ -50,6 +57,13 @@ const ResultList: React.FC<ResultListProps> = ({
           {numberOfItems} result{numberOfItems === 1 || 's'} found
         </strong>
       </Paragraph>
+      {detailsViewHref && listViewHref && (
+        <ListControls
+          listView={listView}
+          detailsViewHref={detailsViewHref}
+          listViewHref={listViewHref}
+        />
+      )}
     </header>
     {numberOfItems > 0 && <main css={mainStyles}>{children}</main>}
     <section css={pageControlsStyles}>

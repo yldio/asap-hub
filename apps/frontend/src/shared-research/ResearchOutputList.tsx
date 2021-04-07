@@ -13,7 +13,13 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   searchQuery = '',
   filters = new Set(),
 }) => {
-  const { currentPage, pageSize } = usePaginationParams();
+  const {
+    currentPage,
+    pageSize,
+    listView,
+    detailsViewParams,
+    listViewParams,
+  } = usePaginationParams();
   const result = useResearchOutputs({
     searchQuery,
     filters,
@@ -36,6 +42,9 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
+      listView={listView}
+      detailsViewParams={detailsViewParams}
+      listViewParams={listViewParams}
     />
   );
 };

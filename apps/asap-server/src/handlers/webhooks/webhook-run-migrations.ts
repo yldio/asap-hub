@@ -1,7 +1,6 @@
 import { RestMigration, Squidex } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
-import { basename } from 'path';
 import { promises } from 'fs';
 import { migrationDir } from '../../config';
 import logger from '../../utils/logger';
@@ -67,13 +66,15 @@ const getMigrationsFromPaths = async (
   const migrations = Promise.all(
     migrationPaths.map(async (file) => {
       logger.debug({ file });
-      const { default: Module } = await import(`${migrationDir}/${file}`);
+      const { default: Module } = (await import(`${migrationDir}/${file}`)) as {
+        default: { new (path: string): Migration };
+      };
 
       if (typeof Module !== 'function') {
         throw new Error(`${file} does not export a valid module`);
       }
 
-      const migration = new Module();
+      const migration = new Module(file);
 
       if (!isMigration(migration)) {
         throw new Error(`${file} does not contain a valid migration`);
@@ -137,13 +138,19 @@ const removeExecutedMigration = async (migration: string): Promise<void> => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isMigration = (instance: any): instance is Migration =>
-  typeof instance.up === 'function' && typeof instance.down === 'function';
+  typeof instance.up === 'function' &&
+  typeof instance.down === 'function' &&
+  typeof instance.getPath === 'function';
 
 export abstract class Migration {
+  path: string;
+
+  constructor(path: string) {
+    this.path = path;
+  }
   abstract up: () => Promise<void>;
   abstract down: () => Promise<void>;
-  // eslint-disable-next-line class-methods-use-this
   getPath(): string {
-    return basename(__filename);
+    return this.path;
   }
 }

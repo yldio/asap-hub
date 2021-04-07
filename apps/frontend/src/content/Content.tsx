@@ -19,7 +19,7 @@ const Content: React.FC<ContentProps> = ({ layoutComponent: Layout }) => {
   if (page) {
     return (
       <Layout>
-        <Frame>
+        <Frame title={page.title}>
           <ContentPage {...page} />
         </Frame>
       </Layout>

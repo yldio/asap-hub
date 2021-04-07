@@ -8,6 +8,7 @@ import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { usePatchUserById } from './state';
+import Frame from '../../structure/Frame';
 
 interface EditingProps {
   user: UserResponse;
@@ -21,19 +22,23 @@ const Editing: React.FC<EditingProps> = ({ user }) => {
   return (
     <>
       <Route exact path={path + route.editPersonalInfo.template}>
-        <PersonalInfoModal {...user} backHref={route.$} onSave={patchUser} />
+        <Frame title="Edit Personal Information">
+          <PersonalInfoModal {...user} backHref={route.$} onSave={patchUser} />
+        </Frame>
       </Route>
       <Route exact path={path + route.editContactInfo.template}>
-        <ContactInfoModal
-          email={user.contactEmail}
-          fallbackEmail={user.email}
-          backHref={route.$}
-          onSave={(newContactEmail) =>
-            patchUser({
-              contactEmail: newContactEmail,
-            })
-          }
-        />
+        <Frame title="Edit Contact Information">
+          <ContactInfoModal
+            email={user.contactEmail}
+            fallbackEmail={user.email}
+            backHref={route.$}
+            onSave={(newContactEmail) =>
+              patchUser({
+                contactEmail: newContactEmail,
+              })
+            }
+          />
+        </Frame>
       </Route>
     </>
   );

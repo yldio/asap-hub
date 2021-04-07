@@ -42,7 +42,7 @@ const Dashboard: React.FC<Record<string, never>> = () => {
   if (dashboard) {
     return (
       <DashboardPage firstName={firstName}>
-        <Frame>
+        <Frame title="Dashboard">
           <Body {...dashboard} userId={id} teamId={teams[0]?.id} />
         </Frame>
       </DashboardPage>

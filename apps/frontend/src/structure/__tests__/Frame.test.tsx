@@ -11,38 +11,80 @@ const Throw: React.FC<Record<string, never>> = () => {
 };
 const Suspend = React.lazy(() => new Promise(() => {}));
 
-it('catches errors', () => {
-  const { container } = render(
-    <Frame>
-      <Throw />
-    </Frame>,
-  );
-  expect(container).toHaveTextContent(/went wrong/i);
+describe('an error', () => {
+  it('is caught by a boundary', () => {
+    const { container } = render(
+      <Frame title={null}>
+        <Throw />
+      </Frame>,
+    );
+    expect(container).toHaveTextContent(/went wrong/i);
+  });
+  it('is caught by a boundary with custom props', () => {
+    const { container } = render(
+      <Frame
+        title={null}
+        boundaryProps={{ description: 'specificerrormessage' }}
+      >
+        <Throw />
+      </Frame>,
+    );
+    expect(container).toHaveTextContent(/specificerrormessage/i);
+  });
 });
 
-it('Passes through error boundary  props', () => {
-  const { container } = render(
-    <Frame boundaryProps={{ description: 'specificerror' }}>
-      <Throw />
-    </Frame>,
-  );
-  expect(container).toHaveTextContent(/specificerror/i);
+describe('the suspense fallback', () => {
+  it('is provided by default', async () => {
+    const { container } = render(
+      <Frame title={null}>
+        <Suspend />
+      </Frame>,
+    );
+    await waitFor(() => expect(container).toHaveTextContent(/loading/i));
+  });
+
+  it('is passed through', async () => {
+    const { container } = render(
+      <Frame title={null} fallback={'123'}>
+        <Suspend />
+      </Frame>,
+    );
+    await waitFor(() => expect(container).toHaveTextContent('123'));
+  });
 });
 
-it('provides a default suspense fallback', async () => {
-  const { container } = render(
-    <Frame>
-      <Suspend />
-    </Frame>,
-  );
-  await waitFor(() => expect(container).toHaveTextContent(/loading/i));
-});
+describe('the document title', () => {
+  it('is set', () => {
+    render(<Frame title="The Hub" />);
+    expect(document.title).toBe('The Hub');
+  });
+  it('is set even while suspended', () => {
+    render(
+      <Frame title="The Suspended Hub">
+        <Suspend />
+      </Frame>,
+    );
+    expect(document.title).toBe('The Suspended Hub');
+  });
 
-it('passes through a suspense fallback', async () => {
-  const { container } = render(
-    <Frame fallback={'123'}>
-      <Suspend />
-    </Frame>,
-  );
-  await waitFor(() => expect(container).toHaveTextContent('123'));
+  it('can be nested', () => {
+    render(
+      <Frame title="The Hub">
+        <Frame title="A Page" />
+      </Frame>,
+    );
+    expect(document.title).toContain('The Hub');
+    expect(document.title).toContain('A Page');
+  });
+  it('ignores Frames without title in the middle', () => {
+    render(
+      <Frame title="The Hub">
+        <Frame title={null}>
+          <Frame title="A Page" />
+        </Frame>
+      </Frame>,
+    );
+    expect(document.title).toContain('The Hub');
+    expect(document.title).toContain('A Page');
+  });
 });

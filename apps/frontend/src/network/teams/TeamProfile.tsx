@@ -32,24 +32,30 @@ const TeamProfile: React.FC<Record<string, never>> = () => {
 
   if (team) {
     return (
-      <TeamProfilePage {...team}>
-        <Frame>
+      <Frame title={team.displayName}>
+        <TeamProfilePage {...team}>
           <Switch>
             <Route path={path + route({ teamId }).about.template}>
-              <About team={team} />
+              <Frame title="About">
+                <About team={team} />
+              </Frame>
             </Route>
             <Route path={path + route({ teamId }).outputs.template}>
-              <Outputs outputs={team.outputs} />
+              <Frame title="Outputs">
+                <Outputs outputs={team.outputs} />
+              </Frame>
             </Route>
             {team.tools && (
               <Route path={path + route({ teamId }).workspace.template}>
-                <Workspace team={{ ...team, tools: team.tools }} />
+                <Frame title="Workspace">
+                  <Workspace team={{ ...team, tools: team.tools }} />
+                </Frame>
               </Route>
             )}
             <Redirect to={route({ teamId }).about({}).$} />
           </Switch>
-        </Frame>
-      </TeamProfilePage>
+        </TeamProfilePage>
+      </Frame>
     );
   }
 

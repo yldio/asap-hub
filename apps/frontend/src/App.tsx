@@ -52,12 +52,12 @@ const App: React.FC<Record<string, never>> = () => {
   }, []);
 
   return (
-    <Frame>
+    <Frame title="ASAP Hub">
       <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       <AuthProvider>
         <Router history={history}>
           <LastLocationProvider>
-            <Frame>
+            <Frame title={null}>
               <Switch>
                 <Route path={welcome.template}>
                   <Welcome />
@@ -73,7 +73,7 @@ const App: React.FC<Record<string, never>> = () => {
                 <Route>
                   <CheckAuth>
                     <ConfiguredLayout>
-                      <Frame>
+                      <Frame title={null}>
                         <GuardedApp />
                       </Frame>
                     </ConfiguredLayout>

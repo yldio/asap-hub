@@ -110,21 +110,27 @@ const User: React.FC<Record<string, never>> = () => {
     };
 
     return (
-      <UserProfilePage {...profilePageProps}>
-        <Frame>
+      <Frame title={user.displayName}>
+        <UserProfilePage {...profilePageProps}>
           {user.role === 'Staff' ? (
             <Staff {...user} />
           ) : (
             <>
               <Switch>
                 <Route path={path + tabRoutes.research.template}>
-                  <Research user={user} />
+                  <Frame title="Research">
+                    <Research user={user} />
+                  </Frame>
                 </Route>
                 <Route path={path + tabRoutes.about.template}>
-                  <About user={user} />
+                  <Frame title="About">
+                    <About user={user} />
+                  </Frame>
                 </Route>
                 <Route path={path + tabRoutes.outputs.template}>
-                  <Outputs />
+                  <Frame title="Outputs">
+                    <Outputs />
+                  </Frame>
                 </Route>
                 <Redirect to={tabRoutes.research({}).$} />
               </Switch>
@@ -135,8 +141,8 @@ const User: React.FC<Record<string, never>> = () => {
               )}
             </>
           )}
-        </Frame>
-      </UserProfilePage>
+        </UserProfilePage>
+      </Frame>
     );
   }
 

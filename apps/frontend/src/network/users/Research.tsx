@@ -29,7 +29,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
       <UserProfileResearch
         {...user}
         userProfileGroupsCard={
-          <Frame fallback={null}>
+          <Frame title={null} fallback={null}>
             <GroupsCard user={user} />
           </Frame>
         }
@@ -58,22 +58,26 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
                 ({ id: currentTeamId }) => currentTeamId === teamId,
               );
               return team ? (
-                <TeamMembershipModal
-                  {...team}
-                  backHref={route.$}
-                  onSave={patchUser}
-                />
+                <Frame title="Edit Team Membership">
+                  <TeamMembershipModal
+                    {...team}
+                    backHref={route.$}
+                    onSave={patchUser}
+                  />
+                </Frame>
               ) : (
                 <Redirect to={route.$} />
               );
             }}
           />
           <Route path={path + route.editQuestions.template}>
-            <OpenQuestionsModal
-              {...user}
-              backHref={route.$}
-              onSave={patchUser}
-            />
+            <Frame title="Edit Open Questions">
+              <OpenQuestionsModal
+                {...user}
+                backHref={route.$}
+                onSave={patchUser}
+              />
+            </Frame>
           </Route>
         </>
       )}

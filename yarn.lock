@@ -326,6 +326,7 @@ __metadata:
     react-router-last-location: ^2.0.1
     react-scripts: ^4.0.3
     react-test-renderer: ^17.0.1
+    react-titled: ^1.0.1
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
     typescript: ~4.1.0
     use-debounce: ^5.0.1
@@ -25614,6 +25615,17 @@ fsevents@^2.1.3:
   peerDependencies:
     react: ^16.8.0
   checksum: 27d83f57c59254366cb13255d3a7771813bf771f2f5b14c273497dbf80d26dc6c4f646feeff8b789c18a0c313ad04d9ba26a63fb5a9e4cfeaffc0569cc224643
+  languageName: node
+  linkType: hard
+
+"react-titled@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "react-titled@npm:1.0.1"
+  dependencies:
+    prop-types: ^15.5.8
+  peerDependencies:
+    react: ^16.3.0-0 || ^17.0.0-0
+  checksum: 1de84c10c1ba1157329bf3d76addafc696db02270d1dffab461c7ed7977b7552b588538924b2b24ddbad998750c44a1942a484ddfc9564219e0825b3345bae19
   languageName: node
   linkType: hard
 

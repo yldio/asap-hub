@@ -49,52 +49,57 @@ const GroupProfile: React.FC = () => {
     };
 
     return (
-      <Switch>
-        <Route path={path + route({ groupId }).about.template}>
-          <GroupProfilePage {...props}>
-            <Frame>
-              <About group={group} groupTeamsElementId={groupTeamsElementId} />
-            </Frame>
-          </GroupProfilePage>
-        </Route>
-        <Route path={path + route({ groupId }).calendar.template}>
-          <GroupProfilePage {...props}>
-            <Frame>
-              <Calendar calendars={group.calendars} />
-            </Frame>
-          </GroupProfilePage>
-        </Route>
-        <Route path={path + route({ groupId }).upcoming.template}>
-          <GroupProfilePage
-            {...props}
-            searchQuery={searchQuery}
-            onChangeSearchQuery={setSearchQuery}
-          >
-            <Frame>
-              <EventList
-                currentTime={currentTime}
-                searchQuery={debouncedSearchQuery}
-              />
-            </Frame>
-          </GroupProfilePage>
-        </Route>
-        <Route path={path + route({ groupId }).past.template}>
-          <GroupProfilePage
-            {...props}
-            searchQuery={searchQuery}
-            onChangeSearchQuery={setSearchQuery}
-          >
-            <Frame>
-              <EventList
-                past
-                currentTime={currentTime}
-                searchQuery={debouncedSearchQuery}
-              />
-            </Frame>
-          </GroupProfilePage>
-        </Route>
-        <Redirect to={route({ groupId }).about({}).$} />
-      </Switch>
+      <Frame title={group.name}>
+        <Switch>
+          <Route path={path + route({ groupId }).about.template}>
+            <GroupProfilePage {...props}>
+              <Frame title="About">
+                <About
+                  group={group}
+                  groupTeamsElementId={groupTeamsElementId}
+                />
+              </Frame>
+            </GroupProfilePage>
+          </Route>
+          <Route path={path + route({ groupId }).calendar.template}>
+            <GroupProfilePage {...props}>
+              <Frame title="Calendar">
+                <Calendar calendars={group.calendars} />
+              </Frame>
+            </GroupProfilePage>
+          </Route>
+          <Route path={path + route({ groupId }).upcoming.template}>
+            <GroupProfilePage
+              {...props}
+              searchQuery={searchQuery}
+              onChangeSearchQuery={setSearchQuery}
+            >
+              <Frame title="Upcoming Events">
+                <EventList
+                  currentTime={currentTime}
+                  searchQuery={debouncedSearchQuery}
+                />
+              </Frame>
+            </GroupProfilePage>
+          </Route>
+          <Route path={path + route({ groupId }).past.template}>
+            <GroupProfilePage
+              {...props}
+              searchQuery={searchQuery}
+              onChangeSearchQuery={setSearchQuery}
+            >
+              <Frame title="Upcoming Events">
+                <EventList
+                  past
+                  currentTime={currentTime}
+                  searchQuery={debouncedSearchQuery}
+                />
+              </Frame>
+            </GroupProfilePage>
+          </Route>
+          <Redirect to={route({ groupId }).about({}).$} />
+        </Switch>
+      </Frame>
     );
   }
 

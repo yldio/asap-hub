@@ -1,10 +1,10 @@
 import React from 'react';
-import { subHours } from 'date-fns';
-import { EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT } from '@asap-hub/model';
 import { EventsList } from '@asap-hub/react-components';
 
-import { useEvents } from './state';
+import { useEvents, usePrefetchEvents } from './state';
 import { usePagination, usePaginationParams } from '../hooks';
+import { usePrefetchCalendars } from './calendar/state';
+import { getEventListOptions } from './options';
 
 type EventListProps = {
   readonly currentTime: Date;
@@ -14,32 +14,28 @@ type EventListProps = {
 };
 const EventList: React.FC<EventListProps> = ({
   currentTime,
-  past,
-  searchQuery,
+  past = false,
+  searchQuery = '',
 }) => {
-  const time = subHours(
-    currentTime,
-    EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,
-  ).toISOString();
-
   const { currentPage, pageSize } = usePaginationParams();
 
-  const { items, total } = useEvents({
-    searchQuery,
-    ...(past
-      ? {
-          before: time,
-          sort: {
-            sortBy: 'endDate',
-            sortOrder: 'desc' as const,
-          },
-        }
-      : {
-          after: time,
-        }),
-    currentPage,
-    pageSize,
-  });
+  const { items, total } = useEvents(
+    getEventListOptions(currentTime, past, {
+      searchQuery,
+      currentPage,
+      pageSize,
+    }),
+  );
+
+  usePrefetchEvents(
+    getEventListOptions(currentTime, !past, {
+      searchQuery,
+      currentPage,
+      pageSize,
+    }),
+  );
+  usePrefetchCalendars();
+
   const { numberOfPages, renderPageHref } = usePagination(total, pageSize);
   return (
     <EventsList

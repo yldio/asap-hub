@@ -1,3 +1,4 @@
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
   selectorFamily,
@@ -7,8 +8,7 @@ import {
 } from 'recoil';
 import { ListEventResponse, EventResponse } from '@asap-hub/model';
 
-import { GetListOptions } from '@asap-hub/frontend/src/api-util';
-import { BeforeOrAfter } from '@asap-hub/frontend/src/events/api';
+import { GetEventListOptions } from '@asap-hub/frontend/src/events/options';
 import { eventState } from '@asap-hub/frontend/src/events/state';
 import { authorizationState } from '@asap-hub/frontend/src/auth/state';
 import { getGroupEvents } from './api';
@@ -18,7 +18,7 @@ const groupEventIndexState = atomFamily<
   | Error
   | 'noSuchGroup'
   | undefined,
-  GetListOptions & BeforeOrAfter
+  GetEventListOptions
 >({
   key: 'groupEventIndex',
   default: undefined,
@@ -26,7 +26,7 @@ const groupEventIndexState = atomFamily<
 
 export const groupEventsState = selectorFamily<
   ListEventResponse | Error | 'noSuchGroup' | undefined,
-  GetListOptions & BeforeOrAfter & { groupId: string }
+  GetEventListOptions & { groupId: string }
 >({
   key: 'groupEvents',
   get: (options) => ({ get }) => {
@@ -70,16 +70,34 @@ export const groupEventsState = selectorFamily<
   },
 });
 
-export const useGroupEvents = (
-  id: string,
-  options: GetListOptions & BeforeOrAfter,
+export const usePrefetchGroupEvents = (
+  groupId: string,
+  options: GetEventListOptions,
 ) => {
   const authorization = useRecoilValue(authorizationState);
   const [groupEvents, setGroupEvents] = useRecoilState(
-    groupEventsState({ ...options, groupId: id }),
+    groupEventsState({ ...options, groupId }),
+  );
+  useDeepCompareEffect(() => {
+    if (groupEvents === undefined) {
+      getGroupEvents(groupId, options, authorization)
+        .then((newGroupEvents) =>
+          setGroupEvents(newGroupEvents ?? 'noSuchGroup'),
+        )
+        .catch();
+    }
+  }, [authorization, groupEvents, groupId, options, setGroupEvents]);
+};
+export const useGroupEvents = (
+  groupId: string,
+  options: GetEventListOptions,
+) => {
+  const authorization = useRecoilValue(authorizationState);
+  const [groupEvents, setGroupEvents] = useRecoilState(
+    groupEventsState({ ...options, groupId }),
   );
   if (groupEvents === undefined) {
-    throw getGroupEvents(id, options, authorization)
+    throw getGroupEvents(groupId, options, authorization)
       .then((newGroupEvents) => setGroupEvents(newGroupEvents ?? 'noSuchGroup'))
       .catch(setGroupEvents);
   }

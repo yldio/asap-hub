@@ -18,7 +18,7 @@ import { refreshCalendarsState } from '../calendar/state';
 import { getCalendars } from '../calendar/api';
 import { getEvents } from '../api';
 import { eventsState } from '../state';
-import { DEFAULT_PAGE_SIZE } from '../../hooks';
+import { getEventListOptions } from '../options';
 
 jest.useFakeTimers('modern');
 
@@ -35,13 +35,7 @@ const renderEventsPage = async (pathname = events({}).$) => {
     <RecoilRoot
       initializeState={({ set, reset }) => {
         set(refreshCalendarsState, Math.random());
-        reset(
-          eventsState({
-            currentPage: 0,
-            pageSize: DEFAULT_PAGE_SIZE,
-            after: new Date().toISOString(),
-          }),
-        );
+        reset(eventsState(getEventListOptions(new Date(), false)));
       }}
     >
       <React.Suspense fallback="loading">

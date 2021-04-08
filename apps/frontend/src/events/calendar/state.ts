@@ -1,4 +1,4 @@
-import { useRecoilValue, atom, selector } from 'recoil';
+import { useRecoilValue, atom, selector, useRecoilValueLoadable } from 'recoil';
 import { ListCalendarResponse } from '@asap-hub/model';
 
 import { authorizationState } from '@asap-hub/frontend/src/auth/state';
@@ -9,7 +9,7 @@ export const refreshCalendarsState = atom({
   default: 0,
 });
 
-const calendarsState = selector<ListCalendarResponse>({
+export const calendarsState = selector<ListCalendarResponse>({
   key: 'calendars',
   get: async ({ get }) => {
     get(refreshCalendarsState);
@@ -18,4 +18,6 @@ const calendarsState = selector<ListCalendarResponse>({
   },
 });
 
+export const usePrefetchCalendars = () =>
+  useRecoilValueLoadable(calendarsState);
 export const useCalendars = () => useRecoilValue(calendarsState);

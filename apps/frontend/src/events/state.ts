@@ -1,3 +1,4 @@
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   atomFamily,
   selectorFamily,
@@ -9,19 +10,19 @@ import {
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 
 import { authorizationState } from '../auth/state';
-import { getEvent, getEvents, BeforeOrAfter } from './api';
-import { GetListOptions } from '../api-util';
+import { getEvent, getEvents } from './api';
+import { GetEventListOptions } from './options';
 
 const eventIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions & BeforeOrAfter
+  GetEventListOptions
 >({
   key: 'eventIndex',
   default: undefined,
 });
 export const eventsState = selectorFamily<
   ListEventResponse | Error | undefined,
-  GetListOptions & BeforeOrAfter
+  GetEventListOptions
 >({
   key: 'events',
   get: (options) => ({ get }) => {
@@ -79,7 +80,16 @@ export const useQuietRefreshEventById = (id: string) => {
   };
 };
 
-export const useEvents = (options: GetListOptions & BeforeOrAfter) => {
+export const usePrefetchEvents = (options: GetEventListOptions) => {
+  const authorization = useRecoilValue(authorizationState);
+  const [events, setEvents] = useRecoilState(eventsState(options));
+  useDeepCompareEffect(() => {
+    if (events === undefined) {
+      getEvents(options, authorization).then(setEvents).catch();
+    }
+  }, [authorization, events, options, setEvents]);
+};
+export const useEvents = (options: GetEventListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [events, setEvents] = useRecoilState(eventsState(options));
   if (events === undefined) {

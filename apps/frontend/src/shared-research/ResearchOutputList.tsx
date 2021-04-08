@@ -10,13 +10,13 @@ interface SharedResearchListProps {
 }
 
 const SharedResearchList: React.FC<SharedResearchListProps> = ({
-  searchQuery,
+  searchQuery = '',
   filters = new Set(),
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
   const result = useResearchOutputs({
     searchQuery,
-    filters: [...filters],
+    filters,
     currentPage,
     pageSize,
   });

@@ -1,19 +1,23 @@
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../config';
-import { GetListOptions, createListApiUrl } from '../api-util';
-
-export type BeforeOrAfter =
-  | { before: string; after?: undefined }
-  | { after: string; before?: undefined };
+import { createListApiUrl } from '../api-util';
+import { GetEventListOptions } from './options';
 
 export const getEvents = async (
-  options: GetListOptions & BeforeOrAfter,
+  options: GetEventListOptions,
   authorization: string,
 ): Promise<ListEventResponse> => {
   const url = createListApiUrl('events', options);
+
   if (options.before) url.searchParams.append('before', options.before);
   else if (options.after) url.searchParams.append('after', options.after);
+
+  if (options.sort) {
+    url.searchParams.set('sortBy', options.sort.sortBy);
+    url.searchParams.set('sortOrder', options.sort.sortOrder);
+  }
+
   const resp = await fetch(url.toString(), {
     headers: { authorization },
   });

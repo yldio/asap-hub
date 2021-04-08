@@ -8,13 +8,16 @@ interface NetworkTeamListProps {
   searchQuery?: string;
 }
 
-const NetworkTeamList: React.FC<NetworkTeamListProps> = ({ searchQuery }) => {
+const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
+  searchQuery = '',
+}) => {
   const { currentPage, pageSize } = usePaginationParams();
 
   const result = useTeams({
     searchQuery,
     currentPage,
     pageSize,
+    filters: new Set(),
   });
 
   const { numberOfPages, renderPageHref } = usePagination(

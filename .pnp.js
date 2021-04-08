@@ -3710,6 +3710,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.2"
       ],
       [
+        "dequal",
+        "npm:2.0.2"
+      ],
+      [
         "des.js",
         "npm:1.0.1"
       ],
@@ -7519,7 +7523,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "recoil",
-        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:0.1.2"
+        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:recoil@npm%3A0.1.2#../../patches/recoil.patch::version=0.1.2&hash=08b51a&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"
       ],
       [
         "recursive-readdir",
@@ -8830,6 +8834,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"
       ],
       [
+        "use-deep-compare-effect",
+        "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.6.1"
+      ],
+      [
         "use-http",
         "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.16"
       ],
@@ -9625,9 +9633,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-router-last-location", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:2.0.1"],
             ["react-scripts", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:4.0.3"],
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.1"],
-            ["recoil", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:0.1.2"],
+            ["recoil", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:recoil@npm%3A0.1.2#../../patches/recoil.patch::version=0.1.2&hash=08b51a&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"],
             ["typescript", "patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=cc6730"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"],
+            ["use-deep-compare-effect", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.6.1"],
             ["use-http", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.16"],
             ["uuid", "npm:8.3.0"]
           ],
@@ -28040,6 +28049,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["dequal", [
+        ["npm:2.0.2", {
+          "packageLocation": "./.yarn/cache/dequal-npm-2.0.2-370927eb6c-3b5b019a87.zip/node_modules/dequal/",
+          "packageDependencies": [
+            ["dequal", "npm:2.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["des.js", [
         ["npm:1.0.1", {
           "packageLocation": "./.yarn/cache/des.js-npm-1.0.1-9f155eddb6-74cd0aa0c5.zip/node_modules/des.js/",
@@ -42903,17 +42921,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["recoil", [
-        ["npm:0.1.2", {
-          "packageLocation": "./.yarn/cache/recoil-npm-0.1.2-9a0edbd2b9-c69105dd7d.zip/node_modules/recoil/",
+        ["patch:recoil@npm%3A0.1.2#../../patches/recoil.patch::version=0.1.2&hash=08b51a&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend", {
+          "packageLocation": "./.yarn/cache/recoil-patch-b5b45f8a52-770d34f051.zip/node_modules/recoil/",
           "packageDependencies": [
-            ["recoil", "npm:0.1.2"]
+            ["recoil", "patch:recoil@npm%3A0.1.2#../../patches/recoil.patch::version=0.1.2&hash=08b51a&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"]
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:0.1.2", {
-          "packageLocation": "./.yarn/$$virtual/recoil-virtual-150731910e/0/cache/recoil-npm-0.1.2-9a0edbd2b9-c69105dd7d.zip/node_modules/recoil/",
+        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:recoil@npm%3A0.1.2#../../patches/recoil.patch::version=0.1.2&hash=08b51a&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend", {
+          "packageLocation": "./.yarn/$$virtual/recoil-virtual-8da4c5f65b/0/cache/recoil-patch-b5b45f8a52-770d34f051.zip/node_modules/recoil/",
           "packageDependencies": [
-            ["recoil", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:0.1.2"],
+            ["recoil", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:recoil@npm%3A0.1.2#../../patches/recoil.patch::version=0.1.2&hash=08b51a&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"],
             ["@types/react", "npm:17.0.0"],
             ["react", "npm:17.0.1"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.1"],
@@ -47812,6 +47830,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.0.1"],
             ["@types/react", "npm:17.0.0"],
+            ["react", "npm:17.0.1"]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["use-deep-compare-effect", [
+        ["npm:1.6.1", {
+          "packageLocation": "./.yarn/cache/use-deep-compare-effect-npm-1.6.1-9b8915ea07-a1cf1afcb0.zip/node_modules/use-deep-compare-effect/",
+          "packageDependencies": [
+            ["use-deep-compare-effect", "npm:1.6.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.6.1", {
+          "packageLocation": "./.yarn/$$virtual/use-deep-compare-effect-virtual-9259d3ba78/0/cache/use-deep-compare-effect-npm-1.6.1-9b8915ea07-a1cf1afcb0.zip/node_modules/use-deep-compare-effect/",
+          "packageDependencies": [
+            ["use-deep-compare-effect", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.6.1"],
+            ["@babel/runtime", "npm:7.12.5"],
+            ["@types/react", "npm:17.0.0"],
+            ["dequal", "npm:2.0.2"],
             ["react", "npm:17.0.1"]
           ],
           "packagePeers": [

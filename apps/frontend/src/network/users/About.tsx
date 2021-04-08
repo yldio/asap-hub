@@ -6,6 +6,7 @@ import { useCurrentUser } from '@asap-hub/react-context';
 import { network } from '@asap-hub/routing';
 
 import { usePatchUserById } from './state';
+import Frame from '../../structure/Frame';
 
 type AboutProps = {
   user: UserResponse;
@@ -28,15 +29,17 @@ const About: React.FC<AboutProps> = ({ user }) => {
         editOrcidWorksHref={id === user.id ? route.editWorks({}).$ : undefined}
       />
       <Route exact path={path + route.editBiography.template}>
-        <BiographyModal
-          biography={user.biography}
-          backHref={route.$}
-          onSave={(newBiography) =>
-            patchUser({
-              biography: newBiography,
-            })
-          }
-        />
+        <Frame title="Edit Biography">
+          <BiographyModal
+            biography={user.biography}
+            backHref={route.$}
+            onSave={(newBiography) =>
+              patchUser({
+                biography: newBiography,
+              })
+            }
+          />
+        </Frame>
       </Route>
     </>
   );

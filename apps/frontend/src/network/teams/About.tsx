@@ -13,7 +13,7 @@ const About: React.FC<AboutProps> = ({ team }) => (
     {...team}
     members={team.members}
     teamGroupsCard={
-      <Frame fallback={null}>
+      <Frame title={null} fallback={null}>
         <GroupsCard id={team.id} />
       </Frame>
     }

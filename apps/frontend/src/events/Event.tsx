@@ -4,6 +4,7 @@ import { events, useRouteParams } from '@asap-hub/routing';
 
 import { useEventById, useQuietRefreshEventById } from './state';
 import { useBackHref } from '../hooks';
+import Frame from '../structure/Frame';
 
 const Event: React.FC = () => {
   const { eventId } = useRouteParams(events({}).event);
@@ -14,7 +15,9 @@ const Event: React.FC = () => {
 
   if (event) {
     return (
-      <EventPage {...event} backHref={backHref} onRefresh={refreshEvent} />
+      <Frame title={event.title}>
+        <EventPage {...event} backHref={backHref} onRefresh={refreshEvent} />
+      </Frame>
     );
   }
 

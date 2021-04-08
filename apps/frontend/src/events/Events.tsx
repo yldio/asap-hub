@@ -29,7 +29,7 @@ const Events: React.FC<Record<string, never>> = () => {
     <Switch>
       <Route exact path={path + events({}).calendar.template}>
         <EventsPage>
-          <Frame>
+          <Frame title="Calendars">
             <Calendars currentTime={currentTime} />
           </Frame>
         </EventsPage>
@@ -40,7 +40,7 @@ const Events: React.FC<Record<string, never>> = () => {
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
         >
-          <Frame>
+          <Frame title="Upcoming Events">
             <EventList
               currentTime={currentTime}
               searchQuery={debouncedSearchQuery}
@@ -53,7 +53,7 @@ const Events: React.FC<Record<string, never>> = () => {
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
         >
-          <Frame>
+          <Frame title="Past Events">
             <EventList
               past
               currentTime={currentTime}
@@ -63,7 +63,7 @@ const Events: React.FC<Record<string, never>> = () => {
         </EventsPage>
       </Route>
       <Route path={path + events({}).event.template}>
-        <Frame>
+        <Frame title="Event">
           <Event />
         </Frame>
       </Route>

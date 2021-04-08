@@ -8,6 +8,7 @@ import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 
 import { useBackHref } from '../hooks';
 import { useResearchOutputById } from '../api';
+import Frame from '../structure/Frame';
 
 const ResearchOutput: React.FC = () => {
   const { researchOutputId } = useRouteParams(
@@ -24,7 +25,11 @@ const ResearchOutput: React.FC = () => {
   }
 
   if (researchOutputData) {
-    return <ResearchOutputPage {...researchOutputData} backHref={backHref} />;
+    return (
+      <Frame title={researchOutputData.title}>
+        <ResearchOutputPage {...researchOutputData} backHref={backHref} />
+      </Frame>
+    );
   }
 
   return <NotFoundPage />;

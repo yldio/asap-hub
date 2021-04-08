@@ -4,7 +4,7 @@ import { NetworkPage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 
 import { useSearch } from '../hooks';
-import { SearchFrame } from '../structure/Frame';
+import Frame, { SearchFrame } from '../structure/Frame';
 import GroupProfile from './groups/GroupProfile';
 
 const loadUserList = () =>
@@ -59,7 +59,7 @@ const Network: React.FC<Record<string, never>> = () => {
           filters={filters}
           onChangeFilter={toggleFilter}
         >
-          <SearchFrame>
+          <SearchFrame title="People">
             <UserList filters={filters} searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
@@ -70,15 +70,18 @@ const Network: React.FC<Record<string, never>> = () => {
           network({}).users.template +
           network({}).users({}).user.template
         }
-        component={UserProfile}
-      />
+      >
+        <Frame title="User Profile">
+          <UserProfile />
+        </Frame>
+      </Route>
       <Route exact path={path + network({}).teams.template}>
         <NetworkPage
           page="teams"
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
         >
-          <SearchFrame>
+          <SearchFrame title="Teams">
             <TeamList searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
@@ -89,15 +92,18 @@ const Network: React.FC<Record<string, never>> = () => {
           network({}).teams.template +
           network({}).teams({}).team.template
         }
-        component={TeamProfile}
-      />
+      >
+        <Frame title="Team Profile">
+          <TeamProfile />
+        </Frame>
+      </Route>
       <Route exact path={path + network({}).groups.template}>
         <NetworkPage
           page="groups"
           searchQuery={searchQuery}
           onChangeSearchQuery={setSearchQuery}
         >
-          <SearchFrame>
+          <SearchFrame title="Groups">
             <GroupList searchQuery={debouncedSearchQuery} />
           </SearchFrame>
         </NetworkPage>
@@ -108,8 +114,11 @@ const Network: React.FC<Record<string, never>> = () => {
           network({}).groups.template +
           network({}).groups({}).group.template
         }
-        component={GroupProfile}
-      />
+      >
+        <Frame title="Group Profile">
+          <GroupProfile />
+        </Frame>
+      </Route>
       <Redirect to={network({}).teams({}).$} />
     </Switch>
   );

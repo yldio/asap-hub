@@ -2,19 +2,23 @@ import sys
 import os
 import requests
 
-CLIENT_SECRET = os.getenv('SQUIDEX_TEST_CLIENT_SECRET')
-CLIENT_ID = os.getenv('SQUIDEX_TEST_CLIENT_ID')
+CLIENT_SECRET = os.getenv('SQUIDEX_CLIENT_SECRET')
+CLIENT_ID = os.getenv('SQUIDEX_CLIENT_ID')
 
 SQUIDEX_URL = 'https://cloud.squidex.io'
 
 def getClientHeaders():
 
     if CLIENT_ID is None:
-        print("SQUIDEX_TEST_CLIENT_ID is undefined. Exiting")
+        print("SQUIDEX_CLIENT_ID is undefined. Exiting")
+        sys.exit()
+
+    if CLIENT_ID in {'asap-hub:default', 'asap-hub-dev:default'}:
+        print("SQUIDEX_CLIENT_ID is pointing to prod or dev. Exiting")
         sys.exit()
 
     if CLIENT_SECRET is None:
-        print("SQUIDEX_TEST_CLIENT_SECRET is undefined. Exiting")
+        print("SQUIDEX_CLIENT_SECRET is undefined. Exiting")
         sys.exit()
 
     tokenUrl = SQUIDEX_URL + '/identity-server/connect/token'

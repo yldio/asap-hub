@@ -24,11 +24,11 @@ test:integration:
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - pip install -r ci/integration/scripts/requirements.txt
-    #- python ci/integration/scripts/create-app.py
+    - python ci/integration/scripts/create-app.py
   script:
     - echo "Running Integration tests against $SQUIDEX_TEST_APP_NAME"
     - echo $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID
     - yarn test --testPathPattern=integration
     - echo "Deleting $SQUIDEX_TEST_APP_NAME"
-    #- python ci/integration/scripts/delete-app.py
+    - python ci/integration/scripts/delete-app.py
   stage: test

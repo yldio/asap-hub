@@ -35,10 +35,10 @@ def syncApp(appName, clientId, clientSecret):
     os.system('sq sync in packages/squidex/schema/ -t app -t schemas -t contents')
 
 def main():
-    appName = os.getenv('SQUIDEX_TEST_APP_NAME')
+    appName = os.getenv('SQUIDEX_APP_NAME')
 
     if appName is None:
-        print("SQUIDEX_TEST_APP_NAME is undefined. Exiting")
+        print("SQUIDEX_APP_NAME is undefined. Exiting")
         sys.exit()
 
     createAPP(appName)

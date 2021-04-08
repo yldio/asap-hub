@@ -7,6 +7,7 @@ const testPathIgnorePatterns = [
   '\\.build-output-test\\.(js|jsx|ts|tsx)$',
   '\\.browser-test\\.(js|jsx|ts|tsx)$',
   '\\.e2e-tests\\.(js|jsx|ts|tsx)$',
+  '\\integration\\.(js|jsx|ts|tsx)$',
 ];
 
 module.exports = {

@@ -14,10 +14,10 @@ def deleteApp(appName):
     return r
 
 def main():
-    appName = os.getenv('SQUIDEX_TEST_APP_NAME')
+    appName = os.getenv('SQUIDEX_APP_NAME')
 
     if appName is None:
-        print("SQUIDEX_TEST_APP_NAME is undefined")
+        print("SQUIDEX_APP_NAME is undefined")
         sys.exit()
 
     deleteApp(appName)

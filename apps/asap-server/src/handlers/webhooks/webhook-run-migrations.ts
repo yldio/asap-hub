@@ -1,13 +1,27 @@
-import { RestMigration, Squidex } from '@asap-hub/squidex';
+import { Query, RestMigration, Squidex } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
-import { promises } from 'fs';
+import { promises as fsPromise } from 'fs';
+import { Logger } from 'pino';
 import { migrationDir } from '../../config';
-import logger from '../../utils/logger';
+import pinoLogger from '../../utils/logger';
 
 const squidexClient = new Squidex<RestMigration>('migration');
 
-export const run: Handler = async () => {
+export const runFactory = (
+  logger: Logger,
+  client: Squidex<RestMigration>,
+  readDir: typeof fsPromise.readdir,
+  importModule: ImportModuleFromPath,
+): Handler => async () => {
+  const getMigrationPaths = getMigrationPathsFromDirectoryFactory(readDir);
+  const filterUnexecutedMigrations = filterUnexecutedMigrationsFactory(client);
+  const saveExecutedMigrations = saveExecutedMigrationsFactory(client);
+  const getMigrationsFromPaths = getMigrationsFromPathsFactory(
+    importModule,
+    logger,
+  );
+
   const migrationPaths = await getMigrationPaths();
   const unexecutedMigrationPaths = await filterUnexecutedMigrations(
     migrationPaths,
@@ -20,61 +34,129 @@ export const run: Handler = async () => {
 
   const migrations = await getMigrationsFromPaths(unexecutedMigrationPaths);
 
+  const executedMigrations: string[] = [];
+
   for (const migration of migrations) {
     logger.debug(`Executing migration '${migration.getPath()}`);
-    await migration.up();
-    logger.info(`Executed migration '${migration.getPath()}`);
+    try {
+      await migration.up();
+      executedMigrations.push(migration.getPath());
+
+      logger.info(`Executed migration '${migration.getPath()}`);
+    } catch (error) {
+      logger.error(
+        error,
+        `Error executing the migration ${migration.getPath()}`,
+      );
+      break;
+    }
   }
 
   logger.debug('Finished executing migrations, saving progress...');
 
-  await saveExecutedMigrations(unexecutedMigrationPaths);
+  await saveExecutedMigrations(executedMigrations);
 
-  logger.info(`Executed and saved ${migrations.length} migrations`);
+  logger.info(`Executed and saved ${executedMigrations.length} migrations`);
 };
 
-export const rollback: Handler = async () => {
-  const migrationPaths = await getMigrationPaths();
-  const executedMigrationPaths = await filterExecutedMigrations(migrationPaths);
+export const rollbackFactory = (
+  logger: Logger,
+  client: Squidex<RestMigration>,
+  readDir: typeof fsPromise.readdir,
+  importModule: ImportModuleFromPath,
+): Handler => async () => {
+  // const getMigrationPaths = getMigrationPathsFromDirectoryFactory(readDir);
+  const getLatestMigrationPathFromDb = getLatestMigrationPathFromDbFactory(
+    client,
+  );
+  const getMigrationsFromPaths = getMigrationsFromPathsFactory(
+    importModule,
+    logger,
+  );
+  const removeExecutedMigration = removeExecutedMigrationFactory(client);
 
-  logger.debug({ migrations: executedMigrationPaths }, 'Executed migrations');
+  const migrationPath = await getLatestMigrationPathFromDb();
 
-  if (executedMigrationPaths.length > 0) {
-    // assert non-null because we know the array has at least one element
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const lastMigrationPath = executedMigrationPaths.slice(-1).pop()!;
-    const [migration] = await getMigrationsFromPaths([lastMigrationPath]);
+  logger.debug({ migrations: migrationPath }, 'Latest migrations');
+
+  if (migrationPath !== null) {
+    let migration: Migration;
+    try {
+      [migration] = await getMigrationsFromPaths([migrationPath]);
+    } catch (error) {
+      logger.error(
+        error,
+        `Could not load the migration from file ${migrationPath}`,
+      );
+
+      return;
+    }
 
     logger.debug(`Executing rollback of migration '${migration.getPath()}`);
 
-    await migration.down();
+    try {
+      await migration.down();
+    } catch (error) {
+      logger.error(
+        error,
+        `Error executing the rollback of migration ${migration.getPath()}`,
+      );
+      return;
+    }
 
     logger.debug('Finished executing rollback, saving progress...');
 
-    await removeExecutedMigration(lastMigrationPath);
+    await removeExecutedMigration(migrationPath);
 
     logger.info(`Rolled back and removed migration '${migration.getPath()}'`);
   }
 };
 
-const getMigrationPaths = async () =>
-  (await promises.readdir(migrationDir)).sort();
+const getMigrationPathsFromDirectoryFactory = (
+  readDir: typeof fsPromise.readdir,
+) => async () => (await readDir(migrationDir)).sort();
 
-const getMigrationsFromPaths = async (
-  migrationPaths: string[],
-): Promise<Migration[]> => {
+const getLatestMigrationPathFromDbFactory = (
+  client: Squidex<RestMigration>,
+) => async (): Promise<string | null> => {
+  const query: Query = {
+    take: 1,
+    skip: 0,
+    sort: [{ path: 'data.name.iv', order: 'descending' }],
+  };
+
+  const { items: migrations } = await client.fetch(query);
+
+  if (migrations.length === 0) {
+    return null;
+  }
+
+  return migrations[0].data.name.iv;
+};
+
+const importModuleFromPath = (path: string): Promise<Module> => import(path);
+export type ImportModuleFromPath = typeof importModuleFromPath;
+
+type Module = {
+  default?: { new (path: string): Migration | unknown };
+};
+
+const getMigrationsFromPathsFactory = (
+  importModule: typeof importModuleFromPath,
+  logger: Logger,
+) => async (migrationPaths: string[]): Promise<Migration[]> => {
   const migrations = Promise.all(
     migrationPaths.map(async (file) => {
       logger.debug({ file });
-      const { default: Module } = (await import(`${migrationDir}/${file}`)) as {
-        default: { new (path: string): Migration };
-      };
+      const { default: ImportedModule } = await importModule(
+        `${migrationDir}/${file}`,
+      );
 
-      if (typeof Module !== 'function') {
+      if (typeof ImportedModule !== 'function') {
         throw new Error(`${file} does not export a valid module`);
       }
 
-      const migration = new Module(file);
+      const migration = new ImportedModule(file);
 
       if (!isMigration(migration)) {
         throw new Error(`${file} does not contain a valid migration`);
@@ -87,12 +169,13 @@ const getMigrationsFromPaths = async (
   return migrations;
 };
 
-const filterUnexecutedMigrations = (migrationPaths: string[]) =>
-  filterMigrations(migrationPaths);
-const filterExecutedMigrations = (migrationPaths: string[]) =>
-  filterMigrations(migrationPaths, false);
+const filterUnexecutedMigrationsFactory = (client: Squidex<RestMigration>) =>
+  filterMigrationsFactory(client);
 
-const filterMigrations = (migrationPaths: string[], unexecuted = true) => {
+const filterMigrationsFactory = (
+  client: Squidex<RestMigration>,
+  unexecuted = true,
+) => (migrationPaths: string[]) => {
   const asyncFilter = async <T>(
     arr: T[],
     predicate: (elem: T) => Promise<boolean>,
@@ -104,7 +187,7 @@ const filterMigrations = (migrationPaths: string[], unexecuted = true) => {
 
   return asyncFilter(migrationPaths, async (migration) => {
     try {
-      await squidexClient.fetchOne({
+      await client.fetchOne({
         filter: { path: 'data/name/iv', op: 'eq', value: migration },
       });
 
@@ -119,9 +202,11 @@ const filterMigrations = (migrationPaths: string[], unexecuted = true) => {
   });
 };
 
-const saveExecutedMigrations = async (migrations: string[]): Promise<void> => {
+const saveExecutedMigrationsFactory = (
+  client: Squidex<RestMigration>,
+) => async (migrations: string[]): Promise<void> => {
   for (const migration of migrations) {
-    await squidexClient.create({
+    await client.create({
       name: {
         iv: migration,
       },
@@ -129,11 +214,13 @@ const saveExecutedMigrations = async (migrations: string[]): Promise<void> => {
   }
 };
 
-const removeExecutedMigration = async (migration: string): Promise<void> => {
-  const migrationRecord = await squidexClient.fetchOne({
+const removeExecutedMigrationFactory = (
+  client: Squidex<RestMigration>,
+) => async (migration: string): Promise<void> => {
+  const migrationRecord = await client.fetchOne({
     filter: { path: 'data/name/iv', op: 'eq', value: migration },
   });
-  await squidexClient.delete(migrationRecord.id);
+  await client.delete(migrationRecord.id);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -154,3 +241,17 @@ export abstract class Migration {
     return this.path;
   }
 }
+
+export const run = runFactory(
+  pinoLogger,
+  squidexClient,
+  fsPromise.readdir,
+  importModuleFromPath,
+);
+
+export const rollback = rollbackFactory(
+  pinoLogger,
+  squidexClient,
+  fsPromise.readdir,
+  importModuleFromPath,
+);

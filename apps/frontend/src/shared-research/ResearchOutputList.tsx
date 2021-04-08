@@ -16,7 +16,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   const {
     currentPage,
     pageSize,
-    listView,
+    isListView,
     cardViewParams,
     listViewParams,
   } = usePaginationParams();
@@ -42,7 +42,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
-      listView={listView}
+      isListView={isListView}
       cardViewParams={cardViewParams}
       listViewParams={listViewParams}
     />

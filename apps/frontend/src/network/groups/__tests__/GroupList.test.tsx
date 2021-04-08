@@ -12,7 +12,7 @@ import {
 import GroupList from '../GroupList';
 import { getGroups } from '../api';
 import { groupsState } from '../state';
-import { DETAILS_VIEW_PAGE_SIZE } from '../../../hooks';
+import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 
@@ -29,7 +29,7 @@ const renderGroupList = async (
         reset(
           groupsState({
             currentPage: 0,
-            pageSize: DETAILS_VIEW_PAGE_SIZE,
+            pageSize: CARD_VIEW_PAGE_SIZE,
             filters: new Set(),
             searchQuery: '',
           }),

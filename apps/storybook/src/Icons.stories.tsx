@@ -11,7 +11,6 @@ export const ChevronDown = () => components.chevronDownIcon;
 export const ChevronUp = () => components.chevronUpIcon;
 export const Clock = () => components.clockIcon;
 export const Cross = () => components.crossIcon;
-export const DetailView = () => components.detailViewIcon;
 export const Discover = () => components.discoverIcon;
 export const Docs = () => components.docsIcon;
 export const DropdownChevron = () => components.dropdownChevronIcon;

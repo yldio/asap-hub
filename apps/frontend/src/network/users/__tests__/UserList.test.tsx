@@ -11,7 +11,7 @@ import {
 import UserList from '../UserList';
 import { getUsers } from '../api';
 import { usersState } from '../state';
-import { DETAILS_VIEW_PAGE_SIZE } from '../../../hooks';
+import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
@@ -23,7 +23,7 @@ const renderUserList = async () => {
         reset(
           usersState({
             currentPage: 0,
-            pageSize: DETAILS_VIEW_PAGE_SIZE,
+            pageSize: CARD_VIEW_PAGE_SIZE,
             filters: new Set(),
             searchQuery: '',
           }),

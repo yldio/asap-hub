@@ -33,7 +33,7 @@ const props = (): ComponentProps<typeof SharedResearchPageBody> => {
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
     currentPageIndex,
     renderPageHref: (index) => `#${index}`,
-    listView: boolean('List View Toggled', false),
+    isListView: boolean('List View Toggled', false),
     listViewParams: '',
     cardViewParams: '',
   };

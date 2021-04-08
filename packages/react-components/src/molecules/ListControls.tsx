@@ -1,12 +1,10 @@
 import React from 'react';
-import { NavHashLink } from 'react-router-hash-link';
+import { Link } from 'react-router-dom';
 import css from '@emotion/css';
 
 import { charcoal, fern, lead } from '../colors';
 import { perRem, lineHeight } from '../pixels';
 import { cardViewIcon, listViewIcon } from '../icons';
-
-const activeClassName = 'active-link';
 
 const containerStyles = css({
   display: 'grid',
@@ -45,40 +43,28 @@ const activeStyles = css({
 });
 
 interface ListControlsProps {
-  readonly listView: boolean;
+  readonly isListView: boolean;
   readonly listViewHref: string;
   readonly cardViewHref: string;
 }
 const ListControls: React.FC<ListControlsProps> = ({
-  listView,
+  isListView,
   listViewHref,
   cardViewHref,
 }) => (
   <div css={containerStyles}>
-    <NavHashLink
-      to={cardViewHref}
-      activeClassName={activeClassName}
-      css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
-      smooth
-      isActive={() => !listView}
-    >
-      <p css={textStyles}>
+    <Link to={cardViewHref} css={styles}>
+      <p css={[textStyles, !isListView && activeStyles]}>
         <span css={iconStyles}>{cardViewIcon}</span>
         Card View
       </p>
-    </NavHashLink>
-    <NavHashLink
-      to={listViewHref}
-      activeClassName={activeClassName}
-      css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
-      smooth
-      isActive={() => listView}
-    >
-      <p css={textStyles}>
+    </Link>
+    <Link to={listViewHref} css={styles}>
+      <p css={[textStyles, isListView && activeStyles]}>
         <span css={iconStyles}>{listViewIcon}</span>
         List View
       </p>
-    </NavHashLink>
+    </Link>
   </div>
 );
 

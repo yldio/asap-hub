@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { viewParam, listViewValue } from '@asap-hub/routing';
 
-export const DETAILS_VIEW_PAGE_SIZE = 10;
+export const CARD_VIEW_PAGE_SIZE = 10;
 export const LIST_VIEW_PAGE_SIZE = 20;
 
 export const usePaginationParams = () => {
@@ -13,7 +13,7 @@ export const usePaginationParams = () => {
   const resetPaginationSearchParams = new URLSearchParams(searchParams);
   resetPaginationSearchParams.delete('currentPage');
 
-  const listView = searchParams.get(viewParam) === listViewValue;
+  const isListView = searchParams.get(viewParam) === listViewValue;
   const listViewParams = new URLSearchParams(resetPaginationSearchParams);
   listViewParams.set(viewParam, listViewValue);
   const cardViewParams = new URLSearchParams(resetPaginationSearchParams);
@@ -25,8 +25,8 @@ export const usePaginationParams = () => {
 
   return {
     currentPage,
-    pageSize: listView ? LIST_VIEW_PAGE_SIZE : DETAILS_VIEW_PAGE_SIZE,
-    listView,
+    pageSize: isListView ? LIST_VIEW_PAGE_SIZE : CARD_VIEW_PAGE_SIZE,
+    isListView,
     listViewParams: `?${listViewParams}`,
     cardViewParams: `${[...cardViewParams].length ? '?' : ''}${cardViewParams}`,
     resetPagination,

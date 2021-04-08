@@ -39,14 +39,14 @@ const pageControlsStyles = css({
 
 type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
-  readonly listView?: boolean;
+  readonly isListView?: boolean;
   readonly cardViewHref?: string;
   readonly listViewHref?: string;
   readonly children: React.ReactNode;
 };
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
-  listView = false,
+  isListView = false,
   cardViewHref,
   listViewHref,
   children,
@@ -61,7 +61,7 @@ const ResultList: React.FC<ResultListProps> = ({
       </Paragraph>
       {isEnabled('LIST_VIEW') && cardViewHref && listViewHref && (
         <ListControls
-          listView={listView}
+          isListView={isListView}
           cardViewHref={cardViewHref}
           listViewHref={listViewHref}
         />

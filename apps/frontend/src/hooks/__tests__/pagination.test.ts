@@ -5,7 +5,7 @@ import {
   usePaginationParams,
   usePagination,
   LIST_VIEW_PAGE_SIZE,
-  DETAILS_VIEW_PAGE_SIZE,
+  CARD_VIEW_PAGE_SIZE,
 } from '../pagination';
 
 const urlSearchParamsToObject = (queryString: string) =>
@@ -17,8 +17,8 @@ describe('usePaginationParams', () => {
       wrapper: MemoryRouter,
     });
     expect(result.current.currentPage).toBe(0);
-    expect(result.current.pageSize).toBe(DETAILS_VIEW_PAGE_SIZE);
-    expect(result.current.listView).toBe(false);
+    expect(result.current.pageSize).toBe(CARD_VIEW_PAGE_SIZE);
+    expect(result.current.isListView).toBe(false);
   });
 
   it('returns current page', () => {
@@ -39,7 +39,7 @@ describe('usePaginationParams', () => {
       },
     });
     expect(result.current.pageSize).toBe(LIST_VIEW_PAGE_SIZE);
-    expect(result.current.listView).toBe(true);
+    expect(result.current.isListView).toBe(true);
   });
 
   it('removes pagination parameters from url after reset', () => {

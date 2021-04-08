@@ -28,7 +28,7 @@ test:integration:
   script:
     - echo "Running Integration tests against $SQUIDEX_APP_NAME"
     # Prevent failing tests from exiting the job
-    - yarn test --testPathPattern=integration || test_exit_code=$?
+    - yarn test --testPathPattern=integration --testPathIgnorePatterns="" || test_exit_code=$?
     - echo "Deleting $SQUIDEX_APP_NAME"
     - python ci/integration/scripts/delete-app.py
     # If tests fail return exit code now

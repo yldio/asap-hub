@@ -26,9 +26,11 @@ test:integration:
     - pip install -r ci/integration/scripts/requirements.txt
     - python ci/integration/scripts/create-app.py
   script:
-    - echo "Running Integration tests against $SQUIDEX_TEST_APP_NAME"
-    - echo $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID
-    - yarn test --testPathPattern=integration
-    - echo "Deleting $SQUIDEX_TEST_APP_NAME"
+    - echo "Running Integration tests against $SQUIDEX_APP_NAME"
+    # Prevent failing tests from exiting the job
+    - yarn test --testPathPattern=integration || test_exit_code=$?
+    - echo "Deleting $SQUIDEX_APP_NAME"
     - python ci/integration/scripts/delete-app.py
+    # If tests fail return exit code now
+    - exit $test_exit_code
   stage: test

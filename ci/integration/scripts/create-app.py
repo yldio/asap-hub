@@ -33,6 +33,8 @@ def syncApp(appName, clientId, clientSecret):
     os.system('sq config use {appName}'.format( appName = appName ))
     # ATM we have not contents in the repo, but we can easily use this feature to setup fixture data 
     os.system('sq sync in packages/squidex/schema/ -t app -t schemas -t contents')
+    # Prevent configuration polution for local development
+    os.system('sq config remove {appName}'.format( appName = appName ))
 
 def main():
     appName = os.getenv('SQUIDEX_APP_NAME')

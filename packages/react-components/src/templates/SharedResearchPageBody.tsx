@@ -11,19 +11,19 @@ type SharedResearchPageBodyProps = Omit<
     ComponentProps<typeof SharedResearchCard> & { id: string }
   >;
   readonly listViewParams: string;
-  readonly detailsViewParams: string;
+  readonly cardViewParams: string;
 };
 
 const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
   researchOutputs,
   listViewParams,
-  detailsViewParams,
+  cardViewParams,
   ...cardListProps
 }) => (
   <ResultList
     {...cardListProps}
     listViewHref={sharedResearch({}).$ + listViewParams}
-    detailsViewHref={sharedResearch({}).$ + detailsViewParams}
+    cardViewHref={sharedResearch({}).$ + cardViewParams}
   >
     {researchOutputs.map((output) => (
       <div key={output.id}>

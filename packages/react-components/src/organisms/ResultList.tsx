@@ -15,6 +15,7 @@ const headerStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  flexWrap: 'wrap',
 });
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -39,14 +40,14 @@ const pageControlsStyles = css({
 type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
   readonly listView?: boolean;
-  readonly detailsViewHref?: string;
+  readonly cardViewHref?: string;
   readonly listViewHref?: string;
   readonly children: React.ReactNode;
 };
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
   listView = false,
-  detailsViewHref,
+  cardViewHref,
   listViewHref,
   children,
   ...pageControlsProps
@@ -58,10 +59,10 @@ const ResultList: React.FC<ResultListProps> = ({
           {numberOfItems} result{numberOfItems === 1 || 's'} found
         </strong>
       </Paragraph>
-      {isEnabled('LIST_VIEW') && detailsViewHref && listViewHref && (
+      {isEnabled('LIST_VIEW') && cardViewHref && listViewHref && (
         <ListControls
           listView={listView}
-          detailsViewHref={detailsViewHref}
+          cardViewHref={cardViewHref}
           listViewHref={listViewHref}
         />
       )}

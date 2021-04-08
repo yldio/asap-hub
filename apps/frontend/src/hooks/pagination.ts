@@ -16,8 +16,8 @@ export const usePaginationParams = () => {
   const listView = searchParams.get(viewParam) === listViewValue;
   const listViewParams = new URLSearchParams(resetPaginationSearchParams);
   listViewParams.set(viewParam, listViewValue);
-  const detailsViewParams = new URLSearchParams(resetPaginationSearchParams);
-  detailsViewParams.delete(viewParam);
+  const cardViewParams = new URLSearchParams(resetPaginationSearchParams);
+  cardViewParams.delete(viewParam);
 
   const resetPagination = () => {
     history.replace({ search: resetPaginationSearchParams.toString() });
@@ -28,9 +28,7 @@ export const usePaginationParams = () => {
     pageSize: listView ? LIST_VIEW_PAGE_SIZE : DETAILS_VIEW_PAGE_SIZE,
     listView,
     listViewParams: `?${listViewParams}`,
-    detailsViewParams: `${
-      [...detailsViewParams].length ? '?' : ''
-    }${detailsViewParams}`,
+    cardViewParams: `${[...cardViewParams].length ? '?' : ''}${cardViewParams}`,
     resetPagination,
   };
 };

@@ -7,7 +7,7 @@ export { default as chevronDownIcon } from './chevron-down';
 export { default as chevronUpIcon } from './chevron-up';
 export { default as clockIcon } from './clock';
 export { default as crossIcon } from './cross';
-export { default as detailViewIcon } from './detail-view';
+export { default as cardViewIcon } from './card-view';
 export { default as discoverIcon } from './discover';
 export { default as docsIcon } from './docs';
 export { default as dropdownChevronIcon } from './dropdown-chevron';

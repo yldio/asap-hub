@@ -4,7 +4,7 @@ import css from '@emotion/css';
 
 import { charcoal, fern, lead } from '../colors';
 import { perRem, lineHeight } from '../pixels';
-import { detailViewIcon, listViewIcon } from '../icons';
+import { cardViewIcon, listViewIcon } from '../icons';
 
 const activeClassName = 'active-link';
 
@@ -12,6 +12,8 @@ const containerStyles = css({
   display: 'grid',
   gridAutoFlow: 'column',
   columnGap: '24px',
+  width: 'fit-content',
+  margin: `${12 / perRem}em 0`,
 });
 
 const styles = css({
@@ -45,24 +47,24 @@ const activeStyles = css({
 interface ListControlsProps {
   readonly listView: boolean;
   readonly listViewHref: string;
-  readonly detailsViewHref: string;
+  readonly cardViewHref: string;
 }
 const ListControls: React.FC<ListControlsProps> = ({
   listView,
   listViewHref,
-  detailsViewHref,
+  cardViewHref,
 }) => (
   <div css={containerStyles}>
     <NavHashLink
-      to={detailsViewHref}
+      to={cardViewHref}
       activeClassName={activeClassName}
       css={[styles, { [`&.${activeClassName}`]: activeStyles }]}
       smooth
       isActive={() => !listView}
     >
       <p css={textStyles}>
-        <span css={iconStyles}>{detailViewIcon}</span>
-        Details View
+        <span css={iconStyles}>{cardViewIcon}</span>
+        Card View
       </p>
     </NavHashLink>
     <NavHashLink

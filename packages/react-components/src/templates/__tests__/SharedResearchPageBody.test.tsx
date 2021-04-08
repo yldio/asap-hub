@@ -22,7 +22,7 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
     },
   ],
   listViewParams: '',
-  detailsViewParams: '',
+  cardViewParams: '',
   numberOfItems: 2,
   numberOfPages: 1,
   currentPageIndex: 0,

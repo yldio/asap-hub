@@ -79,7 +79,7 @@ describe('usePaginationParams', () => {
     );
     expect(
       urlSearchParamsToObject(
-        result.current.usePaginationParamsResult.detailsViewParams,
+        result.current.usePaginationParamsResult.cardViewParams,
       ),
     ).toEqual({ searchQuery: '123' });
     expect(

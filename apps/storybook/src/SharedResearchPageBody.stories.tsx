@@ -35,7 +35,7 @@ const props = (): ComponentProps<typeof SharedResearchPageBody> => {
     renderPageHref: (index) => `#${index}`,
     listView: boolean('List View Toggled', false),
     listViewParams: '',
-    detailsViewParams: '',
+    cardViewParams: '',
   };
 };
 

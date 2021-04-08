@@ -7,15 +7,12 @@ import ListControls from '../ListControls';
 it('passes through links', () => {
   const { getByTitle } = render(
     <ListControls
-      detailsViewHref="/details?123"
+      cardViewHref="/card?123"
       listViewHref="/list?321"
       listView={false}
     />,
     { wrapper: StaticRouter },
   );
   expect(getByTitle(/list/i).closest('a')).toHaveAttribute('href', '/list?321');
-  expect(getByTitle(/detail/i).closest('a')).toHaveAttribute(
-    'href',
-    '/details?123',
-  );
+  expect(getByTitle(/card/i).closest('a')).toHaveAttribute('href', '/card?123');
 });

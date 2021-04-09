@@ -1,3 +1,4 @@
+import { sharedResearch } from '@asap-hub/routing';
 import React, { ComponentProps } from 'react';
 
 import { ResultList, SharedResearchCard } from '../organisms';
@@ -9,13 +10,21 @@ type SharedResearchPageBodyProps = Omit<
   readonly researchOutputs: ReadonlyArray<
     ComponentProps<typeof SharedResearchCard> & { id: string }
   >;
+  readonly listViewParams: string;
+  readonly cardViewParams: string;
 };
 
 const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
   researchOutputs,
+  listViewParams,
+  cardViewParams,
   ...cardListProps
 }) => (
-  <ResultList {...cardListProps}>
+  <ResultList
+    {...cardListProps}
+    listViewHref={sharedResearch({}).$ + listViewParams}
+    cardViewHref={sharedResearch({}).$ + cardViewParams}
+  >
     {researchOutputs.map((output) => (
       <div key={output.id}>
         <SharedResearchCard {...output} />
@@ -23,5 +32,4 @@ const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
     ))}
   </ResultList>
 );
-
 export default SharedResearchPageBody;

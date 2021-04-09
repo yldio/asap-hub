@@ -1,10 +1,10 @@
 import { createListApiUrl } from '../api-util';
-import { DEFAULT_PAGE_SIZE } from '../hooks';
+import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 
 describe('createListApiUrl', () => {
   it('uses defaults for take and skip params', async () => {
     const url = createListApiUrl('test', {
-      pageSize: DEFAULT_PAGE_SIZE,
+      pageSize: CARD_VIEW_PAGE_SIZE,
       currentPage: 0,
       searchQuery: '',
       filters: new Set(),
@@ -26,7 +26,7 @@ describe('createListApiUrl', () => {
     const url = createListApiUrl('test', {
       searchQuery: 'test123',
       filters: new Set(),
-      pageSize: DEFAULT_PAGE_SIZE,
+      pageSize: CARD_VIEW_PAGE_SIZE,
       currentPage: 0,
     });
     expect(url.searchParams.get('search')).toEqual('test123');
@@ -35,7 +35,7 @@ describe('createListApiUrl', () => {
     const url = createListApiUrl('test', {
       filters: new Set(['123', '456']),
       currentPage: 0,
-      pageSize: DEFAULT_PAGE_SIZE,
+      pageSize: CARD_VIEW_PAGE_SIZE,
       searchQuery: '',
     });
     expect(url.searchParams.getAll('filter')).toEqual(['123', '456']);

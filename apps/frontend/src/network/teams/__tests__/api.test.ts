@@ -5,7 +5,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { API_BASE_URL } from '../../../config';
 import { getTeam, patchTeam, getTeams } from '../api';
 import { GetListOptions } from '../../../api-util';
-import { DEFAULT_PAGE_SIZE } from '../../../hooks';
+import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../../../config');
 
@@ -15,7 +15,7 @@ afterEach(() => {
 
 const options: GetListOptions = {
   filters: new Set(),
-  pageSize: DEFAULT_PAGE_SIZE,
+  pageSize: CARD_VIEW_PAGE_SIZE,
   currentPage: 0,
   searchQuery: '',
 };

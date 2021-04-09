@@ -1,6 +1,7 @@
 import React, { ComponentProps } from 'react';
 import { SharedResearchPageBody } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
+import { boolean, number } from '@storybook/addon-knobs';
+import { StaticRouter } from 'react-router-dom';
 
 export default {
   title: 'Templates / Shared Research / Page Body',
@@ -32,7 +33,14 @@ const props = (): ComponentProps<typeof SharedResearchPageBody> => {
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
     currentPageIndex,
     renderPageHref: (index) => `#${index}`,
+    isListView: boolean('List View Toggled', false),
+    listViewParams: '',
+    cardViewParams: '',
   };
 };
 
-export const Normal = () => <SharedResearchPageBody {...props()} />;
+export const Normal = () => (
+  <StaticRouter>
+    <SharedResearchPageBody {...props()} />
+  </StaticRouter>
+);

@@ -33,6 +33,7 @@ export const Info = () => components.infoIcon;
 export const LastPage = () => components.lastPageIcon;
 export const Link = () => components.linkIcon;
 export const LinkedIn = () => components.linkedInIcon;
+export const ListView = () => components.listViewIcon;
 export const Location = () => components.locationIcon;
 export const Logout = () => components.logoutIcon;
 export const Menu = () => components.menuIcon;

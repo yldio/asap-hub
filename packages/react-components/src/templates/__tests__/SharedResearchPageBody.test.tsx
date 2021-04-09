@@ -1,5 +1,6 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { StaticRouter } from 'react-router-dom';
 
 import SharedResearchPageBody from '../SharedResearchPageBody';
 
@@ -20,6 +21,8 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
       created: new Date().toISOString(),
     },
   ],
+  listViewParams: '',
+  cardViewParams: '',
   numberOfItems: 2,
   numberOfPages: 1,
   currentPageIndex: 0,
@@ -27,7 +30,9 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
 };
 
 it('renders multiple library cards', () => {
-  const { queryAllByRole } = render(<SharedResearchPageBody {...props} />);
+  const { queryAllByRole } = render(<SharedResearchPageBody {...props} />, {
+    wrapper: StaticRouter,
+  });
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);

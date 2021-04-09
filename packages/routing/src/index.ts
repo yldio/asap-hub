@@ -26,3 +26,5 @@ export type { RouteNode };
 
 // We could refactor this to use typesafe-routes even for the query params
 export const searchQueryParam = 'searchQuery';
+export const viewParam = 'view';
+export const listViewValue = 'list';

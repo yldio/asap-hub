@@ -1,18 +1,24 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
-import { usePaginationParams, usePagination } from '../pagination';
+import {
+  usePaginationParams,
+  usePagination,
+  LIST_VIEW_PAGE_SIZE,
+  CARD_VIEW_PAGE_SIZE,
+} from '../pagination';
 
 const urlSearchParamsToObject = (queryString: string) =>
   Object.fromEntries(new URLSearchParams(queryString));
 
 describe('usePaginationParams', () => {
-  it('returns default page and page size', () => {
+  it('returns default page, page size and view', () => {
     const { result } = renderHook(() => usePaginationParams(), {
       wrapper: MemoryRouter,
     });
     expect(result.current.currentPage).toBe(0);
-    expect(result.current.pageSize).toBe(10);
+    expect(result.current.pageSize).toBe(CARD_VIEW_PAGE_SIZE);
+    expect(result.current.isListView).toBe(false);
   });
 
   it('returns current page', () => {
@@ -25,14 +31,18 @@ describe('usePaginationParams', () => {
     expect(result.current.currentPage).toBe(1);
   });
 
-  it('returns provided page size', () => {
-    const { result } = renderHook(() => usePaginationParams(12), {
+  it('returns list view page size', () => {
+    const { result } = renderHook(() => usePaginationParams(), {
       wrapper: MemoryRouter,
+      initialProps: {
+        initialEntries: [{ search: `?view=list` }],
+      },
     });
-    expect(result.current.pageSize).toBe(12);
+    expect(result.current.pageSize).toBe(LIST_VIEW_PAGE_SIZE);
+    expect(result.current.isListView).toBe(true);
   });
 
-  it('removes pagination parameters from url', () => {
+  it('removes pagination parameters from url after reset', () => {
     const { result } = renderHook(
       () => ({
         usePaginationParamsResult: usePaginationParams(),
@@ -50,6 +60,33 @@ describe('usePaginationParams', () => {
     expect(
       urlSearchParamsToObject(result.current.useLocationResult.search),
     ).toEqual({});
+  });
+
+  it('generates card and list view params', () => {
+    const { result } = renderHook(
+      () => ({
+        usePaginationParamsResult: usePaginationParams(),
+        useLocationResult: useLocation(),
+      }),
+      {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: [
+            { search: '?currentPage=2&view=list&searchQuery=123' },
+          ],
+        },
+      },
+    );
+    expect(
+      urlSearchParamsToObject(
+        result.current.usePaginationParamsResult.cardViewParams,
+      ),
+    ).toEqual({ searchQuery: '123' });
+    expect(
+      urlSearchParamsToObject(
+        result.current.usePaginationParamsResult.listViewParams,
+      ),
+    ).toEqual({ searchQuery: '123', view: 'list' });
   });
 });
 

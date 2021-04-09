@@ -1,7 +1,8 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
+import { isEnabled } from '@asap-hub/flags';
 
-import { PageControls } from '../molecules';
+import { ListControls, PageControls } from '../molecules';
 import { Paragraph } from '../atoms';
 import {
   perRem,
@@ -11,7 +12,10 @@ import {
 } from '../pixels';
 
 const headerStyles = css({
-  justifySelf: 'start',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  flexWrap: 'wrap',
 });
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -35,11 +39,16 @@ const pageControlsStyles = css({
 
 type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
-
+  readonly isListView?: boolean;
+  readonly cardViewHref?: string;
+  readonly listViewHref?: string;
   readonly children: React.ReactNode;
 };
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
+  isListView = false,
+  cardViewHref,
+  listViewHref,
   children,
   ...pageControlsProps
 }) => (
@@ -50,6 +59,13 @@ const ResultList: React.FC<ResultListProps> = ({
           {numberOfItems} result{numberOfItems === 1 || 's'} found
         </strong>
       </Paragraph>
+      {isEnabled('LIST_VIEW') && cardViewHref && listViewHref && (
+        <ListControls
+          isListView={isListView}
+          cardViewHref={cardViewHref}
+          listViewHref={listViewHref}
+        />
+      )}
     </header>
     {numberOfItems > 0 && <main css={mainStyles}>{children}</main>}
     <section css={pageControlsStyles}>

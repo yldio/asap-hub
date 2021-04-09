@@ -8,7 +8,7 @@ import nock from 'nock';
 import { useGetList, ListResult } from '../get-list';
 import { GetListOptions } from '../../api-util';
 import { API_BASE_URL } from '../../config';
-import { DEFAULT_PAGE_SIZE } from '../../hooks';
+import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
 jest.mock('../../config');
 
@@ -16,7 +16,7 @@ const helperToExtractReturnType = () =>
   renderHook<Partial<GetListOptions>, ListResult<string[]>>(() =>
     useGetList('/endpoint', {
       currentPage: 0,
-      pageSize: DEFAULT_PAGE_SIZE,
+      pageSize: CARD_VIEW_PAGE_SIZE,
       filters: new Set(),
       searchQuery: '',
     }),
@@ -70,7 +70,7 @@ describe('useGetList', () => {
     } = await renderUseGetList(() =>
       useGetList('users', {
         currentPage: 0,
-        pageSize: DEFAULT_PAGE_SIZE,
+        pageSize: CARD_VIEW_PAGE_SIZE,
         filters: new Set([]),
         searchQuery: '',
       }),
@@ -83,7 +83,7 @@ describe('useGetList', () => {
       useGetList('users', {
         filters: new Set(['admin', 'superuser']),
         searchQuery: 'john',
-        pageSize: DEFAULT_PAGE_SIZE,
+        pageSize: CARD_VIEW_PAGE_SIZE,
         currentPage: 0,
       }),
     );
@@ -97,7 +97,7 @@ describe('useGetList', () => {
       useGetList('users', {
         searchQuery,
         filters: new Set(),
-        pageSize: DEFAULT_PAGE_SIZE,
+        pageSize: CARD_VIEW_PAGE_SIZE,
         currentPage: 0,
       }),
     );
@@ -122,7 +122,7 @@ describe('useGetList', () => {
         useGetList('users', {
           searchQuery: '',
           currentPage: 0,
-          pageSize: DEFAULT_PAGE_SIZE,
+          pageSize: CARD_VIEW_PAGE_SIZE,
           filters: new Set(),
         }),
       ),

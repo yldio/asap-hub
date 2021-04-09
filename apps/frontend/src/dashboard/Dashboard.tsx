@@ -8,7 +8,7 @@ import {
 import { useCurrentUser } from '@asap-hub/react-context';
 
 import { usePrefetchTeams } from '@asap-hub/frontend/src/network/teams/state';
-import { DEFAULT_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
+import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/frontend/src/events/calendar/state';
 import { useDashboard } from '../api';
 import Frame from '../structure/Frame';
@@ -29,7 +29,7 @@ const Dashboard: React.FC<Record<string, never>> = () => {
 
   usePrefetchTeams({
     currentPage: 0,
-    pageSize: DEFAULT_PAGE_SIZE,
+    pageSize: CARD_VIEW_PAGE_SIZE,
     searchQuery: '',
     filters: new Set(),
   });

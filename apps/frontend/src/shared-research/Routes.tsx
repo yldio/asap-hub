@@ -4,7 +4,7 @@ import { SharedResearchPage } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
 
 import { useSearch } from '../hooks';
-import Frame, { SearchFrame } from '../structure/Frame';
+import { SearchFrame } from '../structure/Frame';
 
 const loadResearchOutputList = () =>
   import(
@@ -39,7 +39,7 @@ const SharedResearch: React.FC<Record<string, never>> = () => {
           onChangeFilter={toggleFilter}
           filters={filters}
         >
-          <SearchFrame title="Shared Research">
+          <SearchFrame title={null}>
             <ResearchOutputList
               searchQuery={debouncedSearchQuery}
               filters={filters}
@@ -48,9 +48,7 @@ const SharedResearch: React.FC<Record<string, never>> = () => {
         </SharedResearchPage>
       </Route>
       <Route path={path + sharedResearch({}).researchOutput.template}>
-        <Frame title="Shared Research">
-          <ResearchOutput />
-        </Frame>
+        <ResearchOutput />
       </Route>
     </Switch>
   );

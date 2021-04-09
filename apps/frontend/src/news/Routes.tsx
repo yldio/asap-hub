@@ -20,15 +20,13 @@ const NewsAndEvents: React.FC<Record<string, never>> = () => {
     <Switch>
       <Route exact path={path}>
         <NewsAndEventsPage>
-          <Frame title="News">
+          <Frame title={null}>
             <NewsAndEventsList />
           </Frame>
         </NewsAndEventsPage>
       </Route>
       <Route path={path + news({}).article.template}>
-        <Frame title="News">
-          <NewsOrEventPage />
-        </Frame>
+        <NewsOrEventPage />
       </Route>
     </Switch>
   );

@@ -31,7 +31,7 @@ const Discover: React.FC<Record<string, never>> = () => {
     };
     return (
       <DiscoverPage>
-        <Frame title="Discover ASAP">
+        <Frame title={null}>
           <Body {...discover} />
         </Frame>
       </DiscoverPage>

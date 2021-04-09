@@ -14,6 +14,7 @@ import {
 
 import { auth0State } from './auth/state';
 import Logout from './auth/Logout';
+import Frame from './structure/Frame';
 
 const loadNewsAndEvents = () =>
   import(/* webpackChunkName: "news-and-events" */ './news/Routes');
@@ -56,28 +57,44 @@ const GuardedApp: React.FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path="/">
-        <Dashboard />
+        <Frame title="Dashboard">
+          <Dashboard />
+        </Frame>
       </Route>
       <Route path={logout.template}>
-        <Logout />
+        <Frame title="Logout">
+          <Logout />
+        </Frame>
       </Route>
       <Route path={discover.template}>
-        <Discover />
+        <Frame title="Discover ASAP">
+          <Discover />
+        </Frame>
       </Route>
       <Route path={news.template}>
-        <NewsAndEvents />
+        <Frame title="News">
+          <NewsAndEvents />
+        </Frame>
       </Route>
       <Route path={network.template}>
-        <Network />
+        <Frame title={null}>
+          <Network />
+        </Frame>
       </Route>
       <Route path={sharedResearch.template}>
-        <SharedResearch />
+        <Frame title="Shared Research">
+          <SharedResearch />
+        </Frame>
       </Route>
       <Route path={events.template}>
-        <Events />
+        <Frame title={null}>
+          <Events />
+        </Frame>
       </Route>
       <Route>
-        <NotFoundPage />
+        <Frame title="Not Found">
+          <NotFoundPage />
+        </Frame>
       </Route>
     </Switch>
   );

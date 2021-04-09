@@ -4,11 +4,11 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import SharedResearchCard from '../SharedResearchCard';
 
-const libraryCardProps: ComponentProps<typeof SharedResearchCard> = createResearchOutputResponse();
+const sharedResearchCardProps: ComponentProps<typeof SharedResearchCard> = createResearchOutputResponse();
 
 it('renders the title', () => {
   const { getByRole } = render(
-    <SharedResearchCard {...libraryCardProps} title="test123" />,
+    <SharedResearchCard {...sharedResearchCardProps} title="test123" />,
   );
   expect(getByRole('heading').textContent).toEqual('test123');
   expect(getByRole('heading').tagName).toEqual('H2');
@@ -17,7 +17,7 @@ it('renders the title', () => {
 it('displays published date is undefined', () => {
   const { getByText } = render(
     <SharedResearchCard
-      {...libraryCardProps}
+      {...sharedResearchCardProps}
       publishDate={new Date(2019, 3, 3, 14, 32).toISOString()}
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
     />,
@@ -30,7 +30,7 @@ it('displays published date is undefined', () => {
 it('displays created date when published date is undefined', () => {
   const { getByText } = render(
     <SharedResearchCard
-      {...libraryCardProps}
+      {...sharedResearchCardProps}
       publishDate={undefined}
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
     />,
@@ -43,7 +43,7 @@ it('displays created date when published date is undefined', () => {
 it('displays team information when present', () => {
   const { getByText } = render(
     <SharedResearchCard
-      {...libraryCardProps}
+      {...sharedResearchCardProps}
       team={{
         id: '123',
         displayName: 'A',
@@ -59,7 +59,7 @@ it('displays team information when present', () => {
 it('displays link component when link property present', () => {
   const { getByText } = render(
     <SharedResearchCard
-      {...libraryCardProps}
+      {...sharedResearchCardProps}
       type={'Presentation'}
       link={'https://example.com'}
     />,
@@ -71,7 +71,7 @@ it('displays link component when link property present', () => {
 it('displays link component when protocol link property is present', () => {
   const { getByText } = render(
     <SharedResearchCard
-      {...libraryCardProps}
+      {...sharedResearchCardProps}
       type={'Protocol'}
       link={'https://example.com'}
     />,
@@ -83,7 +83,7 @@ it('displays link component when protocol link property is present', () => {
 it('displays link component when presentation link property is present', () => {
   const { getByText } = render(
     <SharedResearchCard
-      {...libraryCardProps}
+      {...sharedResearchCardProps}
       type={'Presentation'}
       link={'https://example.com'}
     />,

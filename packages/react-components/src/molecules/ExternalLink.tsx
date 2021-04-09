@@ -9,17 +9,19 @@ import { perRem } from '../pixels';
 const containerStyles = css({
   display: 'flex',
 });
+
 const styles = css({
   display: 'flex',
   alignItems: 'center',
-  color: fern.rgb,
+  justifyContent: 'center',
   height: '24px',
+  width: 'max-content',
+  minWidth: '24px',
+  color: fern.rgb,
   borderRadius: `${36 / perRem}em`,
   boxSizing: 'border-box',
   border: `1px solid ${fern.rgb}`,
-  padding: `0 ${11 / perRem}em`,
   margin: `${12 / perRem}em 0`,
-  width: 'max-content',
   svg: {
     stroke: fern.rgb,
     width: `${17.8 / perRem}em`,
@@ -33,6 +35,7 @@ const styles = css({
     },
   },
 });
+const paddingStyles = css({ padding: `0 ${11 / perRem}em` });
 
 const textStyles = css({ paddingTop: '1px', fontSize: `${13.6 / perRem}em` });
 
@@ -48,7 +51,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
 }) => (
   <div css={containerStyles}>
     <Anchor href={href}>
-      <div css={styles}>
+      <div css={[styles, label !== '' && paddingStyles]}>
         {icon}
         <div css={textStyles}>{label}</div>
       </div>

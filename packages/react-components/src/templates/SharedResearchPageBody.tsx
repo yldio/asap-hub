@@ -1,7 +1,11 @@
 import { sharedResearch } from '@asap-hub/routing';
 import React, { ComponentProps } from 'react';
 
-import { ResultList, SharedResearchCard } from '../organisms';
+import {
+  ResultList,
+  SharedResearchCard,
+  SharedResearchList,
+} from '../organisms';
 
 type SharedResearchPageBodyProps = Omit<
   ComponentProps<typeof ResultList>,
@@ -25,11 +29,15 @@ const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
     listViewHref={sharedResearch({}).$ + listViewParams}
     cardViewHref={sharedResearch({}).$ + cardViewParams}
   >
-    {researchOutputs.map((output) => (
-      <div key={output.id}>
-        <SharedResearchCard {...output} />
-      </div>
-    ))}
+    {!cardListProps.isListView ? (
+      researchOutputs.map((output) => (
+        <div key={output.id}>
+          <SharedResearchCard {...output} />
+        </div>
+      ))
+    ) : (
+      <SharedResearchList researchOutputs={researchOutputs} />
+    )}
   </ResultList>
 );
 export default SharedResearchPageBody;

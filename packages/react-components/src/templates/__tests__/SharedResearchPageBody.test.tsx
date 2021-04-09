@@ -29,10 +29,25 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
   renderPageHref: (index) => `#${index}`,
 };
 
-it('renders multiple library cards', () => {
-  const { queryAllByRole } = render(<SharedResearchPageBody {...props} />, {
-    wrapper: StaticRouter,
-  });
+it('renders multiple shared outputs cards in card view', () => {
+  const { queryAllByRole } = render(
+    <SharedResearchPageBody {...props} isListView={false} />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+  expect(
+    queryAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(['Output 1', 'Output 2']);
+});
+
+it('renders multiple research outputs in list view', () => {
+  const { queryAllByRole } = render(
+    <SharedResearchPageBody {...props} isListView />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);

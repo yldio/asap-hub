@@ -85,11 +85,6 @@ export default async (data: Protocol): Promise<void> => {
     title: {
       iv: data.name,
     },
-    shortText: {
-      iv:
-        data.abstract ||
-        `From Team ${data.team} and authors: ${data.authors.join(', ')}`,
-    },
     link: {
       iv: data.link,
     },
@@ -97,9 +92,10 @@ export default async (data: Protocol): Promise<void> => {
       iv: new Date(data.created).toISOString(),
     },
     text: {
-      iv: `From Team ${data.team} and authors: ${data.authors.join(
-        ', ',
-      )}. Keywords: ${data.keywords.join(', ')}.`,
+      // eslint-disable-next-line prefer-template
+      iv: `${data.abstract ? data.abstract + '\n || ' : ''}From Team ${
+        data.team
+      } || Authors: ${data.authors.join(', ')}.`,
     },
     tags: {
       iv: data.keywords,

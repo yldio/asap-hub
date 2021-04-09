@@ -5,9 +5,9 @@ export interface Protocol {
   version: string;
   authors: string[];
   created: string;
-  contact: string;
+  owner: string;
   keywords: string[];
-  abstract: string;
+  abstract?: string;
 }
 
 export default (data: string[]): Protocol => {
@@ -16,12 +16,30 @@ export default (data: string[]): Protocol => {
     link,
     name,
     version,
-    authors,
     created,
-    contact,
+    authors,
     keywords,
+    owner,
     abstract,
   ] = data.map((s) => s.trim());
+
+  const [day, month, yearAndTime] = created.split('.');
+
+  let abstractText;
+
+  // try to parse string as JSON or fail gracefully
+  try {
+    abstractText = ['(private protocol)', 'Abstract crypted'].includes(abstract)
+      ? undefined
+      : JSON.parse(abstract)
+          .blocks.reduce(
+            (acc: string[], block: { text: string }) => acc.concat(block.text),
+            [],
+          )
+          .join('\n');
+  } catch (e) {
+    abstractText = abstract;
+  }
 
   return {
     team,
@@ -32,12 +50,12 @@ export default (data: string[]): Protocol => {
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean),
-    created,
-    contact,
+    created: [month, day, yearAndTime].join('-'),
+    owner,
     keywords: keywords
       .split(',')
       .map((s) => s.trim())
       .filter(Boolean),
-    abstract: abstract === '(private protocol)' ? '' : abstract,
+    abstract: abstractText,
   };
 };

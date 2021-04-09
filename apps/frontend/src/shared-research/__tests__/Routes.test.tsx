@@ -21,6 +21,7 @@ const researchOutputs: ListResearchOutputResponse = {
       text: 'description',
       type: 'Proposal',
       link: 'test',
+      tags: ['test', 'tag'],
       team: {
         id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
         displayName: 'Jakobsson, J',
@@ -34,6 +35,7 @@ const researchOutputs: ListResearchOutputResponse = {
       text: 'description',
       type: 'Proposal',
       link: 'test',
+      tags: ['test', 'tag'],
       team: {
         id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
         displayName: 'Rickson, B',

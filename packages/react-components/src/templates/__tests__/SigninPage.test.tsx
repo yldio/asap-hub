@@ -8,8 +8,7 @@ it('renders the signin form', () => {
     <SigninPage
       email=""
       password=""
-      termsHref="#"
-      privacyPolicyHref="#"
+      appOrigin="https://hub.asap.science"
       forgotPasswordHref="#"
     />,
   );
@@ -21,8 +20,7 @@ it('does not render a terms link by default', () => {
     <SigninPage
       email=""
       password=""
-      termsHref="#"
-      privacyPolicyHref="#"
+      appOrigin="https://hub.asap.science"
       forgotPasswordHref="#"
     />,
   );
@@ -35,8 +33,7 @@ it('renders the terms link in signup mode', () => {
       signup
       email=""
       password=""
-      termsHref="#"
-      privacyPolicyHref="#"
+      appOrigin="https://hub.asap.science"
       forgotPasswordHref="#"
     />,
   );

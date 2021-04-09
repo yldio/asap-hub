@@ -8,6 +8,7 @@ export { default as logout } from './logout';
 export { default as network } from './network';
 export { default as news } from './news';
 export { default as sharedResearch } from './shared-research';
+export { default as staticPages } from './static-pages';
 export { default as welcome } from './welcome';
 
 // copied and fixed from typesafe-routes/react-router

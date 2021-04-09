@@ -7,7 +7,7 @@ import {
   GoogleTagManager,
 } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
-import { network, welcome } from '@asap-hub/routing';
+import { staticPages, network, welcome } from '@asap-hub/routing';
 
 import history from './history';
 import AuthProvider from './auth/AuthProvider';
@@ -35,8 +35,6 @@ const ConfiguredLayout: React.FC = ({ children }) => {
         name: displayName,
         href: network({}).teams({}).team({ teamId: id }).$,
       }))}
-      termsHref="/terms-and-conditions"
-      privacyPolicyHref="/privacy-policy"
       aboutHref="https://www.parkinsonsroadmap.org/"
     >
       {children}
@@ -63,11 +61,19 @@ const App: React.FC<Record<string, never>> = () => {
                   <Welcome />
                 </Route>
 
-                <Route exact path="/terms-and-conditions">
-                  <Content layoutComponent={ConfiguredLayout} />
+                <Route exact path={staticPages({}).terms.template}>
+                  <ConfiguredLayout>
+                    <Frame title={null}>
+                      <Content pageId="terms-and-conditions" />
+                    </Frame>
+                  </ConfiguredLayout>
                 </Route>
-                <Route exact path="/privacy-policy">
-                  <Content layoutComponent={ConfiguredLayout} />
+                <Route exact path={staticPages({}).privacyPolicy.template}>
+                  <ConfiguredLayout>
+                    <Frame title={null}>
+                      <Content pageId="privacy-policy" />
+                    </Frame>
+                  </ConfiguredLayout>
                 </Route>
 
                 <Route>

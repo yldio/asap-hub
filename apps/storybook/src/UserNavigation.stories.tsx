@@ -31,8 +31,6 @@ export const Normal = () => {
           name,
           href: `/team-${i + 1}`,
         }))}
-        termsHref="/terms"
-        privacyPolicyHref="/privacy-policy"
         aboutHref="/about"
       />
     </StaticRouter>

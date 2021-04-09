@@ -12,5 +12,6 @@ export const parseGraphQLResearchOutput = (
   type: output.flatData?.type || 'Proposal',
   title: output.flatData?.title || '',
   text: output.flatData?.text || '',
+  tags: output.flatData?.tags || [],
   publishDate: output.flatData?.publishDate || undefined,
 });

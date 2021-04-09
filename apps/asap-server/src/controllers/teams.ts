@@ -34,6 +34,7 @@ flatData {
       shortText
       title
       type
+      tags
     }
   }
   projectSummary

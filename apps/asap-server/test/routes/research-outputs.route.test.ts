@@ -46,6 +46,7 @@ describe('/research-outputs/ route', () => {
             title: 'Title',
             type: 'Proposal',
             link: 'test',
+            tags: ['test', 'tag'],
           },
         ],
       };
@@ -107,6 +108,7 @@ describe('/research-outputs/ route', () => {
         text: 'Text',
         title: 'Title',
         type: 'Proposal',
+        tags: ['test', 'tags'],
         team: {
           id: 'uuid-team',
           displayName: 'team',

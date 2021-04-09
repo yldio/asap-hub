@@ -2,7 +2,10 @@ import nock from 'nock';
 import { config, RestResearchOutput, RestTeam } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import ResearchOutputs from '../../src/controllers/research-outputs';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  ListResearchOutputResponse,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputs = new ResearchOutputs();
@@ -52,6 +55,9 @@ describe('ResearchOutputs controller', () => {
                 title: { iv: 'Title' },
                 text: { iv: 'Text' },
                 link: { iv: 'test' },
+                tags: {
+                  iv: ['tag', 'test'],
+                },
               },
             },
           ],
@@ -75,7 +81,7 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetch({ take: 8, skip: 0 });
 
-      expect(result).toEqual({
+      const expectedResult: ListResearchOutputResponse = {
         total: 1,
         items: [
           {
@@ -85,9 +91,12 @@ describe('ResearchOutputs controller', () => {
             title: 'Title',
             type: 'Proposal',
             link: 'test',
+            tags: ['tag', 'test'],
           },
         ],
-      });
+      };
+
+      expect(result).toEqual(expectedResult);
     });
 
     test('Should return the list of research outputs when using search and filter', async () => {
@@ -112,6 +121,9 @@ describe('ResearchOutputs controller', () => {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
                 text: { iv: 'Text' },
+                tags: {
+                  iv: ['tag', 'test'],
+                },
               },
             },
             {
@@ -121,6 +133,9 @@ describe('ResearchOutputs controller', () => {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
                 text: { iv: 'Text' },
+                tags: {
+                  iv: [],
+                },
               },
             },
             {
@@ -130,6 +145,9 @@ describe('ResearchOutputs controller', () => {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
                 text: { iv: 'Text' },
+                tags: {
+                  iv: [],
+                },
               },
             },
           ],
@@ -173,7 +191,7 @@ describe('ResearchOutputs controller', () => {
         filter: ['Proposal', 'Presentation'],
       });
 
-      expect(result).toEqual({
+      const expectedResult: ListResearchOutputResponse = {
         total: 3,
         items: [
           {
@@ -182,6 +200,7 @@ describe('ResearchOutputs controller', () => {
             text: 'Text',
             title: 'Title',
             type: 'Proposal',
+            tags: ['tag', 'test'],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
@@ -193,6 +212,7 @@ describe('ResearchOutputs controller', () => {
             text: 'Text',
             title: 'Title',
             type: 'Proposal',
+            tags: [],
             team: {
               id: 'uuid-team-2',
               displayName: 'Team 2',
@@ -204,13 +224,16 @@ describe('ResearchOutputs controller', () => {
             text: 'Text',
             title: 'Title',
             type: 'Proposal',
+            tags: [],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
             },
           },
         ],
-      });
+      };
+
+      expect(result).toEqual(expectedResult);
     });
 
     test('Should return the list of research outputs when using search with multiple words', async () => {
@@ -233,6 +256,9 @@ describe('ResearchOutputs controller', () => {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
                 text: { iv: 'Text' },
+                tags: {
+                  iv: ['tag', 'test'],
+                },
               },
             },
           ],
@@ -263,7 +289,7 @@ describe('ResearchOutputs controller', () => {
         search: 'some words',
       });
 
-      expect(result).toEqual({
+      const expectedResult: ListResearchOutputResponse = {
         total: 1,
         items: [
           {
@@ -272,13 +298,16 @@ describe('ResearchOutputs controller', () => {
             text: 'Text',
             title: 'Title',
             type: 'Proposal',
+            tags: ['tag', 'test'],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
             },
           },
         ],
-      });
+      };
+
+      expect(result).toEqual(expectedResult);
     });
   });
 
@@ -309,6 +338,9 @@ describe('ResearchOutputs controller', () => {
             type: { iv: 'Proposal' },
             title: { iv: 'Title' },
             text: { iv: 'Text' },
+            tags: {
+              iv: ['tag', 'test'],
+            },
           },
         })
         .get(`/api/content/${config.appName}/teams`)
@@ -345,6 +377,7 @@ describe('ResearchOutputs controller', () => {
         text: 'Text',
         title: 'Title',
         type: 'Proposal',
+        tags: ['tag', 'test'],
         team: {
           id: 'uuid-team',
           displayName: 'team',
@@ -362,9 +395,12 @@ describe('ResearchOutputs controller', () => {
           id: 'uuid',
           created: '2020-09-23T16:34:26.842Z',
           data: {
-            type: { iv: 'proposal' },
+            type: { iv: 'Proposal' },
             title: { iv: 'Title' },
             text: { iv: 'Text' },
+            tags: {
+              iv: ['tag', 'test'],
+            },
           },
         })
         .get(`/api/content/${config.appName}/teams`)
@@ -384,13 +420,16 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
-      expect(result).toEqual({
+      const expectedResult: ResearchOutputResponse = {
         created: '2020-09-23T16:34:26.842Z',
         id: 'uuid',
         text: 'Text',
         title: 'Title',
-        type: 'proposal',
-      });
+        type: 'Proposal',
+        tags: ['tag', 'test'],
+      };
+
+      expect(result).toEqual(expectedResult);
     });
   });
 });

@@ -14,7 +14,7 @@ const containerStyles = css({
   margin: `${12 / perRem}em 0`,
 });
 
-const styles = css({
+const linkStyles = css({
   color: charcoal.rgb,
   textDecoration: 'none',
   outline: 'none',
@@ -53,13 +53,13 @@ const ListControls: React.FC<ListControlsProps> = ({
   cardViewHref,
 }) => (
   <div css={containerStyles}>
-    <Link to={cardViewHref} css={styles}>
+    <Link to={cardViewHref} css={linkStyles}>
       <p css={[textStyles, !isListView && activeStyles]}>
         <span css={iconStyles}>{cardViewIcon}</span>
         Card View
       </p>
     </Link>
-    <Link to={listViewHref} css={styles}>
+    <Link to={listViewHref} css={linkStyles}>
       <p css={[textStyles, isListView && activeStyles]}>
         <span css={iconStyles}>{listViewIcon}</span>
         List View

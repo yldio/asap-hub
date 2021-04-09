@@ -62,7 +62,7 @@ describe('usePaginationParams', () => {
     ).toEqual({});
   });
 
-  it('generates details and list view params', () => {
+  it('generates card and list view params', () => {
     const { result } = renderHook(
       () => ({
         usePaginationParamsResult: usePaginationParams(),

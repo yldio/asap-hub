@@ -14,6 +14,9 @@ import { usersState } from '../state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
 jest.mock('../api');
+jest.mock('../../teams/api');
+jest.mock('../../groups/api');
+
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 
 const renderUserList = async () => {

@@ -3,6 +3,8 @@ import { NetworkTeams } from '@asap-hub/react-components';
 
 import { useTeams } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
+import { usePrefetchUsers } from '../users/state';
+import { usePrefetchGroups } from '../groups/state';
 
 interface NetworkTeamListProps {
   searchQuery?: string;
@@ -17,6 +19,18 @@ const NetworkTeamList: React.FC<NetworkTeamListProps> = ({
     searchQuery,
     currentPage,
     pageSize,
+    filters: new Set(),
+  });
+  usePrefetchUsers({
+    currentPage: 0,
+    pageSize,
+    searchQuery,
+    filters: new Set(),
+  });
+  usePrefetchGroups({
+    currentPage: 0,
+    pageSize,
+    searchQuery,
     filters: new Set(),
   });
 

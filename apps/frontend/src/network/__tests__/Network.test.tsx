@@ -15,6 +15,7 @@ import { getTeams } from '../teams/api';
 
 jest.mock('../users/api');
 jest.mock('../teams/api');
+jest.mock('../groups/api');
 
 const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;

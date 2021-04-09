@@ -16,6 +16,7 @@ import {
 import { getTeam, patchTeam, getTeams } from './api';
 import { authorizationState } from '../../auth/state';
 import { GetListOptions } from '../../api-util';
+import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
 const teamIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -82,7 +83,14 @@ const teamState = selectorFamily<TeamResponse | undefined, string>({
     get(patchedTeamState(id)) ?? get(initialTeamState(id)),
 });
 
-export const usePrefetchTeams = (options: GetListOptions) => {
+export const usePrefetchTeams = (
+  options: GetListOptions = {
+    filters: new Set(),
+    searchQuery: '',
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    currentPage: 0,
+  },
+) => {
   const authorization = useRecoilValue(authorizationState);
   const [teams, setTeams] = useRecoilState(teamsState(options));
   useDeepCompareEffect(() => {

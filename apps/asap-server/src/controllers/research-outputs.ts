@@ -27,7 +27,7 @@ function transform(
     title: output.data.title.iv,
     text: output.data.text?.iv || '',
     publishDate: output.data.publishDate?.iv,
-    tags: output.data.tags.iv,
+    tags: output.data.tags?.iv || [],
     ...teamProps,
   };
 }

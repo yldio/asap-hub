@@ -60,6 +60,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                         shortText: null,
                         title: 'Proposal',
                         type: 'Proposal',
+                        tags: ['test', 'tag'],
                       },
                     },
                   ],

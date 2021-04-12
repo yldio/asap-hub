@@ -105,6 +105,40 @@ describe('Run-migrations Webhook', () => {
       ]);
     });
 
+    test('Should save progress after each successful migration run', async () => {
+      mockReadDir.mockResolvedValueOnce([
+        '1-test-migration.ts',
+        '2-test-migration.ts',
+      ] as any);
+      squidexClientMock.fetchOne.mockRejectedValue(Boom.notFound());
+
+      const mockDefaultModule = { default: MockModule };
+      mockImportModule.mockResolvedValue(mockDefaultModule);
+
+      const executionOrder: string[] = [];
+      mockUp.mockImplementation(function (this: Migration) {
+        executionOrder.push(`execute ${this.path}`);
+
+        return Promise.resolve(null);
+      });
+      squidexClientMock.create.mockImplementation(function () {
+        executionOrder.push('save');
+
+        return Promise.resolve({} as any);
+      });
+
+      await run(...mockHandlerArguments);
+
+      expect(mockUp).toHaveBeenCalledTimes(2);
+      expect(squidexClientMock.create).toHaveBeenCalledTimes(2);
+      expect(executionOrder).toEqual([
+        'execute 1-test-migration.ts',
+        'save',
+        'execute 2-test-migration.ts',
+        'save',
+      ]);
+    });
+
     test('Should not insert the migration into Migrations schema if it fails to run', async () => {
       mockReadDir.mockResolvedValueOnce(['test-migration.ts'] as any);
       squidexClientMock.fetchOne.mockRejectedValueOnce(Boom.notFound());

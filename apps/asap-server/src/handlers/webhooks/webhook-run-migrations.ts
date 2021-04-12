@@ -16,7 +16,7 @@ export const runFactory = (
 ): Handler => async () => {
   const getMigrationPaths = getMigrationPathsFromDirectoryFactory(readDir);
   const filterUnexecutedMigrations = filterUnexecutedMigrationsFactory(client);
-  const saveExecutedMigrations = saveExecutedMigrationsFactory(client);
+  const saveExecutedMigration = saveExecutedMigrationFactory(client);
   const getMigrationsFromPaths = getMigrationsFromPathsFactory(
     importModule,
     logger,
@@ -41,8 +41,10 @@ export const runFactory = (
     try {
       await migration.up();
       executedMigrations.push(migration.getPath());
-
       logger.info(`Executed migration '${migration.getPath()}`);
+
+      await saveExecutedMigration(migration.getPath());
+      logger.debug(`Saved migration progress`);
     } catch (error) {
       logger.error(
         error,
@@ -51,10 +53,6 @@ export const runFactory = (
       break;
     }
   }
-
-  logger.debug('Finished executing migrations, saving progress...');
-
-  await saveExecutedMigrations(executedMigrations);
 
   logger.info(`Executed and saved ${executedMigrations.length} migrations`);
 };
@@ -199,16 +197,14 @@ const filterMigrationsFactory = (client: Squidex<RestMigration>) => (
   });
 };
 
-const saveExecutedMigrationsFactory = (
-  client: Squidex<RestMigration>,
-) => async (migrations: string[]): Promise<void> => {
-  for (const migration of migrations) {
-    await client.create({
-      name: {
-        iv: migration,
-      },
-    });
-  }
+const saveExecutedMigrationFactory = (client: Squidex<RestMigration>) => async (
+  migration: string,
+): Promise<void> => {
+  await client.create({
+    name: {
+      iv: migration,
+    },
+  });
 };
 
 const removeExecutedMigrationFactory = (

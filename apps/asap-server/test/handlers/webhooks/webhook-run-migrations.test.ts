@@ -30,7 +30,6 @@ describe('Run-migrations Webhook', () => {
   const rollback = rollbackFactory(
     loggerMock,
     squidexClientMock,
-    mockReadDir,
     mockImportModule,
   );
 

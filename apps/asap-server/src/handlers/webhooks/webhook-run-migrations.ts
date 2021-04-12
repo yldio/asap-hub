@@ -62,10 +62,8 @@ export const runFactory = (
 export const rollbackFactory = (
   logger: Logger,
   client: Squidex<RestMigration>,
-  readDir: typeof fsPromise.readdir,
   importModule: ImportModuleFromPath,
 ): Handler => async () => {
-  // const getMigrationPaths = getMigrationPathsFromDirectoryFactory(readDir);
   const getLatestMigrationPathFromDb = getLatestMigrationPathFromDbFactory(
     client,
   );
@@ -172,10 +170,9 @@ const getMigrationsFromPathsFactory = (
 const filterUnexecutedMigrationsFactory = (client: Squidex<RestMigration>) =>
   filterMigrationsFactory(client);
 
-const filterMigrationsFactory = (
-  client: Squidex<RestMigration>,
-  unexecuted = true,
-) => (migrationPaths: string[]) => {
+const filterMigrationsFactory = (client: Squidex<RestMigration>) => (
+  migrationPaths: string[],
+) => {
   const asyncFilter = async <T>(
     arr: T[],
     predicate: (elem: T) => Promise<boolean>,
@@ -191,10 +188,10 @@ const filterMigrationsFactory = (
         filter: { path: 'data/name/iv', op: 'eq', value: migration },
       });
 
-      return !unexecuted;
+      return false;
     } catch (error) {
       if (isBoom(error, 404)) {
-        return unexecuted;
+        return true;
       }
 
       throw error;
@@ -252,6 +249,5 @@ export const run = runFactory(
 export const rollback = rollbackFactory(
   pinoLogger,
   squidexClient,
-  fsPromise.readdir,
   importModuleFromPath,
 );

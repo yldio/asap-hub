@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { useGifReplay, usePrevious } from '../hooks';
+import { useGifReplay, usePrevious, useIsMounted } from '../hooks';
 
 describe('useGifReplay', () => {
   it('returns the same GIF URL apart from the fragment', () => {
@@ -40,14 +40,14 @@ describe('useGifReplay', () => {
 });
 
 describe('usePrevious', () => {
-  it('Initially returns undefined', () => {
+  it('initially returns undefined', () => {
     const { result } = renderHook(({ value }) => usePrevious(value), {
       initialProps: { value: 1 },
     });
     expect(result.current).toEqual(undefined);
   });
 
-  it('Returns previous result', () => {
+  it('returns previous result', () => {
     const { result, rerender } = renderHook(({ value }) => usePrevious(value), {
       initialProps: { value: 1 },
     });
@@ -55,5 +55,18 @@ describe('usePrevious', () => {
     expect(result.current).toEqual(1);
     rerender({ value: 3 });
     expect(result.current).toEqual(2);
+  });
+});
+
+describe('useIsMounted', () => {
+  it('initially returns true in a ref', () => {
+    const { result } = renderHook(useIsMounted);
+    expect(result.current.current).toBe(true);
+  });
+
+  it('return false in a ref once unmounted', () => {
+    const { result, unmount } = renderHook(useIsMounted);
+    unmount();
+    expect(result.current.current).toBe(false);
   });
 });

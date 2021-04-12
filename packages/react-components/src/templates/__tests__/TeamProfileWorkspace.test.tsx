@@ -1,5 +1,10 @@
 import React, { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import {
+  render,
+  getByText as getChildByText,
+  waitFor,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { createTeamResponse } from '@asap-hub/fixtures';
 
 import TeamProfileWorkspace from '../TeamProfileWorkspace';
@@ -45,19 +50,73 @@ it('omits contact project manager when point of contact omitted', () => {
   expect(queryByText('Team Contact Email')).toBe(null);
 });
 
-it('Renders tools when provided', () => {
-  const { getByText } = render(
-    <TeamProfileWorkspace
-      {...team}
-      tools={[
-        {
-          name: 'Mr Trump',
-          description: 'The President',
-          url: 'https://www.whitehouse.gov',
-        },
-      ]}
-    />,
-  );
+describe('a tool', () => {
+  it('is rendered when provided', () => {
+    const { getByText } = render(
+      <TeamProfileWorkspace
+        {...team}
+        tools={[
+          {
+            name: 'Signal',
+            description: 'Our chat tool',
+            url: 'https://signal.group/our',
+          },
+        ]}
+      />,
+    );
 
-  expect(getByText('Mr Trump')).toBeVisible();
+    expect(getByText('Signal')).toBeVisible();
+  });
+
+  it('has an edit link', () => {
+    const { getByText } = render(
+      <TeamProfileWorkspace
+        {...team}
+        tools={[
+          {
+            name: 'Signal',
+            description: 'Our chat tool',
+            url: 'https://signal.group/our',
+          },
+          {
+            name: 'Discord',
+            description: 'Our call tool',
+            url: 'https://discord.gg/our',
+          },
+        ]}
+      />,
+    );
+    const discordCard = getByText('Discord').closest('li')!;
+    expect(getChildByText(discordCard, /edit/i).closest('a')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/\/1(\D|$)/),
+    );
+  });
+
+  it('has a delete button', async () => {
+    const handleDeleteTool = jest.fn();
+    const { getByText } = render(
+      <TeamProfileWorkspace
+        {...team}
+        tools={[
+          {
+            name: 'Signal',
+            description: 'Our chat tool',
+            url: 'https://signal.group/our',
+          },
+          {
+            name: 'Discord',
+            description: 'Our call tool',
+            url: 'https://discord.gg/our',
+          },
+        ]}
+        onDeleteTool={handleDeleteTool}
+      />,
+    );
+    const discordCard = getByText('Discord').closest('li')!;
+
+    userEvent.click(getChildByText(discordCard, /delete/i));
+
+    await waitFor(() => expect(handleDeleteTool).toHaveBeenCalledWith(1));
+  });
 });

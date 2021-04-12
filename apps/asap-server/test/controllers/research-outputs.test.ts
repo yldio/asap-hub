@@ -133,9 +133,6 @@ describe('ResearchOutputs controller', () => {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
                 text: { iv: 'Text' },
-                tags: {
-                  iv: [],
-                },
               },
             },
             {

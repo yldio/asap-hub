@@ -386,7 +386,6 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               shortText: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
-              tags: ['test', 'tag'],
             },
           },
         ],
@@ -481,7 +480,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       type: 'Presentation',
       title: "Team Salzer's intro slide deck",
       text: '',
-      tags: ['test', 'tag'],
+      tags: [],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -573,7 +572,6 @@ export const getGraphQlTeamResponse = (
               shortText: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
-              tags: ['test', 'tag'],
             },
           },
         ],
@@ -640,7 +638,7 @@ export const updateExpectation: TeamResponse = {
       type: 'Presentation',
       title: "Team Salzer's intro slide deck",
       text: '',
-      tags: ['test', 'tag'],
+      tags: [],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',

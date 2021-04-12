@@ -7,6 +7,7 @@ import {
   getByText as getChildByText,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { TeamResponse } from '@asap-hub/model';
 import { createTeamResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
@@ -49,8 +50,81 @@ const wrapper: React.FC<Record<string, never>> = ({ children }) => (
   </RecoilRoot>
 );
 
+const mockPatchTeamImpl = mockPatchTeam.getMockImplementation();
 afterEach(() => {
-  mockPatchTeam.mockClear();
+  mockPatchTeam.mockClear().mockImplementation(mockPatchTeamImpl);
+});
+
+describe('a tool', () => {
+  it('can be deleted', async () => {
+    const { findByText } = render(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [
+            {
+              name: 'My Tool',
+              description: 'A nice tool',
+              url: 'https://example.com/tool',
+            },
+          ],
+        }}
+      />,
+      { wrapper },
+    );
+
+    userEvent.click(await findByText(/delete/i));
+    await findByText(/deleting/i);
+    expect(mockPatchTeam).toHaveBeenLastCalledWith(
+      id,
+      { tools: [] },
+      expect.anything(),
+    );
+  });
+
+  it('can not be deleted while another tool is being deleted', async () => {
+    const { queryByText, findByText, findAllByText } = render(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [
+            {
+              name: 'My Tool',
+              description: 'A nice tool',
+              url: 'https://example.com/tool',
+            },
+            {
+              name: 'My other tool',
+              description: 'Also a nice tool',
+              url: 'https://example.com/tool2',
+            },
+          ],
+        }}
+      />,
+      { wrapper },
+    );
+    let resolvePatchTeam!: (team: TeamResponse) => void;
+    mockPatchTeam.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolvePatchTeam = resolve;
+        }),
+    );
+
+    userEvent.click((await findAllByText(/delete/i))[0]);
+    await findByText(/deleting/i);
+    mockPatchTeam.mockClear();
+
+    userEvent.click(await findByText(/delete/i));
+    expect(mockPatchTeam).not.toHaveBeenCalled();
+
+    resolvePatchTeam(createTeamResponse());
+    await waitFor(() =>
+      expect(queryByText(/deleting/i)).not.toBeInTheDocument(),
+    );
+  });
 });
 
 describe('the add tool dialog', () => {

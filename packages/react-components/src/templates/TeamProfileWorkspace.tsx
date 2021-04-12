@@ -33,13 +33,16 @@ type TeamProfileWorkspaceProps = Readonly<
   Pick<TeamResponse, 'id' | 'pointOfContact' | 'lastModifiedDate'>
 > & {
   readonly tools: ReadonlyArray<TeamTool>;
+  readonly onDeleteTool?: (toolIndex: number) => Promise<void>;
 };
 
 const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
   id,
   pointOfContact,
   lastModifiedDate,
+
   tools,
+  onDeleteTool,
 }) => {
   const toolsRoute = network({})
     .teams({})
@@ -61,6 +64,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
                 <ToolCard
                   {...tool}
                   editHref={toolsRoute.tool({ toolIndex: index }).$}
+                  onDelete={onDeleteTool && (() => onDeleteTool(index))}
                 />
               </li>
             ))}

@@ -1,4 +1,10 @@
-import { useState, useEffect, DependencyList, useRef } from 'react';
+import {
+  useState,
+  useEffect,
+  DependencyList,
+  useRef,
+  MutableRefObject,
+} from 'react';
 
 export const useGifReplay = (
   url: string,
@@ -17,4 +23,15 @@ export const usePrevious = <T extends unknown>(value: T): T | undefined => {
     ref.current = value;
   });
   return ref.current;
+};
+
+export const useIsMounted = (): MutableRefObject<boolean> => {
+  const isMounted = useRef(true);
+  useEffect(
+    () => () => {
+      isMounted.current = false;
+    },
+    [],
+  );
+  return isMounted;
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouteMatch, Route } from 'react-router-dom';
 import {
   NotFoundPage,
@@ -17,12 +17,27 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
   const route = network({}).teams({}).team({ teamId: team.id }).workspace({});
   const { path } = useRouteMatch();
 
+  const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
 
   return (
     <>
       <Route path={path}>
-        <TeamProfileWorkspace {...team} tools={team.tools} />
+        <TeamProfileWorkspace
+          {...team}
+          tools={team.tools}
+          onDeleteTool={
+            deleting
+              ? undefined
+              : async (toolIndex) => {
+                  setDeleting(true);
+                  await patchTeam({
+                    tools: team.tools.filter((_, i) => toolIndex !== i),
+                  });
+                  setDeleting(false);
+                }
+          }
+        />
       </Route>
       <Route exact path={path + route.tools.template}>
         <ToolModal

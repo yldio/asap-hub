@@ -51,7 +51,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
 }) => (
   <div css={containerStyles}>
     <Anchor href={href}>
-      <div css={[styles, label !== '' && paddingStyles]}>
+      <div css={[styles, label && paddingStyles]}>
         {icon}
         <div css={textStyles}>{label}</div>
       </div>

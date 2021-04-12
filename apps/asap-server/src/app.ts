@@ -90,6 +90,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    * --- end of dependency inection
    */
 
+  /* istanbul ignore next */
   if (libs.xRay) {
     app.use(libs.xRay.express.openSegment('default'));
     libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
@@ -137,6 +138,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     });
   });
 
+  /* istanbul ignore next */
   if (libs.xRay) {
     app.use(libs.xRay.express.closeSegment());
   }

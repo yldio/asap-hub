@@ -11,5 +11,7 @@ module.exports = {
   ...base,
 
   rootDir: __dirname,
-  displayName: 'e2e-tests',
+  displayName: 'test-e2e-tests',
+
+  testMatch: ['**/*.e2e-test.{js,jsx,ts,tsx}'],
 };

@@ -1,0 +1,36 @@
+# https://gitlab.com/yldio/asap-hub/-/ci/lint
+
+variables:
+  INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
+
+setup:integration-image:
+  image: docker:19.03.12
+  stage: .pre
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
+    - docker push $INTEGRATION_DOCKER_IMAGE
+  only:
+    changes:
+      - ci/integration/Dockerfile
+
+test:integration:
+  image: $INTEGRATION_DOCKER_IMAGE
+  before_script:
+    # APP is named after PR Nr. or Branch + JobId otherwise (master?)
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID:-$CI_COMMIT_BRANCH-$CI_JOB_ID}
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - pip install -r ci/integration/scripts/requirements.txt
+    - python ci/integration/scripts/create-app.py
+  script:
+    - echo "Running Integration tests against $SQUIDEX_APP_NAME"
+    # Prevent failing tests from exiting the job
+    - yarn test:integration || test_exit_code=$?
+    - echo "Deleting $SQUIDEX_APP_NAME"
+    - python ci/integration/scripts/delete-app.py
+    # If tests fail return exit code now
+    - exit $test_exit_code
+  stage: test

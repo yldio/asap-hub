@@ -2,6 +2,7 @@
 include:
   - 'ci/.gitlab-ci.ses.yml'
   - 'ci/.gitlab-ci.squidex.yml'
+  - 'ci/.gitlab-ci.integration.yml'
 
 .tmpl:master: &tmpl_master
   rules: &tmpl_master_rules

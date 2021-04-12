@@ -5,10 +5,9 @@ export type ResearchOutputType =
   | 'Proposal'
   | 'Presentation'
   | 'Dataset'
-  | 'Code'
+  | 'Bioinformatics'
   | 'Protocol'
   | 'Lab Resource'
-  | 'Preprint'
   | 'Article';
 
 export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';

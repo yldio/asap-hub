@@ -4,7 +4,6 @@ import {
   waitForElementToBeRemoved,
   waitFor,
 } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
 import nock from 'nock';
 import { PageResponse } from '@asap-hub/model';
 import { createPageResponse } from '@asap-hub/fixtures';
@@ -22,13 +21,7 @@ describe('content page', () => {
   });
 
   const renderPage = async () => {
-    const result = render(
-      <MemoryRouter initialEntries={['/privacy-policy']}>
-        <Route path="/privacy-policy">
-          <Content layoutComponent={React.Fragment} />
-        </Route>
-      </MemoryRouter>,
-    );
+    const result = render(<Content pageId="privacy-policy" />);
 
     await waitFor(() =>
       expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),

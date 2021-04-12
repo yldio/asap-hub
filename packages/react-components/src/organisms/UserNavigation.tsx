@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { logout } from '@asap-hub/routing';
+import { logout, staticPages } from '@asap-hub/routing';
 
 import {
   perRem,
@@ -46,15 +46,11 @@ const bottomLinksStyles = css({
 export interface UserNavigationProps {
   readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
-  readonly termsHref: string;
-  readonly privacyPolicyHref: string;
   readonly aboutHref: string;
 }
 const UserNavigation: React.FC<UserNavigationProps> = ({
   userProfileHref,
   teams,
-  termsHref,
-  privacyPolicyHref,
   aboutHref,
 }) => (
   <nav css={containerStyles}>
@@ -88,9 +84,11 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
     </ul>
     <div css={bottomLinksStyles}>
       <Caption accent="lead" asParagraph>
-        <Anchor href={termsHref}>Terms of Use</Anchor>
+        <Anchor href={staticPages({}).terms({}).$}>Terms of Use</Anchor>
         {'  ·  '}
-        <Anchor href={privacyPolicyHref}>Privacy Policy</Anchor>
+        <Anchor href={staticPages({}).privacyPolicy({}).$}>
+          Privacy Policy
+        </Anchor>
         {'  ·  '}
         <Anchor href={aboutHref}>About ASAP</Anchor>
       </Caption>

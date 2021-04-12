@@ -1,16 +1,14 @@
 import React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
 
 import { usePageByPath } from '../api';
 import Frame from '../structure/Frame';
 
 interface ContentProps {
-  layoutComponent: React.FC;
+  pageId: string;
 }
-const Content: React.FC<ContentProps> = ({ layoutComponent: Layout }) => {
-  const { path } = useRouteMatch();
-  const { loading, data: page } = usePageByPath(path);
+const Content: React.FC<ContentProps> = ({ pageId }) => {
+  const { loading, data: page } = usePageByPath(pageId);
 
   if (loading) {
     return <Loading />;
@@ -18,11 +16,9 @@ const Content: React.FC<ContentProps> = ({ layoutComponent: Layout }) => {
 
   if (page) {
     return (
-      <Layout>
-        <Frame title={page.title}>
-          <ContentPage {...page} />
-        </Frame>
-      </Layout>
+      <Frame title={page.title}>
+        <ContentPage {...page} />
+      </Frame>
     );
   }
 

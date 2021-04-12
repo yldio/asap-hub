@@ -7,11 +7,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 
 type SigninPageProps = ComponentProps<typeof SigninForm> &
   ComponentProps<typeof AgreeToTerms>;
-const SigninPage: React.FC<SigninPageProps> = ({
-  termsHref,
-  privacyPolicyHref,
-  ...props
-}) => (
+const SigninPage: React.FC<SigninPageProps> = ({ appOrigin, ...props }) => (
   <div
     css={{
       boxSizing: 'border-box',
@@ -31,10 +27,7 @@ const SigninPage: React.FC<SigninPageProps> = ({
     </div>
     {props.signup && (
       <footer css={{ width: 0, minWidth: '100%' }}>
-        <AgreeToTerms
-          termsHref={termsHref}
-          privacyPolicyHref={privacyPolicyHref}
-        />
+        <AgreeToTerms appOrigin={appOrigin} />
       </footer>
     )}
   </div>

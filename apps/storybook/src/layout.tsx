@@ -39,8 +39,6 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
           { name: '1', href: '/team-1' },
           { name: '2', href: '/team-2' },
         ]}
-        termsHref="/terms"
-        privacyPolicyHref="/privacy-policy"
         aboutHref="/about"
       >
         {storyFn()}
@@ -51,7 +49,7 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
 export const MessageLayoutDecorator: DecoratorFn = (storyFn, context) =>
   NoPaddingDecorator(
     () => (
-      <MessageLayout termsHref="/terms" privacyPolicyHref="/privacy-policy">
+      <MessageLayout appOrigin={window.location.origin}>
         {storyFn()}
       </MessageLayout>
     ),

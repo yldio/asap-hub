@@ -9,8 +9,6 @@ const props: ComponentProps<typeof UserNavigation> = {
     { name: 'Team 1', href: '/team-1' },
     { name: 'Team 2', href: '/team-2' },
   ],
-  termsHref: '/terms',
-  privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
 };
 

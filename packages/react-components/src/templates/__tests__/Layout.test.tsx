@@ -10,8 +10,6 @@ const props: ComponentProps<typeof Layout> = {
 
   userProfileHref: '/profile',
   teams: [],
-  termsHref: '/terms',
-  privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
 };
 

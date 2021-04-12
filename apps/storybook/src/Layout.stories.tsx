@@ -17,8 +17,6 @@ const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
     { name: '1', href: '/team-1' },
     { name: '2', href: '/team-2' },
   ],
-  termsHref: '/terms',
-  privacyPolicyHref: '/privacy-policy',
   aboutHref: '/about',
 };
 

@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import css from '@emotion/css';
+import { staticPages } from '@asap-hub/routing';
 
 import { Link } from '../atoms';
 import { silver } from '../colors';
@@ -44,15 +45,10 @@ const footerContentContainerStyles = css({
 
 interface LayoutProps {
   readonly children: ReactNode;
-  readonly termsHref: string;
-  readonly privacyPolicyHref: string;
+  readonly appOrigin: string;
 }
 
-const EmailLayout: React.FC<LayoutProps> = ({
-  children,
-  termsHref,
-  privacyPolicyHref,
-}) => (
+const MessageLayout: React.FC<LayoutProps> = ({ children, appOrigin }) => (
   <>
     <div css={containerStyles}>
       <div
@@ -66,11 +62,20 @@ const EmailLayout: React.FC<LayoutProps> = ({
     </div>
     <div css={footerContainerStyles}>
       <ul css={[containerStyles, footerContentContainerStyles]}>
-        <Link href={privacyPolicyHref}>Privacy policy</Link>
-        <Link href={termsHref}>Terms and conditions</Link>
+        <Link href={new URL(staticPages({}).terms({}).$, appOrigin).toString()}>
+          Privacy policy
+        </Link>
+        <Link
+          href={new URL(
+            staticPages({}).privacyPolicy({}).$,
+            appOrigin,
+          ).toString()}
+        >
+          Terms and conditions
+        </Link>
       </ul>
     </div>
   </>
 );
 
-export default EmailLayout;
+export default MessageLayout;

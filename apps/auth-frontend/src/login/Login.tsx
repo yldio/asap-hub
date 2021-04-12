@@ -25,8 +25,7 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
   return (
     <SigninPage
       signup={signup}
-      termsHref={`${getHubUrlFromRedirect()}/terms-and-conditions`}
-      privacyPolicyHref={`${getHubUrlFromRedirect()}/privacy-policy`}
+      appOrigin={getHubUrlFromRedirect()}
       forgotPasswordHref="/forgot-password"
       onGoogleSignin={() => authorizeWithSso(window.location, 'google-oauth2')}
       onOrcidSignin={() => authorizeWithSso(window.location, 'ORCID')}

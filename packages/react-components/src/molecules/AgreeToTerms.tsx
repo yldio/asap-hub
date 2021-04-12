@@ -1,18 +1,24 @@
 import React from 'react';
+import { staticPages } from '@asap-hub/routing';
+
 import { Paragraph, Link } from '../atoms';
 
 interface AgreeToTermsProps {
-  readonly termsHref: string;
-  readonly privacyPolicyHref: string;
+  readonly appOrigin: string;
 }
-const AgreeToTerms: React.FC<AgreeToTermsProps> = ({
-  termsHref,
-  privacyPolicyHref,
-}) => (
+const AgreeToTerms: React.FC<AgreeToTermsProps> = ({ appOrigin }) => (
   <Paragraph accent="lead">
     By proceeding, you are agreeing to the{' '}
-    <Link href={termsHref}>Terms and Conditions</Link> and confirm that you have
-    read our <Link href={privacyPolicyHref}>Privacy Policy</Link>.
+    <Link href={new URL(staticPages({}).terms({}).$, appOrigin).toString()}>
+      Terms and Conditions
+    </Link>{' '}
+    and confirm that you have read our{' '}
+    <Link
+      href={new URL(staticPages({}).privacyPolicy({}).$, appOrigin).toString()}
+    >
+      Privacy Policy
+    </Link>
+    .
   </Paragraph>
 );
 

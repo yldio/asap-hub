@@ -6,7 +6,7 @@ import { Logger } from 'pino';
 import { migrationDir } from '../../config';
 import pinoLogger from '../../utils/logger';
 
-const squidexClient = new Squidex<RestMigration>('migration');
+const squidexClient = new Squidex<RestMigration>('migrations');
 
 export const runFactory = (
   logger: Logger,

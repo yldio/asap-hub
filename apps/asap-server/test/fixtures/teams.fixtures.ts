@@ -29,6 +29,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                   shortText: null,
                   title: 'Proposal',
                   type: 'Proposal',
+                  tags: ['test', 'tag'],
                 },
               },
               {
@@ -41,6 +42,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                   shortText: null,
                   title: "Team Salzer's intro slide deck",
                   type: 'Presentation',
+                  tags: ['test', 'tag'],
                 },
               },
             ],
@@ -257,6 +259,7 @@ export const listTeamResponse: ListTeamResponse = {
           type: 'Presentation',
           title: "Team Salzer's intro slide deck",
           text: '',
+          tags: ['test', 'tag'],
           team: {
             id: 'team-id-1',
             displayName: 'Schipa, A',
@@ -268,6 +271,7 @@ export const listTeamResponse: ListTeamResponse = {
           type: 'Proposal',
           title: 'Proposal',
           text: '',
+          tags: ['test', 'tag'],
           team: {
             id: 'team-id-1',
             displayName: 'Schipa, A',
@@ -369,6 +373,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               shortText: null,
               title: 'Proposal',
               type: 'Proposal',
+              tags: ['test', 'tag'],
             },
           },
           {
@@ -475,6 +480,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       type: 'Presentation',
       title: "Team Salzer's intro slide deck",
       text: '',
+      tags: [],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -486,6 +492,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       type: 'Proposal',
       title: 'Proposal',
       text: '',
+      tags: ['test', 'tag'],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -552,6 +559,7 @@ export const getGraphQlTeamResponse = (
               shortText: null,
               title: 'Proposal',
               type: 'Proposal',
+              tags: ['test', 'tag'],
             },
           },
           {
@@ -630,6 +638,7 @@ export const updateExpectation: TeamResponse = {
       type: 'Presentation',
       title: "Team Salzer's intro slide deck",
       text: '',
+      tags: [],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -641,6 +650,7 @@ export const updateExpectation: TeamResponse = {
       type: 'Proposal',
       title: 'Proposal',
       text: '',
+      tags: ['test', 'tag'],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',

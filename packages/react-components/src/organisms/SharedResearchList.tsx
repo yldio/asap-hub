@@ -3,23 +3,23 @@ import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 
-import { Card, Anchor, TagLabel } from '../atoms';
+import { Card, Anchor, TagLabel, Headline2 } from '../atoms';
 import { steel } from '../colors';
 import { ExternalLink } from '../molecules';
 import { paddingStyles } from '../card';
-import { headlineStyles, layoutStyles } from '../text';
-import { mobileScreen } from '../pixels';
 
 const containerStyles = css({
-  '~ div:last-of-type': {
-    borderBottom: 'none',
-  },
+  margin: 0,
+  padding: 0,
+  listStyle: 'none',
 });
-
 const itemStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
   display: 'grid',
   gridTemplateRows: 'auto 12px auto',
+  '* ~ div:last-of-type': {
+    borderBottom: 'none',
+  },
 });
 
 const headerStyles = css({
@@ -41,16 +41,6 @@ const typeStyles = css({
   textTransform: 'capitalize',
 });
 
-const clampStyles = css({
-  display: '-webkit-box',
-  '-webkit-line-clamp': '4',
-  '-webkit-box-orient': 'vertical',
-  overflow: 'hidden',
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    '-webkit-line-clamp': '2',
-  },
-});
-
 type SharedResearchListProps = {
   researchOutputs: ReadonlyArray<
     Pick<ResearchOutputResponse, 'id' | 'title' | 'type' | 'link'>
@@ -61,9 +51,9 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   researchOutputs,
 }) => (
   <Card padding={false}>
-    <div css={containerStyles}>
+    <ul css={containerStyles}>
       {researchOutputs.map(({ type, link, title, id }) => (
-        <div key={`output-${id}`} css={[itemStyles, paddingStyles]}>
+        <li key={`output-${id}`} css={[itemStyles, paddingStyles]}>
           <div css={headerStyles}>
             <div css={typeStyles}>
               <TagLabel>{type}</TagLabel>
@@ -72,24 +62,20 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
           </div>
           <div css={titleStyles}>
             {link ? (
-              <h2 css={[layoutStyles, headlineStyles[5], clampStyles]}>
-                {title}
-              </h2>
+              <Headline2 styleAsHeading={5}>{title}</Headline2>
             ) : (
               <Anchor
                 href={
                   sharedResearch({}).researchOutput({ researchOutputId: id }).$
                 }
               >
-                <h2 css={[layoutStyles, headlineStyles[5], clampStyles]}>
-                  {title}
-                </h2>
+                <Headline2 styleAsHeading={5}>{title}</Headline2>
               </Anchor>
             )}
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   </Card>
 );
 

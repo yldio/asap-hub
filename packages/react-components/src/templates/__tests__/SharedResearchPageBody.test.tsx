@@ -30,24 +30,36 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
 };
 
 it('renders multiple shared outputs cards in card view', () => {
-  const { queryAllByRole } = render(
+  const { queryAllByRole, getByText } = render(
     <SharedResearchPageBody {...props} isListView={false} />,
     {
       wrapper: StaticRouter,
     },
   );
   expect(
+    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
+  ).toBe('bold');
+  expect(
+    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
+  ).toBe('');
+  expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);
 });
 
 it('renders multiple research outputs in list view', () => {
-  const { queryAllByRole } = render(
+  const { queryAllByRole, getByText } = render(
     <SharedResearchPageBody {...props} isListView />,
     {
       wrapper: StaticRouter,
     },
   );
+  expect(
+    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
+  ).toBe('');
+  expect(
+    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
+  ).toBe('bold');
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);

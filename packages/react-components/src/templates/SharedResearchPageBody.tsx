@@ -29,14 +29,14 @@ const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
     listViewHref={sharedResearch({}).$ + listViewParams}
     cardViewHref={sharedResearch({}).$ + cardViewParams}
   >
-    {!cardListProps.isListView ? (
+    {cardListProps.isListView ? (
+      <SharedResearchList researchOutputs={researchOutputs} />
+    ) : (
       researchOutputs.map((output) => (
         <div key={output.id}>
           <SharedResearchCard {...output} />
         </div>
       ))
-    ) : (
-      <SharedResearchList researchOutputs={researchOutputs} />
     )}
   </ResultList>
 );

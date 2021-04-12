@@ -1,5 +1,5 @@
 import Chance from 'chance';
-import { Squidex } from '@asap-hub/squidex';
+import { Squidex, User } from '@asap-hub/squidex';
 import { TeamRole, UserResponse, Invitee } from '@asap-hub/model';
 import { RestTeam, RestUser } from '@asap-hub/squidex';
 import { parseUser } from '../../src/entities';
@@ -18,10 +18,8 @@ function transform(user: RestUser): TestUserResponse {
   };
 }
 
-export const createUser = (
-  overwrites: Invitee | object = {},
-): Promise<RestUser> => {
-  const data = {
+export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
+  const userData: User = {
     firstName: chance.first(),
     lastName: chance.last(),
     jobTitle: chance.suffix({ full: true }),
@@ -30,33 +28,21 @@ export const createUser = (
     email: chance.email(),
     biography: chance.paragraph({ sentence: 3 }),
     location: chance.city(),
+    role: 'Grantee',
+    avatar: [],
+    skills: [],
+    questions: [],
+    teams: [],
+    connections: [],
     ...overwrites,
   };
 
-  const user: RestUser['data'] = {
-    lastModifiedDate: { iv: `${new Date().toISOString()}` },
-    email: { iv: data.email },
-    firstName: { iv: data.firstName },
-    lastName: { iv: data.lastName },
-    jobTitle: { iv: data.jobTitle },
-    orcid: { iv: data.orcid },
-    institution: { iv: data.institution },
-    location: { iv: data.location },
-    role: { iv: 'Guest' },
-    connections: {
-      iv: [
-        {
-          code: chance.ssn(),
-        },
-      ],
-    },
-    avatar: { iv: [] },
-    skills: { iv: [] },
-    questions: { iv: [] },
-    teams: { iv: [] },
-  };
+  const user = Object.entries(userData).reduce((acc, [key, value]) => {
+    acc[key] = { iv: value };
+    return acc;
+  }, {} as { [key: string]: { iv: unknown } });
 
-  return users.create(user);
+  return users.create(user as RestUser['data']);
 };
 
 export const createRandomUser = async (

@@ -1,27 +1,22 @@
-import { Squidex, RestUser } from '@asap-hub/squidex';
+import { Role } from '@asap-hub/model';
 import Users from '../../src/controllers/users';
+import { createUser } from '../helpers/users';
 
 const users = new Users();
-const squidex = new Squidex<RestUser>('users');
 
 describe('Users', () => {
-  test('Should be create and fetch a user', async () => {
-    const user: RestUser['data'] = {
-      firstName: { iv: 'John' },
-      lastName: { iv: 'Doe' },
-      jobTitle: { iv: 'Project Manager' },
-      orcid: { iv: '0000-0002-9079-593X' },
-      institution: { iv: 'Instituto Superior Tecnico' },
-      email: { iv: 'john.doe@asap.science' },
-      role: { iv: 'Grantee' },
-      connections: { iv: [] },
-      questions: { iv: [] },
-      teams: { iv: [] },
-      avatar: { iv: [] },
-      skills: { iv: [] },
+  test('Should create and fetch a user', async () => {
+    const user = {
+      firstName: 'John',
+      lastName: 'Doe',
+      jobTitle: 'Project Manager',
+      orcid: '0000-0002-9079-593X',
+      institution: 'Instituto Superior Tecnico',
+      email: 'john.doe@asap.science',
+      role: 'Grantee' as Role,
     };
 
-    await squidex.create(user);
+    await createUser(user);
 
     const result = await users.fetch({});
 

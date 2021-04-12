@@ -3,10 +3,12 @@ import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 
-import { Card, Anchor, Headline2, TagLabel } from '../atoms';
+import { Card, Anchor, TagLabel } from '../atoms';
 import { steel } from '../colors';
 import { ExternalLink } from '../molecules';
 import { paddingStyles } from '../card';
+import { headlineStyles, layoutStyles } from '../text';
+import { mobileScreen } from '../pixels';
 
 const containerStyles = css({
   '~ div:last-of-type': {
@@ -39,6 +41,16 @@ const typeStyles = css({
   textTransform: 'capitalize',
 });
 
+const clampStyles = css({
+  display: '-webkit-box',
+  '-webkit-line-clamp': '4',
+  '-webkit-box-orient': 'vertical',
+  overflow: 'hidden',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    '-webkit-line-clamp': '2',
+  },
+});
+
 type SharedResearchListProps = {
   researchOutputs: ReadonlyArray<
     Pick<ResearchOutputResponse, 'id' | 'title' | 'type' | 'link'>
@@ -60,14 +72,18 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
           </div>
           <div css={titleStyles}>
             {link ? (
-              <Headline2 styleAsHeading={5}>{title}</Headline2>
+              <h2 css={[layoutStyles, headlineStyles[5], clampStyles]}>
+                {title}
+              </h2>
             ) : (
               <Anchor
                 href={
                   sharedResearch({}).researchOutput({ researchOutputId: id }).$
                 }
               >
-                <Headline2 styleAsHeading={5}>{title}</Headline2>
+                <h2 css={[layoutStyles, headlineStyles[5], clampStyles]}>
+                  {title}
+                </h2>
               </Anchor>
             )}
           </div>

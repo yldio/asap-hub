@@ -1,6 +1,5 @@
 import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
-import { isEnabled } from '@asap-hub/flags';
 
 import { ListControls, PageControls } from '../molecules';
 import { Paragraph } from '../atoms';
@@ -59,7 +58,7 @@ const ResultList: React.FC<ResultListProps> = ({
           {numberOfItems} result{numberOfItems === 1 || 's'} found
         </strong>
       </Paragraph>
-      {isEnabled('LIST_VIEW') && cardViewHref && listViewHref && (
+      {cardViewHref && listViewHref && (
         <ListControls
           isListView={isListView}
           cardViewHref={cardViewHref}

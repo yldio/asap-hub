@@ -4,6 +4,7 @@ import express, { Express, RequestHandler } from 'express';
 import { Tracer } from 'opentracing';
 import { Logger } from 'pino';
 import pinoHttp from 'pino-http';
+import AWSXray from 'aws-xray-sdk';
 
 import decodeToken from './utils/validate-token';
 
@@ -89,6 +90,12 @@ export const appFactory = (libs: Libs = {}): Express => {
    * --- end of dependency inection
    */
 
+  /* istanbul ignore next */
+  if (libs.xRay) {
+    app.use(libs.xRay.express.openSegment('default'));
+    libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
+  }
+
   app.use(httpLogger);
   app.use(tracingHandler);
   app.use(cors());
@@ -131,6 +138,11 @@ export const appFactory = (libs: Libs = {}): Express => {
     });
   });
 
+  /* istanbul ignore next */
+  if (libs.xRay) {
+    app.use(libs.xRay.express.closeSegment());
+  }
+
   app.use(errorHandler);
   app.disable('x-powered-by');
 
@@ -153,4 +165,5 @@ export type Libs = {
   logger?: Logger;
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
+  xRay?: typeof AWSXray;
 };

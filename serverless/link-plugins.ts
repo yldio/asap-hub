@@ -1,9 +1,8 @@
 // https://github.com/serverless/serverless/issues/5634
 
-const { mkdirSync, unlinkSync, symlinkSync } = require('fs');
-const { join, dirname, relative } = require('path');
-
-const { plugins } = require('../serverless.js');
+import { mkdirSync, unlinkSync, symlinkSync } from 'fs';
+import { join, dirname, relative } from 'path';
+import { plugins } from '../serverless';
 
 const pluginsDir = join(__dirname, '../.serverless_plugins');
 mkdirSync(pluginsDir, { recursive: true });

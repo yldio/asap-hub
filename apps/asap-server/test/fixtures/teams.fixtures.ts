@@ -258,7 +258,7 @@ export const listTeamResponse: ListTeamResponse = {
           link: 'docs.google.com',
           type: 'Presentation',
           title: "Team Salzer's intro slide deck",
-          text: '',
+          description: '',
           tags: ['test', 'tag'],
           team: {
             id: 'team-id-1',
@@ -270,7 +270,7 @@ export const listTeamResponse: ListTeamResponse = {
           created: '2020-09-17T08:18:01.000Z',
           type: 'Proposal',
           title: 'Proposal',
-          text: '',
+          description: '',
           tags: ['test', 'tag'],
           team: {
             id: 'team-id-1',
@@ -479,7 +479,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       link: 'docs.google.com',
       type: 'Presentation',
       title: "Team Salzer's intro slide deck",
-      text: '',
+      description: '',
       tags: [],
       team: {
         id: 'team-id-1',
@@ -491,7 +491,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       created: '2020-09-17T08:18:01.000Z',
       type: 'Proposal',
       title: 'Proposal',
-      text: '',
+      description: '',
       tags: ['test', 'tag'],
       team: {
         id: 'team-id-1',
@@ -637,7 +637,7 @@ export const updateExpectation: TeamResponse = {
       link: 'docs.google.com',
       type: 'Presentation',
       title: "Team Salzer's intro slide deck",
-      text: '',
+      description: '',
       tags: [],
       team: {
         id: 'team-id-1',
@@ -649,7 +649,7 @@ export const updateExpectation: TeamResponse = {
       created: '2020-09-17T08:18:01.000Z',
       type: 'Proposal',
       title: 'Proposal',
-      text: '',
+      description: '',
       tags: ['test', 'tag'],
       team: {
         id: 'team-id-1',

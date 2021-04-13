@@ -25,7 +25,7 @@ function transform(
     link: output.data.link?.iv || undefined,
     type: output.data.type.iv,
     title: output.data.title.iv,
-    text: output.data.text?.iv || '',
+    description: output.data.description?.iv || '',
     publishDate: output.data.publishDate?.iv,
     tags: output.data.tags?.iv || [],
     ...teamProps,

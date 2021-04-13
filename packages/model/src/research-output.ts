@@ -19,7 +19,7 @@ export type ResearchOutputFormData = {
   readonly link: string;
   readonly type: ResearchOutputType;
   readonly title: string;
-  readonly text: string;
+  readonly description: string;
   readonly publishDate?: Date;
 };
 

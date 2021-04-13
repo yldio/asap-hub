@@ -44,6 +44,8 @@ module.exports = {
     '@typescript-eslint/no-inferrable-types': 'off',
 
     'lines-between-class-members': 'off',
+
+    'no-alert': 'off',
   },
   overrides: [
     {

@@ -33,11 +33,17 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
               ? undefined
               : async (toolIndex) => {
                   setDeleting(true);
-                  await patchTeam({
-                    tools: team.tools.filter((_, i) => toolIndex !== i),
-                  }).catch(() => {
-                    toast('Something went wrong. Please try again.');
-                  });
+                  if (
+                    window.confirm(
+                      'Are you sure you want to delete this team tool from your team page? This cannot be undone.',
+                    )
+                  ) {
+                    await patchTeam({
+                      tools: team.tools.filter((_, i) => toolIndex !== i),
+                    }).catch(() => {
+                      toast('Something went wrong. Please try again.');
+                    });
+                  }
                   setDeleting(false);
                 }
           }

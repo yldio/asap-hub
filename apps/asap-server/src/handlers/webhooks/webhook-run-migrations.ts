@@ -35,7 +35,7 @@ export const runFactory = (
   const migrations = await getMigrationsFromPaths(unexecutedMigrationPaths);
 
   const executedMigrations: string[] = [];
-
+  let executionError: Error | null = null;
   for (const migration of migrations) {
     logger.debug(`Executing migration '${migration.getPath()}`);
     try {
@@ -50,11 +50,17 @@ export const runFactory = (
         error,
         `Error executing the migration ${migration.getPath()}`,
       );
+      executionError = error;
+
       break;
     }
   }
 
   logger.info(`Executed and saved ${executedMigrations.length} migrations`);
+
+  if (executionError !== null) {
+    throw executionError;
+  }
 };
 
 export const rollbackFactory = (
@@ -85,7 +91,7 @@ export const rollbackFactory = (
         `Could not load the migration from file ${migrationPath}`,
       );
 
-      return;
+      throw error;
     }
 
     logger.debug(`Executing rollback of migration '${migration.getPath()}`);
@@ -97,14 +103,23 @@ export const rollbackFactory = (
         error,
         `Error executing the rollback of migration ${migration.getPath()}`,
       );
-      return;
+
+      throw error;
     }
 
     logger.debug('Finished executing rollback, saving progress...');
 
-    await removeExecutedMigration(migrationPath);
+    try {
+      await removeExecutedMigration(migrationPath);
 
-    logger.info(`Rolled back and removed migration '${migration.getPath()}'`);
+      logger.info(`Rolled back and removed migration '${migration.getPath()}'`);
+    } catch (error) {
+      logger.error(
+        `Rolled back the migration '${migration.getPath()}' but failed to save the rollback progress`,
+      );
+
+      throw error;
+    }
   }
 };
 

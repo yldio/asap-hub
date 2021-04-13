@@ -139,7 +139,7 @@ describe('Run-migrations Webhook', () => {
       ]);
     });
 
-    test('Should not insert the migration into Migrations schema if it fails to run', async () => {
+    test('Should not insert the migration into Migrations schema if it fails to run and throw after logging execution progress', async () => {
       mockReadDir.mockResolvedValueOnce(['test-migration.ts'] as any);
       squidexClientMock.fetchOne.mockRejectedValueOnce(Boom.notFound());
 
@@ -148,7 +148,7 @@ describe('Run-migrations Webhook', () => {
 
       mockUp.mockRejectedValueOnce(new Error('some error'));
 
-      await run(...mockHandlerArguments);
+      await expect(run(...mockHandlerArguments)).rejects.toThrow('some error');
 
       expect(mockUp).toHaveBeenCalled();
       expect(squidexClientMock.create).not.toHaveBeenCalled();
@@ -170,8 +170,7 @@ describe('Run-migrations Webhook', () => {
       mockUp.mockRejectedValueOnce(new Error());
       mockUp.mockResolvedValueOnce(null);
 
-      await run(...mockHandlerArguments);
-
+      await expect(run(...mockHandlerArguments)).rejects.toThrow();
       expect(mockUp).toHaveBeenCalledTimes(2);
       expect(squidexClientMock.create).toHaveBeenCalledWith({
         name: {
@@ -198,7 +197,7 @@ describe('Run-migrations Webhook', () => {
       expect(mockDown).not.toHaveBeenCalled();
     });
 
-    test('Should not run anything if a migration is present in the Migrations schema but the file is not', async () => {
+    test('Should throw if a migration is present in the Migrations schema but the file is not', async () => {
       squidexClientMock.fetch.mockResolvedValueOnce({
         total: 1,
         items: [
@@ -214,8 +213,9 @@ describe('Run-migrations Webhook', () => {
       });
       mockImportModule.mockRejectedValueOnce(new Error('File not found'));
 
-      await rollback(...mockHandlerArguments);
-
+      await expect(rollback(...mockHandlerArguments)).rejects.toThrow(
+        'File not found',
+      );
       expect(mockDown).not.toHaveBeenCalled();
       expect(loggerMock.error).toHaveBeenCalledWith(
         expect.any(Error),
@@ -283,12 +283,49 @@ describe('Run-migrations Webhook', () => {
       mockImportModule.mockResolvedValueOnce(mockDefaultModule);
       mockDown.mockRejectedValueOnce(new Error());
 
-      await rollback(...mockHandlerArguments);
+      await expect(rollback(...mockHandlerArguments)).rejects.toThrow();
 
       expect(squidexClientMock.delete).not.toHaveBeenCalled();
       expect(loggerMock.error).toHaveBeenCalledWith(
         expect.any(Error),
         expect.stringMatching(/1-test-migration.ts/),
+      );
+    });
+
+    test('Should throw and log an error if the rollback works but the migration fails to delete from the Migrations schema', async () => {
+      squidexClientMock.fetch.mockResolvedValueOnce({
+        total: 1,
+        items: [
+          {
+            created: '',
+            lastModified: '',
+            id: 'test-ID-1',
+            data: {
+              name: { iv: '1-test-migration.ts' },
+            },
+          },
+        ],
+      });
+      const mockDefaultModule = { default: MockModule };
+      mockImportModule.mockResolvedValueOnce(mockDefaultModule);
+      squidexClientMock.fetchOne.mockResolvedValueOnce({
+        created: '',
+        lastModified: '',
+        id: 'test-ID-2',
+        data: {
+          name: { iv: '2-test-migration.ts' },
+        },
+      });
+      squidexClientMock.delete.mockRejectedValueOnce(new Error('some error'));
+
+      await expect(rollback(...mockHandlerArguments)).rejects.toThrow(
+        'some error',
+      );
+
+      expect(mockDown).toHaveBeenCalled();
+      expect(squidexClientMock.delete).toHaveBeenCalledWith('test-ID-2');
+      expect(loggerMock.error).toBeCalledWith(
+        `Rolled back the migration '1-test-migration.ts' but failed to save the rollback progress`,
       );
     });
   });

@@ -35,7 +35,7 @@ const styles = css({
     },
   },
 });
-const paddingStyles = css({ padding: `0 ${12 - borderWidth / perRem}em` });
+const paddingStyles = css({ padding: `0 ${(12 - borderWidth) / perRem}em` });
 
 const textStyles = css({ paddingTop: '1px', fontSize: `${13.6 / perRem}em` });
 

@@ -11,7 +11,6 @@ if (NODE_ENV === 'production') {
   });
 }
 
-
 const {
   ASAP_APP_URL = 'http://localhost:3000',
   ASAP_API_URL = 'http://localhost:3333',
@@ -23,7 +22,7 @@ const {
 const region = process.env.AWS_REGION as AWS['provider']['region'];
 
 const service = paramCase(pkg.name);
-const plugins = [
+export const plugins = [
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
   ...(NODE_ENV === 'production'

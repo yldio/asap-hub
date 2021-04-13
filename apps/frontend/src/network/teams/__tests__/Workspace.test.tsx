@@ -11,6 +11,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { createTeamResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { ToastContext } from '@asap-hub/react-context';
+import { mockAlert } from '@asap-hub/dom-test-utils';
 
 import {
   Auth0Provider,
@@ -57,6 +58,8 @@ afterEach(() => {
 });
 
 describe('a tool', () => {
+  const { mockConfirm } = mockAlert();
+
   it('can be deleted', async () => {
     const { findByText } = render(
       <Workspace
@@ -82,6 +85,31 @@ describe('a tool', () => {
       { tools: [] },
       expect.anything(),
     );
+  });
+
+  it('is not deleted when rejecting the confirm prompt', async () => {
+    const { findByText } = render(
+      <Workspace
+        team={{
+          ...createTeamResponse(),
+          id,
+          tools: [
+            {
+              name: 'My Tool',
+              description: 'A nice tool',
+              url: 'https://example.com/tool',
+            },
+          ],
+        }}
+      />,
+      { wrapper },
+    );
+
+    mockConfirm.mockReturnValue(false);
+    userEvent.click(await findByText(/delete/i));
+    await findByText(/delete/i);
+
+    expect(mockPatchTeam).not.toHaveBeenCalled();
   });
 
   it('warns when its deletion failed', async () => {

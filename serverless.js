@@ -239,7 +239,7 @@ module.exports = {
     rollbackMigrations: {
       handler:
         'apps/asap-server/build-cjs/handlers/webhooks/webhook-run-migrations.rollback',
-      timeout: 120,
+      timeout: 900,
     },
     ...(NODE_ENV === 'production'
       ? {

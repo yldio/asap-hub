@@ -1,6 +1,7 @@
 import { AWS } from '@serverless/typescript';
 import assert from 'assert';
 import { paramCase } from 'param-case';
+import { URL } from 'url';
 import pkg from './package.json';
 
 const { NODE_ENV = 'development' } = process.env;

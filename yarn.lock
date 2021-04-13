@@ -5284,6 +5284,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@serverless/typescript@npm:^2.34.0":
+  version: 2.34.0
+  resolution: "@serverless/typescript@npm:2.34.0"
+  checksum: 9b07768fcb9f3eec1de389bc44b288f8541dc2a733ff8095c9424a20cc21fda301a6ed90a564bf6817f575d09e9ad0fd66afe8c70faefa8a06d29ae5ec706b87
+  languageName: node
+  linkType: hard
+
 "@serverless/utils-china@npm:^0.1.27":
   version: 0.1.27
   resolution: "@serverless/utils-china@npm:0.1.27"
@@ -8897,6 +8904,7 @@ __metadata:
     "@emotion/jest": ^11.0.0
     "@jeysal/babel-plugin-ramda": ^2.0.1
     "@peculiar/webcrypto": ^1.1.1
+    "@serverless/typescript": ^2.34.0
     "@testing-library/jest-dom": ^5.11.9
     "@types/jest": ^26.0.20
     "@types/webpack": ^4

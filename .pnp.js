@@ -1183,6 +1183,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.3"
       ],
       [
+        "@serverless/typescript",
+        "npm:2.34.0"
+      ],
+      [
         "@serverless/utils",
         "npm:1.2.0"
       ],
@@ -9347,6 +9351,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.1.0"],
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
+            ["@serverless/typescript", "npm:2.34.0"],
             ["@testing-library/jest-dom", "npm:5.11.9"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/webpack", "npm:4.41.17"],
@@ -18844,6 +18849,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@serverless/typescript", [
+        ["npm:2.34.0", {
+          "packageLocation": "./.yarn/cache/@serverless-typescript-npm-2.34.0-ba3882bd48-9b07768fcb.zip/node_modules/@serverless/typescript/",
+          "packageDependencies": [
+            ["@serverless/typescript", "npm:2.34.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@serverless/utils", [
         ["npm:1.2.0", {
           "packageLocation": "./.yarn/cache/@serverless-utils-npm-1.2.0-809093d82a-63f92079be.zip/node_modules/@serverless/utils/",
@@ -23345,6 +23359,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.1.0"],
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
+            ["@serverless/typescript", "npm:2.34.0"],
             ["@testing-library/jest-dom", "npm:5.11.9"],
             ["@types/jest", "npm:26.0.20"],
             ["@types/webpack", "npm:4.41.17"],

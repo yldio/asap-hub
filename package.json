@@ -102,6 +102,7 @@
     "@emotion/jest": "^11.0.0",
     "@jeysal/babel-plugin-ramda": "^2.0.1",
     "@peculiar/webcrypto": "^1.1.1",
+    "@serverless/typescript": "^2.34.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@types/jest": "^26.0.20",
     "@types/webpack": "^4",

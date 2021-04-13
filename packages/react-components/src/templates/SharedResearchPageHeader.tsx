@@ -34,11 +34,10 @@ const researchOutputFilters: Option<ResearchOutputType>[] = [
   { label: 'Proposal', value: 'Proposal' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },
-  { label: 'Dataset', value: 'Dataset', enabled: false },
-  { label: 'Software', value: 'Code', enabled: false },
-  { label: 'Lab Resource', value: 'Lab Resource', enabled: false },
-  { label: 'Preprint', value: 'Preprint', enabled: false },
-  { label: 'Article', value: 'Article', enabled: false },
+  { label: 'Dataset', value: 'Dataset' },
+  { label: 'Bioinformatics', value: 'Bioinformatics' },
+  { label: 'Lab Resource', value: 'Lab Resource' },
+  { label: 'Article', value: 'Article' },
 ];
 
 const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({

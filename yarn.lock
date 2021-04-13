@@ -1393,6 +1393,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/node@npm:^7.13.13":
+  version: 7.13.13
+  resolution: "@babel/node@npm:7.13.13"
+  dependencies:
+    "@babel/register": ^7.13.8
+    commander: ^4.0.1
+    core-js: ^3.2.1
+    node-environment-flags: ^1.0.5
+    regenerator-runtime: ^0.13.4
+    v8flags: ^3.1.1
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  bin:
+    babel-node: ./bin/babel-node.js
+  checksum: b59d5740a9cbf1d6a9730a3205bfef4f3b52c655b2662781d6455522b301a873e8c7912d93569796df0bc5a68c64413f25a4b8c8e86165fe72acd99b78c3dcf9
+  languageName: node
+  linkType: hard
+
 "@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.10.4, @babel/parser@npm:^7.11.0, @babel/parser@npm:^7.7.0, @babel/parser@npm:^7.9.0":
   version: 7.11.3
   resolution: "@babel/parser@npm:7.11.3"
@@ -3519,7 +3537,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/register@npm:^7.12.10":
+"@babel/register@npm:^7.12.10, @babel/register@npm:^7.13.8":
   version: 7.13.14
   resolution: "@babel/register@npm:7.13.14"
   dependencies:
@@ -8889,6 +8907,7 @@ __metadata:
     "@asap-hub/flags": "workspace:*"
     "@babel/cli": ^7.12.10
     "@babel/core": ^7.12.10
+    "@babel/node": ^7.13.13
     "@babel/plugin-proposal-nullish-coalescing-operator": ^7.12.10
     "@babel/plugin-proposal-optional-chaining": ^7.12.10
     "@babel/plugin-transform-modules-commonjs": ^7.12.1
@@ -11967,6 +11986,13 @@ __metadata:
   version: 3.6.5
   resolution: "core-js@npm:3.6.5"
   checksum: 9283348dd5be2f1d07feaf90e2336b3f00a2316e3d3c6d4f789c9a67bdd4d7b08ce1c88dca4e591340130056c6b412b0b74fae039f8e259206f1073f542e4e85
+  languageName: node
+  linkType: hard
+
+"core-js@npm:^3.2.1":
+  version: 3.10.1
+  resolution: "core-js@npm:3.10.1"
+  checksum: 5329c1bb03a9fa36d259b26180d9c4ad377a37867d2753b08a53738d41adb3b1193708abfaec4976d422140abcfabdc272584fb9ed16b1406a5c02fd122b8702
   languageName: node
   linkType: hard
 
@@ -17212,7 +17238,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"homedir-polyfill@npm:^1.0.0":
+"homedir-polyfill@npm:^1.0.0, homedir-polyfill@npm:^1.0.1":
   version: 1.0.3
   resolution: "homedir-polyfill@npm:1.0.3"
   dependencies:
@@ -22163,6 +22189,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"node-environment-flags@npm:^1.0.5":
+  version: 1.0.6
+  resolution: "node-environment-flags@npm:1.0.6"
+  dependencies:
+    object.getownpropertydescriptors: ^2.0.3
+    semver: ^5.7.0
+  checksum: 1f6d1e636d5bb0caae32cd39b87b61ff1fa101d66db1ccb1417c8cb8df72089d10b0b5150bf10700c5f8a58f4f4ce7f64b1cf17392a3639b597e5fe9ea0dfcc0
+  languageName: node
+  linkType: hard
+
 "node-fetch@npm:2.6.1, node-fetch@npm:^2.3.0, node-fetch@npm:^2.6.1":
   version: 2.6.1
   resolution: "node-fetch@npm:2.6.1"
@@ -27101,7 +27137,7 @@ resolve@1.18.1:
   languageName: node
   linkType: hard
 
-"semver@npm:2 || 3 || 4 || 5, semver@npm:^5.0.3, semver@npm:^5.1.0, semver@npm:^5.3.0, semver@npm:^5.4.1, semver@npm:^5.5.0, semver@npm:^5.5.1, semver@npm:^5.6.0, semver@npm:^5.7.1":
+"semver@npm:2 || 3 || 4 || 5, semver@npm:^5.0.3, semver@npm:^5.1.0, semver@npm:^5.3.0, semver@npm:^5.4.1, semver@npm:^5.5.0, semver@npm:^5.5.1, semver@npm:^5.6.0, semver@npm:^5.7.0, semver@npm:^5.7.1":
   version: 5.7.1
   resolution: "semver@npm:5.7.1"
   bin:
@@ -30550,6 +30586,15 @@ typescript@~4.1.0:
     convert-source-map: ^1.6.0
     source-map: ^0.7.3
   checksum: decc2cc896de173adc27e5621f3d7e5d0d4018d6df12cc95c5de2d8eb1a1bab2ed4fe9a4e767dd469b81b3520024b9fec6b9b4beeefbfac2bbeebfc9937bf9ba
+  languageName: node
+  linkType: hard
+
+"v8flags@npm:^3.1.1":
+  version: 3.2.0
+  resolution: "v8flags@npm:3.2.0"
+  dependencies:
+    homedir-polyfill: ^1.0.1
+  checksum: d68937c42667f91cef97886fab0268d06d37c0de1659f9b3ad57a75aaaed1c21342659bfc80f4558fec21126ef25e486e7717017738b02be4840f465efd6379a
   languageName: node
   linkType: hard
 

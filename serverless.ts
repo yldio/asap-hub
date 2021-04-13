@@ -1,7 +1,7 @@
-const assert = require('assert');
-const { paramCase } = require('param-case');
-
-const pkg = require('./package.json');
+import { AWS } from '@serverless/typescript';
+import assert from 'assert';
+import { paramCase } from 'param-case';
+import pkg from './package.json';
 
 const { NODE_ENV = 'development' } = process.env;
 
@@ -11,14 +11,16 @@ if (NODE_ENV === 'production') {
   });
 }
 
+
 const {
   ASAP_APP_URL = 'http://localhost:3000',
   ASAP_API_URL = 'http://localhost:3333',
   ASAP_HOSTNAME = 'hub.asap.science',
   AWS_ACM_CERTIFICATE_ARN,
-  AWS_REGION = 'us-east-1',
   SLS_STAGE = 'development',
 } = process.env;
+
+const region = process.env.AWS_REGION as AWS['provider']['region'];
 
 const service = paramCase(pkg.name);
 const plugins = [
@@ -29,7 +31,7 @@ const plugins = [
     : ['serverless-offline']),
 ];
 
-module.exports = {
+const serverlessConfig: AWS = {
   service,
   plugins,
   provider: {
@@ -37,7 +39,7 @@ module.exports = {
     runtime: 'nodejs14.x',
     timeout: 16,
     memorySize: 512,
-    region: AWS_REGION,
+    region,
     stage: SLS_STAGE,
     httpApi: {
       payload: '2.0',
@@ -47,22 +49,22 @@ module.exports = {
       },
     },
     tracing: {
-      awsGateway: true,
+      apiGateway: true,
       lambda: true,
     },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',
-      NODE_ENV: `\${env:NODE_ENV}`,
-      ENVIRONMENT: `\${env:SLS_STAGE}`,
-      LIGHTSTEP_TOKEN: `\${env:LIGHTSTEP_TOKEN}`,
-      SQUIDEX_APP_NAME: `\${env:SQUIDEX_APP_NAME}`,
-      SQUIDEX_BASE_URL: `\${env:SQUIDEX_BASE_URL}`,
-      SQUIDEX_CLIENT_ID: `\${env:SQUIDEX_CLIENT_ID}`,
-      SQUIDEX_CLIENT_SECRET: `\${env:SQUIDEX_CLIENT_SECRET}`,
-      SQUIDEX_SHARED_SECRET: `\${env:SQUIDEX_SHARED_SECRET}`,
-      REGION: `\${env:AWS_REGION}`,
-      ASAP_API_URL: `\${env:ASAP_API_URL}`,
+      NODE_ENV: '${env:NODE_ENV}',
+      ENVIRONMENT: '${env:SLS_STAGE}',
+      LIGHTSTEP_TOKEN: '${env:LIGHTSTEP_TOKEN}',
+      SQUIDEX_APP_NAME: '${env:SQUIDEX_APP_NAME}',
+      SQUIDEX_BASE_URL: '${env:SQUIDEX_BASE_URL}',
+      SQUIDEX_CLIENT_ID: '${env:SQUIDEX_CLIENT_ID}',
+      SQUIDEX_CLIENT_SECRET: '${env:SQUIDEX_CLIENT_SECRET}',
+      SQUIDEX_SHARED_SECRET: '${env:SQUIDEX_SHARED_SECRET}',
+      REGION: '${env:AWS_REGION}',
+      ASAP_API_URL: '${env:ASAP_API_URL}',
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
     },
     iamRoleStatements: [
@@ -95,22 +97,22 @@ module.exports = {
     appHostname: new URL(ASAP_APP_URL).hostname,
     s3Sync: [
       {
-        bucketName: `\${self:service}-\${self:provider.stage}-frontend`,
+        bucketName: '${self:service}-${self:provider.stage}-frontend',
         deleteRemoved: false,
         localDir: 'apps/frontend/build',
       },
       {
-        bucketName: `\${self:service}-\${self:provider.stage}-auth-frontend`,
+        bucketName: '${self:service}-${self:provider.stage}-auth-frontend',
         bucketPrefix: '.auth',
         localDir: 'apps/auth-frontend/build',
       },
       {
-        bucketName: `\${self:service}-\${self:provider.stage}-storybook`,
+        bucketName: '${self:service}-${self:provider.stage}-storybook',
         bucketPrefix: '.storybook',
         localDir: 'apps/storybook/build',
       },
       {
-        bucketName: `\${self:service}-\${self:provider.stage}-messages-static`,
+        bucketName: '${self:service}-${self:provider.stage}-messages-static',
         deleteRemoved: false,
         bucketPrefix: '.messages-static',
         localDir: 'apps/messages/build-templates/static',
@@ -143,7 +145,7 @@ module.exports = {
         {
           httpApi: {
             method: 'GET',
-            path: `/webhook/users/{code}`,
+            path: '/webhook/users/{code}',
           },
         },
       ],
@@ -216,7 +218,7 @@ module.exports = {
         {
           httpApi: {
             method: 'POST',
-            path: `/webhook/events`,
+            path: '/webhook/events',
           },
         },
       ],
@@ -236,7 +238,7 @@ module.exports = {
       events: [
         {
           schedule: {
-            rate: `cron(0 1 * * ? *)`,
+            rate: 'cron(0 1 * * ? *)',
           },
         },
       ],
@@ -278,7 +280,7 @@ module.exports = {
       HttpApiDomain: {
         Type: 'AWS::ApiGatewayV2::DomainName',
         Properties: {
-          DomainName: `\${self:custom.apiHostname}`,
+          DomainName: '${self:custom.apiHostname}',
           DomainNameConfigurations: [
             {
               CertificateArn: AWS_ACM_CERTIFICATE_ARN,
@@ -293,7 +295,7 @@ module.exports = {
         Properties: {
           ApiId: { Ref: 'HttpApi' },
           ApiMappingKey: '',
-          DomainName: `\${self:custom.apiHostname}`,
+          DomainName: '${self:custom.apiHostname}',
           Stage: { Ref: 'HttpApiStage' },
         },
       },
@@ -303,7 +305,7 @@ module.exports = {
           HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
-              Name: `\${self:custom.apiHostname}`,
+              Name: '${self:custom.apiHostname}',
               Type: 'A',
               AliasTarget: {
                 DNSName: {
@@ -321,7 +323,7 @@ module.exports = {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',
         Properties: {
-          BucketName: `\${self:service}-\${self:provider.stage}-frontend`,
+          BucketName: '${self:service}-${self:provider.stage}-frontend',
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -339,7 +341,7 @@ module.exports = {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',
         Properties: {
-          BucketName: `\${self:service}-\${self:provider.stage}-auth-frontend`,
+          BucketName: '${self:service}-${self:provider.stage}-auth-frontend',
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -357,7 +359,7 @@ module.exports = {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',
         Properties: {
-          BucketName: `\${self:service}-\${self:provider.stage}-storybook`,
+          BucketName: '${self:service}-${self:provider.stage}-storybook',
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -378,7 +380,7 @@ module.exports = {
         Type: 'AWS::S3::Bucket',
         DeletionPolicy: 'Delete',
         Properties: {
-          BucketName: `\${self:service}-\${self:provider.stage}-messages-static`,
+          BucketName: '${self:service}-${self:provider.stage}-messages-static',
           AccessControl: 'PublicRead',
           CorsConfiguration: {
             CorsRules: [
@@ -395,7 +397,7 @@ module.exports = {
       BucketPolicyFrontend: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
-          Bucket: `\${self:service}-\${self:provider.stage}-frontend`,
+          Bucket: '${self:service}-${self:provider.stage}-frontend',
           PolicyDocument: {
             Statement: [
               {
@@ -416,7 +418,7 @@ module.exports = {
       BucketPolicyAuthFrontend: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
-          Bucket: `\${self:service}-\${self:provider.stage}-auth-frontend`,
+          Bucket: '${self:service}-${self:provider.stage}-auth-frontend',
           PolicyDocument: {
             Statement: [
               {
@@ -437,7 +439,7 @@ module.exports = {
       BucketPolicyStorybook: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
-          Bucket: `\${self:service}-\${self:provider.stage}-storybook`,
+          Bucket: '${self:service}-${self:provider.stage}-storybook',
           PolicyDocument: {
             Statement: [
               {
@@ -458,7 +460,7 @@ module.exports = {
       BucketPolicyMessagesStatic: {
         Type: 'AWS::S3::BucketPolicy',
         Properties: {
-          Bucket: `\${self:service}-\${self:provider.stage}-messages-static`,
+          Bucket: '${self:service}-${self:provider.stage}-messages-static',
           PolicyDocument: {
             Statement: [
               {
@@ -518,7 +520,7 @@ module.exports = {
         ],
         Properties: {
           DistributionConfig: {
-            Aliases: [`\${self:custom.appHostname}`],
+            Aliases: ['${self:custom.appHostname}'],
             CustomErrorResponses: [
               {
                 ErrorCode: 404,
@@ -693,7 +695,7 @@ module.exports = {
           HostedZoneName: `${ASAP_HOSTNAME}.`,
           RecordSets: [
             {
-              Name: `\${self:custom.appHostname}`,
+              Name: '${self:custom.appHostname}',
               Type: 'A',
               AliasTarget: {
                 DNSName: {
@@ -709,3 +711,5 @@ module.exports = {
     },
   },
 };
+
+module.exports = serverlessConfig;

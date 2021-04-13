@@ -10,6 +10,7 @@ import userEvent from '@testing-library/user-event';
 import { TeamResponse } from '@asap-hub/model';
 import { createTeamResponse } from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
+import { ToastContext } from '@asap-hub/react-context';
 
 import {
   Auth0Provider,
@@ -81,6 +82,33 @@ describe('a tool', () => {
       { tools: [] },
       expect.anything(),
     );
+  });
+
+  it('warns when its deletion failed', async () => {
+    const mockToast = jest.fn();
+    const { findByText } = render(
+      <ToastContext.Provider value={mockToast}>
+        <Workspace
+          team={{
+            ...createTeamResponse(),
+            id,
+            tools: [
+              {
+                name: 'My Tool',
+                description: 'A nice tool',
+                url: 'https://example.com/tool',
+              },
+            ],
+          }}
+        />
+      </ToastContext.Provider>,
+      { wrapper },
+    );
+
+    mockPatchTeam.mockRejectedValue(new Error('Nope'));
+    userEvent.click(await findByText(/delete/i));
+
+    await waitFor(() => expect(mockToast).toHaveBeenCalled());
   });
 
   it('can not be deleted while another tool is being deleted', async () => {

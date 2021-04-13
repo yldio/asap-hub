@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouteMatch, Route } from 'react-router-dom';
 import {
   NotFoundPage,
@@ -7,6 +7,7 @@ import {
 } from '@asap-hub/react-components';
 import { TeamTool, TeamResponse } from '@asap-hub/model';
 import { network, useRouteParams } from '@asap-hub/routing';
+import { ToastContext } from '@asap-hub/react-context';
 
 import { usePatchTeamById } from './state';
 
@@ -19,6 +20,7 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
 
   const [deleting, setDeleting] = useState(false);
   const patchTeam = usePatchTeamById(team.id);
+  const toast = useContext(ToastContext);
 
   return (
     <>
@@ -33,6 +35,8 @@ const Workspace: React.FC<WorkspaceProps> = ({ team }) => {
                   setDeleting(true);
                   await patchTeam({
                     tools: team.tools.filter((_, i) => toolIndex !== i),
+                  }).catch(() => {
+                    toast('Something went wrong. Please try again.');
                   });
                   setDeleting(false);
                 }

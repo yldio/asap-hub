@@ -89,6 +89,7 @@ export {
   RichTextCard,
   SearchAndFilter,
   SharedResearchCard,
+  SharedResearchList,
   SsoButtons,
   TeamCard,
   TeamGroupsCard,

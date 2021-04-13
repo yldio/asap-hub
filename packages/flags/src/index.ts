@@ -1,8 +1,7 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'USER_PROFILE_EDIT_SKILLS'
-  | 'USER_PROFILE_EDIT_WORKS'
-  | 'LIST_VIEW';
+  | 'USER_PROFILE_EDIT_WORKS';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {

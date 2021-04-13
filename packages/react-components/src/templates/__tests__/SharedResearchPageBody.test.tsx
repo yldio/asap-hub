@@ -29,10 +29,37 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
   renderPageHref: (index) => `#${index}`,
 };
 
-it('renders multiple library cards', () => {
-  const { queryAllByRole } = render(<SharedResearchPageBody {...props} />, {
-    wrapper: StaticRouter,
-  });
+it('renders multiple shared outputs cards in card view', () => {
+  const { queryAllByRole, getByText } = render(
+    <SharedResearchPageBody {...props} isListView={false} />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+  expect(
+    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
+  ).toBe('bold');
+  expect(
+    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
+  ).toBe('');
+  expect(
+    queryAllByRole('heading').map(({ textContent }) => textContent),
+  ).toEqual(['Output 1', 'Output 2']);
+});
+
+it('renders multiple research outputs in list view', () => {
+  const { queryAllByRole, getByText } = render(
+    <SharedResearchPageBody {...props} isListView />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+  expect(
+    getComputedStyle(getByText(/card/i, { selector: 'p' })).fontWeight,
+  ).toBe('');
+  expect(
+    getComputedStyle(getByText(/list/i, { selector: 'p' })).fontWeight,
+  ).toBe('bold');
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Output 1', 'Output 2']);

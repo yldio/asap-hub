@@ -43,7 +43,7 @@ const postedStyles = css({
 
 type ResearchOutputPageProps = Pick<
   ResearchOutputResponse,
-  'created' | 'publishDate' | 'team' | 'text' | 'title' | 'type'
+  'created' | 'publishDate' | 'team' | 'description' | 'title' | 'type'
 > & {
   backHref: string;
 };
@@ -52,7 +52,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   created,
   publishDate,
   team,
-  text,
+  description,
   title,
   type,
   backHref,
@@ -70,7 +70,7 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
           </Link>
         </span>
       )}
-      <RichText toc text={text} />
+      <RichText toc text={description} />
       <div css={visibilityStyles}>
         <Paragraph>
           <strong>Visibility</strong>

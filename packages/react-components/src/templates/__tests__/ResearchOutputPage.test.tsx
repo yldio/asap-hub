@@ -8,7 +8,7 @@ const props: ComponentProps<typeof ResearchOutputPage> = {
   title: 'title',
   type: 'Proposal',
   created: '2020-06-25T15:00:47.920Z',
-  text: 'content',
+  description: 'content',
 };
 it('renders a proposal title and content', () => {
   const { getByText } = render(
@@ -16,7 +16,7 @@ it('renders a proposal title and content', () => {
       {...props}
       type="Proposal"
       title="title"
-      text="content"
+      description="content"
     />,
   );
   expect(getByText(/proposal/i)).toBeVisible();

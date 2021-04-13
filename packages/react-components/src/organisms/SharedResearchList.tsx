@@ -7,6 +7,7 @@ import { Card, Anchor, TagLabel, Headline2 } from '../atoms';
 import { steel } from '../colors';
 import { ExternalLink } from '../molecules';
 import { paddingStyles } from '../card';
+import { perRem } from '../pixels';
 
 const containerStyles = css({
   margin: 0,
@@ -17,7 +18,7 @@ const itemStyles = css({
   borderBottom: `1px solid ${steel.rgb}`,
   display: 'grid',
   gridTemplateRows: 'auto 12px auto',
-  '* ~ div:last-of-type': {
+  '&:last-of-type': {
     borderBottom: 'none',
   },
 });
@@ -31,6 +32,7 @@ const headerStyles = css({
   justifyContent: 'space-between',
 });
 const titleStyles = css({
+  marginTop: `${6 / perRem}em`,
   gridRow: '2 / span 2',
   gridColumn: 1,
 });

@@ -9,7 +9,7 @@ import { perRem } from '../pixels';
 const containerStyles = css({
   display: 'flex',
 });
-
+const borderWidth = 1;
 const styles = css({
   display: 'flex',
   alignItems: 'center',
@@ -20,7 +20,7 @@ const styles = css({
   color: fern.rgb,
   borderRadius: `${36 / perRem}em`,
   boxSizing: 'border-box',
-  border: `1px solid ${fern.rgb}`,
+  border: `${borderWidth}px solid ${fern.rgb}`,
   margin: `${12 / perRem}em 0`,
   svg: {
     stroke: fern.rgb,
@@ -35,7 +35,7 @@ const styles = css({
     },
   },
 });
-const paddingStyles = css({ padding: `0 ${11 / perRem}em` });
+const paddingStyles = css({ padding: `0 ${12 - borderWidth / perRem}em` });
 
 const textStyles = css({ paddingTop: '1px', fontSize: `${13.6 / perRem}em` });
 

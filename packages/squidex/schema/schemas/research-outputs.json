@@ -72,26 +72,6 @@
         }
       },
       {
-        "name": "text",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "RichText",
-          "label": "Text",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "description",
         "isHidden": false,
         "isLocked": false,

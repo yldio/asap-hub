@@ -59,7 +59,7 @@ describe('the library page', () => {
     userEvent.click(checkbox);
     expect(checkbox).toBeChecked();
     await waitFor(() => {
-      expect(mockGetResearchOutputs).lastCalledWith(
+      expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
         expect.objectContaining({ filters: new Set('Proposal') }),
         expect.anything(),
       );
@@ -76,7 +76,7 @@ describe('the library page', () => {
     const checkbox = getByLabelText('Proposal');
     expect(checkbox).toBeChecked();
 
-    expect(mockGetResearchOutputs).lastCalledWith(
+    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.objectContaining({ filters: new Set('Proposal') }),
       expect.anything(),
     );

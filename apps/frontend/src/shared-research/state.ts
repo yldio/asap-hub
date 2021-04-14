@@ -3,7 +3,6 @@ import {
   atomFamily,
   selectorFamily,
   useRecoilValue,
-  useSetRecoilState,
   DefaultValue,
   useRecoilState,
 } from 'recoil';
@@ -15,6 +14,7 @@ import {
 import { getResearchOutput, getResearchOutputs } from './api';
 import { GetListOptions } from '../api-util';
 import { authorizationState } from '../auth/state';
+import { CARD_VIEW_PAGE_SIZE } from '../hooks';
 
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -44,9 +44,9 @@ export const researchOutputsState = selectorFamily<
       researchOutput === undefined ||
       researchOutput instanceof DefaultValue
     ) {
-      const oldEvents = get(researchOutputIndexState(options));
-      if (!(oldEvents instanceof Error)) {
-        oldEvents?.ids?.forEach((id) => reset(researchOutputState(id)));
+      const oldOutputs = get(researchOutputIndexState(options));
+      if (!(oldOutputs instanceof Error)) {
+        oldOutputs?.ids?.forEach((id) => reset(researchOutputState(id)));
       }
       reset(researchOutputIndexState(options));
     } else if (researchOutput instanceof Error) {
@@ -89,15 +89,15 @@ export const researchOutputState = atomFamily<
 
 export const useResearchOutputById = (id: string) =>
   useRecoilValue(researchOutputState(id));
-export const useQuietRefreshResearchOutputById = (id: string) => {
-  const authorization = useRecoilValue(authorizationState);
-  const setResearchOutput = useSetRecoilState(researchOutputState(id));
-  return async () => {
-    setResearchOutput(await getResearchOutput(id, authorization));
-  };
-};
 
-export const usePrefetchResearchOutputs = (options: GetListOptions) => {
+export const usePrefetchResearchOutputs = (
+  options: GetListOptions = {
+    currentPage: 0,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    searchQuery: '',
+    filters: new Set(),
+  },
+) => {
   const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),

@@ -34,12 +34,7 @@ const Dashboard: React.FC<Record<string, never>> = () => {
     filters: new Set(),
   });
   usePrefetchCalendars();
-  usePrefetchResearchOutputs({
-    currentPage: 0,
-    pageSize: CARD_VIEW_PAGE_SIZE,
-    searchQuery: '',
-    filters: new Set(),
-  });
+  usePrefetchResearchOutputs();
 
   if (loading) {
     return <Loading />;

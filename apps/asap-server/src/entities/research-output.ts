@@ -11,7 +11,7 @@ export const parseGraphQLResearchOutput = (
   link: output.flatData?.link || undefined,
   type: output.flatData?.type || 'Proposal',
   title: output.flatData?.title || '',
-  text: output.flatData?.text || '',
+  description: output.flatData?.description || '',
   tags: output.flatData?.tags || [],
   publishDate: output.flatData?.publishDate || undefined,
 });

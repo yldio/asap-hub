@@ -10,7 +10,7 @@ const researchOutputResponse: Omit<
   created: '2020-09-07T17:36:54Z',
   publishDate: '2020-09-07T17:36:54Z',
   title: 'Output',
-  text: 'description',
+  description: 'description',
   type: 'Proposal',
   tags: ['test', 'tag'],
   team: {

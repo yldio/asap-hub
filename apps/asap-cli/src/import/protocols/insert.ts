@@ -91,16 +91,11 @@ export default async (data: Protocol): Promise<void> => {
     publishDate: {
       iv: new Date(data.created).toISOString(),
     },
-    text: {
+    description: {
       // eslint-disable-next-line prefer-template
       iv: `${data.abstract ? data.abstract + '\n || ' : ''}From Team ${
         data.team
       } || Authors: ${data.authors.join(', ')}.`,
-    },
-    description: {
-      iv: `From Team ${data.team} and authors: ${data.authors.join(
-        ', ',
-      )}. Keywords: ${data.keywords.join(', ')}.`,
     },
     tags: {
       iv: data.keywords,

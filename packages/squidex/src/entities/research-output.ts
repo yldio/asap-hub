@@ -6,7 +6,6 @@ export interface ResearchOutput {
   type: ResearchOutputType;
   title: string;
   shortText?: string;
-  text: string;
   description: string;
   link?: string;
   publishDate?: string;

@@ -254,7 +254,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
               created: '2020-12-11T14:33:18.000Z',
               type: 'Proposal',
               title: 'Proposal',
-              text: '',
+              description: '',
               tags: ['test', 'tag'],
               team: { id: 'team-id-1', displayName: 'Lee, M' },
             },

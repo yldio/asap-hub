@@ -53,7 +53,7 @@ describe('ResearchOutputs controller', () => {
               data: {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
-                text: { iv: 'Text' },
+                description: { iv: 'Text' },
                 link: { iv: 'test' },
                 tags: {
                   iv: ['tag', 'test'],
@@ -87,7 +87,7 @@ describe('ResearchOutputs controller', () => {
           {
             created: '2020-09-23T16:34:26.842Z',
             id: 'uuid',
-            text: 'Text',
+            description: 'Text',
             title: 'Title',
             type: 'Proposal',
             link: 'test',
@@ -120,7 +120,7 @@ describe('ResearchOutputs controller', () => {
               data: {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
-                text: { iv: 'Text' },
+                description: { iv: 'Text' },
                 tags: {
                   iv: ['tag', 'test'],
                 },
@@ -132,7 +132,7 @@ describe('ResearchOutputs controller', () => {
               data: {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
-                text: { iv: 'Text' },
+                description: { iv: 'Text' },
               },
             },
             {
@@ -141,7 +141,7 @@ describe('ResearchOutputs controller', () => {
               data: {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
-                text: { iv: 'Text' },
+                description: { iv: 'Text' },
                 tags: {
                   iv: [],
                 },
@@ -194,7 +194,7 @@ describe('ResearchOutputs controller', () => {
           {
             created: '2020-09-23T16:34:26.842Z',
             id: 'uuid-1',
-            text: 'Text',
+            description: 'Text',
             title: 'Title',
             type: 'Proposal',
             tags: ['tag', 'test'],
@@ -206,7 +206,7 @@ describe('ResearchOutputs controller', () => {
           {
             created: '2020-09-23T16:34:26.842Z',
             id: 'uuid-2',
-            text: 'Text',
+            description: 'Text',
             title: 'Title',
             type: 'Proposal',
             tags: [],
@@ -218,7 +218,7 @@ describe('ResearchOutputs controller', () => {
           {
             created: '2020-09-23T16:34:26.842Z',
             id: 'uuid-3',
-            text: 'Text',
+            description: 'Text',
             title: 'Title',
             type: 'Proposal',
             tags: [],
@@ -252,7 +252,7 @@ describe('ResearchOutputs controller', () => {
               data: {
                 type: { iv: 'Proposal' },
                 title: { iv: 'Title' },
-                text: { iv: 'Text' },
+                description: { iv: 'Text' },
                 tags: {
                   iv: ['tag', 'test'],
                 },
@@ -292,7 +292,7 @@ describe('ResearchOutputs controller', () => {
           {
             created: '2020-09-23T16:34:26.842Z',
             id: 'uuid-1',
-            text: 'Text',
+            description: 'Text',
             title: 'Title',
             type: 'Proposal',
             tags: ['tag', 'test'],
@@ -334,7 +334,7 @@ describe('ResearchOutputs controller', () => {
           data: {
             type: { iv: 'Proposal' },
             title: { iv: 'Title' },
-            text: { iv: 'Text' },
+            description: { iv: 'Text' },
             tags: {
               iv: ['tag', 'test'],
             },
@@ -371,7 +371,7 @@ describe('ResearchOutputs controller', () => {
       const expectedResult: ResearchOutputResponse = {
         created: '2020-09-23T16:34:26.842Z',
         id: 'uuid',
-        text: 'Text',
+        description: 'Text',
         title: 'Title',
         type: 'Proposal',
         tags: ['tag', 'test'],
@@ -394,7 +394,7 @@ describe('ResearchOutputs controller', () => {
           data: {
             type: { iv: 'Proposal' },
             title: { iv: 'Title' },
-            text: { iv: 'Text' },
+            description: { iv: 'Text' },
             tags: {
               iv: ['tag', 'test'],
             },
@@ -420,7 +420,7 @@ describe('ResearchOutputs controller', () => {
       const expectedResult: ResearchOutputResponse = {
         created: '2020-09-23T16:34:26.842Z',
         id: 'uuid',
-        text: 'Text',
+        description: 'Text',
         title: 'Title',
         type: 'Proposal',
         tags: ['tag', 'test'],

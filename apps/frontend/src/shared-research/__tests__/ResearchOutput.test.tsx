@@ -15,7 +15,7 @@ const researchOutput: ResearchOutputResponse = {
   link: '',
   type: 'Proposal',
   title: 'Proposal title.',
-  text: 'Actual proposal?',
+  description: 'Actual proposal?',
   tags: ['test', 'tag'],
   publishDate: '2020-02-02T12:00:00.000Z',
 };

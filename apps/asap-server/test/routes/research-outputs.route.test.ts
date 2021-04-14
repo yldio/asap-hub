@@ -42,7 +42,7 @@ describe('/research-outputs/ route', () => {
           {
             created: '2020-09-23T16:34:26.842Z',
             id: 'uuid',
-            text: 'Text',
+            description: 'Text',
             title: 'Title',
             type: 'Proposal',
             link: 'test',
@@ -105,7 +105,7 @@ describe('/research-outputs/ route', () => {
       const researchOutputResponse: ResearchOutputResponse = {
         created: '2020-09-23T16:34:26.842Z',
         id: 'uuid',
-        text: 'Text',
+        description: 'Text',
         title: 'Title',
         type: 'Proposal',
         tags: ['test', 'tags'],

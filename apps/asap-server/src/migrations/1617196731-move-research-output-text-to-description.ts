@@ -14,7 +14,8 @@ export default class MoveResearchOutputTextToDescription extends Migration {
 
       for (const researchOuput of result.items) {
         await squidexClient.patch(researchOuput.id, {
-          description: researchOuput.data.text,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          description: (researchOuput.data as any).text,
         });
       }
 

@@ -82,28 +82,6 @@ module.exports = {
               }*`,
             ],
           ],
-          'Fn::Join': [
-            ':',
-            [
-              'arn:aws:secretsmanager',
-              { Ref: 'AWS::Region' },
-              { Ref: 'AWS::AccountId' },
-              'secret',
-              `auth0-shared-secret-${
-                SLS_STAGE === 'production' ? 'prod' : 'dev'
-              }`,
-            ],
-          ],
-          'Fn::Join': [
-            ':',
-            [
-              'arn:aws:secretsmanager',
-              { Ref: 'AWS::Region' },
-              { Ref: 'AWS::AccountId' },
-              'secret',
-              `auth0-client-id-${SLS_STAGE === 'production' ? 'prod' : 'dev'}`,
-            ],
-          ],
         },
       },
     ],

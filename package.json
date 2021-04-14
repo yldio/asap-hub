@@ -25,7 +25,7 @@
     "start:backend": "yarn workspace @asap-hub/asap-server start",
     "start:frontend": "yarn workspace @asap-hub/frontend start",
     "start:sb": "yarn workspace @asap-hub/storybook start",
-    "sls": "babel-node serverless/link-plugins.ts && yarn pnpify serverless",
+    "sls": "babel-node --extensions=.js,.jsx,.ts,.tsx --config-file=./babel-cjs.config.js serverless/link-plugins.ts && yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
@@ -134,7 +134,6 @@
     "serverless-offline": "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch",
     "serverless-plugin-tree-shake": "^1.1.7",
     "serverless-s3-sync": "^1.15.0",
-    "ts-node": "^9.1.1",
     "typescript": "~4.1.0",
     "webpack": "^5.1.0"
   }

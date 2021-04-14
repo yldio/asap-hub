@@ -7,10 +7,10 @@
     "emitDeclarationOnly": true,
     "target": "es2015",
 
-    "lib": ["esnext", "dom"],
+    "lib": ["esnext"],
     "skipLibCheck": true,
 
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -26,11 +26,6 @@
 
     "noErrorTruncation": true
   },
-  "include": [
-    "apps/**/*.ts",
-    "serverless.ts",
-    "serverless/**/*.ts",
-    "./package.json"
-  ],
-  "exclude": ["node_modules"]
+  "files": [],
+  "include": []
 }

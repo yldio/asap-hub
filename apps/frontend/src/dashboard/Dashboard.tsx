@@ -6,10 +6,10 @@ import {
   Loading,
 } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
-
 import { usePrefetchTeams } from '@asap-hub/frontend/src/network/teams/state';
 import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/frontend/src/events/calendar/state';
+import { usePrefetchResearchOutputs } from '@asap-hub/frontend/src/shared-research/state';
 import { useDashboard } from '../api';
 import Frame from '../structure/Frame';
 
@@ -34,6 +34,12 @@ const Dashboard: React.FC<Record<string, never>> = () => {
     filters: new Set(),
   });
   usePrefetchCalendars();
+  usePrefetchResearchOutputs({
+    currentPage: 0,
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    searchQuery: '',
+    filters: new Set(),
+  });
 
   if (loading) {
     return <Loading />;

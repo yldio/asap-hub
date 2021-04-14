@@ -1,89 +1,92 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Switch } from 'react-router-dom';
-import nock from 'nock';
-import { authTestUtils } from '@asap-hub/react-components';
-import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 
+import { RecoilRoot } from 'recoil';
+import {
+  Auth0Provider,
+  WhenReady,
+} from '@asap-hub/frontend/src/auth/test-utils';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
+
 import ResearchOutput from '../ResearchOutput';
-import { API_BASE_URL } from '../../config';
+import { getResearchOutput } from '../api';
+import { refreshResearchOutputState } from '../state';
 
-const researchOutput: ResearchOutputResponse = {
-  id: 'f9712278-b3f2-4895-8e4b-d5ebdb7f49b7',
-  created: '2020-09-24T16:18:23Z',
-  link: '',
-  type: 'Proposal',
-  title: 'Proposal title.',
-  description: 'Actual proposal?',
-  tags: ['test', 'tag'],
-  publishDate: '2020-02-02T12:00:00.000Z',
-};
+jest.mock('../api');
 
-const renderComponent = async (id: string) => {
+const id = '42';
+
+const mockGetResearchOutput = getResearchOutput as jest.MockedFunction<
+  typeof getResearchOutput
+>;
+beforeEach(() => {
+  mockGetResearchOutput.mockClear();
+  mockGetResearchOutput.mockResolvedValue({
+    ...createResearchOutputResponse(),
+    id,
+  });
+});
+
+const renderComponent = async () => {
   const result = render(
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.WhenReady>
-        <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter
-            initialEntries={[
-              '/prev',
-              sharedResearch({}).researchOutput({ researchOutputId: id }).$,
-            ]}
-            initialIndex={1}
-          >
-            <Switch>
-              <Route path="/prev">Previous Page</Route>
-              <Route
-                path={
-                  sharedResearch.template +
-                  sharedResearch({}).researchOutput.template
-                }
-                component={ResearchOutput}
-              />
-            </Switch>
-          </MemoryRouter>
-        </authTestUtils.LoggedIn>
-      </authTestUtils.WhenReady>
-    </authTestUtils.Auth0Provider>,
-  );
-  await waitFor(() =>
-    expect(result.queryByText(/auth0/i)).not.toBeInTheDocument(),
+    <RecoilRoot
+      initializeState={({ set }) =>
+        set(refreshResearchOutputState(id), Math.random())
+      }
+    >
+      <Auth0Provider user={{}}>
+        <WhenReady>
+          <Suspense fallback="Loading...">
+            <MemoryRouter
+              initialEntries={[
+                '/prev',
+                sharedResearch({}).researchOutput({ researchOutputId: id }).$,
+              ]}
+              initialIndex={1}
+            >
+              <Switch>
+                <Route path="/prev">Previous Page</Route>
+                <Route
+                  path={
+                    sharedResearch.template +
+                    sharedResearch({}).researchOutput.template
+                  }
+                  component={ResearchOutput}
+                />
+              </Switch>
+            </MemoryRouter>
+          </Suspense>
+        </WhenReady>
+      </Auth0Provider>
+    </RecoilRoot>,
   );
   await waitFor(() =>
     expect(result.queryByText(/loading/i)).not.toBeInTheDocument(),
   );
   return result;
 };
-afterEach(() => {
-  nock.cleanAll();
-});
+
 it('renders the research output', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/research-outputs/42')
-    .reply(200, {
-      ...researchOutput,
-      title: 'Proposal title!',
-    });
-  const { getByRole } = await renderComponent('42');
+  mockGetResearchOutput.mockResolvedValue({
+    ...createResearchOutputResponse(),
+    title: 'Proposal title!',
+  });
+  const { getByRole } = await renderComponent();
   expect(getByRole('heading').textContent).toEqual('Proposal title!');
 });
 
 it('renders the research output with a team', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/research-outputs/42')
-    .reply(200, {
-      ...researchOutput,
-      team: {
-        id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
-        displayName: 'Sulzer, D',
-      },
-    });
-  const { getByText } = await renderComponent('42');
+  mockGetResearchOutput.mockResolvedValue({
+    ...createResearchOutputResponse(),
+    team: {
+      id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
+      displayName: 'Sulzer, D',
+    },
+  });
+
+  const { getByText } = await renderComponent();
   const element = getByText('Team Sulzer, D');
   expect(element).toBeVisible();
   expect(element).toHaveAttribute(
@@ -93,11 +96,7 @@ it('renders the research output with a team', async () => {
 });
 
 it('renders the 404 page for a missing research output', async () => {
-  nock(API_BASE_URL, {
-    reqheaders: { authorization: 'Bearer token' },
-  })
-    .get('/research-outputs/42')
-    .reply(404);
-  const { getByText } = await renderComponent('42');
+  mockGetResearchOutput.mockResolvedValue(undefined);
+  const { getByText } = await renderComponent();
   expect(getByText(/sorry.+page/i)).toBeVisible();
 });

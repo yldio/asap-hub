@@ -21,13 +21,12 @@ setup:squidex-image:
 .tmpl:sync: &tmpl_sync
   image: $SQUIDEX_SYNC_DOCKER_IMAGE
   before_script:
+    - export ASAP_API_URL=https://api-dev.hub.asap.science
     - ./ci/config-squidex-rules.sh
   script:
     - sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
     - sq config use $SQUIDEX_APP_NAME
-    - sq sync in packages/squidex/schema -t schemas -t rules
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
+    - sq sync in packages/squidex/schema -t rules
 
 sync:squidex:dev:
   <<: *tmpl_sync

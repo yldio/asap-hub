@@ -11,6 +11,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 
 jest.mock('../../config');
 jest.mock('../../events/api');
+jest.mock('../../shared-research/api');
 jest.mock('../../network/teams/api');
 
 afterEach(() => {

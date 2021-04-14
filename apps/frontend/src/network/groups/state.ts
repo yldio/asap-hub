@@ -1,3 +1,4 @@
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import {
   useRecoilValue,
   useRecoilState,
@@ -10,6 +11,7 @@ import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import { authorizationState } from '@asap-hub/frontend/src/auth/state';
 import { GetListOptions } from '@asap-hub/frontend/src/api-util';
 import { getGroups, getGroup } from './api';
+import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 
 const groupIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -70,6 +72,22 @@ export const groupState = atomFamily<GroupResponse | undefined, string>({
   default: fetchGroupState,
 });
 
+export const usePrefetchGroups = (
+  options: GetListOptions = {
+    filters: new Set(),
+    searchQuery: '',
+    pageSize: CARD_VIEW_PAGE_SIZE,
+    currentPage: 0,
+  },
+) => {
+  const authorization = useRecoilValue(authorizationState);
+  const [groups, setGroups] = useRecoilState(groupsState(options));
+  useDeepCompareEffect(() => {
+    if (groups === undefined) {
+      getGroups(options, authorization).then(setGroups).catch();
+    }
+  }, [authorization, groups, options, setGroups]);
+};
 export const useGroups = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [groups, setGroups] = useRecoilState(groupsState(options));

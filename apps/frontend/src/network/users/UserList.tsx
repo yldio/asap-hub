@@ -4,6 +4,8 @@ import { NetworkPeople } from '@asap-hub/react-components';
 
 import { useUsers } from './state';
 import { usePaginationParams, usePagination } from '../../hooks';
+import { usePrefetchTeams } from '../teams/state';
+import { usePrefetchGroups } from '../groups/state';
 
 interface UserListProps {
   searchQuery?: string;
@@ -15,12 +17,26 @@ const UserList: React.FC<UserListProps> = ({
   filters = new Set(),
 }) => {
   const { currentPage, pageSize } = usePaginationParams();
+
   const result = useUsers({
     searchQuery,
     filters,
     currentPage,
     pageSize,
   });
+  usePrefetchTeams({
+    currentPage: 0,
+    pageSize,
+    searchQuery,
+    filters: new Set(),
+  });
+  usePrefetchGroups({
+    currentPage: 0,
+    pageSize,
+    searchQuery,
+    filters: new Set(),
+  });
+
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
     pageSize,

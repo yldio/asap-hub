@@ -33,7 +33,7 @@ export { default as RichText } from './RichText';
 export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
 export { default as SharedResearchCard } from './SharedResearchCard';
-export { default as SharedResearchList } from './SharedResearchList';
+export { default as SharedResearchListCard } from './SharedResearchListCard';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamGroupsCard } from './TeamGroupsCard';
 export { default as TeamMembersSection } from './TeamMembersSection';

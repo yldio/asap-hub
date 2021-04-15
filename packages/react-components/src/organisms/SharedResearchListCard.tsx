@@ -43,13 +43,13 @@ const typeStyles = css({
   textTransform: 'capitalize',
 });
 
-type SharedResearchListProps = {
+type SharedResearchListCardProps = {
   researchOutputs: ReadonlyArray<
     Pick<ResearchOutputResponse, 'id' | 'title' | 'type' | 'link'>
   >;
 };
 
-const SharedResearchList: React.FC<SharedResearchListProps> = ({
+const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
   researchOutputs,
 }) => (
   <Card padding={false}>
@@ -81,4 +81,4 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   </Card>
 );
 
-export default SharedResearchList;
+export default SharedResearchListCard;

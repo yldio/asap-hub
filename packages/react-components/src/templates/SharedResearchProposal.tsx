@@ -41,14 +41,14 @@ const postedStyles = css({
   color: lead.rgb,
 });
 
-type ResearchOutputPageProps = Pick<
+type SharedResearchProposalProps = Pick<
   ResearchOutputResponse,
   'created' | 'publishDate' | 'team' | 'description' | 'title' | 'type'
 > & {
   backHref: string;
 };
 
-const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
+const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
   created,
   publishDate,
   team,
@@ -88,4 +88,4 @@ const ResearchOutputPage: React.FC<ResearchOutputPageProps> = ({
   </div>
 );
 
-export default ResearchOutputPage;
+export default SharedResearchProposal;

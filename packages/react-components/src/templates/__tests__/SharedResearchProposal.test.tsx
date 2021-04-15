@@ -1,9 +1,9 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import ResearchOutputPage from '../ResearchOutputPage';
+import SharedResearchProposal from '../SharedResearchProposal';
 
-const props: ComponentProps<typeof ResearchOutputPage> = {
+const props: ComponentProps<typeof SharedResearchProposal> = {
   backHref: '#',
   title: 'title',
   type: 'Proposal',
@@ -12,7 +12,7 @@ const props: ComponentProps<typeof ResearchOutputPage> = {
 };
 it('renders a proposal title and content', () => {
   const { getByText } = render(
-    <ResearchOutputPage
+    <SharedResearchProposal
       {...props}
       type="Proposal"
       title="title"
@@ -26,7 +26,7 @@ it('renders a proposal title and content', () => {
 
 it('renders a proposal with team information', () => {
   const { getByText } = render(
-    <ResearchOutputPage
+    <SharedResearchProposal
       {...props}
       team={{
         id: '42',

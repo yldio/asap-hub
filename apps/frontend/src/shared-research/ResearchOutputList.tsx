@@ -1,15 +1,15 @@
 import React from 'react';
-import { SharedResearchPageBody } from '@asap-hub/react-components';
+import { SharedResearchList } from '@asap-hub/react-components';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
 
-interface SharedResearchListProps {
+interface ResearchOutputListProps {
   searchQuery?: string;
   filters?: Set<string>;
 }
 
-const SharedResearchList: React.FC<SharedResearchListProps> = ({
+const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   searchQuery = '',
   filters = new Set(),
 }) => {
@@ -32,7 +32,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
     pageSize,
   );
   return (
-    <SharedResearchPageBody
+    <SharedResearchList
       researchOutputs={result.items}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}
@@ -45,4 +45,4 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   );
 };
 
-export default SharedResearchList;
+export default ResearchOutputList;

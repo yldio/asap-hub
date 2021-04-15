@@ -21,7 +21,7 @@ it('render a heading', () => {
 
   expect(
     getByText(/phillip/i, { selector: 'h2' }).textContent,
-  ).toMatchInlineSnapshot(`"Phillip’ Groups"`);
+  ).toMatchInlineSnapshot(`"Phillip’s Groups"`);
   expect(
     getByText(/phillip/i, { selector: 'p' }).textContent,
   ).toMatchInlineSnapshot(

@@ -63,7 +63,7 @@ it('is rendered when there are groups', async () => {
   );
   await waitFor(() => {
     expect(queryByText(/loading/i)).not.toBeInTheDocument();
-    expect(queryByText(/test’ groups/i)).toBeInTheDocument();
+    expect(queryByText(/test’s groups/i)).toBeInTheDocument();
   });
 });
 

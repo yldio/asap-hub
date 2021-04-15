@@ -362,7 +362,7 @@ __metadata:
     "@types/react": ^17.0.0
     "@types/react-dom": ^17.0.0
     aws-sdk: ^2.745.0
-    babel-loader: ^8.1.0
+    babel-loader: ^8.2.2
     babel-preset-react-app: ^9.1.2
     core-js: ^3.6.5
     create-emotion-server: ^10.0.27
@@ -9492,7 +9492,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-loader@npm:8.1.0, babel-loader@npm:^8.0.6, babel-loader@npm:^8.1.0":
+"babel-loader@npm:8.1.0, babel-loader@npm:^8.0.6":
   version: 8.1.0
   resolution: "babel-loader@npm:8.1.0"
   dependencies:

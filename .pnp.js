@@ -2591,7 +2591,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "babel-loader",
-        "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:8.2.2"
+        "virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.2.2"
       ],
       [
         "babel-plugin-add-react-displayname",
@@ -9777,7 +9777,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react", "npm:17.0.0"],
             ["@types/react-dom", "npm:17.0.0"],
             ["aws-sdk", "npm:2.745.0"],
-            ["babel-loader", "virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.1.0"],
+            ["babel-loader", "virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.2.2"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["core-js", "npm:3.6.5"],
             ["create-emotion-server", "npm:10.0.27"],
@@ -24130,17 +24130,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.1.0", {
-          "packageLocation": "./.yarn/$$virtual/babel-loader-virtual-b1c6bba747/0/cache/babel-loader-npm-8.1.0-e8c38740ba-f7b236a5f7.zip/node_modules/babel-loader/",
+        ["virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.2.2", {
+          "packageLocation": "./.yarn/$$virtual/babel-loader-virtual-694c8876d7/0/cache/babel-loader-npm-8.2.2-b4e600c2c5-362bb71573.zip/node_modules/babel-loader/",
           "packageDependencies": [
-            ["babel-loader", "virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.1.0"],
+            ["babel-loader", "virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.2.2"],
             ["@babel/core", "npm:7.12.10"],
             ["@types/babel__core", "npm:7.1.9"],
             ["@types/webpack", null],
-            ["find-cache-dir", "npm:2.1.0"],
+            ["find-cache-dir", "npm:3.3.1"],
             ["loader-utils", "npm:1.4.0"],
-            ["mkdirp", "npm:0.5.5"],
-            ["pify", "npm:4.0.1"],
+            ["make-dir", "npm:3.1.0"],
             ["schema-utils", "npm:2.7.1"],
             ["webpack", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:5.1.0"]
           ],

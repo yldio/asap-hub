@@ -53,8 +53,6 @@ module.exports = {
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',
-      AUTH0_CLIENT_ID: `\${env:AUTH0_CLIENT_ID}`,
-      AUTH0_SHARED_SECRET: `\${env:AUTH0_SHARED_SECRET}`,
       NODE_ENV: `\${env:NODE_ENV}`,
       ENVIRONMENT: `\${env:SLS_STAGE}`,
       LIGHTSTEP_TOKEN: `\${env:LIGHTSTEP_TOKEN}`,
@@ -149,6 +147,14 @@ module.exports = {
           },
         },
       ],
+      environment: {
+        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+      },
     },
     auth0ConnectByCode: {
       handler:
@@ -161,6 +167,14 @@ module.exports = {
           },
         },
       ],
+      environment: {
+        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+      },
     },
     syncUserOrcid: {
       handler:

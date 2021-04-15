@@ -1,7 +1,7 @@
 import React from 'react';
-import { SharedResearchPageBody, Loading } from '@asap-hub/react-components';
+import { SharedResearchPageBody } from '@asap-hub/react-components';
 
-import { useResearchOutputs } from '../api';
+import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
 
 interface SharedResearchListProps {
@@ -28,17 +28,13 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
-    result.data?.total ?? 0,
+    result.total,
     pageSize,
   );
-
-  if (result.loading) {
-    return <Loading />;
-  }
   return (
     <SharedResearchPageBody
-      researchOutputs={result.data.items}
-      numberOfItems={result.data.total}
+      researchOutputs={result.items}
+      numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

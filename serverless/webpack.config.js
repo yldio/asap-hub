@@ -9,13 +9,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: require.resolve('babel-loader'),
           options: {
             ...babelOptions,
-            // sourceMaps: true
           },
         },
       },
@@ -26,11 +25,12 @@ module.exports = {
     minimize: false,
   },
   resolve: {
-    extensions: ['*', '.js', '.ts'],
+    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
   },
   output: {
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, '.webpack'),
     filename: '[name].js',
   },
+  devtool: 'source-map',
 };

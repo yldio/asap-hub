@@ -100,6 +100,7 @@ __metadata:
     "@types/pino": ^6
     "@types/pino-http": ^5
     "@types/pump": ^1.1.0
+    "@types/source-map-support": ^0
     "@types/supertest": ^2.0.10
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
@@ -137,6 +138,7 @@ __metadata:
     pino-noir: ^2.2.1
     pump: ^3.0.0
     serverless-http: ^2.6.1
+    source-map-support: ^0.5.19
     supertest: ^6.1.1
   languageName: unknown
   linkType: soft
@@ -7316,6 +7318,15 @@ __metadata:
   version: 0.1.2
   resolution: "@types/source-list-map@npm:0.1.2"
   checksum: 191f0e3b056b481e7a0bbb38f3d5b54b015556e38075726ca2637a35d3694df85cd16761b1b188729ac687a55aec3cbc2b07033ac090bcc13efe09ad10a3e935
+  languageName: node
+  linkType: hard
+
+"@types/source-map-support@npm:^0":
+  version: 0.5.3
+  resolution: "@types/source-map-support@npm:0.5.3"
+  dependencies:
+    source-map: ^0.6.0
+  checksum: b91a22010f83efbcde37861af7d57fc7c62fef2510a6cb39ed3316ee31c6e76cf98445589a0cbb97b9262490b3e3d03748bdc5a1f640b3a03f6965d02eda82d4
   languageName: node
   linkType: hard
 

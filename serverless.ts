@@ -64,6 +64,7 @@ const serverlessConfig: AWS = {
       REGION: '${env:AWS_REGION}',
       ASAP_API_URL: '${env:ASAP_API_URL}',
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
+      NODE_OPTIONS: '--enable-source-maps',
     },
     iamRoleStatements: [
       {

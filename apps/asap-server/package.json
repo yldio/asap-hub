@@ -56,7 +56,8 @@
     "pino-lambda": "^1.2.3",
     "pino-noir": "^2.2.1",
     "pump": "^3.0.0",
-    "serverless-http": "^2.6.1"
+    "serverless-http": "^2.6.1",
+    "source-map-support": "^0.5.19"
   },
   "devDependencies": {
     "@types/apr-intercept": "workspace:*",
@@ -81,6 +82,7 @@
     "@types/pino": "^6",
     "@types/pino-http": "^5",
     "@types/pump": "^1.1.0",
+    "@types/source-map-support": "^0",
     "@types/supertest": "^2.0.10",
     "jwt-encode": "^1.0.1",
     "node-dev": "^6.0.0",

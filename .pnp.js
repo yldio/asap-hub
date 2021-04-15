@@ -1875,6 +1875,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.1.2"
       ],
       [
+        "@types/source-map-support",
+        "npm:0.5.3"
+      ],
+      [
         "@types/stack-utils",
         "npm:2.0.0"
       ],
@@ -9493,6 +9497,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pino", "npm:6.3.6"],
             ["@types/pino-http", "npm:5.4.0"],
             ["@types/pump", "npm:1.1.0"],
+            ["@types/source-map-support", "npm:0.5.3"],
             ["@types/supertest", "npm:2.0.10"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -9530,6 +9535,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pino-noir", "npm:2.2.1"],
             ["pump", "npm:3.0.0"],
             ["serverless-http", "npm:2.6.1"],
+            ["source-map-support", "npm:0.5.19"],
             ["supertest", "npm:6.1.1"]
           ],
           "linkType": "SOFT",
@@ -21376,6 +21382,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-source-list-map-npm-0.1.2-1983e10da7-191f0e3b05.zip/node_modules/@types/source-list-map/",
           "packageDependencies": [
             ["@types/source-list-map", "npm:0.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/source-map-support", [
+        ["npm:0.5.3", {
+          "packageLocation": "./.yarn/cache/@types-source-map-support-npm-0.5.3-e889b6a035-b91a22010f.zip/node_modules/@types/source-map-support/",
+          "packageDependencies": [
+            ["@types/source-map-support", "npm:0.5.3"],
+            ["source-map", "npm:0.6.1"]
           ],
           "linkType": "HARD",
         }]

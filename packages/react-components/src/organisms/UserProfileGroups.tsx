@@ -63,7 +63,7 @@ const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
         flexDirection: 'column',
       }}
     >
-      <Headline2 styleAsHeading={3}>{firstName}’ Groups</Headline2>
+      <Headline2 styleAsHeading={3}>{firstName}’s Groups</Headline2>
       <Paragraph accent="lead">
         {firstName}’s team is collaborating with other teams via groups, which
         meet frequently

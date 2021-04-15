@@ -22,6 +22,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       for (const researchOutput of result.items) {
         const publishDate = researchOutput.data.publishDate?.iv;
         if (!publishDate) {
+          // eslint-disable-next-line no-continue
           continue;
         }
 
@@ -35,6 +36,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
           });
         } catch (err) {
           logger.error(err, `Error migrating RO: ${researchOutput.id}`);
+          // eslint-disable-next-line no-continue
           continue;
         }
       }
@@ -44,5 +46,28 @@ export default class MoveResearchOutputTextToDescription extends Migration {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  down = async (): Promise<void> => {};
+  down = async (): Promise<void> => {
+    const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
+      unpublished: true,
+    });
+
+    let pointer = 0;
+    let result: Results<RestResearchOutput>;
+
+    do {
+      result = await squidexClient.fetch({
+        $top: 10,
+        $skip: pointer,
+        $orderby: 'created asc',
+      });
+
+      for (const researchOutput of result.items) {
+        await squidexClient.patch(researchOutput.id, ({
+          addedDate: { iv: null },
+        } as unknown) as { addedDate: { iv: string } }); // types dont cover null values
+      }
+
+      pointer += 10;
+    } while (pointer < result.total);
+  };
 }

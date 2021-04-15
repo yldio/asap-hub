@@ -25,7 +25,7 @@ setup:squidex-image:
   script:
     - sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
     - sq config use $SQUIDEX_APP_NAME
-    - sq sync in packages/squidex/schema -t schemas
+    - sq sync in packages/squidex/schema -t schemas -t rules
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
 

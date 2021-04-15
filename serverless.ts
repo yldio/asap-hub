@@ -25,9 +25,8 @@ const service = paramCase(pkg.name);
 export const plugins = [
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
-  ...(NODE_ENV === 'production'
-    ? ['serverless-plugin-tree-shake']
-    : ['serverless-offline']),
+  'serverless-webpack',
+  'serverless-plugin-tree-shake',
 ];
 
 const serverlessConfig: AWS = {
@@ -127,7 +126,7 @@ const serverlessConfig: AWS = {
   },
   functions: {
     apiHandler: {
-      handler: 'apps/asap-server/build-cjs/handlers/api-handler.apiHandler',
+      handler: 'apps/asap-server/src/handlers/api-handler.apiHandler',
       events: [
         {
           httpApi: {
@@ -139,7 +138,7 @@ const serverlessConfig: AWS = {
     },
     auth0FetchByCode: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-fetch-by-code.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-fetch-by-code.handler',
       events: [
         {
           httpApi: {
@@ -159,7 +158,7 @@ const serverlessConfig: AWS = {
     },
     auth0ConnectByCode: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-connect-by-code.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-connect-by-code.handler',
       events: [
         {
           httpApi: {
@@ -179,7 +178,7 @@ const serverlessConfig: AWS = {
     },
     syncUserOrcid: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-sync-orcid.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-sync-orcid.handler',
       events: [
         {
           httpApi: {
@@ -191,7 +190,7 @@ const serverlessConfig: AWS = {
     },
     calendarCreated: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-calendar-created.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-calendar-created.handler',
       events: [
         {
           httpApi: {
@@ -212,7 +211,7 @@ const serverlessConfig: AWS = {
     eventsUpdated: {
       timeout: 300,
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-events-updated.handler',
+        'apps/asap-server/src/handlers/webhooks/webhook-events-updated.handler',
       events: [
         {
           httpApi: {
@@ -232,7 +231,7 @@ const serverlessConfig: AWS = {
     },
     resubscribeCalendars: {
       handler:
-        'apps/asap-server/build-cjs/handlers/jobs/resubscribe-calendars.handler',
+        'apps/asap-server/src/handlers/jobs/resubscribe-calendars.handler',
       timeout: 120,
       events: [
         {
@@ -252,19 +251,19 @@ const serverlessConfig: AWS = {
     },
     runMigrations: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-run-migrations.run',
+        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.run',
       timeout: 900,
     },
     rollbackMigrations: {
       handler:
-        'apps/asap-server/build-cjs/handlers/webhooks/webhook-run-migrations.rollback',
+        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
     },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {
             handler:
-              'apps/asap-server/build-cjs/handlers/webhooks/cronjob-sync-orcid.handler',
+              'apps/asap-server/src/handlers/webhooks/cronjob-sync-orcid.handler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

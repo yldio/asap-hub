@@ -8670,7 +8670,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"archiver@npm:^5.2.0":
+"archiver@npm:^5.2.0, archiver@npm:^5.3.0":
   version: 5.3.0
   resolution: "archiver@npm:5.3.0"
   dependencies:
@@ -8924,6 +8924,7 @@ __metadata:
     "@types/webpack": ^4
     "@yarnpkg/pnpify": ^2.2.1
     babel-eslint: ^10.1.0
+    babel-loader: ^8.2.2
     babel-plugin-lodash: ^3.3.4
     babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
     babel-preset-react-app: ^9.1.2
@@ -8949,7 +8950,7 @@ __metadata:
     serverless-offline: "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch"
     serverless-plugin-tree-shake: ^1.1.7
     serverless-s3-sync: ^1.15.0
-    ts-node: ^9.1.1
+    serverless-webpack: ^5.4.1
     typescript: ~4.1.0
     webpack: ^5.1.0
   dependenciesMeta:
@@ -8972,6 +8973,8 @@ __metadata:
     serverless-plugin-tree-shake:
       unplugged: true
     serverless-s3-sync:
+      unplugged: true
+    serverless-webpack@5.4.1:
       unplugged: true
     term-size:
       unplugged: false
@@ -9240,8 +9243,8 @@ __metadata:
   linkType: hard
 
 "aws-sdk@npm:^2.834.0":
-  version: 2.888.0
-  resolution: "aws-sdk@npm:2.888.0"
+  version: 2.887.0
+  resolution: "aws-sdk@npm:2.887.0"
   dependencies:
     buffer: 4.9.2
     events: 1.1.1
@@ -9252,7 +9255,7 @@ __metadata:
     url: 0.10.3
     uuid: 3.3.2
     xml2js: 0.4.19
-  checksum: c1e6a066b5a3a00b3b070e30edc0c049434ca1b072551aeb0882ef608ca3a012a49391e04a71a62bbc5c0e2b80aea9878ab07f9e7c4bdf9d7a79f6bbc16b4877
+  checksum: 87d79a98e7300cb69d7134c3419c89f944be2b098bded9802dac34c447b6ec9e7171ddacbc4e41207b20cce0522fb770f63dd0143cc00cb24f78ad368befce24
   languageName: node
   linkType: hard
 
@@ -9502,6 +9505,21 @@ __metadata:
     "@babel/core": ^7.0.0
     webpack: ">=2"
   checksum: f7b236a5f7b3f2c8a49ec41ed0a2905075ed4bb6d6ba85552b50be7c56b8fdb46e92270576ef29e6598f23919f7a00a515091c2410ced25c08992a4bd799124b
+  languageName: node
+  linkType: hard
+
+"babel-loader@npm:^8.2.2":
+  version: 8.2.2
+  resolution: "babel-loader@npm:8.2.2"
+  dependencies:
+    find-cache-dir: ^3.3.1
+    loader-utils: ^1.4.0
+    make-dir: ^3.1.0
+    schema-utils: ^2.6.5
+  peerDependencies:
+    "@babel/core": ^7.0.0
+    webpack: ">=2"
+  checksum: 362bb715736abec0162bdf8dc2a523a09c46c7b14aef13d9c6548ff609b8cb3879129822a5096401cd955230d836bde19037d9cbebeced940d5348c64959bec3
   languageName: node
   linkType: hard
 
@@ -10091,6 +10109,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bestzip@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "bestzip@npm:2.2.0"
+  dependencies:
+    archiver: ^5.3.0
+    async: ^3.2.0
+    glob: ^7.1.6
+    which: ^2.0.2
+    yargs: ^16.2.0
+  bin:
+    bestzip: bin/cli.js
+  checksum: 5470c182904d0ddb97fdb5f4995b2321f84eec2eaa715d55032a65fc7a9d4f4eab3863efe88c6f87c8c7f22e5815f9665e550fcfb7d81057d0e4a7a4d8e532c1
+  languageName: node
+  linkType: hard
+
 "better-assert@npm:~1.0.0":
   version: 1.0.2
   resolution: "better-assert@npm:1.0.2"
@@ -10624,6 +10657,13 @@ __metadata:
   dependencies:
     type-component: 0.0.1
   checksum: bf87825a9df4c8e720446073b5e58dc80de643d69d473e7e19e3d413597a32e864cd0aeb59ee225cc7a25d1b2ca1554b915186acf4fc9a6b517f0a815d7d4831
+  languageName: node
+  linkType: hard
+
+"builtin-modules@npm:^3.0.0":
+  version: 3.2.0
+  resolution: "builtin-modules@npm:3.2.0"
+  checksum: f0e7240f70ae472a0a0167bf76d2e828c73028fe60be8cd229939c38a27527ea68c92f700553dac1316fa124af3037bc7a765ca0e029a03d2e9201dfb372ea24
   languageName: node
   linkType: hard
 
@@ -18148,6 +18188,15 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"is-builtin-module@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "is-builtin-module@npm:3.0.0"
+  dependencies:
+    builtin-modules: ^3.0.0
+  checksum: ecd0c8669523da05d1d491df8c5c5cb4fe7395268174a8694a3c3dca67e1f546564c52b66cbd94e49c4964fe73b6231bdc4ec14a0d46fabf1936fd39370414cd
+  languageName: node
+  linkType: hard
+
 "is-callable@npm:^1.1.4, is-callable@npm:^1.1.5":
   version: 1.1.5
   resolution: "is-callable@npm:1.1.5"
@@ -21191,6 +21240,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lodash@npm:^4.17.21":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: 4983720b9abca930a4a46f18db163d7dad8dd00dbed6db0cc7b499b33b717cce69f80928b27bbb1ff2cbd3b19d251ee90669a8b5ea466072ca81c2ebe91e7468
+  languageName: node
+  linkType: hard
+
 "log@npm:^6.0.0":
   version: 6.0.0
   resolution: "log@npm:6.0.0"
@@ -21386,6 +21442,15 @@ fsevents@~2.1.2:
   dependencies:
     semver: ^6.0.0
   checksum: ed464f083653c71e9045781d302942cfabcb6e7282aa3410857d7556b3d78ad5e50a75598111c2eab9531d3ec8c5ec3fe11275b5a6c83748f6a48025a0b40518
+  languageName: node
+  linkType: hard
+
+"make-dir@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "make-dir@npm:3.1.0"
+  dependencies:
+    semver: ^6.0.0
+  checksum: 54b6f186c209c1b133d0d1710e6b04c41ebfcb0dac699e5a369ea1223f22c0574ef820b91db37cae6c245f5bda8aff9bfec94f6c23e7d75970446b34a58a79b0
   languageName: node
   linkType: hard
 
@@ -27437,6 +27502,27 @@ serverless-offline@^6.8.0:
   languageName: node
   linkType: hard
 
+"serverless-webpack@npm:^5.4.1":
+  version: 5.4.1
+  resolution: "serverless-webpack@npm:5.4.1"
+  dependencies:
+    bestzip: ^2.2.0
+    bluebird: ^3.7.2
+    fs-extra: ^9.1.0
+    glob: ^7.1.6
+    is-builtin-module: ^3.0.0
+    lodash: ^4.17.21
+    semver: ^7.3.5
+    ts-node: ">= 8.3.0"
+  peerDependencies:
+    webpack: ">= 3.0.0 < 6"
+  dependenciesMeta:
+    ts-node:
+      optional: true
+  checksum: c8a51738d48fcfaf49505c0305050ab761710037f178e549e6216658629445f086227a31f9a2163af1ed1748a60a7e064ba57377d4e96b80f2c066f2b028cb9a
+  languageName: node
+  linkType: hard
+
 "serverless@npm:^1.81.1":
   version: 1.81.1
   resolution: "serverless@npm:1.81.1"
@@ -29586,7 +29672,7 @@ serverless-offline@^6.8.0:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^9.1.1":
+"ts-node@npm:>= 8.3.0":
   version: 9.1.1
   resolution: "ts-node@npm:9.1.1"
   dependencies:
@@ -31754,6 +31840,13 @@ typescript@~4.1.0:
   languageName: node
   linkType: hard
 
+"y18n@npm:^5.0.5":
+  version: 5.0.8
+  resolution: "y18n@npm:5.0.8"
+  checksum: 56275bfa72a8a585c4d2905b086862fb881dfe7871adcefe4ecf4c1a6a78c6389b459b427c0a8672ccdb09731a78143acc71f0bcc8dc8d8427869fafe7f18b95
+  languageName: node
+  linkType: hard
+
 "yallist@npm:^2.1.2":
   version: 2.1.2
   resolution: "yallist@npm:2.1.2"
@@ -31913,6 +32006,21 @@ typescript@~4.1.0:
     y18n: ^5.0.2
     yargs-parser: ^20.2.2
   checksum: 19e94e62eb653f8310aa4ed6eab797b1756fea90cdacb38dec45afdd21b8607bf38723ee0fae0b967ca3886ad58b8430eb48b716958231f2f1b950c1c7f11034
+  languageName: node
+  linkType: hard
+
+"yargs@npm:^16.2.0":
+  version: 16.2.0
+  resolution: "yargs@npm:16.2.0"
+  dependencies:
+    cliui: ^7.0.2
+    escalade: ^3.1.1
+    get-caller-file: ^2.0.5
+    require-directory: ^2.1.1
+    string-width: ^4.2.0
+    y18n: ^5.0.5
+    yargs-parser: ^20.2.2
+  checksum: a79ce1f043021cd645de1ffebb6149541d382ba68f4a6b5eca5d2ad65af51893371bbd78e240dc3b6cf0cbb419511ba5bda715dec992e4266e6863ea49f14feb
   languageName: node
   linkType: hard
 

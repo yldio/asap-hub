@@ -45,7 +45,6 @@ export default class MoveResearchOutputTextToDescription extends Migration {
     } while (pointer < result.total);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   down = async (): Promise<void> => {
     const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
       unpublished: true,

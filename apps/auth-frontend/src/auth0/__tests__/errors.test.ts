@@ -2,6 +2,19 @@ import { extractErrorMessage, Auth0Rule } from '../errors';
 
 describe('extractErrorMessage', () => {
   /* eslint-disable @typescript-eslint/no-explicit-any */
+  it('sets the error target for a known error code', () => {
+    const error = new Error() as any;
+    error.code = 'invalid_password';
+
+    expect(extractErrorMessage(error).target).toBe('password');
+  });
+  it('leaves the error target blank for an unknown error code', () => {
+    const error = new Error() as any;
+    error.code = Math.random().toString();
+
+    expect(extractErrorMessage(error).target).toBe(undefined);
+  });
+
   const errorKeys = [
     'error_description',
     'errorDescription',
@@ -9,30 +22,29 @@ describe('extractErrorMessage', () => {
     'message',
   ] as const;
 
-  it.each(errorKeys)('extracts the %s', (errorKey) => {
-    const error = new Error() as any;
-    error[errorKey] = 'oopsie';
-
-    expect(extractErrorMessage(error)).toContain('oopsie');
-  });
-
-  it('returns a custom message for a known error', () => {
+  it('returns a custom text for a known error code', () => {
     const error = new Error() as any;
     error.code = 'invalid_user_password';
 
-    expect(extractErrorMessage(error)).toMatch(
+    expect(extractErrorMessage(error).text).toMatch(
       /e-?mail or password.+incorrect/i,
     );
   });
 
+  it.each(errorKeys)('extracts the %s text', (errorKey) => {
+    const error = new Error() as any;
+    error[errorKey] = 'oopsie';
+
+    expect(extractErrorMessage(error).text).toContain('oopsie');
+  });
   it.each(errorKeys)('ignores a missing %s', (errorKey) => {
     const error = new Error() as any;
     error[errorKey] = null;
 
-    expect(extractErrorMessage(error)).toMatch(/unknown.+error/i);
+    expect(extractErrorMessage(error).text).toMatch(/unknown.+error/i);
   });
 
-  describe('for a complex error description', () => {
+  describe('for a complex error text description', () => {
     it.each<[string, Auth0Rule[], string]>([
       [
         'concatenates rule messages',
@@ -91,7 +103,7 @@ describe('extractErrorMessage', () => {
       const error = new Error() as any;
       error.description = { rules };
 
-      expect(extractErrorMessage(error)).toContain(expected);
+      expect(extractErrorMessage(error).text).toContain(expected);
     });
   });
   /* eslint-enable @typescript-eslint/no-explicit-any */

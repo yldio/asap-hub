@@ -77,13 +77,27 @@ it('does not emit a signin event without input', () => {
   expect(handleSignin).not.toHaveBeenCalled();
 });
 
-it('shows a custom validation message on both fields', () => {
-  const { getAllByText } = render(
+it('shows a custom email validation message', () => {
+  const { getByText, getByLabelText } = render(
     <EmailPasswordSignin
-      email=""
-      password=""
-      customValidationMessage="valmsg"
+      email="me@example.com"
+      password="asdf1234!@£$"
+      emailValidationMessage="Email already exists!"
     />,
   );
-  expect(getAllByText('valmsg')).toHaveLength(2);
+  expect(getByText('Email already exists!')).toBeVisible();
+  expect(getByLabelText(/e-?mail/i)).toBeInvalid();
+  expect(getByLabelText(/password/i)).not.toBeInvalid();
+});
+it('shows a custom password validation message', () => {
+  const { getByText, getByLabelText } = render(
+    <EmailPasswordSignin
+      email="me@example.com"
+      password="asdf"
+      passwordValidationMessage="Password too weak!"
+    />,
+  );
+  expect(getByText('Password too weak!')).toBeVisible();
+  expect(getByLabelText(/e-?mail/i)).not.toBeInvalid();
+  expect(getByLabelText(/password/i)).toBeInvalid();
 });

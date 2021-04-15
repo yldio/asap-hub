@@ -40,7 +40,15 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["Proposal", "Presentation", "Protocol"],
+          "allowedValues": [
+            "Proposal",
+            "Presentation",
+            "Protocol",
+            "Dataset",
+            "Bioinformatics",
+            "Lab Resource",
+            "Article"
+          ],
           "isUnique": false,
           "inlineEditable": false,
           "contentType": "Unspecified",

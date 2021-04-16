@@ -193,6 +193,26 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "adminNotes",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Admin notes",
+          "hints": "This is ASAP internal content and it's not being shown on the Hub",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
       }
     ],
     "previewUrls": {

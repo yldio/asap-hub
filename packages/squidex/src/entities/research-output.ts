@@ -8,6 +8,7 @@ export interface ResearchOutput {
   shortText?: string;
   description: string;
   link?: string;
+  addedDate?: string;
   publishDate?: string;
   tags?: string[];
 }

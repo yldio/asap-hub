@@ -4,18 +4,24 @@ import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 
 export default class MoveResearchOutputTextToDescription extends Migration {
   up = async (): Promise<void> => {
-    const squidexClient = new Squidex<RestResearchOutput>('research-outputs');
+    const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
+      unpublished: true,
+    });
 
     let pointer = 0;
     let result: Results<RestResearchOutput>;
 
     do {
-      result = await squidexClient.fetch({ $top: 10, $skip: pointer });
+      result = await squidexClient.fetch({
+        $top: 10,
+        $skip: pointer,
+        $orderby: 'created asc',
+      });
 
-      for (const researchOuput of result.items) {
-        await squidexClient.patch(researchOuput.id, {
+      for (const researchOutput of result.items) {
+        await squidexClient.patch(researchOutput.id, {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          description: (researchOuput.data as any).text,
+          description: (researchOutput.data as any).text,
         });
       }
 

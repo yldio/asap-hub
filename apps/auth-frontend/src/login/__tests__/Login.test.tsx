@@ -100,7 +100,7 @@ it('initiates a signup with email and password', async () => {
   );
 });
 
-it('shows an Auth0 error', async () => {
+it('shows an Auth0 email error', async () => {
   mockGetLocation.mockReturnValue(
     new URL(
       '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
@@ -110,20 +110,18 @@ it('shows an Auth0 error', async () => {
   const { getByText, getByLabelText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW');
+  userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('Authentication Error');
-  ((error as unknown) as WebAuthError).errorDescription =
-    'An unknown authentication error occurred.';
+  ((error as unknown) as WebAuthError).code = 'invalid_signup';
+  ((error as unknown) as WebAuthError).errorDescription = 'Invalid signup.';
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
   userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
-  expect(
-    await findAllByText('An unknown authentication error occurred.'),
-  ).not.toHaveLength(0);
+  expect(await findAllByText(/failed/i)).toHaveLength(1);
+  expect(getByLabelText(/e-?mail/i)).toBeInvalid();
 });
-
-it('shows a generic authentication error', async () => {
+it('shows an Auth0 password error', async () => {
   mockGetLocation.mockReturnValue(
     new URL(
       '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
@@ -133,13 +131,38 @@ it('shows a generic authentication error', async () => {
   const { getByText, getByLabelText, findAllByText } = render(
     <Login email="john.doe@example.com" setEmail={() => {}} />,
   );
-  await userEvent.type(getByLabelText(/password/i), 'PW');
+  userEvent.type(getByLabelText(/password/i), 'PW');
+
+  const error = new Error('Authentication Error');
+  ((error as unknown) as WebAuthError).code = 'invalid_password';
+  ((error as unknown) as WebAuthError).errorDescription =
+    'Your password is too weak';
+  mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
+
+  userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
+  expect(await findAllByText(/weak/i)).toHaveLength(1);
+  expect(getByLabelText(/password/i)).toBeInvalid();
+});
+
+it('shows a generic authentication error on both fields', async () => {
+  mockGetLocation.mockReturnValue(
+    new URL(
+      '?response_type=code&screen_hint=signup&redirect_uri=https%3A%2F%2Fdev.hub.asap.science',
+      mockGetLocation(),
+    ),
+  );
+  const { getByText, getByLabelText, findAllByText } = render(
+    <Login email="john.doe@example.com" setEmail={() => {}} />,
+  );
+  userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('FetchError');
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
   userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
-  expect(await findAllByText(/unknown.+FetchError/i)).not.toHaveLength(0);
+  expect(await findAllByText(/unknown.+FetchError/i)).toHaveLength(2);
+  expect(getByLabelText(/e-?mail/i)).toBeInvalid();
+  expect(getByLabelText(/password/i)).toBeInvalid();
 });
 
 it('hides the authentication error message again when changing the credentials', async () => {

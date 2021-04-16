@@ -21,6 +21,7 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState<WebAuthError | Error>();
+  const errorMessage = error && extractErrorMessage(error);
 
   return (
     <SigninPage
@@ -47,7 +48,12 @@ const Login: React.FC<LoginProps> = ({ email, setEmail }) => {
           signup,
         ).catch(setError)
       }
-      customValidationMessage={error && extractErrorMessage(error)}
+      emailValidationMessage={
+        errorMessage?.target === 'password' ? undefined : errorMessage?.text
+      }
+      passwordValidationMessage={
+        errorMessage?.target === 'email' ? undefined : errorMessage?.text
+      }
     />
   );
 };

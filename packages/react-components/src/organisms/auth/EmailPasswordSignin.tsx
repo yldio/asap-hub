@@ -26,7 +26,8 @@ type EmailPasswordSigninProps = Pick<
   readonly password: string;
   readonly onChangePassword?: (newPassword: string) => void;
 
-  readonly customValidationMessage?: string;
+  readonly emailValidationMessage?: string;
+  readonly passwordValidationMessage?: string;
   readonly onSignin?: () => void;
 };
 
@@ -40,10 +41,12 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
   email,
   onChangeEmail = noop,
 
-  customValidationMessage,
+  emailValidationMessage,
+  passwordValidationMessage,
   onSignin = noop,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
+
   return (
     <form autoComplete="on" ref={formRef} css={containerStyles}>
       <div css={fieldsContainerStyles}>
@@ -54,14 +57,14 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
           title="Email"
           value={email}
           onChange={onChangeEmail}
-          customValidationMessage={customValidationMessage}
+          customValidationMessage={emailValidationMessage}
         />
         <LabeledPasswordField
           required
           forgotPasswordHref={signup ? undefined : forgotPasswordHref}
           value={password}
           onChange={onChangePassword}
-          customValidationMessage={customValidationMessage}
+          customValidationMessage={passwordValidationMessage}
         />
       </div>
       <Button

@@ -16,9 +16,20 @@ export type WebAuthError = Auth0Error & {
   readonly description?: null | string | { rules: ReadonlyArray<Auth0Rule> };
 };
 
-const knownErrorCodeMessages: Record<string, string> = {
+export interface ErrorMessage {
+  readonly text: string;
+  readonly target?: 'email' | 'password';
+}
+
+const knownErrorCodeTexts: Record<string, ErrorMessage['text']> = {
+  invalid_signup:
+    'Signup failed. Perhaps an account with this username already exists.',
   invalid_user_password:
     'Your e-mail or password is incorrect. Ensure this is the log in method you used to set up your account.',
+};
+const knownErrorCodeTargets: Record<string, ErrorMessage['target']> = {
+  invalid_signup: 'email', // This code is generic really, but we expect it to most commonly be an existing email conflict
+  invalid_password: 'password',
 };
 
 // Auth0 API has very inconsistent error formats
@@ -35,16 +46,25 @@ const extractRuleErrorMessage = (rules: ReadonlyArray<Auth0Rule>): string =>
       ],
     )
     .join('\n');
-export const extractErrorMessage = (error: WebAuthError | Error): string =>
-  ('code' in error && error.code && knownErrorCodeMessages[error.code]) ||
-  ('error_description' in error && error.error_description) ||
-  ('errorDescription' in error && error.errorDescription) ||
-  ('description' in error &&
-    error.description &&
-    (typeof error.description === 'object'
-      ? extractRuleErrorMessage(error.description.rules)
-      : error.description)) ||
-  ('message' in error &&
-    error.message &&
-    `Unknown authentication error: ${error.message}`) ||
-  `Unknown authentication error: ${error.name}`;
+
+export const extractErrorMessage = (
+  error: WebAuthError | Error,
+): ErrorMessage => ({
+  text:
+    ('code' in error && error.code && knownErrorCodeTexts[error.code]) ||
+    ('error_description' in error && error.error_description) ||
+    ('errorDescription' in error && error.errorDescription) ||
+    ('description' in error &&
+      error.description &&
+      (typeof error.description === 'object'
+        ? extractRuleErrorMessage(error.description.rules)
+        : error.description)) ||
+    ('message' in error &&
+      error.message &&
+      `Unknown authentication error: ${error.message}`) ||
+    `Unknown authentication error: ${error.name}`,
+  target:
+    'code' in error && error.code
+      ? knownErrorCodeTargets[error.code]
+      : undefined,
+});

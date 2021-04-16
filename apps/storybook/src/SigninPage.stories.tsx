@@ -17,9 +17,8 @@ export const Normal = () => (
       'https://en.wikipedia.org/wiki/Password',
     )}
     appOrigin={window.location.origin}
-    email={text('Email', 'john.doe@example.com')}
-    password={text('Password', "_%6.o*fGR75)':7,")}
-    customValidationMessage={text('Signin Error', '')}
+    email="john.doe@example.com"
+    password="_%6.o*fGR75)':7,"
   />
 );
 
@@ -31,8 +30,7 @@ export const Signup = () => (
       'https://en.wikipedia.org/wiki/Password',
     )}
     appOrigin={window.location.origin}
-    email={text('Email', 'john.doe@example.com')}
-    password={text('Password', "_%6.o*fGR75)':7,")}
-    customValidationMessage={text('Signup Error', '')}
+    email="john.doe@example.com"
+    password="_%6.o*fGR75)':7,"
   />
 );

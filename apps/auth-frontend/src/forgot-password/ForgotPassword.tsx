@@ -38,7 +38,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ email, setEmail }) => {
               .then(() => history.replace(`${path}/completed`))
               .catch(setError);
           }}
-          customValidationMessage={error && extractErrorMessage(error)}
+          customValidationMessage={error && extractErrorMessage(error).text}
           onGoBack={() => history.goBack()}
         />
       </Route>

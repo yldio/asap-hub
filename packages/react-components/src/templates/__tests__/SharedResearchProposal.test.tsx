@@ -1,14 +1,12 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import SharedResearchProposal from '../SharedResearchProposal';
 
 const props: ComponentProps<typeof SharedResearchProposal> = {
+  ...createResearchOutputResponse(),
   backHref: '#',
-  title: 'title',
-  type: 'Proposal',
-  created: '2020-06-25T15:00:47.920Z',
-  description: 'content',
 };
 it('renders a proposal title and content', () => {
   const { getByText } = render(

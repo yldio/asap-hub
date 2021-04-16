@@ -1,31 +1,46 @@
-import React from 'react';
-
+import React, { ComponentProps } from 'react';
 import { SharedResearchList } from '@asap-hub/react-components';
-import { text, number, select } from '@storybook/addon-knobs';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { boolean, number } from '@storybook/addon-knobs';
+import { StaticRouter } from 'react-router-dom';
 
 export default {
-  title: 'Organisms / Shared Research / List',
+  title: 'Templates / Shared Research / List',
+};
+
+const researchOutput: Omit<
+  ComponentProps<typeof SharedResearchList>['researchOutputs'][0],
+  'id'
+> = {
+  type: 'Proposal',
+  title:
+    'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
+  created: new Date().toISOString(),
+  team: {
+    id: '123',
+    displayName: 'A Barnes',
+  },
+};
+
+const props = (): ComponentProps<typeof SharedResearchList> => {
+  const numberOfItems = number('Number of Outputs', 2, { min: 0 });
+  const currentPageIndex = number('Current Page', 1, { min: 1 }) - 1;
+  return {
+    researchOutputs: Array.from({ length: numberOfItems }, (_, i) => ({
+      ...researchOutput,
+      id: `ro${i}`,
+    })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
+    numberOfItems,
+    numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
+    currentPageIndex,
+    renderPageHref: (index) => `#${index}`,
+    isListView: boolean('List View Toggled', false),
+    listViewParams: '',
+    cardViewParams: '',
+  };
 };
 
 export const Normal = () => (
-  <SharedResearchList
-    researchOutputs={Array.from({
-      length: number('Outputs', 20, { min: 0, max: 20 }),
-    })
-      .map((_, i) => createResearchOutputResponse(i))
-      .map((output, i) =>
-        i === 0
-          ? {
-              ...output,
-              link: text('Link', 'https://hub.asap.science'),
-              title: text(
-                'Title',
-                'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
-              ),
-              type: select('Type', ['Proposal'], 'Proposal'),
-            }
-          : output,
-      )}
-  />
+  <StaticRouter>
+    <SharedResearchList {...props()} />
+  </StaticRouter>
 );

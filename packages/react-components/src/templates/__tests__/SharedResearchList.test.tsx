@@ -2,9 +2,9 @@ import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { StaticRouter } from 'react-router-dom';
 
-import SharedResearchPageBody from '../SharedResearchPageBody';
+import SharedResearchList from '../SharedResearchList';
 
-const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
+const props: Omit<ComponentProps<typeof SharedResearchList>, 'children'> = {
   researchOutputs: [
     {
       id: '1',
@@ -31,7 +31,7 @@ const props: Omit<ComponentProps<typeof SharedResearchPageBody>, 'children'> = {
 
 it('renders multiple shared outputs cards in card view', () => {
   const { queryAllByRole, getByText } = render(
-    <SharedResearchPageBody {...props} isListView={false} />,
+    <SharedResearchList {...props} isListView={false} />,
     {
       wrapper: StaticRouter,
     },
@@ -49,7 +49,7 @@ it('renders multiple shared outputs cards in card view', () => {
 
 it('renders multiple research outputs in list view', () => {
   const { queryAllByRole, getByText } = render(
-    <SharedResearchPageBody {...props} isListView />,
+    <SharedResearchList {...props} isListView />,
     {
       wrapper: StaticRouter,
     },

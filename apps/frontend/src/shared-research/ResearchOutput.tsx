@@ -1,5 +1,8 @@
 import React from 'react';
-import { NotFoundPage, ResearchOutputPage } from '@asap-hub/react-components';
+import {
+  NotFoundPage,
+  SharedResearchProposal,
+} from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 
 import { useBackHref } from '../hooks';
@@ -16,7 +19,7 @@ const ResearchOutput: React.FC = () => {
   if (researchOutputData) {
     return (
       <Frame title={researchOutputData.title}>
-        <ResearchOutputPage {...researchOutputData} backHref={backHref} />
+        <SharedResearchProposal {...researchOutputData} backHref={backHref} />
       </Frame>
     );
   }

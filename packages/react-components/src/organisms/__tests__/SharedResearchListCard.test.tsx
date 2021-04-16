@@ -2,15 +2,15 @@ import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
-import SharedResearchList from '../SharedResearchList';
+import SharedResearchListCard from '../SharedResearchListCard';
 
-const sharedResearchListProps: ComponentProps<typeof SharedResearchList> = {
+const sharedResearchListCardProps: ComponentProps<typeof SharedResearchListCard> = {
   researchOutputs: [],
 };
 it('renders multiple research outputs', () => {
   const { getAllByRole } = render(
-    <SharedResearchList
-      {...sharedResearchListProps}
+    <SharedResearchListCard
+      {...sharedResearchListCardProps}
       researchOutputs={[
         { ...createResearchOutputResponse(0), title: 'Output 1' },
         { ...createResearchOutputResponse(1), title: 'Output 2' },
@@ -24,8 +24,8 @@ it('renders multiple research outputs', () => {
 
 it('links to research outputs', () => {
   const { getByRole } = render(
-    <SharedResearchList
-      {...sharedResearchListProps}
+    <SharedResearchListCard
+      {...sharedResearchListCardProps}
       researchOutputs={[
         { ...createResearchOutputResponse(0), title: 'Output 1', id: '123' },
       ]}
@@ -39,8 +39,8 @@ it('links to research outputs', () => {
 
 it('shows external link icon when link provided', () => {
   const { getByTitle, queryByTitle, rerender } = render(
-    <SharedResearchList
-      {...sharedResearchListProps}
+    <SharedResearchListCard
+      {...sharedResearchListCardProps}
       researchOutputs={[
         { ...createResearchOutputResponse(0), link: undefined },
       ]}
@@ -48,8 +48,8 @@ it('shows external link icon when link provided', () => {
   );
   expect(queryByTitle(/external/i)).not.toBeInTheDocument();
   rerender(
-    <SharedResearchList
-      {...sharedResearchListProps}
+    <SharedResearchListCard
+      {...sharedResearchListCardProps}
       researchOutputs={[
         { ...createResearchOutputResponse(0), link: 'http://example.com' },
       ]}

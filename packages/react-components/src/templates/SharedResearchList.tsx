@@ -4,10 +4,10 @@ import React, { ComponentProps } from 'react';
 import {
   ResultList,
   SharedResearchCard,
-  SharedResearchList,
+  SharedResearchListCard,
 } from '../organisms';
 
-type SharedResearchPageBodyProps = Omit<
+type SharedResearchListProps = Omit<
   ComponentProps<typeof ResultList>,
   'children'
 > & {
@@ -18,7 +18,7 @@ type SharedResearchPageBodyProps = Omit<
   readonly cardViewParams: string;
 };
 
-const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
+const SharedResearchList: React.FC<SharedResearchListProps> = ({
   researchOutputs,
   listViewParams,
   cardViewParams,
@@ -30,7 +30,7 @@ const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
     cardViewHref={sharedResearch({}).$ + cardViewParams}
   >
     {cardListProps.isListView ? (
-      <SharedResearchList researchOutputs={researchOutputs} />
+      <SharedResearchListCard researchOutputs={researchOutputs} />
     ) : (
       researchOutputs.map((output) => (
         <div key={output.id}>
@@ -40,4 +40,4 @@ const SharedResearchPageBody: React.FC<SharedResearchPageBodyProps> = ({
     )}
   </ResultList>
 );
-export default SharedResearchPageBody;
+export default SharedResearchList;

@@ -63,17 +63,13 @@ const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
             {link ? <ExternalLink href={link} label="" /> : null}
           </div>
           <div css={titleStyles}>
-            {link ? (
+            <Anchor
+              href={
+                sharedResearch({}).researchOutput({ researchOutputId: id }).$
+              }
+            >
               <Headline2 styleAsHeading={5}>{title}</Headline2>
-            ) : (
-              <Anchor
-                href={
-                  sharedResearch({}).researchOutput({ researchOutputId: id }).$
-                }
-              >
-                <Headline2 styleAsHeading={5}>{title}</Headline2>
-              </Anchor>
-            )}
+            </Anchor>
           </div>
         </li>
       ))}

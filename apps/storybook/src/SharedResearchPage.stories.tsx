@@ -9,7 +9,7 @@ export default {
   decorators: [LayoutDecorator],
 };
 
-export const SharedResearchList = () => (
+export const Normal = () => (
   <SharedResearchPage
     searchQuery={text('Search Query', '')}
     filters={new Set()}

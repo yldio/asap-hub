@@ -38,14 +38,19 @@ const postedStyles = css({
 
 type SharedResearchProposalProps = Pick<
   ResearchOutputResponse,
-  'created' | 'publishDate' | 'team' | 'description' | 'title' | 'type'
+  | 'created'
+  | 'addedDate'
+  | 'team'
+  | 'description'
+  | 'title'
+  | 'type'
 > & {
   backHref: string;
 };
 
 const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
   created,
-  publishDate,
+  addedDate,
   team,
   description,
   title,
@@ -69,7 +74,7 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
       <div css={postedStyles}>
         <Caption asParagraph>
           Date Added:
-          {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
+          {format(new Date(addedDate || created), ' Mo MMMM yyyy')}
         </Caption>
       </div>
     </Card>

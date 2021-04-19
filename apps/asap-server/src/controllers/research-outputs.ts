@@ -4,6 +4,8 @@ import {
   ListResearchOutputResponse,
 } from '@asap-hub/model';
 import { RestTeam, RestResearchOutput } from '@asap-hub/squidex';
+
+import { parseResearchOutput } from '../entities/research-output';
 import { InstrumentedSquidex } from '../utils/instrumented-client';
 
 function transform(
@@ -20,17 +22,29 @@ function transform(
     : {};
 
   return {
-    id: output.id,
-    created: output.created,
-    link: output.data.link?.iv || undefined,
-    type: output.data.type.iv,
-    title: output.data.title.iv,
-    description: output.data.description?.iv || '',
-    publishDate: output.data.publishDate?.iv,
-    tags: output.data.tags?.iv || [],
+    ...parseResearchOutput(output),
     ...teamProps,
   };
 }
+
+export const GraphQLQueryResearchOutput = `
+id
+created
+lastModified
+flatData{
+  title
+  type
+  description
+  link
+  addedDate
+  publishDate
+  tags
+  labs{
+    flatData{
+      name
+    }
+  }
+}`;
 
 export default class ResearchOutputs implements ResearchOutputController {
   researchOutputs: InstrumentedSquidex<RestResearchOutput>;

@@ -57,6 +57,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                       flatData: {
                         link: null,
                         publishDate: null,
+                        addedDate: null,
                         title: 'Proposal',
                         type: 'Proposal',
                         tags: ['test', 'tag'],

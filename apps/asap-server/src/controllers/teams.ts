@@ -15,6 +15,7 @@ import {
   InstrumentedSquidex,
   InstrumentedSquidexGraphql,
 } from '../utils/instrumented-client';
+import { GraphQLQueryResearchOutput } from './research-outputs';
 import { parseGraphQLTeam } from '../entities';
 import { createURL } from '../utils/squidex';
 
@@ -26,15 +27,7 @@ flatData {
   applicationNumber
   displayName
   outputs {
-    id
-    created
-    flatData{
-      link
-      publishDate
-      title
-      type
-      tags
-    }
+    ${GraphQLQueryResearchOutput}
   }
   projectSummary
   projectTitle

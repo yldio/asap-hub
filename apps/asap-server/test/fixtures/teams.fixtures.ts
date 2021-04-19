@@ -26,6 +26,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: null,
                   publishDate: null,
+                  addedDate: null,
                   title: 'Proposal',
                   type: 'Proposal',
                   tags: ['test', 'tag'],
@@ -38,6 +39,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: 'docs.google.com',
                   publishDate: null,
+                  addedDate: '2021-05-24T17:33:30Z',
                   title: "Team Salzer's intro slide deck",
                   type: 'Presentation',
                   tags: ['test', 'tag'],
@@ -258,6 +260,7 @@ export const listTeamResponse: ListTeamResponse = {
           title: "Team Salzer's intro slide deck",
           description: '',
           tags: ['test', 'tag'],
+          addedDate: '2021-05-24T17:33:30Z',
           team: {
             id: 'team-id-1',
             displayName: 'Schipa, A',
@@ -368,6 +371,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: null,
               publishDate: null,
+              addedDate: null,
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
@@ -380,6 +384,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
             },
@@ -552,6 +557,7 @@ export const getGraphQlTeamResponse = (
             flatData: {
               link: null,
               publishDate: null,
+              addedDate: null,
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
@@ -564,6 +570,7 @@ export const getGraphQlTeamResponse = (
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
             },

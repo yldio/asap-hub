@@ -11,6 +11,7 @@ const props: Omit<ComponentProps<typeof SharedResearchList>, 'children'> = {
       title: 'Output 1',
       type: 'Proposal',
       publishDate: new Date().toISOString(),
+      addedDate: new Date().toISOString(),
       created: new Date().toISOString(),
     },
     {

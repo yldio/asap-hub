@@ -37,3 +37,21 @@ it('renders a proposal with team information', () => {
     expect.stringMatching(/42$/),
   );
 });
+it('falls back to created date when published date omitted', () => {
+  const { getByText, rerender } = render(
+    <SharedResearchProposal
+      {...props}
+      created={new Date(2019, 1, 1, 1).toISOString()}
+      publishDate={new Date(2020, 1, 1, 1).toISOString()}
+    />,
+  );
+  expect(getByText(/2020/)).toBeVisible();
+  rerender(
+    <SharedResearchProposal
+      {...props}
+      created={new Date(2019, 1, 1, 1).toISOString()}
+      publishDate={undefined}
+    />,
+  );
+  expect(getByText(/2019/)).toBeVisible();
+});

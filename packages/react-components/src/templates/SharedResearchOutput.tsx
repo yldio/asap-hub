@@ -87,29 +87,37 @@ const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
           ) : null}
         </div>
         <Display styleAsHeading={3}>{title}</Display>
-        <Caption asParagraph>
-          <div css={timestampStyles}>
-            <div>
-              Date added:
-              {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
-              {lastModifiedDate && ' · '}
-            </div>
-            {lastModifiedDate && (
-              <div>
-                Last updated:
-                {format(new Date(lastModifiedDate), ' Mo MMMM yyyy')}
-              </div>
-            )}
-          </div>
-        </Caption>
+        <div css={timestampStyles}>
+          <Caption asParagraph>
+            Date added:
+            {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
+            {lastModifiedDate && ' · '}
+          </Caption>
+          {lastModifiedDate && (
+            <Caption asParagraph>
+              Last updated:
+              {format(new Date(lastModifiedDate), ' Mo MMMM yyyy')}
+            </Caption>
+          )}
+        </div>
       </Card>
-      <Card>
-        <Headline2 styleAsHeading={5}>Description</Headline2>
-        <Paragraph>{description}</Paragraph>
-        <Divider />
-        <Headline2 styleAsHeading={5}>Tags</Headline2>
-        <TagList tags={tags} />
-      </Card>
+      {(description || !!tags.length) && (
+        <Card>
+          {description && (
+            <>
+              <Headline2 styleAsHeading={5}>Description</Headline2>
+              <Paragraph>{description}</Paragraph>
+            </>
+          )}
+          {description && !!tags.length && <Divider />}
+          {!!tags.length && (
+            <>
+              <Headline2 styleAsHeading={5}>Tags</Headline2>
+              <TagList tags={tags} />
+            </>
+          )}
+        </Card>
+      )}
     </div>
   </div>
 );

@@ -8,7 +8,7 @@
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch",
-    "start:server": "tsnd --transpile-only ./src/server.ts",
+    "start": "node-dev ./src/server.ts",
     "migration:create": "./scripts/create-migration.sh"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
+    "@babel/register": "^7.12.10",
     "@babel/runtime-corejs3": "^7.12.5",
     "@hapi/boom": "^9.1.0",
     "@hapi/bourne": "^2.0.0",
@@ -82,7 +83,7 @@
     "@types/pump": "^1.1.0",
     "@types/supertest": "^2.0.10",
     "jwt-encode": "^1.0.1",
-    "supertest": "^6.1.1",
-    "ts-node-dev": "^1.1.1"
+    "node-dev": "^6.0.0",
+    "supertest": "^6.1.1"
   }
 }

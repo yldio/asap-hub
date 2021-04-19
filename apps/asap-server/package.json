@@ -22,6 +22,7 @@
     "@hapi/bourne": "^2.0.0",
     "@hapi/joi": "^17.1.1",
     "@types/date-fns": "^2.6.0",
+    "@types/hapi__joi": "^17.1.0",
     "@types/parse-data-url": "^3.0.0",
     "apr-intercept": "^3.0.4",
     "aws-lambda": "^1.0.6",

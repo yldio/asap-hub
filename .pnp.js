@@ -920,7 +920,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@hapi/joi",
-        "npm:16.1.8"
+        "npm:17.1.1"
       ],
       [
         "@hapi/mimos",
@@ -964,7 +964,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@hapi/topo",
-        "npm:3.1.6"
+        "npm:5.0.0"
       ],
       [
         "@hapi/vise",
@@ -9358,6 +9358,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.12.7"],
             ["@babel/runtime-corejs3", "npm:7.12.5"],
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.1.0"],
+            ["@hapi/joi", "npm:17.1.1"],
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
             ["@serverless/typescript", "npm:2.34.0"],
@@ -23427,6 +23428,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/preset-typescript", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:7.12.7"],
             ["@babel/runtime-corejs3", "npm:7.12.5"],
             ["@emotion/jest", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:11.1.0"],
+            ["@hapi/joi", "npm:17.1.1"],
             ["@jeysal/babel-plugin-ramda", "npm:2.0.1"],
             ["@peculiar/webcrypto", "npm:1.1.1"],
             ["@serverless/typescript", "npm:2.34.0"],

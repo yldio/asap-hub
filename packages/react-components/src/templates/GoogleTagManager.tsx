@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 declare global {
   interface Window {
-    readonly dataLayer: Array<Record<string, unknown>>;
+    readonly dataLayer?: Array<Record<string, unknown>>;
   }
 }
 

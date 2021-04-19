@@ -205,7 +205,7 @@ export default class Users {
     /* eslint-disable @typescript-eslint/no-non-null-assertion, no-param-reassign */
     if (update.teams?.length) {
       cleanUpdate.teams = {
-        iv: user.data.teams?.iv.map(
+        iv: user.data.teams?.iv?.map(
           (team: {
             id: string[];
             responsibilities?: string | null;
@@ -350,11 +350,13 @@ export default class Users {
   ): Promise<UserResponse> {
     const user = await fetchByCode(welcomeCode, this.users.client);
 
-    if (user.data.connections.iv.find(({ code }) => code === userId)) {
+    if (user.data.connections.iv?.find(({ code }) => code === userId)) {
       return Promise.resolve(parseUser(user));
     }
 
-    const connections = user.data.connections.iv.concat([{ code: userId }]);
+    const connections = (user.data.connections.iv || []).concat([
+      { code: userId },
+    ]);
 
     const res = await this.users.patch(user.id, {
       email: { iv: user.data.email.iv },

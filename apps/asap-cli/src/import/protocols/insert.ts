@@ -40,7 +40,7 @@ const fetchTeamByName = async (
   }
 
   const user = await cache[name];
-  if (user) {
+  if (user && user.data.teams.iv) {
     const userTeamsLeadership = user.data.teams.iv.find(
       (t) => t.role === 'Lead PI (Core Leadership)',
     );

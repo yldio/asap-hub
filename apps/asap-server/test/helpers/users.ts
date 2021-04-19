@@ -14,7 +14,7 @@ export type TestUserResponse = UserResponse & {
 function transform(user: RestUser): TestUserResponse {
   return {
     ...parseUser(user),
-    connections: user.data.connections.iv,
+    connections: user.data.connections.iv || [],
   };
 }
 

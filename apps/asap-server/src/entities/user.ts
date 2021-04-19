@@ -122,7 +122,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
 
 export const parseUser = (user: RestUser): UserResponse => {
   const teams: UserTeam[] =
-    user.data.teams?.iv.map(({ id, ...t }) => ({
+    user.data.teams?.iv?.map(({ id, ...t }) => ({
       id: id[0],
       displayName: 'Unknown',
       ...t,
@@ -161,8 +161,8 @@ export const parseUser = (user: RestUser): UserResponse => {
       orcidWorks: user.data.orcidWorks?.iv,
       skills: user.data.skills?.iv || [],
       skillsDescription: user.data.skillsDescription,
-      questions: user.data.questions?.iv.map(({ question }) => question) || [],
-      avatarUrl: user.data.avatar && createURL(user.data.avatar.iv)[0],
+      questions: user.data.questions?.iv?.map(({ question }) => question) || [],
+      avatarUrl: user.data.avatar?.iv && createURL(user.data.avatar.iv)[0],
       role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
       responsibilities: user.data.responsibilities?.iv || undefined,
       reachOut: user.data.reachOut?.iv || undefined,

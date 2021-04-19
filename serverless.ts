@@ -119,10 +119,6 @@ const serverlessConfig: AWS = {
     webpack: {
       config: 'serverless/webpack.config.js',
     },
-    'serverless-offline': {
-      noPrependStageInUrl: true,
-      useChildProcesses: true, // needed for hot reloading to work https://github.com/dherault/serverless-offline/issues/931
-    },
   },
   functions: {
     apiHandler: {

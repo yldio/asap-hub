@@ -59,9 +59,6 @@
     "serverless-iam-roles-per-function": {
       "unplugged": true
     },
-    "serverless-offline": {
-      "unplugged": true
-    },
     "serverless-plugin-tree-shake": {
       "unplugged": true
     },
@@ -135,7 +132,6 @@
     "rimraf": "^3.0.2",
     "serverless": "^1.81.1",
     "serverless-iam-roles-per-function": "^2.0.2",
-    "serverless-offline": "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch",
     "serverless-plugin-tree-shake": "^1.1.7",
     "serverless-s3-sync": "^1.15.0",
     "serverless-webpack": "^5.4.1",

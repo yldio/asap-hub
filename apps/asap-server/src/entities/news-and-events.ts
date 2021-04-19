@@ -11,9 +11,9 @@ export const parseNewsAndEvents = (
   text: item.data.text?.iv,
   link: item.data.link?.iv,
   linkText: item.data.linkText?.iv,
-  thumbnail:
-    (item.data.thumbnail?.iv && createURL(item.data.thumbnail.iv)[0]) ||
-    undefined,
+  thumbnail: item.data.thumbnail?.iv
+    ? createURL(item.data.thumbnail.iv)[0]
+    : undefined,
   title: item.data.title.iv,
   type: item.data.type.iv,
 });

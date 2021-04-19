@@ -11,7 +11,7 @@ export interface Rest<T> {
           iv: NonNullable<T[K]>;
         } | null
       : {
-          iv: T[K] extends Array<any> ? T[K] | null : NonNullable<T[K]>;
+          iv: T[K] extends Array<unknown> ? T[K] | null : NonNullable<T[K]>;
         };
   };
 }

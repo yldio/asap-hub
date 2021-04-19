@@ -54,6 +54,7 @@ export const inviteUsers = async (
     usersToInvite.map(async (user) => {
       await limiter();
 
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       let code = user.data.connections
         .iv! // asserting not null as the nulls values are filtered in usersToInvite
         .map((c) => c.code)

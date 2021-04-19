@@ -68,7 +68,7 @@
     "serverless-s3-sync": {
       "unplugged": true
     },
-    "serverless-webpack@5.4.1": {
+    "serverless-webpack": {
       "unplugged": true
     },
     "term-size": {

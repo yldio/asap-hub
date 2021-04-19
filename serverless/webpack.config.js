@@ -13,9 +13,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: require.resolve('babel-loader'),
-          options: {
-            ...babelOptions,
-          },
         },
       },
     ],
@@ -25,7 +22,7 @@ module.exports = {
     minimize: false,
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   output: {
     libraryTarget: 'commonjs2',

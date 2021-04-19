@@ -26,7 +26,6 @@ export const plugins = [
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
   'serverless-webpack',
-  // 'serverless-plugin-tree-shake',
 ];
 
 const serverlessConfig: AWS = {

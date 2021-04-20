@@ -4,7 +4,7 @@ import css from '@emotion/css';
 import { Anchor } from '../atoms';
 import { externalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
-import { perRem } from '../pixels';
+import { mobileScreen, perRem } from '../pixels';
 
 const containerStyles = css({
   display: 'flex',
@@ -22,6 +22,10 @@ const styles = css({
   boxSizing: 'border-box',
   border: `${borderWidth}px solid ${fern.rgb}`,
   margin: `${12 / perRem}em 0`,
+  padding: `0 ${(12 - borderWidth) / perRem}em`,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    padding: 0,
+  },
   svg: {
     stroke: fern.rgb,
     width: `${17.8 / perRem}em`,
@@ -35,9 +39,14 @@ const styles = css({
     },
   },
 });
-const paddingStyles = css({ padding: `0 ${(12 - borderWidth) / perRem}em` });
 
-const textStyles = css({ paddingTop: '1px', fontSize: `${13.6 / perRem}em` });
+const textStyles = css({
+  paddingTop: `${1 / perRem}em`,
+  fontSize: `${13.6 / perRem}em`,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    display: 'none',
+  },
+});
 
 type ExternalLinkProps = {
   readonly href: string;
@@ -51,7 +60,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
 }) => (
   <div css={containerStyles}>
     <Anchor href={href}>
-      <div css={[styles, label && paddingStyles]}>
+      <div css={styles}>
         {icon}
         <div css={textStyles}>{label}</div>
       </div>

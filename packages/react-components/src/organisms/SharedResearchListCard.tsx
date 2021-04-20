@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 
 import { Card, Anchor, TagLabel, Headline2 } from '../atoms';
@@ -60,7 +60,9 @@ const SharedResearchListCard: React.FC<SharedResearchListCardProps> = ({
             <div css={typeStyles}>
               <TagLabel>{type}</TagLabel>
             </div>
-            {link ? <ExternalLink href={link} label="" /> : null}
+            {link ? (
+              <ExternalLink href={link} label={researchOutputLabels[type]} />
+            ) : null}
           </div>
           <div css={titleStyles}>
             <Anchor

@@ -7,7 +7,6 @@ import {
   TagLabel,
   Display,
   Card,
-  Caption,
   Headline2,
   Paragraph,
   Divider,
@@ -16,6 +15,7 @@ import { lead } from '../colors';
 import { mobileScreen, perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, ExternalLink, TagList } from '../molecules';
+import { captionStyles } from '../text';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -37,9 +37,14 @@ const typeStyles = css({
 const timestampStyles = css({
   color: lead.rgb,
   display: 'flex',
+  flexDirection: 'row',
   whiteSpace: 'pre',
+  marginTop: `${24 / perRem}em`,
+  marginBottom: 0,
   [`@media (max-width: ${mobileScreen.max}px)`]: {
-    display: 'block',
+    flexDirection: 'column',
+    marginTop: `${12 / perRem}em`,
+    marginBottom: `${12 / perRem}em`,
   },
 });
 
@@ -87,17 +92,17 @@ const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
           ) : null}
         </div>
         <Display styleAsHeading={3}>{title}</Display>
-        <div css={timestampStyles}>
-          <Caption asParagraph>
+        <div css={[timestampStyles, captionStyles]}>
+          <span>
             Date added:
             {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
             {lastModifiedDate && ' · '}
-          </Caption>
+          </span>
           {lastModifiedDate && (
-            <Caption asParagraph>
+            <span>
               Last updated:
               {format(new Date(lastModifiedDate), ' Mo MMMM yyyy')}
-            </Caption>
+            </span>
           )}
         </div>
       </Card>
@@ -105,14 +110,14 @@ const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
         <Card>
           {description && (
             <>
-              <Headline2 styleAsHeading={5}>Description</Headline2>
+              <Headline2 styleAsHeading={4}>Description</Headline2>
               <Paragraph>{description}</Paragraph>
             </>
           )}
           {description && !!tags.length && <Divider />}
           {!!tags.length && (
             <>
-              <Headline2 styleAsHeading={5}>Tags</Headline2>
+              <Headline2 styleAsHeading={4}>Tags</Headline2>
               <TagList tags={tags} />
             </>
           )}

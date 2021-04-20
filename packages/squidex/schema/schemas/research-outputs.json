@@ -127,15 +127,14 @@
         "isDisabled": false,
         "partitioning": "invariant",
         "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Publish Date",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": false,
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Publish Date",
+          "hints": "Date the publication was created",
+          "placeholder": ""
         }
       },
       {

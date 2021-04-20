@@ -5,7 +5,6 @@ import { Rest, Entity, Graphql } from './common';
 export interface ResearchOutput {
   type: ResearchOutputType;
   title: string;
-  shortText?: string;
   description: string;
   link?: string;
   addedDate?: string;

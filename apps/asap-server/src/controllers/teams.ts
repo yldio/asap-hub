@@ -31,7 +31,6 @@ flatData {
     flatData{
       link
       publishDate
-      shortText
       title
       type
       tags

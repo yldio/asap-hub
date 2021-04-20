@@ -26,7 +26,6 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: null,
                   publishDate: null,
-                  shortText: null,
                   title: 'Proposal',
                   type: 'Proposal',
                   tags: ['test', 'tag'],
@@ -39,7 +38,6 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: 'docs.google.com',
                   publishDate: null,
-                  shortText: null,
                   title: "Team Salzer's intro slide deck",
                   type: 'Presentation',
                   tags: ['test', 'tag'],
@@ -370,7 +368,6 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: null,
               publishDate: null,
-              shortText: null,
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
@@ -383,7 +380,6 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
-              shortText: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
             },
@@ -556,7 +552,6 @@ export const getGraphQlTeamResponse = (
             flatData: {
               link: null,
               publishDate: null,
-              shortText: null,
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
@@ -569,7 +564,6 @@ export const getGraphQlTeamResponse = (
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
-              shortText: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
             },

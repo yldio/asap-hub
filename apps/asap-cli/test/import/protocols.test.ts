@@ -1,6 +1,5 @@
 import nock from 'nock';
 import { join } from 'path';
-import matches from 'lodash.matches';
 
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
@@ -13,12 +12,19 @@ import {
 } from './protocols.fixture';
 
 describe('Import protocol', () => {
+  const realDateNow = Date.now.bind(global.Date);
+
   beforeAll(() => {
     identity();
+    global.Date.now = jest.fn().mockReturnValue(1618926950256);
   });
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
+  });
+
+  afterAll(() => {
+    global.Date.now = realDateNow;
   });
 
   describe('create research output', () => {
@@ -56,7 +62,7 @@ describe('Import protocol', () => {
         })
         .post(
           `/api/content/${config.appName}/research-outputs?publish=false`,
-          matches(createProtocolsRequest),
+          createProtocolsRequest,
         )
         .reply(200);
 
@@ -98,13 +104,13 @@ describe('Import protocol', () => {
         .post(
           `/api/content/${config.appName}/research-outputs?publish=false`,
 
-          matches({
+          {
             ...createProtocolsRequest,
             description: {
               iv:
                 'Abstract text here\n || From Team team || Authors: author 1, author 2.',
             },
-          }),
+          },
         )
         .reply(200);
 
@@ -145,16 +151,13 @@ describe('Import protocol', () => {
           total: 0,
           items: [],
         })
-        .post(
-          `/api/content/${config.appName}/research-outputs?publish=false`,
-          matches({
-            ...createProtocolsRequest,
-            description: {
-              iv:
-                'THIS IS\nMY TEST ABSTRACT\n || From Team team || Authors: author 1, author 2.',
-            },
-          }),
-        )
+        .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
+          ...createProtocolsRequest,
+          description: {
+            iv:
+              'THIS IS\nMY TEST ABSTRACT\n || From Team team || Authors: author 1, author 2.',
+          },
+        })
         .reply(200);
 
       await importProtocols(
@@ -197,7 +200,7 @@ describe('Import protocol', () => {
       })
       .patch(
         `/api/content/${config.appName}/research-outputs/${fetchProtocolsResponse.id}`,
-        matches(createProtocolsRequest),
+        createProtocolsRequest,
       )
       .reply(200);
 
@@ -238,7 +241,7 @@ describe('Import protocol', () => {
       })
       .post(
         `/api/content/${config.appName}/research-outputs?publish=false`,
-        matches(createProtocolsRequest),
+        createProtocolsRequest,
       )
       .reply(200, fetchProtocolsResponse)
       .get(`/api/content/${config.appName}/teams/team-uuid-1`)

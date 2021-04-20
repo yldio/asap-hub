@@ -42,7 +42,7 @@ __metadata:
     "@types/jest": ^26.0.20
     "@types/jwt-decode": ^2.2.1
     "@types/jwt-encode": "workspace:*"
-    "@types/lodash.matches": ^4
+    "@types/luxon": ^1
     "@types/pump": ^1.1.0
     "@types/through2-concurrent": ^2
     "@types/uuid": ^8.0.0
@@ -54,7 +54,7 @@ __metadata:
     csv-parse: ^4.12.0
     got: ^11.6.0
     jwt-encode: ^1.0.1
-    lodash.matches: ^4.6.0
+    luxon: ^1.26.0
     nock: ^13.0.4
     pump: ^3.0.0
     through2-concurrent: ^2.0.0
@@ -82,7 +82,6 @@ __metadata:
     "@types/aws-lambda": ^8.10.51
     "@types/chance": ^1.1.0
     "@types/cors": ^2.8.9
-    "@types/date-fns": ^2.6.0
     "@types/debug": ^4.1.5
     "@types/express": ^4.17.11
     "@types/hapi": ^18.0.3
@@ -111,7 +110,6 @@ __metadata:
     chance: ^1.1.7
     cors: ^2.8.5
     csv-parse: ^4.12.0
-    date-fns: ^2.16.1
     debug: ^4.2.0
     express: ^4.17.1
     express-async-errors: ^3.1.1
@@ -6093,15 +6091,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/date-fns@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "@types/date-fns@npm:2.6.0"
-  dependencies:
-    date-fns: "*"
-  checksum: 9b136620fa858d4652ac3fb8bf9918d896e56220bec2c9cb90715dc768f1b3ab13077e4ec2c3ffc85ab8ae0378221a13982bfdc63fe2a685c28f0584bd381ab6
-  languageName: node
-  linkType: hard
-
 "@types/debug@npm:^4.1.5":
   version: 4.1.5
   resolution: "@types/debug@npm:4.1.5"
@@ -6476,6 +6465,13 @@ __metadata:
   version: 4.0.1
   resolution: "@types/long@npm:4.0.1"
   checksum: ed2a125330dbf2b425b2e58b1e1151a37106ceeec973f9f191fba0bda83ed00fae6d858254022e8b6e7165fec5f0c3872b7cb5f425c753383fed54699fb63b38
+  languageName: node
+  linkType: hard
+
+"@types/luxon@npm:^1":
+  version: 1.26.4
+  resolution: "@types/luxon@npm:1.26.4"
+  checksum: 4ddb55f1c73b1efe0dae407d79f10aba0e3f87945c6386a0c09742b66b39a4b1a81673bc5ddb2483b107684d052fbd953af1aaacdf43bd9bd882742a936791ec
   languageName: node
   linkType: hard
 
@@ -12416,7 +12412,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:*, date-fns@npm:^2.16.1":
+"date-fns@npm:^2.16.1":
   version: 2.16.1
   resolution: "date-fns@npm:2.16.1"
   checksum: fbe5d9aa1dc4c92c7cf9c0b31e58f532ac9fe059f85fc622641b1ac9c673150329620ea6bf941a8ba10e8e677aa0b6ccdc04ce001f81e70fd49acd1760edcba0
@@ -20768,6 +20764,13 @@ fsevents@~2.1.2:
   version: 1.25.0
   resolution: "luxon@npm:1.25.0"
   checksum: 3f0d64355beab707f5e8eb4e2d7e1cad90569c2a4c4dce440e0b4be4eb6833ec1a83513a4210361cd4dc5a266c0221718a9afd15f7cde3002d8fa1d0976b9e50
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^1.26.0":
+  version: 1.26.0
+  resolution: "luxon@npm:1.26.0"
+  checksum: e12bb8bfdd69707f0f3e57b1b2ff39042c67904bdc437602064519f3eb87d3267497bc56cc0b7611faa40e22019991440a8e8e179d4c6a0440e9f226571fce46
   languageName: node
   linkType: hard
 

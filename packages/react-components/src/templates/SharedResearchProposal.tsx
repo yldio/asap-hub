@@ -38,12 +38,7 @@ const postedStyles = css({
 
 type SharedResearchProposalProps = Pick<
   ResearchOutputResponse,
-  | 'created'
-  | 'addedDate'
-  | 'team'
-  | 'description'
-  | 'title'
-  | 'type'
+  'created' | 'addedDate' | 'team' | 'description' | 'title' | 'type'
 > & {
   backHref: string;
 };

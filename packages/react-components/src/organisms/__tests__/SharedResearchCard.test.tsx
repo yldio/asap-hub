@@ -4,9 +4,7 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import SharedResearchCard from '../SharedResearchCard';
 
-const sharedResearchCardProps: ComponentProps<
-  typeof SharedResearchCard
-> = createResearchOutputResponse();
+const sharedResearchCardProps: ComponentProps<typeof SharedResearchCard> = createResearchOutputResponse();
 
 it('renders the title', () => {
   const { getByRole } = render(

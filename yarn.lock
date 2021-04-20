@@ -95,7 +95,7 @@ __metadata:
     "@types/lodash.get": ^4
     "@types/lodash.matches": ^4
     "@types/lodash.uniqby": ^4
-    "@types/luxon": ^1.25.1
+    "@types/luxon": ^1
     "@types/mime-types": ^2
     "@types/parse-data-url": ^3.0.0
     "@types/pino": ^6
@@ -125,7 +125,7 @@ __metadata:
     lodash.get: ^4.4.2
     lodash.matches: ^4.6.0
     lodash.uniqby: ^4.7.0
-    luxon: ^1.25.0
+    luxon: ^1.26.0
     mime-types: ^2.1.27
     nock: ^13.0.4
     node-dev: ^6.0.0
@@ -6472,13 +6472,6 @@ __metadata:
   version: 1.26.4
   resolution: "@types/luxon@npm:1.26.4"
   checksum: 4ddb55f1c73b1efe0dae407d79f10aba0e3f87945c6386a0c09742b66b39a4b1a81673bc5ddb2483b107684d052fbd953af1aaacdf43bd9bd882742a936791ec
-  languageName: node
-  linkType: hard
-
-"@types/luxon@npm:^1.25.1":
-  version: 1.25.1
-  resolution: "@types/luxon@npm:1.25.1"
-  checksum: 5767c3d4b1756494c30ca548468a497090daec938bb66628183971c76e6d35dc97a458374434d97c8ca12cf7af30241a8c487a55538b8342543b0602863a4563
   languageName: node
   linkType: hard
 
@@ -20757,13 +20750,6 @@ fsevents@~2.1.2:
   dependencies:
     es5-ext: ~0.10.2
   checksum: 2eab98cdfb3101dab91ef6b8b50fce616440fa29d27ef1a1b99aa6be13422d03d6ebee15c1eb4873971c34baee27d64376aebc64560aecb37a328c82e3f40169
-  languageName: node
-  linkType: hard
-
-"luxon@npm:^1.25.0":
-  version: 1.25.0
-  resolution: "luxon@npm:1.25.0"
-  checksum: 3f0d64355beab707f5e8eb4e2d7e1cad90569c2a4c4dce440e0b4be4eb6833ec1a83513a4210361cd4dc5a266c0221718a9afd15f7cde3002d8fa1d0976b9e50
   languageName: node
   linkType: hard
 

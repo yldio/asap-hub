@@ -22,8 +22,8 @@ it('displays published date is undefined', () => {
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
     />,
   );
-  expect(getByText(/Originally Published/i).textContent).toMatchInlineSnapshot(
-    `"Originally Published: 3rd April 2019"`,
+  expect(getByText(/added/i).textContent).toMatchInlineSnapshot(
+    `"Date Added: 3rd April 2019"`,
   );
 });
 
@@ -35,8 +35,8 @@ it('displays created date when published date is undefined', () => {
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
     />,
   );
-  expect(getByText(/Originally Published/i).textContent).toMatchInlineSnapshot(
-    `"Originally Published: 12th July 2020"`,
+  expect(getByText(/added/i).textContent).toMatchInlineSnapshot(
+    `"Date Added: 12th July 2020"`,
   );
 });
 

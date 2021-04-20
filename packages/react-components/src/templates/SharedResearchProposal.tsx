@@ -4,7 +4,7 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
 import { network } from '@asap-hub/routing';
 
-import { TagLabel, Display, Link, Paragraph, Card, Caption } from '../atoms';
+import { TagLabel, Display, Link, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
@@ -30,11 +30,6 @@ const iconStyles = css({
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
-});
-
-const visibilityStyles = css({
-  paddingTop: `${24 / perRem}em`,
-  paddingBottom: `${30 / perRem}em`,
 });
 
 const postedStyles = css({
@@ -71,16 +66,9 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
         </span>
       )}
       <RichText toc text={description} />
-      <div css={visibilityStyles}>
-        <Paragraph>
-          <strong>Visibility</strong>
-          <br />
-          Everyone in the ASAP Network
-        </Paragraph>
-      </div>
       <div css={postedStyles}>
         <Caption asParagraph>
-          Posted:
+          Date Added:
           {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
         </Caption>
       </div>

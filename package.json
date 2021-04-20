@@ -25,7 +25,7 @@
     "start:backend": "yarn workspace @asap-hub/asap-server start",
     "start:frontend": "yarn workspace @asap-hub/frontend start",
     "start:sb": "yarn workspace @asap-hub/storybook start",
-    "sls": "node serverless/link-plugins.js && yarn pnpify serverless",
+    "sls": "babel-node --extensions=.js,.jsx,.ts,.tsx --config-file=./babel-cjs.config.js serverless/link-plugins.ts && TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "test:build-output": "yarn test --config=jest-build-output.config.js",
@@ -59,13 +59,13 @@
     "serverless-iam-roles-per-function": {
       "unplugged": true
     },
-    "serverless-offline": {
-      "unplugged": true
-    },
     "serverless-plugin-tree-shake": {
       "unplugged": true
     },
     "serverless-s3-sync": {
+      "unplugged": true
+    },
+    "serverless-webpack": {
       "unplugged": true
     },
     "term-size": {
@@ -92,6 +92,7 @@
     "@asap-hub/flags": "workspace:*",
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
+    "@babel/node": "^7.13.13",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.12.10",
     "@babel/plugin-proposal-optional-chaining": "^7.12.10",
     "@babel/plugin-transform-modules-commonjs": "^7.12.1",
@@ -102,11 +103,13 @@
     "@emotion/jest": "^11.0.0",
     "@jeysal/babel-plugin-ramda": "^2.0.1",
     "@peculiar/webcrypto": "^1.1.1",
+    "@serverless/typescript": "^2.34.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@types/jest": "^26.0.20",
     "@types/webpack": "^4",
     "@yarnpkg/pnpify": "^2.2.1",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-transform-inline-environment-variables": "0.5.0-alpha.42",
     "babel-preset-react-app": "^9.1.2",
@@ -129,9 +132,9 @@
     "rimraf": "^3.0.2",
     "serverless": "^1.81.1",
     "serverless-iam-roles-per-function": "^2.0.2",
-    "serverless-offline": "patch:serverless-offline@^6.8.0#./patches/serverless-offline.patch",
     "serverless-plugin-tree-shake": "^1.1.7",
     "serverless-s3-sync": "^1.15.0",
+    "serverless-webpack": "^5.4.1",
     "typescript": "~4.1.0",
     "webpack": "^5.1.0"
   }

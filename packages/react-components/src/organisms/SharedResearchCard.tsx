@@ -50,13 +50,7 @@ const typeStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
-  | 'id'
-  | 'created'
-  | 'addedDate'
-  | 'team'
-  | 'title'
-  | 'type'
-  | 'link'
+  'id' | 'created' | 'addedDate' | 'team' | 'title' | 'type' | 'link'
 >;
 
 const labels: Record<ResearchOutputType, string> = {

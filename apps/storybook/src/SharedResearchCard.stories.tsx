@@ -16,9 +16,6 @@ export const Normal = () => (
       'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
     )}
     type={select('Type', ['Proposal'], 'Proposal')}
-    publishDate={new Date(
-      date('Published Date', new Date(2020, 6, 12, 14, 32)),
-    ).toISOString()}
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}

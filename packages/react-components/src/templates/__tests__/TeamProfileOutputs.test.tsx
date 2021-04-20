@@ -18,7 +18,7 @@ it('renders output cards', () => {
           type: 'Proposal',
           id: 'uuid-output',
           created: new Date().toISOString(),
-          publishDate: new Date().toISOString(),
+          addedDate: new Date().toISOString(),
           title: 'Title',
           team: {
             id: 'uuid-team',

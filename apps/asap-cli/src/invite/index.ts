@@ -38,7 +38,7 @@ export const inviteUsers = async (
 
   const usersToInvite = items.filter((u) => {
     const connections = u.data.connections.iv;
-    if (connections.length === 0) {
+    if (!connections || connections.length === 0) {
       return true;
     }
 
@@ -54,7 +54,9 @@ export const inviteUsers = async (
     usersToInvite.map(async (user) => {
       await limiter();
 
-      let code = user.data.connections.iv
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      let code = user.data.connections
+        .iv! // asserting not null as the nulls values are filtered in usersToInvite
         .map((c) => c.code)
         .find((c) => c.match(uuidMatch));
 

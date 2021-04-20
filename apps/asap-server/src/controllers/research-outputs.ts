@@ -119,7 +119,7 @@ export default class ResearchOutputs implements ResearchOutputController {
           item,
           teams.items.find(
             (t) =>
-              t.data.outputs &&
+              t.data.outputs?.iv &&
               t.data.outputs.iv.filter((o) => o === item.id).length > 0,
           ),
         ),

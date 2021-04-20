@@ -4,18 +4,19 @@ import { parseDate, createURL } from '../utils/squidex';
 
 export const parseNewsAndEvents = (
   item: RestNewsOrEvent,
-): NewsOrEventResponse =>
-  ({
-    id: item.id,
-    created: parseDate(item.created).toISOString(),
-    shortText: item.data.shortText?.iv,
-    text: item.data.text?.iv,
-    link: item.data.link?.iv,
-    linkText: item.data.linkText?.iv,
-    thumbnail: item.data.thumbnail && createURL(item.data.thumbnail?.iv)[0],
-    title: item.data.title.iv,
-    type: item.data.type.iv,
-  } as NewsOrEventResponse);
+): NewsOrEventResponse => ({
+  id: item.id,
+  created: parseDate(item.created).toISOString(),
+  shortText: item.data.shortText?.iv,
+  text: item.data.text?.iv,
+  link: item.data.link?.iv,
+  linkText: item.data.linkText?.iv,
+  thumbnail: item.data.thumbnail?.iv
+    ? createURL(item.data.thumbnail.iv)[0]
+    : undefined,
+  title: item.data.title.iv,
+  type: item.data.type.iv,
+});
 
 export const parseGraphQLNewsAndEvents = (
   item: GraphqlNewsOrEvent,

@@ -79,6 +79,39 @@ describe('NewsAndEvents controller', () => {
 
       expect(result).toEqual(listNewsAndEventsResponse);
     });
+
+    test('Should return news and events when the thumbnail is null', async () => {
+      const squidexResponse = {
+        total: 1,
+        items: [
+          {
+            ...newsAndEventsSquidexApiResponse.items[0],
+            data: {
+              ...newsAndEventsSquidexApiResponse.items[0].data,
+              thumbnail: {
+                iv: null,
+              },
+            },
+          },
+        ],
+      };
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/news-and-events`)
+        .query({
+          q: JSON.stringify({
+            take: 8,
+            skip: 5,
+            filter: { path: 'data.type.iv', op: 'ne', value: 'Training' },
+            sort: [{ order: 'descending', path: 'created' }],
+          }),
+        })
+        .reply(200, squidexResponse);
+
+      const result = await newsAndEvents.fetch({ take: 8, skip: 5 });
+
+      expect(result.items[0].thumbnail).toBeUndefined();
+    });
   });
 
   describe('Fetch-by-id method', () => {

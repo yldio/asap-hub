@@ -42,7 +42,7 @@ it('falls back to created date when published date omitted', () => {
     <SharedResearchProposal
       {...props}
       created={new Date(2019, 1, 1, 1).toISOString()}
-      publishDate={new Date(2020, 1, 1, 1).toISOString()}
+      addedDate={new Date(2020, 1, 1, 1).toISOString()}
     />,
   );
   expect(getByText(/2020/)).toBeVisible();
@@ -50,7 +50,7 @@ it('falls back to created date when published date omitted', () => {
     <SharedResearchProposal
       {...props}
       created={new Date(2019, 1, 1, 1).toISOString()}
-      publishDate={undefined}
+      addedDate={undefined}
     />,
   );
   expect(getByText(/2019/)).toBeVisible();

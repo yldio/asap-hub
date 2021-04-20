@@ -70,7 +70,7 @@ const renderComponent = async () => {
 };
 
 describe('proposal research output', () => {
-  it('renders a research proposal', async () => {
+  it('renders a research proposal with team', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       type: 'Proposal',
@@ -80,10 +80,11 @@ describe('proposal research output', () => {
       },
       title: 'Proposal title!',
     });
-    const { getByRole } = await renderComponent();
+    const { getByRole, getByText } = await renderComponent();
+    expect(getByText(/proposal team/i)).toBeVisible();
     expect(getByRole('heading').textContent).toEqual('Proposal title!');
   });
-  it('renders the research output with a team', async () => {
+  it('links to a team', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       type: 'Proposal',
@@ -94,17 +95,15 @@ describe('proposal research output', () => {
     });
 
     const { getByText } = await renderComponent();
-    const element = getByText('Team Sulzer, D');
-    expect(element).toBeVisible();
-    expect(element).toHaveAttribute(
+    expect(getByText('Team Sulzer, D')).toHaveAttribute(
       'href',
-      '/network/teams/0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
+      expect.stringMatching(/0d074988-60c3-41e4-9f3a-e40cc65e5f4a/),
     );
   });
 });
 
-describe('other research outputs', () => {
-  it('renders a research output', async () => {
+describe('a non-proposal research output', () => {
+  it('renders with tags', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       type: 'Protocol',

@@ -69,8 +69,8 @@ const renderComponent = async () => {
   return result;
 };
 
-describe('proposal research output', () => {
-  it('renders a research proposal with team', async () => {
+describe('a proposal research output', () => {
+  it('renders with its team', async () => {
     mockGetResearchOutput.mockResolvedValue({
       ...createResearchOutputResponse(),
       type: 'Proposal',

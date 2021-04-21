@@ -2,6 +2,7 @@ import React from 'react';
 import {
   NotFoundPage,
   SharedResearchProposal,
+  SharedResearchOutput,
 } from '@asap-hub/react-components';
 import { sharedResearch, useRouteParams } from '@asap-hub/routing';
 
@@ -19,7 +20,11 @@ const ResearchOutput: React.FC = () => {
   if (researchOutputData) {
     return (
       <Frame title={researchOutputData.title}>
-        <SharedResearchProposal {...researchOutputData} backHref={backHref} />
+        {researchOutputData.type === 'Proposal' ? (
+          <SharedResearchProposal {...researchOutputData} backHref={backHref} />
+        ) : (
+          <SharedResearchOutput {...researchOutputData} backHref={backHref} />
+        )}
       </Frame>
     );
   }

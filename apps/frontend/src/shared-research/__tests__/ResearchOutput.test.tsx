@@ -25,6 +25,7 @@ beforeEach(() => {
   mockGetResearchOutput.mockClear();
   mockGetResearchOutput.mockResolvedValue({
     ...createResearchOutputResponse(),
+    type: 'Proposal',
     id,
   });
 });
@@ -68,31 +69,53 @@ const renderComponent = async () => {
   return result;
 };
 
-it('renders the research output', async () => {
-  mockGetResearchOutput.mockResolvedValue({
-    ...createResearchOutputResponse(),
-    title: 'Proposal title!',
+describe('a proposal research output', () => {
+  it('renders with its team', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      type: 'Proposal',
+      team: {
+        displayName: 'Proposal Team',
+        id: '123',
+      },
+      title: 'Proposal title!',
+    });
+    const { getByRole, getByText } = await renderComponent();
+    expect(getByText(/proposal team/i)).toBeVisible();
+    expect(getByRole('heading').textContent).toEqual('Proposal title!');
   });
-  const { getByRole } = await renderComponent();
-  expect(getByRole('heading').textContent).toEqual('Proposal title!');
+  it('links to a team', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      type: 'Proposal',
+      team: {
+        id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
+        displayName: 'Sulzer, D',
+      },
+    });
+
+    const { getByText } = await renderComponent();
+    expect(getByText('Team Sulzer, D')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/0d074988-60c3-41e4-9f3a-e40cc65e5f4a/),
+    );
+  });
 });
 
-it('renders the research output with a team', async () => {
-  mockGetResearchOutput.mockResolvedValue({
-    ...createResearchOutputResponse(),
-    team: {
-      id: '0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
-      displayName: 'Sulzer, D',
-    },
+describe('a non-proposal research output', () => {
+  it('renders with tags', async () => {
+    mockGetResearchOutput.mockResolvedValue({
+      ...createResearchOutputResponse(),
+      type: 'Protocol',
+      tags: ['Example Tag'],
+      title: 'Proposal title!',
+    });
+    const { getByRole, getByText } = await renderComponent();
+    expect(getByText(/Example Tag/i)).toBeVisible();
+    expect(getByRole('heading', { level: 1 }).textContent).toEqual(
+      'Proposal title!',
+    );
   });
-
-  const { getByText } = await renderComponent();
-  const element = getByText('Team Sulzer, D');
-  expect(element).toBeVisible();
-  expect(element).toHaveAttribute(
-    'href',
-    '/network/teams/0d074988-60c3-41e4-9f3a-e40cc65e5f4a',
-  );
 });
 
 it('renders the 404 page for a missing research output', async () => {

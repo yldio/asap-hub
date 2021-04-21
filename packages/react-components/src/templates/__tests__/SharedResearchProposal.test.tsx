@@ -1,14 +1,12 @@
 import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import SharedResearchProposal from '../SharedResearchProposal';
 
 const props: ComponentProps<typeof SharedResearchProposal> = {
+  ...createResearchOutputResponse(),
   backHref: '#',
-  title: 'title',
-  type: 'Proposal',
-  created: '2020-06-25T15:00:47.920Z',
-  description: 'content',
 };
 it('renders a proposal title and content', () => {
   const { getByText } = render(
@@ -38,4 +36,22 @@ it('renders a proposal with team information', () => {
     'href',
     expect.stringMatching(/42$/),
   );
+});
+it('falls back to created date when published date omitted', () => {
+  const { getByText, rerender } = render(
+    <SharedResearchProposal
+      {...props}
+      created={new Date(2019, 1, 1, 1).toISOString()}
+      addedDate={new Date(2020, 1, 1, 1).toISOString()}
+    />,
+  );
+  expect(getByText(/2020/)).toBeVisible();
+  rerender(
+    <SharedResearchProposal
+      {...props}
+      created={new Date(2019, 1, 1, 1).toISOString()}
+      addedDate={undefined}
+    />,
+  );
+  expect(getByText(/2019/)).toBeVisible();
 });

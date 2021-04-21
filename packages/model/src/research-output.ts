@@ -40,6 +40,17 @@ export type ResearchOutputResponse = Omit<
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly tags: string[];
   readonly addedDate?: string;
+  readonly lastModifiedDate?: string;
+};
+
+export const researchOutputLabels: Record<ResearchOutputType, string> = {
+  Proposal: 'Open External Link',
+  Presentation: 'View on Google',
+  Dataset: 'Open External Link',
+  Bioinformatics: 'Open External Link',
+  Protocol: 'View on Protocols.io',
+  'Lab Resource': 'Open External Link',
+  Article: 'Open External Link',
 };
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;

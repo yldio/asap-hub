@@ -1,7 +1,7 @@
 import React from 'react';
 import css from '@emotion/css';
 import format from 'date-fns/format';
-import { ResearchOutputResponse, ResearchOutputType } from '@asap-hub/model';
+import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 
 import { Card, Anchor, Headline2, Caption, TagLabel } from '../atoms';
@@ -53,16 +53,6 @@ type SharedResearchCardProps = Pick<
   'id' | 'created' | 'addedDate' | 'team' | 'title' | 'type' | 'link'
 >;
 
-const labels: Record<ResearchOutputType, string> = {
-  Proposal: 'Open External Link',
-  Presentation: 'View on Google',
-  Dataset: 'Open External Link',
-  Bioinformatics: 'Open External Link',
-  Protocol: 'View on Protocols.io',
-  'Lab Resource': 'Open External Link',
-  Article: 'Open External Link',
-};
-
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   id,
   created,
@@ -71,44 +61,38 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   team,
   title,
   type,
-}) => {
-  const titleComponent = link ? (
-    <Headline2 styleAsHeading={4}>{title}</Headline2>
-  ) : (
-    <Anchor
-      href={sharedResearch({}).researchOutput({ researchOutputId: id }).$}
-    >
-      <Headline2 styleAsHeading={4}>{title}</Headline2>
-    </Anchor>
-  );
-
-  return (
-    <Card>
-      <div css={containerStyles}>
-        <div css={headerStyles}>
-          <div css={typeStyles}>
-            <TagLabel>{type}</TagLabel>
-          </div>
-          {link ? <ExternalLink label={labels[type]} href={link} /> : null}
+}) => (
+  <Card>
+    <div css={containerStyles}>
+      <div css={headerStyles}>
+        <div css={typeStyles}>
+          <TagLabel>{type}</TagLabel>
         </div>
-        <div css={textStyles}>
-          {titleComponent}
-          {team && (
-            <span css={teamMemberStyles}>
-              <span css={iconStyles}>{teamIcon}</span>
-              <Anchor href={network({}).teams({}).team({ teamId: team.id }).$}>
-                Team {team.displayName}
-              </Anchor>
-            </span>
-          )}
-        </div>
-        <Caption accent={'lead'} asParagraph>
-          Date Added:
-          {format(new Date(addedDate || created), ' do MMMM yyyy')}
-        </Caption>
+        {link ? (
+          <ExternalLink label={researchOutputLabels[type]} href={link} />
+        ) : null}
       </div>
-    </Card>
-  );
-};
+      <div css={textStyles}>
+        <Anchor
+          href={sharedResearch({}).researchOutput({ researchOutputId: id }).$}
+        >
+          <Headline2 styleAsHeading={4}>{title}</Headline2>
+        </Anchor>
+        {team && (
+          <span css={teamMemberStyles}>
+            <span css={iconStyles}>{teamIcon}</span>
+            <Anchor href={network({}).teams({}).team({ teamId: team.id }).$}>
+              Team {team.displayName}
+            </Anchor>
+          </span>
+        )}
+      </div>
+      <Caption accent={'lead'} asParagraph>
+        Date Added:
+        {format(new Date(addedDate || created), ' do MMMM yyyy')}
+      </Caption>
+    </div>
+  </Card>
+);
 
 export default SharedResearchCard;

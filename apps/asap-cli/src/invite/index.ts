@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import Intercept from 'apr-intercept';
-import { Squidex, RestUser } from '@asap-hub/squidex';
+import { Squidex, RestUser, Query } from '@asap-hub/squidex';
 import { RateLimit } from 'async-sema';
 import { v4 as uuidV4 } from 'uuid';
 import path from 'path';
@@ -20,21 +20,26 @@ const squidex: Squidex<RestUser> = new Squidex('users');
 const limiter = RateLimit(10);
 const uuidMatch = /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
 export const inviteUsers = async (
-  role: string,
+  role?: string,
   reinvite = false,
   take = 20,
   skip = 0,
 ): Promise<void> => {
-  const { items } = await squidex.fetch({
+  const query: Query = {
     skip,
     take,
-    filter: {
+    sort: [{ path: 'created', order: 'ascending' }],
+  };
+
+  if (role) {
+    query.filter = {
       path: 'data.role.iv',
       op: 'eq',
       value: role,
-    },
-    sort: [{ path: 'created', order: 'ascending' }],
-  });
+    };
+  }
+
+  const { items } = await squidex.fetch(query);
 
   const usersToInvite = items.filter((u) => {
     const connections = u.data.connections.iv;

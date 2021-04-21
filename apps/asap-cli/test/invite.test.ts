@@ -24,8 +24,12 @@ describe('Invite user', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks(); // clear call count
     expect(nock.isDone()).toBe(true);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks(); // clear call count
+    nock.cleanAll();
   });
 
   test('Doesnt send mails when doesnt find users without code', async () => {
@@ -36,12 +40,12 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
+          sort: [{ path: 'created', order: 'ascending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[2]] });
@@ -50,7 +54,7 @@ describe('Invite user', () => {
     expect(ses.sendTemplatedEmail).toBeCalledTimes(0);
   });
 
-  test('Sends emails and fetches users correctly', async () => {
+  test('Sends emails and fetches users with the role "Staff" correctly', async () => {
     const ses = new SES();
 
     nock(config.baseUrl)
@@ -59,12 +63,12 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
+          sort: [{ path: 'created', order: 'ascending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, fetchUsersResponse)
@@ -95,6 +99,47 @@ describe('Invite user', () => {
     });
   });
 
+  test('Sends emails and fetches users with no particular role', async () => {
+    const ses = new SES();
+
+    nock(config.baseUrl)
+      .get(`/api/content/${config.appName}/users`)
+      .query({
+        q: JSON.stringify({
+          take: 20,
+          skip: 0,
+          sort: [{ path: 'created', order: 'ascending' }],
+        }),
+      })
+      .reply(200, fetchUsersResponse)
+      .patch(`/api/content/${config.appName}/users/userId1`, {
+        email: { iv: 'testUser@asap.science' },
+        connections: { iv: [{ code: 'uuid' }] },
+      })
+      .reply(200, fetchUsersResponse.items[0])
+      .patch(`/api/content/${config.appName}/users/userId2`, {
+        email: { iv: 'testUser@asap.science' },
+        connections: { iv: [{ code: 'uuid' }] },
+      })
+      .reply(200, fetchUsersResponse.items[1])
+      .get(`/api/content/${config.appName}/users`);
+
+    await inviteUsers();
+
+    expect(ses.sendTemplatedEmail).toBeCalledTimes(2);
+    expect(ses.sendTemplatedEmail).toBeCalledWith({
+      Source: grantsFromEmail,
+      Destination: {
+        ToAddresses: ['testUser@asap.science'],
+      },
+      Template: 'Welcome',
+      TemplateData: JSON.stringify({
+        firstName: 'First',
+        link: `${origin}/welcome/uuid`,
+      }),
+    });
+  });
+
   test('Doesnt send mail when fails to write the users code on squidex', async () => {
     nock(config.baseUrl)
       .get(`/api/content/${config.appName}/users`)
@@ -102,12 +147,12 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
+          sort: [{ path: 'created', order: 'ascending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })
@@ -134,12 +179,12 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
+          sort: [{ path: 'created', order: 'ascending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
             value: 'Staff',
           },
-          sort: [{ path: 'created', order: 'ascending' }],
         }),
       })
       .reply(200, { items: [fetchUsersResponse.items[0]] })

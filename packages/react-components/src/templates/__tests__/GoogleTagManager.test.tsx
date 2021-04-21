@@ -6,7 +6,7 @@ import GoogleTagManager from '../GoogleTagManager';
 jest.mock(
   'https://www.googletagmanager.com/gtm.js?id=containerId',
   () => {
-    globalThis.window.dataLayer.push({ key: 'val' });
+    globalThis.window.dataLayer?.push({ key: 'val' });
     return {};
   },
   { virtual: true },
@@ -37,7 +37,7 @@ it('loads the GTM script', () => {
 
 it('does not re-init if GTM is already loaded', () => {
   render(<GoogleTagManager containerId="containerId" />);
-  const oldDataLayer = [...globalThis.window.dataLayer];
+  const oldDataLayer = [...(globalThis.window.dataLayer ?? [])];
 
   jest.resetModules();
   render(<GoogleTagManager containerId="containerId" />);

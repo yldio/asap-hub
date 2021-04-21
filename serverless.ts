@@ -270,6 +270,11 @@ const serverlessConfig: AWS = {
       : {}),
   },
   resources: {
+    Conditions: {
+      IsDev: {
+        'Fn::Equals': ['${self:provider.stage}', 'dev'],
+      },
+    },
     Resources: {
       HttpApiDomain: {
         Type: 'AWS::ApiGatewayV2::DomainName',
@@ -470,6 +475,14 @@ const serverlessConfig: AWS = {
               },
             ],
           },
+        },
+      },
+      DataBackupBucket: {
+        Type: 'AWS::S3::Bucket',
+        Condition: 'IsDev',
+        DeletionPolicy: 'Retain',
+        Properties: {
+          BucketName: '${self:service}-${self:provider.stage}-data-backup',
         },
       },
       CloudFrontOriginAccessIdentityFrontend: {

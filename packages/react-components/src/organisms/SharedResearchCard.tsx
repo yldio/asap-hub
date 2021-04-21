@@ -50,7 +50,7 @@ const typeStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
-  'id' | 'created' | 'publishDate' | 'team' | 'title' | 'type' | 'link'
+  'id' | 'created' | 'addedDate' | 'team' | 'title' | 'type' | 'link'
 >;
 
 const labels: Record<ResearchOutputType, string> = {
@@ -67,7 +67,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   id,
   created,
   link,
-  publishDate,
+  addedDate,
   team,
   title,
   type,
@@ -104,7 +104,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         </div>
         <Caption accent={'lead'} asParagraph>
           Date Added:
-          {format(new Date(publishDate || created), ' do MMMM yyyy')}
+          {format(new Date(addedDate || created), ' do MMMM yyyy')}
         </Caption>
       </div>
     </Card>

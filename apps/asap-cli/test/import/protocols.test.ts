@@ -1,5 +1,6 @@
 import nock from 'nock';
 import { join } from 'path';
+
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import { protocols as importProtocols } from '../../src/import';
@@ -11,12 +12,19 @@ import {
 } from './protocols.fixture';
 
 describe('Import protocol', () => {
+  const realDateNow = Date.now.bind(global.Date);
+
   beforeAll(() => {
     identity();
+    global.Date.now = jest.fn().mockReturnValue(1618926950256);
   });
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
+  });
+
+  afterAll(() => {
+    global.Date.now = realDateNow;
   });
 
   describe('create research output', () => {
@@ -93,13 +101,17 @@ describe('Import protocol', () => {
           total: 0,
           items: [],
         })
-        .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
-          ...createProtocolsRequest,
-          description: {
-            iv:
-              'Abstract text here\n || From Team team || Authors: author 1, author 2.',
+        .post(
+          `/api/content/${config.appName}/research-outputs?publish=false`,
+
+          {
+            ...createProtocolsRequest,
+            description: {
+              iv:
+                'Abstract text here\n || From Team team || Authors: author 1, author 2.',
+            },
           },
-        })
+        )
         .reply(200);
 
       await importProtocols(

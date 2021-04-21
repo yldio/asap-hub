@@ -7,6 +7,7 @@ import {
   RestResearchOutput,
   RestTeam,
 } from '@asap-hub/squidex';
+import { DateTime } from 'luxon';
 import { HTTPError } from 'got';
 import { Protocol } from './parse';
 
@@ -90,6 +91,9 @@ export default async (data: Protocol): Promise<void> => {
     },
     publishDate: {
       iv: new Date(data.created).toISOString(),
+    },
+    addedDate: {
+      iv: DateTime.utc().toISO(),
     },
     description: {
       // eslint-disable-next-line prefer-template

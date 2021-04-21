@@ -4,6 +4,7 @@ export const createProtocolsRequest: RestResearchOutput['data'] = {
   type: { iv: 'Protocol' },
   title: { iv: 'title 1' },
   publishDate: { iv: '2020-11-27T10:26:00.000Z' },
+  addedDate: { iv: '2021-04-20T13:55:50.256Z' },
   description: {
     iv: 'From Team team || Authors: author 1, author 2.',
   },

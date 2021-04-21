@@ -39,6 +39,7 @@ export type ResearchOutputResponse = Omit<
   readonly created: string;
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly tags: string[];
+  readonly addedDate?: string;
 };
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;

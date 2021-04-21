@@ -8,7 +8,7 @@ const researchOutputResponse: Omit<
   'id'
 > = {
   created: '2020-09-07T17:36:54Z',
-  publishDate: '2020-09-07T17:36:54Z',
+  addedDate: '2020-10-08T16:35:54Z',
   title: 'Output',
   description: 'description',
   type: 'Proposal',

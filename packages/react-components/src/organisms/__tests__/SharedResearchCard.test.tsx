@@ -14,11 +14,11 @@ it('renders the title', () => {
   expect(getByRole('heading').tagName).toEqual('H2');
 });
 
-it('displays published date is undefined', () => {
+it('displays addedDate when present', () => {
   const { getByText } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      publishDate={new Date(2019, 3, 3, 14, 32).toISOString()}
+      addedDate={new Date(2019, 3, 3, 14, 32).toISOString()}
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
     />,
   );
@@ -27,11 +27,11 @@ it('displays published date is undefined', () => {
   );
 });
 
-it('displays created date when published date is undefined', () => {
+it('displays created date when addedDate is undefined', () => {
   const { getByText } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      publishDate={undefined}
+      addedDate={undefined}
       created={new Date(2020, 6, 12, 14, 32).toISOString()}
     />,
   );

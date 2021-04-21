@@ -29,22 +29,25 @@ yargs(process.argv.slice(2))
       importers[entity as 'users' | 'protocols'](path as string),
   })
   .command({
-    command: 'invite <role>',
+    command: 'invite [Options]',
     describe: 'invite people to the ASAP Hub',
     builder: (cli) =>
       cli
         .positional('role', {
-          describe: 'specific a role to invite',
+          describe: 'specify a role to invite (optional)',
           type: 'string',
+          default: undefined,
           choices: ['Staff', 'Grantee', 'Guest'],
         })
-        .positional('reinvite', {
-          describe:
-            "flag to reinvite users that didn't complete the registration process",
+        .option('reinvite', {
+          alias: 'r',
           type: 'boolean',
+          description:
+            "flag to reinvite users that didn't complete the registration process",
         }),
+
     handler: async ({ role, reinvite }) => {
-      inviteUsers(role as string, Boolean(reinvite));
+      inviteUsers(role as string | undefined, Boolean(reinvite));
     },
   })
   .demandCommand(1)

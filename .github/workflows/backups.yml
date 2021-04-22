@@ -5,6 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SQUIDEX_VERSION: '7.4'
+      SQUIDEX_APP: 'asap-hub-dev'
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
     steps:
       - name: Cache Squidex CLI
         id: cache-squidex-cli
@@ -18,5 +21,8 @@ jobs:
       - name: Unzip the CLI
         if: steps.cache-squidex-cli.outputs.cache-hit != 'true'
         run: unzip ubuntu-x64.zip -d sq/
+      - name: Add the configuration
+        if: steps.cache-squidex-cli.outputs.cache-hit != 'true'
+        run: ./sq/sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
       - name: Run sync
-        run: ./sq/sq help
+        run: ./sq/sq sync out ./backup

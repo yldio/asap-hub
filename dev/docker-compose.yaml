@@ -1,21 +1,9 @@
 version: '2.1'
 services:
-  localstack:
-    image: localstack/localstack
-    ports:
-      - '4566-4584:4566-4584'
-      - '8081:8080'
-    environment:
-      - SERVICES=ses
-    volumes:
-      - ./dev/localstack:/tmp/localstack
-
   mongo:
     image: mongo:latest
     ports:
       - '27017:27017'
-    volumes:
-      - ./dev/mongodb:/data/db
     restart: unless-stopped
 
   squidex:
@@ -23,24 +11,19 @@ services:
     ports:
       - '${SQUIDEX_PORT:-4004}:80'
     environment:
-      - SQUIDEX_PROTOCOL=${SQUIDEX_PROTOCOL:-http}
       - URLS__BASEURL=${SQUIDEX_URL:-http://localhost:4004}
-      - URLS__ENFORCEHTTPS=${SQUIDEX_FORCE_HTTPS:-False}
       - EVENTSTORE__MONGODB__CONFIGURATION=mongodb://mongo
       - STORE__MONGODB__CONFIGURATION=mongodb://mongo
       - IDENTITY__ADMINEMAIL=${SQUIDEX_ADMINEMAIL:-admin@squidex.io}
-      - IDENTITY__ADMINPASSWORD=${SQUIDEX_ADMINPASSWORD:-SuperS3cure123./.?sdf}
+      - IDENTITY__ADMINPASSWORD=${SQUIDEX_ADMINPASSWORD:-SuperS3cure?}
     depends_on:
       - mongo
-    volumes:
-      - ./dev/squidex/assets:/app/Assets
     restart: unless-stopped
 
   setup_squidex:
-    build: .
-    volumes:
-      - ./dev/fixtures:/dev/fixtures
-      - ./dev/squidex:/dev/squidex
+    build:
+      dockerfile: dev/Dockerfile
+      context: ..
     depends_on:
       - mongo
       - squidex

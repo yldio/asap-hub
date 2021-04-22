@@ -1,16 +1,19 @@
 # Development environment
 
-`yarn start:backend` starts:
+`yarn start:squidex` starts:
 
-- localstack with AWS SES
 - a local instance of squidex
 - a mongoDB instance for squidex
-- a setup container that creates and sets up the squidex app & data
 
-To verify the email on AWS SES you can run the following script:
-`./ses-verify-email.sh`
+Local Squidex is available at http://localhost:4004
 
-**Node:** Set `NODE_ENV=production` to use AWS SES live environment.
+> **Dont use Google Chrome**. Since don't use https locally Chrome will fail the auth flow
+
+**Email**: admin@squidex.io
+**Password**: SuperS3cure?
+
+You don't need to configure the app to run against the local environment.
+It's configured to do so by default.
 
 ### Running Squidex in production
 

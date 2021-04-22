@@ -4,8 +4,8 @@
   "NormalizedUserName": "ADMIN@SQUIDEX.IO",
   "Email": "admin@squidex.io",
   "NormalizedEmail": "ADMIN@SQUIDEX.IO",
-  "PasswordHash": "AQAAAAEAACcQAAAAEJgHB3IH4bIE6Vqj1Ry9uGVwYpA0CcfjLWoQ2mRknX/9Fqq7trRF10xNTHCwkkPKXQ==",
-  "SecurityStamp": "BRUBOALKS7JXX4Q4SJLSDFWRPYU3EI45",
+  "PasswordHash": "AQAAAAEAACcQAAAAEI6cYa5OHPsTzcuUwu/fSF9ZBCd++fl939OzFAwIm3EsqhZ7v9ELtM4W6hWGBw9SHA==",
+  "SecurityStamp": "TBY2IJOELR2I56K4PONT3ZSQQ7TP5GKA",
   "ConcurrencyStamp": "aafb189c-baa0-4ced-99c8-ad87c59ef6df",
   "LockoutEnabled": true,
   "Claims": [

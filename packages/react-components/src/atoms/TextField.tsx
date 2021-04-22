@@ -3,7 +3,7 @@ import css from '@emotion/css';
 import { useDebounce } from 'use-debounce';
 
 import { perRem } from '../pixels';
-import { lead, silver, ember, rose, tin, pine } from '../colors';
+import { lead, silver, ember, rose, tin, pine, steel, paper } from '../colors';
 import { noop, getSvgAspectRatio } from '../utils';
 import { loadingImage, validTickGreenImage } from '../images';
 import { useGifReplay } from '../hooks';
@@ -31,7 +31,16 @@ const disabledStyles = css({
   color: lead.rgb,
   backgroundColor: silver.rgb,
 });
-
+const LABEL_INDICATOR_CLASS_NAME = 'labelIndicator';
+const labelIndicatorStyles = css({
+  padding: `${15 / perRem}em ${18 / perRem}em`,
+  backgroundColor: silver.rgb,
+  border: `1px solid ${steel.rgb}`,
+  borderRight: 0,
+  display: 'flex',
+  color: lead.rgb,
+  order: -1,
+});
 const customIndicatorPadding = (aspectRatio: number, position: Position) => {
   const padding = `${
     (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) / perRem
@@ -75,6 +84,15 @@ const invalidStyles = css({
     '~ div svg': {
       fill: ember.rgb,
     },
+    [`& ~ .${LABEL_INDICATOR_CLASS_NAME}`]: {
+      backgroundColor: ember.rgb,
+      borderColor: ember.rgb,
+      color: paper.rgb,
+      svg: {
+        stroke: paper.rgb,
+        fill: 'none',
+      },
+    },
   },
 });
 
@@ -102,6 +120,8 @@ const textFieldStyles = css({
 });
 const containerStyles = css({
   flexBasis: '100%',
+  display: 'grid',
+  gridTemplateColumns: 'max-content 1fr',
   position: 'relative',
 });
 const customIndicatorStyles = (aspectRatio: number, position: Position) =>
@@ -139,6 +159,7 @@ type TextFieldProps = {
   readonly loading?: boolean;
   readonly customIndicator?: React.ReactElement;
   readonly customIndicatorPosition?: Position;
+  readonly labelIndicator?: React.ReactElement | string;
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
@@ -161,6 +182,7 @@ const TextField: React.FC<TextFieldProps> = ({
   loading = false,
   indicateValid = customIndicator === undefined &&
     (pattern !== undefined || showValidationType.has(type)),
+  labelIndicator,
 
   value,
   onChange = noop,
@@ -198,7 +220,7 @@ const TextField: React.FC<TextFieldProps> = ({
 
           debouncedIndicateValid && validStyles(validGifUrl),
           validationMessage && invalidStyles,
-
+          !labelIndicator && { gridColumn: '1 / span 2' },
           customIndicator &&
             customIndicatorPadding(
               getSvgAspectRatio(customIndicator),
@@ -207,6 +229,11 @@ const TextField: React.FC<TextFieldProps> = ({
           loading && loadingStyles,
         ]}
       />
+      {labelIndicator && (
+        <div className={LABEL_INDICATOR_CLASS_NAME} css={labelIndicatorStyles}>
+          {labelIndicator}
+        </div>
+      )}
       {customIndicator && (
         <div
           css={customIndicatorStyles(
@@ -217,7 +244,9 @@ const TextField: React.FC<TextFieldProps> = ({
           {customIndicator}
         </div>
       )}
-      <div css={validationMessageStyles}>{validationMessage}</div>
+      <div css={[validationMessageStyles, { gridColumn: '1 / span 2' }]}>
+        {validationMessage}
+      </div>
     </div>
   );
 };

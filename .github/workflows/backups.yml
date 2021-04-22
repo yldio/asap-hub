@@ -1,5 +1,5 @@
 name: Create database backup DEV
-on: workflow_dispatch
+on: push
 jobs:
   make_backup:
     runs-on: ubuntu-latest

@@ -25,4 +25,4 @@ jobs:
         if: steps.cache-squidex-cli.outputs.cache-hit != 'true'
         run: ./sq/sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
       - name: Run sync
-        run: ./sq/sq sync out ./backup
+        run: ./sq/sq sync out ./backup -t schemas

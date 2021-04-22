@@ -26,3 +26,5 @@ jobs:
         run: ./sq/sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
       - name: Run sync
         run: ./sq/sq sync out ./backup -t schemas
+      - name: Tar the files
+        run: tar -czf $(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz backup/

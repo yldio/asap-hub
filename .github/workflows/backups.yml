@@ -1,0 +1,22 @@
+name: Create database backup DEV
+on: workflow_dispatch
+jobs:
+  make_backup:
+    runs-on: ubuntu-latest
+    env:
+      SQUIDEX_VERSION: '7.4'
+    steps:
+      - name: Cache Squidex CLI
+        id: cache-squidex-cli
+        uses: actions/cache@v2
+        with:
+          path: sq
+          key: ${{ env.SQUIDEX_VERSION }}-squidex-cli
+      - name: Get the CLI
+        if: steps.cache-squidex-cli.outputs.cache-hit != 'true'
+        run: wget https://github.com/Squidex/squidex-samples/releases/download/cli-v${{ env.SQUIDEX_VERSION }}/ubuntu-x64.zip
+      - name: Unzip the CLI
+        if: steps.cache-squidex-cli.outputs.cache-hit != 'true'
+        run: unzip ubuntu-x64.zip -d sq/
+      - name: Run sync
+        run: ./sq/sq help

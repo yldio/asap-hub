@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 
 import { perRem } from '../pixels';
@@ -10,12 +10,7 @@ const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-type SharedResearchPageProps = {
-  onChangeSearch?: (newQuery: string) => void;
-  searchQuery?: string;
-  onChangeFilter?: (filter: string) => void;
-  filters: Set<string>;
-};
+type SharedResearchPageProps = ComponentProps<typeof SharedResearchPageHeader>;
 const SharedResearchPage: React.FC<SharedResearchPageProps> = ({
   onChangeSearch,
   searchQuery,

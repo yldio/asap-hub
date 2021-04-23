@@ -10,6 +10,7 @@ export { default as EventCard } from './EventCard';
 export { default as EventConversation } from './EventConversation';
 export { default as EventMaterials } from './EventMaterials';
 export { default as EventSearch } from './EventSearch';
+export { default as Filter } from './Filter';
 export { default as GoogleCalendar } from './GoogleCalendar';
 export { default as GroupCard } from './GroupCard';
 export { default as GroupInformation } from './GroupInformation';

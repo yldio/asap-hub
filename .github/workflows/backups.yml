@@ -2,7 +2,7 @@ name: Create database backup DEV
 on: push
 jobs:
   make_backup:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     env:
       SQUIDEX_VERSION: '7.4'
       SQUIDEX_APP: 'asap-hub-dev'

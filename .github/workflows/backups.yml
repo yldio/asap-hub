@@ -10,7 +10,7 @@ jobs:
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      BUCKET_NAME: 'asap-hub-dev-data-backup'
+      BUCKET_NAME: 'asap-hub-822-data-backup'
     steps:
       - name: Cache Squidex CLI
         id: cache-squidex-cli

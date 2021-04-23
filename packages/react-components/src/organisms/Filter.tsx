@@ -1,7 +1,9 @@
 import css from '@emotion/css';
 import React, { useEffect, useState } from 'react';
+import { useDebounce } from 'use-debounce';
 
 import { CheckboxGroup } from '.';
+import { FILTERS_KEY, FILTER_EVENT, FILTER_TITLE_KEY } from '../analytics';
 import { Button, Caption } from '../atoms';
 import { paper, steel, colorWithTransparency, tin } from '../colors';
 import { filterIcon } from '../icons';
@@ -65,6 +67,24 @@ const Filter: React.FC<FilterProps> = ({
   useEffect(() => {
     setMenuShown(false);
   }, [filterTitle]);
+
+  const [debouncedFilters] = useDebounce(filters, 5000);
+  useEffect(() => {
+    if (filters.size && filters === debouncedFilters) {
+      window.dataLayer?.push({
+        [FILTERS_KEY]: [...filters],
+        [FILTER_TITLE_KEY]: filterTitle,
+        event: FILTER_EVENT,
+      });
+    }
+
+    return () => {
+      window.dataLayer?.push({
+        [FILTERS_KEY]: undefined,
+        [FILTER_TITLE_KEY]: undefined,
+      });
+    };
+  }, [debouncedFilters, filterTitle, filters]);
 
   return (
     <div>

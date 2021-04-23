@@ -17,7 +17,6 @@ type SearchProps = Pick<
   Required<Pick<ComponentProps<typeof TextField>, 'placeholder'>>;
 const SearchField: React.FC<SearchProps> = (props) => {
   const [debouncedValue] = useDebounce(props.value, 5000);
-
   useEffect(() => {
     if (props.value && props.value === debouncedValue) {
       window.dataLayer?.push({

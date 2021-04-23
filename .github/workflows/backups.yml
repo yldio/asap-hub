@@ -8,6 +8,9 @@ jobs:
       SQUIDEX_APP: 'asap-hub-dev'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      BUCKET_NAME: 'asap-hub-dev-data-backup'
     steps:
       - name: Cache Squidex CLI
         id: cache-squidex-cli
@@ -26,4 +29,6 @@ jobs:
       - name: Run sync
         run: ./sq/sq sync out ./backup -t schemas
       - name: Tar the files
-        run: tar -czf $(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz backup/
+        run: FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && tar -czf $FILE_NAME backup/ && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: upload to S3
+        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body ./$FILE_NAME

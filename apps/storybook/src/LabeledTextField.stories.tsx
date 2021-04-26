@@ -1,7 +1,7 @@
 import React from 'react';
-import { text } from '@storybook/addon-knobs';
+import { boolean, text } from '@storybook/addon-knobs';
 
-import { LabeledTextField } from '@asap-hub/react-components';
+import { globeIcon, LabeledTextField } from '@asap-hub/react-components';
 
 export default {
   title: 'Molecules / Labeled Text Field',
@@ -37,6 +37,7 @@ export const Valid = () => (
   <LabeledTextField
     title={text('Title', 'Full Name')}
     value={text('Value', 'John Doe')}
+    indicateValid
     pattern=".*"
   />
 );
@@ -56,5 +57,22 @@ export const Loading = () => (
     title={text('Title', 'Full Name')}
     value={text('Value', 'John Doe')}
     loading
+  />
+);
+
+export const LabelIndicator = () => (
+  <LabeledTextField
+    title={text('Title', 'Twitter')}
+    value={text('Value', 'handle')}
+    enabled={boolean('Enabled', true)}
+    hint={text('Hint', '')}
+    customValidationMessage={
+      boolean('Valid', true)
+        ? undefined
+        : 'I am a long error message here for example'
+    }
+    labelIndicator={
+      boolean('Icon', false) ? globeIcon : text('Label Indicator', '@')
+    }
   />
 );

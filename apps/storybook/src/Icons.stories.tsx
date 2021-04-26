@@ -21,6 +21,7 @@ export const Feedback = () => components.feedbackIcon;
 export const Filter = () => components.filterIcon;
 export const FirstPage = () => components.firstPageIcon;
 export const Github = () => components.githubIcon;
+export const Globe = () => components.globeIcon;
 export const Google = () => components.googleIcon;
 export const GoogleCalendar = () => components.googleCalendarIcon;
 export const GoogleDrive = () => components.googleDriveIcon;

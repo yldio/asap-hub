@@ -36,6 +36,13 @@ it('renders a disabled input field', () => {
   );
 });
 
+it('with the label indicator prop prop shows a react node', () => {
+  const { getByText } = render(
+    <TextField value="" labelIndicator={'github.com/'} />,
+  );
+  expect(getByText(/github/)).toBeVisible();
+});
+
 it('with the loading prop shows a loading indicator', () => {
   const { getByRole } = render(<TextField value="" loading />);
   expect(getComputedStyle(getByRole('textbox')).backgroundImage).toMatch(

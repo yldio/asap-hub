@@ -38,4 +38,4 @@ jobs:
       - name: Get the name of the file
         run: FILE_NAME=$(ls ./backup | head -n 1) && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: upload to S3
-        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body ./backup/$FILE_NAME
+        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body ./backup/$FILE_NAME --storage-class STANDARD_IA

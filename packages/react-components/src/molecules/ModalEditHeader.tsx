@@ -3,10 +3,15 @@ import css from '@emotion/css';
 
 import { Headline3, Button, Link } from '../atoms';
 import { crossIcon } from '../icons';
-import { tabletScreen } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { noop } from '../utils';
+import { paddingStyles } from '../card';
+import { steel } from '../colors';
 
-const headerStyles = css({
+const headerStyles = css(paddingStyles, {
+  paddingBottom: `${12 / perRem}em`,
+  borderBottom: `1px solid ${steel.rgb}`,
+
   display: 'flex',
   flexDirection: 'column',
   [`@media (min-width: ${tabletScreen.min}px)`]: {
@@ -20,7 +25,7 @@ const controlsContainerStyles = css({
   gridAutoFlow: 'column',
   alignItems: 'end',
   justifyContent: 'end',
-  columnGap: '12px',
+  columnGap: `${12 / perRem}em`,
 });
 
 type ModalEditHeaderProps = {

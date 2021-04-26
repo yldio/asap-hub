@@ -6,12 +6,27 @@ import React, {
   useEffect,
 } from 'react';
 import { Prompt } from 'react-router-dom';
+import css from '@emotion/css';
 
 import { ModalEditHeader, Modal } from '../molecules';
 import { noop } from '../utils';
 import Toast from './Toast';
 import { paddingStyles } from '../card';
 import { usePushFromHere } from '../routing';
+import { perRem } from '../pixels';
+
+const styles = css({
+  boxSizing: 'border-box',
+  height: '100%',
+  display: 'grid',
+  gridTemplateRows: 'max-content 1fr',
+  overflow: 'auto',
+});
+const bodyStyles = css(paddingStyles, {
+  paddingTop: `${12 / perRem}em`,
+
+  overflowY: 'auto',
+});
 
 type EditModalProps = Pick<
   ComponentProps<typeof ModalEditHeader>,
@@ -54,7 +69,7 @@ const EditModal: React.FC<EditModalProps> = ({
           There was an error and we were unable to save your changes
         </Toast>
       )}
-      <form ref={formRef} css={paddingStyles}>
+      <form ref={formRef} css={styles}>
         <ModalEditHeader
           title={title}
           backHref={backHref}
@@ -75,7 +90,9 @@ const EditModal: React.FC<EditModalProps> = ({
             }
           }}
         />
-        {children({ isSaving: status === 'isSaving' })}
+        <main css={bodyStyles}>
+          {children({ isSaving: status === 'isSaving' })}
+        </main>
       </form>
     </Modal>
   );

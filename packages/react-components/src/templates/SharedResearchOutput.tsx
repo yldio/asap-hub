@@ -3,19 +3,13 @@ import css from '@emotion/css';
 import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
 import format from 'date-fns/format';
 
-import {
-  TagLabel,
-  Display,
-  Card,
-  Headline2,
-  Paragraph,
-  Divider,
-} from '../atoms';
+import { TagLabel, Display, Card, Headline2, Divider } from '../atoms';
 import { lead } from '../colors';
 import { mobileScreen, perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, ExternalLink, TagList } from '../molecules';
 import { captionStyles } from '../text';
+import { RichText } from '../organisms';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -109,10 +103,10 @@ const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
       {(description || !!tags.length) && (
         <Card>
           {description && (
-            <>
+            <div css={{ paddingBottom: `${12 / perRem}em` }}>
               <Headline2 styleAsHeading={4}>Description</Headline2>
-              <Paragraph>{description}</Paragraph>
-            </>
+              <RichText text={description} />
+            </div>
           )}
           {description && !!tags.length && <Divider />}
           {!!tags.length && (

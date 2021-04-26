@@ -18,7 +18,9 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ).toISOString(),
   description: text(
     'Description',
-    'Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.',
+    `Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
+    <b>Bold Text</b> <a href="http://example.com"> link </a>
+    `,
   ),
   title: text(
     'Title',

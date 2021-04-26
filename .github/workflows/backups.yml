@@ -1,5 +1,5 @@
 name: Create database backup DEV
-on: push
+on: workflow_dispatch
 jobs:
   make_backup:
     runs-on: ubuntu-18.04
@@ -14,7 +14,7 @@ jobs:
       - name: Add the configuration
         run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
       - name: Run sync
-        run: sq sync out ./backup -t schemas
+        run: sq sync out ./backup
       - name: Tar the files
         run: FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && tar -czf $FILE_NAME backup/ && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: Store backup as an artifact
@@ -28,7 +28,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      BUCKET_NAME: 'asap-hub-822-data-backup'
+      BUCKET_NAME: 'asap-hub-dev-data-backup'
     steps:
       - name: Download the backup artifact
         uses: actions/download-artifact@v2

@@ -1,7 +1,12 @@
-FROM nikolaik/python-nodejs:python3.9-nodejs14-slim
+FROM registry.gitlab.com/yldio/asap-hub/squidex-utils:latest
 
-RUN apt-get update -y && apt-get install -y unzip software-properties-common
+# Ubuntu 18.04 ships with python 3.6
+# Install node, yarn & npm
 
-RUN wget https://github.com/Squidex/squidex-samples/releases/download/cli-v7.4/linux-x64.zip && \
-    unzip linux-x64.zip && \
-    mv sq /bin
+RUN echo "deb https://deb.nodesource.com/node_14.x buster main" > /etc/apt/sources.list.d/nodesource.list && \
+    wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
+    wget -qO- https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    apt-get update && \
+    apt-get install -yqq nodejs yarn && \
+    npm i -g npm@^6

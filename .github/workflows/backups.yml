@@ -3,32 +3,39 @@ on: push
 jobs:
   make_backup:
     runs-on: ubuntu-18.04
+    container:
+      image: registry.gitlab.com/yldio/asap-hub/squidex-utils
     env:
       SQUIDEX_VERSION: '7.4'
       SQUIDEX_APP: 'asap-hub-dev'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
+    steps:
+      - name: Add the configuration
+        run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
+      - name: Run sync
+        run: sq sync out ./backup -t schemas
+      - name: Tar the files
+        run: FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && tar -czf $FILE_NAME backup/ && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Store backup as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: squidex-dev-backup-artifact-${{ github.run_id }}
+          path: ${{ env.FILE_NAME }}
+  upload_backup_to_s3:
+    runs-on: ubuntu-18.04
+    needs: make_backup
+    env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       BUCKET_NAME: 'asap-hub-822-data-backup'
     steps:
-      - name: Cache Squidex CLI
-        id: cache-squidex-cli
-        uses: actions/cache@v2
+      - name: Download the backup artifact
+        uses: actions/download-artifact@v2
         with:
-          path: sq
-          key: ${{ env.SQUIDEX_VERSION }}-squidex-cli
-      - name: Get the CLI
-        if: steps.cache-squidex-cli.outputs.cache-hit != 'true'
-        run: wget https://github.com/Squidex/squidex-samples/releases/download/cli-v${{ env.SQUIDEX_VERSION }}/ubuntu-x64.zip
-      - name: Unzip the CLI
-        if: steps.cache-squidex-cli.outputs.cache-hit != 'true'
-        run: unzip ubuntu-x64.zip -d sq/
-      - name: Add the configuration
-        run: ./sq/sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
-      - name: Run sync
-        run: ./sq/sq sync out ./backup -t schemas
-      - name: Tar the files
-        run: FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && tar -czf $FILE_NAME backup/ && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+          name: squidex-dev-backup-artifact-${{ github.run_id }}
+          path: backup/
+      - name: Get the name of the file
+        run: FILE_NAME=$(ls ./backup | head -n 1) && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: upload to S3
-        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body ./$FILE_NAME
+        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body ./backup/$FILE_NAME

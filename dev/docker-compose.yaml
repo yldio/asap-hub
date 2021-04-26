@@ -22,7 +22,7 @@ services:
 
   setup_squidex:
     build:
-      dockerfile: dev/Dockerfile
+      dockerfile: dev/local-setup.Dockerfile
       context: ..
     depends_on:
       - mongo

@@ -15,6 +15,7 @@ setup:integration-image:
   only:
     changes:
       - ci/integration/Dockerfile
+      - dev/Dockerfile
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE

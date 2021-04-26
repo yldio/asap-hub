@@ -25,7 +25,7 @@ const textStyles = css({
 
 type SharedResearchPageHeaderProps = {
   onChangeSearch?: (newQuery: string) => void;
-  searchQuery?: string;
+  searchQuery: string;
   onChangeFilter?: (filters: string) => void;
   filters: Set<string>;
 };

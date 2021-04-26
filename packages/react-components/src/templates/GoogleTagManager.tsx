@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
 
+// Types that are definitely suitable to be displayed in analytics go here.
+// Set for example is not, but Arrays are rendered comma-joined.
+// Non-exhaustive, but we can add what we need.
+type DataLayerValue = string | number | ReadonlyArray<DataLayerValue>;
 declare global {
   interface Window {
-    readonly dataLayer?: Array<Record<string, unknown>>;
+    readonly dataLayer?: Array<Record<string, DataLayerValue | undefined>>;
   }
 }
 

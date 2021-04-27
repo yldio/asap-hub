@@ -6,7 +6,6 @@ jobs:
     container:
       image: registry.gitlab.com/yldio/asap-hub/squidex-utils
     env:
-      SQUIDEX_VERSION: '7.4'
       SQUIDEX_APP: 'asap-hub-dev'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}

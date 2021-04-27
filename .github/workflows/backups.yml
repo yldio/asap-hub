@@ -1,5 +1,5 @@
 name: Create database backup DEV
-on: workflow_dispatch
+on: push
 jobs:
   make_backup:
     runs-on: ubuntu-18.04
@@ -7,34 +7,20 @@ jobs:
       image: registry.gitlab.com/yldio/asap-hub/squidex-utils
     env:
       SQUIDEX_APP: 'asap-hub-dev'
+      BUCKET_NAME: 'asap-hub-822-data-backup'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - name: Add the configuration
         run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
       - name: Run sync
-        run: sq sync out ./backup
+        run: sq sync out ./backup -t schemas
       - name: Tar the files
-        run: FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && tar -czf $FILE_NAME backup/ && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
-      - name: Store backup as an artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: squidex-dev-backup-artifact-${{ github.run_id }}
-          path: ${{ env.FILE_NAME }}
-  upload_backup_to_s3:
-    runs-on: ubuntu-18.04
-    needs: make_backup
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      BUCKET_NAME: 'asap-hub-dev-data-backup'
-    steps:
-      - name: Download the backup artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: squidex-dev-backup-artifact-${{ github.run_id }}
-          path: backup/
-      - name: Get the name of the file
-        run: FILE_NAME=$(ls ./backup | head -n 1) && echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+        run: |
+          FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && \
+          tar -czf $FILE_NAME backup/ && \
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: upload to S3
-        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body ./backup/$FILE_NAME --storage-class STANDARD_IA
+        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA

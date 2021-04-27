@@ -272,7 +272,10 @@ const serverlessConfig: AWS = {
   resources: {
     Conditions: {
       IsDev: {
-        'Fn::Equals': ['${self:provider.stage}', 'dev'],
+        'Fn::Or': [
+          { 'Fn::Equals': ['${self:provider.stage}', 'dev'] },
+          { 'Fn::Equals': ['${self:provider.stage}', '822'] },
+        ],
       },
     },
     Resources: {

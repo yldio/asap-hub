@@ -5,17 +5,17 @@ variables:
 
 setup:integration-image:
   image: docker:19.03.12
-  stage: .pre
+  stage: build
   services:
     - docker:19.03.12-dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
     - docker push $INTEGRATION_DOCKER_IMAGE
-  only:
-    changes:
-      - ci/integration/Dockerfile
-      - dev/base.Dockerfile
+  rules:
+    - changes:
+        - ci/integration/Dockerfile
+        - dev/base.Dockerfile
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE

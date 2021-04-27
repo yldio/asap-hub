@@ -16,7 +16,7 @@ setup:squidex-image:
     refs:
       - master
     changes:
-      - dev/Dockerfile
+      - dev/base.Dockerfile
 
 .tmpl:sync: &tmpl_sync
   image: $SQUIDEX_SYNC_DOCKER_IMAGE

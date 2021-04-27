@@ -133,7 +133,7 @@
           "fieldType": "DateTime",
           "editor": "DateTime",
           "label": "Publish Date",
-          "hints": "Date the publication was created",
+          "hints": "Date this output was published (outside of the Hub). This only applies to outputs that have been published.",
           "placeholder": ""
         }
       },

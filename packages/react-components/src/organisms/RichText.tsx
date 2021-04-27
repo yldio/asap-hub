@@ -100,6 +100,13 @@ const components = {
 interface RichTextProps {
   readonly toc?: boolean;
   readonly text: string;
+  readonly poorText?: undefined;
+}
+
+interface PoorTextProps {
+  readonly toc?: undefined;
+  readonly text: string;
+  readonly poorText: true;
 }
 
 const styles = css({
@@ -116,29 +123,35 @@ const styles = css({
   img: { height: 'auto', maxWidth: '100%' },
 });
 
-const RichText: React.FC<RichTextProps> = ({ toc = false, text }) => {
+const RichText: React.FC<RichTextProps | PoorTextProps> = ({
+  toc = false,
+  text,
+  poorText = false,
+}) => {
   let processor = unified().use(rehypeHtml, { fragment: true });
 
   processor = processor.use(rehypeSanitize, {
-    tagNames: [
-      ...Object.keys(components),
-      // text modifiers with default UA styling
-      'strong',
-      'em',
-      'sub',
-      'sup',
-      'i',
-      'b',
-      // lists with default UA styling
-      'ul',
-      'ol',
-      'li',
-      // media
-      'img',
-      'iframe',
-      // rehype-toc
-      'nav',
-    ],
+    tagNames: poorText
+      ? ['a', 'p', 'br']
+      : [
+          ...Object.keys(components),
+          // text modifiers with default UA styling
+          'strong',
+          'em',
+          'sub',
+          'sup',
+          'i',
+          'b',
+          // lists with default UA styling
+          'ul',
+          'ol',
+          'li',
+          // media
+          'img',
+          'iframe',
+          // rehype-toc
+          'nav',
+        ],
     attributes: {
       ...githubSanitizationSchema.attributes,
       iframe: [

@@ -1,23 +1,23 @@
 # https://gitlab.com/yldio/asap-hub/-/ci/lint
 
 variables:
-  SQUIDEX_SYNC_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
+  SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
 
-setup:squidex-image:
+build:base-squidex-image:
   image: docker:19.03.12
   stage: .pre
   services:
     - docker:19.03.12-dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $SQUIDEX_SYNC_DOCKER_IMAGE . -f dev/base.Dockerfile
-    - docker push $SQUIDEX_SYNC_DOCKER_IMAGE
+    - docker build -t $SQUIDEX_BASE_DOCKER_IMAGE . -f dev/base.Dockerfile
+    - docker push $SQUIDEX_BASE_DOCKER_IMAGE
   rules:
     - changes:
         - dev/base.Dockerfile
 
 .tmpl:sync: &tmpl_sync
-  image: $SQUIDEX_SYNC_DOCKER_IMAGE
+  image: $SQUIDEX_BASE_DOCKER_IMAGE
   before_script:
     - ./ci/config-squidex-rules.sh
   script:

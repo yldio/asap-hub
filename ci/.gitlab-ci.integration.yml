@@ -2,23 +2,19 @@
 
 variables:
   INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
+  SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
 
-build:integration-image:
+build:docker-images:
   image: docker:19.03.12
   stage: .pre
-  needs:
-    - job: build:base-squidex-image
-      optional: true  # Dont fail in case the base did not run
   services:
     - docker:19.03.12-dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $SQUIDEX_BASE_DOCKER_IMAGE . -f dev/base.Dockerfile
+    - docker push $SQUIDEX_BASE_DOCKER_IMAGE
     - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
     - docker push $INTEGRATION_DOCKER_IMAGE
-  rules:
-    - changes:
-        - ci/integration/Dockerfile
-        - dev/base.Dockerfile
 
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE
@@ -38,3 +34,24 @@ test:integration:
     # If tests fail return exit code now
     - exit $test_exit_code
   stage: test
+
+.tmpl:sync: &tmpl_sync
+  image: $SQUIDEX_BASE_DOCKER_IMAGE
+  before_script:
+    - ./ci/config-squidex-rules.sh
+  script:
+    - sq config add $SQUIDEX_APP_NAME $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET -u $SQUIDEX_BASE_URL
+    - sq config use $SQUIDEX_APP_NAME
+    - sq sync in packages/squidex/schema -t schemas -t rules --delete
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+
+sync:squidex:dev:
+  <<: *tmpl_sync
+  stage: prepare-dev
+
+sync:squidex:production:
+  <<: *tmpl_sync
+  stage: prepare-prod
+  environment:
+    name: production

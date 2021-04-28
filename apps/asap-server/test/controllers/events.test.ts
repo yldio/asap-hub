@@ -31,6 +31,10 @@ describe('Event controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('Fetch method', () => {
     test('Should return an empty result when the client returns an empty array of data', async () => {
       nock(config.baseUrl)
@@ -152,6 +156,39 @@ describe('Event controller', () => {
         await events.fetch({
           after: 'after-date',
           search: 'a',
+        });
+      });
+
+      test('Should sanitise single quotation mark by using two single quotes', async () => {
+        // http://docs.oasis-open.org/odata/odata/v4.01/cs01/part2-url-conventions/odata-v4.01-cs01-part2-url-conventions.html#sec_URLComponents
+        const expectedFilter =
+          "(contains(data/title/iv, '''') or contains(data/tags/iv, '''')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(expectedFilter),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          search: "'",
+        });
+      });
+
+      test('Should sanitise double quotation mark by using a backslash', async () => {
+        const expectedFilter =
+          "(contains(data/title/iv, '\\\"') or contains(data/tags/iv, '\\\"')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(expectedFilter),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          search: '"',
         });
       });
     });

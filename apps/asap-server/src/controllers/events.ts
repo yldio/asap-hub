@@ -9,6 +9,7 @@ import {
 import { FetchOptions, AllOrNone } from '../utils/types';
 import { parseGraphQLEvent } from '../entities/event';
 import { ResponseFetchGroup, GraphQLQueryGroup } from './groups';
+import { sanitiseForSquidex } from '../utils/squidex';
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;
@@ -40,7 +41,7 @@ export default class Events implements EventController {
       sortOrder,
     } = options;
 
-    const filters = (search || '')
+    const filters = ((search && sanitiseForSquidex(search)) || '')
       .split(' ')
       .filter(Boolean)
       .reduce(

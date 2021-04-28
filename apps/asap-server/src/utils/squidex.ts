@@ -12,3 +12,6 @@ export const createURL = (assets: string[]): string[] =>
 
 export const parseDate = (date: string): Date =>
   DateTime.fromISO(date).toJSDate();
+
+export const sanitiseForSquidex = (text: string): string =>
+  text.replace(/'/g, "''").replace(/"/g, '\\"');

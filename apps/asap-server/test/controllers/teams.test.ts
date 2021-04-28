@@ -52,6 +52,10 @@ describe('Team controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('Fetch method', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
@@ -94,6 +98,63 @@ describe('Team controller', () => {
 
       const result = await teams.fetch(
         { take: 8, skip: 0, search: 'Cristiano Ronaldo' },
+        mockUser,
+      );
+
+      expect(result).toEqual({
+        total: 1,
+        items: listTeamResponse.items.slice(0, 1),
+      });
+    });
+
+    test('Should sanitise single quotation mark by using two single quotes', async () => {
+      // http://docs.oasis-open.org/odata/odata/v4.01/cs01/part2-url-conventions/odata-v4.01-cs01-part2-url-conventions.html#sec_URLComponents
+      const expectedSearchFilter =
+        `(contains(data/displayName/iv, '''')` +
+        ` or contains(data/projectTitle/iv, '''')` +
+        ` or contains(data/skills/iv, ''''))`;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+        })
+        .reply(200, graphQlTeamsResponseSingle)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: "data/teams/iv/id eq 'team-id-1'",
+        })
+        .reply(200, usersResponseTeam1);
+
+      const result = await teams.fetch(
+        { take: 8, skip: 0, search: "'" },
+        mockUser,
+      );
+
+      expect(result).toEqual({
+        total: 1,
+        items: listTeamResponse.items.slice(0, 1),
+      });
+    });
+
+    test('Should sanitise double quotation mark by using a backslash', async () => {
+      const expectedSearchFilter =
+        `(contains(data/displayName/iv, '\\\"')` +
+        ` or contains(data/projectTitle/iv, '\\\"')` +
+        ` or contains(data/skills/iv, '\\\"'))`;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+        })
+        .reply(200, graphQlTeamsResponseSingle)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: "data/teams/iv/id eq 'team-id-1'",
+        })
+        .reply(200, usersResponseTeam1);
+
+      const result = await teams.fetch(
+        { take: 8, skip: 0, search: '"' },
         mockUser,
       );
 

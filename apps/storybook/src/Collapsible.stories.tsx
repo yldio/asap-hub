@@ -2,7 +2,7 @@ import React from 'react';
 import { Collapsible, Paragraph } from '@asap-hub/react-components';
 
 export default {
-  title: 'Molecules / CochevronCircleDownIcon',
+  title: 'Molecules / Collapsible',
   component: Collapsible,
 };
 

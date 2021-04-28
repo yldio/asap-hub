@@ -13,8 +13,8 @@ export default {
 
 const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ...createResearchOutputResponse(),
-  publishDate: new Date(
-    date('Published Date', new Date(2020, 6, 12, 14, 32)),
+  addedDate: new Date(
+    date('Added Date', new Date(2020, 6, 12, 14, 32)),
   ).toISOString(),
   description: text(
     'Description',

@@ -35,12 +35,12 @@ it('renders an output with an external link', () => {
   );
 });
 
-it('falls back to created date when published date omitted', () => {
+it('falls back to created date when added date omitted', () => {
   const { getByText, rerender } = render(
     <SharedResearchOutput
       {...props}
       created={new Date(2019, 1, 1, 1).toISOString()}
-      publishDate={new Date(2020, 1, 1, 1).toISOString()}
+      addedDate={new Date(2020, 1, 1, 1).toISOString()}
       lastModifiedDate={undefined}
     />,
   );
@@ -49,7 +49,7 @@ it('falls back to created date when published date omitted', () => {
     <SharedResearchOutput
       {...props}
       created={new Date(2019, 1, 1, 1).toISOString()}
-      publishDate={undefined}
+      addedDate={undefined}
       lastModifiedDate={undefined}
     />,
   );
@@ -60,7 +60,7 @@ it('renders an output with a modified date', () => {
   const { queryByText, getByText, rerender } = render(
     <SharedResearchOutput
       {...props}
-      publishDate={new Date(2019, 1, 1, 1).toISOString()}
+      addedDate={new Date(2019, 1, 1, 1).toISOString()}
       lastModifiedDate={undefined}
     />,
   );
@@ -69,7 +69,7 @@ it('renders an output with a modified date', () => {
   rerender(
     <SharedResearchOutput
       {...props}
-      publishDate={new Date(2019, 1, 1, 1).toISOString()}
+      addedDate={new Date(2019, 1, 1, 1).toISOString()}
       lastModifiedDate={new Date(2020, 1, 1, 1).toISOString()}
     />,
   );

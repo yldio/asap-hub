@@ -37,7 +37,7 @@ it('renders a proposal with team information', () => {
     expect.stringMatching(/42$/),
   );
 });
-it('falls back to created date when published date omitted', () => {
+it('falls back to created date when added date omitted', () => {
   const { getByText, rerender } = render(
     <SharedResearchProposal
       {...props}

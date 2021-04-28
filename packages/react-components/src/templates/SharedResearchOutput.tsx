@@ -50,7 +50,7 @@ const cardsStyles = css({
 type SharedResearchProposalProps = Pick<
   ResearchOutputResponse,
   | 'created'
-  | 'publishDate'
+  | 'addedDate'
   | 'team'
   | 'description'
   | 'title'
@@ -64,7 +64,7 @@ type SharedResearchProposalProps = Pick<
 
 const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
   created,
-  publishDate,
+  addedDate,
   title,
   description,
   type,
@@ -89,7 +89,7 @@ const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
         <div css={[timestampStyles, captionStyles]}>
           <span>
             Date added:
-            {format(new Date(publishDate || created), ' Mo MMMM yyyy')}
+            {format(new Date(addedDate || created), ' Mo MMMM yyyy')}
             {lastModifiedDate && ' · '}
           </span>
           {lastModifiedDate && (

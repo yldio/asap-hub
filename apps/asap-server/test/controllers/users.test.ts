@@ -23,6 +23,10 @@ describe('Users controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('fetch', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
@@ -71,6 +75,57 @@ describe('Users controller', () => {
         .reply(200, fixtures.graphQlResponseFetchUsers);
 
       const result = await users.fetch(fetchOptions);
+      expect(result).toEqual(fixtures.fetchExpectation);
+    });
+
+    test('Should sanitise single quotation mark by using two single quotes', async () => {
+      // http://docs.oasis-open.org/odata/odata/v4.01/cs01/part2-url-conventions/odata-v4.01-cs01-part2-url-conventions.html#sec_URLComponents
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: "'",
+      };
+
+      const expectedFilter =
+        "data/role/iv ne 'Hidden' and" +
+        " (contains(data/firstName/iv, '''')" +
+        " or contains(data/lastName/iv, '''')" +
+        " or contains(data/institution/iv, '''')" +
+        " or contains(data/skills/iv, ''''))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.graphQlResponseFetchUsers);
+
+      const result = await users.fetch(fetchOptions);
+
+      expect(result).toEqual(fixtures.fetchExpectation);
+    });
+
+    test('Should sanitise double quotation mark by using a backslash', async () => {
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: '"',
+      };
+
+      const expectedFilter =
+        "data/role/iv ne 'Hidden' and" +
+        " (contains(data/firstName/iv, '\\\"')" +
+        " or contains(data/lastName/iv, '\\\"')" +
+        " or contains(data/institution/iv, '\\\"')" +
+        " or contains(data/skills/iv, '\\\"'))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.graphQlResponseFetchUsers);
+
+      const result = await users.fetch(fetchOptions);
+
       expect(result).toEqual(fixtures.fetchExpectation);
     });
   });

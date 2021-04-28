@@ -17,6 +17,7 @@ import {
 import { parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
 import { FetchOptions } from '../utils/types';
+import { sanitiseForSquidex } from '../utils/squidex';
 
 export const GraphQLQueryUser = `
 id
@@ -245,7 +246,7 @@ export default class Users {
 
     const searchQ = [
       "data/role/iv ne 'Hidden'",
-      ...(search || '')
+      ...((search && sanitiseForSquidex(search)) || '')
         .split(' ')
         .filter(Boolean) // removes whitespaces
         .reduce(

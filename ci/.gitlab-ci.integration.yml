@@ -7,7 +7,8 @@ build:integration-image:
   image: docker:19.03.12
   stage: .pre
   needs:
-    - build:base-squidex-image
+    - job: build:base-squidex-image
+      optional: true  # Dont fail in case the base did not run
   services:
     - docker:19.03.12-dind
   script:

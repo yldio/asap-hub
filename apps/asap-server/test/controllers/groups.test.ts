@@ -21,6 +21,10 @@ describe('Group controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('Fetch method', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
@@ -63,6 +67,53 @@ describe('Group controller', () => {
         .reply(200, fixtures.queryGroupsResponse);
 
       const result = await groups.fetch(fetchOptions);
+      expect(result).toEqual(fixtures.queryGroupsExpectation);
+    });
+
+    test('Should sanitise single quotation mark by using two single quotes', async () => {
+      // http://docs.oasis-open.org/odata/odata/v4.01/cs01/part2-url-conventions/odata-v4.01-cs01-part2-url-conventions.html#sec_URLComponents
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: "'",
+      };
+
+      const expectedFilter =
+        "(contains(data/name/iv, '''')" +
+        " or contains(data/description/iv, '''')" +
+        " or contains(data/tags/iv, ''''))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchGroups(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.queryGroupsResponse);
+
+      const result = await groups.fetch(fetchOptions);
+
+      expect(result).toEqual(fixtures.queryGroupsExpectation);
+    });
+
+    test('Should sanitise double quotation mark by using a backslash', async () => {
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: '"',
+      };
+
+      const expectedFilter =
+        "(contains(data/name/iv, '\\\"')" +
+        " or contains(data/description/iv, '\\\"')" +
+        " or contains(data/tags/iv, '\\\"'))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchGroups(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.queryGroupsResponse);
+
+      const result = await groups.fetch(fetchOptions);
+
       expect(result).toEqual(fixtures.queryGroupsExpectation);
     });
   });

@@ -8,6 +8,7 @@ import { FetchOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
 import { GraphQLQueryUser } from './users';
 import { GraphQLQueryTeam } from './teams';
+import { sanitiseForSquidex } from '../utils/squidex';
 
 export const GraphQLQueryGroup = `
 id
@@ -116,7 +117,7 @@ export default class Groups implements GroupController {
   async fetch(options: FetchOptions): Promise<ListGroupResponse> {
     const { search } = options;
 
-    const searchQ = (search || '')
+    const searchQ = ((search && sanitiseForSquidex(search)) || '')
       .split(' ')
       .filter(Boolean) // removes whitespaces
       .reduce(

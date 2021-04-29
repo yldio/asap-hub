@@ -499,7 +499,6 @@ const serverlessConfig: AWS = {
         DeletionPolicy: 'Retain',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-data-backup',
-          AccessControl: 'Private',
           LifecycleConfiguration: {
             Rules: [
               {

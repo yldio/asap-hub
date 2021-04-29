@@ -26,4 +26,4 @@ jobs:
           tar -czf $FILE_NAME backup/ && \
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: upload to S3
-        run: aws s3api put-object --private --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
+        run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA

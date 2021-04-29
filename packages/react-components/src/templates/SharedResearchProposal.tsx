@@ -69,7 +69,7 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
       <div css={postedStyles}>
         <Caption asParagraph>
           Date Added:
-          {format(new Date(addedDate || created), ' Mo MMMM yyyy')}
+          {format(new Date(addedDate || created), ' do MMMM yyyy')}
         </Caption>
       </div>
     </Card>

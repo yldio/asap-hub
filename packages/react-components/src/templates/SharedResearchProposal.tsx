@@ -1,7 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import format from 'date-fns/format';
 import { network } from '@asap-hub/routing';
 
 import { TagLabel, Display, Link, Card, Caption } from '../atoms';
@@ -11,6 +10,7 @@ import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { teamIcon } from '../icons';
 import { BackLink } from '../molecules';
+import { formatDate } from '../date';
 
 const teamMemberStyles = css({
   color: lead.rgb,
@@ -68,8 +68,7 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
       <RichText toc text={description} />
       <div css={postedStyles}>
         <Caption asParagraph>
-          Date Added:
-          {format(new Date(addedDate || created), ' do MMMM yyyy')}
+          Date Added: {formatDate(new Date(addedDate || created))}
         </Caption>
       </div>
     </Card>

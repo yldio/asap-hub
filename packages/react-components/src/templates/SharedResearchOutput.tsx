@@ -1,7 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
 import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
-import format from 'date-fns/format';
 
 import { TagLabel, Display, Card, Headline2, Divider } from '../atoms';
 import { lead } from '../colors';
@@ -10,6 +9,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, ExternalLink, TagList } from '../molecules';
 import { captionStyles } from '../text';
 import { RichText } from '../organisms';
+import { formatDate } from '../date';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -88,15 +88,11 @@ const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
         <Display styleAsHeading={3}>{title}</Display>
         <div css={[timestampStyles, captionStyles]}>
           <span>
-            Date added:
-            {format(new Date(addedDate || created), ' Mo MMMM yyyy')}
+            Date added: {formatDate(new Date(addedDate || created))}
             {lastModifiedDate && ' · '}
           </span>
           {lastModifiedDate && (
-            <span>
-              Last updated:
-              {format(new Date(lastModifiedDate), ' Mo MMMM yyyy')}
-            </span>
+            <span>Last updated: {formatDate(new Date(lastModifiedDate))}</span>
           )}
         </div>
       </Card>

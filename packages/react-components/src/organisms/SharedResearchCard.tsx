@@ -1,6 +1,5 @@
 import React from 'react';
 import css from '@emotion/css';
-import format from 'date-fns/format';
 import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 
@@ -9,6 +8,7 @@ import { perRem } from '../pixels';
 import { lead } from '../colors';
 import { teamIcon } from '../icons';
 import { ExternalLink } from '../molecules';
+import { formatDate } from '../date';
 
 const containerStyles = css({
   display: 'flex',
@@ -88,8 +88,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         )}
       </div>
       <Caption accent={'lead'} asParagraph>
-        Date Added:
-        {format(new Date(addedDate || created), ' do MMMM yyyy')}
+        Date Added: {formatDate(new Date(addedDate || created))}
       </Caption>
     </div>
   </Card>

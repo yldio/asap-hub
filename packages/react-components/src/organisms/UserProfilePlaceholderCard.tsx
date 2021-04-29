@@ -7,7 +7,7 @@ import { headlineStyles } from '../text';
 import { charcoal, lead } from '../colors';
 
 const containerStyles = css({
-  padding: `${16 / perRem}em`,
+  padding: `${15 / perRem}em ${18 / perRem}em`,
   color: lead.rgb,
 });
 

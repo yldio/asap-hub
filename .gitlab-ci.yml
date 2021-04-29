@@ -136,8 +136,8 @@ test:build-output:
 deploy:sls:branch:
   <<: *tmpl_branch
   <<: *tmpl_deploy
-  before_script:
-    - source ci/env-setup.sh
+  image: $INTEGRATION_DOCKER_IMAGE
+  stage: deploy-dev
   environment:
     name: review/$CI_EXTERNAL_PULL_REQUEST_IID
     url: https://$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
@@ -145,10 +145,15 @@ deploy:sls:branch:
   variables:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables
-  stage: deploy-dev
-  needs:
-    - build:ts
-    - build:native
+  script:
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - python ci/integration/scripts/create-app.py
+    #- s3 get backup
+    #- sync backup
+    - source ci/env-setup.sh
+    - yarn sls deploy --verbose
 
 deploy:sls:development:
   <<: *tmpl_master

@@ -19,11 +19,9 @@ build:docker-images:
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE
   before_script:
-    # APP is named after PR Nr. or Branch + JobId otherwise (master?)
-    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID:-$CI_COMMIT_BRANCH-$CI_JOB_ID}
+    - export SQUIDEX_APP_NAME=$CI_COMMIT_BRANCH-$CI_JOB_ID
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
-    - pip install -r ci/integration/scripts/requirements.txt
     - python ci/integration/scripts/create-app.py
   script:
     - echo "Running Integration tests against $SQUIDEX_APP_NAME"

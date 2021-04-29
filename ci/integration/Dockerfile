@@ -1,5 +1,7 @@
 FROM registry.gitlab.com/yldio/asap-hub/squidex-utils:latest
 
+WORKDIR /app
+
 # Ubuntu 18.04 ships with python 3.6
 # Install node, yarn & npm
 
@@ -10,3 +12,6 @@ RUN echo "deb https://deb.nodesource.com/node_14.x buster main" > /etc/apt/sourc
     apt-get update && \
     apt-get install -yqq nodejs yarn python-pip && \
     npm i -g npm@^6
+
+COPY ci/integration/scripts/requirements.txt .
+RUN pip install -r requirements.txt

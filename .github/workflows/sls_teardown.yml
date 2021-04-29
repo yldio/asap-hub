@@ -4,7 +4,9 @@ on:
     types: [closed]
 jobs:
   sls_teardown:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
+    container:
+      image: registry.gitlab.com/yldio/asap-hub/node-python-sq:latest
     env:
       SLS_STAGE: ${{ github.event.number }}
       NODE_ENV: 'production'
@@ -15,6 +17,9 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_ACM_CERTIFICATE_ARN: ${{ secrets.AWS_ACM_CERTIFICATE_ARN }}
       AWS_REGION: ${{ secrets.AWS_REGION }}
+      SQUIDEX_APP: ${{ github.event.number }}
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_TEST }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_TEST }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -23,3 +28,6 @@ jobs:
       - name: Remove CF Stack
         if: ${{ env.SLS_STAGE != 'production' }}
         run: yarn sls remove --verbose
+        continue-on-error: true
+      - name: Delete PR Squidex App
+        run: python ci/integration/scripts/delete-app.py

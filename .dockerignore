@@ -1,3 +1,4 @@
 *
 !dev
 !packages/squidex
+!ci/integration/scripts/requirements.txt

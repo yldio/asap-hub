@@ -178,9 +178,10 @@ export default class Teams implements TeamController {
   ): Promise<ListTeamResponse> {
     const { take, skip, search } = options;
 
-    const searchQ = ((search && sanitiseForSquidex(search)) || '')
+    const searchQ = (search || '')
       .split(' ')
       .filter(Boolean) // removes whitespaces
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(

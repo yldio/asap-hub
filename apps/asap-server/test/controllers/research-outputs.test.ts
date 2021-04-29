@@ -311,8 +311,7 @@ describe('ResearchOutputs controller', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    test('Should sanitise single quotation mark by using two single quotes', async () => {
-      // http://docs.oasis-open.org/odata/odata/v4.01/cs01/part2-url-conventions/odata-v4.01-cs01-part2-url-conventions.html#sec_URLComponents
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/research-outputs`)
         .query({
@@ -320,7 +319,7 @@ describe('ResearchOutputs controller', () => {
           $skip: 0,
           $orderby: 'created desc',
           $filter:
-            "(contains(data/title/iv, '''') or contains(data/tags/iv, ''''))",
+            "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27'))",
         })
         .reply(200, {
           total: 1,
@@ -386,7 +385,7 @@ describe('ResearchOutputs controller', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    test('Should sanitise double quotation mark by using a backslash', async () => {
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/research-outputs`)
         .query({
@@ -394,7 +393,7 @@ describe('ResearchOutputs controller', () => {
           $skip: 0,
           $orderby: 'created desc',
           $filter:
-            "(contains(data/title/iv, '\\\"') or contains(data/tags/iv, '\\\"'))",
+            "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22'))",
         })
         .reply(200, {
           total: 1,

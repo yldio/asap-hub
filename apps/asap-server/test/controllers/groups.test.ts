@@ -70,8 +70,7 @@ describe('Group controller', () => {
       expect(result).toEqual(fixtures.queryGroupsExpectation);
     });
 
-    test('Should sanitise single quotation mark by using two single quotes', async () => {
-      // http://docs.oasis-open.org/odata/odata/v4.01/cs01/part2-url-conventions/odata-v4.01-cs01-part2-url-conventions.html#sec_URLComponents
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
       const fetchOptions: FetchOptions = {
         take: 12,
         skip: 2,
@@ -79,9 +78,9 @@ describe('Group controller', () => {
       };
 
       const expectedFilter =
-        "(contains(data/name/iv, '''')" +
-        " or contains(data/description/iv, '''')" +
-        " or contains(data/tags/iv, ''''))";
+        "(contains(data/name/iv, '%27%27')" +
+        " or contains(data/description/iv, '%27%27')" +
+        " or contains(data/tags/iv, '%27%27'))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -94,7 +93,7 @@ describe('Group controller', () => {
       expect(result).toEqual(fixtures.queryGroupsExpectation);
     });
 
-    test('Should sanitise double quotation mark by using a backslash', async () => {
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
       const fetchOptions: FetchOptions = {
         take: 12,
         skip: 2,
@@ -102,9 +101,9 @@ describe('Group controller', () => {
       };
 
       const expectedFilter =
-        "(contains(data/name/iv, '\\\"')" +
-        " or contains(data/description/iv, '\\\"')" +
-        " or contains(data/tags/iv, '\\\"'))";
+        "(contains(data/name/iv, '%22')" +
+        " or contains(data/description/iv, '%22')" +
+        " or contains(data/tags/iv, '%22'))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

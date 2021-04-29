@@ -83,9 +83,10 @@ export default class ResearchOutputs implements ResearchOutputController {
   }): Promise<ListResearchOutputResponse> {
     const { search, filter, take = 8, skip = 0 } = options;
 
-    const searchQ = ((search && sanitiseForSquidex(search)) || '')
+    const searchQ = (search || '')
       .split(' ')
       .filter(Boolean)
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(

@@ -246,9 +246,10 @@ export default class Users {
 
     const searchQ = [
       "data/role/iv ne 'Hidden'",
-      ...((search && sanitiseForSquidex(search)) || '')
+      ...(search || '')
         .split(' ')
         .filter(Boolean) // removes whitespaces
+        .map(sanitiseForSquidex)
         .reduce(
           (acc: string[], word: string) =>
             acc.concat(

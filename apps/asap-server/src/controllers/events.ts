@@ -41,9 +41,10 @@ export default class Events implements EventController {
       sortOrder,
     } = options;
 
-    const filters = ((search && sanitiseForSquidex(search)) || '')
+    const filters = (search || '')
       .split(' ')
       .filter(Boolean)
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(

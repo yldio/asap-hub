@@ -14,4 +14,4 @@ export const parseDate = (date: string): Date =>
   DateTime.fromISO(date).toJSDate();
 
 export const sanitiseForSquidex = (text: string): string =>
-  text.replace(/'/g, "''").replace(/"/g, '\\"');
+  escape(text.replace(/'/g, "''"));

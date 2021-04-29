@@ -117,9 +117,10 @@ export default class Groups implements GroupController {
   async fetch(options: FetchOptions): Promise<ListGroupResponse> {
     const { search } = options;
 
-    const searchQ = ((search && sanitiseForSquidex(search)) || '')
+    const searchQ = (search || '')
       .split(' ')
       .filter(Boolean) // removes whitespaces
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(

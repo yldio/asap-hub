@@ -503,6 +503,7 @@ const serverlessConfig: AWS = {
             Rules: [
               {
                 Id: 'delete-after-3-months',
+                Status: 'Enabled',
                 ExpirationInDays: 90,
               },
             ],

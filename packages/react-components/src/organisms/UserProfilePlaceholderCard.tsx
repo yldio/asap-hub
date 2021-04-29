@@ -4,7 +4,7 @@ import css from '@emotion/css';
 import { Card } from '../atoms';
 import { perRem } from '../pixels';
 import { headlineStyles } from '../text';
-import { lead } from '../colors';
+import { charcoal, lead } from '../colors';
 
 const containerStyles = css({
   padding: `${16 / perRem}em`,
@@ -22,7 +22,9 @@ const UserProfilePlaceholderCard: React.FC<UserProfilePlaceholderCardProps> = ({
 }) => (
   <Card padding={false} accent="placeholder">
     <div css={containerStyles}>
-      <h4 css={(headlineStyles[5], [{ margin: 0 }])}>{title}</h4>
+      <h4 css={(headlineStyles[5], [{ margin: 0, color: charcoal.rgb }])}>
+        {title}
+      </h4>
       <span>{children}</span>
     </div>
   </Card>

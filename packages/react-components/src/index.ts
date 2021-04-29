@@ -100,6 +100,7 @@ export {
   UserProfileBackground,
   UserProfileBiography,
   UserProfileGroups,
+  UserProfilePlaceholderCard,
   UserProfileRecentWorks,
 } from './organisms';
 export {

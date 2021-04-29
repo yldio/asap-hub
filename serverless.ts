@@ -274,6 +274,22 @@ const serverlessConfig: AWS = {
       IsDev: {
         'Fn::Equals': ['${self:provider.stage}', 'dev'],
       },
+      IsProd: {
+        'Fn::Equals': ['${self:provider.stage}', 'production'],
+      },
+      IsDevOrProd: {
+        'Fn::Or': [
+          {
+            Condition: 'IsDev',
+          },
+          {
+            Condition: 'IsProd',
+          },
+          {
+            'Fn::Equals': ['${self:provider.stage}', '836'],
+          },
+        ],
+      },
     },
     Resources: {
       HttpApiDomain: {
@@ -479,10 +495,19 @@ const serverlessConfig: AWS = {
       },
       DataBackupBucket: {
         Type: 'AWS::S3::Bucket',
-        Condition: 'IsDev',
+        Condition: 'IsDevOrProd',
         DeletionPolicy: 'Retain',
         Properties: {
           BucketName: '${self:service}-${self:provider.stage}-data-backup',
+          AccessControl: 'Private',
+          LifecycleConfiguration: {
+            Rules: [
+              {
+                Id: 'delete-after-3-months',
+                ExpirationInDays: 90,
+              },
+            ],
+          },
         },
       },
       CloudFrontOriginAccessIdentityFrontend: {

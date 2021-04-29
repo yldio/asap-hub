@@ -1,7 +1,7 @@
 name: Create database backup DEV
 on:
   schedule:
-    - cron: '0 7 * * *'
+    - cron: '0 7 * * *' # Once a day at 7am UTC
   workflow_dispatch:
 jobs:
   make_backup:

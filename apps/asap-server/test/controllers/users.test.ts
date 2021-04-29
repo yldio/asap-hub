@@ -23,6 +23,10 @@ describe('Users controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('fetch', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
@@ -71,6 +75,56 @@ describe('Users controller', () => {
         .reply(200, fixtures.graphQlResponseFetchUsers);
 
       const result = await users.fetch(fetchOptions);
+      expect(result).toEqual(fixtures.fetchExpectation);
+    });
+
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: "'",
+      };
+
+      const expectedFilter =
+        "data/role/iv ne 'Hidden' and" +
+        " (contains(data/firstName/iv, '%27%27')" +
+        " or contains(data/lastName/iv, '%27%27')" +
+        " or contains(data/institution/iv, '%27%27')" +
+        " or contains(data/skills/iv, '%27%27'))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.graphQlResponseFetchUsers);
+
+      const result = await users.fetch(fetchOptions);
+
+      expect(result).toEqual(fixtures.fetchExpectation);
+    });
+
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: '"',
+      };
+
+      const expectedFilter =
+        "data/role/iv ne 'Hidden' and" +
+        " (contains(data/firstName/iv, '%22')" +
+        " or contains(data/lastName/iv, '%22')" +
+        " or contains(data/institution/iv, '%22')" +
+        " or contains(data/skills/iv, '%22'))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.graphQlResponseFetchUsers);
+
+      const result = await users.fetch(fetchOptions);
+
       expect(result).toEqual(fixtures.fetchExpectation);
     });
   });

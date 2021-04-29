@@ -21,6 +21,10 @@ describe('Group controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('Fetch method', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
@@ -63,6 +67,52 @@ describe('Group controller', () => {
         .reply(200, fixtures.queryGroupsResponse);
 
       const result = await groups.fetch(fetchOptions);
+      expect(result).toEqual(fixtures.queryGroupsExpectation);
+    });
+
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: "'",
+      };
+
+      const expectedFilter =
+        "(contains(data/name/iv, '%27%27')" +
+        " or contains(data/description/iv, '%27%27')" +
+        " or contains(data/tags/iv, '%27%27'))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchGroups(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.queryGroupsResponse);
+
+      const result = await groups.fetch(fetchOptions);
+
+      expect(result).toEqual(fixtures.queryGroupsExpectation);
+    });
+
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: '"',
+      };
+
+      const expectedFilter =
+        "(contains(data/name/iv, '%22')" +
+        " or contains(data/description/iv, '%22')" +
+        " or contains(data/tags/iv, '%22'))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchGroups(expectedFilter, 12, 2),
+        })
+        .reply(200, fixtures.queryGroupsResponse);
+
+      const result = await groups.fetch(fetchOptions);
+
       expect(result).toEqual(fixtures.queryGroupsExpectation);
     });
   });

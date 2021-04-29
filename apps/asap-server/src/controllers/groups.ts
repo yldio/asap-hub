@@ -8,6 +8,7 @@ import { FetchOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
 import { GraphQLQueryUser } from './users';
 import { GraphQLQueryTeam } from './teams';
+import { sanitiseForSquidex } from '../utils/squidex';
 
 export const GraphQLQueryGroup = `
 id
@@ -119,6 +120,7 @@ export default class Groups implements GroupController {
     const searchQ = (search || '')
       .split(' ')
       .filter(Boolean) // removes whitespaces
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(

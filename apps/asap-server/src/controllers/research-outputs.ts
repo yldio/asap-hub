@@ -7,6 +7,7 @@ import { RestTeam, RestResearchOutput } from '@asap-hub/squidex';
 
 import { parseResearchOutput } from '../entities/research-output';
 import { InstrumentedSquidex } from '../utils/instrumented-client';
+import { sanitiseForSquidex } from '../utils/squidex';
 
 function transform(
   output: RestResearchOutput,
@@ -85,6 +86,7 @@ export default class ResearchOutputs implements ResearchOutputController {
     const searchQ = (search || '')
       .split(' ')
       .filter(Boolean)
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(

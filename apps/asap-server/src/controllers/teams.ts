@@ -17,7 +17,7 @@ import {
 } from '../utils/instrumented-client';
 import { GraphQLQueryResearchOutput } from './research-outputs';
 import { parseGraphQLTeam } from '../entities';
-import { createURL } from '../utils/squidex';
+import { createURL, sanitiseForSquidex } from '../utils/squidex';
 
 export const GraphQLQueryTeam = `
 id
@@ -181,6 +181,7 @@ export default class Teams implements TeamController {
     const searchQ = (search || '')
       .split(' ')
       .filter(Boolean) // removes whitespaces
+      .map(sanitiseForSquidex)
       .reduce(
         (acc: string[], word: string) =>
           acc.concat(

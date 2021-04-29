@@ -52,6 +52,10 @@ describe('Team controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('Fetch method', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
@@ -94,6 +98,62 @@ describe('Team controller', () => {
 
       const result = await teams.fetch(
         { take: 8, skip: 0, search: 'Cristiano Ronaldo' },
+        mockUser,
+      );
+
+      expect(result).toEqual({
+        total: 1,
+        items: listTeamResponse.items.slice(0, 1),
+      });
+    });
+
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+      const expectedSearchFilter =
+        `(contains(data/displayName/iv, '%27%27')` +
+        ` or contains(data/projectTitle/iv, '%27%27')` +
+        ` or contains(data/skills/iv, '%27%27'))`;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+        })
+        .reply(200, graphQlTeamsResponseSingle)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: "data/teams/iv/id eq 'team-id-1'",
+        })
+        .reply(200, usersResponseTeam1);
+
+      const result = await teams.fetch(
+        { take: 8, skip: 0, search: "'" },
+        mockUser,
+      );
+
+      expect(result).toEqual({
+        total: 1,
+        items: listTeamResponse.items.slice(0, 1),
+      });
+    });
+
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
+      const expectedSearchFilter =
+        `(contains(data/displayName/iv, '%22')` +
+        ` or contains(data/projectTitle/iv, '%22')` +
+        ` or contains(data/skills/iv, '%22'))`;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+        })
+        .reply(200, graphQlTeamsResponseSingle)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $filter: "data/teams/iv/id eq 'team-id-1'",
+        })
+        .reply(200, usersResponseTeam1);
+
+      const result = await teams.fetch(
+        { take: 8, skip: 0, search: '"' },
         mockUser,
       );
 

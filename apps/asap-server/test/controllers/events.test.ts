@@ -31,6 +31,10 @@ describe('Event controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('Fetch method', () => {
     test('Should return an empty result when the client returns an empty array of data', async () => {
       nock(config.baseUrl)
@@ -152,6 +156,38 @@ describe('Event controller', () => {
         await events.fetch({
           after: 'after-date',
           search: 'a',
+        });
+      });
+
+      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+        const expectedFilter =
+          "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(expectedFilter),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          search: "'",
+        });
+      });
+
+      test('Should sanitise double quotation mark by encoding to hex', async () => {
+        const expectedFilter =
+          "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchEvents(expectedFilter),
+          })
+          .reply(200, fetchEventsResponse);
+
+        await events.fetch({
+          after: 'after-date',
+          search: '"',
         });
       });
     });

@@ -18,6 +18,10 @@ describe('ResearchOutputs controller', () => {
     expect(nock.isDone()).toBe(true);
   });
 
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
   describe('Fetch method', () => {
     test('Should return an empty result when the client returns an empty array of data', async () => {
       nock(config.baseUrl)
@@ -284,6 +288,154 @@ describe('ResearchOutputs controller', () => {
         take: 8,
         skip: 0,
         search: 'some words',
+      });
+
+      const expectedResult: ListResearchOutputResponse = {
+        total: 1,
+        items: [
+          {
+            created: '2020-09-23T16:34:26.842Z',
+            id: 'uuid-1',
+            description: 'Text',
+            title: 'Title',
+            type: 'Proposal',
+            tags: ['tag', 'test'],
+            team: {
+              id: 'uuid-team-1',
+              displayName: 'Team 1',
+            },
+          },
+        ],
+      };
+
+      expect(result).toEqual(expectedResult);
+    });
+
+    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/research-outputs`)
+        .query({
+          $top: 8,
+          $skip: 0,
+          $orderby: 'created desc',
+          $filter:
+            "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27'))",
+        })
+        .reply(200, {
+          total: 1,
+          items: [
+            {
+              id: 'uuid-1',
+              created: '2020-09-23T16:34:26.842Z',
+              data: {
+                type: { iv: 'Proposal' },
+                title: { iv: 'Title' },
+                description: { iv: 'Text' },
+                tags: {
+                  iv: ['tag', 'test'],
+                },
+              },
+            },
+          ],
+        } as { total: number; items: RestResearchOutput[] })
+        .get(`/api/content/${config.appName}/teams`)
+        .query(() => true)
+        .reply(200, {
+          total: 1,
+          items: [
+            {
+              id: 'uuid-team-1',
+              created: '2020-09-23T16:34:26.842Z',
+              lastModified: '2020-09-23T16:34:26.842Z',
+              data: {
+                displayName: { iv: 'Team 1' },
+                applicationNumber: { iv: 'APP' },
+                outputs: {
+                  iv: ['uuid-1', 'uuid-3'],
+                },
+              },
+            },
+          ],
+        } as { total: number; items: RestTeam[] });
+
+      const result = await researchOutputs.fetch({
+        take: 8,
+        skip: 0,
+        search: "'",
+      });
+
+      const expectedResult: ListResearchOutputResponse = {
+        total: 1,
+        items: [
+          {
+            created: '2020-09-23T16:34:26.842Z',
+            id: 'uuid-1',
+            description: 'Text',
+            title: 'Title',
+            type: 'Proposal',
+            tags: ['tag', 'test'],
+            team: {
+              id: 'uuid-team-1',
+              displayName: 'Team 1',
+            },
+          },
+        ],
+      };
+
+      expect(result).toEqual(expectedResult);
+    });
+
+    test('Should sanitise double quotation mark by encoding to hex', async () => {
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/research-outputs`)
+        .query({
+          $top: 8,
+          $skip: 0,
+          $orderby: 'created desc',
+          $filter:
+            "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22'))",
+        })
+        .reply(200, {
+          total: 1,
+          items: [
+            {
+              id: 'uuid-1',
+              created: '2020-09-23T16:34:26.842Z',
+              data: {
+                type: { iv: 'Proposal' },
+                title: { iv: 'Title' },
+                description: { iv: 'Text' },
+                tags: {
+                  iv: ['tag', 'test'],
+                },
+              },
+            },
+          ],
+        } as { total: number; items: RestResearchOutput[] })
+        .get(`/api/content/${config.appName}/teams`)
+        .query(() => true)
+        .reply(200, {
+          total: 1,
+          items: [
+            {
+              id: 'uuid-team-1',
+              created: '2020-09-23T16:34:26.842Z',
+              lastModified: '2020-09-23T16:34:26.842Z',
+              data: {
+                displayName: { iv: 'Team 1' },
+                applicationNumber: { iv: 'APP' },
+                outputs: {
+                  iv: ['uuid-1', 'uuid-3'],
+                },
+              },
+            },
+          ],
+        } as { total: number; items: RestTeam[] });
+
+      const result = await researchOutputs.fetch({
+        take: 8,
+        skip: 0,
+        search: '"',
       });
 
       const expectedResult: ListResearchOutputResponse = {

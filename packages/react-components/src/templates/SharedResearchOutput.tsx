@@ -105,7 +105,7 @@ const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
           {description && (
             <div css={{ paddingBottom: `${12 / perRem}em` }}>
               <Headline2 styleAsHeading={4}>Description</Headline2>
-              <RichText text={description} />
+              <RichText poorText text={description} />
             </div>
           )}
           {description && !!tags.length && <Divider />}

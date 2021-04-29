@@ -103,3 +103,25 @@ describe('with toc', () => {
     );
   });
 });
+
+describe('with poorText', () => {
+  it('renders <a> as a link', () => {
+    const { getByText } = render(
+      <RichText poorText text={'<a href="https://localhost/">anchor</a>'} />,
+    );
+    expect(getByText('anchor').tagName).toBe('A');
+    expect(getByText('anchor')).toHaveAttribute('href', 'https://localhost/');
+  });
+  it('renders <p> as a paragraph', () => {
+    const { getByText } = render(<RichText poorText text={'<p>text</p>'} />);
+    expect(getByText('text').tagName).toBe('P');
+  });
+  it('strips out other formatting preserving content', () => {
+    const { getByText } = render(
+      <RichText poorText text={'<b>bold</b> <i>italic</i> text'} />,
+    );
+    expect(getByText(/text/i).innerHTML).toMatchInlineSnapshot(
+      `"bold italic text"`,
+    );
+  });
+});

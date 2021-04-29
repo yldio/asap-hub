@@ -1,0 +1,29 @@
+name: DEV - Create database backup
+on:
+  schedule:
+    - cron: '0 7 * * FRI' # Every Friday at 7am UTC
+  workflow_dispatch:
+jobs:
+  make_backup:
+    runs-on: ubuntu-18.04
+    container:
+      image: registry.gitlab.com/yldio/asap-hub/squidex-utils
+    env:
+      SQUIDEX_APP: 'asap-hub-dev'
+      BUCKET_NAME: 'asap-hub-dev-data-backup'
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Add the configuration
+        run: sq config add $SQUIDEX_APP $SQUIDEX_CLIENT_ID $SQUIDEX_CLIENT_SECRET
+      - name: Run sync
+        run: sq sync out ./backup
+      - name: Tar the files
+        run: |
+          FILE_NAME=$(date +%s| cut -b1-13)-squidex-dev-backup.tar.gz && \
+          tar -czf $FILE_NAME backup/ && \
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: upload to S3
+        run: aws s3api put-object --private --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA

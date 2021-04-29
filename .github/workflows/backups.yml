@@ -1,5 +1,8 @@
 name: Create database backup DEV
-on: workflow_dispatch
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
 jobs:
   make_backup:
     runs-on: ubuntu-18.04

@@ -145,10 +145,10 @@ deploy:sls:branch:
   variables:
     <<: *tmpl_branch_variables
     <<: *tmpl_deploy_variables
+    SQUIDEX_APP_NAME: $CI_EXTERNAL_PULL_REQUEST_IID
+    SQUIDEX_CLIENT_ID: $SQUIDEX_TEST_CLIENT_ID
+    SQUIDEX_CLIENT_SECRET: $SQUIDEX_TEST_CLIENT_SECRET
   script:
-    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
-    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
-    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - python ci/integration/scripts/create-app.py
     - export MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
     - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP

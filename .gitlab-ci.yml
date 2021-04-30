@@ -150,8 +150,9 @@ deploy:sls:branch:
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - python ci/integration/scripts/create-app.py
-    #- s3 get backup
-    #- sync backup
+    - export FILE_NAME=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
+    - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $FILE_NAME $FILE_NAME
+    - ls
     - source ci/env-setup.sh
     - yarn sls deploy --verbose
 

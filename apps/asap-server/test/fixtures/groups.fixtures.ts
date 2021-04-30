@@ -257,6 +257,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
               description: '',
               tags: ['test', 'tag'],
               team: { id: 'team-id-1', displayName: 'Lee, M' },
+              teams: [{ id: 'team-id-1', displayName: 'Lee, M' }],
             },
           ],
           projectTitle:

@@ -47,6 +47,7 @@ describe('/research-outputs/ route', () => {
             type: 'Proposal',
             link: 'test',
             tags: ['test', 'tag'],
+            teams: [],
           },
         ],
       };
@@ -113,6 +114,12 @@ describe('/research-outputs/ route', () => {
           id: 'uuid-team',
           displayName: 'team',
         },
+        teams: [
+          {
+            id: 'uuid-team',
+            displayName: 'team',
+          },
+        ],
       };
 
       researchOutputControllerMock.fetchById.mockResolvedValueOnce(

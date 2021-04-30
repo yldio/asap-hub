@@ -265,6 +265,12 @@ export const listTeamResponse: ListTeamResponse = {
             id: 'team-id-1',
             displayName: 'Schipa, A',
           },
+          teams: [
+            {
+              id: 'team-id-1',
+              displayName: 'Schipa, A',
+            },
+          ],
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -277,6 +283,12 @@ export const listTeamResponse: ListTeamResponse = {
             id: 'team-id-1',
             displayName: 'Schipa, A',
           },
+          teams: [
+            {
+              id: 'team-id-1',
+              displayName: 'Schipa, A',
+            },
+          ],
         },
       ],
       members: [
@@ -486,6 +498,12 @@ export const fetchTeamByIdExpectation: TeamResponse = {
         id: 'team-id-1',
         displayName: 'Schipa, A',
       },
+      teams: [
+        {
+          id: 'team-id-1',
+          displayName: 'Schipa, A',
+        },
+      ],
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -498,6 +516,12 @@ export const fetchTeamByIdExpectation: TeamResponse = {
         id: 'team-id-1',
         displayName: 'Schipa, A',
       },
+      teams: [
+        {
+          id: 'team-id-1',
+          displayName: 'Schipa, A',
+        },
+      ],
     },
   ],
   members: [
@@ -644,6 +668,12 @@ export const updateExpectation: TeamResponse = {
         id: 'team-id-1',
         displayName: 'Schipa, A',
       },
+      teams: [
+        {
+          id: 'team-id-1',
+          displayName: 'Schipa, A',
+        },
+      ],
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -656,6 +686,12 @@ export const updateExpectation: TeamResponse = {
         id: 'team-id-1',
         displayName: 'Schipa, A',
       },
+      teams: [
+        {
+          id: 'team-id-1',
+          displayName: 'Schipa, A',
+        },
+      ],
     },
   ],
   members: [

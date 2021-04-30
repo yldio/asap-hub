@@ -96,6 +96,7 @@ describe('ResearchOutputs controller', () => {
             type: 'Proposal',
             link: 'test',
             tags: ['tag', 'test'],
+            teams: [],
           },
         ],
       };
@@ -178,7 +179,7 @@ describe('ResearchOutputs controller', () => {
                 displayName: { iv: 'Team 2' },
                 applicationNumber: { iv: 'APP' },
                 outputs: {
-                  iv: ['uuid-2'],
+                  iv: ['uuid-1', 'uuid-2'],
                 },
               },
             },
@@ -206,6 +207,16 @@ describe('ResearchOutputs controller', () => {
               id: 'uuid-team-1',
               displayName: 'Team 1',
             },
+            teams: [
+              {
+                id: 'uuid-team-1',
+                displayName: 'Team 1',
+              },
+              {
+                id: 'uuid-team-2',
+                displayName: 'Team 2',
+              },
+            ],
           },
           {
             created: '2020-09-23T16:34:26.842Z',
@@ -218,6 +229,12 @@ describe('ResearchOutputs controller', () => {
               id: 'uuid-team-2',
               displayName: 'Team 2',
             },
+            teams: [
+              {
+                id: 'uuid-team-2',
+                displayName: 'Team 2',
+              },
+            ],
           },
           {
             created: '2020-09-23T16:34:26.842Z',
@@ -230,6 +247,12 @@ describe('ResearchOutputs controller', () => {
               id: 'uuid-team-1',
               displayName: 'Team 1',
             },
+            teams: [
+              {
+                id: 'uuid-team-1',
+                displayName: 'Team 1',
+              },
+            ],
           },
         ],
       };
@@ -304,6 +327,12 @@ describe('ResearchOutputs controller', () => {
               id: 'uuid-team-1',
               displayName: 'Team 1',
             },
+            teams: [
+              {
+                id: 'uuid-team-1',
+                displayName: 'Team 1',
+              },
+            ],
           },
         ],
       };
@@ -378,6 +407,12 @@ describe('ResearchOutputs controller', () => {
               id: 'uuid-team-1',
               displayName: 'Team 1',
             },
+            teams: [
+              {
+                id: 'uuid-team-1',
+                displayName: 'Team 1',
+              },
+            ],
           },
         ],
       };
@@ -452,6 +487,12 @@ describe('ResearchOutputs controller', () => {
               id: 'uuid-team-1',
               displayName: 'Team 1',
             },
+            teams: [
+              {
+                id: 'uuid-team-1',
+                displayName: 'Team 1',
+              },
+            ],
           },
         ],
       };
@@ -460,7 +501,7 @@ describe('ResearchOutputs controller', () => {
     });
   });
 
-  describe('Fetch-by-ID method', () => {
+  describe(' -ID method', () => {
     const researchOutputId = 'uuid';
 
     test('Should throw a Not Found error when the research output is not found', async () => {
@@ -495,7 +536,7 @@ describe('ResearchOutputs controller', () => {
         .get(`/api/content/${config.appName}/teams`)
         .query({
           q: JSON.stringify({
-            take: 1,
+            take: 8,
             filter: {
               path: 'data.outputs.iv',
               op: 'eq',
@@ -531,6 +572,12 @@ describe('ResearchOutputs controller', () => {
           id: 'uuid-team',
           displayName: 'team',
         },
+        teams: [
+          {
+            id: 'uuid-team',
+            displayName: 'team',
+          },
+        ],
       };
       expect(result).toEqual(expectedResult);
     });
@@ -555,7 +602,7 @@ describe('ResearchOutputs controller', () => {
         .get(`/api/content/${config.appName}/teams`)
         .query({
           q: JSON.stringify({
-            take: 1,
+            take: 8,
             filter: {
               path: 'data.outputs.iv',
               op: 'eq',
@@ -576,6 +623,7 @@ describe('ResearchOutputs controller', () => {
         title: 'Title',
         type: 'Proposal',
         tags: ['tag', 'test'],
+        teams: [],
       };
 
       expect(result).toEqual(expectedResult);

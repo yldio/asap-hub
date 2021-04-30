@@ -11,20 +11,25 @@ import { sanitiseForSquidex } from '../utils/squidex';
 
 function transform(
   output: RestResearchOutput,
-  team?: RestTeam,
+  teams: RestTeam[],
 ): ResearchOutputResponse {
-  const teamProps = team
-    ? {
-        team: {
-          id: team.id,
-          displayName: team.data.displayName.iv,
-        },
-      }
-    : {};
+  const teamProps =
+    teams.length > 0
+      ? {
+          team: {
+            id: teams[0].id,
+            displayName: teams[0].data.displayName.iv,
+          },
+        }
+      : {};
 
   return {
     ...parseResearchOutput(output),
     ...teamProps,
+    teams: teams.map((team) => ({
+      id: team.id,
+      displayName: team.data.displayName.iv,
+    })),
   };
 }
 
@@ -62,8 +67,8 @@ export default class ResearchOutputs implements ResearchOutputController {
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const res = await this.researchOutputs.fetchById(id);
-    const [, team] = await intercept(
-      this.teams.fetchOne({
+    const [, teamResults] = await intercept(
+      this.teams.fetch({
         filter: {
           path: 'data.outputs.iv',
           op: 'eq',
@@ -72,7 +77,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       }),
     );
 
-    return transform(res, team);
+    return transform(res, teamResults.items);
   }
 
   async fetch(options: {
@@ -133,7 +138,7 @@ export default class ResearchOutputs implements ResearchOutputController {
       items: items.map((item) =>
         transform(
           item,
-          teams.items.find(
+          teams.items.filter(
             (t) =>
               t.data.outputs?.iv &&
               t.data.outputs.iv.filter((o) => o === item.id).length > 0,

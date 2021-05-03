@@ -501,7 +501,7 @@ describe('ResearchOutputs controller', () => {
     });
   });
 
-  describe(' -ID method', () => {
+  describe('Fetch-by-ID method', () => {
     const researchOutputId = 'uuid';
 
     test('Should throw a Not Found error when the research output is not found', async () => {

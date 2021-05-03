@@ -7,7 +7,7 @@ import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { FetchOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
 import { GraphQLQueryUser } from './users';
-import { GraphQLQueryTeam } from './teams';
+import { getGraphQLQueryTeam } from './teams';
 import { sanitiseForSquidex } from '../utils/squidex';
 
 export const GraphQLQueryGroup = `
@@ -23,7 +23,7 @@ flatData {
     googleDrive
   }
   teams {
-  ${GraphQLQueryTeam}
+  ${getGraphQLQueryTeam(false)}
   }
   leaders{
     role

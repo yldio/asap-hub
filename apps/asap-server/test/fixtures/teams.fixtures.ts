@@ -400,6 +400,24 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
             },
+            referencingTeamsContents: [
+              {
+                id: 'team-id-1',
+                created: '2020-09-23T20:33:36Z',
+                lastModified: '2020-11-26T11:56:04Z',
+                flatData: {
+                  displayName: 'Schipa, A',
+                },
+              },
+              {
+                id: 'team-id-2',
+                created: '2020-09-23T20:33:36Z',
+                lastModified: '2020-11-26T11:56:04Z',
+                flatData: {
+                  displayName: 'Team, B',
+                },
+              },
+            ],
           },
         ],
         projectSummary: null,
@@ -503,6 +521,10 @@ export const fetchTeamByIdExpectation: TeamResponse = {
           id: 'team-id-1',
           displayName: 'Schipa, A',
         },
+        {
+          id: 'team-id-2',
+          displayName: 'Team, B',
+        },
       ],
     },
     {
@@ -586,6 +608,16 @@ export const getGraphQlTeamResponse = (
               type: 'Proposal',
               tags: ['test', 'tag'],
             },
+            referencingTeamsContents: [
+              {
+                id: 'team-id-1',
+                created: '2020-09-17T08:18:01Z',
+                lastModified: '2020-10-21T13:11:50Z',
+                flatData: {
+                  displayName: 'Schipa, A',
+                },
+              },
+            ],
           },
           {
             id: '7198d072-de87-4b80-90ca-4a1abe67952e',
@@ -598,6 +630,24 @@ export const getGraphQlTeamResponse = (
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
             },
+            referencingTeamsContents: [
+              {
+                id: 'team-id-1',
+                created: '2020-09-17T08:18:01Z',
+                lastModified: '2020-10-21T13:11:50Z',
+                flatData: {
+                  displayName: 'Schipa, A',
+                },
+              },
+              {
+                id: 'team-id-2',
+                created: '2020-09-17T08:18:01Z',
+                lastModified: '2020-10-21T13:11:50Z',
+                flatData: {
+                  displayName: 'Team, B',
+                },
+              },
+            ],
           },
         ],
         projectSummary: null,
@@ -672,6 +722,10 @@ export const updateExpectation: TeamResponse = {
         {
           id: 'team-id-1',
           displayName: 'Schipa, A',
+        },
+        {
+          id: 'team-id-2',
+          displayName: 'Team, B',
         },
       ],
     },

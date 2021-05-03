@@ -303,51 +303,90 @@ describe('Team controller', () => {
       });
     });
 
-    test('Should parse the team user correctly when the avatar is null', async () => {
-      const teamId = 'team-id-1';
-      const user = fetchByIdUserResponse.items[0];
-      user.data.avatar.iv = null as any;
-
-      const userResponse = {
-        total: 1,
-        items: [user],
+    describe('Avatar', () => {
+      const user = {
+        ...fetchByIdUserResponse.items[0],
+        data: {
+          ...fetchByIdUserResponse.items[0].data,
+          avatar: { iv: 'test avatar' },
+        },
       };
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
-        })
-        .reply(200, graphQlTeamResponse)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
-        })
-        .reply(200, userResponse);
+      test('Should parse the team user correctly when the avatar is null', async () => {
+        const teamId = 'team-id-1';
 
-      const result = await teams.fetchById(teamId, mockUser);
+        user.data.avatar.iv = null as any;
 
-      const expectedResponse = {
-        ...fetchTeamByIdExpectation,
-        members: [
-          {
-            ...fetchTeamByIdExpectation.members[0],
-            avatarUrl: undefined,
-          },
-        ],
-      };
+        const userResponse = {
+          total: 1,
+          items: [user],
+        };
 
-      expect(result).toEqual(expectedResponse);
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(teamId),
+          })
+          .reply(200, graphQlTeamResponse)
+          .get(`/api/content/${config.appName}/users`)
+          .query({
+            $filter: `data/teams/iv/id eq '${teamId}'`,
+          })
+          .reply(200, userResponse);
+
+        const result = await teams.fetchById(teamId, mockUser);
+
+        const expectedResponse = {
+          ...fetchTeamByIdExpectation,
+          members: [
+            {
+              ...fetchTeamByIdExpectation.members[0],
+              avatarUrl: undefined,
+            },
+          ],
+        };
+
+        expect(result).toEqual(expectedResponse);
+      });
+
+      test('Should parse the team user correctly when the avatar is undefined', async () => {
+        const teamId = 'team-id-1';
+
+        delete (user.data as any).avatar;
+
+        const userResponse = {
+          total: 1,
+          items: [user],
+        };
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(teamId),
+          })
+          .reply(200, graphQlTeamResponse)
+          .get(`/api/content/${config.appName}/users`)
+          .query({
+            $filter: `data/teams/iv/id eq '${teamId}'`,
+          })
+          .reply(200, userResponse);
+
+        const result = await teams.fetchById(teamId, mockUser);
+
+        const expectedResponse = {
+          ...fetchTeamByIdExpectation,
+          members: [
+            {
+              ...fetchTeamByIdExpectation.members[0],
+              avatarUrl: undefined,
+            },
+          ],
+        };
+
+        expect(result).toEqual(expectedResponse);
+      });
     });
 
-    test('Should parse the team user correctly when the avatar is undefined', async () => {
+    test('Should return more than a single team on the nested research-output', async () => {
       const teamId = 'team-id-1';
-      const user = fetchByIdUserResponse.items[0];
-      delete (user.data as any).avatar;
-
-      const userResponse = {
-        total: 1,
-        items: [user],
-      };
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -358,21 +397,11 @@ describe('Team controller', () => {
         .query({
           $filter: `data/teams/iv/id eq '${teamId}'`,
         })
-        .reply(200, userResponse);
+        .reply(200, fetchByIdUserResponse);
 
       const result = await teams.fetchById(teamId, mockUser);
 
-      const expectedResponse = {
-        ...fetchTeamByIdExpectation,
-        members: [
-          {
-            ...fetchTeamByIdExpectation.members[0],
-            avatarUrl: undefined,
-          },
-        ],
-      };
-
-      expect(result).toEqual(expectedResponse);
+      expect(result).toEqual(fetchTeamByIdExpectation);
     });
   });
 

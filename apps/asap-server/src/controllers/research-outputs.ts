@@ -33,7 +33,7 @@ function transform(
   };
 }
 
-export const GraphQLQueryResearchOutput = `
+export const getGraphQLQueryResearchOutput = (withTeams = false): string => `
 id
 created
 lastModified
@@ -50,7 +50,20 @@ flatData{
       name
     }
   }
-}`;
+}
+${
+  (withTeams &&
+    `referencingTeamsContents {
+  id
+  created
+  lastModified
+  flatData {
+    displayName
+  }
+}`) ||
+  ''
+}
+`;
 
 export default class ResearchOutputs implements ResearchOutputController {
   researchOutputs: InstrumentedSquidex<RestResearchOutput>;

@@ -1,6 +1,7 @@
 import { ResearchOutputType } from '@asap-hub/model';
 
 import { Rest, Entity, Graphql } from './common';
+import { GraphqlTeam } from './team';
 
 export interface ResearchOutput {
   type: ResearchOutputType;
@@ -14,6 +15,6 @@ export interface ResearchOutput {
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
-export interface GraphqlResearchOutput
-  extends Entity,
-    Graphql<ResearchOutput> {}
+export interface GraphqlResearchOutput extends Entity, Graphql<ResearchOutput> {
+  referencingTeamsContents?: GraphqlTeam[];
+}

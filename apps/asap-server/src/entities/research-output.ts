@@ -19,7 +19,7 @@ export const parseResearchOutput = (
 
 export const parseGraphQLResearchOutput = (
   output: GraphqlResearchOutput,
-): ResearchOutputResponse => ({
+): Omit<ResearchOutputResponse, 'teams'> => ({
   id: output.id,
   created: parseDate(output.created).toISOString(),
   link: output.flatData?.link || undefined,

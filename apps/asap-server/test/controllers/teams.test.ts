@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
+import { config, GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { User } from '@asap-hub/auth';
 import {
   graphQlTeamsResponseSingle,
@@ -304,11 +304,11 @@ describe('Team controller', () => {
     });
 
     describe('Avatar', () => {
-      const user = {
+      const user: RestUser = {
         ...fetchByIdUserResponse.items[0],
         data: {
           ...fetchByIdUserResponse.items[0].data,
-          avatar: { iv: 'test avatar' },
+          avatar: { iv: ['test-avatar'] },
         },
       };
 

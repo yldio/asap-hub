@@ -33,7 +33,11 @@ function transform(
   };
 }
 
-export const getGraphQLQueryResearchOutput = (withTeams = false): string => `
+export const getGraphQLQueryResearchOutput = ({
+  withTeams = false,
+}: {
+  withTeams: boolean;
+}): string => `
 id
 created
 lastModified

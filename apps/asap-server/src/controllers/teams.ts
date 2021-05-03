@@ -19,9 +19,11 @@ import { getGraphQLQueryResearchOutput } from './research-outputs';
 import { parseGraphQLTeam } from '../entities';
 import { createURL, sanitiseForSquidex } from '../utils/squidex';
 
-export const getGraphQLQueryTeam = (
+export const getGraphQLQueryTeam = ({
   researchOutputsWithTeams = false,
-): string => `
+}: {
+  researchOutputsWithTeams: boolean;
+}): string => `
 id
 created
 lastModified
@@ -29,7 +31,7 @@ flatData {
   applicationNumber
   displayName
   outputs {
-    ${getGraphQLQueryResearchOutput(researchOutputsWithTeams)}
+    ${getGraphQLQueryResearchOutput({ withTeams: researchOutputsWithTeams })}
   }
   projectSummary
   projectTitle
@@ -53,7 +55,7 @@ export const buildGraphQLQueryFetchTeams = (
   queryTeamsContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/displayName/iv") {
     total
     items {
-      ${getGraphQLQueryTeam(true)}
+      ${getGraphQLQueryTeam({ researchOutputsWithTeams: true })}
     }
   }
 }`;
@@ -61,7 +63,7 @@ export const buildGraphQLQueryFetchTeams = (
 export const buildGraphQLQueryFetchTeam = (id: string): string =>
   `{
   findTeamsContent(id: "${id}") {
-    ${getGraphQLQueryTeam(true)}
+    ${getGraphQLQueryTeam({ researchOutputsWithTeams: true })}
   }
 }`;
 

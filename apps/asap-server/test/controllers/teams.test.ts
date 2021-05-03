@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config, GraphqlUser, RestUser } from '@asap-hub/squidex';
+import { config, RestUser } from '@asap-hub/squidex';
 import { User } from '@asap-hub/auth';
 import {
   graphQlTeamsResponseSingle,
@@ -383,25 +383,6 @@ describe('Team controller', () => {
 
         expect(result).toEqual(expectedResponse);
       });
-    });
-
-    test('Should return more than a single team on the nested research-output', async () => {
-      const teamId = 'team-id-1';
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
-        })
-        .reply(200, graphQlTeamResponse)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
-        })
-        .reply(200, fetchByIdUserResponse);
-
-      const result = await teams.fetchById(teamId, mockUser);
-
-      expect(result).toEqual(fetchTeamByIdExpectation);
     });
   });
 

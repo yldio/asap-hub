@@ -1,6 +1,10 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import Joi from '@hapi/joi';
 import { framework } from '@asap-hub/services-common';
+import {
+  ListResearchOutputResponse,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { ResearchOutputController } from '../controllers/research-outputs';
 
 export const researchOutputRouteFactory = (
@@ -8,28 +12,31 @@ export const researchOutputRouteFactory = (
 ): Router => {
   const researchOutputRoutes = Router();
 
-  researchOutputRoutes.get('/research-outputs', async (req, res) => {
-    const { query } = req;
+  researchOutputRoutes.get(
+    '/research-outputs',
+    async (req, res: Response<ListResearchOutputResponse>) => {
+      const { query } = req;
 
-    const options = (framework.validate(
-      'query',
-      query,
-      querySchema,
-    ) as unknown) as {
-      take: number;
-      skip: number;
-      search?: string;
-      filter?: string[];
-    };
+      const options = (framework.validate(
+        'query',
+        query,
+        querySchema,
+      ) as unknown) as {
+        take: number;
+        skip: number;
+        search?: string;
+        filter?: string[];
+      };
 
-    const result = await researchOutputController.fetch(options);
+      const result = await researchOutputController.fetch(options);
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
   researchOutputRoutes.get(
     '/research-outputs/:researchOutputId',
-    async (req, res) => {
+    async (req, res: Response<ResearchOutputResponse>) => {
       const { params } = req;
       const { researchOutputId } = framework.validate(
         'parameters',

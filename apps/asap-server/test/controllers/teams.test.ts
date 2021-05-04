@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
+import { config, RestUser } from '@asap-hub/squidex';
 import { User } from '@asap-hub/auth';
 import {
   graphQlTeamsResponseSingle,
@@ -303,76 +303,86 @@ describe('Team controller', () => {
       });
     });
 
-    test('Should parse the team user correctly when the avatar is null', async () => {
-      const teamId = 'team-id-1';
-      const user = fetchByIdUserResponse.items[0];
-      user.data.avatar.iv = null as any;
-
-      const userResponse = {
-        total: 1,
-        items: [user],
+    describe('Avatar', () => {
+      const user: RestUser = {
+        ...fetchByIdUserResponse.items[0],
+        data: {
+          ...fetchByIdUserResponse.items[0].data,
+          avatar: { iv: ['test-avatar'] },
+        },
       };
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
-        })
-        .reply(200, graphQlTeamResponse)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
-        })
-        .reply(200, userResponse);
+      test('Should parse the team user correctly when the avatar is null', async () => {
+        const teamId = 'team-id-1';
 
-      const result = await teams.fetchById(teamId, mockUser);
+        user.data.avatar.iv = null as any;
 
-      const expectedResponse = {
-        ...fetchTeamByIdExpectation,
-        members: [
-          {
-            ...fetchTeamByIdExpectation.members[0],
-            avatarUrl: undefined,
-          },
-        ],
-      };
+        const userResponse = {
+          total: 1,
+          items: [user],
+        };
 
-      expect(result).toEqual(expectedResponse);
-    });
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(teamId),
+          })
+          .reply(200, graphQlTeamResponse)
+          .get(`/api/content/${config.appName}/users`)
+          .query({
+            $filter: `data/teams/iv/id eq '${teamId}'`,
+          })
+          .reply(200, userResponse);
 
-    test('Should parse the team user correctly when the avatar is undefined', async () => {
-      const teamId = 'team-id-1';
-      const user = fetchByIdUserResponse.items[0];
-      delete (user.data as any).avatar;
+        const result = await teams.fetchById(teamId, mockUser);
 
-      const userResponse = {
-        total: 1,
-        items: [user],
-      };
+        const expectedResponse = {
+          ...fetchTeamByIdExpectation,
+          members: [
+            {
+              ...fetchTeamByIdExpectation.members[0],
+              avatarUrl: undefined,
+            },
+          ],
+        };
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
-        })
-        .reply(200, graphQlTeamResponse)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
-        })
-        .reply(200, userResponse);
+        expect(result).toEqual(expectedResponse);
+      });
 
-      const result = await teams.fetchById(teamId, mockUser);
+      test('Should parse the team user correctly when the avatar is undefined', async () => {
+        const teamId = 'team-id-1';
 
-      const expectedResponse = {
-        ...fetchTeamByIdExpectation,
-        members: [
-          {
-            ...fetchTeamByIdExpectation.members[0],
-            avatarUrl: undefined,
-          },
-        ],
-      };
+        delete (user.data as any).avatar;
 
-      expect(result).toEqual(expectedResponse);
+        const userResponse = {
+          total: 1,
+          items: [user],
+        };
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(teamId),
+          })
+          .reply(200, graphQlTeamResponse)
+          .get(`/api/content/${config.appName}/users`)
+          .query({
+            $filter: `data/teams/iv/id eq '${teamId}'`,
+          })
+          .reply(200, userResponse);
+
+        const result = await teams.fetchById(teamId, mockUser);
+
+        const expectedResponse = {
+          ...fetchTeamByIdExpectation,
+          members: [
+            {
+              ...fetchTeamByIdExpectation.members[0],
+              avatarUrl: undefined,
+            },
+          ],
+        };
+
+        expect(result).toEqual(expectedResponse);
+      });
     });
   });
 

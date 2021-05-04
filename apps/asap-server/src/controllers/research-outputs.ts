@@ -56,16 +56,16 @@ flatData{
   }
 }
 ${
-  (withTeams &&
-    `referencingTeamsContents {
+  withTeams
+    ? `referencingTeamsContents {
   id
   created
   lastModified
   flatData {
     displayName
   }
-}`) ||
-  ''
+}`
+    : ''
 }
 `;
 

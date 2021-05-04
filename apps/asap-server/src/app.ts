@@ -26,7 +26,7 @@ import { dashboardRouteFactory } from './routes/dashboard.route';
 import { calendarRouteFactory } from './routes/calendars.route';
 import { researchOutputRouteFactory } from './routes/research-outputs.route';
 import { teamRouteFactory } from './routes/teams.route';
-import { userRouteFactory } from './routes/user.route';
+import { userPublicRouteFactory, userRouteFactory } from './routes/user.route';
 import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
 import Pages, { PageController } from './controllers/pages';
@@ -85,6 +85,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   );
   const teamRoutes = teamRouteFactory(groupController, teamController);
   const userRoutes = userRouteFactory(userController, groupController);
+  const userPublicRoutes = userPublicRouteFactory(userController);
 
   /**
    * --- end of dependency inection
@@ -105,6 +106,7 @@ export const appFactory = (libs: Libs = {}): Express => {
    * Public routes --->
    */
   app.use(pageRoutes);
+  app.use(userPublicRoutes);
 
   /**
    * --- end of public routes

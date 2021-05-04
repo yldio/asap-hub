@@ -1,16 +1,41 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { framework } from '@asap-hub/services-common';
 import parseURI from 'parse-data-url';
 import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
-import { UserPatchRequest } from '@asap-hub/model';
+import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 
 import { FetchOptions } from '../utils/types';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
 import { userUpdateSchema } from '../entities/user';
+
+export const userPublicRouteFactory = (
+  userController: UserController,
+): Router => {
+  const userPublicRoutes = Router();
+
+  userPublicRoutes.get(
+    '/users/invites/:code',
+    async (req, res: Response<UserPublicResponse>) => {
+      const { code } = framework.validate(
+        'parameters',
+        req.params,
+        publicParamSchema,
+      );
+      const result = await userController.fetchByCode(code);
+
+      res.json({
+        id: result.id,
+        displayName: result.displayName,
+      });
+    },
+  );
+
+  return userPublicRoutes;
+};
 
 export const userRouteFactory = (
   userController: UserController,
@@ -152,3 +177,9 @@ const querySchemaWithFilter = querySchema.append({
 const paramSchema = Joi.object({
   userId: Joi.string().required(),
 });
+
+const publicParamSchema = Joi.object({
+  code: Joi.string().required(),
+});
+
+type UserPublicResponse = Pick<UserResponse, 'id' | 'displayName'>;

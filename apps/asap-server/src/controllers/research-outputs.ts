@@ -34,7 +34,7 @@ function transform(
 }
 
 export const getGraphQLQueryResearchOutput = ({
-  withTeams = false,
+  withTeams,
 }: {
   withTeams: boolean;
 }): string => `

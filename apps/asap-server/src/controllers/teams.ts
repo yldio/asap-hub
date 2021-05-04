@@ -20,7 +20,7 @@ import { parseGraphQLTeam } from '../entities';
 import { createURL, sanitiseForSquidex } from '../utils/squidex';
 
 export const getGraphQLQueryTeam = ({
-  researchOutputsWithTeams = false,
+  researchOutputsWithTeams,
 }: {
   researchOutputsWithTeams: boolean;
 }): string => `

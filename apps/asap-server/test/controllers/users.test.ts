@@ -160,7 +160,7 @@ describe('Users controller', () => {
     const code = 'some-uuid-code';
     const filter = `data/connections/iv/code eq '${code}'`;
 
-    test('Should throw when no user', async () => {
+    test('Should throw 403 when no user is found', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(filter, 1, 0),

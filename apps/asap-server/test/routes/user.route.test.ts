@@ -28,10 +28,15 @@ describe('/users/ route', () => {
     };
     next();
   };
-  const app = appFactory({
+  const appWithMockedAuth = appFactory({
     groupController: groupControllerMock,
     userController: userControllerMock,
     authHandler: authHandlerMock,
+  });
+
+  const app = appFactory({
+    groupController: groupControllerMock,
+    userController: userControllerMock,
   });
 
   afterEach(() => {
@@ -45,7 +50,7 @@ describe('/users/ route', () => {
         total: 0,
       });
 
-      const response = await supertest(app).get('/users');
+      const response = await supertest(appWithMockedAuth).get('/users');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -57,7 +62,7 @@ describe('/users/ route', () => {
     test('Should return the results correctly', async () => {
       userControllerMock.fetch.mockResolvedValueOnce(fixtures.fetchExpectation);
 
-      const response = await supertest(app).get('/users');
+      const response = await supertest(appWithMockedAuth).get('/users');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(fixtures.fetchExpectation);
@@ -69,7 +74,7 @@ describe('/users/ route', () => {
         total: 0,
       });
 
-      await supertest(app).get('/users').query({
+      await supertest(appWithMockedAuth).get('/users').query({
         take: 15,
         skip: 5,
         search: 'something',
@@ -86,9 +91,11 @@ describe('/users/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app).get('/users').query({
-          take: 'invalid param',
-        });
+        const response = await supertest(appWithMockedAuth)
+          .get('/users')
+          .query({
+            take: 'invalid param',
+          });
 
         expect(response.status).toBe(400);
       });
@@ -99,7 +106,7 @@ describe('/users/ route', () => {
     test('Should return 404 when user doesnt exist', async () => {
       userControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
 
-      const response = await supertest(app).get('/users/123');
+      const response = await supertest(appWithMockedAuth).get('/users/123');
 
       expect(response.status).toBe(404);
     });
@@ -109,7 +116,7 @@ describe('/users/ route', () => {
         fixtures.fetchUserExpectation,
       );
 
-      const response = await supertest(app).get('/users/123');
+      const response = await supertest(appWithMockedAuth).get('/users/123');
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(fixtures.fetchUserExpectation);
@@ -118,9 +125,42 @@ describe('/users/ route', () => {
     test('Should call the controller with the right parameter', async () => {
       const userId = 'abc123';
 
-      await supertest(app).get(`/users/${userId}`);
+      await supertest(appWithMockedAuth).get(`/users/${userId}`);
 
       expect(userControllerMock.fetchById).toBeCalledWith(userId);
+    });
+  });
+
+  describe('GET /users/invites/{code}', () => {
+    test('Should return 404 when user doesnt exist', async () => {
+      userControllerMock.fetchByCode.mockRejectedValueOnce(Boom.forbidden());
+
+      const response = await supertest(app).get('/users/invites/123');
+
+      expect(response.status).toBe(404);
+    });
+
+    test('Should return the results correctly', async () => {
+      userControllerMock.fetchByCode.mockResolvedValueOnce(
+        fixtures.fetchUserExpectation,
+      );
+
+      const response = await supertest(app).get('/users/invites/123');
+
+      expect(response.status).toBe(200);
+      const expectedResult = {
+        id: fixtures.fetchUserExpectation.id,
+        displayName: fixtures.fetchUserExpectation.displayName,
+      };
+      expect(response.body).toEqual(expectedResult);
+    });
+
+    test('Should call the controller with the right parameter', async () => {
+      const code = 'abc123';
+
+      await supertest(app).get(`/users/invites/${code}`);
+
+      expect(userControllerMock.fetchByCode).toBeCalledWith(code);
     });
   });
 
@@ -128,7 +168,9 @@ describe('/users/ route', () => {
     test('Should return 404 when user doesnt exist', async () => {
       userControllerMock.fetchById.mockRejectedValueOnce(Boom.notFound());
 
-      const response = await supertest(app).get('/users/not-found/groups');
+      const response = await supertest(appWithMockedAuth).get(
+        '/users/not-found/groups',
+      );
 
       expect(response.status).toBe(404);
     });
@@ -142,7 +184,9 @@ describe('/users/ route', () => {
         total: 0,
       });
 
-      const response = await supertest(app).get('/users/123/groups');
+      const response = await supertest(appWithMockedAuth).get(
+        '/users/123/groups',
+      );
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
@@ -159,7 +203,9 @@ describe('/users/ route', () => {
         groupFixtures.queryGroupsExpectation,
       );
 
-      const response = await supertest(app).get('/users/123/groups');
+      const response = await supertest(appWithMockedAuth).get(
+        '/users/123/groups',
+      );
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(groupFixtures.queryGroupsExpectation);
@@ -176,7 +222,7 @@ describe('/users/ route', () => {
       const teams = ['team-id-1', 'team-id-3'];
       const userId = '123abcd';
 
-      await supertest(app).get(`/users/${userId}/groups`).query({
+      await supertest(appWithMockedAuth).get(`/users/${userId}/groups`).query({
         take: 15,
         skip: 5,
         search: 'something',
@@ -197,9 +243,11 @@ describe('/users/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app).get('/users/123/groups').query({
-          take: 'invalid param',
-        });
+        const response = await supertest(appWithMockedAuth)
+          .get('/users/123/groups')
+          .query({
+            take: 'invalid param',
+          });
 
         expect(response.status).toBe(400);
       });
@@ -214,7 +262,7 @@ describe('/users/ route', () => {
         fixtures.updateUserExpectation,
       );
 
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send({ jobTitle: 'CEO' });
 
@@ -229,7 +277,7 @@ describe('/users/ route', () => {
         }),
       );
 
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send({ jobTitle: 'CEO' });
 
@@ -237,14 +285,14 @@ describe('/users/ route', () => {
     });
 
     test('Returns 403 when user is changing other user', async () => {
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .patch('/users/not-me')
         .send({ jobTitle: 'CEO' });
       expect(response.status).toBe(403);
     });
 
     test('Returns 403 when user is editing a team he doesnt belong to', async () => {
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send({
           teams: [
@@ -260,7 +308,7 @@ describe('/users/ route', () => {
     test('Should return 404 when user doesnt exist', async () => {
       userControllerMock.update.mockRejectedValueOnce(Boom.notFound());
 
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send({ jobTitle: 'CEO' });
       expect(response.status).toBe(404);
@@ -271,7 +319,7 @@ describe('/users/ route', () => {
         fixtures.updateUserExpectation,
       );
 
-      await supertest(app)
+      await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send({
           social: { github: 'johnytiago' },
@@ -291,7 +339,7 @@ describe('/users/ route', () => {
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
-        const response = await supertest(app)
+        const response = await supertest(appWithMockedAuth)
           .patch(`/users/${userId}`)
           .send({ jobTitle: 666 });
 
@@ -308,7 +356,7 @@ describe('/users/ route', () => {
         fixtures.updateUserExpectation,
       );
 
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .post(`/users/${userId}/avatar`)
         .send(fixtures.updateAvatarBody);
 
@@ -323,7 +371,7 @@ describe('/users/ route', () => {
         }),
       );
 
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .post(`/users/${userId}/avatar`)
         .send(fixtures.updateAvatarBody);
 
@@ -331,14 +379,14 @@ describe('/users/ route', () => {
     });
 
     test('Returns 403 when user is changing other user', async () => {
-      const response = await supertest(app)
+      const response = await supertest(appWithMockedAuth)
         .post('/users/not-me/avatar')
         .send(fixtures.updateAvatarBody);
       expect(response.status).toBe(403);
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      await supertest(app)
+      await supertest(appWithMockedAuth)
         .post(`/users/${userId}/avatar`)
         .send(fixtures.updateAvatarBody);
 
@@ -351,26 +399,28 @@ describe('/users/ route', () => {
 
     describe('Parameter validation', () => {
       test('Returns 400 when payload is invalid', async () => {
-        const response = await supertest(app).post(`/users/${userId}/avatar`);
+        const response = await supertest(appWithMockedAuth).post(
+          `/users/${userId}/avatar`,
+        );
         expect(response.status).toBe(400);
       });
 
       test('Returns 400 when payload is not data URL conformant', async () => {
-        const response = await supertest(app)
+        const response = await supertest(appWithMockedAuth)
           .post(`/users/${userId}/avatar`)
           .send({ avatar: 'data:video/mp4' });
         expect(response.status).toBe(400);
       });
 
       test('Returns 415 when content type is invalid', async () => {
-        const response = await supertest(app)
+        const response = await supertest(appWithMockedAuth)
           .post(`/users/${userId}/avatar`)
           .send({ avatar: 'data:video/mp4;base64,some-data' });
         expect(response.status).toBe(415);
       });
 
       test('Returns 413 when avatar is too big', async () => {
-        const response = await supertest(app)
+        const response = await supertest(appWithMockedAuth)
           .post(`/users/${userId}/avatar`)
           .send({
             avatar: `data:image/jpeg;base64,${Buffer.alloc(4e6).toString(

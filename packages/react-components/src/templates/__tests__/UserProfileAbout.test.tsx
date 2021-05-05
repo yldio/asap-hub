@@ -11,10 +11,6 @@ it('renders the biography', () => {
   expect(getByText(/biography/i)).toBeVisible();
   expect(getByText('Text content')).toBeVisible();
 });
-it('does not render an empty biography', () => {
-  const { queryByText } = render(<UserProfileAbout orcidWorks={[]} />);
-  expect(queryByText(/biography/i)).not.toBeInTheDocument();
-});
 
 it('renders the recent works from ORCID', () => {
   const { getByText } = render(

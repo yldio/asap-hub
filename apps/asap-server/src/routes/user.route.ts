@@ -4,7 +4,7 @@ import { Router, Response } from 'express';
 import { framework } from '@asap-hub/services-common';
 import parseURI from 'parse-data-url';
 import Joi from '@hapi/joi';
-import Boom from '@hapi/boom';
+import Boom, { isBoom } from '@hapi/boom';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 
 import { FetchOptions } from '../utils/types';
@@ -25,12 +25,21 @@ export const userPublicRouteFactory = (
         req.params,
         publicParamSchema,
       );
-      const result = await userController.fetchByCode(code);
 
-      res.json({
-        id: result.id,
-        displayName: result.displayName,
-      });
+      try {
+        const result = await userController.fetchByCode(code);
+
+        res.json({
+          id: result.id,
+          displayName: result.displayName,
+        });
+      } catch (error) {
+        if (isBoom(error, 403)) {
+          throw Boom.notFound();
+        }
+
+        throw error;
+      }
     },
   );
 

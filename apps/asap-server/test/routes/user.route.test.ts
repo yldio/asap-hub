@@ -133,7 +133,7 @@ describe('/users/ route', () => {
 
   describe('GET /users/invites/{code}', () => {
     test('Should return 404 when user doesnt exist', async () => {
-      userControllerMock.fetchByCode.mockRejectedValueOnce(Boom.notFound());
+      userControllerMock.fetchByCode.mockRejectedValueOnce(Boom.forbidden());
 
       const response = await supertest(app).get('/users/invites/123');
 

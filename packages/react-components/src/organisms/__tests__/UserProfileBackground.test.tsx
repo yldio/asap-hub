@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { UserProfileContext } from '@asap-hub/react-context';
 
 import UserProfileBackground from '../UserProfileBackground';
 
@@ -86,6 +87,35 @@ it('renders responsibilities if present', () => {
   expect(queryAllByText(/responsibilities/i).length).toBeGreaterThan(0);
 });
 
+it('renders responsibilities placeholder if ownProfile is true', () => {
+  const { rerender, queryAllByText } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfileBackground
+        id="42"
+        firstName="Phillip"
+        displayName="Phillip, M"
+        role="Collaborating PI"
+      />
+      ,
+    </UserProfileContext.Provider>,
+  );
+  expect(queryAllByText(/responsibilities/i)).toHaveLength(0);
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileBackground
+        id="42"
+        firstName="Phillip"
+        displayName="Phillip, M"
+        role="Collaborating PI"
+      />
+      ,
+    </UserProfileContext.Provider>,
+  );
+
+  expect(queryAllByText(/responsibilities/i).length).toBeGreaterThan(0);
+});
+
 it('renders approach if present', () => {
   const { rerender, queryAllByText } = render(
     <UserProfileBackground
@@ -96,7 +126,7 @@ it('renders approach if present', () => {
     />,
   );
 
-  expect(queryAllByText(/approach/i)).toHaveLength(0);
+  expect(queryAllByText(/interests/i)).toHaveLength(0);
 
   rerender(
     <UserProfileBackground
@@ -106,6 +136,33 @@ it('renders approach if present', () => {
       role="Collaborating PI"
       approach="text"
     />,
+  );
+
+  expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);
+});
+
+it('renders approach placeholder ownProfile is true', () => {
+  const { rerender, queryAllByText } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfileBackground
+        id="42"
+        firstName="Phillip"
+        displayName="Phillip, M"
+        role="Collaborating PI"
+      />
+    </UserProfileContext.Provider>,
+  );
+  expect(queryAllByText(/interests/i)).toHaveLength(0);
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileBackground
+        id="42"
+        firstName="Phillip"
+        displayName="Phillip, M"
+        role="Collaborating PI"
+      />
+    </UserProfileContext.Provider>,
   );
 
   expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);

@@ -8,7 +8,11 @@ import {
 } from 'react-router-dom';
 import { relative } from 'path';
 import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
-import { useCurrentUser, ToastContext } from '@asap-hub/react-context';
+import {
+  useCurrentUser,
+  ToastContext,
+  UserProfileContext,
+} from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
 import { network, RouteNode, useRouteParams } from '@asap-hub/routing';
 
@@ -110,39 +114,41 @@ const User: React.FC<Record<string, never>> = () => {
     };
 
     return (
-      <Frame title={user.displayName}>
-        <UserProfilePage {...profilePageProps}>
-          {user.role === 'Staff' ? (
-            <Staff {...user} />
-          ) : (
-            <>
-              <Switch>
-                <Route path={path + tabRoutes.research.template}>
-                  <Frame title="Research">
-                    <Research user={user} />
-                  </Frame>
-                </Route>
-                <Route path={path + tabRoutes.about.template}>
-                  <Frame title="About">
-                    <About user={user} />
-                  </Frame>
-                </Route>
-                <Route path={path + tabRoutes.outputs.template}>
-                  <Frame title="Outputs">
-                    <Outputs />
-                  </Frame>
-                </Route>
-                <Redirect to={tabRoutes.research({}).$} />
-              </Switch>
-              {isOwnProfile && tabRoute && (
-                <Route path={path + tabRoute.template}>
-                  <Editing user={user} />
-                </Route>
-              )}
-            </>
-          )}
-        </UserProfilePage>
-      </Frame>
+      <UserProfileContext.Provider value={{ isOwnProfile }}>
+        <Frame title={user.displayName}>
+          <UserProfilePage {...profilePageProps}>
+            {user.role === 'Staff' ? (
+              <Staff {...user} />
+            ) : (
+              <>
+                <Switch>
+                  <Route path={path + tabRoutes.research.template}>
+                    <Frame title="Research">
+                      <Research user={user} />
+                    </Frame>
+                  </Route>
+                  <Route path={path + tabRoutes.about.template}>
+                    <Frame title="About">
+                      <About user={user} />
+                    </Frame>
+                  </Route>
+                  <Route path={path + tabRoutes.outputs.template}>
+                    <Frame title="Outputs">
+                      <Outputs />
+                    </Frame>
+                  </Route>
+                  <Redirect to={tabRoutes.research({}).$} />
+                </Switch>
+                {isOwnProfile && tabRoute && (
+                  <Route path={path + tabRoute.template}>
+                    <Editing user={user} />
+                  </Route>
+                )}
+              </>
+            )}
+          </UserProfilePage>
+        </Frame>
+      </UserProfileContext.Provider>
     );
   }
 

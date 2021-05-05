@@ -67,12 +67,13 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
           card: userProfileGroupsCard,
         },
         {
-          card: skills.length ? (
+          card: (
             <ProfileSkills
               skillsDescription={skillsDescription}
               skills={skills}
             />
-          ) : null,
+          ),
+
           editLink:
             editSkillsHref === undefined
               ? undefined
@@ -83,9 +84,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                 },
         },
         {
-          card: questions.length ? (
+          card: (
             <QuestionsSection firstName={firstName} questions={questions} />
-          ) : null,
+          ),
           editLink:
             editQuestionsHref === undefined
               ? undefined

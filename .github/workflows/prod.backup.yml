@@ -3,7 +3,6 @@ on:
   schedule:
     - cron: '0 7,19 * * *' # Twice a day: 7am and 7pm UTC
   workflow_dispatch:
-  push:
 jobs:
   make_backup:
     runs-on: ubuntu-18.04
@@ -11,7 +10,7 @@ jobs:
       image: registry.gitlab.com/yldio/asap-hub/squidex-utils
     env:
       SQUIDEX_APP: 'asap-hub'
-      BUCKET_NAME: 'asap-hub-836-data-backup'
+      BUCKET_NAME: 'asap-hub-prod-data-backup'
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_PROD }}
       SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_PROD }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

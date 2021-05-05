@@ -285,9 +285,6 @@ const serverlessConfig: AWS = {
           {
             Condition: 'IsProd',
           },
-          {
-            'Fn::Equals': ['${self:provider.stage}', '836'],
-          },
         ],
       },
     },

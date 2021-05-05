@@ -19,7 +19,8 @@ build:docker-images:
 test:integration:
   image: $INTEGRATION_DOCKER_IMAGE
   before_script:
-    - export SQUIDEX_APP_NAME=$CI_EXTERNAL_PULL_REQUEST_IID-$CI_JOB_ID
+    - export BASE_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID:-$CI_COMMIT_BRANCH}
+    - export SQUIDEX_APP_NAME=$BASE_APP_NAME-$CI_JOB_ID
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
     - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
     - python ci/integration/scripts/create-app.py

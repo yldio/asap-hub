@@ -87,7 +87,7 @@ it('renders responsibilities if present', () => {
   expect(queryAllByText(/responsibilities/i).length).toBeGreaterThan(0);
 });
 
-it('renders responsibilities placeholder if ownProfile is true', () => {
+it('renders placeholder if no responsibilities provided for your own profile', () => {
   const { rerender, queryAllByText } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfileBackground
@@ -141,7 +141,7 @@ it('renders approach if present', () => {
   expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);
 });
 
-it('renders approach placeholder ownProfile is true', () => {
+it('renders placeholder for your own profile when there is no approach', () => {
   const { rerender, queryAllByText } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfileBackground

@@ -29,7 +29,7 @@ it('handles empty names', () => {
   );
 });
 
-it('renders placeholder when no open questions supplied and ownProfile is true', () => {
+it('renders placeholder when no open questions supplied for your own profile', () => {
   const { getByRole } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <QuestionsSection {...props} questions={[]} />
@@ -40,7 +40,7 @@ it('renders placeholder when no open questions supplied and ownProfile is true',
   );
 });
 
-it('does not render when no open questions and ownProfile is false', () => {
+it('does not render when no open questions for profiles other than your own', () => {
   const { container } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <QuestionsSection {...props} questions={[]} />

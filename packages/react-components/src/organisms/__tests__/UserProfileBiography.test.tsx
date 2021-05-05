@@ -23,7 +23,7 @@ it('renders a biosketch button', () => {
   expect(getByRole('link')).toHaveAttribute('href', 'http://google.com');
 });
 
-it('renders a placeholder for isOwnProfile true and biography omitted', () => {
+it('renders a placeholder for your own profile when biography omitted', () => {
   const { getByText } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <UserProfileBiography {...props} biography="" />
@@ -32,7 +32,7 @@ it('renders a placeholder for isOwnProfile true and biography omitted', () => {
   expect(getByText(/your story/i)).toBeVisible();
 });
 
-it('does not render if isOwnProfile false and biography omitted', () => {
+it('does not render if not your own profile and biography omitted', () => {
   const { container } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfileBiography {...props} biography="" />

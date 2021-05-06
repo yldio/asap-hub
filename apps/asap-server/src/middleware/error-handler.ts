@@ -1,8 +1,7 @@
 import { ErrorRequestHandler } from 'express';
 import { isBoom } from '@hapi/boom';
-import { Logger } from 'pino';
 
-export const errorHandlerFactory = (logger: Logger): ErrorRequestHandler => (
+export const errorHandlerFactory = (): ErrorRequestHandler => (
   err,
   req,
   res,
@@ -12,7 +11,7 @@ export const errorHandlerFactory = (logger: Logger): ErrorRequestHandler => (
     return next(err);
   }
 
-  logger.error(err);
+  req.log.error(err);
 
   // add error to the trace
   req.span?.log({ 'error.error': err });

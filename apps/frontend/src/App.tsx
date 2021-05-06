@@ -5,6 +5,7 @@ import {
   Layout,
   BasicLayout,
   GoogleTagManager,
+  ToastStack,
 } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { staticPages, network, welcome } from '@asap-hub/routing';
@@ -58,7 +59,9 @@ const App: React.FC<Record<string, never>> = () => {
             <Frame title={null}>
               <Switch>
                 <Route path={welcome.template}>
-                  <Welcome />
+                  <ToastStack>
+                    <Welcome />
+                  </ToastStack>
                 </Route>
 
                 <Route exact path={staticPages({}).terms.template}>

@@ -17,7 +17,8 @@ interface ToastStackProps {
 const ToastStack: React.FC<ToastStackProps> = ({ children }) => {
   const [toastNodes, setToastNodes] = useState<ReadonlyArray<ReactNode>>([]);
   const toast = useCallback(
-    (node) => setToastNodes((currToastNodes) => [...currToastNodes, node]),
+    (node: ReactNode) =>
+      setToastNodes((currToastNodes) => [...currToastNodes, node]),
     [],
   );
 

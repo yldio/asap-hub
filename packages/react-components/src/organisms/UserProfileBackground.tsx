@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import css from '@emotion/css';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
+import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Card, Headline2, Headline3, Link } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
+import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 
 type UserProfileBackgroundProps = UserTeam & Pick<UserResponse, 'firstName'>;
 
@@ -52,7 +54,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   firstName,
 }) => {
   const teamHref = network({}).teams({}).team({ teamId: id }).$;
-
+  const { isOwnProfile } = useContext(UserProfileContext);
   return (
     <Card>
       <Headline2 styleAsHeading={3}>
@@ -69,18 +71,32 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
             <p>{role}</p>
           </div>
         </div>
-        {approach && (
+        {(approach || isOwnProfile) && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
-            <p css={textStyle}>{approach}</p>
+            {approach ? (
+              <p css={textStyle}>{approach}</p>
+            ) : (
+              <UserProfilePlaceholderCard title="What are your main research interests?">
+                Tell the network what your main research interests are to easily
+                find researchers with similar interests.
+              </UserProfilePlaceholderCard>
+            )}
           </div>
         )}
-        {responsibilities && (
+        {(responsibilities || isOwnProfile) && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>
               {firstName}'s Responsibilities
             </Headline3>
-            <p css={textStyle}>{responsibilities}</p>
+            {responsibilities ? (
+              <p css={textStyle}>{responsibilities}</p>
+            ) : (
+              <UserProfilePlaceholderCard title="Which responsibilities do you have in your project?">
+                Tell others about the role you play in your team. This will
+                encourage collaboration.
+              </UserProfilePlaceholderCard>
+            )}
           </div>
         )}
       </div>

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import css from '@emotion/css';
+import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Card, Headline2, Paragraph, Link } from '../atoms';
 import { docsIcon } from '../icons';
 import { mobileScreen } from '../pixels';
+import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
 
 const stretchOnMobile = css({
   display: 'flex',
@@ -13,32 +15,42 @@ const stretchOnMobile = css({
 });
 
 type UserProfileBiographyProps = {
-  readonly biography: string;
+  readonly biography?: string;
   readonly biosketch?: string;
 };
 const UserProfileBiography: React.FC<UserProfileBiographyProps> = ({
   biography,
   biosketch,
-}) => (
-  <Card>
-    <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Headline2 styleAsHeading={3}>Biography</Headline2>
-      <Paragraph accent="lead">{biography}</Paragraph>
-      {biosketch && (
-        <div css={stretchOnMobile}>
-          <Link buttonStyle href={biosketch}>
-            {docsIcon}
-            View Biosketch
-          </Link>
-        </div>
-      )}
-    </div>
-  </Card>
-);
+}) => {
+  const { isOwnProfile } = useContext(UserProfileContext);
+  return biography || isOwnProfile ? (
+    <Card>
+      <div
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Headline2 styleAsHeading={3}>Biography</Headline2>
+        {biography ? (
+          <Paragraph accent="lead">{biography}</Paragraph>
+        ) : (
+          <UserProfilePlaceholderCard title="What’s your story?">
+            Complement your profile with a biography. You may summarize your
+            background and highlight any past achievements.
+          </UserProfilePlaceholderCard>
+        )}
+        {biosketch && (
+          <div css={stretchOnMobile}>
+            <Link buttonStyle href={biosketch}>
+              {docsIcon}
+              View Biosketch
+            </Link>
+          </div>
+        )}
+      </div>
+    </Card>
+  ) : null;
+};
 
 export default UserProfileBiography;

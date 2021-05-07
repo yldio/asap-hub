@@ -1,9 +1,11 @@
 import React from 'react';
 import { array, text } from '@storybook/addon-knobs';
 import { QuestionsSection } from '@asap-hub/react-components';
+import { UserProfileDecorator } from './user-profile';
 
 export default {
   title: 'Organisms / User Profile / Questions',
+  decorators: [UserProfileDecorator],
 };
 
 export const Normal = () => (

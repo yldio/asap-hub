@@ -37,6 +37,9 @@ export type ResearchOutputResponse = Omit<
   readonly id: string;
   readonly link?: string;
   readonly created: string;
+  /**
+   * @deprecated in favour of teams
+   */
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly teams: Pick<TeamResponse, 'id' | 'displayName'>[];
   readonly tags: string[];

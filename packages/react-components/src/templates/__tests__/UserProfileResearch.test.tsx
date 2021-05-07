@@ -33,34 +33,17 @@ it('renders the skills list', () => {
   const { getByText } = render(
     <UserProfileResearch {...commonProps} skills={['Neurological Diseases']} />,
   );
-  expect(getByText(/expertise/i)).toBeVisible();
+  expect(getByText(/expertise/i, { selector: 'h2' })).toBeVisible();
   expect(getByText('Neurological Diseases')).toBeVisible();
 });
-it('does not render an empty skills list', () => {
-  const { queryByText } = render(
-    <UserProfileResearch {...commonProps} skills={[]} />,
-  );
-  expect(queryByText(/expertise/i)).not.toBeInTheDocument();
-  expect(queryByText('Neurological Diseases')).not.toBeInTheDocument();
-});
-
-it('renders the questions list', () => {
+it('renders opens questions when questions provided', () => {
   const { getByText } = render(
     <UserProfileResearch
       {...commonProps}
       questions={['What is the meaning of life?']}
     />,
   );
-  expect(getByText(/open questions/i).tagName).toBe('H2');
-  expect(
-    getByText('What is the meaning of life?', { exact: false }),
-  ).toBeVisible();
-});
-it('does not render an empty questions list', () => {
-  const { queryByText } = render(
-    <UserProfileResearch {...commonProps} questions={[]} />,
-  );
-  expect(queryByText(/open questions/i)).not.toBeInTheDocument();
+  expect(getByText(/open questions/i)).toBeVisible();
 });
 
 it('does not render an edit button by default', () => {

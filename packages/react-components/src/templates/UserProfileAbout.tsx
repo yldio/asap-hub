@@ -28,7 +28,7 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
   return (
     <ProfileCardList>
       {{
-        card: biography && (
+        card: (
           <UserProfileBiography biosketch={biosketch} biography={biography} />
         ),
         editLink:

@@ -10,7 +10,42 @@ export type ResearchOutputType =
   | 'Lab Resource'
   | 'Article';
 
-export type ResearchOutputAccessLevel = 'private' | 'team' | 'public';
+export type ResearchOutputSubtype =
+  | 'ASAP annual meeting'
+  | 'ASAP subgroup meeting'
+  | 'External meeting'
+  | 'Preprint'
+  | 'Published'
+  | 'Genetic Data - DNA'
+  | 'Genetic Data - RNA'
+  | 'Protein Data'
+  | 'Microscopy'
+  | 'Electrophysiology'
+  | 'Mass Spectrometry'
+  | 'Code'
+  | 'Data portal'
+  | 'Web Portal'
+  | 'Analysis'
+  | 'Assays'
+  | 'Cell Culture & Differentiation'
+  | 'Cloning'
+  | 'Imaging'
+  | 'Model System'
+  | 'Protein expression'
+  | 'Sample Collection'
+  | 'Shipment Procedures'
+  | '3D Printing'
+  | 'Animal Models'
+  | 'Antibodies'
+  | 'Biosample'
+  | 'Cell line'
+  | 'Compounds'
+  | 'Plasmid'
+  | 'Protein'
+  | 'Viral Vector';
+
+export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
+
 export type ResearchOutputAuthor =
   | { readonly displayName: string }
   | { readonly id: string };

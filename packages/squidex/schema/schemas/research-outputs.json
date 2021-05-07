@@ -232,6 +232,197 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
+      },
+      {
+        "name": "subtype",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Dropdown",
+          "inlineEditable": false,
+          "isUnique": false,
+          "allowedValues": [
+            "ASAP annual meeting",
+            "ASAP subgroup meeting",
+            "External meeting",
+            "Preprint",
+            "Published",
+            "Genetic Data - DNA",
+            "Genetic Data - RNA",
+            "Protein Data",
+            "Microscopy",
+            "Electrophysiology",
+            "Mass Spectrometry",
+            "Code",
+            "Data portal",
+            "Web Portal",
+            "Analysis",
+            "Assays",
+            "Cell Culture & Differentiation",
+            "Cloning",
+            "Imaging",
+            "Model System",
+            "Protein expression",
+            "Sample Collection",
+            "Shipment Procedures",
+            "3D Printing",
+            "Animal Models",
+            "Antibodies",
+            "Biosample",
+            "Cell line",
+            "Compounds",
+            "Plasmid",
+            "Protein",
+            "Viral Vector"
+          ],
+          "contentType": "Unspecified",
+          "label": "Subtype"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "accessInstructions",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Input",
+          "inlineEditable": false,
+          "isUnique": false,
+          "contentType": "Unspecified",
+          "label": "Access Instructions"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "sharingStatus",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Dropdown",
+          "inlineEditable": false,
+          "isUnique": false,
+          "defaultValue": "Network Only",
+          "allowedValues": [
+            "Public",
+            "Network Only"
+          ],
+          "contentType": "Unspecified",
+          "label": "Sharing Status"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "asapFunded",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Dropdown",
+          "inlineEditable": false,
+          "isUnique": false,
+          "defaultValue": "Not Sure",
+          "allowedValues": [
+            "Yes",
+            "No",
+            "Not Sure"
+          ],
+          "contentType": "Unspecified",
+          "label": "ASAP Funded"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "usedInAPublication",
+        "properties": {
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "String",
+          "editor": "Dropdown",
+          "inlineEditable": false,
+          "isUnique": false,
+          "defaultValue": "Not Sure",
+          "allowedValues": [
+            "Yes",
+            "No",
+            "Not Sure"
+          ],
+          "contentType": "Unspecified",
+          "label": "Used in a Publication"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant"
+      },
+      {
+        "name": "externalAuthors",
+        "properties": {
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false,
+          "fieldType": "Array",
+          "label": "External Authors"
+        },
+        "isLocked": false,
+        "isHidden": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "nested": [
+          {
+            "name": "name",
+            "properties": {
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "String",
+              "editor": "Input",
+              "inlineEditable": false,
+              "isUnique": false,
+              "contentType": "Unspecified",
+              "label": "Name"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          },
+          {
+            "name": "orcid",
+            "properties": {
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": false,
+              "fieldType": "String",
+              "editor": "Input",
+              "inlineEditable": false,
+              "isUnique": false,
+              "contentType": "Unspecified",
+              "label": "ORCID"
+            },
+            "isLocked": false,
+            "isHidden": false,
+            "isDisabled": false
+          }
+        ]
       }
     ],
     "previewUrls": {

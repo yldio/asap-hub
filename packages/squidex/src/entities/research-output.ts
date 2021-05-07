@@ -1,4 +1,9 @@
-import { ResearchOutputType } from '@asap-hub/model';
+import {
+  ResearchOutputType,
+  ResearchOutputSubtype,
+  ResearchOutputSharingStatus,
+  DecisionOption,
+} from '@asap-hub/model';
 
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
@@ -13,6 +18,15 @@ export interface ResearchOutput {
   tags?: string[];
   adminNotes?: string;
   lastUpdatedPartial?: string;
+  subtype: ResearchOutputSubtype;
+  accessInstructions?: string;
+  sharingStatus: ResearchOutputSharingStatus;
+  asapFunded: DecisionOption;
+  usedInAPublication: DecisionOption;
+  externalAuthors: {
+    name: string;
+    orcid?: string;
+  }[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

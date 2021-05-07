@@ -68,5 +68,5 @@ it('renders social icons without links for own profile', () => {
   );
   const element = getByTitle('Research Gate');
   expect(element).toBeInTheDocument();
-  expect(element).not.toHaveAttribute('href');
+  expect(element.closest('a')).not.toHaveAttribute('href');
 });

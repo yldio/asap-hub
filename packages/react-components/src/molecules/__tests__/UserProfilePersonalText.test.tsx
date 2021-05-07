@@ -58,3 +58,21 @@ it('does not show team information if the user is not on a team', async () => {
   );
   expect(container).not.toHaveTextContent(/\w on \w/);
 });
+
+it('shows placeholder text on your own profile', () => {
+  const { queryByTitle, queryByText, rerender } = render(
+    <UserProfilePersonalText
+      teams={[]}
+      role={'Grantee'}
+      isOwnProfile={false}
+    />,
+  );
+  expect(queryByTitle(/location/i)).not.toBeInTheDocument();
+  expect(queryByText(/your position/i)).not.toBeInTheDocument();
+
+  rerender(
+    <UserProfilePersonalText teams={[]} role={'Grantee'} isOwnProfile={true} />,
+  );
+  expect(queryByTitle(/location/i)).toBeInTheDocument();
+  expect(queryByText(/your position/i)).toBeInTheDocument();
+});

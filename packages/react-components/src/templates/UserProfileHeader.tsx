@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import css from '@emotion/css';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
+import { UserProfileContext } from '@asap-hub/react-context';
 
 import {
   tabletScreen,
@@ -15,7 +16,7 @@ import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
 import { UserProfilePersonalText, TabNav, SocialIcons } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
-import { paper } from '../colors';
+import { paper, tin } from '../colors';
 import { editIcon, uploadIcon } from '../icons';
 
 const containerStyles = css({
@@ -152,6 +153,7 @@ type UserProfileHeaderProps = Pick<
   | 'role'
   | 'social'
   | 'teams'
+  | 'degree'
 > & {
   readonly onImageSelect?: (file: File) => void;
   readonly avatarSaving?: boolean;
@@ -173,6 +175,7 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   avatarUrl,
   contactEmail,
   email,
+  degree,
   onImageSelect,
   avatarSaving,
 
@@ -182,17 +185,29 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   social,
 }) => {
   const tabRoutes = network({}).users({}).user({ userId: id });
+  const { isOwnProfile } = useContext(UserProfileContext);
+
   return (
     <header css={[containerStyles, role === 'Staff' && staffContainerStyles]}>
       <section css={personalInfoStyles}>
         <div>
-          <Display styleAsHeading={2}>{displayName}</Display>
+          <div css={{ display: 'flex' }}>
+            <Display styleAsHeading={2}>{displayName}</Display>
+            {degree ? (
+              <Display styleAsHeading={2}>, {degree}</Display>
+            ) : isOwnProfile ? (
+              <div css={{ color: tin.rgb }}>
+                <Display styleAsHeading={2}>, Degree</Display>
+              </div>
+            ) : null}
+          </div>
           <UserProfilePersonalText
             institution={institution}
             location={location}
             jobTitle={jobTitle}
             teams={teams}
             role={role}
+            isOwnProfile={isOwnProfile}
           />
         </div>
         <div css={avatarContainer}>

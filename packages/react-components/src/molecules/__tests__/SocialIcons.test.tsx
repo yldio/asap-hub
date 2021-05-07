@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { UserProfileContext } from '@asap-hub/react-context';
 
 import SocialIcons from '../SocialIcons';
 
@@ -52,4 +53,20 @@ it('renders icon and link', () => {
       ],
     ]
   `);
+});
+
+it('does not contain content when there are no social icons', () => {
+  const { container } = render(<SocialIcons />);
+  expect(container.firstChild).toBeEmptyDOMElement();
+});
+
+it('renders social icons without links for own profile', () => {
+  const { getByTitle } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <SocialIcons />
+    </UserProfileContext.Provider>,
+  );
+  const element = getByTitle('Research Gate');
+  expect(element).toBeInTheDocument();
+  expect(element).not.toHaveAttribute('href');
 });

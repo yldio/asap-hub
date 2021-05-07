@@ -2,6 +2,7 @@ import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
 import { createUserResponse } from '@asap-hub/fixtures';
+import { UserProfileContext } from '@asap-hub/react-context';
 
 import UserProfileHeader from '../UserProfileHeader';
 
@@ -109,4 +110,25 @@ it('generates staff profile without contact and tabs', () => {
   expect(queryByText(/research/i)).not.toBeInTheDocument();
   expect(queryByText(/background/i)).not.toBeInTheDocument();
   expect(queryByText(/outputs/i)).not.toBeInTheDocument();
+});
+
+it('shows placeholder text for degree on own profile when omitted', () => {
+  const { queryByText, rerender } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfileHeader {...boilerplateProps} degree={undefined} />,
+    </UserProfileContext.Provider>,
+  );
+  expect(queryByText(/degree/i)).toBeNull();
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileHeader {...boilerplateProps} degree={undefined} />,
+    </UserProfileContext.Provider>,
+  );
+  expect(queryByText(/degree/i)).toBeVisible();
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileHeader {...boilerplateProps} degree="BA" />,
+    </UserProfileContext.Provider>,
+  );
+  expect(queryByText(/, BA/i)).toBeVisible();
 });

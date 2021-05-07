@@ -37,7 +37,7 @@ import NewsAndEvents, {
 import { newsAndEventsRouteFactory } from './routes/news-and-events.route';
 import Discover, { DiscoverController } from './controllers/discover';
 import { discoverRouteFactory } from './routes/discover.route';
-import pinoLogger from './utils/logger';
+import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
 
 export const appFactory = (libs: Libs = {}): Express => {
@@ -52,6 +52,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Middleware
   const httpLogger = pinoHttp({
     logger,
+    serializers: redaction,
   });
   const errorHandler = errorHandlerFactory();
 

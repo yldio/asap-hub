@@ -1,9 +1,8 @@
-import React, { useEffect, useContext, ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { Layout } from '@asap-hub/react-components';
-import { number } from '@storybook/addon-knobs';
-import { ToastContext } from '@asap-hub/react-context';
 
 import { NoPaddingDecorator } from './layout';
+import { toastGenerator } from './toast';
 
 export default {
   title: 'Organisms / Layout / Layout',
@@ -23,21 +22,10 @@ const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
 export const Normal = () => <Layout {...props}>Content</Layout>;
 
 export const Toasts = () => {
-  const numToasts = number('Number of toasts', 3, { min: 0 });
-  const Toast: React.FC<Record<string, never>> = () => {
-    const toast = useContext(ToastContext);
-    useEffect(() => {
-      Array.from({ length: numToasts }, (_, i) => `Toast ${i + 1}`).forEach(
-        toast,
-      );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    return null;
-  };
-
+  const { numToasts, ToastGenerator } = toastGenerator();
   return (
     <Layout {...props} key={numToasts}>
-      <Toast />
+      <ToastGenerator />
       Content
     </Layout>
   );

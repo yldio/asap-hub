@@ -1,4 +1,5 @@
 import { RestResearchOutput, RestUser, RestTeam } from '@asap-hub/squidex';
+import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
 
 export const createProtocolsRequest: RestResearchOutput['data'] = {
   type: { iv: 'Protocol' },
@@ -14,6 +15,9 @@ export const createProtocolsRequest: RestResearchOutput['data'] = {
   tags: {
     iv: ['a', 'b', 'c d', 'e'],
   },
+  sharingStatus: { iv: 'Network Only' as ResearchOutputSharingStatus },
+  asapFunded: { iv: 'Not Sure' as DecisionOption },
+  usedInAPublication: { iv: 'Not Sure' as DecisionOption },
 };
 
 export const fetchProtocolsResponse: RestResearchOutput = {

@@ -314,10 +314,7 @@
           "inlineEditable": false,
           "isUnique": false,
           "defaultValue": "Network Only",
-          "allowedValues": [
-            "Public",
-            "Network Only"
-          ],
+          "allowedValues": ["Public", "Network Only"],
           "contentType": "Unspecified",
           "label": "Sharing Status"
         },
@@ -337,11 +334,7 @@
           "inlineEditable": false,
           "isUnique": false,
           "defaultValue": "Not Sure",
-          "allowedValues": [
-            "Yes",
-            "No",
-            "Not Sure"
-          ],
+          "allowedValues": ["Yes", "No", "Not Sure"],
           "contentType": "Unspecified",
           "label": "ASAP Funded"
         },
@@ -361,11 +354,7 @@
           "inlineEditable": false,
           "isUnique": false,
           "defaultValue": "Not Sure",
-          "allowedValues": [
-            "Yes",
-            "No",
-            "Not Sure"
-          ],
+          "allowedValues": ["Yes", "No", "Not Sure"],
           "contentType": "Unspecified",
           "label": "Used in a Publication"
         },

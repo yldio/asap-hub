@@ -18,12 +18,12 @@ export interface ResearchOutput {
   tags?: string[];
   adminNotes?: string;
   lastUpdatedPartial?: string;
-  subtype: ResearchOutputSubtype;
+  subtype?: ResearchOutputSubtype;
   accessInstructions?: string;
   sharingStatus: ResearchOutputSharingStatus;
   asapFunded: DecisionOption;
   usedInAPublication: DecisionOption;
-  externalAuthors: {
+  externalAuthors?: {
     name: string;
     orcid?: string;
   }[];

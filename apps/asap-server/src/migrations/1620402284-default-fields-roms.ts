@@ -32,11 +32,8 @@ export default class MoveResearchOutputTextToDescription extends Migration {
 
       for (const researchOutput of result.items as OldRestResearchOutput[]) {
         try {
-          const {
-            sharingStatus,
-            asapFunded,
-            usedInAPublication,
-          } = researchOutput.data;
+          const { sharingStatus, asapFunded, usedInAPublication } =
+            researchOutput.data;
           const defaults = {
             sharingStatus: {
               iv:
@@ -62,5 +59,7 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       pointer += 10;
     } while (pointer < result.total);
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   down = async (): Promise<void> => {};
 }

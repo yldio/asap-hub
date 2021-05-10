@@ -67,3 +67,13 @@ describe('tags and description', () => {
     expect(queryByRole('separator')).toBeVisible();
   });
 });
+
+it('displays access instructions when data provided', () => {
+  const { queryByText, getByText, rerender } = render(
+    <SharedResearchOutput {...props} accessInstructions="" />,
+  );
+  expect(queryByText(/access instructions/i)).not.toBeInTheDocument();
+  rerender(<SharedResearchOutput {...props} accessInstructions="Some Data" />);
+  expect(getByText(/access instructions/i)).toBeVisible();
+  expect(getByText(/some data/i)).toBeVisible();
+});

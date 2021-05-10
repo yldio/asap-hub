@@ -78,6 +78,7 @@ export type ResearchOutputResponse = Omit<
    */
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
+  readonly accessInstructions?: string;
   readonly tags: string[];
   readonly addedDate?: string;
   readonly lastModifiedDate?: string;

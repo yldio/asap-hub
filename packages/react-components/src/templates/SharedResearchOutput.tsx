@@ -1,45 +1,15 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
-import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
-import { TagLabel, Display, Card, Headline2, Divider } from '../atoms';
-import { lead } from '../colors';
-import { mobileScreen, perRem } from '../pixels';
+import { Card, Headline2, Divider } from '../atoms';
+import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { BackLink, ExternalLink, TagList } from '../molecules';
-import { captionStyles } from '../text';
-import { RichText } from '../organisms';
-import { formatDate } from '../date';
+import { BackLink, TagList } from '../molecules';
+import { RichText, SharedResearchOutputHeaderCard } from '../organisms';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
-});
-
-const headerStyles = css({
-  flex: 1,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-});
-
-const typeStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  textTransform: 'capitalize',
-});
-
-const timestampStyles = css({
-  color: lead.rgb,
-  display: 'flex',
-  flexDirection: 'row',
-  whiteSpace: 'pre',
-  marginTop: `${24 / perRem}em`,
-  marginBottom: 0,
-  [`@media (max-width: ${mobileScreen.max}px)`]: {
-    flexDirection: 'column',
-    marginTop: `${12 / perRem}em`,
-    marginBottom: `${12 / perRem}em`,
-  },
 });
 
 const cardsStyles = css({
@@ -47,55 +17,24 @@ const cardsStyles = css({
   rowGap: `${36 / perRem}em`,
 });
 
-type SharedResearchProposalProps = Pick<
+type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
-  | 'created'
-  | 'addedDate'
-  | 'team'
-  | 'description'
-  | 'title'
-  | 'type'
-  | 'link'
-  | 'tags'
-  | 'lastModifiedDate'
-> & {
-  backHref: string;
-};
+  'description' | 'tags'
+> &
+  ComponentProps<typeof SharedResearchOutputHeaderCard> & {
+    backHref: string;
+  };
 
-const SharedResearchOutput: React.FC<SharedResearchProposalProps> = ({
-  created,
-  addedDate,
-  title,
+const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description,
-  type,
   backHref,
   tags,
-  link,
-  lastModifiedDate,
+  ...props
 }) => (
   <div css={containerStyles}>
     <BackLink href={backHref} />
     <div css={cardsStyles}>
-      <Card>
-        <div css={headerStyles}>
-          <div css={typeStyles}>
-            <TagLabel>{type}</TagLabel>
-          </div>
-          {link ? (
-            <ExternalLink label={researchOutputLabels[type]} href={link} />
-          ) : null}
-        </div>
-        <Display styleAsHeading={3}>{title}</Display>
-        <div css={[timestampStyles, captionStyles]}>
-          <span>
-            Date added: {formatDate(new Date(addedDate || created))}
-            {lastModifiedDate && ' · '}
-          </span>
-          {lastModifiedDate && (
-            <span>Last updated: {formatDate(new Date(lastModifiedDate))}</span>
-          )}
-        </div>
-      </Card>
+      <SharedResearchOutputHeaderCard {...props} />
       {(description || !!tags.length) && (
         <Card>
           {description && (

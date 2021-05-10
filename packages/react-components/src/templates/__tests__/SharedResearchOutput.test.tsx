@@ -23,61 +23,6 @@ it('renders an output with title and content', () => {
   expect(getByText(/content/i)).toBeVisible();
 });
 
-it('renders an output with an external link', () => {
-  const { queryByTitle, getByTitle, rerender } = render(
-    <SharedResearchOutput {...props} link={undefined} />,
-  );
-  expect(queryByTitle(/external link/i)).not.toBeInTheDocument();
-  rerender(<SharedResearchOutput {...props} link={'http://example.com'} />);
-  expect(getByTitle(/external link/i).closest('a')).toHaveAttribute(
-    'href',
-    'http://example.com',
-  );
-});
-
-it('falls back to created date when added date omitted', () => {
-  const { getByText, rerender } = render(
-    <SharedResearchOutput
-      {...props}
-      created={new Date(2019, 1, 1, 1).toISOString()}
-      addedDate={new Date(2020, 1, 1, 1).toISOString()}
-      lastModifiedDate={undefined}
-    />,
-  );
-  expect(getByText(/2020/)).toBeVisible();
-  rerender(
-    <SharedResearchOutput
-      {...props}
-      created={new Date(2019, 1, 1, 1).toISOString()}
-      addedDate={undefined}
-      lastModifiedDate={undefined}
-    />,
-  );
-  expect(getByText(/2019/)).toBeVisible();
-});
-
-it('renders an output with a modified date', () => {
-  const { queryByText, getByText, rerender } = render(
-    <SharedResearchOutput
-      {...props}
-      addedDate={new Date(2019, 1, 1, 1).toISOString()}
-      lastModifiedDate={undefined}
-    />,
-  );
-  expect(getByText(/2019/)).toBeVisible();
-  expect(queryByText(/·/i)).not.toBeInTheDocument();
-  rerender(
-    <SharedResearchOutput
-      {...props}
-      addedDate={new Date(2019, 1, 1, 1).toISOString()}
-      lastModifiedDate={new Date(2020, 1, 1, 1).toISOString()}
-    />,
-  );
-  expect(getByText(/2019/)).toBeVisible();
-  expect(queryByText(/2020/)).toBeVisible();
-  expect(queryByText(/·/i)).toBeInTheDocument();
-});
-
 describe('tags and description', () => {
   it('handles tags and description omitted', () => {
     const { queryByText, queryByRole } = render(

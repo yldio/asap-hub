@@ -35,6 +35,7 @@ export { default as RichTextCard } from './RichTextCard';
 export { default as SearchAndFilter } from './SearchAndFilter';
 export { default as SharedResearchCard } from './SharedResearchCard';
 export { default as SharedResearchListCard } from './SharedResearchListCard';
+export { default as SharedResearchOutputHeaderCard } from './SharedResearchOutputHeaderCard';
 export { default as TeamCard } from './TeamCard';
 export { default as TeamGroupsCard } from './TeamGroupsCard';
 export { default as TeamMembersSection } from './TeamMembersSection';

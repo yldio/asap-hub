@@ -32,8 +32,11 @@ export default class MoveResearchOutputTextToDescription extends Migration {
 
       for (const researchOutput of result.items as OldRestResearchOutput[]) {
         try {
-          const { sharingStatus, asapFunded, usedInAPublication } =
-            researchOutput.data;
+          const {
+            sharingStatus,
+            asapFunded,
+            usedInAPublication,
+          } = researchOutput.data;
           const defaults = {
             sharingStatus: {
               iv:

@@ -53,7 +53,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                   outputs: [
                     {
                       id: 'output-id-1',
-                      created: '2020-12-11T14:33:18Z',
+                      created: '2020-12-11T14:33:18.000Z',
                       flatData: {
                         link: null,
                         publishDate: null,
@@ -258,6 +258,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
               tags: ['test', 'tag'],
               team: { id: 'team-id-1', displayName: 'Lee, M' },
               teams: [{ id: 'team-id-1', displayName: 'Lee, M' }],
+              lastUpdatedPartial: '2020-12-11T14:33:18.000Z',
             },
           ],
           projectTitle:

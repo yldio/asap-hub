@@ -54,6 +54,7 @@ flatData{
       name
     }
   }
+  lastUpdatedPartial
 }
 ${
   withTeams

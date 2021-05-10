@@ -12,6 +12,7 @@ export interface ResearchOutput {
   publishDate?: string;
   tags?: string[];
   adminNotes?: string;
+  lastUpdatedPartial?: string;
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

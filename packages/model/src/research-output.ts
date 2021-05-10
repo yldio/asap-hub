@@ -45,6 +45,7 @@ export type ResearchOutputResponse = Omit<
   readonly tags: string[];
   readonly addedDate?: string;
   readonly lastModifiedDate?: string;
+  readonly lastUpdatedPartial: string;
 };
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {

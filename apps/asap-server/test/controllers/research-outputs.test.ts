@@ -62,6 +62,7 @@ describe('ResearchOutputs controller', () => {
                 tags: {
                   iv: ['tag', 'test'],
                 },
+                lastUpdatedPartial: { iv: '2020-09-10T16:34:26.842Z' },
               },
             },
           ],
@@ -97,6 +98,7 @@ describe('ResearchOutputs controller', () => {
             link: 'test',
             tags: ['tag', 'test'],
             teams: [],
+            lastUpdatedPartial: '2020-09-10T16:34:26.842Z',
           },
         ],
       };
@@ -217,6 +219,7 @@ describe('ResearchOutputs controller', () => {
                 displayName: 'Team 2',
               },
             ],
+            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
           },
           {
             created: '2020-09-23T16:34:26.842Z',
@@ -235,6 +238,7 @@ describe('ResearchOutputs controller', () => {
                 displayName: 'Team 2',
               },
             ],
+            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
           },
           {
             created: '2020-09-23T16:34:26.842Z',
@@ -253,6 +257,7 @@ describe('ResearchOutputs controller', () => {
                 displayName: 'Team 1',
               },
             ],
+            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
           },
         ],
       };
@@ -333,6 +338,7 @@ describe('ResearchOutputs controller', () => {
                 displayName: 'Team 1',
               },
             ],
+            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
           },
         ],
       };
@@ -413,6 +419,7 @@ describe('ResearchOutputs controller', () => {
                 displayName: 'Team 1',
               },
             ],
+            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
           },
         ],
       };
@@ -493,6 +500,7 @@ describe('ResearchOutputs controller', () => {
                 displayName: 'Team 1',
               },
             ],
+            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
           },
         ],
       };
@@ -578,6 +586,7 @@ describe('ResearchOutputs controller', () => {
             displayName: 'team',
           },
         ],
+        lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
       };
       expect(result).toEqual(expectedResult);
     });
@@ -624,9 +633,87 @@ describe('ResearchOutputs controller', () => {
         type: 'Proposal',
         tags: ['tag', 'test'],
         teams: [],
+        lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
       };
 
       expect(result).toEqual(expectedResult);
+    });
+
+    describe('Last Updated Partial field', () => {
+      test('Should default to last-modified if the last-updated-partial is not present', async () => {
+        nock(config.baseUrl)
+          .get(
+            `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
+          )
+          .reply(200, {
+            id: 'uuid',
+            created: '2020-09-23T16:34:26.842Z',
+            lastModified: '2019-10-01T12:01:22.132Z',
+            data: {
+              type: { iv: 'Proposal' },
+              title: { iv: 'Title' },
+              description: { iv: 'Text' },
+              tags: {
+                iv: ['tag', 'test'],
+              },
+            },
+          })
+          .get(`/api/content/${config.appName}/teams`)
+          .query({
+            q: JSON.stringify({
+              take: 8,
+              filter: {
+                path: 'data.outputs.iv',
+                op: 'eq',
+                value: 'uuid',
+              },
+            }),
+          })
+          .reply(200, {
+            items: [],
+          });
+
+        const result = await researchOutputs.fetchById(researchOutputId);
+
+        expect(result.lastUpdatedPartial).toEqual('2019-10-01T12:01:22.132Z');
+      });
+
+      test('Should default to created-date if the last-updated-partial and last-modified are not present', async () => {
+        nock(config.baseUrl)
+          .get(
+            `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
+          )
+          .reply(200, {
+            id: 'uuid',
+            created: '2020-07-23T16:34:26.842Z',
+            data: {
+              type: { iv: 'Proposal' },
+              title: { iv: 'Title' },
+              description: { iv: 'Text' },
+              tags: {
+                iv: ['tag', 'test'],
+              },
+            },
+          })
+          .get(`/api/content/${config.appName}/teams`)
+          .query({
+            q: JSON.stringify({
+              take: 8,
+              filter: {
+                path: 'data.outputs.iv',
+                op: 'eq',
+                value: 'uuid',
+              },
+            }),
+          })
+          .reply(200, {
+            items: [],
+          });
+
+        const result = await researchOutputs.fetchById(researchOutputId);
+
+        expect(result.lastUpdatedPartial).toEqual('2020-07-23T16:34:26.842Z');
+      });
     });
   });
 });

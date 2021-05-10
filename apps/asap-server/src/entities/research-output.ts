@@ -15,6 +15,8 @@ export const parseResearchOutput = (
   publishDate: output.data.publishDate?.iv,
   addedDate: output.data.addedDate?.iv,
   tags: output.data.tags?.iv || [],
+  lastUpdatedPartial:
+    output.data.lastUpdatedPartial?.iv || output.lastModified || output.created,
 });
 
 export const parseGraphQLResearchOutput = (
@@ -29,4 +31,8 @@ export const parseGraphQLResearchOutput = (
   tags: output.flatData?.tags || [],
   publishDate: output.flatData?.publishDate || undefined,
   addedDate: output.flatData?.addedDate || undefined,
+  lastUpdatedPartial:
+    output.flatData?.lastUpdatedPartial ||
+    output.lastModified ||
+    output.created,
 });

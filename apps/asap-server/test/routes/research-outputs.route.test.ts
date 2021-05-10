@@ -48,6 +48,7 @@ describe('/research-outputs/ route', () => {
             link: 'test',
             tags: ['test', 'tag'],
             teams: [],
+            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
           },
         ],
       };
@@ -120,6 +121,7 @@ describe('/research-outputs/ route', () => {
             displayName: 'team',
           },
         ],
+        lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
       };
 
       researchOutputControllerMock.fetchById.mockResolvedValueOnce(

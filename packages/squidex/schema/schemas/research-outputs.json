@@ -10,7 +10,9 @@
       "label": "Research Outputs",
       "validateOnPublish": false
     },
-    "scripts": {},
+    "scripts": {
+      "update": "const modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.test2.iv = JSON.stringify(modified);\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n\n"
+    },
     "fieldsInReferences": ["title", "type"],
     "fieldsInLists": ["title", "type"],
     "fields": [
@@ -209,6 +211,23 @@
           "label": "Admin notes",
           "hints": "This is ASAP internal content and it's not being shown on the Hub",
           "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "lastUpdatedPartial",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "calculatedDefaultValue": "Now",
+          "label": "Last Updated (partial)",
+          "hints": "Last updated date (does not include changes to Publish Date and Admin notes)",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

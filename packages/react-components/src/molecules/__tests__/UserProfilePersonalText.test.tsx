@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { UserProfileContext } from '@asap-hub/react-context';
 import UserProfilePersonalText from '../UserProfilePersonalText';
 
 it.each`
@@ -61,17 +62,17 @@ it('does not show team information if the user is not on a team', async () => {
 
 it('shows placeholder text on your own profile', () => {
   const { queryByTitle, queryByText, rerender } = render(
-    <UserProfilePersonalText
-      teams={[]}
-      role={'Grantee'}
-      isOwnProfile={false}
-    />,
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfilePersonalText teams={[]} role={'Grantee'} />
+    </UserProfileContext.Provider>,
   );
   expect(queryByTitle(/location/i)).not.toBeInTheDocument();
   expect(queryByText(/your position/i)).not.toBeInTheDocument();
 
   rerender(
-    <UserProfilePersonalText teams={[]} role={'Grantee'} isOwnProfile={true} />,
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfilePersonalText teams={[]} role={'Grantee'} />
+    </UserProfileContext.Provider>,
   );
   expect(queryByTitle(/location/i)).toBeInTheDocument();
   expect(queryByText(/your position/i)).toBeInTheDocument();

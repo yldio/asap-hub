@@ -207,7 +207,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             jobTitle={jobTitle}
             teams={teams}
             role={role}
-            isOwnProfile={isOwnProfile}
           />
         </div>
         <div css={avatarContainer}>

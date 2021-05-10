@@ -7,6 +7,7 @@ import { lead } from '../colors';
 import { formatDate } from '../date';
 import { perRem, mobileScreen } from '../pixels';
 import { captionStyles } from '../text';
+import { TeamsList } from '../molecules';
 
 const headerStyles = css({
   flex: 1,
@@ -65,6 +66,7 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
       ) : null}
     </div>
     <Display styleAsHeading={3}>{title}</Display>
+    <TeamsList inline teams={teams} />
     <div css={[timestampStyles, captionStyles]}>
       <span>
         Date added: {formatDate(new Date(addedDate || created))}

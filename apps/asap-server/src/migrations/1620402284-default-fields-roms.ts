@@ -14,7 +14,7 @@ type OldRestResearchOutput = Omit<
   usedInAPublication?: RestResearchOutput['data']['usedInAPublication'];
 };
 
-export default class MoveResearchOutputTextToDescription extends Migration {
+export default class SetResearchOutputDefaultFields extends Migration {
   up = async (): Promise<void> => {
     const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
       unpublished: true,
@@ -31,32 +31,24 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       });
 
       for (const researchOutput of result.items as OldRestResearchOutput[]) {
-        try {
-          const {
-            sharingStatus,
-            asapFunded,
-            usedInAPublication,
-          } = researchOutput.data;
-          const defaults = {
-            sharingStatus: {
-              iv:
-                sharingStatus?.iv ??
-                ('Network Only' as ResearchOutputSharingStatus),
-            },
-            asapFunded: {
-              iv: asapFunded?.iv ?? ('Not Sure' as DecisionOption),
-            },
-            usedInAPublication: {
-              iv: usedInAPublication?.iv ?? ('Not Sure' as DecisionOption),
-            },
-          };
+        const { sharingStatus, asapFunded, usedInAPublication } =
+          researchOutput.data;
 
-          await squidexClient.patch(researchOutput.id, defaults);
-        } catch (err) {
-          logger.error(err, `Error migrating RO: ${researchOutput.id}`);
-          // eslint-disable-next-line no-continue
-          continue;
-        }
+        const defaults = {
+          sharingStatus: {
+            iv:
+              sharingStatus?.iv ??
+              ('Network Only' as ResearchOutputSharingStatus),
+          },
+          asapFunded: {
+            iv: asapFunded?.iv ?? ('Not Sure' as DecisionOption),
+          },
+          usedInAPublication: {
+            iv: usedInAPublication?.iv ?? ('Not Sure' as DecisionOption),
+          },
+        };
+
+        await squidexClient.patch(researchOutput.id, defaults);
       }
 
       pointer += 10;

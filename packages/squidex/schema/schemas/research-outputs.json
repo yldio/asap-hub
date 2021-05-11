@@ -275,7 +275,8 @@
             "Compounds",
             "Plasmid",
             "Protein",
-            "Viral Vector"
+            "Viral Vector",
+            "Other"
           ],
           "contentType": "Unspecified",
           "label": "Subtype"

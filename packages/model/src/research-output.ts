@@ -42,7 +42,8 @@ export type ResearchOutputSubtype =
   | 'Compounds'
   | 'Plasmid'
   | 'Protein'
-  | 'Viral Vector';
+  | 'Viral Vector'
+  | 'Other';
 
 export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
 

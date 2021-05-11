@@ -2,7 +2,6 @@
 import { ResearchOutputSharingStatus, DecisionOption } from '@asap-hub/model';
 import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
-import logger from '../utils/logger';
 
 // The results we get from the squidex might not have the default values yet
 type OldRestResearchOutput = Omit<

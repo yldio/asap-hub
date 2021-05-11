@@ -7,8 +7,8 @@ const orcidSocialIcon = (
     width={28}
     height={28}
     viewBox="0 0 28 28"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    fill="#00222C"
   >
     <title>ORCID</title>
     <path fill="#fff" d="M0 0h28v28H0z" />
@@ -16,7 +16,6 @@ const orcidSocialIcon = (
       style={{
         mixBlendMode: 'darken',
       }}
-      fill="#00222C"
     >
       <path
         fillRule="evenodd"

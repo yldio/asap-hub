@@ -18,7 +18,7 @@ def main():
 
     if appName is None:
         print("SQUIDEX_APP_NAME is undefined")
-        sys.exit()
+        sys.exit(1)
 
     deleteApp(appName)
     print("App", appName, "deleted")

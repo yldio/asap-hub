@@ -11,15 +11,15 @@ def getClientHeaders():
 
     if CLIENT_ID is None:
         print("SQUIDEX_CLIENT_ID is undefined. Exiting")
-        sys.exit()
+        sys.exit(1)
 
     if CLIENT_ID in {'asap-hub:default', 'asap-hub-dev:default'}:
         print("SQUIDEX_CLIENT_ID is pointing to prod or dev. Exiting")
-        sys.exit()
+        sys.exit(1)
 
     if CLIENT_SECRET is None:
         print("SQUIDEX_CLIENT_SECRET is undefined. Exiting")
-        sys.exit()
+        sys.exit(1)
 
     tokenUrl = SQUIDEX_URL + '/identity-server/connect/token'
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}

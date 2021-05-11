@@ -39,7 +39,7 @@ def main():
 
     if appName is None:
         print("SQUIDEX_APP_NAME is undefined. Exiting")
-        sys.exit()
+        sys.exit(1)
 
     createAPP(appName)
     print("App", appName, "created")

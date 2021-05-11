@@ -50,6 +50,7 @@ export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
 export type ResearchOutputResponse = {
   readonly id: string;
   readonly type: ResearchOutputType;
+  readonly subTypes: ResearchOutputSubtype[];
   readonly title: string;
   readonly description: string;
   readonly tags: ReadonlyArray<string>;

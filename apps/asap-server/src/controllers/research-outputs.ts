@@ -21,6 +21,7 @@ lastModified
 flatData{
   title
   type
+  subtype
   description
   link
   addedDate

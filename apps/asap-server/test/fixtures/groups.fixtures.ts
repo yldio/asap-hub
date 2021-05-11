@@ -261,6 +261,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
               id: 'output-id-1',
               created: '2020-12-11T14:33:18.000Z',
               type: 'Proposal',
+              subTypes: [],
               title: 'Proposal',
               description: '',
               tags: ['test', 'tag'],

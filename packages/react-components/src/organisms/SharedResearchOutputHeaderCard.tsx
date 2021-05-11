@@ -12,14 +12,25 @@ import { TeamsList, UsersList } from '../molecules';
 const headerStyles = css({
   flex: 1,
   display: 'flex',
-  alignItems: 'center',
   justifyContent: 'space-between',
 });
 
-const typeStyles = css({
+const ROW_GAP_OFFSET = 6;
+
+const typeContainerStyles = css({
   display: 'flex',
+  flexWrap: 'wrap',
+  listStyle: 'none',
+  columnGap: `${12 / perRem}em`,
+  margin: 0,
+  marginTop: `${ROW_GAP_OFFSET / perRem}em`,
+  padding: 0,
   alignItems: 'center',
   textTransform: 'capitalize',
+});
+
+const typeStyles = css({
+  marginTop: `-${ROW_GAP_OFFSET / perRem}em`,
 });
 
 const timestampStyles = css({
@@ -46,6 +57,7 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'type'
   | 'link'
   | 'lastModifiedDate'
+  | 'subTypes'
 >;
 
 const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardProps> =
@@ -58,15 +70,23 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
     type,
     link,
     lastModifiedDate,
+    subTypes,
   }) => {
     const { isEnabled } = useFlags();
 
     return (
       <Card>
         <div css={headerStyles}>
-          <div css={typeStyles}>
-            <TagLabel>{type}</TagLabel>
-          </div>
+          <ul css={typeContainerStyles}>
+            <li css={typeStyles}>
+              <TagLabel>{type}</TagLabel>
+            </li>
+            {subTypes.map((subType, i) => (
+              <li css={typeStyles} key={`subtype-${i}`}>
+                <TagLabel>{subType}</TagLabel>
+              </li>
+            ))}
+          </ul>
           {link ? (
             <ExternalLink label={researchOutputLabels[type]} href={link} />
           ) : null}

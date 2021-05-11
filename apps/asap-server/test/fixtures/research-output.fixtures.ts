@@ -70,6 +70,7 @@ export const getResearchOutputResponse =
     description: 'Text',
     title: 'Test Proposal 1234',
     type: 'Proposal',
+    subTypes: [],
     tags: ['tag', 'test'],
     authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
     team: {

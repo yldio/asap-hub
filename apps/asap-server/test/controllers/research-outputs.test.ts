@@ -57,7 +57,6 @@ describe('ResearchOutputs controller', () => {
         });
 
       const result = await researchOutputs.fetch({ take: 8, skip: 0 });
-
       expect(result).toEqual(getListResearchOutputResponse());
     });
 
@@ -101,7 +100,6 @@ describe('ResearchOutputs controller', () => {
         skip: 0,
         search: 'some words',
       });
-
       expect(result).toEqual(getListResearchOutputResponse());
     });
 

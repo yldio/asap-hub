@@ -220,7 +220,7 @@
         "name": "lastUpdatedPartial",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "DateTime",

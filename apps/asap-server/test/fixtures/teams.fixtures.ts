@@ -22,7 +22,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
               {
                 id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
                 created: '2020-09-17T08:18:01Z',
-                lastModified: '2020-10-21T13:11:50Z',
+                lastModified: '2020-10-21T13:11:50.000Z',
                 flatData: {
                   link: null,
                   publishDate: null,
@@ -35,7 +35,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
               {
                 id: '7198d072-de87-4b80-90ca-4a1abe67952e',
                 created: '2020-11-24T16:33:30Z',
-                lastModified: '2020-11-26T13:45:49Z',
+                lastModified: '2020-11-26T13:45:49.000Z',
                 flatData: {
                   link: 'docs.google.com',
                   publishDate: null,
@@ -271,6 +271,7 @@ export const listTeamResponse: ListTeamResponse = {
               displayName: 'Schipa, A',
             },
           ],
+          lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -289,6 +290,7 @@ export const listTeamResponse: ListTeamResponse = {
               displayName: 'Schipa, A',
             },
           ],
+          lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
         },
       ],
       members: [
@@ -379,7 +381,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
           {
             id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
             created: '2020-09-17T08:18:01Z',
-            lastModified: '2020-10-21T13:11:50Z',
+            lastModified: '2020-10-21T13:11:50.000Z',
             flatData: {
               link: null,
               publishDate: null,
@@ -392,7 +394,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
           {
             id: '7198d072-de87-4b80-90ca-4a1abe67952e',
             created: '2020-11-24T16:33:30Z',
-            lastModified: '2020-11-26T13:45:49Z',
+            lastModified: '2020-11-26T13:45:49.000Z',
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
@@ -526,6 +528,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
           displayName: 'Team, B',
         },
       ],
+      lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -544,6 +547,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
           displayName: 'Schipa, A',
         },
       ],
+      lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
     },
   ],
   members: [
@@ -599,7 +603,7 @@ export const getGraphQlTeamResponse = (
           {
             id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
             created: '2020-09-17T08:18:01Z',
-            lastModified: '2020-10-21T13:11:50Z',
+            lastModified: '2020-10-21T13:11:50.000Z',
             flatData: {
               link: null,
               publishDate: null,
@@ -622,7 +626,7 @@ export const getGraphQlTeamResponse = (
           {
             id: '7198d072-de87-4b80-90ca-4a1abe67952e',
             created: '2020-11-24T16:33:30Z',
-            lastModified: '2020-11-26T13:45:49Z',
+            lastModified: '2020-11-26T13:45:49.000Z',
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
@@ -728,6 +732,7 @@ export const updateExpectation: TeamResponse = {
           displayName: 'Team, B',
         },
       ],
+      lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -746,6 +751,7 @@ export const updateExpectation: TeamResponse = {
           displayName: 'Schipa, A',
         },
       ],
+      lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
     },
   ],
   members: [

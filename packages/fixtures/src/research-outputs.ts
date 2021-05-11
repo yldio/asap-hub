@@ -24,6 +24,7 @@ const researchOutputResponse: Omit<
       displayName: 'Jakobsson, J',
     },
   ],
+  lastUpdatedPartial: '2020-09-09T20:36:54Z',
 };
 
 export const createResearchOutputResponse = (

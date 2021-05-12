@@ -101,6 +101,7 @@ describe('ResearchOutputs controller', () => {
             link: 'test',
             tags: ['tag', 'test'],
             accessInstructions: 'some access instructions',
+            authors: [],
             teams: [],
             lastUpdatedPartial: '2020-09-10T16:34:26.842Z',
           },
@@ -209,6 +210,12 @@ describe('ResearchOutputs controller', () => {
             title: 'Title',
             type: 'Proposal',
             tags: ['tag', 'test'],
+            authors: [
+              {
+                id: 'user-id-1',
+                displayName: 'John Doe',
+              },
+            ],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
@@ -232,6 +239,12 @@ describe('ResearchOutputs controller', () => {
             title: 'Title',
             type: 'Proposal',
             tags: [],
+            authors: [
+              {
+                id: 'user-id-1',
+                displayName: 'John Doe',
+              },
+            ],
             team: {
               id: 'uuid-team-2',
               displayName: 'Team 2',
@@ -251,6 +264,12 @@ describe('ResearchOutputs controller', () => {
             title: 'Title',
             type: 'Proposal',
             tags: [],
+            authors: [
+              {
+                id: 'user-id-1',
+                displayName: 'John Doe',
+              },
+            ],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
@@ -332,6 +351,12 @@ describe('ResearchOutputs controller', () => {
             title: 'Title',
             type: 'Proposal',
             tags: ['tag', 'test'],
+            authors: [
+              {
+                id: 'user-id-1',
+                displayName: 'John Doe',
+              },
+            ],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
@@ -413,6 +438,12 @@ describe('ResearchOutputs controller', () => {
             title: 'Title',
             type: 'Proposal',
             tags: ['tag', 'test'],
+            authors: [
+              {
+                id: 'user-id-1',
+                displayName: 'John Doe',
+              },
+            ],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
@@ -494,6 +525,12 @@ describe('ResearchOutputs controller', () => {
             title: 'Title',
             type: 'Proposal',
             tags: ['tag', 'test'],
+            authors: [
+              {
+                id: 'user-id-1',
+                displayName: 'John Doe',
+              },
+            ],
             team: {
               id: 'uuid-team-1',
               displayName: 'Team 1',
@@ -583,6 +620,12 @@ describe('ResearchOutputs controller', () => {
         title: 'Title',
         type: 'Proposal',
         tags: ['tag', 'test'],
+        authors: [
+          {
+            id: 'user-id-1',
+            displayName: 'John Doe',
+          },
+        ],
         team: {
           id: 'uuid-team',
           displayName: 'team',
@@ -640,6 +683,7 @@ describe('ResearchOutputs controller', () => {
         title: 'Title',
         type: 'Proposal',
         tags: ['tag', 'test'],
+        authors: [],
         teams: [],
         lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
       };

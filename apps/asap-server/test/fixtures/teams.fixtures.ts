@@ -262,6 +262,12 @@ export const listTeamResponse: ListTeamResponse = {
           description: '',
           tags: ['test', 'tag'],
           addedDate: '2021-05-24T17:33:30Z',
+          authors: [
+            {
+              id: 'user-id-1',
+              displayName: 'John Doe',
+            },
+          ],
           team: {
             id: 'team-id-1',
             displayName: 'Schipa, A',
@@ -282,6 +288,12 @@ export const listTeamResponse: ListTeamResponse = {
           title: 'Proposal',
           description: '',
           tags: ['test', 'tag'],
+          authors: [
+            {
+              id: 'user-id-1',
+              displayName: 'John Doe',
+            },
+          ],
           team: {
             id: 'team-id-1',
             displayName: 'Schipa, A',
@@ -516,6 +528,12 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       title: "Team Salzer's intro slide deck",
       description: '',
       tags: [],
+      authors: [
+        {
+          id: 'user-id-1',
+          displayName: 'John Doe',
+        },
+      ],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -539,6 +557,12 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       title: 'Proposal',
       description: '',
       tags: ['test', 'tag'],
+      authors: [
+        {
+          id: 'user-id-1',
+          displayName: 'John Doe',
+        },
+      ],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -720,6 +744,12 @@ export const updateExpectation: TeamResponse = {
       title: "Team Salzer's intro slide deck",
       description: '',
       tags: [],
+      authors: [
+        {
+          id: 'user-id-1',
+          displayName: 'John Doe',
+        },
+      ],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -743,6 +773,12 @@ export const updateExpectation: TeamResponse = {
       title: 'Proposal',
       description: '',
       tags: ['test', 'tag'],
+      authors: [
+        {
+          id: 'user-id-1',
+          displayName: 'John Doe',
+        },
+      ],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',

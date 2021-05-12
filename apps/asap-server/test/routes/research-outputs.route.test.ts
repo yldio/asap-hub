@@ -47,6 +47,7 @@ describe('/research-outputs/ route', () => {
             type: 'Proposal',
             link: 'test',
             tags: ['test', 'tag'],
+            authors: [],
             teams: [],
             lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
             accessInstructions: 'some access instructions',
@@ -112,6 +113,12 @@ describe('/research-outputs/ route', () => {
         title: 'Title',
         type: 'Proposal',
         tags: ['test', 'tags'],
+        authors: [
+          {
+            id: 'uuid-user',
+            displayName: 'user',
+          },
+        ],
         team: {
           id: 'uuid-team',
           displayName: 'team',

@@ -26,6 +26,7 @@ function transform(
   return {
     ...parseResearchOutput(output),
     ...teamProps,
+    authors: [], // TODO fetch
     teams: teams.map((team) => ({
       id: team.id,
       displayName: team.data.displayName.iv,

@@ -46,6 +46,7 @@ export const parseGraphQLTeam = (
 
       return {
         ...output,
+        authors: [], // TODO fetch
         team: { id: team.id, displayName },
         teams: (o as GraphqlResearchOutput).referencingTeamsContents?.map(
           (t) => ({

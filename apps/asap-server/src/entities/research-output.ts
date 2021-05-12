@@ -5,7 +5,7 @@ import { parseDate } from '../utils/squidex';
 
 export const parseResearchOutput = (
   output: RestResearchOutput,
-): Omit<ResearchOutputResponse, 'teams'> => ({
+): Omit<ResearchOutputResponse, 'authors' | 'teams'> => ({
   id: output.id,
   created: output.created,
   link: output.data.link?.iv || undefined,
@@ -22,7 +22,7 @@ export const parseResearchOutput = (
 
 export const parseGraphQLResearchOutput = (
   output: GraphqlResearchOutput,
-): Omit<ResearchOutputResponse, 'teams'> => ({
+): Omit<ResearchOutputResponse, 'authors' | 'teams'> => ({
   id: output.id,
   created: parseDate(output.created).toISOString(),
   link: output.flatData?.link || undefined,

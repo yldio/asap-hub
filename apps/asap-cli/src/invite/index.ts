@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import Intercept from 'apr-intercept';
-import { Squidex, RestUser, Query } from '@asap-hub/squidex';
+import { Squidex, RestUser, Query, RestTeam } from '@asap-hub/squidex';
 import { RateLimit } from 'async-sema';
 import { v4 as uuidV4 } from 'uuid';
 import path from 'path';
@@ -15,7 +15,8 @@ interface HTTPError extends Error {
   };
 }
 
-const squidex: Squidex<RestUser> = new Squidex('users');
+const userClient: Squidex<RestUser> = new Squidex('users');
+const teamClient: Squidex<RestTeam> = new Squidex('teams');
 
 const limiter = RateLimit(10);
 const uuidMatch = /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
@@ -39,7 +40,7 @@ export const inviteUsers = async (
     };
   }
 
-  const { items } = await squidex.fetch(query);
+  const { items } = await userClient.fetch(query);
 
   const usersToInvite = items.filter((u) => {
     const connections = u.data.connections.iv;
@@ -55,6 +56,32 @@ export const inviteUsers = async (
     return false;
   });
 
+  const userTeamIds = usersToInvite
+    .flatMap((user) => user.data.teams.iv)
+    .flatMap((team) => team?.id)
+    .filter((team) => typeof team !== 'undefined');
+
+  let teamMap: { [key: string]: string } | undefined = undefined;
+  if (userTeamIds.length > 0) {
+    const teamQuery: Query = {
+      skip,
+      take,
+      filter: {
+        path: 'id',
+        op: 'in',
+        value: userTeamIds.join(','),
+      },
+    };
+    const { items: teams } = await teamClient.fetch(teamQuery);
+    teamMap = teams.reduce(
+      (prev, next) => ({
+        ...prev,
+        [next.id]: next.data.displayName.iv,
+      }),
+      {},
+    );
+  }
+
   await Promise.all(
     usersToInvite.map(async (user) => {
       await limiter();
@@ -69,7 +96,7 @@ export const inviteUsers = async (
         code = uuidV4();
         console.log(`create invite code for ${user.data.email.iv}`);
         const [err1] = await Intercept(
-          squidex.patch(user.id, {
+          userClient.patch(user.id, {
             email: user.data.email,
             connections: {
               iv: [{ code }],
@@ -102,12 +129,21 @@ export const inviteUsers = async (
       );
 
       if (!err2) {
-        console.log(`Invited user ${user.data.email.iv}`);
+        let userTeams = undefined;
+        if (teamMap !== undefined) {
+          userTeams = user.data.teams.iv
+            ?.flatMap((team) => team.id)
+            .map((id) => teamMap![id])
+            .join(', ');
+        }
+        console.log(
+          `Invited user ${user.data.email.iv} ${userTeams && `(${userTeams})`}`,
+        );
         return;
       }
 
       // error sending mail, remove inserted code
-      await squidex.patch(user.id, {
+      await userClient.patch(user.id, {
         email: user.data.email,
         connections: { iv: [] },
       });

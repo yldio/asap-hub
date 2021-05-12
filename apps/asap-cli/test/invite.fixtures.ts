@@ -1,4 +1,4 @@
-import { RestUser } from '@asap-hub/squidex';
+import { RestTeam, RestUser } from '@asap-hub/squidex';
 
 export const fetchUsersResponse: { total: number; items: RestUser[] } = {
   total: 200,
@@ -74,3 +74,89 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
     },
   ],
 };
+
+export const getFetchUsersWithTeamsResponse: () => {
+  total: number;
+  items: RestUser[];
+} = () => ({
+  total: 3,
+  items: [
+    {
+      ...fetchUsersResponse.items[0],
+      data: {
+        ...fetchUsersResponse.items[0].data,
+        teams: {
+          iv: [
+            {
+              id: ['team-id-1'],
+              role: 'Project Manager',
+            },
+          ],
+        },
+      },
+    },
+    {
+      ...fetchUsersResponse.items[1],
+      data: {
+        ...fetchUsersResponse.items[1].data,
+        teams: {
+          iv: [
+            {
+              id: ['team-id-2'],
+              role: 'Collaborating PI',
+            },
+          ],
+        },
+      },
+    },
+  ],
+});
+
+export const getListTeamResponse: () => {
+  total: number;
+  items: RestTeam[];
+} = () => ({
+  total: 2,
+  items: [
+    {
+      id: 'team-id-1',
+      data: {
+        displayName: { iv: 'Team 1' },
+        applicationNumber: { iv: 'hofded' },
+        projectTitle: {
+          iv:
+            'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
+        },
+        projectSummary: {
+          iv:
+            'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
+        },
+        skills: { iv: [] },
+        outputs: { iv: [] },
+        tools: { iv: [] },
+      },
+      created: '2020-09-08T16:35:28Z',
+      lastModified: '2020-09-08T16:35:28Z',
+    },
+    {
+      id: 'team-id-2',
+      data: {
+        displayName: { iv: 'Team 2' },
+        applicationNumber: { iv: 'hofded' },
+        projectTitle: {
+          iv:
+            'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
+        },
+        projectSummary: {
+          iv:
+            'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
+        },
+        skills: { iv: [] },
+        outputs: { iv: [] },
+        tools: { iv: [] },
+      },
+      created: '2020-09-08T16:35:28Z',
+      lastModified: '2020-09-08T16:35:28Z',
+    },
+  ],
+});

@@ -32,7 +32,7 @@ it('renders skills and expertises with description', () => {
 });
 
 it('renders description placeholder component when no description and own profile', () => {
-  const { getByRole, queryByText, rerender } = render(
+  const { getByText, queryByText, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <ProfileSkills skillsDescription="" skills={['test']} />,
     </UserProfileContext.Provider>,
@@ -45,9 +45,23 @@ it('renders description placeholder component when no description and own profil
     </UserProfileContext.Provider>,
   );
 
-  expect(getByRole('heading', { level: 4 }).textContent).toMatch(
-    /you summarize/i,
+  expect(getByText(/you summarize/i)).toBeVisible();
+});
+
+it('renders tags placeholder component when description, no tags and own profile', () => {
+  const { getByText, queryByText, rerender } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <ProfileSkills skillsDescription="test" skills={[]} />,
+    </UserProfileContext.Provider>,
   );
+  expect(queryByText(/add tags/i)).toBeNull();
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <ProfileSkills skillsDescription="test" skills={[]} />,
+    </UserProfileContext.Provider>,
+  );
+  expect(getByText(/add tags/i)).toBeVisible();
 });
 
 it('is not rendered when not own profile and without skills', () => {

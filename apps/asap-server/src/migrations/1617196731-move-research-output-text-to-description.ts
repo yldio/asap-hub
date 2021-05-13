@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this, @typescript-eslint/no-empty-function, no-empty-function */
 /* istanbul ignore file */
 import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
@@ -29,6 +30,5 @@ export default class MoveResearchOutputTextToDescription extends Migration {
     } while (pointer < result.total);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   async down(): Promise<void> {}
 }

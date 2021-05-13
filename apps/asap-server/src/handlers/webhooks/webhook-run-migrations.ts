@@ -6,11 +6,16 @@ import { Logger } from 'pino';
 import { migrationDir } from '../../config';
 import pinoLogger from '../../utils/logger';
 
+// eslint-disable-next-line no-undef
 function importAll(r: __WebpackModuleApi.RequireContext) {
   r.keys().forEach(r);
 }
 
-importAll(require.context('../../migrations', true, /\.ts$/));
+/* istanbul ignore next */
+if (require.context) {
+  // make sure migration scripts are imported by webpack
+  importAll(require.context('../../migrations', true, /\.ts$/));
+}
 
 const squidexClient = new Squidex<RestMigration>('migrations');
 

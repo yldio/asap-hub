@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this, @typescript-eslint/no-empty-function, no-empty-function */
 /* istanbul ignore file */
 import { ResearchOutputSharingStatus, DecisionOption } from '@asap-hub/model';
 import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
@@ -57,6 +58,5 @@ export default class SetResearchOutputDefaultFields extends Migration {
     } while (pointer < result.total);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   async down(): Promise<void> {}
 }

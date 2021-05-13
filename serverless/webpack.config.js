@@ -13,6 +13,7 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: require.resolve('babel-loader'),
+          options: babelOptions,
         },
       },
     ],

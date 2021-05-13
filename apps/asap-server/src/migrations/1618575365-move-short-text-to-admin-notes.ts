@@ -3,7 +3,7 @@ import { RestResearchOutput, Results, Squidex } from '@asap-hub/squidex';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 
 export default class MoveResearchOutputTextToDescription extends Migration {
-  up = async (): Promise<void> => {
+  async up(): Promise<void> {
     const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
       unpublished: true,
     });
@@ -27,8 +27,8 @@ export default class MoveResearchOutputTextToDescription extends Migration {
 
       pointer += 10;
     } while (pointer < result.total);
-  };
-  down = async (): Promise<void> => {
+  }
+  async down(): Promise<void> {
     const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
       unpublished: true,
     });
@@ -52,5 +52,5 @@ export default class MoveResearchOutputTextToDescription extends Migration {
 
       pointer += 10;
     } while (pointer < result.total);
-  };
+  }
 }

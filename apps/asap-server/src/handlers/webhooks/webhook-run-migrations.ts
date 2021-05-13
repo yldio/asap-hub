@@ -6,6 +6,12 @@ import { Logger } from 'pino';
 import { migrationDir } from '../../config';
 import pinoLogger from '../../utils/logger';
 
+function importAll(r: __WebpackModuleApi.RequireContext) {
+  r.keys().forEach(r);
+}
+
+importAll(require.context('../../migrations', true, /\.ts$/));
+
 const squidexClient = new Squidex<RestMigration>('migrations');
 
 export const runFactory = (
@@ -243,8 +249,8 @@ export abstract class Migration {
   constructor(path: string) {
     this.path = path;
   }
-  abstract up: () => Promise<void>;
-  abstract down: () => Promise<void>;
+  abstract up(): Promise<void>;
+  abstract down(): Promise<void>;
   getPath(): string {
     return this.path;
   }

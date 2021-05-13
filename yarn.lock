@@ -103,6 +103,7 @@ __metadata:
     "@types/pump": ^1.1.0
     "@types/source-map-support": ^0
     "@types/supertest": ^2.0.10
+    "@types/webpack-env": ^1.16.0
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
     aws-sdk: ^2.745.0
@@ -7143,7 +7144,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webpack-env@npm:^1.15.3":
+"@types/webpack-env@npm:^1.15.3, @types/webpack-env@npm:^1.16.0":
   version: 1.16.0
   resolution: "@types/webpack-env@npm:1.16.0"
   checksum: eaf62fb65ba18737174a520a444bb7407e5a6f32581690c5a7a687e6f86e9d4ce336fd9e79989aafa19e5f390046ad54b9100cd3d70a43dcf0ab0161d30cd5bd

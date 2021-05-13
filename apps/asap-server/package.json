@@ -23,6 +23,7 @@
     "@hapi/joi": "^17.1.1",
     "@types/hapi__joi": "^17.1.0",
     "@types/parse-data-url": "^3.0.0",
+    "@types/webpack-env": "^1.16.0",
     "apr-intercept": "^3.0.4",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.745.0",

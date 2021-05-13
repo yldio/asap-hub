@@ -14,7 +14,7 @@ type OldRestResearchOutput = Omit<
 };
 
 export default class SetResearchOutputDefaultFields extends Migration {
-  up = async (): Promise<void> => {
+  async up(): Promise<void> {
     const squidexClient = new Squidex<RestResearchOutput>('research-outputs', {
       unpublished: true,
     });
@@ -55,8 +55,8 @@ export default class SetResearchOutputDefaultFields extends Migration {
 
       pointer += 10;
     } while (pointer < result.total);
-  };
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  down = async (): Promise<void> => {};
+  async down(): Promise<void> {}
 }

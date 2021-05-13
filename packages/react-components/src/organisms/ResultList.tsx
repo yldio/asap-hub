@@ -9,6 +9,7 @@ import {
   mobileScreen,
   tabletScreen,
 } from '../pixels';
+import { lead } from '../colors';
 
 const headerStyles = css({
   display: 'flex',
@@ -54,9 +55,11 @@ const ResultList: React.FC<ResultListProps> = ({
   <article>
     <header css={headerStyles}>
       <Paragraph primary>
-        <strong>
-          {numberOfItems} result{numberOfItems === 1 || 's'} found
-        </strong>
+        {numberOfItems > 0 && (
+          <strong>
+            {numberOfItems} result{numberOfItems === 1 || 's'} found
+          </strong>
+        )}
       </Paragraph>
       {cardViewHref && listViewHref && (
         <ListControls
@@ -66,10 +69,29 @@ const ResultList: React.FC<ResultListProps> = ({
         />
       )}
     </header>
-    {numberOfItems > 0 && <main css={mainStyles}>{children}</main>}
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlsProps} />
-    </section>
+    {numberOfItems > 0 ? (
+      <>
+        <main css={mainStyles}>{children}</main>
+        <section css={pageControlsStyles}>
+          <PageControls {...pageControlsProps} />
+        </section>
+      </>
+    ) : (
+      <section
+        css={{
+          textAlign: 'center',
+        }}
+      >
+        <Paragraph primary>
+          <strong>No matches found!</strong>
+          <br />
+          <span css={{ color: lead.rgb }}>
+            We're sorry, we couldn't find results to match your search. Please
+            check your spelling or try using fewer words.
+          </span>
+        </Paragraph>
+      </section>
+    )}
   </article>
 );
 

@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import ResultList from '../ResultList';
 
 it.each([
-  [0, /(^|\D)0 results($|\W)/i],
   [1, /(^|\D)1 result($|\W)/i],
   [5, /(^|\D)5 results($|\W)/i],
 ])('shows the number of items', (numberOfItems, text) => {
@@ -34,6 +33,23 @@ it('renders the children', () => {
   );
   expect(getByRole('main')).toContainElement(getByText('cards'));
 });
+
+it('renders no results found', () => {
+  const { getByText, queryByText } = render(
+    <ResultList
+      numberOfItems={0}
+      numberOfPages={1}
+      currentPageIndex={0}
+      renderPageHref={() => ''}
+    >
+      cards
+    </ResultList>,
+  );
+  expect(queryByText(/cards/i)).not.toBeInTheDocument();
+  expect(queryByText(/\d+ result/i)).not.toBeInTheDocument();
+  expect(getByText(/no matches/i)).toBeVisible();
+});
+
 it('omits the main section if there are no items', () => {
   const { queryByRole } = render(
     <ResultList
@@ -51,7 +67,7 @@ it('omits the main section if there are no items', () => {
 it('renders page controls', () => {
   const { getByRole, getByTitle } = render(
     <ResultList
-      numberOfItems={0}
+      numberOfItems={1}
       numberOfPages={2}
       currentPageIndex={0}
       renderPageHref={() => ''}

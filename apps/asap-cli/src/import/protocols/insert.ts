@@ -7,6 +7,7 @@ import {
   RestResearchOutput,
   RestTeam,
 } from '@asap-hub/squidex';
+import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 import { HTTPError } from 'got';
 import { Protocol } from './parse';
@@ -83,27 +84,20 @@ export default async (data: Protocol): Promise<void> => {
   const promises: Cache = {};
   const protocol: RestResearchOutput['data'] = {
     type: { iv: 'Protocol' },
-    title: {
-      iv: data.name,
-    },
-    link: {
-      iv: data.link,
-    },
-    publishDate: {
-      iv: new Date(data.created).toISOString(),
-    },
-    addedDate: {
-      iv: DateTime.utc().toISO(),
-    },
+    title: { iv: data.name },
+    link: { iv: data.link },
+    publishDate: { iv: new Date(data.created).toISOString() },
+    addedDate: { iv: DateTime.utc().toISO() },
     description: {
       // eslint-disable-next-line prefer-template
       iv: `${data.abstract ? data.abstract + '\n || ' : ''}From Team ${
         data.team
       } || Authors: ${data.authors.join(', ')}.`,
     },
-    tags: {
-      iv: data.keywords,
-    },
+    tags: { iv: data.keywords },
+    sharingStatus: { iv: 'Network Only' as ResearchOutputSharingStatus },
+    asapFunded: { iv: 'Not Sure' as DecisionOption },
+    usedInAPublication: { iv: 'Not Sure' as DecisionOption },
   };
 
   const [e1, teamId] = await Intercept(fetchTeamByName(data.team, promises));

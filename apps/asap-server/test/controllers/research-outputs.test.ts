@@ -63,6 +63,9 @@ describe('ResearchOutputs controller', () => {
                   iv: ['tag', 'test'],
                 },
                 lastUpdatedPartial: { iv: '2020-09-10T16:34:26.842Z' },
+                accessInstructions: {
+                  iv: 'some access instructions',
+                },
               },
             },
           ],
@@ -97,6 +100,7 @@ describe('ResearchOutputs controller', () => {
             type: 'Proposal',
             link: 'test',
             tags: ['tag', 'test'],
+            accessInstructions: 'some access instructions',
             teams: [],
             lastUpdatedPartial: '2020-09-10T16:34:26.842Z',
           },
@@ -539,6 +543,9 @@ describe('ResearchOutputs controller', () => {
             tags: {
               iv: ['tag', 'test'],
             },
+            accessInstructions: {
+              iv: 'some access instructions',
+            },
           },
         })
         .get(`/api/content/${config.appName}/teams`)
@@ -587,6 +594,7 @@ describe('ResearchOutputs controller', () => {
           },
         ],
         lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
+        accessInstructions: 'some access instructions',
       };
       expect(result).toEqual(expectedResult);
     });

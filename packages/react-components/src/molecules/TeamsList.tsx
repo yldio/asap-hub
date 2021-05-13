@@ -73,7 +73,7 @@ interface TeamsListProps {
 }
 const TeamsList: React.FC<TeamsListProps> = ({ teams, inline = false }) => (
   <div css={inline && containerInlineStyles}>
-    {inline && teamIcon}
+    {inline && !!teams.length && teamIcon}
     <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
       {teams.flatMap(({ id, displayName }, i) => (
         <li css={inline ? itemInlineStyles : itemBlockStyles} key={`sep-${i}`}>

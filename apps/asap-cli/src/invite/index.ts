@@ -61,7 +61,7 @@ export const inviteUsers = async (
     .flatMap((team) => team?.id)
     .filter((team) => typeof team !== 'undefined');
 
-  let teamMap: { [key: string]: string } | undefined = undefined;
+  let teamMap: { [key: string]: string } | undefined;
   if (userTeamIds.length > 0) {
     const teamQuery: Query = {
       skip,
@@ -129,10 +129,11 @@ export const inviteUsers = async (
       );
 
       if (!err2) {
-        let userTeams = undefined;
-        if (teamMap !== undefined) {
+        let userTeams;
+        if (teamMap) {
           userTeams = user.data.teams.iv
             ?.flatMap((team) => team.id)
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             .map((id) => teamMap![id])
             .join(', ');
         }

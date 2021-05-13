@@ -29,3 +29,28 @@ it('links to the teams', () => {
     expect.stringMatching(/t0$/),
   );
 });
+
+describe('in inline mode', () => {
+  it('renders one team icon as opposed to one each', () => {
+    const { getAllByTitle, rerender } = render(
+      <TeamsList
+        teams={[
+          { displayName: 'One', id: 't0' },
+          { displayName: 'Two', id: 't1' },
+        ]}
+      />,
+    );
+    expect(getAllByTitle(/team/i)).toHaveLength(2);
+
+    rerender(
+      <TeamsList
+        inline
+        teams={[
+          { displayName: 'One', id: 't0' },
+          { displayName: 'Two', id: 't1' },
+        ]}
+      />,
+    );
+    expect(getAllByTitle(/team/i)).toHaveLength(1);
+  });
+});

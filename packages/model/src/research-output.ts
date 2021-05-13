@@ -77,7 +77,7 @@ export type ResearchOutputResponse = Omit<
    * @deprecated in favour of teams
    */
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
-  readonly teams: Pick<TeamResponse, 'id' | 'displayName'>[];
+  readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
   readonly tags: string[];
   readonly addedDate?: string;
   readonly lastModifiedDate?: string;

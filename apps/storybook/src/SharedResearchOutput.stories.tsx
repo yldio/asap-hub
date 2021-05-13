@@ -3,9 +3,12 @@ import {
   SharedResearchOutput,
   SharedResearchProposal,
 } from '@asap-hub/react-components';
-import { text, date, array } from '@storybook/addon-knobs';
+import { text, date, array, number } from '@storybook/addon-knobs';
 
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createListTeamResponse,
+  createResearchOutputResponse,
+} from '@asap-hub/fixtures';
 
 export default {
   title: 'Templates / Shared Research / Details',
@@ -26,17 +29,16 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     'Title',
     'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain',
   ),
-  link: text('link', 'http://example.com'),
+  link: text('Link', 'http://example.com'),
   tags: array('Tags', ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4', 'Tag 5']),
   lastModifiedDate: new Date(
     date('Last Modified Date', new Date(2020, 6, 12, 14, 32)),
   ).toISOString(),
   backHref: '#',
+  teams: createListTeamResponse(number('Number of teams', 3)).items,
 });
 
-export const Normal = () => (
-  <SharedResearchOutput {...props()} type="Proposal" />
-);
+export const Normal = () => <SharedResearchOutput {...props()} />;
 export const Proposal = () => (
   <SharedResearchProposal {...props()} type="Proposal" />
 );

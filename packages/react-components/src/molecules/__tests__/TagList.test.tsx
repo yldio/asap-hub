@@ -31,7 +31,7 @@ it('hides tags when there are none', () => {
 });
 
 it('disables its tags when disabled', () => {
-  const { getByText } = render(<TagList tags={['tag 1']} disabled />);
+  const { getByText } = render(<TagList tags={['tag 1']} enabled={false} />);
 
   expect(getComputedStyle(getByText(/tag 1/i)).color).toEqual(tin.rgb);
 });

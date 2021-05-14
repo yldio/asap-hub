@@ -46,7 +46,7 @@ const ProfileSkills: React.FC<ProfileSkillsProps> = ({
                 'Alpha-synuclein',
                 'VPS35',
               ]}
-              disabled
+              enabled={false}
             />
           </UserProfilePlaceholderCard>
         </div>

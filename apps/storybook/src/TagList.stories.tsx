@@ -10,7 +10,7 @@ export const Normal = () => (
   <TagList
     min={number('Minimum number of tags shown on mobile', 3)}
     max={number('Maximum number of tags shown on desktop', 5)}
-    disabled={boolean('Disabled', false)}
+    enabled={boolean('Enabled', true)}
     tags={array('Skills', [
       'Neurological Diseases',
       'Clinical Neurology',

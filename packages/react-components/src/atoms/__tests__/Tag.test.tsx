@@ -27,7 +27,7 @@ it('renders a tag with different border and text color when disabled', () => {
     tin.rgb.replace(/ /g, ''),
   );
 
-  rerender(<Tag disabled>Text</Tag>);
+  rerender(<Tag enabled={false}>Text</Tag>);
   expect(getComputedStyle(getByText('Text')).color).toBe(tin.rgb);
   expect(getComputedStyle(getByText('Text')).borderColor).toEqual(
     tin.rgb.replace(/ /g, ''),

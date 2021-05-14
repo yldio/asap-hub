@@ -2,7 +2,7 @@ import React, { ComponentProps } from 'react';
 import css from '@emotion/css';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-import { Card, Headline2, Divider, Paragraph } from '../atoms';
+import { Card, Headline2, Divider } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, TagList } from '../molecules';
@@ -57,7 +57,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         <Card>
           <div css={{ paddingBottom: `${12 / perRem}em` }}>
             <Headline2 styleAsHeading={4}>Access Instructions</Headline2>
-            <Paragraph accent="lead">{accessInstructions}</Paragraph>
+            <RichText poorText text={accessInstructions} />
           </div>
         </Card>
       )}

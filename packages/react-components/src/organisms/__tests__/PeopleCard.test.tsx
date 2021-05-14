@@ -14,6 +14,14 @@ it('renders the display name', () => {
   expect(getByRole('heading').tagName).toEqual('H2');
 });
 
+it('renders the display name and degree', () => {
+  const { getByRole } = render(
+    <PeopleCard {...props} displayName="John Doe" degree={'BA'} />,
+  );
+  expect(getByRole('heading').textContent).toEqual('John Doe, BA');
+  expect(getByRole('heading').tagName).toEqual('H2');
+});
+
 it('renders the date in the correct format', () => {
   const { getByText } = render(
     <PeopleCard {...props} createdDate="2021-01-01" />,

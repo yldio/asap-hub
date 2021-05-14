@@ -49,6 +49,7 @@ type PeopleCardProps = Pick<
   | 'location'
   | 'role'
   | 'teams'
+  | 'degree'
 >;
 const PeopleCard: React.FC<PeopleCardProps> = ({
   id,
@@ -57,6 +58,7 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
   firstName,
   lastName,
   avatarUrl,
+  degree,
   ...props
 }) => {
   const userHref = network({}).users({}).user({ userId: id }).$;
@@ -74,7 +76,10 @@ const PeopleCard: React.FC<PeopleCardProps> = ({
         <div css={textContainerStyles}>
           <div css={moveStyles}>
             <Anchor href={userHref}>
-              <Headline2 styleAsHeading={4}>{displayName}</Headline2>
+              <Headline2 styleAsHeading={4}>
+                {displayName}
+                {degree && `, ${degree}`}
+              </Headline2>
             </Anchor>
           </div>
           <div css={profileTextStyles}>

@@ -60,6 +60,7 @@ export { default as trainingPlaceholderIcon } from './training-placeholder';
 export { default as twitterIcon } from './twitter';
 export { default as uploadIcon } from './upload';
 export { default as userIcon } from './user';
+export { default as userPlaceholderIcon } from './user-placeholder';
 export { default as validTickIcon } from './valid-tick-icon';
 export { default as verticalDividerIcon } from './vertical-divider';
 export { default as warningIcon } from './warning';

@@ -64,6 +64,7 @@ export const TrainingPlaceholderIcon = () => components.trainingPlaceholderIcon;
 export const Twitter = () => components.twitterIcon;
 export const Upload = () => components.uploadIcon;
 export const User = () => components.userIcon;
+export const UserPlaceholder = () => components.userPlaceholderIcon;
 export const ValidTick = () => components.validTickIcon;
 export const VerticalDivider = () => components.verticalDividerIcon;
 export const Warning = () => components.warningIcon;

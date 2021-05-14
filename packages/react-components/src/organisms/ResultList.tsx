@@ -12,10 +12,9 @@ import {
 import { lead } from '../colors';
 
 const headerStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
+  display: 'grid',
+  gridAutoFlow: 'column',
   alignItems: 'center',
-  flexWrap: 'wrap',
 });
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -54,19 +53,21 @@ const ResultList: React.FC<ResultListProps> = ({
 }) => (
   <article>
     <header css={headerStyles}>
-      <Paragraph primary>
-        {numberOfItems > 0 && (
+      {numberOfItems > 0 && (
+        <Paragraph primary>
           <strong>
             {numberOfItems} result{numberOfItems === 1 || 's'} found
           </strong>
-        )}
-      </Paragraph>
+        </Paragraph>
+      )}
       {cardViewHref && listViewHref && (
-        <ListControls
-          isListView={isListView}
-          cardViewHref={cardViewHref}
-          listViewHref={listViewHref}
-        />
+        <div css={{ justifySelf: 'end' }}>
+          <ListControls
+            isListView={isListView}
+            cardViewHref={cardViewHref}
+            listViewHref={listViewHref}
+          />
+        </div>
       )}
     </header>
     {numberOfItems > 0 ? (
@@ -77,11 +78,7 @@ const ResultList: React.FC<ResultListProps> = ({
         </section>
       </>
     ) : (
-      <section
-        css={{
-          textAlign: 'center',
-        }}
-      >
+      <main css={{ textAlign: 'center' }}>
         <Paragraph primary>
           <strong>No matches found!</strong>
           <br />
@@ -90,7 +87,7 @@ const ResultList: React.FC<ResultListProps> = ({
             check your spelling or try using fewer words.
           </span>
         </Paragraph>
-      </section>
+      </main>
     )}
   </article>
 );

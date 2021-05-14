@@ -35,7 +35,7 @@ it('renders the children', () => {
 });
 
 it('renders no results found', () => {
-  const { getByText, queryByText } = render(
+  const { getByText, queryByText, queryByRole } = render(
     <ResultList
       numberOfItems={0}
       numberOfPages={1}
@@ -47,21 +47,8 @@ it('renders no results found', () => {
   );
   expect(queryByText(/cards/i)).not.toBeInTheDocument();
   expect(queryByText(/\d+ result/i)).not.toBeInTheDocument();
+  expect(queryByRole('navigation')).not.toBeInTheDocument();
   expect(getByText(/no matches/i)).toBeVisible();
-});
-
-it('omits the main section if there are no items', () => {
-  const { queryByRole } = render(
-    <ResultList
-      numberOfItems={0}
-      numberOfPages={1}
-      currentPageIndex={0}
-      renderPageHref={() => ''}
-    >
-      cards
-    </ResultList>,
-  );
-  expect(queryByRole('main')).not.toBeInTheDocument();
 });
 
 it('renders page controls', () => {

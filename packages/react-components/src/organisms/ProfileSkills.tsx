@@ -18,12 +18,12 @@ const ProfileSkills: React.FC<ProfileSkillsProps> = ({
   return skills.length || isOwnProfile ? (
     <Card>
       <Headline2 styleAsHeading={3}>Expertise and Resources</Headline2>
-      {skillsDescription ? (
-        <Paragraph>{skillsDescription}</Paragraph>
-      ) : (
+      {!skillsDescription && isOwnProfile ? (
         <UserProfilePlaceholderCard title="How would you summarize your expertise and resources?">
           Add one or two sentences to help others understand your strengths
         </UserProfilePlaceholderCard>
+      ) : (
+        <Paragraph>{skillsDescription}</Paragraph>
       )}
       <TagList tags={skills} />
     </Card>

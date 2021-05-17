@@ -32,9 +32,16 @@ it('renders skills and expertises with description', () => {
 });
 
 it('renders description placeholder component when no description and own profile', () => {
-  const { getByRole } = render(
+  const { getByRole, queryByText, rerender } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <ProfileSkills skillsDescription="" skills={['test']} />,
+    </UserProfileContext.Provider>,
+  );
+  expect(queryByText(/you summarize/i)).toBeNull();
+
+  rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <ProfileSkills skillsDescription="" skills={[]} />,
+      <ProfileSkills skillsDescription="" skills={['test']} />,
     </UserProfileContext.Provider>,
   );
 

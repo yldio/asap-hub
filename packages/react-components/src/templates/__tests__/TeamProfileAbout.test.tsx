@@ -33,3 +33,40 @@ it('renders the contact banner', () => {
   expect(link).toBeVisible();
   expect(link).toHaveAttribute('href', 'mailto:test@test.com');
 });
+
+it('renders the team list', () => {
+  const { getByText } = render(
+    <TeamProfileAbout
+      projectTitle="Title"
+      skills={[]}
+      members={[
+        {
+          id: 'uuid',
+          displayName: 'John Doe',
+          firstName: 'John',
+          lastName: 'Doe',
+          role: 'Project Manager',
+        },
+      ]}
+    />,
+  );
+
+  const avatar = getByText(/john doe/i);
+  expect(avatar).toBeVisible();
+  expect(avatar.closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/uuid/i),
+  );
+});
+
+it('renders the skill list', () => {
+  const { getByText } = render(
+    <TeamProfileAbout
+      projectTitle="Title"
+      skills={['example skill']}
+      members={[]}
+    />,
+  );
+  expect(getByText(/example skill/i)).toBeVisible();
+  expect(getByText(/expertise and resources/i)).toBeVisible();
+});

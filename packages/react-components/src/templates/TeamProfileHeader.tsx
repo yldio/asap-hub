@@ -104,7 +104,9 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
                   key={memberId}
                   css={[listItemStyles, { left: `-${i * 3}px` }]}
                 >
-                  <Anchor href={network({}).users({ userId: memberId }).$}>
+                  <Anchor
+                    href={network({}).users({}).user({ userId: memberId }).$}
+                  >
                     <Avatar
                       firstName={firstName}
                       lastName={lastName}
@@ -115,9 +117,11 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               ))}
             <li css={extraUsersStyles}>
               {members.length > MAX_MEMBER_AVATARS && (
-                <Avatar
-                  placeholder={`+${members.length - MAX_MEMBER_AVATARS}`}
-                />
+                <Anchor href={`${route.about({}).$}#TEAM_MEMBERS_SECTION`}>
+                  <Avatar
+                    placeholder={`+${members.length - MAX_MEMBER_AVATARS}`}
+                  />
+                </Anchor>
               )}
             </li>
           </ul>

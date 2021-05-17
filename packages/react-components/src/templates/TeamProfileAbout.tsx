@@ -41,7 +41,11 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       />
     ) : null}
     {skills.length ? <ProfileSkills skills={skills} /> : null}
-    {members.length ? <TeamMembersSection members={members} /> : null}
+    {members.length ? (
+      <section id="TEAM_MEMBERS_SECTION">
+        <TeamMembersSection members={members} />
+      </section>
+    ) : null}
     {teamGroupsCard}
     {pointOfContact && (
       <CtaCard

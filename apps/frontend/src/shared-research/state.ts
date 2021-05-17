@@ -28,39 +28,43 @@ export const researchOutputsState = selectorFamily<
   GetListOptions
 >({
   key: 'researchOutputs',
-  get: (options) => ({ get }) => {
-    const index = get(researchOutputIndexState(options));
-    if (index === undefined || index instanceof Error) return index;
-    const researchOutputs: ResearchOutputResponse[] = [];
-    for (const id of index.ids) {
-      const researchOutput = get(researchOutputState(id));
-      if (researchOutput === undefined) return undefined;
-      researchOutputs.push(researchOutput);
-    }
-    return { total: index.total, items: researchOutputs };
-  },
-  set: (options) => ({ get, set, reset }, researchOutput) => {
-    if (
-      researchOutput === undefined ||
-      researchOutput instanceof DefaultValue
-    ) {
-      const oldOutputs = get(researchOutputIndexState(options));
-      if (!(oldOutputs instanceof Error)) {
-        oldOutputs?.ids?.forEach((id) => reset(researchOutputState(id)));
+  get:
+    (options) =>
+    ({ get }) => {
+      const index = get(researchOutputIndexState(options));
+      if (index === undefined || index instanceof Error) return index;
+      const researchOutputs: ResearchOutputResponse[] = [];
+      for (const id of index.ids) {
+        const researchOutput = get(researchOutputState(id));
+        if (researchOutput === undefined) return undefined;
+        researchOutputs.push(researchOutput);
       }
-      reset(researchOutputIndexState(options));
-    } else if (researchOutput instanceof Error) {
-      set(researchOutputIndexState(options), researchOutput);
-    } else {
-      researchOutput.items.forEach((output) =>
-        set(researchOutputState(output.id), output),
-      );
-      set(researchOutputIndexState(options), {
-        total: researchOutput.total,
-        ids: researchOutput.items.map((output) => output.id),
-      });
-    }
-  },
+      return { total: index.total, items: researchOutputs };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, researchOutput) => {
+      if (
+        researchOutput === undefined ||
+        researchOutput instanceof DefaultValue
+      ) {
+        const oldOutputs = get(researchOutputIndexState(options));
+        if (!(oldOutputs instanceof Error)) {
+          oldOutputs?.ids?.forEach((id) => reset(researchOutputState(id)));
+        }
+        reset(researchOutputIndexState(options));
+      } else if (researchOutput instanceof Error) {
+        set(researchOutputIndexState(options), researchOutput);
+      } else {
+        researchOutput.items.forEach((output) =>
+          set(researchOutputState(output.id), output),
+        );
+        set(researchOutputIndexState(options), {
+          total: researchOutput.total,
+          ids: researchOutput.items.map((output) => output.id),
+        });
+      }
+    },
 });
 
 export const refreshResearchOutputState = atomFamily<number, string>({
@@ -73,11 +77,13 @@ const fetchResearchOutputState = selectorFamily<
   string
 >({
   key: 'fetchResearchOutput',
-  get: (id) => async ({ get }) => {
-    get(refreshResearchOutputState(id));
-    const authorization = get(authorizationState);
-    return getResearchOutput(id, authorization);
-  },
+  get:
+    (id) =>
+    async ({ get }) => {
+      get(refreshResearchOutputState(id));
+      const authorization = get(authorizationState);
+      return getResearchOutput(id, authorization);
+    },
 });
 export const researchOutputState = atomFamily<
   ResearchOutputResponse | undefined,

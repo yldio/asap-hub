@@ -39,12 +39,11 @@ const NetworkGroupList: React.FC<NetworkGroupListProps> = ({
     pageSize,
   );
 
-  const groups: ComponentProps<
-    typeof NetworkGroups
-  >['groups'] = result.items.map((group) => ({
-    ...group,
-    numberOfTeams: group.teams.length,
-  }));
+  const groups: ComponentProps<typeof NetworkGroups>['groups'] =
+    result.items.map((group) => ({
+      ...group,
+      numberOfTeams: group.teams.length,
+    }));
 
   return (
     <NetworkGroups

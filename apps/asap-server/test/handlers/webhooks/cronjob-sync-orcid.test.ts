@@ -12,7 +12,8 @@ describe('Cronjob - Sync Users ORCID', () => {
   beforeAll(() => {
     identity();
     // Add recently synced user
-    fixtures.fetchUsersResponse.items[1]!.data.orcidLastSyncDate!.iv = new Date().toISOString();
+    fixtures.fetchUsersResponse.items[1]!.data.orcidLastSyncDate!.iv =
+      new Date().toISOString();
   });
 
   afterAll(() => {

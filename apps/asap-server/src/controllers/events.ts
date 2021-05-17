@@ -30,16 +30,8 @@ export default class Events implements EventController {
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventResponse> {
-    const {
-      take,
-      skip,
-      before,
-      after,
-      groupId,
-      search,
-      sortBy,
-      sortOrder,
-    } = options;
+    const { take, skip, before, after, groupId, search, sortBy, sortOrder } =
+      options;
 
     const filters = (search || '')
       .split(' ')

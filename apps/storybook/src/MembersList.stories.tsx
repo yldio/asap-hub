@@ -11,9 +11,9 @@ export default {
 export const Normal = () => (
   <MembersList
     singleColumn={boolean('Force Single Column', false)}
-    members={createListUserResponse(
-      number('Number of members', 6),
-    ).items.map((member) => ({ ...member, teams: [] }))}
+    members={createListUserResponse(number('Number of members', 6)).items.map(
+      (member) => ({ ...member, teams: [] }),
+    )}
   />
 );
 

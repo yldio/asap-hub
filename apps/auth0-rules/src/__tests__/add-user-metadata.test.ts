@@ -106,9 +106,8 @@ describe('Auth0 Rule - Add User Metadata', () => {
   });
 
   it('errors if the redirect_uri is missing', async () => {
-    const cb: jest.MockedFunction<
-      Parameters<typeof addUserMetadata>[2]
-    > = jest.fn();
+    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+      jest.fn();
 
     await addUserMetadata(
       user,
@@ -130,9 +129,8 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(404);
 
-    const cb: jest.MockedFunction<
-      Parameters<typeof addUserMetadata>[2]
-    > = jest.fn();
+    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+      jest.fn();
 
     await addUserMetadata(user, context, cb);
 
@@ -152,9 +150,8 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, apiUser);
 
-    const cb: jest.MockedFunction<
-      Parameters<typeof addUserMetadata>[2]
-    > = jest.fn();
+    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+      jest.fn();
 
     await addUserMetadata(user, context, cb);
 
@@ -189,9 +186,8 @@ describe('Auth0 Rule - Add User Metadata', () => {
       .get(`/webhook/users/${user.user_id}`)
       .reply(200, apiUser);
 
-    const cb: jest.MockedFunction<
-      Parameters<typeof addUserMetadata>[2]
-    > = jest.fn();
+    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+      jest.fn();
 
     await addUserMetadata(
       user,

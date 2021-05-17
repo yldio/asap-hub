@@ -18,13 +18,12 @@ const DisableFlag: React.FC<{ flag: Flag }> = ({ flag, children }) => {
     </FlagsContext.Provider>
   );
 };
-export const makeFlagDecorator = (name: string, flag: Flag): DecoratorFn => (
-  storyFn,
-  context,
-) => {
-  const enabled = boolean(name, true);
-  const Provider: React.ComponentType = enabled
-    ? React.Fragment
-    : ({ children }) => <DisableFlag flag={flag}>{children}</DisableFlag>;
-  return <Provider>{storyFn({ ...context })}</Provider>;
-};
+export const makeFlagDecorator =
+  (name: string, flag: Flag): DecoratorFn =>
+  (storyFn, context) => {
+    const enabled = boolean(name, true);
+    const Provider: React.ComponentType = enabled
+      ? React.Fragment
+      : ({ children }) => <DisableFlag flag={flag}>{children}</DisableFlag>;
+    return <Provider>{storyFn({ ...context })}</Provider>;
+  };

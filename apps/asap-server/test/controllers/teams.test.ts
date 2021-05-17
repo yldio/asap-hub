@@ -275,7 +275,7 @@ describe('Team controller', () => {
           url: 'https://example.com',
           name: 'good link',
           // squidex graphql api typings aren't perfect
-          description: (null as unknown) as undefined,
+          description: null as unknown as undefined,
         },
       ];
 

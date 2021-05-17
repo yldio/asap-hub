@@ -51,20 +51,18 @@ const User: React.FC<Record<string, never>> = () => {
   const { pathname } = useLocation();
 
   const tabRoutes = route({ userId });
-  const tabRoute = ([
-    tabRoutes.about,
-    tabRoutes.research,
-    tabRoutes.outputs,
-  ] as ReadonlyArray<
-    RouteNode<
-      string,
-      Record<string, never>,
-      {
-        editPersonalInfo: typeof tabRoutes.about.children.editPersonalInfo;
-        editContactInfo: typeof tabRoutes.about.children.editContactInfo;
-      }
+  const tabRoute = (
+    [tabRoutes.about, tabRoutes.research, tabRoutes.outputs] as ReadonlyArray<
+      RouteNode<
+        string,
+        Record<string, never>,
+        {
+          editPersonalInfo: typeof tabRoutes.about.children.editPersonalInfo;
+          editContactInfo: typeof tabRoutes.about.children.editContactInfo;
+        }
+      >
     >
-  >).find(
+  ).find(
     (possibleTabRoute) =>
       !relative(possibleTabRoute({}).$, pathname).startsWith('..'),
   );

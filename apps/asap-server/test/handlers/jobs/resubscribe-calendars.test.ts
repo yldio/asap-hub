@@ -15,7 +15,8 @@ import {
 } from '../../helpers/events';
 
 describe('Resubscribe calendar handler', () => {
-  const unsubscribeMock: jest.MockedFunction<UnsubscribeFromEventChanges> = jest.fn();
+  const unsubscribeMock: jest.MockedFunction<UnsubscribeFromEventChanges> =
+    jest.fn();
   const subscribeMock: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
   const resubscribeCalendarsHandler = resubscribeCalendarsHandlerFactory(
     calendarControllerMock,

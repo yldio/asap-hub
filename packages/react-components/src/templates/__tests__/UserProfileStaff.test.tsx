@@ -4,7 +4,8 @@ import { createUserResponse } from '@asap-hub/fixtures';
 
 import UserProfileStaff from '../UserProfileStaff';
 
-const boilerplateProps: ComponentProps<typeof UserProfileStaff> = createUserResponse();
+const boilerplateProps: ComponentProps<typeof UserProfileStaff> =
+  createUserResponse();
 
 it('renders the biography', () => {
   const { getByText } = render(

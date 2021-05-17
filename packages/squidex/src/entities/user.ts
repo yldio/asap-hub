@@ -27,7 +27,7 @@ type OrNull<T> = { [K in keyof T]: T[K] | null };
 export interface User<
   TAvatar = string,
   TConnection = UserTeamConnection,
-  TSocial = Omit<UserSocialLinks, 'orcid'>
+  TSocial = Omit<UserSocialLinks, 'orcid'>,
 > {
   avatar: TAvatar[];
   biography?: string;

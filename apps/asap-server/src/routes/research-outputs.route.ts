@@ -17,11 +17,11 @@ export const researchOutputRouteFactory = (
     async (req, res: Response<ListResearchOutputResponse>) => {
       const { query } = req;
 
-      const options = (framework.validate(
+      const options = framework.validate(
         'query',
         query,
         querySchema,
-      ) as unknown) as {
+      ) as unknown as {
         take: number;
         skip: number;
         search?: string;

@@ -77,9 +77,8 @@ const TextArea: React.FC<TextAreaProps> = ({
 
   ...props
 }) => {
-  const { validationMessage, validationTargetProps } = useValidation<
-    HTMLTextAreaElement
-  >(customValidationMessage);
+  const { validationMessage, validationTargetProps } =
+    useValidation<HTMLTextAreaElement>(customValidationMessage);
 
   const reachedMaxLength =
     value.length >= (maxLength ?? Number.POSITIVE_INFINITY);

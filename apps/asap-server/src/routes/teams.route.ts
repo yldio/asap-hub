@@ -19,11 +19,11 @@ export const teamRouteFactory = (
   teamRoutes.get('/teams', async (req, res) => {
     const { query } = req;
 
-    const options = (framework.validate(
+    const options = framework.validate(
       'query',
       query,
       fetchQuerySchema,
-    ) as unknown) as {
+    ) as unknown as {
       take: number;
       skip: number;
       search?: string;
@@ -67,11 +67,11 @@ export const teamRouteFactory = (
     const { query, params } = req;
 
     const { teamId } = framework.validate('parameters', params, paramSchema);
-    const options = (framework.validate(
+    const options = framework.validate(
       'query',
       query,
       querySchema,
-    ) as unknown) as FetchOptions;
+    ) as unknown as FetchOptions;
 
     const result = await groupsController.fetchByTeamId(teamId, options);
 

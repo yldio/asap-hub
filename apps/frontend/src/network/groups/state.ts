@@ -25,34 +25,38 @@ export const groupsState = selectorFamily<
   GetListOptions
 >({
   key: 'groups',
-  get: (options) => ({ get }) => {
-    const index = get(groupIndexState(options));
-    if (index === undefined || index instanceof Error) return index;
-    const groups: GroupResponse[] = [];
-    for (const id of index.ids) {
-      const group = get(groupState(id));
-      if (group === undefined) return undefined;
-      groups.push(group);
-    }
-    return { total: index.total, items: groups };
-  },
-  set: (options) => ({ get, set, reset }, newGroups) => {
-    if (newGroups === undefined || newGroups instanceof DefaultValue) {
-      const oldGroups = get(groupIndexState(options));
-      if (!(oldGroups instanceof Error)) {
-        oldGroups?.ids?.forEach((id) => reset(groupState(id)));
+  get:
+    (options) =>
+    ({ get }) => {
+      const index = get(groupIndexState(options));
+      if (index === undefined || index instanceof Error) return index;
+      const groups: GroupResponse[] = [];
+      for (const id of index.ids) {
+        const group = get(groupState(id));
+        if (group === undefined) return undefined;
+        groups.push(group);
       }
-      reset(groupIndexState(options));
-    } else if (newGroups instanceof Error) {
-      set(groupIndexState(options), newGroups);
-    } else {
-      newGroups?.items.forEach((group) => set(groupState(group.id), group));
-      set(groupIndexState(options), {
-        total: newGroups.total,
-        ids: newGroups.items.map((group) => group.id),
-      });
-    }
-  },
+      return { total: index.total, items: groups };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, newGroups) => {
+      if (newGroups === undefined || newGroups instanceof DefaultValue) {
+        const oldGroups = get(groupIndexState(options));
+        if (!(oldGroups instanceof Error)) {
+          oldGroups?.ids?.forEach((id) => reset(groupState(id)));
+        }
+        reset(groupIndexState(options));
+      } else if (newGroups instanceof Error) {
+        set(groupIndexState(options), newGroups);
+      } else {
+        newGroups?.items.forEach((group) => set(groupState(group.id), group));
+        set(groupIndexState(options), {
+          total: newGroups.total,
+          ids: newGroups.items.map((group) => group.id),
+        });
+      }
+    },
 });
 
 export const refreshGroupState = atomFamily<number, string>({
@@ -61,11 +65,13 @@ export const refreshGroupState = atomFamily<number, string>({
 });
 const fetchGroupState = selectorFamily<GroupResponse | undefined, string>({
   key: 'fetchGroup',
-  get: (id) => async ({ get }) => {
-    get(refreshGroupState(id));
-    const authorization = get(authorizationState);
-    return getGroup(id, authorization);
-  },
+  get:
+    (id) =>
+    async ({ get }) => {
+      get(refreshGroupState(id));
+      const authorization = get(authorizationState);
+      return getGroup(id, authorization);
+    },
 });
 export const groupState = atomFamily<GroupResponse | undefined, string>({
   key: 'group',

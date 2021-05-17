@@ -30,34 +30,38 @@ export const teamsState = selectorFamily<
   GetListOptions
 >({
   key: 'teams',
-  get: (options) => ({ get }) => {
-    const index = get(teamIndexState(options));
-    if (index === undefined || index instanceof Error) return index;
-    const teams: TeamResponse[] = [];
-    for (const id of index.ids) {
-      const team = get(teamState(id));
-      if (team === undefined) return undefined;
-      teams.push(team);
-    }
-    return { total: index.total, items: teams };
-  },
-  set: (options) => ({ get, set, reset }, newTeams) => {
-    if (newTeams === undefined || newTeams instanceof DefaultValue) {
-      const oldTeams = get(teamIndexState(options));
-      if (!(oldTeams instanceof Error)) {
-        oldTeams?.ids?.forEach((id) => reset(patchedTeamState(id)));
+  get:
+    (options) =>
+    ({ get }) => {
+      const index = get(teamIndexState(options));
+      if (index === undefined || index instanceof Error) return index;
+      const teams: TeamResponse[] = [];
+      for (const id of index.ids) {
+        const team = get(teamState(id));
+        if (team === undefined) return undefined;
+        teams.push(team);
       }
-      reset(teamIndexState(options));
-    } else if (newTeams instanceof Error) {
-      set(teamIndexState(options), newTeams);
-    } else {
-      newTeams?.items.forEach((team) => set(patchedTeamState(team.id), team));
-      set(teamIndexState(options), {
-        total: newTeams.total,
-        ids: newTeams.items.map((team) => team.id),
-      });
-    }
-  },
+      return { total: index.total, items: teams };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, newTeams) => {
+      if (newTeams === undefined || newTeams instanceof DefaultValue) {
+        const oldTeams = get(teamIndexState(options));
+        if (!(oldTeams instanceof Error)) {
+          oldTeams?.ids?.forEach((id) => reset(patchedTeamState(id)));
+        }
+        reset(teamIndexState(options));
+      } else if (newTeams instanceof Error) {
+        set(teamIndexState(options), newTeams);
+      } else {
+        newTeams?.items.forEach((team) => set(patchedTeamState(team.id), team));
+        set(teamIndexState(options), {
+          total: newTeams.total,
+          ids: newTeams.items.map((team) => team.id),
+        });
+      }
+    },
 });
 export const refreshTeamState = atomFamily<number, string>({
   key: 'refreshTeam',
@@ -65,11 +69,13 @@ export const refreshTeamState = atomFamily<number, string>({
 });
 const initialTeamState = selectorFamily<TeamResponse | undefined, string>({
   key: 'initialTeam',
-  get: (id) => async ({ get }) => {
-    get(refreshTeamState(id));
-    const authorization = get(authorizationState);
-    return getTeam(id, authorization);
-  },
+  get:
+    (id) =>
+    async ({ get }) => {
+      get(refreshTeamState(id));
+      const authorization = get(authorizationState);
+      return getTeam(id, authorization);
+    },
 });
 
 const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
@@ -79,8 +85,10 @@ const patchedTeamState = atomFamily<TeamResponse | undefined, string>({
 
 const teamState = selectorFamily<TeamResponse | undefined, string>({
   key: 'team',
-  get: (id) => ({ get }) =>
-    get(patchedTeamState(id)) ?? get(initialTeamState(id)),
+  get:
+    (id) =>
+    ({ get }) =>
+      get(patchedTeamState(id)) ?? get(initialTeamState(id)),
 });
 
 export const usePrefetchTeams = (

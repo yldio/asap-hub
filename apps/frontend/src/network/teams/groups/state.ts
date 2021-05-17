@@ -26,41 +26,49 @@ export const teamGroupsState = selectorFamily<
   string
 >({
   key: 'teamGroups',
-  get: (teamId) => ({ get }) => {
-    const index = get(teamGroupIndexState(teamId));
-    if (index === undefined || index === 'noSuchTeam' || index instanceof Error)
-      return index;
-    const groups: GroupResponse[] = [];
-    for (const id of index.ids) {
-      const group = get(groupState(id));
-      if (group === undefined) return undefined;
-      groups.push(group);
-    }
-    return { total: index.total, items: groups };
-  },
-  set: (teamId) => ({ get, set, reset }, newGroups) => {
-    if (newGroups === undefined || newGroups instanceof DefaultValue) {
-      const oldGroups = get(teamGroupIndexState(teamId));
+  get:
+    (teamId) =>
+    ({ get }) => {
+      const index = get(teamGroupIndexState(teamId));
       if (
-        !(
-          oldGroups === undefined ||
-          oldGroups === 'noSuchTeam' ||
-          oldGroups instanceof Error
-        )
-      ) {
-        oldGroups.ids.forEach((id) => reset(groupState(id)));
+        index === undefined ||
+        index === 'noSuchTeam' ||
+        index instanceof Error
+      )
+        return index;
+      const groups: GroupResponse[] = [];
+      for (const id of index.ids) {
+        const group = get(groupState(id));
+        if (group === undefined) return undefined;
+        groups.push(group);
       }
-      reset(teamGroupIndexState(teamId));
-    } else if (newGroups instanceof Error || newGroups === 'noSuchTeam') {
-      set(teamGroupIndexState(teamId), newGroups);
-    } else {
-      newGroups?.items.forEach((group) => set(groupState(group.id), group));
-      set(teamGroupIndexState(teamId), {
-        total: newGroups.total,
-        ids: newGroups.items.map((group) => group.id),
-      });
-    }
-  },
+      return { total: index.total, items: groups };
+    },
+  set:
+    (teamId) =>
+    ({ get, set, reset }, newGroups) => {
+      if (newGroups === undefined || newGroups instanceof DefaultValue) {
+        const oldGroups = get(teamGroupIndexState(teamId));
+        if (
+          !(
+            oldGroups === undefined ||
+            oldGroups === 'noSuchTeam' ||
+            oldGroups instanceof Error
+          )
+        ) {
+          oldGroups.ids.forEach((id) => reset(groupState(id)));
+        }
+        reset(teamGroupIndexState(teamId));
+      } else if (newGroups instanceof Error || newGroups === 'noSuchTeam') {
+        set(teamGroupIndexState(teamId), newGroups);
+      } else {
+        newGroups?.items.forEach((group) => set(groupState(group.id), group));
+        set(teamGroupIndexState(teamId), {
+          total: newGroups.total,
+          ids: newGroups.items.map((group) => group.id),
+        });
+      }
+    },
 });
 
 export const useTeamGroupsById = (teamId: string) => {

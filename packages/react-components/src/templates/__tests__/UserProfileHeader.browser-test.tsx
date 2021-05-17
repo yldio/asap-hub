@@ -11,7 +11,8 @@ afterEach(async () => {
   await jestPlaywright.resetPage();
 });
 
-const boilerplateProps: ComponentProps<typeof UserProfileHeader> = createUserResponse();
+const boilerplateProps: ComponentProps<typeof UserProfileHeader> =
+  createUserResponse();
 
 describe.each([
   ['mobile', mobileScreen],

@@ -119,15 +119,12 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     loginWithPopup,
     handleRedirectCallback,
     getTokenSilently,
-    getIdTokenClaims: getSafeAuth0ClientProperty('getIdTokenClaims').bind(
-      auth0Client,
-    ),
-    loginWithRedirect: getSafeAuth0ClientProperty('loginWithRedirect').bind(
-      auth0Client,
-    ),
-    getTokenWithPopup: getSafeAuth0ClientProperty('getTokenWithPopup').bind(
-      auth0Client,
-    ),
+    getIdTokenClaims:
+      getSafeAuth0ClientProperty('getIdTokenClaims').bind(auth0Client),
+    loginWithRedirect:
+      getSafeAuth0ClientProperty('loginWithRedirect').bind(auth0Client),
+    getTokenWithPopup:
+      getSafeAuth0ClientProperty('getTokenWithPopup').bind(auth0Client),
     logout: getSafeAuth0ClientProperty('logout').bind(auth0Client),
   };
 

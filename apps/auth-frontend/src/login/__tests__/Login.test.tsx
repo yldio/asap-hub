@@ -20,9 +20,10 @@ jest.mock('../../auth0/web-auth');
 const mockAuthorizeWithSso = authorizeWithSso as jest.MockedFunction<
   typeof authorizeWithSso
 >;
-const mockAuthorizeWithEmailPassword = authorizeWithEmailPassword as jest.MockedFunction<
-  typeof authorizeWithEmailPassword
->;
+const mockAuthorizeWithEmailPassword =
+  authorizeWithEmailPassword as jest.MockedFunction<
+    typeof authorizeWithEmailPassword
+  >;
 beforeEach(() => {
   mockAuthorizeWithSso.mockClear();
   mockAuthorizeWithEmailPassword.mockClear();
@@ -113,8 +114,8 @@ it('shows an Auth0 email error', async () => {
   userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('Authentication Error');
-  ((error as unknown) as WebAuthError).code = 'invalid_signup';
-  ((error as unknown) as WebAuthError).errorDescription = 'Invalid signup.';
+  (error as unknown as WebAuthError).code = 'invalid_signup';
+  (error as unknown as WebAuthError).errorDescription = 'Invalid signup.';
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 
   userEvent.click(getByText(/continue$/i, { selector: 'button *' }));
@@ -134,8 +135,8 @@ it('shows an Auth0 password error', async () => {
   userEvent.type(getByLabelText(/password/i), 'PW');
 
   const error = new Error('Authentication Error');
-  ((error as unknown) as WebAuthError).code = 'invalid_password';
-  ((error as unknown) as WebAuthError).errorDescription =
+  (error as unknown as WebAuthError).code = 'invalid_password';
+  (error as unknown as WebAuthError).errorDescription =
     'Your password is too weak';
   mockAuthorizeWithEmailPassword.mockRejectedValueOnce(error);
 

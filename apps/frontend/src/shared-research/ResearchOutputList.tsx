@@ -13,13 +13,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   searchQuery = '',
   filters = new Set(),
 }) => {
-  const {
-    currentPage,
-    pageSize,
-    isListView,
-    cardViewParams,
-    listViewParams,
-  } = usePaginationParams();
+  const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
+    usePaginationParams();
   const result = useResearchOutputs({
     searchQuery,
     filters,

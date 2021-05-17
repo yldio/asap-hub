@@ -93,9 +93,8 @@ describe('Auth0 Rule - Connect User', () => {
   });
 
   it('should callback with same user + context if receives no invitation_code', () => {
-    const cb: jest.MockedFunction<
-      Parameters<typeof connectUser>[2]
-    > = jest.fn();
+    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> =
+      jest.fn();
 
     connectUser(user, context, cb);
     expect(cb).toHaveBeenCalled();
@@ -117,9 +116,8 @@ describe('Auth0 Rule - Connect User', () => {
       })
       .reply(404);
 
-    const cb: jest.MockedFunction<
-      Parameters<typeof connectUser>[2]
-    > = jest.fn();
+    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> =
+      jest.fn();
 
     await connectUser(
       user,
@@ -146,9 +144,8 @@ describe('Auth0 Rule - Connect User', () => {
       })
       .reply(202);
 
-    const cb: jest.MockedFunction<
-      Parameters<typeof connectUser>[2]
-    > = jest.fn();
+    const cb: jest.MockedFunction<Parameters<typeof connectUser>[2]> =
+      jest.fn();
 
     await connectUser(
       user,

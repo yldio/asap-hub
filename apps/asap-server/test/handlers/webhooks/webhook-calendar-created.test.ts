@@ -30,7 +30,8 @@ const createSignedPayload = (payload: WebhookPayload<Calendar>) =>
 
 describe('Calendar Webhook', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
-  const unsubscribe: jest.MockedFunction<UnsubscribeFromEventChanges> = jest.fn();
+  const unsubscribe: jest.MockedFunction<UnsubscribeFromEventChanges> =
+    jest.fn();
   const handler = webhookCalendarCreatedHandlerFactory(
     subscribe,
     unsubscribe,
@@ -208,9 +209,8 @@ describe('Calendar Webhook', () => {
 describe('Subscription', () => {
   const calendarId = 'calendar-id';
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
-  const subscribeToEventChanges = subscribeToEventChangesFactory(
-    getJWTCredentials,
-  );
+  const subscribeToEventChanges =
+    subscribeToEventChangesFactory(getJWTCredentials);
 
   test('Should subscribe to the calendar events notifications and return the resourceId', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);
@@ -257,9 +257,8 @@ describe('Unsubscribing', () => {
   const resourceId = 'resource-id';
   const channelId = 'channel-id';
   const getJWTCredentials: jest.MockedFunction<GetJWTCredentials> = jest.fn();
-  const unsubscribeFromEventChanges = unsubscribeFromEventChangesFactory(
-    getJWTCredentials,
-  );
+  const unsubscribeFromEventChanges =
+    unsubscribeFromEventChangesFactory(getJWTCredentials);
 
   test('Should unsubscribe from the calendar events notifications', async () => {
     getJWTCredentials.mockResolvedValueOnce(googleApiAuthJWTCredentials);

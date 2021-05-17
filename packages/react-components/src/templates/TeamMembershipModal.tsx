@@ -44,9 +44,8 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   backHref,
 }) => {
   const [newApproach, setNewApproach] = useState(approach);
-  const [newResponsibilities, setNewResponsibilities] = useState(
-    responsibilities,
-  );
+  const [newResponsibilities, setNewResponsibilities] =
+    useState(responsibilities);
 
   return (
     <EditModal

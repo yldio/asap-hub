@@ -70,9 +70,11 @@ interface TabNavProps {
 const TabNav: React.FC<TabNavProps> = ({ children }) => (
   <nav css={containerStyles}>
     <ul css={styles}>
-      {((Array.isArray(children) ? children : [children]) as ReadonlyArray<
-        React.ReactElement
-      >)
+      {(
+        (Array.isArray(children)
+          ? children
+          : [children]) as ReadonlyArray<React.ReactElement>
+      )
         .flat(Number.POSITIVE_INFINITY)
         .filter((child) => child && typeof child === 'object')
         .map((child, index) => (

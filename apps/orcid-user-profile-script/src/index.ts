@@ -8,7 +8,7 @@ interface UserProfileFetcherContext<IDT> {
 /* eslint-disable no-unused-vars */
 type UserProfileFetcher<
   AT = Record<string, never>,
-  IDT extends string | undefined = undefined
+  IDT extends string | undefined = undefined,
 > = (
   accessToken: AT,
   ctx: UserProfileFetcherContext<IDT>,
@@ -30,20 +30,18 @@ export interface OrcidIdToken {
   jti: string;
 }
 
-const fetchOrcidUserProfile: UserProfileFetcher<
-  Record<string, never>,
-  string
-> = (accessToken, { id_token }, cb) => {
-  const idToken = decode(id_token) as OrcidIdToken;
-  const profile: Auth0User = {
-    user_id: idToken.sub,
-    sub: idToken.sub,
-    given_name: idToken.given_name,
-    family_name: idToken.family_name,
-    name: `${idToken.given_name} ${idToken.family_name}`,
-    orcid: idToken.sub,
-    aud: idToken.aud,
+const fetchOrcidUserProfile: UserProfileFetcher<Record<string, never>, string> =
+  (accessToken, { id_token }, cb) => {
+    const idToken = decode(id_token) as OrcidIdToken;
+    const profile: Auth0User = {
+      user_id: idToken.sub,
+      sub: idToken.sub,
+      given_name: idToken.given_name,
+      family_name: idToken.family_name,
+      name: `${idToken.given_name} ${idToken.family_name}`,
+      orcid: idToken.sub,
+      aud: idToken.aud,
+    };
+    cb(null, profile);
   };
-  cb(null, profile);
-};
 export default fetchOrcidUserProfile;

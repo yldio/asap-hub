@@ -107,8 +107,7 @@ describe('Import protocol', () => {
           {
             ...createProtocolsRequest,
             description: {
-              iv:
-                'Abstract text here\n || From Team team || Authors: author 1, author 2.',
+              iv: 'Abstract text here\n || From Team team || Authors: author 1, author 2.',
             },
           },
         )
@@ -154,8 +153,7 @@ describe('Import protocol', () => {
         .post(`/api/content/${config.appName}/research-outputs?publish=false`, {
           ...createProtocolsRequest,
           description: {
-            iv:
-              'THIS IS\nMY TEST ABSTRACT\n || From Team team || Authors: author 1, author 2.',
+            iv: 'THIS IS\nMY TEST ABSTRACT\n || From Team team || Authors: author 1, author 2.',
           },
         })
         .reply(200);

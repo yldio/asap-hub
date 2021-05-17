@@ -5,22 +5,24 @@ import { Auth0User } from '@asap-hub/auth';
 import { Auth0Context, useAuth0 } from '../auth0';
 import { getUserClaimKey, useCurrentUser } from '../auth';
 
-const userProvider = (user: Auth0User): React.FC => ({ children }) => {
-  const ctx = useAuth0();
+const userProvider =
+  (user: Auth0User): React.FC =>
+  ({ children }) => {
+    const ctx = useAuth0();
 
-  return (
-    <Auth0Context.Provider
-      value={{
-        ...ctx,
-        loading: false,
-        isAuthenticated: true,
-        user,
-      }}
-    >
-      {children}
-    </Auth0Context.Provider>
-  );
-};
+    return (
+      <Auth0Context.Provider
+        value={{
+          ...ctx,
+          loading: false,
+          isAuthenticated: true,
+          user,
+        }}
+      >
+        {children}
+      </Auth0Context.Provider>
+    );
+  };
 
 describe('getUserClaimKey', () => {
   it('returns a URL on the current origin', () => {

@@ -28,10 +28,8 @@ describe('on mobile', () => {
     const { top: cardTop, right: cardRight } = await getBoundingClientRect(
       select(getByText('card1')),
     );
-    const {
-      bottom: editBottom,
-      right: editRight,
-    } = await getBoundingClientRect(select(getByLabelText('Edit card 1')));
+    const { bottom: editBottom, right: editRight } =
+      await getBoundingClientRect(select(getByLabelText('Edit card 1')));
 
     expect(editRight).toBeCloseTo(cardRight, -2);
     expect(editBottom).toBeLessThan(cardTop);

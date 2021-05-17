@@ -25,34 +25,38 @@ export const eventsState = selectorFamily<
   GetEventListOptions
 >({
   key: 'events',
-  get: (options) => ({ get }) => {
-    const index = get(eventIndexState(options));
-    if (index === undefined || index instanceof Error) return index;
-    const events: EventResponse[] = [];
-    for (const id of index.ids) {
-      const event = get(eventState(id));
-      if (event === undefined) return undefined;
-      events.push(event);
-    }
-    return { total: index.total, items: events };
-  },
-  set: (options) => ({ get, set, reset }, newEvents) => {
-    if (newEvents === undefined || newEvents instanceof DefaultValue) {
-      const oldEvents = get(eventIndexState(options));
-      if (!(oldEvents instanceof Error)) {
-        oldEvents?.ids?.forEach((id) => reset(eventState(id)));
+  get:
+    (options) =>
+    ({ get }) => {
+      const index = get(eventIndexState(options));
+      if (index === undefined || index instanceof Error) return index;
+      const events: EventResponse[] = [];
+      for (const id of index.ids) {
+        const event = get(eventState(id));
+        if (event === undefined) return undefined;
+        events.push(event);
       }
-      reset(eventIndexState(options));
-    } else if (newEvents instanceof Error) {
-      set(eventIndexState(options), newEvents);
-    } else {
-      newEvents?.items.forEach((event) => set(eventState(event.id), event));
-      set(eventIndexState(options), {
-        total: newEvents.total,
-        ids: newEvents.items.map((event) => event.id),
-      });
-    }
-  },
+      return { total: index.total, items: events };
+    },
+  set:
+    (options) =>
+    ({ get, set, reset }, newEvents) => {
+      if (newEvents === undefined || newEvents instanceof DefaultValue) {
+        const oldEvents = get(eventIndexState(options));
+        if (!(oldEvents instanceof Error)) {
+          oldEvents?.ids?.forEach((id) => reset(eventState(id)));
+        }
+        reset(eventIndexState(options));
+      } else if (newEvents instanceof Error) {
+        set(eventIndexState(options), newEvents);
+      } else {
+        newEvents?.items.forEach((event) => set(eventState(event.id), event));
+        set(eventIndexState(options), {
+          total: newEvents.total,
+          ids: newEvents.items.map((event) => event.id),
+        });
+      }
+    },
 });
 export const refreshEventState = atomFamily<number, string>({
   key: 'refreshEvent',
@@ -60,11 +64,13 @@ export const refreshEventState = atomFamily<number, string>({
 });
 const fetchEventState = selectorFamily<EventResponse | undefined, string>({
   key: 'fetchEvent',
-  get: (id) => async ({ get }) => {
-    get(refreshEventState(id));
-    const authorization = get(authorizationState);
-    return getEvent(id, authorization);
-  },
+  get:
+    (id) =>
+    async ({ get }) => {
+      get(refreshEventState(id));
+      const authorization = get(authorizationState);
+      return getEvent(id, authorization);
+    },
 });
 export const eventState = atomFamily<EventResponse | undefined, string>({
   key: 'event',

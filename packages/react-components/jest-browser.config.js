@@ -2,12 +2,8 @@ const { dirname, basename } = require('path');
 
 const makeDefaultConfig = require('../../jest/make-default-config');
 
-const {
-  setupFilesAfterEnv,
-  testEnvironment,
-  testPathIgnorePatterns,
-  ...base
-} = makeDefaultConfig(dirname(__dirname), basename(__dirname));
+const { setupFilesAfterEnv, testEnvironment, testPathIgnorePatterns, ...base } =
+  makeDefaultConfig(dirname(__dirname), basename(__dirname));
 
 module.exports = {
   ...base,

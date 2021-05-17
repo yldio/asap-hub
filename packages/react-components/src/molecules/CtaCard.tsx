@@ -24,9 +24,10 @@ const getInTouchStyles = css({
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     gridTemplateColumns: 'auto max-content',
   },
-  [`@media (min-width: ${tabletScreen.min}px) and (max-width: ${smallDesktopScreen.min}px)`]: {
-    paddingBottom: `${14 / perRem}em`,
-  },
+  [`@media (min-width: ${tabletScreen.min}px) and (max-width: ${smallDesktopScreen.min}px)`]:
+    {
+      paddingBottom: `${14 / perRem}em`,
+    },
 });
 
 const buttonStyles = css({

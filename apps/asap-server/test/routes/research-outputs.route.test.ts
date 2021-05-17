@@ -49,6 +49,7 @@ describe('/research-outputs/ route', () => {
             tags: ['test', 'tag'],
             teams: [],
             lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
+            accessInstructions: 'some access instructions',
           },
         ],
       };

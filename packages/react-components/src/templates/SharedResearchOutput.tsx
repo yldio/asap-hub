@@ -19,7 +19,7 @@ const cardsStyles = css({
 
 type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
-  'description' | 'tags'
+  'description' | 'tags' | 'accessInstructions'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -29,6 +29,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   description,
   backHref,
   tags,
+  accessInstructions,
   ...props
 }) => (
   <div css={containerStyles}>
@@ -50,6 +51,14 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               <TagList tags={tags} />
             </>
           )}
+        </Card>
+      )}
+      {accessInstructions && (
+        <Card>
+          <div css={{ paddingBottom: `${12 / perRem}em` }}>
+            <Headline2 styleAsHeading={4}>Access Instructions</Headline2>
+            <RichText poorText text={accessInstructions} />
+          </div>
         </Card>
       )}
     </div>

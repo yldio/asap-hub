@@ -16,10 +16,10 @@ export interface ResearchOutput {
   addedDate?: string;
   publishDate?: string;
   tags?: string[];
+  accessInstructions?: string;
   adminNotes?: string;
   lastUpdatedPartial?: string;
   subtype?: ResearchOutputSubtype;
-  accessInstructions?: string;
   sharingStatus: ResearchOutputSharingStatus;
   asapFunded: DecisionOption;
   usedInAPublication: DecisionOption;

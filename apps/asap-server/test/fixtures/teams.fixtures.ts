@@ -43,6 +43,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                   title: "Team Salzer's intro slide deck",
                   type: 'Presentation',
                   tags: ['test', 'tag'],
+                  accessInstructions: 'some access instructions',
                 },
               },
             ],
@@ -272,6 +273,7 @@ export const listTeamResponse: ListTeamResponse = {
             },
           ],
           lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
+          accessInstructions: 'some access instructions',
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

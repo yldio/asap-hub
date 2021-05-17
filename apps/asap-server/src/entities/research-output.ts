@@ -17,6 +17,7 @@ export const parseResearchOutput = (
   tags: output.data.tags?.iv || [],
   lastUpdatedPartial:
     output.data.lastUpdatedPartial?.iv || output.lastModified || output.created,
+  accessInstructions: output.data.accessInstructions?.iv,
 });
 
 export const parseGraphQLResearchOutput = (
@@ -35,4 +36,5 @@ export const parseGraphQLResearchOutput = (
     output.flatData?.lastUpdatedPartial ||
     output.lastModified ||
     output.created,
+  accessInstructions: output.flatData?.accessInstructions || undefined,
 });

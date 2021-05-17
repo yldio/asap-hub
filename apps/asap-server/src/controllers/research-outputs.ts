@@ -55,6 +55,7 @@ flatData{
     }
   }
   lastUpdatedPartial
+  accessInstructions
 }
 ${
   withTeams

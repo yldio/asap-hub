@@ -36,4 +36,5 @@ export const parseGraphQLResearchOutput = (
     output.flatData?.lastUpdatedPartial ||
     output.lastModified ||
     output.created,
+  accessInstructions: output.flatData?.accessInstructions || undefined,
 });

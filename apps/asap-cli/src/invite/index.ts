@@ -59,7 +59,7 @@ export const inviteUsers = async (
   const userTeamIds = usersToInvite
     .flatMap((user) => user.data.teams.iv)
     .flatMap((team) => team?.id)
-    .filter((team) => typeof team !== 'undefined');
+    .filter(Boolean) as string[];
 
   let teamMap: { [key: string]: string } | undefined;
   if (userTeamIds.length > 0) {
@@ -69,10 +69,23 @@ export const inviteUsers = async (
       filter: {
         path: 'id',
         op: 'in',
-        value: userTeamIds.join(','),
+        value: userTeamIds,
       },
     };
-    const { items: teams } = await teamClient.fetch(teamQuery);
+    const [teamsError, res] = await Intercept(teamClient.fetch(teamQuery));
+
+    const fetchTeamError = teamsError as HTTPError;
+    if (fetchTeamError) {
+      console.log({
+        op: 'Fetch teams',
+        message: fetchTeamError.message,
+        statusCode: fetchTeamError.response?.statusCode,
+        body: fetchTeamError.response?.body,
+      });
+      throw fetchTeamError;
+    }
+
+    const { items: teams } = res;
     teamMap = teams.reduce(
       (prev, next) => ({
         ...prev,

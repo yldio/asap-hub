@@ -20,7 +20,7 @@ const parse =
           await transformer(parser(chunk));
           return callback(null);
         }),
-        (err: Error) => {
+        (err?: Error) => {
           if (err) {
             return reject(err);
           }

@@ -12,8 +12,9 @@ import Frame from '../../structure/Frame';
 
 interface EditingProps {
   user: UserResponse;
+  backHref: string;
 }
-const Editing: React.FC<EditingProps> = ({ user }) => {
+const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
   const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).about({});
 
@@ -23,7 +24,7 @@ const Editing: React.FC<EditingProps> = ({ user }) => {
     <>
       <Route exact path={path + route.editPersonalInfo.template}>
         <Frame title="Edit Personal Information">
-          <PersonalInfoModal {...user} backHref={route.$} onSave={patchUser} />
+          <PersonalInfoModal {...user} backHref={backHref} onSave={patchUser} />
         </Frame>
       </Route>
       <Route exact path={path + route.editContactInfo.template}>
@@ -31,7 +32,7 @@ const Editing: React.FC<EditingProps> = ({ user }) => {
           <ContactInfoModal
             email={user.contactEmail}
             fallbackEmail={user.email}
-            backHref={route.$}
+            backHref={backHref}
             onSave={(newContactEmail) =>
               patchUser({
                 contactEmail: newContactEmail,

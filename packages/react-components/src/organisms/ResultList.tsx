@@ -9,12 +9,12 @@ import {
   mobileScreen,
   tabletScreen,
 } from '../pixels';
+import { lead } from '../colors';
 
 const headerStyles = css({
-  display: 'flex',
-  justifyContent: 'space-between',
+  display: 'grid',
+  gridAutoFlow: 'column',
   alignItems: 'center',
-  flexWrap: 'wrap',
 });
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -53,23 +53,42 @@ const ResultList: React.FC<ResultListProps> = ({
 }) => (
   <article>
     <header css={headerStyles}>
-      <Paragraph primary>
-        <strong>
-          {numberOfItems} result{numberOfItems === 1 || 's'} found
-        </strong>
-      </Paragraph>
+      {numberOfItems > 0 && (
+        <Paragraph primary>
+          <strong>
+            {numberOfItems} result{numberOfItems === 1 || 's'} found
+          </strong>
+        </Paragraph>
+      )}
       {cardViewHref && listViewHref && (
-        <ListControls
-          isListView={isListView}
-          cardViewHref={cardViewHref}
-          listViewHref={listViewHref}
-        />
+        <div css={{ justifySelf: 'end' }}>
+          <ListControls
+            isListView={isListView}
+            cardViewHref={cardViewHref}
+            listViewHref={listViewHref}
+          />
+        </div>
       )}
     </header>
-    {numberOfItems > 0 && <main css={mainStyles}>{children}</main>}
-    <section css={pageControlsStyles}>
-      <PageControls {...pageControlsProps} />
-    </section>
+    {numberOfItems > 0 ? (
+      <>
+        <main css={mainStyles}>{children}</main>
+        <section css={pageControlsStyles}>
+          <PageControls {...pageControlsProps} />
+        </section>
+      </>
+    ) : (
+      <main css={{ textAlign: 'center' }}>
+        <Paragraph primary>
+          <strong>No matches found!</strong>
+          <br />
+          <span css={{ color: lead.rgb }}>
+            We're sorry, we couldn't find results to match your search. Please
+            check your spelling or try using fewer words.
+          </span>
+        </Paragraph>
+      </main>
+    )}
   </article>
 );
 

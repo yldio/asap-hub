@@ -18,7 +18,7 @@
     "@types/yargs": "^15.0.13",
     "apr-intercept": "^3.0.4",
     "async-sema": "^3.1.0",
-    "aws-sdk": "^2.906.0",
+    "aws-sdk": "^2.907.0",
     "csv-parse": "^4.15.4",
     "got": "^11.8.2",
     "jwt-encode": "^1.0.1",

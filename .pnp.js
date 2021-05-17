@@ -2415,7 +2415,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "aws-sdk",
-        "npm:2.906.0"
+        "npm:2.907.0"
       ],
       [
         "aws-sign2",
@@ -7567,7 +7567,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "sax",
-        "npm:1.2.4"
+        "npm:1.2.1"
       ],
       [
         "saxes",
@@ -9086,7 +9086,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@yarnpkg/pnpify", "virtual:17df4a6b7bc90a892848ea4c573b3f4fb009d45ed9e2e79220aa6879fd736424e8c4a39cef6752e4925485f2fc611317f0f97be3d91b72001eff479d14125faa#npm:2.4.0"],
             ["apr-intercept", "npm:3.0.4"],
             ["async-sema", "npm:3.1.0"],
-            ["aws-sdk", "npm:2.906.0"],
+            ["aws-sdk", "npm:2.907.0"],
             ["csv-parse", "npm:4.15.4"],
             ["got", "npm:11.8.2"],
             ["jwt-encode", "npm:1.0.1"],
@@ -9141,7 +9141,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/supertest", "npm:2.0.11"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
-            ["aws-sdk", "npm:2.906.0"],
+            ["aws-sdk", "npm:2.907.0"],
             ["aws-xray-sdk", "npm:3.3.2"],
             ["chance", "npm:1.1.7"],
             ["cors", "npm:2.8.5"],
@@ -9421,7 +9421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/babel__core", "npm:7.1.9"],
             ["@types/react", "npm:17.0.5"],
             ["@types/react-dom", "npm:17.0.5"],
-            ["aws-sdk", "npm:2.906.0"],
+            ["aws-sdk", "npm:2.907.0"],
             ["babel-loader", "virtual:a3fafb0d2cd3c2ae8e738eb2d8089699bce34091fd9cdccce8c5479f239af72dc3a67cb84e3f8d0afaa0bb8b9135555668b8590a0807d6c86a5f392e05cb64cd#npm:8.2.2"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["core-js", "npm:3.12.1"],
@@ -25794,6 +25794,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/unplugged/aws-sdk-npm-2.906.0-d1e026697f/node_modules/aws-sdk/",
           "packageDependencies": [
             ["aws-sdk", "npm:2.906.0"],
+            ["buffer", "npm:4.9.2"],
+            ["events", "npm:1.1.1"],
+            ["ieee754", "npm:1.1.13"],
+            ["jmespath", "npm:0.15.0"],
+            ["querystring", "npm:0.2.0"],
+            ["sax", "npm:1.2.1"],
+            ["url", "npm:0.10.3"],
+            ["uuid", "npm:3.3.2"],
+            ["xml2js", "npm:0.4.19"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:2.907.0", {
+          "packageLocation": "./.yarn/unplugged/aws-sdk-npm-2.907.0-ca8f293c50/node_modules/aws-sdk/",
+          "packageDependencies": [
+            ["aws-sdk", "npm:2.907.0"],
             ["buffer", "npm:4.9.2"],
             ["events", "npm:1.1.1"],
             ["ieee754", "npm:1.1.13"],

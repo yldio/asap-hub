@@ -38,7 +38,7 @@ export const http =
     event: APIGatewayProxyEventV2,
     context?: Context,
   ): Promise<APIGatewayProxyResultV2> => {
-    if (logger) {
+    if (logger && 'withRequest' in logger) {
       logger.withRequest(event, context || { awsRequestId: 'none' });
     }
     if (!context) {

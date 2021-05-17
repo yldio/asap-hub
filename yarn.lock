@@ -50,7 +50,7 @@ __metadata:
     "@yarnpkg/pnpify": ^2.4.0
     apr-intercept: ^3.0.4
     async-sema: ^3.1.0
-    aws-sdk: ^2.906.0
+    aws-sdk: ^2.907.0
     csv-parse: ^4.15.4
     got: ^11.8.2
     jwt-encode: ^1.0.1
@@ -105,7 +105,7 @@ __metadata:
     "@types/supertest": ^2.0.11
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
-    aws-sdk: ^2.906.0
+    aws-sdk: ^2.907.0
     aws-xray-sdk: ^3.3.2
     chance: ^1.1.7
     cors: ^2.8.5
@@ -363,7 +363,7 @@ __metadata:
     "@types/babel__core": ^7
     "@types/react": ^17.0.5
     "@types/react-dom": ^17.0.5
-    aws-sdk: ^2.906.0
+    aws-sdk: ^2.907.0
     babel-loader: ^8.2.2
     babel-preset-react-app: ^9.1.2
     core-js: ^3.12.1
@@ -10601,7 +10601,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-sdk@npm:^2.869.0, aws-sdk@npm:^2.906.0":
+"aws-sdk@npm:^2.869.0":
   version: 2.906.0
   resolution: "aws-sdk@npm:2.906.0"
   dependencies:
@@ -10615,6 +10615,23 @@ __metadata:
     uuid: 3.3.2
     xml2js: 0.4.19
   checksum: 0f79de14ffa6095e7ae8e24a9a91e454eca289d473abc4e346642f9a0d3b75066adbed0d85464bd2b39dffd88c91326775c9587e6566c55761ac73794b1dd239
+  languageName: node
+  linkType: hard
+
+"aws-sdk@npm:^2.907.0":
+  version: 2.907.0
+  resolution: "aws-sdk@npm:2.907.0"
+  dependencies:
+    buffer: 4.9.2
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.15.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    uuid: 3.3.2
+    xml2js: 0.4.19
+  checksum: 9373d523e3ed4019b9c1e11252b775cefae9498a9a645f02fc85bc6da458f17d2fb3dde58cbb03e3430f152c12994421ab8e6a04ca950f2e6fd21cd324b80e15
   languageName: node
   linkType: hard
 

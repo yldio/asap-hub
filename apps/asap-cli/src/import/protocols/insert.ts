@@ -11,6 +11,7 @@ import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
 import { DateTime } from 'luxon';
 import { HTTPError } from 'got';
 import { Protocol } from './parse';
+import log from '../../logger';
 
 const users = new Squidex<RestUser>('users', { unpublished: true });
 const teams = new Squidex<RestTeam>('teams', { unpublished: true });
@@ -36,7 +37,7 @@ const fetchTeamByName = async (
         },
       })
       .catch(() => {
-        console.error(`❌ couldn't find a team with the name "${name}".`);
+        log(`❌ couldn't find a team with the name "${name}".`);
         return null;
       });
   }
@@ -105,7 +106,7 @@ export default async (data: Protocol): Promise<void> => {
 
   const err1 = e1 as HTTPError;
   if (err1) {
-    console.error({
+    log({
       op: `❌ fetch team '${data.team}'`,
       message: err1.message,
       body: err1.response?.body,
@@ -114,7 +115,7 @@ export default async (data: Protocol): Promise<void> => {
 
   const err2 = e2 as HTTPError;
   if (err2) {
-    console.error({
+    log({
       op: `❌ fetch protocol '${data.link}'`,
       message: err2.message,
       body: err2.response?.body,
@@ -128,7 +129,7 @@ export default async (data: Protocol): Promise<void> => {
     const [e3, res] = await Intercept(protocols.create(protocol, false));
     const err3 = e3 as HTTPError;
     if (err3) {
-      console.error({
+      log({
         op: `❌ create '${data.link}'`,
         message: err3.message,
         body: err3.response?.body,
@@ -141,7 +142,7 @@ export default async (data: Protocol): Promise<void> => {
     const [e4] = await Intercept(addProtocolToTeam(teamId, protocolId));
     const err4 = e4 as HTTPError;
     if (err4) {
-      console.error({
+      log({
         op: `link '${protocolId}' and '${teamId}'`,
         message: err4.message,
         body: err4.response?.body,

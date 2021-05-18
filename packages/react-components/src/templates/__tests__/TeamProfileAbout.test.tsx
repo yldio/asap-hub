@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import TeamProfileAbout from '../TeamProfileAbout';
 
+const props: ComponentProps<typeof TeamProfileAbout> = {
+  projectTitle: '',
+  skills: [],
+  members: [],
+  teamListElementId: '',
+};
 it('renders the overview', () => {
   const { getByText } = render(
-    <TeamProfileAbout projectTitle="Title" skills={[]} members={[]} />,
+    <TeamProfileAbout {...props} projectTitle="Title" />,
   );
 
   expect(getByText(/overview/i)).toBeVisible();
@@ -15,7 +21,7 @@ it('renders the overview', () => {
 it('renders the contact banner', () => {
   const { getByRole } = render(
     <TeamProfileAbout
-      projectTitle="Title"
+      {...props}
       pointOfContact={{
         id: 'uuid',
         displayName: 'John Doe',
@@ -24,8 +30,6 @@ it('renders the contact banner', () => {
         email: 'test@test.com',
         role: 'Project Manager',
       }}
-      skills={[]}
-      members={[]}
     />,
   );
 
@@ -37,8 +41,7 @@ it('renders the contact banner', () => {
 it('renders the team list', () => {
   const { getByText } = render(
     <TeamProfileAbout
-      projectTitle="Title"
-      skills={[]}
+      {...props}
       members={[
         {
           id: 'uuid',
@@ -61,11 +64,7 @@ it('renders the team list', () => {
 
 it('renders the skill list', () => {
   const { getByText } = render(
-    <TeamProfileAbout
-      projectTitle="Title"
-      skills={['example skill']}
-      members={[]}
-    />,
+    <TeamProfileAbout {...props} skills={['example skill']} />,
   );
   expect(getByText(/example skill/i)).toBeVisible();
   expect(getByText(/expertise and resources/i)).toBeVisible();

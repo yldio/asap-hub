@@ -21,7 +21,9 @@ const mockedGetTeamGroups = getTeamGroups as jest.MockedFunction<
 
 const teamId = '42';
 
-const renderTeamAbout = async (aboutProps: ComponentProps<typeof About>) => {
+const renderTeamAbout = async (
+  aboutProps: Omit<ComponentProps<typeof About>, 'teamListElementId'>,
+) => {
   const result = render(
     <RecoilRoot
       initializeState={({ set }) =>
@@ -44,7 +46,7 @@ const renderTeamAbout = async (aboutProps: ComponentProps<typeof About>) => {
                   network({}).teams({}).team({ teamId }).about.template
                 }
               >
-                <About {...aboutProps} />
+                <About teamListElementId="uuid" {...aboutProps} />
               </Route>
             </MemoryRouter>
           </WhenReady>

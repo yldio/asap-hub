@@ -81,6 +81,7 @@ const listItemStyles = css({
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
+  readonly teamListElementId: string;
 };
 const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   id,
@@ -89,6 +90,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   members,
   pointOfContact,
   tools,
+  teamListElementId,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   return (
@@ -117,7 +119,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
               ))}
             <li css={extraUsersStyles}>
               {members.length > MAX_MEMBER_AVATARS && (
-                <Anchor href={`${route.about({}).$}#TEAM_MEMBERS_SECTION`}>
+                <Anchor href={`${route.about({}).$}#${teamListElementId}`}>
                   <Avatar
                     placeholder={`+${members.length - MAX_MEMBER_AVATARS}`}
                   />

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { subYears, formatISO } from 'date-fns';
 import { createTeamResponseMembers } from '@asap-hub/fixtures';
 
 import TeamProfileHeader from '../TeamProfileHeader';
 
-const boilerplateProps = {
+const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   id: '42',
   displayName: 'John, D',
   projectTitle: 'Unknown',
@@ -13,9 +13,7 @@ const boilerplateProps = {
   skills: [],
   outputs: [],
   lastModifiedDate: formatISO(new Date()),
-  aboutHref: './about',
-  outputsHref: './outputs',
-  workspaceHref: './workspace',
+  teamListElementId: '',
 };
 
 it('renders the name as the top-level heading', () => {

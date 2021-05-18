@@ -22,6 +22,7 @@ const props = (): Omit<ComponentProps<typeof TeamProfilePage>, 'children'> => ({
   lastModifiedDate: formatISO(subDays(new Date(), 2)),
   skills: [],
   outputs: [],
+  teamListElementId: 'uuid',
   pointOfContact: {
     id: '2',
     displayName: 'Peter Venkman',

@@ -260,6 +260,41 @@ describe('a header edit button', () => {
     );
   });
 
+  it('can open and close   personal info remaining on the tab', async () => {
+    const userProfile: UserResponse = {
+      ...createUserResponse(),
+      biography: 'My Bio',
+    };
+
+    const {
+      getByText,
+      getByTitle,
+      queryByText,
+      findByLabelText,
+      findByText,
+    } = await renderUserProfile(userProfile);
+
+    // Open and close on research tab
+    expect(getByText(/role on asap network/i)).toBeVisible();
+    expect(queryByText(/your details/i)).toBeNull();
+    userEvent.click(await findByLabelText(/edit.+personal/i));
+    expect(getByText(/role on asap network/i)).toBeVisible();
+    expect(getByText(/your details/i)).toBeVisible();
+    userEvent.click(getByTitle(/Close/i));
+    expect(getByText(/role on asap network/i)).toBeVisible();
+    expect(queryByText(/your details/i)).toBeNull();
+
+    // Open and close on background tab
+    userEvent.click(await findByText(/background/i, { selector: 'nav *' }));
+    expect(await findByText('My Bio')).toBeVisible();
+    userEvent.click(await findByLabelText(/edit.+personal/i));
+    expect(getByText(/my bio/i)).toBeVisible();
+    expect(getByText(/your details/i)).toBeVisible();
+    userEvent.click(getByTitle(/Close/i));
+    expect(getByText(/my bio/i)).toBeVisible();
+    expect(queryByText(/your details/i)).toBeNull();
+  });
+
   it('can change contact info', async () => {
     const userProfile: UserResponse = {
       ...createUserResponse(),

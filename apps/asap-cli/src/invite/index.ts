@@ -17,12 +17,9 @@ interface HTTPError extends Error {
 
 interface inviteUsersFn {
   /* eslint-disable no-unused-vars */
-  (
-    role?: string,
-    reinvite?: boolean,
-    take?: number,
-    skip?: number,
-  ): Promise<void>;
+  (role?: string, reinvite?: boolean, take?: number, skip?: number): Promise<
+    void
+  >;
   /* eslint-enable no-unused-vars */
 }
 

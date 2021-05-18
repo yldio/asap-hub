@@ -94,9 +94,7 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
         };
       }
 
-      throw Boom.badImplementation('squidex', {
-        data: err,
-      });
+      throw Boom.badImplementation('squidex', err);
     }
   }
 
@@ -116,9 +114,7 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
         throw Boom.notFound();
       }
 
-      throw Boom.badImplementation('squidex', {
-        data: err.response?.body || err,
-      });
+      throw Boom.badImplementation('squidex', err);
     }
   }
 
@@ -162,9 +158,7 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
         throw Boom.badRequest(err, err.response?.body);
       }
 
-      throw Boom.badImplementation('squidex', {
-        data: err.response?.body || err,
-      });
+      throw Boom.badImplementation('squidex', err);
     }
   }
 
@@ -195,9 +189,7 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
         throw Boom.badRequest(err, err.response?.body);
       }
 
-      throw Boom.badImplementation('squidex', {
-        data: err.response?.body || err,
-      });
+      throw Boom.badImplementation('squidex', err);
     }
   }
 
@@ -218,17 +210,13 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
       }
 
       if (err.response?.statusCode === 400) {
-        throw Boom.badImplementation('Bad Request', {
-          data: err.response?.body,
-        });
+        throw Boom.badImplementation('Bad Request', err);
       }
       if (err.response?.statusCode === 404) {
         throw Boom.notFound();
       }
 
-      throw Boom.badImplementation('squidex', {
-        data: err.response?.body || err,
-      });
+      throw Boom.badImplementation('squidex', err);
     }
   }
 
@@ -249,17 +237,13 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
       }
 
       if (err.response?.statusCode === 400) {
-        throw Boom.badImplementation('Bad Request', {
-          data: err.response?.body,
-        });
+        throw Boom.badImplementation('Bad Request', err);
       }
       if (err.response?.statusCode === 404) {
         throw Boom.notFound();
       }
 
-      throw Boom.badImplementation('squidex', {
-        data: err.response?.body || err,
-      });
+      throw Boom.badImplementation('squidex', err);
     }
   }
 
@@ -274,9 +258,7 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
         throw Boom.unauthorized();
       }
 
-      throw Boom.badImplementation('squidex', {
-        data: err.response?.body || err,
-      });
+      throw Boom.badImplementation('squidex', err);
     }
   }
 }

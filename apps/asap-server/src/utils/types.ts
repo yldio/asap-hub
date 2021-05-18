@@ -27,3 +27,7 @@ export type ScheduledHandlerAsync = (
   event: EventBridgeEvent<'Scheduled Event', ScheduledEvent>,
   context: Context,
 ) => Promise<void>;
+
+export type DeepWriteable<T> = {
+  -readonly [P in keyof T]: DeepWriteable<T[P]>;
+};

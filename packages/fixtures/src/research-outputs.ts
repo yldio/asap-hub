@@ -2,6 +2,7 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { listUserResponseItem } from './users';
 
 const researchOutputResponse: Omit<
   ListResearchOutputResponse['items'][0],
@@ -17,7 +18,7 @@ const researchOutputResponse: Omit<
   authors: [
     {
       id: 'e12729e0-bfdd-471f-a554-7b58eae83a8d',
-      displayName: 'Dr. John Doe',
+      ...listUserResponseItem,
     },
   ],
   team: {

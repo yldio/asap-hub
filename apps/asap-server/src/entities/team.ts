@@ -42,11 +42,12 @@ export const parseGraphQLTeam = (
 
   const outputs: ResearchOutputResponse[] = flatOutputs
     .map((o) => {
-      const output = parseGraphQLResearchOutput(o as GraphqlResearchOutput);
+      const output = parseGraphQLResearchOutput(o as GraphqlResearchOutput, {
+        includeAuthors: true,
+      }) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
 
       return {
         ...output,
-        authors: [], // TODO fetch
         team: { id: team.id, displayName },
         teams: (o as GraphqlResearchOutput).referencingTeamsContents?.map(
           (t) => ({

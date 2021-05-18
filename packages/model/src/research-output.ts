@@ -62,7 +62,7 @@ export type ResearchOutputResponse = {
   readonly lastUpdatedPartial: string;
   readonly accessInstructions?: string;
 
-  readonly authors: ReadonlyArray<Pick<UserResponse, 'id' | 'displayName'>>;
+  readonly authors: ReadonlyArray<UserResponse>;
   /**
    * @deprecated in favour of teams
    */

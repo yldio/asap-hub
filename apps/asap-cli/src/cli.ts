@@ -7,7 +7,7 @@
 
 import yargs from 'yargs/yargs';
 import * as importers from './import';
-import { inviteUsers } from './invite';
+import inviteUsersFactory from './invite';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(process.argv.slice(2))
@@ -47,6 +47,7 @@ yargs(process.argv.slice(2))
         }),
 
     handler: async ({ role, reinvite }) => {
+      const inviteUsers = inviteUsersFactory();
       inviteUsers(role as string | undefined, Boolean(reinvite));
     },
   })

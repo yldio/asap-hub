@@ -2,7 +2,7 @@ import { SES } from 'aws-sdk';
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
 import { identity } from './helpers/squidex';
-import inviteUsers from '../src/invite';
+import inviteUsersFactory from '../src/invite';
 import { origin, grantsFromEmail } from '../src/config';
 import {
   fetchUsersResponse,
@@ -22,7 +22,8 @@ jest.mock('uuid', () => ({
   v4: jest.fn(() => 'uuid'),
 }));
 
-const consoleLog = jest.spyOn(console, 'log').mockImplementation(() => {});
+const consoleLog = jest.fn().mockImplementation(() => {});
+const inviteUsers = inviteUsersFactory(consoleLog);
 
 describe('Invite user', () => {
   beforeAll(() => {
@@ -167,7 +168,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          filter: { path: 'id', op: 'in', value: 'team-id-1,team-id-2' },
+          filter: { path: 'id', op: 'in', value: ['team-id-1', 'team-id-2'] },
         }),
       })
       .reply(200, listTeamResponse)
@@ -233,7 +234,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          filter: { path: 'id', op: 'in', value: 'team-id-3,team-id-4' },
+          filter: { path: 'id', op: 'in', value: ['team-id-3', 'team-id-4'] },
         }),
       })
       .reply(200, listTeamResponse)
@@ -247,7 +248,7 @@ describe('Invite user', () => {
     await inviteUsers();
 
     expect(consoleLog).toBeCalledWith(
-      `Invited user ${user.data.email.iv} (${listTeamResponse.items[0].data.displayName.iv}, ${listTeamResponse.items[1].data.displayName.iv})`,
+      `Invited user ${user.data.email.iv} (${listTeamResponse.items[0].data.displayName.iv} | ${listTeamResponse.items[1].data.displayName.iv})`,
     );
   });
 

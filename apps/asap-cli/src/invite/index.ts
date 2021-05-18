@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Intercept from 'apr-intercept';
 import { Squidex, RestUser, Query, RestTeam } from '@asap-hub/squidex';
 import { RateLimit } from 'async-sema';
@@ -17,12 +16,14 @@ interface HTTPError extends Error {
 }
 
 interface inviteUsersFn {
+  /* eslint-disable no-unused-vars */
   (
     role?: string,
     reinvite?: boolean,
     take?: number,
     skip?: number,
   ): Promise<void>;
+  /* eslint-enable no-unused-vars */
 }
 
 const inviteUsersFactory = (

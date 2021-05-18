@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-param-reassign */
+/* eslint-disable no-param-reassign */
 
 import Intercept from 'apr-intercept';
 import {

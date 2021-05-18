@@ -123,7 +123,7 @@ const inviteUsersFactory = (
 
         if (!code) {
           code = uuidV4();
-          log(`create invite code for ${user.data.email.iv}`);
+          log(`Created invite code for ${user.data.email.iv}`);
           const [err1] = await Intercept(
             userClient.patch(user.id, {
               email: user.data.email,
@@ -164,13 +164,10 @@ const inviteUsersFactory = (
               ?.flatMap((team) => team.id)
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               .map((id) => teamMap![id])
-              .join(', ');
+              .join(' | ');
           }
-          log(
-            `Invited user ${user.data.email.iv} ${
-              userTeams && `(${userTeams})`
-            }`,
-          );
+          const teamReport = userTeams ? `(${userTeams})` : '';
+          log(`Invited user ${user.data.email.iv} ${teamReport}`);
           return;
         }
 

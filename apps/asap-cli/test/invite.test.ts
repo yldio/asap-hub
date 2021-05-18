@@ -248,7 +248,7 @@ describe('Invite user', () => {
     await inviteUsers();
 
     expect(consoleLog).toBeCalledWith(
-      `Invited user ${user.data.email.iv} (${listTeamResponse.items[0].data.displayName.iv}, ${listTeamResponse.items[1].data.displayName.iv})`,
+      `Invited user ${user.data.email.iv} (${listTeamResponse.items[0].data.displayName.iv} | ${listTeamResponse.items[1].data.displayName.iv})`,
     );
   });
 

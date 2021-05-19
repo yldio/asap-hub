@@ -22225,13 +22225,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/history", [
-        ["npm:4.7.6", {
-          "packageLocation": "./.yarn/cache/@types-history-npm-4.7.6-cab19a876f-8782d92953.zip/node_modules/@types/history/",
-          "packageDependencies": [
-            ["@types/history", "npm:4.7.6"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:4.7.8", {
           "packageLocation": "./.yarn/cache/@types-history-npm-4.7.8-53b2aef3de-54020371a4.zip/node_modules/@types/history/",
           "packageDependencies": [
@@ -22848,7 +22841,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-react-router-npm-5.1.7-f0979c7a97-b8cae75e5f.zip/node_modules/@types/react-router/",
           "packageDependencies": [
             ["@types/react-router", "npm:5.1.7"],
-            ["@types/history", "npm:4.7.6"],
+            ["@types/history", "npm:4.7.8"],
             ["@types/react", "npm:16.9.34"]
           ],
           "linkType": "HARD",
@@ -22859,7 +22852,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-react-router-dom-npm-5.1.5-b0a728cc6d-d25c11cb71.zip/node_modules/@types/react-router-dom/",
           "packageDependencies": [
             ["@types/react-router-dom", "npm:5.1.5"],
-            ["@types/history", "npm:4.7.6"],
+            ["@types/history", "npm:4.7.8"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-router", "npm:5.1.7"]
           ],
@@ -22869,7 +22862,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-react-router-dom-npm-5.1.7-94984451d7-c5afe043f9.zip/node_modules/@types/react-router-dom/",
           "packageDependencies": [
             ["@types/react-router-dom", "npm:5.1.7"],
-            ["@types/history", "npm:4.7.6"],
+            ["@types/history", "npm:4.7.8"],
             ["@types/react", "npm:16.9.34"],
             ["@types/react-router", "npm:5.1.7"]
           ],

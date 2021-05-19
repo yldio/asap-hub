@@ -115,10 +115,11 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 
 // ensure any thrown exception is handled and returned correctly
 // complaining about `request` here is a lint rule bug
-// eslint-disable-next-line no-unused-vars
 export const http =
-  (fn: (request: Request) => Promise<Response>) =>
-  async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+  // eslint-disable-next-line no-unused-vars
+  (fn: (request: Request) => Promise<Response>) => async (
+    event: APIGatewayProxyEventV2,
+  ): Promise<APIGatewayProxyResultV2> => {
     // we assume the body is json
     let body;
     try {

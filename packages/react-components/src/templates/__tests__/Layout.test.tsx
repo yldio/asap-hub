@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 
@@ -70,10 +70,14 @@ it('closes the drawer on navigation', async () => {
     </MemoryRouter>,
   );
   userEvent.click(getByLabelText(/toggle menu/i));
-  expect(getByLabelText(/close/i)).toBeVisible();
+  await waitFor(() => {
+    expect(getByLabelText(/close/i)).toBeVisible();
+  });
 
   userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
-  expect(getByLabelText(/close/i)).not.toBeVisible();
+  await waitFor(() => {
+    expect(getByLabelText(/close/i)).not.toBeVisible();
+  });
 });
 
 it('scrolls to top between page navigations', async () => {

@@ -13841,14 +13841,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decimal.js@npm:^10.2.0":
-  version: 10.2.0
-  resolution: "decimal.js@npm:10.2.0"
-  checksum: f60df1cce54e4b717cf9b865cbacf667ee67747563a4e84a2ebe8fd65fd57814a3ba6eba0870345fe37aea574ecbb84b3642a6e4e7a9089d3c7fbff8247e3c7f
-  languageName: node
-  linkType: hard
-
-"decimal.js@npm:^10.2.1":
+"decimal.js@npm:^10.2.0, decimal.js@npm:^10.2.1":
   version: 10.2.1
   resolution: "decimal.js@npm:10.2.1"
   checksum: ba28b27bb8aca6bbb73fbdb51d759961d9ff82218c4aa737b4f4826dee4244618a61c410201bb152950c4915e3d82a86211d1c2a4e23f805ee577574ba115e59
@@ -15271,8 +15264,8 @@ __metadata:
   linkType: hard
 
 "escodegen@npm:^1.14.1":
-  version: 1.14.1
-  resolution: "escodegen@npm:1.14.1"
+  version: 1.14.3
+  resolution: "escodegen@npm:1.14.3"
   dependencies:
     esprima: ^4.0.1
     estraverse: ^4.2.0
@@ -15283,9 +15276,9 @@ __metadata:
     source-map:
       optional: true
   bin:
-    escodegen: ./bin/escodegen.js
-    esgenerate: ./bin/esgenerate.js
-  checksum: 97e0500474c885163aaeb3fa32e86c688a73feb641e23c3498e912ea638ba0770e6103dd7dc51ea2cc03fbb906bfafaa219d202a8a43f23037aa86e0c1dbfc2a
+    escodegen: bin/escodegen.js
+    esgenerate: bin/esgenerate.js
+  checksum: 548c5a83a81a51122f1006309a392e1412bb00657f15aca60f01f9d4553851bdaf0519d898fd3ee2bb46f116e03ee48757f4d9a28a7b58bc8c096fd4b33f6cbc
   languageName: node
   linkType: hard
 
@@ -32382,7 +32375,7 @@ typescript@~4.2.4:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.2.1, ws@npm:^7.2.3, ws@npm:^7.3.0, ws@npm:^7.3.1":
+"ws@npm:^7.2.1, ws@npm:^7.3.0, ws@npm:^7.3.1":
   version: 7.3.1
   resolution: "ws@npm:7.3.1"
   peerDependencies:
@@ -32397,7 +32390,7 @@ typescript@~4.2.4:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.4.4":
+"ws@npm:^7.2.3, ws@npm:^7.4.4":
   version: 7.4.5
   resolution: "ws@npm:7.4.5"
   peerDependencies:

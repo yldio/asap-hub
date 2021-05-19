@@ -4,9 +4,9 @@ import { appFactory } from '../../src/app';
 import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { researchOutputControllerMock } from '../mocks/research-outputs-controller.mock';
 import {
-  ListResearchOutputResponse,
-  ResearchOutputResponse,
-} from '@asap-hub/model';
+  getListResearchOutputResponse,
+  getResearchOutputResponse,
+} from '../fixtures/research-output.fixtures';
 
 describe('/research-outputs/ route', () => {
   const app = appFactory({
@@ -36,23 +36,8 @@ describe('/research-outputs/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      const listResearchOutputResponse: ListResearchOutputResponse = {
-        total: 1,
-        items: [
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            link: 'test',
-            tags: ['test', 'tag'],
-            teams: [],
-            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-            accessInstructions: 'some access instructions',
-          },
-        ],
-      };
+      const listResearchOutputResponse = getListResearchOutputResponse();
+
       researchOutputControllerMock.fetch.mockResolvedValueOnce(
         listResearchOutputResponse,
       );
@@ -105,25 +90,7 @@ describe('/research-outputs/ route', () => {
     });
 
     test('Should return the result correctly', async () => {
-      const researchOutputResponse: ResearchOutputResponse = {
-        created: '2020-09-23T16:34:26.842Z',
-        id: 'uuid',
-        description: 'Text',
-        title: 'Title',
-        type: 'Proposal',
-        tags: ['test', 'tags'],
-        team: {
-          id: 'uuid-team',
-          displayName: 'team',
-        },
-        teams: [
-          {
-            id: 'uuid-team',
-            displayName: 'team',
-          },
-        ],
-        lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-      };
+      const researchOutputResponse = getResearchOutputResponse();
 
       researchOutputControllerMock.fetchById.mockResolvedValueOnce(
         researchOutputResponse,

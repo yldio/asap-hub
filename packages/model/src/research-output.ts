@@ -1,5 +1,6 @@
 import { TeamResponse } from './team';
 import { ListResponse } from './common';
+import { UserResponse } from './user';
 
 export type ResearchOutputType =
   | 'Proposal'
@@ -46,42 +47,27 @@ export type ResearchOutputSubtype =
 
 export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
 
-export type ResearchOutputAuthor =
-  | { readonly displayName: string }
-  | { readonly id: string };
-
-export type ResearchOutputFormData = {
-  readonly link: string;
+export type ResearchOutputResponse = {
+  readonly id: string;
   readonly type: ResearchOutputType;
   readonly title: string;
   readonly description: string;
-  readonly publishDate?: Date;
-};
-
-export type ResearchOutputCreationRequest = Omit<
-  ResearchOutputFormData,
-  'publishDate'
-> & {
-  readonly publishDate?: string;
-};
-
-export type ResearchOutputResponse = Omit<
-  ResearchOutputCreationRequest,
-  'link'
-> & {
-  readonly id: string;
+  readonly tags: ReadonlyArray<string>;
   readonly link?: string;
+
   readonly created: string;
+  readonly publishDate?: string;
+  readonly addedDate?: string;
+  readonly lastModifiedDate?: string;
+  readonly lastUpdatedPartial: string;
+  readonly accessInstructions?: string;
+
+  readonly authors: ReadonlyArray<UserResponse>;
   /**
    * @deprecated in favour of teams
    */
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
-  readonly accessInstructions?: string;
-  readonly tags: string[];
-  readonly addedDate?: string;
-  readonly lastModifiedDate?: string;
-  readonly lastUpdatedPartial: string;
 };
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {

@@ -22,6 +22,7 @@ import { sanitiseForSquidex } from '../utils/squidex';
 export const GraphQLQueryUser = `
 id
 created
+lastModified
 flatData {
   avatar {
     id

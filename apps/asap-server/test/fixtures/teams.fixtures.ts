@@ -5,6 +5,7 @@ import {
   ResponseFetchTeams,
   ResponseFetchTeam,
 } from '../../src/controllers/teams';
+import { fetchExpectation, graphQlResponseFetchUsers } from './users.fixtures';
 
 export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
   data: {
@@ -30,6 +31,10 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                   title: 'Proposal',
                   type: 'Proposal',
                   tags: ['test', 'tag'],
+                  authors: [
+                    graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+                      .items[0],
+                  ],
                 },
               },
               {
@@ -44,6 +49,10 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                   type: 'Presentation',
                   tags: ['test', 'tag'],
                   accessInstructions: 'some access instructions',
+                  authors: [
+                    graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+                      .items[1],
+                  ],
                 },
               },
             ],
@@ -262,6 +271,7 @@ export const listTeamResponse: ListTeamResponse = {
           description: '',
           tags: ['test', 'tag'],
           addedDate: '2021-05-24T17:33:30Z',
+          authors: [fetchExpectation.items[1]],
           team: {
             id: 'team-id-1',
             displayName: 'Schipa, A',
@@ -282,6 +292,7 @@ export const listTeamResponse: ListTeamResponse = {
           title: 'Proposal',
           description: '',
           tags: ['test', 'tag'],
+          authors: [fetchExpectation.items[0]],
           team: {
             id: 'team-id-1',
             displayName: 'Schipa, A',
@@ -391,6 +402,10 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
+              authors: [
+                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+                  .items[0],
+              ],
             },
           },
           {
@@ -403,6 +418,10 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
+              authors: [
+                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+                  .items[1],
+              ],
             },
             referencingTeamsContents: [
               {
@@ -516,6 +535,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       title: "Team Salzer's intro slide deck",
       description: '',
       tags: [],
+      authors: [fetchExpectation.items[1]],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -539,6 +559,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       title: 'Proposal',
       description: '',
       tags: ['test', 'tag'],
+      authors: [fetchExpectation.items[0]],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -613,6 +634,10 @@ export const getGraphQlTeamResponse = (
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
+              authors: [
+                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+                  .items[0],
+              ],
             },
             referencingTeamsContents: [
               {
@@ -635,6 +660,10 @@ export const getGraphQlTeamResponse = (
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
+              authors: [
+                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+                  .items[1],
+              ],
             },
             referencingTeamsContents: [
               {
@@ -720,6 +749,7 @@ export const updateExpectation: TeamResponse = {
       title: "Team Salzer's intro slide deck",
       description: '',
       tags: [],
+      authors: [fetchExpectation.items[1]],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',
@@ -743,6 +773,7 @@ export const updateExpectation: TeamResponse = {
       title: 'Proposal',
       description: '',
       tags: ['test', 'tag'],
+      authors: [fetchExpectation.items[0]],
       team: {
         id: 'team-id-1',
         displayName: 'Schipa, A',

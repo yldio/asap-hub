@@ -1,11 +1,16 @@
 import nock from 'nock';
-import { config, RestResearchOutput, RestTeam } from '@asap-hub/squidex';
+import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
-import ResearchOutputs from '../../src/controllers/research-outputs';
+import ResearchOutputs, {
+  buildGraphQLQueryFetchResearchOutputs,
+  buildGraphQLQueryResearchOutput,
+} from '../../src/controllers/research-outputs';
 import {
-  ListResearchOutputResponse,
-  ResearchOutputResponse,
-} from '@asap-hub/model';
+  getListResearchOutputResponse,
+  getResearchOutputResponse,
+  getSquidexResearchOutputGraphqlResponse,
+  getSquidexResearchOutputsGraphqlResponse,
+} from '../fixtures/research-output.fixtures';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputs = new ResearchOutputs();
@@ -25,14 +30,17 @@ describe('ResearchOutputs controller', () => {
   describe('Fetch method', () => {
     test('Should return an empty result when the client returns an empty array of data', async () => {
       nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/research-outputs`)
-        .query({
-          $top: 8,
-          $skip: 0,
-          $orderby: 'created desc',
-          $filter: '',
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchResearchOutputs(),
         })
-        .reply(200, { total: 0, items: [] });
+        .reply(200, {
+          data: {
+            queryResearchOutputsContentsWithTotal: {
+              total: 0,
+              items: [],
+            },
+          },
+        });
 
       const result = await researchOutputs.fetch({ take: 8, skip: 0 });
 
@@ -41,156 +49,30 @@ describe('ResearchOutputs controller', () => {
 
     test('Should return the list of research outputs', async () => {
       nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/research-outputs`)
-        .query({
-          $top: 8,
-          $skip: 0,
-          $orderby: 'created desc',
-          $filter: '',
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchResearchOutputs(),
         })
         .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                type: { iv: 'Proposal' },
-                title: { iv: 'Title' },
-                description: { iv: 'Text' },
-                link: { iv: 'test' },
-                tags: {
-                  iv: ['tag', 'test'],
-                },
-                lastUpdatedPartial: { iv: '2020-09-10T16:34:26.842Z' },
-                accessInstructions: {
-                  iv: 'some access instructions',
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestResearchOutput[] })
-        .get(`/api/content/${config.appName}/teams`)
-        .query(() => true)
-        .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid',
-              created: '2020-09-23T16:34:26.842Z',
-              lastModified: '2020-09-23T16:34:26.842Z',
-              data: {
-                displayName: { iv: 'Unknown' },
-                applicationNumber: { iv: 'APP' },
-              },
-            },
-          ],
-        } as { total: number; items: RestTeam[] });
+          data: getSquidexResearchOutputsGraphqlResponse(),
+        });
 
       const result = await researchOutputs.fetch({ take: 8, skip: 0 });
 
-      const expectedResult: ListResearchOutputResponse = {
-        total: 1,
-        items: [
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            link: 'test',
-            tags: ['tag', 'test'],
-            accessInstructions: 'some access instructions',
-            teams: [],
-            lastUpdatedPartial: '2020-09-10T16:34:26.842Z',
-          },
-        ],
-      };
-
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(getListResearchOutputResponse());
     });
 
     test('Should return the list of research outputs when using search and filter', async () => {
+      const expectedFilter =
+        "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation') " +
+        "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
+
       nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/research-outputs`)
-        .query({
-          $top: 8,
-          $skip: 0,
-          $orderby: 'created desc',
-          $filter: [
-            "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation')",
-            "(contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))",
-          ].join(' and '),
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchResearchOutputs(expectedFilter),
         })
         .reply(200, {
-          total: 3,
-          items: [
-            {
-              id: 'uuid-1',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                type: { iv: 'Proposal' },
-                title: { iv: 'Title' },
-                description: { iv: 'Text' },
-                tags: {
-                  iv: ['tag', 'test'],
-                },
-              },
-            },
-            {
-              id: 'uuid-2',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                type: { iv: 'Proposal' },
-                title: { iv: 'Title' },
-                description: { iv: 'Text' },
-              },
-            },
-            {
-              id: 'uuid-3',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                type: { iv: 'Proposal' },
-                title: { iv: 'Title' },
-                description: { iv: 'Text' },
-                tags: {
-                  iv: [],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestResearchOutput[] })
-        .get(`/api/content/${config.appName}/teams`)
-        .query(() => true)
-        .reply(200, {
-          total: 2,
-          items: [
-            {
-              id: 'uuid-team-1',
-              created: '2020-09-23T16:34:26.842Z',
-              lastModified: '2020-09-23T16:34:26.842Z',
-              data: {
-                displayName: { iv: 'Team 1' },
-                applicationNumber: { iv: 'APP' },
-                outputs: {
-                  iv: ['uuid-1', 'uuid-3'],
-                },
-              },
-            },
-            {
-              id: 'uuid-team-2',
-              created: '2020-09-23T16:34:26.842Z',
-              lastModified: '2020-09-23T16:34:26.842Z',
-              data: {
-                displayName: { iv: 'Team 2' },
-                applicationNumber: { iv: 'APP' },
-                outputs: {
-                  iv: ['uuid-1', 'uuid-2'],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestTeam[] });
+          data: getSquidexResearchOutputsGraphqlResponse(),
+        });
 
       const result = await researchOutputs.fetch({
         take: 8,
@@ -199,122 +81,20 @@ describe('ResearchOutputs controller', () => {
         filter: ['Proposal', 'Presentation'],
       });
 
-      const expectedResult: ListResearchOutputResponse = {
-        total: 3,
-        items: [
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid-1',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            tags: ['tag', 'test'],
-            team: {
-              id: 'uuid-team-1',
-              displayName: 'Team 1',
-            },
-            teams: [
-              {
-                id: 'uuid-team-1',
-                displayName: 'Team 1',
-              },
-              {
-                id: 'uuid-team-2',
-                displayName: 'Team 2',
-              },
-            ],
-            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-          },
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid-2',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            tags: [],
-            team: {
-              id: 'uuid-team-2',
-              displayName: 'Team 2',
-            },
-            teams: [
-              {
-                id: 'uuid-team-2',
-                displayName: 'Team 2',
-              },
-            ],
-            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-          },
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid-3',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            tags: [],
-            team: {
-              id: 'uuid-team-1',
-              displayName: 'Team 1',
-            },
-            teams: [
-              {
-                id: 'uuid-team-1',
-                displayName: 'Team 1',
-              },
-            ],
-            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-          },
-        ],
-      };
-
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(getListResearchOutputResponse());
     });
 
     test('Should return the list of research outputs when using search with multiple words', async () => {
+      const expectedFilter =
+        "(contains(data/title/iv, 'some') or contains(data/tags/iv, 'some') or contains(data/title/iv, 'words') or contains(data/tags/iv, 'words'))";
+
       nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/research-outputs`)
-        .query({
-          $top: 8,
-          $skip: 0,
-          $orderby: 'created desc',
-          $filter:
-            "(contains(data/title/iv, 'some') or contains(data/tags/iv, 'some') or contains(data/title/iv, 'words') or contains(data/tags/iv, 'words'))",
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchResearchOutputs(expectedFilter),
         })
         .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid-1',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                type: { iv: 'Proposal' },
-                title: { iv: 'Title' },
-                description: { iv: 'Text' },
-                tags: {
-                  iv: ['tag', 'test'],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestResearchOutput[] })
-        .get(`/api/content/${config.appName}/teams`)
-        .query(() => true)
-        .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid-team-1',
-              created: '2020-09-23T16:34:26.842Z',
-              lastModified: '2020-09-23T16:34:26.842Z',
-              data: {
-                displayName: { iv: 'Team 1' },
-                applicationNumber: { iv: 'APP' },
-                outputs: {
-                  iv: ['uuid-1', 'uuid-3'],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestTeam[] });
+          data: getSquidexResearchOutputsGraphqlResponse(),
+        });
 
       const result = await researchOutputs.fetch({
         take: 8,
@@ -322,80 +102,20 @@ describe('ResearchOutputs controller', () => {
         search: 'some words',
       });
 
-      const expectedResult: ListResearchOutputResponse = {
-        total: 1,
-        items: [
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid-1',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            tags: ['tag', 'test'],
-            team: {
-              id: 'uuid-team-1',
-              displayName: 'Team 1',
-            },
-            teams: [
-              {
-                id: 'uuid-team-1',
-                displayName: 'Team 1',
-              },
-            ],
-            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-          },
-        ],
-      };
-
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(getListResearchOutputResponse());
     });
 
     test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+      const expectedFilter =
+        "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27'))";
+
       nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/research-outputs`)
-        .query({
-          $top: 8,
-          $skip: 0,
-          $orderby: 'created desc',
-          $filter:
-            "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27'))",
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchResearchOutputs(expectedFilter),
         })
         .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid-1',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                type: { iv: 'Proposal' },
-                title: { iv: 'Title' },
-                description: { iv: 'Text' },
-                tags: {
-                  iv: ['tag', 'test'],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestResearchOutput[] })
-        .get(`/api/content/${config.appName}/teams`)
-        .query(() => true)
-        .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid-team-1',
-              created: '2020-09-23T16:34:26.842Z',
-              lastModified: '2020-09-23T16:34:26.842Z',
-              data: {
-                displayName: { iv: 'Team 1' },
-                applicationNumber: { iv: 'APP' },
-                outputs: {
-                  iv: ['uuid-1', 'uuid-3'],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestTeam[] });
+          data: getSquidexResearchOutputsGraphqlResponse(),
+        });
 
       const result = await researchOutputs.fetch({
         take: 8,
@@ -403,80 +123,20 @@ describe('ResearchOutputs controller', () => {
         search: "'",
       });
 
-      const expectedResult: ListResearchOutputResponse = {
-        total: 1,
-        items: [
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid-1',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            tags: ['tag', 'test'],
-            team: {
-              id: 'uuid-team-1',
-              displayName: 'Team 1',
-            },
-            teams: [
-              {
-                id: 'uuid-team-1',
-                displayName: 'Team 1',
-              },
-            ],
-            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-          },
-        ],
-      };
-
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(getListResearchOutputResponse());
     });
 
     test('Should sanitise double quotation mark by encoding to hex', async () => {
+      const expectedFilter =
+        "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22'))";
+
       nock(config.baseUrl)
-        .get(`/api/content/${config.appName}/research-outputs`)
-        .query({
-          $top: 8,
-          $skip: 0,
-          $orderby: 'created desc',
-          $filter:
-            "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22'))",
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchResearchOutputs(expectedFilter),
         })
         .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid-1',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                type: { iv: 'Proposal' },
-                title: { iv: 'Title' },
-                description: { iv: 'Text' },
-                tags: {
-                  iv: ['tag', 'test'],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestResearchOutput[] })
-        .get(`/api/content/${config.appName}/teams`)
-        .query(() => true)
-        .reply(200, {
-          total: 1,
-          items: [
-            {
-              id: 'uuid-team-1',
-              created: '2020-09-23T16:34:26.842Z',
-              lastModified: '2020-09-23T16:34:26.842Z',
-              data: {
-                displayName: { iv: 'Team 1' },
-                applicationNumber: { iv: 'APP' },
-                outputs: {
-                  iv: ['uuid-1', 'uuid-3'],
-                },
-              },
-            },
-          ],
-        } as { total: number; items: RestTeam[] });
+          data: getSquidexResearchOutputsGraphqlResponse(),
+        });
 
       const result = await researchOutputs.fetch({
         take: 8,
@@ -484,32 +144,7 @@ describe('ResearchOutputs controller', () => {
         search: '"',
       });
 
-      const expectedResult: ListResearchOutputResponse = {
-        total: 1,
-        items: [
-          {
-            created: '2020-09-23T16:34:26.842Z',
-            id: 'uuid-1',
-            description: 'Text',
-            title: 'Title',
-            type: 'Proposal',
-            tags: ['tag', 'test'],
-            team: {
-              id: 'uuid-team-1',
-              displayName: 'Team 1',
-            },
-            teams: [
-              {
-                id: 'uuid-team-1',
-                displayName: 'Team 1',
-              },
-            ],
-            lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-          },
-        ],
-      };
-
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(getListResearchOutputResponse());
     });
   });
 
@@ -518,10 +153,14 @@ describe('ResearchOutputs controller', () => {
 
     test('Should throw a Not Found error when the research output is not found', async () => {
       nock(config.baseUrl)
-        .get(
-          `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
-        )
-        .reply(404);
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, {
+          data: {
+            findResearchOutputsContent: null,
+          },
+        });
 
       await expect(researchOutputs.fetchById(researchOutputId)).rejects.toThrow(
         'Not Found',
@@ -530,197 +169,123 @@ describe('ResearchOutputs controller', () => {
 
     test('Should return the research output and the team', async () => {
       nock(config.baseUrl)
-        .get(
-          `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
-        )
-        .reply(200, {
-          id: 'uuid',
-          created: '2020-09-23T16:34:26.842Z',
-          data: {
-            type: { iv: 'Proposal' },
-            title: { iv: 'Title' },
-            description: { iv: 'Text' },
-            tags: {
-              iv: ['tag', 'test'],
-            },
-            accessInstructions: {
-              iv: 'some access instructions',
-            },
-          },
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
         })
-        .get(`/api/content/${config.appName}/teams`)
-        .query({
-          q: JSON.stringify({
-            take: 8,
-            filter: {
-              path: 'data.outputs.iv',
-              op: 'eq',
-              value: 'uuid',
-            },
-          }),
-        })
-        .reply(200, {
-          items: [
-            {
-              id: 'uuid-team',
-              created: '2020-09-23T16:34:26.842Z',
-              data: {
-                displayName: { iv: 'team' },
-                outputs: {
-                  iv: ['uuid'],
-                },
-              },
-            },
-          ],
-        });
+        .reply(200, { data: getSquidexResearchOutputGraphqlResponse() });
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
-      const expectedResult: ResearchOutputResponse = {
-        created: '2020-09-23T16:34:26.842Z',
-        id: 'uuid',
-        description: 'Text',
-        title: 'Title',
-        type: 'Proposal',
-        tags: ['tag', 'test'],
-        team: {
-          id: 'uuid-team',
-          displayName: 'team',
-        },
-        teams: [
-          {
-            id: 'uuid-team',
-            displayName: 'team',
-          },
-        ],
-        lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-        accessInstructions: 'some access instructions',
-      };
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(getResearchOutputResponse());
+    });
+
+    test('Should default team displayName to an empty string when not present', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      (squidexGraphqlResponse.findResearchOutputsContent
+        .referencingTeamsContents![0].flatData!.displayName as
+        | string
+        | null) = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.team?.displayName).toEqual('');
+    });
+
+    test('Should default type to Proposal and title to an empty string when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      delete squidexGraphqlResponse.findResearchOutputsContent.flatData?.type;
+      delete squidexGraphqlResponse.findResearchOutputsContent.flatData?.title;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.title).toEqual('');
+      expect(result.type).toEqual('Proposal');
+    });
+
+    test('Should default authors to an empty array when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
+        ?.authors;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.authors).toEqual([]);
     });
 
     test('Should return the research output without the team', async () => {
+      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      researchOutputResponse.findResearchOutputsContent.referencingTeamsContents = [];
+
       nock(config.baseUrl)
-        .get(
-          `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
-        )
-        .reply(200, {
-          id: 'uuid',
-          created: '2020-09-23T16:34:26.842Z',
-          data: {
-            type: { iv: 'Proposal' },
-            title: { iv: 'Title' },
-            description: { iv: 'Text' },
-            tags: {
-              iv: ['tag', 'test'],
-            },
-          },
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
         })
-        .get(`/api/content/${config.appName}/teams`)
-        .query({
-          q: JSON.stringify({
-            take: 8,
-            filter: {
-              path: 'data.outputs.iv',
-              op: 'eq',
-              value: 'uuid',
-            },
-          }),
-        })
-        .reply(200, {
-          items: [],
-        });
+        .reply(200, { data: researchOutputResponse });
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
-      const expectedResult: ResearchOutputResponse = {
-        created: '2020-09-23T16:34:26.842Z',
-        id: 'uuid',
-        description: 'Text',
-        title: 'Title',
-        type: 'Proposal',
-        tags: ['tag', 'test'],
-        teams: [],
-        lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-      };
+      const expectedResult = getResearchOutputResponse();
+      expectedResult.team = undefined;
+      expectedResult.teams = [];
 
       expect(result).toEqual(expectedResult);
     });
 
     describe('Last Updated Partial field', () => {
       test('Should default to last-modified if the last-updated-partial is not present', async () => {
+        const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+        delete researchOutputResponse.findResearchOutputsContent.flatData
+          ?.lastUpdatedPartial;
+
         nock(config.baseUrl)
-          .get(
-            `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
-          )
-          .reply(200, {
-            id: 'uuid',
-            created: '2020-09-23T16:34:26.842Z',
-            lastModified: '2019-10-01T12:01:22.132Z',
-            data: {
-              type: { iv: 'Proposal' },
-              title: { iv: 'Title' },
-              description: { iv: 'Text' },
-              tags: {
-                iv: ['tag', 'test'],
-              },
-            },
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryResearchOutput(researchOutputId),
           })
-          .get(`/api/content/${config.appName}/teams`)
-          .query({
-            q: JSON.stringify({
-              take: 8,
-              filter: {
-                path: 'data.outputs.iv',
-                op: 'eq',
-                value: 'uuid',
-              },
-            }),
-          })
-          .reply(200, {
-            items: [],
-          });
+          .reply(200, { data: researchOutputResponse });
 
         const result = await researchOutputs.fetchById(researchOutputId);
 
-        expect(result.lastUpdatedPartial).toEqual('2019-10-01T12:01:22.132Z');
+        expect(result.lastUpdatedPartial).toEqual(
+          researchOutputResponse.findResearchOutputsContent.lastModified,
+        );
       });
 
       test('Should default to created-date if the last-updated-partial and last-modified are not present', async () => {
+        const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+        delete researchOutputResponse.findResearchOutputsContent.flatData
+          ?.lastUpdatedPartial;
+        delete (researchOutputResponse.findResearchOutputsContent as any)
+          .lastModified;
+
         nock(config.baseUrl)
-          .get(
-            `/api/content/${config.appName}/research-outputs/${researchOutputId}`,
-          )
-          .reply(200, {
-            id: 'uuid',
-            created: '2020-07-23T16:34:26.842Z',
-            data: {
-              type: { iv: 'Proposal' },
-              title: { iv: 'Title' },
-              description: { iv: 'Text' },
-              tags: {
-                iv: ['tag', 'test'],
-              },
-            },
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryResearchOutput(researchOutputId),
           })
-          .get(`/api/content/${config.appName}/teams`)
-          .query({
-            q: JSON.stringify({
-              take: 8,
-              filter: {
-                path: 'data.outputs.iv',
-                op: 'eq',
-                value: 'uuid',
-              },
-            }),
-          })
-          .reply(200, {
-            items: [],
-          });
+          .reply(200, { data: researchOutputResponse });
 
         const result = await researchOutputs.fetchById(researchOutputId);
 
-        expect(result.lastUpdatedPartial).toEqual('2020-07-23T16:34:26.842Z');
+        expect(result.lastUpdatedPartial).toEqual(
+          researchOutputResponse.findResearchOutputsContent.created,
+        );
       });
     });
   });

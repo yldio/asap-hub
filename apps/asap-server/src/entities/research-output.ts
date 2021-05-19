@@ -76,16 +76,7 @@ export const parseGraphQLResearchOutput = (
 
 const parseGraphqlTeamLite = (
   graphqlTeam: GraphqlTeam,
-): ResearchOutputResponse['team'] => {
-  if (
-    !graphqlTeam.flatData ||
-    typeof graphqlTeam.flatData.displayName !== 'string'
-  ) {
-    throw Error('Invalid team display name');
-  }
-
-  return {
-    id: graphqlTeam.id,
-    displayName: graphqlTeam.flatData.displayName,
-  };
-};
+): ResearchOutputResponse['team'] => ({
+  id: graphqlTeam.id,
+  displayName: graphqlTeam.flatData?.displayName || '',
+});

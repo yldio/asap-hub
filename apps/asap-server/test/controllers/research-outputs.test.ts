@@ -179,6 +179,24 @@ describe('ResearchOutputs controller', () => {
       expect(result).toEqual(getResearchOutputResponse());
     });
 
+    test('Should convert the displayName to an empty string if it is not present', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      (squidexGraphqlResponse.findResearchOutputsContent
+        .referencingTeamsContents![0].flatData!.displayName as
+        | string
+        | null) = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.team?.displayName).toEqual('');
+    });
+
     test('Should return the research output without the team', async () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
       researchOutputResponse.findResearchOutputsContent.referencingTeamsContents = [];

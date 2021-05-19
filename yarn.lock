@@ -10145,6 +10145,8 @@ __metadata:
     typescript: ~4.2.4
     webpack: ^5.37.0
   dependenciesMeta:
+    aws-sdk:
+      built: false
     browser-tabs-lock:
       built: false
     core-js:

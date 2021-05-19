@@ -39,6 +39,9 @@
     "encoding": "0.1.13"
   },
   "dependenciesMeta": {
+    "aws-sdk": {
+      "built": false
+    },
     "browser-tabs-lock": {
       "built": false
     },

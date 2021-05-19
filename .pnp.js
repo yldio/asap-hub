@@ -25453,7 +25453,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }],
         ["npm:2.906.0", {
-          "packageLocation": "./.yarn/unplugged/aws-sdk-npm-2.906.0-d1e026697f/node_modules/aws-sdk/",
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.906.0-d1e026697f-0f79de14ff.zip/node_modules/aws-sdk/",
           "packageDependencies": [
             ["aws-sdk", "npm:2.906.0"],
             ["buffer", "npm:4.9.2"],
@@ -25469,7 +25469,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }],
         ["npm:2.907.0", {
-          "packageLocation": "./.yarn/unplugged/aws-sdk-npm-2.907.0-ca8f293c50/node_modules/aws-sdk/",
+          "packageLocation": "./.yarn/cache/aws-sdk-npm-2.907.0-ca8f293c50-9373d523e3.zip/node_modules/aws-sdk/",
           "packageDependencies": [
             ["aws-sdk", "npm:2.907.0"],
             ["buffer", "npm:4.9.2"],

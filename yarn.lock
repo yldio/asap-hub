@@ -10119,7 +10119,7 @@ __metadata:
     babel-eslint: ^10.1.0
     babel-loader: ^8.2.2
     babel-plugin-lodash: ^3.3.4
-    babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.e9f96ffe
+    babel-plugin-transform-inline-environment-variables: 0.5.0-alpha.42
     babel-preset-react-app: ^9.1.2
     bundlewatch: ^0.3.2
     codecov: ^3.8.2
@@ -10883,10 +10883,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-transform-inline-environment-variables@npm:0.5.0-alpha.e9f96ffe":
-  version: 0.5.0-alpha.e9f96ffe
-  resolution: "babel-plugin-transform-inline-environment-variables@npm:0.5.0-alpha.e9f96ffe"
-  checksum: e8582dbe91ba4f8bc91246f1b5740136eaa06f3309e21871cec5d1cae44512d41dbcef19be98d52fb049a481e913ab1d3fe4796931eb0a1db28cd14d4ff8e3f2
+"babel-plugin-transform-inline-environment-variables@npm:0.5.0-alpha.42":
+  version: 0.5.0-alpha.42
+  resolution: "babel-plugin-transform-inline-environment-variables@npm:0.5.0-alpha.42"
+  checksum: f6acb71f7b33d6ff48657e92514b9b16de4c883cc4d5d7fadf22c4734c29ccbd7117ae697f74f5937c13667a1fb26904ab83ff96d81dd2b1d17e93a80802b088
   languageName: node
   linkType: hard
 

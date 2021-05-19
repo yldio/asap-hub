@@ -2475,7 +2475,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "babel-plugin-transform-inline-environment-variables",
-        "npm:0.5.0-alpha.e9f96ffe"
+        "npm:0.5.0-alpha.42"
       ],
       [
         "babel-plugin-transform-object-rest-spread",
@@ -8884,7 +8884,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-loader", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:8.2.2"],
             ["babel-plugin-lodash", "npm:3.3.4"],
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.e9f96ffe"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["bundlewatch", "npm:0.3.2"],
             ["codecov", "npm:3.8.2"],
@@ -25127,7 +25127,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["babel-eslint", "virtual:e5f9eb154079fdd4338bd303428dd8c07458a7d94655b1a833a23008ffb05453d53b540eca10ef9ecd77c37ad0c143cdff30e266a3d7c259e83c0e8e92d8147a#npm:10.1.0"],
             ["babel-loader", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:8.2.2"],
             ["babel-plugin-lodash", "npm:3.3.4"],
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.e9f96ffe"],
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"],
             ["babel-preset-react-app", "npm:9.1.2"],
             ["bundlewatch", "npm:0.3.2"],
             ["codecov", "npm:3.8.2"],
@@ -26219,10 +26219,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["babel-plugin-transform-inline-environment-variables", [
-        ["npm:0.5.0-alpha.e9f96ffe", {
-          "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-environment-variables-npm-0.5.0-alpha.e9f96ffe-53eb5d5f52-e8582dbe91.zip/node_modules/babel-plugin-transform-inline-environment-variables/",
+        ["npm:0.5.0-alpha.42", {
+          "packageLocation": "./.yarn/cache/babel-plugin-transform-inline-environment-variables-npm-0.5.0-alpha.42-aa3c61a11b-f6acb71f7b.zip/node_modules/babel-plugin-transform-inline-environment-variables/",
           "packageDependencies": [
-            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.e9f96ffe"]
+            ["babel-plugin-transform-inline-environment-variables", "npm:0.5.0-alpha.42"]
           ],
           "linkType": "HARD",
         }]

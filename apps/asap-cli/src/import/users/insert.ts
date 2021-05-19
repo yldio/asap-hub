@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-param-reassign */
+/* eslint-disable no-param-reassign */
 
 import Intercept from 'apr-intercept';
 import {
@@ -9,6 +9,7 @@ import {
 } from '@asap-hub/squidex';
 import { HTTPError } from 'got';
 import { Data } from './parse';
+import log from '../../logger';
 
 const teams = new Squidex<RestTeam>('teams');
 const users = new Squidex<RestUser>('users');
@@ -188,7 +189,7 @@ const insertUser = async (
   if (!cache[user.email.iv]) {
     cache[user.email.iv] = users.create(user).catch((err) => {
       if (err.response?.statusCode === 400) {
-        console.log(`fetch ${user.email.iv}`);
+        log(`fetch ${user.email.iv}`);
         return users
           .fetchOne({
             filter: {
@@ -199,7 +200,7 @@ const insertUser = async (
           })
           .then((t) => {
             if (upsert) {
-              console.log(`upsert ${user.email.iv}`);
+              log(`upsert ${user.email.iv}`);
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const { teams: _, connections, avatar, ...props } = user;
               return users.patch(t.id, {
@@ -218,45 +219,42 @@ const insertUser = async (
 };
 
 export default ({
-    upsert,
-  }: {
-    upsert: boolean;
-    // complaining about `data` here is a lint rule bug
-    // eslint-disable-next-line no-unused-vars
-  }): ((data: Data) => Promise<void>) =>
-  async (data: Data): Promise<void> => {
-    const promises: Cache = {};
-    const [e1, user] = await Intercept(insertUser(data, promises, upsert));
-    const err1 = e1 as HTTPError;
-    if (err1) {
-      console.error({
-        op: `create '${data.email}'`,
+  upsert,
+}: {
+  upsert: boolean;
+  // complaining about `data` here is a lint rule bug
+  // eslint-disable-next-line no-unused-vars
+}): ((data: Data) => Promise<void>) => async (data: Data): Promise<void> => {
+  const promises: Cache = {};
+  const [e1, user] = await Intercept(insertUser(data, promises, upsert));
+  const err1 = e1 as HTTPError;
+  if (err1) {
+    log({
+      op: `create '${data.email}'`,
+      message: err1.message,
+      body: err1.response?.body,
+    });
+  }
+
+  if (data.application) {
+    const [e2, team] = await Intercept(insertTeam(data, promises));
+    const err2 = e2 as HTTPError;
+    if (err2) {
+      log({
+        op: `create '${data.application}'`,
         message: err1.message,
         body: err1.response?.body,
       });
     }
 
-    if (data.application) {
-      const [e2, team] = await Intercept(insertTeam(data, promises));
-      const err2 = e2 as HTTPError;
-      if (err2) {
-        console.error({
-          op: `create '${data.application}'`,
-          message: err1.message,
-          statusCode: err1.response?.statusCode,
-          body: err1.response?.body,
-        });
-        return;
-      }
-
-      const [e3] = await Intercept(insertMembership(user, team, data));
-      const err3 = e3 as HTTPError;
-      if (err3) {
-        console.error({
-          op: `update '${data.email}'`,
-          message: err3.message,
-          body: err3.response?.body,
-        });
-      }
+    const [e3] = await Intercept(insertMembership(user, team, data));
+    const err3 = e3 as HTTPError;
+    if (err3) {
+      log({
+        op: `update '${data.email}'`,
+        message: err3.message,
+        body: err3.response?.body,
+      });
     }
-  };
+  }
+};

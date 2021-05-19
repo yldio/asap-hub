@@ -4,6 +4,7 @@ import {
   ResponseFetchGroups,
   ResponseFetchGroup,
 } from '../../src/controllers/groups';
+import { fetchExpectation, graphQlResponseFetchUsers } from './users.fixtures';
 
 export const queryGroupsResponse: { data: ResponseFetchGroups } = {
   data: {
@@ -61,6 +62,10 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                         title: 'Proposal',
                         type: 'Proposal',
                         tags: ['test', 'tag'],
+                        accessInstructions: 'some access instructions',
+                        authors:
+                          graphQlResponseFetchUsers.data
+                            .queryUsersContentsWithTotal.items,
                       },
                     },
                   ],
@@ -256,9 +261,11 @@ export const queryGroupsExpectation: ListGroupResponse = {
               title: 'Proposal',
               description: '',
               tags: ['test', 'tag'],
+              authors: fetchExpectation.items,
               team: { id: 'team-id-1', displayName: 'Lee, M' },
               teams: [{ id: 'team-id-1', displayName: 'Lee, M' }],
               lastUpdatedPartial: '2020-12-11T14:33:18.000Z',
+              accessInstructions: 'some access instructions',
             },
           ],
           projectTitle:

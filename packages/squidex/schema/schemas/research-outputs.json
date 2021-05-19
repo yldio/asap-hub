@@ -275,8 +275,7 @@
             "Compounds",
             "Plasmid",
             "Protein",
-            "Viral Vector",
-            "Other"
+            "Viral Vector"
           ],
           "contentType": "Unspecified",
           "label": "Subtype"
@@ -293,7 +292,7 @@
           "isRequiredOnPublish": false,
           "isHalfWidth": false,
           "fieldType": "String",
-          "editor": "Input",
+          "editor": "RichText",
           "inlineEditable": false,
           "isUnique": false,
           "contentType": "Unspecified",

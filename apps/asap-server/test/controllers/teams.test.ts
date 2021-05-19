@@ -75,7 +75,7 @@ describe('Team controller', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    test('Should search by name and return the groups', async () => {
+    test('Should search by name and return the teams', async () => {
       const searchQ =
         "(contains(data/displayName/iv, 'Cristiano')" +
         " or contains(data/projectTitle/iv, 'Cristiano')" +

@@ -54,6 +54,7 @@ const overflowContentStyles = css({
 
 interface TagListProps {
   tags: ReadonlyArray<string>;
+  enabled?: boolean;
   min?: number;
   max?: number;
 }
@@ -61,6 +62,7 @@ const TagList: React.FC<TagListProps> = ({
   tags,
   min = Number.MAX_SAFE_INTEGER,
   max = Number.MAX_SAFE_INTEGER,
+  enabled = true,
 }) =>
   tags.length ? (
     <ul css={[listStyles, { counterReset: `tags ${tags.length}` }]}>
@@ -69,11 +71,11 @@ const TagList: React.FC<TagListProps> = ({
           key={index}
           css={[normalListItemStyles, summarizedListItemStyles(min, max)]}
         >
-          <Tag>{tag}</Tag>
+          <Tag enabled={enabled}>{tag}</Tag>
         </li>
       ))}
       <li key="overflow" className="overflow">
-        <Tag>
+        <Tag enabled={enabled}>
           <span css={overflowContentStyles}></span>
         </Tag>
       </li>

@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 
 import TagList from '../TagList';
+import { tin } from '../../colors';
 
 it('shows all tags by default', () => {
   const { getAllByRole } = render(
@@ -27,6 +28,12 @@ it('shows all tags by default', () => {
 it('hides tags when there are none', () => {
   const { queryAllByRole } = render(<TagList tags={[]} />);
   expect(queryAllByRole('list')).toEqual([]);
+});
+
+it('disables its tags when disabled', () => {
+  const { getByText } = render(<TagList tags={['tag 1']} enabled={false} />);
+
+  expect(getComputedStyle(getByText(/tag 1/i)).color).toEqual(tin.rgb);
 });
 
 describe('when capped', () => {

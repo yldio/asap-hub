@@ -53,4 +53,9 @@ describe('in inline mode', () => {
     );
     expect(getAllByTitle(/team/i)).toHaveLength(1);
   });
+
+  it('does not render a team icon if there are no teams', () => {
+    const { queryByTitle } = render(<TeamsList inline teams={[]} />);
+    expect(queryByTitle(/team/i)).not.toBeInTheDocument();
+  });
 });

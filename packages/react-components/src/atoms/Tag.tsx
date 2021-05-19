@@ -1,6 +1,6 @@
 import React from 'react';
 import css from '@emotion/css';
-import { steel, mint } from '../colors';
+import { steel, mint, tin } from '../colors';
 import { perRem } from '../pixels';
 
 const borderWidth = 1;
@@ -31,14 +31,28 @@ const highlightStyles = css({
   backgroundColor: mint.rgb,
 });
 
+const disabledStyles = css({
+  borderColor: tin.rgb,
+  color: tin.rgb,
+});
+
 type TagProps = {
+  readonly enabled?: boolean;
   readonly highlight?: boolean;
   readonly children?: React.ReactNode;
 };
 
-const Tag: React.FC<TagProps> = ({ children, highlight = false }) => (
+const Tag: React.FC<TagProps> = ({
+  children,
+  highlight = false,
+  enabled = true,
+}) => (
   <div css={containerStyles}>
-    <div css={[styles, highlight && highlightStyles]}>{children}</div>
+    <div
+      css={[styles, highlight && highlightStyles, !enabled && disabledStyles]}
+    >
+      {children}
+    </div>
   </div>
 );
 

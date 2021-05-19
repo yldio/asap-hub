@@ -1,37 +1,14 @@
-import intercept from 'apr-intercept';
+import Boom from '@hapi/boom';
 import {
   ResearchOutputResponse,
   ListResearchOutputResponse,
 } from '@asap-hub/model';
-import { RestTeam, RestResearchOutput } from '@asap-hub/squidex';
+import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
-import { parseResearchOutput } from '../entities/research-output';
-import { InstrumentedSquidex } from '../utils/instrumented-client';
+import { parseGraphQLResearchOutput } from '../entities/research-output';
+import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { sanitiseForSquidex } from '../utils/squidex';
-
-function transform(
-  output: RestResearchOutput,
-  teams: RestTeam[],
-): ResearchOutputResponse {
-  const teamProps =
-    teams.length > 0
-      ? {
-          team: {
-            id: teams[0].id,
-            displayName: teams[0].data.displayName.iv,
-          },
-        }
-      : {};
-
-  return {
-    ...parseResearchOutput(output),
-    ...teamProps,
-    teams: teams.map((team) => ({
-      id: team.id,
-      displayName: team.data.displayName.iv,
-    })),
-  };
-}
+import { GraphQLQueryUser } from './users';
 
 export const getGraphQLQueryResearchOutput = ({
   withTeams,
@@ -49,12 +26,11 @@ flatData{
   addedDate
   publishDate
   tags
-  labs{
-    flatData{
-      name
-    }
-  }
   lastUpdatedPartial
+  accessInstructions
+  authors {
+    ${GraphQLQueryUser}
+  }
 }
 ${
   withTeams
@@ -70,32 +46,52 @@ ${
 }
 `;
 
+export const buildGraphQLQueryResearchOutput = (id: string): string =>
+  `{
+    findResearchOutputsContent(id: "${id}") {
+      ${getGraphQLQueryResearchOutput({ withTeams: true })}
+  }
+}`;
+
+export const buildGraphQLQueryFetchResearchOutputs = (
+  filter = '',
+  top = 8,
+  skip = 0,
+): string =>
+  `{
+    queryResearchOutputsContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "created desc") {
+    total
+    items {
+      ${getGraphQLQueryResearchOutput({ withTeams: true })}
+    }
+  }
+}`;
+
 export default class ResearchOutputs implements ResearchOutputController {
-  researchOutputs: InstrumentedSquidex<RestResearchOutput>;
+  graphqlSquidexClient: InstrumentedSquidexGraphql;
 
-  teams: InstrumentedSquidex<RestTeam>;
-
-  constructor(ctxHeaders?: Record<string, string>) {
-    this.researchOutputs = new InstrumentedSquidex(
-      'research-outputs',
-      ctxHeaders,
-    );
-    this.teams = new InstrumentedSquidex('teams', ctxHeaders);
+  constructor() {
+    this.graphqlSquidexClient = new InstrumentedSquidexGraphql();
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
-    const res = await this.researchOutputs.fetchById(id);
-    const [, teamResults] = await intercept(
-      this.teams.fetch({
-        filter: {
-          path: 'data.outputs.iv',
-          op: 'eq',
-          value: res.id,
-        },
-      }),
-    );
+    const query = buildGraphQLQueryResearchOutput(id);
+    const researchOutputGraphqlResponse = await this.graphqlSquidexClient.request<
+      ResponseFetchResearchOutput,
+      unknown
+    >(query);
 
-    return transform(res, teamResults.items);
+    const {
+      findResearchOutputsContent: researchOutputContent,
+    } = researchOutputGraphqlResponse;
+    if (!researchOutputContent) {
+      throw Boom.notFound();
+    }
+
+    return parseGraphQLResearchOutput(researchOutputContent, {
+      includeAuthors: true,
+      includeTeams: true,
+    }) as ResearchOutputResponse;
   }
 
   async fetch(options: {
@@ -127,41 +123,35 @@ export default class ResearchOutputs implements ResearchOutputController {
       )
       .join(' or ');
 
-    const $filter = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
+    const filterGraphql = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
       .filter(Boolean)
       .join(' and ');
 
-    const { total, items } = await this.researchOutputs.fetch({
-      $top: take,
-      $skip: skip,
-      $orderby: 'created desc',
-      $filter,
-    });
+    const query = buildGraphQLQueryFetchResearchOutputs(
+      filterGraphql,
+      take,
+      skip,
+    );
+    const {
+      queryResearchOutputsContentsWithTotal,
+    } = await this.graphqlSquidexClient.request<
+      ResponseFetchResearchOutputs,
+      unknown
+    >(query);
 
-    const teams = items.length
-      ? await this.teams.fetch({
-          take: items.length,
-          filter: {
-            or: items.map((item) => ({
-              path: 'data.outputs.iv',
-              op: 'eq',
-              value: item.id,
-            })),
-          },
-        })
-      : { items: [] };
+    const {
+      total,
+      items: researchOutputs,
+    } = queryResearchOutputsContentsWithTotal;
 
     return {
       total,
-      items: items.map((item) =>
-        transform(
-          item,
-          teams.items.filter(
-            (t) =>
-              t.data.outputs?.iv &&
-              t.data.outputs.iv.filter((o) => o === item.id).length > 0,
-          ),
-        ),
+      items: researchOutputs.map(
+        (item) =>
+          parseGraphQLResearchOutput(item, {
+            includeAuthors: true,
+            includeTeams: true,
+          }) as ResearchOutputResponse,
       ),
     };
   }
@@ -176,4 +166,15 @@ export interface ResearchOutputController {
   }) => Promise<ListResearchOutputResponse>;
 
   fetchById: (id: string) => Promise<ResearchOutputResponse>;
+}
+
+export interface ResponseFetchResearchOutput {
+  findResearchOutputsContent: GraphqlResearchOutput;
+}
+
+export interface ResponseFetchResearchOutputs {
+  queryResearchOutputsContentsWithTotal: {
+    total: number;
+    items: GraphqlResearchOutput[];
+  };
 }

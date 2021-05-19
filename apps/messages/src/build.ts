@@ -38,6 +38,9 @@ const main = async () => {
   if (!outputPath) {
     throw new Error('Cannot determine output dir');
   }
+  if (res.hasErrors()) {
+    throw new Error(res.compilation.errors.join('\n'));
+  }
 };
 
 main().catch((err) => {

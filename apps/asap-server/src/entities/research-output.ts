@@ -1,29 +1,7 @@
 import { ResearchOutputResponse } from '@asap-hub/model';
-import {
-  GraphqlResearchOutput,
-  GraphqlTeam,
-  RestResearchOutput,
-} from '@asap-hub/squidex';
-
+import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
-
-export const parseResearchOutput = (
-  output: RestResearchOutput,
-): Omit<ResearchOutputResponse, 'authors' | 'teams'> => ({
-  id: output.id,
-  created: output.created,
-  link: output.data.link?.iv || undefined,
-  type: output.data.type.iv,
-  title: output.data.title.iv,
-  description: output.data.description?.iv || '',
-  publishDate: output.data.publishDate?.iv,
-  addedDate: output.data.addedDate?.iv,
-  tags: output.data.tags?.iv || [],
-  lastUpdatedPartial:
-    output.data.lastUpdatedPartial?.iv || output.lastModified || output.created,
-  accessInstructions: output.data.accessInstructions?.iv,
-});
 
 export const parseGraphQLResearchOutput = (
   output: GraphqlResearchOutput,

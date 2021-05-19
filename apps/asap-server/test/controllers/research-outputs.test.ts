@@ -182,9 +182,8 @@ describe('ResearchOutputs controller', () => {
     test('Should default team displayName to an empty string when not present', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       (squidexGraphqlResponse.findResearchOutputsContent
-        .referencingTeamsContents![0].flatData!.displayName as
-        | string
-        | null) = null;
+        .referencingTeamsContents![0].flatData!.displayName as string | null) =
+        null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -232,7 +231,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should return the research output without the team', async () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      researchOutputResponse.findResearchOutputsContent.referencingTeamsContents = [];
+      researchOutputResponse.findResearchOutputsContent.referencingTeamsContents =
+        [];
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -251,7 +251,8 @@ describe('ResearchOutputs controller', () => {
 
     describe('Last Updated Partial field', () => {
       test('Should default to last-modified if the last-updated-partial is not present', async () => {
-        const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+        const researchOutputResponse =
+          getSquidexResearchOutputGraphqlResponse();
         delete researchOutputResponse.findResearchOutputsContent.flatData
           ?.lastUpdatedPartial;
 
@@ -269,7 +270,8 @@ describe('ResearchOutputs controller', () => {
       });
 
       test('Should default to created-date if the last-updated-partial and last-modified are not present', async () => {
-        const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+        const researchOutputResponse =
+          getSquidexResearchOutputGraphqlResponse();
         delete researchOutputResponse.findResearchOutputsContent.flatData
           ?.lastUpdatedPartial;
         delete (researchOutputResponse.findResearchOutputsContent as any)

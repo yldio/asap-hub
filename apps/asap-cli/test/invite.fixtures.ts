@@ -124,12 +124,10 @@ export const getListTeamResponse: () => {
         displayName: { iv: 'Team 1' },
         applicationNumber: { iv: 'hofded' },
         projectTitle: {
-          iv:
-            'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
+          iv: 'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
         },
         projectSummary: {
-          iv:
-            'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
+          iv: 'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
         },
         skills: { iv: [] },
         outputs: { iv: [] },
@@ -144,12 +142,10 @@ export const getListTeamResponse: () => {
         displayName: { iv: 'Team 2' },
         applicationNumber: { iv: 'hofded' },
         projectTitle: {
-          iv:
-            'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
+          iv: 'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
         },
         projectSummary: {
-          iv:
-            'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
+          iv: 'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
         },
         skills: { iv: [] },
         outputs: { iv: [] },

@@ -11,16 +11,18 @@ import {
 import { DeepWriteable } from '../../src/utils/types';
 import { fetchExpectation, graphQlResponseFetchUsers } from './users.fixtures';
 
-export const getSquidexResearchOutputsGraphqlResponse = (): ResponseFetchResearchOutputs => ({
-  queryResearchOutputsContentsWithTotal: {
-    total: 1,
-    items: [getSquidexGraphqlResearchOutput()],
-  },
-});
+export const getSquidexResearchOutputsGraphqlResponse =
+  (): ResponseFetchResearchOutputs => ({
+    queryResearchOutputsContentsWithTotal: {
+      total: 1,
+      items: [getSquidexGraphqlResearchOutput()],
+    },
+  });
 
-export const getSquidexResearchOutputGraphqlResponse = (): ResponseFetchResearchOutput => ({
-  findResearchOutputsContent: getSquidexGraphqlResearchOutput(),
-});
+export const getSquidexResearchOutputGraphqlResponse =
+  (): ResponseFetchResearchOutput => ({
+    findResearchOutputsContent: getSquidexGraphqlResearchOutput(),
+  });
 
 export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
@@ -58,36 +60,36 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
   ],
 });
 
-export const getResearchOutputResponse = (): DeepWriteable<
-  ResearchOutputResponse
-> => ({
-  created: '2020-09-23T16:34:26.842Z',
-  id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-  description: 'Text',
-  title: 'Test Proposal 1234',
-  type: 'Proposal',
-  tags: ['tag', 'test'],
-  authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
-  team: {
-    id: 'team-id-1',
-    displayName: 'Schipa, A',
-  },
-  teams: [
-    {
+export const getResearchOutputResponse =
+  (): DeepWriteable<ResearchOutputResponse> => ({
+    created: '2020-09-23T16:34:26.842Z',
+    id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
+    description: 'Text',
+    title: 'Test Proposal 1234',
+    type: 'Proposal',
+    tags: ['tag', 'test'],
+    authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
+    team: {
       id: 'team-id-1',
       displayName: 'Schipa, A',
     },
-    {
-      id: 'team-id-2',
-      displayName: 'Team, B',
-    },
-  ],
-  publishDate: '2021-05-21T13:18:31Z',
-  lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-  accessInstructions: 'some access instructions',
-});
+    teams: [
+      {
+        id: 'team-id-1',
+        displayName: 'Schipa, A',
+      },
+      {
+        id: 'team-id-2',
+        displayName: 'Team, B',
+      },
+    ],
+    publishDate: '2021-05-21T13:18:31Z',
+    lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
+    accessInstructions: 'some access instructions',
+  });
 
-export const getListResearchOutputResponse = (): ListResearchOutputResponse => ({
-  total: 1,
-  items: [getResearchOutputResponse()],
-});
+export const getListResearchOutputResponse =
+  (): ListResearchOutputResponse => ({
+    total: 1,
+    items: [getResearchOutputResponse()],
+  });

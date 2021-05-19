@@ -1,4 +1,3 @@
-import React from 'react';
 import nock from 'nock';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';

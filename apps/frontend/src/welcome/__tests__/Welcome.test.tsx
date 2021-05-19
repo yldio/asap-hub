@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';

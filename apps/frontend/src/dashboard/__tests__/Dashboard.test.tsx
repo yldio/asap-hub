@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import nock from 'nock';
 import { User } from '@asap-hub/auth';
 import { render, waitFor } from '@testing-library/react';

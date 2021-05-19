@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -43,7 +43,7 @@ describe('the library page', () => {
     const { getByRole } = await renderSharedResearchPage('/shared-research');
     const searchBox = getByRole('searchbox') as HTMLInputElement;
 
-    await userEvent.type(searchBox, 'test123');
+    userEvent.type(searchBox, 'test123');
     expect(searchBox.value).toEqual('test123');
   });
 

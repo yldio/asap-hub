@@ -260,7 +260,7 @@ describe('a header edit button', () => {
     );
   });
 
-  it('can open and close   personal info remaining on the tab', async () => {
+  it('remains on the same tab after closing a modal', async () => {
     const userProfile: UserResponse = {
       ...createUserResponse(),
       biography: 'My Bio',
@@ -275,6 +275,7 @@ describe('a header edit button', () => {
     } = await renderUserProfile(userProfile);
 
     // Open and close on research tab
+    userEvent.click(await findByText(/research/i, { selector: 'nav *' }));
     expect(getByText(/role on asap network/i)).toBeVisible();
     expect(queryByText(/your details/i)).toBeNull();
     userEvent.click(await findByLabelText(/edit.+personal/i));

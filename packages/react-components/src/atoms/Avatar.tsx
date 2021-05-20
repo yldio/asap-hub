@@ -33,7 +33,7 @@ const hash = (str: string) => {
   return h;
 };
 
-const minWidth = 36;
+const minWidth = 24;
 const maxWidth = 90;
 
 const borderPadding = 4;

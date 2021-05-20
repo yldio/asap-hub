@@ -1,5 +1,6 @@
 import React from 'react';
 import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
+import { useFlags } from '@asap-hub/react-context';
 import css from '@emotion/css';
 
 import { Card, TagLabel, ExternalLink, Display } from '..';
@@ -7,7 +8,7 @@ import { lead } from '../colors';
 import { formatDate } from '../date';
 import { perRem, mobileScreen } from '../pixels';
 import { captionStyles } from '../text';
-import { TeamsList } from '../molecules';
+import { TeamsList, UsersList } from '../molecules';
 
 const headerStyles = css({
   flex: 1,
@@ -40,6 +41,7 @@ type SharedResearchOutputHeaderCardProps = Pick<
   ResearchOutputResponse,
   | 'created'
   | 'addedDate'
+  | 'authors'
   | 'teams'
   | 'title'
   | 'type'
@@ -48,28 +50,44 @@ type SharedResearchOutputHeaderCardProps = Pick<
 >;
 
 const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardProps> =
-  ({ created, addedDate, teams, title, type, link, lastModifiedDate }) => (
-    <Card>
-      <div css={headerStyles}>
-        <div css={typeStyles}>
-          <TagLabel>{type}</TagLabel>
+  ({
+    created,
+    addedDate,
+    authors,
+    teams,
+    title,
+    type,
+    link,
+    lastModifiedDate,
+  }) => {
+    const { isEnabled } = useFlags();
+
+    return (
+      <Card>
+        <div css={headerStyles}>
+          <div css={typeStyles}>
+            <TagLabel>{type}</TagLabel>
+          </div>
+          {link ? (
+            <ExternalLink label={researchOutputLabels[type]} href={link} />
+          ) : null}
         </div>
-        {link ? (
-          <ExternalLink label={researchOutputLabels[type]} href={link} />
-        ) : null}
-      </div>
-      <Display styleAsHeading={3}>{title}</Display>
-      <TeamsList inline teams={teams} />
-      <div css={[timestampStyles, captionStyles]}>
-        <span>
-          Date added: {formatDate(new Date(addedDate || created))}
-          {lastModifiedDate && ' · '}
-        </span>
-        {lastModifiedDate && (
-          <span>Last updated: {formatDate(new Date(lastModifiedDate))}</span>
+        <Display styleAsHeading={3}>{title}</Display>
+        {isEnabled('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST') && (
+          <UsersList users={authors} />
         )}
-      </div>
-    </Card>
-  );
+        <TeamsList inline teams={teams} />
+        <div css={[timestampStyles, captionStyles]}>
+          <span>
+            Date added: {formatDate(new Date(addedDate || created))}
+            {lastModifiedDate && ' · '}
+          </span>
+          {lastModifiedDate && (
+            <span>Last updated: {formatDate(new Date(lastModifiedDate))}</span>
+          )}
+        </div>
+      </Card>
+    );
+  };
 
 export default SharedResearchOutputHeaderCard;

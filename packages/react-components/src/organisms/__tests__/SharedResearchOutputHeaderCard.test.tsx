@@ -1,6 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import {
+  createResearchOutputResponse,
+  createUserResponse,
+} from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 
 import SharedResearchOutputHeaderCard from '../SharedResearchOutputHeaderCard';
 
@@ -60,4 +64,24 @@ it('falls back to created date when added date omitted', () => {
     />,
   );
   expect(getByText(/2019/)).toBeVisible();
+});
+
+it('does not show authors (REGRESSION)', () => {
+  disable('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST');
+  const { queryByText } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      authors={[{ ...createUserResponse(), displayName: 'John Doe' }]}
+    />,
+  );
+  expect(queryByText('John Doe')).not.toBeInTheDocument();
+});
+it('shows authors', () => {
+  const { getByText } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      authors={[{ ...createUserResponse(), displayName: 'John Doe' }]}
+    />,
+  );
+  expect(getByText('John Doe')).toBeVisible();
 });

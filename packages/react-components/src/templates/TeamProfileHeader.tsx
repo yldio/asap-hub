@@ -12,6 +12,7 @@ import { perRem, mobileScreen } from '../pixels';
 import { paper } from '../colors';
 
 const MAX_MEMBER_AVATARS = 5;
+const MEMBER_AVATAR_BORDER_WIDTH = 1;
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
@@ -55,9 +56,14 @@ const membersContainerStyles = css({
 
   display: 'grid',
   gridAutoFlow: 'column',
-  gridTemplateColumns: `repeat(${MAX_MEMBER_AVATARS}, minmax(auto, 36px)) ${
-    6 / perRem
-  }em minmax(auto, 36px)`,
+  gridTemplateColumns: `
+    repeat(
+      ${MAX_MEMBER_AVATARS},
+      minmax(auto, ${36 + MEMBER_AVATAR_BORDER_WIDTH * 2}px)
+    )
+    ${6 / perRem}em
+    minmax(auto, ${36 + MEMBER_AVATAR_BORDER_WIDTH * 2}px)
+  `,
 });
 const membersListStyles = css({
   display: 'contents',

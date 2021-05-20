@@ -7,6 +7,7 @@ import { text, date, array, number } from '@storybook/addon-knobs';
 
 import {
   createListTeamResponse,
+  createListUserResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 
@@ -40,6 +41,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ).toISOString(),
   backHref: '#',
   teams: createListTeamResponse(number('Number of teams', 3)).items,
+  authors: createListUserResponse(number('Number of authors', 3)).items,
 });
 
 export const Normal = () => <SharedResearchOutput {...props()} />;

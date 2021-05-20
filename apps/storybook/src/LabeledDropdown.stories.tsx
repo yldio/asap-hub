@@ -1,4 +1,3 @@
-import React from 'react';
 import { text, select, boolean } from '@storybook/addon-knobs';
 
 import { LabeledDropdown } from '@asap-hub/react-components';

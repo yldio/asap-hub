@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 

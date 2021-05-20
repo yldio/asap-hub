@@ -1,3 +1,3 @@
 module.exports = {
-  presets: [require.resolve('@babel/preset-react')],
+  presets: [[require.resolve('@babel/preset-react'), { runtime: 'automatic' }]],
 };

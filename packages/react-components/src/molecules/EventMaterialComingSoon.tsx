@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Card, Headline2, Paragraph } from '../atoms';
 import { charcoal } from '../colors';
 

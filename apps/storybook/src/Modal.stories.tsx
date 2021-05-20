@@ -1,4 +1,3 @@
-import React from 'react';
 import { Modal, Paragraph } from '@asap-hub/react-components';
 
 export default {

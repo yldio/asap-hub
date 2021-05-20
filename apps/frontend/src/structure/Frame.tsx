@@ -1,4 +1,4 @@
-import React, { Suspense, ComponentProps } from 'react';
+import { Suspense, ComponentProps } from 'react';
 import { Titled } from 'react-titled';
 import { Loading } from '@asap-hub/react-components';
 

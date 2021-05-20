@@ -1,4 +1,3 @@
-import React from 'react';
 import { text } from '@storybook/addon-knobs';
 import { ForgotPasswordPage } from '@asap-hub/react-components';
 import { BasicLayoutDecorator } from './layout';

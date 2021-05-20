@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { TeamRole, Role } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 

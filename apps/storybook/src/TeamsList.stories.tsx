@@ -1,4 +1,3 @@
-import React from 'react';
 import { TeamsList } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';
 import { createListTeamResponse } from '@asap-hub/fixtures';

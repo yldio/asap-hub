@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { render, getByTitle } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ToastContext } from '@asap-hub/react-context';

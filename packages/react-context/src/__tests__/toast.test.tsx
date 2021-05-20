@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { render } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 

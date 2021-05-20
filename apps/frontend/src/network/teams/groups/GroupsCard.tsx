@@ -1,4 +1,3 @@
-import React from 'react';
 import { TeamGroupsCard } from '@asap-hub/react-components';
 
 import { useTeamGroupsById } from './state';

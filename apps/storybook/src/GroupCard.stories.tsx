@@ -1,4 +1,3 @@
-import React from 'react';
 import { GroupCard } from '@asap-hub/react-components';
 import { text, array, number } from '@storybook/addon-knobs';
 

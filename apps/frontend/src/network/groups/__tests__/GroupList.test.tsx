@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -38,7 +38,7 @@ const renderGroupList = async (
         )
       }
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/groups/']}>
@@ -46,7 +46,7 @@ const renderGroupList = async (
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

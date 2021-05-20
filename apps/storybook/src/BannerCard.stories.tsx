@@ -1,4 +1,3 @@
-import React from 'react';
 import { BannerCard } from '@asap-hub/react-components';
 
 export default {

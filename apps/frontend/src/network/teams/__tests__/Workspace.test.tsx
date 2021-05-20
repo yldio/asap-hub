@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import {
@@ -25,9 +25,9 @@ const mockPatchTeam = patchTeam as jest.MockedFunction<typeof patchTeam>;
 
 const id = '42';
 
-const wrapper: React.FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
-    <React.Suspense fallback="loading">
+    <Suspense fallback="loading">
       <Auth0Provider user={{}}>
         <WhenReady>
           <MemoryRouter
@@ -48,7 +48,7 @@ const wrapper: React.FC<Record<string, never>> = ({ children }) => (
           </MemoryRouter>
         </WhenReady>
       </Auth0Provider>
-    </React.Suspense>
+    </Suspense>
   </RecoilRoot>
 );
 

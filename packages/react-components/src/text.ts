@@ -1,5 +1,5 @@
 import { isValidElement } from 'react';
-import type { Interpolation } from '@emotion/css';
+import { CSSObject } from '@emotion/react';
 
 import {
   perRem,
@@ -97,7 +97,7 @@ export const headlineStyles = {
       'px',
     ),
     lineHeight: vminLinearCalc(mobileScreen, 42, largeDesktopScreen, 48, 'px'),
-  } as Interpolation,
+  } as CSSObject,
   2: {
     fontWeight: 'bold',
     fontSize: vminLinearCalc(
@@ -108,7 +108,7 @@ export const headlineStyles = {
       'px',
     ),
     lineHeight: vminLinearCalc(mobileScreen, 30, largeDesktopScreen, 42, 'px'),
-  } as Interpolation,
+  } as CSSObject,
   3: {
     fontWeight: 'bold',
     fontSize: vminLinearCalc(
@@ -119,7 +119,7 @@ export const headlineStyles = {
       'px',
     ),
     lineHeight: vminLinearCalc(mobileScreen, 30, largeDesktopScreen, 36, 'px'),
-  } as Interpolation,
+  } as CSSObject,
   4: {
     fontWeight: 'bold',
     fontSize: vminLinearCalc(
@@ -130,15 +130,15 @@ export const headlineStyles = {
       'px',
     ),
     lineHeight: vminLinearCalc(mobileScreen, 24, largeDesktopScreen, 30, 'px'),
-  } as Interpolation,
+  } as CSSObject,
   5: {
     ...fontStyles,
     fontWeight: 'bold',
-  } as Interpolation,
+  } as CSSObject,
   6: {
     ...fontStyles,
     fontWeight: 'normal',
-  },
+  } as CSSObject,
 } as const;
 
 export type AccentColorName =

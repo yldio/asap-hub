@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import css from '@emotion/css';
+import { useRef } from 'react';
+import { css } from '@emotion/react';
 import { v4 as uuidV4 } from 'uuid';
 
 const containerStyles = css({

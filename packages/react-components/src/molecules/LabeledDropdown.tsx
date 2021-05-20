@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Dropdown, Paragraph, Label, DropdownProps } from '../atoms';
 import { perRem } from '../pixels';
 

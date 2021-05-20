@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useAuth0 } from '@asap-hub/react-context';
 import { WelcomePage } from '@asap-hub/react-components';

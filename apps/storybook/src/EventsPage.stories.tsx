@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventsPage } from '@asap-hub/react-components';
 import { select, text } from '@storybook/addon-knobs';
 import { events } from '@asap-hub/routing';

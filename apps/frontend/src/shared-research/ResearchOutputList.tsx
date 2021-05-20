@@ -1,4 +1,3 @@
-import React from 'react';
 import { SharedResearchList } from '@asap-hub/react-components';
 
 import { useResearchOutputs } from './state';

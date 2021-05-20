@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { BasicLayout } from '@asap-hub/react-components';
 
 import { NoPaddingDecorator } from './layout';

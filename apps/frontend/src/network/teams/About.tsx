@@ -1,4 +1,3 @@
-import React from 'react';
 import { TeamProfileAbout } from '@asap-hub/react-components';
 import { TeamResponse } from '@asap-hub/model';
 

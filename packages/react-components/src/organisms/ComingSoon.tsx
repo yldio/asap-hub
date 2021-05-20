@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { TextChildren } from '../text';
 import { Paragraph } from '../atoms';
 import { lead } from '../colors';

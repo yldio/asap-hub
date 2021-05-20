@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventPage } from '@asap-hub/react-components';
 import { createEventResponse } from '@asap-hub/fixtures';
 

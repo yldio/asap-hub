@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { Layout } from '@asap-hub/react-components';
 
 import { NoPaddingDecorator } from './layout';

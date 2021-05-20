@@ -9,10 +9,9 @@
 /packages/*/coverage
 
 # production
-/build
-/apps/*/build
-/packages/*/build
-**/build-cjs
+/apps/*/build*
+/packages/*/build*
+/apps/frontend/public/*unsupported-browser*
 
 # editors
 .vscode

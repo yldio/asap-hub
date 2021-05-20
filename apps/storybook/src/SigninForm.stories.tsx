@@ -1,4 +1,3 @@
-import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
 import { SigninForm } from '@asap-hub/react-components';

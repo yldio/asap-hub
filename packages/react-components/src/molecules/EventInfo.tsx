@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import { EventResponse } from '@asap-hub/model';
 import { events, network } from '@asap-hub/routing';
 

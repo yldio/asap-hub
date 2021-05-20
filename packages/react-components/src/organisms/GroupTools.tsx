@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph, Link } from '../atoms';

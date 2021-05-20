@@ -1,4 +1,3 @@
-import React from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import { render } from '@testing-library/react';

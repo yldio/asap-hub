@@ -1,4 +1,3 @@
-import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { array, select } from '@storybook/addon-knobs';
 import { UserNavigation } from '@asap-hub/react-components';

@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import { TeamResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';

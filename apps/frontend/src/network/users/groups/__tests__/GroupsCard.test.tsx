@@ -1,4 +1,4 @@
-import React from 'react';
+import { createElement, FC, Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import {
   createListGroupResponse,
@@ -26,15 +26,15 @@ mockConsoleError();
 
 const userId = 'u42';
 
-const wrapper: React.FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot initializeState={({ reset }) => reset(userGroupsState(userId))}>
-    <React.Suspense fallback="loading">
+    <Suspense fallback="loading">
       <Auth0Provider user={{ id: '42' }}>
         <WhenReady>
           <StaticRouter>{children}</StaticRouter>
         </WhenReady>
       </Auth0Provider>
-    </React.Suspense>
+    </Suspense>
   </RecoilRoot>
 );
 
@@ -69,8 +69,8 @@ it('is rendered when there are groups', async () => {
 
 it('throws if the user does not exist', async () => {
   mockGetUserGroups.mockResolvedValue(undefined);
-  const errorWrapper: React.FC = ({ children }) =>
-    React.createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
+  const errorWrapper: FC = ({ children }) =>
+    createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
   const { findByText } = render(
     <GroupsCard user={{ ...createUserResponse(), id: userId }} />,
     {

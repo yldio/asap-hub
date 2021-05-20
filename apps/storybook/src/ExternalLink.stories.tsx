@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { ExternalLink } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 

@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { NetworkPeople } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';
 import { TeamRole } from '@asap-hub/model';

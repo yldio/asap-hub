@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 
 import { Label, TextField, Paragraph } from '../atoms';
 import { perRem } from '../pixels';

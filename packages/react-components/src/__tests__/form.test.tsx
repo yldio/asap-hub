@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes } from 'react';
+import { InputHTMLAttributes } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
 import { useValidation } from '../form';

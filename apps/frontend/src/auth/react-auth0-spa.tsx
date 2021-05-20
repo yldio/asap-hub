@@ -4,7 +4,7 @@
 /* istanbul ignore file */
 /* eslint-disable no-shadow */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Auth0User, Auth0 } from '@asap-hub/auth';
 import { Auth0Context } from '@asap-hub/react-context';
 import {

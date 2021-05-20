@@ -1,4 +1,3 @@
-import React from 'react';
 import { isBefore, addHours, parseISO } from 'date-fns';
 import {
   EventResponse,

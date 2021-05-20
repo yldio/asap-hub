@@ -1,9 +1,5 @@
-import React, {
-  createElement,
-  HTMLAttributes,
-  AnchorHTMLAttributes,
-} from 'react';
-import css from '@emotion/css';
+import { createElement, HTMLAttributes, AnchorHTMLAttributes } from 'react';
+import { css } from '@emotion/react';
 
 import unified from 'unified';
 import rehypeHtml from 'rehype-parse';

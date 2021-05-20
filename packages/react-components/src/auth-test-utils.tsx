@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 import type { User, Auth0User } from '@asap-hub/auth';
 import {

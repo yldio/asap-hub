@@ -1,4 +1,3 @@
-import React from 'react';
 import { NewsAndEventsPageBody, Loading } from '@asap-hub/react-components';
 
 import { useNewsAndEvents } from '../api';

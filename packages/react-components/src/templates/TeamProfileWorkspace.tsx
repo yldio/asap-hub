@@ -1,6 +1,5 @@
-import React from 'react';
 import { TeamResponse, TeamTool } from '@asap-hub/model';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
 import { Card, Display, Link, Caption, Headline2, Paragraph } from '../atoms';

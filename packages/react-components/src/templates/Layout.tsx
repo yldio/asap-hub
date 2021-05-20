@@ -1,7 +1,16 @@
-import React, { useState, useEffect, ComponentProps, createRef } from 'react';
+import {
+  Suspense,
+  useState,
+  useEffect,
+  ComponentProps,
+  createRef,
+  FC,
+  lazy,
+  ReactNode,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, ToastStack } from '../organisms';
@@ -10,19 +19,19 @@ import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
 import { usePrevious } from '../hooks';
 
-const UserMenuButton = React.lazy(
+const UserMenuButton = lazy(
   () =>
     import(
       /* webpackChunkName: "user-menu-button" */ '../molecules/UserMenuButton'
     ),
 );
-const MainNavigation = React.lazy(
+const MainNavigation = lazy(
   () =>
     import(
       /* webpackChunkName: "main-navigation" */ '../organisms/MainNavigation'
     ),
 );
-const UserNavigation = React.lazy(
+const UserNavigation = lazy(
   () =>
     import(
       /* webpackChunkName: "user-navigation" */ '../organisms/UserNavigation'
@@ -149,10 +158,10 @@ const userMenuShownStyles = css({
 });
 
 type LayoutProps = {
-  readonly children: React.ReactNode;
+  readonly children: ReactNode;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
-const Layout: React.FC<LayoutProps> = ({ children, ...userNavProps }) => {
+const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -188,12 +197,12 @@ const Layout: React.FC<LayoutProps> = ({ children, ...userNavProps }) => {
           />
         </div>
         <div css={userButtonStyles}>
-          <React.Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading />}>
             <UserMenuButton
               onClick={() => setMenuShown(!menuShown)}
               open={menuShown}
             />
-          </React.Suspense>
+          </Suspense>
         </div>
         <main ref={mainRef} css={contentStyles}>
           {children}
@@ -204,9 +213,9 @@ const Layout: React.FC<LayoutProps> = ({ children, ...userNavProps }) => {
         <div
           css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}
         >
-          <React.Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading />}>
             <MainNavigation />
-          </React.Suspense>
+          </Suspense>
         </div>
         <div
           css={[
@@ -216,9 +225,9 @@ const Layout: React.FC<LayoutProps> = ({ children, ...userNavProps }) => {
             menuShown && userMenuShownStyles,
           ]}
         >
-          <React.Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading />}>
             <UserNavigation {...userNavProps} />
-          </React.Suspense>
+          </Suspense>
         </div>
       </article>
     </ToastStack>

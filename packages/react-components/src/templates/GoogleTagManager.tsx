@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 // Types that are definitely suitable to be displayed in analytics go here.
 // Set for example is not, but Arrays are rendered comma-joined.

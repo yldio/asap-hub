@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { SearchField } from '../molecules';
 
 interface EventSearchProps {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { TeamProfileWorkspace } from '@asap-hub/react-components';
 import { createTeamResponse } from '@asap-hub/fixtures';
 

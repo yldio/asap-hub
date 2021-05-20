@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { css } from '@emotion/core';
+import { useState } from 'react';
+import { css } from '@emotion/react';
 import { TeamTool } from '@asap-hub/model';
 
 import { Card, Headline3, Paragraph, Anchor, Link, Button } from '../atoms';

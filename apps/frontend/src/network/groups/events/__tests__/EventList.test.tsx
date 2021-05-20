@@ -1,4 +1,4 @@
-import React from 'react';
+import { ComponentType, FC, Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import {
   createListEventResponse,
@@ -34,7 +34,7 @@ beforeEach(() => {
 
 const renderGroupEventList = async (
   { searchQuery = '', currentTime = new Date(), past = false } = {},
-  wrapper?: React.ComponentType,
+  wrapper?: ComponentType,
 ) => {
   const result = render(
     <RecoilRoot
@@ -53,7 +53,7 @@ const renderGroupEventList = async (
         );
       }}
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter
@@ -83,7 +83,7 @@ const renderGroupEventList = async (
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
     { wrapper },
   );
@@ -179,7 +179,7 @@ it('sets before to an hour before now and sort parameters for past events', asyn
 
 it('throws if the group does not exist', async () => {
   mockGetGroupEvents.mockResolvedValue(undefined);
-  const errorWrapper: React.FC = ({ children }) => (
+  const errorWrapper: FC = ({ children }) => (
     <ErrorBoundary>{children}</ErrorBoundary>
   );
   const { getByText } = await renderGroupEventList({}, errorWrapper);

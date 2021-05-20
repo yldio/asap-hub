@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { WelcomePage } from '@asap-hub/react-components';
 import { ToastContext, useAuth0 } from '@asap-hub/react-context';
 import { useRouteParams, welcome } from '@asap-hub/routing';

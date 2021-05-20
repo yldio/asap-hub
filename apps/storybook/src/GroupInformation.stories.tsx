@@ -1,4 +1,3 @@
-import React from 'react';
 import { GroupInformation } from '@asap-hub/react-components';
 import { text, array } from '@storybook/addon-knobs';
 

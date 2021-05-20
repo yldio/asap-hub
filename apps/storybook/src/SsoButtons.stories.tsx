@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { SsoButtons } from '@asap-hub/react-components';
 
 export default {

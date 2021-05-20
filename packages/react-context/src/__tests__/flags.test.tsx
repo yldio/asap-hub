@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { render, fireEvent } from '@testing-library/react';
 import { isEnabled, disable } from '@asap-hub/flags';

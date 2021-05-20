@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
 import { createListUserResponse } from '@asap-hub/fixtures';

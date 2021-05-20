@@ -1,4 +1,3 @@
-import React from 'react';
 import { NetworkTeams } from '@asap-hub/react-components';
 
 import { useTeams } from './state';

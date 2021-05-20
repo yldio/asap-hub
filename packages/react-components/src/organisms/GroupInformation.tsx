@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { GroupResponse } from '@asap-hub/model';
 
 import { Button, Card, Headline3, Paragraph, Divider } from '../atoms';

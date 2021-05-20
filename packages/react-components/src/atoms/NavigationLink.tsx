@@ -1,6 +1,5 @@
-import React from 'react';
 import { NavHashLink } from 'react-router-hash-link';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { TextChildren } from '../text';
 import { useHasRouter } from '../routing';

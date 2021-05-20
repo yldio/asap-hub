@@ -1,4 +1,3 @@
-import React from 'react';
 import { act, render } from '@testing-library/react';
 
 import SearchField from '../SearchField';

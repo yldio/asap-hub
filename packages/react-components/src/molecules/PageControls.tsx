@@ -1,6 +1,5 @@
-import React from 'react';
 import { aperture, filter, uniqBy, sortWith, pipe, ascend } from 'ramda';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import {
   perRem,

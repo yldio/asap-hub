@@ -1,4 +1,3 @@
-import React from 'react';
 import { GoogleCalendar } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 import { googleLegacyCalendarColor } from './colors';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import { createBrowserHistory, History } from 'history';
 import { Router, Route } from 'react-router-dom';

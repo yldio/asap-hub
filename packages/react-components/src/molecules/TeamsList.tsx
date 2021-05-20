@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
 import { Divider, Link } from '../atoms';

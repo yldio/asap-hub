@@ -1,4 +1,3 @@
-import React from 'react';
 import { withKnobs } from '@storybook/addon-knobs';
 import { addParameters, addDecorator } from '@storybook/react';
 import { GlobalStyles, pixels } from '@asap-hub/react-components';

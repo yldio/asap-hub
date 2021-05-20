@@ -1,4 +1,3 @@
-import React from 'react';
 import { text } from '@storybook/addon-knobs';
 
 import { SigninPage } from '@asap-hub/react-components';

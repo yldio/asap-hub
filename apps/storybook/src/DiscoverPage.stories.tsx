@@ -1,4 +1,3 @@
-import React from 'react';
 import { DiscoverPage } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './layout';

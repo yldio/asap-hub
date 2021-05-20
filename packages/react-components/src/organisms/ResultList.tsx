@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 
 import { ListControls, PageControls } from '../molecules';
 import { Paragraph } from '../atoms';

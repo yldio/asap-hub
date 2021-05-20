@@ -1,5 +1,3 @@
-import React from 'react';
-
 const alert = (
   <svg
     width="24px"

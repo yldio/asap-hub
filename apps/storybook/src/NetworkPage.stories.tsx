@@ -1,4 +1,3 @@
-import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
 import { text, select } from '@storybook/addon-knobs';

@@ -1,5 +1,5 @@
-import React, { ReactElement, ReactNode } from 'react';
-import css, { CSSObject } from '@emotion/css';
+import { ReactElement, ReactNode } from 'react';
+import { css, CSSObject } from '@emotion/react';
 
 import {
   ceruleanFernGradientStyles,

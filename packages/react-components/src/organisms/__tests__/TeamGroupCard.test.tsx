@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import { createListGroupResponse } from '@asap-hub/fixtures';
 import userEvent from '@testing-library/user-event';

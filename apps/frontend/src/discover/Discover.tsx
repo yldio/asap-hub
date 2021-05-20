@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, lazy } from 'react';
 import {
   DiscoverPage,
   NotFoundPage,
@@ -9,10 +9,10 @@ import { useDiscover } from '../api';
 import Frame from '../structure/Frame';
 
 const loadBody = () => import(/* webpackChunkName: "discover-body" */ './Body');
-const Body = React.lazy(loadBody);
+const Body = lazy(loadBody);
 loadBody();
 
-const Discover: React.FC<Record<string, never>> = () => {
+const Discover: FC<Record<string, never>> = () => {
   const { loading, data } = useDiscover();
 
   if (loading) {

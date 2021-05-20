@@ -1,6 +1,9 @@
 module.exports = {
   presets: [
-    require.resolve('@babel/preset-react'),
-    require.resolve('@emotion/babel-preset-css-prop'),
+    [
+      require.resolve('@babel/preset-react'),
+      { runtime: 'automatic', importSource: '@emotion/react' },
+    ],
   ],
+  plugins: [require.resolve('@emotion/babel-plugin')],
 };

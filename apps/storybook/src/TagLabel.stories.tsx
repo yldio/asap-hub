@@ -1,4 +1,3 @@
-import React from 'react';
 import { TagLabel } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 

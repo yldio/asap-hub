@@ -1,4 +1,3 @@
-import React from 'react';
 import { AdditionalMaterials } from '@asap-hub/react-components';
 import { number, text } from '@storybook/addon-knobs';
 import { createEventResponse } from '@asap-hub/fixtures';

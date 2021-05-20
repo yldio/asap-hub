@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 import UserProfilePersonalText from '../UserProfilePersonalText';

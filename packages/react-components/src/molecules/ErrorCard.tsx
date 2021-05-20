@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { serializeError } from 'serialize-error';
 
 import { Card, Anchor, Button } from '../atoms';

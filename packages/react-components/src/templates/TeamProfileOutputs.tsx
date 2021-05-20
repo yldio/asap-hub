@@ -1,5 +1,5 @@
-import css from '@emotion/css';
-import React, { ComponentProps } from 'react';
+import { css } from '@emotion/react';
+import { ComponentProps } from 'react';
 import { ComingSoon, SharedResearchCard } from '../organisms';
 import { perRem } from '../pixels';
 

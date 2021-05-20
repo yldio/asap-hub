@@ -1,4 +1,4 @@
-import React, { ComponentProps, useEffect } from 'react';
+import { ComponentProps, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import {

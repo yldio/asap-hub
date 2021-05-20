@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { FC, lazy, useState, useEffect } from 'react';
 import { EventsPage } from '@asap-hub/react-components';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { events } from '@asap-hub/routing';
@@ -12,10 +12,10 @@ const loadCalendars = () =>
 const loadEventList = () =>
   import(/* webpackChunkName: "events-list" */ './EventList');
 
-const Calendars = React.lazy(loadCalendars);
-const EventList = React.lazy(loadEventList);
+const Calendars = lazy(loadCalendars);
+const EventList = lazy(loadEventList);
 
-const Events: React.FC<Record<string, never>> = () => {
+const Events: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadCalendars().then(loadEventList);
   }, []);

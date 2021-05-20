@@ -1,4 +1,4 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 
 import { GlobalStyles } from '@asap-hub/react-components';
@@ -7,10 +7,10 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <StrictMode>
     <GlobalStyles />
     <App />
-  </React.StrictMode>,
+  </StrictMode>,
   document.getElementById('root'),
 );
 

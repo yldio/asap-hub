@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import css from '@emotion/css';
+import { useState, useEffect, useRef } from 'react';
+import { css } from '@emotion/react';
 import { Button, Anchor } from '../atoms';
 import { perRem, mobileScreen } from '../pixels';
 import {

@@ -1,6 +1,6 @@
-import React, { ReactNode, useState, useCallback } from 'react';
+import { ReactNode, useState, useCallback } from 'react';
 import { ToastContext } from '@asap-hub/react-context';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import Toast from './Toast';
 

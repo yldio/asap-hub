@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Card, Headline2, Link, Paragraph } from '../atoms';
 import { createMailTo } from '../mail';
 

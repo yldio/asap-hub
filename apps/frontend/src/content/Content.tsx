@@ -1,4 +1,3 @@
-import React from 'react';
 import { ContentPage, NotFoundPage, Loading } from '@asap-hub/react-components';
 
 import { usePageByPath } from '../api';

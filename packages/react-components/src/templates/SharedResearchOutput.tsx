@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Divider } from '../atoms';

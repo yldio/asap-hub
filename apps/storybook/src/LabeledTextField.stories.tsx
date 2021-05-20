@@ -1,4 +1,3 @@
-import React from 'react';
 import { boolean, text } from '@storybook/addon-knobs';
 
 import { globeIcon, LabeledTextField } from '@asap-hub/react-components';

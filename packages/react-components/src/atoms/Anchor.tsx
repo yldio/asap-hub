@@ -1,6 +1,6 @@
-import React, { AnchorHTMLAttributes, ComponentProps } from 'react';
+import { AnchorHTMLAttributes, ComponentProps } from 'react';
 import { HashLink } from 'react-router-hash-link';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { isInternalLink } from '../utils';
 import { useHasRouter } from '../routing';

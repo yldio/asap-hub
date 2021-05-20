@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import css from '@emotion/css';
+import { useRef } from 'react';
+import { css } from '@emotion/react';
 
 import { Display, Paragraph, Button } from '../atoms';
 import { LabeledTextField } from '../molecules';

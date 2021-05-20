@@ -1,4 +1,3 @@
-import React from 'react';
 import { UserProfileRecentWorks } from '@asap-hub/react-components';
 
 export default {

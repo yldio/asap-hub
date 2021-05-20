@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { TextChildren, layoutStyles, headlineStyles } from '../text';
 
 interface DisplayProps {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ComingSoon } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 

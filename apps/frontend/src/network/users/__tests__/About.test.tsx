@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { render, RenderResult, waitFor } from '@testing-library/react';
@@ -15,11 +15,11 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
 const id = '42';
 const makeWrapper =
-  (userId = id, currentUserId = userId): React.FC<Record<string, never>> =>
+  (userId = id, currentUserId = userId): FC<Record<string, never>> =>
   ({ children }) =>
     (
       <RecoilRoot>
-        <React.Suspense fallback="loading">
+        <Suspense fallback="loading">
           <Auth0Provider user={{ id: currentUserId }}>
             <MemoryRouter
               initialEntries={[
@@ -38,7 +38,7 @@ const makeWrapper =
               </Route>
             </MemoryRouter>
           </Auth0Provider>
-        </React.Suspense>
+        </Suspense>
       </RecoilRoot>
     );
 const wrapper = makeWrapper();

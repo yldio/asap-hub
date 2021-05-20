@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import { createContext, useContext } from 'react';
 
 type UserProfile = {
   isOwnProfile: boolean;
 };
 
-export const UserProfileContext = React.createContext<UserProfile>({
+export const UserProfileContext = createContext<UserProfile>({
   isOwnProfile: false,
 });
 export const useUserProfileContext = (): UserProfile =>

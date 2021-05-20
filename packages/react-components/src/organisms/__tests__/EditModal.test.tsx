@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { Router, MemoryRouter } from 'react-router-dom';
 import { History, createMemoryHistory } from 'history';
 import { render, act, waitFor, RenderResult } from '@testing-library/react';

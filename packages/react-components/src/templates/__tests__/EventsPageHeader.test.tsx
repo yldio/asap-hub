@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 import { events, searchQueryParam } from '@asap-hub/routing';
 import { StaticRouter } from 'react-router-dom';

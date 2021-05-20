@@ -1,4 +1,3 @@
-import React from 'react';
 import { PageControls } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';
 

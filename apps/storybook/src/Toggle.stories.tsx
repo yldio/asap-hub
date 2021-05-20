@@ -1,4 +1,3 @@
-import React from 'react';
 import { boolean, text } from '@storybook/addon-knobs';
 import { action } from '@storybook/addon-actions';
 import { Toggle, userIcon, teamIcon } from '@asap-hub/react-components';

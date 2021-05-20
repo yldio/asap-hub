@@ -1,4 +1,3 @@
-import React from 'react';
 import { Router, StaticRouter } from 'react-router-dom';
 import { renderHook } from '@testing-library/react-hooks';
 import { createMemoryHistory } from 'history';

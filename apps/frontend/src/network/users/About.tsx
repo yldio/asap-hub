@@ -1,4 +1,3 @@
-import React from 'react';
 import { useRouteMatch, Route } from 'react-router-dom';
 import { UserProfileAbout, BiographyModal } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createListUserResponse } from '@asap-hub/fixtures';
 import { UsersList } from '@asap-hub/react-components';
 import { number } from '@storybook/addon-knobs';

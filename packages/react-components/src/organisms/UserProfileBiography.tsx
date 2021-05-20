@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import css from '@emotion/css';
+import { useContext } from 'react';
+import { css } from '@emotion/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Card, Headline2, Paragraph, Link } from '../atoms';

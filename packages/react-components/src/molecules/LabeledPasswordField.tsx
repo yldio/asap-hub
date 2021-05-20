@@ -1,5 +1,5 @@
-import React, { ComponentProps, useState } from 'react';
-import css from '@emotion/css';
+import { ComponentProps, useState } from 'react';
+import { css } from '@emotion/react';
 
 import { Label, TextField, Paragraph, Link, Button } from '../atoms';
 import { perRem } from '../pixels';

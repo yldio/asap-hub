@@ -1,12 +1,6 @@
-import React, {
-  ComponentProps,
-  ReactNode,
-  useRef,
-  useState,
-  useEffect,
-} from 'react';
+import { ComponentProps, ReactNode, useRef, useState, useEffect } from 'react';
 import { Prompt } from 'react-router-dom';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { ModalEditHeader, Modal } from '../molecules';
 import { noop } from '../utils';

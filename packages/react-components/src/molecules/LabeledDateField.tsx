@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { formatISO, parseISO } from 'date-fns';
 
 import { TextField, Label, Paragraph } from '../atoms';

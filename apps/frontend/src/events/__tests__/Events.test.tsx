@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
@@ -38,7 +38,7 @@ const renderEventsPage = async (pathname = events({}).$) => {
         reset(eventsState(getEventListOptions(new Date(), false)));
       }}
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname }]}>
@@ -48,7 +48,7 @@ const renderEventsPage = async (pathname = events({}).$) => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

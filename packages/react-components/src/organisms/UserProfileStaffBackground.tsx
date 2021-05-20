@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { UserResponse } from '@asap-hub/model';
 import { discover } from '@asap-hub/routing';
 

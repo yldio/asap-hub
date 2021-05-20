@@ -1,4 +1,3 @@
-import React from 'react';
 import { Overlay } from '@asap-hub/react-components';
 import { boolean } from '@storybook/addon-knobs';
 import { NoPaddingDecorator } from './layout';

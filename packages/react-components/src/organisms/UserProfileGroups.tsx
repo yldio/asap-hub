@@ -1,6 +1,6 @@
-import React from 'react';
+import { FC, Fragment } from 'react';
 import { UserResponse, GroupResponse } from '@asap-hub/model';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { network } from '@asap-hub/routing';
 
 import { Card, Headline2, Paragraph, Link, Divider } from '../atoms';
@@ -51,7 +51,7 @@ const listItemStyle = css({
 type UserProfileGroupsProps = Pick<UserResponse, 'firstName' | 'id'> & {
   readonly groups: ReadonlyArray<GroupResponse>;
 };
-const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
+const UserProfileGroups: FC<UserProfileGroupsProps> = ({
   firstName,
   id,
   groups,
@@ -71,7 +71,7 @@ const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
       {!!groups.length && (
         <ul css={[containerStyles]}>
           {groups.map((group, idx) => (
-            <React.Fragment key={`group-${idx}`}>
+            <Fragment key={`group-${idx}`}>
               {idx === 0 || <Divider />}
               <li key={idx} css={listItemStyle}>
                 <div css={[titleStyle]}>Group</div>
@@ -86,7 +86,7 @@ const UserProfileGroups: React.FC<UserProfileGroupsProps> = ({
                     ?.role ?? 'Member'}
                 </div>
               </li>
-            </React.Fragment>
+            </Fragment>
           ))}
         </ul>
       )}

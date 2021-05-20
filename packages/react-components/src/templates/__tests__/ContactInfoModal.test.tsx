@@ -1,4 +1,3 @@
-import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

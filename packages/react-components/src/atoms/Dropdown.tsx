@@ -1,6 +1,6 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import Select, { OptionTypeBase } from 'react-select';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { noop } from '../utils';
 import {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { boolean } from '@storybook/addon-knobs';
 
 import { OrcidSigninButton } from '@asap-hub/react-components';

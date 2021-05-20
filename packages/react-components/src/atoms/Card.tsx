@@ -1,5 +1,4 @@
-import React from 'react';
-import css, { CSSObject } from '@emotion/css';
+import { css, CSSObject } from '@emotion/react';
 
 import * as colors from '../colors';
 import { perRem } from '../pixels';

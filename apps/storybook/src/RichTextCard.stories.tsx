@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { RichTextCard } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 

@@ -1,5 +1,5 @@
-import React, { ComponentProps, useRef } from 'react';
-import css from '@emotion/css';
+import { ComponentProps, useRef } from 'react';
+import { css } from '@emotion/react';
 
 import { LabeledPasswordField, LabeledTextField } from '../../molecules';
 import { noop } from '../../utils';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, lazy } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 
@@ -6,10 +6,10 @@ import Frame from '../Frame';
 
 mockConsoleError();
 
-const Throw: React.FC<Record<string, never>> = () => {
+const Throw: FC<Record<string, never>> = () => {
   throw new Error('oops');
 };
-const Suspend = React.lazy(() => new Promise(() => {}));
+const Suspend = lazy(() => new Promise(() => {}));
 
 describe('an error', () => {
   it('is caught by a boundary', () => {

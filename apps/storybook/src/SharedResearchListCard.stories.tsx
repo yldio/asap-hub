@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { SharedResearchListCard } from '@asap-hub/react-components';
 import { text, number, select } from '@storybook/addon-knobs';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';

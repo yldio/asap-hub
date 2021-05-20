@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { Header } from '../molecules';
 import { steel } from '../colors';

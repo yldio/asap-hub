@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, FC, lazy, useState } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
@@ -13,12 +13,12 @@ const loadOutputs = () =>
   import(/* webpackChunkName: "network-team-outputs" */ './Outputs');
 const loadWorkspace = () =>
   import(/* webpackChunkName: "network-team-workspace" */ './Workspace');
-const About = React.lazy(loadAbout);
-const Outputs = React.lazy(loadOutputs);
-const Workspace = React.lazy(loadWorkspace);
+const About = lazy(loadAbout);
+const Outputs = lazy(loadOutputs);
+const Workspace = lazy(loadWorkspace);
 loadAbout();
 
-const TeamProfile: React.FC<Record<string, never>> = () => {
+const TeamProfile: FC<Record<string, never>> = () => {
   const route = network({}).teams({}).team;
   const [teamListElementId] = useState(`team-list-${uuid()}`);
 

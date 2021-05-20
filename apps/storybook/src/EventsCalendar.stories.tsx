@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { EventsCalendar } from '@asap-hub/react-components';
 import { createListCalendarResponse } from '@asap-hub/fixtures';
 import { number } from '@storybook/addon-knobs';

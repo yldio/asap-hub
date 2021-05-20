@@ -1,4 +1,3 @@
-import React from 'react';
 import { TabNav, TabLink } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 import { select, number } from '@storybook/addon-knobs';

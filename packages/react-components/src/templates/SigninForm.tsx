@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 
 import { EmailPasswordSignin, SsoButtons } from '../organisms';
 import { Display, Divider, Paragraph } from '../atoms';

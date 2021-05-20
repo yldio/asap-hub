@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import css, { SerializedStyles } from '@emotion/css';
+import { ReactNode } from 'react';
+import { css, SerializedStyles } from '@emotion/react';
 
 import { fern, paper, pine } from '../colors';
 import { ThemeVariant, defaultThemeVariant } from '../theme';

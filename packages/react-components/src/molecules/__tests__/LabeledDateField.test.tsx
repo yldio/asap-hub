@@ -1,4 +1,3 @@
-import React from 'react';
 import { formatISO } from 'date-fns';
 import { render, fireEvent } from '@testing-library/react';
 

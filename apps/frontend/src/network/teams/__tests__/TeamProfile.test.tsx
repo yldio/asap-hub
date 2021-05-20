@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -32,7 +32,7 @@ const renderTeamProfile = async (
         set(refreshTeamState(teamResponse.id), Math.random())
       }
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter
@@ -49,7 +49,7 @@ const renderTeamProfile = async (
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

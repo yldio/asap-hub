@@ -7,7 +7,7 @@
     "noEmit": true,
 
     "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": ["src"],
   "references": [

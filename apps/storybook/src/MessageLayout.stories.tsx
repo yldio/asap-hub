@@ -1,4 +1,3 @@
-import React from 'react';
 import { MessageLayout } from '@asap-hub/react-components';
 
 export default {

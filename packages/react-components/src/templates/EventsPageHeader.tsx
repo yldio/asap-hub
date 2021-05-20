@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import { events } from '@asap-hub/routing';
 
 import { Display, Paragraph, TabLink } from '../atoms';

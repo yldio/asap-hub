@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT,

@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import css from '@emotion/css';
+import { useContext } from 'react';
+import { css } from '@emotion/react';
 import formatDistance from 'date-fns/formatDistance';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';

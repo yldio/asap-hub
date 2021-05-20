@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventsList } from '@asap-hub/react-components';
 
 import { useEvents, usePrefetchEvents } from './state';

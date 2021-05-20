@@ -42,6 +42,7 @@ ${
     displayName
   }
   sharingStatus
+  asapFunded
 }`
     : ''
 }

@@ -36,6 +36,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                       .items[0],
                   ],
                   sharingStatus: 'Network Only',
+                  asapFunded: 'No',
                 },
               },
               {
@@ -307,6 +308,7 @@ export const listTeamResponse: ListTeamResponse = {
           ],
           lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
           sharingStatus: 'Network Only',
+          asapFunded: 'No',
         },
       ],
       members: [
@@ -406,6 +408,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               type: 'Proposal',
               tags: ['test', 'tag'],
               sharingStatus: 'Network Only',
+              asapFunded: 'No',
               authors: [
                 graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
                   .items[0],
@@ -577,6 +580,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       ],
       lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
       sharingStatus: 'Network Only',
+      asapFunded: 'No',
     },
   ],
   members: [
@@ -643,6 +647,7 @@ export const getGraphQlTeamResponse = (
                   .items[0],
               ],
               sharingStatus: 'Network Only',
+              asapFunded: 'No',
             },
             referencingTeamsContents: [
               {
@@ -792,6 +797,7 @@ export const updateExpectation: TeamResponse = {
       ],
       lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
       sharingStatus: 'Network Only',
+      asapFunded: 'No',
     },
   ],
   members: [

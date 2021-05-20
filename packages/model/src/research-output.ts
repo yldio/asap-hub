@@ -46,6 +46,7 @@ export type ResearchOutputSubtype =
   | 'Viral Vector';
 
 export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
+export type DecisionOptionSimple = 'Yes' | 'No';
 
 export type ResearchOutputResponse = {
   readonly id: string;
@@ -62,6 +63,7 @@ export type ResearchOutputResponse = {
   readonly lastUpdatedPartial: string;
   readonly accessInstructions?: string;
   readonly sharingStatus: ResearchOutputSharingStatus;
+  readonly asapFunded?: DecisionOptionSimple;
 
   readonly authors: ReadonlyArray<UserResponse>;
   /**
@@ -82,3 +84,4 @@ export const researchOutputLabels: Record<ResearchOutputType, string> = {
 };
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
+

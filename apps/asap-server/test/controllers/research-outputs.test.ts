@@ -215,7 +215,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default sharingStatus to Public when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      delete squidexGraphqlResponse.findResearchOutputsContent.flatData?.sharingStatus;
+      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
+        ?.sharingStatus;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -226,6 +227,38 @@ describe('ResearchOutputs controller', () => {
       const result = await researchOutputs.fetchById(researchOutputId);
 
       expect(result.sharingStatus).toEqual('Public');
+    });
+
+    test('Should default asapFunded to undefined when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
+        ?.asapFunded;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.asapFunded).not.toBeDefined();
+    });
+
+    test('Should default asapFunded "Not Sure" option to undefined', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent.flatData!.asapFunded =
+        'Not Sure';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.asapFunded).not.toBeDefined();
     });
 
     test('Should default authors to an empty array when missing', async () => {

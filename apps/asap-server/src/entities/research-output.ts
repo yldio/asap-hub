@@ -1,4 +1,8 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  DecisionOption,
+  DecisionOptionSimple,
+  ResearchOutputResponse,
+} from '@asap-hub/model';
 import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
@@ -50,6 +54,7 @@ export const parseGraphQLResearchOutput = (
     ...optionalAuthors,
     ...optionalTeams,
     sharingStatus: output.flatData?.sharingStatus || 'Public',
+    asapFunded: convertNotSureToUndefined(output.flatData?.asapFunded),
   };
 };
 
@@ -59,3 +64,10 @@ const parseGraphqlTeamLite = (
   id: graphqlTeam.id,
   displayName: graphqlTeam.flatData?.displayName || '',
 });
+
+const convertNotSureToUndefined = (
+  decision?: DecisionOption | null,
+): DecisionOptionSimple | undefined =>
+  decision && ['Yes', 'No'].includes(decision)
+    ? (decision as 'Yes' | 'No')
+    : undefined;

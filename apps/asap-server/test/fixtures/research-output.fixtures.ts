@@ -40,6 +40,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
     authors: graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items,
     accessInstructions: 'some access instructions',
     sharingStatus: 'Network Only',
+    asapFunded: 'Yes',
   },
   referencingTeamsContents: [
     {
@@ -74,6 +75,7 @@ export const getResearchOutputResponse =
       id: 'team-id-1',
       displayName: 'Schipa, A',
     },
+<<<<<<< HEAD
     teams: [
       {
         id: 'team-id-1',
@@ -88,7 +90,21 @@ export const getResearchOutputResponse =
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
     accessInstructions: 'some access instructions',
     sharingStatus: 'Network Only',
+    asapFunded: 'Yes',
   });
+=======
+    {
+      id: 'team-id-2',
+      displayName: 'Team, B',
+    },
+  ],
+  publishDate: '2021-05-21T13:18:31Z',
+  lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
+  accessInstructions: 'some access instructions',
+  sharingStatus: 'Network Only',
+  asapFunded: 'Yes',
+});
+>>>>>>> added asap-funded to controllers and route
 
 export const getListResearchOutputResponse =
   (): ListResearchOutputResponse => ({

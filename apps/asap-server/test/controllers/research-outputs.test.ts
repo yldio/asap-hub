@@ -213,6 +213,21 @@ describe('ResearchOutputs controller', () => {
       expect(result.type).toEqual('Proposal');
     });
 
+    test('Should default sharingStatus to Public when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      delete squidexGraphqlResponse.findResearchOutputsContent.flatData?.sharingStatus;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.sharingStatus).toEqual('Public');
+    });
+
     test('Should default authors to an empty array when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       delete squidexGraphqlResponse.findResearchOutputsContent.flatData

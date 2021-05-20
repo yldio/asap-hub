@@ -61,6 +61,7 @@ export type ResearchOutputResponse = {
   readonly lastModifiedDate?: string;
   readonly lastUpdatedPartial: string;
   readonly accessInstructions?: string;
+  readonly sharingStatus: ResearchOutputSharingStatus;
 
   readonly authors: ReadonlyArray<UserResponse>;
   /**

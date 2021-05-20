@@ -39,6 +39,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
     authors: graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items,
     accessInstructions: 'some access instructions',
+    sharingStatus: 'Network Only',
   },
   referencingTeamsContents: [
     {
@@ -86,6 +87,7 @@ export const getResearchOutputResponse =
     publishDate: '2021-05-21T13:18:31Z',
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
     accessInstructions: 'some access instructions',
+    sharingStatus: 'Network Only',
   });
 
 export const getListResearchOutputResponse =

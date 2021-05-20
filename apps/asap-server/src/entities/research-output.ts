@@ -49,6 +49,7 @@ export const parseGraphQLResearchOutput = (
     accessInstructions: output.flatData?.accessInstructions || undefined,
     ...optionalAuthors,
     ...optionalTeams,
+    sharingStatus: output.flatData?.sharingStatus || 'Public',
   };
 };
 

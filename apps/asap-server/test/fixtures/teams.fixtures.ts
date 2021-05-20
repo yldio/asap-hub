@@ -35,6 +35,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                     graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
                       .items[0],
                   ],
+                  sharingStatus: 'Network Only',
                 },
               },
               {
@@ -284,6 +285,7 @@ export const listTeamResponse: ListTeamResponse = {
           ],
           lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
           accessInstructions: 'some access instructions',
+          sharingStatus: 'Public',
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -304,6 +306,7 @@ export const listTeamResponse: ListTeamResponse = {
             },
           ],
           lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
+          sharingStatus: 'Network Only',
         },
       ],
       members: [
@@ -402,6 +405,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
+              sharingStatus: 'Network Only',
               authors: [
                 graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
                   .items[0],
@@ -551,6 +555,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
         },
       ],
       lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
+      sharingStatus: 'Public',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -571,6 +576,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
         },
       ],
       lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
+      sharingStatus: 'Network Only',
     },
   ],
   members: [
@@ -636,6 +642,7 @@ export const getGraphQlTeamResponse = (
                 graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
                   .items[0],
               ],
+              sharingStatus: 'Network Only',
             },
             referencingTeamsContents: [
               {
@@ -763,6 +770,7 @@ export const updateExpectation: TeamResponse = {
         },
       ],
       lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
+      sharingStatus: 'Public',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -783,6 +791,7 @@ export const updateExpectation: TeamResponse = {
         },
       ],
       lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
+      sharingStatus: 'Network Only',
     },
   ],
   members: [

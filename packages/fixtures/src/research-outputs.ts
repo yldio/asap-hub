@@ -32,6 +32,7 @@ const researchOutputResponse: Omit<
     },
   ],
   lastUpdatedPartial: '2020-09-09T20:36:54Z',
+  sharingStatus: 'Public',
 };
 
 export const createResearchOutputResponse = (

@@ -41,6 +41,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
     accessInstructions: 'some access instructions',
     sharingStatus: 'Network Only',
     asapFunded: 'Yes',
+    usedInAPublication: 'No',
   },
   referencingTeamsContents: [
     {
@@ -103,6 +104,7 @@ export const getResearchOutputResponse =
   accessInstructions: 'some access instructions',
   sharingStatus: 'Network Only',
   asapFunded: 'Yes',
+  usedInPublication: 'No',
 });
 >>>>>>> added asap-funded to controllers and route
 

@@ -261,6 +261,38 @@ describe('ResearchOutputs controller', () => {
       expect(result.asapFunded).not.toBeDefined();
     });
 
+    test('Should default usedInPublication to undefined when missing', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
+        ?.usedInAPublication;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.usedInPublication).not.toBeDefined();
+    });
+
+    test('Should default usedInPublication "Not Sure" option to undefined', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent.flatData!.usedInAPublication =
+        'Not Sure';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.usedInPublication).not.toBeDefined();
+    });
+
     test('Should default authors to an empty array when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       delete squidexGraphqlResponse.findResearchOutputsContent.flatData

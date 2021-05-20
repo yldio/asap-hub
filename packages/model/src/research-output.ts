@@ -64,6 +64,7 @@ export type ResearchOutputResponse = {
   readonly accessInstructions?: string;
   readonly sharingStatus: ResearchOutputSharingStatus;
   readonly asapFunded?: DecisionOptionSimple;
+  readonly usedInPublication?: DecisionOptionSimple;
 
   readonly authors: ReadonlyArray<UserResponse>;
   /**
@@ -84,4 +85,3 @@ export const researchOutputLabels: Record<ResearchOutputType, string> = {
 };
 
 export type ListResearchOutputResponse = ListResponse<ResearchOutputResponse>;
-

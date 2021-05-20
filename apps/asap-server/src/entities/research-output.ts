@@ -55,6 +55,9 @@ export const parseGraphQLResearchOutput = (
     ...optionalTeams,
     sharingStatus: output.flatData?.sharingStatus || 'Public',
     asapFunded: convertNotSureToUndefined(output.flatData?.asapFunded),
+    usedInPublication: convertNotSureToUndefined(
+      output.flatData?.usedInAPublication,
+    ),
   };
 };
 

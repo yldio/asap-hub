@@ -429,6 +429,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
                 graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
                   .items[1],
               ],
+              usedInAPublication: 'No',
             },
             referencingTeamsContents: [
               {
@@ -559,6 +560,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       ],
       lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
       sharingStatus: 'Public',
+      usedInPublication: 'No',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -674,6 +676,7 @@ export const getGraphQlTeamResponse = (
                 graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
                   .items[1],
               ],
+              usedInAPublication: 'No',
             },
             referencingTeamsContents: [
               {
@@ -776,6 +779,7 @@ export const updateExpectation: TeamResponse = {
       ],
       lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
       sharingStatus: 'Public',
+      usedInPublication: 'No',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

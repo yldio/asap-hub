@@ -43,6 +43,7 @@ ${
   }
   sharingStatus
   asapFunded
+  usedInAPublication
 }`
     : ''
 }

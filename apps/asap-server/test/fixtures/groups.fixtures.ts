@@ -65,6 +65,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                         accessInstructions: 'some access instructions',
                         sharingStatus: 'Network Only',
                         asapFunded: 'No',
+                        usedInAPublication: 'No',
                         authors:
                           graphQlResponseFetchUsers.data
                             .queryUsersContentsWithTotal.items,
@@ -270,6 +271,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
               accessInstructions: 'some access instructions',
               sharingStatus: 'Network Only',
               asapFunded: 'No',
+              usedInPublication: 'No',
             },
           ],
           projectTitle:

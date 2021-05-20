@@ -104,3 +104,16 @@ it('renders the 404 page for a missing team', async () => {
   );
   expect(getByText(/sorry.+page/i)).toBeVisible();
 });
+
+it('deep links to the teams list', async () => {
+  const { container, getByLabelText } = await renderTeamProfile({
+    ...createTeamResponse({ teamMembers: 10 }),
+    id: '42',
+  });
+
+  const anchor = getByLabelText(/\+\d/i).closest('a');
+  expect(anchor).toBeVisible();
+  const { hash } = new URL(anchor!.href, globalThis.location.href);
+
+  expect(container.querySelector(hash)).toHaveTextContent(/team members/i);
+});

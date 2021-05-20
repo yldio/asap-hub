@@ -53,11 +53,11 @@ export const userRouteFactory = (
   const userRoutes = Router();
 
   userRoutes.get('/users', async (req, res) => {
-    const options = (framework.validate(
+    const options = framework.validate(
       'query',
       req.query,
       querySchemaWithFilter,
-    ) as unknown) as FetchOptions;
+    ) as unknown as FetchOptions;
 
     const result = await userController.fetch(options);
 
@@ -79,11 +79,11 @@ export const userRouteFactory = (
     const { query, params } = req;
 
     const { userId } = framework.validate('parameters', params, paramSchema);
-    const options = (framework.validate(
+    const options = framework.validate(
       'query',
       query,
       querySchema,
-    ) as unknown) as FetchOptions;
+    ) as unknown as FetchOptions;
 
     const user = await userController.fetchById(userId);
     const teams = user.teams.map((t) => t.id);

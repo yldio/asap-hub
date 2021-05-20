@@ -39,7 +39,7 @@ const iconMap: Record<Type, ReactNode> = {
   live: clockIcon,
 };
 
-const accentMap: Record<Type, ReactNode> = {
+const accentMap = {
   alert: emberStyles,
   attachment: leadStyles,
   live: leadStyles,

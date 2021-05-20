@@ -11,11 +11,11 @@ export const newsAndEventsRouteFactory = (
   newsAndEventsRoutes.get('/news-and-events', async (req, res) => {
     const { query } = req;
 
-    const options = (framework.validate(
+    const options = framework.validate(
       'query',
       query,
       fetchQuerySchema,
-    ) as unknown) as {
+    ) as unknown as {
       take: number;
       skip: number;
     };

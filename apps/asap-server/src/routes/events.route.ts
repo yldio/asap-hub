@@ -8,11 +8,11 @@ export const eventRouteFactory = (eventController: EventController): Router => {
   const eventRoutes = Router();
 
   eventRoutes.get('/events', async (req, res: Response<ListEventResponse>) => {
-    const query = (framework.validate(
+    const query = framework.validate(
       'query',
       req.query,
       eventQuerySchema,
-    ) as unknown) as FetchEventsOptions;
+    ) as unknown as FetchEventsOptions;
 
     const result = await eventController.fetch(query);
 

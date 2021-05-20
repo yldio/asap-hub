@@ -37,8 +37,10 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 const mockPostUserAvatar = postUserAvatar as jest.MockedFunction<
   typeof postUserAvatar
 >;
-const standardMockPatchUser = mockPatchUser.getMockImplementation() as typeof patchUser;
-const standardMockPostUserAvatar = mockPostUserAvatar.getMockImplementation() as typeof postUserAvatar;
+const standardMockPatchUser =
+  mockPatchUser.getMockImplementation() as typeof patchUser;
+const standardMockPostUserAvatar =
+  mockPostUserAvatar.getMockImplementation() as typeof postUserAvatar;
 
 const mockToast = jest.fn() as jest.MockedFunction<
   ContextType<typeof ToastContext>
@@ -240,12 +242,8 @@ describe('a header edit button', () => {
       id: '42',
     };
 
-    const {
-      getByText,
-      findByText,
-      findByLabelText,
-      findByDisplayValue,
-    } = await renderUserProfile(userProfile);
+    const { getByText, findByText, findByLabelText, findByDisplayValue } =
+      await renderUserProfile(userProfile);
 
     userEvent.click(await findByLabelText(/edit.+personal/i));
     userEvent.type(await findByDisplayValue('York'), 'shire');
@@ -266,12 +264,8 @@ describe('a header edit button', () => {
       contactEmail: 'contact@example.com',
       id: '42',
     };
-    const {
-      getByText,
-      findByText,
-      findByLabelText,
-      findByDisplayValue,
-    } = await renderUserProfile(userProfile);
+    const { getByText, findByText, findByLabelText, findByDisplayValue } =
+      await renderUserProfile(userProfile);
 
     userEvent.click(await findByLabelText(/edit.+contact/i));
     userEvent.type(await findByDisplayValue('contact@example.com'), 'm');

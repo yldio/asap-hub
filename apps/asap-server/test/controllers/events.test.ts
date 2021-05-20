@@ -439,9 +439,11 @@ describe('Event controller', () => {
       const pUnavailableEventRes = eventBase;
       pUnavailableEventRes.flatData!.endDate = '2009-12-24T16:20:14Z';
       pUnavailableEventRes.flatData!.notesPermanentlyUnavailable = true;
-      pUnavailableEventRes.flatData!.videoRecordingPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.videoRecordingPermanentlyUnavailable =
+        true;
       pUnavailableEventRes.flatData!.presentationPermanentlyUnavailable = true;
-      pUnavailableEventRes.flatData!.meetingMaterialsPermanentlyUnavailable = true;
+      pUnavailableEventRes.flatData!.meetingMaterialsPermanentlyUnavailable =
+        true;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -715,9 +717,8 @@ describe('Event controller', () => {
             fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
         },
       };
-      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents = [
-        queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0],
-      ];
+      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents =
+        [queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0]];
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -736,7 +737,8 @@ describe('Event controller', () => {
             fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
         },
       };
-      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents = [];
+      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents =
+        [];
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

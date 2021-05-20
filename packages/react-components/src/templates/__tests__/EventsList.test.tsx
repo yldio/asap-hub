@@ -31,7 +31,7 @@ it('renders multiple event cards', () => {
       ])}
     />,
   );
-  expect(
-    getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['FirstEvent', 'SecondEvent']);
+  expect(getAllByRole('heading').map(({ textContent }) => textContent)).toEqual(
+    ['FirstEvent', 'SecondEvent'],
+  );
 });

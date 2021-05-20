@@ -3,11 +3,12 @@ export const mockLocation = (
 ) => {
   const originalLocation = globalThis.location;
   const mockGetLocation: jest.MockedFunction<() => URL> = jest.fn();
-  const mockSetLocation: jest.MockedFunction<(
-    newLocation: string,
-  ) => void> = jest.fn();
-  const mockAssign: jest.MockedFunction<typeof globalThis.location.assign> = jest.fn();
-  const mockReload: jest.MockedFunction<typeof globalThis.location.reload> = jest.fn();
+  const mockSetLocation: jest.MockedFunction<(newLocation: string) => void> =
+    jest.fn();
+  const mockAssign: jest.MockedFunction<typeof globalThis.location.assign> =
+    jest.fn();
+  const mockReload: jest.MockedFunction<typeof globalThis.location.reload> =
+    jest.fn();
 
   beforeEach(() => {
     mockGetLocation.mockReset().mockReturnValue(new URL(initialUrl));

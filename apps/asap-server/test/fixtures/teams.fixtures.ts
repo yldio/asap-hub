@@ -596,12 +596,10 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
     displayName: { iv: 'Cristiano Ronaldo' },
     applicationNumber: { iv: 'hofded' },
     projectTitle: {
-      iv:
-        'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
+      iv: 'Ce fe kok ob lovkad pim cukiviw lakwujuz vilid camiduci nim ca perkeb mekkaho wuculate re huppoljop.',
     },
     projectSummary: {
-      iv:
-        'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
+      iv: 'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
     },
     skills: { iv: [] },
     outputs: { iv: [] },

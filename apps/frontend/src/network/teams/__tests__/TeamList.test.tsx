@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createListTeamResponse } from '@asap-hub/fixtures';
@@ -22,7 +22,7 @@ const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 const renderTeamList = async () => {
   const result = render(
     <RecoilRoot
-      initializeState={({ set, reset }) => {
+      initializeState={({ reset }) => {
         reset(
           teamsState({
             currentPage: 0,

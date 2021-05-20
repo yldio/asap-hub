@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createListUserResponse } from '@asap-hub/fixtures';
@@ -22,7 +22,7 @@ const mockGetUsers = getUsers as jest.MockedFunction<typeof getUsers>;
 const renderUserList = async () => {
   const result = render(
     <RecoilRoot
-      initializeState={({ set, reset }) => {
+      initializeState={({ reset }) => {
         reset(
           usersState({
             currentPage: 0,

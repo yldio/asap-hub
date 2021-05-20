@@ -53,7 +53,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
       setIsAuthenticated(isAuthenticated);
 
       if (isAuthenticated) {
-        const user = await auth0FromHook.getUser();
+        const user = await auth0FromHook.getUser<Auth0User>();
         setUser(user);
       }
 
@@ -75,7 +75,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     } finally {
       setPopupOpen(false);
     }
-    const user = await auth0Client.getUser();
+    const user = await auth0Client.getUser<Auth0User>();
     setUser(user);
     setIsAuthenticated(true);
   };
@@ -86,7 +86,7 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     }
     setLoading(true);
     const result = await auth0Client.handleRedirectCallback();
-    const user = await auth0Client.getUser();
+    const user = await auth0Client.getUser<Auth0User>();
     setLoading(false);
     setIsAuthenticated(true);
     setUser(user);
@@ -119,15 +119,12 @@ export const Auth0Provider: React.FC<Auth0ProviderProps> = ({
     loginWithPopup,
     handleRedirectCallback,
     getTokenSilently,
-    getIdTokenClaims: getSafeAuth0ClientProperty('getIdTokenClaims').bind(
-      auth0Client,
-    ),
-    loginWithRedirect: getSafeAuth0ClientProperty('loginWithRedirect').bind(
-      auth0Client,
-    ),
-    getTokenWithPopup: getSafeAuth0ClientProperty('getTokenWithPopup').bind(
-      auth0Client,
-    ),
+    getIdTokenClaims:
+      getSafeAuth0ClientProperty('getIdTokenClaims').bind(auth0Client),
+    loginWithRedirect:
+      getSafeAuth0ClientProperty('loginWithRedirect').bind(auth0Client),
+    getTokenWithPopup:
+      getSafeAuth0ClientProperty('getTokenWithPopup').bind(auth0Client),
     logout: getSafeAuth0ClientProperty('logout').bind(auth0Client),
   };
 

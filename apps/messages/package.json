@@ -14,27 +14,27 @@
   "dependencies": {
     "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/react-components": "workspace:*",
-    "@babel/core": "^7.12.10",
-    "@babel/preset-react": "^7.12.10",
-    "@babel/runtime-corejs3": "^7.12.5",
+    "@babel/core": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
+    "@babel/runtime-corejs3": "^7.14.0",
     "@emotion/cache": "^10.0.29",
-    "@emotion/core": "^10.0.28",
-    "aws-sdk": "^2.745.0",
+    "@emotion/core": "^10.1.1",
+    "aws-sdk": "^2.907.0",
     "babel-loader": "^8.2.2",
     "babel-preset-react-app": "^9.1.2",
-    "core-js": "^3.6.5",
+    "core-js": "^3.12.1",
     "create-emotion-server": "^10.0.27",
     "juice": "^7.0.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "title-case": "^3.0.2",
-    "url-loader": "^4.1.0",
-    "webpack": "^5.1.0"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "title-case": "^3.0.3",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.37.0"
   },
   "devDependencies": {
     "@asap-hub/eslint-config-asap-hub": "workspace:*",
     "@types/babel__core": "^7",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0"
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.5"
   }
 }

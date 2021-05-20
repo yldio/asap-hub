@@ -4,7 +4,9 @@ import { createResearchOutputResponse } from '@asap-hub/fixtures';
 
 import SharedResearchListCard from '../SharedResearchListCard';
 
-const sharedResearchListCardProps: ComponentProps<typeof SharedResearchListCard> = {
+const sharedResearchListCardProps: ComponentProps<
+  typeof SharedResearchListCard
+> = {
   researchOutputs: [],
 };
 it('renders multiple research outputs', () => {
@@ -17,9 +19,9 @@ it('renders multiple research outputs', () => {
       ]}
     />,
   );
-  expect(
-    getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Output 1', 'Output 2']);
+  expect(getAllByRole('heading').map(({ textContent }) => textContent)).toEqual(
+    ['Output 1', 'Output 2'],
+  );
 });
 
 it('links to research outputs', () => {

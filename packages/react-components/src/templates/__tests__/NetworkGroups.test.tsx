@@ -36,7 +36,7 @@ it('renders one group card per group', async () => {
       ]}
     />,
   );
-  expect(
-    getAllByRole('heading').map(({ textContent }) => textContent),
-  ).toEqual(['Group 0', 'Group 1']);
+  expect(getAllByRole('heading').map(({ textContent }) => textContent)).toEqual(
+    ['Group 0', 'Group 1'],
+  );
 });

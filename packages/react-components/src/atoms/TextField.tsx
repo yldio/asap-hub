@@ -189,9 +189,8 @@ const TextField: React.FC<TextFieldProps> = ({
 
   ...props
 }) => {
-  const { validationMessage, validationTargetProps } = useValidation<
-    HTMLInputElement
-  >(customValidationMessage);
+  const { validationMessage, validationTargetProps } =
+    useValidation<HTMLInputElement>(customValidationMessage);
 
   const validGifUrl = useGifReplay(validTickGreenImage, [indicateValid, value]);
   const [debouncedValue] = useDebounce(value, 500);

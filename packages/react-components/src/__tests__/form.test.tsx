@@ -12,9 +12,8 @@ describe('useValidation', () => {
     customValidationMessage = '',
     ...props
   }) => {
-    const { validationMessage, validationTargetProps } = useValidation<
-      HTMLInputElement
-    >(customValidationMessage);
+    const { validationMessage, validationTargetProps } =
+      useValidation<HTMLInputElement>(customValidationMessage);
     return (
       <label>
         <input

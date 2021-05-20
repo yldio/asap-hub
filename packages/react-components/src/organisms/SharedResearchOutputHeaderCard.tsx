@@ -47,36 +47,29 @@ type SharedResearchOutputHeaderCardProps = Pick<
   | 'lastModifiedDate'
 >;
 
-const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardProps> = ({
-  created,
-  addedDate,
-  teams,
-  title,
-  type,
-  link,
-  lastModifiedDate,
-}) => (
-  <Card>
-    <div css={headerStyles}>
-      <div css={typeStyles}>
-        <TagLabel>{type}</TagLabel>
+const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardProps> =
+  ({ created, addedDate, teams, title, type, link, lastModifiedDate }) => (
+    <Card>
+      <div css={headerStyles}>
+        <div css={typeStyles}>
+          <TagLabel>{type}</TagLabel>
+        </div>
+        {link ? (
+          <ExternalLink label={researchOutputLabels[type]} href={link} />
+        ) : null}
       </div>
-      {link ? (
-        <ExternalLink label={researchOutputLabels[type]} href={link} />
-      ) : null}
-    </div>
-    <Display styleAsHeading={3}>{title}</Display>
-    <TeamsList inline teams={teams} />
-    <div css={[timestampStyles, captionStyles]}>
-      <span>
-        Date added: {formatDate(new Date(addedDate || created))}
-        {lastModifiedDate && ' · '}
-      </span>
-      {lastModifiedDate && (
-        <span>Last updated: {formatDate(new Date(lastModifiedDate))}</span>
-      )}
-    </div>
-  </Card>
-);
+      <Display styleAsHeading={3}>{title}</Display>
+      <TeamsList inline teams={teams} />
+      <div css={[timestampStyles, captionStyles]}>
+        <span>
+          Date added: {formatDate(new Date(addedDate || created))}
+          {lastModifiedDate && ' · '}
+        </span>
+        {lastModifiedDate && (
+          <span>Last updated: {formatDate(new Date(lastModifiedDate))}</span>
+        )}
+      </div>
+    </Card>
+  );
 
 export default SharedResearchOutputHeaderCard;

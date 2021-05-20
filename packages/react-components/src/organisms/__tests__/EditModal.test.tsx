@@ -13,10 +13,9 @@ const props: ComponentProps<typeof EditModal> = {
   children: () => null,
 };
 
-let getUserConfirmation!: jest.MockedFunction<(
-  message: string,
-  callback: (confirmed: boolean) => void,
-) => void>;
+let getUserConfirmation!: jest.MockedFunction<
+  (message: string, callback: (confirmed: boolean) => void) => void
+>;
 let history!: History;
 beforeEach(() => {
   getUserConfirmation = jest.fn((_message, cb) => cb(true));

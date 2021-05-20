@@ -76,14 +76,14 @@ export default class ResearchOutputs implements ResearchOutputController {
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const query = buildGraphQLQueryResearchOutput(id);
-    const researchOutputGraphqlResponse = await this.graphqlSquidexClient.request<
-      ResponseFetchResearchOutput,
-      unknown
-    >(query);
+    const researchOutputGraphqlResponse =
+      await this.graphqlSquidexClient.request<
+        ResponseFetchResearchOutput,
+        unknown
+      >(query);
 
-    const {
-      findResearchOutputsContent: researchOutputContent,
-    } = researchOutputGraphqlResponse;
+    const { findResearchOutputsContent: researchOutputContent } =
+      researchOutputGraphqlResponse;
     if (!researchOutputContent) {
       throw Boom.notFound();
     }
@@ -132,17 +132,14 @@ export default class ResearchOutputs implements ResearchOutputController {
       take,
       skip,
     );
-    const {
-      queryResearchOutputsContentsWithTotal,
-    } = await this.graphqlSquidexClient.request<
-      ResponseFetchResearchOutputs,
-      unknown
-    >(query);
+    const { queryResearchOutputsContentsWithTotal } =
+      await this.graphqlSquidexClient.request<
+        ResponseFetchResearchOutputs,
+        unknown
+      >(query);
 
-    const {
-      total,
-      items: researchOutputs,
-    } = queryResearchOutputsContentsWithTotal;
+    const { total, items: researchOutputs } =
+      queryResearchOutputsContentsWithTotal;
 
     return {
       total,

@@ -11,10 +11,13 @@ import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { staticPages, network, welcome } from '@asap-hub/routing';
 
 import history from './history';
-import AuthProvider from './auth/AuthProvider';
 import CheckAuth from './auth/CheckAuth';
 import Frame from './structure/Frame';
 import { GTM_CONTAINER_ID } from './config';
+
+const loadAuthProvider = () =>
+  import(/* webpackChunkName: "auth-provider" */ './auth/AuthProvider');
+const AuthProvider = React.lazy(loadAuthProvider);
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');

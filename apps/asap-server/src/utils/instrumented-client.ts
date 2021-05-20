@@ -24,8 +24,7 @@ const getQueryName = (query: string): string => {
     .map(({ selectionSet }) => selectionSet)
     .filter(({ kind }) => kind === 'SelectionSet')
     .reduce(
-      (memo, { selections }) =>
-        memo.concat((selections as unknown) as FieldNode),
+      (memo, { selections }) => memo.concat(selections as unknown as FieldNode),
       [] as FieldNode[],
     )
     .map(({ name }) => name.value)
@@ -61,7 +60,7 @@ export class InstrumentedSquidexGraphql extends SquidexGraphql {
 }
 
 export class InstrumentedSquidex<
-  T extends { id: string; data: Record<string, unknown> }
+  T extends { id: string; data: Record<string, unknown> },
 > extends Squidex<T> {
   tracingContext: SpanContext | undefined;
 

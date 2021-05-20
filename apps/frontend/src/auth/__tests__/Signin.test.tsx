@@ -50,8 +50,11 @@ beforeEach(() => {
   nock('https://auth.example.com')
     .defaultReplyHeaders({
       'access-control-allow-origin': '*',
+      'access-control-allow-headers': 'Auth0-Client',
       'access-control-allow-credentials': 'true',
     })
+    .options('/oauth/token')
+    .reply(200)
     .post('/oauth/token')
     .reply(200, (_uri, _body, cb) =>
       cb(null, {

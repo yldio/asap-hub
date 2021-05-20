@@ -15,11 +15,11 @@ export const groupRouteFactory = (
   groupRoutes.get('/groups', async (req, res) => {
     const parameters = req.query;
 
-    const query = (framework.validate(
+    const query = framework.validate(
       'query',
       parameters,
       querySchema,
-    ) as unknown) as FetchOptions;
+    ) as unknown as FetchOptions;
 
     const result = await groupsController.fetch(query);
 
@@ -36,11 +36,11 @@ export const groupRouteFactory = (
   });
 
   groupRoutes.get('/groups/:groupId/events', async (req, res) => {
-    const query = (framework.validate(
+    const query = framework.validate(
       'query',
       req.query,
       eventQuerySchema,
-    ) as unknown) as FetchEventsOptions;
+    ) as unknown as FetchEventsOptions;
     const { params } = req;
     const { groupId } = framework.validate('parameters', params, paramSchema);
 

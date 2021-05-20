@@ -1,5 +1,5 @@
 import React, { ComponentProps } from 'react';
-import Select from 'react-select';
+import Select, { OptionTypeBase } from 'react-select';
 import css from '@emotion/css';
 
 import { noop } from '../utils';
@@ -59,7 +59,7 @@ const reactSelectStyles = (
   singleValue: (provided, { getValue }) => ({
     ...provided,
     margin: 0,
-    color: getValue().some((option: Option<string>) => option.value !== '')
+    color: getValue()?.some((option: Option<string>) => option.value !== '')
       ? 'unset'
       : tin.rgb,
   }),
@@ -129,7 +129,7 @@ export default function Dropdown<V extends string>({
 }: DropdownProps<V>): ReturnType<React.FC> {
   return (
     <div css={containerStyles}>
-      <Select<Option<V>>
+      <Select<OptionTypeBase>
         isDisabled={!enabled}
         options={options.filter((option) => option.value !== '')}
         value={options.find((option) => option.value === value)}

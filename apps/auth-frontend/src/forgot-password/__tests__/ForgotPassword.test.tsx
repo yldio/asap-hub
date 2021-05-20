@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   render,
   RenderResult,
@@ -99,7 +98,7 @@ describe('when clicking the reset button', () => {
 
   describe('and sending a reset link fails', () => {
     it('shows an error message', async () => {
-      const error = (new Error() as unknown) as WebAuthError;
+      const error = new Error() as unknown as WebAuthError;
       error.errorDescription = 'Rate limit exceeded';
       mockSendPasswordResetLink.mockRejectedValue(error);
 

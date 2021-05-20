@@ -25,8 +25,8 @@ const revert = addHook(
   { exts: Object.keys(mimeTypes) },
 );
 const unsupportedBrowserPageFilename = 'unsupported-browser.html';
-const unsupportedBrowserPage = require('@asap-hub/unsupported-browser-page')
-  .default;
+const unsupportedBrowserPage =
+  require('@asap-hub/unsupported-browser-page').default;
 revert();
 
 console.log('Building unsupported browser detection script');

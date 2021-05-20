@@ -14,31 +14,33 @@ jest.mock('../api');
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
 const id = '42';
-const makeWrapper = (
-  userId = id,
-  currentUserId = userId,
-): React.FC<Record<string, never>> => ({ children }) => (
-  <RecoilRoot>
-    <React.Suspense fallback="loading">
-      <Auth0Provider user={{ id: currentUserId }}>
-        <MemoryRouter
-          initialEntries={[network({}).users({}).user({ userId }).about({}).$]}
-        >
-          <Route
-            path={
-              network.template +
-              network({}).users.template +
-              network({}).users({}).user.template +
-              network({}).users({}).user({ userId }).about.template
-            }
-          >
-            {children}
-          </Route>
-        </MemoryRouter>
-      </Auth0Provider>
-    </React.Suspense>
-  </RecoilRoot>
-);
+const makeWrapper =
+  (userId = id, currentUserId = userId): React.FC<Record<string, never>> =>
+  ({ children }) =>
+    (
+      <RecoilRoot>
+        <React.Suspense fallback="loading">
+          <Auth0Provider user={{ id: currentUserId }}>
+            <MemoryRouter
+              initialEntries={[
+                network({}).users({}).user({ userId }).about({}).$,
+              ]}
+            >
+              <Route
+                path={
+                  network.template +
+                  network({}).users.template +
+                  network({}).users({}).user.template +
+                  network({}).users({}).user({ userId }).about.template
+                }
+              >
+                {children}
+              </Route>
+            </MemoryRouter>
+          </Auth0Provider>
+        </React.Suspense>
+      </RecoilRoot>
+    );
 const wrapper = makeWrapper();
 
 it('renders the profile about section', async () => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -10,21 +9,27 @@ import { ToastContext } from '@asap-hub/react-context';
 import Welcome from '../Welcome';
 import { API_BASE_URL } from '../../config';
 
-// fetch user by code request
-beforeEach(() => {
-  nock(API_BASE_URL).get('/users/invites/42').reply(200, {});
-});
-
-// redirect
-const { mockAssign } = mockLocation();
-
-// toast
-let mockToast: jest.Mock;
-beforeEach(() => {
-  mockToast = jest.fn();
-});
-
 describe('the welcome page', () => {
+  // fetch user by code request
+  beforeEach(() => {
+    nock.cleanAll();
+    nock(API_BASE_URL).get('/users/invites/42').reply(200, {});
+  });
+  afterEach(async () => {
+    await waitFor(() => expect(nock.isDone()).toBe(true));
+    // allow macro tasks to run, found no other way here
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+
+  // redirect
+  const { mockAssign } = mockLocation();
+
+  // toast
+  let mockToast: jest.Mock;
+  beforeEach(() => {
+    mockToast = jest.fn();
+  });
+
   const renderWelcome = async (): Promise<RenderResult> =>
     render(
       <authTestUtils.Auth0Provider>
@@ -35,10 +40,6 @@ describe('the welcome page', () => {
         </ToastContext.Provider>
       </authTestUtils.Auth0Provider>,
     );
-
-  afterEach(async () => {
-    await waitFor(() => expect(nock.isDone()).toBe(true));
-  });
 
   it('renders a headline', async () => {
     const { findByRole } = await renderWelcome();

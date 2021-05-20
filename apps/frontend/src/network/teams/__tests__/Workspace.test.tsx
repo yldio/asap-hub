@@ -185,12 +185,7 @@ describe('a tool', () => {
 
 describe('the add tool dialog', () => {
   it('goes back when closed', async () => {
-    const {
-      getByText,
-      queryByTitle,
-      findByText,
-      findByTitle,
-    } = render(
+    const { getByText, queryByTitle, findByText, findByTitle } = render(
       <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
       { wrapper },
     );
@@ -202,15 +197,10 @@ describe('the add tool dialog', () => {
   });
 
   it('saves the new tool and goes back', async () => {
-    const {
-      queryByText,
-      queryByDisplayValue,
-      findByText,
-      findByLabelText,
-    } = render(
-      <Workspace team={{ ...createTeamResponse(), id, tools: [] }} />,
-      { wrapper },
-    );
+    const { queryByText, queryByDisplayValue, findByText, findByLabelText } =
+      render(<Workspace team={{ ...createTeamResponse(), id, tools: [] }} />, {
+        wrapper,
+      });
     userEvent.click(await findByText(/add/i));
     userEvent.type(await findByLabelText(/tool.+name/i), 'tool');
     userEvent.type(await findByLabelText(/description/i), 'description');
@@ -263,32 +253,28 @@ describe('the edit tool dialog', () => {
   });
 
   it('saves the changes and goes back', async () => {
-    const {
-      queryByText,
-      queryByDisplayValue,
-      findByText,
-      findByLabelText,
-    } = render(
-      <Workspace
-        team={{
-          ...createTeamResponse(),
-          id,
-          tools: [
-            {
-              name: 'tool 1',
-              description: 'description',
-              url: 'http://example.com/tool-1',
-            },
-            {
-              name: 'tool 2',
-              description: 'description',
-              url: 'http://example.com/tool-2',
-            },
-          ],
-        }}
-      />,
-      { wrapper },
-    );
+    const { queryByText, queryByDisplayValue, findByText, findByLabelText } =
+      render(
+        <Workspace
+          team={{
+            ...createTeamResponse(),
+            id,
+            tools: [
+              {
+                name: 'tool 1',
+                description: 'description',
+                url: 'http://example.com/tool-1',
+              },
+              {
+                name: 'tool 2',
+                description: 'description',
+                url: 'http://example.com/tool-2',
+              },
+            ],
+          }}
+        />,
+        { wrapper },
+      );
     userEvent.click(
       getChildByText((await findByText('tool 2')).closest('li')!, /edit/i),
     );

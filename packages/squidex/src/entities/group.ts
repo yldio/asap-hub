@@ -14,7 +14,7 @@ export interface Group<
   TUserConnection = string,
   TTeamConnection = string,
   TCalendar = string,
-  TThumbnail = string
+  TThumbnail = string,
 > {
   name: string;
   tags: string[];

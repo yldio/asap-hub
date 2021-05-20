@@ -25,7 +25,7 @@ export type User = {
 };
 
 export type RuleContext<
-  CustomContext extends Record<string, unknown> = Record<string, unknown>
+  CustomContext extends Record<string, unknown> = Record<string, unknown>,
 > = Partial<CustomContext> & {
   tenant: string;
   clientID: string;
@@ -70,14 +70,14 @@ export type RuleContext<
 };
 
 export interface RuleCallback<
-  CustomContext extends Record<string, unknown> = Record<string, unknown>
+  CustomContext extends Record<string, unknown> = Record<string, unknown>,
 > {
   (error: Error): void;
   (error: null, user: User, context: RuleContext<CustomContext>): void;
 }
 
 export type Rule<
-  CustomContext extends Record<string, unknown> = Record<string, unknown>
+  CustomContext extends Record<string, unknown> = Record<string, unknown>,
 > = (
   user: User,
   context: RuleContext<CustomContext>,

@@ -115,60 +115,61 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 
 // ensure any thrown exception is handled and returned correctly
 // complaining about `request` here is a lint rule bug
-// eslint-disable-next-line no-unused-vars
-export const http = (fn: (request: Request) => Promise<Response>) => async (
-  event: APIGatewayProxyEventV2,
-): Promise<APIGatewayProxyResultV2> => {
-  // we assume the body is json
-  let body;
-  try {
-    body = event.body && Bourne.parse(event.body);
-  } catch (err) {
-    const boom = Boom.badRequest(err.message);
-    return response({
-      statusCode: boom.output.statusCode,
-      body: JSON.stringify(boom.output.payload),
-    });
-  }
+export const http =
+  (
+    fn: (request: Request) => Promise<Response>, // eslint-disable-line no-unused-vars
+  ) =>
+  async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+    // we assume the body is json
+    let body;
+    try {
+      body = event.body && Bourne.parse(event.body);
+    } catch (err) {
+      const boom = Boom.badRequest(err.message);
+      return response({
+        statusCode: boom.output.statusCode,
+        body: JSON.stringify(boom.output.payload),
+      });
+    }
 
-  // lowercase headers
-  const headers =
-    event.headers &&
-    Object.entries(event.headers).reduce(
-      (res, [key, value]) => ({
-        ...res,
-        [key.toLowerCase()]: value,
-      }),
-      {},
+    // lowercase headers
+    const headers =
+      event.headers &&
+      Object.entries(event.headers).reduce(
+        (res, [key, value]) => ({
+          ...res,
+          [key.toLowerCase()]: value,
+        }),
+        {},
+      );
+
+    const query: Query = Object.fromEntries(
+      Object.entries(event.queryStringParameters || {}).map(([key, value]) => [
+        key,
+        value?.includes(',') ? value.split(',') : value,
+      ]),
     );
 
-  const query: Query = Object.fromEntries(
-    Object.entries(event.queryStringParameters || {}).map(([key, value]) => [
-      key,
-      value?.includes(',') ? value.split(',') : value,
-    ]),
-  );
+    const request = {
+      method: event.requestContext.http.method.toLocaleLowerCase(),
+      headers,
+      params: event.pathParameters,
+      payload: body,
+      query,
+    } as Request;
 
-  const request = {
-    method: event.requestContext.http.method.toLocaleLowerCase(),
-    headers,
-    params: event.pathParameters,
-    payload: body,
-    query,
-  } as Request;
+    const [err, res] = await Intercept(fn(request));
 
-  const [err, res] = await Intercept(fn(request));
+    if (err) {
+      return handlerError(err);
+    }
 
-  if (err) {
-    return handlerError(err);
-  }
-
-  return response({
-    statusCode: res.statusCode || 200,
-    body: JSON.stringify(res.payload || null),
-    headers: {
-      'content-type': 'application/json',
-      ...res.headers,
-    },
-  });
-};
+    return response({
+      statusCode: res.statusCode || 200,
+      body: JSON.stringify(res.payload || null),
+      headers: {
+        'content-type': 'application/json',
+        ...res.headers,
+      },
+    });
+  };

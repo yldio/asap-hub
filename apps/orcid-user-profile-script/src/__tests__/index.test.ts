@@ -16,9 +16,8 @@ it('calls back with the user profile object', () => {
     family_name: 'Seckinger',
     jti: '2589ee66-86a7-4183-9aad-a7593eba2c01',
   };
-  const cb: jest.MockedFunction<
-    Parameters<typeof fetchOrcidUserProfile>[2]
-  > = jest.fn();
+  const cb: jest.MockedFunction<Parameters<typeof fetchOrcidUserProfile>[2]> =
+    jest.fn();
 
   fetchOrcidUserProfile(
     {},

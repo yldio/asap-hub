@@ -61,9 +61,9 @@ export default class MoveResearchOutputTextToDescription extends Migration {
       });
 
       for (const researchOutput of result.items) {
-        await squidexClient.patch(researchOutput.id, ({
+        await squidexClient.patch(researchOutput.id, {
           addedDate: { iv: null },
-        } as unknown) as { addedDate: { iv: string } }); // types dont cover null values
+        } as unknown as { addedDate: { iv: string } }); // types dont cover null values
       }
 
       pointer += 10;

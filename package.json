@@ -137,5 +137,8 @@
     "serverless-webpack": "^5.5.0",
     "typescript": "~4.2.4",
     "webpack": "^5.37.0"
+  },
+  "dependencies": {
+    "ts-node": "^9.1.1"
   }
 }

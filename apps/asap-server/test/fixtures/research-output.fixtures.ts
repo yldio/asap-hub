@@ -76,7 +76,6 @@ export const getResearchOutputResponse =
       id: 'team-id-1',
       displayName: 'Schipa, A',
     },
-<<<<<<< HEAD
     teams: [
       {
         id: 'team-id-1',
@@ -92,21 +91,8 @@ export const getResearchOutputResponse =
     accessInstructions: 'some access instructions',
     sharingStatus: 'Network Only',
     asapFunded: 'Yes',
+    usedInPublication: 'No',
   });
-=======
-    {
-      id: 'team-id-2',
-      displayName: 'Team, B',
-    },
-  ],
-  publishDate: '2021-05-21T13:18:31Z',
-  lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-  accessInstructions: 'some access instructions',
-  sharingStatus: 'Network Only',
-  asapFunded: 'Yes',
-  usedInPublication: 'No',
-});
->>>>>>> added asap-funded to controllers and route
 
 export const getListResearchOutputResponse =
   (): ListResearchOutputResponse => ({

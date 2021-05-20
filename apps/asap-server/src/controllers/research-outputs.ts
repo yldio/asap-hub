@@ -28,6 +28,9 @@ flatData{
   tags
   lastUpdatedPartial
   accessInstructions
+  sharingStatus
+  asapFunded
+  usedInAPublication
   authors {
     ${GraphQLQueryUser}
   }
@@ -41,9 +44,6 @@ ${
   flatData {
     displayName
   }
-  sharingStatus
-  asapFunded
-  usedInAPublication
 }`
     : ''
 }

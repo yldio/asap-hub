@@ -39,7 +39,7 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
           <Route exact path={aboutPath}>
             Profile
           </Route>
-          <Editing user={createUserResponse()} />
+          <Editing user={createUserResponse()} backHref={aboutPath} />
         </Route>
       </MemoryRouter>,
       { wrapper },
@@ -56,7 +56,7 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
           <Route exact path={aboutPath}>
             Profile
           </Route>
-          <Editing user={createUserResponse()} />
+          <Editing user={createUserResponse()} backHref={aboutPath} />
         </Route>
       </MemoryRouter>,
       { wrapper },
@@ -85,6 +85,7 @@ describe('the personal info modal', () => {
                 id,
                 location: 'York',
               }}
+              backHref={aboutPath}
             />
           </Route>
         </MemoryRouter>
@@ -120,6 +121,7 @@ describe('the contact info modal', () => {
               ...createUserResponse(),
               contactEmail: 'contact@example.com',
             }}
+            backHref={aboutPath}
           />
         </Route>
       </MemoryRouter>,
@@ -148,6 +150,7 @@ describe('the contact info modal', () => {
                 id,
                 contactEmail: 'contact@example.com',
               }}
+              backHref={aboutPath}
             />
           </Route>
         </MemoryRouter>

@@ -146,7 +146,7 @@ const User: FC<Record<string, never>> = () => {
                 </Switch>
                 {isOwnProfile && tabRoute && (
                   <Route path={path + tabRoute.template}>
-                    <Editing user={user} />
+                    <Editing user={user} backHref={tabRoute({}).$} />
                   </Route>
                 )}
               </>

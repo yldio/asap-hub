@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
+import { v4 as uuid } from 'uuid';
 
 import { useTeamById } from './state';
 import Frame from '../../structure/Frame';
@@ -19,6 +20,8 @@ loadAbout();
 
 const TeamProfile: React.FC<Record<string, never>> = () => {
   const route = network({}).teams({}).team;
+  const [teamListElementId] = useState(`team-list-${uuid()}`);
+
   const { path } = useRouteMatch();
   const { teamId } = useRouteParams(route);
 
@@ -33,11 +36,11 @@ const TeamProfile: React.FC<Record<string, never>> = () => {
   if (team) {
     return (
       <Frame title={team.displayName}>
-        <TeamProfilePage {...team}>
+        <TeamProfilePage teamListElementId={teamListElementId} {...team}>
           <Switch>
             <Route path={path + route({ teamId }).about.template}>
               <Frame title="About">
-                <About team={team} />
+                <About teamListElementId={teamListElementId} team={team} />
               </Frame>
             </Route>
             <Route path={path + route({ teamId }).outputs.template}>

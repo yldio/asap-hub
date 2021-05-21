@@ -24,6 +24,7 @@ const props = (): ComponentProps<typeof TeamProfileAbout> => ({
   teamGroupsCard: boolean('Team Groups placeholder toggle', true)
     ? 'Team Groups Card here'
     : null,
+  teamListElementId: 'uuid',
   members: [
     {
       id: '1',

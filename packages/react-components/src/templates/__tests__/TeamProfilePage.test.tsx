@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
 import TeamProfilePage from '../TeamProfilePage';
 
-const boilerplateProps = {
+const boilerplateProps: Omit<
+  ComponentProps<typeof TeamProfilePage>,
+  'children'
+> = {
   id: '42',
   projectTitle: 'Unknown',
   displayName: 'Doe, J',
@@ -11,9 +14,7 @@ const boilerplateProps = {
   members: [],
   skills: [],
   outputs: [],
-  aboutHref: '#',
-  outputsHref: '#',
-  workspaceHref: '#',
+  teamListElementId: '',
 };
 
 it('renders the header', () => {

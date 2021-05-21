@@ -21,6 +21,7 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
   Omit<ComponentProps<typeof TeamMembersSection>, 'title'> &
   Pick<TeamResponse, 'pointOfContact'> & {
     teamGroupsCard?: React.ReactNode;
+    readonly teamListElementId: string;
   };
 
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
@@ -31,6 +32,7 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   members,
   proposalURL,
   teamGroupsCard,
+  teamListElementId,
 }) => (
   <div css={styles}>
     {projectTitle ? (
@@ -41,7 +43,11 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
       />
     ) : null}
     {skills.length ? <ProfileSkills skills={skills} /> : null}
-    {members.length ? <TeamMembersSection members={members} /> : null}
+    {members.length ? (
+      <section id={teamListElementId}>
+        <TeamMembersSection members={members} />
+      </section>
+    ) : null}
     {teamGroupsCard}
     {pointOfContact && (
       <CtaCard

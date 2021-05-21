@@ -270,8 +270,8 @@ export const queryGroupsExpectation: ListGroupResponse = {
               lastUpdatedPartial: '2020-12-11T14:33:18.000Z',
               accessInstructions: 'some access instructions',
               sharingStatus: 'Network Only',
-              asapFunded: 'No',
-              usedInPublication: 'No',
+              asapFunded: false,
+              usedInPublication: false,
             },
           ],
           projectTitle:

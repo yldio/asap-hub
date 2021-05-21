@@ -90,8 +90,8 @@ export const getResearchOutputResponse =
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
     accessInstructions: 'some access instructions',
     sharingStatus: 'Network Only',
-    asapFunded: 'Yes',
-    usedInPublication: 'No',
+    asapFunded: true,
+    usedInPublication: false,
   });
 
 export const getListResearchOutputResponse =

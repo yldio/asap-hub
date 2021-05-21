@@ -1,8 +1,4 @@
-import {
-  DecisionOption,
-  DecisionOptionSimple,
-  ResearchOutputResponse,
-} from '@asap-hub/model';
+import { DecisionOption, ResearchOutputResponse } from '@asap-hub/model';
 import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
@@ -70,7 +66,5 @@ const parseGraphqlTeamLite = (
 
 const convertNotSureToUndefined = (
   decision?: DecisionOption | null,
-): DecisionOptionSimple | undefined =>
-  decision && ['Yes', 'No'].includes(decision)
-    ? (decision as 'Yes' | 'No')
-    : undefined;
+): boolean | undefined =>
+  decision && ['Yes', 'No'].includes(decision) ? decision === 'Yes' : undefined;

@@ -1,12 +1,9 @@
 import { css } from '@emotion/react';
 import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { sharedResearch } from '@asap-hub/routing';
 
 import { Card, Anchor, Headline2, Caption, TagLabel } from '../atoms';
-import { perRem } from '../pixels';
-import { lead } from '../colors';
-import { teamIcon } from '../icons';
-import { ExternalLink } from '../molecules';
+import { ExternalLink, TeamsList } from '../molecules';
 import { formatDate } from '../date';
 
 const containerStyles = css({
@@ -26,21 +23,6 @@ const textStyles = css({
   flexBasis: '100%',
 });
 
-const teamMemberStyles = css({
-  color: lead.rgb,
-  display: 'flex',
-  alignItems: 'center',
-  paddingTop: `${12 / perRem}em`,
-  paddingBottom: `${12 / perRem}em`,
-});
-
-const iconStyles = css({
-  display: 'inline-block',
-  width: `${24 / perRem}em`,
-  height: `${24 / perRem}em`,
-  paddingRight: `${15 / perRem}em`,
-});
-
 const typeStyles = css({
   display: 'flex',
   alignItems: 'center',
@@ -49,7 +31,7 @@ const typeStyles = css({
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
-  'id' | 'created' | 'addedDate' | 'team' | 'title' | 'type' | 'link'
+  'id' | 'created' | 'addedDate' | 'teams' | 'title' | 'type' | 'link'
 >;
 
 const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
@@ -57,7 +39,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
   created,
   link,
   addedDate,
-  team,
+  teams,
   title,
   type,
 }) => (
@@ -77,14 +59,7 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
         >
           <Headline2 styleAsHeading={4}>{title}</Headline2>
         </Anchor>
-        {team && (
-          <span css={teamMemberStyles}>
-            <span css={iconStyles}>{teamIcon}</span>
-            <Anchor href={network({}).teams({}).team({ teamId: team.id }).$}>
-              Team {team.displayName}
-            </Anchor>
-          </span>
-        )}
+        <TeamsList inline max={3} teams={teams} />
       </div>
       <Caption accent={'lead'} asParagraph>
         Date Added: {formatDate(new Date(addedDate || created))}

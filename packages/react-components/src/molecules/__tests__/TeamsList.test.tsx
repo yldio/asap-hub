@@ -58,3 +58,32 @@ describe('in inline mode', () => {
     expect(queryByTitle(/team/i)).not.toBeInTheDocument();
   });
 });
+
+describe.each`
+  mode        | inline
+  ${'block'}  | ${false}
+  ${'inline'} | ${true}
+`(
+  'in $mode mode with a maximum exceeded',
+  ({ inline }: { inline: boolean }) => {
+    it.each`
+      teams | expectedText
+      ${1}  | ${/1 team/i}
+      ${3}  | ${/3 teams/i}
+    `(
+      'summarizes the list of $teams teams to a number',
+      ({ teams, expectedText }: { teams: number; expectedText: RegExp }) => {
+        const { container } = render(
+          <TeamsList
+            max={0}
+            inline={inline}
+            teams={Array(teams)
+              .fill(null)
+              .map((_, i) => ({ id: `t${i}`, displayName: `Team ${i + 1}` }))}
+          />,
+        );
+        expect(container).toHaveTextContent(expectedText);
+      },
+    );
+  },
+);

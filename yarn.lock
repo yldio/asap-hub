@@ -229,7 +229,7 @@ __metadata:
   dependencies:
     "@babel/runtime-corejs3": ^7.14.0
     "@types/node-fetch": ^2.5.10
-    node-fetch: 3.0.0-beta.8
+    node-fetch: ^3.0.0-beta.9
   languageName: unknown
   linkType: soft
 
@@ -10106,7 +10106,7 @@ __metadata:
     jest-watch-suspend: ^1.1.2
     jest-watch-typeahead: ^0.6.3
     nock: ^13.0.11
-    node-fetch: 3.0.0-beta.8
+    node-fetch: ^3.0.0-beta.9
     param-case: ^3.0.4
     prettier: ^2.3.0
     rimraf: ^3.0.2
@@ -16388,7 +16388,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fetch-blob@npm:^2.0.0":
+"fetch-blob@npm:^2.1.1":
   version: 2.1.2
   resolution: "fetch-blob@npm:2.1.2"
   peerDependenciesMeta:
@@ -23078,16 +23078,6 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:3.0.0-beta.8":
-  version: 3.0.0-beta.8
-  resolution: "node-fetch@npm:3.0.0-beta.8"
-  dependencies:
-    data-uri-to-buffer: ^3.0.1
-    fetch-blob: ^2.0.0
-  checksum: 105459224430799bb80397f7084fc78b01a0e61336326df090d065cb00413b166da31a2d205c6bd08d4540f6e08dc838f83bc958096a52fa869af96070404d41
-  languageName: node
-  linkType: hard
-
 "node-fetch@npm:^1.0.1":
   version: 1.7.3
   resolution: "node-fetch@npm:1.7.3"
@@ -23102,6 +23092,16 @@ fsevents@~2.1.2:
   version: 2.6.0
   resolution: "node-fetch@npm:2.6.0"
   checksum: dd9f586a9f7ddb7dd94d2aba9cb693d32f5001e9850098512fbc8a4cbdd56838afa08ed0a6725b9fce9b01ec12b713e622cbfc16d92762d8b937b238330a632a
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^3.0.0-beta.9":
+  version: 3.0.0-beta.9
+  resolution: "node-fetch@npm:3.0.0-beta.9"
+  dependencies:
+    data-uri-to-buffer: ^3.0.1
+    fetch-blob: ^2.1.1
+  checksum: e1b71946805b6dbe44394df4dcd7287bb18c2d93bb5b1d41de24c5d87bc3ec28be5e7ec0601dfc93a62d41c05a25dc5f7c0804912e2c11bfbb23252c8ff2a155
   languageName: node
   linkType: hard
 

@@ -4127,7 +4127,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "fetch-blob",
-        "virtual:94db07de6e3b386b00bd20898b083ee7baa83c1d16e22cc3432b009c7d9b3808948ed0cd44c3efb8dcbb538e8990fa9f4e90a9ab10eeca1386d117b7a208de4c#npm:2.1.2"
+        "virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2"
       ],
       [
         "figgy-pudding",
@@ -6011,7 +6011,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "node-fetch",
-        "npm:3.0.0-beta.8"
+        "npm:3.0.0-beta.9"
       ],
       [
         "node-forge",
@@ -8903,7 +8903,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.3"],
             ["nock", "npm:13.0.11"],
-            ["node-fetch", "npm:3.0.0-beta.8"],
+            ["node-fetch", "npm:3.0.0-beta.9"],
             ["param-case", "npm:3.0.4"],
             ["prettier", "npm:2.3.0"],
             ["rimraf", "npm:3.0.2"],
@@ -9155,7 +9155,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/e2e-tests", "workspace:apps/e2e-tests"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["@types/node-fetch", "npm:2.5.10"],
-            ["node-fetch", "npm:3.0.0-beta.8"]
+            ["node-fetch", "npm:3.0.0-beta.9"]
           ],
           "linkType": "SOFT",
         }]
@@ -25122,7 +25122,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-watch-suspend", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:1.1.2"],
             ["jest-watch-typeahead", "virtual:d0e958afa23d83fcbe1e8341a17fed5245116729be9039e4a7f723d5645a3b4a0db7dc084c7f30fa2114faa4c170592f819708d736b1e487b4ae7cd58824e005#npm:0.6.3"],
             ["nock", "npm:13.0.11"],
-            ["node-fetch", "npm:3.0.0-beta.8"],
+            ["node-fetch", "npm:3.0.0-beta.9"],
             ["param-case", "npm:3.0.4"],
             ["prettier", "npm:2.3.0"],
             ["rimraf", "npm:3.0.2"],
@@ -32798,11 +32798,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:94db07de6e3b386b00bd20898b083ee7baa83c1d16e22cc3432b009c7d9b3808948ed0cd44c3efb8dcbb538e8990fa9f4e90a9ab10eeca1386d117b7a208de4c#npm:2.1.2", {
-          "packageLocation": "./.yarn/$$virtual/fetch-blob-virtual-e925579477/0/cache/fetch-blob-npm-2.1.2-2056bf83c5-c11ab96a19.zip/node_modules/fetch-blob/",
+        ["virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2", {
+          "packageLocation": "./.yarn/$$virtual/fetch-blob-virtual-166ee5ce72/0/cache/fetch-blob-npm-2.1.2-2056bf83c5-c11ab96a19.zip/node_modules/fetch-blob/",
           "packageDependencies": [
-            ["fetch-blob", "virtual:94db07de6e3b386b00bd20898b083ee7baa83c1d16e22cc3432b009c7d9b3808948ed0cd44c3efb8dcbb538e8990fa9f4e90a9ab10eeca1386d117b7a208de4c#npm:2.1.2"],
-            ["domexception", "npm:2.0.1"]
+            ["fetch-blob", "virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2"],
+            ["domexception", null]
           ],
           "packagePeers": [
             "domexception"
@@ -40298,13 +40298,12 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:3.0.0-beta.8", {
-          "packageLocation": "./.yarn/cache/node-fetch-npm-3.0.0-beta.8-94db07de6e-1054592244.zip/node_modules/node-fetch/",
+        ["npm:3.0.0-beta.9", {
+          "packageLocation": "./.yarn/cache/node-fetch-npm-3.0.0-beta.9-6d113662d5-e1b7194680.zip/node_modules/node-fetch/",
           "packageDependencies": [
-            ["node-fetch", "npm:3.0.0-beta.8"],
+            ["node-fetch", "npm:3.0.0-beta.9"],
             ["data-uri-to-buffer", "npm:3.0.1"],
-            ["domexception", "npm:2.0.1"],
-            ["fetch-blob", "virtual:94db07de6e3b386b00bd20898b083ee7baa83c1d16e22cc3432b009c7d9b3808948ed0cd44c3efb8dcbb538e8990fa9f4e90a9ab10eeca1386d117b7a208de4c#npm:2.1.2"]
+            ["fetch-blob", "virtual:6d113662d53f111ebc45d76894379672c4bef1024d442c9142fc052527e3a96d54235ec89724f5865223f87cc87cf23a111fa3aa71b23aae42bc577034ca5762#npm:2.1.2"]
           ],
           "linkType": "HARD",
         }]

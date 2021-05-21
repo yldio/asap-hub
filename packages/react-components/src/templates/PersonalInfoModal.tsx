@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { UserPatchRequest } from '@asap-hub/model';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { LabeledTextField, LabeledDropdown } from '../molecules';
 import { noop } from '../utils';

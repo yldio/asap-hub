@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import css from '@emotion/css';
+import { ReactNode } from 'react';
+import { css } from '@emotion/react';
 
 import { Link, Card, Paragraph } from '../atoms';
 import {

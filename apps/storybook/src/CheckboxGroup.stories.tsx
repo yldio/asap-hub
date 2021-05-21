@@ -1,4 +1,3 @@
-import React from 'react';
 import { optionsKnob } from '@storybook/addon-knobs';
 
 import { CheckboxGroup } from '@asap-hub/react-components';

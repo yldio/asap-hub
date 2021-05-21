@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';
 

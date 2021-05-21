@@ -1,4 +1,3 @@
-import React from 'react';
 import { staticPages } from '@asap-hub/routing';
 
 import { Paragraph, Link } from '../atoms';

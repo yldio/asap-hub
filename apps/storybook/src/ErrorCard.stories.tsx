@@ -1,4 +1,3 @@
-import React from 'react';
 import { text, boolean } from '@storybook/addon-knobs';
 
 import { ErrorCard } from '@asap-hub/react-components';

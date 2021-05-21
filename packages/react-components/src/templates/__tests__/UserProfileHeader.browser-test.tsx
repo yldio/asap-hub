@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
 import { createUserResponse } from '@asap-hub/fixtures';

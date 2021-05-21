@@ -9,6 +9,8 @@ const outputDir = path.resolve(
 const config: Configuration = {
   target: 'node',
   mode: 'production',
+  // To prevent duplicating the installed version of React into the output bundle - React does not like that
+  externals: ['react', 'react-dom'],
   output: {
     libraryTarget: 'commonjs',
     path: outputDir,

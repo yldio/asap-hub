@@ -1,9 +1,9 @@
+import * as React from 'react';
 import createCache from '@emotion/cache';
-import createEmotionServer from 'create-emotion-server';
+import createEmotionServer from '@emotion/server/create-instance';
 import juice from 'juice';
 import path from 'path';
-import React from 'react';
-import { CacheProvider } from '@emotion/core';
+import { CacheProvider } from '@emotion/react';
 import { promises as fs } from 'fs';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { titleCase } from 'title-case';
@@ -46,7 +46,8 @@ const apply = async (stats: Stats) => {
   const tasks = files
     .filter((file) => path.extname(file) === '.js')
     .map(async (file) => {
-      const cache = createCache();
+      const key = file;
+      const cache = createCache({ key });
       const { extractCritical } = createEmotionServer(cache);
       const template = require(path.resolve(outputDir, file)) as Record<
         string,
@@ -56,8 +57,9 @@ const apply = async (stats: Stats) => {
 
       const reactElement = template.default as React.ReactElement;
       if (
-        typeof reactElement === 'object' &&
-        !React.isValidElement(reactElement)
+        !(
+          typeof reactElement === 'object' && React.isValidElement(reactElement)
+        )
       ) {
         throw new Error(
           `Template ${file} does not default export a valid React element`,
@@ -75,7 +77,7 @@ const apply = async (stats: Stats) => {
         reactElement,
       );
 
-      const { html, css } = extractCritical(renderToStaticMarkup(element));
+      const { html, css, ids } = extractCritical(renderToStaticMarkup(element));
       const s3Html = Object.keys(stats.compilation.assets).reduce(
         (res, asset) => {
           const { base } = path.parse(asset);
@@ -87,7 +89,9 @@ const apply = async (stats: Stats) => {
         html,
       );
 
-      const content = juice(`<style>${css}</style>${s3Html}`);
+      const content = juice(
+        `<style data-emotion="${key} ${ids.join(' ')}">${css}</style>${s3Html}`,
+      );
 
       await fs.writeFile(
         path.resolve(outputDir, `template-${name}.json`),

@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { charcoal, fern, lead } from '../colors';
 import { perRem, lineHeight } from '../pixels';

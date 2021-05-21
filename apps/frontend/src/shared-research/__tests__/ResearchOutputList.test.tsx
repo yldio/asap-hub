@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
@@ -24,7 +24,7 @@ afterEach(() => {
 const renderResearchOutputList = async (searchQuery = '') => {
   const result = render(
     <RecoilRoot
-      initializeState={({ set, reset }) => {
+      initializeState={({ reset }) => {
         reset(
           researchOutputsState({
             searchQuery,
@@ -35,7 +35,7 @@ const renderResearchOutputList = async (searchQuery = '') => {
         );
       }}
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={['/shared-research']}>
@@ -45,7 +45,7 @@ const renderResearchOutputList = async (searchQuery = '') => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

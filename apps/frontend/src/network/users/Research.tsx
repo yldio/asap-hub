@@ -1,4 +1,3 @@
-import React from 'react';
 import { useRouteMatch, Route, Redirect } from 'react-router-dom';
 import {
   UserProfileResearch,

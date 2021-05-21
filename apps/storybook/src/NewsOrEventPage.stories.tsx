@@ -1,4 +1,3 @@
-import React from 'react';
 import { NewsOrEventPage } from '@asap-hub/react-components';
 import { createNewsAndEventsResponse } from '@asap-hub/fixtures';
 

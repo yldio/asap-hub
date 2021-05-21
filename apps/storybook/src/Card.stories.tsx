@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Card } from '@asap-hub/react-components';
 import { select } from '@storybook/addon-knobs';
 

@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import { discover, network, news, sharedResearch } from '@asap-hub/routing';
 
 import { PagesSection, NewsAndEventsSection, HelpSection } from '../organisms';

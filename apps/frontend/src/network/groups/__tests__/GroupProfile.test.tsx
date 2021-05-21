@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
@@ -38,7 +38,7 @@ const renderGroupProfile = async (
         set(refreshGroupState(groupResponse.id), Math.random())
       }
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter
@@ -55,7 +55,7 @@ const renderGroupProfile = async (
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

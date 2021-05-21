@@ -1,8 +1,8 @@
-import React from 'react';
+import { FC } from 'react';
+import { css } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
-import css from '@emotion/css';
 
 import { Avatar, Link } from '../atoms';
 import { perRem } from '../pixels';
@@ -49,7 +49,7 @@ interface UsersListProps {
       Partial<Pick<UserResponse, 'id' | 'firstName' | 'lastName' | 'avatarUrl'>>
   >;
 }
-const UsersList: React.FC<UsersListProps> = ({ users }) => (
+const UsersList: FC<UsersListProps> = ({ users }) => (
   <ul css={listStyles}>
     {users.map((user, i) => (
       <li key={user.id ?? i} css={itemStyles}>

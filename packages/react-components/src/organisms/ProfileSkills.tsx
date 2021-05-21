@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Card, Headline2, Paragraph } from '../atoms';

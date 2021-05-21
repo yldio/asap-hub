@@ -1,4 +1,3 @@
-import React from 'react';
 import { PagesSection } from '@asap-hub/react-components';
 import { createPageResponse } from '@asap-hub/fixtures';
 import { number, text } from '@storybook/addon-knobs';

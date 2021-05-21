@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
 import {
@@ -17,7 +17,7 @@ import { GTM_CONTAINER_ID } from './config';
 
 const loadAuthProvider = () =>
   import(/* webpackChunkName: "auth-provider" */ './auth/AuthProvider');
-const AuthProvider = React.lazy(loadAuthProvider);
+const AuthProvider = lazy(loadAuthProvider);
 
 const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
@@ -25,11 +25,11 @@ const loadContent = () =>
   import(/* webpackChunkName: "content" */ './content/Content');
 const loadGuardedApp = () =>
   import(/* webpackChunkName: "guarded-app" */ './GuardedApp');
-const Welcome = React.lazy(loadWelcome);
-const Content = React.lazy(loadContent);
-const GuardedApp = React.lazy(loadGuardedApp);
+const Welcome = lazy(loadWelcome);
+const Content = lazy(loadContent);
+const GuardedApp = lazy(loadGuardedApp);
 
-const ConfiguredLayout: React.FC = ({ children }) => {
+const ConfiguredLayout: FC = ({ children }) => {
   const { isAuthenticated } = useAuth0();
   const user = useCurrentUser();
   return isAuthenticated && user ? (
@@ -48,7 +48,7 @@ const ConfiguredLayout: React.FC = ({ children }) => {
   );
 };
 
-const App: React.FC<Record<string, never>> = () => {
+const App: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadGuardedApp().then(loadContent).then(loadWelcome);
   }, []);

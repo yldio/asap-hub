@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
@@ -7,11 +7,11 @@ import CheckAuth from '../CheckAuth';
 
 it('renders a loading indicator while Auth0 is initializing', async () => {
   const { getByText, queryByText } = render(
-    <React.Suspense fallback="suspended">
+    <Suspense fallback="suspended">
       <authTestUtils.Auth0Provider>
         <CheckAuth>content</CheckAuth>
       </authTestUtils.Auth0Provider>
-    </React.Suspense>,
+    </Suspense>,
     { wrapper: MemoryRouter },
   );
 

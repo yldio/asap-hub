@@ -1,13 +1,13 @@
-import React from 'react';
+import { ReactNode, FC, lazy } from 'react';
 import { useAuth0 } from '@asap-hub/react-context';
 import { Loading } from '@asap-hub/react-components';
 
-const Signin = React.lazy(() => import('./Signin'));
+const Signin = lazy(() => import('./Signin'));
 
 interface CheckAuthProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
-const CheckAuth: React.FC<CheckAuthProps> = ({ children }) => {
+const CheckAuth: FC<CheckAuthProps> = ({ children }) => {
   const { loading, isAuthenticated } = useAuth0();
 
   if (loading) {

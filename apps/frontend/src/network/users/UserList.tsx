@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { NetworkPeople } from '@asap-hub/react-components';
 
 import { useUsers } from './state';

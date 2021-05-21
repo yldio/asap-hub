@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { text } from '@storybook/addon-knobs';
 import { EventConversation } from '@asap-hub/react-components';
 import { createEventResponse, createGroupResponse } from '@asap-hub/fixtures';

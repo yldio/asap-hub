@@ -1,4 +1,3 @@
-import React from 'react';
 import { Collapsible, Paragraph } from '@asap-hub/react-components';
 
 export default {

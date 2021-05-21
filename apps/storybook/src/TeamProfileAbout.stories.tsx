@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { TeamProfileAbout } from '@asap-hub/react-components';
 import { text, boolean } from '@storybook/addon-knobs';
 

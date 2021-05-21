@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, act } from '@testing-library/react';
 import { subMinutes, addMinutes, addDays, subHours } from 'date-fns';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';

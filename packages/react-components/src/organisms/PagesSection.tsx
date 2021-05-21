@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { PageResponse } from '@asap-hub/model';
 
 import PageCard from './PageCard';

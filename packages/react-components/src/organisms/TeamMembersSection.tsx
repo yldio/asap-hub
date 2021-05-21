@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 
 import { Card, Headline2 } from '../atoms';
 import { MembersList } from '../molecules';

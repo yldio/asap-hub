@@ -1,4 +1,3 @@
-import React from 'react';
 import { ToastCard } from '@asap-hub/react-components';
 import { select, text } from '@storybook/addon-knobs';
 

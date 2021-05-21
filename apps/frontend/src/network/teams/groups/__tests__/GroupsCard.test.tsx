@@ -1,4 +1,4 @@
-import React from 'react';
+import { createElement, FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { StaticRouter } from 'react-router-dom';
 import { createGroupResponse } from '@asap-hub/fixtures';
@@ -23,15 +23,15 @@ mockConsoleError();
 
 const id = 't42';
 
-const wrapper: React.FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot initializeState={({ reset }) => reset(teamGroupsState(id))}>
-    <React.Suspense fallback="loading">
+    <Suspense fallback="loading">
       <Auth0Provider user={{ id: 'u42' }}>
         <WhenReady>
           <StaticRouter>{children}</StaticRouter>
         </WhenReady>
       </Auth0Provider>
-    </React.Suspense>
+    </Suspense>
   </RecoilRoot>
 );
 
@@ -79,8 +79,8 @@ it('links to the group', async () => {
 
 it('throws if the team does not exist', async () => {
   mockGetTeamGroups.mockResolvedValue(undefined);
-  const errorWrapper: React.FC = ({ children }) =>
-    React.createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
+  const errorWrapper: FC = ({ children }) =>
+    createElement(wrapper, {}, <ErrorBoundary>{children}</ErrorBoundary>);
   const { findByText } = render(<GroupsCard id={id} />, {
     wrapper: errorWrapper,
   });

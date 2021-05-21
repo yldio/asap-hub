@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { SharedResearchCard } from '@asap-hub/react-components';
 import { text, select, date } from '@storybook/addon-knobs';
 

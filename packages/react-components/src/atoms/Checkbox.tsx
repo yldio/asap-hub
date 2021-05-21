@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { perRem } from '../pixels';

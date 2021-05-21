@@ -1,4 +1,3 @@
-import React from 'react';
 import { UserProfileGroups } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventPage, NotFoundPage } from '@asap-hub/react-components';
 import { events, useRouteParams } from '@asap-hub/routing';
 

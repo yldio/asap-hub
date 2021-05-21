@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, useRouteMatch } from 'react-router-dom';
 import {
   PersonalInfoModal,

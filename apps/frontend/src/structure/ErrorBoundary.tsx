@@ -1,4 +1,4 @@
-import React, { ReactNode, ComponentProps } from 'react';
+import { ReactNode, ComponentProps } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
 import { ErrorCard } from '@asap-hub/react-components';

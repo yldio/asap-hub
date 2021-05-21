@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import css from '@emotion/css';
+import { useState } from 'react';
+import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 

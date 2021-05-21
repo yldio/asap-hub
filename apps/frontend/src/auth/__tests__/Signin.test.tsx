@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { StaticRouter, Router } from 'react-router-dom';
 import { History, createMemoryHistory } from 'history';
 import { render, RenderResult, waitFor } from '@testing-library/react';

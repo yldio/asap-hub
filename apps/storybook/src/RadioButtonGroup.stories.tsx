@@ -1,4 +1,3 @@
-import React from 'react';
 import { select } from '@storybook/addon-knobs';
 
 import { RadioButtonGroup } from '@asap-hub/react-components';

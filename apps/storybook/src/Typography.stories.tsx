@@ -1,4 +1,4 @@
-import React from 'react';
+import { Fragment } from 'react';
 import { text, boolean } from '@storybook/addon-knobs';
 
 import {
@@ -39,7 +39,7 @@ export const Headline6 = () => (
 );
 
 export const Paragraph = () => {
-  const Importance = boolean('Bold', false) ? 'strong' : React.Fragment;
+  const Importance = boolean('Bold', false) ? 'strong' : Fragment;
   return (
     <ParagraphText primary={boolean('Primary', true)} accent={accentColor()}>
       <Importance>{text('Text', 'Paragraph')}</Importance>
@@ -47,7 +47,7 @@ export const Paragraph = () => {
   );
 };
 export const Caption = () => {
-  const Importance = boolean('Bold', false) ? 'strong' : React.Fragment;
+  const Importance = boolean('Bold', false) ? 'strong' : Fragment;
   return (
     <figure>
       <code>The figure being captioned</code>

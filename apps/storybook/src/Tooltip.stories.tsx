@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tooltip } from '@asap-hub/react-components';
 import { text, boolean } from '@storybook/addon-knobs';
 import { CenterDecorator } from './layout';

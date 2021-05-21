@@ -1,4 +1,3 @@
-import React from 'react';
 import { UserMenuButton, authTestUtils } from '@asap-hub/react-components';
 import { boolean, text } from '@storybook/addon-knobs';
 

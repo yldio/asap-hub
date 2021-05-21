@@ -1,4 +1,3 @@
-import React from 'react';
 import { TeamMembershipModal } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
 

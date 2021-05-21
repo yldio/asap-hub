@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { fontStyles } from '../text';
 
 const { fontFamily, fontSize } = fontStyles;

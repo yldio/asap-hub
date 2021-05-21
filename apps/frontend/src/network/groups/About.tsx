@@ -1,5 +1,5 @@
 import { GroupProfileAbout } from '@asap-hub/react-components';
-import React from 'react';
+
 import { GroupResponse } from '@asap-hub/model';
 
 interface AboutProps {

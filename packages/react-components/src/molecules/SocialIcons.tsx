@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { UserResponse } from '@asap-hub/model';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Link } from '../atoms';

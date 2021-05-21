@@ -1,4 +1,3 @@
-import React from 'react';
 import { MenuButton } from '@asap-hub/react-components';
 
 export default {

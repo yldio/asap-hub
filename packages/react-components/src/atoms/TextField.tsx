@@ -1,5 +1,5 @@
-import React, { InputHTMLAttributes, useState } from 'react';
-import css from '@emotion/css';
+import { InputHTMLAttributes, useState } from 'react';
+import { css } from '@emotion/react';
 import { useDebounce } from 'use-debounce';
 
 import { perRem } from '../pixels';

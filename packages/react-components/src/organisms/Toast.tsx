@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import css from '@emotion/css';
+import { ReactNode } from 'react';
+import { css } from '@emotion/react';
 
 import { layoutStyles } from '../text';
 import { Paragraph } from '../atoms';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { text, date, number, select } from '@storybook/addon-knobs';
 
 import { PeopleCard } from '@asap-hub/react-components';

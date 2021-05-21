@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { useFlags } from '@asap-hub/react-context';
 
 import {

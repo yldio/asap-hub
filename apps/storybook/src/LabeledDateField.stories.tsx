@@ -1,4 +1,3 @@
-import React from 'react';
 import { text, date } from '@storybook/addon-knobs';
 
 import { LabeledDateField } from '@asap-hub/react-components';

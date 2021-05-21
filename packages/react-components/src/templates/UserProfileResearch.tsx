@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode } from 'react';
+import { ComponentProps, ReactNode } from 'react';
 import { UserResponse } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
 

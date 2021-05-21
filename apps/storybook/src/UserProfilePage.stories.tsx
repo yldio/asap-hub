@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { date, text, select, boolean } from '@storybook/addon-knobs';
 import { UserProfilePage } from '@asap-hub/react-components';

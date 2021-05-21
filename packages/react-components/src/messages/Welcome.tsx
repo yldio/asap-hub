@@ -1,4 +1,3 @@
-import React from 'react';
 import { Display, Paragraph, Link } from '../atoms';
 import { mailToSupport } from '../mail';
 

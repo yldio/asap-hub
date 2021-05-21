@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { layoutStyles } from '../text';
 import { perRem } from '../pixels';

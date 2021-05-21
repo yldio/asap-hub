@@ -1,4 +1,3 @@
-import React from 'react';
 import { GroupProfilePage } from '@asap-hub/react-components';
 import { select, text } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';

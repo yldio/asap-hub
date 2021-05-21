@@ -1,4 +1,3 @@
-import React from 'react';
 import { PageResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Paragraph, Link } from '../atoms';

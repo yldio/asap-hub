@@ -1,5 +1,5 @@
 import { sharedResearch } from '@asap-hub/routing';
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 
 import {
   ResultList,

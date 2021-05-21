@@ -1,4 +1,3 @@
-import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 
 import { silver, fern, charcoal } from '../../colors';
@@ -59,13 +58,11 @@ it('renders a primary button', () => {
 it('renders an active secondary button', () => {
   const { getByRole, rerender } = render(<Button />);
   expect(getComputedStyle(getByRole('button')).borderColor).not.toBe(
-    charcoal.rgb.replace(/ /g, ''),
+    charcoal.rgb,
   );
 
   rerender(<Button active />);
-  expect(getComputedStyle(getByRole('button')).borderColor).toBe(
-    charcoal.rgb.replace(/ /g, ''),
-  );
+  expect(getComputedStyle(getByRole('button')).borderColor).toBe(charcoal.rgb);
 });
 
 it('renders an active primary button', () => {

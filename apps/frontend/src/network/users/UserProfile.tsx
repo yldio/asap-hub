@@ -1,4 +1,11 @@
-import React, { useEffect, ComponentProps, useState, useContext } from 'react';
+import {
+  FC,
+  lazy,
+  useEffect,
+  ComponentProps,
+  useState,
+  useContext,
+} from 'react';
 import {
   Switch,
   Route,
@@ -29,14 +36,14 @@ const loadStaff = () =>
   import(/* webpackChunkName: "network-profile-staff" */ './Staff');
 const loadEditing = () =>
   import(/* webpackChunkName: "network-editing" */ './Editing');
-const Research = React.lazy(loadResearch);
-const About = React.lazy(loadAbout);
-const Outputs = React.lazy(loadOutputs);
-const Staff = React.lazy(loadStaff);
-const Editing = React.lazy(loadEditing);
+const Research = lazy(loadResearch);
+const About = lazy(loadAbout);
+const Outputs = lazy(loadOutputs);
+const Staff = lazy(loadStaff);
+const Editing = lazy(loadEditing);
 loadResearch().then(loadStaff);
 
-const User: React.FC<Record<string, never>> = () => {
+const User: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadResearch()
       .then(loadStaff)

@@ -1,5 +1,4 @@
-import React from 'react';
-
+import { FC, lazy } from 'react';
 import {
   DashboardPage,
   NotFoundPage,
@@ -15,10 +14,10 @@ import Frame from '../structure/Frame';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
-const Body = React.lazy(loadBody);
+const Body = lazy(loadBody);
 loadBody();
 
-const Dashboard: React.FC<Record<string, never>> = () => {
+const Dashboard: FC<Record<string, never>> = () => {
   const currentUser = useCurrentUser();
   if (!currentUser) {
     throw new Error('Failed to find out who is currently logged in');

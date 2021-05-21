@@ -1,4 +1,3 @@
-import React from 'react';
 import { ToastStack } from '@asap-hub/react-components';
 
 import { toastGenerator } from './toast';

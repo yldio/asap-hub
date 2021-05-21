@@ -1,4 +1,3 @@
-import React from 'react';
 import { GroupProfileAbout } from '@asap-hub/react-components';
 import { createGroupResponse } from '@asap-hub/fixtures';
 import { boolean } from '@storybook/addon-knobs';

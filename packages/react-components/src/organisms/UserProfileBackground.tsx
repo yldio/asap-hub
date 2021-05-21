@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import css from '@emotion/css';
+import { useContext } from 'react';
+import { css } from '@emotion/react';
 import { UserResponse, UserTeam } from '@asap-hub/model';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';

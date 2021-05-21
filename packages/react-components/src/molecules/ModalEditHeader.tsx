@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { Headline3, Button, Link } from '../atoms';
 import { crossIcon } from '../icons';

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import { SharedResearchPage } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
@@ -12,11 +12,11 @@ const loadResearchOutputList = () =>
   );
 const loadResearchOutput = () =>
   import(/* webpackChunkName: "shared-research-output" */ './ResearchOutput');
-const ResearchOutputList = React.lazy(loadResearchOutputList);
-const ResearchOutput = React.lazy(loadResearchOutput);
+const ResearchOutputList = lazy(loadResearchOutputList);
+const ResearchOutput = lazy(loadResearchOutput);
 loadResearchOutputList();
 
-const SharedResearch: React.FC<Record<string, never>> = () => {
+const SharedResearch: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadResearchOutputList().then(loadResearchOutput);
   }, []);

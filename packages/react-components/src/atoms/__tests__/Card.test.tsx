@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 
 import Card from '../Card';
@@ -16,7 +15,7 @@ it('applies a default border and paper background', () => {
     container.firstElementChild as Element,
   );
 
-  expect(borderColor).toMatchInlineSnapshot(`"rgb(223,229,234)"`);
+  expect(borderColor).toMatchInlineSnapshot(`"rgb(223, 229, 234)"`);
   expect(backgroundColor).toMatchInlineSnapshot(`"rgb(255, 255, 255)"`);
 });
 
@@ -28,7 +27,7 @@ it('applies a ember border and rose background', () => {
     container.firstElementChild as Element,
   );
 
-  expect(borderColor).toMatchInlineSnapshot(`"rgb(205,20,38)"`);
+  expect(borderColor).toMatchInlineSnapshot(`"rgb(205, 20, 38)"`);
   expect(backgroundColor).toMatchInlineSnapshot(`"rgb(247, 232, 234)"`);
 });
 

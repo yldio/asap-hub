@@ -1,4 +1,3 @@
-import React from 'react';
 import { DecoratorFn } from '@storybook/react';
 import { boolean } from '@storybook/addon-knobs';
 import { UserProfileContext } from '@asap-hub/react-context';

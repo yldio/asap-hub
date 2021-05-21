@@ -1,5 +1,5 @@
-import React from 'react';
-import { Global } from '@emotion/core';
+import { Global } from '@emotion/react';
+import { FC } from 'react';
 import emotionNormalize from 'emotion-normalize';
 
 import { fontStyles } from '../text';
@@ -20,7 +20,7 @@ const styles = {
     letterSpacing: `${0.1 / perRem}em`,
   },
 } as const;
-const GlobalStyles: React.FC<Record<string, never>> = () => (
+const GlobalStyles: FC<Record<string, never>> = () => (
   <>
     <Global styles={emotionNormalize} />
     <Global styles={styles} />

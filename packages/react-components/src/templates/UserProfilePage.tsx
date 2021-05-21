@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 
 import UserProfileHeader from './UserProfileHeader';
 import { steel } from '../colors';

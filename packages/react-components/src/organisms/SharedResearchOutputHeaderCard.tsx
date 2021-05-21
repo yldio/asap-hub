@@ -1,7 +1,6 @@
-import React from 'react';
 import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
 import { useFlags } from '@asap-hub/react-context';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { Card, TagLabel, ExternalLink, Display } from '..';
 import { lead } from '../colors';

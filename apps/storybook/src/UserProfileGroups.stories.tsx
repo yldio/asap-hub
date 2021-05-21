@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { text, number } from '@storybook/addon-knobs';
 import { UserProfileGroups } from '@asap-hub/react-components';
 import { createGroupResponse, createUserResponse } from '@asap-hub/fixtures';

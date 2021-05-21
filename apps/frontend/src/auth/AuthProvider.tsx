@@ -1,4 +1,3 @@
-import React from 'react';
 import { RedirectLoginResult } from '@auth0/auth0-spa-js';
 import { config } from '@asap-hub/auth';
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -23,7 +23,7 @@ const mockGetTeams = getTeams as jest.MockedFunction<typeof getTeams>;
 const renderNetworkPage = async (pathname: string, query = '') => {
   const result = render(
     <RecoilRoot>
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname, search: query }]}>
@@ -33,7 +33,7 @@ const renderNetworkPage = async (pathname: string, query = '') => {
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
 

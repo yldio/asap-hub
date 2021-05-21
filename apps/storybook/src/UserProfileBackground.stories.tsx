@@ -1,4 +1,3 @@
-import React from 'react';
 import { text } from '@storybook/addon-knobs';
 import { UserProfileBackground } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';

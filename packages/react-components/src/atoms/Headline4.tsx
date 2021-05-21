@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { AllowedChildren, layoutStyles, headlineStyles } from '../text';
 
 interface Headline4Props {

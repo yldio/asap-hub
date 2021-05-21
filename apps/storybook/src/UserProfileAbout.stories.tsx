@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { UserProfileAbout } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
 import { makeFlagDecorator } from './flags';

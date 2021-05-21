@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { EventStatus } from '@asap-hub/model';
 import { array, boolean, date, select, text } from '@storybook/addon-knobs';
 import { EventCard } from '@asap-hub/react-components';

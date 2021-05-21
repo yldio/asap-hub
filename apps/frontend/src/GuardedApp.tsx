@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useSetRecoilState, RecoilRoot, useResetRecoilState } from 'recoil';
 import { NotFoundPage } from '@asap-hub/react-components';
@@ -28,14 +28,14 @@ const loadDiscover = () =>
   import(/* webpackChunkName: "discover" */ './discover/Discover');
 const loadEvents = () =>
   import(/* webpackChunkName: "events" */ './events/Events');
-const NewsAndEvents = React.lazy(loadNewsAndEvents);
-const Network = React.lazy(loadNetwork);
-const SharedResearch = React.lazy(loadSharedResearch);
-const Dashboard = React.lazy(loadDashboard);
-const Discover = React.lazy(loadDiscover);
-const Events = React.lazy(loadEvents);
+const NewsAndEvents = lazy(loadNewsAndEvents);
+const Network = lazy(loadNetwork);
+const SharedResearch = lazy(loadSharedResearch);
+const Dashboard = lazy(loadDashboard);
+const Discover = lazy(loadDiscover);
+const Events = lazy(loadEvents);
 
-const GuardedApp: React.FC<Record<string, never>> = () => {
+const GuardedApp: FC<Record<string, never>> = () => {
   const auth0 = useAuth0();
   const setAuth0 = useSetRecoilState(auth0State);
   const resetAuth0 = useResetRecoilState(auth0State);
@@ -100,7 +100,7 @@ const GuardedApp: React.FC<Record<string, never>> = () => {
   );
 };
 
-const GuardedAppWithRecoil: React.FC<Record<string, never>> = () => (
+const GuardedAppWithRecoil: FC<Record<string, never>> = () => (
   <RecoilRoot>
     <GuardedApp />
   </RecoilRoot>

@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { EventTime } from '@asap-hub/react-components';
 import { date } from '@storybook/addon-knobs';
 

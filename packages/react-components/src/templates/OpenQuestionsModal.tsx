@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import deepEqual from 'fast-deep-equal';
 
 import { LabeledTextArea } from '../molecules';

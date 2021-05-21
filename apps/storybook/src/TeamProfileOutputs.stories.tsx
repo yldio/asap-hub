@@ -1,4 +1,3 @@
-import React from 'react';
 import { TeamProfileOutputs } from '@asap-hub/react-components';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { number } from '@storybook/addon-knobs';

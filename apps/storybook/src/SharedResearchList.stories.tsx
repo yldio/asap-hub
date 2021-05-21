@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { SharedResearchList } from '@asap-hub/react-components';
 import { boolean, number } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';

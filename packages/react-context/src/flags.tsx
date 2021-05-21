@@ -1,18 +1,16 @@
-import React, { useContext, useState, useCallback } from 'react';
+import { useContext, useState, useCallback, createContext, FC } from 'react';
 import { isEnabled, disable, reset, getOverrides } from '@asap-hub/flags';
 
 type Flags = Pick<
   typeof import('@asap-hub/flags'),
   'isEnabled' | 'reset' | 'disable'
 >;
-export const FlagsContext = React.createContext<Flags>({
+export const FlagsContext = createContext<Flags>({
   isEnabled,
   disable,
   reset,
 });
-export const LiveFlagsProvider: React.FC<Record<string, never>> = ({
-  children,
-}) => {
+export const LiveFlagsProvider: FC<Record<string, never>> = ({ children }) => {
   // ignore overrides value, new flags object identity every time will be sufficient to update consumers
   const [, setOverrides] = useState(getOverrides());
   const flags: Flags = {

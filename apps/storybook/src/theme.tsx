@@ -1,4 +1,3 @@
-import React from 'react';
 import { css } from 'emotion';
 import { DecoratorFn } from '@storybook/react';
 import { select } from '@storybook/addon-knobs';

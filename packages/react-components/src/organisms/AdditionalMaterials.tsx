@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 
 import { EventResponse } from '@asap-hub/model';
 import { Card, Headline2, Headline3 } from '../atoms';

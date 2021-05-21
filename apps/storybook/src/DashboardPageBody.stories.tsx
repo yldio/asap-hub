@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps } from 'react';
 import { DashboardPageBody } from '@asap-hub/react-components';
 
 export default {

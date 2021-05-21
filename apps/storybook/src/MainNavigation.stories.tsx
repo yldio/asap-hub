@@ -1,4 +1,3 @@
-import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { select } from '@storybook/addon-knobs';
 import { MainNavigation } from '@asap-hub/react-components';

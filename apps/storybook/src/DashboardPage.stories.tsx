@@ -1,4 +1,3 @@
-import React from 'react';
 import { DashboardPage } from '@asap-hub/react-components';
 
 import { LayoutDecorator } from './layout';

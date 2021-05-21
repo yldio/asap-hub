@@ -1,4 +1,4 @@
-import React, { ContextType } from 'react';
+import { ContextType, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
@@ -74,7 +74,7 @@ const renderUserProfile = async (
         set(refreshUserState(userResponse.id), Math.random());
       }}
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <ToastContext.Provider value={mockToast}>
           <Auth0Provider
             user={{ id: ownUserId }}
@@ -98,7 +98,7 @@ const renderUserProfile = async (
             </WhenReady>
           </Auth0Provider>
         </ToastContext.Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

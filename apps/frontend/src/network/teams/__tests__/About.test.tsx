@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { createTeamResponse, createGroupResponse } from '@asap-hub/fixtures';
 import {
@@ -30,7 +30,7 @@ const renderTeamAbout = async (
         set(refreshTeamState(aboutProps.team.id), Math.random())
       }
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter
@@ -51,7 +51,7 @@ const renderTeamAbout = async (
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

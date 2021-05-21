@@ -1,4 +1,3 @@
-import React from 'react';
 import { addHours, subHours } from 'date-fns';
 import { EventAbout } from '@asap-hub/react-components';
 import { text, array } from '@storybook/addon-knobs';

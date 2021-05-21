@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { NetworkPage } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
@@ -21,13 +21,13 @@ const loadGroupProfile = () =>
   import(
     /* webpackChunkName: "network-group-profile" */ './groups/GroupProfile'
   );
-const UserList = React.lazy(loadUserList);
-const UserProfile = React.lazy(loadUserProfile);
-const TeamList = React.lazy(loadTeamList);
-const TeamProfile = React.lazy(loadTeamProfile);
-const GroupList = React.lazy(loadGroupList);
+const UserList = lazy(loadUserList);
+const UserProfile = lazy(loadUserProfile);
+const TeamList = lazy(loadTeamList);
+const TeamProfile = lazy(loadTeamProfile);
+const GroupList = lazy(loadGroupList);
 
-const Network: React.FC<Record<string, never>> = () => {
+const Network: FC<Record<string, never>> = () => {
   useEffect(() => {
     loadTeamList()
       // Tab can be changed very quickly

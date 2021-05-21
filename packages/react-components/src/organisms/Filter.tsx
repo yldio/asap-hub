@@ -1,5 +1,5 @@
-import css from '@emotion/css';
-import React, { useEffect, useState } from 'react';
+import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 import { CheckboxGroup } from '.';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Suspense } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { createListEventResponse } from '@asap-hub/fixtures';
@@ -40,7 +40,7 @@ const renderEventsListPage = async (
         );
       }}
     >
-      <React.Suspense fallback="loading">
+      <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter initialEntries={[{ pathname: '/' }]}>
@@ -54,7 +54,7 @@ const renderEventsListPage = async (
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
-      </React.Suspense>
+      </Suspense>
     </RecoilRoot>,
   );
   await waitFor(() =>

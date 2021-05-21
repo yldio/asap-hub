@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventsCalendar } from '@asap-hub/react-components';
 
 import { useCalendars } from './state';

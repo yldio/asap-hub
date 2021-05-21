@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { OrcidWork } from '@asap-hub/model';
 import { format } from 'date-fns';
 import {

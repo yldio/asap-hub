@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventsList } from '@asap-hub/react-components';
 import { network, useRouteParams } from '@asap-hub/routing';
 

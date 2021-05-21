@@ -1,4 +1,3 @@
-import React from 'react';
 import { UnsupportedBrowserPage } from '@asap-hub/react-components';
 
 import { BasicLayoutDecorator } from './layout';

@@ -1,5 +1,5 @@
-import React, { ReactText } from 'react';
-import css from '@emotion/css';
+import { ReactText } from 'react';
+import { css } from '@emotion/react';
 
 import { lead, steel, paper } from '../colors';
 import { perRem } from '../pixels';

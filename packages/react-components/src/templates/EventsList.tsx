@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { Fragment, FC, ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import { EventResponse } from '@asap-hub/model';
 
 import { perRem } from '../pixels';
@@ -14,13 +14,13 @@ type EventsListProps = Omit<ComponentProps<typeof ResultList>, 'children'> & {
   events: ReadonlyArray<EventResponse>;
 };
 
-const EventsListPage: React.FC<EventsListProps> = ({ events, ...props }) => (
+const EventsListPage: FC<EventsListProps> = ({ events, ...props }) => (
   <div css={containerStyles}>
     <ResultList {...props}>
       {events.map((event) => (
-        <React.Fragment key={event.id}>
+        <Fragment key={event.id}>
           <EventCard {...event} />
-        </React.Fragment>
+        </Fragment>
       ))}
     </ResultList>
   </div>

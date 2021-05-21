@@ -1,4 +1,3 @@
-import React from 'react';
 import { TagList } from '@asap-hub/react-components';
 import { array, boolean, number } from '@storybook/addon-knobs';
 

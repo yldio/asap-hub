@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderHook, act } from '@testing-library/react-hooks';
 import { waitFor } from '@testing-library/dom';
 import { authTestUtils } from '@asap-hub/react-components';

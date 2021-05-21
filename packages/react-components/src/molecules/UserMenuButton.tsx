@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { useCurrentUser } from '@asap-hub/react-context';
 
 import { noop } from '../utils';

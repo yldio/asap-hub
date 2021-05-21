@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react';
-import css from '@emotion/css';
+import { ReactNode } from 'react';
+import { css } from '@emotion/react';
 
 import { themes } from '../theme';
 import { perRem } from '../pixels';

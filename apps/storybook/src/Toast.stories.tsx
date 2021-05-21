@@ -1,4 +1,3 @@
-import React from 'react';
 import { text } from '@storybook/addon-knobs';
 import { Toast } from '@asap-hub/react-components';
 import { NoPaddingDecorator } from './layout';

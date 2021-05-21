@@ -1,4 +1,3 @@
-import React from 'react';
 import nock, { ReplyFnContext, ReplyFnResult } from 'nock';
 import { waitFor } from '@testing-library/dom';
 import { render, act, RenderResult } from '@testing-library/react';

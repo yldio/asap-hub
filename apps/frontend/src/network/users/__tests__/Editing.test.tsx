@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
@@ -16,11 +16,11 @@ const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
 const id = '42';
 
-const wrapper: React.FC<Record<string, never>> = ({ children }) => (
+const wrapper: FC<Record<string, never>> = ({ children }) => (
   <RecoilRoot>
-    <React.Suspense fallback="loading">
+    <Suspense fallback="loading">
       <Auth0Provider user={{ id }}>{children}</Auth0Provider>
-    </React.Suspense>
+    </Suspense>
   </RecoilRoot>
 );
 const aboutRoute = network({}).users({}).user({ userId: id }).about;

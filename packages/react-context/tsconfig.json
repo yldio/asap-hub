@@ -5,7 +5,7 @@
     "outDir": "build",
 
     "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": ["src"],
   "references": [{ "path": "../auth" }, { "path": "../flags" }]

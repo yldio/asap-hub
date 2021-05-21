@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { PasswordResetEmailSentPage } from '@asap-hub/react-components';
 import { BasicLayoutDecorator } from './layout';
 

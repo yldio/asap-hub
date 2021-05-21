@@ -1,4 +1,3 @@
-import React from 'react';
 import { EventMaterials } from '@asap-hub/react-components';
 import { boolean, date, number, text } from '@storybook/addon-knobs';
 import { createEventResponse } from '@asap-hub/fixtures';

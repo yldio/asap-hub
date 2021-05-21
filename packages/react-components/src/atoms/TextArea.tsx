@@ -1,5 +1,5 @@
-import React, { InputHTMLAttributes } from 'react';
-import css from '@emotion/css';
+import { InputHTMLAttributes } from 'react';
+import { css } from '@emotion/react';
 
 import { useValidation, styles, validationMessageStyles } from '../form';
 import { noop } from '../utils';

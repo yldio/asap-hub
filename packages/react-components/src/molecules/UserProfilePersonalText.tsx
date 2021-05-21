@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import css from '@emotion/css';
+import { FC, Fragment, useContext } from 'react';
+import { css } from '@emotion/react';
 import { UserResponse } from '@asap-hub/model';
 import { discover, network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
@@ -33,7 +33,7 @@ type UserProfilePersonalTextProps = Pick<
   UserResponse,
   'institution' | 'jobTitle' | 'location' | 'teams' | 'role'
 >;
-const UserProfilePersonalText: React.FC<UserProfilePersonalTextProps> = ({
+const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
   location,
   jobTitle,
@@ -63,13 +63,13 @@ const UserProfilePersonalText: React.FC<UserProfilePersonalTextProps> = ({
           </>
         ) : null}
         {teams.map(({ id, role: teamRole, displayName }) => (
-          <React.Fragment key={id}>
+          <Fragment key={id}>
             <br />
             {teamRole} on{' '}
             <Link href={network({}).teams({}).team({ teamId: id }).$}>
               Team {displayName}
             </Link>
-          </React.Fragment>
+          </Fragment>
         ))}
       </p>
       {(location || isOwnProfile) && (

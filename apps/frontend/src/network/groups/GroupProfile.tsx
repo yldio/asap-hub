@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ComponentProps } from 'react';
+import { FC, lazy, useState, useEffect, ComponentProps } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { GroupProfilePage, NotFoundPage } from '@asap-hub/react-components';
@@ -17,12 +17,12 @@ const loadEventList = () =>
     /* webpackChunkName: "network-group-event-list" */ './events/EventList'
   );
 
-const About = React.lazy(loadAbout);
-const Calendar = React.lazy(loadCalendar);
-const EventList = React.lazy(loadEventList);
+const About = lazy(loadAbout);
+const Calendar = lazy(loadCalendar);
+const EventList = lazy(loadEventList);
 loadAbout();
 
-const GroupProfile: React.FC = () => {
+const GroupProfile: FC = () => {
   useEffect(() => {
     loadAbout().then(loadCalendar).then(loadEventList);
   }, []);

@@ -1,5 +1,5 @@
-import React, { ComponentProps } from 'react';
-import css from '@emotion/css';
+import { ComponentProps } from 'react';
+import { css } from '@emotion/react';
 import { EventResponse } from '@asap-hub/model';
 import formatDistance from 'date-fns/formatDistance';
 

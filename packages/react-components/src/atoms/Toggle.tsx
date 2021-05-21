@@ -1,5 +1,4 @@
-import React from 'react';
-import css from '@emotion/css';
+import { css } from '@emotion/react';
 import { lineHeight, perRem } from '../pixels';
 import { steel, paper, tin, charcoal, lead, silver } from '../colors';
 import { noop } from '../utils';

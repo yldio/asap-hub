@@ -1,4 +1,4 @@
-import React, { ComponentProps } from 'react';
+import { ComponentProps, Fragment, FC } from 'react';
 
 import { ResultList, PeopleCard } from '../organisms';
 
@@ -11,15 +11,15 @@ type NetworkPeopleProps = Omit<
   >;
 };
 
-const NetworkPeople: React.FC<NetworkPeopleProps> = ({
+const NetworkPeople: FC<NetworkPeopleProps> = ({
   people,
   ...cardListProps
 }) => (
   <ResultList {...cardListProps}>
     {people.map((person) => (
-      <React.Fragment key={person.id}>
+      <Fragment key={person.id}>
         <PeopleCard {...person} />
-      </React.Fragment>
+      </Fragment>
     ))}
   </ResultList>
 );

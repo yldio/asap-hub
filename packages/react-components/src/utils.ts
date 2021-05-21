@@ -27,9 +27,23 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
   return width / height;
 };
 
-export const isInternalLink = (href: string): boolean =>
-  globalThis.location &&
-  new URL(href, globalThis.location.href).origin === globalThis.location.origin;
+export const isInternalLink = (href: string): [boolean, string] => {
+  if (globalThis.location) {
+    const url = new URL(href, globalThis.location.href);
+    if (url.origin === globalThis.location.origin) {
+      return [
+        true,
+        `${url.pathname}${
+          url.searchParams.toString() !== ''
+            ? `?${url.searchParams.toString()}`
+            : ''
+        }${url.hash}`,
+      ];
+    }
+    return [false, url.toString()];
+  }
+  return [false, href];
+};
 
 const icons = Object.entries({
   '.slack.com': slackIcon,

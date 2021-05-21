@@ -28,9 +28,10 @@ type AnchorProps = {
 } & Omit<ComponentProps<typeof HashLink>, 'to' | 'smooth'> &
   Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target' | 'rel'>;
 const Anchor: React.FC<AnchorProps> = ({ href, enabled = true, ...props }) => {
-  const internal = enabled && href ? isInternalLink(href) : false;
-  if (useHasRouter() && href && internal) {
-    return <HashLink {...props} to={href} smooth css={resetStyles} />;
+  const [internal, url] =
+    enabled && href ? isInternalLink(href) : [false, undefined];
+  if (useHasRouter() && url && internal) {
+    return <HashLink {...props} to={url} smooth css={resetStyles} />;
   }
   return (
     <a

@@ -72,10 +72,11 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   icon,
   children,
 }) => {
-  if (useHasRouter() && isInternalLink(href)) {
+  const [internal, url] = isInternalLink(href);
+  if (useHasRouter() && internal) {
     return (
       <NavHashLink
-        to={href}
+        to={url}
         activeClassName={activeClassName}
         css={[styles, { [`&.${activeClassName}`]: activePrimaryStyles }]}
         smooth
@@ -92,7 +93,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
   return (
-    <a href={href} css={[styles, active && activePrimaryStyles]}>
+    <a href={url} css={[styles, active && activePrimaryStyles]}>
       <p css={textStyles}>
         <span css={iconStyles}>{icon}</span>
         {children}

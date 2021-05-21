@@ -9,7 +9,7 @@ export default {
 export const Normal = () => {
   const degree = select(
     'Degree',
-    ['Empty', 'BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'],
+    ['Empty', 'BA', 'BSc', 'MSc', 'PhD', 'MD', 'MD, PhD', 'MPH', 'MA', 'MBA'],
     'PhD',
   );
   return (

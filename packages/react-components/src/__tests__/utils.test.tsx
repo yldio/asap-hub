@@ -19,21 +19,21 @@ describe('getSvgAspectRatio', () => {
 
 describe('isInternalLink', () => {
   describe.each`
-    description          | href                                                                          | absolute
+    description          | href                                                                          | full
     ${'external link'}   | ${`https://parkinsonsroadmap.org/`}                                           | ${`https://parkinsonsroadmap.org/`}
-    ${'external link'}   | ${`//parkinsonsroadmap.org/`}                                                 | ${`http://parkinsonsroadmap.org/`}
-    ${'external link'}   | ${`//${window.location.hostname}:${Number(window.location.port || 80) - 1}/`} | ${`http://localhost:79/`}
-    ${'external mailto'} | ${`mailto:test@${window.location.hostname}`}                                  | ${`mailto:test@localhost`}
-  `('for an $href to be an $description', ({ href, absolute }) => {
-    it('returns false and absolute url', () => {
-      const [internal, absoluteUrl] = isInternalLink(href);
+    ${'external link'}   | ${`//parkinsonsroadmap.org/`}                                                 | ${`${window.location.protocol}//parkinsonsroadmap.org/`}
+    ${'external link'}   | ${`//${window.location.hostname}:${Number(window.location.port || 80) - 1}/`} | ${`http://${window.location.hostname}:${Number(window.location.port || 80) - 1}/`}
+    ${'external mailto'} | ${`mailto:test@${window.location.hostname}`}                                  | ${`mailto:test@${window.location.hostname}`}
+  `('for an $href to be an $description', ({ href, full }) => {
+    it('returns false and full url', () => {
+      const [internal, fullUrl] = isInternalLink(href);
       expect(internal).toBe(false);
-      expect(absoluteUrl).toEqual(absolute);
+      expect(fullUrl).toEqual(full);
     });
   });
 
   describe.each`
-    href                                                                          | relative
+    href                                                                          | stripped
     ${`${window.location.protocol}//${window.location.host}`}                     | ${`/`}
     ${`${window.location.protocol}//${window.location.host}/page`}                | ${`/page`}
     ${`//${window.location.host}`}                                                | ${`/`}
@@ -48,13 +48,14 @@ describe('isInternalLink', () => {
     ${`#`}                                                                        | ${`/`}
     ${`#elementId`}                                                               | ${`/#elementId`}
     ${`#fragment`}                                                                | ${`/#fragment`}
-    ${`?query`}                                                                   | ${`/?query=`}
-    ${`${window.location.protocol}//${window.location.host}/page?query#fragment`} | ${`/page?query=#fragment`}
-  `('for an internal link with a router to %s', ({ href, relative }) => {
-    it('returns true and relative urls', () => {
-      const [internal, relativeUrl] = isInternalLink(href);
+    ${`?query`}                                                                   | ${`/?query`}
+    ${`?query=123`}                                                               | ${`/?query=123`}
+    ${`${window.location.protocol}//${window.location.host}/page?query#fragment`} | ${`/page?query#fragment`}
+  `('for an internal link with a router to %s', ({ href, stripped }) => {
+    it('returns true and stripped url', () => {
+      const [internal, strippedUrl] = isInternalLink(href);
       expect(internal).toBe(true);
-      expect(relativeUrl).toEqual(relative);
+      expect(strippedUrl).toEqual(stripped);
     });
   });
 });

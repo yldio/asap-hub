@@ -31,14 +31,7 @@ export const isInternalLink = (href: string): [boolean, string] => {
   if (globalThis.location) {
     const url = new URL(href, globalThis.location.href);
     if (url.origin === globalThis.location.origin) {
-      return [
-        true,
-        `${url.pathname}${
-          url.searchParams.toString() !== ''
-            ? `?${url.searchParams.toString()}`
-            : ''
-        }${url.hash}`,
-      ];
+      return [true, `${url.pathname}${url.search}${url.hash}`];
     }
     return [false, url.toString()];
   }

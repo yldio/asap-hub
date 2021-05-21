@@ -50,8 +50,8 @@ export const parseGraphQLResearchOutput = (
     ...optionalAuthors,
     ...optionalTeams,
     sharingStatus: output.flatData?.sharingStatus || 'Network Only',
-    asapFunded: convertNotSureToUndefined(output.flatData?.asapFunded),
-    usedInPublication: convertNotSureToUndefined(
+    asapFunded: convertDecisionToBoolean(output.flatData?.asapFunded),
+    usedInPublication: convertDecisionToBoolean(
       output.flatData?.usedInAPublication,
     ),
   };
@@ -64,7 +64,7 @@ const parseGraphqlTeamLite = (
   displayName: graphqlTeam.flatData?.displayName || '',
 });
 
-const convertNotSureToUndefined = (
+const convertDecisionToBoolean = (
   decision?: DecisionOption | null,
 ): boolean | undefined =>
   decision && ['Yes', 'No'].includes(decision) ? decision === 'Yes' : undefined;

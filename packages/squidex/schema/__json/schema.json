@@ -299,6 +299,9 @@
             "type": "string"
           }
         },
+        "folderId": {
+          "type": ["null", "string"]
+        },
         "minItems": {
           "type": ["integer", "null"],
           "format": "int32"
@@ -808,6 +811,9 @@
           "type": ["null", "string"]
         },
         "patternMessage": {
+          "type": ["null", "string"]
+        },
+        "folderId": {
           "type": ["null", "string"]
         },
         "minLength": {

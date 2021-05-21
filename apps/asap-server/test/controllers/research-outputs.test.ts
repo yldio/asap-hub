@@ -213,7 +213,7 @@ describe('ResearchOutputs controller', () => {
       expect(result.type).toEqual('Proposal');
     });
 
-    test('Should default sharingStatus to Public when missing', async () => {
+    test('Should default sharingStatus to Network Only when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       delete squidexGraphqlResponse.findResearchOutputsContent.flatData
         ?.sharingStatus;
@@ -226,7 +226,7 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
-      expect(result.sharingStatus).toEqual('Public');
+      expect(result.sharingStatus).toEqual('Network Only');
     });
 
     test('Should default asapFunded to undefined when missing', async () => {

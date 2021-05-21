@@ -286,7 +286,7 @@ export const listTeamResponse: ListTeamResponse = {
           ],
           lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
           accessInstructions: 'some access instructions',
-          sharingStatus: 'Public',
+          sharingStatus: 'Network Only',
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -559,7 +559,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
         },
       ],
       lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
-      sharingStatus: 'Public',
+      sharingStatus: 'Network Only',
       usedInPublication: 'No',
     },
     {
@@ -778,7 +778,7 @@ export const updateExpectation: TeamResponse = {
         },
       ],
       lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
-      sharingStatus: 'Public',
+      sharingStatus: 'Network Only',
       usedInPublication: 'No',
     },
     {

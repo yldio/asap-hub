@@ -53,7 +53,7 @@ export const parseGraphQLResearchOutput = (
     accessInstructions: output.flatData?.accessInstructions || undefined,
     ...optionalAuthors,
     ...optionalTeams,
-    sharingStatus: output.flatData?.sharingStatus || 'Public',
+    sharingStatus: output.flatData?.sharingStatus || 'Network Only',
     asapFunded: convertNotSureToUndefined(output.flatData?.asapFunded),
     usedInPublication: convertNotSureToUndefined(
       output.flatData?.usedInAPublication,

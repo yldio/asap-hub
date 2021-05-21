@@ -28,6 +28,7 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             skillsDescription: null,
             orcid: '123-456-789',
             social: null,
+            degree: 'MPH',
             teams: [
               {
                 role: 'Lead PI (Core Leadership)',
@@ -120,6 +121,7 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
       lastModified: '2020-09-25T09:42:51Z',
       data: null,
       flatData: {
+        degree: 'MPH',
         email: 'cristiano@ronaldo.com',
         contactEmail: 'cristiano@ronaldo.com',
         firstName: 'Cristiano',
@@ -322,6 +324,7 @@ export const updateUserExpectation: UserResponse = {
   lastName: 'Ronaldo',
   jobTitle: 'Junior',
   institution: 'Dollar General Corporation',
+  degree: 'MPH',
   teams: [
     {
       id: 'team-id-1',
@@ -367,6 +370,7 @@ export const fetchExpectation: ListUserResponse = {
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
       orcidWorks: [],
       orcid: '123-456-789',
+      degree: 'MPH',
       social: {
         orcid: '123-456-789',
       },

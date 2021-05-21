@@ -42,7 +42,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               use a different correspondence email address, please add it below.
             </>
           }
-          hint="Note: This will not change your login email."
+          hint="Note: This will not affect the way you login into the Hub."
         />
       )}
     </EditModal>

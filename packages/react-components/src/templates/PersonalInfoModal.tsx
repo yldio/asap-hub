@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserPatchRequest } from '@asap-hub/model';
+import { UserPatchRequest, UserDegree } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import { LabeledTextField, LabeledDropdown } from '../molecules';
@@ -32,7 +32,7 @@ type PersonalInfoModalProps = Pick<
 const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   firstName = '',
   lastName = '',
-  degree = '',
+  degree = '' as const,
   institution = '',
   location = '',
   jobTitle = '',
@@ -42,7 +42,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
 }) => {
   const [newFirstName, setNewFirstName] = useState<string>(firstName);
   const [newLastName, setNewLastName] = useState<string>(lastName);
-  const [newDegree, setNewDegree] = useState<string>(degree);
+  const [newDegree, setNewDegree] = useState<UserDegree | ''>(degree);
   const [newInstitution, setNewInstitution] = useState<string>(institution);
   const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle);
   const [newLocation, setNewLocation] = useState<string>(location);
@@ -91,7 +91,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               enabled={!isSaving}
               required
             />
-            <LabeledDropdown
+            <LabeledDropdown<UserDegree | ''>
               title="Degree"
               onChange={setNewDegree}
               options={[
@@ -101,7 +101,10 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
                 { label: 'MSc', value: 'MSc' },
                 { label: 'PhD', value: 'PhD' },
                 { label: 'MD', value: 'MD' },
-                { label: 'PhD, MD', value: 'PhD, MD' },
+                { label: 'MD, PhD', value: 'MD, PhD' },
+                { label: 'MPH', value: 'MPH' },
+                { label: 'MA', value: 'MA' },
+                { label: 'MBA', value: 'MBA' },
               ]}
               value={newDegree}
               enabled={!isSaving}

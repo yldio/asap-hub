@@ -14,6 +14,7 @@ const researchOutputResponse: Omit<
   title: 'Output',
   description: 'description',
   type: 'Proposal',
+  subTypes: ['3D Printing'],
   tags: ['test', 'tag'],
   authors: [
     {

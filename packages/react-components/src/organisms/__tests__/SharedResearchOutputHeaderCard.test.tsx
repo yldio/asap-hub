@@ -75,6 +75,7 @@ it('does not show authors (REGRESSION)', () => {
   );
   expect(queryByText('John Doe')).not.toBeInTheDocument();
 });
+
 it('shows authors', () => {
   const { getByText } = render(
     <SharedResearchOutputHeaderCard
@@ -83,4 +84,32 @@ it('shows authors', () => {
     />,
   );
   expect(getByText('John Doe')).toBeVisible();
+});
+
+it('renders an output with type and subtypes', () => {
+  const { getAllByRole, rerender } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      teams={[]}
+      authors={[]}
+      type="Protocol"
+      subTypes={[]}
+    />,
+  );
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['Protocol']);
+
+  rerender(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      teams={[]}
+      authors={[]}
+      type="Protocol"
+      subTypes={['3D Printing', 'ASAP annual meeting']}
+    />,
+  );
+  expect(
+    getAllByRole('listitem').map(({ textContent }) => textContent),
+  ).toEqual(['Protocol', '3D Printing', 'ASAP annual meeting']);
 });

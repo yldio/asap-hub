@@ -37,6 +37,7 @@ export const parseGraphQLResearchOutput = (
     created: parseDate(output.created).toISOString(),
     link: output.flatData?.link || undefined,
     type: output.flatData?.type || 'Proposal',
+    subTypes: output.flatData?.subtype ? [output.flatData.subtype] : [],
     title: output.flatData?.title || '',
     description: output.flatData?.description || '',
     tags: output.flatData?.tags || [],

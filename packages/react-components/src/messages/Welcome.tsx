@@ -27,6 +27,13 @@ const Welcome: React.FC<WelcomeProps> = ({ firstName, link }) => (
       <Link href={mailToSupport()}>get in touch</Link>. Our Support team is
       happy to help!
     </Paragraph>
+    <Paragraph>
+      Note: please be mindful that the ASAP Hub is a closed platform developed
+      for ASAP grantees only. The closed nature of the Hub is meant to foster
+      trust, candor, and connection. As a reminder, your commitment to
+      confidentiality has been codified in the ASAP grant agreement to which
+      your team has agreed
+    </Paragraph>
   </section>
 );
 

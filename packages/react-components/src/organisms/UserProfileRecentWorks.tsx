@@ -139,8 +139,9 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
   orcid,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
+  if (!isOwnProfile && orcidWorks.length === 0) return null;
 
-  return orcidWorks.length || isOwnProfile ? (
+  return (
     <Card>
       <div css={headerStyles}>
         <Headline2 styleAsHeading={3}>
@@ -156,12 +157,12 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
           <span css={titleStyle}>No works available on your ORCID.</span>
           <br />
           To complete this section, please add works to your ORCID.{' '}
-          <span css={{ svg: { stroke: fern.rgb } }}>
-            <Link href="https://support.orcid.org/hc/en-us/articles/360006973133-Add-works-to-your-ORCID-record">
-              Learn how to add works.
-              <span css={{ verticalAlign: 'middle' }}>{externalLinkIcon}</span>
-            </Link>
-          </span>
+          <Link href="https://support.orcid.org/hc/en-us/articles/360006973133-Add-works-to-your-ORCID-record">
+            Learn how to add works.
+            <span css={{ verticalAlign: 'middle', svg: { stroke: fern.rgb } }}>
+              {externalLinkIcon}
+            </span>
+          </Link>
           <br />
           <br />
           <span css={titleStyle}>Your ORCID is: </span>
@@ -187,7 +188,7 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
         </ul>
       )}
     </Card>
-  ) : null;
+  );
 };
 
 export default UserProfileRecentWorks;

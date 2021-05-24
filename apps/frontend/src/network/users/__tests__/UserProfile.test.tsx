@@ -264,13 +264,8 @@ describe('a header edit button', () => {
       biography: 'My Bio',
     };
 
-    const {
-      getByText,
-      getByTitle,
-      queryByText,
-      findByLabelText,
-      findByText,
-    } = await renderUserProfile(userProfile);
+    const { getByText, getByTitle, queryByText, findByLabelText, findByText } =
+      await renderUserProfile(userProfile);
 
     // Open and close on research tab
     userEvent.click(await findByText(/research/i, { selector: 'nav *' }));

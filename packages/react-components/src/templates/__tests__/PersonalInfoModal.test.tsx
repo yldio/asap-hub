@@ -52,7 +52,7 @@ it('triggers the save function', async () => {
       location="location"
       jobTitle="jobTitle"
       institution="institution"
-      degree="BA"
+      degree="MPH"
       onSave={jestFn}
     />,
     { wrapper: MemoryRouter },
@@ -63,7 +63,7 @@ it('triggers the save function', async () => {
     firstName: 'firstName',
     lastName: 'lastName',
     location: 'location',
-    degree: 'BA',
+    degree: 'MPH',
     jobTitle: 'jobTitle',
     institution: 'institution',
   });

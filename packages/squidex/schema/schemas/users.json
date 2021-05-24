@@ -256,7 +256,17 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "allowedValues": ["BA", "BSc", "MD", "MSc", "PhD, MD", "PhD"],
+          "allowedValues": [
+            "BA",
+            "BSc",
+            "MD",
+            "MSc",
+            "MD, PhD",
+            "PhD",
+            "MPH",
+            "MA",
+            "MBA"
+          ],
           "isUnique": false,
           "inlineEditable": false,
           "contentType": "Unspecified",

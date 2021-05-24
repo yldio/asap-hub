@@ -1,6 +1,9 @@
+import { useContext } from 'react';
 import { css } from '@emotion/react';
-import { OrcidWork } from '@asap-hub/model';
+import { OrcidWork, UserResponse } from '@asap-hub/model';
 import { format } from 'date-fns';
+import { UserProfileContext } from '@asap-hub/react-context';
+
 import {
   Card,
   Headline2,
@@ -9,10 +12,12 @@ import {
   Divider,
   Paragraph,
   Anchor,
+  Link,
 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
-import { orcidIcon } from '../icons';
-import { lead } from '../colors';
+import { externalLinkIcon, orcidIcon } from '../icons';
+import { charcoal, lead, fern } from '../colors';
+import { mailToSupport } from '../mail';
 
 const typeMap: { [key in OrcidWork['type']]: string } = {
   ANNOTATION: 'Other',
@@ -82,11 +87,13 @@ const listStyles = css({
   gridRowGap: `${12 / perRem}em`,
 });
 
+const titleStyle = css({ fontWeight: 'bold', color: charcoal.rgb });
+
 type UserProfileRecentWorkProps = Omit<OrcidWork, 'id'>;
 
 type UserProfileRecentWorksProps = {
   readonly orcidWorks?: UserProfileRecentWorkProps[];
-};
+} & Pick<UserResponse, 'orcid'>;
 
 const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
   doi,
@@ -129,26 +136,58 @@ const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
 
 const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
   orcidWorks = [],
-}) => (
-  <Card>
-    <div css={headerStyles}>
-      <Headline2 styleAsHeading={3}>
-        Recent Publications ({orcidWorks.length})
-      </Headline2>
-      <Paragraph accent="lead">Via ORCID</Paragraph>
-      <span css={{ display: 'grid', svg: { fill: lead.rgb } }}>
-        {orcidIcon}
-      </span>
-    </div>
-    <ul css={listStyles}>
-      {orcidWorks
-        .flatMap((work, idx) => [
-          <Divider key={`sep-${idx}`} />,
-          <UserProfileRecentWork key={`wrk-${idx}`} {...work} />,
-        ])
-        .slice(1)}
-    </ul>
-  </Card>
-);
+  orcid,
+}) => {
+  const { isOwnProfile } = useContext(UserProfileContext);
+
+  return orcidWorks.length || isOwnProfile ? (
+    <Card>
+      <div css={headerStyles}>
+        <Headline2 styleAsHeading={3}>
+          Recent Publications ({orcidWorks.length})
+        </Headline2>
+        <Paragraph accent="lead">Via ORCID</Paragraph>
+        <span css={{ display: 'grid', svg: { fill: lead.rgb } }}>
+          {orcidIcon}
+        </span>
+      </div>
+      {orcidWorks.length === 0 && isOwnProfile ? (
+        <Paragraph accent="lead">
+          <span css={titleStyle}>No works available on your ORCID.</span>
+          <br />
+          To complete this section, please add works to your ORCID.{' '}
+          <span css={{ svg: { stroke: fern.rgb } }}>
+            <Link href="https://support.orcid.org/hc/en-us/articles/360006973133-Add-works-to-your-ORCID-record">
+              Learn how to add works.
+              <span css={{ verticalAlign: 'middle' }}>{externalLinkIcon}</span>
+            </Link>
+          </span>
+          <br />
+          <br />
+          <span css={titleStyle}>Your ORCID is: </span>
+          <Link href={new URL(`https://orcid.org/${orcid}`).toString()}>
+            {orcid}
+          </Link>
+          <br /> If this is incorrect please{' '}
+          <Link href={mailToSupport({ subject: 'Orcid change request' })}>
+            contact ASAP.
+          </Link>
+          <br /> <br />
+          Works are automatically pulled via ORCID and may take up to 24 hours
+          to appear here.
+        </Paragraph>
+      ) : (
+        <ul css={listStyles}>
+          {orcidWorks
+            .flatMap((work, idx) => [
+              <Divider key={`sep-${idx}`} />,
+              <UserProfileRecentWork key={`wrk-${idx}`} {...work} />,
+            ])
+            .slice(1)}
+        </ul>
+      )}
+    </Card>
+  ) : null;
+};
 
 export default UserProfileRecentWorks;

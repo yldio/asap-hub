@@ -1,4 +1,4 @@
-import { ResearchOutputResponse } from '@asap-hub/model';
+import { DecisionOption, ResearchOutputResponse } from '@asap-hub/model';
 import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
@@ -49,6 +49,11 @@ export const parseGraphQLResearchOutput = (
     accessInstructions: output.flatData?.accessInstructions || undefined,
     ...optionalAuthors,
     ...optionalTeams,
+    sharingStatus: output.flatData?.sharingStatus || 'Network Only',
+    asapFunded: convertDecisionToBoolean(output.flatData?.asapFunded),
+    usedInPublication: convertDecisionToBoolean(
+      output.flatData?.usedInAPublication,
+    ),
   };
 };
 
@@ -58,3 +63,8 @@ const parseGraphqlTeamLite = (
   id: graphqlTeam.id,
   displayName: graphqlTeam.flatData?.displayName || '',
 });
+
+const convertDecisionToBoolean = (
+  decision?: DecisionOption | null,
+): boolean | undefined =>
+  decision && ['Yes', 'No'].includes(decision) ? decision === 'Yes' : undefined;

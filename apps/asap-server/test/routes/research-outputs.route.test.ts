@@ -78,7 +78,7 @@ describe('/research-outputs/ route', () => {
     });
   });
 
-  describe('GET /research-outputs/{research_output_it}', () => {
+  describe('GET /research-outputs/{research_output_id}', () => {
     test('Should return a 404 error when the team or members are not found', async () => {
       researchOutputControllerMock.fetchById.mockRejectedValueOnce(
         Boom.notFound(),

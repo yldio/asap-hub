@@ -9,12 +9,12 @@ export default {
 
 export const Normal = () => (
   <UserProfileRecentWorks
-    orcid={text('Orcid Id', '0000-0002-9945-3696')}
-    orcidWorks={Array.from({ length: number('Number of orcid works', 2) }).map(
+    orcid={text('ORCID', '0000-0002-9945-3696')}
+    orcidWorks={Array.from({ length: number('Number of ORCID works', 2) }).map(
       (_, i) => {
         if (i === 0) {
           return {
-            doi: text('Work Doi', 'https://doi.org/10.7554/elife.07083'),
+            doi: text('Work DOI', 'https://doi.org/10.7554/elife.07083'),
             title: text(
               'Work Title',
               'Recognizing the importance of new tools and resources for research',

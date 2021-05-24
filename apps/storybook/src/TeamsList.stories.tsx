@@ -10,6 +10,7 @@ export default {
 export const Normal = () => (
   <TeamsList
     teams={createListTeamResponse(number('Number of Teams', 6)).items}
+    max={number('Maximum', 10)}
   />
 );
 
@@ -17,5 +18,6 @@ export const Inline = () => (
   <TeamsList
     inline
     teams={createListTeamResponse(number('Number of Teams', 6)).items}
+    max={number('Maximum', 10)}
   />
 );

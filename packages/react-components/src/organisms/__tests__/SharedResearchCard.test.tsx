@@ -45,10 +45,12 @@ it('displays team information when present', () => {
   const { getByText } = render(
     <SharedResearchCard
       {...sharedResearchCardProps}
-      team={{
-        id: '123',
-        displayName: 'A',
-      }}
+      teams={[
+        {
+          id: '123',
+          displayName: 'A',
+        },
+      ]}
     />,
   );
   expect(getByText('Team A').closest('a')).toHaveAttribute(

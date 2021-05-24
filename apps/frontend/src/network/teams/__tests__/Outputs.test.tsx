@@ -25,7 +25,7 @@ it('generates a link back to the team', async () => {
           outputs={[
             {
               ...createResearchOutputResponse(),
-              team: { id: '42', displayName: 'Some Team' },
+              teams: [{ id: '42', displayName: 'Some Team' }],
             },
           ]}
         />

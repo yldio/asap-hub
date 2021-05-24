@@ -7,10 +7,15 @@ import { teamIcon } from '../icons';
 import { lead } from '../colors';
 import { themeStyles as linkStyles } from '../atoms/Link';
 
-const containerInlineStyles = css({
+const containerStyles = css({
   display: 'grid',
-  gridTemplateColumns: 'max-content 1fr',
   gridColumnGap: `${12 / perRem}em`,
+});
+const containerInlineStyles = css({
+  gridTemplateColumns: 'max-content 1fr',
+});
+const containerSummarizedStyles = css({
+  gridTemplateColumns: 'max-content max-content',
 });
 
 const listStyles = css({
@@ -69,24 +74,44 @@ const bulletStyles = css({
 interface TeamsListProps {
   readonly teams: ReadonlyArray<{ id: string; displayName: string }>;
   readonly inline?: boolean;
+  readonly max?: number;
 }
-const TeamsList: React.FC<TeamsListProps> = ({ teams, inline = false }) => (
-  <div css={inline && containerInlineStyles}>
-    {inline && !!teams.length && teamIcon}
-    <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
-      {teams.flatMap(({ id, displayName }, i) => (
-        <li css={inline ? itemInlineStyles : itemBlockStyles} key={`sep-${i}`}>
-          {inline || teamIcon}
-          <div css={inline && teamInlineStyles}>
-            <Link href={network({}).teams({}).team({ teamId: id }).$}>
-              Team {displayName}
-            </Link>
-            {inline && <span css={bulletStyles}>·</span>}
-          </div>
-          <div css={dividerStyles}>{inline || <Divider />}</div>
-        </li>
-      ))}
-    </ul>
+const TeamsList: React.FC<TeamsListProps> = ({
+  teams,
+  inline = false,
+  max = Number.POSITIVE_INFINITY,
+}) => (
+  <div
+    css={[
+      containerStyles,
+      inline && containerInlineStyles,
+      teams.length > max && containerSummarizedStyles,
+    ]}
+  >
+    {((inline && !!teams.length) || teams.length > max) && teamIcon}
+    {teams.length > max ? (
+      <span css={{ color: lead.rgb }}>
+        {teams.length} Team{teams.length === 1 ? '' : 's'}
+      </span>
+    ) : (
+      <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
+        {teams.flatMap(({ id, displayName }, i) => (
+          <li
+            css={inline ? itemInlineStyles : itemBlockStyles}
+            key={`sep-${i}`}
+          >
+            {inline || teamIcon}
+            <div css={inline && teamInlineStyles}>
+              <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                Team {displayName}
+              </Link>
+              {inline && <span css={bulletStyles}>·</span>}
+            </div>
+            <div css={dividerStyles}>{inline || <Divider />}</div>
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
 );
 

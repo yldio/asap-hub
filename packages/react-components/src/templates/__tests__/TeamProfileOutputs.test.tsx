@@ -19,10 +19,12 @@ it('renders output cards', () => {
           created: new Date().toISOString(),
           addedDate: new Date().toISOString(),
           title: 'Title',
-          team: {
-            id: 'uuid-team',
-            displayName: 'Unknown',
-          },
+          teams: [
+            {
+              id: 'uuid-team',
+              displayName: 'Unknown',
+            },
+          ],
         },
       ]}
     />,

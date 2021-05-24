@@ -1,5 +1,6 @@
+import { createListTeamResponse } from '@asap-hub/fixtures';
 import { SharedResearchCard } from '@asap-hub/react-components';
-import { text, select, date } from '@storybook/addon-knobs';
+import { text, select, date, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Shared Research / Card',
@@ -17,9 +18,6 @@ export const Normal = () => (
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}
-    team={{
-      id: text('Team Id', '123'),
-      displayName: text('Team Name', 'Barnes, A.'),
-    }}
+    teams={createListTeamResponse(number('Number of Teams', 3)).items}
   />
 );

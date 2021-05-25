@@ -28,7 +28,7 @@ type TagLabelProps = {
 };
 
 const Tag: React.FC<TagLabelProps> = ({ children }) => (
-  <div css={[styles]}>{children}</div>
+  <div css={styles}>{children}</div>
 );
 
 export default Tag;

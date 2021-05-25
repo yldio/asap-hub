@@ -159,7 +159,7 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
           To complete this section, please add works to your ORCID.{' '}
           <Link href="https://support.orcid.org/hc/en-us/articles/360006973133-Add-works-to-your-ORCID-record">
             Learn how to add works.
-            <span css={{ verticalAlign: 'middle', svg: { stroke: fern.rgb } }}>
+            <span css={{ verticalAlign: 'top', svg: { stroke: fern.rgb } }}>
               {externalLinkIcon}
             </span>
           </Link>

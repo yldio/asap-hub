@@ -15,7 +15,18 @@ const headerStyles = css({
   display: 'grid',
   gridAutoFlow: 'column',
   alignItems: 'center',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    gridAutoFlow: 'row',
+  },
 });
+
+const controlStyles = css({
+  justifySelf: 'end',
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    justifySelf: 'unset',
+  },
+});
+
 const mainStyles = css({
   justifySelf: 'stretch',
   paddingTop: `${18 / perRem}em`,
@@ -61,7 +72,7 @@ const ResultList: React.FC<ResultListProps> = ({
         </Paragraph>
       )}
       {cardViewHref && listViewHref && (
-        <div css={{ justifySelf: 'end' }}>
+        <div css={controlStyles}>
           <ListControls
             isListView={isListView}
             cardViewHref={cardViewHref}

@@ -121,6 +121,7 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
       lastModified: '2020-09-25T09:42:51Z',
       data: null,
       flatData: {
+        onboarded: true,
         degree: 'MPH',
         email: 'cristiano@ronaldo.com',
         contactEmail: 'cristiano@ronaldo.com',
@@ -274,6 +275,7 @@ export const buildUserGraphqlResponse = (
 export const patchResponse: RestUser = {
   id: 'userId',
   data: {
+    onboarded: { iv: true },
     role: { iv: 'Grantee' },
     lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
     email: { iv: 'cristiano@ronaldo.com' },
@@ -315,6 +317,7 @@ export const updateAvatarBody: { avatar: string } = {
 
 export const updateUserExpectation: UserResponse = {
   id: 'userId',
+  onboarded: true,
   displayName: 'Cristiano Ronaldo',
   createdDate: '2020-09-25T09:42:51.000Z',
   lastModifiedDate: '2020-09-25T09:42:51.132Z',
@@ -359,6 +362,7 @@ export const fetchExpectation: ListUserResponse = {
   items: [
     {
       id: 'userId1',
+      onboarded: true,
       createdDate: '2020-09-23T20:45:22.000Z',
       questions: [],
       skills: ['React'],
@@ -386,6 +390,7 @@ export const fetchExpectation: ListUserResponse = {
     },
     {
       id: 'userId2',
+      onboarded: true,
       createdDate: '2020-09-23T20:45:22.000Z',
       questions: [],
       skills: [],

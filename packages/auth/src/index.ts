@@ -8,7 +8,13 @@ export { config, auth0PubKeys };
 
 export type User = Pick<
   UserResponse,
-  'id' | 'displayName' | 'email' | 'firstName' | 'lastName' | 'avatarUrl'
+  | 'id'
+  | 'onboarded'
+  | 'displayName'
+  | 'email'
+  | 'firstName'
+  | 'lastName'
+  | 'avatarUrl'
 > & {
   teams: ReadonlyArray<
     Omit<UserResponse['teams'][0], 'approach' | 'responsibilities'>
@@ -21,6 +27,7 @@ export interface Auth0User {
   readonly given_name?: string;
   readonly family_name?: string;
   readonly orcid?: string;
+  readonly onboarded: boolean;
   readonly aud: string;
   readonly [customUserClaim: string]: string | undefined | User;
 }

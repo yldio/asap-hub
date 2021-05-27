@@ -19,6 +19,12 @@ const headerStyles = css({
   alignItems: 'center',
 });
 
+const headerNoResultsStyles = css({
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    justifyContent: 'flex-end',
+  },
+});
+
 const mainStyles = css({
   justifySelf: 'stretch',
   paddingTop: `${18 / perRem}em`,
@@ -55,9 +61,7 @@ const ResultList: React.FC<ResultListProps> = ({
   ...pageControlsProps
 }) => (
   <article>
-    <header
-      css={[headerStyles, numberOfItems > 0 || { justifyContent: 'flex-end' }]}
-    >
+    <header css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}>
       {numberOfItems > 0 && (
         <Paragraph primary>
           <strong>

@@ -1,26 +1,28 @@
 import { css } from '@emotion/react';
 import { steel, lead, paper } from '../colors';
-import { perRem } from '../pixels';
+import { lineHeight, perRem } from '../pixels';
 
 const borderWidth = 1;
 const styles = css({
   display: 'inline-block',
-  backgroundColor: paper.rgb,
+  boxSizing: 'border-box',
+  height: lineHeight,
+  margin: `${12 / perRem}em 0`,
+  padding: `0 ${8 / perRem}em`,
+
+  maxWidth: '100%',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  textOverflow: 'ellipsis',
 
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
   borderRadius: `${6 / perRem}em`,
 
-  transition: '200ms',
-  padding: `0 ${8 / perRem}em`,
-  height: '24px',
-  boxSizing: 'border-box',
-
-  color: lead.rgb,
   fontSize: '0.8em',
-
-  margin: `${12 / perRem}em 0`,
+  color: lead.rgb,
+  backgroundColor: paper.rgb,
 });
 
 type TagLabelProps = {
@@ -28,7 +30,7 @@ type TagLabelProps = {
 };
 
 const Tag: React.FC<TagLabelProps> = ({ children }) => (
-  <div css={[styles]}>{children}</div>
+  <span css={styles}>{children}</span>
 );
 
 export default Tag;

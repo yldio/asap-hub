@@ -12,10 +12,19 @@ import {
 import { lead } from '../colors';
 
 const headerStyles = css({
-  display: 'grid',
-  gridAutoFlow: 'column',
+  display: 'flex',
+  flexWrap: 'wrap',
+  columnGap: `${12 / perRem}em`,
+  justifyContent: 'space-between',
   alignItems: 'center',
 });
+
+const headerNoResultsStyles = css({
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
+    justifyContent: 'flex-end',
+  },
+});
+
 const mainStyles = css({
   justifySelf: 'stretch',
   paddingTop: `${18 / perRem}em`,
@@ -52,7 +61,7 @@ const ResultList: React.FC<ResultListProps> = ({
   ...pageControlsProps
 }) => (
   <article>
-    <header css={headerStyles}>
+    <header css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}>
       {numberOfItems > 0 && (
         <Paragraph primary>
           <strong>
@@ -61,13 +70,11 @@ const ResultList: React.FC<ResultListProps> = ({
         </Paragraph>
       )}
       {cardViewHref && listViewHref && (
-        <div css={{ justifySelf: 'end' }}>
-          <ListControls
-            isListView={isListView}
-            cardViewHref={cardViewHref}
-            listViewHref={listViewHref}
-          />
-        </div>
+        <ListControls
+          isListView={isListView}
+          cardViewHref={cardViewHref}
+          listViewHref={listViewHref}
+        />
       )}
     </header>
     {numberOfItems > 0 ? (

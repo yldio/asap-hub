@@ -15,6 +15,8 @@ const containerStyles = css({
 const cardsStyles = css({
   display: 'grid',
   rowGap: `${36 / perRem}em`,
+  maxWidth: '100%',
+  overflow: 'hidden',
 });
 
 const additionalInformationListStyles = css({

@@ -23,11 +23,8 @@ const orderList = css({
 
 const listElement = css({
   width: '100%',
-  display: 'block',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'inline-flex',
-    justifyContent: 'space-between',
-  },
+  display: 'flex',
+  justifyContent: 'space-between',
 });
 
 type AdditionalMaterialsProps = {

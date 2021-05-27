@@ -8,6 +8,7 @@ import { paddingStyles, borderRadius } from '../card';
 const containerStyles = css({
   boxSizing: 'border-box',
   maxWidth: '100%',
+  overflow: 'hidden',
 
   borderWidth: 1,
   borderStyle: 'solid',

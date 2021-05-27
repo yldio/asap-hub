@@ -11,25 +11,38 @@ import { TeamsList, UsersList } from '../molecules';
 
 const headerStyles = css({
   flex: 1,
+
   display: 'flex',
   justifyContent: 'space-between',
+  columnGap: `${12 / perRem}em`,
+  maxWidth: '100%',
+  overflow: 'hidden',
 });
 
 const ROW_GAP_OFFSET = 6;
 
 const typeContainerStyles = css({
+  flexShrink: 1,
+
   display: 'flex',
   flexWrap: 'wrap',
-  listStyle: 'none',
+  alignItems: 'center',
   columnGap: `${12 / perRem}em`,
+  maxWidth: '100%',
+  overflow: 'hidden',
+
+  listStyle: 'none',
   margin: 0,
   marginTop: `${ROW_GAP_OFFSET / perRem}em`,
   padding: 0,
-  alignItems: 'center',
+
   textTransform: 'capitalize',
 });
 
 const typeStyles = css({
+  maxWidth: '100%',
+  overflow: 'hidden',
+
   marginTop: `-${ROW_GAP_OFFSET / perRem}em`,
 });
 

@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '@asap-hub/react-components';
-import { boolean, number } from '@storybook/addon-knobs';
+import { number } from '@storybook/addon-knobs';
 import { StaticRouter } from 'react-router-dom';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 
@@ -19,14 +19,18 @@ const props = (): ComponentProps<typeof SharedResearchList> => {
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
     currentPageIndex,
     renderPageHref: (index) => `#${index}`,
-    isListView: boolean('List View Toggled', false),
     listViewParams: '',
     cardViewParams: '',
   };
 };
 
-export const Normal = () => (
+export const CardView = () => (
   <StaticRouter>
-    <SharedResearchList {...props()} />
+    <SharedResearchList {...props()} isListView={false} />
+  </StaticRouter>
+);
+export const ListView = () => (
+  <StaticRouter>
+    <SharedResearchList {...props()} isListView />
   </StaticRouter>
 );

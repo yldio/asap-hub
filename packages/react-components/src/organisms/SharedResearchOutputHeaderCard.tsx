@@ -1,50 +1,15 @@
-import { researchOutputLabels, ResearchOutputResponse } from '@asap-hub/model';
+import { ResearchOutputResponse } from '@asap-hub/model';
+import { ComponentProps } from 'react';
 import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 
-import { Card, TagLabel, ExternalLink, Display } from '..';
+import { Card, Display } from '../atoms';
 import { lead } from '../colors';
 import { formatDate } from '../date';
 import { perRem, mobileScreen } from '../pixels';
 import { captionStyles } from '../text';
 import { TeamsList, UsersList } from '../molecules';
-
-const headerStyles = css({
-  flex: 1,
-
-  display: 'flex',
-  justifyContent: 'space-between',
-  columnGap: `${12 / perRem}em`,
-  maxWidth: '100%',
-  overflow: 'hidden',
-});
-
-const ROW_GAP_OFFSET = 6;
-
-const typeContainerStyles = css({
-  flexShrink: 1,
-
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-  columnGap: `${12 / perRem}em`,
-  maxWidth: '100%',
-  overflow: 'hidden',
-
-  listStyle: 'none',
-  margin: 0,
-  marginTop: `${ROW_GAP_OFFSET / perRem}em`,
-  padding: 0,
-
-  textTransform: 'capitalize',
-});
-
-const typeStyles = css({
-  maxWidth: '100%',
-  overflow: 'hidden',
-
-  marginTop: `-${ROW_GAP_OFFSET / perRem}em`,
-});
+import { SharedResearchMetadata } from '.';
 
 const timestampStyles = css({
   color: lead.rgb,
@@ -60,18 +25,13 @@ const timestampStyles = css({
   },
 });
 
-type SharedResearchOutputHeaderCardProps = Pick<
-  ResearchOutputResponse,
-  | 'created'
-  | 'addedDate'
-  | 'authors'
-  | 'teams'
-  | 'title'
-  | 'type'
-  | 'link'
-  | 'lastModifiedDate'
-  | 'subTypes'
->;
+type SharedResearchOutputHeaderCardProps = ComponentProps<
+  typeof SharedResearchMetadata
+> &
+  Pick<
+    ResearchOutputResponse,
+    'created' | 'addedDate' | 'authors' | 'teams' | 'title' | 'lastModifiedDate'
+  >;
 
 const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardProps> =
   ({
@@ -80,30 +40,14 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
     authors,
     teams,
     title,
-    type,
-    link,
     lastModifiedDate,
-    subTypes,
+    ...props
   }) => {
     const { isEnabled } = useFlags();
 
     return (
       <Card>
-        <div css={headerStyles}>
-          <ul css={typeContainerStyles}>
-            <li css={typeStyles}>
-              <TagLabel>{type}</TagLabel>
-            </li>
-            {subTypes.map((subType, i) => (
-              <li css={typeStyles} key={`subtype-${i}`}>
-                <TagLabel>{subType}</TagLabel>
-              </li>
-            ))}
-          </ul>
-          {link ? (
-            <ExternalLink label={researchOutputLabels[type]} href={link} />
-          ) : null}
-        </div>
+        <SharedResearchMetadata {...props} />
         <Display styleAsHeading={3}>{title}</Display>
         {isEnabled('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST') && (
           <UsersList users={authors} />

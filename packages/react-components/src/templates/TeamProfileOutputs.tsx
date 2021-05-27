@@ -17,7 +17,7 @@ export type TeamProfileOutputsProps = {
 const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({ outputs }) => (
   <div css={containerStyles}>
     {outputs.map((output) => (
-      <SharedResearchCard key={output.id} {...output} />
+      <SharedResearchCard {...output} key={output.id} />
     ))}
     <ComingSoon>
       As teams create and share more research outputs - such as datasets,

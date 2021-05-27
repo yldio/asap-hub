@@ -38,6 +38,9 @@ const mainStyles = css({
     36,
     'px',
   )}`,
+  boxSizing: 'border-box',
+  maxWidth: '100%',
+  overflow: 'hidden',
 });
 const pageControlsStyles = css({
   justifySelf: 'center',

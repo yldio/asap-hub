@@ -10,7 +10,7 @@ import {
   createListUserResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
-import { ResearchOutputSharingStatus } from '@asap-hub/model';
+import { ExternalAuthor, ResearchOutputSharingStatus } from '@asap-hub/model';
 
 export default {
   title: 'Templates / Shared Research / Details',
@@ -57,7 +57,14 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ).toISOString(),
   backHref: '#',
   teams: createListTeamResponse(number('Number of teams', 3)).items,
-  authors: createListUserResponse(number('Number of authors', 3)).items,
+  authors: [
+    ...createListUserResponse(number('Number of authors', 2)).items,
+    ...Array.from({ length: number('Number of external authors', 1) }).map(
+      (_, i): ExternalAuthor => ({
+        displayName: `External Author ${i}`,
+      }),
+    ),
+  ],
 });
 
 export const Normal = () => <SharedResearchOutput {...props()} />;

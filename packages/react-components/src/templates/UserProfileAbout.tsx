@@ -11,6 +11,7 @@ export interface UserProfileAboutProps {
   biography?: ComponentProps<typeof UserProfileBiography>['biography'];
   biosketch?: ComponentProps<typeof UserProfileBiography>['biosketch'];
   orcidWorks?: ComponentProps<typeof UserProfileRecentWorks>['orcidWorks'];
+  orcid?: ComponentProps<typeof UserProfileRecentWorks>['orcid'];
 
   editBiographyHref?: string;
   editOrcidWorksHref?: string;
@@ -20,6 +21,7 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
   biography,
   biosketch,
   orcidWorks,
+  orcid,
   editBiographyHref,
   editOrcidWorksHref,
 }) => {
@@ -40,10 +42,7 @@ const UserProfileAbout: React.FC<UserProfileAboutProps> = ({
               },
       }}
       {{
-        card:
-          orcidWorks && orcidWorks.length ? (
-            <UserProfileRecentWorks orcidWorks={orcidWorks} />
-          ) : null,
+        card: <UserProfileRecentWorks orcid={orcid} orcidWorks={orcidWorks} />,
         editLink:
           editOrcidWorksHref === undefined
             ? undefined

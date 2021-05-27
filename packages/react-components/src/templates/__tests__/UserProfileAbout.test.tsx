@@ -27,10 +27,6 @@ it('renders the recent works from ORCID', () => {
   expect(getByText(/recent/i)).toBeVisible();
   expect(getByText('Clean Code')).toBeVisible();
 });
-it('does not render an empty recent works list', () => {
-  const { queryByText } = render(<UserProfileAbout orcidWorks={[]} />);
-  expect(queryByText(/recent/i)).not.toBeInTheDocument();
-});
 
 it('does not render an edit button by default', () => {
   const { queryByLabelText } = render(<UserProfileAbout orcidWorks={[]} />);

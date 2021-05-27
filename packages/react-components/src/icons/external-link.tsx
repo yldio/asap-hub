@@ -2,16 +2,17 @@
 
 const externalLink = (
   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={18}
-    height={18}
-    viewBox="0 0 18 18"
+    width={24}
+    height={24}
+    viewBox="0 0 24 24"
     fill="none"
     stroke="#00222C"
+    xmlns="http://www.w3.org/2000/svg"
   >
     <title>External Link</title>
     <path
-      d="M13.657 7.026v-2.6h-2.616M9.08 8.976l4.578-4.55M13.657 8.789v4.737H4.5v-9.1h4.715"
+      d="M18.133 9.467V6h-3.466M12.067 12.067L18.133 6M18.133 11.817v6.316H6V6h6.248"
+      strokeWidth={1.3}
       strokeLinecap="round"
       strokeLinejoin="round"
     />

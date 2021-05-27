@@ -3,13 +3,14 @@ import {
   SharedResearchOutput,
   SharedResearchProposal,
 } from '@asap-hub/react-components';
-import { text, date, array, number } from '@storybook/addon-knobs';
+import { text, date, array, number, select } from '@storybook/addon-knobs';
 
 import {
   createListTeamResponse,
   createListUserResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
+import { ResearchOutputSharingStatus } from '@asap-hub/model';
 
 export default {
   title: 'Templates / Shared Research / Details',
@@ -35,6 +36,21 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   accessInstructions: text(
     'Access Instructions',
     'If you need many people to view a file at once, publish it and create a link to share to viewers. You can give edit access to people who need to edit or comment. Up to 100 people with view, edit, or comment permissions can work at the same time. When more than 100 people are accessing a file, only the owner and some users with editing permissions can edit the file.',
+  ),
+  sharingStatus: select<ResearchOutputSharingStatus>(
+    'Sharing Status',
+    ['Public', 'Network Only'],
+    'Public',
+  ),
+  asapFunded: select<boolean | undefined>(
+    'ASAP-funded',
+    { Unknown: undefined, Yes: true, No: false },
+    undefined,
+  ),
+  usedInPublication: select<boolean | undefined>(
+    'Used in a publication',
+    { Unknown: undefined, Yes: true, No: false },
+    undefined,
   ),
   lastModifiedDate: new Date(
     date('Last Modified Date', new Date(2020, 6, 12, 14, 32)),

@@ -17,9 +17,25 @@ const cardsStyles = css({
   rowGap: `${36 / perRem}em`,
 });
 
+const additionalInformationListStyles = css({
+  listStyle: 'none',
+  margin: 0,
+  padding: `${6 / perRem}em 0`,
+});
+const additionalInformationEntryStyles = css({
+  display: 'flex',
+  justifyContent: 'space-between',
+  padding: `${6 / perRem}em 0`,
+});
+
 type SharedResearchOutputProps = Pick<
   ResearchOutputResponse,
-  'description' | 'tags' | 'accessInstructions'
+  | 'description'
+  | 'tags'
+  | 'accessInstructions'
+  | 'sharingStatus'
+  | 'asapFunded'
+  | 'usedInPublication'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -30,6 +46,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   backHref,
   tags,
   accessInstructions,
+  sharingStatus,
+  asapFunded,
+  usedInPublication,
   ...props
 }) => (
   <div css={containerStyles}>
@@ -61,6 +80,33 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           </div>
         </Card>
       )}
+      <Card>
+        <Headline2 styleAsHeading={4}>Additional Information</Headline2>
+        <ol css={additionalInformationListStyles}>
+          <li css={additionalInformationEntryStyles}>
+            <strong>Sharing Status</strong>
+            <span>{sharingStatus}</span>
+          </li>
+          {asapFunded === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>ASAP Funded</strong>
+                <span>{asapFunded ? 'Yes' : 'No'}</span>
+              </li>
+            </>
+          )}
+          {usedInPublication === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Used in Publications</strong>
+                <span>{usedInPublication ? 'Yes' : 'No'}</span>
+              </li>
+            </>
+          )}
+        </ol>
+      </Card>
     </div>
   </div>
 );

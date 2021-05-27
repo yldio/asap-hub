@@ -83,19 +83,7 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
             </li>
             {subTypes.map((subType, i) => (
               <li css={typeStyles} key={`subtype-${i}`}>
-                <TagLabel>
-                  <span
-                    css={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 1,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {subType}
-                  </span>
-                </TagLabel>
+                <TagLabel>{subType}</TagLabel>
               </li>
             ))}
           </ul>

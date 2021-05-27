@@ -23,12 +23,22 @@ const styles = css({
   margin: `${12 / perRem}em 0`,
 });
 
+const ellipsisStyles = css({
+  display: '-webkit-box',
+  WebkitLineClamp: 1,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+});
+
 type TagLabelProps = {
   readonly children?: React.ReactNode;
 };
 
 const Tag: React.FC<TagLabelProps> = ({ children }) => (
-  <div css={styles}>{children}</div>
+  <div css={styles}>
+    <span css={ellipsisStyles}>{children}</span>
+  </div>
 );
 
 export default Tag;

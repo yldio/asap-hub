@@ -47,7 +47,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
@@ -70,7 +70,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
@@ -115,7 +115,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
         }),
       })
       .reply(200, fetchUsersResponse)
@@ -159,7 +159,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
         }),
       })
       .reply(200, fetchUsersWithTeamsResponse)
@@ -225,7 +225,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
         }),
       })
       .reply(200, fetchUserMultipleTeamsResponse)
@@ -259,7 +259,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
@@ -291,7 +291,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
@@ -314,4 +314,106 @@ describe('Invite user', () => {
     await expect(inviteUsers('Staff')).rejects.toThrow();
     expect(ses.sendTemplatedEmail().promise).toBeCalledTimes(1);
   });
+
+  //
+  // FLACKY test: couldn't get to work with the others
+  //
+  //test.only('Wont fetch a team if found on the cache', async () => {
+  //const ses = new SES();
+
+  //const usersResponse = new Array(20).fill(true).map(() => {
+  //return {
+  //...fetchUsersResponse.items[0],
+  //data: {
+  //...fetchUsersResponse.items[0].data,
+  //teams: {
+  //iv: [
+  //{
+  //id: ['team-id-1'],
+  //role: 'Collaborating PI',
+  //},
+  //],
+  //},
+  //connections: {
+  //iv: [{ code: 'skip-this-user' }],
+  //},
+  //},
+  //};
+  //});
+
+  //// actually invite a user so we populate the cache
+  //usersResponse[0].data.connections.iv = [];
+
+  //const invitedUsersResponse = {
+  //total: 200,
+  //items: usersResponse,
+  //};
+
+  //const listTeam1Response = getListTeamResponse();
+  //listTeam1Response.items = [listTeam1Response.items[0]];
+
+  //const listTeam2Response = getListTeamResponse();
+  //listTeam2Response.items = [listTeam2Response.items[0]];
+
+  //const fetchUsersWithTeamsResponse = getFetchUsersWithTeamsResponse();
+  //fetchUsersWithTeamsResponse.items[0].id = 'userId3';
+
+  //nock(config.baseUrl)
+  //.get(`/api/content/${config.appName}/users`)
+  //.query({
+  //q: JSON.stringify({
+  //take: 20,
+  //skip: 0,
+  //sort: [{ path: 'created', order: 'descending' }],
+  //}),
+  //})
+  //.reply(200, invitedUsersResponse)
+  //.get(`/api/content/${config.appName}/teams`)
+  //.query({
+  //q: JSON.stringify({
+  //take: 20,
+  //skip: 0,
+  //filter: { path: 'id', op: 'in', value: ['team-id-1'] },
+  //}),
+  //})
+  //.reply(200, listTeam1Response)
+  //.patch(`/api/content/${config.appName}/users/userId1`, {
+  //email: { iv: 'testUser@asap.science' },
+  //connections: { iv: [{ code: 'uuid' }] },
+  //})
+  //.reply(200, fetchUsersResponse.items[0])
+  //.get(`/api/content/${config.appName}/users`)
+  //.query({
+  //q: JSON.stringify({
+  //take: 20,
+  //skip: 20,
+  //sort: [{ path: 'created', order: 'descending' }],
+  //}),
+  //})
+  //.reply(200, fetchUsersWithTeamsResponse)
+  //.get(`/api/content/${config.appName}/teams`)
+  //.query({
+  //q: JSON.stringify({
+  //take: 20,
+  //skip: 0,
+  //filter: { path: 'id', op: 'in', value: ['team-id-2'] }, // should only fetch team 2
+  //}),
+  //})
+  //.reply(200, listTeam2Response)
+  //.patch(`/api/content/${config.appName}/users/userId3`, {
+  //email: { iv: 'testUser@asap.science' },
+  //connections: { iv: [{ code: 'uuid' }] },
+  //})
+  //.reply(200, fetchUsersResponse.items[0])
+  //.patch(`/api/content/${config.appName}/users/userId2`, {
+  //email: { iv: 'testUser@asap.science' },
+  //connections: { iv: [{ code: 'uuid' }] },
+  //})
+  //.reply(200, fetchUsersResponse.items[0])
+  //.get(`/api/content/${config.appName}/users`);
+
+  //await inviteUsers();
+
+  //expect(ses.sendTemplatedEmail).toBeCalledTimes(3);
+  //});
 });

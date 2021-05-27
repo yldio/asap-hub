@@ -33,8 +33,9 @@ const inviteUsersFactory = (
   const teamClient: Squidex<RestTeam> = new Squidex('teams');
 
   const limiter = RateLimit(10);
-  const uuidMatch =
-    /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
+  const uuidMatch = /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
+
+  let teamCache: { [key: string]: string } = {};
 
   const inviteUsers: inviteUsersFn = async (
     role,
@@ -45,7 +46,7 @@ const inviteUsersFactory = (
     const query: Query = {
       skip,
       take,
-      sort: [{ path: 'created', order: 'ascending' }],
+      sort: [{ path: 'created', order: 'descending' }],
     };
 
     if (role) {
@@ -77,21 +78,21 @@ const inviteUsersFactory = (
     const userTeamIds = usersToInvite
       .flatMap((user) => user.data.teams.iv)
       .flatMap((team) => team?.id)
-      .filter(Boolean) as string[];
+      .filter((team) => team && !teamCache[team]) // don't fetch teams on the cache
+      .filter((team, pos, self) => self.indexOf(team) == pos) as string[]; // remove duplicate teams
 
-    let teamMap: { [key: string]: string };
     if (userTeamIds.length > 0) {
       const teamQuery: Query = {
-        skip,
-        take,
+        skip: 0,
+        take: 20, // Dont expect a user to have more than 20 teams
         filter: {
           path: 'id',
           op: 'in',
           value: userTeamIds,
         },
       };
-      const [teamsError, res] = await Intercept(teamClient.fetch(teamQuery));
 
+      const [teamsError, res] = await Intercept(teamClient.fetch(teamQuery));
       const fetchTeamError = teamsError as HTTPError;
       if (fetchTeamError) {
         log({
@@ -104,13 +105,10 @@ const inviteUsersFactory = (
       }
 
       const { items: teams } = res;
-      teamMap = teams.reduce(
-        (acc, team) => ({
-          ...acc,
-          [team.id]: team.data.displayName.iv,
-        }),
-        {},
-      );
+      // Add teams to cache
+      teams.forEach((team) => {
+        teamCache[team.id] = team.data.displayName.iv;
+      });
     }
 
     await Promise.all(
@@ -160,15 +158,15 @@ const inviteUsersFactory = (
         );
 
         if (!err2) {
-          let userTeams;
-          if (teamMap) {
-            userTeams = user.data.teams.iv
-              ?.flatMap((team) => team.id)
-              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              .map((id) => teamMap![id])
+          let userTeams = '';
+          if (teamCache) {
+            userTeams = (user.data.teams.iv || [])
+              .flatMap((team) => team.id)
+              .map((id) => teamCache[id])
+              .filter(Boolean)
               .join(' | ');
           }
-          const teamReport = userTeams ? `(${userTeams})` : '';
+          const teamReport = userTeams.length ? `(${userTeams})` : '';
           log(`Invited user ${user.data.email.iv} ${teamReport}`);
           return;
         }

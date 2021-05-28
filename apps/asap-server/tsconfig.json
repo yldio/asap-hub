@@ -8,8 +8,8 @@
   },
   "include": ["src", "test", "test/**/*.json", "@types/**/*.d.ts"],
   "references": [
-    { "path": "../../apps/asap-cli" },
     { "path": "../../packages/auth" },
+    { "path": "../../packages/management-scripts" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" }

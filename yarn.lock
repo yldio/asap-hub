@@ -24,7 +24,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@asap-hub/asap-cli@workspace:*, @asap-hub/asap-cli@workspace:apps/asap-cli":
+"@asap-hub/asap-cli@workspace:apps/asap-cli":
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-cli@workspace:apps/asap-cli"
   dependencies:
@@ -47,8 +47,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-server@workspace:apps/asap-server"
   dependencies:
-    "@asap-hub/asap-cli": "workspace:*"
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/management-scripts": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"

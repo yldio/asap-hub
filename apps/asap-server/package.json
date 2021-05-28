@@ -12,8 +12,8 @@
     "migration:create": "./scripts/create-migration.sh"
   },
   "dependencies": {
-    "@asap-hub/asap-cli": "workspace:*",
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/management-scripts": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",

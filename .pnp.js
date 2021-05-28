@@ -8960,8 +8960,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./apps/asap-server/",
           "packageDependencies": [
             ["@asap-hub/asap-server", "workspace:apps/asap-server"],
-            ["@asap-hub/asap-cli", "workspace:apps/asap-cli"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/management-scripts", "workspace:packages/management-scripts"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
             ["@asap-hub/squidex", "workspace:packages/squidex"],

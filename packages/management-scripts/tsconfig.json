@@ -3,13 +3,10 @@
   "compilerOptions": {
     "rootDir": ".",
     "resolveJsonModule": true,
-    "outDir": "build",
-    "module": "commonjs"
+    "outDir": "build"
   },
-  "include": ["src", "test", "test/**/*.json", "@types/**/*.d.ts"],
+  "include": ["src"],
   "references": [
-    { "path": "../../apps/asap-cli" },
-    { "path": "../../packages/auth" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" }

@@ -27,7 +27,6 @@ export interface Auth0User {
   readonly given_name?: string;
   readonly family_name?: string;
   readonly orcid?: string;
-  readonly onboarded: boolean;
   readonly aud: string;
   readonly [customUserClaim: string]: string | undefined | User;
 }

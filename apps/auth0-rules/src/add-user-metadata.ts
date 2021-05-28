@@ -22,13 +22,21 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
   }
 
   try {
-    const { id, onboarded, displayName, email, firstName, lastName, avatarUrl, teams } =
-      await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
-        headers: {
-          Authorization: `Basic ${apiSharedSecret}`,
-        },
-        timeout: 10000,
-      }).json<UserResponse>();
+    const {
+      id,
+      onboarded,
+      displayName,
+      email,
+      firstName,
+      lastName,
+      avatarUrl,
+      teams,
+    } = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
+      headers: {
+        Authorization: `Basic ${apiSharedSecret}`,
+      },
+      timeout: 10000,
+    }).json<UserResponse>();
 
     const user: User = {
       id,

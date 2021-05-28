@@ -321,8 +321,8 @@ export const queryGroupsExpectation: ListGroupResponse = {
         {
           user: {
             id: 'user-id-2',
-    onboarded: true,
-    createdDate: '2020-12-11T14:33:50.000Z',
+            onboarded: true,
+            createdDate: '2020-12-11T14:33:50.000Z',
             displayName: 'João Tiago',
             firstName: 'João',
             lastName: 'Tiago',

@@ -1,7 +1,9 @@
 import { Results, Squidex } from '@asap-hub/squidex';
 import { Entity, Rest } from '@asap-hub/squidex/src/entities/common';
 
-export const applyToAllItemsInCollection = async <T extends Entity & Rest<unknown>>(
+export const applyToAllItemsInCollection = async <
+  T extends Entity & Rest<unknown>,
+>(
   entityName: string,
   processEntity: (entity: T, squidexClient: Squidex<T>) => Promise<void>,
 ): Promise<void> => {

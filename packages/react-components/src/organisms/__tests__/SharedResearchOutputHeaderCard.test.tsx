@@ -27,18 +27,11 @@ it('renders an output with an external link if available', () => {
   );
 });
 
-it('renders an output with a modified date', () => {
-  const { queryByText, getByText, rerender } = render(
+it('renders an output with a last updated date', () => {
+  const { getByText } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
-      lastModifiedDate={undefined}
-    />,
-  );
-  expect(queryByText(/2003/)).not.toBeInTheDocument();
-  rerender(
-    <SharedResearchOutputHeaderCard
-      {...createResearchOutputResponse()}
-      addedDate={new Date(2003, 1, 1, 1).toISOString()}
+      lastUpdatedPartial={new Date(2003, 1, 1, 1).toISOString()}
     />,
   );
   expect(getByText(/2003/)).toBeVisible();
@@ -48,21 +41,19 @@ it('falls back to created date when added date omitted', () => {
   const { getByText, rerender } = render(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
-      created={new Date(2019, 1, 1, 1).toISOString()}
-      addedDate={new Date(2020, 1, 1, 1).toISOString()}
-      lastModifiedDate={undefined}
+      created={new Date(2011, 1, 1, 1).toISOString()}
+      addedDate={new Date(2012, 1, 1, 1).toISOString()}
     />,
   );
-  expect(getByText(/2020/)).toBeVisible();
+  expect(getByText(/2012/)).toBeVisible();
   rerender(
     <SharedResearchOutputHeaderCard
       {...createResearchOutputResponse()}
-      created={new Date(2019, 1, 1, 1).toISOString()}
+      created={new Date(2011, 1, 1, 1).toISOString()}
       addedDate={undefined}
-      lastModifiedDate={undefined}
     />,
   );
-  expect(getByText(/2019/)).toBeVisible();
+  expect(getByText(/2011/)).toBeVisible();
 });
 
 it('does not show authors (REGRESSION)', () => {

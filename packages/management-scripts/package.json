@@ -7,7 +7,7 @@
   },
   "module": "build/index.js",
   "main": "build-cjs/index.js",
-  "types": "build/index.d.ts",
+  "types": "build/src/index.d.ts",
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch"

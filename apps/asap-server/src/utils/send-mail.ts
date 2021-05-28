@@ -1,30 +1,35 @@
 /* istanbul ignore file */
-import aws from 'aws-sdk';
+import aws, { SES } from 'aws-sdk';
 import { sesEndpoint } from '../config';
 
-export interface Welcome {
-  displayName: string;
-  link: string;
-}
-
 const ses = new aws.SES({ apiVersion: '2010-12-01', endpoint: sesEndpoint });
-export const sendEmail = async ({
+export const sendRawEmail = async ({
   to,
-  template,
-  values,
+  body,
+  subject,
 }: {
   to: [string];
-  template: 'Welcome';
-  values: unknown;
+  body: string;
+  subject: string;
 }): Promise<unknown> => {
-  const params = {
+  const params: SES.SendEmailRequest = {
     Destination: {
       ToAddresses: to,
     },
-    Template: template,
-    TemplateData: JSON.stringify(values),
+    Message: {
+      Body: {
+        Text: {
+          Charset: 'UTF-8',
+          Data: body,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: subject,
+      },
+    },
     Source: 'no-reply@hub.asap.science',
   };
 
-  return ses.sendTemplatedEmail(params).promise();
+  return ses.sendEmail(params).promise();
 };

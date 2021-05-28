@@ -33,10 +33,9 @@ const inviteUsersFactory = (
   const teamClient: Squidex<RestTeam> = new Squidex('teams');
 
   const limiter = RateLimit(10);
-  const uuidMatch =
-    /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
+  const uuidMatch = /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
 
-  let teamCache: { [key: string]: string } = {};
+  const teamCache: { [key: string]: string } = {};
 
   const inviteUsers: inviteUsersFn = async (
     role,
@@ -80,7 +79,7 @@ const inviteUsersFactory = (
       .flatMap((user) => user.data.teams.iv)
       .flatMap((team) => team?.id)
       .filter((team) => team && !teamCache[team]) // don't fetch teams on the cache
-      .filter((team, pos, self) => self.indexOf(team) == pos) as string[]; // remove duplicate teams
+      .filter((team, pos, self) => self.indexOf(team) === pos) as string[]; // remove duplicate teams
 
     if (userTeamIds.length > 0) {
       const teamQuery: Query = {

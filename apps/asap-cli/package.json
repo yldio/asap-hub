@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@asap-hub/management-scripts": "workspace:*",
-    "@types/node": "^15.6.1",
     "yargs": "^16.2.0"
   },
   "devDependencies": {
@@ -21,6 +20,7 @@
     "@babel/plugin-transform-runtime": "^7.14.2",
     "@babel/runtime-corejs3": "^7.14.0",
     "@types/babel__core": "^7",
+    "@types/node": "^14.14.45",
     "@types/yargs": "^15.0.13",
     "nock": "^13.0.11"
   }

@@ -8947,7 +8947,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/plugin-transform-runtime", "virtual:9e0f6c9e0b94e1614067bcb5e290469ca4ff1bbec74124be1c49a3d811e4b8f74222ca07725634e46125bf9b1a3caab8468aed2e4d035f53d4db28c1c4283a73#npm:7.14.2"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["@types/babel__core", "npm:7.1.9"],
-            ["@types/node", "npm:15.6.1"],
+            ["@types/node", "npm:14.14.45"],
             ["@types/yargs", "npm:15.0.13"],
             ["nock", "npm:13.0.11"],
             ["yargs", "npm:16.2.0"]
@@ -20981,13 +20981,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-14.14.45-65a5d246b5-b9ad381a8c.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:14.14.45"]
-          ],
-          "linkType": "HARD",
-        }],
-        ["npm:15.6.1", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-15.6.1-1a0b9c8653-07b3855bc0.zip/node_modules/@types/node/",
-          "packageDependencies": [
-            ["@types/node", "npm:15.6.1"]
           ],
           "linkType": "HARD",
         }]

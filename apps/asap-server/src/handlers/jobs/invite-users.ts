@@ -2,9 +2,10 @@ import { inviteUsersFactory } from '@asap-hub/management-scripts';
 import logger from '../../utils/logger';
 import { sendRawEmail } from '../../utils/send-mail';
 
-export const handler = async () => {
+export const handler = async (): Promise<void> => {
   const emailBody: string[] = [];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const logAndSaveOutputs = (row: any) => {
     if (typeof row === 'string') {
       // exclude error messages from email

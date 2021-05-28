@@ -14,7 +14,7 @@ export const sendEmail = async ({
 }): Promise<unknown> => {
   const params = {
     Destination: {
-      ToAddresses: ['joao.tiago@yld.io'],
+      ToAddresses: to,
     },
     Template: template,
     TemplateData: JSON.stringify(values),

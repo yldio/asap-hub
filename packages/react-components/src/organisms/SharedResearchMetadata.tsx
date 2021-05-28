@@ -15,7 +15,7 @@ const styles = css({
   overflow: 'hidden',
 });
 
-const ROW_GAP_OFFSET = 6;
+const ROW_GAP_OFFSET = 12;
 
 const typeListStyles = css({
   display: 'flex',

@@ -18,9 +18,6 @@ export default {
 
 const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ...createResearchOutputResponse(),
-  addedDate: new Date(
-    date('Added Date', new Date(2020, 6, 12, 14, 32)),
-  ).toISOString(),
   description: text(
     'Description',
     `Neural control of muscle function is fundamental to animal behavior. In many cases, specific muscles can generate multiple distinct behaviors. Nonetheless, individual muscle cells are generally regarded as the smallest units of motor control. Here we report that muscle cells can alter their behavioral output by contracting subcellularly.
@@ -52,8 +49,11 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     { Unknown: undefined, Yes: true, No: false },
     undefined,
   ),
-  lastModifiedDate: new Date(
-    date('Last Modified Date', new Date(2020, 6, 12, 14, 32)),
+  addedDate: new Date(
+    date('Added Date', new Date(2020, 3, 10, 10, 54)),
+  ).toISOString(),
+  lastUpdatedPartial: new Date(
+    date('Last Updated Date', new Date(2020, 6, 12, 14, 32)),
   ).toISOString(),
   backHref: '#',
   teams: createListTeamResponse(number('Number of teams', 3)).items,

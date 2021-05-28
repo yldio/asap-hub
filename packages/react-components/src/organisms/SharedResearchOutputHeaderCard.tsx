@@ -30,7 +30,12 @@ type SharedResearchOutputHeaderCardProps = ComponentProps<
 > &
   Pick<
     ResearchOutputResponse,
-    'created' | 'addedDate' | 'authors' | 'teams' | 'title' | 'lastModifiedDate'
+    | 'created'
+    | 'addedDate'
+    | 'authors'
+    | 'teams'
+    | 'title'
+    | 'lastUpdatedPartial'
   >;
 
 const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardProps> =
@@ -40,7 +45,7 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
     authors,
     teams,
     title,
-    lastModifiedDate,
+    lastUpdatedPartial,
     ...props
   }) => {
     const { isEnabled } = useFlags();
@@ -55,12 +60,9 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
         <TeamsList inline teams={teams} />
         <div css={[timestampStyles, captionStyles]}>
           <span>
-            Date added: {formatDate(new Date(addedDate || created))}
-            {lastModifiedDate && ' · '}
+            Date added: {formatDate(new Date(addedDate || created))} ·{' '}
           </span>
-          {lastModifiedDate && (
-            <span>Last updated: {formatDate(new Date(lastModifiedDate))}</span>
-          )}
+          <span>Last updated: {formatDate(new Date(lastUpdatedPartial))}</span>
         </div>
       </Card>
     );

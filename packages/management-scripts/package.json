@@ -5,9 +5,9 @@
   "engines": {
     "node": "14.15.x"
   },
-  "module": "build/index.js",
-  "main": "build-cjs/index.js",
-  "types": "build/index.d.ts",
+  "module": "build/src/index.js",
+  "main": "build-cjs/src/index.js",
+  "types": "build/src/index.d.ts",
   "scripts": {
     "build:babel": "../../scripts/build-babel.sh build",
     "watch:babel": "../../scripts/build-babel.sh watch"

@@ -3,7 +3,6 @@ import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
 import { Logger } from 'pino';
-import { migrationDir } from '../../config';
 import pinoLogger from '../../utils/logger';
 
 const squidexClient = new Squidex<RestMigration>('migrations');
@@ -131,7 +130,7 @@ export const rollbackFactory =
 
 const getMigrationPathsFromDirectoryFactory =
   (readDir: typeof fsPromise.readdir) => async () =>
-    (await readDir(migrationDir)).sort();
+    (await readDir(`./migrations`)).sort();
 
 const getLatestMigrationPathFromDbFactory =
   (client: Squidex<RestMigration>) => async (): Promise<string | null> => {
@@ -150,7 +149,8 @@ const getLatestMigrationPathFromDbFactory =
     return migrations[0].data.name.iv;
   };
 
-const importModuleFromPath = (path: string): Promise<Module> => import(path);
+const importModuleFromPath = (path: string): Promise<Module> =>
+  import(`../../migrations/${path}`);
 export type ImportModuleFromPath = typeof importModuleFromPath;
 
 type Module = {
@@ -163,9 +163,7 @@ const getMigrationsFromPathsFactory =
     const migrations = Promise.all(
       migrationPaths.map(async (file) => {
         logger.debug({ file });
-        const { default: ImportedModule } = await importModule(
-          `${migrationDir}/${file}`,
-        );
+        const { default: ImportedModule } = await importModule(`${file}`);
 
         if (typeof ImportedModule !== 'function') {
           throw new Error(`${file} does not export a valid module`);

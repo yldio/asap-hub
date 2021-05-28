@@ -33,4 +33,3 @@ export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';
 export const asapApiUrl = ASAP_API_URL || 'http://localhost:3333';
 export const logLevel = LOG_LEVEL || 'info';
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
-export const migrationDir = `${__dirname}/migrations`;

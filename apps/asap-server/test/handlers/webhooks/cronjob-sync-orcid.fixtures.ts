@@ -26,6 +26,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         skills: { iv: [] },
         questions: { iv: [] },
         teams: { iv: [] },
+        onboarded: {
+          iv: true,
+        },
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',
@@ -52,6 +55,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         skills: { iv: [] },
         questions: { iv: [] },
         teams: { iv: [] },
+        onboarded: {
+          iv: true,
+        },
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',

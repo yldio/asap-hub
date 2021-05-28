@@ -26,6 +26,7 @@ describe('Team controller', () => {
   const teams = new Teams();
   const mockUser: User = {
     id: 'userId',
+    onboarded: true,
     displayName: 'JT',
     email: 'joao.tiago@asap.science',
     firstName: 'Joao',

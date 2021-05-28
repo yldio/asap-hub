@@ -37,6 +37,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       skills: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
+      onboarded: {
+        iv: true,
+      },
     },
     dataOld: {
       firstName: { iv: 'Bill' },
@@ -64,6 +67,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       skills: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
+      onboarded: {
+        iv: true,
+      },
     },
   },
 };
@@ -102,6 +108,9 @@ export const createUserEvent: WebhookPayload<User> = {
       },
       email: {
         iv: 'webhokk@ola.io',
+      },
+      onboarded: {
+        iv: true,
       },
     },
   },

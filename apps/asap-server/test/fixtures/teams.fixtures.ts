@@ -149,6 +149,9 @@ export const usersResponseTeam1: { total: number; items: RestUser[] } = {
         connections: { iv: [] },
         questions: { iv: [] },
         skills: { iv: [] },
+        onboarded: {
+          iv: true,
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -184,6 +187,9 @@ export const usersResponseTeam2: { total: number; items: RestUser[] } = {
         connections: { iv: [] },
         skills: { iv: [] },
         questions: { iv: [] },
+        onboarded: {
+          iv: true,
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -213,6 +219,9 @@ export const usersResponseTeam2: { total: number; items: RestUser[] } = {
         connections: { iv: [] },
         skills: { iv: [] },
         questions: { iv: [] },
+        onboarded: {
+          iv: true,
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -248,6 +257,9 @@ export const usersResponseTeam3: { total: number; items: RestUser[] } = {
         connections: { iv: [] },
         skills: { iv: [] },
         questions: { iv: [] },
+        onboarded: {
+          iv: true,
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -476,6 +488,9 @@ export const fetchByIdUserResponse: { total: number; items: RestUser[] } = {
       data: {
         role: {
           iv: 'Grantee',
+        },
+        onboarded: {
+          iv: true,
         },
         lastModifiedDate: {
           iv: '2020-09-25T09:42:51.132Z',
@@ -745,6 +760,9 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
         },
         connections: { iv: [] },
         questions: { iv: [] },
+        onboarded: {
+          iv: true,
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',

@@ -117,6 +117,7 @@ export const discoverResponse: DiscoverResponse = {
   members: [
     {
       id: 'uuid-1',
+      onboarded: true,
       createdDate: '2020-10-15T17:55:21.000Z',
       displayName: 'John Doe',
       email: 'john@example.com',
@@ -133,6 +134,7 @@ export const discoverResponse: DiscoverResponse = {
     },
     {
       id: 'uuid-2',
+      onboarded: true,
       createdDate: '2020-10-14T17:55:21.000Z',
       displayName: 'Jon Do',
       email: '',

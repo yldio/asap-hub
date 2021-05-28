@@ -71,6 +71,7 @@ describe('useCurrentUser', () => {
         aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
         [`${window.location.origin}/user`]: {
           id: 'testuser',
+          onboarded: true,
           email: 'john.doe@example.com',
           firstName: 'John',
           lastName: 'Doe',

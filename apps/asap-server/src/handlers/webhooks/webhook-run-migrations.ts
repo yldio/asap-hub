@@ -3,6 +3,7 @@ import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
 import { Logger } from 'pino';
+import path from 'path';
 import pinoLogger from '../../utils/logger';
 
 const squidexClient = new Squidex<RestMigration>('migrations');
@@ -130,7 +131,9 @@ export const rollbackFactory =
 
 const getMigrationPathsFromDirectoryFactory =
   (readDir: typeof fsPromise.readdir) => async () =>
-    (await readDir(`./migrations`)).sort();
+    (await readDir(`./migrations`))
+      .map((filePath) => path.basename(filePath, '.ts'))
+      .sort();
 
 const getLatestMigrationPathFromDbFactory =
   (client: Squidex<RestMigration>) => async (): Promise<string | null> => {
@@ -149,12 +152,12 @@ const getLatestMigrationPathFromDbFactory =
     return migrations[0].data.name.iv;
   };
 
-const importModuleFromPath = (path: string): Promise<Module> =>
-  import(`../../migrations/${path}`);
+const importModuleFromPath = (filePath: string): Promise<Module> =>
+  import(`../../migrations/${filePath}`);
 export type ImportModuleFromPath = typeof importModuleFromPath;
 
 type Module = {
-  default?: { new (path: string): Migration | unknown };
+  default?: { new (filePath: string): Migration | unknown };
 };
 
 const getMigrationsFromPathsFactory =
@@ -241,8 +244,8 @@ const isMigration = (instance: any): instance is Migration =>
 export abstract class Migration {
   path: string;
 
-  constructor(path: string) {
-    this.path = path;
+  constructor(filePath: string) {
+    this.path = filePath;
   }
   abstract up: () => Promise<void>;
   abstract down: () => Promise<void>;

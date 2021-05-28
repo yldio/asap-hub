@@ -5,8 +5,9 @@
     "resolveJsonModule": true,
     "outDir": "build"
   },
-  "include": ["src", "test"],
+  "include": ["src"],
   "references": [
+    { "path": "../../packages/management-scripts" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" }

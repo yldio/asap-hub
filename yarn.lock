@@ -28,37 +28,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/asap-cli@workspace:apps/asap-cli"
   dependencies:
-    "@asap-hub/message-templates": "workspace:*"
-    "@asap-hub/model": "workspace:*"
-    "@asap-hub/services-common": "workspace:*"
-    "@asap-hub/squidex": "workspace:*"
+    "@asap-hub/management-scripts": "workspace:*"
     "@babel/core": ^7.14.2
     "@babel/plugin-transform-modules-commonjs": ^7.14.0
     "@babel/plugin-transform-runtime": ^7.14.2
     "@babel/runtime-corejs3": ^7.14.0
-    "@types/apr-intercept": "workspace:*"
     "@types/babel__core": ^7
-    "@types/got": ^9.6.11
-    "@types/jest": ^26.0.23
-    "@types/jwt-decode": ^2.2.1
-    "@types/jwt-encode": "workspace:*"
-    "@types/luxon": ^1
-    "@types/pump": ^1.1.1
-    "@types/through2-concurrent": ^2
-    "@types/uuid": ^8.3.0
+    "@types/node": ^14.14.45
     "@types/yargs": ^15.0.13
-    "@yarnpkg/pnpify": ^2.4.0
-    apr-intercept: ^3.0.4
-    async-sema: ^3.1.0
-    aws-sdk: ^2.907.0
-    csv-parse: ^4.15.4
-    got: ^11.8.2
-    jwt-encode: ^1.0.1
-    luxon: ^1.26.0
     nock: ^13.0.11
-    pump: ^3.0.0
-    through2-concurrent: ^2.0.0
-    uuid: ^8.3.2
     yargs: ^16.2.0
   bin:
     asap-cli: build-cjs/cli.js
@@ -70,6 +48,7 @@ __metadata:
   resolution: "@asap-hub/asap-server@workspace:apps/asap-server"
   dependencies:
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/management-scripts": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
@@ -337,6 +316,43 @@ __metadata:
     use-debounce: ^5.2.1
     use-deep-compare-effect: ^1.6.1
     use-http: ^1.0.20
+    uuid: ^8.3.2
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/management-scripts@workspace:*, @asap-hub/management-scripts@workspace:packages/management-scripts":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/management-scripts@workspace:packages/management-scripts"
+  dependencies:
+    "@asap-hub/message-templates": "workspace:*"
+    "@asap-hub/model": "workspace:*"
+    "@asap-hub/services-common": "workspace:*"
+    "@asap-hub/squidex": "workspace:*"
+    "@babel/core": ^7.14.2
+    "@babel/plugin-transform-modules-commonjs": ^7.14.0
+    "@babel/plugin-transform-runtime": ^7.14.2
+    "@babel/runtime-corejs3": ^7.14.0
+    "@types/apr-intercept": "workspace:*"
+    "@types/babel__core": ^7
+    "@types/got": ^9.6.11
+    "@types/jest": ^26.0.23
+    "@types/jwt-decode": ^2.2.1
+    "@types/jwt-encode": "workspace:*"
+    "@types/luxon": ^1
+    "@types/pump": ^1.1.1
+    "@types/through2-concurrent": ^2
+    "@types/uuid": ^8.3.0
+    "@yarnpkg/pnpify": ^2.4.0
+    apr-intercept: ^3.0.4
+    async-sema: ^3.1.0
+    aws-sdk: ^2.907.0
+    csv-parse: ^4.15.4
+    got: ^11.8.2
+    jwt-encode: ^1.0.1
+    luxon: ^1.26.0
+    nock: ^13.0.11
+    pump: ^3.0.0
+    through2-concurrent: ^2.0.0
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft

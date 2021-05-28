@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/management-scripts": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",

@@ -3,13 +3,11 @@
   "compilerOptions": {
     "rootDir": ".",
     "resolveJsonModule": true,
-    "outDir": "build",
-    "module": "commonjs"
+    "outDir": "build"
   },
-  "include": ["src", "test", "test/**/*.json", "@types/**/*.d.ts"],
+  "include": ["src"],
   "references": [
-    { "path": "../../packages/auth" },
-    { "path": "../../packages/management-scripts" },
+    { "path": "../../packages/message-templates" },
     { "path": "../../packages/model" },
     { "path": "../../packages/services-common" },
     { "path": "../../packages/squidex" }

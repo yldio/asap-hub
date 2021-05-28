@@ -255,11 +255,24 @@ const serverlessConfig: AWS = {
         'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
     },
+    // TODO: make this only run in prod
+    inviteUsers: {
+      handler: 'apps/asap-server/src/handlers/jobs/invite-users.handler',
+      timeout: 300,
+      // TODO: make this a cronjob
+      //events: [
+      //{
+      //schedule: {
+      //rate: 'cron(30 14 * * MON)',
+      //},
+      //},
+      //],
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {
             handler:
-              'apps/asap-server/src/handlers/webhooks/cronjob-sync-orcid.handler',
+              'apps/asap-server/src/handlers/jobs/cronjob-sync-orcid.handler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

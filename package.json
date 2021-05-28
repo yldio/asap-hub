@@ -116,6 +116,7 @@
     "babel-preset-react-app": "^10",
     "bundlewatch": "^0.3.2",
     "codecov": "^3.8.2",
+    "copy-webpack-plugin": "^9.0.0",
     "dotenv": "^8.6.0",
     "escape-string-regexp": "^4.0.0",
     "eslint": "^7.26.0",

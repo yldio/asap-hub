@@ -71,7 +71,7 @@ describe('Run-migrations Webhook', () => {
       expect(mockUp).toHaveBeenCalled();
       expect(squidexClientMock.create).toHaveBeenCalledWith({
         name: {
-          iv: 'test-migration.ts',
+          iv: 'test-migration',
         },
       });
       expect(loggerMock.info).toBeCalledWith(`Executed and saved 1 migrations`);
@@ -99,9 +99,9 @@ describe('Run-migrations Webhook', () => {
 
       expect(mockUp).toHaveBeenCalledTimes(3);
       expect(executionPaths).toEqual([
-        '1-test-migration.ts',
-        '2-test-migration.ts',
-        '3-test-migration.ts',
+        '1-test-migration',
+        '2-test-migration',
+        '3-test-migration',
       ]);
     });
 
@@ -132,9 +132,9 @@ describe('Run-migrations Webhook', () => {
       expect(mockUp).toHaveBeenCalledTimes(2);
       expect(squidexClientMock.create).toHaveBeenCalledTimes(2);
       expect(executionOrder).toEqual([
-        'execute 1-test-migration.ts',
+        'execute 1-test-migration',
         'save',
-        'execute 2-test-migration.ts',
+        'execute 2-test-migration',
         'save',
       ]);
     });
@@ -174,7 +174,7 @@ describe('Run-migrations Webhook', () => {
       expect(mockUp).toHaveBeenCalledTimes(2);
       expect(squidexClientMock.create).toHaveBeenCalledWith({
         name: {
-          iv: '1-test-migration.ts',
+          iv: '1-test-migration',
         },
       });
       expect(loggerMock.error).toHaveBeenCalledWith(

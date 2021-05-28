@@ -33,9 +33,7 @@ const SharedResearchList: React.FC<SharedResearchListProps> = ({
       <SharedResearchListCard researchOutputs={researchOutputs} />
     ) : (
       researchOutputs.map((output) => (
-        <div key={output.id}>
-          <SharedResearchCard {...output} />
-        </div>
+        <SharedResearchCard key={output.id} {...output} />
       ))
     )}
   </ResultList>

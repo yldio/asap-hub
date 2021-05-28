@@ -1,6 +1,6 @@
 import { createListTeamResponse } from '@asap-hub/fixtures';
 import { SharedResearchCard } from '@asap-hub/react-components';
-import { text, select, date, number } from '@storybook/addon-knobs';
+import { text, date, number } from '@storybook/addon-knobs';
 
 export default {
   title: 'Organisms / Shared Research / Card',
@@ -14,7 +14,8 @@ export const Normal = () => (
       'Title',
       'Tracing the Origin and Progression of Parkinson’s Disease through the Neuro-Immune Interactome',
     )}
-    type={select('Type', ['Proposal'], 'Proposal')}
+    type="Article"
+    subTypes={['Code', 'Assays', 'Cloning', 'Imaging']}
     created={new Date(
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}

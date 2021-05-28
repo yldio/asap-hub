@@ -1,3 +1,4 @@
+import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 
 import TeamProfileOutputs from '../TeamProfileOutputs';
@@ -14,10 +15,8 @@ it('renders output cards', () => {
     <TeamProfileOutputs
       outputs={[
         {
-          type: 'Proposal',
+          ...createResearchOutputResponse(),
           id: 'uuid-output',
-          created: new Date().toISOString(),
-          addedDate: new Date().toISOString(),
           title: 'Title',
           teams: [
             {
@@ -34,8 +33,8 @@ it('renders output cards', () => {
   expect(links).toHaveLength(2);
   const [titleLink, teamLink] = links;
 
-  expect(titleLink.textContent).toMatchInlineSnapshot(`"Title"`);
-  expect(teamLink.textContent).toMatchInlineSnapshot(`"Team Unknown"`);
+  expect(titleLink).toHaveTextContent('Title');
+  expect(teamLink).toHaveTextContent(/Unknown/);
 
   expect(titleLink).toHaveAttribute(
     'href',

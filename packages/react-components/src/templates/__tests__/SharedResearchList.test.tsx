@@ -1,27 +1,12 @@
 import { ComponentProps } from 'react';
+import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 import { StaticRouter } from 'react-router-dom';
 
 import SharedResearchList from '../SharedResearchList';
 
 const props: Omit<ComponentProps<typeof SharedResearchList>, 'children'> = {
-  researchOutputs: [
-    {
-      id: '1',
-      title: 'Output 1',
-      type: 'Proposal',
-      addedDate: new Date().toISOString(),
-      created: new Date().toISOString(),
-      teams: [],
-    },
-    {
-      id: '2',
-      title: 'Output 2',
-      type: 'Proposal',
-      created: new Date().toISOString(),
-      teams: [],
-    },
-  ],
+  researchOutputs: createListResearchOutputResponse(2).items,
   listViewParams: '',
   cardViewParams: '',
   numberOfItems: 2,

@@ -15,14 +15,13 @@ const styles = css({
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
 
+  backgroundColor: paper.rgb,
+  color: lead.rgb,
+
   borderStyle: 'solid',
   borderWidth: `${borderWidth}px`,
   borderColor: steel.rgb,
   borderRadius: `${6 / perRem}em`,
-
-  fontSize: '0.8em',
-  color: lead.rgb,
-  backgroundColor: paper.rgb,
 });
 
 type TagLabelProps = {
@@ -30,7 +29,9 @@ type TagLabelProps = {
 };
 
 const Tag: React.FC<TagLabelProps> = ({ children }) => (
-  <span css={styles}>{children}</span>
+  <span css={styles}>
+    <small>{children}</small>
+  </span>
 );
 
 export default Tag;

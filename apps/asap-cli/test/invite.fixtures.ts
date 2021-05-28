@@ -22,6 +22,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         questions: { iv: [] },
         skills: { iv: [] },
         role: { iv: 'Grantee' },
+        onboarded: {
+          iv: true,
+        },
       },
     },
     {
@@ -43,6 +46,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         teams: { iv: [] },
         skills: { iv: [] },
         role: { iv: 'Grantee' },
+        onboarded: {
+          iv: true,
+        },
       },
     },
     {
@@ -70,6 +76,9 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         teams: { iv: [] },
         skills: { iv: [] },
         role: { iv: 'Grantee' },
+        onboarded: {
+          iv: true,
+        },
       },
     },
   ],

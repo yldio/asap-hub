@@ -46,6 +46,9 @@ export const fetchUserResponse: RestUser = {
     questions: { iv: [] },
     skills: { iv: [] },
     role: { iv: 'Grantee' },
+    onboarded: {
+      iv: true,
+    },
   },
 };
 

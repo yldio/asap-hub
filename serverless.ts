@@ -259,7 +259,7 @@ const serverlessConfig: AWS = {
       ? {
           cronjobSyncOrcid: {
             handler:
-              'apps/asap-server/src/handlers/webhooks/cronjob-sync-orcid.handler',
+              'apps/asap-server/src/handlers/jobs/cronjob-sync-orcid.handler',
             events: [
               {
                 schedule: 'rate(1 hour)', // run every hour

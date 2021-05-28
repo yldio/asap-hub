@@ -2,7 +2,7 @@ import nock from 'nock';
 import matches from 'lodash.matches';
 import { config } from '@asap-hub/squidex';
 
-import { handler } from '../../../src/handlers/webhooks/cronjob-sync-orcid';
+import { handler } from '../../../src/handlers/jobs/cronjob-sync-orcid';
 import { identity } from '../../helpers/squidex';
 import * as fixtures from './cronjob-sync-orcid.fixtures';
 

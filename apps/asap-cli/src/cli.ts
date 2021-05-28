@@ -6,7 +6,7 @@
 'use strict';
 
 import yargs from 'yargs/yargs';
-import {importers, inviteUsersFactory} from '@asap-hub/management-scripts'
+import { importers, inviteUsersFactory } from '@asap-hub/management-scripts';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(process.argv.slice(2))

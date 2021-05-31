@@ -31,6 +31,10 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
+    if (user.onboarded !== true) {
+      throw Boom.forbidden('User is not onboarded');
+    }
+
     req.loggedUser = user;
     req.span?.setBaggageItem('user.id', user.id);
 

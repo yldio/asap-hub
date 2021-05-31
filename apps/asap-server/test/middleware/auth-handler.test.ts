@@ -2,7 +2,10 @@ import { Router } from 'express';
 import { appFactory } from '../../src/app';
 import supertest from 'supertest';
 import { authHandlerFactory } from '../../src/middleware/auth-handler';
-import { auth0UserMock } from '../../src/utils/__mocks__/validate-token';
+import {
+  auth0UserMock,
+  userMock,
+} from '../../src/utils/__mocks__/validate-token';
 import { DecodeToken } from '../../src/utils/validate-token';
 import { origin } from '../../src/config';
 
@@ -87,6 +90,24 @@ describe('Authentication middleware', () => {
       .set('Authorization', 'Bearer something');
 
     expect(response.status).toBe(401);
+  });
+
+  test('Should return 403 when the user is not onboarded', async () => {
+    const authMock = {
+      ...auth0UserMock,
+      [`${origin}/user`]: {
+        ...userMock,
+        onboarded: false,
+      },
+    };
+    decodeToken.mockResolvedValueOnce(authMock);
+
+    const response = await supertest(app)
+      .get('/test-route')
+      .set('Authorization', 'Bearer something');
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ message: 'User is not onboarded' });
   });
 
   test('Should return 200 when token is valid', async () => {

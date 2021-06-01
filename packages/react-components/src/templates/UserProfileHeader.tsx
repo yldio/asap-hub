@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { css } from '@emotion/react';
-import formatDistance from 'date-fns/formatDistance';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
@@ -12,12 +11,15 @@ import {
   mobileScreen,
   largeDesktopScreen,
 } from '../pixels';
-import { Avatar, Paragraph, TabLink, Display, Link } from '../atoms';
+import { Avatar, TabLink, Display, Link } from '../atoms';
 import { UserProfilePersonalText, TabNav, SocialIcons } from '../molecules';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { paper, tin } from '../colors';
 import { editIcon, uploadIcon } from '../icons';
+
+const middleSizeQuery = '@media (min-width: 620px)';
+const bigSizeQuery = `@media (min-width: ${tabletScreen.width}px)`;
 
 const containerStyles = css({
   backgroundColor: paper.rgb,
@@ -28,18 +30,29 @@ const containerStyles = css({
     ".             edit-personal-info" ${24 / perRem}em
     "personal-info personal-info     " auto
     "contact       edit-contact-info " auto
+    "social        social            " auto
     "tab-nav       tab-nav           " auto
       / 1fr ${36 / perRem}em
   `,
   gridColumnGap: `${12 / perRem}em`,
 
-  [`@media (min-width: ${tabletScreen.width}px)`]: {
+  [middleSizeQuery]: {
+    grid: `
+      ".             .             edit-personal-info" ${24 / perRem}em
+      "personal-info personal-info personal-info     " auto
+      "contact       social        edit-contact-info " auto
+      "tab-nav       tab-nav       tab-nav           " auto
+        / max-content 1fr ${36 / perRem}em
+    `,
+  },
+
+  [bigSizeQuery]: {
     paddingTop: `${36 / perRem}em`,
     grid: `
-      "edit-personal-info personal-info ."
-      "edit-contact-info  contact       ."
-      ".                  tab-nav       ."
-        / ${36 / perRem}em 1fr ${36 / perRem}em
+      "edit-personal-info personal-info personal-info ."
+      "edit-contact-info  contact       social        ."
+      ".                  tab-nav       tab-nav       ."
+        / ${36 / perRem}em max-content 1fr ${36 / perRem}em
     `,
     gridColumnGap: vminLinearCalc(
       mobileScreen,
@@ -81,43 +94,25 @@ const editContactStyles = css({
 });
 const contactStyles = css({
   gridArea: 'contact',
+  [middleSizeQuery]: {
+    justifySelf: 'start',
+  },
 
-  display: 'grid',
-
-  gridRowGap: `${12 / perRem}em`,
-  gridColumnGap: `${12 / perRem}em`,
-
-  gridTemplateColumns: 'min-content min-content auto',
+  display: 'flex',
+  alignItems: 'start',
 });
 const contactNoEditStyles = css({
   gridColumnEnd: 'edit-contact-info',
-});
-const contactButtonStyles = css({
-  flexGrow: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  gridColumn: 'span 3',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    gridColumn: 'span 1',
-    display: 'block',
-    paddingRight: `${12 / perRem}em`,
-  },
-});
-const lastModifiedStyles = css({
-  flexBasis: 0,
-  flexGrow: 9999,
-
-  textAlign: 'right',
-  alignSelf: 'flex-end',
-
-  display: 'none',
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
-    display: 'unset',
+  [middleSizeQuery]: {
+    gridColumnEnd: 'contact',
   },
 });
 
-const lastModifiedNoContactStyles = css({
-  gridColumn: 'span 2',
+const socialIconStyles = css({
+  gridArea: 'social',
+});
+const socialIconStaffStyles = css({
+  gridColumnStart: 'contact',
 });
 
 const tabNavStyles = css({
@@ -147,7 +142,6 @@ type UserProfileHeaderProps = Pick<
   | 'firstName'
   | 'institution'
   | 'jobTitle'
-  | 'lastModifiedDate'
   | 'lastName'
   | 'location'
   | 'role'
@@ -166,7 +160,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   id,
   displayName,
   institution,
-  lastModifiedDate,
   firstName,
   lastName,
   location,
@@ -263,31 +256,15 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
         css={[contactStyles, editContactInfoHref ? null : contactNoEditStyles]}
       >
         {role !== 'Staff' ? (
-          <div css={contactButtonStyles}>
-            <Link
-              small
-              buttonStyle
-              primary
-              href={createMailTo(contactEmail || email)}
-            >
-              Contact
-            </Link>
-          </div>
+          <Link
+            small
+            buttonStyle
+            primary
+            href={createMailTo(contactEmail || email)}
+          >
+            Contact
+          </Link>
         ) : null}
-        <SocialIcons {...social} />
-        <div
-          css={[
-            lastModifiedStyles,
-            role === 'Staff' ? lastModifiedNoContactStyles : null,
-          ]}
-        >
-          <Paragraph accent="lead">
-            <small>
-              Last updated:{' '}
-              {formatDistance(new Date(), new Date(lastModifiedDate))} ago
-            </small>
-          </Paragraph>
-        </div>
       </section>
       {editContactInfoHref && (
         <div css={editContactStyles}>
@@ -302,6 +279,9 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           </Link>
         </div>
       )}
+      <div css={[socialIconStyles, role === 'Staff' && socialIconStaffStyles]}>
+        <SocialIcons {...social} />
+      </div>
       <div css={tabNavStyles}>
         {role !== 'Staff' ? (
           <TabNav>

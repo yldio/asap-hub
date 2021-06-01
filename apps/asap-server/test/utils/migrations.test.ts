@@ -1,10 +1,12 @@
 import { RestUser, Results, Squidex } from '@asap-hub/squidex';
 import { applyToAllItemsInCollection } from '../../src/utils/migrations';
+import { restUserMock } from '../fixtures/users.fixtures';
 
 const mockFetch: jest.MockedFunction<Squidex<RestUser>['fetch']> = jest.fn();
 const mockConstructor = jest.fn();
 
 jest.mock('@asap-hub/squidex', () => ({
+  ...jest.requireActual('@asap-hub/squidex'),
   Squidex: class Squidex {
     constructor(collection: string) {
       mockConstructor(collection);
@@ -12,15 +14,6 @@ jest.mock('@asap-hub/squidex', () => ({
     fetch = mockFetch;
   },
 }));
-
-const restUserMock = {
-  id: 'userId',
-  onboarded: true,
-  displayName: 'Cristiano Ronaldo',
-  created: '',
-  lastModified: '',
-  data: {},
-} as any as RestUser;
 
 describe('Migration utils', () => {
   describe('applyToAllItemsInCollection helper method', () => {

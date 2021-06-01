@@ -417,3 +417,5 @@ export const fetchExpectation: ListUserResponse = {
     },
   ],
 };
+
+export const restUserMock = patchResponse;

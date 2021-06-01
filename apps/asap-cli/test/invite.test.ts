@@ -47,7 +47,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
@@ -70,7 +70,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
@@ -115,7 +115,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
         }),
       })
       .reply(200, fetchUsersResponse)
@@ -159,7 +159,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
         }),
       })
       .reply(200, fetchUsersWithTeamsResponse)
@@ -225,7 +225,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
         }),
       })
       .reply(200, fetchUserMultipleTeamsResponse)
@@ -259,7 +259,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',
@@ -291,7 +291,7 @@ describe('Invite user', () => {
         q: JSON.stringify({
           take: 20,
           skip: 0,
-          sort: [{ path: 'created', order: 'ascending' }],
+          sort: [{ path: 'created', order: 'descending' }],
           filter: {
             path: 'data.role.iv',
             op: 'eq',

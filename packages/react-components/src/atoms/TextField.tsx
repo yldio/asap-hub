@@ -160,6 +160,7 @@ type TextFieldProps = {
   readonly customIndicator?: React.ReactElement;
   readonly customIndicatorPosition?: Position;
   readonly labelIndicator?: React.ReactElement | string;
+  readonly getValidationMessage?: Parameters<typeof useValidation>[1];
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
@@ -184,13 +185,18 @@ const TextField: React.FC<TextFieldProps> = ({
     (pattern !== undefined || showValidationType.has(type)),
   labelIndicator,
 
+  getValidationMessage,
+
   value,
   onChange = noop,
 
   ...props
 }) => {
   const { validationMessage, validationTargetProps } =
-    useValidation<HTMLInputElement>(customValidationMessage);
+    useValidation<HTMLInputElement>(
+      customValidationMessage,
+      getValidationMessage,
+    );
 
   const validGifUrl = useGifReplay(validTickGreenImage, [indicateValid, value]);
   const [debouncedValue] = useDebounce(value, 500);

@@ -45,7 +45,9 @@ it('fires onSave when submitting', async () => {
   userEvent.clear(getByLabelText(/email/i));
   await userEvent.type(getByLabelText(/email/i), 'new-contact@example.com');
   userEvent.click(getByText(/save/i));
-  expect(handleSave).toHaveBeenLastCalledWith('new-contact@example.com');
+  expect(handleSave).toHaveBeenLastCalledWith(
+    expect.objectContaining({ contactEmail: 'new-contact@example.com' }),
+  );
 
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),

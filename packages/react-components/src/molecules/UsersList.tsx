@@ -45,6 +45,7 @@ const userStyles = css({
   alignItems: 'center',
 });
 const nameStyles = css({
+  fontSize: `${13.6 / perRem}em`,
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',

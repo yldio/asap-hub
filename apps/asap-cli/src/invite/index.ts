@@ -45,7 +45,7 @@ const inviteUsersFactory = (
     const query: Query = {
       skip,
       take,
-      sort: [{ path: 'created', order: 'ascending' }],
+      sort: [{ path: 'created', order: 'descending' }],
     };
 
     if (role) {
@@ -77,13 +77,14 @@ const inviteUsersFactory = (
     const userTeamIds = usersToInvite
       .flatMap((user) => user.data.teams.iv)
       .flatMap((team) => team?.id)
-      .filter(Boolean) as string[];
+      .filter(Boolean)
+      .filter((team, pos, self) => self.indexOf(team) === pos) as string[];
 
     let teamMap: { [key: string]: string };
     if (userTeamIds.length > 0) {
       const teamQuery: Query = {
-        skip,
-        take,
+        skip: 0,
+        take: 20, // Dont expect a user to have more than 20 teams
         filter: {
           path: 'id',
           op: 'in',

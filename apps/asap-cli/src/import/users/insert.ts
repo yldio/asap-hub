@@ -166,6 +166,9 @@ const insertUser = async (
     role: {
       iv: asapRole,
     },
+    onboarded: {
+      iv: true,
+    },
   };
 
   if (location) {

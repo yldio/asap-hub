@@ -3,6 +3,7 @@ import { origin } from '../../config';
 
 export const userMock: User = {
   id: 'userId',
+  onboarded: true,
   displayName: 'JT',
   email: 'joao.tiago@asap.science',
   firstName: 'Joao',

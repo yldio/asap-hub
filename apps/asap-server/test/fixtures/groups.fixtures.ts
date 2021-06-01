@@ -284,6 +284,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
         {
           user: {
             id: 'user-id-1',
+            onboarded: true,
             createdDate: '2020-12-11T14:33:50.000Z',
             displayName: 'Filipe Pinheiro',
             firstName: 'Filipe',
@@ -320,6 +321,7 @@ export const queryGroupsExpectation: ListGroupResponse = {
         {
           user: {
             id: 'user-id-2',
+            onboarded: true,
             createdDate: '2020-12-11T14:33:50.000Z',
             displayName: 'João Tiago',
             firstName: 'João',

@@ -50,6 +50,7 @@ describe('Authentication middleware', () => {
     decodeToken.mockResolvedValueOnce({
       [`some-other-origin/user`]: {
         id: 'userId',
+        onboarded: true,
         displayName: 'JT',
         email: 'joao.tiago@asap.science',
         firstName: 'Joao',

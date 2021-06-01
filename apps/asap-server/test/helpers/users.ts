@@ -20,6 +20,7 @@ function transform(user: RestUser): TestUserResponse {
 
 export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
   const userData: User = {
+    onboarded: true,
     firstName: chance.first(),
     lastName: chance.last(),
     jobTitle: chance.suffix({ full: true }),

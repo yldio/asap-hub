@@ -78,6 +78,7 @@ const context: RuleContext = {
 };
 
 const apiUser: UserResponse = {
+  onboarded: true,
   displayName: 'Joao Tiago',
   firstName: 'Joao',
   lastName: 'Tiago',
@@ -164,6 +165,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
+      onboarded: true,
       firstName: 'Joao',
       lastName: 'Tiago',
       avatarUrl: undefined,
@@ -210,6 +212,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
       displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',
+      onboarded: true,
       firstName: 'Joao',
       lastName: 'Tiago',
       avatarUrl: undefined,

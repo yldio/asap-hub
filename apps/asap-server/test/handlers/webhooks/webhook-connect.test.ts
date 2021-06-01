@@ -29,6 +29,9 @@ const user: RestUser = {
     skills: { iv: [] },
     questions: { iv: [] },
     teams: { iv: [] },
+    onboarded: {
+      iv: true,
+    },
   },
 };
 

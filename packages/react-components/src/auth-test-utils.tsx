@@ -84,6 +84,7 @@ export const LoggedIn: React.FC<{
   if (user) {
     const completeUser: User = {
       id: 'testuserid',
+      onboarded: true,
       email: 'john.doe@example.com',
       displayName: 'John Doe',
       firstName: 'John',

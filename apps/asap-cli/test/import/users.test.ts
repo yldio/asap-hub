@@ -57,6 +57,9 @@ const body = {
       },
     ],
   },
+  onboarded: {
+    iv: true,
+  },
 };
 
 describe('Import user', () => {

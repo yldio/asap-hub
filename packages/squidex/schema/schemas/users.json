@@ -15,6 +15,24 @@
     "fieldsInLists": ["email", "meta.id"],
     "fields": [
       {
+        "name": "onboarded",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": true,
+          "inlineEditable": false,
+          "editor": "Toggle",
+          "label": "Onboarding complete",
+          "hints": "Users that have NOT completed onboarding can only see their profile and are hidden from the Hub.",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "separatorBasicData",
         "isHidden": false,
         "isLocked": false,

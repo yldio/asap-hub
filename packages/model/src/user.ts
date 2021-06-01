@@ -103,6 +103,7 @@ export interface UserSocialLinks {
 
 export interface UserResponse extends Invitee {
   id: string;
+  onboarded: boolean;
   contactEmail?: string;
   displayName: string;
   lastModifiedDate: string;

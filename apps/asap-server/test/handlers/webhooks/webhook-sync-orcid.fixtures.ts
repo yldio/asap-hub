@@ -23,6 +23,9 @@ export const fetchUserResponse: RestUser = {
     role: {
       iv: 'Grantee',
     },
+    onboarded: {
+      iv: true,
+    },
   },
   created: '2020-08-27T13:20:57Z',
   lastModified: '2020-08-31T13:57:51Z',
@@ -63,6 +66,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       skills: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
+      onboarded: {
+        iv: true,
+      },
     },
     dataOld: {
       firstName: { iv: 'Bill' },
@@ -90,6 +96,9 @@ export const updateUserEvent: WebhookPayload<User> = {
       skills: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
+      onboarded: {
+        iv: true,
+      },
     },
   },
 };
@@ -128,6 +137,9 @@ export const createUserEvent: WebhookPayload<User> = {
       },
       email: {
         iv: 'webhokk@ola.io',
+      },
+      onboarded: {
+        iv: true,
       },
     },
   },

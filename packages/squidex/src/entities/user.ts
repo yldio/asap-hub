@@ -29,6 +29,7 @@ export interface User<
   TConnection = UserTeamConnection,
   TSocial = Omit<UserSocialLinks, 'orcid'>,
 > {
+  onboarded: boolean;
   avatar: TAvatar[];
   biography?: string;
   connections: { code: string }[];

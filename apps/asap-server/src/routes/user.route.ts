@@ -11,6 +11,7 @@ import { FetchOptions } from '../utils/types';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
 import { userUpdateSchema } from '../entities/user';
+import { permissionHandler } from '../middleware/permission-handler';
 
 export const userPublicRouteFactory = (
   userController: UserController,
@@ -52,7 +53,7 @@ export const userRouteFactory = (
 ): Router => {
   const userRoutes = Router();
 
-  userRoutes.get('/users', async (req, res) => {
+  userRoutes.get('/users', permissionHandler, async (req, res) => {
     const options = framework.validate(
       'query',
       req.query,

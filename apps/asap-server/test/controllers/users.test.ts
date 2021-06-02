@@ -152,7 +152,7 @@ describe('Users controller', () => {
         .reply(200, fixtures.graphQlResponseFetchUser);
 
       const result = await users.fetchById('user-id');
-      expect(result).toEqual(fixtures.fetchUserExpectation);
+      expect(result).toEqual(fixtures.userResponse);
     });
 
     test('Should return onboarded flag when its false', async () => {
@@ -252,7 +252,7 @@ describe('Users controller', () => {
         });
 
       const result = await users.fetchByCode(code);
-      expect(result).toEqual(fixtures.fetchUserExpectation);
+      expect(result).toEqual(fixtures.userResponse);
     });
   });
 
@@ -491,7 +491,7 @@ describe('Users controller', () => {
         Buffer.from('avatar'),
         'image/jpeg',
       );
-      expect(result).toEqual(fixtures.fetchUserExpectation);
+      expect(result).toEqual(fixtures.userResponse);
     });
   });
 

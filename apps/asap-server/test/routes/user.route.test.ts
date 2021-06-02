@@ -112,14 +112,12 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(
-        fixtures.fetchUserExpectation,
-      );
+      userControllerMock.fetchById.mockResolvedValueOnce(fixtures.userResponse);
 
       const response = await supertest(appWithMockedAuth).get('/users/123');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(fixtures.fetchUserExpectation);
+      expect(response.body).toEqual(fixtures.userResponse);
     });
 
     test('Should call the controller with the right parameter', async () => {
@@ -142,15 +140,15 @@ describe('/users/ route', () => {
 
     test('Should return the results correctly', async () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce(
-        fixtures.fetchUserExpectation,
+        fixtures.userResponse,
       );
 
       const response = await supertest(app).get('/users/invites/123');
 
       expect(response.status).toBe(200);
       const expectedResult = {
-        id: fixtures.fetchUserExpectation.id,
-        displayName: fixtures.fetchUserExpectation.displayName,
+        id: fixtures.userResponse.id,
+        displayName: fixtures.userResponse.displayName,
       };
       expect(response.body).toEqual(expectedResult);
     });
@@ -176,9 +174,7 @@ describe('/users/ route', () => {
     });
 
     test('Should return 200 when no grups exist', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(
-        fixtures.fetchUserExpectation,
-      );
+      userControllerMock.fetchById.mockResolvedValueOnce(fixtures.userResponse);
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
@@ -196,9 +192,7 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(
-        fixtures.fetchUserExpectation,
-      );
+      userControllerMock.fetchById.mockResolvedValueOnce(fixtures.userResponse);
       groupControllerMock.fetchByUserId.mockResolvedValueOnce(
         groupFixtures.listGroupsResponse,
       );
@@ -212,9 +206,7 @@ describe('/users/ route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(
-        fixtures.fetchUserExpectation,
-      );
+      userControllerMock.fetchById.mockResolvedValueOnce(fixtures.userResponse);
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
@@ -258,16 +250,14 @@ describe('/users/ route', () => {
     const userId = userMock.id;
 
     test('Should return the results correctly', async () => {
-      userControllerMock.update.mockResolvedValueOnce(
-        fixtures.updateUserExpectation,
-      );
+      userControllerMock.update.mockResolvedValueOnce(fixtures.userResponse);
 
       const response = await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send({ jobTitle: 'CEO' });
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(fixtures.updateUserExpectation);
+      expect(response.body).toEqual(fixtures.userResponse);
     });
 
     test('Should return 500 when it fails to update the user', async () => {
@@ -315,9 +305,7 @@ describe('/users/ route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      userControllerMock.update.mockResolvedValueOnce(
-        fixtures.updateUserExpectation,
-      );
+      userControllerMock.update.mockResolvedValueOnce(fixtures.userResponse);
 
       await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
@@ -353,7 +341,7 @@ describe('/users/ route', () => {
 
     test('Should return the results correctly', async () => {
       userControllerMock.updateAvatar.mockResolvedValueOnce(
-        fixtures.updateUserExpectation,
+        fixtures.userResponse,
       );
 
       const response = await supertest(appWithMockedAuth)
@@ -361,7 +349,7 @@ describe('/users/ route', () => {
         .send(fixtures.updateAvatarBody);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(fixtures.updateUserExpectation);
+      expect(response.body).toEqual(fixtures.userResponse);
     });
 
     test('Should return 500 when it fails to update the avatar', async () => {

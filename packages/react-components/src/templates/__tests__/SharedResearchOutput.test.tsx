@@ -90,16 +90,16 @@ describe('additional information', () => {
     const { getByText, rerender } = render(
       <SharedResearchOutput {...props} usedInPublication />,
     );
-    expect(getByText(/used in pub/i).closest('li')).toHaveTextContent(/yes/i);
+    expect(getByText(/used in.+pub/i).closest('li')).toHaveTextContent(/yes/i);
 
     rerender(<SharedResearchOutput {...props} usedInPublication={false} />);
-    expect(getByText(/used in pub/i).closest('li')).toHaveTextContent(/no/i);
+    expect(getByText(/used in.+pub/i).closest('li')).toHaveTextContent(/no/i);
   });
   it('omits the publication use status if unknown', () => {
     const { queryByText } = render(
       <SharedResearchOutput {...props} usedInPublication={undefined} />,
     );
-    expect(queryByText(/used in pub/i)).not.toBeInTheDocument();
+    expect(queryByText(/used in.+pub/i)).not.toBeInTheDocument();
   });
 
   it('contains the ASAP funding status', () => {

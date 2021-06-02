@@ -2,7 +2,7 @@ import Boom from '@hapi/boom';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { pageControllerMock } from '../mocks/page-controller.mock';
-import { PageResponse } from '@asap-hub/model';
+import { pageResponse } from '../fixtures/page.fixtures';
 
 describe('/pages/ route', () => {
   const app = appFactory({
@@ -23,15 +23,6 @@ describe('/pages/ route', () => {
     });
 
     test('Should return the result correctly', async () => {
-      const pageResponse: PageResponse = {
-        id: 'some-id',
-        path: '/privacy-policy',
-        shortText: 'short text',
-        text: '<h1>Privacy Policy</h1>',
-        title: 'Privacy Policy',
-        link: 'link',
-        linkText: 'linkText',
-      };
       pageControllerMock.fetchByPath.mockResolvedValueOnce(pageResponse);
 
       const response = await supertest(app).get('/pages/some-other-page');

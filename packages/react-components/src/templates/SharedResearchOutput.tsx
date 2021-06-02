@@ -102,7 +102,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
             <>
               <Divider />
               <li css={additionalInformationEntryStyles}>
-                <strong>Used in Publications</strong>
+                <strong>Used in a Publication</strong>
                 <span>{usedInPublication ? 'Yes' : 'No'}</span>
               </li>
             </>

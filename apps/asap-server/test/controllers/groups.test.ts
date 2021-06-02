@@ -67,7 +67,7 @@ describe('Group controller', () => {
         .reply(200, fixtures.queryGroupsResponse);
 
       const result = await groups.fetch(fetchOptions);
-      expect(result).toEqual(fixtures.queryGroupsExpectation);
+      expect(result).toEqual(fixtures.listGroupsResponse);
     });
 
     test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
@@ -90,7 +90,7 @@ describe('Group controller', () => {
 
       const result = await groups.fetch(fetchOptions);
 
-      expect(result).toEqual(fixtures.queryGroupsExpectation);
+      expect(result).toEqual(fixtures.listGroupsResponse);
     });
 
     test('Should sanitise double quotation mark by encoding to hex', async () => {
@@ -113,7 +113,7 @@ describe('Group controller', () => {
 
       const result = await groups.fetch(fetchOptions);
 
-      expect(result).toEqual(fixtures.queryGroupsExpectation);
+      expect(result).toEqual(fixtures.listGroupsResponse);
     });
   });
 
@@ -142,7 +142,7 @@ describe('Group controller', () => {
         .reply(200, fixtures.findGroupResponse);
 
       const result = await groups.fetchById(groupId);
-      expect(result).toEqual(fixtures.findGroupExpectation);
+      expect(result).toEqual(fixtures.groupResponse);
     });
   });
 
@@ -185,7 +185,7 @@ describe('Group controller', () => {
         .reply(200, fixtures.queryGroupsResponse);
 
       const result = await groups.fetchByTeamId(teamUUID, fetchOptions);
-      expect(result).toEqual(fixtures.queryGroupsExpectation);
+      expect(result).toEqual(fixtures.listGroupsResponse);
     });
   });
 
@@ -251,7 +251,7 @@ describe('Group controller', () => {
         {},
       );
 
-      expect(result).toEqual(fixtures.queryGroupsExpectation);
+      expect(result).toEqual(fixtures.listGroupsResponse);
     });
   });
 });

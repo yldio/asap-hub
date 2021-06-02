@@ -234,7 +234,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
   },
 };
 
-export const queryGroupsExpectation: ListGroupResponse = {
+export const listGroupsResponse: ListGroupResponse = {
   total: 2,
   items: [
     {
@@ -371,5 +371,4 @@ export const findGroupResponse: { data: ResponseFetchGroup } = {
   },
 };
 
-export const findGroupExpectation: GroupResponse =
-  queryGroupsExpectation.items[0];
+export const groupResponse: GroupResponse = listGroupsResponse.items[0];

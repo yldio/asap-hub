@@ -41,12 +41,12 @@ describe('/teams/ route', () => {
 
     test('Should return the results correctly', async () => {
       groupControllerMock.fetchByTeamId.mockResolvedValueOnce(
-        fixtures.queryGroupsExpectation,
+        fixtures.listGroupsResponse,
       );
 
       const response = await supertest(app).get('/teams/123/groups');
 
-      expect(response.body).toEqual(fixtures.queryGroupsExpectation);
+      expect(response.body).toEqual(fixtures.listGroupsResponse);
     });
 
     test('Should call the controller with the right parameters', async () => {

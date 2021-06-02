@@ -200,7 +200,7 @@ describe('/users/ route', () => {
         fixtures.fetchUserExpectation,
       );
       groupControllerMock.fetchByUserId.mockResolvedValueOnce(
-        groupFixtures.queryGroupsExpectation,
+        groupFixtures.listGroupsResponse,
       );
 
       const response = await supertest(appWithMockedAuth).get(
@@ -208,7 +208,7 @@ describe('/users/ route', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(groupFixtures.queryGroupsExpectation);
+      expect(response.body).toEqual(groupFixtures.listGroupsResponse);
     });
 
     test('Should call the controller method with the correct parameters', async () => {

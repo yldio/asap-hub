@@ -73,15 +73,15 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
         onSave({
           contactEmail: newEmail,
           social: {
-            twitter: newTwitter,
-            researcherId: newResearcherId,
-            researchGate: newResearchGate,
-            github: newGithub,
-            googleScholar: newGoogleScholar,
-            linkedIn: newLinkedIn,
-            orcid: newOrcid,
-            website1: newWebsite1,
-            website2: newWebsite2,
+            twitter: newTwitter || undefined,
+            researcherId: newResearcherId || undefined,
+            researchGate: newResearchGate || undefined,
+            github: newGithub || undefined,
+            googleScholar: newGoogleScholar || undefined,
+            linkedIn: newLinkedIn || undefined,
+            orcid: newOrcid || undefined,
+            website1: newWebsite1 || undefined,
+            website2: newWebsite2 || undefined,
           },
         })
       }

@@ -168,7 +168,7 @@ describe('the contact info modal', () => {
     });
     expect(mockPatchUser).toHaveBeenLastCalledWith(
       id,
-      { contactEmail: 'contact@example.comm' },
+      expect.objectContaining({ contactEmail: 'contact@example.comm' }),
       expect.any(String),
     );
   });

@@ -9905,8 +9905,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/validation", "workspace:packages/validation"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
-            ["@babel/runtime-corejs3", "npm:7.14.0"],
-            ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
+            ["@babel/runtime-corejs3", "npm:7.14.0"]
           ],
           "linkType": "SOFT",
         }]

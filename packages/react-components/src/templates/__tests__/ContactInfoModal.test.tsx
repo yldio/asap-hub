@@ -5,11 +5,11 @@ import userEvent from '@testing-library/user-event';
 import ContactInfoModal from '../ContactInfoModal';
 
 it('renders a form to edit the contact info', () => {
-  const { getByRole } = render(
+  const { getByText } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
     { wrapper: StaticRouter },
   );
-  expect(getByRole('heading')).toHaveTextContent(/contact/i);
+  expect(getByText(/contact/i, { selector: 'h3' })).toBeVisible();
 });
 it('shows the fallback email', () => {
   const { container } = render(

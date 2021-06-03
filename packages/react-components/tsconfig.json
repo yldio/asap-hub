@@ -15,6 +15,7 @@
     { "path": "../fixtures" },
     { "path": "../model" },
     { "path": "../react-context" },
-    { "path": "../routing" }
+    { "path": "../routing" },
+    { "path": "../validation" }
   ]
 }

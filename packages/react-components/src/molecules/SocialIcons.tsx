@@ -30,25 +30,16 @@ const iconStyles = css({
   paddingRight: `${ROW_GAP / perRem}em`,
 });
 
-const fillInactiveStyles = css({ svg: { fill: tin.rgb } });
-const strokeInactiveStyles = css({ svg: { stroke: tin.rgb } });
+const inactiveStyles = css({ svg: { fill: tin.rgb, stroke: tin.rgb } });
 
 const SocialIconLink: React.FC<{
   link?: string;
   icon: JSX.Element;
-  strokeInactive?: boolean;
   isOwnProfile: boolean;
-}> = ({ link, icon, isOwnProfile, strokeInactive = false }) =>
+}> = ({ link, icon, isOwnProfile }) =>
   link || isOwnProfile ? (
     <Link href={link}>
-      <div
-        css={[
-          iconStyles,
-          !link && (strokeInactive ? strokeInactiveStyles : fillInactiveStyles),
-        ]}
-      >
-        {icon}
-      </div>
+      <div css={[iconStyles, !link && inactiveStyles]}>{icon}</div>
     </Link>
   ) : null;
 
@@ -136,13 +127,11 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        strokeInactive
         link={website1}
         icon={globeIcon}
         isOwnProfile={isOwnProfile}
       />
       <SocialIconLink
-        strokeInactive
         link={website2}
         icon={globeIcon}
         isOwnProfile={isOwnProfile}

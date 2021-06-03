@@ -10,7 +10,7 @@ declare global {
   namespace Express {
     interface Request {
       context: APIGatewayProxyEventV2['requestContext'];
-      loggedUser?: User;
+      loggedInUser?: User;
       span?: Span;
     }
 

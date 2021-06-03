@@ -13,7 +13,7 @@ import { userMock } from '../../src/utils/__mocks__/validate-token';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {
-    req.loggedUser = {
+    req.loggedInUser = {
       ...userMock,
       teams: [
         {

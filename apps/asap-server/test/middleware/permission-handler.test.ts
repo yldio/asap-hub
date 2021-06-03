@@ -19,7 +19,7 @@ describe('Permission middleware', () => {
   };
   const userMockFactory = jest.fn<User | undefined, []>();
   const authHandlerMock: AuthHandler = (req, _res, next) => {
-    req.loggedUser = userMockFactory();
+    req.loggedInUser = userMockFactory();
     next();
   };
   const mockRoutes = Router();

@@ -101,7 +101,7 @@ export const userRouteFactory = (
     );
 
     // user is trying to update someone else
-    if (req.loggedUser!.id !== userId) {
+    if (req.loggedInUser!.id !== userId) {
       throw Boom.forbidden();
     }
 
@@ -152,7 +152,7 @@ export const userRouteFactory = (
     ) as UserPatchRequest;
 
     // user is trying to update someone else
-    if (req.loggedUser!.id !== userId) {
+    if (req.loggedInUser!.id !== userId) {
       throw Boom.forbidden();
     }
 
@@ -160,7 +160,7 @@ export const userRouteFactory = (
     if (
       update.teams &&
       !update.teams.every(({ id }) =>
-        req.loggedUser!.teams.find((t) => t.id === id),
+        req.loggedInUser!.teams.find((t) => t.id === id),
       )
     ) {
       throw Boom.forbidden();

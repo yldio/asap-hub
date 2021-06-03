@@ -9,7 +9,7 @@ describe('User info logging handler', () => {
   // mock auth handler
   const getUser: jest.MockedFunction<() => User | undefined> = jest.fn();
   const authHandlerMock: RequestHandler = async (req, _res, next) => {
-    req.loggedUser = getUser();
+    req.loggedInUser = getUser();
     next();
   };
 

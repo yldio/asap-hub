@@ -92,7 +92,10 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
 
   return {
     id: item.id,
-    onboarded: item.flatData?.onboarded || true,
+    onboarded:
+      item.flatData && typeof item.flatData.onboarded === 'boolean'
+        ? item.flatData.onboarded
+        : true,
     createdDate,
     displayName,
     orcid, // TODO: remove once edit social is added

@@ -154,6 +154,56 @@ describe('Users controller', () => {
       const result = await users.fetchById('user-id');
       expect(result).toEqual(fixtures.fetchUserExpectation);
     });
+
+    test('Should return onboarded flag when its false', async () => {
+      const response = {
+        data: {
+          findUsersContent: {
+            ...fixtures.graphQlResponseFetchUser.data.findUsersContent,
+            flatData: {
+              ...fixtures.graphQlResponseFetchUser.data.findUsersContent
+                .flatData,
+              onboarded: false,
+            },
+          },
+        },
+      };
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUser('user-id'),
+        })
+        .reply(200, response);
+
+      const result = await users.fetchById('user-id');
+
+      expect(result.onboarded).toEqual(false);
+    });
+
+    test('Should default onboarded flag to true when its null', async () => {
+      const response = {
+        data: {
+          findUsersContent: {
+            ...fixtures.graphQlResponseFetchUser.data.findUsersContent,
+            flatData: {
+              ...fixtures.graphQlResponseFetchUser.data.findUsersContent
+                .flatData,
+              onboarded: null,
+            },
+          },
+        },
+      };
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUser('user-id'),
+        })
+        .reply(200, response);
+
+      const result = await users.fetchById('user-id');
+
+      expect(result.onboarded).toEqual(true);
+    });
   });
 
   describe('fetchByCode', () => {

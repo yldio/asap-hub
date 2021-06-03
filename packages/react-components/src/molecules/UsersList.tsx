@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import {
   ExternalAuthor,
   UserResponse,
-  isExternalAuthor,
+  isInternalAuthor,
 } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
@@ -64,7 +64,7 @@ const UsersList: FC<UsersListProps> = ({ users }) => (
   <ul css={listStyles}>
     {users.map((user, i) => (
       <li key={`author-${i}`} css={itemStyles}>
-        {!isExternalAuthor(user) ? (
+        {isInternalAuthor(user) ? (
           <Link
             href={user.id && network({}).users({}).user({ userId: user.id }).$}
           >

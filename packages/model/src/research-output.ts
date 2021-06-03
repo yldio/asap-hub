@@ -49,9 +49,9 @@ export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
 
 export type ExternalAuthor = Pick<UserResponse, 'displayName' | 'orcid'>;
 
-export const isExternalAuthor = (
+export const isInternalAuthor = (
   author: ExternalAuthor | UserResponse,
-): author is ExternalAuthor => (author as UserResponse).id === undefined;
+): author is UserResponse => (author as UserResponse).id !== undefined;
 
 export type ResearchOutputResponse = {
   readonly id: string;

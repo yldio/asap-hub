@@ -8,5 +8,9 @@
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  "references": [{ "path": "../auth" }, { "path": "../flags" }]
+  "references": [
+    { "path": "../auth" },
+    { "path": "../dom-test-utils" },
+    { "path": "../flags" }
+  ]
 }

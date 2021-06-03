@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 
 export const userLoggerHandler: RequestHandler = (req, res, next) => {
-  if (req.loggedUser) {
+  if (req.loggedInUser) {
     req.log = res.log = req.log.child({
-      userId: req.loggedUser.id,
+      userId: req.loggedInUser.id,
     });
   }
   next();

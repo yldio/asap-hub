@@ -11,6 +11,7 @@ import { FetchOptions } from '../utils/types';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
 import { userUpdateSchema } from '../entities/user';
+import { permissionHandler } from '../middleware/permission-handler';
 
 export const userPublicRouteFactory = (
   userController: UserController,
@@ -52,7 +53,7 @@ export const userRouteFactory = (
 ): Router => {
   const userRoutes = Router();
 
-  userRoutes.get('/users', async (req, res) => {
+  userRoutes.get('/users', permissionHandler, async (req, res) => {
     const options = framework.validate(
       'query',
       req.query,
@@ -100,7 +101,7 @@ export const userRouteFactory = (
     );
 
     // user is trying to update someone else
-    if (req.loggedUser!.id !== userId) {
+    if (req.loggedInUser!.id !== userId) {
       throw Boom.forbidden();
     }
 
@@ -151,7 +152,7 @@ export const userRouteFactory = (
     ) as UserPatchRequest;
 
     // user is trying to update someone else
-    if (req.loggedUser!.id !== userId) {
+    if (req.loggedInUser!.id !== userId) {
       throw Boom.forbidden();
     }
 
@@ -159,7 +160,7 @@ export const userRouteFactory = (
     if (
       update.teams &&
       !update.teams.every(({ id }) =>
-        req.loggedUser!.teams.find((t) => t.id === id),
+        req.loggedInUser!.teams.find((t) => t.id === id),
       )
     ) {
       throw Boom.forbidden();

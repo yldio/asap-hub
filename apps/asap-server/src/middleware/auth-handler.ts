@@ -31,7 +31,7 @@ export const authHandlerFactory =
       throw Boom.unauthorized();
     }
 
-    req.loggedUser = user;
+    req.loggedInUser = user;
     req.span?.setBaggageItem('user.id', user.id);
 
     next();

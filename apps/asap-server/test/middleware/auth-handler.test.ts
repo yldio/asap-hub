@@ -9,7 +9,7 @@ import { origin } from '../../src/config';
 describe('Authentication middleware', () => {
   const mockRoutes = Router();
   mockRoutes.get('/test-route', async (req, res) => {
-    return res.json(req.loggedUser);
+    return res.json(req.loggedInUser);
   });
   const decodeToken: jest.MockedFunction<DecodeToken> = jest.fn();
   const authHandler = authHandlerFactory(decodeToken);

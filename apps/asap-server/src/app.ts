@@ -39,6 +39,7 @@ import Discover, { DiscoverController } from './controllers/discover';
 import { discoverRouteFactory } from './routes/discover.route';
 import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
+import { permissionHandler } from './middleware/permission-handler';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -121,12 +122,20 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(userLoggerHandler);
 
   /**
-   * Routes requiring authorisation below
+   * Routes requiring authentication below
    */
   if (libs.mockRequestHandlers) {
     app.use(libs.mockRequestHandlers);
   }
 
+  app.use(userRoutes);
+
+  // Permission check
+  app.use(permissionHandler);
+
+  /**
+   * Routes requiring onboarding below
+   */
   app.use(calendarRoutes);
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
@@ -135,7 +144,6 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(groupRoutes);
   app.use(researchOutputsRoutes);
   app.use(teamRoutes);
-  app.use(userRoutes);
 
   app.get('*', async (_req, res) => {
     res.status(404).json({

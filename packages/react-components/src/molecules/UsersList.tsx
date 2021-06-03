@@ -1,12 +1,17 @@
 import { FC } from 'react';
 import { css } from '@emotion/react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { UserResponse } from '@asap-hub/model';
+import {
+  ExternalAuthor,
+  UserResponse,
+  isInternalAuthor,
+} from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
 import { Avatar, Link } from '../atoms';
 import { perRem } from '../pixels';
 import { userPlaceholderIcon } from '../icons';
+import { lead } from '../colors';
 
 const getPlaceholderAvatarUrl = () =>
   `data:image/svg+xml;base64,${btoa(
@@ -21,6 +26,8 @@ const listStyles = css({
   overflow: 'hidden',
   display: 'flex',
   flexWrap: 'wrap',
+
+  color: lead.rgb,
 });
 const itemStyles = css({
   paddingBottom: `${12 / perRem}em`,
@@ -38,6 +45,7 @@ const userStyles = css({
   alignItems: 'center',
 });
 const nameStyles = css({
+  fontSize: `${13.6 / perRem}em`,
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
@@ -45,25 +53,32 @@ const nameStyles = css({
 
 interface UsersListProps {
   users: ReadonlyArray<
-    Pick<UserResponse, 'displayName'> &
-      Partial<Pick<UserResponse, 'id' | 'firstName' | 'lastName' | 'avatarUrl'>>
+    | Pick<
+        UserResponse,
+        'displayName' | 'firstName' | 'lastName' | 'avatarUrl' | 'id'
+      >
+    | ExternalAuthor
   >;
 }
 const UsersList: FC<UsersListProps> = ({ users }) => (
   <ul css={listStyles}>
     {users.map((user, i) => (
-      <li key={user.id ?? i} css={itemStyles}>
-        <Link
-          href={user.id && network({}).users({}).user({ userId: user.id }).$}
-        >
+      <li key={`author-${i}`} css={itemStyles}>
+        {isInternalAuthor(user) ? (
+          <Link
+            href={user.id && network({}).users({}).user({ userId: user.id }).$}
+          >
+            <div css={userStyles}>
+              <Avatar {...user} />
+              <span css={nameStyles}>{user.displayName}</span>
+            </div>
+          </Link>
+        ) : (
           <div css={userStyles}>
-            <Avatar
-              {...user}
-              imageUrl={user.id ? user.avatarUrl : getPlaceholderAvatarUrl()}
-            />
+            <Avatar {...user} imageUrl={getPlaceholderAvatarUrl()} />
             <span css={nameStyles}>{user.displayName}</span>
           </div>
-        </Link>
+        )}
       </li>
     ))}
   </ul>

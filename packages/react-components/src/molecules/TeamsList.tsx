@@ -13,6 +13,7 @@ const containerStyles = css({
 });
 const containerInlineStyles = css({
   gridTemplateColumns: 'max-content 1fr',
+  fontSize: `${13.6 / perRem}em`,
 });
 const containerSummarizedStyles = css({
   gridTemplateColumns: 'max-content max-content',

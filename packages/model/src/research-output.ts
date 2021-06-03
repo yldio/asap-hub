@@ -47,6 +47,12 @@ export type ResearchOutputSubtype =
 
 export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
 
+export type ExternalAuthor = Pick<UserResponse, 'displayName' | 'orcid'>;
+
+export const isInternalAuthor = (
+  author: ExternalAuthor | UserResponse,
+): author is UserResponse => (author as UserResponse).id !== undefined;
+
 export type ResearchOutputResponse = {
   readonly id: string;
   readonly type: ResearchOutputType;
@@ -66,7 +72,7 @@ export type ResearchOutputResponse = {
   readonly asapFunded?: boolean;
   readonly usedInPublication?: boolean;
 
-  readonly authors: ReadonlyArray<UserResponse>;
+  readonly authors: ReadonlyArray<UserResponse | ExternalAuthor>;
   /**
    * @deprecated in favour of teams
    */

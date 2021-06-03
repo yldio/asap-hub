@@ -67,10 +67,15 @@ const configErrors = [];
     compositeProjectPaths.push(dir);
 
     // make sure the TS project is not missing any project references
-    const dependencyWorkspacePaths = Object.values({
+    const dependencyWorkspacePaths = Object.entries({
       ...dependencies,
       ...devDependencies,
-    }).flatMap((version) => (/workspace:(.+)/.exec(version) || []).slice(1));
+    })
+      .filter(([, version]) => /workspace:.+/.test(version))
+      .flatMap(
+        ([package]) =>
+          `packages/${(/@asap-hub\/(.+)/.exec(package) || []).slice(1)}`,
+      );
     const projectReferencePaths = projectReferences.map(({ path }) => path);
     dependencyWorkspacePaths.forEach((dependencyWorkspacePath) => {
       const dependencyDir = resolve(rootDir, dependencyWorkspacePath);

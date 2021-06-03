@@ -40,5 +40,5 @@ it('does not link external users', () => {
       ]}
     />,
   );
-  expect(getByText(/john doe/i).closest('a')).toBeNull();
+  expect(getByText(/John Doe/).closest('a')).toBeNull();
 });

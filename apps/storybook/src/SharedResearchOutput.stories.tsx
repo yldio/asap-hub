@@ -61,7 +61,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     ...createListUserResponse(number('Number of authors', 2)).items,
     ...Array.from({ length: number('Number of external authors', 1) }).map(
       (_, i): ExternalAuthor => ({
-        displayName: `External Author ${i}`,
+        displayName: `External Author ${i + 1}`,
       }),
     ),
   ],

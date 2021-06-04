@@ -2,14 +2,7 @@ import { css } from '@emotion/react';
 import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
-import {
-  Card,
-  Paragraph,
-  Headline2,
-  TagLabel,
-  Caption,
-  Anchor,
-} from '../atoms';
+import { Card, Paragraph, Headline2, Pill, Caption, Anchor } from '../atoms';
 import { perRem, smallDesktopScreen } from '../pixels';
 import { formatDate } from '../date';
 import {
@@ -104,7 +97,7 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
         </div>
         <div css={containerStyle}>
           <div css={headerStyles}>
-            <TagLabel>{type}</TagLabel>
+            <Pill>{type}</Pill>
             {link ? <ExternalLink label={linkText} href={link} /> : null}
           </div>
           {titleComponent}

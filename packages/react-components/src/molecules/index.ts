@@ -29,6 +29,7 @@ export { default as Modal } from './Modal';
 export { default as ModalEditHeader } from './ModalEditHeader';
 export { default as OrcidSigninButton } from './OrcidSigninButton';
 export { default as PageControls } from './PageControls';
+export { default as PillList } from './PillList';
 export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';
 export { default as TabNav } from './TabNav';

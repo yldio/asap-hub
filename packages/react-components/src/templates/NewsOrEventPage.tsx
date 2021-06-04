@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { NewsOrEventResponse } from '@asap-hub/model';
 
-import { TagLabel, Display, Card, Caption } from '../atoms';
+import { Pill, Display, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
@@ -51,7 +51,7 @@ const NewsOrEventPage: React.FC<NewsOrEventPageProps> = ({
   return (
     <div css={containerStyles}>
       <Card>
-        <TagLabel>{type}</TagLabel>
+        <Pill>{type}</Pill>
         <Display styleAsHeading={3}>{title}</Display>
         {publishDateComponent}
         <div css={richTextContainer}>

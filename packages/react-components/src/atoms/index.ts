@@ -20,7 +20,7 @@ export { default as Paragraph } from './Paragraph';
 export { default as RadioButton } from './RadioButton';
 export { default as TabLink } from './TabLink';
 export { default as Tag } from './Tag';
-export { default as TagLabel } from './TagLabel';
+export { default as Pill } from './Pill';
 export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
 export { default as Toggle } from './Toggle';

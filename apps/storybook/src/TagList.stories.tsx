@@ -10,7 +10,7 @@ export const Normal = () => (
     min={number('Minimum number of tags shown on mobile', 3)}
     max={number('Maximum number of tags shown on desktop', 5)}
     enabled={boolean('Enabled', true)}
-    tags={array('Skills', [
+    tags={array('Tags', [
       'Neurological Diseases',
       'Clinical Neurology',
       'Adult Neurology',

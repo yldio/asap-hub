@@ -22,12 +22,16 @@ const socialContainerStyles = css({
   display: 'flex',
   flexWrap: 'wrap',
   paddingRight: `-${ROW_GAP / perRem}em`,
+  paddingTop: `${15 / perRem}em`,
+  paddingBottom: `${17 / perRem}em`,
 });
 
 const iconStyles = css({
-  paddingTop: `${15 / perRem}em`,
-  paddingBottom: `${17 / perRem}em`,
   paddingRight: `${ROW_GAP / perRem}em`,
+  svg: {
+    width: '28px',
+    height: '28px',
+  },
 });
 
 const inactiveStyles = css({ svg: { fill: tin.rgb, stroke: tin.rgb } });

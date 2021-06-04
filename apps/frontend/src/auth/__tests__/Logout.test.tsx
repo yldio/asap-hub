@@ -28,3 +28,8 @@ it('redirects to the logout URL', async () => {
     `"http://localhost"`,
   );
 });
+
+it('can still be rendered without authentication', async () => {
+  const { findByText } = render(<Logout />);
+  expect(await findByText(/log.*out/i)).toBeVisible();
+});

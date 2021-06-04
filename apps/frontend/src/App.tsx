@@ -8,10 +8,11 @@ import {
   ToastStack,
 } from '@asap-hub/react-components';
 import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
-import { staticPages, network, welcome } from '@asap-hub/routing';
+import { staticPages, network, welcome, logout } from '@asap-hub/routing';
 
 import history from './history';
 import CheckAuth from './auth/CheckAuth';
+import Logout from './auth/Logout';
 import Frame from './structure/Frame';
 import { GTM_CONTAINER_ID } from './config';
 
@@ -65,6 +66,11 @@ const App: FC<Record<string, never>> = () => {
                   <ToastStack>
                     <Welcome />
                   </ToastStack>
+                </Route>
+                <Route path={logout.template}>
+                  <Frame title="Logout">
+                    <Logout />
+                  </Frame>
                 </Route>
 
                 <Route exact path={staticPages({}).terms.template}>

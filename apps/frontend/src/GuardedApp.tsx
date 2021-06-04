@@ -7,13 +7,11 @@ import {
   network,
   discover,
   sharedResearch,
-  logout,
   news,
   events,
 } from '@asap-hub/routing';
 
 import { auth0State } from './auth/state';
-import Logout from './auth/Logout';
 import Frame from './structure/Frame';
 import CheckOnboarded from './auth/CheckOnboarded';
 
@@ -61,11 +59,6 @@ const GuardedApp: FC<Record<string, never>> = () => {
         <Route exact path="/">
           <Frame title="Dashboard">
             <Dashboard />
-          </Frame>
-        </Route>
-        <Route path={logout.template}>
-          <Frame title="Logout">
-            <Logout />
           </Frame>
         </Route>
         <Route path={discover.template}>

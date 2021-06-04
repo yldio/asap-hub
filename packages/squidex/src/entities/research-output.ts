@@ -5,7 +5,8 @@ import {
   DecisionOption,
 } from '@asap-hub/model';
 
-import { Rest, Entity, Graphql } from './common';
+import { Rest, Entity, Graphql, GraphqlWithTypename } from './common';
+import { GraphqlExternalAuthor } from './external-author';
 import { GraphqlTeam } from './team';
 import { GraphqlUser } from './user';
 
@@ -34,6 +35,11 @@ export interface ResearchOutput<TAuthorConnection = string> {
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
 export interface GraphqlResearchOutput
   extends Entity,
-    Graphql<ResearchOutput<GraphqlUser>> {
+    Graphql<
+      ResearchOutput<
+        | GraphqlWithTypename<GraphqlUser, 'Users'>
+        | GraphqlWithTypename<GraphqlExternalAuthor, 'ExternalAuthors'>
+      >
+    > {
   referencingTeamsContents?: GraphqlTeam[];
 }

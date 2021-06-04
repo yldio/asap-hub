@@ -1,5 +1,5 @@
 import { StaticRouter } from 'react-router-dom';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ContactInfoModal from '../ContactInfoModal';
@@ -97,3 +97,29 @@ it('disables the form elements while submitting', async () => {
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });
+
+it.each`
+  label               | value        | message
+  ${'Website 1'}      | ${'not url'} | ${'valid website'}
+  ${'Website 2'}      | ${'not url'} | ${'valid website'}
+  ${'ResearcherID'}   | ${'http://'} | ${'valid ResearcherID'}
+  ${'Twitter'}        | ${'http://'} | ${'valid Twitter handle'}
+  ${'Github'}         | ${'http://'} | ${'valid Github username'}
+  ${'LinkedIn'}       | ${'http://'} | ${'valid LinkedIn username'}
+  ${'Researchgate'}   | ${'http://'} | ${'valid Research Gate Profile ID'}
+  ${'Google Scholar'} | ${'http://'} | ${'valid Google Scholar Profile ID'}
+`(
+  'shows invalid message $message for $label input',
+  async ({ label, value, message }) => {
+    const { getByLabelText, findByText } = render(
+      <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
+      { wrapper: StaticRouter },
+    );
+    const input = getByLabelText(new RegExp(label, 'i'));
+    fireEvent.change(input, {
+      target: { value },
+    });
+    fireEvent.focusOut(input);
+    expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
+  },
+);

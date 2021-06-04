@@ -7,13 +7,18 @@ import { noop } from '../utils';
 describe('useValidation', () => {
   type ValidatedInputProps = {
     customValidationMessage?: string;
+    getValidationMessage?: Parameters<typeof useValidation>[1];
   } & Pick<InputHTMLAttributes<HTMLInputElement>, 'value' | 'pattern'>;
   const ValidatedInput: React.FC<ValidatedInputProps> = ({
     customValidationMessage = '',
+    getValidationMessage,
     ...props
   }) => {
     const { validationMessage, validationTargetProps } =
-      useValidation<HTMLInputElement>(customValidationMessage);
+      useValidation<HTMLInputElement>(
+        customValidationMessage,
+        getValidationMessage,
+      );
     return (
       <label>
         <input
@@ -50,6 +55,47 @@ describe('useValidation', () => {
     );
     (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
     expect(getByText(/match/i)).toBeVisible();
+  });
+
+  it('does not immediately show a custom validation error message', () => {
+    const { queryByText } = render(
+      <ValidatedInput
+        getValidationMessage={() => 'custom error message'}
+        value="wrong"
+        pattern="^val$"
+      />,
+    );
+    expect(queryByText(/custom error/i)).not.toBeInTheDocument();
+  });
+
+  it('shows a custom validation error message after losing focus', async () => {
+    const message = jest.fn(() => 'custom error message');
+    const { getByRole, findByText } = render(
+      <ValidatedInput
+        getValidationMessage={message}
+        value="wrong"
+        pattern="^val$"
+      />,
+    );
+    fireEvent.focusOut(getByRole('textbox'));
+    expect(await findByText(/custom error/i)).toBeVisible();
+    expect(message).toHaveBeenCalled();
+  });
+
+  it('shows a custom validation error message when the form is validated', () => {
+    const message = jest.fn(() => 'custom error message');
+    const { getByRole, getByText } = render(
+      <form>
+        <ValidatedInput
+          getValidationMessage={message}
+          value="wrong"
+          pattern="^val$"
+        />
+      </form>,
+    );
+    (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
+    expect(getByText(/custom error/i)).toBeVisible();
+    expect(message).toHaveBeenCalled();
   });
 
   it('shows a custom validation message', () => {

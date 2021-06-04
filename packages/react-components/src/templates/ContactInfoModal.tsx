@@ -11,14 +11,15 @@ import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { charcoal } from '../colors';
 import { EditModal } from '../organisms';
-import { perRem, tabletScreen } from '../pixels';
+import { perRem, smallDesktopScreen, tabletScreen } from '../pixels';
 import { globeIcon } from '../icons';
-import { Headline3 } from '../atoms';
+import { Headline4, Link } from '../atoms';
+import { mailToSupport } from '../mail';
 
 const fieldsContainerStyles = css({
   display: 'grid',
   columnGap: `${24 / perRem}em`,
-  [`@media (min-width: ${tabletScreen.min}px)`]: {
+  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr',
     rowGap: `${12 / perRem}em`,
   },
@@ -128,9 +129,21 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               placeholder="https://example.com"
             />
           </div>
-          <Headline3>Social Networks</Headline3>
+          <Headline4 styleAsHeading={3}>Social Networks</Headline4>
           <div css={fieldsContainerStyles}>
             <LabeledTextField
+              hint={
+                <>
+                  To change your ORCID please{' '}
+                  <Link
+                    href={mailToSupport({
+                      subject: `Orcid change for "${orcid}"`,
+                    })}
+                  >
+                    contact ASAP
+                  </Link>
+                </>
+              }
               title="ORCID"
               onChange={setNewOrcid}
               value={newOrcid}
@@ -146,6 +159,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newResearcherId}
               enabled={!isSaving}
               labelIndicator="researchid.com/rid/"
+              indicateValid={false}
               placeholder="x-xxxx-xxxx"
             />
             <LabeledTextField
@@ -156,6 +170,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newTwitter}
               enabled={!isSaving}
               labelIndicator="@"
+              indicateValid={false}
               placeholder="twitterhandle"
             />
             <LabeledTextField
@@ -168,6 +183,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newGithub}
               enabled={!isSaving}
               labelIndicator="github.com/"
+              indicateValid={false}
               placeholder="username"
             />
             <LabeledTextField
@@ -180,6 +196,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newLinkedIn}
               enabled={!isSaving}
               labelIndicator="linkedin.com/in/"
+              indicateValid={false}
               placeholder="username"
             />
             <LabeledTextField
@@ -192,6 +209,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newResearchGate}
               enabled={!isSaving}
               labelIndicator="researchgate.net/profile/"
+              indicateValid={false}
               placeholder="profileID"
             />
           </div>
@@ -205,6 +223,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newGoogleScholar}
             enabled={!isSaving}
             labelIndicator="scholar.google.com/citations?user="
+            indicateValid={false}
             placeholder="profileID"
           />
         </>

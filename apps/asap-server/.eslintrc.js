@@ -11,5 +11,6 @@ module.exports = {
       'LabeledStatement',
       'WithStatement',
     ],
+    'no-underscore-dangle': ['error', { allow: ['__typename'] }],
   },
 };

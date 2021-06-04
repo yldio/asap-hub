@@ -36,7 +36,7 @@ const modalStyles = css({
   zIndex: 1,
 
   width: '100%',
-  maxWidth: `${730 / perRem}em`,
+  maxWidth: `${850 / perRem}em`,
   maxHeight: '80%',
 
   display: 'grid',

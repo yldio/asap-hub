@@ -33,7 +33,19 @@ flatData{
   asapFunded
   usedInAPublication
   authors {
-    ${GraphQLQueryUser}
+    __typename
+    ... on Users {
+      ${GraphQLQueryUser}
+    }
+    ... on ExternalAuthors {
+      id
+      created
+      lastModified
+      flatData {
+        name
+        orcid
+      }
+    }
   }
 }
 ${

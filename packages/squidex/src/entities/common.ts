@@ -31,6 +31,6 @@ export interface Graphql<T> {
     | null;
 }
 
-export type GraphqlWithTypename<T extends Graphql<any>, Y> = T & {
+export type GraphqlWithTypename<T extends Graphql<unknown>, Y> = T & {
   __typename: Y;
 };

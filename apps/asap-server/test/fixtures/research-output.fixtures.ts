@@ -3,7 +3,11 @@ import {
   ListUserResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import { GraphqlResearchOutput } from '@asap-hub/squidex';
+import {
+  GraphqlResearchOutputAuthors,
+  GraphqlResearchOutput,
+  GraphqlUserAssoc,
+} from '@asap-hub/squidex';
 import {
   ResponseFetchResearchOutput,
   ResponseFetchResearchOutputs,
@@ -18,6 +22,15 @@ export const getSquidexResearchOutputsGraphqlResponse =
       items: [getSquidexGraphqlResearchOutput()],
     },
   });
+
+export const getSquidexResearchOutputGrapqlResponseAuthors =
+  (): GraphqlResearchOutputAuthors[] =>
+    graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items.map(
+      (item): GraphqlUserAssoc => ({
+        __typename: 'Users',
+        ...item,
+      }),
+    );
 
 export const getSquidexResearchOutputGraphqlResponse =
   (): ResponseFetchResearchOutput => ({
@@ -37,7 +50,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
     publishDate: '2021-05-21T13:18:31Z',
     tags: ['tag', 'test'],
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-    authors: graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items,
+    authors: getSquidexResearchOutputGrapqlResponseAuthors(),
     accessInstructions: 'some access instructions',
     sharingStatus: 'Network Only',
     asapFunded: 'Yes',

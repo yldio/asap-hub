@@ -101,7 +101,7 @@ const TeamsList: React.FC<TeamsListProps> = ({
             key={`sep-${i}`}
           >
             {inline || teamIcon}
-            <div css={inline && teamInlineStyles}>
+            <div css={inline ? teamInlineStyles : undefined}>
               <Link href={network({}).teams({}).team({ teamId: id }).$}>
                 Team {displayName}
               </Link>

@@ -1,0 +1,58 @@
+{
+  "$schema": "./../__json/schema.json",
+  "name": "external-authors",
+  "isSingleton": false,
+  "isPublished": false,
+  "schema": {
+    "noFieldDeletion": false,
+    "noFieldRecreation": false,
+    "properties": {
+      "label": "External authors",
+      "validateOnPublish": false
+    },
+    "scripts": {},
+    "fieldsInReferences": [],
+    "fieldsInLists": [],
+    "fields": [
+      {
+        "name": "name",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Name",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "orcid",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Orcid",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      }
+    ],
+    "previewUrls": {},
+    "category": "Storage",
+    "isPublished": true
+  }
+}

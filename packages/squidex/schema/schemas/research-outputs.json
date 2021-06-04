@@ -307,7 +307,7 @@
           "resolveReference": false,
           "mustBePublished": false,
           "editor": "List",
-          "schemaIds": ["users"],
+          "schemaIds": ["users", "external-authors"],
           "label": "Authors",
           "isRequired": false,
           "isRequiredOnPublish": false,

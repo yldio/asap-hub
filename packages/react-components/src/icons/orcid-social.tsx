@@ -7,6 +7,9 @@ const orcidSocialIcon = (
     viewBox="0 0 28 28"
     xmlns="http://www.w3.org/2000/svg"
     fill="#00222C"
+    style={{
+      stroke: 'none',
+    }}
   >
     <title>ORCID</title>
     <path fill="#fff" d="M0 0h28v28H0z" />

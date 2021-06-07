@@ -13,6 +13,8 @@ it('renders icon and link', () => {
       twitter="test"
       googleScholar="test"
       researchGate="test"
+      website1="http://example.com/website1"
+      website2="http://example.com/website2"
     />,
   );
   expect(
@@ -49,6 +51,14 @@ it('renders icon and link', () => {
       Array [
         "LinkedIn",
         "https://www.linkedin.com/in/test",
+      ],
+      Array [
+        "Globe",
+        "http://example.com/website1",
+      ],
+      Array [
+        "Globe",
+        "http://example.com/website2",
       ],
     ]
   `);

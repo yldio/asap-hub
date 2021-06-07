@@ -7,6 +7,9 @@ const researcherIdIcon = (
     viewBox="0 0 28 28"
     fill="#00222C"
     xmlns="http://www.w3.org/2000/svg"
+    style={{
+      stroke: 'none',
+    }}
   >
     <title>ResearcherID</title>
     <path fill="#fff" d="M0 0h28v28H0z" />

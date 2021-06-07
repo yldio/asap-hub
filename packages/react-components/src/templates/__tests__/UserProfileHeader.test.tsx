@@ -1,6 +1,5 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { subYears, formatISO } from 'date-fns';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserProfileContext } from '@asap-hub/react-context';
 
@@ -17,16 +16,6 @@ it('renders the name as the top-level heading', () => {
   );
   expect(getByRole('heading')).toHaveTextContent('John Doe');
   expect(getByRole('heading').tagName).toBe('H1');
-});
-
-it('generates the last updated text', () => {
-  const { container } = render(
-    <UserProfileHeader
-      {...boilerplateProps}
-      lastModifiedDate={formatISO(subYears(new Date(), 2))}
-    />,
-  );
-  expect(container).toHaveTextContent(/update.* 2 years ago/);
 });
 
 it('generates the mailto link', () => {

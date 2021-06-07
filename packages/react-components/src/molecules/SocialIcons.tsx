@@ -12,20 +12,29 @@ import {
   researcherIdIcon,
   orcidSocialIcon,
   googleScholarIcon,
+  globeIcon,
 } from '../icons';
 import { perRem } from '../pixels';
 import { tin } from '../colors';
 
+const ROW_GAP = 12;
 const socialContainerStyles = css({
-  display: 'grid',
-  columnGap: `${12 / perRem}em`,
-  gridAutoFlow: 'column',
-});
-
-const iconStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  paddingRight: `-${ROW_GAP / perRem}em`,
   paddingTop: `${15 / perRem}em`,
   paddingBottom: `${17 / perRem}em`,
 });
+
+const iconStyles = css({
+  paddingRight: `${ROW_GAP / perRem}em`,
+  svg: {
+    width: '28px',
+    height: '28px',
+  },
+});
+
+const inactiveStyles = css({ svg: { fill: tin.rgb, stroke: tin.rgb } });
 
 const SocialIconLink: React.FC<{
   link?: string;
@@ -34,7 +43,7 @@ const SocialIconLink: React.FC<{
 }> = ({ link, icon, isOwnProfile }) =>
   link || isOwnProfile ? (
     <Link href={link}>
-      <div css={[iconStyles, !link && { svg: { fill: tin.rgb } }]}>{icon}</div>
+      <div css={[iconStyles, !link && inactiveStyles]}>{icon}</div>
     </Link>
   ) : null;
 
@@ -48,6 +57,8 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
   twitter,
   googleScholar,
   researchGate,
+  website1,
+  website2,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
   return (
@@ -117,6 +128,16 @@ const SocialIcons: React.FC<SocialIconsProps> = ({
             : undefined
         }
         icon={linkedInIcon}
+        isOwnProfile={isOwnProfile}
+      />
+      <SocialIconLink
+        link={website1}
+        icon={globeIcon}
+        isOwnProfile={isOwnProfile}
+      />
+      <SocialIconLink
+        link={website2}
+        icon={globeIcon}
         isOwnProfile={isOwnProfile}
       />
     </div>

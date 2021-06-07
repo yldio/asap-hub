@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { date, text, select, boolean } from '@storybook/addon-knobs';
+import { text, select, boolean } from '@storybook/addon-knobs';
 import { UserProfilePage } from '@asap-hub/react-components';
 import { TeamRole } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -26,9 +26,6 @@ const propsViewOnly = (): Omit<
     id: 'u42',
     displayName: text('Display Name', 'Phillip Mars'),
     institution: text('Institution', 'Yale University'),
-    lastModifiedDate: new Date(
-      date('Last modified', new Date(2020, 6, 12, 14, 32)),
-    ).toISOString(),
     firstName: text('First Name', 'Phillip'),
     lastName: text('Last Name', 'Mars'),
     email: text('Email', 'me@example.com'),
@@ -64,6 +61,8 @@ const propsViewOnly = (): Omit<
       orcid: text('Orcid Id', '123'),
       researchGate: text('Research Gate', '123'),
       researcherId: text('Researcher Id', '123'),
+      website1: text('Website 1', 'http://example.com/website1'),
+      website2: text('Website 2', 'http://example.com/website2'),
     },
   };
 };

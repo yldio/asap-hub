@@ -22,19 +22,29 @@ it('renders a proposal title and content', () => {
   expect(getByText(/content/i)).toBeVisible();
 });
 
-it('renders a proposal with team information', () => {
+it("renders a proposal with two team's information", () => {
   const { getByText } = render(
     <SharedResearchProposal
       {...props}
-      team={{
-        id: '42',
-        displayName: 'Test',
-      }}
+      teams={[
+        {
+          id: '42',
+          displayName: 'Test',
+        },
+        {
+          id: '43',
+          displayName: 'second',
+        },
+      ]}
     />,
   );
   expect(getByText('Team Test').closest('a')).toHaveAttribute(
     'href',
     expect.stringMatching(/42$/),
+  );
+  expect(getByText('Team second').closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/43$/),
   );
 });
 it('falls back to created date when added date omitted', () => {

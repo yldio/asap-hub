@@ -23,7 +23,7 @@ export const getSquidexResearchOutputsGraphqlResponse =
     },
   });
 
-export const getSquidexResearchOutputGrapqlResponseAuthors =
+export const getSquidexResearchOutputGraphqlResponseAuthors =
   (): GraphqlResearchOutputAuthors[] =>
     graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items.map(
       (item): GraphqlUserAssoc => ({
@@ -50,7 +50,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
     publishDate: '2021-05-21T13:18:31Z',
     tags: ['tag', 'test'],
     lastUpdatedPartial: '2020-09-23T16:34:26.842Z',
-    authors: getSquidexResearchOutputGrapqlResponseAuthors(),
+    authors: getSquidexResearchOutputGraphqlResponseAuthors(),
     accessInstructions: 'some access instructions',
     sharingStatus: 'Network Only',
     asapFunded: 'Yes',

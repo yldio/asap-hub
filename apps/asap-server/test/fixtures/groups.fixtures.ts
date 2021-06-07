@@ -4,7 +4,7 @@ import {
   ResponseFetchGroups,
   ResponseFetchGroup,
 } from '../../src/controllers/groups';
-import { getSquidexResearchOutputGrapqlResponseAuthors } from './research-output.fixtures';
+import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
 import { fetchExpectation } from './users.fixtures';
 
 export const queryGroupsResponse: { data: ResponseFetchGroups } = {
@@ -68,7 +68,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                         asapFunded: 'No',
                         usedInAPublication: 'No',
                         authors:
-                          getSquidexResearchOutputGrapqlResponseAuthors(),
+                          getSquidexResearchOutputGraphqlResponseAuthors(),
                       },
                     },
                   ],

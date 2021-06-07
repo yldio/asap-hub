@@ -65,7 +65,7 @@ describe('useValidation', () => {
         pattern="^val$"
       />,
     );
-    expect(queryByText(/custom error/i)).not.toBeInTheDocument();
+    expect(queryByText('custom error message')).not.toBeInTheDocument();
   });
 
   it('shows a custom validation error message after losing focus', async () => {
@@ -78,7 +78,7 @@ describe('useValidation', () => {
       />,
     );
     fireEvent.focusOut(getByRole('textbox'));
-    expect(await findByText(/custom error/i)).toBeVisible();
+    expect(await findByText('custom error message')).toBeVisible();
     expect(message).toHaveBeenCalled();
   });
 
@@ -94,7 +94,7 @@ describe('useValidation', () => {
       </form>,
     );
     (getByRole('textbox') as HTMLInputElement).form!.reportValidity();
-    expect(getByText(/custom error/i)).toBeVisible();
+    expect(getByText('custom error message')).toBeVisible();
     expect(message).toHaveBeenCalled();
   });
 

@@ -61,7 +61,7 @@ type ValidationTarget =
   | HTMLSelectElement;
 export function useValidation<T extends ValidationTarget>(
   customValidationMessage: string,
-  getValidationMessage?: (validityState: ValidityState) => string | void,
+  getValidationMessage?: (validityState: ValidityState) => string,
 ): {
   validationMessage: string;
   validationTargetProps: Pick<HTMLProps<T>, 'ref' | 'onBlur' | 'onInvalid'>;
@@ -86,7 +86,7 @@ export function useValidation<T extends ValidationTarget>(
       onBlur: (event: FocusEvent<ValidationTarget>) => {
         setValidationMessage(
           (getValidationMessage &&
-            event.currentTarget.validationMessage &&
+            event.currentTarget.validity.valid &&
             getValidationMessage(event.currentTarget.validity)) ||
             event.currentTarget.validationMessage,
         );

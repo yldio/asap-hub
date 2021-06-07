@@ -109,7 +109,7 @@ it.each`
   ${'Researchgate'}   | ${'http://'} | ${'valid Research Gate Profile ID'}
   ${'Google Scholar'} | ${'http://'} | ${'valid Google Scholar Profile ID'}
 `(
-  'shows invalid message $message for $label input',
+  'shows validation message "$message" for $label input',
   async ({ label, value, message }) => {
     const { getByLabelText, findByText } = render(
       <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,

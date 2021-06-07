@@ -24,7 +24,7 @@ export {
   Overlay,
   Paragraph,
   TabLink,
-  TagLabel,
+  Pill,
   Toggle,
   Tooltip,
 } from './atoms';
@@ -53,6 +53,7 @@ export {
   Modal,
   OrcidSigninButton,
   PageControls,
+  PillList,
   SearchField,
   TabNav,
   TagList,

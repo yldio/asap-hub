@@ -24,14 +24,14 @@ const styles = css({
   borderRadius: `${6 / perRem}em`,
 });
 
-type TagLabelProps = {
+type PillProps = {
   readonly children?: React.ReactNode;
 };
 
-const Tag: React.FC<TagLabelProps> = ({ children }) => (
+const Pill: React.FC<PillProps> = ({ children }) => (
   <span css={styles}>
     <small>{children}</small>
   </span>
 );
 
-export default Tag;
+export default Pill;

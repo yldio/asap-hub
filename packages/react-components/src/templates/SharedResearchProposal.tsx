@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
 
-import { TagLabel, Display, Link, Card, Caption } from '../atoms';
+import { Pill, Display, Link, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
@@ -54,7 +54,7 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
   <div css={containerStyles}>
     <BackLink href={backHref} />
     <Card>
-      <TagLabel>{type}</TagLabel>
+      <Pill>{type}</Pill>
       <Display styleAsHeading={3}>{title}</Display>
       {team && (
         <span css={teamMemberStyles}>

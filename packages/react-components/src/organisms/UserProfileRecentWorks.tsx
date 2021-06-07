@@ -8,7 +8,7 @@ import {
   Card,
   Headline2,
   Headline3,
-  TagLabel,
+  Pill,
   Divider,
   Paragraph,
   Anchor,
@@ -125,7 +125,7 @@ const UserProfileRecentWork: React.FC<UserProfileRecentWorkProps> = ({
 
   const elements = (
     <div>
-      <TagLabel>{typeMap[type]}</TagLabel>
+      <Pill>{typeMap[type]}</Pill>
       <Headline3 styleAsHeading={4}>{title}</Headline3>
       {publishDateComponent}
     </div>

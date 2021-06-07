@@ -86,7 +86,7 @@ export function useValidation<T extends ValidationTarget>(
       onBlur: (event: FocusEvent<ValidationTarget>) => {
         setValidationMessage(
           (getValidationMessage &&
-            event.currentTarget.validity.valid &&
+            !event.currentTarget.validity.valid &&
             getValidationMessage(event.currentTarget.validity)) ||
             event.currentTarget.validationMessage,
         );
@@ -95,7 +95,7 @@ export function useValidation<T extends ValidationTarget>(
       onInvalid: (event: FormEvent<ValidationTarget>) => {
         setValidationMessage(
           (getValidationMessage &&
-            event.currentTarget.validationMessage &&
+            !event.currentTarget.validity.valid &&
             getValidationMessage(event.currentTarget.validity)) ||
             event.currentTarget.validationMessage,
         );

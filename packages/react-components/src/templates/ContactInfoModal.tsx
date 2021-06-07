@@ -72,7 +72,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
       dirty={newEmail !== email}
       onSave={() =>
         onSave({
-          contactEmail: newEmail,
+          contactEmail: newEmail || undefined,
           social: {
             twitter: newTwitter || undefined,
             researcherId: newResearcherId || undefined,
@@ -116,6 +116,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newWebsite1}
               enabled={!isSaving}
               labelIndicator={globeIcon}
+              indicateValid={false}
               placeholder="https://example.com"
             />
             <LabeledTextField
@@ -126,6 +127,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newWebsite2}
               enabled={!isSaving}
               labelIndicator={globeIcon}
+              indicateValid={false}
               placeholder="https://example.com"
             />
           </div>
@@ -149,6 +151,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newOrcid}
               enabled={false}
               labelIndicator="orcid.org/"
+              indicateValid={false}
               placeholder="xxxx-xxxx-xxxx-xxxx"
             />
             <LabeledTextField

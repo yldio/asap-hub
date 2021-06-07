@@ -70,7 +70,7 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
         <>
           <Paragraph accent="lead">
             Tell the network what role you play in your team and your main
-            research goals.
+            research goals by completing this part of your profile.
           </Paragraph>
           <div css={fieldsContainer}>
             <div css={textFieldsContainerStyles}>

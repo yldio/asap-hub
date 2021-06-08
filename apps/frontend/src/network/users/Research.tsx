@@ -3,6 +3,7 @@ import {
   UserProfileResearch,
   TeamMembershipModal,
   OpenQuestionsModal,
+  SkillsModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
@@ -76,6 +77,11 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
                 backHref={route.$}
                 onSave={patchUser}
               />
+            </Frame>
+          </Route>
+          <Route path={path + route.editSkills.template}>
+            <Frame title="Edit Expertise and resources">
+              <SkillsModal {...user} backHref={route.$} onSave={patchUser} />
             </Frame>
           </Route>
         </>

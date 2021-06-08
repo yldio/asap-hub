@@ -74,6 +74,7 @@ describe('when editing', () => {
     ...createUserResponse(),
     questions: ['question 1', 'question 2', 'question 3', 'question 4'],
     id,
+    skillsDescription: 'Skills Description',
     teams: [
       {
         ...createTeamResponse(),
@@ -142,6 +143,57 @@ describe('when editing', () => {
               responsibilities: 'My Responsibilities 2',
             },
           ],
+        },
+        expect.any(String),
+      );
+    });
+  });
+  describe('skills', () => {
+    it('opens and closes the dialog', async () => {
+      const {
+        getByText,
+        queryByText,
+        findByLabelText,
+        getByDisplayValue,
+        queryByDisplayValue,
+      } = result;
+
+      userEvent.click(await findByLabelText(/edit.+resources/i));
+      expect(getByDisplayValue('Skills Description')).toBeVisible();
+
+      userEvent.click(getByText(/close/i));
+      await waitFor(() => {
+        expect(queryByText(/loading/i)).not.toBeInTheDocument();
+        expect(
+          queryByDisplayValue('Skills Description'),
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    it('saves the changes from the dialog', async () => {
+      const {
+        getByText,
+        queryByText,
+        findByLabelText,
+        getByDisplayValue,
+        queryByDisplayValue,
+      } = result;
+
+      userEvent.click(await findByLabelText(/edit.+resources/i));
+      userEvent.type(getByDisplayValue('Skills Description'), ' 2');
+      expect(getByDisplayValue('Skills Description 2')).toBeVisible();
+
+      userEvent.click(getByText(/save/i));
+      await waitFor(() => {
+        expect(queryByText(/loading/i)).not.toBeInTheDocument();
+        expect(
+          queryByDisplayValue('Skills Description 2'),
+        ).not.toBeInTheDocument();
+      });
+      expect(mockPatchUser).toHaveBeenCalledWith(
+        id,
+        {
+          skillsDescription: 'Skills Description 2',
         },
         expect.any(String),
       );

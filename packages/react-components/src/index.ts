@@ -143,6 +143,7 @@ export {
   SharedResearchProposal,
   SigninForm,
   SigninPage,
+  SkillsModal,
   TeamMembershipModal,
   TeamProfileAbout,
   TeamProfileOutputs,

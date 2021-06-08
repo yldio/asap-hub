@@ -2,14 +2,10 @@ import { ComponentProps } from 'react';
 import { UserProfileResearch } from '@asap-hub/react-components';
 import { array, text, boolean } from '@storybook/addon-knobs';
 import { TeamRole } from '@asap-hub/model';
-import { makeFlagDecorator } from './flags';
 
 export default {
   title: 'Templates / User Profile / Research',
   component: UserProfileResearch,
-  decorators: [
-    makeFlagDecorator('Enable Skills Editing', 'USER_PROFILE_EDIT_SKILLS'),
-  ],
 };
 
 const props = (): ComponentProps<typeof UserProfileResearch> => ({

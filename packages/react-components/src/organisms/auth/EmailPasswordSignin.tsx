@@ -52,6 +52,7 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
       <div css={fieldsContainerStyles}>
         <LabeledTextField
           required
+          ommitRequiredIcon
           indicateValid={false}
           type="email"
           title="Email"
@@ -61,6 +62,7 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
         />
         <LabeledPasswordField
           required
+          ommitRequiredIcon
           forgotPasswordHref={signup ? undefined : forgotPasswordHref}
           value={password}
           onChange={onChangePassword}

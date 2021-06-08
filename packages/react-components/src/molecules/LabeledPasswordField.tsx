@@ -1,7 +1,14 @@
 import { ComponentProps, useState } from 'react';
 import { css } from '@emotion/react';
 
-import { Label, TextField, Paragraph, Link, Button } from '../atoms';
+import {
+  Label,
+  TextField,
+  Paragraph,
+  Link,
+  Button,
+  FieldTitle,
+} from '../atoms';
 import { perRem } from '../pixels';
 import { showPasswordIcon, hidePasswordIcon } from '../icons';
 import { fern } from '../colors';
@@ -67,7 +74,9 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
         )}
       >
         <Paragraph>
-          <strong>{title}</strong>
+          <FieldTitle {...props}>
+            <strong>{title}</strong>
+          </FieldTitle>
         </Paragraph>
       </Label>
       {forgotPasswordHref && (

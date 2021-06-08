@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { formatISO, parseISO } from 'date-fns';
 
-import { TextField, Label, Paragraph } from '../atoms';
+import { TextField, Label, Paragraph, FieldTitle } from '../atoms';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 
@@ -35,7 +35,9 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
       )}
     >
       <Paragraph>
-        <strong>{title}</strong>
+        <FieldTitle {...dateFieldProps}>
+          <strong>{title}</strong>
+        </FieldTitle>
       </Paragraph>
     </Label>
   </div>

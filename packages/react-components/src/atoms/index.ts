@@ -7,6 +7,7 @@ export { default as Checkbox } from './Checkbox';
 export { default as Display } from './Display';
 export { default as Divider } from './Divider';
 export { default as Dropdown } from './Dropdown';
+export { default as FieldTitle } from './FieldTitle';
 export { default as Headline2 } from './Headline2';
 export { default as Headline3 } from './Headline3';
 export { default as Headline4 } from './Headline4';

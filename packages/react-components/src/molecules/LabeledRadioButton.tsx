@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { RadioButton, Label, FieldTitle } from '../atoms';
+import { RadioButton, Label } from '../atoms';
 
 type LabeledRadioButtonProps = {
   readonly title: string;
@@ -12,7 +12,7 @@ const LabeledRadioButton: React.FC<LabeledRadioButtonProps> = ({
     trailing
     forContent={(id) => <RadioButton {...radioButtonProps} id={id} />}
   >
-    <FieldTitle {...radioButtonProps}>{title}</FieldTitle>
+    {title}
   </Label>
 );
 

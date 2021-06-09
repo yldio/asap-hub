@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { Label, TextField, Paragraph, FieldTitle } from '../atoms';
+import { Label, TextField, Paragraph, RequiredAsterisk } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
 
@@ -25,7 +25,8 @@ type LabeledTextFieldProps = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
   readonly hint?: React.ReactNode;
-} & Exclude<ComponentProps<typeof TextField>, 'id'>;
+} & Exclude<ComponentProps<typeof TextField>, 'id'> &
+  ComponentProps<typeof RequiredAsterisk>;
 
 const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   title,
@@ -36,9 +37,10 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   <div css={containerStyles}>
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
-        <FieldTitle {...textFieldProps}>
-          <strong>{title}</strong>
-        </FieldTitle>
+        <strong>
+          {title} <RequiredAsterisk {...textFieldProps} />
+        </strong>
+
         <br />
         <span css={subtitleStyles}>{subtitle}</span>
       </Paragraph>

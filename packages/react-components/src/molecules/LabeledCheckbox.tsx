@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
-import { Label, Paragraph, Checkbox, FieldTitle } from '../atoms';
+import { Label, Paragraph, Checkbox } from '../atoms';
 import { lead, tin } from '../colors';
 
 const containerStyles = css({
@@ -28,9 +28,7 @@ const LabeledCheckbox: React.FC<LabeledCheckboxProps> = ({
         <Checkbox {...checkboxProps} enabled={enabled} id={id} />
       )}
     >
-      <Paragraph>
-        <FieldTitle {...checkboxProps}>{title}</FieldTitle>
-      </Paragraph>
+      <Paragraph>{title}</Paragraph>
     </Label>
   </div>
 );

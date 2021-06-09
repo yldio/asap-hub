@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
-import { Label, TextArea, Paragraph, FieldTitle } from '../atoms';
+import { Label, TextArea, Paragraph, RequiredAsterisk } from '../atoms';
 import { lead } from '../colors';
 
 const tipStyles = css({
@@ -17,7 +17,9 @@ const tipStyles = css({
 type LabeledTextAreaProps = {
   readonly title: React.ReactNode;
   readonly tip?: React.ReactNode;
-} & Exclude<ComponentProps<typeof TextArea>, 'id'>;
+} & Exclude<ComponentProps<typeof TextArea>, 'id'> &
+  ComponentProps<typeof RequiredAsterisk>;
+
 const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   title,
   tip,
@@ -26,9 +28,10 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
       <Paragraph>
-        <FieldTitle {...textAreaProps}>
-          <strong>{title}</strong>
-        </FieldTitle>
+        <strong>
+          {title}
+          <RequiredAsterisk {...textAreaProps} />
+        </strong>
         <br />
         <span css={tipStyles}>{tip}</span>
       </Paragraph>

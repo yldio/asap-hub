@@ -15,8 +15,16 @@ export const parseGraphQLResearchOutput = (
   const optionalAuthors = options?.includeAuthors
     ? {
         authors:
-          output.flatData?.authors?.map((author) => parseGraphQLUser(author)) ||
-          [],
+          output.flatData?.authors?.map((author) => {
+            if (author.__typename === 'Users') {
+              return parseGraphQLUser(author);
+            }
+
+            return {
+              displayName: author.flatData?.name,
+              orcid: author.flatData?.orcid,
+            };
+          }) || [],
       }
     : {};
 

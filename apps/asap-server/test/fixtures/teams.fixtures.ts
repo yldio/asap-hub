@@ -5,7 +5,8 @@ import {
   ResponseFetchTeams,
   ResponseFetchTeam,
 } from '../../src/controllers/teams';
-import { fetchExpectation, graphQlResponseFetchUsers } from './users.fixtures';
+import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
+import { fetchExpectation } from './users.fixtures';
 
 export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
   data: {
@@ -32,8 +33,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                   type: 'Proposal',
                   tags: ['test', 'tag'],
                   authors: [
-                    graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
-                      .items[0],
+                    getSquidexResearchOutputGraphqlResponseAuthors()[0],
                   ],
                   sharingStatus: 'Network Only',
                   asapFunded: 'No',
@@ -52,8 +52,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                   tags: ['test', 'tag'],
                   accessInstructions: 'some access instructions',
                   authors: [
-                    graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
-                      .items[1],
+                    getSquidexResearchOutputGraphqlResponseAuthors()[1],
                   ],
                 },
               },
@@ -423,10 +422,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               tags: ['test', 'tag'],
               sharingStatus: 'Network Only',
               asapFunded: 'No',
-              authors: [
-                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
-                  .items[0],
-              ],
+              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[0]],
             },
           },
           {
@@ -439,10 +435,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
-              authors: [
-                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
-                  .items[1],
-              ],
+              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[1]],
               usedInAPublication: 'No',
             },
             referencingTeamsContents: [
@@ -663,10 +656,7 @@ export const getGraphQlTeamResponse = (
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
-              authors: [
-                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
-                  .items[0],
-              ],
+              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[0]],
               sharingStatus: 'Network Only',
               asapFunded: 'No',
             },
@@ -691,10 +681,7 @@ export const getGraphQlTeamResponse = (
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
-              authors: [
-                graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
-                  .items[1],
-              ],
+              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[1]],
               usedInAPublication: 'No',
             },
             referencingTeamsContents: [

@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config } from '@asap-hub/squidex';
+import { config, GraphqlUser } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import ResearchOutputs, {
   buildGraphQLQueryFetchResearchOutputs,
@@ -11,6 +11,10 @@ import {
   getSquidexResearchOutputGraphqlResponse,
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
+import { graphQlResponseFetchUsers } from '../fixtures/users.fixtures';
+import { GraphqlWithTypename } from '@asap-hub/squidex/src/entities/common';
+import { GraphqlExternalAuthor } from '@asap-hub/squidex/src/entities/external-author';
+import { ResearchOutputResponse } from '@asap-hub/model';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputs = new ResearchOutputs();
@@ -325,6 +329,57 @@ describe('ResearchOutputs controller', () => {
       expectedResult.teams = [];
 
       expect(result).toEqual(expectedResult);
+    });
+
+    test('Should return a mix of internal and external authors', async () => {
+      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      const squidexUser1: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+        ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0],
+        __typename: 'Users',
+      };
+      const squidexUser2: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+        ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[1],
+        __typename: 'Users',
+      };
+      const externalAuthor: GraphqlWithTypename<
+        GraphqlExternalAuthor,
+        'ExternalAuthors'
+      > = {
+        __typename: 'ExternalAuthors',
+        id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
+        created: '2021-06-04T09:37:54Z',
+        lastModified: '2021-06-04T09:37:54Z',
+        flatData: {
+          name: 'test external author',
+          orcid: '23423423',
+        },
+      };
+      researchOutputResponse.findResearchOutputsContent.flatData!.authors = [
+        squidexUser1,
+        externalAuthor,
+        squidexUser2,
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: researchOutputResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      const { authors } = getResearchOutputResponse();
+
+      const expectedAuthorsResponse: ResearchOutputResponse['authors'] = [
+        authors[0],
+        {
+          displayName: externalAuthor.flatData!.name!,
+          orcid: externalAuthor.flatData!.orcid!,
+        },
+        authors[1],
+      ];
+
+      expect(result.authors).toEqual(expectedAuthorsResponse);
     });
 
     describe('Last Updated Partial field', () => {

@@ -80,7 +80,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
             </Frame>
           </Route>
           <Route path={path + route.editSkills.template}>
-            <Frame title="Edit Expertise and resources">
+            <Frame title="Edit Expertise and Resources">
               <SkillsModal {...user} backHref={route.$} onSave={patchUser} />
             </Frame>
           </Route>

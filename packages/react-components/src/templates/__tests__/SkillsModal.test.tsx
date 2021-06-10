@@ -28,9 +28,9 @@ it('renders default values into text inputs', () => {
 });
 
 it('triggers the save function', async () => {
-  const jestFn = jest.fn();
+  const handleSave = jest.fn();
   const { getByLabelText, getByText } = render(
-    <SkillsModal {...props} onSave={jestFn} />,
+    <SkillsModal {...props} onSave={handleSave} />,
     { wrapper: MemoryRouter },
   );
 
@@ -40,7 +40,7 @@ it('triggers the save function', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
-  expect(jestFn).toHaveBeenCalledWith({
+  expect(handleSave).toHaveBeenCalledWith({
     skillsDescription: 'example description',
   });
 });

@@ -437,7 +437,7 @@ __metadata:
     "@types/react-dom": ^17.0.5
     "@types/react-router-dom": ^5.1.7
     "@types/react-router-hash-link": ^1.2.1
-    "@types/react-select": 3.1.0
+    "@types/react-select": "patch:@types/react-select@^4#patches/types__react-select.patch"
     "@types/react-test-renderer": ^17.0.1
     "@types/rehype-slug": "workspace:*"
     "@types/testing-library__jest-dom": ^5.9.5
@@ -463,7 +463,7 @@ __metadata:
     react-dom: ^17.0.2
     react-router-dom: ^5.2.0
     react-router-hash-link: ^2.4.3
-    react-select: ^3.2.0
+    react-select: ^4
     react-test-renderer: ^17.0.2
     regenerator-runtime: ^0.13.8
     rehype-parse: ^7.0.1
@@ -3808,6 +3808,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.12.0":
+  version: 7.14.5
+  resolution: "@babel/runtime@npm:7.14.5"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: 1e7b7bd939488df0e9af92fac7cf65a38d6de0e5be71883ac2e5f59e6c1199086a9be723b483f9c79adca9f7a62fdffc9ce6f85b953c7efb3469f01f64a41f27
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.10.4, @babel/template@npm:^7.3.3, @babel/template@npm:^7.8.3, @babel/template@npm:^7.8.6":
   version: 7.10.4
   resolution: "@babel/template@npm:7.10.4"
@@ -4118,7 +4127,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/react@npm:^11":
+"@emotion/react@npm:^11, @emotion/react@npm:^11.1.1":
   version: 11.4.0
   resolution: "@emotion/react@npm:11.4.0"
   dependencies:
@@ -4154,7 +4163,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/serialize@npm:^1.0.2":
+"@emotion/serialize@npm:^1.0.0, @emotion/serialize@npm:^1.0.2":
   version: 1.0.2
   resolution: "@emotion/serialize@npm:1.0.2"
   dependencies:
@@ -7416,14 +7425,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-select@npm:3.1.0":
-  version: 3.1.0
-  resolution: "@types/react-select@npm:3.1.0"
+"@types/react-select@^4":
+  version: 4.0.15
+  resolution: "@types/react-select@npm:4.0.15"
   dependencies:
+    "@emotion/serialize": ^1.0.0
     "@types/react": "*"
     "@types/react-dom": "*"
     "@types/react-transition-group": "*"
-  checksum: 5bd9cd8f971ce983dd07fe2083364a1ba9a101f6bf016c3047a17ed5a400af9b8d8440917f6f2886ca32401f22cfc5add8fbc6d398c92122fbdcb6ca0f79b78d
+  checksum: 2872242b10d11157cab809898c20e24aa21a0af12f0a8e0cfa919b29dfade52666f77001f70087a5b179f58b6b95d9713708d2e313b0e018963f20a5b720bbe2
+  languageName: node
+  linkType: hard
+
+"@types/react-select@patch:@types/react-select@^4#patches/types__react-select.patch::locator=%40asap-hub%2Freact-components%40workspace%3Apackages%2Freact-components":
+  version: 4.0.15
+  resolution: "@types/react-select@patch:@types/react-select@npm%3A4.0.15#patches/types__react-select.patch::version=4.0.15&hash=3a5c02&locator=%40asap-hub%2Freact-components%40workspace%3Apackages%2Freact-components"
+  dependencies:
+    "@emotion/serialize": ^1.0.0
+    "@types/react": "*"
+    "@types/react-dom": "*"
+    "@types/react-transition-group": "*"
+  checksum: 4fc1acad8c7f7905df501a997f090f029d911498f24748136417ccaa465f83ee0c9c8ec42d3cee7c7a16c868cdb9766a3f31777aec1ff4a1b6c64c5f3b06e7dc
   languageName: node
   linkType: hard
 
@@ -25937,6 +25959,24 @@ fsevents@~2.1.2:
     react: ^16.8.0 || ^17.0.0
     react-dom: ^16.8.0 || ^17.0.0
   checksum: f162b1a93e18e72af3fc2438dc3a9aa987f38817458cb26db89b0b6041e8e941468eaea328a3a3909e47e1a7a17c911333ec6c56cd00d7455afab1edb7d98dab
+  languageName: node
+  linkType: hard
+
+"react-select@npm:^4":
+  version: 4.3.1
+  resolution: "react-select@npm:4.3.1"
+  dependencies:
+    "@babel/runtime": ^7.12.0
+    "@emotion/cache": ^11.4.0
+    "@emotion/react": ^11.1.1
+    memoize-one: ^5.0.0
+    prop-types: ^15.6.0
+    react-input-autosize: ^3.0.0
+    react-transition-group: ^4.3.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0
+    react-dom: ^16.8.0 || ^17.0.0
+  checksum: 4748ec24df2385979785812ad6eb9788d3253867ace2d910215f89d148a6697626c81d5073437763747829e71212102d4efac098efa4c76283b45d28ebb2c466
   languageName: node
   linkType: hard
 

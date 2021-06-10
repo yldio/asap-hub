@@ -30,7 +30,7 @@ export const Normal = () => (
       },
       'LHR',
     )}
-    enabled={boolean('enabled', true)}
+    enabled={boolean('Enabled', true)}
   />
 );
 export const EmptyOption = () => (
@@ -46,7 +46,7 @@ export const EmptyOption = () => (
       { value: 'SEN', label: 'Southend' },
     ]}
     value=""
-    enabled={boolean('enabled', true)}
+    enabled={boolean('Enabled', true)}
   />
 );
 export const Invalid = () => (
@@ -65,6 +65,6 @@ export const Invalid = () => (
       'Validation Error Message',
       'This airport is currently closed.',
     )}
-    enabled={boolean('enabled', true)}
+    enabled={boolean('Enabled', true)}
   />
 );

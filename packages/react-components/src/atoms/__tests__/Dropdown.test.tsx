@@ -124,7 +124,7 @@ it('gets a green border when focused', () => {
   ).toBe(fern.rgb.replace(/ /g, ''));
 });
 
-it('shows the dropdown grey out', () => {
+it('gets greyed out when disabled', () => {
   const { getByRole, getByText, rerender } = render(
     <Dropdown
       options={[{ value: 'LHR', label: 'Heathrow' }]}

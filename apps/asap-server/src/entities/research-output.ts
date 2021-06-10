@@ -55,6 +55,7 @@ export const parseGraphQLResearchOutput = (
     usedInPublication: convertDecisionToBoolean(
       output.flatData?.usedInAPublication,
     ),
+    pmsEmails: output.flatData?.pmsEmails || []
   };
 };
 

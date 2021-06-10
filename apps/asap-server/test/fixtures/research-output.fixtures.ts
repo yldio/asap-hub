@@ -93,6 +93,7 @@ export const getResearchOutputResponse =
     sharingStatus: 'Network Only',
     asapFunded: true,
     usedInPublication: false,
+    pmsEmails: ['test@example.com']
   });
 
 export const getListResearchOutputResponse =

@@ -353,7 +353,7 @@ describe('ResearchOutputs controller', () => {
         delete researchOutputResponse.findResearchOutputsContent.flatData
           ?.lastUpdatedPartial;
         delete (researchOutputResponse.findResearchOutputsContent as any)
-          .lastModified;
+          .lastModifid;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -367,6 +367,10 @@ describe('ResearchOutputs controller', () => {
           researchOutputResponse.findResearchOutputsContent.created,
         );
       });
+    });
+    test('Should return a list of PM emails', async () => {
+      const result = await researchOutputs.fetchById(researchOutputId);
+      expect(result.pmsEmails).toEqual(['test@example.com']);
     });
   });
 });

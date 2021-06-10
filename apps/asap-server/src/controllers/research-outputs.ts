@@ -39,6 +39,11 @@ flatData{
 ${
   withTeams
     ? `referencingTeamsContents {
+  referencingUsersContents {
+    flatData {
+      email
+    }
+  }
   id
   created
   lastModified

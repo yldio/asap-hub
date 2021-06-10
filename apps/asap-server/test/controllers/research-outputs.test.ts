@@ -353,7 +353,7 @@ describe('ResearchOutputs controller', () => {
         delete researchOutputResponse.findResearchOutputsContent.flatData
           ?.lastUpdatedPartial;
         delete (researchOutputResponse.findResearchOutputsContent as any)
-          .lastModifid;
+          .lastModified;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {

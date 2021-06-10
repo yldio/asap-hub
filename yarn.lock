@@ -414,6 +414,7 @@ __metadata:
     "@asap-hub/model": "workspace:*"
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
+    "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/core": ^7.14.2
     "@babel/preset-react": ^7.13.13
@@ -637,6 +638,15 @@ __metadata:
     "@types/react-dom": ^17.0.5
     react: ^17.0.2
     react-dom: ^17.0.2
+  languageName: unknown
+  linkType: soft
+
+"@asap-hub/validation@workspace:*, @asap-hub/validation@workspace:packages/validation":
+  version: 0.0.0-use.local
+  resolution: "@asap-hub/validation@workspace:packages/validation"
+  dependencies:
+    "@asap-hub/eslint-config-asap-hub": "workspace:*"
+    "@babel/runtime-corejs3": ^7.14.0
   languageName: unknown
   linkType: soft
 

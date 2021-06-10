@@ -137,6 +137,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "@asap-hub/unsupported-browser-page",
         "reference": "workspace:packages/unsupported-browser-page"
+      },
+      {
+        "name": "@asap-hub/validation",
+        "reference": "workspace:packages/validation"
       }
     ],
     "enableTopLevelFallback": true,
@@ -164,6 +168,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ["@asap-hub/squidex", ["workspace:packages/squidex"]],
       ["@asap-hub/storybook", ["workspace:apps/storybook"]],
       ["@asap-hub/unsupported-browser-page", ["workspace:packages/unsupported-browser-page"]],
+      ["@asap-hub/validation", ["workspace:packages/validation"]],
       ["@types/apr-intercept", ["workspace:@types/apr-intercept"]],
       ["@types/asap-hub__assets", ["workspace:@types/asap-hub__assets"]],
       ["@types/asap-hub__inline-environment", ["workspace:@types/asap-hub__inline-environment"]],
@@ -269,6 +274,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@asap-hub/unsupported-browser-page",
         "workspace:packages/unsupported-browser-page"
+      ],
+      [
+        "@asap-hub/validation",
+        "workspace:packages/validation"
       ],
       [
         "@auth0/auth0-spa-js",
@@ -9351,6 +9360,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/core", "npm:7.14.2"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
@@ -9439,6 +9449,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/core", "npm:7.14.2"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
@@ -9522,6 +9533,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/core", "npm:7.14.2"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
@@ -9609,6 +9621,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/react-context", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/react-context"],
             ["@asap-hub/routing", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#workspace:packages/routing"],
+            ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/core", "npm:7.14.2"],
             ["@babel/preset-react", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:7.13.13"],
@@ -9882,6 +9895,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:17.0.5"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["@asap-hub/validation", [
+        ["workspace:packages/validation", {
+          "packageLocation": "./packages/validation/",
+          "packageDependencies": [
+            ["@asap-hub/validation", "workspace:packages/validation"],
+            ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
+            ["@babel/runtime-corejs3", "npm:7.14.0"]
           ],
           "linkType": "SOFT",
         }]

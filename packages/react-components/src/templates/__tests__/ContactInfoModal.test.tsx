@@ -1,15 +1,15 @@
 import { StaticRouter } from 'react-router-dom';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ContactInfoModal from '../ContactInfoModal';
 
 it('renders a form to edit the contact info', () => {
-  const { getByRole } = render(
+  const { getByText } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
     { wrapper: StaticRouter },
   );
-  expect(getByRole('heading')).toHaveTextContent(/contact/i);
+  expect(getByText(/contact/i, { selector: 'h3' })).toBeVisible();
 });
 it('shows the fallback email', () => {
   const { container } = render(
@@ -45,7 +45,9 @@ it('fires onSave when submitting', async () => {
   userEvent.clear(getByLabelText(/email/i));
   await userEvent.type(getByLabelText(/email/i), 'new-contact@example.com');
   userEvent.click(getByText(/save/i));
-  expect(handleSave).toHaveBeenLastCalledWith('new-contact@example.com');
+  expect(handleSave).toHaveBeenLastCalledWith(
+    expect.objectContaining({ contactEmail: 'new-contact@example.com' }),
+  );
 
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
@@ -95,3 +97,29 @@ it('disables the form elements while submitting', async () => {
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });
+
+it.each`
+  label               | value        | message
+  ${'Website 1'}      | ${'not url'} | ${'valid website'}
+  ${'Website 2'}      | ${'not url'} | ${'valid website'}
+  ${'ResearcherID'}   | ${'http://'} | ${'valid ResearcherID'}
+  ${'Twitter'}        | ${'http://'} | ${'valid Twitter handle'}
+  ${'Github'}         | ${'http://'} | ${'valid Github username'}
+  ${'LinkedIn'}       | ${'http://'} | ${'valid LinkedIn username'}
+  ${'Researchgate'}   | ${'http://'} | ${'valid Research Gate Profile ID'}
+  ${'Google Scholar'} | ${'http://'} | ${'valid Google Scholar Profile ID'}
+`(
+  'shows validation message "$message" for $label input',
+  async ({ label, value, message }) => {
+    const { getByLabelText, findByText } = render(
+      <ContactInfoModal backHref="#" fallbackEmail="fallback@example.com" />,
+      { wrapper: StaticRouter },
+    );
+    const input = getByLabelText(new RegExp(label, 'i'));
+    fireEvent.change(input, {
+      target: { value },
+    });
+    fireEvent.focusOut(input);
+    expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
+  },
+);

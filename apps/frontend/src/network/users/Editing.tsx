@@ -32,11 +32,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             email={user.contactEmail}
             fallbackEmail={user.email}
             backHref={backHref}
-            onSave={(newContactEmail) =>
-              patchUser({
-                contactEmail: newContactEmail,
-              })
-            }
+            onSave={patchUser}
           />
         </Frame>
       </Route>

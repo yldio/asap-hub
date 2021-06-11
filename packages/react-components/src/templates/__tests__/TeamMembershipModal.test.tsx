@@ -75,7 +75,12 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <TeamMembershipModal {...props} onSave={handleSave} />,
+    <TeamMembershipModal
+      {...props}
+      approach="approach"
+      responsibilities="responsibilities"
+      onSave={handleSave}
+    />,
     { wrapper: StaticRouter },
   );
 

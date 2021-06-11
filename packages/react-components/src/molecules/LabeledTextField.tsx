@@ -38,7 +38,8 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
         <strong>
-          {title} <RequiredAsterisk {...textFieldProps} />
+          {title}
+          <RequiredAsterisk {...textFieldProps} />
         </strong>
 
         <br />

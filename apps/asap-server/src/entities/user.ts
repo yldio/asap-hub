@@ -6,6 +6,7 @@ import { parseDate, createURL } from '../utils/squidex';
 export type CMSOrcidWork = OrcidWork;
 
 export const userUpdateSchema = Joi.object({
+  onboarded: Joi.boolean(),
   contactEmail: Joi.string().allow(''),
   firstName: Joi.string().allow(''),
   lastName: Joi.string().allow(''),

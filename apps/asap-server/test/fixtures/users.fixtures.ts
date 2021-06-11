@@ -1,4 +1,4 @@
-import { ListUserResponse } from '@asap-hub/model';
+import { ListUserResponse, UserPatchRequest } from '@asap-hub/model';
 import { UserResponse } from '@asap-hub/model';
 import { RestUser, config, GraphqlUser } from '@asap-hub/squidex';
 import {
@@ -196,6 +196,7 @@ export const buildUserGraphqlResponse = (
       lastModified: '2020-09-25T09:42:51Z',
       data: null,
       flatData: {
+        onboarded: true,
         email: 'cristiano@ronaldo.com',
         contactEmail: 'cristiano@ronaldo.com',
         firstName: 'Cristiano',
@@ -418,3 +419,10 @@ export const fetchExpectation: ListUserResponse = {
 };
 
 export const restUserMock = patchResponse;
+
+export const userPatchRequest: UserPatchRequest = {
+  social: { github: 'johnytiago' },
+  jobTitle: 'CEO',
+  questions: ['To be or not to be?'],
+  onboarded: true,
+};

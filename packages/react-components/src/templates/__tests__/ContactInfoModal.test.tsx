@@ -100,8 +100,8 @@ it('disables the form elements while submitting', async () => {
 
 it.each`
   label               | value        | message
-  ${'Website 1'}      | ${'not url'} | ${'valid website'}
-  ${'Website 2'}      | ${'not url'} | ${'valid website'}
+  ${'Website 1'}      | ${'not url'} | ${'valid URL'}
+  ${'Website 2'}      | ${'not url'} | ${'valid URL'}
   ${'ResearcherID'}   | ${'http://'} | ${'valid ResearcherID'}
   ${'Twitter'}        | ${'http://'} | ${'valid Twitter handle'}
   ${'Github'}         | ${'http://'} | ${'valid Github username'}

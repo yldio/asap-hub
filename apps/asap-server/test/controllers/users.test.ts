@@ -8,9 +8,17 @@ import {
   buildGraphQLQueryFetchUser,
 } from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
-import * as fixtures from '../fixtures/users.fixtures';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import { FetchOptions } from '../../src/utils/types';
+import {
+  buildUserGraphqlResponse,
+  fetchExpectation,
+  fetchUserResponse,
+  graphQlResponseFetchUser,
+  graphQlResponseFetchUsers,
+  patchResponse,
+  userResponse,
+} from '../fixtures/users.fixtures';
 
 const users = new Users();
 
@@ -72,10 +80,10 @@ describe('Users controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(filterQuery, 12, 2),
         })
-        .reply(200, fixtures.graphQlResponseFetchUsers);
+        .reply(200, graphQlResponseFetchUsers);
 
       const result = await users.fetch(fetchOptions);
-      expect(result).toEqual(fixtures.fetchExpectation);
+      expect(result).toEqual(fetchExpectation);
     });
 
     test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
@@ -96,11 +104,11 @@ describe('Users controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
         })
-        .reply(200, fixtures.graphQlResponseFetchUsers);
+        .reply(200, graphQlResponseFetchUsers);
 
       const result = await users.fetch(fetchOptions);
 
-      expect(result).toEqual(fixtures.fetchExpectation);
+      expect(result).toEqual(fetchExpectation);
     });
 
     test('Should sanitise double quotation mark by encoding to hex', async () => {
@@ -121,11 +129,11 @@ describe('Users controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
         })
-        .reply(200, fixtures.graphQlResponseFetchUsers);
+        .reply(200, graphQlResponseFetchUsers);
 
       const result = await users.fetch(fetchOptions);
 
-      expect(result).toEqual(fixtures.fetchExpectation);
+      expect(result).toEqual(fetchExpectation);
     });
   });
 
@@ -149,20 +157,19 @@ describe('Users controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser('user-id'),
         })
-        .reply(200, fixtures.graphQlResponseFetchUser);
+        .reply(200, graphQlResponseFetchUser);
 
       const result = await users.fetchById('user-id');
-      expect(result).toEqual(fixtures.userResponse);
+      expect(result).toEqual(userResponse);
     });
 
     test('Should return onboarded flag when its false', async () => {
       const response = {
         data: {
           findUsersContent: {
-            ...fixtures.graphQlResponseFetchUser.data.findUsersContent,
+            ...graphQlResponseFetchUser.data.findUsersContent,
             flatData: {
-              ...fixtures.graphQlResponseFetchUser.data.findUsersContent
-                .flatData,
+              ...graphQlResponseFetchUser.data.findUsersContent.flatData,
               onboarded: false,
             },
           },
@@ -184,10 +191,9 @@ describe('Users controller', () => {
       const response = {
         data: {
           findUsersContent: {
-            ...fixtures.graphQlResponseFetchUser.data.findUsersContent,
+            ...graphQlResponseFetchUser.data.findUsersContent,
             flatData: {
-              ...fixtures.graphQlResponseFetchUser.data.findUsersContent
-                .flatData,
+              ...graphQlResponseFetchUser.data.findUsersContent.flatData,
               onboarded: null,
             },
           },
@@ -232,7 +238,7 @@ describe('Users controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUsers(filter, 1, 0),
         })
-        .reply(200, fixtures.graphQlResponseFetchUsers);
+        .reply(200, graphQlResponseFetchUsers);
 
       await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
     });
@@ -246,18 +252,19 @@ describe('Users controller', () => {
           data: {
             queryUsersContentsWithTotal: {
               total: 1,
-              items: [fixtures.graphQlResponseFetchUser.data.findUsersContent],
+              items: [graphQlResponseFetchUser.data.findUsersContent],
             },
           },
         });
 
       const result = await users.fetchByCode(code);
-      expect(result).toEqual(fixtures.userResponse);
+      expect(result).toEqual(userResponse);
     });
   });
 
   describe('update', () => {
     const userId = 'user-id';
+
     test('Should throw when sync asset fails', async () => {
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/users/${userId}`, {
@@ -270,21 +277,37 @@ describe('Users controller', () => {
       );
     });
 
+    test('Should update job title through a clean-update', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/users/${userId}`, {
+          jobTitle: { iv: 'CEO' },
+        })
+        .reply(200, fetchUserResponse)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUser(userId),
+        })
+        .reply(200, buildUserGraphqlResponse());
+
+      expect(await users.update(userId, { jobTitle: 'CEO' })).toEqual(
+        userResponse,
+      );
+    });
+
     test('Should delete user fields', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fixtures.fetchUserResponse)
+        .reply(200, fetchUserResponse)
         .put(`/api/content/${config.appName}/users/${userId}`, {
-          ...fixtures.fetchUserResponse.data,
+          ...fetchUserResponse.data,
           contactEmail: { iv: null },
         } as { [k: string]: any })
-        .reply(200, fixtures.fetchUserResponse) // this response is ignored
+        .reply(200, fetchUserResponse) // this response is ignored
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser(userId),
         })
         .reply(
           200,
-          fixtures.buildUserGraphqlResponse({
+          buildUserGraphqlResponse({
             contactEmail: null,
           }),
         );
@@ -301,13 +324,13 @@ describe('Users controller', () => {
           questions: { iv: [{ question: 'To be or not to be?' }] },
           social: { iv: [{ github: 'johnytiago' }] },
         } as { [k: string]: any })
-        .reply(200, fixtures.fetchUserResponse)
+        .reply(200, fetchUserResponse)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser(userId),
         })
         .reply(
           200,
-          fixtures.buildUserGraphqlResponse({
+          buildUserGraphqlResponse({
             questions: [{ question: 'To be or not to be?' }],
             social: [
               {
@@ -340,9 +363,9 @@ describe('Users controller', () => {
     test('Should update and delete user team properties', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fixtures.fetchUserResponse)
+        .reply(200, fetchUserResponse)
         .put(`/api/content/${config.appName}/users/${userId}`, {
-          ...fixtures.fetchUserResponse.data,
+          ...fetchUserResponse.data,
           teams: {
             iv: [
               {
@@ -360,13 +383,13 @@ describe('Users controller', () => {
             ],
           },
         } as { [k: string]: any })
-        .reply(200, fixtures.fetchUserResponse) // this response is ignored
+        .reply(200, fetchUserResponse) // this response is ignored
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser(userId),
         })
         .reply(
           200,
-          fixtures.buildUserGraphqlResponse({
+          buildUserGraphqlResponse({
             teams: [
               {
                 role: 'Lead PI (Core Leadership)',
@@ -480,18 +503,18 @@ describe('Users controller', () => {
         .patch(`/api/content/${config.appName}/users/user-id`, {
           avatar: { iv: ['squidex-asset-id'] },
         })
-        .reply(200, fixtures.patchResponse)
+        .reply(200, patchResponse)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser('user-id'),
         })
-        .reply(200, fixtures.graphQlResponseFetchUser);
+        .reply(200, graphQlResponseFetchUser);
 
       const result = await users.updateAvatar(
         'user-id',
         Buffer.from('avatar'),
         'image/jpeg',
       );
-      expect(result).toEqual(fixtures.userResponse);
+      expect(result).toEqual(userResponse);
     });
   });
 
@@ -512,7 +535,7 @@ describe('Users controller', () => {
 
     test('Shouldnt do anything if connecting with existing code', async () => {
       const userId = 'google-oauth2|token';
-      const connectedUser = JSON.parse(JSON.stringify(fixtures.patchResponse));
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
       connectedUser.data.connections.iv = [{ code: userId }];
 
       nock(config.baseUrl)
@@ -529,7 +552,7 @@ describe('Users controller', () => {
 
     test('Should connect user', async () => {
       const userId = 'google-oauth2|token';
-      const patchedUser = JSON.parse(JSON.stringify(fixtures.patchResponse));
+      const patchedUser = JSON.parse(JSON.stringify(patchResponse));
       patchedUser.data.connections.iv = [{ code: userId }];
 
       nock(config.baseUrl)
@@ -538,14 +561,11 @@ describe('Users controller', () => {
           $top: 1,
           $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
         })
-        .reply(200, { total: 1, items: [fixtures.patchResponse] })
-        .patch(
-          `/api/content/${config.appName}/users/${fixtures.patchResponse.id}`,
-          {
-            email: { iv: fixtures.patchResponse.data.email.iv },
-            connections: { iv: [{ code: userId }] },
-          },
-        )
+        .reply(200, { total: 1, items: [patchResponse] })
+        .patch(`/api/content/${config.appName}/users/${patchResponse.id}`, {
+          email: { iv: patchResponse.data.email.iv },
+          connections: { iv: [{ code: userId }] },
+        })
         .reply(200, patchedUser);
 
       const result = await users.connectByCode('asapWelcomeCode', userId);
@@ -570,9 +590,9 @@ describe('Users controller', () => {
     test('Should update user profile even when ORCID returns 500', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fixtures.fetchUserResponse)
+        .reply(200, fetchUserResponse)
         .patch(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fixtures.fetchUserResponse);
+        .reply(200, fetchUserResponse);
 
       // times 3 because got will retry on 5XXs
       nock('https://pub.orcid.org')
@@ -587,18 +607,18 @@ describe('Users controller', () => {
     test('Should successfully fetch and update user - with id', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)
-        .reply(200, fixtures.fetchUserResponse)
+        .reply(200, fetchUserResponse)
         .patch(
           `/api/content/${config.appName}/users/${userId}`,
           matches({
-            email: { iv: fixtures.fetchUserResponse.data.email.iv },
+            email: { iv: fetchUserResponse.data.email.iv },
             orcidLastModifiedDate: {
               iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
             },
             orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
           }),
         )
-        .reply(200, fixtures.fetchUserResponse);
+        .reply(200, fetchUserResponse);
 
       nock('https://pub.orcid.org')
         .get(`/v2.1/${orcid}/works`)
@@ -613,23 +633,20 @@ describe('Users controller', () => {
         .patch(
           `/api/content/${config.appName}/users/${userId}`,
           matches({
-            email: { iv: fixtures.fetchUserResponse.data.email.iv },
+            email: { iv: fetchUserResponse.data.email.iv },
             orcidLastModifiedDate: {
               iv: `${orcidFixtures.orcidWorksResponse['last-modified-date'].value}`,
             },
             orcidWorks: { iv: orcidFixtures.orcidWorksDeserialisedExpectation },
           }),
         )
-        .reply(200, fixtures.fetchUserResponse);
+        .reply(200, fetchUserResponse);
 
       nock('https://pub.orcid.org')
         .get(`/v2.1/${orcid}/works`)
         .reply(200, orcidFixtures.orcidWorksResponse);
 
-      const result = await users.syncOrcidProfile(
-        userId,
-        fixtures.fetchUserResponse,
-      );
+      const result = await users.syncOrcidProfile(userId, fetchUserResponse);
       expect(result).toBeDefined(); // we only care that the update is made
     });
   });

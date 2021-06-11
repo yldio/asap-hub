@@ -111,7 +111,9 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             <LabeledTextField
               title="Website 1"
               pattern={USER_SOCIAL_WEBSITE.source}
-              getValidationMessage={() => 'Please enter a valid Website URL'}
+              getValidationMessage={() =>
+                'Please enter a valid URL, starting with http://'
+              }
               onChange={setNewWebsite1}
               value={newWebsite1}
               enabled={!isSaving}
@@ -122,7 +124,9 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             <LabeledTextField
               title="Website 2"
               pattern={USER_SOCIAL_WEBSITE.source}
-              getValidationMessage={() => 'Please enter a valid Website URL'}
+              getValidationMessage={() =>
+                'Please enter a valid URL, starting with http://'
+              }
               onChange={setNewWebsite2}
               value={newWebsite2}
               enabled={!isSaving}

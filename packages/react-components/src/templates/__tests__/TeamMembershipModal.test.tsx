@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
@@ -94,4 +94,42 @@ it('disables the form elements while submitting', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
+});
+
+it('shows validation message for inexistent Main research interests', async () => {
+  const { getByLabelText, findByText } = render(
+    <TeamMembershipModal
+      {...props}
+      approach="approach"
+      responsibilities="responsibilities"
+    />,
+    { wrapper: StaticRouter },
+  );
+  const textArea = getByLabelText(/main.+interests/i);
+
+  fireEvent.change(textArea, {
+    target: { value: '' },
+  });
+  fireEvent.focusOut(textArea);
+
+  expect(await findByText('Please add your research interests.')).toBeVisible();
+});
+
+it('shows validation message for inexistent Your responsibilities', async () => {
+  const { getByLabelText, findByText } = render(
+    <TeamMembershipModal
+      {...props}
+      approach="approach"
+      responsibilities="responsibilities"
+    />,
+    { wrapper: StaticRouter },
+  );
+  const textArea = getByLabelText(/responsibilities/i);
+
+  fireEvent.change(textArea, {
+    target: { value: '' },
+  });
+  fireEvent.focusOut(textArea);
+
+  expect(await findByText('Please add your responsibilities.')).toBeVisible();
 });

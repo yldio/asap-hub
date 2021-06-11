@@ -17,7 +17,6 @@ const tipStyles = css({
 type LabeledTextAreaProps = {
   readonly title: React.ReactNode;
   readonly tip?: React.ReactNode;
-  readonly required?: boolean;
 } & Exclude<ComponentProps<typeof TextArea>, 'id'>;
 
 const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({

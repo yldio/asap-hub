@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react';
 import { formatISO, parseISO } from 'date-fns';
 
-import { TextField, Label, Paragraph, RequiredAsterisk } from '../atoms';
+import { TextField, Label, Paragraph } from '../atoms';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 
@@ -13,8 +13,7 @@ type LabeledDateFieldProps = {
 } & Pick<
   ComponentProps<typeof TextField>,
   'required' | 'customValidationMessage'
-> &
-  ComponentProps<typeof RequiredAsterisk>;
+>;
 
 const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
   title,
@@ -38,7 +37,7 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
       <Paragraph>
         <strong>
           {title}
-          <RequiredAsterisk {...dateFieldProps} />
+          {dateFieldProps.required && '*'}
         </strong>
       </Paragraph>
     </Label>

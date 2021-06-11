@@ -51,7 +51,6 @@ const EmailPasswordSignin: React.FC<EmailPasswordSigninProps> = ({
     <form autoComplete="on" ref={formRef} css={containerStyles}>
       <div css={fieldsContainerStyles}>
         <LabeledTextField
-          omitRequiredAsterisk
           indicateValid={false}
           type="email"
           title="Email"

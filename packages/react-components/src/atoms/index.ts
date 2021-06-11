@@ -19,7 +19,6 @@ export { default as Overlay } from './Overlay';
 export { default as Paragraph } from './Paragraph';
 export { default as Pill } from './Pill';
 export { default as RadioButton } from './RadioButton';
-export { default as RequiredAsterisk } from './RequiredAsterisk';
 export { default as TabLink } from './TabLink';
 export { default as Tag } from './Tag';
 export { default as TextArea } from './TextArea';

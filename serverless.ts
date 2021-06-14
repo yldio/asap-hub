@@ -64,6 +64,9 @@ const serverlessConfig: AWS = {
       ASAP_API_URL: '${env:ASAP_API_URL}',
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
       NODE_OPTIONS: '--enable-source-maps',
+      ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${
+        SLS_STAGE === 'production' ? 'prod' : 'dev'
+      }}`,
     },
     iamRoleStatements: [
       {

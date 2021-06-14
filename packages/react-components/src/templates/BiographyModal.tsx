@@ -35,6 +35,7 @@ const BiographyModal: React.FC<BiographyModalProps> = ({
           title="Summarize your background and highlight any past achievements."
           tip="Tip: refer to yourself in the third person."
           placeholder="Example: Randy is a Professor in the Department of Molecular and Cell Biology, University of California, and an Investigator of the Howard Hughes Medical Institute. He studied the enzymology of DNA replication as a graduate student with Arthur Kornberg at Stanford University. Among his awards is the Nobel Prize in Physiology or Medicine, which he shared with James Rothman and Thomas Südhof."
+          getValidationMessage={() => 'Please add your biography'}
         />
       )}
     </EditModal>

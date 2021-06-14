@@ -1,6 +1,5 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
-import { disable } from '@asap-hub/flags';
 
 import UserProfileResearch from '../UserProfileResearch';
 
@@ -77,13 +76,6 @@ it('renders an edit button for the skills list', () => {
     'href',
     '/edit-skills',
   );
-});
-it('disables the edit button for the skills list (REGRESSION)', () => {
-  disable('USER_PROFILE_EDIT_SKILLS');
-  const { getByLabelText } = render(
-    <UserProfileResearch {...commonProps} editSkillsHref="/edit-skills" />,
-  );
-  expect(getByLabelText(/edit.+expertise/i)).not.toHaveAttribute('href');
 });
 it('renders an edit button for the questions list', () => {
   const { getByLabelText } = render(

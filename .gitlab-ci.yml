@@ -50,6 +50,7 @@ stages:
 ###############j
 
 build:ts:
+  image: $INTEGRATION_DOCKER_IMAGE
   artifacts:
     expire_in: 2 weeks
     paths:

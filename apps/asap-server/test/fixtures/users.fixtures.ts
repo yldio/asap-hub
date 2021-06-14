@@ -133,7 +133,7 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
         institution: 'Dollar General Corporation',
         location: 'Zofilte',
         avatar: [{ id: 'squidex-asset-id' }],
-        questions: null,
+        questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
         skills: null,
         teams: [
           {
@@ -197,6 +197,7 @@ export const buildUserGraphqlResponse = (
       data: null,
       flatData: {
         onboarded: true,
+        degree: 'MPH',
         email: 'cristiano@ronaldo.com',
         contactEmail: 'cristiano@ronaldo.com',
         firstName: 'Cristiano',
@@ -206,12 +207,11 @@ export const buildUserGraphqlResponse = (
         orcid: '363-98-9330',
         institution: 'Dollar General Corporation',
         location: 'Zofilte',
-        avatar: [{ id: 'uuid-user-id-1' }],
-        questions: null,
+        avatar: [{ id: 'squidex-asset-id' }],
+        questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
         skills: null,
         social: [
           {
-            github: 'awesome',
             googleScholar: null,
             linkedIn: null,
             researcherId: null,
@@ -352,7 +352,7 @@ export const userResponse: UserResponse = {
     orcid: '363-98-9330',
   },
   skills: [],
-  questions: [],
+  questions: ['Question 1', 'Question 2'],
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
 };

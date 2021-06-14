@@ -13,6 +13,7 @@ import { userControllerMock } from '../mocks/user-controller.mock';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
+import { UserResponse } from '@asap-hub/model';
 
 describe('/users/ route', () => {
   const authHandlerMock: AuthHandler = (req, _res, next) => {
@@ -316,10 +317,10 @@ describe('/users/ route', () => {
         .patch(`/users/${userId}`)
         .send(requestParams);
 
-      expect(userControllerMock.update).toBeCalledWith(
-        userId,
-        userPatchRequest,
-      );
+      const { onboarded, ...remainingParams } = userPatchRequest;
+
+      expect(userControllerMock.update).toBeCalledWith(userId, remainingParams);
+      expect(userControllerMock.update).toBeCalledWith(userId, { onboarded });
     });
 
     describe('Parameter validation', () => {
@@ -329,6 +330,47 @@ describe('/users/ route', () => {
           .send({ jobTitle: 666 });
 
         expect(response.status).toBe(400);
+      });
+    });
+
+    describe('Profile completeness validation', () => {
+      test('Should return an error when attempting to onboard the user with incomplete profile (missing questions)', async () => {
+        const incompleteUserResponse: UserResponse = {
+          ...userResponse,
+          questions: [],
+        };
+        userControllerMock.update.mockResolvedValueOnce(incompleteUserResponse);
+
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({ onboarded: true });
+
+        expect(response.status).toBe(422);
+        expect(response.body).toMatchObject({
+          message: 'User profile is not complete',
+        });
+      });
+
+      test('Should update and onboard the user', async () => {
+        const nonOnboardedUserResponse: UserResponse = {
+          ...userResponse,
+          onboarded: false,
+        };
+        userControllerMock.update.mockResolvedValueOnce(
+          nonOnboardedUserResponse,
+        );
+
+        const onboardedUserResponse: UserResponse = {
+          ...userResponse,
+          onboarded: true,
+        };
+        userControllerMock.update.mockResolvedValueOnce(onboardedUserResponse);
+
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({ onboarded: true, questions: ['question 1', 'question 2'] });
+
+        expect(response.body).toEqual(onboardedUserResponse);
       });
     });
   });

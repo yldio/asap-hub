@@ -57,6 +57,7 @@ type TextAreaProps = {
   readonly enabled?: boolean;
 
   readonly customValidationMessage?: string;
+  readonly getValidationMessage?: Parameters<typeof useValidation>[1];
 
   readonly value: string;
   readonly onChange?: (newValue: string) => void;
@@ -71,6 +72,7 @@ const TextArea: React.FC<TextAreaProps> = ({
   maxLength,
 
   customValidationMessage = '',
+  getValidationMessage,
 
   value,
   onChange = noop,
@@ -78,7 +80,10 @@ const TextArea: React.FC<TextAreaProps> = ({
   ...props
 }) => {
   const { validationMessage, validationTargetProps } =
-    useValidation<HTMLTextAreaElement>(customValidationMessage);
+    useValidation<HTMLTextAreaElement>(
+      customValidationMessage,
+      getValidationMessage,
+    );
 
   const reachedMaxLength =
     value.length >= (maxLength ?? Number.POSITIVE_INFINITY);

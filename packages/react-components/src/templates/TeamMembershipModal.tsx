@@ -70,7 +70,7 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
         <>
           <Paragraph accent="lead">
             Tell the network what role you play in your team and your main
-            research goals.
+            research goals by completing this part of your profile.
           </Paragraph>
           <div css={fieldsContainer}>
             <div css={textFieldsContainerStyles}>
@@ -87,16 +87,20 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
               />
             </div>
             <LabeledTextArea
+              required
               title="Main research interests"
               placeholder="Example: Randy is interested in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretary pathway."
+              getValidationMessage={() => 'Please add your research interests.'}
               maxLength={200}
               enabled={!isSaving}
               value={newApproach}
               onChange={setNewApproach}
             />
             <LabeledTextArea
+              required
               title="Your responsibilities"
               placeholder="Example: Randy will be responsible for applying basic principles he developed from studies of a simple eukaryote, yeast, to investigate the mechanisms of intracellular vesicular transport and biogenesis of extracellular vesicles (exosomes) in cultured human cells. His team's current work is devoted to understanding how proteins and RNA are sorted into extracellular vesicles and how these molecules may be delivered to target cells in relation to normal and pathological functions."
+              getValidationMessage={() => 'Please add your responsibilities.'}
               maxLength={500}
               enabled={!isSaving}
               value={newResponsibilities}

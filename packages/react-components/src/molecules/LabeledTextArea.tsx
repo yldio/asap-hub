@@ -18,6 +18,7 @@ type LabeledTextAreaProps = {
   readonly title: React.ReactNode;
   readonly tip?: React.ReactNode;
 } & Exclude<ComponentProps<typeof TextArea>, 'id'>;
+
 const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   title,
   tip,
@@ -26,7 +27,10 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
       <Paragraph>
-        <strong>{title}</strong>
+        <strong>
+          {title}
+          {textAreaProps.required && '*'}
+        </strong>
         <br />
         <span css={tipStyles}>{tip}</span>
       </Paragraph>

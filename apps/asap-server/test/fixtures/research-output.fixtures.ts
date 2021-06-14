@@ -64,6 +64,16 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       flatData: {
         displayName: 'Schipa, A',
       },
+      referencingUsersContents: [
+        {
+          id: "94adc252-cf5e-4950-bbcf-339e46d326a0",
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'pm1@example.com'
+          }
+        }
+      ]
     },
     {
       id: 'team-id-2',
@@ -72,9 +82,18 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       flatData: {
         displayName: 'Team, B',
       },
+      referencingUsersContents: [
+        {
+          id: "94adc252-cf5e-4950-bbcf-339e46d326a0",
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'pm2@example.com'
+          }
+        }
+      ]
     },
   ],
-  pmsEmails: ['test@example.com']
 });
 
 export const getResearchOutputResponse =
@@ -107,7 +126,7 @@ export const getResearchOutputResponse =
     sharingStatus: 'Network Only',
     asapFunded: true,
     usedInPublication: false,
-    pmsEmails: ['test@example.com']
+    pmsEmails: ['pm1@example.com', 'pm2@example.com']
   });
 
 export const getListResearchOutputResponse =

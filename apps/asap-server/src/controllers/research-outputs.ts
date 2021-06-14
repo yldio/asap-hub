@@ -65,7 +65,7 @@ ${
 }`
     : ''
 }
-`;
+`; // TODO: this just gets all the users on a team, we want to filter to only the PMs
 
 export const buildGraphQLQueryResearchOutput = (id: string): string =>
   `{

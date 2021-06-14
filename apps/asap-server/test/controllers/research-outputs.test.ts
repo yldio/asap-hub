@@ -327,6 +327,7 @@ describe('ResearchOutputs controller', () => {
       const expectedResult = getResearchOutputResponse();
       expectedResult.team = undefined;
       expectedResult.teams = [];
+      expectedResult.pmsEmails = []; // as there are no referencing teams, there won't be any PMs
 
       expect(result).toEqual(expectedResult);
     });
@@ -383,8 +384,15 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should return a list of PM emails', async () => {
+      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: researchOutputResponse });
+
       const result = await researchOutputs.fetchById(researchOutputId);
-      expect(result.pmsEmails).toEqual(['test@example.com']);
+      expect(result.pmsEmails).toEqual(['pm1@example.com', 'pm2@example.com']);
     });
 
     describe('Last Updated Partial field', () => {

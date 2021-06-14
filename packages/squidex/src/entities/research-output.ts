@@ -30,7 +30,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
     orcid?: string;
   }[];
   authors?: TAuthorConnection[];
-  pmsEmails?: string[];
+  pmsEmails: string[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

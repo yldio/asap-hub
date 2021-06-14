@@ -46,8 +46,10 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
           </Paragraph>
           <div css={[fieldsContainerStyles]}>
             <LabeledTextArea
+              required
               title="Open Question 1"
               placeholder="Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?"
+              getValidationMessage={() => 'Please add your first Open Question'}
               maxLength={200}
               enabled={!isSaving}
               onChange={(newValue) =>
@@ -58,8 +60,12 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
               value={newQuestions[0] || ''}
             />
             <LabeledTextArea
+              required
               title="Open Question 2"
               placeholder="Does alpha-synuclein represent a pathologically relevant stimulator of microglial activation?"
+              getValidationMessage={() =>
+                'Please add your second Open Question'
+              }
               maxLength={200}
               enabled={!isSaving}
               onChange={(newValue) =>

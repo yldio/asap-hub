@@ -39,7 +39,9 @@ describe('triggers the save function', () => {
 
     const answerQuestion = (index: number) =>
       userEvent.type(
-        getByLabelText(`Open Question ${index}`),
+        getByLabelText(
+          `Open Question ${index}${index === 1 || index === 2 ? '*' : ''}`,
+        ),
         questions[index],
       );
 
@@ -54,14 +56,21 @@ describe('triggers the save function', () => {
     );
   };
 
-  it('sends an empty array when no questions are entered and saved', async () => {
+  it('does not save if no questions are set', async () => {
     await testSave({});
-    expect(jestFn).toHaveBeenCalledWith({ questions: [] });
+    expect(jestFn).not.toHaveBeenCalled();
   });
-  it('sends questions when a question is skipped', async () => {
-    await testSave({ 1: 'a', 4: 'b' });
-    expect(jestFn).toHaveBeenCalledWith({ questions: ['a', 'b'] });
+
+  it('does not save if required questions 1 and 2 are empty', async () => {
+    await testSave({ 3: 'c', 4: 'd' });
+    expect(jestFn).not.toHaveBeenCalled();
   });
+
+  it('sends questions when a non required question is skipped', async () => {
+    await testSave({ 1: 'a', 2: 'b', 4: 'd' });
+    expect(jestFn).toHaveBeenCalledWith({ questions: ['a', 'b', 'd'] });
+  });
+
   it('sends all questions', async () => {
     await testSave({ 1: 'a', 2: 'b', 3: 'c', 4: 'd' });
     expect(jestFn).toHaveBeenCalledWith({ questions: ['a', 'b', 'c', 'd'] });
@@ -75,7 +84,11 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <OpenQuestionsModal {...props} onSave={handleSave} />,
+    <OpenQuestionsModal
+      {...props}
+      onSave={handleSave}
+      questions={['a', 'b']}
+    />,
     { wrapper: StaticRouter },
   );
 

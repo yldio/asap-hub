@@ -64,13 +64,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
               title="Open Question 2"
               placeholder="Does alpha-synuclein represent a pathologically relevant stimulator of microglial activation?"
               getValidationMessage={() =>
-               
-               
-               
                 'Please add your second Open Question'
-              
-              
-              
               }
               maxLength={200}
               enabled={!isSaving}

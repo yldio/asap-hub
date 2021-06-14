@@ -57,6 +57,11 @@ ${
   flatData {
     displayName
   }
+  referencingUsersContents {
+    flatData {
+      email
+    }
+  }
 }`
     : ''
 }

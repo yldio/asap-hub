@@ -63,6 +63,12 @@ export const parseGraphQLResearchOutput = (
     usedInPublication: convertDecisionToBoolean(
       output.flatData?.usedInAPublication,
     ),
+    pmsEmails: 
+      output.referencingTeamsContents?.flatMap((team) => {
+        team.referencingUsersContents?.map((user) => { 
+          user.flatData?.email
+        }).filter(e => e !== null && e !== undefined)
+      }).filter(e => e !== null && e !== undefined)
   };
 };
 

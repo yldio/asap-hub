@@ -382,6 +382,11 @@ describe('ResearchOutputs controller', () => {
       expect(result.authors).toEqual(expectedAuthorsResponse);
     });
 
+    test('Should return a list of PM emails', async () => {
+      const result = await researchOutputs.fetchById(researchOutputId);
+      expect(result.pmsEmails).toEqual(['test@example.com']);
+    });
+
     describe('Last Updated Partial field', () => {
       test('Should default to last-modified if the last-updated-partial is not present', async () => {
         const researchOutputResponse =

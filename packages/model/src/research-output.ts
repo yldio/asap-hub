@@ -78,6 +78,7 @@ export type ResearchOutputResponse = {
    */
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
+  readonly pmsEmails?: string[];
 };
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {

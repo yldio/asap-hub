@@ -50,6 +50,7 @@ stages:
 ###############j
 
 build:ts:
+  image: $INTEGRATION_DOCKER_IMAGE
   artifacts:
     expire_in: 2 weeks
     paths:
@@ -58,6 +59,7 @@ build:ts:
   script:
     - source ci/env-setup.sh
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
+    - export ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-$([ "$SLS_STAGE" == "production" ] && echo "prod" || echo "dev")" --query Parameter.Value --output text)
     - yarn run build
 
     - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"

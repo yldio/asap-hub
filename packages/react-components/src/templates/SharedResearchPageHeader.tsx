@@ -63,7 +63,7 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
     </div>
     <div css={controlsStyles}>
       <SearchAndFilter
-        searchPlaceholder="Enter a keyword, method, resource, tool, etc"
+        searchPlaceholder="Enter resource, keyword or method…"
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
         filterOptions={researchOutputFilters}

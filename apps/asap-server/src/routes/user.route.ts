@@ -170,7 +170,7 @@ export const userRouteFactory = (
 
     const result = await userController.update(userId, userProfileUpdate);
 
-    if (typeof onboarded === 'boolean') {
+    if (onboarded === true) {
       if (!isUserOnboardable(result).isOnboardable) {
         throw Boom.badData('User profile is not complete');
       }

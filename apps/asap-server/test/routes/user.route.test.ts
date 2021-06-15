@@ -351,6 +351,22 @@ describe('/users/ route', () => {
         });
       });
 
+      test('Should not return an error when updating a user with incomplete profile while sending onboarded flag set to false', async () => {
+        const incompleteUserResponse: UserResponse = {
+          ...userResponse,
+          onboarded: false,
+          questions: [],
+        };
+        userControllerMock.update.mockResolvedValueOnce(incompleteUserResponse);
+
+        const response = await supertest(appWithMockedAuth)
+          .patch(`/users/${userId}`)
+          .send({ onboarded: false });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual(incompleteUserResponse);
+      });
+
       test('Should update and onboard the user', async () => {
         const nonOnboardedUserResponse: UserResponse = {
           ...userResponse,

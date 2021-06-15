@@ -1,6 +1,6 @@
 # Algolia frontend integration
 
-Status: Draft
+Status: Final
 Date: 2021-06-11
 Author: Thomas Waterfall <tom.waterfall@yld.io>
 

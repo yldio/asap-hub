@@ -7,6 +7,7 @@ import * as LightStep from 'lightstep-tracer';
 import AWSXray from 'aws-xray-sdk';
 import http from 'http';
 import https from 'https';
+import * as Sentry from '@sentry/serverless';
 import { appFactory } from '../app';
 import { lightstepToken, environment } from '../config';
 import logger from '../utils/logger';
@@ -30,7 +31,7 @@ interface RequestWithContext extends RequestExpress {
   context: APIGatewayProxyEventV2['requestContext'];
 }
 
-export const apiHandler = serverlessHttp(app, {
+const httpHandler = serverlessHttp(app, {
   request(
     request: RequestWithContext,
     event: APIGatewayProxyEventV2,
@@ -40,3 +41,11 @@ export const apiHandler = serverlessHttp(app, {
     logger.withRequest(event, context);
   },
 });
+
+Sentry.AWSLambda.init({
+  dsn: 'https://c61a36e015ef481bb29e0bd2a9f84aa3@o850903.ingest.sentry.io/5817859',
+  tracesSampleRate: 1.0,
+  environment,
+});
+
+export const apiHandler = Sentry.AWSLambda.wrapHandler(httpHandler);

@@ -1056,6 +1056,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "virtual:e56cf3532a32111d14f6de81e9e0a2b07361913ba9724833be1ffb76eda9e46cdbd0bca3df20ce2d77b659704e6658032603e88a34ee740a2ec75501c60ccaf8#npm:3.1.0"
       ],
       [
+        "@sentry/core",
+        "npm:6.7.1"
+      ],
+      [
+        "@sentry/hub",
+        "npm:6.7.1"
+      ],
+      [
+        "@sentry/minimal",
+        "npm:6.7.1"
+      ],
+      [
+        "@sentry/node",
+        "npm:6.7.1"
+      ],
+      [
+        "@sentry/serverless",
+        "npm:6.7.1"
+      ],
+      [
+        "@sentry/tracing",
+        "npm:6.7.1"
+      ],
+      [
+        "@sentry/types",
+        "npm:6.7.1"
+      ],
+      [
+        "@sentry/utils",
+        "npm:6.7.1"
+      ],
+      [
         "@serverless/cli",
         "npm:1.5.2"
       ],
@@ -3100,7 +3132,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "cookie",
-        "npm:0.4.0"
+        "npm:0.4.1"
       ],
       [
         "cookie-signature",
@@ -5725,6 +5757,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "lru-queue",
         "npm:0.1.0"
+      ],
+      [
+        "lru_map",
+        "npm:0.3.3"
       ],
       [
         "luxon",
@@ -8998,6 +9034,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@hapi/boom", "npm:9.1.2"],
             ["@hapi/bourne", "npm:2.0.0"],
             ["@hapi/joi", "npm:17.1.1"],
+            ["@sentry/serverless", "npm:6.7.1"],
             ["@types/apr-intercept", "workspace:@types/apr-intercept"],
             ["@types/aws-lambda", "npm:8.10.76"],
             ["@types/chance", "npm:1.1.1"],
@@ -18519,6 +18556,113 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@sentry/core", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-core-npm-6.7.1-5dfdbc0bd5-6911f265d0.zip/node_modules/@sentry/core/",
+          "packageDependencies": [
+            ["@sentry/core", "npm:6.7.1"],
+            ["@sentry/hub", "npm:6.7.1"],
+            ["@sentry/minimal", "npm:6.7.1"],
+            ["@sentry/types", "npm:6.7.1"],
+            ["@sentry/utils", "npm:6.7.1"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@sentry/hub", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-hub-npm-6.7.1-0ec554e818-f996dd6c25.zip/node_modules/@sentry/hub/",
+          "packageDependencies": [
+            ["@sentry/hub", "npm:6.7.1"],
+            ["@sentry/types", "npm:6.7.1"],
+            ["@sentry/utils", "npm:6.7.1"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@sentry/minimal", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-minimal-npm-6.7.1-5e5bd5ed6e-1e10e0904d.zip/node_modules/@sentry/minimal/",
+          "packageDependencies": [
+            ["@sentry/minimal", "npm:6.7.1"],
+            ["@sentry/hub", "npm:6.7.1"],
+            ["@sentry/types", "npm:6.7.1"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@sentry/node", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-node-npm-6.7.1-dcb3a08d1c-1551e12003.zip/node_modules/@sentry/node/",
+          "packageDependencies": [
+            ["@sentry/node", "npm:6.7.1"],
+            ["@sentry/core", "npm:6.7.1"],
+            ["@sentry/hub", "npm:6.7.1"],
+            ["@sentry/tracing", "npm:6.7.1"],
+            ["@sentry/types", "npm:6.7.1"],
+            ["@sentry/utils", "npm:6.7.1"],
+            ["cookie", "npm:0.4.1"],
+            ["https-proxy-agent", "npm:5.0.0"],
+            ["lru_map", "npm:0.3.3"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@sentry/serverless", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-serverless-npm-6.7.1-bbf56f8b16-0fc78fc3b7.zip/node_modules/@sentry/serverless/",
+          "packageDependencies": [
+            ["@sentry/serverless", "npm:6.7.1"],
+            ["@sentry/minimal", "npm:6.7.1"],
+            ["@sentry/node", "npm:6.7.1"],
+            ["@sentry/tracing", "npm:6.7.1"],
+            ["@sentry/types", "npm:6.7.1"],
+            ["@sentry/utils", "npm:6.7.1"],
+            ["@types/aws-lambda", "npm:8.10.77"],
+            ["@types/express", "npm:4.17.12"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@sentry/tracing", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-tracing-npm-6.7.1-8e3b364441-5f96b8b0bb.zip/node_modules/@sentry/tracing/",
+          "packageDependencies": [
+            ["@sentry/tracing", "npm:6.7.1"],
+            ["@sentry/hub", "npm:6.7.1"],
+            ["@sentry/minimal", "npm:6.7.1"],
+            ["@sentry/types", "npm:6.7.1"],
+            ["@sentry/utils", "npm:6.7.1"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@sentry/types", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-types-npm-6.7.1-48b745f9b1-e6fdeaa951.zip/node_modules/@sentry/types/",
+          "packageDependencies": [
+            ["@sentry/types", "npm:6.7.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@sentry/utils", [
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/@sentry-utils-npm-6.7.1-f1162f6529-7579666a37.zip/node_modules/@sentry/utils/",
+          "packageDependencies": [
+            ["@sentry/utils", "npm:6.7.1"],
+            ["@sentry/types", "npm:6.7.1"],
+            ["tslib", "npm:1.14.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@serverless/cli", [
         ["npm:1.5.2", {
           "packageLocation": "./.yarn/cache/@serverless-cli-npm-1.5.2-dcf588416a-8ccaeecaf6.zip/node_modules/@serverless/cli/",
@@ -20268,6 +20412,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/aws-lambda", "npm:8.10.76"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:8.10.77", {
+          "packageLocation": "./.yarn/cache/@types-aws-lambda-npm-8.10.77-fd116b2b31-c810f6dec2.zip/node_modules/@types/aws-lambda/",
+          "packageDependencies": [
+            ["@types/aws-lambda", "npm:8.10.77"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@types/babel__core", [
@@ -20545,6 +20696,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-express-npm-4.17.11-1b3f17f056-2818120a0f.zip/node_modules/@types/express/",
           "packageDependencies": [
             ["@types/express", "npm:4.17.11"],
+            ["@types/body-parser", "npm:1.19.0"],
+            ["@types/express-serve-static-core", "npm:4.17.18"],
+            ["@types/qs", "npm:6.9.5"],
+            ["@types/serve-static", "npm:1.13.9"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:4.17.12", {
+          "packageLocation": "./.yarn/cache/@types-express-npm-4.17.12-d30bfc5b29-b1ab50e037.zip/node_modules/@types/express/",
+          "packageDependencies": [
+            ["@types/express", "npm:4.17.12"],
             ["@types/body-parser", "npm:1.19.0"],
             ["@types/express-serve-static-core", "npm:4.17.18"],
             ["@types/qs", "npm:6.9.5"],
@@ -26919,6 +27081,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/cookie-npm-0.4.0-4b3d629e45-7aaef4b642.zip/node_modules/cookie/",
           "packageDependencies": [
             ["cookie", "npm:0.4.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:0.4.1", {
+          "packageLocation": "./.yarn/cache/cookie-npm-0.4.1-cc5e2ebb42-b8e0928e3e.zip/node_modules/cookie/",
+          "packageDependencies": [
+            ["cookie", "npm:0.4.1"]
           ],
           "linkType": "HARD",
         }]
@@ -37765,6 +37934,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["lru_map", [
+        ["npm:0.3.3", {
+          "packageLocation": "./.yarn/cache/lru_map-npm-0.3.3-a038bb3418-c1d5347da0.zip/node_modules/lru_map/",
+          "packageDependencies": [
+            ["lru_map", "npm:0.3.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["luxon", [
         ["npm:1.26.0", {
           "packageLocation": "./.yarn/cache/luxon-npm-1.26.0-09624ad59c-e12bb8bfdd.zip/node_modules/luxon/",
@@ -47308,6 +47486,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/tslib-npm-1.13.0-f5e9ea9b66-5dc3bdaea3.zip/node_modules/tslib/",
           "packageDependencies": [
             ["tslib", "npm:1.13.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:1.14.1", {
+          "packageLocation": "./.yarn/cache/tslib-npm-1.14.1-102499115e-f44fe7f216.zip/node_modules/tslib/",
+          "packageDependencies": [
+            ["tslib", "npm:1.14.1"]
           ],
           "linkType": "HARD",
         }],

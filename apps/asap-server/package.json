@@ -23,6 +23,7 @@
     "@hapi/boom": "^9.1.2",
     "@hapi/bourne": "^2.0.0",
     "@hapi/joi": "^17.1.1",
+    "@sentry/serverless": "^6.7.1",
     "@types/hapi__joi": "^17.1.6",
     "@types/parse-data-url": "^3.0.0",
     "apr-intercept": "^3.0.4",

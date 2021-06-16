@@ -47,7 +47,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
           <div css={[fieldsContainerStyles]}>
             <LabeledTextArea
               required
-              title="Open Question 1"
+              title="Open Question 1*"
               placeholder="Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?"
               getValidationMessage={() => 'Please add your first Open Question'}
               maxLength={200}
@@ -61,7 +61,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             />
             <LabeledTextArea
               required
-              title="Open Question 2"
+              title="Open Question 2*"
               placeholder="Does alpha-synuclein represent a pathologically relevant stimulator of microglial activation?"
               getValidationMessage={() =>
                 'Please add your second Open Question'

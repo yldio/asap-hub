@@ -36,10 +36,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   <div css={containerStyles}>
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
-        <strong>
-          {title}
-          {textFieldProps.required && '*'}
-        </strong>
+        <strong>{title}</strong>
         <br />
         <span css={subtitleStyles}>{subtitle}</span>
       </Paragraph>

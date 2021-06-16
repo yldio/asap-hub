@@ -2,9 +2,10 @@ import {
   useState,
   useEffect,
   useRef,
-  FocusEvent,
   FormEvent,
-  HTMLProps,
+  MutableRefObject,
+  FocusEventHandler,
+  FormEventHandler,
 } from 'react';
 import { fern, steel, ember } from './colors';
 import { perRem, lineHeight } from './pixels';
@@ -64,7 +65,11 @@ export function useValidation<T extends ValidationTarget>(
   getValidationMessage?: (validityState: ValidityState) => string,
 ): {
   validationMessage: string;
-  validationTargetProps: Pick<HTMLProps<T>, 'ref' | 'onBlur' | 'onInvalid'>;
+  validationTargetProps: {
+    readonly onInvalid: FormEventHandler;
+    readonly onBlur: FocusEventHandler;
+    readonly ref: MutableRefObject<T | null>;
+  };
 } {
   const inputRef = useRef<T>(null);
   const [validationMessage, setValidationMessage] = useState('');
@@ -83,21 +88,25 @@ export function useValidation<T extends ValidationTarget>(
     validationMessage,
     validationTargetProps: {
       ref: inputRef,
-      onBlur: (event: FocusEvent<ValidationTarget>) => {
+      onBlur: () => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const inputField = inputRef.current!;
         setValidationMessage(
           (getValidationMessage &&
-            !event.currentTarget.validity.valid &&
-            getValidationMessage(event.currentTarget.validity)) ||
-            event.currentTarget.validationMessage,
+            !inputField.validity.valid &&
+            getValidationMessage(inputField.validity)) ||
+            inputField.validationMessage,
         );
       },
 
       onInvalid: (event: FormEvent<ValidationTarget>) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const inputField = inputRef.current!;
         setValidationMessage(
           (getValidationMessage &&
-            !event.currentTarget.validity.valid &&
-            getValidationMessage(event.currentTarget.validity)) ||
-            event.currentTarget.validationMessage,
+            !inputField.validity.valid &&
+            getValidationMessage(inputField.validity)) ||
+            inputField.validationMessage,
         );
         event.preventDefault();
       },

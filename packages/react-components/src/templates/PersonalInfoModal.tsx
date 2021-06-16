@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { UserPatchRequest, UserDegree } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
-import { LabeledTextField, LabeledDropdown } from '../molecules';
+import {
+  LabeledTextField,
+  LabeledDropdown,
+  LabeledTypeahead,
+} from '../molecules';
 import { noop } from '../utils';
 import { perRem, tabletScreen } from '../pixels';
 import { EditModal } from '../organisms';
@@ -78,14 +82,14 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         <>
           <div css={[fieldsContainerStyles, paddingStyles]}>
             <LabeledTextField
-              title="First name"
+              title="First name*"
               onChange={setNewFirstName}
               value={newFirstName}
               enabled={!isSaving}
               required
             />
             <LabeledTextField
-              title="Last name(s)"
+              title="Last name(s)*"
               onChange={setNewLastName}
               value={newLastName}
               enabled={!isSaving}
@@ -118,10 +122,28 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               value={newInstitution}
               enabled={!isSaving}
             />
-            <LabeledTextField
-              title="Position"
-              maxLength={22}
+            <LabeledTypeahead
+              title="Position*"
+              required
+              getValidationMessage={() => 'Please add your position'}
+              maxLength={35}
               onChange={setNewJobTitle}
+              suggestions={[
+                'Assistant Professor',
+                'Associate Professor',
+                'Attending Physician',
+                'CEO',
+                'Department Chair',
+                'Clinician Scientist',
+                'Director/Co-Director',
+                'Consultant',
+                'Fellow',
+                'Graduate student',
+                'Postdoctoral Fellow',
+                'Professor',
+                'Project Manager',
+                'Research Associate',
+              ]}
               value={newJobTitle}
               enabled={!isSaving}
             />

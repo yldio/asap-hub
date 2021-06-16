@@ -27,10 +27,7 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
       <Paragraph>
-        <strong>
-          {title}
-          {textAreaProps.required && '*'}
-        </strong>
+        <strong>{title}</strong>
         <br />
         <span css={tipStyles}>{tip}</span>
       </Paragraph>

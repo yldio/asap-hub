@@ -25,5 +25,6 @@ export { default as TextArea } from './TextArea';
 export { default as TextField } from './TextField';
 export { default as Toggle } from './Toggle';
 export { default as Tooltip } from './Tooltip';
+export { default as Typeahead } from './Typeahead';
 
 export type { DropdownProps } from './Dropdown';

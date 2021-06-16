@@ -47,6 +47,7 @@ export {
   LabeledPasswordField,
   LabeledTextArea,
   LabeledTextField,
+  LabeledTypeahead,
   Loading,
   MembersList,
   MenuButton,

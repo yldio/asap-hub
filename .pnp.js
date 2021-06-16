@@ -8991,7 +8991,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
             ["@asap-hub/squidex", "workspace:packages/squidex"],
-            ["@asap-hub/validation", "workspace:packages/validation"],
             ["@babel/core", "npm:7.14.2"],
             ["@babel/register", "virtual:2814f914463cd1afd5226e339daed08340c81f9bafed429eee2e256fae5e6c9a213ac60fa5dfcc7bb3f0b07319c789ed3c4f649054fe891c7d2898d3aec29e89#npm:7.13.16"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
@@ -9906,7 +9905,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@asap-hub/validation", "workspace:packages/validation"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
-            ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"]
           ],
           "linkType": "SOFT",

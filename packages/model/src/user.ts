@@ -139,7 +139,6 @@ export interface UserPatchRequest {
   questions?: string[];
   teams?: Pick<UserTeam, 'id' | 'approach' | 'responsibilities'>[];
   social?: UserSocialLinks;
-  onboarded?: boolean;
 }
 
 export interface UserAvatarPostRequest {

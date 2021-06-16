@@ -1,4 +1,4 @@
-import { ListUserResponse, UserPatchRequest } from '@asap-hub/model';
+import { ListUserResponse } from '@asap-hub/model';
 import { UserResponse } from '@asap-hub/model';
 import { RestUser, config, GraphqlUser } from '@asap-hub/squidex';
 import {
@@ -133,8 +133,8 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
         institution: 'Dollar General Corporation',
         location: 'Zofilte',
         avatar: [{ id: 'squidex-asset-id' }],
-        questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
-        skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
+        questions: null,
+        skills: null,
         teams: [
           {
             role: 'Lead PI (Core Leadership)',
@@ -196,8 +196,6 @@ export const buildUserGraphqlResponse = (
       lastModified: '2020-09-25T09:42:51Z',
       data: null,
       flatData: {
-        onboarded: true,
-        degree: 'MPH',
         email: 'cristiano@ronaldo.com',
         contactEmail: 'cristiano@ronaldo.com',
         firstName: 'Cristiano',
@@ -207,11 +205,12 @@ export const buildUserGraphqlResponse = (
         orcid: '363-98-9330',
         institution: 'Dollar General Corporation',
         location: 'Zofilte',
-        avatar: [{ id: 'squidex-asset-id' }],
-        questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
-        skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
+        avatar: [{ id: 'uuid-user-id-1' }],
+        questions: null,
+        skills: null,
         social: [
           {
+            github: 'awesome',
             googleScholar: null,
             linkedIn: null,
             researcherId: null,
@@ -351,8 +350,8 @@ export const userResponse: UserResponse = {
   social: {
     orcid: '363-98-9330',
   },
-  skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
-  questions: ['Question 1', 'Question 2'],
+  skills: [],
+  questions: [],
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
 };
@@ -419,10 +418,3 @@ export const fetchExpectation: ListUserResponse = {
 };
 
 export const restUserMock = patchResponse;
-
-export const userPatchRequest: UserPatchRequest = {
-  social: { github: 'johnytiago' },
-  jobTitle: 'CEO',
-  questions: ['To be or not to be?'],
-  onboarded: true,
-};

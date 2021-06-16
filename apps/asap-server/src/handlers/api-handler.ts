@@ -22,9 +22,18 @@ AWSXray.captureHTTPsGlobal(http, true);
 AWSXray.captureHTTPsGlobal(https, true);
 AWSXray.capturePromise();
 
+Sentry.AWSLambda.init({
+  dsn: 'https://c61a36e015ef481bb29e0bd2a9f84aa3@o850903.ingest.sentry.io/5817859',
+  tracesSampleRate: 1.0,
+  environment,
+  release: currentRevision,
+});
+
 const app = appFactory({
   tracer: lsTracer,
   xRay: AWSXray,
+  sentryErrorHandler: Sentry.Handlers.errorHandler,
+  sentryRequestHandler: Sentry.Handlers.requestHandler,
 });
 
 interface RequestWithContext extends RequestExpress {
@@ -40,13 +49,6 @@ const httpHandler = serverlessHttp(app, {
     request.context = event.requestContext;
     logger.withRequest(event, context);
   },
-});
-
-Sentry.AWSLambda.init({
-  dsn: 'https://c61a36e015ef481bb29e0bd2a9f84aa3@o850903.ingest.sentry.io/5817859',
-  tracesSampleRate: 1.0,
-  environment,
-  release: currentRevision,
 });
 
 export const apiHandler = Sentry.AWSLambda.wrapHandler(httpHandler);

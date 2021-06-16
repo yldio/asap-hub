@@ -6,7 +6,7 @@ import parseURI from 'parse-data-url';
 import Joi from '@hapi/joi';
 import Boom, { isBoom } from '@hapi/boom';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
-
+import { isUserOnboardable } from '@asap-hub/validation';
 import { FetchOptions } from '../utils/types';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
@@ -166,7 +166,22 @@ export const userRouteFactory = (
       throw Boom.forbidden();
     }
 
-    const result = await userController.update(userId, update);
+    const { onboarded, ...userProfileUpdate } = update;
+
+    const result = await userController.update(userId, userProfileUpdate);
+
+    if (onboarded === true) {
+      if (!isUserOnboardable(result).isOnboardable) {
+        throw Boom.badData('User profile is not complete');
+      }
+
+      await userController.update(userId, { onboarded });
+
+      res.json({
+        ...result,
+        onboarded,
+      });
+    }
 
     res.json(result);
   });

@@ -5,6 +5,7 @@ import { Tracer } from 'opentracing';
 import { Logger } from 'pino';
 import pinoHttp from 'pino-http';
 import AWSXray from 'aws-xray-sdk';
+import * as Sentry from '@sentry/serverless';
 
 import decodeToken from './utils/validate-token';
 
@@ -102,6 +103,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
   }
 
+  if (libs.sentryRequestHandler) {
+    app.use(libs.sentryRequestHandler());
+  }
+
   app.use(httpLogger);
   app.use(tracingHandler);
   app.use(cors());
@@ -158,6 +163,10 @@ export const appFactory = (libs: Libs = {}): Express => {
     app.use(libs.xRay.express.closeSegment());
   }
 
+  if (libs.sentryErrorHandler) {
+    app.use(libs.sentryErrorHandler());
+  }
+
   app.use(errorHandler);
   app.disable('x-powered-by');
 
@@ -181,4 +190,6 @@ export type Libs = {
   // extra handlers only for tests and local development
   mockRequestHandlers?: RequestHandler[];
   xRay?: typeof AWSXray;
+  sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
+  sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
 };

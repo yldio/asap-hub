@@ -82,14 +82,14 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         <>
           <div css={[fieldsContainerStyles, paddingStyles]}>
             <LabeledTextField
-              title="First name"
+              title="First name*"
               onChange={setNewFirstName}
               value={newFirstName}
               enabled={!isSaving}
               required
             />
             <LabeledTextField
-              title="Last name(s)"
+              title="Last name(s)*"
               onChange={setNewLastName}
               value={newLastName}
               enabled={!isSaving}

@@ -35,10 +35,7 @@ const LabeledDateField: React.FC<LabeledDateFieldProps> = ({
       )}
     >
       <Paragraph>
-        <strong>
-          {title}
-          {dateFieldProps.required && '*'}
-        </strong>
+        <strong>{title}</strong>
       </Paragraph>
     </Label>
   </div>

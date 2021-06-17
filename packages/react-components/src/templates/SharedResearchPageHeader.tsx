@@ -9,13 +9,17 @@ import { noop } from '../utils';
 import { SearchAndFilter } from '../organisms';
 import { Option } from '../organisms/CheckboxGroup';
 
-const containerStyles = css({
-  background: paper.rgb,
-  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
-  marginBottom: '2px',
+const visualHeaderStyles = css({
+  marginBottom: `${30 / perRem}em`,
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)} ${
     48 / perRem
   }em `,
+  background: paper.rgb,
+  boxShadow: `0 2px 4px -2px ${steel.rgb}`,
+});
+
+const controlsStyles = css({
+  padding: `0 ${contentSidePaddingWithNavigation(8)}`,
 });
 
 const textStyles = css({
@@ -45,25 +49,29 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
   filters,
   onChangeFilter,
 }) => (
-  <header css={containerStyles}>
-    <Display styleAsHeading={2}>Shared Research</Display>
-    <div css={textStyles}>
-      <Paragraph accent="lead">
-        This page contains all shared research from the research teams. As teams
-        begin to share more items, this library will grow. Teams should be
-        mindful to respect intellectual boundaries and not share outside of the
-        Network
-      </Paragraph>
+  <header>
+    <div css={visualHeaderStyles}>
+      <Display styleAsHeading={2}>Shared Research</Display>
+      <div css={textStyles}>
+        <Paragraph accent="lead">
+          This page contains all shared research from the research teams. As
+          teams begin to share more items, this library will grow. Teams should
+          be mindful to respect intellectual boundaries and not share outside of
+          the Network
+        </Paragraph>
+      </div>
     </div>
-    <SearchAndFilter
-      searchPlaceholder="Enter a keyword, method, resource, tool, etc"
-      onChangeSearch={onChangeSearch}
-      searchQuery={searchQuery}
-      filterOptions={researchOutputFilters}
-      filterTitle="TYPE OF OUTPUTS"
-      onChangeFilter={onChangeFilter}
-      filters={filters}
-    />
+    <div css={controlsStyles}>
+      <SearchAndFilter
+        searchPlaceholder="Enter a keyword, method, resource…"
+        onChangeSearch={onChangeSearch}
+        searchQuery={searchQuery}
+        filterOptions={researchOutputFilters}
+        filterTitle="TYPE OF OUTPUTS"
+        onChangeFilter={onChangeFilter}
+        filters={filters}
+      />
+    </div>
   </header>
 );
 

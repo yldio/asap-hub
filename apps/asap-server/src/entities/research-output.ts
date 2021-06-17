@@ -1,5 +1,7 @@
 import { DecisionOption, ResearchOutputResponse } from '@asap-hub/model';
 import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
+import { UniqueDirectiveNamesRule } from 'graphql';
+import { teamControllerMock } from '../../test/mocks/team-controller.mock';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
 
@@ -40,6 +42,16 @@ export const parseGraphQLResearchOutput = (
       }
     : {};
 
+  const pmsEmails =
+    (output.referencingTeamsContents
+      ?.flatMap((team) =>
+        team.referencingUsersContents
+          ?.filter((user) =>
+            user.flatData?.teams?.filter((innerTeam) => innerTeam?.id?.[0]?.id === team.id && innerTeam?.role === 'Project Manager') !== undefined &&
+            user.flatData?.teams?.filter((innerTeam) => innerTeam?.id?.[0]?.id === team.id && innerTeam?.role === 'Project Manager').length !== 0)
+        .map((user) => user.flatData?.email)
+        .filter((email) => typeof email === 'string') as string[])) || [];
+
   return {
     id: output.id,
     created: parseDate(output.created).toISOString(),
@@ -63,12 +75,7 @@ export const parseGraphQLResearchOutput = (
     usedInPublication: convertDecisionToBoolean(
       output.flatData?.usedInAPublication,
     ),
-    pmsEmails:
-      (output.referencingTeamsContents
-        ?.flatMap((team) =>
-          team.referencingUsersContents?.map((user) => user.flatData?.email),
-        )
-        .filter((email) => typeof email === 'string') as string[]) || [],
+    pmsEmails: pmsEmails
   };
 };
 

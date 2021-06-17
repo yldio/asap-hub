@@ -68,6 +68,7 @@ const serverlessConfig: AWS = {
         SLS_STAGE === 'production' ? 'prod' : 'dev'
       }}`,
       CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
+      SENTRY_DSN: '${env:SENTRY_DSN}',
     },
     iamRoleStatements: [
       {

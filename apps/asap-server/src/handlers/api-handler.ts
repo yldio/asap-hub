@@ -9,7 +9,12 @@ import http from 'http';
 import https from 'https';
 import * as Sentry from '@sentry/serverless';
 import { appFactory } from '../app';
-import { lightstepToken, environment, currentRevision } from '../config';
+import {
+  lightstepToken,
+  environment,
+  currentRevision,
+  sentryDsn,
+} from '../config';
 import logger from '../utils/logger';
 
 const lsTracer = new LightStep.Tracer({
@@ -23,7 +28,7 @@ AWSXray.captureHTTPsGlobal(https, true);
 AWSXray.capturePromise();
 
 Sentry.AWSLambda.init({
-  dsn: 'https://c61a36e015ef481bb29e0bd2a9f84aa3@o850903.ingest.sentry.io/5817859',
+  dsn: sentryDsn,
   tracesSampleRate: 1.0,
   environment,
   release: currentRevision,

@@ -1,5 +1,5 @@
 import { DecisionOption, ResearchOutputResponse } from '@asap-hub/model';
-import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
+import { GraphqlResearchOutput, GraphqlTeam, GraphqlUser, UserTeamConnection } from '@asap-hub/squidex';
 import { UniqueDirectiveNamesRule } from 'graphql';
 import { teamControllerMock } from '../../test/mocks/team-controller.mock';
 import { parseDate } from '../utils/squidex';
@@ -42,15 +42,21 @@ export const parseGraphQLResearchOutput = (
       }
     : {};
 
+
+  function userIsPMInTeam(user: GraphqlUser, team: GraphqlTeam): boolean {
+    const teamsMatchAndUserIsPM = (innerTeam: UserTeamConnection<GraphqlTeam>) =>
+      innerTeam.id[0].id === team.id && innerTeam.role === 'Project Manager';
+
+    const filteredTeams = user.flatData?.teams?.filter(teamsMatchAndUserIsPM);
+
+    return filteredTeams !== undefined && filteredTeams.length !== 0;
+  }
+
   const pmsEmails =
     (output.referencingTeamsContents
-      ?.flatMap((team) =>
-        team.referencingUsersContents
-          ?.filter((user) =>
-            user.flatData?.teams?.filter((innerTeam) => innerTeam?.id?.[0]?.id === team.id && innerTeam?.role === 'Project Manager') !== undefined &&
-            user.flatData?.teams?.filter((innerTeam) => innerTeam?.id?.[0]?.id === team.id && innerTeam?.role === 'Project Manager').length !== 0)
-        .map((user) => user.flatData?.email)
-        .filter((email) => typeof email === 'string') as string[])) || [];
+      ?.flatMap((team) => team.referencingUsersContents?.filter((user) => userIsPMInTeam(user, team))
+       .map((user) => user.flatData?.email)
+       .filter((email): email is string => typeof email === 'string') as string[])) || [];
 
   return {
     id: output.id,

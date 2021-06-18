@@ -191,7 +191,7 @@ const serverlessConfig: AWS = {
     },
     calendarCreated: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-calendar-created.handler',
+        'apps/asap-server/src/handlers/webhooks/calendar-created/handler.handler',
       events: [
         {
           httpApi: {

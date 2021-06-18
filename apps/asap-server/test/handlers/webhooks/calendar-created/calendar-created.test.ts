@@ -4,21 +4,25 @@ import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 
 import {
   SubscribeToEventChanges,
-  webhookCalendarCreatedHandlerFactory,
+  calendarCreatedHandlerFactory,
   subscribeToEventChangesFactory,
   UnsubscribeFromEventChanges,
   unsubscribeFromEventChangesFactory,
-} from '../../../src/handlers/webhooks/webhook-calendar-created';
-import { apiGatewayEvent } from '../../helpers/events';
-import { signPayload } from '../../../src/utils/validate-squidex-request';
+} from '../../../../src/handlers/webhooks/calendar-created/calendar-created';
+import { apiGatewayEvent } from '../../../helpers/events';
+import { signPayload } from '../../../../src/utils/validate-squidex-request';
 import {
   createCalendarEvent,
   updateCalendarEvent,
 } from './webhook-sync-calendar.fixtures';
-import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../src/config';
-import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
-import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
-import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
+import {
+  googleApiUrl,
+  asapApiUrl,
+  googleApiToken,
+} from '../../../../src/config';
+import { googleApiAuthJWTCredentials } from '../../../mocks/google-api.mock';
+import { calendarControllerMock } from '../../../mocks/calendar-controller.mock';
+import { GetJWTCredentials } from '../../../../src/utils/aws-secret-manager';
 
 const createSignedPayload = (payload: WebhookPayload<Calendar>) =>
   apiGatewayEvent({
@@ -32,7 +36,7 @@ describe('Calendar Webhook', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
   const unsubscribe: jest.MockedFunction<UnsubscribeFromEventChanges> =
     jest.fn();
-  const handler = webhookCalendarCreatedHandlerFactory(
+  const handler = calendarCreatedHandlerFactory(
     subscribe,
     unsubscribe,
     calendarControllerMock,

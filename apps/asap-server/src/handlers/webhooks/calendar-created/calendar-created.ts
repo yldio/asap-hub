@@ -1,20 +1,17 @@
-/* eslint-disable no-shadow */
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import { Auth } from 'googleapis';
 
-import { googleApiUrl, asapApiUrl, googleApiToken } from '../../config';
-import { http } from '../../utils/instrumented-framework';
-import { Handler } from '../../utils/types';
-import validateRequest from '../../utils/validate-squidex-request';
-import Calendars, { CalendarController } from '../../controllers/calendars';
-import getJWTCredentials, {
-  GetJWTCredentials,
-} from '../../utils/aws-secret-manager';
-import logger from '../../utils/logger';
+import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../config';
+import { http } from '../../../utils/instrumented-framework';
+import { Handler } from '../../../utils/types';
+import validateRequest from '../../../utils/validate-squidex-request';
+import { CalendarController } from '../../../controllers/calendars';
+import { GetJWTCredentials } from '../../../utils/aws-secret-manager';
+import logger from '../../../utils/logger';
 
-export const webhookCalendarCreatedHandlerFactory = (
+export const calendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
   unsubscribe: UnsubscribeFromEventChanges,
   calendarController: CalendarController,
@@ -184,9 +181,3 @@ export const unsubscribeFromEventChangesFactory =
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
-
-export const handler: Handler = webhookCalendarCreatedHandlerFactory(
-  subscribeToEventChangesFactory(getJWTCredentials),
-  unsubscribeFromEventChangesFactory(getJWTCredentials),
-  new Calendars(),
-);

@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 
-import { LabeledTextArea } from '../molecules';
+import { LabeledMultiSelect, LabeledTextArea } from '../molecules';
 import { noop } from '../utils';
-import { Paragraph } from '../atoms';
+import { Link, Paragraph } from '../atoms';
 import { EditModal } from '../organisms';
+import { mailToSupport } from '../mail';
 
-type SkillsModalProps = Pick<UserResponse, 'skillsDescription'> & {
+type SkillsModalProps = Pick<UserResponse, 'skillsDescription' | 'skills'> & {
   onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
 };
@@ -15,9 +16,11 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
   onSave = noop,
   backHref,
   skillsDescription = '',
+  skills,
 }) => {
   const [newSkillsDescription, setSkillsDescription] =
     useState(skillsDescription);
+  const [newSkills, setNewSkills] = useState(skills);
 
   return (
     <EditModal
@@ -45,6 +48,18 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
             onChange={(newValue) => setSkillsDescription(newValue)}
             value={newSkillsDescription}
           />
+          <LabeledMultiSelect
+            title="Skills"
+            subtitle="Select the keywords that best apply to your work. Please add a minimum of 5 tags."
+            placeholder="Add a tag (E.g. Cell Biology)"
+            values={newSkills}
+            onChange={(newValue) => setNewSkills(newValue)}
+            suggestions={[]}
+          />
+          <br />
+          <Link href={mailToSupport({ subject: 'New tag' })}>
+            Ask ASAP to add a new tag
+          </Link>
         </>
       )}
     </EditModal>

@@ -1,0 +1,44 @@
+import { LabeledMultiSelect } from '@asap-hub/react-components';
+import { boolean, number, text } from '@storybook/addon-knobs';
+
+export default {
+  title: 'Molecules / Labeled Multi Select',
+  component: LabeledMultiSelect,
+};
+
+export const Normal = () => (
+  <LabeledMultiSelect
+    title={text('Title', 'Tags')}
+    subtitle={text(
+      'Subtitle',
+      'Select the keywords that best apply to your work. Please add a minimum of 5 tags.',
+    )}
+    placeholder={text('Placeholder', 'Add a tag (E.g. Cell Biology)')}
+    suggestions={[
+      'Neurological Diseases',
+      'Cell Biology',
+      'Clinical Neurology',
+      'Neuroimaging',
+      'Neurologic Examination',
+      'Neuroprotection',
+      'Movement Disorders',
+    ]}
+    values={['Neurological Diseases', 'Cell Biology', 'Clinical Neurology']}
+    enabled={boolean('Enabled', true)}
+    maxLength={number('Maximum length', 100)}
+  />
+);
+
+export const Invalid = () => (
+  <LabeledMultiSelect
+    title={text('Title', 'Airport')}
+    suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN']}
+    value="LHR"
+    placeholder={text('Placeholder', 'Please select some airports')}
+    enabled={boolean('Enabled', true)}
+    customValidationMessage={text(
+      'Validation Error Message',
+      'This airport is currently closed.',
+    )}
+  />
+);

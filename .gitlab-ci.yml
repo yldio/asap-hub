@@ -20,6 +20,7 @@ include:
     - yarn sls deploy --verbose
   variables: &tmpl_deploy_variables
     NODE_ENV: production
+    NODE_OPTIONS: '--max_old_space_size=4096'
   dependencies:
     - build:ts
     - build:native

@@ -97,17 +97,11 @@ const containerStyles = css({
   position: 'relative',
 });
 
-const getIndicatorPadding = (aspectRatio: number, position: Position) => {
-  const padding = `${
+const getIndicatorPadding = (icon: React.ReactElement) => {
+  const aspectRatio = getSvgAspectRatio(icon);
+  return `${
     (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) / perRem
   }em`;
-  return position === 'right'
-    ? css({
-        paddingRight: padding,
-      })
-    : css({
-        paddingLeft: padding,
-      });
 };
 
 const getIndicatorStyles = (aspectRatio: number, position: Position) =>
@@ -139,7 +133,7 @@ type TextFieldProps = {
   readonly customValidationMessage?: string;
 
   readonly leftIndicator?: React.ReactElement;
-  readonly rightIndicator?: React.ReactElement | null;
+  readonly rightIndicator?: React.ReactElement;
 
   readonly labelIndicator?: React.ReactElement | string;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
@@ -200,10 +194,13 @@ const TextField: React.FC<TextFieldProps> = ({
           validationMessage && invalidStyles,
           !labelIndicator && { gridColumn: '1 / span 2' },
 
-          leftIndicator &&
-            getIndicatorPadding(getSvgAspectRatio(leftIndicator), 'left'),
-          rightIndicator &&
-            getIndicatorPadding(getSvgAspectRatio(rightIndicator), 'right'),
+          leftIndicator && {
+            paddingLeft: getIndicatorPadding(leftIndicator),
+          },
+
+          rightIndicator && {
+            paddingRight: getIndicatorPadding(rightIndicator),
+          },
         ]}
       />
 

@@ -12,6 +12,17 @@ import { searchIcon, crossIcon } from '../icons';
 import { perRem } from '../pixels';
 
 const clearButtonStyles = css({
+  padding: `${18 / perRem}em 0`,
+  // removing input's clear/cancel pseudo-element
+  // from webkit based browsers
+  'input[type="search"]::-webkit-search-cancel-button': {
+    appearance: 'none',
+  },
+  // and from IE
+  'input[type=text]::-ms-clear': { display: 'none', width: 0, height: 0 },
+});
+
+const rightIndicatorStyles = css({
   button: {
     display: 'flex',
     justifyContent: 'center',
@@ -45,25 +56,14 @@ const SearchField: React.FC<SearchProps> = (props) => {
   }, [debouncedValue, props.placeholder, props.value]);
 
   return (
-    <div
-      css={{
-        padding: `${18 / perRem}em 0`,
-        // removing input's clear/cancel pseudo-element
-        // from webkit based browsers
-        'input[type="search"]::-webkit-search-cancel-button': {
-          appearance: 'none',
-        },
-        // and from IE
-        'input[type=text]::-ms-clear': { display: 'none', width: 0, height: 0 },
-      }}
-    >
+    <div css={clearButtonStyles}>
       <TextField
         {...props}
         type="search"
         leftIndicator={searchIcon}
         rightIndicator={
           props.value ? (
-            <div css={clearButtonStyles}>
+            <div css={rightIndicatorStyles}>
               <Button
                 linkStyle
                 onClick={() => props.onChange && props.onChange('')}

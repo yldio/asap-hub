@@ -68,7 +68,6 @@ const serverlessConfig: AWS = {
         SLS_STAGE === 'production' ? 'prod' : 'dev'
       }}`,
       CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
-      SENTRY_DSN: '${env:SENTRY_DSN}',
     },
     iamRoleStatements: [
       {
@@ -136,6 +135,9 @@ const serverlessConfig: AWS = {
           },
         },
       ],
+      environment: {
+        SENTRY_DSN: '${env:SENTRY_DSN_API}',
+      },
     },
     auth0FetchByCode: {
       handler:
@@ -207,6 +209,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }}`,
+        SENTRY_DSN: '${env:SENTRY_DSN_CALENDAR}',
       },
     },
     eventsUpdated: {

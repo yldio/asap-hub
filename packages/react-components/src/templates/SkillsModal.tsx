@@ -59,6 +59,7 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
             subtitle="Select the keywords that best apply to your work. Please add a minimum of 5 tags."
             placeholder="Add a tag (E.g. Cell Biology)"
             values={newSkills}
+            enabled={!isSaving}
             onChange={(newValue) => {
               setNewSkills(newValue);
               if (newValue.length <= MIN_SKILLS)

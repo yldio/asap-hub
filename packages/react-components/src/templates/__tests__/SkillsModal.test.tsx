@@ -28,14 +28,28 @@ it('renders default values into text inputs', () => {
   expect(getByLabelText(/overview/i)).toHaveValue('example description');
 });
 
+it('displays a no options message', async () => {
+  const { getByLabelText, getByText } = render(
+    <SkillsModal {...props} skillSuggestions={['abc']} />,
+    { wrapper: StaticRouter },
+  );
+
+  userEvent.type(getByLabelText(/skills/i), 'def');
+  expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
+});
+
 it('triggers the save function', async () => {
   const handleSave = jest.fn();
   const { getByLabelText, getByText } = render(
-    <SkillsModal {...props} onSave={handleSave} />,
+    <SkillsModal {...props} skillSuggestions={['abc']} onSave={handleSave} />,
     { wrapper: MemoryRouter },
   );
 
   userEvent.type(getByLabelText(/overview/i), 'example description');
+
+  userEvent.type(getByLabelText(/skills/i), 'a');
+  userEvent.tab();
+
   userEvent.click(getByText('Save'));
 
   await waitFor(() =>
@@ -43,6 +57,7 @@ it('triggers the save function', async () => {
   );
   expect(handleSave).toHaveBeenCalledWith({
     skillsDescription: 'example description',
+    skills: ['abc'],
   });
 });
 

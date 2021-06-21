@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { ComponentProps, FC, useState } from 'react';
-import { components, OptionTypeBase } from 'react-select';
-import Select from 'react-select';
+import Select, { components, OptionTypeBase } from 'react-select';
 import { validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
@@ -27,7 +26,7 @@ type MultiSelectProps = {
 
   readonly placeholder?: string;
 
-  readonly values: string[];
+  readonly values?: string[];
   readonly onChange?: (newValues: string[]) => void;
 } & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
 const MultiSelect: FC<MultiSelectProps> = ({

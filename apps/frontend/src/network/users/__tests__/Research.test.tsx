@@ -12,6 +12,10 @@ import { patchUser } from '../api';
 
 jest.mock('../api');
 jest.mock('../groups/api');
+jest.mock('../skill-suggestions', () => ({
+  __esModule: true,
+  default: ['abc'],
+}));
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
 const id = '42';
@@ -176,12 +180,16 @@ describe('when editing', () => {
         queryByText,
         findByLabelText,
         getByDisplayValue,
+        getByLabelText,
         queryByDisplayValue,
       } = result;
 
       userEvent.click(await findByLabelText(/edit.+resources/i));
       userEvent.type(getByDisplayValue('Skills Description'), ' 2');
       expect(getByDisplayValue('Skills Description 2')).toBeVisible();
+
+      userEvent.type(getByLabelText(/Skills/i), 'ab');
+      userEvent.tab();
 
       userEvent.click(getByText(/save/i));
       await waitFor(() => {
@@ -193,6 +201,7 @@ describe('when editing', () => {
       expect(mockPatchUser).toHaveBeenCalledWith(
         id,
         {
+          skills: ['abc'],
           skillsDescription: 'Skills Description 2',
         },
         expect.any(String),

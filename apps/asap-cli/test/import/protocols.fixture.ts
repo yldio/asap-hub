@@ -18,6 +18,7 @@ export const createProtocolsRequest: RestResearchOutput['data'] = {
   sharingStatus: { iv: 'Network Only' as ResearchOutputSharingStatus },
   asapFunded: { iv: 'Not Sure' as DecisionOption },
   usedInAPublication: { iv: 'Not Sure' as DecisionOption },
+  pmsEmails: { iv: null }
 };
 
 export const fetchProtocolsResponse: RestResearchOutput = {

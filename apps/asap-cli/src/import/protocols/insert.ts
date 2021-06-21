@@ -99,7 +99,7 @@ export default async (data: Protocol): Promise<void> => {
     sharingStatus: { iv: 'Network Only' as ResearchOutputSharingStatus },
     asapFunded: { iv: 'Not Sure' as DecisionOption },
     usedInAPublication: { iv: 'Not Sure' as DecisionOption },
-    pmsEmails: { iv: null }
+    pmsEmails: { iv: null },
   };
 
   const [e1, teamId] = await Intercept(fetchTeamByName(data.team, promises));

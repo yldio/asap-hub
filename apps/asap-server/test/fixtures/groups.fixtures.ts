@@ -273,7 +273,7 @@ export const listGroupsResponse: ListGroupResponse = {
               sharingStatus: 'Network Only',
               asapFunded: false,
               usedInPublication: false,
-              pmsEmails: []
+              pmsEmails: [],
             },
           ],
           projectTitle:

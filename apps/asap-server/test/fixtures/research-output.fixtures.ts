@@ -66,7 +66,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       },
       referencingUsersContents: [
         {
-          id: "94adc252-cf5e-4950-bbcf-339e46d326a3",
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a3',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
           flatData: {
@@ -75,27 +75,27 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
               {
                 id: [
                   {
-                    id: "team-id-1",
+                    id: 'team-id-1',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {}
-                  }
+                    flatData: {},
+                  },
                 ],
-                role: "Project Manager" 
-              }    
-            ]
-          }
+                role: 'Project Manager',
+              },
+            ],
+          },
         },
         {
-          id: "94adc252-cf5e-4950-bbcf-339e46d326a0",
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a0',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
           flatData: {
-            email: 'notapm1@example.com'
-          }
+            email: 'notapm1@example.com',
+          },
         },
         {
-          id: "94adc252-cf5e-4950-bbcf-339e46d326a1",
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
           flatData: {
@@ -104,19 +104,19 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
               {
                 id: [
                   {
-                    id: "wrong-team-id",
+                    id: 'wrong-team-id',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {}
-                  }
+                    flatData: {},
+                  },
                 ],
-                role: "Project Manager" 
-              }    
-            ]
-          }
+                role: 'Project Manager',
+              },
+            ],
+          },
         },
         {
-          id: "94adc252-cf5e-4950-bbcf-339e46d326a2",
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a2',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
           flatData: {
@@ -125,18 +125,18 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
               {
                 id: [
                   {
-                    id: "team-id-1",
+                    id: 'team-id-1',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {}
-                  }
+                    flatData: {},
+                  },
                 ],
-                role: "Key Personnel" 
-              }    
-            ]
-          }
+                role: 'Key Personnel',
+              },
+            ],
+          },
         },
-      ]
+      ],
     },
     {
       id: 'team-id-2',
@@ -147,7 +147,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       },
       referencingUsersContents: [
         {
-          id: "94adc252-cf5e-4950-bbcf-339e46d326a1",
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
           flatData: {
@@ -156,26 +156,26 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
               {
                 id: [
                   {
-                    id: "team-id-2",
+                    id: 'team-id-2',
                     created: '2020-09-23T20:33:36Z',
                     lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {}
-                  }
+                    flatData: {},
+                  },
                 ],
-                role: "Project Manager" 
-              }    
-            ]
-          }
+                role: 'Project Manager',
+              },
+            ],
+          },
         },
         {
-          id: "94adc252-cf5e-4950-bbcf-339e46d326a0",
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a0',
           created: '2020-09-23T20:33:36Z',
           lastModified: '2020-11-26T11:56:04Z',
           flatData: {
-            email: 'notapm4@example.com'
-          }
+            email: 'notapm4@example.com',
+          },
         },
-      ]
+      ],
     },
   ],
 });
@@ -210,7 +210,7 @@ export const getResearchOutputResponse =
     sharingStatus: 'Network Only',
     asapFunded: true,
     usedInPublication: false,
-    pmsEmails: ['pm1@example.com', 'pm2@example.com']
+    pmsEmails: ['pm1@example.com', 'pm2@example.com'],
   });
 
 export const getListResearchOutputResponse =

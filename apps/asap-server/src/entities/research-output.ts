@@ -1,5 +1,10 @@
 import { DecisionOption, ResearchOutputResponse } from '@asap-hub/model';
-import { GraphqlResearchOutput, GraphqlTeam, GraphqlUser, UserTeamConnection } from '@asap-hub/squidex';
+import {
+  GraphqlResearchOutput,
+  GraphqlTeam,
+  GraphqlUser,
+  UserTeamConnection,
+} from '@asap-hub/squidex';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
 
@@ -40,10 +45,10 @@ export const parseGraphQLResearchOutput = (
       }
     : {};
 
-
   function userIsPMInTeam(user: GraphqlUser, team: GraphqlTeam): boolean {
-    const teamsMatchAndUserIsPM = (innerTeam: UserTeamConnection<GraphqlTeam>) =>
-      innerTeam.id[0].id === team.id && innerTeam.role === 'Project Manager';
+    const teamsMatchAndUserIsPM = (
+      innerTeam: UserTeamConnection<GraphqlTeam>,
+    ) => innerTeam.id[0].id === team.id && innerTeam.role === 'Project Manager';
 
     const filteredTeams = user.flatData?.teams?.filter(teamsMatchAndUserIsPM);
 
@@ -51,10 +56,13 @@ export const parseGraphQLResearchOutput = (
   }
 
   const pmsEmails =
-    (output.referencingTeamsContents
-      ?.flatMap((team) => team.referencingUsersContents?.filter((user) => userIsPMInTeam(user, team))
-       .map((user) => user.flatData?.email)
-       .filter((email): email is string => email !== undefined) as string[])) || [];
+    output.referencingTeamsContents?.flatMap(
+      (team) =>
+        team.referencingUsersContents
+          ?.filter((user) => userIsPMInTeam(user, team))
+          .map((user) => user.flatData?.email)
+          .filter((email): email is string => email !== undefined) as string[],
+    ) || [];
 
   const filteredPmsEmails = pmsEmails.filter((email) => email !== undefined);
 
@@ -81,7 +89,7 @@ export const parseGraphQLResearchOutput = (
     usedInPublication: convertDecisionToBoolean(
       output.flatData?.usedInAPublication,
     ),
-    pmsEmails: filteredPmsEmails
+    pmsEmails: filteredPmsEmails,
   };
 };
 

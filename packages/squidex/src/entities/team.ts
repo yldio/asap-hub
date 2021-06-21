@@ -21,4 +21,6 @@ export interface RestTeam extends Entity, Rest<Team> {}
 // TODO: REMOVE old proposal type
 export interface GraphqlTeam
   extends Entity,
-    Graphql<Team<GraphqlResearchOutput | { id: string }>> { referencingUsersContents?: GraphqlUser[] }
+    Graphql<Team<GraphqlResearchOutput | { id: string }>> {
+  referencingUsersContents?: GraphqlUser[];
+}

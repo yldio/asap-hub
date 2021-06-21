@@ -41,8 +41,8 @@ const disabledStyles = {
 };
 
 const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
-  input: (_provided) => ({}),
-  indicatorSeparator: (_provided) => ({ display: 'none' }),
+  input: () => ({}),
+  indicatorSeparator: () => ({ display: 'none' }),
   indicatorsContainer: (provided) => ({
     ...provided,
 
@@ -80,7 +80,8 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
     ':active': undefined,
   }),
 
-  noOptionsMessage: (_provided) => ({
+  noOptionsMessage: () => ({
+    ...disabledStyles,
     padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
   }),
 };
@@ -152,8 +153,12 @@ export const reactMultiSelectStyles = (
   }),
   multiValueRemove: (provided) => ({
     ...provided,
-    width: '7px',
-    height: '7px',
+    padding: 0,
+    marginLeft: `${9 / perRem}em`,
+    display: 'flex',
+    cursor: 'pointer',
+    svg: { width: '12px', height: '12px', strokeWidth: '2.5' },
+    ':hover': {},
   }),
   indicatorsContainer: () => ({ display: 'none' }),
   valueContainer: (provided) => ({

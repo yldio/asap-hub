@@ -1,24 +1,24 @@
 import { css } from '@emotion/react';
-import { FC, useState } from 'react';
-import { OptionTypeBase } from 'react-select';
+import { ComponentProps, FC, useState } from 'react';
+import { components, OptionTypeBase } from 'react-select';
 import Select from 'react-select';
 import { validationMessageStyles } from '../form';
 import { reactMultiSelectStyles } from '../select';
 import { noop } from '../utils';
-// import { crossIcon } from '../icons';
+import { crossIcon } from '../icons';
 
-// const valueRemoveStyles = css({
-//   paddingLeft: '9px',
-//   display: 'flex',
-//   cursor: 'pointer',
-
-//   svg: { width: '12px', height: '12px', strokeWidth: '1.5' },
-// });
+const MultiValueRemove = (
+  props: ComponentProps<typeof components.MultiValueRemove>,
+) => (
+  <components.MultiValueRemove {...props}>
+    {crossIcon}
+  </components.MultiValueRemove>
+);
 
 const containerStyles = css({
   flexBasis: '100%',
 });
-interface MultiSelectProps {
+type MultiSelectProps = {
   readonly customValidationMessage?: string;
 
   readonly id?: string;
@@ -29,7 +29,7 @@ interface MultiSelectProps {
 
   readonly values: string[];
   readonly onChange?: (newValues: string[]) => void;
-}
+} & Pick<ComponentProps<typeof Select>, 'noOptionsMessage'>;
 const MultiSelect: FC<MultiSelectProps> = ({
   customValidationMessage = '',
 
@@ -37,6 +37,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
   suggestions,
   enabled = true,
   placeholder = '',
+  noOptionsMessage,
 
   values = [],
   onChange = noop,
@@ -63,7 +64,8 @@ const MultiSelect: FC<MultiSelectProps> = ({
           onChange(newValues);
         }}
         placeholder={placeholder}
-        // components={ }}
+        components={{ MultiValueRemove }}
+        noOptionsMessage={noOptionsMessage}
         styles={reactMultiSelectStyles(!!customValidationMessage)}
       />
       <div css={validationMessageStyles}>{customValidationMessage}</div>

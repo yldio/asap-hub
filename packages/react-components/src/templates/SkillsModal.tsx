@@ -12,6 +12,7 @@ type SkillsModalProps = Pick<UserResponse, 'skillsDescription' | 'skills'> & {
   backHref: string;
 };
 
+const MIN_SKILLS = 5;
 const SkillsModal: React.FC<SkillsModalProps> = ({
   onSave = noop,
   backHref,
@@ -21,15 +22,18 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
   const [newSkillsDescription, setSkillsDescription] =
     useState(skillsDescription);
   const [newSkills, setNewSkills] = useState(skills);
+  const [skillsCustomValidationMessage, setSkillsCustomValidationMessage] =
+    useState('');
 
   return (
     <EditModal
       title="Expertise and resources"
       backHref={backHref}
-      dirty={skillsDescription !== newSkillsDescription}
+      dirty={skillsDescription !== newSkillsDescription || skills !== newSkills}
       onSave={() =>
         onSave({
           skillsDescription: newSkillsDescription || undefined,
+          skills: newSkills,
         })
       }
     >
@@ -53,8 +57,16 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
             subtitle="Select the keywords that best apply to your work. Please add a minimum of 5 tags."
             placeholder="Add a tag (E.g. Cell Biology)"
             values={newSkills}
-            onChange={(newValue) => setNewSkills(newValue)}
+            onChange={(newValue) => {
+              setNewSkills(newValue);
+              if (newValue.length <= MIN_SKILLS)
+                setSkillsCustomValidationMessage('');
+            }}
             suggestions={[]}
+            noOptionsMessage={({ inputValue }) =>
+              `Sorry, No current tags match "${inputValue}"`
+            }
+            customValidationMessage={skillsCustomValidationMessage}
           />
           <br />
           <Link href={mailToSupport({ subject: 'New tag' })}>

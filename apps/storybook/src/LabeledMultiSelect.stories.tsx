@@ -24,7 +24,6 @@ export const Normal = () => (
       'Movement Disorders',
     ]}
     values={['Neurological Diseases', 'Cell Biology', 'Clinical Neurology']}
-    enabled={boolean('Enabled', true)}
     maxLength={number('Maximum length', 100)}
   />
 );
@@ -35,7 +34,6 @@ export const Invalid = () => (
     suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN']}
     value="LHR"
     placeholder={text('Placeholder', 'Please select some airports')}
-    enabled={boolean('Enabled', true)}
     customValidationMessage={text(
       'Validation Error Message',
       'This airport is currently closed.',

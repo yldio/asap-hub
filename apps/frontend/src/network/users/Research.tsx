@@ -12,6 +12,7 @@ import { network } from '@asap-hub/routing';
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
 import GroupsCard from './groups/GroupsCard';
+import skillSuggestions from './skill-suggestions';
 
 type ResearchProps = {
   user: UserResponse;
@@ -81,7 +82,12 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
           </Route>
           <Route path={path + route.editSkills.template}>
             <Frame title="Edit Expertise and Resources">
-              <SkillsModal {...user} backHref={route.$} onSave={patchUser} />
+              <SkillsModal
+                {...user}
+                skillSuggestions={skillSuggestions}
+                backHref={route.$}
+                onSave={patchUser}
+              />
             </Frame>
           </Route>
         </>

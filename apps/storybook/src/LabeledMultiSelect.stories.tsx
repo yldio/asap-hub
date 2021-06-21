@@ -1,5 +1,5 @@
 import { LabeledMultiSelect } from '@asap-hub/react-components';
-import { boolean, number, text } from '@storybook/addon-knobs';
+import { text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Molecules / Labeled Multi Select',
@@ -24,15 +24,15 @@ export const Normal = () => (
       'Movement Disorders',
     ]}
     values={['Neurological Diseases', 'Cell Biology', 'Clinical Neurology']}
-    maxLength={number('Maximum length', 100)}
   />
 );
 
 export const Invalid = () => (
   <LabeledMultiSelect
     title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', 'Pick some airports')}
     suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN']}
-    value="LHR"
+    values={[]}
     placeholder={text('Placeholder', 'Please select some airports')}
     customValidationMessage={text(
       'Validation Error Message',

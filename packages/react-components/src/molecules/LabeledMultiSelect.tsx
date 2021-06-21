@@ -10,7 +10,7 @@ const subtitleStyles = css({
 
 type LabeledMultiSelectProps = {
   readonly title: ReactNode;
-  readonly subtitle: ReactNode;
+  readonly subtitle?: ReactNode;
 } & Exclude<ComponentProps<typeof MultiSelect>, 'id'>;
 const LabeledMultiSelect: React.FC<LabeledMultiSelectProps> = ({
   title,

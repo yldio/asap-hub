@@ -10,6 +10,7 @@ import { mailToSupport } from '../mail';
 type SkillsModalProps = Pick<UserResponse, 'skillsDescription' | 'skills'> & {
   onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
+  skillSuggestions: string[];
 };
 
 const MIN_SKILLS = 5;
@@ -18,6 +19,7 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
   backHref,
   skillsDescription = '',
   skills,
+  skillSuggestions,
 }) => {
   const [newSkillsDescription, setSkillsDescription] =
     useState(skillsDescription);
@@ -62,7 +64,7 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
               if (newValue.length <= MIN_SKILLS)
                 setSkillsCustomValidationMessage('');
             }}
-            suggestions={[]}
+            suggestions={skillSuggestions}
             noOptionsMessage={({ inputValue }) =>
               `Sorry, No current tags match "${inputValue}"`
             }

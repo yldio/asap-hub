@@ -8,6 +8,7 @@ import SkillsModal from '../SkillsModal';
 
 const props: ComponentProps<typeof SkillsModal> = {
   ...createUserResponse(),
+  skillSuggestions: [],
   backHref: '/wrong',
 };
 it('renders the title', () => {

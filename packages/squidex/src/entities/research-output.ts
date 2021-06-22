@@ -25,10 +25,6 @@ export interface ResearchOutput<TAuthorConnection = string> {
   sharingStatus: ResearchOutputSharingStatus;
   asapFunded: DecisionOption;
   usedInAPublication: DecisionOption;
-  externalAuthors?: {
-    name: string;
-    orcid?: string;
-  }[];
   authors?: TAuthorConnection[];
 }
 

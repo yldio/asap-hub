@@ -60,6 +60,9 @@ ${
   referencingUsersContents {
     flatData {
       email
+      teams {
+        role
+      }
     }
   }
 }`

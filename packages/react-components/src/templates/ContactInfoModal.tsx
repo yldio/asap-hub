@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { css } from '@emotion/react';
-import { UserPatchRequest } from '@asap-hub/model';
+import { UserPatchRequest, UserResponse } from '@asap-hub/model';
 import {
   USER_SOCIAL_WEBSITE,
   USER_SOCIAL_RESEARCHER_ID,
@@ -30,26 +30,28 @@ const paddingStyles = css({
   },
 });
 
-type ContactInfoModalProps = UserPatchRequest['social'] & {
+type ContactInfoModalProps = {
   readonly email?: string;
 
   readonly fallbackEmail: string;
 
   readonly backHref: string;
   readonly onSave?: (data: UserPatchRequest) => void | Promise<void>;
-};
+} & Pick<UserResponse, 'social'>;
 const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   email = '',
   fallbackEmail,
-  website1 = '',
-  website2 = '',
-  orcid = '',
-  github = '',
-  linkedIn = '',
-  googleScholar = '',
-  researchGate = '',
-  researcherId = '',
-  twitter = '',
+  social: {
+    website1 = '',
+    website2 = '',
+    orcid = '',
+    github = '',
+    linkedIn = '',
+    googleScholar = '',
+    researchGate = '',
+    researcherId = '',
+    twitter = '',
+  } = {},
 
   backHref,
   onSave = noop,

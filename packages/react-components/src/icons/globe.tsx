@@ -11,7 +11,7 @@ const globeIcon = (
       fill: 'none',
     }}
   >
-    <title>Globe</title>
+    <title>Website</title>
     <path
       clipRule="evenodd"
       d="M15.767 12c0 5.099-1.687 9.23-3.767 9.23S8.234 17.1 8.234 12c0-5.1 1.686-9.231 3.766-9.231s3.767 4.132 3.767 9.23z"

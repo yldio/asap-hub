@@ -53,11 +53,11 @@ it('renders icon and link', () => {
         "https://www.linkedin.com/in/test",
       ],
       Array [
-        "Globe",
+        "Website",
         "http://example.com/website1",
       ],
       Array [
-        "Globe",
+        "Website",
         "http://example.com/website2",
       ],
     ]

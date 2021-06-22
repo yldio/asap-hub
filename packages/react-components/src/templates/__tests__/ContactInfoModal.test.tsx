@@ -1,6 +1,7 @@
 import { StaticRouter } from 'react-router-dom';
 import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { UserResponse } from '@asap-hub/model';
 
 import ContactInfoModal from '../ContactInfoModal';
 
@@ -96,6 +97,41 @@ it('disables the form elements while submitting', async () => {
   await waitFor(() =>
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
+});
+
+it.each`
+  label               | value
+  ${'Website 1'}      | ${`website1`}
+  ${'Website 2'}      | ${`website2`}
+  ${'ResearcherID'}   | ${`researcherId`}
+  ${'Twitter'}        | ${`twitter`}
+  ${'Github'}         | ${`github`}
+  ${'LinkedIn'}       | ${`linkedIn`}
+  ${'Researchgate'}   | ${`researchGate`}
+  ${'Google Scholar'} | ${`googleScholar`}
+`('displays value $value for $label', ({ label, value }) => {
+  const social: Required<UserResponse['social']> = {
+    github: 'github',
+    googleScholar: 'googleScholar',
+    linkedIn: 'linkedIn',
+    orcid: 'orcid',
+    researchGate: 'researchGate',
+    researcherId: 'researcherId',
+    twitter: 'twitter',
+    website1: 'website1',
+    website2: 'website2',
+  };
+  const { getByLabelText } = render(
+    <ContactInfoModal
+      fallbackEmail="fallback@example.com"
+      email="contact@example.com"
+      social={social}
+      backHref="#"
+    />,
+    { wrapper: StaticRouter },
+  );
+  const input = getByLabelText(new RegExp(label, 'i'));
+  expect(input).toHaveValue(value);
 });
 
 it.each`

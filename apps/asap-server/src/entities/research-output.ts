@@ -45,7 +45,7 @@ export const parseGraphQLResearchOutput = (
       }
     : {};
 
-  function userIsPMInTeam(user: GraphqlUser, team: GraphqlTeam): boolean {
+  const userIsPMInTeam = (user: GraphqlUser, team: GraphqlTeam): boolean => {
     const teamsMatchAndUserIsPM = (
       innerTeam: UserTeamConnection<GraphqlTeam>,
     ) => innerTeam.id[0].id === team.id && innerTeam.role === 'Project Manager';

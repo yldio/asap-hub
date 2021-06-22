@@ -292,7 +292,7 @@
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true
+          "isHalfWidth": false
         }
       },
       {
@@ -311,7 +311,7 @@
           "label": "Authors",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true
+          "isHalfWidth": false
         }
       },
       {

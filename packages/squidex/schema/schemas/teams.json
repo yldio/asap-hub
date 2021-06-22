@@ -12,7 +12,7 @@
     },
     "scripts": {},
     "fieldsInReferences": ["displayName"],
-    "fieldsInLists": [],
+    "fieldsInLists": ["displayName"],
     "fields": [
       {
         "name": "displayName",

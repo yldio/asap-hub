@@ -48,8 +48,8 @@ export const parseGraphQLResearchOutput = (
             user.flatData?.teams !== undefined &&
             user.flatData?.teams?.filter(
               (innerTeam) =>
-                innerTeam.id[0].id === team.id &&
-                innerTeam.role === 'Project Manager',
+                innerTeam?.role === 'Project Manager' &&
+                innerTeam?.id?.[0]?.id === team?.id,
             ).length !== 0,
         )
         .map((user) => user.flatData?.email),

@@ -62,6 +62,9 @@ ${
       email
       teams {
         role
+        id {
+          id
+        }
       }
     }
   }

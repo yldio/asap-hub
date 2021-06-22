@@ -11,8 +11,8 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": ["email"],
-    "fieldsInLists": ["email", "meta.id"],
+    "fieldsInReferences": ["firstName", "lastName", "orcid"],
+    "fieldsInLists": ["firstName", "lastName", "orcid"],
     "fields": [
       {
         "name": "onboarded",
@@ -139,7 +139,7 @@
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": true,
-          "editor": "List",
+          "editor": "Tags",
           "schemaIds": ["labs"],
           "label": "Labs",
           "hints": "",

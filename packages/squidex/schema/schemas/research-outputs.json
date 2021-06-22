@@ -285,14 +285,14 @@
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": true,
-          "editor": "List",
+          "editor": "Tags",
           "schemaIds": ["labs"],
           "label": "Labs",
           "hints": "",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true
+          "isHalfWidth": false
         }
       },
       {
@@ -311,58 +311,8 @@
           "label": "Authors",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
-        "name": "externalAuthors",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Array",
-          "label": "External Authors",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
           "isHalfWidth": false
-        },
-        "nested": [
-          {
-            "name": "name",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": false,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Name",
-              "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "orcid",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "ORCID",
-              "isRequired": false,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          }
-        ]
+        }
       },
       {
         "name": "Compliance",

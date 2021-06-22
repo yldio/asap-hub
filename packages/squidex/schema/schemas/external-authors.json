@@ -11,8 +11,8 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [],
-    "fieldsInLists": [],
+    "fieldsInReferences": ["name", "orcid"],
+    "fieldsInLists": ["name", "orcid"],
     "fields": [
       {
         "name": "name",

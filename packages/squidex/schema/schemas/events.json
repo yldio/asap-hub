@@ -11,8 +11,8 @@
       "validateOnPublish": false
     },
     "scripts": {},
-    "fieldsInReferences": [],
-    "fieldsInLists": ["title"],
+    "fieldsInReferences": ["title", "startDate"],
+    "fieldsInLists": ["title", "startDate"],
     "fields": [
       {
         "name": "hidden",

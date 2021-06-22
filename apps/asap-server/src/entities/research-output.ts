@@ -59,6 +59,8 @@ export const parseGraphQLResearchOutput = (
     (email): email is string => email !== undefined,
   ) as string[];
 
+  const uniquePmsEmails = [...new Set(filteredPmsEmails)];
+
   return {
     id: output.id,
     created: parseDate(output.created).toISOString(),
@@ -82,7 +84,7 @@ export const parseGraphQLResearchOutput = (
     usedInPublication: convertDecisionToBoolean(
       output.flatData?.usedInAPublication,
     ),
-    pmsEmails: filteredPmsEmails,
+    pmsEmails: uniquePmsEmails,
   };
 };
 

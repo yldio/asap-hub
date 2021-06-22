@@ -1,8 +1,5 @@
 import { DecisionOption, ResearchOutputResponse } from '@asap-hub/model';
-import {
-  GraphqlResearchOutput,
-  GraphqlTeam,
-} from '@asap-hub/squidex';
+import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
 
@@ -43,15 +40,24 @@ export const parseGraphQLResearchOutput = (
       }
     : {};
 
-  const pmsEmails = output.referencingTeamsContents?.flatMap((team) =>
-    team.referencingUsersContents?.filter((user) =>
-      user.flatData?.teams !== undefined &&
-      user.flatData?.teams?.filter((innerTeam) =>
-        innerTeam.id[0].id === team.id && innerTeam.role === 'Project Manager').length !== 0)
-      .map((user) => user.flatData?.email)
-  ) || [];
+  const pmsEmails =
+    output.referencingTeamsContents?.flatMap((team) =>
+      team.referencingUsersContents
+        ?.filter(
+          (user) =>
+            user.flatData?.teams !== undefined &&
+            user.flatData?.teams?.filter(
+              (innerTeam) =>
+                innerTeam.id[0].id === team.id &&
+                innerTeam.role === 'Project Manager',
+            ).length !== 0,
+        )
+        .map((user) => user.flatData?.email),
+    ) || [];
 
-  const filteredPmsEmails = pmsEmails?.filter((email): email is string => email !== undefined) as string[];
+  const filteredPmsEmails = pmsEmails?.filter(
+    (email): email is string => email !== undefined,
+  ) as string[];
 
   return {
     id: output.id,

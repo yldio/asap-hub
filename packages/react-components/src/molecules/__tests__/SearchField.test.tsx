@@ -1,4 +1,4 @@
-import { act, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 
 import SearchField from '../SearchField';
 import { SEARCH_EVENT, SEARCH_QUERY_KEY } from '../../analytics';
@@ -33,6 +33,25 @@ describe('GTM data', () => {
     expect(window.dataLayer?.reduce(Object.assign)).not.toHaveProperty(
       SEARCH_QUERY_KEY,
       expect.anything(),
+    );
+  });
+  it('shows an custom X to clear the query', () => {
+    const { getByRole } = render(<SearchField placeholder="p" value="q" />);
+    expect(getByRole('button')).toBeVisible();
+  });
+  it('clears the query after the custom X is pushed', () => {
+    const onChange = jest.fn();
+    const { getByRole } = render(
+      <SearchField placeholder="p" value="q" onChange={onChange} />,
+    );
+    fireEvent.click(getByRole('button'));
+    expect(onChange).toHaveBeenCalledWith('');
+
+    act(() => {
+      jest.advanceTimersByTime(30 * 1000);
+    });
+    expect(window.dataLayer?.reduce(Object.assign)).not.toHaveProperty(
+      SEARCH_EVENT,
     );
   });
   it('is pushed after changing the query and waiting for a debounce', () => {

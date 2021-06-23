@@ -1,7 +1,10 @@
 import { RestResearchOutput, RestUser, RestTeam } from '@asap-hub/squidex';
 import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
 
-export const createProtocolsRequest: RestResearchOutput['data'] = {
+export const createProtocolsRequest: Omit<
+  RestResearchOutput['data'],
+  'pmsEmails'
+> = {
   type: { iv: 'Protocol' },
   title: { iv: 'title 1' },
   publishDate: { iv: '2020-11-27T10:26:00.000Z' },
@@ -18,14 +21,13 @@ export const createProtocolsRequest: RestResearchOutput['data'] = {
   sharingStatus: { iv: 'Network Only' as ResearchOutputSharingStatus },
   asapFunded: { iv: 'Not Sure' as DecisionOption },
   usedInAPublication: { iv: 'Not Sure' as DecisionOption },
-  pmsEmails: { iv: null },
 };
 
 export const fetchProtocolsResponse: RestResearchOutput = {
   id: 'uuid',
   lastModified: '2020-09-25T11:06:27.164Z',
   created: '2020-09-24T11:06:27.164Z',
-  data: createProtocolsRequest,
+  data: (createProtocolsRequest as Omit<RestResearchOutput['data'], 'pmsEmails'>),
 };
 
 export const fetchUserResponse: RestUser = {

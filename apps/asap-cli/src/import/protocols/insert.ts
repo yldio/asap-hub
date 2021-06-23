@@ -83,7 +83,7 @@ const addProtocolToTeam = async (
 
 export default async (data: Protocol): Promise<void> => {
   const promises: Cache = {};
-  const protocol: RestResearchOutput['data'] = {
+  const protocol: Omit<RestResearchOutput['data'], 'pmsEmails'> = {
     type: { iv: 'Protocol' },
     title: { iv: data.name },
     link: { iv: data.link },
@@ -99,7 +99,6 @@ export default async (data: Protocol): Promise<void> => {
     sharingStatus: { iv: 'Network Only' as ResearchOutputSharingStatus },
     asapFunded: { iv: 'Not Sure' as DecisionOption },
     usedInAPublication: { iv: 'Not Sure' as DecisionOption },
-    pmsEmails: { iv: null },
   };
 
   const [e1, teamId] = await Intercept(fetchTeamByName(data.team, promises));

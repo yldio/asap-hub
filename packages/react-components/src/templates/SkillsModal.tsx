@@ -14,6 +14,8 @@ type SkillsModalProps = Pick<UserResponse, 'skillsDescription' | 'skills'> & {
 };
 
 const MIN_SKILLS = 5;
+const validateSkills = (skills: string[]) => skills.length >= MIN_SKILLS;
+
 const SkillsModal: React.FC<SkillsModalProps> = ({
   onSave = noop,
   backHref,
@@ -32,6 +34,14 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
       title="Expertise and resources"
       backHref={backHref}
       dirty={skillsDescription !== newSkillsDescription || skills !== newSkills}
+      validate={() => {
+        const skillsValid = validateSkills(newSkills);
+        !skillsValid &&
+          setSkillsCustomValidationMessage(
+            `Please add a minimum of ${MIN_SKILLS} tags`,
+          );
+        return skillsValid;
+      }}
       onSave={() =>
         onSave({
           skillsDescription: newSkillsDescription || undefined,
@@ -62,7 +72,7 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
             enabled={!isSaving}
             onChange={(newValue) => {
               setNewSkills(newValue);
-              if (newValue.length <= MIN_SKILLS)
+              if (validateSkills(newValue))
                 setSkillsCustomValidationMessage('');
             }}
             suggestions={skillSuggestions}
@@ -71,7 +81,6 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
             }
             customValidationMessage={skillsCustomValidationMessage}
           />
-          <br />
           <Link href={mailToSupport({ subject: 'New tag' })}>
             Ask ASAP to add a new tag
           </Link>

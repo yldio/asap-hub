@@ -34,6 +34,9 @@ export interface ResearchOutput<TAuthorConnection = string> {
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
+export interface CreateResearchOutput
+  extends Entity,
+    Rest<Omit<ResearchOutput, 'pmsEmails'>> {}
 
 export type GraphqlExternalAuthorAssoc = GraphqlWithTypename<
   GraphqlExternalAuthor,

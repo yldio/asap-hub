@@ -6,6 +6,7 @@ import {
   RestUser,
   RestResearchOutput,
   RestTeam,
+  CreateResearchOutput,
 } from '@asap-hub/squidex';
 import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
 import { DateTime } from 'luxon';
@@ -15,9 +16,12 @@ import log from '../../logger';
 
 const users = new Squidex<RestUser>('users', { unpublished: true });
 const teams = new Squidex<RestTeam>('teams', { unpublished: true });
-const protocols = new Squidex<RestResearchOutput>('research-outputs', {
-  unpublished: true,
-});
+const protocols = new Squidex<RestResearchOutput, CreateResearchOutput>(
+  'research-outputs',
+  {
+    unpublished: true,
+  },
+);
 
 interface Cache {
   [key: string]: Promise<RestUser | null>;

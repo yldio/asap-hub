@@ -37,6 +37,8 @@ flatData {
   lastModifiedDate
   lastName
   location
+  country
+  city
   onboarded
   orcid
   orcidLastModifiedDate

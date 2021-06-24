@@ -21,6 +21,8 @@ export interface Invitee {
   jobTitle?: string;
   institution?: string;
   location?: string;
+  country?: string;
+  city?: string;
   avatarUrl?: string;
 }
 

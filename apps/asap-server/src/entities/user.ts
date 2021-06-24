@@ -109,6 +109,8 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     institution: item.flatData?.institution || undefined,
     jobTitle: item.flatData?.jobTitle || undefined,
     location: item.flatData?.location || undefined,
+    country: item.flatData?.country || undefined,
+    city: item.flatData?.city || undefined,
     orcidWorks: item.flatData?.orcidWorks?.slice(0, 5) || [],
     questions: flatQuestions.map((q) => q.question) || [],
     skills: flatSkills,

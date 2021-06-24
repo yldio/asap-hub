@@ -395,7 +395,6 @@ describe('ResearchOutputs controller', () => {
       expect(result.pmsEmails).toEqual([
         'pm1@example.com',
         'pm2@example.com',
-        'pm3@example.com',
         'multiple-pms-on-same-team@example.com',
       ]);
     });

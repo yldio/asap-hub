@@ -112,6 +112,23 @@ describe('the personal info modal', () => {
 });
 
 describe('the contact info modal', () => {
+  it('passes user data to contact info modal', async () => {
+    const { findByDisplayValue } = render(
+      <MemoryRouter initialEntries={[editContactInfo({}).$]}>
+        <Route path={aboutPath}>
+          <Editing
+            user={{
+              ...createUserResponse(),
+              social: { github: 'github' },
+            }}
+            backHref={aboutPath}
+          />
+        </Route>
+      </MemoryRouter>,
+      { wrapper },
+    );
+    expect(await findByDisplayValue('github')).toBeVisible();
+  });
   it('uses the contact email as the email value', async () => {
     const { findByLabelText } = render(
       <MemoryRouter initialEntries={[editContactInfo({}).$]}>

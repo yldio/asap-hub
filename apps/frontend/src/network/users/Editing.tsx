@@ -29,6 +29,7 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
       <Route exact path={path + route.editContactInfo.template}>
         <Frame title="Edit Contact Information">
           <ContactInfoModal
+            {...user}
             email={user.contactEmail}
             fallbackEmail={user.email}
             backHref={backHref}

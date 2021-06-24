@@ -24,6 +24,7 @@ export const Normal = () => (
       'Movement Disorders',
     ]}
     values={['Neurological Diseases', 'Cell Biology', 'Clinical Neurology']}
+    noOptionsMessage={() => text('No Options Message', 'No options!')}
   />
 );
 

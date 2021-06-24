@@ -44,7 +44,7 @@ it('triggers the save function', async () => {
 
   userEvent.type(getByLabelText(/overview/i), 'example description');
 
-  userEvent.type(getByLabelText(/skills/i), '5');
+  userEvent.type(getByLabelText(/tags/i), '5');
   userEvent.tab();
 
   userEvent.click(getByText('Save'));
@@ -87,14 +87,14 @@ it('disables the form elements while submitting', async () => {
   );
 });
 
-describe('skills selection', () => {
+describe('tags selection', () => {
   it('displays a no options message', async () => {
     const { getByLabelText, getByText } = render(
       <SkillsModal {...props} skillSuggestions={['abc']} />,
       { wrapper: StaticRouter },
     );
 
-    userEvent.type(getByLabelText(/skills/i), 'def');
+    userEvent.type(getByLabelText(/tags/i), 'def');
     expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
   });
 
@@ -110,7 +110,7 @@ describe('skills selection', () => {
         wrapper: StaticRouter,
       },
     );
-    const input = getByLabelText(/skills/i);
+    const input = getByLabelText(/tags/i);
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toEqual(
       ember.rgb,
     );
@@ -135,7 +135,7 @@ describe('skills selection', () => {
       },
     );
     userEvent.click(getByText(/save/i));
-    const input = getByLabelText(/skills/i);
+    const input = getByLabelText(/tags/i);
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
       ember.rgb,
     );

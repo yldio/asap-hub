@@ -190,7 +190,7 @@ describe('when editing', () => {
       userEvent.type(getByDisplayValue('Skills Description'), ' 2');
       expect(getByDisplayValue('Skills Description 2')).toBeVisible();
       suggestedSkills.forEach((skill) => {
-        userEvent.type(getByLabelText(/Skills/i), skill);
+        userEvent.type(getByLabelText(/tags/i), skill);
         userEvent.tab();
       });
 

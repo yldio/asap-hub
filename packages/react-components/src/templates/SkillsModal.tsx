@@ -55,19 +55,10 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
             Help ASAP researchers find you in search results by describing your
             unique skills, techniques, resources, and tools.
           </Paragraph>
-          <LabeledTextArea
-            title="Overview"
-            tip="Summarize your expertise and resources in one to two sentences"
-            placeholder="Example: Randy has years of experience in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretory pathway."
-            maxLength={200}
-            enabled={!isSaving}
-            onChange={(newValue) => setSkillsDescription(newValue)}
-            value={newSkillsDescription}
-          />
           <LabeledMultiSelect
-            title="Skills"
-            subtitle="Select the keywords that best apply to your work. Please add a minimum of 5 tags."
-            placeholder="Add a tag (E.g. Cell Biology)"
+            title="Tags*"
+            subtitle="Select 5 to 10 keywords that best apply to your work."
+            placeholder="Start typing…"
             values={newSkills}
             enabled={!isSaving}
             onChange={(newValue) => {
@@ -84,6 +75,15 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
           <Link href={mailToSupport({ subject: 'New tag' })}>
             Ask ASAP to add a new tag
           </Link>
+          <LabeledTextArea
+            title="Overview"
+            tip="Summarize your expertise and resources in one to two sentences"
+            placeholder="Example: Randy has years of experience in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretory pathway."
+            maxLength={200}
+            enabled={!isSaving}
+            onChange={(newValue) => setSkillsDescription(newValue)}
+            value={newSkillsDescription}
+          />
         </>
       )}
     </EditModal>

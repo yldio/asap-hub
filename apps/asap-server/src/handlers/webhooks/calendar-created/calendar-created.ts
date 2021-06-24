@@ -10,11 +10,13 @@ import validateRequest from '../../../utils/validate-squidex-request';
 import { CalendarController } from '../../../controllers/calendars';
 import { GetJWTCredentials } from '../../../utils/aws-secret-manager';
 import logger from '../../../utils/logger';
+import { Alerts } from '../../../utils/alerts';
 
 export const calendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
   unsubscribe: UnsubscribeFromEventChanges,
   calendarController: CalendarController,
+  alerts: Alerts,
 ): Handler =>
   http(async (request: lambda.Request): Promise<lambda.Response> => {
     validateRequest(request);
@@ -63,6 +65,7 @@ export const calendarCreatedHandlerFactory = (
           });
         } catch (error) {
           logger.error(error, 'Error during unsubscribing from the calendar');
+          alerts.error(error);
         }
       }
     }
@@ -89,6 +92,7 @@ export const calendarCreatedHandlerFactory = (
         });
       } catch (error) {
         logger.error(error, 'Error subscribing to the calendar');
+        alerts.error(error);
 
         return {
           statusCode: 502,

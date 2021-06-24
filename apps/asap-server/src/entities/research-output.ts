@@ -40,6 +40,27 @@ export const parseGraphQLResearchOutput = (
       }
     : {};
 
+  const pmsEmails =
+    output.referencingTeamsContents?.flatMap((team) =>
+      team.referencingUsersContents
+        ?.filter(
+          (user) =>
+            user.flatData?.teams !== undefined &&
+            user.flatData?.teams?.filter(
+              (innerTeam) =>
+                innerTeam?.role === 'Project Manager' &&
+                innerTeam?.id?.[0]?.id === team?.id,
+            ).length !== 0,
+        )
+        .map((user) => user.flatData?.email),
+    ) || [];
+
+  const filteredPmsEmails = pmsEmails?.filter(
+    (email): email is string => email !== undefined,
+  ) as string[];
+
+  const uniquePmsEmails = [...new Set(filteredPmsEmails)];
+
   return {
     id: output.id,
     created: parseDate(output.created).toISOString(),
@@ -63,6 +84,7 @@ export const parseGraphQLResearchOutput = (
     usedInPublication: convertDecisionToBoolean(
       output.flatData?.usedInAPublication,
     ),
+    pmsEmails: uniquePmsEmails,
   };
 };
 

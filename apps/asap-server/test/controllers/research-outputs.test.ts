@@ -327,6 +327,7 @@ describe('ResearchOutputs controller', () => {
       const expectedResult = getResearchOutputResponse();
       expectedResult.team = undefined;
       expectedResult.teams = [];
+      expectedResult.pmsEmails = []; // as there are no referencing teams, there won't be any PMs
 
       expect(result).toEqual(expectedResult);
     });
@@ -380,6 +381,41 @@ describe('ResearchOutputs controller', () => {
       ];
 
       expect(result.authors).toEqual(expectedAuthorsResponse);
+    });
+
+    test('Should return a list of PM emails', async () => {
+      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: researchOutputResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+      expect(result.pmsEmails).toEqual([
+        'pm1@example.com',
+        'pm2@example.com',
+        'multiple-pms-on-same-team@example.com',
+      ]);
+    });
+
+    test('PM emails should be deduplicated', async () => {
+      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: researchOutputResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      // Both these PMs are duplicated in the fixture
+      expect(
+        result.pmsEmails.filter((email) => email === 'pm1@example.com').length,
+      ).toEqual(1);
+      expect(
+        result.pmsEmails.filter((email) => email === 'pm2@example.com').length,
+      ).toEqual(1);
     });
 
     describe('Last Updated Partial field', () => {

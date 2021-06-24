@@ -26,9 +26,13 @@ export interface ResearchOutput<TAuthorConnection = string> {
   asapFunded: DecisionOption;
   usedInAPublication: DecisionOption;
   authors?: TAuthorConnection[];
+  pmsEmails: string[];
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
+export interface CreateResearchOutput
+  extends Entity,
+    Rest<Omit<ResearchOutput, 'pmsEmails'>> {}
 
 export type GraphqlExternalAuthorAssoc = GraphqlWithTypename<
   GraphqlExternalAuthor,

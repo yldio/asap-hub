@@ -57,6 +57,17 @@ ${
   flatData {
     displayName
   }
+  referencingUsersContents {
+    flatData {
+      email
+      teams {
+        role
+        id {
+          id
+        }
+      }
+    }
+  }
 }`
     : ''
 }

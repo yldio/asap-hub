@@ -64,6 +64,100 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       flatData: {
         displayName: 'Schipa, A',
       },
+      referencingUsersContents: [
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a3',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'pm1@example.com',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-1',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {},
+                  },
+                ],
+                role: 'Project Manager',
+              },
+            ],
+          },
+        },
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a3',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'pm1@example.com',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-1',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {},
+                  },
+                ],
+                role: 'Project Manager',
+              },
+            ],
+          },
+        },
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a0',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'notapm1@example.com',
+          },
+        },
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'notapm2@example.com',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'wrong-team-id',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {},
+                  },
+                ],
+                role: 'Project Manager',
+              },
+            ],
+          },
+        },
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a2',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'notapm3@example.com',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-1',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {},
+                  },
+                ],
+                role: 'Key Personnel',
+              },
+            ],
+          },
+        },
+      ],
     },
     {
       id: 'team-id-2',
@@ -72,6 +166,79 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       flatData: {
         displayName: 'Team, B',
       },
+      referencingUsersContents: [
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'pm2@example.com',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-2',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {},
+                  },
+                ],
+                role: 'Project Manager',
+              },
+            ],
+          },
+        },
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'pm2@example.com',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-2',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {},
+                  },
+                ],
+                role: 'Project Manager',
+              },
+            ],
+          },
+        },
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'multiple-pms-on-same-team@example.com',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-2',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {},
+                  },
+                ],
+                role: 'Project Manager',
+              },
+            ],
+          },
+        },
+        {
+          id: '94adc252-cf5e-4950-bbcf-339e46d326a0',
+          created: '2020-09-23T20:33:36Z',
+          lastModified: '2020-11-26T11:56:04Z',
+          flatData: {
+            email: 'notapm4@example.com',
+          },
+        },
+      ],
     },
   ],
 });
@@ -106,6 +273,11 @@ export const getResearchOutputResponse =
     sharingStatus: 'Network Only',
     asapFunded: true,
     usedInPublication: false,
+    pmsEmails: [
+      'pm1@example.com',
+      'pm2@example.com',
+      'multiple-pms-on-same-team@example.com',
+    ],
   });
 
 export const getListResearchOutputResponse =

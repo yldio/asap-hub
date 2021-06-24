@@ -47,7 +47,10 @@ export interface ODataQuery {
   $search?: string;
 }
 
-export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
+export class Squidex<
+  T extends { id: string; data: Record<string, unknown> },
+  C extends { id: string; data: Record<string, unknown> } = T,
+> {
   client: typeof Got;
   collection: string;
 
@@ -131,7 +134,7 @@ export class Squidex<T extends { id: string; data: Record<string, unknown> }> {
     return items[0];
   }
 
-  async create(json: T['data'], publish = true): Promise<T> {
+  async create(json: C['data'], publish = true): Promise<T> {
     try {
       const res = await this.client
         .post(`${this.collection}`, {

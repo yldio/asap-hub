@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+import 'source-map-support/register';
 import * as Sentry from '@sentry/serverless';
 import { sentryDsn, environment, currentRevision } from '../../../config';
 import Calendars from '../../../controllers/calendars';

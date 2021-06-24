@@ -1,4 +1,9 @@
-import { RestResearchOutput, RestUser, RestTeam } from '@asap-hub/squidex';
+import {
+  CreateResearchOutput,
+  RestResearchOutput,
+  RestUser,
+  RestTeam,
+} from '@asap-hub/squidex';
 import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
 
 export const createProtocolsRequest: Omit<
@@ -23,11 +28,11 @@ export const createProtocolsRequest: Omit<
   usedInAPublication: { iv: 'Not Sure' as DecisionOption },
 };
 
-export const fetchProtocolsResponse: RestResearchOutput = {
+export const fetchProtocolsResponse: CreateResearchOutput = {
   id: 'uuid',
   lastModified: '2020-09-25T11:06:27.164Z',
   created: '2020-09-24T11:06:27.164Z',
-  data: (createProtocolsRequest as Omit<RestResearchOutput['data'], 'pmsEmails'>),
+  data: createProtocolsRequest,
 };
 
 export const fetchUserResponse: RestUser = {

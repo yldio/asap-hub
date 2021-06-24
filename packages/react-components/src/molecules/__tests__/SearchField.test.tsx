@@ -35,7 +35,7 @@ describe('GTM data', () => {
       expect.anything(),
     );
   });
-  it('shows an custom X to clear the query', () => {
+  it('shows a clear query button when there is a value', () => {
     const { rerender, queryByRole, getByRole } = render(
       <SearchField placeholder="p" value="" />,
     );

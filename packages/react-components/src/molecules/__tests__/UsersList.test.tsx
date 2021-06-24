@@ -42,3 +42,35 @@ it('does not link external users', () => {
   );
   expect(getByText(/John Doe/).closest('a')).toBeNull();
 });
+
+describe('maximum users', () => {
+  it('truncates user list when maximum exceeded and shows additional count', () => {
+    const { getAllByRole, getByText } = render(
+      <UsersList
+        max={3}
+        users={Array.from({ length: 5 }).map(
+          () =>
+            ({
+              displayName: 'John Doe',
+            } as ExternalAuthor),
+        )}
+      />,
+    );
+    expect(getAllByRole('listitem').length).toEqual(4);
+    expect(getByText('+2')).toBeVisible();
+  });
+  it('does not truncate the list at the maximum', () => {
+    const { getAllByRole } = render(
+      <UsersList
+        max={3}
+        users={Array.from({ length: 3 }).map(
+          () =>
+            ({
+              displayName: 'John Doe',
+            } as ExternalAuthor),
+        )}
+      />,
+    );
+    expect(getAllByRole('listitem').length).toEqual(3);
+  });
+});

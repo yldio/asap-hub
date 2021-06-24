@@ -17,6 +17,8 @@ export const userUpdateSchema = Joi.object({
   institution: Joi.string().allow(''),
   biography: Joi.string().allow(''),
   location: Joi.string().allow(''),
+  country: Joi.string().allow(''),
+  city: Joi.string().allow(''),
   orcid: Joi.string().allow(''),
   skills: Joi.array().items(Joi.string()),
   skillsDescription: Joi.string().allow(''),

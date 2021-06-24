@@ -134,6 +134,8 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
         orcid: '363-98-9330',
         institution: 'Dollar General Corporation',
         location: 'Zofilte',
+        country: 'United Kingdom',
+        city: 'Brighton',
         avatar: [{ id: 'squidex-asset-id' }],
         questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
         skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
@@ -209,6 +211,8 @@ export const buildUserGraphqlResponse = (
         orcid: '363-98-9330',
         institution: 'Dollar General Corporation',
         location: 'Zofilte',
+        country: 'United Kingdom',
+        city: 'Brighton',
         avatar: [{ id: 'squidex-asset-id' }],
         questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
         skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
@@ -288,6 +292,8 @@ export const patchResponse: RestUser = {
     orcid: { iv: '363-98-9330' },
     institution: { iv: 'Dollar General Corporation' },
     location: { iv: 'Zofilte' },
+    country: { iv: 'United Kingdom' },
+    city: { iv: 'Brighton' },
     avatar: { iv: ['squidex-asset-id'] },
     skills: { iv: [] },
     orcidWorks: { iv: [] },
@@ -331,6 +337,8 @@ export const userResponse: UserResponse = {
   jobTitle: 'Junior',
   institution: 'Dollar General Corporation',
   degree: 'MPH',
+  country: 'United Kingdom',
+  city: 'Brighton',
   teams: [
     {
       id: 'team-id-1',
@@ -429,4 +437,6 @@ export const userPatchRequest: UserPatchRequest = {
   jobTitle: 'CEO',
   questions: ['To be or not to be?'],
   onboarded: true,
+  country: 'United Kingdom',
+  city: 'Manchester',
 };

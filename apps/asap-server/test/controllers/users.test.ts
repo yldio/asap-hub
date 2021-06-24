@@ -293,6 +293,26 @@ describe('Users controller', () => {
       );
     });
 
+    test('Should update the country and city through a clean-update', async () => {
+      nock(config.baseUrl)
+        .patch(`/api/content/${config.appName}/users/${userId}`, {
+          country: { iv: 'United Kingdom' },
+          city: { iv: 'Brighton' },
+        })
+        .reply(200, fetchUserResponse)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUser(userId),
+        })
+        .reply(200, buildUserGraphqlResponse());
+
+      expect(
+        await users.update(userId, {
+          country: 'United Kingdom',
+          city: 'Brighton',
+        }),
+      ).toEqual(userResponse);
+    });
+
     test('Should delete user fields', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/users/${userId}`)

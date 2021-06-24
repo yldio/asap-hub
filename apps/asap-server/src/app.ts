@@ -103,6 +103,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     libs.xRay.middleware.enableDynamicNaming('*.hub.asap.science');
   }
 
+  /* istanbul ignore next */
   if (libs.sentryRequestHandler) {
     app.use(libs.sentryRequestHandler());
   }
@@ -163,6 +164,7 @@ export const appFactory = (libs: Libs = {}): Express => {
     app.use(libs.xRay.express.closeSegment());
   }
 
+  /* istanbul ignore next */
   if (libs.sentryErrorHandler) {
     app.use(libs.sentryErrorHandler());
   }

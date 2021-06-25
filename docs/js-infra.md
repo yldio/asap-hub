@@ -17,9 +17,10 @@ The root and some projects contain `patches` applies to some broken dependencies
 
 TypeScript is used only for typechecking, while Babel is used for the actual compilation.
 The reasons for this are
-* that Babel allows specifying more precise target platforms using Browserslist,
-* that Babel allows custom plugins, such as for CSS-in-JS or inlining environment variables, and
-* that Babel is much faster, so even when you have typecheck running in parallel, you get faster feedback.
+
+- that Babel allows specifying more precise target platforms using Browserslist,
+- that Babel allows custom plugins, such as for CSS-in-JS or inlining environment variables, and
+- that Babel is much faster, so even when you have typecheck running in parallel, you get faster feedback.
 
 Because TypeScript itself does not auto-detect all projects that are part of the workspace, the `get-composite-ts-projects` script does it. It also checks whether any `tsconfig` `references` are missing to avoid confusing errors or out-of-order typechecking later on.
 

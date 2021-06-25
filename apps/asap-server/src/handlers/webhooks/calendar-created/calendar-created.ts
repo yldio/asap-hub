@@ -1,23 +1,22 @@
-/* eslint-disable no-shadow */
 import Joi from '@hapi/joi';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 import { Auth } from 'googleapis';
 
-import { googleApiUrl, asapApiUrl, googleApiToken } from '../../config';
-import { http } from '../../utils/instrumented-framework';
-import { Handler } from '../../utils/types';
-import validateRequest from '../../utils/validate-squidex-request';
-import Calendars, { CalendarController } from '../../controllers/calendars';
-import getJWTCredentials, {
-  GetJWTCredentials,
-} from '../../utils/aws-secret-manager';
-import logger from '../../utils/logger';
+import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../config';
+import { http } from '../../../utils/instrumented-framework';
+import { Handler } from '../../../utils/types';
+import validateRequest from '../../../utils/validate-squidex-request';
+import { CalendarController } from '../../../controllers/calendars';
+import { GetJWTCredentials } from '../../../utils/aws-secret-manager';
+import logger from '../../../utils/logger';
+import { Alerts } from '../../../utils/alerts';
 
-export const webhookCalendarCreatedHandlerFactory = (
+export const calendarCreatedHandlerFactory = (
   subscribe: SubscribeToEventChanges,
   unsubscribe: UnsubscribeFromEventChanges,
   calendarController: CalendarController,
+  alerts: Alerts,
 ): Handler =>
   http(async (request: lambda.Request): Promise<lambda.Response> => {
     validateRequest(request);
@@ -66,6 +65,7 @@ export const webhookCalendarCreatedHandlerFactory = (
           });
         } catch (error) {
           logger.error(error, 'Error during unsubscribing from the calendar');
+          alerts.error(error);
         }
       }
     }
@@ -92,6 +92,7 @@ export const webhookCalendarCreatedHandlerFactory = (
         });
       } catch (error) {
         logger.error(error, 'Error subscribing to the calendar');
+        alerts.error(error);
 
         return {
           statusCode: 502,
@@ -184,9 +185,3 @@ export const unsubscribeFromEventChangesFactory =
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
-
-export const handler: Handler = webhookCalendarCreatedHandlerFactory(
-  subscribeToEventChangesFactory(getJWTCredentials),
-  unsubscribeFromEventChangesFactory(getJWTCredentials),
-  new Calendars(),
-);

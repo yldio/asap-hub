@@ -14,6 +14,8 @@ const {
   LOG_LEVEL,
   LOG_ENABLED,
   NODE_ENV,
+  CURRENT_REVISION,
+  SENTRY_DSN,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -33,3 +35,5 @@ export const googleApiToken = GOOGLE_API_TOKEN || 'asap-google-api-token';
 export const asapApiUrl = ASAP_API_URL || 'http://localhost:3333';
 export const logLevel = LOG_LEVEL || 'info';
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
+export const currentRevision = CURRENT_REVISION || 'default';
+export const sentryDsn = SENTRY_DSN;

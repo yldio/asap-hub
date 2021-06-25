@@ -8,7 +8,7 @@ import {
 import {
   UnsubscribeFromEventChanges,
   SubscribeToEventChanges,
-} from '../../../src/handlers/webhooks/webhook-calendar-created';
+} from '../../../src/handlers/webhooks/calendar-created/calendar-created';
 import {
   createEventBridgeEventMock,
   createHandlerContext,

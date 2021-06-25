@@ -80,6 +80,7 @@ __metadata:
     "@hapi/boom": ^9.1.2
     "@hapi/bourne": ^2.0.0
     "@hapi/joi": ^17.1.1
+    "@sentry/serverless": ^6.7.1
     "@types/apr-intercept": "workspace:*"
     "@types/aws-lambda": ^8.10.76
     "@types/chance": ^1.1.1
@@ -5138,6 +5139,104 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/core@npm:6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/core@npm:6.7.1"
+  dependencies:
+    "@sentry/hub": 6.7.1
+    "@sentry/minimal": 6.7.1
+    "@sentry/types": 6.7.1
+    "@sentry/utils": 6.7.1
+    tslib: ^1.9.3
+  checksum: 6911f265d0bdd896579a31369df96276967e43df078400daaee498b16764bd49a993be1ecf5c8305b094c382e41084284f99823dce419078b4f0739b2066c1ae
+  languageName: node
+  linkType: hard
+
+"@sentry/hub@npm:6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/hub@npm:6.7.1"
+  dependencies:
+    "@sentry/types": 6.7.1
+    "@sentry/utils": 6.7.1
+    tslib: ^1.9.3
+  checksum: f996dd6c250a828820ecc2a4e61a42c826e28ce214de7a589dcbb3914237c57646c1249a6655b44824b4548ee762fc6f217b72e8b1e66364871b5769c423e9be
+  languageName: node
+  linkType: hard
+
+"@sentry/minimal@npm:6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/minimal@npm:6.7.1"
+  dependencies:
+    "@sentry/hub": 6.7.1
+    "@sentry/types": 6.7.1
+    tslib: ^1.9.3
+  checksum: 1e10e0904d5bb58b61b9bb8b09bf18c529a03f8a249d0c7c8e79d196b633ceac180c667f7c1b82fcd8a44c7c052e61edeed6b8a5f20a1932af8e62320aef6d72
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/node@npm:6.7.1"
+  dependencies:
+    "@sentry/core": 6.7.1
+    "@sentry/hub": 6.7.1
+    "@sentry/tracing": 6.7.1
+    "@sentry/types": 6.7.1
+    "@sentry/utils": 6.7.1
+    cookie: ^0.4.1
+    https-proxy-agent: ^5.0.0
+    lru_map: ^0.3.3
+    tslib: ^1.9.3
+  checksum: 1551e120035bd15432087e237d561aa1c80529077492a78b30e4774bd3ffa825647f64660737187d35b7be82f08eb0f91661ef63b1bd3c703afce36197953131
+  languageName: node
+  linkType: hard
+
+"@sentry/serverless@npm:^6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/serverless@npm:6.7.1"
+  dependencies:
+    "@sentry/minimal": 6.7.1
+    "@sentry/node": 6.7.1
+    "@sentry/tracing": 6.7.1
+    "@sentry/types": 6.7.1
+    "@sentry/utils": 6.7.1
+    "@types/aws-lambda": ^8.10.62
+    "@types/express": ^4.17.2
+    tslib: ^1.9.3
+  checksum: 0fc78fc3b77693cf5eb29ab4a70a66fd32f6da6b106b779d906b493d9e1f31710be5f01ba84f0c3a6060933fc697c5bc6a621c011a740d39a8f280104d7781dd
+  languageName: node
+  linkType: hard
+
+"@sentry/tracing@npm:6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/tracing@npm:6.7.1"
+  dependencies:
+    "@sentry/hub": 6.7.1
+    "@sentry/minimal": 6.7.1
+    "@sentry/types": 6.7.1
+    "@sentry/utils": 6.7.1
+    tslib: ^1.9.3
+  checksum: 5f96b8b0bb30e2c3de8d366aeaf663d9f71c773877e4efcbdbe64f8c96ea2a09b850464b6e50e0705be0db32f81dfab7b8f529d1b9747d29eab865fcb3b99784
+  languageName: node
+  linkType: hard
+
+"@sentry/types@npm:6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/types@npm:6.7.1"
+  checksum: e6fdeaa9518a55e7e51c39b60c812bb38933a5c8dbe0984d2b64de9c30ea56925a2f09e719fa15e25bd996b11bdd3e29c7b221af59a6baab5bfbcc01a6cf3a50
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:6.7.1":
+  version: 6.7.1
+  resolution: "@sentry/utils@npm:6.7.1"
+  dependencies:
+    "@sentry/types": 6.7.1
+    tslib: ^1.9.3
+  checksum: 7579666a37819bad85ec247574dbd4e000d23f254d5005037c86686d736f3a5346fc88d9df59a17c13372f68d1787f587f2237624792c0598697db8bb3794bdd
+  languageName: node
+  linkType: hard
+
 "@serverless/cli@npm:^1.5.2":
   version: 1.5.2
   resolution: "@serverless/cli@npm:1.5.2"
@@ -6518,6 +6617,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/aws-lambda@npm:^8.10.62":
+  version: 8.10.77
+  resolution: "@types/aws-lambda@npm:8.10.77"
+  checksum: c810f6dec21ebd2c0910a3d5a0101c7f0e1965c99b1cba34e9af063b7cda4d91e702a0dd509b1dbc47589907474368e2eed45a4f4f99aef957c553236c609578
+  languageName: node
+  linkType: hard
+
 "@types/aws-lambda@npm:^8.10.76":
   version: 8.10.76
   resolution: "@types/aws-lambda@npm:8.10.76"
@@ -6781,6 +6887,18 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 2818120a0fd8b7982215864929cdc6cd14942dd44849f93054fe2a90b4233dff67aadc34c73b5937922a02c688b0263d00a4807aa2e59307ac859a1458d73669
+  languageName: node
+  linkType: hard
+
+"@types/express@npm:^4.17.2":
+  version: 4.17.12
+  resolution: "@types/express@npm:4.17.12"
+  dependencies:
+    "@types/body-parser": "*"
+    "@types/express-serve-static-core": ^4.17.18
+    "@types/qs": "*"
+    "@types/serve-static": "*"
+  checksum: b1ab50e0373095283f5a58c8c1aa7e206182d241d24279e24d754819ae39959b35996d34633b1e4b3a9d3817559abad00ec33c94b96da945a9c3d1546f3e4f70
   languageName: node
   linkType: hard
 
@@ -12102,6 +12220,13 @@ __metadata:
   version: 0.4.0
   resolution: "cookie@npm:0.4.0"
   checksum: 7aaef4b642c533600fdd001d963a507dfcd814267503374e51d9743475d024feeff8b0b4ddd0777a25791a2efbdfd8bc4a0fe0696104efa195e8f8584807d410
+  languageName: node
+  linkType: hard
+
+"cookie@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "cookie@npm:0.4.1"
+  checksum: b8e0928e3e7aba013087974b33a6eec730b0a68b7ec00fc3c089a56ba2883bcf671252fc2ed64775aa1ca64796b6e1f6fdddba25a66808aef77614d235fd3e06
   languageName: node
   linkType: hard
 
@@ -21464,6 +21589,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lru_map@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "lru_map@npm:0.3.3"
+  checksum: c1d5347da0658d31f9440496c97e87cc67f201f79e46e9f83dd4cf3766cc93f021c6226f900f096d0e357913cad290c7d464ac632e5e124efbdb2af1da08774c
+  languageName: node
+  linkType: hard
+
 "luxon@npm:^1.26.0":
   version: 1.26.0
   resolution: "luxon@npm:1.26.0"
@@ -29618,6 +29750,13 @@ resolve@^2.0.0-next.3:
   version: 1.13.0
   resolution: "tslib@npm:1.13.0"
   checksum: 5dc3bdaea3b67c76ef4a14c28fcb2171da7bcf292fd9c59a260098729626b1ce766c52b588f08e324ed9a0c52ea8a93a815920f980d75981abc9d850fbf310fb
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^1.9.3":
+  version: 1.14.1
+  resolution: "tslib@npm:1.14.1"
+  checksum: f44fe7f216946b17d3e3074df3746372703cf24e9127b4c045511456e8e4bf25515fb0a1bb3937676cc305651c5d4fcb6377b0588a4c6a957e748c4c28905d17
   languageName: node
   linkType: hard
 

@@ -4,21 +4,26 @@ import { WebhookPayload, Calendar } from '@asap-hub/squidex';
 
 import {
   SubscribeToEventChanges,
-  webhookCalendarCreatedHandlerFactory,
+  calendarCreatedHandlerFactory,
   subscribeToEventChangesFactory,
   UnsubscribeFromEventChanges,
   unsubscribeFromEventChangesFactory,
-} from '../../../src/handlers/webhooks/webhook-calendar-created';
-import { apiGatewayEvent } from '../../helpers/events';
-import { signPayload } from '../../../src/utils/validate-squidex-request';
+} from '../../../../src/handlers/webhooks/calendar-created/calendar-created';
+import { apiGatewayEvent } from '../../../helpers/events';
+import { signPayload } from '../../../../src/utils/validate-squidex-request';
 import {
   createCalendarEvent,
   updateCalendarEvent,
 } from './webhook-sync-calendar.fixtures';
-import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../src/config';
-import { googleApiAuthJWTCredentials } from '../../mocks/google-api.mock';
-import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
-import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
+import {
+  googleApiUrl,
+  asapApiUrl,
+  googleApiToken,
+} from '../../../../src/config';
+import { googleApiAuthJWTCredentials } from '../../../mocks/google-api.mock';
+import { calendarControllerMock } from '../../../mocks/calendar-controller.mock';
+import { GetJWTCredentials } from '../../../../src/utils/aws-secret-manager';
+import { Alerts } from '../../../../src/utils/alerts';
 
 const createSignedPayload = (payload: WebhookPayload<Calendar>) =>
   apiGatewayEvent({
@@ -32,10 +37,14 @@ describe('Calendar Webhook', () => {
   const subscribe: jest.MockedFunction<SubscribeToEventChanges> = jest.fn();
   const unsubscribe: jest.MockedFunction<UnsubscribeFromEventChanges> =
     jest.fn();
-  const handler = webhookCalendarCreatedHandlerFactory(
+  const alerts: jest.Mocked<Alerts> = {
+    error: jest.fn(),
+  };
+  const handler = calendarCreatedHandlerFactory(
     subscribe,
     unsubscribe,
     calendarControllerMock,
+    alerts,
   );
 
   afterEach(() => {
@@ -81,10 +90,11 @@ describe('Calendar Webhook', () => {
       );
     });
 
-    test('Should return 502 when the subscription was unsuccessful', async () => {
+    test('Should return 502 and alert when the subscription was unsuccessful', async () => {
       const errorMessage =
         'Channel id 238c6b46-706e-11eb-9439-0242ac130002 not unique';
-      subscribe.mockRejectedValueOnce(new Error(errorMessage));
+      const error = new Error(errorMessage);
+      subscribe.mockRejectedValueOnce(error);
 
       const res = (await handler(
         createSignedPayload(createCalendarEvent),
@@ -92,6 +102,7 @@ describe('Calendar Webhook', () => {
 
       expect(res.statusCode).toStrictEqual(502);
       expect(res.body).toContain(errorMessage);
+      expect(alerts.error).toBeCalledWith(error);
     });
 
     test('Should unsubscribe and skip the subscription if the calendar ID was set to an empty string', async () => {
@@ -190,11 +201,12 @@ describe('Calendar Webhook', () => {
       expect(subscribe).toHaveBeenCalled();
     });
 
-    test('Should continue to subscription even if unsubscribing failed', async () => {
+    test('Should alert and continue to subscription even when unsubscribing failed', async () => {
       const resourceId = 'some-resource-id';
       const expiration = 123456;
       subscribe.mockResolvedValueOnce({ resourceId, expiration });
-      unsubscribe.mockRejectedValueOnce(new Error());
+      const error = new Error();
+      unsubscribe.mockRejectedValueOnce(error);
 
       const res = (await handler(
         createSignedPayload(updateCalendarEvent),
@@ -202,6 +214,7 @@ describe('Calendar Webhook', () => {
 
       expect(res.statusCode).toStrictEqual(200);
       expect(subscribe).toHaveBeenCalled();
+      expect(alerts.error).toBeCalledWith(error);
     });
   });
 });

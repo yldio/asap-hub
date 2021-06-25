@@ -7,8 +7,14 @@ import * as LightStep from 'lightstep-tracer';
 import AWSXray from 'aws-xray-sdk';
 import http from 'http';
 import https from 'https';
+import * as Sentry from '@sentry/serverless';
 import { appFactory } from '../app';
-import { lightstepToken, environment } from '../config';
+import {
+  lightstepToken,
+  environment,
+  currentRevision,
+  sentryDsn,
+} from '../config';
 import logger from '../utils/logger';
 
 const lsTracer = new LightStep.Tracer({
@@ -21,16 +27,25 @@ AWSXray.captureHTTPsGlobal(http, true);
 AWSXray.captureHTTPsGlobal(https, true);
 AWSXray.capturePromise();
 
+Sentry.AWSLambda.init({
+  dsn: sentryDsn,
+  tracesSampleRate: 1.0,
+  environment,
+  release: currentRevision,
+});
+
 const app = appFactory({
   tracer: lsTracer,
   xRay: AWSXray,
+  sentryErrorHandler: Sentry.Handlers.errorHandler,
+  sentryRequestHandler: Sentry.Handlers.requestHandler,
 });
 
 interface RequestWithContext extends RequestExpress {
   context: APIGatewayProxyEventV2['requestContext'];
 }
 
-export const apiHandler = serverlessHttp(app, {
+const httpHandler = serverlessHttp(app, {
   request(
     request: RequestWithContext,
     event: APIGatewayProxyEventV2,
@@ -40,3 +55,5 @@ export const apiHandler = serverlessHttp(app, {
     logger.withRequest(event, context);
   },
 });
+
+export const apiHandler = Sentry.AWSLambda.wrapHandler(httpHandler);

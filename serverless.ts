@@ -67,6 +67,7 @@ const serverlessConfig: AWS = {
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${
         SLS_STAGE === 'production' ? 'prod' : 'dev'
       }}`,
+      CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
     },
     iamRoleStatements: [
       {
@@ -134,6 +135,9 @@ const serverlessConfig: AWS = {
           },
         },
       ],
+      environment: {
+        SENTRY_DSN: '${env:SENTRY_DSN_API}',
+      },
     },
     auth0FetchByCode: {
       handler:
@@ -189,7 +193,7 @@ const serverlessConfig: AWS = {
     },
     calendarCreated: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-calendar-created.handler',
+        'apps/asap-server/src/handlers/webhooks/calendar-created/handler.handler',
       events: [
         {
           httpApi: {
@@ -205,6 +209,7 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }}`,
+        SENTRY_DSN: '${env:SENTRY_DSN_CALENDAR}',
       },
     },
     eventsUpdated: {

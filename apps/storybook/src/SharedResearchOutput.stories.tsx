@@ -3,7 +3,14 @@ import {
   SharedResearchOutput,
   SharedResearchProposal,
 } from '@asap-hub/react-components';
-import { text, date, array, number, select } from '@storybook/addon-knobs';
+import {
+  text,
+  date,
+  array,
+  number,
+  select,
+  boolean,
+} from '@storybook/addon-knobs';
 
 import {
   createListTeamResponse,
@@ -57,6 +64,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
   ).toISOString(),
   backHref: '#',
   teams: createListTeamResponse(number('Number of teams', 3)).items,
+  pmsEmails: boolean('Show Contact CTA', true) ? ['example@example.com'] : [],
   authors: [
     ...createListUserResponse(number('Number of authors', 2)).items,
     ...Array.from({ length: number('Number of external authors', 1) }).map(

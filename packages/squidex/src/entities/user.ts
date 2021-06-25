@@ -42,6 +42,8 @@ export interface User<
   jobTitle?: string;
   lastModifiedDate?: string;
   location?: string;
+  country?: string;
+  city?: string;
   orcid?: string;
   orcidWorks?: OrcidWork[];
   orcidLastSyncDate?: string;

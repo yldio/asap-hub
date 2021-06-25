@@ -21,6 +21,8 @@ export interface Invitee {
   jobTitle?: string;
   institution?: string;
   location?: string;
+  country?: string;
+  city?: string;
   avatarUrl?: string;
 }
 
@@ -134,6 +136,8 @@ export interface UserPatchRequest {
   institution?: string;
   degree?: UserDegree;
   location?: string;
+  country?: string;
+  city?: string;
   skills?: string[];
   skillsDescription?: string;
   questions?: string[];

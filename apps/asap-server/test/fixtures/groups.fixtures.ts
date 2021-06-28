@@ -5,7 +5,6 @@ import {
   ResponseFetchGroup,
 } from '../../src/controllers/groups';
 import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
-import { fetchExpectation } from './users.fixtures';
 
 export const queryGroupsResponse: { data: ResponseFetchGroups } = {
   data: {
@@ -256,26 +255,6 @@ export const listGroupsResponse: ListGroupResponse = {
           displayName: 'Lee, M',
           lastModifiedDate: '2020-12-11T15:06:26.000Z',
           skills: [],
-          outputs: [
-            {
-              id: 'output-id-1',
-              created: '2020-12-11T14:33:18.000Z',
-              type: 'Proposal',
-              subTypes: [],
-              title: 'Proposal',
-              description: '',
-              tags: ['test', 'tag'],
-              authors: fetchExpectation.items,
-              team: { id: 'team-id-1', displayName: 'Lee, M' },
-              teams: [{ id: 'team-id-1', displayName: 'Lee, M' }],
-              lastUpdatedPartial: '2020-12-11T14:33:18.000Z',
-              accessInstructions: 'some access instructions',
-              sharingStatus: 'Network Only',
-              asapFunded: false,
-              usedInPublication: false,
-              pmsEmails: [],
-            },
-          ],
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
           proposalURL: 'output-id-1',

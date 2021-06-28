@@ -42,6 +42,15 @@ describe('usePaginationParams', () => {
     expect(result.current.isListView).toBe(true);
   });
 
+  it('returns overridden page size and view', () => {
+    const { result } = renderHook(() => usePaginationParams(8), {
+      wrapper: MemoryRouter,
+    });
+    expect(result.current.currentPage).toBe(0);
+    expect(result.current.pageSize).toBe(8);
+    expect(result.current.isListView).toBe(false);
+  });
+
   it('removes pagination parameters from url after reset', () => {
     const { result } = renderHook(
       () => ({

@@ -17,7 +17,7 @@ export const Normal = () => {
           ? meetingMaterials.map((material, i) =>
               i === 0
                 ? {
-                    title: text('title', 'Material 0'),
+                    title: text('title', 'Material 1'),
                     url: text('url', 'http://example.com'),
                   }
                 : material,

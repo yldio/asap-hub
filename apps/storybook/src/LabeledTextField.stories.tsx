@@ -51,13 +51,6 @@ export const Invalid = () => (
     hint={text('Hint', 'Hint')}
   />
 );
-export const Loading = () => (
-  <LabeledTextField
-    title={text('Title', 'Full Name')}
-    value={text('Value', 'John Doe')}
-    loading
-  />
-);
 
 export const LabelIndicator = () => (
   <LabeledTextField

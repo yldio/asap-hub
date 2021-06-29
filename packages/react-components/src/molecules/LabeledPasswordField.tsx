@@ -51,7 +51,7 @@ const LabeledPasswordField: React.FC<LabeledPasswordFieldProps> = ({
             id={id}
             value={value}
             type={showPassword ? 'text' : 'password'}
-            customIndicator={
+            rightIndicator={
               value ? (
                 <div css={showPasswordIndicatorStyles}>
                   <Button

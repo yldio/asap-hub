@@ -26,6 +26,7 @@ type EditModalProps = Pick<
   ComponentProps<typeof ModalEditHeader>,
   'title' | 'backHref' | 'onSave'
 > & {
+  validate?: () => boolean;
   dirty: boolean; // mandatory so that it cannot be forgotten
   children: (state: { isSaving: boolean }) => ReactNode;
 };
@@ -34,6 +35,7 @@ const EditModal: React.FC<EditModalProps> = ({
   children,
   title,
   backHref,
+  validate = () => true,
   onSave = noop,
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -68,8 +70,9 @@ const EditModal: React.FC<EditModalProps> = ({
           backHref={backHref}
           saveEnabled={status !== 'isSaving'}
           onSave={async () => {
+            const parentValidation = validate();
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            if (formRef.current!.reportValidity()) {
+            if (formRef.current!.reportValidity() && parentValidation) {
               setStatus('isSaving');
               try {
                 await onSave();

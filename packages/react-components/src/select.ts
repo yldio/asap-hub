@@ -1,6 +1,16 @@
 import { ComponentProps } from 'react';
 import Select from 'react-select';
-import { ember, rose, lead, silver, tin, steel, mint, pine } from './colors';
+import {
+  ember,
+  rose,
+  lead,
+  silver,
+  tin,
+  steel,
+  mint,
+  pine,
+  charcoal,
+} from './colors';
 import {
   styles,
   indicatorPadding,
@@ -30,36 +40,9 @@ const disabledStyles = {
   backgroundColor: silver.rgb,
 };
 
-export const reactSelectStyles = (
-  isInvalid: boolean,
-): ComponentProps<typeof Select>['styles'] => ({
-  control: (_provided, { isFocused, isDisabled }) => ({
-    ...baseStyles,
-
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-
-    ...(isFocused ? focusStyles : {}),
-    ...(isInvalid ? invalidStyles : {}),
-    ...(isDisabled ? disabledStyles : {}),
-  }),
-
-  valueContainer: (provided) => ({
-    ...provided,
-    padding: 0,
-    paddingRight: `${indicatorPadding / perRem}em`,
-  }),
-  input: (_provided) => ({}),
-  singleValue: (provided, { getValue }) => ({
-    ...provided,
-    margin: 0,
-    color: getValue()?.some((option) => option.value !== '')
-      ? 'unset'
-      : tin.rgb,
-  }),
-
-  indicatorSeparator: (_provided) => ({ display: 'none' }),
+const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
+  input: () => ({}),
+  indicatorSeparator: () => ({ display: 'none' }),
   indicatorsContainer: (provided) => ({
     ...provided,
 
@@ -97,7 +80,98 @@ export const reactSelectStyles = (
     ':active': undefined,
   }),
 
-  noOptionsMessage: (_provided) => ({
+  noOptionsMessage: () => ({
+    ...disabledStyles,
     padding: `${12 / perRem}em ${paddingLeftRight / perRem}em`,
+  }),
+};
+
+export const reactSelectStyles = (
+  isInvalid: boolean,
+): ComponentProps<typeof Select>['styles'] => ({
+  ...baseSelectStyles,
+  control: (_provided, { isFocused, isDisabled }) => ({
+    ...baseStyles,
+
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    ...(isFocused ? focusStyles : {}),
+    ...(isInvalid ? invalidStyles : {}),
+    ...(isDisabled ? disabledStyles : {}),
+  }),
+  singleValue: (provided, { getValue }) => ({
+    ...provided,
+    margin: 0,
+    color: getValue()?.some((option) => option.value !== '')
+      ? 'unset'
+      : tin.rgb,
+  }),
+  valueContainer: (provided) => ({
+    ...provided,
+    padding: 0,
+    paddingRight: `${indicatorPadding / perRem}em`,
+  }),
+});
+
+export const reactMultiSelectStyles = (
+  isInvalid: boolean,
+): ComponentProps<typeof Select>['styles'] => ({
+  ...baseSelectStyles,
+  control: (_provided, { isFocused, isDisabled }) => ({
+    ...baseStyles,
+    padding: `${3 / perRem}em ${9 / perRem}em`,
+
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    ...(isFocused ? focusStyles : {}),
+    ...(isInvalid
+      ? { ...invalidStyles, backgroundColor: 'unset', svg: { fill: 'unset' } }
+      : {}),
+    ...(isDisabled ? disabledStyles : {}),
+  }),
+  multiValue: () => ({
+    padding: `${5 / perRem}em ${15 / perRem}em ${5 / perRem}em`,
+    margin: `${5 / perRem}em ${6 / perRem}em ${5 / perRem}em`,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    borderStyle: 'solid',
+    borderWidth: `${borderWidth}px`,
+    borderColor: steel.rgb,
+    borderRadius: `${18 / perRem}em`,
+  }),
+  multiValueLabel: (provided) => ({
+    ...provided,
+    padding: 0,
+    color: charcoal.rgb,
+    fontSize: 'unset',
+  }),
+  multiValueRemove: (provided) => ({
+    ...provided,
+    padding: 0,
+    marginLeft: `${9 / perRem}em`,
+    display: 'flex',
+    cursor: 'pointer',
+    svg: { width: '12px', height: '12px', strokeWidth: '2.5' },
+    ':hover': {},
+  }),
+  indicatorsContainer: () => ({ display: 'none' }),
+  valueContainer: (provided) => ({
+    ...provided,
+    padding: 0,
+  }),
+  input: (provided) => ({
+    ...provided,
+    padding: `${5 / perRem}em 0 ${5 / perRem}em`,
+    margin: `${6 / perRem}em ${6 / perRem}em ${6 / perRem}em`,
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    marginLeft: `${6 / perRem}em`,
   }),
 });

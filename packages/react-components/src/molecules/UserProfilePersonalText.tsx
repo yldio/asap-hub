@@ -31,11 +31,12 @@ const paragraphStyles = css({
 
 type UserProfilePersonalTextProps = Pick<
   UserResponse,
-  'institution' | 'jobTitle' | 'location' | 'teams' | 'role'
+  'institution' | 'jobTitle' | 'country' | 'city' | 'teams' | 'role'
 >;
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
-  location,
+  country,
+  city,
   jobTitle,
   teams,
   role,
@@ -72,11 +73,16 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           </Fragment>
         ))}
       </p>
-      {(location || isOwnProfile) && (
+      {(country || city || isOwnProfile) && (
         <Paragraph accent="lead">
           <span css={locationStyles}>
             <span css={iconStyles}>{locationIcon}</span>
-            {location ?? (
+            {country || city ? (
+              <>
+                {country}
+                {country && city && ','} {city}
+              </>
+            ) : (
               <span css={{ color: tin.rgb }}>Add your location</span>
             )}
           </span>

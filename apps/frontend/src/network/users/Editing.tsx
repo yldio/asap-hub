@@ -8,11 +8,13 @@ import { network } from '@asap-hub/routing';
 
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
+import countrySuggestions from './country-suggestions';
 
 interface EditingProps {
   user: UserResponse;
   backHref: string;
 }
+
 const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
   const { path } = useRouteMatch();
   const route = network({}).users({}).user({ userId: user.id }).about({});
@@ -23,7 +25,14 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
     <>
       <Route exact path={path + route.editPersonalInfo.template}>
         <Frame title="Edit Personal Information">
-          <PersonalInfoModal {...user} backHref={backHref} onSave={patchUser} />
+          <PersonalInfoModal
+            {...user}
+            countrySuggestions={countrySuggestions.map(
+              ({ countryName }) => countryName,
+            )}
+            backHref={backHref}
+            onSave={patchUser}
+          />
         </Frame>
       </Route>
       <Route exact path={path + route.editContactInfo.template}>

@@ -31,7 +31,8 @@ const propsViewOnly = (): Omit<
     email: text('Email', 'me@example.com'),
     degree: degree === 'Empty' ? undefined : degree,
     contactEmail: text('Contact email', 'contact@example.com'),
-    location: text('Location', 'New Haven, Connecticut'),
+    country: text('Country', 'New Haven'),
+    city: text('City', 'Connecticut'),
     teams: [
       {
         id: 't42',

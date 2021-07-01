@@ -83,7 +83,7 @@ describe('the personal info modal', () => {
               user={{
                 ...createUserResponse(),
                 id,
-                location: 'York',
+                city: 'Lon',
               }}
               backHref={aboutPath}
             />
@@ -93,18 +93,18 @@ describe('the personal info modal', () => {
       { wrapper },
     );
 
-    userEvent.type(await findByLabelText(/location/i), 'shire');
-    expect(getByDisplayValue('Yorkshire')).toBeVisible();
+    userEvent.type(await findByLabelText(/city/i), 'don');
+    expect(getByDisplayValue('London')).toBeVisible();
 
     userEvent.click(await findByText(/save/i));
     await waitFor(() => {
       expect(queryByText(/loading/i)).not.toBeInTheDocument();
-      expect(queryByDisplayValue('Yorkshire')).not.toBeInTheDocument();
+      expect(queryByDisplayValue('London')).not.toBeInTheDocument();
     });
     expect(mockPatchUser).toHaveBeenLastCalledWith(
       id,
       expect.objectContaining({
-        location: 'Yorkshire',
+        city: 'London',
       }),
       expect.any(String),
     );

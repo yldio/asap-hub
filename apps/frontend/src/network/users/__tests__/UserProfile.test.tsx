@@ -238,7 +238,8 @@ describe('a header edit button', () => {
   it('can change personal info', async () => {
     const userProfile: UserResponse = {
       ...createUserResponse(),
-      location: 'York',
+      city: 'Lon',
+      country: 'UK',
       id: '42',
     };
 
@@ -246,14 +247,14 @@ describe('a header edit button', () => {
       await renderUserProfile(userProfile);
 
     userEvent.click(await findByLabelText(/edit.+personal/i));
-    userEvent.type(await findByDisplayValue('York'), 'shire');
-    expect(await findByDisplayValue('Yorkshire')).toBeVisible();
+    userEvent.type(await findByDisplayValue('Lon'), 'don');
+    expect(await findByDisplayValue('London')).toBeVisible();
 
     userEvent.click(getByText(/save/i));
-    expect(await findByText('Yorkshire')).toBeVisible();
+    expect(await findByText(/London/i)).toBeVisible();
     expect(mockPatchUser).toHaveBeenLastCalledWith(
       '42',
-      expect.objectContaining({ location: 'Yorkshire' }),
+      expect.objectContaining({ city: 'London' }),
       expect.any(String),
     );
   });

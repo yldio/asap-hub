@@ -14,6 +14,8 @@ import { EditModal } from '../organisms';
 const fieldsContainerStyles = css({
   display: 'grid',
   columnGap: `${24 / perRem}em`,
+  paddingBottom: `${240 / perRem}em`,
+
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr',
     rowGap: `${12 / perRem}em`,
@@ -27,8 +29,15 @@ const paddingStyles = css({
 
 type PersonalInfoModalProps = Pick<
   UserPatchRequest,
-  'firstName' | 'lastName' | 'degree' | 'institution' | 'location' | 'jobTitle'
+  | 'firstName'
+  | 'lastName'
+  | 'degree'
+  | 'institution'
+  | 'country'
+  | 'city'
+  | 'jobTitle'
 > & {
+  countrySuggestions: string[];
   onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
 };
@@ -38,9 +47,11 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   lastName = '',
   degree = '' as const,
   institution = '',
-  location = '',
+  country = '',
+  city = '',
   jobTitle = '',
 
+  countrySuggestions,
   onSave = noop,
   backHref,
 }) => {
@@ -49,7 +60,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   const [newDegree, setNewDegree] = useState<UserDegree | ''>(degree);
   const [newInstitution, setNewInstitution] = useState<string>(institution);
   const [newJobTitle, setNewJobTitle] = useState<string>(jobTitle);
-  const [newLocation, setNewLocation] = useState<string>(location);
+  const [newCity, setNewCity] = useState<string>(city);
+  const [newCountry, setNewCountry] = useState<string>(country);
 
   return (
     <EditModal
@@ -60,7 +72,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
         newDegree !== degree ||
         newInstitution !== institution ||
         newJobTitle !== jobTitle ||
-        newLocation !== location
+        newCity !== city ||
+        newCountry !== country
       }
       backHref={backHref}
       onSave={() =>
@@ -72,7 +85,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               degree: newDegree,
               institution: newInstitution,
               jobTitle: newJobTitle,
-              location: newLocation,
+              city: newCity,
+              country: newCountry,
             }).map(([key, value]) => [key, value.trim()]),
           ),
         )
@@ -147,10 +161,21 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               value={newJobTitle}
               enabled={!isSaving}
             />
+            <LabeledTypeahead
+              title="Country"
+              required
+              getValidationMessage={() => 'Please add your country'}
+              suggestions={countrySuggestions}
+              onChange={setNewCountry}
+              value={newCountry}
+              enabled={!isSaving}
+            />
             <LabeledTextField
-              title="Location"
-              onChange={setNewLocation}
-              value={newLocation}
+              title="City"
+              required
+              getValidationMessage={() => 'Please add your city'}
+              onChange={setNewCity}
+              value={newCity}
               enabled={!isSaving}
             />
           </div>

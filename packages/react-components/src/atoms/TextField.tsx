@@ -122,14 +122,6 @@ type TextFieldProps = {
   readonly type?: FieldType;
   readonly enabled?: boolean;
 
-  /**
-   * By default, a valid text field only shows an indicator
-   * if one of the input validation attributes is set
-   * to avoid polluting fields that do not have validation at all with indicators.
-   * However, if custom validity checking is used, this can be used
-   * to show an indicator despite no validation attributes being set.
-   */
-  readonly indicateValid?: boolean;
   readonly customValidationMessage?: string;
 
   readonly leftIndicator?: React.ReactElement;

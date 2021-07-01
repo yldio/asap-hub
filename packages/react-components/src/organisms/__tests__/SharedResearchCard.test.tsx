@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 
 import SharedResearchCard from '../SharedResearchCard';
 
@@ -93,4 +94,25 @@ it('displays link component when presentation link property is present', () => {
   );
   const link = getByText(/view\son\sgoogle/i).closest('a');
   expect(link).toHaveAttribute('href', 'https://example.com');
+});
+
+it('does not display authors (REGRESSION)', () => {
+  disable('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST');
+  const { queryByText } = render(
+    <SharedResearchCard
+      {...sharedResearchCardProps}
+      authors={[{ displayName: 'ab' }]}
+    />,
+  );
+  expect(queryByText('ab')).toBeNull();
+});
+
+it('displays authors when present', () => {
+  const { getByText } = render(
+    <SharedResearchCard
+      {...sharedResearchCardProps}
+      authors={[{ displayName: 'ab' }]}
+    />,
+  );
+  expect(getByText('ab')).toBeVisible();
 });

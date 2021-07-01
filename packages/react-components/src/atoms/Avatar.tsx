@@ -82,7 +82,7 @@ const initialsStyle = css({
 const textStyle = css(fontStyles, headlineStyles[3], {
   dominantBaseline: 'central',
   textAnchor: 'middle',
-  fontSize: '1.5em',
+  fontSize: '2.25em',
 });
 
 const placeholderColorStyle = css({

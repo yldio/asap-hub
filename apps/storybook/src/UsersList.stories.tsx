@@ -11,6 +11,7 @@ export default {
 export const Normal = () => (
   <UsersList
     users={createListUserResponse(number('Number of Users', 3)).items}
+    max={number('Max Authors', 3)}
   />
 );
 export const External = () => (

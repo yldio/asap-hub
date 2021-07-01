@@ -59,10 +59,14 @@ interface UsersListProps {
       >
     | ExternalAuthor
   >;
+  max?: number;
 }
-const UsersList: FC<UsersListProps> = ({ users }) => (
+const UsersList: FC<UsersListProps> = ({
+  users,
+  max = Number.POSITIVE_INFINITY,
+}) => (
   <ul css={listStyles}>
-    {users.map((user, i) => (
+    {users.slice(0, max).map((user, i) => (
       <li key={`author-${i}`} css={itemStyles}>
         {isInternalAuthor(user) ? (
           <Link
@@ -81,6 +85,14 @@ const UsersList: FC<UsersListProps> = ({ users }) => (
         )}
       </li>
     ))}
+    {users.length > max && (
+      <li>
+        <div css={userStyles}>
+          <Avatar placeholder={`+${users.length - max}`} />
+          <span css={nameStyles}>Authors</span>
+        </div>
+      </li>
+    )}
   </ul>
 );
 

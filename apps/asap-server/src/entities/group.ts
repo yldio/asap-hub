@@ -16,7 +16,7 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
   const teams: GroupTeam[] = (item.flatData?.teams || []).map((t) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { members, ...team } = parseGraphQLTeam(t, []);
+    const { members, outputs, ...team } = parseGraphQLTeam(t, []);
     return team;
   });
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(
@@ -28,7 +28,6 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
       role: leader.role,
     }),
   );
-
   let tools: GroupTools = {};
   if (item.flatData?.tools?.length) {
     const [groupTools] = item.flatData?.tools;

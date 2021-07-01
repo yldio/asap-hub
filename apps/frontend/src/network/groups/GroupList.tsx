@@ -13,7 +13,7 @@ interface NetworkGroupListProps {
 const NetworkGroupList: React.FC<NetworkGroupListProps> = ({
   searchQuery = '',
 }) => {
-  const { currentPage, pageSize } = usePaginationParams(8);
+  const { currentPage, pageSize } = usePaginationParams();
 
   const result = useGroups({
     searchQuery,

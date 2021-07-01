@@ -5,7 +5,7 @@ import { viewParam, listViewValue } from '@asap-hub/routing';
 export const CARD_VIEW_PAGE_SIZE = 10;
 export const LIST_VIEW_PAGE_SIZE = 20;
 
-export const usePaginationParams = (pageSize?: number) => {
+export const usePaginationParams = () => {
   const history = useHistory();
   const searchParams = new URLSearchParams(useLocation().search);
   const currentPage = Number(searchParams.get('currentPage')) ?? 0;
@@ -25,8 +25,7 @@ export const usePaginationParams = (pageSize?: number) => {
 
   return {
     currentPage,
-    pageSize:
-      pageSize ?? (isListView ? LIST_VIEW_PAGE_SIZE : CARD_VIEW_PAGE_SIZE),
+    pageSize: isListView ? LIST_VIEW_PAGE_SIZE : CARD_VIEW_PAGE_SIZE,
     isListView,
     listViewParams: `?${listViewParams}`,
     cardViewParams: `${[...cardViewParams].length ? '?' : ''}${cardViewParams}`,

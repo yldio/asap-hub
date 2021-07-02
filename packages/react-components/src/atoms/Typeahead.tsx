@@ -81,6 +81,12 @@ const Typeahead: FC<TypeaheadProps> = ({
       customValidationMessage,
       getValidationMessage,
     );
+  const onNewValue = (newValue: string) => {
+    setInputValue(newValue);
+    onChange(newValue);
+    // Hack to re-validate once the selected value has been put in the state of the input field
+    setTimeout(validationTargetProps.onBlur, 0);
+  };
 
   return (
     <div css={containerStyles}>
@@ -95,19 +101,12 @@ const Typeahead: FC<TypeaheadProps> = ({
             label: suggestion,
           }))}
           value={{ value, label: value }}
-          onChange={(option) => {
-            const newValue = option?.value || '';
-            setInputValue(newValue);
-            onChange(newValue);
-            // Hack to re-validate once the selected value has been put in the state of the input field
-            setTimeout(validationTargetProps.onBlur, 0);
-          }}
+          onChange={(option) => onNewValue(option?.value || '')}
           inputValue={inputValue}
           onInputChange={(newInputValue, { action }) => {
             switch (action) {
               case 'input-change':
-                setInputValue(newInputValue);
-                onChange(newInputValue);
+                onNewValue(newInputValue);
                 break;
             }
           }}

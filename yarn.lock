@@ -622,6 +622,7 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-router-dom: ^5.2.0
+    storybook-addon-designs: ^6.0.1
     typescript: ~4.2.4
   languageName: unknown
   linkType: soft
@@ -4303,6 +4304,27 @@ __metadata:
     minimatch: ^3.0.4
     strip-json-comments: ^3.1.1
   checksum: 418f5810c8dd9897d2457ceef098197d0e5f1ad345fbe4cd9256fd4223d7ea83d5e350f9091b3ab3483b6b1c367fa560df3ba1fccc7eb8ca6e1aae5a5b126d60
+  languageName: node
+  linkType: hard
+
+"@figspec/components@npm:^0.1.1":
+  version: 0.1.9
+  resolution: "@figspec/components@npm:0.1.9"
+  dependencies:
+    copy-to-clipboard: ^3.0.0
+    lit-element: ^2.4.0
+  checksum: 4621a8d664654053284382023b7b4a13497fd87275f7bdb8917f405562a4b9fac37f4a0964847921ce1fcd9e75338106337ac1eb9dd4e20d94be3eeb671af3d5
+  languageName: node
+  linkType: hard
+
+"@figspec/react@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "@figspec/react@npm:0.1.6"
+  dependencies:
+    "@figspec/components": ^0.1.1
+  peerDependencies:
+    react: ^16.14.0 || ^17.0.0
+  checksum: 2768734809e40776c75f063aaa79efd8bf7e7289145c1bca64a8479807abc8194e12d27fa8b6a6053402cec704bfdfb2925f04efdf346ea43c59f3416956fe2d
   languageName: node
   linkType: hard
 
@@ -12258,7 +12280,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-to-clipboard@npm:^3.3.1":
+"copy-to-clipboard@npm:^3.0.0, copy-to-clipboard@npm:^3.3.1":
   version: 3.3.1
   resolution: "copy-to-clipboard@npm:3.3.1"
   dependencies:
@@ -21167,6 +21189,22 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lit-element@npm:^2.4.0":
+  version: 2.5.1
+  resolution: "lit-element@npm:2.5.1"
+  dependencies:
+    lit-html: ^1.1.1
+  checksum: 82f14fc0edd82eec77ad4b48c5f65c1aff15d6cfe7639b19cbac983dcf94892c94c6a202bebf89114a9500e01e9013f5a0ff7e261adf24aa7a1de669448ccd74
+  languageName: node
+  linkType: hard
+
+"lit-html@npm:^1.1.1":
+  version: 1.4.1
+  resolution: "lit-html@npm:1.4.1"
+  checksum: cf3dea0afa2cb014a258169b1b597272f868385ba7b5d7a55258500aa4f2fb3d79e903dd22aa2076ff1c801ba5fbcde3db2ca185707ae57ca3816c95e8bcc086
+  languageName: node
+  linkType: hard
+
 "load-json-file@npm:^2.0.0":
   version: 2.0.0
   resolution: "load-json-file@npm:2.0.0"
@@ -28333,6 +28371,15 @@ resolve@^2.0.0-next.3:
   version: 2.12.0
   resolution: "store2@npm:2.12.0"
   checksum: 517b66b6bed513668b10310b08980e722a919fa8b818262480c5f975575377aedfc40d9bd5de8b2ea0e05d82a830c8664273b1a8bd6169a1ff5020e18db9f88d
+  languageName: node
+  linkType: hard
+
+"storybook-addon-designs@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "storybook-addon-designs@npm:6.0.1"
+  dependencies:
+    "@figspec/react": ^0.1.6
+  checksum: 13df02836479660f8ae293d361d226b10f5d4cfa186bfc9bbd5e1893365658f9b60731d31b364bc653d865fde6b85d4a10952a90a173d79d271a872d919b3f20
   languageName: node
   linkType: hard
 

@@ -248,8 +248,7 @@ export default class Users {
   async fetch(options: FetchOptions): Promise<ListUserResponse> {
     const { take, skip, search, filter } = options;
 
-    const searchQ = [
-      "data/role/iv ne 'Hidden'",
+    const searchFilter = [
       ...(search || '')
         .split(' ')
         .filter(Boolean) // removes whitespaces
@@ -268,7 +267,7 @@ export default class Users {
         ),
     ].join(' and ');
 
-    const filterQ = (filter || [])
+    const filterRoles = (filter || [])
       .filter((word) => word !== 'Staff')
       .reduce(
         (acc: string[], word: string) =>
@@ -278,9 +277,20 @@ export default class Users {
       .concat(filter?.includes('Staff') ? `data/role/iv eq 'Staff'` : [])
       .join(' or ');
 
-    const $filter = filterQ ? `(${filterQ}) and (${searchQ})`.trim() : searchQ;
+    const filterHidden = "data/role/iv ne 'Hidden'";
+    const filterNonOnboarded = 'data/onboarded/iv eq true';
 
-    const query = buildGraphQLQueryFetchUsers($filter, take, skip);
+    const queryFilter = [
+      filterRoles && `(${filterRoles})`,
+      filterNonOnboarded,
+      filterHidden,
+      searchFilter && `(${searchFilter})`,
+    ]
+      .filter(Boolean)
+      .join(' and ')
+      .trim();
+
+    const query = buildGraphQLQueryFetchUsers(queryFilter, take, skip);
 
     const { queryUsersContentsWithTotal } = await this.client.request<
       ResponseFetchUsers,

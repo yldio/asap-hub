@@ -39,7 +39,9 @@ describe('Users controller', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers("data/role/iv ne 'Hidden'"),
+          query: buildGraphQLQueryFetchUsers(
+            "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
+          ),
         })
         .reply(200, {
           data: {
@@ -65,8 +67,11 @@ describe('Users controller', () => {
       const filterQuery =
         "(data/teams/iv/role eq 'role' or data/role/iv eq 'Staff')" +
         ' and' +
-        " (data/role/iv ne 'Hidden' and" +
-        " (contains(data/firstName/iv, 'first')" +
+        ' data/onboarded/iv eq true' +
+        ' and' +
+        " data/role/iv ne 'Hidden'" +
+        ' and' +
+        " ((contains(data/firstName/iv, 'first')" +
         " or contains(data/lastName/iv, 'first')" +
         " or contains(data/institution/iv, 'first')" +
         " or contains(data/skills/iv, 'first'))" +
@@ -94,11 +99,11 @@ describe('Users controller', () => {
       };
 
       const expectedFilter =
-        "data/role/iv ne 'Hidden' and" +
-        " (contains(data/firstName/iv, '%27%27')" +
+        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+        " ((contains(data/firstName/iv, '%27%27')" +
         " or contains(data/lastName/iv, '%27%27')" +
         " or contains(data/institution/iv, '%27%27')" +
-        " or contains(data/skills/iv, '%27%27'))";
+        " or contains(data/skills/iv, '%27%27')))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -119,11 +124,11 @@ describe('Users controller', () => {
       };
 
       const expectedFilter =
-        "data/role/iv ne 'Hidden' and" +
-        " (contains(data/firstName/iv, '%22')" +
+        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+        " ((contains(data/firstName/iv, '%22')" +
         " or contains(data/lastName/iv, '%22')" +
         " or contains(data/institution/iv, '%22')" +
-        " or contains(data/skills/iv, '%22'))";
+        " or contains(data/skills/iv, '%22')))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

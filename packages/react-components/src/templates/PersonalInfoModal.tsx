@@ -14,7 +14,6 @@ import { EditModal } from '../organisms';
 const fieldsContainerStyles = css({
   display: 'grid',
   columnGap: `${24 / perRem}em`,
-  paddingBottom: `${240 / perRem}em`,
 
   [`@media (min-width: ${tabletScreen.min}px)`]: {
     gridTemplateColumns: '1fr 1fr',
@@ -128,7 +127,12 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               enabled={!isSaving}
             />
           </div>
-          <div css={fieldsContainerStyles}>
+          <div
+            css={[
+              fieldsContainerStyles,
+              { paddingBottom: `${240 / perRem}em` },
+            ]}
+          >
             <LabeledTextField
               title="Institution"
               maxLength={44}
@@ -162,7 +166,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               enabled={!isSaving}
             />
             <LabeledTypeahead
-              title="Country"
+              title="Country*"
               required
               getValidationMessage={() => 'Please add your country'}
               suggestions={countrySuggestions}
@@ -171,7 +175,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               enabled={!isSaving}
             />
             <LabeledTextField
-              title="City"
+              title="City*"
               required
               getValidationMessage={() => 'Please add your city'}
               onChange={setNewCity}

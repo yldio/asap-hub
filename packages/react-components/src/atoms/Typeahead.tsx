@@ -38,6 +38,8 @@ const Input: React.FC<ComponentProps<typeof components.Input>> = (props) => {
         props.onBlur?.(event);
         onBlur(event);
       }}
+      style={{ display: 'unset' }}
+      autoComplete="off"
       isHidden={false}
       innerRef={(element) => {
         ref.current = element;

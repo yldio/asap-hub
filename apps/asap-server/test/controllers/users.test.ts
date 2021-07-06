@@ -14,7 +14,7 @@ import {
   buildUserGraphqlResponse,
   fetchExpectation,
   fetchUserResponse,
-  graphQlResponseFetchUser,
+  getGraphQlResponseFetchUser,
   graphQlResponseFetchUsers,
   patchResponse,
   userResponse,
@@ -157,59 +157,41 @@ describe('Users controller', () => {
       await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
     });
 
-    test('Should return user when it finds it', async () => {
+    test('Should throw when the user is found but is not onboarded', async () => {
+      const nonOnboardedUserResponse = getGraphQlResponseFetchUser();
+      nonOnboardedUserResponse.data.findUsersContent.flatData!.onboarded =
+        false;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUser('not-found'),
+        })
+        .reply(200, nonOnboardedUserResponse);
+
+      await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
+    });
+
+    test('Should return the user when it finds it', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser('user-id'),
         })
-        .reply(200, graphQlResponseFetchUser);
+        .reply(200, getGraphQlResponseFetchUser());
 
       const result = await users.fetchById('user-id');
       expect(result).toEqual(userResponse);
     });
 
-    test('Should return onboarded flag when its false', async () => {
-      const response = {
-        data: {
-          findUsersContent: {
-            ...graphQlResponseFetchUser.data.findUsersContent,
-            flatData: {
-              ...graphQlResponseFetchUser.data.findUsersContent.flatData,
-              onboarded: false,
-            },
-          },
-        },
-      };
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser('user-id'),
-        })
-        .reply(200, response);
-
-      const result = await users.fetchById('user-id');
-
-      expect(result.onboarded).toEqual(false);
-    });
-
     test('Should default onboarded flag to true when its null', async () => {
-      const response = {
-        data: {
-          findUsersContent: {
-            ...graphQlResponseFetchUser.data.findUsersContent,
-            flatData: {
-              ...graphQlResponseFetchUser.data.findUsersContent.flatData,
-              onboarded: null,
-            },
-          },
-        },
-      };
+      const userWithNoOnboardedFlagResponse = getGraphQlResponseFetchUser();
+      userWithNoOnboardedFlagResponse.data.findUsersContent.flatData!.onboarded =
+        null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser('user-id'),
         })
-        .reply(200, response);
+        .reply(200, userWithNoOnboardedFlagResponse);
 
       const result = await users.fetchById('user-id');
 
@@ -257,7 +239,7 @@ describe('Users controller', () => {
           data: {
             queryUsersContentsWithTotal: {
               total: 1,
-              items: [graphQlResponseFetchUser.data.findUsersContent],
+              items: [getGraphQlResponseFetchUser().data.findUsersContent],
             },
           },
         });
@@ -532,7 +514,7 @@ describe('Users controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser('user-id'),
         })
-        .reply(200, graphQlResponseFetchUser);
+        .reply(200, getGraphQlResponseFetchUser());
 
       const result = await users.updateAvatar(
         'user-id',

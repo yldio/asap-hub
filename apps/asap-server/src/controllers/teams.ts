@@ -116,7 +116,7 @@ const fetchUsers = async (id: string, client: Got): Promise<RestUser[]> => {
     client
       .get('users', {
         searchParams: {
-          $filter: `data/teams/iv/id eq '${id}'`,
+          $filter: `data/teams/iv/id eq '${id}' and data/onboarded/iv eq true`,
         },
       })
       .json() as Promise<{ total: number; items: RestUser[] }>,

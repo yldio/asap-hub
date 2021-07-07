@@ -20,6 +20,7 @@
     "@asap-hub/react-context": "workspace:*",
     "@asap-hub/routing": "workspace:*",
     "@asap-hub/unsupported-browser-page": "workspace:*",
+    "@asap-hub/validation": "workspace:*",
     "@auth0/auth0-spa-js": "^1.15.0",
     "browser-image-compression": "^1.0.14",
     "date-fns": "^2.21.3",

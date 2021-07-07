@@ -17,6 +17,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
   link?: string;
   addedDate?: string;
   publishDate?: string;
+  identifierDoi?: string;
   tags?: string[];
   accessInstructions?: string;
   adminNotes?: string;

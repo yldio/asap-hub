@@ -15,16 +15,22 @@ export const parseGraphQLResearchOutput = (
   const optionalAuthors = options?.includeAuthors
     ? {
         authors:
-          output.flatData?.authors?.map((author) => {
-            if (author.__typename === 'Users') {
-              return parseGraphQLUser(author);
-            }
+          output.flatData?.authors
+            ?.filter(
+              (author) =>
+                author.__typename !== 'Users' ||
+                author.flatData?.onboarded !== false,
+            )
+            .map((author) => {
+              if (author.__typename === 'Users') {
+                return parseGraphQLUser(author);
+              }
 
-            return {
-              displayName: author.flatData?.name,
-              orcid: author.flatData?.orcid,
-            };
-          }) || [],
+              return {
+                displayName: author.flatData?.name,
+                orcid: author.flatData?.orcid,
+              };
+            }) || [],
       }
     : {};
 

@@ -115,7 +115,7 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
   },
 };
 
-export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
+export const getGraphQlResponseFetchUser = (): { data: ResponseFetchUser } => ({
   data: {
     findUsersContent: {
       id: 'userId',
@@ -188,7 +188,7 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
       },
     },
   },
-};
+});
 
 export const buildUserGraphqlResponse = (
   flatdata: Partial<GraphqlUser['flatData']> = {},

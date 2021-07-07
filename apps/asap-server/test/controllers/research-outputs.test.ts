@@ -383,6 +383,50 @@ describe('ResearchOutputs controller', () => {
       expect(result.authors).toEqual(expectedAuthorsResponse);
     });
 
+    test('Should not return the non-onboarded authors', async () => {
+      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      const squidexUser1: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+        ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0],
+        __typename: 'Users',
+        flatData: {
+          ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0]
+            .flatData,
+          onboarded: false,
+        },
+      };
+      const squidexUser2: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+        ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[1],
+        __typename: 'Users',
+        flatData: {
+          ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[1]
+            .flatData,
+          onboarded: true,
+        },
+      };
+
+      researchOutputResponse.findResearchOutputsContent.flatData!.authors = [
+        squidexUser1,
+        squidexUser2,
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryResearchOutput(researchOutputId),
+        })
+        .reply(200, { data: researchOutputResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      const { authors } = getResearchOutputResponse();
+
+      const expectedAuthorsResponse: ResearchOutputResponse['authors'] = [
+        authors[1],
+      ];
+
+      expect(result.authors).toHaveLength(1);
+      expect(result.authors).toEqual(expectedAuthorsResponse);
+    });
+
     test('Should return a list of PM emails', async () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
       nock(config.baseUrl)

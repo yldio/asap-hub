@@ -45,6 +45,12 @@ const serverlessConfig: AWS = {
         allowCredentials: true,
       },
     },
+    logs: {
+      httpApi: {
+        format:
+          '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "path":"$context.path", "routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength" }',
+      },
+    },
     tracing: {
       apiGateway: true,
       lambda: true,

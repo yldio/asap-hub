@@ -33,8 +33,10 @@ const GuardedApp = lazy(loadGuardedApp);
 const ConfiguredLayout: FC = ({ children }) => {
   const { isAuthenticated } = useAuth0();
   const user = useCurrentUser();
+
   return isAuthenticated && user ? (
     <Layout
+      onboarded={!user.onboarded}
       userProfileHref={network({}).users({}).user({ userId: user.id }).$}
       teams={user.teams.map(({ id, displayName = '' }) => ({
         name: displayName,

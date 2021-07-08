@@ -4,7 +4,7 @@ on:
     - cron: '0 7 * * FRI' # Every Friday at 7am UTC
   workflow_dispatch:
 jobs:
-  make_backup:
+  make_squidex_backup:
     runs-on: ubuntu-18.04
     container:
       image: registry.gitlab.com/yldio/asap-hub/squidex-utils
@@ -27,3 +27,16 @@ jobs:
           echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
       - name: upload to S3
         run: aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
+  make_algolia_backup:
+    runs-on: ubuntu-18.04
+    env:
+      BUCKET_NAME: 'asap-hub-dev-algolia-backup'
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Fetch the Algolia keys
+        run: |
+          export ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
+          export ALGOLIA_API_KEY=$(aws ssm get-parameter --name "algolia-api-key-ci-dev" --query Parameter.Value --output text)
+      - name: Run the backup
+        run: echo $ALGOLIA_APP_ID && echo $ALGOLIA_API_KEY

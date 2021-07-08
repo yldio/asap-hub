@@ -18,7 +18,7 @@ it.each`
   country      | city         | text
   ${undefined} | ${'City'}    | ${/City/}
   ${'Country'} | ${undefined} | ${/Country/}
-  ${'Country'} | ${'City'}    | ${/Country, City/}
+  ${'Country'} | ${'City'}    | ${/City, Country/}
 `('generates the location description "$text"', ({ text, ...location }) => {
   const { container, getByTitle } = render(
     <UserProfilePersonalText teams={[]} {...location} />,

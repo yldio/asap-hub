@@ -10,8 +10,6 @@ const listStyles = css({
   flexWrap: 'wrap',
   alignItems: 'center',
   columnGap: `${12 / perRem}em`,
-  maxWidth: '100%',
-  overflow: 'hidden',
 
   listStyle: 'none',
   margin: 0,
@@ -21,9 +19,6 @@ const listStyles = css({
   textTransform: 'capitalize',
 });
 const listItemStyles = css({
-  maxWidth: '100%',
-  overflow: 'hidden',
-
   marginTop: `-${ROW_GAP_OFFSET / perRem}em`,
 });
 

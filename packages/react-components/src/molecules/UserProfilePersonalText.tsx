@@ -4,7 +4,7 @@ import { UserResponse } from '@asap-hub/model';
 import { discover, network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-import { Link, Paragraph } from '../atoms';
+import { Link, Paragraph, Ellipsis } from '../atoms';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight } from '../pixels';
 import { lead, tin } from '../colors';
@@ -78,10 +78,10 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
           <span css={locationStyles}>
             <span css={iconStyles}>{locationIcon}</span>
             {country || city ? (
-              <>
-                {country}
-                {country && city && ','} {city}
-              </>
+              <Ellipsis>
+                {city}
+                {city && country && ','} {country}
+              </Ellipsis>
             ) : (
               <span css={{ color: tin.rgb }}>Add your location</span>
             )}

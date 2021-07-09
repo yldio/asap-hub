@@ -5,6 +5,7 @@ import { SpanContext, Span } from 'opentracing';
 import { Squidex, SquidexGraphql } from '@asap-hub/squidex';
 import gql from 'graphql-tag';
 import { DocumentNode, OperationDefinitionNode, FieldNode } from 'graphql';
+import logger from './logger';
 
 const startSpan = (spanName: string, tracingContext?: SpanContext): Span => {
   const tracer = opentracing.globalTracer();
@@ -167,6 +168,9 @@ export class InstrumentedSquidex<
     const res = await super.patch(...args).catch((err) => {
       span.setTag(opentracing.Tags.ERROR, true);
       span.log({ event: 'error', 'error.object': err, message: err.message });
+
+      logger.error({ err }, 'PATCH request to Squidex failed');
+
       throw err;
     });
 

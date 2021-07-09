@@ -82,7 +82,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             github: newGithub || undefined,
             googleScholar: newGoogleScholar || undefined,
             linkedIn: newLinkedIn || undefined,
-            orcid: newOrcid || undefined,
             website1: newWebsite1 || undefined,
             website2: newWebsite2 || undefined,
           },

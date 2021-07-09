@@ -142,7 +142,7 @@ export interface UserPatchRequest {
   skillsDescription?: string;
   questions?: string[];
   teams?: Pick<UserTeam, 'id' | 'approach' | 'responsibilities'>[];
-  social?: UserSocialLinks;
+  social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
 }
 

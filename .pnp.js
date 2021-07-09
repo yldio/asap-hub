@@ -1888,6 +1888,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.0.0"
       ],
       [
+        "@types/stream-chain",
+        "npm:2.0.1"
+      ],
+      [
+        "@types/stream-json",
+        "npm:1.7.1"
+      ],
+      [
         "@types/superagent",
         "npm:4.1.10"
       ],
@@ -7903,6 +7911,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.0.2"
       ],
       [
+        "stream-chain",
+        "npm:2.2.4"
+      ],
+      [
         "stream-each",
         "npm:1.2.3"
       ],
@@ -7913,6 +7925,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "stream-http",
         "npm:2.8.3"
+      ],
+      [
+        "stream-json",
+        "npm:1.7.2"
       ],
       [
         "stream-promise",
@@ -9268,6 +9284,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/pino-http", "npm:5.4.0"],
             ["@types/pump", "npm:1.1.1"],
             ["@types/source-map-support", "npm:0.5.3"],
+            ["@types/stream-json", "npm:1.7.1"],
             ["@types/supertest", "npm:2.0.11"],
             ["algoliasearch", "npm:4.10.3"],
             ["apr-intercept", "npm:3.0.4"],
@@ -9306,6 +9323,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pump", "npm:3.0.0"],
             ["serverless-http", "npm:2.7.0"],
             ["source-map-support", "npm:0.5.19"],
+            ["stream-json", "npm:1.7.2"],
             ["supertest", "npm:6.1.3"]
           ],
           "linkType": "SOFT",
@@ -21896,6 +21914,27 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-stack-utils-npm-2.0.0-8ded8461bc-662312302e.zip/node_modules/@types/stack-utils/",
           "packageDependencies": [
             ["@types/stack-utils", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/stream-chain", [
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/@types-stream-chain-npm-2.0.1-7b91245216-42b95f5769.zip/node_modules/@types/stream-chain/",
+          "packageDependencies": [
+            ["@types/stream-chain", "npm:2.0.1"],
+            ["@types/node", "npm:13.11.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/stream-json", [
+        ["npm:1.7.1", {
+          "packageLocation": "./.yarn/cache/@types-stream-json-npm-1.7.1-eddfb8b51b-94bee61168.zip/node_modules/@types/stream-json/",
+          "packageDependencies": [
+            ["@types/stream-json", "npm:1.7.1"],
+            ["@types/node", "npm:13.11.1"],
+            ["@types/stream-chain", "npm:2.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -46031,6 +46070,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["stream-chain", [
+        ["npm:2.2.4", {
+          "packageLocation": "./.yarn/cache/stream-chain-npm-2.2.4-c720761d67-c426d12462.zip/node_modules/stream-chain/",
+          "packageDependencies": [
+            ["stream-chain", "npm:2.2.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["stream-each", [
         ["npm:1.2.3", {
           "packageLocation": "./.yarn/cache/stream-each-npm-1.2.3-ff15985d6a-2b64a88075.zip/node_modules/stream-each/",
@@ -46062,6 +46110,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["readable-stream", "npm:2.3.7"],
             ["to-arraybuffer", "npm:1.0.1"],
             ["xtend", "npm:4.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["stream-json", [
+        ["npm:1.7.2", {
+          "packageLocation": "./.yarn/cache/stream-json-npm-1.7.2-d2a1e96844-9ff362e4e6.zip/node_modules/stream-json/",
+          "packageDependencies": [
+            ["stream-json", "npm:1.7.2"],
+            ["stream-chain", "npm:2.2.4"]
           ],
           "linkType": "HARD",
         }]

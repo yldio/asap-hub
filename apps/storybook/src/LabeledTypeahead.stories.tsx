@@ -28,3 +28,31 @@ export const Invalid = () => (
     )}
   />
 );
+
+export const loadOptionsMock =
+  (options: string[], delay = 2000) =>
+  (inputValue = ''): Promise<string[]> =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(
+          options.filter((i) =>
+            i.toLowerCase().includes(inputValue.toLowerCase()),
+          ),
+        );
+      }, delay);
+    });
+
+export const Async = () => {
+  const delay = number('Delay(ms)', 2000);
+  return (
+    <LabeledTypeahead
+      title={text('Title', 'Airport')}
+      loadOptions={loadOptionsMock(
+        ['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN'],
+        delay,
+      )}
+      value=""
+      enabled={boolean('Enabled', true)}
+    />
+  );
+};

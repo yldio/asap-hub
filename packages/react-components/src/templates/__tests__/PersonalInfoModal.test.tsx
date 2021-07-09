@@ -10,15 +10,13 @@ import PersonalInfoModal from '../PersonalInfoModal';
 const props: ComponentProps<typeof PersonalInfoModal> = {
   ...createUserResponse(),
   countrySuggestions: [],
+  loadInstitutionOptions: () => Promise.resolve([]),
   backHref: '/wrong',
 };
 it('renders the title', () => {
-  const { getByText } = render(
-    <PersonalInfoModal countrySuggestions={[]} backHref="/wrong" />,
-    {
-      wrapper: StaticRouter,
-    },
-  );
+  const { getByText } = render(<PersonalInfoModal {...props} />, {
+    wrapper: StaticRouter,
+  });
   expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
 });
 

@@ -18,11 +18,11 @@ jobs:
           echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
       - name: Get the latest backup file name
-        run: echo "export MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)" >> $GITHUB_ENV
+        run: echo "MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket $BUCKET_NAME --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)" >> $GITHUB_ENV
       - name: Download the file and restore the index
         run: |
           cd apps/asap-server
-          aws s3api get-object --bucket $BUCKET_NAME --key $MOST_RECENT_BACKUP
+          aws s3api get-object --bucket $BUCKET_NAME --key $MOST_RECENT_BACKUP $MOST_RECENT_BACKUP
           export ALGOLIA_INDEX=asap-hub_research_outputs_CI-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           export ALGOLIA_BACKUP=$(readlink -f $MOST_RECENT_BACKUP)
           yarn node scripts/restore-algolia-index.js

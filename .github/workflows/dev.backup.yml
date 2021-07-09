@@ -1,4 +1,4 @@
-name: DEV - Create database backup
+name: DEV - Create database backups
 on:
   schedule:
     - cron: '0 7 * * FRI' # Every Friday at 7am UTC
@@ -33,10 +33,21 @@ jobs:
       BUCKET_NAME: 'asap-hub-dev-algolia-backup'
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: 'us-east-1'
+      ALGOLIA_INDEX: 'asap-hub_research_outputs_dev'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Fetch the Algolia keys
         run: |
-          export ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
-          export ALGOLIA_API_KEY=$(aws ssm get-parameter --name "algolia-api-key-ci-dev" --query Parameter.Value --output text)
+          echo "ALGOLIA_APP_ID=$(aws ssm get-parameter --name 'algolia-app-id-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
       - name: Run the backup
-        run: echo $ALGOLIA_APP_ID && echo $ALGOLIA_API_KEY
+        run: |
+          export FILE_NAME=$(date +%s| cut -b1-13)-algolia-dev-backup.json
+          cd apps/asap-server && yarn node scripts/create-algolia-backup.js
+          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+      - name: Upload to S3
+        run: |
+          cd apps/asap-server
+          aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA

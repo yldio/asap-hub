@@ -1,27 +1,37 @@
 import { css } from '@emotion/react';
 
-import { padlock } from '../icons';
+import { padlockIcon, tickIcon } from '../icons';
 import { Button, Headline2, Paragraph } from '../atoms';
 import { pearl, steel } from '../colors';
 
-import { perRem } from '../pixels';
+import { perRem, smallDesktopScreen } from '../pixels';
 
 const headerStyles = css({
   backgroundColor: pearl.rgb,
   borderBottom: `1px solid ${steel.rgb}`,
   padding: `${24 / perRem}em`,
   display: 'flex',
-  button: {
-    alignSelf: 'flex-end',
-    display: 'flex',
-    alignItems: 'center',
-    flexGrow: 0,
-  },
 });
 
 const containerStyles = css({
   display: 'flex',
   width: '100%',
+  flexDirection: 'column',
+
+  button: {
+    display: 'flex',
+    alignItems: 'center',
+    flexGrow: 0,
+    alignSelf: 'flex-start',
+  },
+
+  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+    flexDirection: 'row',
+
+    button: {
+      alignSelf: 'flex-end',
+    },
+  },
 });
 
 const textStyles = css({
@@ -35,28 +45,30 @@ const iconStyles = css({
 });
 
 interface OnboardingHeaderProps {
-  isComplete: boolean;
+  onboardable: boolean;
 }
 const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
-  isComplete = false,
+  onboardable = false,
 }) => {
-  const title = isComplete
+  const title = onboardable
     ? 'Your profile is complete'
     : 'Your profile is incomplete';
 
-  const subtitle = isComplete
+  const subtitle = onboardable
     ? 'Click to publish your profile and start exploring the Hub.'
     : 'Once completed, you can publish your profile and start exploring the Hub.';
+
+  const icon = onboardable ? tickIcon : padlockIcon;
 
   return (
     <header css={headerStyles}>
       <div css={containerStyles}>
         <div css={textStyles}>
-          <Headline2 styleAsHeading={1}>{title}</Headline2>
+          <Headline2 styleAsHeading={3}>{title}</Headline2>
           <Paragraph accent={'lead'}>{subtitle}</Paragraph>
         </div>
-        <Button onClick={() => {}} enabled={false}>
-          <span css={iconStyles}>{padlock}</span>
+        <Button onClick={() => {}} enabled={onboardable} primary>
+          <span css={iconStyles}>{icon}</span>
           Explore the Hub
         </Button>
       </div>

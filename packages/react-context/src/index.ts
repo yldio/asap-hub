@@ -3,3 +3,4 @@ export { getUserClaimKey, useCurrentUser } from './auth';
 export { LiveFlagsProvider, FlagsContext, useFlags } from './flags';
 export { ToastContext } from './toast';
 export { UserProfileContext } from './user-profile';
+export { UserContext, useUserContext, UserContextProvider } from './user';

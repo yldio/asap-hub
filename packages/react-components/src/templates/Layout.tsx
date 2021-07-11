@@ -11,6 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
+import { useUserContext } from '@asap-hub/react-context';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, OnboardingHeader, ToastStack } from '../organisms';
@@ -159,11 +160,10 @@ const userMenuShownStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-  readonly onboarded: boolean;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
 
-const Layout: FC<LayoutProps> = ({ children, onboarded, ...userNavProps }) => {
+const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -188,10 +188,12 @@ const Layout: FC<LayoutProps> = ({ children, onboarded, ...userNavProps }) => {
     }
   }, [location, prevLocation, mainRef]);
 
+  const { onboarded, onboardable } = useUserContext();
+
   return (
     <ToastStack>
       {/* This should only appear during onboarding */}
-      {!onboarded && <OnboardingHeader isComplete={false} />}
+      {!onboarded && <OnboardingHeader onboardable={onboardable} />}
       <article css={[styles, menuShown || { overflow: 'hidden' }]}>
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>

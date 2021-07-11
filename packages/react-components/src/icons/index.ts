@@ -43,6 +43,7 @@ export { default as nextPageIcon } from './next-page';
 export { default as orcidIcon } from './orcid';
 export { default as orcidSocialIcon } from './orcid-social';
 export { default as outlookIcon } from './outlook';
+export { default as padlockIcon } from './padlock';
 export { default as paperClipIcon } from './paper-clip';
 export { default as placeholderIcon } from './placeholder';
 export { default as plusIcon } from './plus';

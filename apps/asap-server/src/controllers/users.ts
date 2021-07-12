@@ -16,7 +16,7 @@ import {
 } from '../utils/instrumented-client';
 import { parseUser, parseGraphQLUser } from '../entities';
 import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-import { FetchOptions } from '../utils/types';
+import { FetchOptions, GraphqlFetchOptions } from '../utils/types';
 import { sanitiseForSquidex } from '../utils/squidex';
 
 export const GraphQLQueryUser = `
@@ -85,26 +85,24 @@ flatData {
   reachOut
 }`;
 
-export const buildGraphQLQueryFetchUsers = (
-  filter = '',
-  top = 8,
-  skip = 0,
-): string =>
-  `{
-  queryUsersContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/firstName/iv,data/lastName/iv") {
-    total
-    items {
+export const buildGraphQLQueryFetchUsers = (): string => `
+  query FetchUsers($top: Int, $skip: Int, $filter: String) {
+    queryUsersContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: "data/firstName/iv,data/lastName/iv") {
+      total
+      items {
+        ${GraphQLQueryUser}
+      }
+    }
+  }
+`;
+
+export const buildGraphQLQueryFetchUser = (): string => `
+  query FetchUser($id: String) {
+    findUsersContent(id: $id) {
       ${GraphQLQueryUser}
     }
   }
-}`;
-
-export const buildGraphQLQueryFetchUser = (id: string): string =>
-  `{
-  findUsersContent(id: "${id}") {
-    ${GraphQLQueryUser}
-  }
-}`;
+`;
 
 export interface ResponseFetchUsers {
   queryUsersContentsWithTotal: {
@@ -246,7 +244,7 @@ export default class Users {
   }
 
   async fetch(options: FetchOptions): Promise<ListUserResponse> {
-    const { take, skip, search, filter } = options;
+    const { take = 8, skip = 0, search, filter } = options;
 
     const searchFilter = [
       ...(search || '')
@@ -290,12 +288,12 @@ export default class Users {
       .join(' and ')
       .trim();
 
-    const query = buildGraphQLQueryFetchUsers(queryFilter, take, skip);
+    const query = buildGraphQLQueryFetchUsers();
 
     const { queryUsersContentsWithTotal } = await this.client.request<
       ResponseFetchUsers,
-      unknown
-    >(query);
+      GraphqlFetchOptions
+    >(query, { filter: queryFilter, top: take, skip });
     const { total, items } = queryUsersContentsWithTotal;
 
     return {
@@ -305,11 +303,11 @@ export default class Users {
   }
 
   async fetchById(id: string): Promise<UserResponse> {
-    const query = buildGraphQLQueryFetchUser(id);
+    const query = buildGraphQLQueryFetchUser();
     const { findUsersContent } = await this.client.request<
       ResponseFetchUser,
-      unknown
-    >(query);
+      { id: string }
+    >(query, { id });
     if (!findUsersContent) {
       throw Boom.notFound();
     }
@@ -322,15 +320,15 @@ export default class Users {
   }
 
   async fetchByCode(code: string): Promise<UserResponse> {
-    const query = buildGraphQLQueryFetchUsers(
-      `data/connections/iv/code eq '${code}'`,
-      1,
-      0,
-    );
+    const query = buildGraphQLQueryFetchUsers();
     const { queryUsersContentsWithTotal } = await this.client.request<
       ResponseFetchUsers,
-      unknown
-    >(query);
+      GraphqlFetchOptions
+    >(query, {
+      filter: `data/connections/iv/code eq '${code}'`,
+      top: 1,
+      skip: 0,
+    });
 
     const { total, items } = queryUsersContentsWithTotal;
     if (total !== 1) {

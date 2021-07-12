@@ -243,7 +243,7 @@
               "allowDuplicates": false,
               "resolveReference": false,
               "mustBePublished": false,
-              "editor": "Dropdown",
+              "editor": "List",
               "schemaIds": ["users"],
               "label": "User",
               "hints": "",

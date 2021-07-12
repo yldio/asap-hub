@@ -14,20 +14,22 @@ it.each`
   expect(container).toHaveTextContent(text);
 });
 
-it('shows the location', async () => {
-  const { getByText, getByTitle } = render(
-    <UserProfilePersonalText location="New York" teams={[]} role={'Grantee'} />,
+it.each`
+  country      | city         | text
+  ${undefined} | ${'City'}    | ${/City/}
+  ${'Country'} | ${undefined} | ${/Country/}
+  ${'Country'} | ${'City'}    | ${/City, Country/}
+`('generates the location description "$text"', ({ text, ...location }) => {
+  const { container, getByTitle } = render(
+    <UserProfilePersonalText teams={[]} {...location} />,
   );
-  expect(getByText('New York')).toBeVisible();
+  expect(container).toHaveTextContent(text);
   expect(getByTitle(/location/i)).toBeInTheDocument();
 });
+
 it('does not show the location icon if no location is available', () => {
   const { queryByTitle } = render(
-    <UserProfilePersonalText
-      location={undefined}
-      teams={[]}
-      role={'Grantee'}
-    />,
+    <UserProfilePersonalText teams={[]} role={'Grantee'} />,
   );
   expect(queryByTitle(/location/i)).toBe(null);
 });
@@ -62,7 +64,12 @@ it('does not show team information if the user is not on a team', async () => {
 it('shows placeholder text on your own profile', () => {
   const { queryByTitle, queryByText, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <UserProfilePersonalText teams={[]} role={'Grantee'} />
+      <UserProfilePersonalText
+        teams={[]}
+        city={undefined}
+        country={undefined}
+        role={'Grantee'}
+      />
     </UserProfileContext.Provider>,
   );
   expect(queryByTitle(/location/i)).not.toBeInTheDocument();

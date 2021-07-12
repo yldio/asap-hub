@@ -32,14 +32,7 @@ export const Disabled = () => (
     enabled={false}
   />
 );
-export const Valid = () => (
-  <LabeledTextField
-    title={text('Title', 'Full Name')}
-    value={text('Value', 'John Doe')}
-    indicateValid
-    pattern=".*"
-  />
-);
+
 export const Invalid = () => (
   <LabeledTextField
     title={text('Title', 'Full Name')}

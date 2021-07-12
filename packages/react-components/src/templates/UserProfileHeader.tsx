@@ -143,7 +143,8 @@ type UserProfileHeaderProps = Pick<
   | 'institution'
   | 'jobTitle'
   | 'lastName'
-  | 'location'
+  | 'country'
+  | 'city'
   | 'role'
   | 'social'
   | 'teams'
@@ -159,10 +160,11 @@ type UserProfileHeaderProps = Pick<
 const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   id,
   displayName,
+  country,
+  city,
   institution,
   firstName,
   lastName,
-  location,
   teams,
   jobTitle,
   avatarUrl,
@@ -196,7 +198,8 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
           </div>
           <UserProfilePersonalText
             institution={institution}
-            location={location}
+            country={country}
+            city={city}
             jobTitle={jobTitle}
             teams={teams}
             role={role}

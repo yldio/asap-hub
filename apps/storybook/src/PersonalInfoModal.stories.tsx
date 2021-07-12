@@ -12,8 +12,10 @@ const props = (): ComponentProps<typeof PersonalInfoModal> => ({
   lastName: 'Doe',
   degree: 'PhD',
   jobTitle: 'Assistant Professor',
-  location: 'Los Angeles, CA',
+  country: 'Los Angeles',
+  city: 'CA',
   backHref: '#',
+  countrySuggestions: ['a', 'b', 'c'],
 });
 
 export const Normal = () => (

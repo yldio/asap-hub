@@ -119,7 +119,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newWebsite1}
               enabled={!isSaving}
               labelIndicator={globeIcon}
-              indicateValid={false}
               placeholder="https://example.com"
             />
             <LabeledTextField
@@ -132,7 +131,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newWebsite2}
               enabled={!isSaving}
               labelIndicator={globeIcon}
-              indicateValid={false}
               placeholder="https://example.com"
             />
           </div>
@@ -156,7 +154,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newOrcid}
               enabled={false}
               labelIndicator="orcid.org/"
-              indicateValid={false}
               placeholder="xxxx-xxxx-xxxx-xxxx"
             />
             <LabeledTextField
@@ -167,7 +164,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newResearcherId}
               enabled={!isSaving}
               labelIndicator="researchid.com/rid/"
-              indicateValid={false}
               placeholder="x-xxxx-xxxx"
             />
             <LabeledTextField
@@ -178,7 +174,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newTwitter}
               enabled={!isSaving}
               labelIndicator="@"
-              indicateValid={false}
               placeholder="twitterhandle"
             />
             <LabeledTextField
@@ -191,7 +186,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newGithub}
               enabled={!isSaving}
               labelIndicator="github.com/"
-              indicateValid={false}
               placeholder="username"
             />
             <LabeledTextField
@@ -204,7 +198,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newLinkedIn}
               enabled={!isSaving}
               labelIndicator="linkedin.com/in/"
-              indicateValid={false}
               placeholder="username"
             />
             <LabeledTextField
@@ -217,7 +210,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               value={newResearchGate}
               enabled={!isSaving}
               labelIndicator="researchgate.net/profile/"
-              indicateValid={false}
               placeholder="profileID"
             />
           </div>
@@ -231,7 +223,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             value={newGoogleScholar}
             enabled={!isSaving}
             labelIndicator="scholar.google.com/citations?user="
-            indicateValid={false}
             placeholder="profileID"
           />
         </>

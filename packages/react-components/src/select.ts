@@ -41,7 +41,12 @@ const disabledStyles = {
 };
 
 const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
-  input: () => ({}),
+  input: () => ({
+    width: '100%',
+    input: {
+      width: '100% !important',
+    },
+  }),
   indicatorSeparator: () => ({ display: 'none' }),
   indicatorsContainer: (provided) => ({
     ...provided,

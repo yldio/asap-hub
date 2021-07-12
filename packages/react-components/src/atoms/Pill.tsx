@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { Ellipsis } from '.';
 import { steel, lead, paper } from '../colors';
 import { lineHeight, perRem } from '../pixels';
 
@@ -9,11 +10,6 @@ const styles = css({
   height: lineHeight,
   margin: `${12 / perRem}em 0`,
   padding: `0 ${8 / perRem}em`,
-
-  maxWidth: '100%',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
 
   backgroundColor: paper.rgb,
   color: lead.rgb,
@@ -30,7 +26,9 @@ type PillProps = {
 
 const Pill: React.FC<PillProps> = ({ children }) => (
   <span css={styles}>
-    <small>{children}</small>
+    <Ellipsis>
+      <small>{children}</small>
+    </Ellipsis>
   </span>
 );
 

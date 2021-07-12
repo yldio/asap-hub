@@ -10,8 +10,6 @@ const styles = css({
   display: 'flex',
   justifyContent: 'space-between',
   columnGap: `${12 / perRem}em`,
-  maxWidth: '100%',
-  overflow: 'hidden',
 });
 
 type SharedResearchMetadataProps = Pick<

@@ -64,6 +64,7 @@
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Calendar ID",
+          "hints": "Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise.",
           "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -124,7 +125,7 @@
           "isUnique": false,
           "inlineEditable": false,
           "contentType": "Unspecified",
-          "editor": "Radio",
+          "editor": "Dropdown",
           "label": "Color",
           "isRequired": true,
           "isRequiredOnPublish": false,

@@ -209,7 +209,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
-          "defaultValue": "The Hub will only show text or hyperlinks. Other formatting will be ignored (e.g. bold, color, size)",
+          "defaultValue": "",
           "isUnique": false,
           "inlineEditable": false,
           "contentType": "Unspecified",

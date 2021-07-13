@@ -29,7 +29,7 @@
           "label": "Display Name",
           "isRequired": true,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
         }
       },
       {
@@ -46,6 +46,41 @@
           "editor": "Input",
           "label": "Application Number",
           "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "skills",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Expertise and Resources",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "proposal",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "editor": "Dropdown",
+          "schemaIds": ["research-outputs"],
+          "label": "Proposal",
+          "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
@@ -87,26 +122,6 @@
         }
       },
       {
-        "name": "proposal",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "maxItems": 1,
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "mustBePublished": false,
-          "editor": "Dropdown",
-          "schemaIds": ["research-outputs"],
-          "label": "Proposal",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "outputs",
         "isHidden": false,
         "isLocked": false,
@@ -120,21 +135,6 @@
           "editor": "List",
           "schemaIds": ["research-outputs"],
           "label": "Shared Research",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "skills",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Expertise and Resources",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

@@ -10,11 +10,16 @@ import PersonalInfoModal from '../PersonalInfoModal';
 const props: ComponentProps<typeof PersonalInfoModal> = {
   ...createUserResponse(),
   countrySuggestions: [],
+  loadInstitutionOptions: () => Promise.resolve([]),
   backHref: '/wrong',
 };
 it('renders the title', () => {
   const { getByText } = render(
-    <PersonalInfoModal countrySuggestions={[]} backHref="/wrong" />,
+    <PersonalInfoModal
+      countrySuggestions={[]}
+      loadInstitutionOptions={() => Promise.resolve([])}
+      backHref="/wrong"
+    />,
     {
       wrapper: StaticRouter,
     },

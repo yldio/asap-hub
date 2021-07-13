@@ -9,6 +9,7 @@ import { network } from '@asap-hub/routing';
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
 import countrySuggestions from './country-suggestions';
+import { getInstitutions } from './api';
 
 interface EditingProps {
   user: UserResponse;
@@ -30,6 +31,11 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             countrySuggestions={countrySuggestions.map(
               ({ countryName }) => countryName,
             )}
+            loadInstitutionOptions={(searchQuery) =>
+              getInstitutions({ searchQuery }).then((data) =>
+                data.items.map(({ name }) => name),
+              )
+            }
             backHref={backHref}
             onSave={patchUser}
           />

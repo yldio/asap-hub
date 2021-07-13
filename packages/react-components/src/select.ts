@@ -53,8 +53,9 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
 
     minWidth: `${lineHeight / perRem}em`,
     minHeight: `${lineHeight / perRem}em`,
+    paddingRight: `${3 / perRem}em`,
 
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   }),
 

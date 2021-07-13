@@ -14,9 +14,16 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
   backHref: '/wrong',
 };
 it('renders the title', () => {
-  const { getByText } = render(<PersonalInfoModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = render(
+    <PersonalInfoModal
+      countrySuggestions={[]}
+      loadInstitutionOptions={() => Promise.resolve([])}
+      backHref="/wrong"
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
   expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
 });
 

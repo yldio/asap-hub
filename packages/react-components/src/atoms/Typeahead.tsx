@@ -78,14 +78,13 @@ const Typeahead: FC<TypeaheadProps> = ({
   getValidationMessage,
 
   id,
-  suggestions,
-  loadOptions,
   enabled = true,
   required = false,
   maxLength,
 
   value,
   onChange = noop,
+  ...rest
 }) => {
   const [inputValue, setInputValue] = useState(value);
 
@@ -129,10 +128,10 @@ const Typeahead: FC<TypeaheadProps> = ({
       <InputContext.Provider
         value={{ ...validationTargetProps, required, maxLength }}
       >
-        {suggestions ? (
+        {rest.suggestions ? (
           <Creatable<OptionTypeBase>
             {...commonProps}
-            options={suggestions.map((suggestion) => ({
+            options={rest.suggestions.map((suggestion) => ({
               value: suggestion,
               label: suggestion,
             }))}
@@ -144,16 +143,12 @@ const Typeahead: FC<TypeaheadProps> = ({
             cacheOptions
             loadingMessage={() => null}
             isValidNewOption={() => false}
-            loadOptions={async (newValue) => {
-              const asyncSuggestions = loadOptions
-                ? await loadOptions(newValue)
-                : [];
-
-              return asyncSuggestions.map((suggestion) => ({
+            loadOptions={async (newValue) =>
+              (await rest.loadOptions(newValue)).map((suggestion) => ({
                 label: suggestion,
                 value: suggestion,
-              }));
-            }}
+              }))
+            }
           />
         )}
       </InputContext.Provider>

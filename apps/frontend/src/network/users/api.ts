@@ -107,7 +107,7 @@ export const getInstitutions = async ({
   searchQuery,
 }: {
   searchQuery?: string;
-}): Promise<InstitutionsResponse> => {
+} = {}): Promise<InstitutionsResponse> => {
   const url = new URL('https://api.ror.org/organizations');
   searchQuery && url.searchParams.set('query', searchQuery);
   const resp = await fetch(url.toString());

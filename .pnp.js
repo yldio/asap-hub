@@ -860,6 +860,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.4.1"
       ],
       [
+        "@figspec/components",
+        "npm:0.1.9"
+      ],
+      [
+        "@figspec/react",
+        "virtual:14222968197044fe02f6d09ca8630769db1c4e2b5b163d582b2c769f7d8d4b92b357a29cfa83f2b4ae9fbcc2a256f06f0558b0a07715055c07107686d4354aa5#npm:0.1.6"
+      ],
+      [
         "@hapi/address",
         "npm:4.0.1"
       ],
@@ -5603,6 +5611,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.1.6"
       ],
       [
+        "lit-element",
+        "npm:2.5.1"
+      ],
+      [
+        "lit-html",
+        "npm:1.4.1"
+      ],
+      [
         "load-json-file",
         "npm:2.0.0"
       ],
@@ -7835,6 +7851,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:2.12.0"
       ],
       [
+        "storybook-addon-designs",
+        "npm:6.0.1"
+      ],
+      [
         "stream-browserify",
         "npm:2.0.2"
       ],
@@ -9913,6 +9933,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:17.0.2"],
             ["react-router-dom", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:5.2.0"],
+            ["storybook-addon-designs", "npm:6.0.1"],
             ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"]
           ],
           "linkType": "SOFT",
@@ -17562,6 +17583,40 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["js-yaml", "npm:3.14.0"],
             ["minimatch", "npm:3.0.4"],
             ["strip-json-comments", "npm:3.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@figspec/components", [
+        ["npm:0.1.9", {
+          "packageLocation": "./.yarn/cache/@figspec-components-npm-0.1.9-25319e7d17-4621a8d664.zip/node_modules/@figspec/components/",
+          "packageDependencies": [
+            ["@figspec/components", "npm:0.1.9"],
+            ["copy-to-clipboard", "npm:3.3.1"],
+            ["lit-element", "npm:2.5.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@figspec/react", [
+        ["npm:0.1.6", {
+          "packageLocation": "./.yarn/cache/@figspec-react-npm-0.1.6-e59a29ed54-2768734809.zip/node_modules/@figspec/react/",
+          "packageDependencies": [
+            ["@figspec/react", "npm:0.1.6"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:14222968197044fe02f6d09ca8630769db1c4e2b5b163d582b2c769f7d8d4b92b357a29cfa83f2b4ae9fbcc2a256f06f0558b0a07715055c07107686d4354aa5#npm:0.1.6", {
+          "packageLocation": "./.yarn/$$virtual/@figspec-react-virtual-a4fe17db9f/0/cache/@figspec-react-npm-0.1.6-e59a29ed54-2768734809.zip/node_modules/@figspec/react/",
+          "packageDependencies": [
+            ["@figspec/react", "virtual:14222968197044fe02f6d09ca8630769db1c4e2b5b163d582b2c769f7d8d4b92b357a29cfa83f2b4ae9fbcc2a256f06f0558b0a07715055c07107686d4354aa5#npm:0.1.6"],
+            ["@figspec/components", "npm:0.1.9"],
+            ["@types/react", null],
+            ["react", null]
+          ],
+          "packagePeers": [
+            "@types/react",
+            "react"
           ],
           "linkType": "HARD",
         }]
@@ -37456,6 +37511,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["lit-element", [
+        ["npm:2.5.1", {
+          "packageLocation": "./.yarn/cache/lit-element-npm-2.5.1-7fccfb6b01-82f14fc0ed.zip/node_modules/lit-element/",
+          "packageDependencies": [
+            ["lit-element", "npm:2.5.1"],
+            ["lit-html", "npm:1.4.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["lit-html", [
+        ["npm:1.4.1", {
+          "packageLocation": "./.yarn/cache/lit-html-npm-1.4.1-4c175266aa-cf3dea0afa.zip/node_modules/lit-html/",
+          "packageDependencies": [
+            ["lit-html", "npm:1.4.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["load-json-file", [
         ["npm:2.0.0", {
           "packageLocation": "./.yarn/cache/load-json-file-npm-2.0.0-9317df26fa-c6ea93d360.zip/node_modules/load-json-file/",
@@ -45774,6 +45848,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/store2-npm-2.12.0-79733c8c4f-517b66b6be.zip/node_modules/store2/",
           "packageDependencies": [
             ["store2", "npm:2.12.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["storybook-addon-designs", [
+        ["npm:6.0.1", {
+          "packageLocation": "./.yarn/cache/storybook-addon-designs-npm-6.0.1-1422296819-13df028364.zip/node_modules/storybook-addon-designs/",
+          "packageDependencies": [
+            ["storybook-addon-designs", "npm:6.0.1"],
+            ["@figspec/react", "virtual:14222968197044fe02f6d09ca8630769db1c4e2b5b163d582b2c769f7d8d4b92b357a29cfa83f2b4ae9fbcc2a256f06f0558b0a07715055c07107686d4354aa5#npm:0.1.6"]
           ],
           "linkType": "HARD",
         }]

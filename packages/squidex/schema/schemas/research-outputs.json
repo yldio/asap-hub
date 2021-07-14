@@ -410,6 +410,26 @@
         }
       },
       {
+        "name": "labCatalogNumber",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Lab Catalog Number",
+          "hints": "If this is a hyperlink, please start with \"http://\" or \"https://\"",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "adminNotes",
         "isHidden": false,
         "isLocked": false,

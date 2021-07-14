@@ -26,6 +26,7 @@ flatData{
   link
   addedDate
   publishDate
+  labCatalogNumber
   tags
   lastUpdatedPartial
   accessInstructions

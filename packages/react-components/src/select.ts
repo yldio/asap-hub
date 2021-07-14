@@ -47,7 +47,9 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
       width: '100% !important',
     },
   }),
-  indicatorSeparator: () => ({ display: 'none' }),
+  indicatorSeparator: () => ({
+    padding: `0 ${3 / perRem}em`,
+  }),
   indicatorsContainer: (provided) => ({
     ...provided,
 

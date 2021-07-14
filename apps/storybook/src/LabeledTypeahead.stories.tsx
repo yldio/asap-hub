@@ -30,7 +30,7 @@ export const Invalid = () => (
 );
 
 export const loadOptionsMock =
-  (options: string[], delay = 2000) =>
+  (options: string[]) =>
   (inputValue = ''): Promise<string[]> =>
     new Promise((resolve) => {
       setTimeout(() => {
@@ -39,20 +39,14 @@ export const loadOptionsMock =
             i.toLowerCase().includes(inputValue.toLowerCase()),
           ),
         );
-      }, delay);
+      }, 2000);
     });
 
-export const Async = () => {
-  const delay = number('Delay(ms)', 2000);
-  return (
-    <LabeledTypeahead
-      title={text('Title', 'Airport')}
-      loadOptions={loadOptionsMock(
-        ['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN'],
-        delay,
-      )}
-      value=""
-      enabled={boolean('Enabled', true)}
-    />
-  );
-};
+export const Async = () => (
+  <LabeledTypeahead
+    title={text('Title', 'Airport')}
+    loadOptions={loadOptionsMock(['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN'])}
+    value=""
+    enabled={boolean('Enabled', true)}
+  />
+);

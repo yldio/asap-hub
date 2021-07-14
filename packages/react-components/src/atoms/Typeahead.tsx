@@ -11,15 +11,28 @@ import { components, InputActionMeta, OptionTypeBase } from 'react-select';
 import Creatable from 'react-select/creatable';
 import AsyncCreatable from 'react-select/async-creatable';
 import { dropdownChevronIcon } from '../icons';
+import { loadingImage } from '../images';
 import { useValidation, validationMessageStyles } from '../form';
 import { reactSelectStyles } from '../select';
 import { noop } from '../utils';
+import { perRem } from '../pixels';
 
 const containerStyles = css({
   flexBasis: '100%',
 });
 
 const DropdownIndicator: FC = () => dropdownChevronIcon;
+const LoadingIndicator: FC = () => (
+  <div
+    css={{
+      display: 'flex',
+      width: `${24 / perRem}em`,
+      height: `${24 / perRem}em`,
+      backgroundImage: `url(${loadingImage})`,
+      backgroundSize: 'cover',
+    }}
+  />
+);
 
 const InputContext = createContext<
   ReturnType<typeof useValidation>['validationTargetProps'] &
@@ -105,11 +118,12 @@ const Typeahead: FC<TypeaheadProps> = ({
     isDisabled: !enabled,
     value: { value, label: value },
     inputValue,
+    loading: true,
     placeholder: 'Start Typing…',
     noOptionsMessage: () => null,
     tabSelectsValue: false,
     controlShouldRenderValue: false,
-    components: { DropdownIndicator, Input },
+    components: { DropdownIndicator, Input, LoadingIndicator },
     styles: reactSelectStyles(!!validationMessage),
     onChange: (option: OptionTypeBase | null) => {
       const newValue = option?.value || '';

@@ -28,6 +28,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: null,
                   publishDate: null,
+                  labCatalogNumber: 'http://example.com',
                   addedDate: null,
                   title: 'Proposal',
                   type: 'Proposal',
@@ -46,6 +47,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: 'docs.google.com',
                   publishDate: null,
+                  labCatalogNumber: 'http://example.com',
                   addedDate: '2021-05-24T17:33:30Z',
                   title: "Team Salzer's intro slide deck",
                   type: 'Presentation',
@@ -300,6 +302,7 @@ export const listTeamResponse: ListTeamResponse = {
           accessInstructions: 'some access instructions',
           sharingStatus: 'Network Only',
           pmsEmails: [],
+          labCatalogNumber: 'http://example.com'
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -324,6 +327,7 @@ export const listTeamResponse: ListTeamResponse = {
           sharingStatus: 'Network Only',
           asapFunded: false,
           pmsEmails: [],
+          labCatalogNumber: 'http://example.com'
         },
       ],
       members: [
@@ -424,6 +428,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               tags: ['test', 'tag'],
               sharingStatus: 'Network Only',
               asapFunded: 'No',
+              labCatalogNumber: 'http://example.com',
               authors: [getSquidexResearchOutputGraphqlResponseAuthors()[0]],
             },
           },
@@ -434,6 +439,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              labCatalogNumber: 'http://example.com',
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
@@ -575,6 +581,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       usedInPublication: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -599,6 +606,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       asapFunded: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com',
     },
   ],
   members: [
@@ -662,6 +670,7 @@ export const getGraphQlTeamResponse = (
               tags: ['test', 'tag'],
               authors: [getSquidexResearchOutputGraphqlResponseAuthors()[0]],
               sharingStatus: 'Network Only',
+              labCatalogNumber: 'http://example.com',
               asapFunded: 'No',
             },
             referencingTeamsContents: [
@@ -682,6 +691,7 @@ export const getGraphQlTeamResponse = (
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              labCatalogNumber: 'http://example.com',
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
@@ -795,6 +805,7 @@ export const updateExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       usedInPublication: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com'
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -819,6 +830,7 @@ export const updateExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       asapFunded: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com',
     },
   ],
   members: [

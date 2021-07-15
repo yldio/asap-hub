@@ -14,6 +14,8 @@ import {
 import { auth0State } from './auth/state';
 import Frame from './structure/Frame';
 import CheckOnboarded from './auth/CheckOnboarded';
+import OnboardableWrapper from './OnboardableWrapper';
+import { ConfiguredLayout } from './App';
 
 const loadNewsAndEvents = () =>
   import(/* webpackChunkName: "news-and-events" */ './news/Routes');
@@ -54,45 +56,49 @@ const GuardedApp: FC<Record<string, never>> = () => {
   }, []);
 
   return (
-    <CheckOnboarded>
-      <Switch>
-        <Route exact path="/">
-          <Frame title="Dashboard">
-            <Dashboard />
-          </Frame>
-        </Route>
-        <Route path={discover.template}>
-          <Frame title="Discover ASAP">
-            <Discover />
-          </Frame>
-        </Route>
-        <Route path={news.template}>
-          <Frame title="News">
-            <NewsAndEvents />
-          </Frame>
-        </Route>
-        <Route path={network.template}>
-          <Frame title={null}>
-            <Network />
-          </Frame>
-        </Route>
-        <Route path={sharedResearch.template}>
-          <Frame title="Shared Research">
-            <SharedResearch />
-          </Frame>
-        </Route>
-        <Route path={events.template}>
-          <Frame title={null}>
-            <Events />
-          </Frame>
-        </Route>
-        <Route>
-          <Frame title="Not Found">
-            <NotFoundPage />
-          </Frame>
-        </Route>
-      </Switch>
-    </CheckOnboarded>
+    <OnboardableWrapper>
+      <ConfiguredLayout>
+        <CheckOnboarded>
+          <Switch>
+            <Route exact path="/">
+              <Frame title="Dashboard">
+                <Dashboard />
+              </Frame>
+            </Route>
+            <Route path={discover.template}>
+              <Frame title="Discover ASAP">
+                <Discover />
+              </Frame>
+            </Route>
+            <Route path={news.template}>
+              <Frame title="News">
+                <NewsAndEvents />
+              </Frame>
+            </Route>
+            <Route path={network.template}>
+              <Frame title={null}>
+                <Network />
+              </Frame>
+            </Route>
+            <Route path={sharedResearch.template}>
+              <Frame title="Shared Research">
+                <SharedResearch />
+              </Frame>
+            </Route>
+            <Route path={events.template}>
+              <Frame title={null}>
+                <Events />
+              </Frame>
+            </Route>
+            <Route>
+              <Frame title="Not Found">
+                <NotFoundPage />
+              </Frame>
+            </Route>
+          </Switch>
+        </CheckOnboarded>
+      </ConfiguredLayout>
+    </OnboardableWrapper>
   );
 };
 

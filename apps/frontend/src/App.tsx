@@ -1,18 +1,13 @@
-import { FC, lazy, useEffect, useState } from 'react';
+import { FC, lazy, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
-import { isUserOnboardable } from '@asap-hub/validation';
 import {
   Layout,
   BasicLayout,
   GoogleTagManager,
   ToastStack,
 } from '@asap-hub/react-components';
-import {
-  useAuth0,
-  useCurrentUser,
-  UserContextProvider,
-} from '@asap-hub/react-context';
+import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
 import { staticPages, network, welcome, logout } from '@asap-hub/routing';
 
 import history from './history';
@@ -35,32 +30,20 @@ const Welcome = lazy(loadWelcome);
 const Content = lazy(loadContent);
 const GuardedApp = lazy(loadGuardedApp);
 
-const ConfiguredLayout: FC = ({ children }) => {
+export const ConfiguredLayout: FC = ({ children }) => {
   const { isAuthenticated } = useAuth0();
   const user = useCurrentUser();
-  const { isOnboardable } = isUserOnboardable(user);
-
-  const [onboardable, setOnboardable] = useState(isOnboardable);
-
-  const updateOnboardable = (value: boolean) => {
-    setOnboardable(value);
-  };
-
-  const UserValues = { onboardable, updateOnboardable };
-
   return isAuthenticated && user ? (
-    <UserContextProvider value={UserValues}>
-      <Layout
-        userProfileHref={network({}).users({}).user({ userId: user.id }).$}
-        teams={user.teams.map(({ id, displayName = '' }) => ({
-          name: displayName,
-          href: network({}).teams({}).team({ teamId: id }).$,
-        }))}
-        aboutHref="https://www.parkinsonsroadmap.org/"
-      >
-        {children}
-      </Layout>
-    </UserContextProvider>
+    <Layout
+      userProfileHref={network({}).users({}).user({ userId: user.id }).$}
+      teams={user.teams.map(({ id, displayName = '' }) => ({
+        name: displayName,
+        href: network({}).teams({}).team({ teamId: id }).$,
+      }))}
+      aboutHref="https://www.parkinsonsroadmap.org/"
+    >
+      {children}
+    </Layout>
   ) : (
     <BasicLayout>{children}</BasicLayout>
   );
@@ -107,11 +90,9 @@ const App: FC<Record<string, never>> = () => {
 
                 <Route>
                   <CheckAuth>
-                    <ConfiguredLayout>
-                      <Frame title={null}>
-                        <GuardedApp />
-                      </Frame>
-                    </ConfiguredLayout>
+                    <Frame title={null}>
+                      <GuardedApp />
+                    </Frame>
                   </CheckAuth>
                 </Route>
               </Switch>

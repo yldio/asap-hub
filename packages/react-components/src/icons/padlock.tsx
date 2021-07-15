@@ -8,6 +8,7 @@ const padlock = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
+    <title>Lock</title>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

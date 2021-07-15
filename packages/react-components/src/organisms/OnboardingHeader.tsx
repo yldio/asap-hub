@@ -17,22 +17,12 @@ const containerStyles = css({
   display: 'flex',
   width: '100%',
   flexDirection: 'column',
-
-  button: {
-    display: 'flex',
-    alignItems: 'center',
-    flexGrow: 0,
-    alignSelf: 'flex-start',
-  },
-
   [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
     flexDirection: 'row',
-
-    button: {
-      alignSelf: 'flex-end',
-    },
   },
 });
+
+const buttonStyles = css({ display: 'flex', alignItems: 'flex-end' });
 
 const textStyles = css({
   flexGrow: 1,
@@ -41,38 +31,39 @@ const textStyles = css({
 const iconStyles = css({
   marginRight: `${12 / perRem}em`,
   display: 'flex',
-  alignItems: 'center',
+  alignSelf: 'center',
 });
 
-interface OnboardingHeaderProps {
-  onboardable: boolean;
-}
-const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
-  onboardable = false,
-}) => {
-  const title = onboardable
-    ? 'Your profile is complete'
-    : 'Your profile is incomplete';
-
-  const subtitle = onboardable
-    ? 'Click to publish your profile and start exploring the Hub.'
-    : 'Once completed, you can publish your profile and start exploring the Hub.';
-
-  const icon = onboardable ? tickIcon : padlockIcon;
-
-  return (
-    <header css={headerStyles}>
-      <div css={containerStyles}>
-        <div css={textStyles}>
-          <Headline2 styleAsHeading={3}>{title}</Headline2>
-          <Paragraph accent={'lead'}>{subtitle}</Paragraph>
-        </div>
-        <Button onClick={() => {}} enabled={onboardable} primary>
-          <span css={iconStyles}>{icon}</span>
-          Explore the Hub
-        </Button>
-      </div>
-    </header>
-  );
+type OnboardingHeaderProps = {
+  isOnboardable: boolean;
 };
+
+const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
+  isOnboardable,
+}) => (
+  <header css={headerStyles}>
+    <div css={containerStyles}>
+      <div css={textStyles}>
+        <Headline2 styleAsHeading={3}>
+          Your profile is {isOnboardable ? 'complete' : 'incomplete'}
+        </Headline2>
+        <Paragraph accent={'lead'}>
+          {isOnboardable
+            ? 'Click to publish your profile and start exploring the Hub.'
+            : 'Once completed, you can publish your profile and start exploring the Hub.'}
+        </Paragraph>
+      </div>
+      <div css={buttonStyles}>
+        <div>
+          <Button enabled={!!isOnboardable} primary>
+            <span css={iconStyles}>
+              {isOnboardable ? tickIcon : padlockIcon}
+            </span>
+            Explore the Hub
+          </Button>
+        </div>
+      </div>
+    </div>
+  </header>
+);
 export default OnboardingHeader;

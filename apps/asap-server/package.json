@@ -12,6 +12,7 @@
     "migration:create": "./scripts/create-migration.sh"
   },
   "dependencies": {
+    "@algolia/cli": "^4.0.8",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
@@ -26,6 +27,7 @@
     "@sentry/serverless": "^6.7.1",
     "@types/hapi__joi": "^17.1.6",
     "@types/parse-data-url": "^3.0.0",
+    "algoliasearch": "^4.10.3",
     "apr-intercept": "^3.0.4",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.907.0",
@@ -85,9 +87,11 @@
     "@types/pino-http": "^5",
     "@types/pump": "^1.1.1",
     "@types/source-map-support": "^0",
+    "@types/stream-json": "^1",
     "@types/supertest": "^2.0.11",
     "jwt-encode": "^1.0.1",
     "node-dev": "^6.7.0",
+    "stream-json": "^1.7.2",
     "supertest": "^6.1.3"
   }
 }

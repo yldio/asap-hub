@@ -807,7 +807,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/validation@workspace:packages/validation"
   dependencies:
-    "@asap-hub/auth": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0

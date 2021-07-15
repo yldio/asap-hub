@@ -11,7 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
-import { useUserContext } from '@asap-hub/react-context';
+import { useOnboardableContext } from '@asap-hub/react-context';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, OnboardingHeader, ToastStack } from '../organisms';
@@ -162,7 +162,6 @@ type LayoutProps = {
   readonly children: ReactNode;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
-
 const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
   const [menuShown, setMenuShown] = useState(false);
 
@@ -177,7 +176,7 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
   } catch {
     // If there is no router, fine, never auto-close the menu
   }
-  /* eslint-enable react-hooks/rules-of-h ooks */
+  /* eslint-enable react-hooks/rules-of-hooks */
 
   useEffect(() => {
     setMenuShown(false);
@@ -187,13 +186,12 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
       mainRef.current.scrollTo(0, 0);
     }
   }, [location, prevLocation, mainRef]);
-
-  const { onboarded, onboardable } = useUserContext();
-
+  const { isOnboardable } = useOnboardableContext();
   return (
     <ToastStack>
-      {/* This should only appear during onboarding */}
-      {!onboarded && <OnboardingHeader onboardable={onboardable} />}
+      {isOnboardable !== null && (
+        <OnboardingHeader isOnboardable={isOnboardable} />
+      )}
       <article css={[styles, menuShown || { overflow: 'hidden' }]}>
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>

@@ -46,6 +46,7 @@ export const NextPage = () => components.nextPageIcon;
 export const Orcid = () => components.orcidIcon;
 export const OrcidSocial = () => components.orcidSocialIcon;
 export const Outlook = () => components.outlookIcon;
+export const Padlock = () => components.padlockIcon;
 export const PaperClip = () => components.paperClipIcon;
 export const Placeholder = () => components.placeholderIcon;
 export const Plus = () => components.plusIcon;

@@ -28,7 +28,6 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: null,
                   publishDate: null,
-                  labCatalogNumber: 'http://example.com',
                   addedDate: null,
                   title: 'Proposal',
                   type: 'Proposal',
@@ -327,7 +326,6 @@ export const listTeamResponse: ListTeamResponse = {
           sharingStatus: 'Network Only',
           asapFunded: false,
           pmsEmails: [],
-          labCatalogNumber: 'http://example.com',
         },
       ],
       members: [
@@ -422,7 +420,6 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: null,
               publishDate: null,
-              labCatalogNumber: 'http://example.com',
               addedDate: null,
               title: 'Proposal',
               type: 'Proposal',
@@ -606,7 +603,6 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       asapFunded: false,
       pmsEmails: [],
-      labCatalogNumber: 'http://example.com',
     },
   ],
   members: [
@@ -670,7 +666,6 @@ export const getGraphQlTeamResponse = (
               tags: ['test', 'tag'],
               authors: [getSquidexResearchOutputGraphqlResponseAuthors()[0]],
               sharingStatus: 'Network Only',
-              labCatalogNumber: 'http://example.com',
               asapFunded: 'No',
             },
             referencingTeamsContents: [
@@ -830,7 +825,6 @@ export const updateExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       asapFunded: false,
       pmsEmails: [],
-      labCatalogNumber: 'http://example.com',
     },
   ],
   members: [

@@ -136,7 +136,9 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             ]}
           >
             <LabeledTypeahead
-              title="Institution"
+              title="Institution*"
+              required
+              getValidationMessage={() => 'Please add your institution'}
               maxLength={44}
               onChange={setNewInstitution}
               value={newInstitution}

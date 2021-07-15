@@ -55,9 +55,10 @@ it('renders default values into text inputs', () => {
 });
 
 it.each`
-  label         | value | message
-  ${/country/i} | ${''} | ${'Please add your country'}
-  ${/city/i}    | ${''} | ${'Please add your city'}
+  label             | value | message
+  ${/country/i}     | ${''} | ${'Please add your country'}
+  ${/city/i}        | ${''} | ${'Please add your city'}
+  ${/institution/i} | ${''} | ${'Please add your institution'}
 `(
   'shows validation message $message when value set to $value on $label',
   async ({ label, value, message }) => {

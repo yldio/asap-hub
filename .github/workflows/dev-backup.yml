@@ -44,10 +44,10 @@ jobs:
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
       - name: Run the backup
         run: |
-          export FILE_NAME=$(date +%s| cut -b1-13)-algolia-dev-backup.json
-          cd apps/asap-server && yarn node scripts/create-algolia-backup.js
-          echo "FILE_NAME=$FILE_NAME" >> $GITHUB_ENV
+          export DIR_NAME=$(date +%s| cut -b1-13)
+          mkdir $DIR_NAME
+          yarn workspace @asap-hub/asap-server run algolia export -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_INDEX -o "../../$DIR_NAME"
+          echo "DIR_NAME=$DIR_NAME" >> $GITHUB_ENV
       - name: Upload to S3
         run: |
-          cd apps/asap-server
-          aws s3api put-object --bucket $BUCKET_NAME --key $FILE_NAME --body $FILE_NAME --storage-class STANDARD_IA
+          aws s3 cp $DIR_NAME s3://$BUCKET_NAME/$DIR_NAME --recursive --storage-class STANDARD_IA

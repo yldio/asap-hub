@@ -12,6 +12,7 @@
     "migration:create": "./scripts/create-migration.sh"
   },
   "dependencies": {
+    "@algolia/cli": "^4.0.8",
     "@asap-hub/auth": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",

@@ -302,7 +302,7 @@ export const listTeamResponse: ListTeamResponse = {
           accessInstructions: 'some access instructions',
           sharingStatus: 'Network Only',
           pmsEmails: [],
-          labCatalogNumber: 'http://example.com'
+          labCatalogNumber: 'http://example.com',
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -327,7 +327,7 @@ export const listTeamResponse: ListTeamResponse = {
           sharingStatus: 'Network Only',
           asapFunded: false,
           pmsEmails: [],
-          labCatalogNumber: 'http://example.com'
+          labCatalogNumber: 'http://example.com',
         },
       ],
       members: [
@@ -805,7 +805,7 @@ export const updateExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       usedInPublication: false,
       pmsEmails: [],
-      labCatalogNumber: 'http://example.com'
+      labCatalogNumber: 'http://example.com',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

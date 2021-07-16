@@ -64,7 +64,12 @@ describe('Team controller', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams('', 8, 8),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: '',
+            top: 10,
+            skip: 8,
+          },
         })
         .reply(200, {
           data: {
@@ -75,7 +80,7 @@ describe('Team controller', () => {
           },
         });
 
-      const result = await teams.fetch({ take: 8, skip: 8 }, mockUser);
+      const result = await teams.fetch({ take: 10, skip: 8 }, mockUser);
       expect(result).toEqual({ items: [], total: 0 });
     });
 
@@ -91,7 +96,12 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(searchQ),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: searchQ,
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponseSingle)
         .get(`/api/content/${config.appName}/users`)
@@ -119,7 +129,12 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: expectedSearchFilter,
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponseSingle)
         .get(`/api/content/${config.appName}/users`)
@@ -147,7 +162,12 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: expectedSearchFilter,
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponseSingle)
         .get(`/api/content/${config.appName}/users`)
@@ -171,6 +191,11 @@ describe('Team controller', () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: '',
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponse)
         .get(`/api/content/${config.appName}/users`)
@@ -201,7 +226,10 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, {
           data: {
@@ -219,7 +247,10 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, graphQlTeamResponse)
         .get(`/api/content/${config.appName}/users`)
@@ -238,7 +269,10 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, graphQlTeamResponse)
         .get(`/api/content/${config.appName}/users`)
@@ -257,7 +291,10 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, graphQlTeamResponse)
         .get(`/api/content/${config.appName}/users`)
@@ -285,7 +322,10 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, getGraphQlTeamResponse(tools))
         .get(`/api/content/${config.appName}/users`)
@@ -328,7 +368,10 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(teamId),
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
           })
           .reply(200, graphQlTeamResponse)
           .get(`/api/content/${config.appName}/users`)
@@ -364,7 +407,10 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(teamId),
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
           })
           .reply(200, graphQlTeamResponse)
           .get(`/api/content/${config.appName}/users`)
@@ -411,7 +457,10 @@ describe('Team controller', () => {
         })
         .reply(200, getUpdateTeamResponse()) // response is not used
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, getGraphQlTeamResponse())
         .get(`/api/content/${config.appName}/users`)
@@ -440,7 +489,10 @@ describe('Team controller', () => {
         })
         .reply(200, getUpdateTeamResponse(tools)) // response is not used
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, getGraphQlTeamResponse(tools))
         .get(`/api/content/${config.appName}/users`)

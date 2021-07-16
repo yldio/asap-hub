@@ -9,6 +9,7 @@ import { parseGraphQLResearchOutput } from '../entities/research-output';
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { GraphQLQueryUser } from './users';
+import { GraphqlFetchOptions } from '../utils/types';
 
 export const getGraphQLQueryResearchOutput = ({
   withTeams,
@@ -73,26 +74,24 @@ ${
 }
 `;
 
-export const buildGraphQLQueryResearchOutput = (id: string): string =>
-  `{
-    findResearchOutputsContent(id: "${id}") {
-      ${getGraphQLQueryResearchOutput({ withTeams: true })}
-  }
-}`;
-
-export const buildGraphQLQueryFetchResearchOutputs = (
-  filter = '',
-  top = 8,
-  skip = 0,
-): string =>
-  `{
-    queryResearchOutputsContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "created desc") {
-    total
-    items {
+export const buildGraphQLQueryResearchOutput = (): string => `
+  query FetchResearchOutput($id: String) {
+    findResearchOutputsContent(id: $id) {
       ${getGraphQLQueryResearchOutput({ withTeams: true })}
     }
   }
-}`;
+`;
+
+export const buildGraphQLQueryFetchResearchOutputs = (): string => `
+  query FetchResearchOutputs($top: Int, $skip: Int, $filter: String) {
+    queryResearchOutputsContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: "created desc") {
+      total
+      items {
+        ${getGraphQLQueryResearchOutput({ withTeams: true })}
+      }
+    }
+  }
+`;
 
 export default class ResearchOutputs implements ResearchOutputController {
   graphqlSquidexClient: InstrumentedSquidexGraphql;
@@ -102,12 +101,12 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
-    const query = buildGraphQLQueryResearchOutput(id);
+    const query = buildGraphQLQueryResearchOutput();
     const researchOutputGraphqlResponse =
       await this.graphqlSquidexClient.request<
         ResponseFetchResearchOutput,
-        unknown
-      >(query);
+        { id: string }
+      >(query, { id });
 
     const { findResearchOutputsContent: researchOutputContent } =
       researchOutputGraphqlResponse;
@@ -154,16 +153,17 @@ export default class ResearchOutputs implements ResearchOutputController {
       .filter(Boolean)
       .join(' and ');
 
-    const query = buildGraphQLQueryFetchResearchOutputs(
-      filterGraphql,
-      take,
-      skip,
-    );
+    const query = buildGraphQLQueryFetchResearchOutputs();
+
     const { queryResearchOutputsContentsWithTotal } =
       await this.graphqlSquidexClient.request<
         ResponseFetchResearchOutputs,
-        unknown
-      >(query);
+        GraphqlFetchOptions
+      >(query, {
+        top: take,
+        skip,
+        filter: filterGraphql,
+      });
 
     const { total, items: researchOutputs } =
       queryResearchOutputsContentsWithTotal;

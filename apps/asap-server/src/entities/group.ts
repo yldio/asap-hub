@@ -4,8 +4,9 @@ import {
   CalendarResponse,
   GroupTeam,
   GroupTools,
+  GroupRole,
 } from '@asap-hub/model';
-import { GraphqlGroup } from '@asap-hub/squidex';
+import { GraphqlGroup, GraphqlUser } from '@asap-hub/squidex';
 
 import { parseGraphQLTeam } from './team';
 import { parseGraphQLUser } from './user';
@@ -22,12 +23,15 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(
     parseGraphQLCalendar,
   );
-  const leaders: GroupResponse['leaders'] = (item.flatData?.leaders || []).map(
-    (leader) => ({
+  const leaders: GroupResponse['leaders'] = (item.flatData?.leaders || [])
+    .filter(
+      (leader): leader is { user: GraphqlUser[]; role: GroupRole } =>
+        !!leader.user[0],
+    )
+    .map((leader) => ({
       user: parseGraphQLUser(leader.user[0]),
       role: leader.role,
-    }),
-  );
+    }));
   let tools: GroupTools = {};
   if (item.flatData?.tools?.length) {
     const [groupTools] = item.flatData?.tools;

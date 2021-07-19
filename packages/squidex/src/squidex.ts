@@ -146,7 +146,7 @@ export class Squidex<
         .json();
       return res as T;
     } catch (err) {
-      console.log(">>>>>>>>>>>>>>>> error", err);
+      // console.log(">>>>>>>>>>>>>>>> error", err);
       if (err.response?.statusCode === 409) {
         throw Boom.conflict();
       }
@@ -159,7 +159,7 @@ export class Squidex<
       }
 
       if (err.response?.statusCode === 400) {
-        console.log("400 err >>>>>>>>>>>>>>>>>>>>>>", err, err.response, err.response?.body);
+        // console.log("400 err >>>>>>>>>>>>>>>>>>>>>>", err, err.response, err.response?.body);
         throw Boom.badRequest(err, err.response?.body);
       }
 

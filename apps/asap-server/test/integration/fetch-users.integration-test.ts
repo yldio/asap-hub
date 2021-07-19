@@ -24,10 +24,10 @@ describe('Users', () => {
       degree: 'MPH',
     };
 
-    console.log(">>>>>>>>>>>>>>>>>>>>>>> Creating user");
+    // console.log(">>>>>>>>>>>>>>>>>>>>>>> Creating user");
     await createUser(user);
 
-    console.log(">>>>>>>>>>>>>>>>>>>>>>> Fetching user");
+    // console.log(">>>>>>>>>>>>>>>>>>>>>>> Fetching user");
     const result = await users.fetch({});
 
     const expectedResponse: Partial<UserResponse> = {

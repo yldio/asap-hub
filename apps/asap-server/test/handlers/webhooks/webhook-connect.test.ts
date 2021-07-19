@@ -24,7 +24,6 @@ const user: RestUser = {
     institution: { iv: 'Institution' },
     connections: { iv: [] },
     biography: { iv: 'Biography' },
-    location: { iv: 'Lisbon, Portugal' },
     avatar: { iv: [] },
     skills: { iv: [] },
     questions: { iv: [] },

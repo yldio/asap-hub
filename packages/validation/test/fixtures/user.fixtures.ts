@@ -29,7 +29,6 @@ export const userResponse: UserResponse = {
       role: 'Collaborating PI',
     },
   ],
-  location: 'Zofilte',
   orcid: '363-98-9330',
   orcidWorks: [],
   social: {

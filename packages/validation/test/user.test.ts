@@ -160,17 +160,6 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if Location is missing from user profile', async () => {
-    const userIncompleteResponse: UserResponse = {
-      ...userResponse,
-      location: undefined,
-    };
-
-    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
-      isOnboardable: false,
-    });
-  });
-
   test('Should fail if Expertise and Resources are missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...userResponse,

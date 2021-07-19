@@ -135,7 +135,6 @@ export const usersResponseTeam1: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-1'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -173,7 +172,6 @@ export const usersResponseTeam2: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-2'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -205,7 +203,6 @@ export const usersResponseTeam2: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-3'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -243,7 +240,6 @@ export const usersResponseTeam3: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9335' },
         institution: { iv: 'Euro General Corporation' },
-        location: { iv: 'Zurich' },
         avatar: { iv: ['uuid-user-id-4'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -511,9 +507,6 @@ export const fetchByIdUserResponse: { total: number; items: RestUser[] } = {
         institution: {
           iv: 'Dollar General Corporation',
         },
-        location: {
-          iv: 'Zofilte',
-        },
         avatar: {
           iv: ['uuid-user-id-1'],
         },
@@ -742,7 +735,6 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-1'] },
         skills: { iv: [] },
         orcidWorks: { iv: [] },

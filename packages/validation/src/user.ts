@@ -41,10 +41,6 @@ export const isUserOnboardable = (
     return getFailedResponse();
   }
 
-  if (typeof user.location === 'undefined') {
-    return getFailedResponse();
-  }
-
   if (user.skills.length < 5) {
     return getFailedResponse();
   }

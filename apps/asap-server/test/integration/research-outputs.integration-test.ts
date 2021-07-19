@@ -1,3 +1,5 @@
+export {};
+
 // // Submit something with an invalid identifierDOI
 // // Should receive an error
 

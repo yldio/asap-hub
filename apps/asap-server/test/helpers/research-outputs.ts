@@ -1,3 +1,5 @@
+export {};
+
 // import { Squidex, ResearchOutput, RestResearchOutput } from "@asap-hub/squidex";
 
 // const researchOutputs = new Squidex<RestResearchOutput>('researchOutputs'); // TODO check this arg

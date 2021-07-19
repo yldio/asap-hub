@@ -47,14 +47,17 @@ const baseSelectStyles: ComponentProps<typeof Select>['styles'] = {
       width: '100% !important',
     },
   }),
-  indicatorSeparator: () => ({ display: 'none' }),
+  indicatorSeparator: () => ({
+    padding: `0 ${3 / perRem}em`,
+  }),
   indicatorsContainer: (provided) => ({
     ...provided,
 
     minWidth: `${lineHeight / perRem}em`,
     minHeight: `${lineHeight / perRem}em`,
+    paddingRight: `${3 / perRem}em`,
 
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   }),
 

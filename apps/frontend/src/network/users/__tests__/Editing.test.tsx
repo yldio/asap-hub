@@ -8,11 +8,14 @@ import { network } from '@asap-hub/routing';
 
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import Editing from '../Editing';
-import { patchUser } from '../api';
+import { patchUser, getInstitutions } from '../api';
 
 jest.mock('../api');
 
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
+const mockGetInstitutions = getInstitutions as jest.MockedFunction<
+  typeof getInstitutions
+>;
 
 const id = '42';
 
@@ -30,6 +33,8 @@ const aboutPath =
   network({}).users({}).user.template +
   aboutRoute.template;
 const { editPersonalInfo, editContactInfo } = aboutRoute({});
+
+beforeEach(() => jest.resetAllMocks());
 
 describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
   it('goes back when closed', async () => {
@@ -68,6 +73,49 @@ describe.each([editPersonalInfo, editContactInfo])('the %s modal', (route) => {
 });
 
 describe('the personal info modal', () => {
+  it('searches and displays results from organisations api', async () => {
+    mockGetInstitutions.mockResolvedValue({
+      number_of_results: 1,
+      time_taken: 0,
+      items: [
+        {
+          name: 'ExampleInst',
+          id: 'id-1',
+          email_address: 'example@example.com',
+          status: '',
+          wikipedia_url: '',
+          established: 1999,
+          aliases: [],
+          acronyms: [],
+          links: [],
+          types: [],
+        },
+      ],
+    });
+    const { findByDisplayValue, findByText } = render(
+      <Auth0Provider user={{ id }}>
+        <MemoryRouter initialEntries={[editPersonalInfo({}).$]}>
+          <Route path={aboutPath}>
+            <Editing
+              user={{
+                ...createUserResponse(),
+                institution: 'NCU',
+              }}
+              backHref={aboutPath}
+            />
+          </Route>
+        </MemoryRouter>
+      </Auth0Provider>,
+      { wrapper },
+    );
+
+    userEvent.type(await findByDisplayValue('NCU'), ' 1');
+    expect(await findByText('ExampleInst')).toBeVisible();
+    expect(mockGetInstitutions).toHaveBeenCalledWith({
+      searchQuery: 'NCU 1',
+    });
+  });
+
   it('saves changes', async () => {
     const {
       findByText,

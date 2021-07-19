@@ -6,6 +6,7 @@ import {
   ListUserResponse,
 } from '@asap-hub/model';
 import { GetListOptions } from '../../../api-util';
+import { InstitutionsResponse } from '../api';
 
 export const getUser = jest.fn(
   async (id: string): Promise<UserResponse> => ({
@@ -37,4 +38,23 @@ export const postUserAvatar = jest.fn(
 export const getUsers = jest.fn(
   async ({ pageSize }: GetListOptions): Promise<ListUserResponse> =>
     createListUserResponse(pageSize ?? 10),
+);
+
+export const getInstitutions = jest.fn(
+  async (): Promise<InstitutionsResponse> => ({
+    number_of_results: 20,
+    time_taken: 0,
+    items: Array.from({ length: 20 }).map((_, i) => ({
+      name: `Institution ${i + 1}`,
+      id: `id-${i}`,
+      email_address: 'example@example.com',
+      status: '',
+      wikipedia_url: '',
+      established: 1999,
+      aliases: [],
+      acronyms: [],
+      links: [],
+      types: [],
+    })),
+  }),
 );

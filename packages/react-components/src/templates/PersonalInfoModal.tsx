@@ -37,6 +37,7 @@ type PersonalInfoModalProps = Pick<
   | 'jobTitle'
 > & {
   countrySuggestions: string[];
+  loadInstitutionOptions: (newValue?: string) => Promise<string[]>;
   onSave?: (data: UserPatchRequest) => void | Promise<void>;
   backHref: string;
 };
@@ -51,6 +52,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
   jobTitle = '',
 
   countrySuggestions,
+  loadInstitutionOptions,
   onSave = noop,
   backHref,
 }) => {
@@ -133,12 +135,15 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               { paddingBottom: `${240 / perRem}em` },
             ]}
           >
-            <LabeledTextField
-              title="Institution"
+            <LabeledTypeahead
+              title="Institution*"
+              required
+              getValidationMessage={() => 'Please add your institution'}
               maxLength={44}
               onChange={setNewInstitution}
               value={newInstitution}
               enabled={!isSaving}
+              loadOptions={loadInstitutionOptions}
             />
             <LabeledTypeahead
               title="Position*"

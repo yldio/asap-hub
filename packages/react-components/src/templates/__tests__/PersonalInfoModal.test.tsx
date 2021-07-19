@@ -10,11 +10,16 @@ import PersonalInfoModal from '../PersonalInfoModal';
 const props: ComponentProps<typeof PersonalInfoModal> = {
   ...createUserResponse(),
   countrySuggestions: [],
+  loadInstitutionOptions: () => Promise.resolve([]),
   backHref: '/wrong',
 };
 it('renders the title', () => {
   const { getByText } = render(
-    <PersonalInfoModal countrySuggestions={[]} backHref="/wrong" />,
+    <PersonalInfoModal
+      countrySuggestions={[]}
+      loadInstitutionOptions={() => Promise.resolve([])}
+      backHref="/wrong"
+    />,
     {
       wrapper: StaticRouter,
     },
@@ -50,9 +55,10 @@ it('renders default values into text inputs', () => {
 });
 
 it.each`
-  label         | value | message
-  ${/country/i} | ${''} | ${'Please add your country'}
-  ${/city/i}    | ${''} | ${'Please add your city'}
+  label             | value | message
+  ${/country/i}     | ${''} | ${'Please add your country'}
+  ${/city/i}        | ${''} | ${'Please add your city'}
+  ${/institution/i} | ${''} | ${'Please add your institution'}
 `(
   'shows validation message $message when value set to $value on $label',
   async ({ label, value, message }) => {

@@ -4,7 +4,7 @@ describe('Dummy test', () => {
   test('Dummy', async () => {
     expect(true);
   });
-})
+});
 
 // // Submit something with an invalid identifierDOI
 // // Should receive an error

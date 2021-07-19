@@ -11,6 +11,8 @@ export const userResponse: UserResponse = {
   firstName: 'Cristiano',
   lastName: 'Ronaldo',
   jobTitle: 'Junior',
+  city: 'London',
+  country: 'United Kingdom',
   institution: 'Dollar General Corporation',
   degree: 'MPH',
   teams: [

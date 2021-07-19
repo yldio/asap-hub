@@ -1,19 +1,25 @@
+import Chance from 'chance';
+
 import { Role, UserResponse } from '@asap-hub/model';
 import { User } from '@asap-hub/squidex';
 import Users from '../../src/controllers/users';
 import { createUser } from '../helpers/users';
 
+const chance = new Chance();
 const users = new Users();
 
 describe('Users', () => {
   test('Should create and fetch a user', async () => {
+    const randomOrcid = chance.ssn();
+    const randomEmail = chance.email();
+
     const user: Partial<User> = {
       firstName: 'John',
       lastName: 'Doe',
       jobTitle: 'Project Manager',
-      orcid: '0000-0002-9079-593X',
+      orcid: randomOrcid,
       institution: 'Instituto Superior Tecnico',
-      email: 'john.doe@asap.science',
+      email: randomEmail,
       role: 'Grantee' as Role,
       degree: 'MPH',
     };
@@ -29,9 +35,9 @@ describe('Users', () => {
       lastName: 'Doe',
       displayName: 'John Doe',
       jobTitle: 'Project Manager',
-      orcid: '0000-0002-9079-593X',
+      orcid: randomOrcid,
       institution: 'Instituto Superior Tecnico',
-      email: 'john.doe@asap.science',
+      email: randomEmail,
       role: 'Grantee',
       degree: 'MPH',
       teams: [],

@@ -46,6 +46,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: 'docs.google.com',
                   publishDate: null,
+                  labCatalogNumber: 'http://example.com',
                   addedDate: '2021-05-24T17:33:30Z',
                   title: "Team Salzer's intro slide deck",
                   type: 'Presentation',
@@ -300,6 +301,7 @@ export const listTeamResponse: ListTeamResponse = {
           accessInstructions: 'some access instructions',
           sharingStatus: 'Network Only',
           pmsEmails: [],
+          labCatalogNumber: 'http://example.com',
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -434,6 +436,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              labCatalogNumber: 'http://example.com',
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
@@ -575,6 +578,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       usedInPublication: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -682,6 +686,7 @@ export const getGraphQlTeamResponse = (
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              labCatalogNumber: 'http://example.com',
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
@@ -795,6 +800,7 @@ export const updateExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       usedInPublication: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

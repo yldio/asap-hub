@@ -97,7 +97,7 @@ export const buildGraphQLQueryFetchUsers = (): string => `
 `;
 
 export const buildGraphQLQueryFetchUser = (): string => `
-  query FetchUser($id: String) {
+  query FetchUser($id: String!) {
     findUsersContent(id: $id) {
       ${GraphQLQueryUser}
     }

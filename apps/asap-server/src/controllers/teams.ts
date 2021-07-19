@@ -59,7 +59,7 @@ export const buildGraphQLQueryFetchTeams = (): string => `
 `;
 
 export const buildGraphQLQueryFetchTeam = (): string => `
-  query FetchTeam($id: String) {
+  query FetchTeam($id: String!) {
     findTeamsContent(id: $id) {
       ${getGraphQLQueryTeam({ researchOutputsWithTeams: false })}
     }

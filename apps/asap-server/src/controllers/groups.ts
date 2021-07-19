@@ -55,7 +55,7 @@ export const buildGraphQLQueryFetchGroups = (): string => `
 `;
 
 export const buildGraphQLQueryFetchGroup = (): string => `
-  query FetchGroup($id: String) {
+  query FetchGroup($id: String!) {
     findGroupsContent(id: $id) {
       ${GraphQLQueryGroup}
     }

@@ -216,7 +216,7 @@ export const buildGraphQLQueryFetchEvents = (): string => `
 `;
 
 export const buildGraphQLQueryFetchEvent = (): string => `
-  query FetchEvent($id: String) {
+  query FetchEvent($id: String!) {
     findEventsContent(id: $id) {
       ${GraphQLQueryEvent}
     }
@@ -224,7 +224,7 @@ export const buildGraphQLQueryFetchEvent = (): string => `
 `;
 
 export const buildGraphQLQueryFetchGroup = (): string => `
-  query FetchGroup($id: String) {
+  query FetchGroup($id: String!) {
     findGroupsContent(id: $id) {
       flatData {
         calendars {

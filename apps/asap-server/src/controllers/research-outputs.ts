@@ -76,7 +76,7 @@ ${
 `;
 
 export const buildGraphQLQueryResearchOutput = (): string => `
-  query FetchResearchOutput($id: String) {
+  query FetchResearchOutput($id: String!) {
     findResearchOutputsContent(id: $id) {
       ${getGraphQLQueryResearchOutput({ withTeams: true })}
     }

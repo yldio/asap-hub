@@ -43,6 +43,7 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
     return acc;
   }, {} as { [key: string]: { iv: unknown } });
 
+  console.log(">>>>>>>>>>>>>>>>> users.create");
   return users.create(user as RestUser['data']);
 };
 

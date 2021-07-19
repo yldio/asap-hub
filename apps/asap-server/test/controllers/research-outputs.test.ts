@@ -418,19 +418,6 @@ describe('ResearchOutputs controller', () => {
       ).toEqual(1);
     });
 
-    test('identifierDoi fails with invalid DOI', async () => {
-      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      researchOutputResponse.findResearchOutputsContent!.flatData!.identifierDoi = 'invalidDOI';
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(researchOutputId),
-        })
-        .reply(200, { data: researchOutputResponse });
-
-      const result = await researchOutputs.fetchById(researchOutputId);
-    });
-
     describe('Last Updated Partial field', () => {
       test('Should default to last-modified if the last-updated-partial is not present', async () => {
         const researchOutputResponse =

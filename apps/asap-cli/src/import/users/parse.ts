@@ -14,7 +14,6 @@ export interface Data {
   lastName: string;
   institution: string;
   degree: Degree;
-  location: string;
   jobTitle: string;
   orcid: string;
   questions: string[];
@@ -59,7 +58,6 @@ export default (data: string[]): Data => {
     responsibilities,
     skills,
     asapRole,
-    location,
     ,
     website1,
     website2,
@@ -88,7 +86,6 @@ export default (data: string[]): Data => {
     questions: [question1, question2, question3, question4].filter(Boolean),
     researchInterest,
     responsibilities,
-    location,
     role: role as TeamRole,
     skills: skills
       .split(',')

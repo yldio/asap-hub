@@ -30,7 +30,6 @@ The csv format needs to respect the following structure:
 - responsibilities
 - skills
 - asap_role
-- location
 - avatar
 - website1
 - website2

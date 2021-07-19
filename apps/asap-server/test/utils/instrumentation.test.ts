@@ -39,11 +39,12 @@ describe('Instrumentation', () => {
   test('marks span as ERROR, when statusCode is >= 400', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
-        query: buildGraphQLQueryFetchUsers(
-          `data/connections/iv/code eq 'notFound'`,
-          1,
-          0,
-        ),
+        query: buildGraphQLQueryFetchUsers(),
+        variables: {
+          filter: `data/connections/iv/code eq 'notFound'`,
+          top: 1,
+          skip: 0,
+        },
       })
       .reply(200, {
         data: {
@@ -72,11 +73,12 @@ describe('Instrumentation', () => {
   test('returns 200 when user exists', async () => {
     nock(config.baseUrl)
       .post(`/api/content/${config.appName}/graphql`, {
-        query: buildGraphQLQueryFetchUsers(
-          `data/connections/iv/code eq 'welcomeCode'`,
-          1,
-          0,
-        ),
+        query: buildGraphQLQueryFetchUsers(),
+        variables: {
+          filter: `data/connections/iv/code eq 'welcomeCode'`,
+          top: 1,
+          skip: 0,
+        },
       })
       .reply(200, fetchUserResponse);
 

@@ -39,9 +39,12 @@ describe('Users controller', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(
-            "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
-          ),
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter: "data/onboarded/iv eq true and data/role/iv ne 'Hidden'",
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, {
           data: {
@@ -83,7 +86,12 @@ describe('Users controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(filterQuery, 12, 2),
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter: filterQuery,
+            top: 12,
+            skip: 2,
+          },
         })
         .reply(200, graphQlResponseFetchUsers);
 
@@ -107,7 +115,12 @@ describe('Users controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter: expectedFilter,
+            top: 12,
+            skip: 2,
+          },
         })
         .reply(200, graphQlResponseFetchUsers);
 
@@ -132,7 +145,12 @@ describe('Users controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(expectedFilter, 12, 2),
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter: expectedFilter,
+            top: 12,
+            skip: 2,
+          },
         })
         .reply(200, graphQlResponseFetchUsers);
 
@@ -146,7 +164,10 @@ describe('Users controller', () => {
     test('Should throw when user is not found', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser('not-found'),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: 'not-found',
+          },
         })
         .reply(200, {
           data: {
@@ -164,7 +185,10 @@ describe('Users controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser('not-found'),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: 'not-found',
+          },
         })
         .reply(200, nonOnboardedUserResponse);
 
@@ -174,7 +198,10 @@ describe('Users controller', () => {
     test('Should return the user when it finds it', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser('user-id'),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: 'user-id',
+          },
         })
         .reply(200, getGraphQlResponseFetchUser());
 
@@ -189,7 +216,10 @@ describe('Users controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser('user-id'),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: 'user-id',
+          },
         })
         .reply(200, userWithNoOnboardedFlagResponse);
 
@@ -206,7 +236,12 @@ describe('Users controller', () => {
     test('Should throw 403 when no user is found', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(filter, 1, 0),
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter,
+            top: 1,
+            skip: 0,
+          },
         })
         .reply(200, {
           data: {
@@ -223,7 +258,12 @@ describe('Users controller', () => {
     test('Should throw when it finds more than one user', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(filter, 1, 0),
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter,
+            top: 1,
+            skip: 0,
+          },
         })
         .reply(200, graphQlResponseFetchUsers);
 
@@ -233,7 +273,12 @@ describe('Users controller', () => {
     test('Should return user when it finds it', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(filter, 1, 0),
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter,
+            top: 1,
+            skip: 0,
+          },
         })
         .reply(200, {
           data: {
@@ -271,7 +316,10 @@ describe('Users controller', () => {
         })
         .reply(200, fetchUserResponse)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser(userId),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: userId,
+          },
         })
         .reply(200, buildUserGraphqlResponse());
 
@@ -288,7 +336,10 @@ describe('Users controller', () => {
         })
         .reply(200, fetchUserResponse)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser(userId),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: userId,
+          },
         })
         .reply(200, buildUserGraphqlResponse());
 
@@ -310,7 +361,10 @@ describe('Users controller', () => {
         } as { [k: string]: any })
         .reply(200, fetchUserResponse) // this response is ignored
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser(userId),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: userId,
+          },
         })
         .reply(
           200,
@@ -333,7 +387,10 @@ describe('Users controller', () => {
         } as { [k: string]: any })
         .reply(200, fetchUserResponse)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser(userId),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: userId,
+          },
         })
         .reply(
           200,
@@ -392,7 +449,10 @@ describe('Users controller', () => {
         } as { [k: string]: any })
         .reply(200, fetchUserResponse) // this response is ignored
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser(userId),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: userId,
+          },
         })
         .reply(
           200,
@@ -512,7 +572,10 @@ describe('Users controller', () => {
         })
         .reply(200, patchResponse)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser('user-id'),
+          query: buildGraphQLQueryFetchUser(),
+          variables: {
+            id: 'user-id',
+          },
         })
         .reply(200, getGraphQlResponseFetchUser());
 

@@ -41,12 +41,12 @@ export class InstrumentedSquidexGraphql extends SquidexGraphql {
       tracer.extract(opentracing.FORMAT_HTTP_HEADERS, ctxHeaders) || undefined;
   }
 
-  async request<T, V>(query: string): Promise<T> {
+  async request<T, V>(query: string, variables?: V): Promise<T> {
     const queryName = getQueryName(query) || 'Graphql Request';
     const span = startSpan(queryName, this.tracingContext);
     span.log({ event: 'request_started', query });
 
-    const res = await super.request<T, V>(query).catch((err) => {
+    const res = await super.request<T, V>(query, variables).catch((err) => {
       span.setTag(opentracing.Tags.ERROR, true);
       span.log({ event: 'error', 'error.object': err, message: err.message });
       throw err;

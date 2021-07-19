@@ -38,7 +38,15 @@ describe('Event controller', () => {
   describe('Fetch method', () => {
     test('Should return an empty result when the client returns an empty array of data', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvents(),
+          variables: {
+            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+            order: '',
+            top: 10,
+            skip: 0,
+          },
+        })
         .reply(200, {
           data: {
             queryEventsContentsWithTotal: {
@@ -62,7 +70,15 @@ describe('Event controller', () => {
 
     test('Should return a list of events', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvents(),
+          variables: {
+            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+            order: '',
+            top: 10,
+            skip: 0,
+          },
+        })
         .reply(200, fetchEventsResponse);
 
       const result = await events.fetch({
@@ -74,7 +90,15 @@ describe('Event controller', () => {
 
     test('Should return event thumbnail', async () => {
       nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, (body) => body.query)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchEvents(),
+          variables: {
+            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+            order: '',
+            top: 10,
+            skip: 0,
+          },
+        })
         .reply(200, fetchEventsResponse);
 
       const result = await events.fetch({
@@ -87,9 +111,13 @@ describe('Event controller', () => {
     test('Should apply the filter to remove hidden events by default', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvents(
-            'data/hidden/iv ne true and data/endDate/iv gt after-date',
-          ),
+          query: buildGraphQLQueryFetchEvents(),
+          variables: {
+            filter: 'data/hidden/iv ne true and data/endDate/iv gt after-date',
+            order: '',
+            top: 10,
+            skip: 0,
+          },
         })
         .reply(200, fetchEventsResponse);
 
@@ -102,9 +130,14 @@ describe('Event controller', () => {
       test('Should apply the "after" filter to the end-date', async () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(
-              'data/hidden/iv ne true and data/endDate/iv gt after-date',
-            ),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter:
+                'data/hidden/iv ne true and data/endDate/iv gt after-date',
+              order: '',
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -116,9 +149,14 @@ describe('Event controller', () => {
       test('Should apply the "before" filter to the end-date', async () => {
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(
-              'data/hidden/iv ne true and data/endDate/iv lt before-date',
-            ),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter:
+                'data/hidden/iv ne true and data/endDate/iv lt before-date',
+              order: '',
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -133,7 +171,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(expectedFilter),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: '',
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -149,7 +193,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(expectedFilter),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: '',
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -165,7 +215,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(expectedFilter),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: '',
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -181,7 +237,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(expectedFilter),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: '',
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -229,7 +291,10 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchGroup(groupId),
+            query: buildGraphQLQueryFetchGroup(),
+            variables: {
+              id: groupId,
+            },
           })
           .reply(200, findGroupResponse);
 
@@ -238,7 +303,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(expectedFilter),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: '',
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -258,12 +329,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(
-              expectedFilter,
-              undefined,
-              undefined,
-              expectedOrder,
-            ),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: expectedOrder,
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -279,12 +351,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(
-              expectedFilter,
-              undefined,
-              undefined,
-              expectedOrder,
-            ),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: expectedOrder,
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -300,12 +373,13 @@ describe('Event controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchEvents(
-              expectedFilter,
-              undefined,
-              undefined,
-              expectedOrder,
-            ),
+            query: buildGraphQLQueryFetchEvents(),
+            variables: {
+              filter: expectedFilter,
+              order: expectedOrder,
+              top: 10,
+              skip: 0,
+            },
           })
           .reply(200, fetchEventsResponse);
 
@@ -447,7 +521,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, {
           data: { findEventsContent: pUnavailableEventRes },
@@ -476,7 +553,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, { data: { findEventsContent: emptyEvent } });
 
@@ -505,7 +585,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, { data: { findEventsContent: emptyEvent } });
 
@@ -538,7 +621,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, { data: { findEventsContent: eventResponse } });
 
@@ -583,7 +669,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, findEventResponse);
 
@@ -702,7 +791,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, findEventResponseMultiRef);
 
@@ -722,7 +814,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, findEventResponseSingleRef);
 
@@ -742,7 +837,10 @@ describe('Event controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchEvent(eventId),
+          query: buildGraphQLQueryFetchEvent(),
+          variables: {
+            id: eventId,
+          },
         })
         .reply(200, findEventResponse);
 

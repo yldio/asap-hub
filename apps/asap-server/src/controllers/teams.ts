@@ -18,6 +18,7 @@ import {
 import { getGraphQLQueryResearchOutput } from './research-outputs';
 import { parseGraphQLTeam } from '../entities';
 import { createURL, sanitiseForSquidex } from '../utils/squidex';
+import { GraphqlFetchOptions } from '../utils/types';
 
 export const getGraphQLQueryTeam = ({
   researchOutputsWithTeams,
@@ -46,26 +47,24 @@ flatData {
   }
 }`;
 
-export const buildGraphQLQueryFetchTeams = (
-  filter = '',
-  top = 8,
-  skip = 0,
-): string =>
-  `{
-  queryTeamsContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "data/displayName/iv") {
-    total
-    items {
-      ${getGraphQLQueryTeam({ researchOutputsWithTeams: true })}
+export const buildGraphQLQueryFetchTeams = (): string => `
+  query FetchTeams($top: Int, $skip: Int, $filter: String) {
+    queryTeamsContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: "data/displayName/iv") {
+      total
+      items {
+        ${getGraphQLQueryTeam({ researchOutputsWithTeams: true })}
+      }
     }
   }
-}`;
+`;
 
-export const buildGraphQLQueryFetchTeam = (id: string): string =>
-  `{
-  findTeamsContent(id: "${id}") {
-    ${getGraphQLQueryTeam({ researchOutputsWithTeams: false })}
+export const buildGraphQLQueryFetchTeam = (): string => `
+  query FetchTeam($id: String) {
+    findTeamsContent(id: $id) {
+      ${getGraphQLQueryTeam({ researchOutputsWithTeams: false })}
+    }
   }
-}`;
+`;
 
 export interface ResponseFetchTeams {
   queryTeamsContentsWithTotal: {
@@ -180,7 +179,7 @@ export default class Teams implements TeamController {
     },
     user: User,
   ): Promise<ListTeamResponse> {
-    const { take, skip, search } = options;
+    const { take = 8, skip = 0, search } = options;
 
     const searchQ = (search || '')
       .split(' ')
@@ -199,12 +198,16 @@ export default class Teams implements TeamController {
       )
       .join(' and ');
 
-    const query = buildGraphQLQueryFetchTeams(searchQ, take, skip);
+    const query = buildGraphQLQueryFetchTeams();
 
     const { queryTeamsContentsWithTotal } = await this.client.request<
       ResponseFetchTeams,
-      unknown
-    >(query);
+      GraphqlFetchOptions
+    >(query, {
+      filter: searchQ,
+      top: take,
+      skip,
+    });
 
     const { total, items: teams } = queryTeamsContentsWithTotal;
 
@@ -227,8 +230,11 @@ export default class Teams implements TeamController {
   }
 
   async fetchById(teamId: string, user: User): Promise<TeamResponse> {
-    const query = buildGraphQLQueryFetchTeam(teamId);
-    const teamPromise = this.client.request<ResponseFetchTeam, unknown>(query);
+    const query = buildGraphQLQueryFetchTeam();
+    const teamPromise = this.client.request<ResponseFetchTeam, { id: string }>(
+      query,
+      { id: teamId },
+    );
 
     const usersPromise = fetchUsers(teamId, this.users.client);
 

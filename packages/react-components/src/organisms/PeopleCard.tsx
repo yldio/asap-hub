@@ -45,7 +45,6 @@ type PeopleCardProps = Pick<
   | 'jobTitle'
   | 'createdDate'
   | 'lastName'
-  | 'location'
   | 'role'
   | 'teams'
   | 'degree'

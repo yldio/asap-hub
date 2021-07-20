@@ -48,7 +48,7 @@ describe('Users', () => {
 
     expect(result).toEqual({
       total: 1,
-      items: [expect.objectContaining(expectedResponse)]
+      items: [expect.objectContaining(expectedResponse)],
     });
   });
 });

@@ -27,7 +27,7 @@ describe('Research Outputs', () => {
     const result = await researchOutputs.fetch({
       take: 1,
       skip: 0,
-      search: randomTitle
+      search: randomTitle,
     });
 
     const expectedResponse: Partial<ResearchOutputResponse> = {
@@ -36,12 +36,12 @@ describe('Research Outputs', () => {
       description: 'Research Output Description',
       sharingStatus: 'Network Only',
       asapFunded: undefined,
-      usedInPublication: undefined
+      usedInPublication: undefined,
     };
 
     expect(result).toEqual({
       total: 1,
-      items: [expect.objectContaining(expectedResponse)]
+      items: [expect.objectContaining(expectedResponse)],
     });
   });
 
@@ -49,11 +49,11 @@ describe('Research Outputs', () => {
     researchOutput.doi = 'invalid doi';
 
     try {
-      await createResearchOutput(researchOutput); 
+      await createResearchOutput(researchOutput);
     } catch (e) {
       expect(e.name).toBe('HTTPError');
       expect(e.output.statusCode).toBe(400);
-      expect(e.data).toMatch("doi.iv: Must follow the pattern");
+      expect(e.data).toMatch('doi.iv: Must follow the pattern');
     }
   });
 });

@@ -28,6 +28,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
   usedInAPublication: DecisionOption;
   authors?: TAuthorConnection[];
   pmsEmails: string[];
+  rrid?: string;
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

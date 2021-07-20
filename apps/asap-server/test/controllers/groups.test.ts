@@ -29,7 +29,12 @@ describe('Group controller', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(''),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: '',
+            top: 50,
+            skip: 0,
+          },
         })
         .reply(200, {
           data: {
@@ -51,7 +56,7 @@ describe('Group controller', () => {
         search: 'first last',
       };
 
-      const filterQuery =
+      const expetedFilter =
         "(contains(data/name/iv, 'first')" +
         " or contains(data/description/iv, 'first')" +
         " or contains(data/tags/iv, 'first'))" +
@@ -62,7 +67,12 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(filterQuery, 12, 2),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: expetedFilter,
+            top: 12,
+            skip: 2,
+          },
         })
         .reply(200, fixtures.queryGroupsResponse);
 
@@ -84,7 +94,12 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(expectedFilter, 12, 2),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: expectedFilter,
+            top: 12,
+            skip: 2,
+          },
         })
         .reply(200, fixtures.queryGroupsResponse);
 
@@ -107,7 +122,12 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(expectedFilter, 12, 2),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: expectedFilter,
+            top: 12,
+            skip: 2,
+          },
         })
         .reply(200, fixtures.queryGroupsResponse);
 
@@ -122,7 +142,10 @@ describe('Group controller', () => {
       const groupId = 'not-found';
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroup(groupId),
+          query: buildGraphQLQueryFetchGroup(),
+          variables: {
+            id: groupId,
+          },
         })
         .reply(200, {
           data: {
@@ -137,7 +160,10 @@ describe('Group controller', () => {
       const groupId = 'group-id-1';
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroup(groupId),
+          query: buildGraphQLQueryFetchGroup(),
+          variables: {
+            id: groupId,
+          },
         })
         .reply(200, fixtures.findGroupResponse);
 
@@ -149,11 +175,16 @@ describe('Group controller', () => {
   describe('Fetch-by-team-ID method', () => {
     test('Should return an empty result', async () => {
       const teamUUID = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      const filter = `data/teams/iv eq '${teamUUID}'`;
+      const expectedFilter = `data/teams/iv eq '${teamUUID}'`;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(filter),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: expectedFilter,
+            top: 50,
+            skip: 0,
+          },
         })
         .reply(200, {
           data: {
@@ -176,11 +207,16 @@ describe('Group controller', () => {
       };
 
       const teamUUID = 'eb531b6e-195c-46e2-b347-58fb86715033';
-      const filterQuery = `data/teams/iv eq '${teamUUID}'`;
+      const expectedFilter = `data/teams/iv eq '${teamUUID}'`;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(filterQuery, 12, 2),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: expectedFilter,
+            top: 12,
+            skip: 2,
+          },
         })
         .reply(200, fixtures.queryGroupsResponse);
 
@@ -198,7 +234,12 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(userFilter),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: userFilter,
+            top: 50,
+            skip: 0,
+          },
         })
         .reply(200, {
           data: {
@@ -209,7 +250,12 @@ describe('Group controller', () => {
           },
         })
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(teamFilter),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: teamFilter,
+            top: 50,
+            skip: 0,
+          },
         })
         .reply(200, {
           data: {
@@ -237,11 +283,21 @@ describe('Group controller', () => {
       // same response since the user is group leader and member a team
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(userFilter),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: userFilter,
+            top: 50,
+            skip: 0,
+          },
         })
         .reply(200, fixtures.queryGroupsResponse)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(teamFilter),
+          query: buildGraphQLQueryFetchGroups(),
+          variables: {
+            filter: teamFilter,
+            top: 50,
+            skip: 0,
+          },
         })
         .reply(200, fixtures.queryGroupsResponse);
 

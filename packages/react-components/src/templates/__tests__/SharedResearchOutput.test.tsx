@@ -78,6 +78,18 @@ it('displays access instructions when data provided', () => {
   expect(getByText(/some data/i)).toBeVisible();
 });
 
+it('displays contact pm card when there are contact emails', () => {
+  const { queryByText, getByText, rerender } = render(
+    <SharedResearchOutput {...props} pmsEmails={[]} />,
+  );
+  expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
+  rerender(<SharedResearchOutput {...props} pmsEmails={['blah@gmail.com']} />);
+  expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
+    'href',
+    expect.stringMatching(/blah/i),
+  );
+});
+
 describe('additional information', () => {
   it('contains the sharing status', () => {
     const { getByText } = render(

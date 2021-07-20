@@ -15,16 +15,22 @@ export const parseGraphQLResearchOutput = (
   const optionalAuthors = options?.includeAuthors
     ? {
         authors:
-          output.flatData?.authors?.map((author) => {
-            if (author.__typename === 'Users') {
-              return parseGraphQLUser(author);
-            }
+          output.flatData?.authors
+            ?.filter(
+              (author) =>
+                author.__typename !== 'Users' ||
+                author.flatData?.onboarded !== false,
+            )
+            .map((author) => {
+              if (author.__typename === 'Users') {
+                return parseGraphQLUser(author);
+              }
 
-            return {
-              displayName: author.flatData?.name,
-              orcid: author.flatData?.orcid,
-            };
-          }) || [],
+              return {
+                displayName: author.flatData?.name,
+                orcid: author.flatData?.orcid,
+              };
+            }) || [],
       }
     : {};
 
@@ -72,6 +78,7 @@ export const parseGraphQLResearchOutput = (
     tags: output.flatData?.tags || [],
     publishDate: output.flatData?.publishDate || undefined,
     doi: output.flatData?.doi || undefined,
+    labCatalogNumber: output.flatData?.labCatalogNumber || undefined,
     addedDate: output.flatData?.addedDate || undefined,
     lastUpdatedPartial:
       output.flatData?.lastUpdatedPartial ||

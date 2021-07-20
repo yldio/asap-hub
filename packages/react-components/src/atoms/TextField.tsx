@@ -1,12 +1,9 @@
-import { InputHTMLAttributes, useState } from 'react';
+import { InputHTMLAttributes } from 'react';
 import { css } from '@emotion/react';
-import { useDebounce } from 'use-debounce';
 
 import { perRem } from '../pixels';
 import { lead, silver, ember, rose, tin, pine, steel, paper } from '../colors';
 import { noop, getSvgAspectRatio } from '../utils';
-import { loadingImage, validTickGreenImage } from '../images';
-import { useGifReplay } from '../hooks';
 import {
   useValidation,
   styles,
@@ -31,6 +28,7 @@ const disabledStyles = css({
   color: lead.rgb,
   backgroundColor: silver.rgb,
 });
+
 const LABEL_INDICATOR_CLASS_NAME = 'labelIndicator';
 const labelIndicatorStyles = css({
   padding: `${15 / perRem}em ${18 / perRem}em`,
@@ -41,34 +39,7 @@ const labelIndicatorStyles = css({
   color: lead.rgb,
   order: -1,
 });
-const customIndicatorPadding = (aspectRatio: number, position: Position) => {
-  const padding = `${
-    (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) / perRem
-  }em`;
-  return position === 'right'
-    ? css({
-        paddingRight: padding,
-      })
-    : css({
-        paddingLeft: padding,
-      });
-};
 
-const loadingStyles = css({
-  paddingRight: `${
-    (paddingLeftRight + indicatorSize + indicatorPadding) / perRem
-  }em`,
-  backgroundImage: `url(${loadingImage})`,
-});
-const validStyles = (gifUrl: string) =>
-  css({
-    ':valid': {
-      paddingRight: `${
-        (paddingLeftRight + indicatorSize + indicatorPadding) / perRem
-      }em`,
-      backgroundImage: `url(${gifUrl})`,
-    },
-  });
 const invalidStyles = css({
   ':invalid': {
     color: ember.rgb,
@@ -118,15 +89,27 @@ const textFieldStyles = css({
     stroke: pine.rgb,
   },
 });
+
 const containerStyles = css({
   flexBasis: '100%',
   display: 'grid',
   gridTemplateColumns: 'max-content 1fr',
   position: 'relative',
 });
-const customIndicatorStyles = (aspectRatio: number, position: Position) =>
+
+const getIndicatorPadding = (icon: React.ReactElement) => {
+  const aspectRatio = getSvgAspectRatio(icon);
+  return `${
+    (paddingLeftRight + indicatorSize * aspectRatio + indicatorPadding) / perRem
+  }em`;
+};
+
+const getIndicatorStyles = (aspectRatio: number, position: Position) =>
   css({
     position: 'absolute',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
 
     top: `${paddingTopBottom / perRem}em`,
     [position]: `${paddingLeftRight / perRem}em`,
@@ -135,30 +118,15 @@ const customIndicatorStyles = (aspectRatio: number, position: Position) =>
     width: `${(indicatorSize * aspectRatio) / perRem}em`,
   });
 
-const showValidationType: Set<FieldType> = new Set([
-  'date',
-  'email',
-  'tel',
-  'url',
-]);
-
 type TextFieldProps = {
   readonly type?: FieldType;
   readonly enabled?: boolean;
 
-  /**
-   * By default, a valid text field only shows an indicator
-   * if one of the input validation attributes is set
-   * to avoid polluting fields that do not have validation at all with indicators.
-   * However, if custom validity checking is used, this can be used
-   * to show an indicator despite no validation attributes being set.
-   */
-  readonly indicateValid?: boolean;
   readonly customValidationMessage?: string;
 
-  readonly loading?: boolean;
-  readonly customIndicator?: React.ReactElement;
-  readonly customIndicatorPosition?: Position;
+  readonly leftIndicator?: React.ReactElement;
+  readonly rightIndicator?: React.ReactElement;
+
   readonly labelIndicator?: React.ReactElement | string;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
 
@@ -178,11 +146,9 @@ const TextField: React.FC<TextFieldProps> = ({
 
   customValidationMessage = '',
 
-  customIndicator,
-  customIndicatorPosition = 'right',
-  loading = false,
-  indicateValid = customIndicator === undefined &&
-    (pattern !== undefined || showValidationType.has(type)),
+  leftIndicator,
+  rightIndicator,
+
   labelIndicator,
 
   getValidationMessage,
@@ -198,11 +164,6 @@ const TextField: React.FC<TextFieldProps> = ({
       getValidationMessage,
     );
 
-  const validGifUrl = useGifReplay(validTickGreenImage, [indicateValid, value]);
-  const [debouncedValue] = useDebounce(value, 500);
-  const [isDirty, setIsDirty] = useState(false);
-  const debouncedIndicateValid =
-    isDirty && indicateValid && value === debouncedValue;
   return (
     <div css={containerStyles}>
       <input
@@ -214,41 +175,47 @@ const TextField: React.FC<TextFieldProps> = ({
         maxLength={maxLength}
         pattern={pattern}
         value={value}
-        onChange={({ currentTarget: { value: newValue } }) => {
-          setIsDirty(true);
-          return onChange(newValue);
-        }}
+        onChange={({ currentTarget: { value: newValue } }) =>
+          onChange(newValue)
+        }
         css={[
           styles,
           textFieldStyles,
           enabled || disabledStyles,
 
-          debouncedIndicateValid && validStyles(validGifUrl),
           validationMessage && invalidStyles,
           !labelIndicator && { gridColumn: '1 / span 2' },
-          customIndicator &&
-            customIndicatorPadding(
-              getSvgAspectRatio(customIndicator),
-              customIndicatorPosition,
-            ),
-          loading && loadingStyles,
+
+          leftIndicator && {
+            paddingLeft: getIndicatorPadding(leftIndicator),
+          },
+
+          rightIndicator && {
+            paddingRight: getIndicatorPadding(rightIndicator),
+          },
         ]}
       />
+
       {labelIndicator && (
         <div className={LABEL_INDICATOR_CLASS_NAME} css={labelIndicatorStyles}>
           {labelIndicator}
         </div>
       )}
-      {customIndicator && (
-        <div
-          css={customIndicatorStyles(
-            getSvgAspectRatio(customIndicator),
-            customIndicatorPosition,
-          )}
-        >
-          {customIndicator}
+
+      {leftIndicator && (
+        <div css={getIndicatorStyles(getSvgAspectRatio(leftIndicator), 'left')}>
+          {leftIndicator}
         </div>
       )}
+
+      {rightIndicator && (
+        <div
+          css={getIndicatorStyles(getSvgAspectRatio(rightIndicator), 'right')}
+        >
+          {rightIndicator}
+        </div>
+      )}
+
       <div css={[validationMessageStyles, { gridColumn: '1 / span 2' }]}>
         {validationMessage}
       </div>

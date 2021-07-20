@@ -41,7 +41,6 @@ export interface User<
   institution?: string;
   jobTitle?: string;
   lastModifiedDate?: string;
-  location?: string;
   country?: string;
   city?: string;
   orcid?: string;

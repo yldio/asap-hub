@@ -115,7 +115,7 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
   },
 };
 
-export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
+export const getGraphQlResponseFetchUser = (): { data: ResponseFetchUser } => ({
   data: {
     findUsersContent: {
       id: 'userId',
@@ -133,7 +133,6 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
         jobTitle: 'Junior',
         orcid: '363-98-9330',
         institution: 'Dollar General Corporation',
-        location: 'Zofilte',
         country: 'United Kingdom',
         city: 'Brighton',
         avatar: [{ id: 'squidex-asset-id' }],
@@ -188,7 +187,7 @@ export const graphQlResponseFetchUser: { data: ResponseFetchUser } = {
       },
     },
   },
-};
+});
 
 export const buildUserGraphqlResponse = (
   flatdata: Partial<GraphqlUser['flatData']> = {},
@@ -210,7 +209,6 @@ export const buildUserGraphqlResponse = (
         jobTitle: 'Junior',
         orcid: '363-98-9330',
         institution: 'Dollar General Corporation',
-        location: 'Zofilte',
         country: 'United Kingdom',
         city: 'Brighton',
         avatar: [{ id: 'squidex-asset-id' }],
@@ -291,7 +289,6 @@ export const patchResponse: RestUser = {
     jobTitle: { iv: 'Junior' },
     orcid: { iv: '363-98-9330' },
     institution: { iv: 'Dollar General Corporation' },
-    location: { iv: 'Zofilte' },
     country: { iv: 'United Kingdom' },
     city: { iv: 'Brighton' },
     avatar: { iv: ['squidex-asset-id'] },
@@ -355,7 +352,6 @@ export const userResponse: UserResponse = {
       role: 'Collaborating PI',
     },
   ],
-  location: 'Zofilte',
   orcid: '363-98-9330',
   orcidWorks: [],
   social: {

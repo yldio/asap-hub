@@ -15,24 +15,6 @@
     "fieldsInLists": ["firstName", "lastName", "orcid"],
     "fields": [
       {
-        "name": "onboarded",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Boolean",
-          "defaultValue": true,
-          "inlineEditable": false,
-          "editor": "Toggle",
-          "label": "Onboarding complete",
-          "hints": "Users that have NOT completed onboarding can only see their profile and are hidden from the Hub.",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "separatorBasicData",
         "isHidden": false,
         "isLocked": false,
@@ -42,7 +24,7 @@
           "fieldType": "UI",
           "editor": "Separator",
           "label": "Basic Data ",
-          "hints": "Future Embryonic profile",
+          "hints": "Mandatory for grantees - they can only publish profile if this section complete",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -142,7 +124,7 @@
           "editor": "Tags",
           "schemaIds": ["labs"],
           "label": "Labs",
-          "hints": "",
+          "hints": "Mandatory for grantees. They cannot publish profile without a lab.",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -158,13 +140,35 @@
         "properties": {
           "fieldType": "Array",
           "label": "Teams",
-          "hints": "",
+          "hints": "Mandatory for grantees. They cannot publish profile without a team.",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         },
         "nested": [
+          {
+            "name": "id",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "References",
+              "minItems": 1,
+              "maxItems": 1,
+              "allowDuplicates": false,
+              "resolveReference": false,
+              "mustBePublished": false,
+              "editor": "Dropdown",
+              "schemaIds": ["teams"],
+              "label": "ID",
+              "hints": "",
+              "placeholder": "",
+              "isRequired": true,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
           {
             "name": "role",
             "isHidden": false,
@@ -184,28 +188,7 @@
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",
-              "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "id",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": false,
-            "properties": {
-              "fieldType": "References",
-              "minItems": 1,
-              "maxItems": 1,
-              "allowDuplicates": false,
-              "resolveReference": false,
-              "mustBePublished": false,
-              "editor": "List",
-              "schemaIds": ["teams"],
-              "label": "ID",
-              "hints": "",
-              "placeholder": "",
+              "hints": "Attention: Check if this user needs to be added to Smart Simple",
               "isRequired": true,
               "isRequiredOnPublish": false,
               "isHalfWidth": true
@@ -298,26 +281,6 @@
         }
       },
       {
-        "name": "location",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Location",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
         "name": "country",
         "isHidden": false,
         "isLocked": false,
@@ -350,7 +313,7 @@
           "label": "City",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
         }
       },
       {
@@ -733,6 +696,24 @@
         }
       },
       {
+        "name": "onboarded",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Boolean",
+          "defaultValue": false,
+          "inlineEditable": false,
+          "editor": "Toggle",
+          "label": "Onboarding complete",
+          "hints": "Use this to allow the user to see the full Hub and skip profile completion",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "connections",
         "isHidden": false,
         "isLocked": false,
@@ -883,7 +864,7 @@
               "placeholder": "",
               "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           },
           {
@@ -902,7 +883,7 @@
               "placeholder": "",
               "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           },
           {
@@ -921,7 +902,7 @@
               "placeholder": "",
               "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           },
           {
@@ -940,7 +921,7 @@
               "placeholder": "",
               "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           },
           {
@@ -959,7 +940,7 @@
               "placeholder": "",
               "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           },
           {
@@ -974,7 +955,7 @@
               "placeholder": "",
               "isRequired": false,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           }
         ]
@@ -988,7 +969,7 @@
         "properties": {
           "fieldType": "UI",
           "editor": "Separator",
-          "label": "ASAP Staff Only",
+          "label": "ASAP Staff Only (Currently not in use)",
           "hints": "Only fill out these fields if the user is an ASAP staff person",
           "placeholder": "",
           "isRequired": false,

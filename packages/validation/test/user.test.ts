@@ -160,10 +160,21 @@ describe('isUserOnboardable validation', () => {
     });
   });
 
-  test('Should fail if Location is missing from user profile', async () => {
+  test('Should fail if City is missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...userResponse,
-      location: undefined,
+      city: undefined,
+    };
+
+    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+      isOnboardable: false,
+    });
+  });
+
+  test('Should fail if Country is missing from user profile', async () => {
+    const userIncompleteResponse: UserResponse = {
+      ...userResponse,
+      country: undefined,
     };
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({

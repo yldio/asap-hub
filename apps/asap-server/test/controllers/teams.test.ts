@@ -45,6 +45,9 @@ describe('Team controller', () => {
     ],
   };
 
+  const getUserFilterExpectation = (teamId: string): string =>
+    `data/teams/iv/id eq '${teamId}' and data/onboarded/iv eq true`;
+
   beforeAll(() => {
     identity();
   });
@@ -61,7 +64,12 @@ describe('Team controller', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams('', 8, 8),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: '',
+            top: 10,
+            skip: 8,
+          },
         })
         .reply(200, {
           data: {
@@ -72,7 +80,7 @@ describe('Team controller', () => {
           },
         });
 
-      const result = await teams.fetch({ take: 8, skip: 8 }, mockUser);
+      const result = await teams.fetch({ take: 10, skip: 8 }, mockUser);
       expect(result).toEqual({ items: [], total: 0 });
     });
 
@@ -88,12 +96,17 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(searchQ),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: searchQ,
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponseSingle)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: "data/teams/iv/id eq 'team-id-1'",
+          $filter: getUserFilterExpectation('team-id-1'),
         })
         .reply(200, usersResponseTeam1);
 
@@ -116,12 +129,17 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: expectedSearchFilter,
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponseSingle)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: "data/teams/iv/id eq 'team-id-1'",
+          $filter: getUserFilterExpectation('team-id-1'),
         })
         .reply(200, usersResponseTeam1);
 
@@ -144,12 +162,17 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(expectedSearchFilter),
+          query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: expectedSearchFilter,
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponseSingle)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: "data/teams/iv/id eq 'team-id-1'",
+          $filter: getUserFilterExpectation('team-id-1'),
         })
         .reply(200, usersResponseTeam1);
 
@@ -168,21 +191,26 @@ describe('Team controller', () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchTeams(),
+          variables: {
+            filter: '',
+            top: 8,
+            skip: 0,
+          },
         })
         .reply(200, graphQlTeamsResponse)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: "data/teams/iv/id eq 'team-id-1'",
+          $filter: getUserFilterExpectation('team-id-1'),
         })
         .reply(200, usersResponseTeam1)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: "data/teams/iv/id eq 'team-id-2'",
+          $filter: getUserFilterExpectation('team-id-2'),
         })
         .reply(200, usersResponseTeam2)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: "data/teams/iv/id eq 'team-id-3'",
+          $filter: getUserFilterExpectation('team-id-3'),
         })
         .reply(200, usersResponseTeam3);
 
@@ -198,7 +226,10 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, {
           data: {
@@ -216,12 +247,15 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, graphQlTeamResponse)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
+          $filter: getUserFilterExpectation(teamId),
         })
         .reply(404);
 
@@ -235,12 +269,15 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, graphQlTeamResponse)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
+          $filter: getUserFilterExpectation(teamId),
         })
         .reply(200, { total: 0, items: [] });
 
@@ -254,12 +291,15 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, graphQlTeamResponse)
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
+          $filter: getUserFilterExpectation(teamId),
         })
         .reply(200, fetchByIdUserResponse);
 
@@ -282,12 +322,15 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, getGraphQlTeamResponse(tools))
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
+          $filter: getUserFilterExpectation(teamId),
         })
         .reply(200, fetchByIdUserResponse);
 
@@ -325,12 +368,15 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(teamId),
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
           })
           .reply(200, graphQlTeamResponse)
           .get(`/api/content/${config.appName}/users`)
           .query({
-            $filter: `data/teams/iv/id eq '${teamId}'`,
+            $filter: getUserFilterExpectation(teamId),
           })
           .reply(200, userResponse);
 
@@ -361,12 +407,15 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(teamId),
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
           })
           .reply(200, graphQlTeamResponse)
           .get(`/api/content/${config.appName}/users`)
           .query({
-            $filter: `data/teams/iv/id eq '${teamId}'`,
+            $filter: getUserFilterExpectation(teamId),
           })
           .reply(200, userResponse);
 
@@ -408,12 +457,15 @@ describe('Team controller', () => {
         })
         .reply(200, getUpdateTeamResponse()) // response is not used
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, getGraphQlTeamResponse())
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
+          $filter: getUserFilterExpectation(teamId),
         })
         .reply(200, updateResponseTeam);
 
@@ -437,12 +489,15 @@ describe('Team controller', () => {
         })
         .reply(200, getUpdateTeamResponse(tools)) // response is not used
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(teamId),
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
         })
         .reply(200, getGraphQlTeamResponse(tools))
         .get(`/api/content/${config.appName}/users`)
         .query({
-          $filter: `data/teams/iv/id eq '${teamId}'`,
+          $filter: getUserFilterExpectation(teamId),
         })
         .reply(200, updateResponseTeam);
 

@@ -1,4 +1,7 @@
-import { createListTeamResponse } from '@asap-hub/fixtures';
+import {
+  createListTeamResponse,
+  createListUserResponse,
+} from '@asap-hub/fixtures';
 import { SharedResearchCard } from '@asap-hub/react-components';
 import { text, date, number } from '@storybook/addon-knobs';
 
@@ -20,5 +23,6 @@ export const Normal = () => (
       date('Created Date', new Date(2020, 6, 4, 14, 32)),
     ).toISOString()}
     teams={createListTeamResponse(number('Number of Teams', 3)).items}
+    authors={createListUserResponse(number('Number of Authors', 5)).items}
   />
 );

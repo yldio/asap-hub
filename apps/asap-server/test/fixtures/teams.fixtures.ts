@@ -46,6 +46,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 flatData: {
                   link: 'docs.google.com',
                   publishDate: null,
+                  labCatalogNumber: 'http://example.com',
                   addedDate: '2021-05-24T17:33:30Z',
                   title: "Team Salzer's intro slide deck",
                   type: 'Presentation',
@@ -134,7 +135,6 @@ export const usersResponseTeam1: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-1'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -172,7 +172,6 @@ export const usersResponseTeam2: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-2'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -204,7 +203,6 @@ export const usersResponseTeam2: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-3'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -242,7 +240,6 @@ export const usersResponseTeam3: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9335' },
         institution: { iv: 'Euro General Corporation' },
-        location: { iv: 'Zurich' },
         avatar: { iv: ['uuid-user-id-4'] },
         orcidWorks: { iv: [] },
         teams: {
@@ -300,6 +297,7 @@ export const listTeamResponse: ListTeamResponse = {
           accessInstructions: 'some access instructions',
           sharingStatus: 'Network Only',
           pmsEmails: [],
+          labCatalogNumber: 'http://example.com',
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -434,6 +432,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              labCatalogNumber: 'http://example.com',
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
@@ -508,9 +507,6 @@ export const fetchByIdUserResponse: { total: number; items: RestUser[] } = {
         institution: {
           iv: 'Dollar General Corporation',
         },
-        location: {
-          iv: 'Zofilte',
-        },
         avatar: {
           iv: ['uuid-user-id-1'],
         },
@@ -575,6 +571,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       usedInPublication: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -682,6 +679,7 @@ export const getGraphQlTeamResponse = (
             flatData: {
               link: 'docs.google.com',
               publishDate: null,
+              labCatalogNumber: 'http://example.com',
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
@@ -737,7 +735,6 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
         jobTitle: { iv: 'Junior' },
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
-        location: { iv: 'Zofilte' },
         avatar: { iv: ['uuid-user-id-1'] },
         skills: { iv: [] },
         orcidWorks: { iv: [] },
@@ -795,6 +792,7 @@ export const updateExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       usedInPublication: false,
       pmsEmails: [],
+      labCatalogNumber: 'http://example.com',
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',

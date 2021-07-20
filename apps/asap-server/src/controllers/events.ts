@@ -6,7 +6,7 @@ import {
   InstrumentedSquidexGraphql,
   InstrumentedSquidex,
 } from '../utils/instrumented-client';
-import { FetchOptions, AllOrNone } from '../utils/types';
+import { FetchOptions, AllOrNone, GraphqlFetchOptions } from '../utils/types';
 import { parseGraphQLEvent } from '../entities/event';
 import { ResponseFetchGroup, GraphQLQueryGroup } from './groups';
 import { sanitiseForSquidex } from '../utils/squidex';
@@ -30,8 +30,16 @@ export default class Events implements EventController {
   }
 
   async fetch(options: FetchEventsOptions): Promise<ListEventResponse> {
-    const { take, skip, before, after, groupId, search, sortBy, sortOrder } =
-      options;
+    const {
+      take = 10,
+      skip = 0,
+      before,
+      after,
+      groupId,
+      search,
+      sortBy,
+      sortOrder,
+    } = options;
 
     const filters = (search || '')
       .split(' ')
@@ -67,8 +75,8 @@ export default class Events implements EventController {
     if (groupId) {
       const { findGroupsContent } = await this.client.request<
         ResponseFetchGroup,
-        unknown
-      >(buildGraphQLQueryFetchGroup(groupId));
+        { id: string }
+      >(buildGraphQLQueryFetchGroup(), { id: groupId });
 
       if (!findGroupsContent) {
         throw Boom.notFound();
@@ -82,17 +90,17 @@ export default class Events implements EventController {
       filters.push(`data/calendar/iv in [${calendarIds.join(', ')}]`);
     }
 
-    const query = buildGraphQLQueryFetchEvents(
-      filters.join(' and '),
-      take,
-      skip,
-      orderby,
-    );
+    const query = buildGraphQLQueryFetchEvents();
 
     const { queryEventsContentsWithTotal } = await this.client.request<
       ResponseFetchEvents,
-      unknown
-    >(query);
+      GraphqlFetchOptions
+    >(query, {
+      filter: filters.join(' and '),
+      top: take,
+      skip,
+      order: orderby,
+    });
 
     const { total, items: events } = queryEventsContentsWithTotal;
 
@@ -105,11 +113,11 @@ export default class Events implements EventController {
   }
 
   async fetchById(eventId: string): Promise<EventResponse> {
-    const query = buildGraphQLQueryFetchEvent(eventId);
+    const query = buildGraphQLQueryFetchEvent();
     const { findEventsContent: event } = await this.client.request<
       ResponseFetchEvent,
-      unknown
-    >(query);
+      { id: string }
+    >(query, { id: eventId });
 
     if (!event) {
       throw Boom.notFound();
@@ -196,32 +204,28 @@ flatData{
   }
 }`;
 
-export const buildGraphQLQueryFetchEvents = (
-  filter: string,
-  top = 10,
-  skip = 0,
-  orderby = '',
-): string =>
-  `{
-  queryEventsContentsWithTotal(top: ${top}, skip: ${skip}, filter: "${filter}", orderby: "${orderby}"){
-    total,
-    items{
-      ${GraphQLQueryEvent}
-    }
-  }
-}`;
-
-export const buildGraphQLQueryFetchEvent = (eventId: string): string => `
-  {
-    findEventsContent(id: "${eventId}") {
+export const buildGraphQLQueryFetchEvents = (): string => `
+  query FetchEvents($top: Int, $skip: Int, $filter: String, $order: String) {
+    queryEventsContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: $order){
+      total,
+      items {
         ${GraphQLQueryEvent}
+      }
     }
   }
 `;
 
-export const buildGraphQLQueryFetchGroup = (groupId: string): string => `
-  {
-    findGroupsContent(id: "${groupId}") {
+export const buildGraphQLQueryFetchEvent = (): string => `
+  query FetchEvent($id: String!) {
+    findEventsContent(id: $id) {
+      ${GraphQLQueryEvent}
+    }
+  }
+`;
+
+export const buildGraphQLQueryFetchGroup = (): string => `
+  query FetchGroup($id: String!) {
+    findGroupsContent(id: $id) {
       flatData {
         calendars {
           id

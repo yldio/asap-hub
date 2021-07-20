@@ -1,5 +1,6 @@
 import supertest from 'supertest';
 import Boom from '@hapi/boom';
+import Crypto from 'crypto';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import {
@@ -400,6 +401,21 @@ describe('/users/ route', () => {
       const response = await supertest(appWithMockedAuth)
         .post(`/users/${userId}/avatar`)
         .send(updateAvatarBody);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(userResponse);
+    });
+
+    test('Should upload pictures of 2MB correctly', async () => {
+      userControllerMock.updateAvatar.mockResolvedValueOnce(userResponse);
+      const blob = Crypto.randomBytes(2097152).toString('base64');
+      const updateLargeAvatar = {
+        avatar: `data:image/jpeg;base64,${blob}`,
+      };
+
+      const response = await supertest(appWithMockedAuth)
+        .post(`/users/${userId}/avatar`)
+        .send(updateLargeAvatar);
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual(userResponse);

@@ -21,6 +21,13 @@ export type FetchOptions = {
   filter?: string[];
 } & FetchPaginationOptions;
 
+export type GraphqlFetchOptions = {
+  top?: number;
+  skip?: number;
+  filter?: string;
+  order?: string;
+};
+
 export type AllOrNone<T> = T | { [K in keyof T]?: never };
 
 export type ScheduledHandlerAsync = (

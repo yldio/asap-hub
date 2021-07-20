@@ -46,7 +46,22 @@
           "label": "Name",
           "isRequired": true,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "tags",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Expertise (Tags)",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
         }
       },
       {
@@ -63,21 +78,6 @@
           "editor": "TextArea",
           "label": "Description",
           "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "tags",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Expertise (Tags)",
-          "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }
@@ -133,7 +133,7 @@
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
-          "editor": "List",
+          "editor": "Dropdown",
           "schemaIds": ["calendars"],
           "label": "Calendars",
           "hints": "",
@@ -250,7 +250,7 @@
               "placeholder": "",
               "isRequired": true,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           },
           {
@@ -268,7 +268,7 @@
               "label": "Role",
               "isRequired": true,
               "isRequiredOnPublish": false,
-              "isHalfWidth": false
+              "isHalfWidth": true
             }
           }
         ]
@@ -284,7 +284,7 @@
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": false,
-          "editor": "List",
+          "editor": "Tags",
           "schemaIds": ["teams"],
           "label": "Teams",
           "hints": "",

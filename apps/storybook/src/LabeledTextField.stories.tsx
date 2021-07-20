@@ -32,14 +32,7 @@ export const Disabled = () => (
     enabled={false}
   />
 );
-export const Valid = () => (
-  <LabeledTextField
-    title={text('Title', 'Full Name')}
-    value={text('Value', 'John Doe')}
-    indicateValid
-    pattern=".*"
-  />
-);
+
 export const Invalid = () => (
   <LabeledTextField
     title={text('Title', 'Full Name')}
@@ -49,13 +42,6 @@ export const Invalid = () => (
       "Must not include special characters, such as '|' and '%'.",
     )}
     hint={text('Hint', 'Hint')}
-  />
-);
-export const Loading = () => (
-  <LabeledTextField
-    title={text('Title', 'Full Name')}
-    value={text('Value', 'John Doe')}
-    loading
   />
 );
 

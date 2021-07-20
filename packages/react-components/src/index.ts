@@ -44,6 +44,7 @@ export {
   LabeledCheckbox,
   LabeledDateField,
   LabeledDropdown,
+  LabeledMultiSelect,
   LabeledPasswordField,
   LabeledTextArea,
   LabeledTextField,
@@ -60,8 +61,8 @@ export {
   TagList,
   TeamsList,
   ToastCard,
-  UsersList,
   UserMenuButton,
+  UsersList,
 } from './molecules';
 export {
   AdditionalMaterials,

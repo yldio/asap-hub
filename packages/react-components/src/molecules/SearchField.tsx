@@ -1,14 +1,34 @@
 import { ComponentProps, useEffect } from 'react';
 import { useDebounce } from 'use-debounce';
+import { css } from '@emotion/react';
 
 import {
   SEARCH_EVENT,
   SEARCH_PLACEHOLDER_KEY,
   SEARCH_QUERY_KEY,
 } from '../analytics';
-import { TextField } from '../atoms';
-import { searchIcon } from '../icons';
+import { TextField, Button } from '../atoms';
+import { searchIcon, crossIcon } from '../icons';
 import { perRem } from '../pixels';
+
+const clearButtonStyles = css({
+  padding: `${18 / perRem}em 0`,
+  // removing input's clear/cancel pseudo-element
+  // from webkit based browsers
+  'input[type="search"]::-webkit-search-cancel-button': {
+    appearance: 'none',
+  },
+  // and from IE
+  'input[type=text]::-ms-clear': { display: 'none', width: 0, height: 0 },
+});
+
+const rightIndicatorStyles = css({
+  button: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 type SearchProps = Pick<
   ComponentProps<typeof TextField>,
@@ -17,6 +37,7 @@ type SearchProps = Pick<
   Required<Pick<ComponentProps<typeof TextField>, 'placeholder'>>;
 const SearchField: React.FC<SearchProps> = (props) => {
   const [debouncedValue] = useDebounce(props.value, 5000);
+
   useEffect(() => {
     if (props.value && props.value === debouncedValue) {
       window.dataLayer?.push({
@@ -35,12 +56,23 @@ const SearchField: React.FC<SearchProps> = (props) => {
   }, [debouncedValue, props.placeholder, props.value]);
 
   return (
-    <div css={{ padding: `${18 / perRem}em 0` }}>
+    <div css={clearButtonStyles}>
       <TextField
         {...props}
         type="search"
-        customIndicator={searchIcon}
-        customIndicatorPosition="left"
+        leftIndicator={searchIcon}
+        rightIndicator={
+          props.value ? (
+            <div css={rightIndicatorStyles}>
+              <Button
+                linkStyle
+                onClick={() => props.onChange && props.onChange('')}
+              >
+                {crossIcon}
+              </Button>
+            </div>
+          ) : undefined
+        }
       />
     </div>
   );

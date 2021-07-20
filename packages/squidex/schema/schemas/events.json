@@ -15,6 +15,85 @@
     "fieldsInLists": ["title", "startDate"],
     "fields": [
       {
+        "name": "title",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Title",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "startDate",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "DateTime",
+          "editor": "DateTime",
+          "label": "Start Date",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "status",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Dropdown",
+          "label": "Status",
+          "hints": "",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "calendar",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": true,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "References",
+          "minItems": 1,
+          "maxItems": 1,
+          "allowDuplicates": false,
+          "resolveReference": false,
+          "mustBePublished": false,
+          "editor": "Dropdown",
+          "schemaIds": ["calendars"],
+          "label": "Calendar",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "hidden",
         "isHidden": false,
         "isLocked": false,
@@ -43,21 +122,6 @@
           "fieldType": "UI",
           "editor": "Separator",
           "label": "Future Events Data",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "tags",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": false,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Tags",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -102,7 +166,22 @@
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
-          "isHalfWidth": false
+          "isHalfWidth": true
+        }
+      },
+      {
+        "name": "tags",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Tags",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": true
         }
       },
       {
@@ -132,7 +211,7 @@
           "inlineEditable": false,
           "editor": "Checkbox",
           "label": "Mark Notes as permanently unavailable",
-          "hints": "This flag denotes there will be no Notes coming for this event.",
+          "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -152,6 +231,7 @@
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Notes",
+          "hints": "If permanently unavailable box is ticked, any content you put here will be ignored.",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -168,7 +248,7 @@
           "inlineEditable": false,
           "editor": "Checkbox",
           "label": "Mark Video Recording as permanently unavailable",
-          "hints": "This flag denotes there will be no Video Recording coming for this event.",
+          "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -188,6 +268,7 @@
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Video Recording",
+          "hints": "If permanently unavailable box is ticked, any content you put here will be ignored.",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -204,7 +285,7 @@
           "inlineEditable": false,
           "editor": "Checkbox",
           "label": "Mark Presentation as permanently unavailable",
-          "hints": "This flag denotes there will be no Presentation coming for this event.",
+          "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -224,6 +305,7 @@
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Presentation",
+          "hints": "If permanently unavailable box is ticked, any content you put here will be ignored.",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
@@ -240,7 +322,7 @@
           "inlineEditable": false,
           "editor": "Checkbox",
           "label": "Mark Additional Meeting Materials as permanently unavailable",
-          "hints": "This flag denotes there will be no Additional Meeting Materials coming for this event.",
+          "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -256,7 +338,7 @@
         "properties": {
           "fieldType": "Array",
           "label": "Additional Meeting Materials",
-          "hints": "",
+          "hints": "If permanently unavailable box is ticked, any content you put here will be ignored.",
           "placeholder": "",
           "isRequired": false,
           "isRequiredOnPublish": false,
@@ -320,26 +402,6 @@
         }
       },
       {
-        "name": "title",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Title",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "description",
         "isHidden": false,
         "isLocked": false,
@@ -350,25 +412,8 @@
           "isUnique": false,
           "inlineEditable": false,
           "contentType": "Unspecified",
-          "editor": "Input",
+          "editor": "TextArea",
           "label": "Description",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "startDate",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "DateTime",
-          "editor": "DateTime",
-          "label": "Start Date",
           "hints": "",
           "placeholder": "",
           "isRequired": false,
@@ -430,27 +475,6 @@
         }
       },
       {
-        "name": "calendar",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "References",
-          "minItems": 1,
-          "maxItems": 1,
-          "allowDuplicates": false,
-          "resolveReference": false,
-          "mustBePublished": false,
-          "editor": "List",
-          "schemaIds": ["calendars"],
-          "label": "Calendar",
-          "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
         "name": "eventLink",
         "isHidden": false,
         "isLocked": false,
@@ -486,27 +510,6 @@
           "hints": "",
           "placeholder": "",
           "isRequired": true,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "status",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "Dropdown",
-          "label": "Status",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false
         }

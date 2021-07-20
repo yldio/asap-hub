@@ -20,7 +20,6 @@ export interface Invitee {
   biography?: string;
   jobTitle?: string;
   institution?: string;
-  location?: string;
   country?: string;
   city?: string;
   avatarUrl?: string;
@@ -135,14 +134,13 @@ export interface UserPatchRequest {
   orcid?: string;
   institution?: string;
   degree?: UserDegree;
-  location?: string;
   country?: string;
   city?: string;
   skills?: string[];
   skillsDescription?: string;
   questions?: string[];
   teams?: Pick<UserTeam, 'id' | 'approach' | 'responsibilities'>[];
-  social?: UserSocialLinks;
+  social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
 }
 

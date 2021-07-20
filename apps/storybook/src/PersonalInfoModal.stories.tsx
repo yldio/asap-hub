@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import { PersonalInfoModal } from '@asap-hub/react-components';
 import { StaticRouter } from 'react-router-dom';
+import { loadOptionsMock } from './LabeledTypeahead.stories';
 
 export default {
   title: 'Templates / User Profile / Personal Info Modal',
@@ -12,8 +13,16 @@ const props = (): ComponentProps<typeof PersonalInfoModal> => ({
   lastName: 'Doe',
   degree: 'PhD',
   jobTitle: 'Assistant Professor',
-  location: 'Los Angeles, CA',
+  country: 'Los Angeles',
+  city: 'CA',
+
+  loadInstitutionOptions: loadOptionsMock([
+    'Institution 1',
+    'Institution 2',
+    'Institution 3',
+  ]),
   backHref: '#',
+  countrySuggestions: ['a', 'b', 'c'],
 });
 
 export const Normal = () => (

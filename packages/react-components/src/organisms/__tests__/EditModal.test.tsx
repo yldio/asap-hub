@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { Router, MemoryRouter } from 'react-router-dom';
+import { Router, MemoryRouter, StaticRouter } from 'react-router-dom';
 import { History, createMemoryHistory } from 'history';
 import { render, act, waitFor, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -71,6 +71,27 @@ describe('when saving', () => {
       );
 
       userEvent.click(getByText(/^save/i));
+      expect(handleSave).not.toHaveBeenCalled();
+    });
+
+    it('does not call onSave when parent validation fails', () => {
+      const handleSave = jest.fn(() => Promise.resolve());
+      const handleValidate = jest.fn(() => false);
+      const { getByText } = render(
+        <EditModal
+          {...props}
+          validate={handleValidate}
+          onSave={handleSave}
+          dirty
+        >
+          {() => <input type="text" />}
+        </EditModal>,
+        { wrapper: StaticRouter },
+      );
+
+      userEvent.click(getByText(/^save/i));
+
+      expect(handleValidate).toHaveBeenCalled();
       expect(handleSave).not.toHaveBeenCalled();
     });
   });

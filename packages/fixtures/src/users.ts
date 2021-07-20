@@ -15,6 +15,8 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   lastName: 'Kirkeby',
   jobTitle: 'Assistant Professor',
   institution: 'University of Copenhagen',
+  country: 'Denmark',
+  city: 'Copenhagen',
   teams: [],
   orcid: '0000-0001-8203-6901',
   orcidWorks: [],

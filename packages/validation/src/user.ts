@@ -41,7 +41,11 @@ export const isUserOnboardable = (
     return getFailedResponse();
   }
 
-  if (typeof user.location === 'undefined') {
+  if (typeof user.city === 'undefined') {
+    return getFailedResponse();
+  }
+
+  if (typeof user.country === 'undefined') {
     return getFailedResponse();
   }
 

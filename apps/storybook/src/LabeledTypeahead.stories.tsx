@@ -28,3 +28,25 @@ export const Invalid = () => (
     )}
   />
 );
+
+export const loadOptionsMock =
+  (options: string[]) =>
+  (inputValue = ''): Promise<string[]> =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(
+          options.filter((i) =>
+            i.toLowerCase().includes(inputValue.toLowerCase()),
+          ),
+        );
+      }, 2000);
+    });
+
+export const Async = () => (
+  <LabeledTypeahead
+    title={text('Title', 'Airport')}
+    loadOptions={loadOptionsMock(['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN'])}
+    value=""
+    enabled={boolean('Enabled', true)}
+  />
+);

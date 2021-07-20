@@ -1,6 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
+import { waitFor } from '@testing-library/dom';
 
 import Typeahead from '../Typeahead';
 import { ember, lead, pine, silver } from '../../colors';
@@ -119,5 +120,66 @@ describe('invalidity', () => {
     expect(findParentWithStyle(getByDisplayValue(''), 'color')?.color).toBe(
       ember.rgb,
     );
+  });
+
+  it('is removed after keypress', () => {
+    const { getByDisplayValue } = render(
+      <Typeahead suggestions={['LHR', 'LGW']} value="" required />,
+    );
+    const input = getByDisplayValue('');
+    fireEvent.focusOut(input);
+    expect(findParentWithStyle(input, 'color')?.color).toBe(ember.rgb);
+    userEvent.type(input, 'a');
+    waitFor(() =>
+      expect(findParentWithStyle(input, 'color')?.color).not.toBe(ember.rgb),
+    );
+  });
+});
+
+describe('async', () => {
+  it('displays value', () => {
+    const loadOptions = jest.fn().mockResolvedValue(['example']);
+    const { getByDisplayValue } = render(
+      <Typeahead loadOptions={loadOptions} value="example" required />,
+    );
+    expect(getByDisplayValue('example')).toBeVisible();
+  });
+  it('displays and able to select suggestions', async () => {
+    const loadOptions = jest.fn().mockResolvedValue(['test']);
+    const onChange = jest.fn();
+    const { getByDisplayValue, getByText } = render(
+      <Typeahead
+        loadOptions={loadOptions}
+        value=""
+        required
+        onChange={onChange}
+      />,
+    );
+    const input = getByDisplayValue('');
+    userEvent.type(input, 't');
+
+    await waitFor(() => {
+      const menuItem = getByText('test');
+      expect(menuItem).toBeVisible();
+      fireEvent.click(menuItem);
+    });
+    expect(onChange).toHaveBeenCalledWith('test');
+  });
+
+  it('allows unknown options to be entered', async () => {
+    const loadOptions = jest.fn().mockResolvedValue([]);
+    const onChange = jest.fn();
+    const { getByDisplayValue } = render(
+      <Typeahead
+        loadOptions={loadOptions}
+        value=""
+        required
+        onChange={onChange}
+      />,
+    );
+    const input = getByDisplayValue('');
+    userEvent.type(input, 'example');
+
+    await waitFor(() => expect(onChange).toHaveBeenCalledWith('example'));
   });
 });

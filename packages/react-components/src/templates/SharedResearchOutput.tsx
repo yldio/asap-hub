@@ -5,8 +5,9 @@ import { ResearchOutputResponse } from '@asap-hub/model';
 import { Card, Headline2, Divider } from '../atoms';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { BackLink, TagList } from '../molecules';
+import { BackLink, CtaCard, TagList } from '../molecules';
 import { RichText, SharedResearchOutputHeaderCard } from '../organisms';
+import { createMailTo } from '../mail';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -15,8 +16,6 @@ const containerStyles = css({
 const cardsStyles = css({
   display: 'grid',
   rowGap: `${36 / perRem}em`,
-  maxWidth: '100%',
-  overflow: 'hidden',
 });
 
 const additionalInformationListStyles = css({
@@ -38,6 +37,7 @@ type SharedResearchOutputProps = Pick<
   | 'sharingStatus'
   | 'asapFunded'
   | 'usedInPublication'
+  | 'pmsEmails'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -51,6 +51,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   sharingStatus,
   asapFunded,
   usedInPublication,
+  pmsEmails,
   ...props
 }) => (
   <div css={containerStyles}>
@@ -109,6 +110,12 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           )}
         </ol>
       </Card>
+      {!!pmsEmails.length && (
+        <CtaCard href={createMailTo(pmsEmails)} buttonText="Contact PM">
+          <strong>Interested in what you have seen?</strong>
+          <br /> Reach out to the PMs associated with this output
+        </CtaCard>
+      )}
     </div>
   </div>
 );

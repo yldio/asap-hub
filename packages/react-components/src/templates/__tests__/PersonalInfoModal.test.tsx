@@ -3,17 +3,27 @@ import { render, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
+import { fireEvent } from '@testing-library/dom';
 
 import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
   ...createUserResponse(),
+  countrySuggestions: [],
+  loadInstitutionOptions: () => Promise.resolve([]),
   backHref: '/wrong',
 };
 it('renders the title', () => {
-  const { getByText } = render(<PersonalInfoModal {...props} />, {
-    wrapper: StaticRouter,
-  });
+  const { getByText } = render(
+    <PersonalInfoModal
+      countrySuggestions={[]}
+      loadInstitutionOptions={() => Promise.resolve([])}
+      backHref="/wrong"
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
   expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
 });
 
@@ -23,7 +33,8 @@ it('renders default values into text inputs', () => {
       {...props}
       firstName="firstName"
       lastName="lastName"
-      location="location"
+      country="country"
+      city="city"
       jobTitle="jobTitle"
       institution="institution"
     />,
@@ -37,10 +48,32 @@ it('renders default values into text inputs', () => {
       "",
       "institution",
       "jobTitle",
-      "location",
+      "country",
+      "city",
     ]
   `);
 });
+
+it.each`
+  label             | value | message
+  ${/country/i}     | ${''} | ${'Please add your country'}
+  ${/city/i}        | ${''} | ${'Please add your city'}
+  ${/institution/i} | ${''} | ${'Please add your institution'}
+`(
+  'shows validation message $message when value set to $value on $label',
+  async ({ label, value, message }) => {
+    const { getByLabelText, findByText } = render(
+      <PersonalInfoModal {...props} />,
+      { wrapper: StaticRouter },
+    );
+    const input = getByLabelText(label);
+    fireEvent.change(input, {
+      target: { value },
+    });
+    fireEvent.focusOut(input);
+    expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
+  },
+);
 
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
@@ -49,7 +82,8 @@ it('triggers the save function', async () => {
       {...props}
       firstName="firstName"
       lastName="lastName"
-      location="location"
+      country="country"
+      city="city"
       jobTitle="jobTitle"
       institution="institution"
       degree="MPH"
@@ -62,7 +96,8 @@ it('triggers the save function', async () => {
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
     lastName: 'lastName',
-    location: 'location',
+    country: 'country',
+    city: 'city',
     degree: 'MPH',
     jobTitle: 'jobTitle',
     institution: 'institution',

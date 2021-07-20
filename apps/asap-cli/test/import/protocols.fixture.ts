@@ -49,7 +49,6 @@ export const fetchUserResponse: RestUser = {
     institution: { iv: 'Institution' },
     connections: { iv: [] },
     biography: { iv: 'Biography' },
-    location: { iv: 'Lisbon, Portugal' },
     teams: { iv: [{ id: ['team-uuid-1'], role: 'Lead PI (Core Leadership)' }] },
     questions: { iv: [] },
     skills: { iv: [] },

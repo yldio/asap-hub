@@ -1,5 +1,5 @@
 import { StaticRouter } from 'react-router-dom';
-import { text } from '@storybook/addon-knobs';
+import { array, text } from '@storybook/addon-knobs';
 import { SkillsModal } from '@asap-hub/react-components';
 
 export default {
@@ -9,7 +9,19 @@ export default {
 export const Normal = () => (
   <StaticRouter>
     <SkillsModal
-      skillsDescription={text('Skills Description', '')}
+      skillsDescription={text('Description', '')}
+      skills={[]}
+      skillSuggestions={array('Skills', [
+        'Neurological Diseases',
+        'Clinical Neurology',
+        'Adult Neurology',
+        'Neuroimaging',
+        'Neurologic Examination',
+        'Neuroprotection',
+        'Movement Disorders',
+        'Neurodegenerative Diseases',
+        'Neurological Diseases',
+      ])}
       backHref="#"
     />
   </StaticRouter>

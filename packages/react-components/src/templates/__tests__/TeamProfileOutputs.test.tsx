@@ -18,6 +18,7 @@ it('renders output cards', () => {
           ...createResearchOutputResponse(),
           id: 'uuid-output',
           title: 'Title',
+          authors: [],
           teams: [
             {
               id: 'uuid-team',

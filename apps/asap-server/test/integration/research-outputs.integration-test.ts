@@ -1,52 +1,59 @@
-export {};
+import { Chance } from 'chance';
+import { ResearchOutput } from '@asap-hub/squidex';
+import { ResearchOutputResponse } from '@asap-hub/model';
+import { createResearchOutput } from '../helpers/research-outputs';
+import ResearchOutputs from '../../src/controllers/research-outputs';
 
-describe('Dummy test', () => {
-  test('Dummy', async () => {
-    expect(true);
+const chance = new Chance();
+const researchOutputs = new ResearchOutputs();
+
+describe('Research Outputs', () => {
+  const randomTitle = chance.guid();
+
+  const researchOutput: Partial<ResearchOutput> = {
+    type: 'Proposal',
+    title: randomTitle,
+    description: 'Research Output Description',
+    sharingStatus: 'Network Only',
+    asapFunded: 'Not Sure',
+    usedInAPublication: 'Not Sure',
+  };
+
+  test('Valid identifierDois should succeed', async () => {
+    researchOutput.identifierDoi = '10.5555/YFRU1371';
+
+    await createResearchOutput(researchOutput);
+
+    const result = await researchOutputs.fetch({
+      take: 1,
+      skip: 0,
+      search: randomTitle
+    });
+
+    const expectedResponse: Partial<ResearchOutputResponse> = {
+      type: 'Proposal',
+      title: randomTitle,
+      description: 'Research Output Description',
+      sharingStatus: 'Network Only',
+      asapFunded: undefined,
+      usedInPublication: undefined
+    };
+
+    expect(result).toEqual({
+      total: 1,
+      items: [expect.objectContaining(expectedResponse)]
+    });
+  });
+
+  test('Invalid identifierDois should fail', async () => {
+    researchOutput.identifierDoi = 'invalid identifierDoi';
+
+    try {
+      await createResearchOutput(researchOutput); 
+    } catch (e) {
+      expect(e.name).toBe('HTTPError');
+      expect(e.output.statusCode).toBe(400);
+      expect(e.data).toMatch("identifierDoi.iv: Must follow the pattern");
+    }
   });
 });
-
-// // Submit something with an invalid identifierDOI
-// // Should receive an error
-
-// import { ResearchOutput } from '@asap-hub/squidex';
-// import { ResearchOutputResponse } from '@asap-hub/model';
-// import { createResearchOutput } from '../helpers/research-outputs';
-// import ResearchOutputs from '../../src/controllers/research-outputs';
-// import { getResearchOutputResponse } from '../fixtures/research-output.fixtures';
-
-// const researchOutputs = new ResearchOutputs(''); // TODO what should this arg be?
-
-// describe('Research Outputs', () => {
-//   test('Invalid identifierDois should fail', async () => {
-//     const researchOutput: Partial<ResearchOutput> = {
-//       type: 'Proposal',
-//       title: 'Research Output Title',
-//       description: 'Research Output Description',
-//       sharingStatus: 'Network Only',
-//       asapFunded: 'Not Sure',
-//       usedInAPublication: 'Not Sure',
-//       pmsEmails: []
-//     };
-
-//     researchOutput.identifierDoi = 'invalid identifierDoi';
-
-//     await createResearchOutput(researchOutput);
-
-//     const result = await researchOutputs.fetch({
-//       take: 1,
-//       skip: 0
-//     });
-//     console.log(result);
-
-//     // This should be an error
-//     // const expectedResponse: Partial<ResearchOutputResponse> = {
-
-//     // };
-
-//     // expect(expectedResponse).toEqual({
-//     //   total: 1,
-//     //   items: [expect.objectContaining(expectedResponse)]
-//     // });
-//   });
-// });

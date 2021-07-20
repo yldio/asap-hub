@@ -28,7 +28,7 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
     institution: chance.company(),
     email: chance.email(),
     biography: chance.paragraph({ sentence: 3 }),
-    location: chance.city(),
+    // location: chance.city(), TODO should this be renamed to city?
     role: 'Grantee',
     avatar: [],
     skills: [],
@@ -43,7 +43,6 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
     return acc;
   }, {} as { [key: string]: { iv: unknown } });
 
-  // console.log(">>>>>>>>>>>>>>>>> users.create");
   return users.create(user as RestUser['data']);
 };
 

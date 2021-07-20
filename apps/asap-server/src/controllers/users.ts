@@ -36,7 +36,6 @@ flatData {
   jobTitle
   lastModifiedDate
   lastName
-  location
   country
   city
   onboarded

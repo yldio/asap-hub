@@ -12,10 +12,11 @@ describe('Users', () => {
   test('Should create and fetch a user', async () => {
     const randomOrcid = chance.ssn();
     const randomEmail = chance.email();
+    const randomName = chance.guid();
 
     const user: Partial<User> = {
       firstName: 'John',
-      lastName: 'Doe',
+      lastName: randomName,
       jobTitle: 'Project Manager',
       orcid: randomOrcid,
       institution: 'Instituto Superior Tecnico',
@@ -24,16 +25,16 @@ describe('Users', () => {
       degree: 'MPH',
     };
 
-    // console.log(">>>>>>>>>>>>>>>>>>>>>>> Creating user");
     await createUser(user);
 
-    // console.log(">>>>>>>>>>>>>>>>>>>>>>> Fetching user");
-    const result = await users.fetch({});
+    const result = await users.fetch({
+      search: randomName,
+    });
 
     const expectedResponse: Partial<UserResponse> = {
       firstName: 'John',
-      lastName: 'Doe',
-      displayName: 'John Doe',
+      lastName: randomName,
+      displayName: 'John ' + randomName,
       jobTitle: 'Project Manager',
       orcid: randomOrcid,
       institution: 'Instituto Superior Tecnico',
@@ -47,7 +48,7 @@ describe('Users', () => {
 
     expect(result).toEqual({
       total: 1,
-      items: [expect.objectContaining(expectedResponse)],
+      items: [expect.objectContaining(expectedResponse)]
     });
   });
 });

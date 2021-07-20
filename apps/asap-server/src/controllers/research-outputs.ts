@@ -29,6 +29,7 @@ flatData{
   publishDate
   labCatalogNumber
   doi
+  labCatalogNumber
   tags
   lastUpdatedPartial
   accessInstructions

@@ -410,6 +410,27 @@
         }
       },
       {
+        "name": "rrid",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^RRID:[a-zA-Z]+.+$",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Identifier (RRID)",
+          "hints": "This must start with \"RRID:\"",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "labCatalogNumber",
         "isHidden": false,
         "isLocked": false,

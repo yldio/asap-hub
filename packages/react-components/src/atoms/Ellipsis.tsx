@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-const ellipsisStyles = css({
+export const ellipsisStyles = css({
   display: '-webkit-box',
   WebkitLineClamp: 1,
   WebkitBoxOrient: 'vertical',

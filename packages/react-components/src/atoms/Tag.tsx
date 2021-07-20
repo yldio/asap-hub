@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { steel, mint, tin } from '../colors';
 import { perRem } from '../pixels';
+import Ellipsis from './Ellipsis';
 
 const borderWidth = 1;
 const containerStyles = css({
@@ -50,7 +51,7 @@ const Tag: React.FC<TagProps> = ({
     <div
       css={[styles, highlight && highlightStyles, !enabled && disabledStyles]}
     >
-      {children}
+      <Ellipsis>{children}</Ellipsis>
     </div>
   </div>
 );

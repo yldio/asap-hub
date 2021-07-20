@@ -11,6 +11,8 @@ export const userResponse: UserResponse = {
   firstName: 'Cristiano',
   lastName: 'Ronaldo',
   jobTitle: 'Junior',
+  city: 'London',
+  country: 'United Kingdom',
   institution: 'Dollar General Corporation',
   degree: 'MPH',
   teams: [
@@ -29,7 +31,6 @@ export const userResponse: UserResponse = {
       role: 'Collaborating PI',
     },
   ],
-  location: 'Zofilte',
   orcid: '363-98-9330',
   orcidWorks: [],
   social: {

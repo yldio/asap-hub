@@ -23,7 +23,6 @@ export const Normal = () => {
       institution={text('Institution', 'Yale University')}
       firstName={text('First Name', 'Phillip')}
       lastName={text('Last Name', 'Mars')}
-      location={text('Location', 'New Haven, Connecticut')}
       teams={Array(number('Number of Teams', 1)).fill({
         id: 't42',
         role: text('Role', 'Researcher'),

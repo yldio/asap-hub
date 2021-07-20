@@ -281,26 +281,6 @@
         }
       },
       {
-        "name": "location",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": false,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Location",
-          "hints": "",
-          "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": true
-        }
-      },
-      {
         "name": "country",
         "isHidden": false,
         "isLocked": false,

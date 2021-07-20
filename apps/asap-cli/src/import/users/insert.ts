@@ -111,7 +111,6 @@ const insertUser = async (
     degree,
     jobTitle,
     skills,
-    location,
     questions,
     institution,
     orcid,
@@ -170,12 +169,6 @@ const insertUser = async (
       iv: true,
     },
   };
-
-  if (location) {
-    user.location = {
-      iv: location,
-    };
-  }
 
   if (orcid) {
     user.orcid = {

@@ -285,7 +285,7 @@
           "allowDuplicates": false,
           "resolveReference": false,
           "mustBePublished": true,
-          "editor": "Tags",
+          "editor": "List",
           "schemaIds": ["labs"],
           "label": "Labs",
           "hints": "",

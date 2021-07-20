@@ -703,7 +703,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Boolean",
-          "defaultValue": false,
+          "defaultValue": true,
           "inlineEditable": false,
           "editor": "Toggle",
           "label": "Onboarding complete",

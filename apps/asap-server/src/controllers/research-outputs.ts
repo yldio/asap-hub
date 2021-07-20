@@ -26,7 +26,7 @@ flatData{
   link
   addedDate
   publishDate
-  identifierDoi
+  doi
   tags
   lastUpdatedPartial
   accessInstructions

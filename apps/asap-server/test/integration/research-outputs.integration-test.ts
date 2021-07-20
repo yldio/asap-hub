@@ -19,8 +19,8 @@ describe('Research Outputs', () => {
     usedInAPublication: 'Not Sure',
   };
 
-  test('Valid identifierDois should succeed', async () => {
-    researchOutput.identifierDoi = '10.5555/YFRU1371';
+  test('Valid dois should succeed', async () => {
+    researchOutput.doi = '10.5555/YFRU1371';
 
     await createResearchOutput(researchOutput);
 
@@ -45,15 +45,15 @@ describe('Research Outputs', () => {
     });
   });
 
-  test('Invalid identifierDois should fail', async () => {
-    researchOutput.identifierDoi = 'invalid identifierDoi';
+  test('Invalid dois should fail', async () => {
+    researchOutput.doi = 'invalid doi';
 
     try {
       await createResearchOutput(researchOutput); 
     } catch (e) {
       expect(e.name).toBe('HTTPError');
       expect(e.output.statusCode).toBe(400);
-      expect(e.data).toMatch("identifierDoi.iv: Must follow the pattern");
+      expect(e.data).toMatch("doi.iv: Must follow the pattern");
     }
   });
 });

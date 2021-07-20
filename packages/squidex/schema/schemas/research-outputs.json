@@ -410,7 +410,7 @@
         }
       },
       {
-        "name": "identifierDoi",
+        "name": "doi",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,

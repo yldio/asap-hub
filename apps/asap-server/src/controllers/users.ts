@@ -311,10 +311,6 @@ export default class Users {
       throw Boom.notFound();
     }
 
-    if (findUsersContent.flatData?.onboarded === false) {
-      throw Boom.notFound();
-    }
-
     return parseGraphQLUser(findUsersContent);
   }
 

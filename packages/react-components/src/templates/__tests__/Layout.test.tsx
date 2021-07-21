@@ -2,6 +2,7 @@ import { ComponentProps } from 'react';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
+import { OnboardableContext } from '@asap-hub/react-context';
 
 import Layout from '../Layout';
 
@@ -89,4 +90,13 @@ it('scrolls to top between page navigations', async () => {
 
   userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
   expect(getByRole('main').scrollTo).toHaveBeenCalled();
+});
+
+it('displays onboarding header', async () => {
+  const { getByText } = render(
+    <OnboardableContext.Provider value={{ isOnboardable: false }}>
+      <Layout {...props} />
+    </OnboardableContext.Provider>,
+  );
+  expect(getByText(/profile.+incomplete/i)).toBeVisible();
 });

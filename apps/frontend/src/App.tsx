@@ -15,6 +15,7 @@ import CheckAuth from './auth/CheckAuth';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
 import { GTM_CONTAINER_ID } from './config';
+import { Onboardable } from './Onboardable';
 
 const loadAuthProvider = () =>
   import(/* webpackChunkName: "auth-provider" */ './auth/AuthProvider');
@@ -34,16 +35,21 @@ export const ConfiguredLayout: FC = ({ children }) => {
   const { isAuthenticated } = useAuth0();
   const user = useCurrentUser();
   return isAuthenticated && user ? (
-    <Layout
-      userProfileHref={network({}).users({}).user({ userId: user.id }).$}
-      teams={user.teams.map(({ id, displayName = '' }) => ({
-        name: displayName,
-        href: network({}).teams({}).team({ teamId: id }).$,
-      }))}
-      aboutHref="https://www.parkinsonsroadmap.org/"
-    >
-      {children}
-    </Layout>
+    <Onboardable>
+      {({ isOnboardable }) => (
+        <Layout
+          isOnboardable={isOnboardable}
+          userProfileHref={network({}).users({}).user({ userId: user.id }).$}
+          teams={user.teams.map(({ id, displayName = '' }) => ({
+            name: displayName,
+            href: network({}).teams({}).team({ teamId: id }).$,
+          }))}
+          aboutHref="https://www.parkinsonsroadmap.org/"
+        >
+          {children}
+        </Layout>
+      )}
+    </Onboardable>
   ) : (
     <BasicLayout>{children}</BasicLayout>
   );

@@ -1,6 +1,5 @@
 import { ComponentProps } from 'react';
 import { Layout, authTestUtils } from '@asap-hub/react-components';
-import { OnboardableContext } from '@asap-hub/react-context';
 import { boolean } from '@storybook/addon-knobs';
 
 import { NoPaddingDecorator } from './layout';
@@ -34,17 +33,15 @@ export const Toasts = () => {
 };
 
 export const Onboardable = () => (
-  <OnboardableContext.Provider
-    value={{ isOnboardable: boolean('isOnboardable', false) }}
-  >
-    <authTestUtils.Auth0Provider>
-      <authTestUtils.LoggedIn
-        user={{
-          onboarded: false,
-        }}
-      >
-        <Layout {...props}>Content</Layout>
-      </authTestUtils.LoggedIn>
-    </authTestUtils.Auth0Provider>
-  </OnboardableContext.Provider>
+  <authTestUtils.Auth0Provider>
+    <authTestUtils.LoggedIn
+      user={{
+        onboarded: false,
+      }}
+    >
+      <Layout {...props} isOnboardable={boolean('isOnboardable', false)}>
+        Content
+      </Layout>
+    </authTestUtils.LoggedIn>
+  </authTestUtils.Auth0Provider>
 );

@@ -11,7 +11,6 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
-import { useOnboardableContext } from '@asap-hub/react-context';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, OnboardingHeader, ToastStack } from '../organisms';
@@ -160,9 +159,14 @@ const userMenuShownStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
+  readonly isOnboardable?: boolean | null;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
-const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
+const Layout: FC<LayoutProps> = ({
+  children,
+  isOnboardable = null,
+  ...userNavProps
+}) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -186,7 +190,7 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
       mainRef.current.scrollTo(0, 0);
     }
   }, [location, prevLocation, mainRef]);
-  const { isOnboardable } = useOnboardableContext();
+
   return (
     <ToastStack>
       {isOnboardable !== null && (

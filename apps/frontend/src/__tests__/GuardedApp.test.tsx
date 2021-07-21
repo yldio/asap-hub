@@ -32,7 +32,9 @@ it('syncs the auth state to recoil', async () => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
-  const { container } = render(<GuardedApp />, { wrapper });
-  await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
-  expect(container.textContent).toMatchInlineSnapshot(`"Bearer token"`);
+  const { queryByText, getByText } = render(<GuardedApp />, { wrapper });
+  await waitFor(() => {
+    expect(queryByText(/loading/i)).not.toBeInTheDocument();
+    expect(getByText(/Bearer token/i)).toBeVisible();
+  });
 });

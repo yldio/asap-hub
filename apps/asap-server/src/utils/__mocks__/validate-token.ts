@@ -2,7 +2,7 @@ import { Auth0User, User } from '@asap-hub/auth';
 import { origin } from '../../config';
 
 export const userMock: User = {
-  id: 'userId',
+  id: 'userMockId',
   onboarded: true,
   displayName: 'JT',
   email: 'joao.tiago@asap.science',

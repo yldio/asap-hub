@@ -73,6 +73,10 @@ export const userRouteFactory = (
     );
     const result = await userController.fetchById(userId);
 
+    if (result.onboarded === false && result.id !== req.loggedInUser?.id) {
+      throw Boom.notFound();
+    }
+
     res.json(result);
   });
 

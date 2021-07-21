@@ -29,6 +29,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
   authors?: TAuthorConnection[];
   pmsEmails: string[];
   rrid?: string;
+  accession?: string;
 }
 
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}

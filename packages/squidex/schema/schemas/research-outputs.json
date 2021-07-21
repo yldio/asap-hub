@@ -431,6 +431,27 @@
         }
       },
       {
+        "name": "accession",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^(\\w+\\d+(\\.\\d+)?)|(NP_\\d+)$",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Identifier (Accession #)",
+          "hints": "This must start with a letter",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "labCatalogNumber",
         "isHidden": false,
         "isLocked": false,

@@ -50,7 +50,7 @@ const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
         <Paragraph accent={'lead'}>
           {isOnboardable
             ? 'Click to publish your profile and start exploring the Hub.'
-            : 'Once completed, you can publish your profile and start exploring the Hub.'}
+            : 'Complete your profile to unlock access to the Hub. Any edits will be privately stored until you’re ready to publish.'}
         </Paragraph>
       </div>
       <div css={buttonStyles}>

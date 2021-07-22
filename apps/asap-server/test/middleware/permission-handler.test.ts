@@ -120,13 +120,21 @@ describe('Permission middleware', () => {
       });
 
       describe('User profile', () => {
-        test('Should allow access to GET /users/{user_id}', async () => {
+        test('Should allow access to GET /users/{user_id} when the requested user is the logged-in user', async () => {
           userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
 
           const response = await supertest(appWithMockedAuth).get(
             `/users/${userMock.id}`,
           );
           expect(response.status).toBe(200);
+        });
+
+        test('Should deny access to GET /users/{user_id} when the requested user is not the logged-in user', async () => {
+          const response = await supertest(appWithMockedAuth).get(
+            `/users/some-other-id`,
+          );
+
+          expect(response.status).toBe(403);
         });
 
         test('Should allow access to PATCH /users/{user_id}', async () => {

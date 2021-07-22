@@ -178,7 +178,7 @@ describe('Users controller', () => {
       await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
     });
 
-    test('Should throw when the user is found but is not onboarded', async () => {
+    test('Should return the user when they are found, even if they are not onboarded', async () => {
       const nonOnboardedUserResponse = getGraphQlResponseFetchUser();
       nonOnboardedUserResponse.data.findUsersContent.flatData!.onboarded =
         false;
@@ -187,12 +187,18 @@ describe('Users controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: buildGraphQLQueryFetchUser(),
           variables: {
-            id: 'not-found',
+            id: 'user-id',
           },
         })
         .reply(200, nonOnboardedUserResponse);
 
-      await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
+      const result = await users.fetchById('user-id');
+
+      const expectedResult = {
+        ...userResponse,
+        onboarded: false,
+      };
+      expect(result).toEqual(expectedResult);
     });
 
     test('Should return the user when it finds it', async () => {

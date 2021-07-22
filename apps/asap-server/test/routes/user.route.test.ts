@@ -132,6 +132,36 @@ describe('/users/ route', () => {
 
       expect(userControllerMock.fetchById).toBeCalledWith(userId);
     });
+
+    test('Should return 404 when the user is found but is not onboarded', async () => {
+      const userNonOnboardedResponse = {
+        ...userResponse,
+        onboarded: false,
+      };
+      userControllerMock.fetchById.mockResolvedValueOnce(
+        userNonOnboardedResponse,
+      );
+
+      const response = await supertest(appWithMockedAuth).get('/users/123');
+
+      expect(response.status).toBe(404);
+    });
+
+    test('Should return the result when the user is found and is not onboarded but is queried by the same, logged-in user', async () => {
+      const userNonOnboardedResponse = {
+        ...userResponse,
+        onboarded: false,
+        id: userMock.id,
+      };
+      userControllerMock.fetchById.mockResolvedValueOnce(
+        userNonOnboardedResponse,
+      );
+
+      const response = await supertest(appWithMockedAuth).get('/users/123');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual(userNonOnboardedResponse);
+    });
   });
 
   describe('GET /users/invites/{code}', () => {

@@ -21,10 +21,17 @@ it('renders a tag with background color when highlighted', () => {
 
 it('renders a tag with different border and text color when disabled', () => {
   const { getByText, rerender } = render(<Tag>Text</Tag>);
-  expect(getComputedStyle(getByText('Text')).color).not.toBe(tin.rgb);
-  expect(getComputedStyle(getByText('Text')).borderColor).not.toEqual(tin.rgb);
+  expect(findParentWithStyle(getByText('Text'), 'color')?.color).not.toBe(
+    tin.rgb,
+  );
+  expect(
+    findParentWithStyle(getByText('Text'), 'borderColor')?.borderColor,
+  ).not.toEqual(tin.rgb);
 
   rerender(<Tag enabled={false}>Text</Tag>);
-  expect(getComputedStyle(getByText('Text')).color).toBe(tin.rgb);
-  expect(getComputedStyle(getByText('Text')).borderColor).toEqual(tin.rgb);
+
+  expect(findParentWithStyle(getByText('Text'), 'color')?.color).toBe(tin.rgb);
+  expect(
+    findParentWithStyle(getByText('Text'), 'borderColor')?.borderColor,
+  ).toEqual(tin.rgb);
 });

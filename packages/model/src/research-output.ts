@@ -65,6 +65,7 @@ export type ResearchOutputResponse = {
   readonly created: string;
   readonly publishDate?: string;
   readonly labCatalogNumber?: string;
+  readonly doi?: string;
   readonly addedDate?: string;
   readonly lastModifiedDate?: string;
   readonly lastUpdatedPartial: string;

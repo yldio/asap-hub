@@ -472,6 +472,27 @@
         }
       },
       {
+        "name": "doi",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^(doi\\:)?\\d{2}\\.\\d{4}.*$",
+          "isUnique": false,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Identifier (DOI)",
+          "hints": "DOIs must start with a number and cannot be a URL",
+          "placeholder": "",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "adminNotes",
         "isHidden": false,
         "isLocked": false,

@@ -6,38 +6,41 @@ import { mobileScreen } from '../../pixels';
 
 import Ellipsis from '../Ellipsis';
 
-const lineHeightValue = 12;
+const LINE_HEIGHT = 12;
 
 const containerStyle = css({
-  lineHeight: `${lineHeightValue}px`,
+  lineHeight: `${LINE_HEIGHT}px`,
 });
 
 const longText =
   'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi commodi fugit impedit numquam temporibus.';
 
-it('When using Ellipsis the element height should be 1 line height even for long texts', async () => {
-  await page.setViewportSize(mobileScreen);
-  const { container } = render(
-    <div css={containerStyle}>
-      <Ellipsis>{longText}</Ellipsis>
-    </div>,
-  );
+describe('When using Ellipsis', () => {
+  it('should have height equals to 1 line height even for long texts', async () => {
+    await page.setViewportSize(mobileScreen);
+    const { container, rerender } = render(
+      <div css={containerStyle}>
+        <span>{longText}</span>,
+      </div>,
+    );
+    const { select, update } = await domToPlaywright(page, document);
+    let containerHeight = await page.$eval(
+      select(container),
+      ({ offsetHeight }: HTMLElement) => offsetHeight,
+    );
+    expect(containerHeight).toBeGreaterThan(LINE_HEIGHT);
 
-  const { select } = await domToPlaywright(page, document);
-  const containerHeight = await page.$eval(
-    select(container),
-    ({ offsetHeight }: HTMLElement) => offsetHeight,
-  );
-  expect(containerHeight).toEqual(lineHeightValue);
-});
+    rerender(
+      <div css={containerStyle}>
+        <Ellipsis>{longText}</Ellipsis>
+      </div>,
+    );
+    update(document);
 
-it('When not using Ellipsis, the component height should be the number of lines needed for the text', async () => {
-  await page.setViewportSize(mobileScreen);
-  const { container } = render(<span css={containerStyle}>{longText}</span>);
-  const { select } = await domToPlaywright(page, document);
-  const containerHeight = await page.$eval(
-    select(container),
-    ({ offsetHeight }: HTMLElement) => offsetHeight,
-  );
-  expect(containerHeight).toEqual(3 * lineHeightValue);
+    containerHeight = await page.$eval(
+      select(container),
+      ({ offsetHeight }: HTMLElement) => offsetHeight,
+    );
+    expect(containerHeight).toEqual(LINE_HEIGHT);
+  });
 });

@@ -71,6 +71,14 @@ export const userRouteFactory = (
       req.params,
       paramSchema,
     );
+
+    if (
+      req.loggedInUser?.onboarded !== true &&
+      userId !== req.loggedInUser?.id
+    ) {
+      throw Boom.forbidden('User is not onboarded');
+    }
+
     const result = await userController.fetchById(userId);
 
     if (result.onboarded === false && result.id !== req.loggedInUser?.id) {

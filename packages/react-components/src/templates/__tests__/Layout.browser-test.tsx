@@ -8,7 +8,7 @@ import { largeDesktopScreen } from '../../pixels';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
-
+  userOnboarded: true,
   userProfileHref: '/profile',
   teams: [],
   aboutHref: '/about',

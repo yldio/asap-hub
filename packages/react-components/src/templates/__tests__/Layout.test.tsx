@@ -7,7 +7,7 @@ import Layout from '../Layout';
 
 const props: ComponentProps<typeof Layout> = {
   children: 'Content',
-
+  userOnboarded: true,
   userProfileHref: '/profile',
   teams: [],
   aboutHref: '/about',

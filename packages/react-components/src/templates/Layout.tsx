@@ -214,7 +214,7 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
           css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}
         >
           <Suspense fallback={<Loading />}>
-            <MainNavigation />
+            <MainNavigation userOnboarded={userNavProps.userOnboarded} />
           </Suspense>
         </div>
         <div
@@ -226,7 +226,11 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
           ]}
         >
           <Suspense fallback={<Loading />}>
-            <UserNavigation {...userNavProps} />
+            <UserNavigation
+              userProfileHref={userNavProps.userProfileHref}
+              teams={userNavProps.teams}
+              aboutHref={userNavProps.aboutHref}
+            />
           </Suspense>
         </div>
       </article>

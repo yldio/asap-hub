@@ -35,6 +35,7 @@ const ConfiguredLayout: FC = ({ children }) => {
   const user = useCurrentUser();
   return isAuthenticated && user ? (
     <Layout
+      userOnboarded={user.onboarded}
       userProfileHref={network({}).users({}).user({ userId: user.id }).$}
       teams={user.teams.map(({ id, displayName = '' }) => ({
         name: displayName,

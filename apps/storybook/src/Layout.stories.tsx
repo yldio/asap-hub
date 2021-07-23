@@ -11,6 +11,7 @@ export default {
 };
 
 const props: Omit<ComponentProps<typeof Layout>, 'children'> = {
+  userOnboarded: true,
   userProfileHref: '/profile',
   teams: [
     { name: '1', href: '/team-1' },

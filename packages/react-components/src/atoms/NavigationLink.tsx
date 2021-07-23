@@ -35,7 +35,6 @@ const styles = css({
     15 - 1,
     'px',
   ),
-
   color: 'unset',
   textDecoration: 'none',
   outline: 'none',
@@ -50,7 +49,6 @@ const textStyles = css({
   margin: 0,
   display: 'flex',
   alignItems: 'center',
-
   fontSize: `${18 / perRem}em`,
 });
 const iconStyles = css({
@@ -60,24 +58,35 @@ const iconStyles = css({
   paddingRight: `${14 / perRem}em`,
 });
 
+const disableStyles = css({
+  opacity: 0.3,
+  pointerEvents: 'none',
+});
+
 interface NavigationLinkProps {
   readonly href: string;
-
+  readonly enabled?: boolean;
   readonly icon: JSX.Element;
   readonly children: TextChildren;
 }
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   href,
+  enabled = true,
   icon,
   children,
 }) => {
   const [internal, url] = isInternalLink(href);
+
   if (useHasRouter() && internal) {
     return (
       <NavHashLink
         to={url}
         activeClassName={activeClassName}
-        css={[styles, { [`&.${activeClassName}`]: activePrimaryStyles }]}
+        css={[
+          styles,
+          { [`&.${activeClassName}`]: activePrimaryStyles },
+          !enabled && disableStyles,
+        ]}
         smooth
         isActive={(match, _) => !!match}
       >
@@ -92,7 +101,10 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   const active =
     new URL(href, window.location.href).pathname === window.location.pathname;
   return (
-    <a href={url} css={[styles, active && activePrimaryStyles]}>
+    <a
+      href={url}
+      css={[styles, active && activePrimaryStyles, !enabled && disableStyles]}
+    >
       <p css={textStyles}>
         <span css={iconStyles}>{icon}</span>
         {children}

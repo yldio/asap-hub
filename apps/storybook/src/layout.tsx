@@ -33,6 +33,7 @@ export const LayoutDecorator: DecoratorFn = (storyFn, context) =>
   NoPaddingDecorator(
     () => (
       <Layout
+        userOnboarded={true}
         userProfileHref="/profile"
         teams={[
           { name: '1', href: '/team-1' },

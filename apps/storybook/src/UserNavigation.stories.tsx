@@ -25,6 +25,7 @@ export const Normal = () => {
   return (
     <StaticRouter key={path} location={path}>
       <UserNavigation
+        userOnboarded={true}
         userProfileHref="/profile"
         teams={array('Teams', ['Team 1', 'Team 2']).map((name, i) => ({
           name,

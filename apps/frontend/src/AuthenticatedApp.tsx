@@ -65,6 +65,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     <Onboardable>
       {(onboardable) => (
         <Layout
+          userOnboarded={user.onboarded}
           onboardable={onboardable}
           onboardModalHref={
             tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined

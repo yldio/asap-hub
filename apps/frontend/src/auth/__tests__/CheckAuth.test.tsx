@@ -9,7 +9,7 @@ it('renders a loading indicator while Auth0 is initializing', async () => {
   const { getByText, queryByText } = render(
     <Suspense fallback="suspended">
       <authTestUtils.Auth0Provider>
-        <CheckAuth>content</CheckAuth>
+        <CheckAuth>{() => 'content'}</CheckAuth>
       </authTestUtils.Auth0Provider>
     </Suspense>,
     { wrapper: MemoryRouter },
@@ -23,7 +23,7 @@ it('renders a sign in page if the user is not authenticated', async () => {
   const { findByText } = render(
     <authTestUtils.Auth0Provider>
       <CheckAuth>
-        <p>secure</p>
+        {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
       </CheckAuth>
     </authTestUtils.Auth0Provider>,
     { wrapper: MemoryRouter },
@@ -36,7 +36,7 @@ it('renders the children if the user is authenticated', async () => {
     <authTestUtils.Auth0Provider>
       <authTestUtils.LoggedIn user={{}}>
         <CheckAuth>
-          <p>secure</p>
+          {({ isAuthenticated }) => (isAuthenticated ? 'secure' : 'Sign in')}
         </CheckAuth>
       </authTestUtils.LoggedIn>
     </authTestUtils.Auth0Provider>,

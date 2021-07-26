@@ -2,16 +2,15 @@ import { FC, lazy, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
 import {
-  Layout,
   BasicLayout,
   GoogleTagManager,
   ToastStack,
 } from '@asap-hub/react-components';
-import { useAuth0, useCurrentUser } from '@asap-hub/react-context';
-import { staticPages, network, welcome, logout } from '@asap-hub/routing';
+import { staticPages, welcome, logout } from '@asap-hub/routing';
 
 import history from './history';
 import CheckAuth from './auth/CheckAuth';
+import Signin from './auth/Signin';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
 import { GTM_CONTAINER_ID } from './config';
@@ -24,34 +23,15 @@ const loadWelcome = () =>
   import(/* webpackChunkName: "welcome" */ './welcome/Routes');
 const loadContent = () =>
   import(/* webpackChunkName: "content" */ './content/Content');
-const loadGuardedApp = () =>
-  import(/* webpackChunkName: "guarded-app" */ './GuardedApp');
+const loadAuthenticatedApp = () =>
+  import(/* webpackChunkName: "authenticated-app" */ './AuthenticatedApp');
 const Welcome = lazy(loadWelcome);
 const Content = lazy(loadContent);
-const GuardedApp = lazy(loadGuardedApp);
-
-const ConfiguredLayout: FC = ({ children }) => {
-  const { isAuthenticated } = useAuth0();
-  const user = useCurrentUser();
-  return isAuthenticated && user ? (
-    <Layout
-      userProfileHref={network({}).users({}).user({ userId: user.id }).$}
-      teams={user.teams.map(({ id, displayName = '' }) => ({
-        name: displayName,
-        href: network({}).teams({}).team({ teamId: id }).$,
-      }))}
-      aboutHref="https://www.parkinsonsroadmap.org/"
-    >
-      {children}
-    </Layout>
-  ) : (
-    <BasicLayout>{children}</BasicLayout>
-  );
-};
+const AuthenticatedApp = lazy(loadAuthenticatedApp);
 
 const App: FC<Record<string, never>> = () => {
   useEffect(() => {
-    loadGuardedApp().then(loadContent).then(loadWelcome);
+    loadAuthenticatedApp().then(loadContent).then(loadWelcome);
   }, []);
 
   return (
@@ -72,29 +52,33 @@ const App: FC<Record<string, never>> = () => {
                     <Logout />
                   </Frame>
                 </Route>
-
                 <Route exact path={staticPages({}).terms.template}>
-                  <ConfiguredLayout>
+                  <BasicLayout>
                     <Frame title={null}>
                       <Content pageId="terms-and-conditions" />
                     </Frame>
-                  </ConfiguredLayout>
+                  </BasicLayout>
                 </Route>
                 <Route exact path={staticPages({}).privacyPolicy.template}>
-                  <ConfiguredLayout>
+                  <BasicLayout>
                     <Frame title={null}>
                       <Content pageId="privacy-policy" />
                     </Frame>
-                  </ConfiguredLayout>
+                  </BasicLayout>
                 </Route>
-
                 <Route>
                   <CheckAuth>
-                    <ConfiguredLayout>
-                      <Frame title={null}>
-                        <GuardedApp />
-                      </Frame>
-                    </ConfiguredLayout>
+                    {({ isAuthenticated }) =>
+                      !isAuthenticated ? (
+                        <Frame title={null}>
+                          <Signin />
+                        </Frame>
+                      ) : (
+                        <Frame title={null}>
+                          <AuthenticatedApp />
+                        </Frame>
+                      )
+                    }
                   </CheckAuth>
                 </Route>
               </Switch>

@@ -13,7 +13,7 @@ import { Location } from 'history';
 import { css } from '@emotion/react';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
-import { MenuHeader, ToastStack } from '../organisms';
+import { MenuHeader, OnboardingHeader, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
@@ -159,9 +159,14 @@ const userMenuShownStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
+  readonly isOnboardable?: boolean | null;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
-const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
+const Layout: FC<LayoutProps> = ({
+  children,
+  isOnboardable = null,
+  ...userNavProps
+}) => {
   const [menuShown, setMenuShown] = useState(false);
 
   let location: Location | undefined;
@@ -188,6 +193,9 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
 
   return (
     <ToastStack>
+      {isOnboardable !== null && (
+        <OnboardingHeader isOnboardable={isOnboardable} />
+      )}
       <article css={[styles, menuShown || { overflow: 'hidden' }]}>
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>

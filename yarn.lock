@@ -455,6 +455,7 @@ __metadata:
     "@asap-hub/react-context": "workspace:*"
     "@asap-hub/routing": "workspace:*"
     "@asap-hub/unsupported-browser-page": "workspace:*"
+    "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": ^7.14.0
     "@testing-library/dom": ^7.31.0

@@ -4,7 +4,7 @@ import { StaticRouter } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import { authTestUtils } from '@asap-hub/react-components';
 
-import GuardedApp from '../GuardedApp';
+import AuthenticatedApp from '../AuthenticatedApp';
 import { authorizationState } from '../auth/state';
 import Dashboard from '../dashboard/Dashboard';
 
@@ -32,7 +32,9 @@ it('syncs the auth state to recoil', async () => {
     const authorization = useRecoilValue(authorizationState);
     return <>{authorization}</>;
   });
-  const { container } = render(<GuardedApp />, { wrapper });
-  await waitFor(() => expect(container).not.toHaveTextContent(/loading/i));
-  expect(container.textContent).toMatchInlineSnapshot(`"Bearer token"`);
+  const { queryByText, getByText } = render(<AuthenticatedApp />, { wrapper });
+  await waitFor(() => {
+    expect(queryByText(/loading/i)).not.toBeInTheDocument();
+    expect(getByText(/Bearer token/i)).toBeVisible();
+  });
 });

@@ -90,3 +90,8 @@ it('scrolls to top between page navigations', async () => {
   userEvent.click(getAllByText(/network/i, { selector: 'nav *' })[0]);
   expect(getByRole('main').scrollTo).toHaveBeenCalled();
 });
+
+it('displays onboarding header', async () => {
+  const { getByText } = render(<Layout {...props} isOnboardable={false} />);
+  expect(getByText(/profile.+incomplete/i)).toBeVisible();
+});

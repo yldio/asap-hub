@@ -241,11 +241,7 @@ const Layout: FC<LayoutProps> = ({
           ]}
         >
           <Suspense fallback={<Loading />}>
-            <UserNavigation
-              userProfileHref={userNavProps.userProfileHref}
-              teams={userNavProps.teams}
-              aboutHref={userNavProps.aboutHref}
-            />
+            <UserNavigation {...userNavProps} />
           </Suspense>
         </div>
       </article>

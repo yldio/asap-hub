@@ -22,7 +22,11 @@ const containerStyles = css({
   },
 });
 
-const buttonStyles = css({ display: 'flex', alignItems: 'flex-end' });
+const buttonStyles = css({
+  display: 'flex',
+  alignItems: 'flex-end',
+  flexShrink: 0,
+});
 
 const textStyles = css({
   flexGrow: 1,

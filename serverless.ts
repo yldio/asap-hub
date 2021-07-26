@@ -73,6 +73,9 @@ const serverlessConfig: AWS = {
       ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${
         SLS_STAGE === 'production' ? 'prod' : 'dev'
       }}`,
+      ALGOLIA_SEARCH_API_KEY: `\${ssm:algolia-search-api-key-${
+        SLS_STAGE === 'production' ? 'prod' : 'dev'
+      }}`,
       CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
     },
     iamRoleStatements: [

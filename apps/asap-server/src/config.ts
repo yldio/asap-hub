@@ -16,6 +16,7 @@ const {
   NODE_ENV,
   CURRENT_REVISION,
   SENTRY_DSN,
+  ALGOLIA_SEARCH_API_KEY,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -37,3 +38,5 @@ export const logLevel = LOG_LEVEL || 'info';
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const currentRevision = CURRENT_REVISION || 'default';
 export const sentryDsn = SENTRY_DSN;
+export const algoliaSearchApiKey =
+  ALGOLIA_SEARCH_API_KEY || 'a351a70bca038d43c5981cfdd4cd7ea0';

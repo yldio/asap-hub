@@ -4,6 +4,7 @@ import { render } from '@testing-library/react';
 import UserNavigation from '../UserNavigation';
 
 const props: ComponentProps<typeof UserNavigation> = {
+  userOnboarded: false,
   userProfileHref: '/profile',
   teams: [
     { name: 'Team 1', href: '/team-1' },
@@ -41,4 +42,18 @@ it('applies the passed href', () => {
       /profile/i.test(textContent ?? ''),
     ),
   ).toHaveAttribute('href', '/profile');
+});
+
+it('enables My team link when user is onboarded', () => {
+  const { getAllByText, rerender } = render(
+    <UserNavigation {...props} userOnboarded={false} />,
+  );
+  getAllByText(/^My team:/i).map((groupItem) =>
+    expect(groupItem).toHaveStyle('opacity: 0,3'),
+  );
+
+  rerender(<UserNavigation {...props} userOnboarded={true} />);
+  getAllByText(/^My team:/i).map((groupItem) =>
+    expect(groupItem).toHaveStyle('opacity:'),
+  );
 });

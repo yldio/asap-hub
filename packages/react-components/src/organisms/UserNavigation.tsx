@@ -43,11 +43,13 @@ const bottomLinksStyles = css({
 });
 
 export interface UserNavigationProps {
+  readonly userOnboarded: boolean;
   readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
   readonly aboutHref: string;
 }
 const UserNavigation: React.FC<UserNavigationProps> = ({
+  userOnboarded,
   userProfileHref,
   teams,
   aboutHref,
@@ -61,7 +63,7 @@ const UserNavigation: React.FC<UserNavigationProps> = ({
       </li>
       {teams.map(({ name, href }) => (
         <li key={href}>
-          <NavigationLink href={href} icon={teamIcon}>
+          <NavigationLink href={href} icon={teamIcon} enabled={userOnboarded}>
             My Team: {name}
           </NavigationLink>
         </li>

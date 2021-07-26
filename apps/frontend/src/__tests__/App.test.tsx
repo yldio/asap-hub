@@ -21,7 +21,7 @@ beforeEach(() => {
   MockAuthenticatedApp.mockReset().mockReturnValue(<>Authenticated</>);
 });
 
-it('changes the routing for logged in users', async () => {
+it('changes routing for logged in users', async () => {
   const { container, rerender } = render(
     <authTestUtils.Auth0Provider>
       <App />

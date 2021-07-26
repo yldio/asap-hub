@@ -192,6 +192,7 @@ const Layout: FC<LayoutProps> = ({ children, ...userNavProps }) => {
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
           <MenuHeader
+            enabled={userNavProps.userOnboarded}
             menuOpen={menuShown}
             onToggleMenu={() => setMenuShown(!menuShown)}
           />

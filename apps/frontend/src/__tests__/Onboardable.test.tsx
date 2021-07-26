@@ -37,16 +37,11 @@ const onboardableUser: UserResponse = {
   skills: ['1', '2', '3', '4', '5'],
 };
 
-it('onboardable is null when there is no logged in user', async () => {
+it('is null when there is no logged in user', async () => {
   const { container } = render(
     <RecoilRoot>
       <Onboardable>
-        {({ isOnboardable }) => (
-          <>
-            isOnboardable:{' '}
-            {isOnboardable === null ? 'null' : isOnboardable ? 'true' : 'false'}
-          </>
-        )}
+        {({ isOnboardable }) => `isOnboardable: ${isOnboardable}`}
       </Onboardable>
     </RecoilRoot>,
   );
@@ -61,18 +56,13 @@ const renderOnboardable = (onboarded: boolean) => (
   >
     <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
       <Onboardable>
-        {({ isOnboardable }) => (
-          <>
-            isOnboardable:{' '}
-            {isOnboardable === null ? 'null' : isOnboardable ? 'true' : 'false'}
-          </>
-        )}
+        {({ isOnboardable }) => `isOnboardable: ${isOnboardable}`}
       </Onboardable>
     </Auth0Provider>
   </RecoilRoot>
 );
 
-it('onboardable is null when the logged in user is already onboarded', async () => {
+it('is null when the logged in user is already onboarded', async () => {
   const { queryByText } = render(renderOnboardable(true));
   await act(() =>
     waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument()),
@@ -80,7 +70,7 @@ it('onboardable is null when the logged in user is already onboarded', async () 
   expect(queryByText('isOnboardable: null')).toBeVisible();
 });
 
-it('onboardable is true when: logged in, not onboarded and conditions met', async () => {
+it('is true when: logged in, not onboarded and conditions met', async () => {
   const { queryByText } = render(renderOnboardable(false));
   await act(() =>
     waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument()),
@@ -91,7 +81,7 @@ it('onboardable is true when: logged in, not onboarded and conditions met', asyn
   expect(queryByText('isOnboardable: true')).toBeVisible();
 });
 
-it('onboardable is false when: logged in, not onboarded but conditions not met', async () => {
+it('is false when: logged in, not onboarded but conditions not met', async () => {
   const { queryByText } = render(renderOnboardable(false));
   await act(() =>
     waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument()),

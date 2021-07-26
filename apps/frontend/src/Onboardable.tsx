@@ -1,10 +1,8 @@
 import { FC, ReactNode } from 'react';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { isUserOnboardable } from '@asap-hub/validation';
-import { useRecoilState } from 'recoil';
 
 import { useUserByIdLoadable } from './network/users/state';
-import { auth0State } from './auth/state';
 
 type OnboardableLoadUserProps = {
   id: string;
@@ -27,16 +25,12 @@ type OnboardableProps = {
 };
 export const Onboardable: FC<OnboardableProps> = ({ children }) => {
   const auth0user = useCurrentUser();
-  const [auth0] = useRecoilState(auth0State);
   if (auth0user && !auth0user.onboarded) {
-    if (auth0) {
-      return (
-        <OnboardableLoadUser id={auth0user.id}>
-          {(state) => children(state)}
-        </OnboardableLoadUser>
-      );
-    }
-    return <>{children({ isOnboardable: false })}</>;
+    return (
+      <OnboardableLoadUser id={auth0user.id}>
+        {(state) => children(state)}
+      </OnboardableLoadUser>
+    );
   }
   return <>{children({ isOnboardable: null })}</>;
 };

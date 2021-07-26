@@ -63,6 +63,7 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
     <Onboardable>
       {({ isOnboardable }) => (
         <Layout
+          userOnboarded={user.onboarded}
           isOnboardable={isOnboardable}
           userProfileHref={network({}).users({}).user({ userId: user.id }).$}
           teams={user.teams.map(({ id, displayName = '' }) => ({

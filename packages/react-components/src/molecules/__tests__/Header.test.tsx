@@ -37,3 +37,11 @@ it('does not render an opaque background when set to transparent', () => {
     findParentWithStyle(getByAltText(/asap.+logo/i), 'backgroundColor'),
   ).toBe(null);
 });
+
+it('enables the header link when user is onboarded', () => {
+  const { container, rerender } = render(<Header enabled={true} />);
+  expect(container.querySelector('a')).toBeDefined();
+
+  rerender(<Header enabled={false} />);
+  expect(container.querySelector('a')).toBeNull();
+});

@@ -51,7 +51,7 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 - `yarn start:frontend`: to run the frontend
 - `yarn start:storybook`: to run storybook
 
-### Now that everything's up
+### Now that everything's up!
 
 - On localhost:3000 you should have the hub running. You'll need to get your profile created.
 - Get your UUID from the previous step, and use it on https://dev.hub.asap.science/welcome/{uuid}

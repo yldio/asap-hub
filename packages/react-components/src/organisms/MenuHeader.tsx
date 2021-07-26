@@ -36,10 +36,12 @@ const headerSpaceStyles = css({
 });
 
 interface MenuHeaderProps {
+  enabled?: boolean;
   menuOpen?: boolean;
   onToggleMenu?: () => void;
 }
 const MenuHeader: React.FC<MenuHeaderProps> = ({
+  enabled = true,
   menuOpen = false,
   onToggleMenu = noop,
 }) => (
@@ -47,7 +49,7 @@ const MenuHeader: React.FC<MenuHeaderProps> = ({
     <div css={[menuButtonStyles]}>
       <MenuButton open={menuOpen} onClick={() => onToggleMenu()} />
     </div>
-    <Header />
+    <Header enabled={enabled} />
     <div role="presentation" css={[headerSpaceStyles]} />
   </div>
 );

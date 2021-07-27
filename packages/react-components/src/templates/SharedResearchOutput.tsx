@@ -198,7 +198,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 <Divider />
                 <li css={additionalInformationEntryStyles}>
                   <strong>Lab Catalog Number</strong>
-                  <span css={additionalInformationValueStyles}>
+                  <span
+                    css={additionalInformationValueStyles}
+                    data-testid="labCatalogNumber"
+                  >
                     {isLabCatalogNumberALink ? (
                       <Anchor href={labCatalogNumber}>
                         <div css={externalLinkStyle}>
@@ -207,7 +210,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                         </div>
                       </Anchor>
                     ) : (
-                      <>{labCatalogNumber}</>
+                      labCatalogNumber
                     )}
                   </span>
                 </li>

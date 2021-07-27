@@ -8,9 +8,15 @@ import { Anchor } from '.';
 
 const styles = css({
   textDecoration: 'underline',
+  ':hover': {
+    textDecoration: 'none',
+  },
 });
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
-  light: css({ color: fern.rgb, ':active': { color: pine.rgb } }),
+  light: css({
+    color: fern.rgb,
+    ':active, :hover': { color: pine.rgb },
+  }),
   grey: css({ color: fern.rgb, ':active': { color: pine.rgb } }),
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),
 };

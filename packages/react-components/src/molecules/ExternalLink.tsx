@@ -4,6 +4,7 @@ import { Anchor } from '../atoms';
 import { externalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
 import { mobileScreen, perRem } from '../pixels';
+import { themeStyles as linkStyles } from '../atoms/Link';
 
 const containerStyles = css({
   display: 'flex',
@@ -45,6 +46,10 @@ const textStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     display: 'none',
   },
+  textDecoration: 'underline',
+  ':hover': {
+    textDecoration: 'none',
+  },
 });
 
 type ExternalLinkProps = {
@@ -61,7 +66,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     <Anchor href={href}>
       <div css={styles}>
         {icon}
-        <div css={textStyles}>{label}</div>
+        <div css={[textStyles, linkStyles]}>{label}</div>
       </div>
     </Anchor>
   </div>

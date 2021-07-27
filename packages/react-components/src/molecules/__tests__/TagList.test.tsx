@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import TagList from '../TagList';
 import { tin } from '../../colors';
@@ -32,7 +33,9 @@ it('hides tags when there are none', () => {
 it('disables its tags when disabled', () => {
   const { getByText } = render(<TagList tags={['tag 1']} enabled={false} />);
 
-  expect(getComputedStyle(getByText(/tag 1/i)).color).toEqual(tin.rgb);
+  expect(findParentWithStyle(getByText(/tag 1/i), 'color')?.color).toEqual(
+    tin.rgb,
+  );
 });
 
 describe('when capped', () => {

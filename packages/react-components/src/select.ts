@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import Select from 'react-select';
+import { ellipsisStyles } from './atoms/Ellipsis';
 import {
   ember,
   rose,
@@ -155,6 +156,7 @@ export const reactMultiSelectStyles = (
   }),
   multiValueLabel: (provided) => ({
     ...provided,
+    ...ellipsisStyles,
     padding: 0,
     color: charcoal.rgb,
     fontSize: 'unset',

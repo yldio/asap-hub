@@ -129,4 +129,55 @@ describe('additional information', () => {
     );
     expect(queryByText(/asap.funded/i)).not.toBeInTheDocument();
   });
+  it('contains doi and builds the correct href', () => {
+    const doiValue = '10.1101/gr.10.12.1841';
+    const { getByText } = render(
+      <SharedResearchOutput {...props} doi={doiValue} />,
+    );
+    expect(getByText(doiValue)?.closest('a')?.href).toBe(
+      `https://doi.org/${doiValue}`,
+    );
+  });
+  it('contains rrid and builds the correct href', () => {
+    const rridValue = 'RRID:SCR_007358';
+    const { getByText } = render(
+      <SharedResearchOutput {...props} rrid={rridValue} />,
+    );
+    expect(getByText(rridValue)?.closest('a')?.href).toBe(
+      `https://scicrunch.org/resolver/${rridValue}`,
+    );
+  });
+  it('contains accession', () => {
+    const accessionValue = 'NC_000001.11';
+    const { getByText } = render(
+      <SharedResearchOutput {...props} accession={accessionValue} />,
+    );
+    expect(getByText(accessionValue)).toBeInTheDocument();
+  });
+  it('contains labCatalogNumber and builds the correct href', () => {
+    const labCatalogNumberLink = 'https://example.com';
+    const labCatalogNumberText = '0000-0004-9946-3696';
+    const { getByTestId, rerender } = render(
+      <SharedResearchOutput
+        {...props}
+        labCatalogNumber={labCatalogNumberLink}
+      />,
+    );
+    expect(getByTestId('labCatalogNumber')?.firstElementChild?.tagName).toMatch(
+      /a/i,
+    );
+    expect(
+      getByTestId('labCatalogNumber')?.firstElementChild,
+    ).toHaveTextContent(/external.link/i);
+    rerender(
+      <SharedResearchOutput
+        {...props}
+        labCatalogNumber={labCatalogNumberText}
+      />,
+    );
+    expect(getByTestId('labCatalogNumber').childElementCount).toBe(0);
+    expect(getByTestId('labCatalogNumber')).toHaveTextContent(
+      labCatalogNumberText,
+    );
+  });
 });

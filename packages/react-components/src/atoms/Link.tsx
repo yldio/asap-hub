@@ -8,9 +8,6 @@ import { Anchor } from '.';
 
 const styles = css({
   textDecoration: 'underline',
-  ':hover': {
-    textDecoration: 'none',
-  },
 });
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({

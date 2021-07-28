@@ -20,8 +20,8 @@ it('triggers the menu toggle event', () => {
 
 it('enables the header link when user is onboarded', () => {
   const { container, rerender } = render(<MenuHeader enabled={true} />);
-  expect(container.querySelector('a')).toBeDefined();
+  expect(container.querySelector('a')).toHaveAttribute('href', '/');
 
   rerender(<MenuHeader enabled={false} />);
-  expect(container.querySelector('a')).toBeNull();
+  expect(container.querySelector('a')).not.toHaveAttribute('href', '');
 });

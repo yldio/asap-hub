@@ -143,5 +143,28 @@ describe('Fetch-user-by-code handler', () => {
         },
       );
     });
+
+    test('should a null algolia API key if the function throws', async () => {
+      algoliaClientMock.generateSecuredApiKey.mockImplementationOnce(() => {
+        throw new Error('some error');
+      });
+      userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
+
+      const result = (await handler(
+        apiGatewayEvent({
+          pathParameters: {
+            code: 'welcomeCode',
+          },
+          headers: {
+            Authorization: `Basic ${secret}`,
+          },
+        }),
+      )) as APIGatewayProxyResult;
+
+      expect(result.statusCode).toStrictEqual(200);
+      expect(JSON.parse(result.body)).toMatchObject({
+        algoliaApiKey: null,
+      });
+    });
   });
 });

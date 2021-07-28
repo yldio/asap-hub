@@ -131,21 +131,21 @@ describe('additional information', () => {
   });
   it('contains doi and builds the correct href', () => {
     const doiValue = '10.1101/gr.10.12.1841';
+    const expectedLink = new URL(`https://doi.org/${doiValue}`).toString();
     const { getByText } = render(
       <SharedResearchOutput {...props} doi={doiValue} />,
     );
-    expect(getByText(doiValue)?.closest('a')?.href).toBe(
-      `https://doi.org/${doiValue}`,
-    );
+    expect(getByText(doiValue)?.closest('a')?.href).toBe(expectedLink);
   });
   it('contains rrid and builds the correct href', () => {
     const rridValue = 'RRID:SCR_007358';
+    const expectedLink = new URL(
+      `https://scicrunch.org/resolver/${rridValue}`,
+    ).toString();
     const { getByText } = render(
       <SharedResearchOutput {...props} rrid={rridValue} />,
     );
-    expect(getByText(rridValue)?.closest('a')?.href).toBe(
-      `https://scicrunch.org/resolver/${rridValue}`,
-    );
+    expect(getByText(rridValue)?.closest('a')?.href).toBe(expectedLink);
   });
   it('contains accession', () => {
     const accessionValue = 'NC_000001.11';
@@ -157,27 +157,26 @@ describe('additional information', () => {
   it('contains labCatalogNumber and builds the correct href', () => {
     const labCatalogNumberLink = 'https://example.com';
     const labCatalogNumberText = '0000-0004-9946-3696';
-    const { getByTestId, rerender } = render(
+    const expectedLink = new URL(labCatalogNumberLink).toString();
+    const { rerender, queryByText } = render(
       <SharedResearchOutput
         {...props}
         labCatalogNumber={labCatalogNumberLink}
       />,
     );
-    expect(getByTestId('labCatalogNumber')?.firstElementChild?.tagName).toMatch(
-      /a/i,
-    );
     expect(
-      getByTestId('labCatalogNumber')?.firstElementChild,
-    ).toHaveTextContent(/external.link/i);
+      queryByText(/external.link/i, { selector: 'span' })?.closest('a')?.href,
+    ).toBe(expectedLink);
+
     rerender(
       <SharedResearchOutput
         {...props}
         labCatalogNumber={labCatalogNumberText}
       />,
     );
-    expect(getByTestId('labCatalogNumber').childElementCount).toBe(0);
-    expect(getByTestId('labCatalogNumber')).toHaveTextContent(
-      labCatalogNumberText,
-    );
+    expect(
+      queryByText(/external.link/i, { selector: 'span' }),
+    ).not.toBeInTheDocument();
+    expect(queryByText(labCatalogNumberText)).toBeInTheDocument();
   });
 });

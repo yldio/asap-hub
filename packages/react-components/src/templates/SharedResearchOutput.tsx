@@ -10,6 +10,7 @@ import { RichText, SharedResearchOutputHeaderCard } from '../organisms';
 import { createMailTo } from '../mail';
 import { externalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
+import { isLink } from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -86,9 +87,6 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   labCatalogNumber,
   ...props
 }) => {
-  const isLabCatalogNumberALink =
-    labCatalogNumber?.startsWith('https://') ||
-    labCatalogNumber?.startsWith('http://');
   return (
     <div css={containerStyles}>
       <BackLink href={backHref} />
@@ -156,7 +154,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 <li css={additionalInformationEntryStyles}>
                   <strong>Identifier (DOI)</strong>
                   <span css={additionalInformationValueStyles}>
-                    <Anchor href={`https://doi.org/${doi}`}>
+                    <Anchor href={new URL(`https://doi.org/${doi}`).toString()}>
                       <div css={externalLinkStyle}>
                         <span>{doi}</span>
                         {externalLinkIcon}
@@ -172,7 +170,11 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 <li css={additionalInformationEntryStyles}>
                   <strong>Identifier (RRID)</strong>
                   <span css={additionalInformationValueStyles}>
-                    <Anchor href={`https://scicrunch.org/resolver/${rrid}`}>
+                    <Anchor
+                      href={new URL(
+                        `https://scicrunch.org/resolver/${rrid}`,
+                      ).toString()}
+                    >
                       <div css={externalLinkStyle}>
                         <span>{rrid}</span>
                         {externalLinkIcon}
@@ -198,12 +200,9 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 <Divider />
                 <li css={additionalInformationEntryStyles}>
                   <strong>Lab Catalog Number</strong>
-                  <span
-                    css={additionalInformationValueStyles}
-                    data-testid="labCatalogNumber"
-                  >
-                    {isLabCatalogNumberALink ? (
-                      <Anchor href={labCatalogNumber}>
+                  <span css={additionalInformationValueStyles}>
+                    {isLink(labCatalogNumber) ? (
+                      <Anchor href={new URL(labCatalogNumber).toString()}>
                         <div css={externalLinkStyle}>
                           <span>External Link</span>
                           {externalLinkIcon}

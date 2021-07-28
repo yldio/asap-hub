@@ -26,6 +26,15 @@ export const getSvgAspectRatio = (element: React.ReactElement): number => {
   return width / height;
 };
 
+export const isLink = (link: string = '') => {
+  try {
+    new URL(link);
+  } catch (_) {
+    return false;
+  }
+  return true;
+};
+
 export const isInternalLink = (href: string): [boolean, string] => {
   if (globalThis.location) {
     const url = new URL(href, globalThis.location.href);

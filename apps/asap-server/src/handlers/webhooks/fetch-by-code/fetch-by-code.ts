@@ -6,6 +6,7 @@ import { UserController } from '../../../controllers/users';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { Handler } from '../../../utils/types';
 import { algoliaSearchApiKey } from '../../../config';
+import logger from '../../../utils/logger';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -27,9 +28,16 @@ export const fetchUserByCodeHandlerFactory = (
     };
 
     const user = await userController.fetchByCode(code);
-    const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-      validUntil: Date.now() + 36001, // which is one second over the TTL of the ID token
-    });
+    let apiKey: string | null;
+
+    try {
+      apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
+        validUntil: Date.now() + 36001, // which is one second over the TTL of the ID token
+      });
+    } catch (e) {
+      apiKey = null;
+      logger.error(e, 'Error during generating the key for Algolia search');
+    }
 
     return {
       payload: {

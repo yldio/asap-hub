@@ -47,9 +47,6 @@ const textStyles = css({
     display: 'none',
   },
   textDecoration: 'underline',
-  ':hover': {
-    textDecoration: 'none',
-  },
 });
 
 type ExternalLinkProps = {
@@ -66,7 +63,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     <Anchor href={href}>
       <div css={styles}>
         {icon}
-        <div css={[textStyles, linkStyles]}>{label}</div>
+        <div css={[textStyles, linkStyles.light]}>{label}</div>
       </div>
     </Anchor>
   </div>

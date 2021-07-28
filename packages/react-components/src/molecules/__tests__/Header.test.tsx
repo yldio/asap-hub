@@ -40,8 +40,8 @@ it('does not render an opaque background when set to transparent', () => {
 
 it('enables the header link when user is onboarded', () => {
   const { container, rerender } = render(<Header enabled={true} />);
-  expect(container.querySelector('a')).toBeDefined();
+  expect(container.querySelector('a')).toHaveAttribute('href', '/');
 
   rerender(<Header enabled={false} />);
-  expect(container.querySelector('a')).toBeNull();
+  expect(container.querySelector('a')).not.toHaveAttribute('href', '');
 });

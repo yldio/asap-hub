@@ -14,7 +14,6 @@ const containerStyles = (enabled: boolean) =>
     padding: '0 24px',
     display: 'flex',
     justifyContent: 'center',
-    cursor: enabled ? 'pointer' : 'cursor',
   });
 const containerOpaqueStyles = css({
   backgroundColor: paper.rgb,
@@ -35,25 +34,17 @@ const Header: React.FC<HeaderProps> = ({
   transparent = false,
   logoHref = '/',
 }) => {
-  const Logo = () => (
-    <img
-      alt="ASAP logo"
-      src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
-      css={logoStyles}
-    />
-  );
-
   return (
     <header
       css={[containerStyles(enabled), transparent || containerOpaqueStyles]}
     >
-      {enabled ? (
-        <Link href={logoHref}>
-          <Logo />
-        </Link>
-      ) : (
-        <Logo />
-      )}
+      <Link href={enabled ? logoHref : undefined}>
+        <img
+          alt="ASAP logo"
+          src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
+          css={logoStyles}
+        />
+      </Link>
     </header>
   );
 };

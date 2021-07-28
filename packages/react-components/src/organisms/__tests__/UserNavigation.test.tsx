@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import UserNavigation from '../UserNavigation';
 
 const props: ComponentProps<typeof UserNavigation> = {
-  userOnboarded: false,
   userProfileHref: '/profile',
   teams: [
     { name: 'Team 1', href: '/team-1' },

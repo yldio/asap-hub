@@ -48,6 +48,7 @@ export interface UserNavigationProps {
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
   readonly aboutHref: string;
 }
+
 const UserNavigation: React.FC<UserNavigationProps> = ({
   userOnboarded = true,
   userProfileHref,

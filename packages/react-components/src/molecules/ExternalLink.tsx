@@ -4,6 +4,7 @@ import { Anchor } from '../atoms';
 import { externalLinkIcon } from '../icons';
 import { fern, pine } from '../colors';
 import { mobileScreen, perRem } from '../pixels';
+import { themeStyles as linkStyles } from '../atoms/Link';
 
 const containerStyles = css({
   display: 'flex',
@@ -61,7 +62,7 @@ const ExternalLink: React.FC<ExternalLinkProps> = ({
     <Anchor href={href}>
       <div css={styles}>
         {icon}
-        <div css={textStyles}>{label}</div>
+        <div css={[textStyles, linkStyles.light]}>{label}</div>
       </div>
     </Anchor>
   </div>

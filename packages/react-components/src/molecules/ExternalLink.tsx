@@ -46,7 +46,6 @@ const textStyles = css({
   [`@media (max-width: ${mobileScreen.max}px)`]: {
     display: 'none',
   },
-  textDecoration: 'underline',
 });
 
 type ExternalLinkProps = {

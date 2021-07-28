@@ -1,20 +1,26 @@
-import nock from 'nock';
 import { APIGatewayProxyResult } from 'aws-lambda';
-import { config } from '@asap-hub/squidex';
-
+import Boom from '@hapi/boom';
 import { apiGatewayEvent } from '../../../helpers/events';
-import { auth0SharedSecret as secret } from '../../../../src/config';
+import {
+  algoliaSearchApiKey,
+  auth0SharedSecret as secret,
+} from '../../../../src/config';
 import { identity } from '../../../helpers/squidex';
-import Users, {
-  buildGraphQLQueryFetchUsers,
-} from '../../../../src/controllers/users';
-import { fetchUserResponse } from './fetch-by-code.fixtures';
 import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
+import { SearchClient } from 'algoliasearch';
+import { userControllerMock } from '../../../mocks/user-controller.mock';
+import { userResponse } from '../../../fixtures/users.fixtures';
 
 describe('Fetch-user-by-code handler', () => {
-  const handler = fetchUserByCodeHandlerFactory(new Users());
+  const algoliaClientMock = {
+    generateSecuredApiKey: jest.fn(),
+  } as unknown as jest.Mocked<SearchClient>;
+  const handler = fetchUserByCodeHandlerFactory(
+    userControllerMock,
+    algoliaClientMock,
+  );
 
-  describe('POST /webhook/users/{code} - validation', () => {
+  describe('Validation', () => {
     test("return 400 when code isn't present", async () => {
       const result = (await handler(
         apiGatewayEvent({
@@ -75,28 +81,8 @@ describe('Fetch-user-by-code handler', () => {
       identity();
     });
 
-    afterEach(() => {
-      expect(nock.isDone()).toBe(true);
-    });
-
     test("returns 403 when code doesn't exist", async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(),
-          variables: {
-            filter: `data/connections/iv/code eq 'notFound'`,
-            top: 1,
-            skip: 0,
-          },
-        })
-        .reply(200, {
-          data: {
-            queryUsersContentsWithTotal: {
-              total: 0,
-              items: [],
-            },
-          },
-        });
+      userControllerMock.fetchByCode.mockRejectedValueOnce(Boom.forbidden());
 
       const result = (await handler(
         apiGatewayEvent({
@@ -112,17 +98,8 @@ describe('Fetch-user-by-code handler', () => {
       expect(result.statusCode).toStrictEqual(403);
     });
 
-    test('returns 200 when user exists', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUsers(),
-          variables: {
-            filter: `data/connections/iv/code eq 'welcomeCode'`,
-            top: 1,
-            skip: 0,
-          },
-        })
-        .reply(200, fetchUserResponse);
+    test('returns status 200 and user data when the user exists', async () => {
+      userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
 
       const result = (await handler(
         apiGatewayEvent({
@@ -136,6 +113,35 @@ describe('Fetch-user-by-code handler', () => {
       )) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
+      expect(JSON.parse(result.body)).toMatchObject(userResponse);
+    });
+
+    test('should return an algolia API key', async () => {
+      const mockApiKey = 'test-api-key';
+      algoliaClientMock.generateSecuredApiKey.mockReturnValueOnce(mockApiKey);
+      userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
+
+      const result = (await handler(
+        apiGatewayEvent({
+          pathParameters: {
+            code: 'welcomeCode',
+          },
+          headers: {
+            Authorization: `Basic ${secret}`,
+          },
+        }),
+      )) as APIGatewayProxyResult;
+
+      expect(result.statusCode).toStrictEqual(200);
+      expect(JSON.parse(result.body)).toMatchObject({
+        algoliaApiKey: mockApiKey,
+      });
+      expect(algoliaClientMock.generateSecuredApiKey).toBeCalledWith(
+        algoliaSearchApiKey,
+        {
+          validUntil: expect.any(Number),
+        },
+      );
     });
   });
 });

@@ -33,20 +33,18 @@ const Header: React.FC<HeaderProps> = ({
   enabled = true,
   transparent = false,
   logoHref = '/',
-}) => {
-  return (
-    <header
-      css={[containerStyles(enabled), transparent || containerOpaqueStyles]}
-    >
-      <Link href={enabled ? logoHref : undefined}>
-        <img
-          alt="ASAP logo"
-          src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
-          css={logoStyles}
-        />
-      </Link>
-    </header>
-  );
-};
+}) => (
+  <header
+    css={[containerStyles(enabled), transparent || containerOpaqueStyles]}
+  >
+    <Link href={enabled ? logoHref : undefined}>
+      <img
+        alt="ASAP logo"
+        src={transparent ? asapPaddedWhiteImage : asapPaddedImage}
+        css={logoStyles}
+      />
+    </Link>
+  </header>
+);
 
 export default Header;

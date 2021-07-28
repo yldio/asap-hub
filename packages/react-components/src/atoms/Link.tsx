@@ -12,6 +12,7 @@ const styles = css({
     textDecoration: 'none',
   },
 });
+
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({
     color: fern.rgb,

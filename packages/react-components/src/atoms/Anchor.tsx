@@ -8,13 +8,7 @@ import { useHasRouter } from '../routing';
 const resetStyles = css({
   outline: 'none',
   textDecoration: 'none',
-  ':hover, :focus': {
-    textDecoration: 'none',
-  },
   color: 'unset',
-  ':active': {
-    color: 'unset',
-  },
 });
 
 // Lint rules don't understand abstractions ...

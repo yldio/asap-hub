@@ -76,6 +76,13 @@ const serverlessConfig: AWS = {
       ALGOLIA_SEARCH_API_KEY: `\${ssm:algolia-search-api-key-${
         SLS_STAGE === 'production' ? 'prod' : 'dev'
       }}`,
+      ALGOLIA_RESEARCH_OUTPUT_INDEX: `asap-hub_research_outputs_${
+        SLS_STAGE === 'production'
+          ? 'prod'
+          : SLS_STAGE === 'dev'
+          ? 'dev'
+          : `CI-${SLS_STAGE}`
+      }`,
       CURRENT_REVISION: '${env:CI_COMMIT_SHA}',
     },
     iamRoleStatements: [

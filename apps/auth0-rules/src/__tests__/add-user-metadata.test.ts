@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { UserResponse } from '@asap-hub/model';
+import { UserMetadataResponse } from '@asap-hub/model';
 import type { User, RuleContext } from '../types';
 import addUserMetadata from '../add-user-metadata';
 
@@ -77,7 +77,7 @@ const context: RuleContext = {
   authorization: { roles: [] },
 };
 
-const apiUser: UserResponse = {
+const apiUser: UserMetadataResponse = {
   onboarded: true,
   displayName: 'Joao Tiago',
   firstName: 'Joao',
@@ -92,6 +92,7 @@ const apiUser: UserResponse = {
   skills: [],
   questions: [],
   role: 'Grantee',
+  algoliaApiKey: 'test-api-key',
 };
 
 describe('Auth0 Rule - Add User Metadata', () => {
@@ -176,6 +177,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
           role: 'Lead PI (Core Leadership)',
         },
       ],
+      algoliaApiKey: 'test-api-key',
     });
   });
 
@@ -223,6 +225,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
           role: 'Lead PI (Core Leadership)',
         },
       ],
+      algoliaApiKey: 'test-api-key',
     });
   });
 });

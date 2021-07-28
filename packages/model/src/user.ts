@@ -124,6 +124,10 @@ export interface UserResponse extends Invitee {
   social?: UserSocialLinks;
 }
 
+export type UserMetadataResponse = UserResponse & {
+  algoliaApiKey: string | null;
+};
+
 export interface UserPatchRequest {
   displayName?: string;
   contactEmail?: string;

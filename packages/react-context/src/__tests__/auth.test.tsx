@@ -77,6 +77,7 @@ describe('useCurrentUser', () => {
           lastName: 'Doe',
           displayName: 'John Doe',
           teams: [],
+          algoliaApiKey: 'asdasda',
         },
       }),
     });

@@ -1,5 +1,5 @@
 import type { Auth0Client } from '@auth0/auth0-spa-js';
-import type { UserResponse } from '@asap-hub/model';
+import type { UserMetadataResponse, UserResponse } from '@asap-hub/model';
 
 import * as config from './config';
 import auth0PubKeys from './pubKeys';
@@ -7,7 +7,7 @@ import auth0PubKeys from './pubKeys';
 export { config, auth0PubKeys };
 
 export type User = Pick<
-  UserResponse,
+  UserMetadataResponse,
   | 'id'
   | 'onboarded'
   | 'displayName'
@@ -15,6 +15,7 @@ export type User = Pick<
   | 'firstName'
   | 'lastName'
   | 'avatarUrl'
+  | 'algoliaApiKey'
 > & {
   teams: ReadonlyArray<
     Omit<UserResponse['teams'][0], 'approach' | 'responsibilities'>

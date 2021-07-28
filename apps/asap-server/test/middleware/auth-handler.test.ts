@@ -67,6 +67,7 @@ describe('Authentication middleware', () => {
             role: 'Collaborating PI',
           },
         ],
+        algoliaApiKey: 'test-api-key',
       },
       given_name: 'Joao',
       family_name: 'Tiago',

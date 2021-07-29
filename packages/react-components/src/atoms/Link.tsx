@@ -9,7 +9,7 @@ import { Anchor } from '.';
 const styles = css({
   textDecoration: 'underline',
   ':hover': {
-    textDecoration: 'none',
+    textDecoration: 'underline',
   },
 });
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {

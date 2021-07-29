@@ -38,6 +38,7 @@ const createAuth0 = (
           role: 'Lead PI (Core Leadership)',
         },
       ],
+      algoliaApiKey: 'test-api-key',
       ...user,
     };
     auth0User = {

@@ -23,9 +23,9 @@ export interface Request {
   query?: Query;
 }
 
-export interface Response {
+export interface Response<T = unknown> {
   statusCode?: number | undefined;
-  payload?: unknown;
+  payload?: T;
   headers?:
     | {
         [header: string]: string | number | boolean;

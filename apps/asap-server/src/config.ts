@@ -16,6 +16,9 @@ const {
   NODE_ENV,
   CURRENT_REVISION,
   SENTRY_DSN,
+  ALGOLIA_APP_ID,
+  ALGOLIA_SEARCH_API_KEY,
+  ALGOLIA_RESEARCH_OUTPUT_INDEX,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -37,3 +40,7 @@ export const logLevel = LOG_LEVEL || 'info';
 export const logEnabled = NODE_ENV === 'production' || LOG_ENABLED === 'true';
 export const currentRevision = CURRENT_REVISION || 'default';
 export const sentryDsn = SENTRY_DSN;
+export const algoliaAppId = ALGOLIA_APP_ID || 'LVYWOPQ0A9';
+export const algoliaSearchApiKey = ALGOLIA_SEARCH_API_KEY || '';
+export const algoliaResearchOutputIndex =
+  ALGOLIA_RESEARCH_OUTPUT_INDEX || 'asap-hub_research_outputs_dev';

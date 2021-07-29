@@ -1,5 +1,5 @@
 import type { User } from '@asap-hub/auth';
-import type { UserResponse } from '@asap-hub/model';
+import type { UserMetadataResponse } from '@asap-hub/model';
 import { URL, URLSearchParams } from 'url';
 import got from 'got';
 import type { Rule } from './types';
@@ -31,12 +31,13 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
       lastName,
       avatarUrl,
       teams,
+      algoliaApiKey,
     } = await got(`${apiURL}/webhook/users/${auth0User.user_id}`, {
       headers: {
         Authorization: `Basic ${apiSharedSecret}`,
       },
       timeout: 10000,
-    }).json<UserResponse>();
+    }).json<UserMetadataResponse>();
 
     const user: User = {
       id,
@@ -51,6 +52,7 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
         displayName: team.displayName,
         role: team.role,
       })),
+      algoliaApiKey,
     };
     context.idToken[new URL('/user', redirect_uri).toString()] = user;
     // Uncomment for dev auth0. This allows pointing to dev api from local FE

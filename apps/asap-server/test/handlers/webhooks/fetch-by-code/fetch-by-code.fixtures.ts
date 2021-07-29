@@ -1,4 +1,4 @@
-import { ResponseFetchUsers } from '../../../src/controllers/users';
+import { ResponseFetchUsers } from '../../../../src/controllers/users';
 
 export const fetchUserResponse: { data: ResponseFetchUsers } = {
   data: {

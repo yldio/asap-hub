@@ -43,6 +43,7 @@ describe('Team controller', () => {
         role: 'Collaborating PI',
       },
     ],
+    algoliaApiKey: 'test-api-key',
   };
 
   const getUserFilterExpectation = (teamId: string): string =>

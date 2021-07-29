@@ -20,6 +20,7 @@ export const userMock: User = {
       role: 'Collaborating PI',
     },
   ],
+  algoliaApiKey: 'test-mock-key',
 };
 
 const user: Auth0User = {

@@ -96,6 +96,7 @@ export const LoggedIn: React.FC<{
           role: 'Lead PI (Core Leadership)',
         },
       ],
+      algoliaApiKey: 'algolia-mock-key',
       ...user,
     };
     auth0User = {

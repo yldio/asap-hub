@@ -35,7 +35,7 @@ export const fetchUserByCodeHandlerFactory = (
 
     try {
       apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-        validUntil: Date.now() + 36001, // which is one second over the TTL of the ID token
+        validUntil: Date.now() + 36060, // which is one minute over the TTL of the ID token
       });
     } catch (e) {
       apiKey = null;

@@ -86,146 +86,139 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   accession,
   labCatalogNumber,
   ...props
-}) => {
-  return (
-    <div css={containerStyles}>
-      <BackLink href={backHref} />
-      <div css={cardsStyles}>
-        <SharedResearchOutputHeaderCard {...props} />
-        {(description || !!tags.length) && (
-          <Card>
-            {description && (
-              <div css={{ paddingBottom: `${12 / perRem}em` }}>
-                <Headline2 styleAsHeading={4}>Description</Headline2>
-                <RichText poorText text={description} />
-              </div>
-            )}
-            {description && !!tags.length && <Divider />}
-            {!!tags.length && (
-              <>
-                <Headline2 styleAsHeading={4}>Tags</Headline2>
-                <TagList tags={tags} />
-              </>
-            )}
-          </Card>
-        )}
-        {accessInstructions && (
-          <Card>
-            <div css={{ paddingBottom: `${12 / perRem}em` }}>
-              <Headline2 styleAsHeading={4}>Access Instructions</Headline2>
-              <RichText poorText text={accessInstructions} />
-            </div>
-          </Card>
-        )}
+}) => (
+  <div css={containerStyles}>
+    <BackLink href={backHref} />
+    <div css={cardsStyles}>
+      <SharedResearchOutputHeaderCard {...props} />
+      {(description || !!tags.length) && (
         <Card>
-          <Headline2 styleAsHeading={4}>Additional Information</Headline2>
-          <ol css={additionalInformationListStyles}>
-            <li css={additionalInformationEntryStyles}>
-              <strong>Sharing Status</strong>
-              <span css={additionalInformationValueStyles}>
-                {sharingStatus}
-              </span>
-            </li>
-            {asapFunded === undefined || (
-              <>
-                <Divider />
-                <li css={additionalInformationEntryStyles}>
-                  <strong>ASAP Funded</strong>
-                  <span css={additionalInformationValueStyles}>
-                    {asapFunded ? 'Yes' : 'No'}
-                  </span>
-                </li>
-              </>
-            )}
-            {usedInPublication === undefined || (
-              <>
-                <Divider />
-                <li css={additionalInformationEntryStyles}>
-                  <strong>Used in a Publication</strong>
-                  <span css={additionalInformationValueStyles}>
-                    {usedInPublication ? 'Yes' : 'No'}
-                  </span>
-                </li>
-              </>
-            )}
-            {doi === undefined || (
-              <>
-                <Divider />
-                <li css={additionalInformationEntryStyles}>
-                  <strong>Identifier (DOI)</strong>
-                  <span css={additionalInformationValueStyles}>
-                    <Anchor href={new URL(`https://doi.org/${doi}`).toString()}>
-                      <div css={externalLinkStyle}>
-                        <span>{doi}</span>
-                        {externalLinkIcon}
-                      </div>
-                    </Anchor>
-                  </span>
-                </li>
-              </>
-            )}
-            {rrid === undefined || (
-              <>
-                <Divider />
-                <li css={additionalInformationEntryStyles}>
-                  <strong>Identifier (RRID)</strong>
-                  <span css={additionalInformationValueStyles}>
-                    <Anchor
-                      href={new URL(
-                        `https://scicrunch.org/resolver/${rrid}`,
-                      ).toString()}
-                    >
-                      <div css={externalLinkStyle}>
-                        <span>{rrid}</span>
-                        {externalLinkIcon}
-                      </div>
-                    </Anchor>
-                  </span>
-                </li>
-              </>
-            )}
-            {accession === undefined || (
-              <>
-                <Divider />
-                <li css={additionalInformationEntryStyles}>
-                  <strong>Identifier (Accession #)</strong>
-                  <span css={additionalInformationValueStyles}>
-                    {accession}
-                  </span>
-                </li>
-              </>
-            )}
-            {labCatalogNumber === undefined || (
-              <>
-                <Divider />
-                <li css={additionalInformationEntryStyles}>
-                  <strong>Lab Catalog Number</strong>
-                  <span css={additionalInformationValueStyles}>
-                    {isLink(labCatalogNumber) ? (
-                      <Anchor href={new URL(labCatalogNumber).toString()}>
-                        <div css={externalLinkStyle}>
-                          <span>External Link</span>
-                          {externalLinkIcon}
-                        </div>
-                      </Anchor>
-                    ) : (
-                      labCatalogNumber
-                    )}
-                  </span>
-                </li>
-              </>
-            )}
-          </ol>
+          {description && (
+            <div css={{ paddingBottom: `${12 / perRem}em` }}>
+              <Headline2 styleAsHeading={4}>Description</Headline2>
+              <RichText poorText text={description} />
+            </div>
+          )}
+          {description && !!tags.length && <Divider />}
+          {!!tags.length && (
+            <>
+              <Headline2 styleAsHeading={4}>Tags</Headline2>
+              <TagList tags={tags} />
+            </>
+          )}
         </Card>
-        {!!pmsEmails.length && (
-          <CtaCard href={createMailTo(pmsEmails)} buttonText="Contact PM">
-            <strong>Interested in what you have seen?</strong>
-            <br /> Reach out to the PMs associated with this output
-          </CtaCard>
-        )}
-      </div>
+      )}
+      {accessInstructions && (
+        <Card>
+          <div css={{ paddingBottom: `${12 / perRem}em` }}>
+            <Headline2 styleAsHeading={4}>Access Instructions</Headline2>
+            <RichText poorText text={accessInstructions} />
+          </div>
+        </Card>
+      )}
+      <Card>
+        <Headline2 styleAsHeading={4}>Additional Information</Headline2>
+        <ol css={additionalInformationListStyles}>
+          <li css={additionalInformationEntryStyles}>
+            <strong>Sharing Status</strong>
+            <span css={additionalInformationValueStyles}>{sharingStatus}</span>
+          </li>
+          {asapFunded === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>ASAP Funded</strong>
+                <span css={additionalInformationValueStyles}>
+                  {asapFunded ? 'Yes' : 'No'}
+                </span>
+              </li>
+            </>
+          )}
+          {usedInPublication === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Used in a Publication</strong>
+                <span css={additionalInformationValueStyles}>
+                  {usedInPublication ? 'Yes' : 'No'}
+                </span>
+              </li>
+            </>
+          )}
+          {doi === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Identifier (DOI)</strong>
+                <span css={additionalInformationValueStyles}>
+                  <Anchor href={new URL(`https://doi.org/${doi}`).toString()}>
+                    <div css={externalLinkStyle}>
+                      <span>{doi}</span>
+                      {externalLinkIcon}
+                    </div>
+                  </Anchor>
+                </span>
+              </li>
+            </>
+          )}
+          {rrid === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Identifier (RRID)</strong>
+                <span css={additionalInformationValueStyles}>
+                  <Anchor
+                    href={new URL(
+                      `https://scicrunch.org/resolver/${rrid}`,
+                    ).toString()}
+                  >
+                    <div css={externalLinkStyle}>
+                      <span>{rrid}</span>
+                      {externalLinkIcon}
+                    </div>
+                  </Anchor>
+                </span>
+              </li>
+            </>
+          )}
+          {accession === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Identifier (Accession #)</strong>
+                <span css={additionalInformationValueStyles}>{accession}</span>
+              </li>
+            </>
+          )}
+          {labCatalogNumber === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Lab Catalog Number</strong>
+                <span css={additionalInformationValueStyles}>
+                  {isLink(labCatalogNumber) ? (
+                    <Anchor href={new URL(labCatalogNumber).toString()}>
+                      <div css={externalLinkStyle}>
+                        <span>External Link</span>
+                        {externalLinkIcon}
+                      </div>
+                    </Anchor>
+                  ) : (
+                    labCatalogNumber
+                  )}
+                </span>
+              </li>
+            </>
+          )}
+        </ol>
+      </Card>
+      {!!pmsEmails.length && (
+        <CtaCard href={createMailTo(pmsEmails)} buttonText="Contact PM">
+          <strong>Interested in what you have seen?</strong>
+          <br /> Reach out to the PMs associated with this output
+        </CtaCard>
+      )}
     </div>
-  );
-};
-
+  </div>
+);
 export default SharedResearchOutput;

@@ -135,7 +135,10 @@ describe('additional information', () => {
     const { getByText } = render(
       <SharedResearchOutput {...props} doi={doiValue} />,
     );
-    expect(getByText(doiValue)?.closest('a')?.href).toBe(expectedLink);
+    expect(getByText(doiValue)?.closest('a')).toHaveAttribute(
+      'href',
+      expectedLink,
+    );
   });
   it('contains rrid and builds the correct href', () => {
     const rridValue = 'RRID:SCR_007358';
@@ -145,7 +148,10 @@ describe('additional information', () => {
     const { getByText } = render(
       <SharedResearchOutput {...props} rrid={rridValue} />,
     );
-    expect(getByText(rridValue)?.closest('a')?.href).toBe(expectedLink);
+    expect(getByText(rridValue)?.closest('a')).toHaveAttribute(
+      'href',
+      expectedLink,
+    );
   });
   it('contains accession', () => {
     const accessionValue = 'NC_000001.11';
@@ -165,8 +171,8 @@ describe('additional information', () => {
       />,
     );
     expect(
-      queryByText(/external.link/i, { selector: 'span' })?.closest('a')?.href,
-    ).toBe(expectedLink);
+      queryByText(/external.link/i, { selector: 'span' })?.closest('a'),
+    ).toHaveAttribute('href', expectedLink);
 
     rerender(
       <SharedResearchOutput

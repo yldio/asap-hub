@@ -11,6 +11,9 @@ const styles = css({
   ':hover': {
     textDecoration: 'underline',
   },
+  ':active': {
+    textDecoration: 'none',
+  },
 });
 export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({

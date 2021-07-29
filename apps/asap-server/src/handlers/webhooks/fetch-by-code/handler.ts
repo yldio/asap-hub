@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import algoliasearch from 'algoliasearch';
 import { algoliaAppId, algoliaSearchApiKey } from '../../../config';
 import Users from '../../../controllers/users';

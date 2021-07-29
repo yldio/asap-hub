@@ -22,7 +22,7 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),
 };
 
-const iconThemeStyle: Record<ThemeVariant, SerializedStyles> = {
+const iconThemeStyles: Record<ThemeVariant, SerializedStyles> = {
   light: css({
     svg: {
       stroke: fern.rgb,
@@ -83,7 +83,7 @@ const Link: React.FC<LinkProps> = ({
 }) => {
   const linkStyles = buttonStyle
     ? [getButtonStyles({ primary, small, enabled, children })]
-    : [styles, themeStyles[theme], applyIconTheme && iconThemeStyle[theme]];
+    : [styles, themeStyles[theme], applyIconTheme && iconThemeStyles[theme]];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   return (
     <Anchor href={href} enabled={enabled} aria-label={label} css={linkStyles}>

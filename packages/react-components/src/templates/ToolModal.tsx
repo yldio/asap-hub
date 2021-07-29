@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { TeamTool } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
+import { globeIcon } from '../icons';
+import { TEAM_TOOL_URL } from '@asap-hub/validation';
+
 import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 import { EditModal } from '../organisms';
-import { TEAM_TOOL_URL } from '@asap-hub/validation';
 
 const fieldsContainer = css({
   display: 'grid',
@@ -56,6 +58,10 @@ const ToolModal: React.FC<ToolModalProps> = ({
             onChange={setNewUrl}
             enabled={!isSaving}
             pattern={TEAM_TOOL_URL.source}
+            labelIndicator={globeIcon}
+            getValidationMessage={() =>
+              'Please enter a valid URL, starting with http:// or https://'
+            }
             required
           />
           <LabeledTextField

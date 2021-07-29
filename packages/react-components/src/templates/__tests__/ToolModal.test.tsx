@@ -39,6 +39,33 @@ it('renders default values into inputs', () => {
   `);
 });
 
+it('allows url with http protocol', () => {
+  const { getAllByRole } = render(
+    <ToolModal {...props} url="http://example.com/tool" />,
+    { wrapper: StaticRouter },
+  );
+
+  expect(getAllByRole('textbox')[0]).toBeValid();
+});
+
+it('allows url with https protocol', () => {
+  const { getAllByRole } = render(
+    <ToolModal {...props} url="https://example.com/tool" />,
+    { wrapper: StaticRouter },
+  );
+
+  expect(getAllByRole('textbox')[0]).toBeValid();
+});
+
+it('does not allow any other uri scheme', () => {
+  const { getAllByRole } = render(
+    <ToolModal {...props} url="slack://example" />,
+    { wrapper: StaticRouter },
+  );
+
+  expect(getAllByRole('textbox')[0]).toBeInvalid();
+});
+
 it('triggers the save function', async () => {
   const jestFn = jest.fn();
   const { getByText } = render(

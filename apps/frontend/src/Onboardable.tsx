@@ -4,9 +4,11 @@ import { isUserOnboardable } from '@asap-hub/validation';
 
 import { useUserByIdLoadable } from './network/users/state';
 
+type OnboardableResult = ReturnType<typeof isUserOnboardable> | undefined;
+
 type OnboardableLoadUserProps = {
   id: string;
-  children: (state: { isOnboardable: boolean }) => ReactNode;
+  children: (state: OnboardableResult) => ReactNode;
 };
 const OnboardableLoadUser: FC<OnboardableLoadUserProps> = ({
   id,
@@ -21,7 +23,7 @@ const OnboardableLoadUser: FC<OnboardableLoadUserProps> = ({
 };
 
 type OnboardableProps = {
-  children: (state: { isOnboardable: boolean | null }) => ReactNode;
+  children: (state: OnboardableResult) => ReactNode;
 };
 export const Onboardable: FC<OnboardableProps> = ({ children }) => {
   const auth0user = useCurrentUser();
@@ -32,7 +34,7 @@ export const Onboardable: FC<OnboardableProps> = ({ children }) => {
       </OnboardableLoadUser>
     );
   }
-  return <>{children({ isOnboardable: null })}</>;
+  return <>{children(undefined)}</>;
 };
 
 export default Onboardable;

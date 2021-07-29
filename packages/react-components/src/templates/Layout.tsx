@@ -11,6 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
+import { isUserOnboardable } from '@asap-hub/validation';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, OnboardingHeader, ToastStack } from '../organisms';
@@ -159,12 +160,14 @@ const userMenuShownStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-  readonly isOnboardable?: boolean | null;
+  readonly onboardModalHref?: string;
+  readonly onboardable?: ReturnType<typeof isUserOnboardable>;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
 const Layout: FC<LayoutProps> = ({
   children,
-  isOnboardable = null,
+  onboardable,
+  onboardModalHref,
   ...userNavProps
 }) => {
   const [menuShown, setMenuShown] = useState(false);
@@ -193,8 +196,11 @@ const Layout: FC<LayoutProps> = ({
 
   return (
     <ToastStack>
-      {isOnboardable !== null && (
-        <OnboardingHeader isOnboardable={isOnboardable} />
+      {onboardable && (
+        <OnboardingHeader
+          onboardModalHref={onboardModalHref}
+          onboardable={onboardable}
+        />
       )}
       <article css={[styles, menuShown || { overflow: 'hidden' }]}>
         {/* order relevant for overlap */}

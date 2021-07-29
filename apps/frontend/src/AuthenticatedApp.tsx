@@ -15,6 +15,7 @@ import { auth0State } from './auth/state';
 import Frame from './structure/Frame';
 import CheckOnboarded from './auth/CheckOnboarded';
 import Onboardable from './Onboardable';
+import { useCurrentUserProfileTabRoute } from './hooks';
 
 const loadNewsAndEvents = () =>
   import(/* webpackChunkName: "news-and-events" */ './news/Routes');
@@ -55,15 +56,19 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   }, []);
 
   const user = useCurrentUser();
+  const tabRoute = useCurrentUserProfileTabRoute();
   if (!user || !recoilAuth0) {
     return <Loading />;
   }
 
   return (
     <Onboardable>
-      {({ isOnboardable }) => (
+      {(onboardable) => (
         <Layout
-          isOnboardable={isOnboardable}
+          onboardable={onboardable}
+          onboardModalHref={
+            tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
+          }
           userProfileHref={network({}).users({}).user({ userId: user.id }).$}
           teams={user.teams.map(({ id, displayName = '' }) => ({
             name: displayName,

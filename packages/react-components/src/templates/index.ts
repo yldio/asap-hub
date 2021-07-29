@@ -30,6 +30,7 @@ export { default as NewsAndEventsPageBody } from './NewsAndEventsPageBody';
 export { default as NewsAndEventsPageHeader } from './NewsAndEventsPageHeader';
 export { default as NewsOrEventPage } from './NewsOrEventPage';
 export { default as NotFoundPage } from './NotFoundPage';
+export { default as OnboardModal } from './OnboardModal';
 export { default as OpenQuestionsModal } from './OpenQuestionsModal';
 export { default as PasswordResetEmailSentPage } from './PasswordResetEmailSentPage';
 export { default as PersonalInfoModal } from './PersonalInfoModal';

@@ -2,6 +2,7 @@ import { Route, useRouteMatch } from 'react-router-dom';
 import {
   PersonalInfoModal,
   ContactInfoModal,
+  OnboardModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { network } from '@asap-hub/routing';
@@ -50,6 +51,11 @@ const Editing: React.FC<EditingProps> = ({ user, backHref }) => {
             backHref={backHref}
             onSave={patchUser}
           />
+        </Frame>
+      </Route>
+      <Route exact path={path + route.editOnboarded.template}>
+        <Frame title="Publish your profile">
+          <OnboardModal onSave={patchUser} backHref={backHref} />
         </Frame>
       </Route>
     </>

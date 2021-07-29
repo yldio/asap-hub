@@ -6,14 +6,7 @@ import {
   useState,
   useContext,
 } from 'react';
-import {
-  Switch,
-  Route,
-  useRouteMatch,
-  Redirect,
-  useLocation,
-} from 'react-router-dom';
-import { relative } from 'path';
+import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import { UserProfilePage, NotFoundPage } from '@asap-hub/react-components';
 import {
   useCurrentUser,
@@ -21,10 +14,11 @@ import {
   UserProfileContext,
 } from '@asap-hub/react-context';
 import imageCompression from 'browser-image-compression';
-import { network, RouteNode, useRouteParams } from '@asap-hub/routing';
+import { network, useRouteParams } from '@asap-hub/routing';
 
 import { useUserById, usePatchUserAvatarById } from './state';
 import Frame from '../../structure/Frame';
+import { useCurrentUserProfileTabRoute } from '../../hooks';
 
 const loadResearch = () =>
   import(/* webpackChunkName: "network-profile-research" */ './Research');
@@ -55,24 +49,9 @@ const User: FC<Record<string, never>> = () => {
   const route = network({}).users({}).user;
   const { path } = useRouteMatch();
   const { userId } = useRouteParams(route);
-  const { pathname } = useLocation();
 
   const tabRoutes = route({ userId });
-  const tabRoute = (
-    [tabRoutes.about, tabRoutes.research, tabRoutes.outputs] as ReadonlyArray<
-      RouteNode<
-        string,
-        Record<string, never>,
-        {
-          editPersonalInfo: typeof tabRoutes.about.children.editPersonalInfo;
-          editContactInfo: typeof tabRoutes.about.children.editContactInfo;
-        }
-      >
-    >
-  ).find(
-    (possibleTabRoute) =>
-      !relative(possibleTabRoute({}).$, pathname).startsWith('..'),
-  );
+  const tabRoute = useCurrentUserProfileTabRoute();
 
   const user = useUserById(userId);
   const currentUser = useCurrentUser();

@@ -6,6 +6,7 @@ import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 import { EditModal } from '../organisms';
+import { TEAM_TOOL_URL } from '@asap-hub/validation';
 
 const fieldsContainer = css({
   display: 'grid',
@@ -54,6 +55,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
             value={newUrl}
             onChange={setNewUrl}
             enabled={!isSaving}
+            pattern={TEAM_TOOL_URL.source}
             required
           />
           <LabeledTextField

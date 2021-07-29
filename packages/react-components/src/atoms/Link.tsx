@@ -22,6 +22,28 @@ export const themeStyles: Record<ThemeVariant, SerializedStyles> = {
   dark: css({ color: paper.rgb, ':active': { color: paper.rgb } }),
 };
 
+const iconThemeStyle: Record<ThemeVariant, SerializedStyles> = {
+  light: css({
+    svg: {
+      stroke: fern.rgb,
+    },
+    ':hover': {
+      svg: {
+        stroke: pine.rgb,
+      },
+    },
+    ':active': { svg: { stroke: fern.rgb } },
+  }),
+  grey: css({
+    svg: { stroke: fern.rgb },
+    ':active': { svg: { stroke: pine.rgb } },
+  }),
+  dark: css({
+    svg: { stroke: paper.rgb },
+    ':active': { svg: { stroke: paper.rgb } },
+  }),
+};
+
 interface NormalLinkProps {
   readonly theme?: ThemeVariant;
 
@@ -44,6 +66,7 @@ type LinkProps = {
   readonly children: ReactNode;
   readonly href: string | undefined;
   readonly label?: string;
+  readonly applyIconTheme?: boolean;
 } & (NormalLinkProps | ButtonStyleLinkProps);
 const Link: React.FC<LinkProps> = ({
   children,
@@ -56,10 +79,11 @@ const Link: React.FC<LinkProps> = ({
   primary = false,
   small = false,
   enabled = true,
+  applyIconTheme = false,
 }) => {
   const linkStyles = buttonStyle
     ? [getButtonStyles({ primary, small, enabled, children })]
-    : [styles, themeStyles[theme]];
+    : [styles, themeStyles[theme], applyIconTheme && iconThemeStyle[theme]];
   const linkChildren = buttonStyle ? getButtonChildren(children) : children;
   return (
     <Anchor href={href} enabled={enabled} aria-label={label} css={linkStyles}>

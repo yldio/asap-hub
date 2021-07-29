@@ -1,15 +1,14 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-import { Card, Headline2, Divider, Anchor } from '../atoms';
+import { Card, Headline2, Divider, Link } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, CtaCard, TagList } from '../molecules';
 import { RichText, SharedResearchOutputHeaderCard } from '../organisms';
 import { createMailTo } from '../mail';
 import { externalLinkIcon } from '../icons';
-import { fern, pine } from '../colors';
 import { isLink } from '../utils';
 
 const containerStyles = css({
@@ -41,17 +40,6 @@ const additionalInformationValueStyles = css({
 });
 const externalLinkStyle = css({
   display: 'flex',
-  color: fern.rgb,
-  svg: {
-    stroke: fern.rgb,
-  },
-  ':hover, :focus': {
-    color: pine.rgb,
-    borderColor: pine.rgb,
-    svg: {
-      stroke: pine.rgb,
-    },
-  },
 });
 
 type SharedResearchOutputProps = Pick<
@@ -151,12 +139,15 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               <li css={additionalInformationEntryStyles}>
                 <strong>Identifier (DOI)</strong>
                 <span css={additionalInformationValueStyles}>
-                  <Anchor href={new URL(`https://doi.org/${doi}`).toString()}>
+                  <Link
+                    applyIconTheme
+                    href={new URL(`https://doi.org/${doi}`).toString()}
+                  >
                     <div css={externalLinkStyle}>
                       <span>{doi}</span>
                       {externalLinkIcon}
                     </div>
-                  </Anchor>
+                  </Link>
                 </span>
               </li>
             </>
@@ -167,7 +158,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               <li css={additionalInformationEntryStyles}>
                 <strong>Identifier (RRID)</strong>
                 <span css={additionalInformationValueStyles}>
-                  <Anchor
+                  <Link
                     href={new URL(
                       `https://scicrunch.org/resolver/${rrid}`,
                     ).toString()}
@@ -176,7 +167,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                       <span>{rrid}</span>
                       {externalLinkIcon}
                     </div>
-                  </Anchor>
+                  </Link>
                 </span>
               </li>
             </>
@@ -197,12 +188,15 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 <strong>Lab Catalog Number</strong>
                 <span css={additionalInformationValueStyles}>
                   {isLink(labCatalogNumber) ? (
-                    <Anchor href={new URL(labCatalogNumber).toString()}>
+                    <Link
+                      applyIconTheme
+                      href={new URL(labCatalogNumber).toString()}
+                    >
                       <div css={externalLinkStyle}>
                         <span>External Link</span>
                         {externalLinkIcon}
                       </div>
-                    </Anchor>
+                    </Link>
                   ) : (
                     labCatalogNumber
                   )}

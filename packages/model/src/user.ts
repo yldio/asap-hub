@@ -125,7 +125,7 @@ export interface UserResponse extends Invitee {
 }
 
 export type UserMetadataResponse = UserResponse & {
-  algoliaApiKey: string | null;
+  algoliaApiKey: string;
 };
 
 export interface UserPatchRequest {

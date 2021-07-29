@@ -144,7 +144,7 @@ describe('Fetch-user-by-code handler', () => {
       );
     });
 
-    test('should a null algolia API key if the function throws', async () => {
+    test('should return status 500 when algolia API key generation fails', async () => {
       algoliaClientMock.generateSecuredApiKey.mockImplementationOnce(() => {
         throw new Error('some error');
       });
@@ -161,10 +161,7 @@ describe('Fetch-user-by-code handler', () => {
         }),
       )) as APIGatewayProxyResult;
 
-      expect(result.statusCode).toStrictEqual(200);
-      expect(JSON.parse(result.body)).toMatchObject({
-        algoliaApiKey: null,
-      });
+      expect(result.statusCode).toStrictEqual(500);
     });
   });
 });

@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 
@@ -39,31 +39,48 @@ it('renders default values into inputs', () => {
   `);
 });
 
-it('allows url with http protocol', () => {
-  const { getAllByRole } = render(
-    <ToolModal {...props} url="http://example.com/tool" />,
-    { wrapper: StaticRouter },
-  );
-
-  expect(getAllByRole('textbox')[0]).toBeValid();
-});
-
 it('allows url with https protocol', () => {
-  const { getAllByRole } = render(
-    <ToolModal {...props} url="https://example.com/tool" />,
-    { wrapper: StaticRouter },
-  );
+  const { getAllByRole, queryByText } = render(<ToolModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+  const inputUrl = getAllByRole('textbox')[0];
 
-  expect(getAllByRole('textbox')[0]).toBeValid();
+  expect(inputUrl).toBeValid();
+  expect(
+    queryByText('Please enter a valid URL, starting with http:// or https://'),
+  ).toBeNull();
+});
+it('allows url with http protocol', () => {
+  const { getAllByRole, queryByText } = render(<ToolModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+  const inputUrl = getAllByRole('textbox')[0];
+
+  fireEvent.change(inputUrl, {
+    target: { value: 'http://example.com/tool' },
+  });
+  fireEvent.focusOut(inputUrl);
+
+  expect(inputUrl).toBeValid();
+  expect(
+    queryByText('Please enter a valid URL, starting with http:// or https://'),
+  ).toBeNull();
 });
 
 it('does not allow any other uri scheme', () => {
-  const { getAllByRole } = render(
-    <ToolModal {...props} url="slack://example" />,
-    { wrapper: StaticRouter },
-  );
+  const { getAllByRole, queryByText } = render(<ToolModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+  const inputUrl = getAllByRole('textbox')[0];
+  fireEvent.change(inputUrl, {
+    target: { value: 'slack://tool' },
+  });
+  fireEvent.focusOut(inputUrl);
 
-  expect(getAllByRole('textbox')[0]).toBeInvalid();
+  expect(inputUrl).toBeInvalid();
+  expect(
+    queryByText('Please enter a valid URL, starting with http:// or https://'),
+  ).toBeVisible();
 });
 
 it('triggers the save function', async () => {

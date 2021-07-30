@@ -39,8 +39,7 @@ const modalStyles = css({
   maxWidth: `${850 / perRem}em`,
   maxHeight: '80%',
 
-  display: 'grid',
-  gridTemplateRows: '100%',
+  display: 'flex',
   padding: `${12 / perRem}em ${vminLinearCalcClamped(
     mobileScreen,
     24,

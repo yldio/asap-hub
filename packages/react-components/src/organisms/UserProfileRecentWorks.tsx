@@ -16,7 +16,7 @@ import {
 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { externalLinkIcon, orcidIcon } from '../icons';
-import { charcoal, lead, fern } from '../colors';
+import { charcoal, lead } from '../colors';
 import { mailToSupport } from '../mail';
 
 const typeMap: { [key in OrcidWork['type']]: string } = {
@@ -157,11 +157,12 @@ const UserProfileRecentWorks: React.FC<UserProfileRecentWorksProps> = ({
           <span css={titleStyle}>No works available on your ORCID.</span>
           <br />
           To complete this section, please add works to your ORCID.{' '}
-          <Link href="https://support.orcid.org/hc/en-us/articles/360006973133-Add-works-to-your-ORCID-record">
+          <Link
+            href="https://support.orcid.org/hc/en-us/articles/360006973133-Add-works-to-your-ORCID-record"
+            applyIconTheme
+          >
             Learn how to add works.
-            <span css={{ verticalAlign: 'top', svg: { stroke: fern.rgb } }}>
-              {externalLinkIcon}
-            </span>
+            <span css={{ verticalAlign: 'top' }}>{externalLinkIcon}</span>
           </Link>
           <br />
           <br />

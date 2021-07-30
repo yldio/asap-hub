@@ -1,6 +1,11 @@
 import { render } from '@testing-library/react';
 
-import { getSvgAspectRatio, isInternalLink, getIconFromUrl } from '../utils';
+import {
+  getSvgAspectRatio,
+  isInternalLink,
+  getIconFromUrl,
+  isLink,
+} from '../utils';
 
 describe('getSvgAspectRatio', () => {
   it('throws if the element does not contain a svg', () => {
@@ -77,5 +82,14 @@ describe('getIconFromUrl', () => {
 
   it('returns undefined for invalid urls', () => {
     expect(getIconFromUrl('not a url')).toBeUndefined();
+  });
+});
+
+describe('isLink', () => {
+  it('returns false when the input is not a valid link', () => {
+    expect(isLink('not valid')).toBeFalsy();
+  });
+  it('returns true when the input is a valid link', () => {
+    expect(isLink('https://example.com')).toBeTruthy();
   });
 });

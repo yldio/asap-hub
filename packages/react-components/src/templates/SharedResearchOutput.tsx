@@ -1,13 +1,15 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
-import { Card, Headline2, Divider } from '../atoms';
-import { perRem } from '../pixels';
+import { Card, Headline2, Divider, Link } from '../atoms';
+import { mobileScreen, perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { BackLink, CtaCard, TagList } from '../molecules';
 import { RichText, SharedResearchOutputHeaderCard } from '../organisms';
 import { createMailTo } from '../mail';
+import { externalLinkIcon } from '../icons';
+import { isLink } from '../utils';
 
 const containerStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
@@ -27,6 +29,17 @@ const additionalInformationEntryStyles = css({
   display: 'flex',
   justifyContent: 'space-between',
   padding: `${6 / perRem}em 0`,
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    flexDirection: 'column',
+  },
+});
+const additionalInformationValueStyles = css({
+  [`@media (max-width: ${mobileScreen.max}px)`]: {
+    marginTop: `${12 / perRem}em`,
+  },
+});
+const externalLinkStyle = css({
+  display: 'flex',
 });
 
 type SharedResearchOutputProps = Pick<
@@ -38,6 +51,10 @@ type SharedResearchOutputProps = Pick<
   | 'asapFunded'
   | 'usedInPublication'
   | 'pmsEmails'
+  | 'doi'
+  | 'rrid'
+  | 'accession'
+  | 'labCatalogNumber'
 > &
   ComponentProps<typeof SharedResearchOutputHeaderCard> & {
     backHref: string;
@@ -52,6 +69,10 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   asapFunded,
   usedInPublication,
   pmsEmails,
+  doi,
+  rrid,
+  accession,
+  labCatalogNumber,
   ...props
 }) => (
   <div css={containerStyles}>
@@ -88,14 +109,16 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
         <ol css={additionalInformationListStyles}>
           <li css={additionalInformationEntryStyles}>
             <strong>Sharing Status</strong>
-            <span>{sharingStatus}</span>
+            <span css={additionalInformationValueStyles}>{sharingStatus}</span>
           </li>
           {asapFunded === undefined || (
             <>
               <Divider />
               <li css={additionalInformationEntryStyles}>
                 <strong>ASAP Funded</strong>
-                <span>{asapFunded ? 'Yes' : 'No'}</span>
+                <span css={additionalInformationValueStyles}>
+                  {asapFunded ? 'Yes' : 'No'}
+                </span>
               </li>
             </>
           )}
@@ -104,7 +127,81 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
               <Divider />
               <li css={additionalInformationEntryStyles}>
                 <strong>Used in a Publication</strong>
-                <span>{usedInPublication ? 'Yes' : 'No'}</span>
+                <span css={additionalInformationValueStyles}>
+                  {usedInPublication ? 'Yes' : 'No'}
+                </span>
+              </li>
+            </>
+          )}
+          {doi === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Identifier (DOI)</strong>
+                <span css={additionalInformationValueStyles}>
+                  <Link
+                    applyIconTheme
+                    href={new URL(`https://doi.org/${doi}`).toString()}
+                  >
+                    <div css={externalLinkStyle}>
+                      <span>{doi}</span>
+                      {externalLinkIcon}
+                    </div>
+                  </Link>
+                </span>
+              </li>
+            </>
+          )}
+          {rrid === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Identifier (RRID)</strong>
+                <span css={additionalInformationValueStyles}>
+                  <Link
+                    applyIconTheme
+                    href={new URL(
+                      `https://scicrunch.org/resolver/${rrid}`,
+                    ).toString()}
+                  >
+                    <div css={externalLinkStyle}>
+                      <span>{rrid}</span>
+                      {externalLinkIcon}
+                    </div>
+                  </Link>
+                </span>
+              </li>
+            </>
+          )}
+          {accession === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Identifier (Accession #)</strong>
+                <span css={additionalInformationValueStyles}>{accession}</span>
+              </li>
+            </>
+          )}
+          {labCatalogNumber === undefined || (
+            <>
+              <Divider />
+              <li css={additionalInformationEntryStyles}>
+                <strong>Lab Catalog Number</strong>
+                <span css={additionalInformationValueStyles}>
+                  {isLink(labCatalogNumber) ? (
+                    <Link
+                      applyIconTheme
+                      href={new URL(labCatalogNumber).toString()}
+                    >
+                      <div css={externalLinkStyle}>
+                        <span>External Link</span>
+                        {externalLinkIcon}
+                      </div>
+                    </Link>
+                  ) : (
+                    labCatalogNumber
+                  )}
+                </span>
               </li>
             </>
           )}
@@ -119,5 +216,4 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
     </div>
   </div>
 );
-
 export default SharedResearchOutput;

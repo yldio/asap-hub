@@ -56,6 +56,10 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
     { Unknown: undefined, Yes: true, No: false },
     undefined,
   ),
+  doi: text('DOI', '10.1101/gr.10.12.1841'),
+  rrid: text('RRID', 'RRID:SCR_007358'),
+  accession: text('Accession #', 'NC_000001.11'),
+  labCatalogNumber: text('Lab Catalog Number', 'https://example.com'),
   addedDate: new Date(
     date('Added Date', new Date(2020, 3, 10, 10, 54)),
   ).toISOString(),

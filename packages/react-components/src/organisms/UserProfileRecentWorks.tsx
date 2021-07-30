@@ -16,7 +16,7 @@ import {
 } from '../atoms';
 import { perRem, tabletScreen } from '../pixels';
 import { externalLinkIcon, orcidIcon } from '../icons';
-import { charcoal, lead, fern } from '../colors';
+import { charcoal, lead } from '../colors';
 import { mailToSupport } from '../mail';
 
 const typeMap: { [key in OrcidWork['type']]: string } = {

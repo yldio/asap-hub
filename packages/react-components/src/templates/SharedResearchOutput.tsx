@@ -159,6 +159,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
                 <strong>Identifier (RRID)</strong>
                 <span css={additionalInformationValueStyles}>
                   <Link
+                    applyIconTheme
                     href={new URL(
                       `https://scicrunch.org/resolver/${rrid}`,
                     ).toString()}

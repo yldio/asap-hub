@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { TeamTool } from '@asap-hub/model';
-import { css } from '@emotion/react';
-
-import { globeIcon } from '../icons';
 import { TEAM_TOOL_URL } from '@asap-hub/validation';
+import { css } from '@emotion/react';
 
 import { LabeledTextField } from '../molecules';
 import { noop } from '../utils';
 import { perRem } from '../pixels';
 import { EditModal } from '../organisms';
+import { globeIcon } from '../icons';
 
 const fieldsContainer = css({
   display: 'grid',

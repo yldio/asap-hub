@@ -44,3 +44,4 @@ export const algoliaAppId = ALGOLIA_APP_ID || 'LVYWOPQ0A9';
 export const algoliaSearchApiKey = ALGOLIA_SEARCH_API_KEY || '';
 export const algoliaResearchOutputIndex =
   ALGOLIA_RESEARCH_OUTPUT_INDEX || 'asap-hub_research_outputs_dev';
+export const algoliaApiKeyTtl = 36060;

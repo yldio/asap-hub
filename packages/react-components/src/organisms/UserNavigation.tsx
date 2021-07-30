@@ -43,7 +43,7 @@ const bottomLinksStyles = css({
 });
 
 export interface UserNavigationProps {
-  userOnboarded?: boolean;
+  readonly userOnboarded?: boolean;
   readonly userProfileHref: string;
   readonly teams: ReadonlyArray<{ name: string; href: string }>;
   readonly aboutHref: string;

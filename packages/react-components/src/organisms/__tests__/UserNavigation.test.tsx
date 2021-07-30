@@ -55,7 +55,13 @@ it('enables My team link when user is onboarded', () => {
     expect(groupItem).toHaveStyle('opacity: 0,3'),
   );
 
-  rerender(<UserNavigation {...props} userOnboarded={true} />);
+  rerender(
+    <UserNavigation
+      {...props}
+      userOnboarded={true}
+      teams={[{ name: 'Team 1', href: '/team-1' }]}
+    />,
+  );
   getAllByText(/^My team:/i).map((groupItem) =>
     expect(groupItem).toHaveStyle('opacity:'),
   );

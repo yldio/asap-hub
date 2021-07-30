@@ -65,7 +65,7 @@ const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
           <Link
             href={onboardModalHref}
             buttonStyle
-            enabled={!!isOnboardable}
+            enabled={isOnboardable}
             primary
           >
             <span css={iconStyles}>

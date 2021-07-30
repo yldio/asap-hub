@@ -70,51 +70,53 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
           There was an error and we were unable to publish your profile
         </Toast>
       )}
-      <header css={headerStyles}>
-        <div css={controlsContainerStyles}>
-          <Link small buttonStyle href={backHref}>
-            {crossIcon}
-          </Link>
-        </div>
-        <Headline3>Ready to publish your profile?</Headline3>
-      </header>
-      <div css={[paddingStyles, { paddingTop: 0 }]}>
-        <Paragraph accent="lead">
-          In order to show you the Hub, we will need to make your profile public
-          to the Hub network. Would you like to continue?
-        </Paragraph>
-        <div css={buttonContainerStyles}>
-          <div css={backStyles}>
-            <Link
-              buttonStyle
-              enabled={status !== 'isSaving'}
-              small
-              href={backHref}
-            >
-              Back to Editing
+      <form>
+        <header css={headerStyles}>
+          <div css={controlsContainerStyles}>
+            <Link small buttonStyle href={backHref}>
+              {crossIcon}
             </Link>
           </div>
-          <div css={saveStyles}>
-            <Button
-              primary
-              small
-              enabled={status !== 'isSaving'}
-              onClick={async () => {
-                setStatus('isSaving');
-                try {
-                  await onSave({ onboarded: true });
-                  setStatus('hasSaved');
-                  historyPush(discover.template);
-                } catch (e) {
-                  setStatus('hasError');
-                }
-              }}
-            >
-              Continue and Publish
-            </Button>
+          <Headline3>Ready to publish your profile?</Headline3>
+        </header>
+        <div css={[paddingStyles, { paddingTop: 0 }]}>
+          <Paragraph accent="lead">
+            In order to show you the Hub, we will need to make your profile
+            public to the Hub network. Would you like to continue?
+          </Paragraph>
+          <div css={buttonContainerStyles}>
+            <div css={backStyles}>
+              <Link
+                buttonStyle
+                enabled={status !== 'isSaving'}
+                small
+                href={backHref}
+              >
+                Back to Editing
+              </Link>
+            </div>
+            <div css={saveStyles}>
+              <Button
+                primary
+                small
+                enabled={status !== 'isSaving'}
+                onClick={async () => {
+                  setStatus('isSaving');
+                  try {
+                    await onSave({ onboarded: true });
+                    setStatus('hasSaved');
+                    historyPush(discover.template);
+                  } catch (e) {
+                    setStatus('hasError');
+                  }
+                }}
+              >
+                Continue and Publish
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 };

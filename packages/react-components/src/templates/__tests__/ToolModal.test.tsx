@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 
@@ -37,6 +37,51 @@ it('renders default values into inputs', () => {
       "LinkDescription",
     ]
   `);
+});
+
+it('allows url with https protocol', () => {
+  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
+
+  expect(inputUrl).toBeValid();
+  expect(
+    queryByText('Please enter a valid URL, starting with http:// or https://'),
+  ).toBeNull();
+});
+it('allows url with http protocol', () => {
+  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+
+  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
+
+  fireEvent.change(inputUrl, {
+    target: { value: 'http://example.com/tool' },
+  });
+  fireEvent.focusOut(inputUrl);
+
+  expect(inputUrl).toBeValid();
+  expect(
+    queryByText('Please enter a valid URL, starting with http:// or https://'),
+  ).toBeNull();
+});
+
+it('does not allow any other uri scheme', () => {
+  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
+  fireEvent.change(inputUrl, {
+    target: { value: 'slack://tool' },
+  });
+  fireEvent.focusOut(inputUrl);
+
+  expect(inputUrl).toBeInvalid();
+  expect(
+    queryByText('Please enter a valid URL, starting with http:// or https://'),
+  ).toBeVisible();
 });
 
 it('triggers the save function', async () => {

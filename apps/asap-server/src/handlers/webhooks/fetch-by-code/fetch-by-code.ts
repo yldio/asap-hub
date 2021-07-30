@@ -6,7 +6,7 @@ import { http } from '../../../utils/instrumented-framework';
 import { UserController } from '../../../controllers/users';
 import validateRequest from '../../../utils/validate-auth0-request';
 import { Handler } from '../../../utils/types';
-import { algoliaSearchApiKey } from '../../../config';
+import { algoliaApiKeyTtl, algoliaSearchApiKey } from '../../../config';
 
 export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
@@ -31,7 +31,7 @@ export const fetchUserByCodeHandlerFactory = (
 
     const user = await userController.fetchByCode(code);
     const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-      validUntil: Date.now() + 36060, // which is one minute over the TTL of the ID token
+      validUntil: Date.now() + algoliaApiKeyTtl, // which is one minute over the TTL of the ID token
     });
 
     return {

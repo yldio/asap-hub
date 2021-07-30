@@ -40,10 +40,10 @@ it('renders default values into inputs', () => {
 });
 
 it('allows url with https protocol', () => {
-  const { getAllByRole, queryByText } = render(<ToolModal {...props} />, {
+  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
     wrapper: StaticRouter,
   });
-  const inputUrl = getAllByRole('textbox')[0];
+  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
 
   expect(inputUrl).toBeValid();
   expect(
@@ -51,10 +51,11 @@ it('allows url with https protocol', () => {
   ).toBeNull();
 });
 it('allows url with http protocol', () => {
-  const { getAllByRole, queryByText } = render(<ToolModal {...props} />, {
+  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
     wrapper: StaticRouter,
   });
-  const inputUrl = getAllByRole('textbox')[0];
+
+  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
 
   fireEvent.change(inputUrl, {
     target: { value: 'http://example.com/tool' },
@@ -68,10 +69,10 @@ it('allows url with http protocol', () => {
 });
 
 it('does not allow any other uri scheme', () => {
-  const { getAllByRole, queryByText } = render(<ToolModal {...props} />, {
+  const { getByLabelText, queryByText } = render(<ToolModal {...props} />, {
     wrapper: StaticRouter,
   });
-  const inputUrl = getAllByRole('textbox')[0];
+  const inputUrl = getByLabelText(new RegExp(/Add URL/, 'i'));
   fireEvent.change(inputUrl, {
     target: { value: 'slack://tool' },
   });

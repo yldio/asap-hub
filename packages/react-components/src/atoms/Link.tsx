@@ -9,6 +9,9 @@ import { Anchor } from '.';
 const styles = css({
   textDecoration: 'underline',
   ':hover': {
+    textDecoration: 'underline',
+  },
+  ':active': {
     textDecoration: 'none',
   },
 });

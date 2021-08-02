@@ -42,6 +42,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
   onChange = noop,
 }) => {
   const [inputValues, setInputValues] = useState(values);
+  const [validationMsg, setValidationMsg] = useState('');
 
   return (
     <div css={containerStyles}>
@@ -57,6 +58,8 @@ const MultiSelect: FC<MultiSelectProps> = ({
           value,
           label: value,
         }))}
+        onFocus={() => setValidationMsg('')}
+        onBlur={() => setValidationMsg(customValidationMessage)}
         onChange={(options) => {
           const newValues = options.map(({ value }) => value);
           setInputValues(newValues);
@@ -65,9 +68,9 @@ const MultiSelect: FC<MultiSelectProps> = ({
         placeholder={placeholder}
         components={{ MultiValueRemove }}
         noOptionsMessage={noOptionsMessage}
-        styles={reactMultiSelectStyles(!!customValidationMessage)}
+        styles={reactMultiSelectStyles(!!validationMsg)}
       />
-      <div css={validationMessageStyles}>{customValidationMessage}</div>
+      <div css={validationMessageStyles}>{validationMsg}</div>
     </div>
   );
 };

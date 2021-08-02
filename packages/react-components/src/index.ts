@@ -136,6 +136,7 @@ export {
   NewsAndEventsPageBody,
   NewsOrEventPage,
   NotFoundPage,
+  OnboardModal,
   OpenQuestionsModal,
   PasswordResetEmailSentPage,
   PersonalInfoModal,

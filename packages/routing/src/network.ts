@@ -3,13 +3,20 @@ import { intParser, route, stringParser } from 'typesafe-routes';
 const user = (() => {
   const editPersonalInfo = route('/edit-personal-info', {}, {});
   const editContactInfo = route('/edit-contact-info', {}, {});
+  const editOnboarded = route('/edit-onboarded', {}, {});
 
   const editBiography = route('/edit-biography', {}, {});
   const editWorks = route('/edit-works', {}, {});
   const about = route(
     '/about',
     {},
-    { editPersonalInfo, editContactInfo, editBiography, editWorks },
+    {
+      editPersonalInfo,
+      editContactInfo,
+      editOnboarded,
+      editBiography,
+      editWorks,
+    },
   );
 
   const editSkills = route('/edit-skills', {}, {});
@@ -25,13 +32,18 @@ const user = (() => {
     {
       editPersonalInfo,
       editContactInfo,
+      editOnboarded,
       editSkills,
       editQuestions,
       editTeamMembership,
     },
   );
 
-  const outputs = route('/outputs', {}, { editPersonalInfo, editContactInfo });
+  const outputs = route(
+    '/outputs',
+    {},
+    { editPersonalInfo, editContactInfo, editOnboarded },
+  );
 
   return route(
     '/:userId',

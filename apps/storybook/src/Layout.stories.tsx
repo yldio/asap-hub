@@ -39,7 +39,11 @@ export const Onboardable = () => (
         onboarded: false,
       }}
     >
-      <Layout {...props} isOnboardable={boolean('isOnboardable', false)}>
+      <Layout
+        {...props}
+        onboardModalHref="/wrong"
+        onboardable={{ isOnboardable: boolean('isOnboardable', false) }}
+      >
         Content
       </Layout>
     </authTestUtils.LoggedIn>

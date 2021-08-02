@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
+import { isUserOnboardable } from '@asap-hub/validation';
 
 import { padlockIcon, tickIcon } from '../icons';
-import { Button, Headline2, Paragraph } from '../atoms';
+import { Link, Headline2, Paragraph } from '../atoms';
 import { pearl, steel } from '../colors';
 
 import { perRem, smallDesktopScreen } from '../pixels';
@@ -39,11 +40,13 @@ const iconStyles = css({
 });
 
 type OnboardingHeaderProps = {
-  isOnboardable: boolean;
+  onboardModalHref?: string;
+  onboardable: ReturnType<typeof isUserOnboardable>;
 };
 
 const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
-  isOnboardable,
+  onboardModalHref,
+  onboardable: { isOnboardable },
 }) => (
   <header css={headerStyles}>
     <div css={containerStyles}>
@@ -59,12 +62,17 @@ const OnboardingHeader: React.FC<OnboardingHeaderProps> = ({
       </div>
       <div css={buttonStyles}>
         <div>
-          <Button enabled={!!isOnboardable} primary>
+          <Link
+            href={onboardModalHref}
+            buttonStyle
+            enabled={isOnboardable}
+            primary
+          >
             <span css={iconStyles}>
               {isOnboardable ? tickIcon : padlockIcon}
             </span>
             Explore the Hub
-          </Button>
+          </Link>
         </div>
       </div>
     </div>

@@ -37,15 +37,17 @@ const onboardableUser: UserResponse = {
   skills: ['1', '2', '3', '4', '5'],
 };
 
-it('is null when there is no logged in user', async () => {
+it('is undefined when there is no logged in user', async () => {
   const { container } = render(
     <RecoilRoot>
       <Onboardable>
-        {({ isOnboardable }) => `isOnboardable: ${isOnboardable}`}
+        {(onboardable) => `onboardable: ${onboardable}`}
       </Onboardable>
     </RecoilRoot>,
   );
-  expect(container.textContent).toMatchInlineSnapshot(`"isOnboardable: null"`);
+  expect(container.textContent).toMatchInlineSnapshot(
+    `"onboardable: undefined"`,
+  );
 });
 
 const renderOnboardable = (onboarded: boolean) => (
@@ -56,18 +58,18 @@ const renderOnboardable = (onboarded: boolean) => (
   >
     <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
       <Onboardable>
-        {({ isOnboardable }) => `isOnboardable: ${isOnboardable}`}
+        {(onboardable) => `isOnboardable: ${onboardable?.isOnboardable}`}
       </Onboardable>
     </Auth0Provider>
   </RecoilRoot>
 );
 
-it('is null when the logged in user is already onboarded', async () => {
+it('is undefined when the logged in user is already onboarded', async () => {
   const { queryByText } = render(renderOnboardable(true));
   await act(() =>
     waitFor(() => expect(queryByText(/loading/i)).not.toBeInTheDocument()),
   );
-  expect(queryByText('isOnboardable: null')).toBeVisible();
+  expect(queryByText('isOnboardable: undefined')).toBeVisible();
 });
 
 it('is true when: logged in, not onboarded and conditions met', async () => {

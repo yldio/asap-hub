@@ -88,7 +88,7 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
           !enabled && disableStyles,
         ]}
         smooth
-        isActive={(match, _) => !!match}
+        isActive={(match, _) => enabled && !!match}
       >
         <p css={textStyles}>
           <span css={iconStyles}>{icon}</span>

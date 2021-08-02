@@ -11,6 +11,7 @@ import {
   mint,
   pine,
   charcoal,
+  paper,
 } from './colors';
 import {
   styles,
@@ -26,12 +27,6 @@ export interface Option<V extends string> {
 }
 
 const { ':focus': focusStyles, ...baseStyles } = styles;
-
-const invalidStyles = {
-  color: ember.rgb,
-  borderColor: ember.rgb,
-  backgroundColor: rose.rgb,
-};
 
 const disabledStyles = {
   color: lead.rgb,
@@ -107,7 +102,13 @@ export const reactSelectStyles = (
     alignItems: 'center',
 
     ...(isFocused ? focusStyles : {}),
-    ...(isInvalid ? invalidStyles : {}),
+    ...(isInvalid
+      ? {
+          color: ember.rgb,
+          borderColor: ember.rgb,
+          backgroundColor: rose.rgb,
+        }
+      : {}),
     ...(isDisabled ? disabledStyles : {}),
   }),
   singleValue: (provided, { getValue }) => ({
@@ -138,7 +139,11 @@ export const reactMultiSelectStyles = (
 
     ...(isFocused ? focusStyles : {}),
     ...(isInvalid
-      ? { ...invalidStyles, backgroundColor: 'unset', svg: { fill: 'unset' } }
+      ? {
+          borderColor: isFocused ? pine.rgb : ember.rgb,
+          backgroundColor: isFocused ? paper.rgb : rose.rgb,
+          svg: { fill: 'unset' },
+        }
       : {}),
     ...(isDisabled ? disabledStyles : {}),
   }),
@@ -153,6 +158,7 @@ export const reactMultiSelectStyles = (
     borderWidth: `${borderWidth}px`,
     borderColor: steel.rgb,
     borderRadius: `${18 / perRem}em`,
+    backgroundColor: paper.rgb,
   }),
   multiValueLabel: (provided) => ({
     ...provided,

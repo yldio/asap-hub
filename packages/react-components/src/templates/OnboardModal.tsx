@@ -24,29 +24,33 @@ const controlsContainerStyles = css({
   alignItems: 'flex-start',
 });
 
+const buttonMediaQuery = `@media (min-width: ${mobileScreen.max - 100}px)`;
+
 const buttonContainerStyles = css({
   display: 'grid',
   columnGap: `${30 / perRem}em`,
   gridTemplateRows: 'max-content 12px max-content',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
+  [buttonMediaQuery]: {
     gridTemplateColumns: 'max-content max-content',
   },
 });
 
 const saveStyles = css({
   display: 'flex',
+  justifyContent: 'center',
   gridRow: '1 / span 2',
   gridColumn: '1',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
+  [buttonMediaQuery]: {
     gridRow: '1',
     gridColumn: '2',
   },
 });
 const backStyles = css({
   display: 'flex',
+  justifyContent: 'center',
   gridRow: '2 / span 2',
   gridColumn: '1',
-  [`@media (min-width: ${mobileScreen.max}px)`]: {
+  [buttonMediaQuery]: {
     gridRow: '1',
   },
 });

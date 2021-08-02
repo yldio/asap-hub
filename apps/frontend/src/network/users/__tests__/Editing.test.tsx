@@ -32,7 +32,7 @@ const aboutPath =
   network({}).users.template +
   network({}).users({}).user.template +
   aboutRoute.template;
-const { editPersonalInfo, editContactInfo } = aboutRoute({});
+const { editPersonalInfo, editContactInfo, editOnboarded } = aboutRoute({});
 
 beforeEach(() => jest.resetAllMocks());
 
@@ -236,5 +236,36 @@ describe('the contact info modal', () => {
       expect.objectContaining({ contactEmail: 'contact@example.comm' }),
       expect.any(String),
     );
+  });
+});
+
+describe('the onboarded modal', () => {
+  it('saves changes', async () => {
+    const { findByText } = render(
+      <Auth0Provider user={{ id, onboarded: false }}>
+        <MemoryRouter initialEntries={[`/profile${editOnboarded.template}`]}>
+          <Route path="/profile">
+            <Editing
+              user={{
+                ...createUserResponse(),
+                id,
+                onboarded: false,
+              }}
+              backHref={aboutPath}
+            />
+          </Route>
+        </MemoryRouter>
+      </Auth0Provider>,
+      { wrapper },
+    );
+
+    userEvent.click(await findByText(/Continue and Publish/i));
+    await waitFor(() => {
+      expect(mockPatchUser).toHaveBeenLastCalledWith(
+        id,
+        expect.objectContaining({ onboarded: true }),
+        expect.any(String),
+      );
+    });
   });
 });

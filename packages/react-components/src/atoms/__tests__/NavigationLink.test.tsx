@@ -61,6 +61,16 @@ describe.each`
         ?.backgroundColor,
     ).toBeFalsy();
   });
+
+  it('disables the current link when not enabled', () => {
+    const { getByText } = render(
+      <NavigationLink href="/location" icon={<svg />} enabled={false}>
+        Target
+      </NavigationLink>,
+    );
+    expect(getByText('Target')).toHaveStyle('opacity:0,3');
+    expect(getByText('Target').closest('a')).toHaveStyle('pointer-events:none');
+  });
 });
 
 describe('with a router', () => {

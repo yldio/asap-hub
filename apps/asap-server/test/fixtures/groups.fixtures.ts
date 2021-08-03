@@ -4,7 +4,6 @@ import {
   ResponseFetchGroups,
   ResponseFetchGroup,
 } from '../../src/controllers/groups';
-import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
 
 export const queryGroupsResponse: { data: ResponseFetchGroups } = {
   data: {
@@ -51,26 +50,6 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                 flatData: {
                   applicationNumber: 'ASAP-000592',
                   displayName: 'Lee, M',
-                  outputs: [
-                    {
-                      id: 'output-id-1',
-                      created: '2020-12-11T14:33:18.000Z',
-                      flatData: {
-                        link: null,
-                        publishDate: null,
-                        addedDate: null,
-                        title: 'Proposal',
-                        type: 'Proposal',
-                        tags: ['test', 'tag'],
-                        accessInstructions: 'some access instructions',
-                        sharingStatus: 'Network Only',
-                        asapFunded: 'No',
-                        usedInAPublication: 'No',
-                        authors:
-                          getSquidexResearchOutputGraphqlResponseAuthors(),
-                      },
-                    },
-                  ],
                   projectSummary: null,
                   projectTitle:
                     'Senescence in Parkinson’s disease and related disorders',

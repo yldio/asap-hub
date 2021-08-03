@@ -21,9 +21,11 @@ import { createURL, sanitiseForSquidex } from '../utils/squidex';
 import { GraphqlFetchOptions } from '../utils/types';
 
 export const getGraphQLQueryTeam = ({
-  researchOutputsWithTeams,
+  withResearchOutputs = true,
+  researchOutputsWithTeams = true,
 }: {
-  researchOutputsWithTeams: boolean;
+  withResearchOutputs?: boolean;
+  researchOutputsWithTeams?: boolean;
 }): string => `
 id
 created
@@ -31,8 +33,12 @@ lastModified
 flatData {
   applicationNumber
   displayName
-  outputs {
+  ${
+    withResearchOutputs
+      ? `outputs {
     ${getGraphQLQueryResearchOutput({ withTeams: researchOutputsWithTeams })}
+  }`
+      : ''
   }
   projectSummary
   projectTitle

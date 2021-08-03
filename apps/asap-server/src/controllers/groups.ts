@@ -23,7 +23,7 @@ flatData {
     googleDrive
   }
   teams {
-    ${getGraphQLQueryTeam({ researchOutputsWithTeams: false })}
+    ${getGraphQLQueryTeam({ withResearchOutputs: false })}
   }
   leaders{
     role

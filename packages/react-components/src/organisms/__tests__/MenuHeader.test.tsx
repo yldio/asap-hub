@@ -17,3 +17,11 @@ it('triggers the menu toggle event', () => {
   userEvent.click(getByLabelText(/toggle menu/i));
   expect(handleToggleMenu).toHaveBeenCalledTimes(1);
 });
+
+it('enables the header link when user is onboarded', () => {
+  const { container, rerender } = render(<MenuHeader enabled={true} />);
+  expect(container.querySelector('a')).toHaveAttribute('href', '/');
+
+  rerender(<MenuHeader enabled={false} />);
+  expect(container.querySelector('a')).not.toHaveAttribute('href', '');
+});

@@ -42,7 +42,6 @@ const containerStyles = css({
 const listStyles = css({
   listStyle: 'none',
   margin: 0,
-
   boxSizing: 'border-box',
   padding: `${12 / perRem}em`,
   paddingTop: `max(${12 / perRem}em, ${vminLinearCalc(
@@ -54,31 +53,55 @@ const listStyles = css({
   )})`,
 });
 
-const MainNavigation: React.FC = () => (
+export interface MainNavigationProps {
+  readonly userOnboarded: boolean;
+}
+
+const MainNavigation: React.FC<MainNavigationProps> = ({ userOnboarded }) => (
   <nav css={containerStyles}>
     <ul css={listStyles}>
       <li>
-        <NavigationLink href={network({}).$} icon={networkIcon}>
+        <NavigationLink
+          href={network({}).$}
+          icon={networkIcon}
+          enabled={userOnboarded}
+        >
           Network
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={sharedResearch({}).$} icon={libraryIcon}>
+        <NavigationLink
+          href={sharedResearch({}).$}
+          icon={libraryIcon}
+          enabled={userOnboarded}
+        >
           Shared Research
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={news({}).$} icon={newsIcon}>
+        <NavigationLink
+          href={news({}).$}
+          icon={newsIcon}
+          enabled={userOnboarded}
+        >
           News
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={events({}).$} icon={calendarIcon}>
+        <NavigationLink
+          href={events({}).$}
+          icon={calendarIcon}
+          enabled={userOnboarded}
+        >
           Calendar and Events
         </NavigationLink>
       </li>
       <li>
-        <NavigationLink href={discover({}).$} icon={discoverIcon}>
+        <NavigationLink
+          href={discover({}).$}
+          icon={discoverIcon}
+          enabled={userOnboarded}
+        >
           Discover ASAP
         </NavigationLink>
       </li>

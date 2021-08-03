@@ -25,7 +25,9 @@ export const Normal = () => {
   );
   return (
     <StaticRouter key={path} location={path}>
-      <MainNavigation />
+      <MainNavigation userOnboarded={true} />
     </StaticRouter>
   );
 };
+
+export const Disabled = () => <MainNavigation userOnboarded={false} />;

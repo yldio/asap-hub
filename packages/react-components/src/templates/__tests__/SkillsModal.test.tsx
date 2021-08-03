@@ -1,12 +1,12 @@
 import { ComponentProps } from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, act, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import SkillsModal from '../SkillsModal';
-import { ember } from '../../colors';
+import { ember, steel } from '../../colors';
 
 const props: ComponentProps<typeof SkillsModal> = {
   ...createUserResponse(),
@@ -116,17 +116,17 @@ describe('tags selection', () => {
     );
     userEvent.click(getByText(/save/i));
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
-      ember.rgb,
+      steel.rgb,
     );
     expect(handleSave).not.toHaveBeenCalled();
   });
 
   it('removes error message when enough skills are selected', () => {
     const handleSave = jest.fn();
-    const { getByText, queryByText, getByLabelText } = render(
+    const { getByLabelText, getByText, queryByText } = render(
       <SkillsModal
         {...props}
-        skills={['1', '2', '3', '4']}
+        skills={['1', '2', '3']}
         skillSuggestions={['1', '2', '3', '4', '5']}
         onSave={handleSave}
       />,
@@ -134,17 +134,25 @@ describe('tags selection', () => {
         wrapper: StaticRouter,
       },
     );
-    userEvent.click(getByText(/save/i));
+
     const input = getByLabelText(/tags/i);
+    userEvent.click(input);
+    userEvent.type(input, '4');
+    userEvent.type(input, `{enter}`);
+    fireEvent.blur(input);
+
     expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
       ember.rgb,
     );
     expect(getByText('Please add a minimum of 5 tags')).toBeVisible();
 
+    userEvent.click(input);
     userEvent.type(input, '5');
-    userEvent.tab();
-    expect(findParentWithStyle(input, 'borderColor')?.borderColor).not.toEqual(
-      ember.rgb,
+    userEvent.type(input, `{enter}`);
+    fireEvent.blur(input);
+
+    expect(findParentWithStyle(input, 'borderColor')?.borderColor).toEqual(
+      steel.rgb,
     );
     expect(
       queryByText('Please add a minimum of 5 tags'),

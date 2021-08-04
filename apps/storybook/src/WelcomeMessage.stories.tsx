@@ -9,11 +9,17 @@ export default {
   decorators: [MessageLayoutDecorator],
 };
 
-export const Normal = () => (
+export const Variant1 = () => (
   <WelcomeMessage
     firstName={text('First Name', 'John')}
     link={text('Link', 'https://example.com/register')}
-  >
-    Content
-  </WelcomeMessage>
+  />
+);
+
+export const Variant2 = () => (
+  <WelcomeMessage
+    firstName={text('First Name', 'John')}
+    link={text('Link', 'https://example.com/register')}
+    variant={'Variant2'}
+  />
 );

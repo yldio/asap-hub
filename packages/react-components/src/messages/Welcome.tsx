@@ -1,14 +1,10 @@
 import { Display, Paragraph, Link } from '../atoms';
 import { mailToSupport } from '../mail';
 
-type WelcomeProps = {
-  readonly firstName: string;
-  readonly link: string;
-};
+type WelcomeContentProps = { link: string };
 
-const Welcome: React.FC<WelcomeProps> = ({ firstName, link }) => (
-  <section>
-    <Display styleAsHeading={3}>Dear {firstName}</Display>
+const Variant1: React.FC<WelcomeContentProps> = ({ link }) => (
+  <>
     <Paragraph>
       Thank you for filling out your Profile Form, you’re one step away from
       joining the ASAP Hub! Please choose a login method and activate your
@@ -34,7 +30,57 @@ const Welcome: React.FC<WelcomeProps> = ({ firstName, link }) => (
       confidentiality has been codified in the ASAP grant agreement to which
       your team has agreed
     </Paragraph>
-  </section>
+  </>
 );
+
+const Variant2: React.FC<WelcomeContentProps> = ({ link }) => (
+  <>
+    <Paragraph>Thank you for starting this journey with us!</Paragraph>
+    <Paragraph>
+      You’re one step closer to joining the ASAP Hub - the virtual home of the
+      Collaborative Research Network (CRN), where you can connect with your
+      team, join events and access research.
+    </Paragraph>
+    <Paragraph>
+      Before you can explore the Hub you’ll need to complete your profile. Click
+      ‘Create Account’ below to get started - we look forward to seeing you
+      there!
+    </Paragraph>
+    <Link buttonStyle primary href={link}>
+      Create account
+    </Link>
+    <Paragraph>
+      As with every new path, you may come across some questions and{' '}
+      <Link href={mailToSupport()}>our team</Link> would be delighted to answer
+      them.
+    </Paragraph>
+    <Paragraph>
+      Reminder: ASAP Hub is a closed platform to foster trust, candor and
+      connection among grantees. In line with your team’s grant agreement, you
+      are expected to comply with confidentiality guidelines.
+    </Paragraph>
+  </>
+);
+
+type WelcomeProps = {
+  readonly firstName: string;
+  readonly link: string;
+  readonly variant?: 'Variant1' | 'Variant2';
+};
+
+const Welcome: React.FC<WelcomeProps> = ({
+  firstName,
+  link,
+  variant = 'Variant1',
+}) => {
+  const contentVariants = { Variant1, Variant2 };
+  const ContentTag = contentVariants[variant];
+  return (
+    <section>
+      <Display styleAsHeading={3}>Dear {firstName}</Display>
+      <ContentTag link={link} />
+    </section>
+  );
+};
 
 export default Welcome;

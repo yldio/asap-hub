@@ -29,4 +29,30 @@ describe('welcome email template', () => {
     expect(mailToSupport.protocol).toBe('mailto:');
     expect(mailToSupport.pathname).toBe('techsupport@asap.science');
   });
+
+  it('renders different variants of the content', () => {
+    let cta1;
+    let cta2;
+    const { queryByRole, rerender } = result;
+
+    cta1 = queryByRole('link', { name: /activate account/i });
+    cta2 = queryByRole('link', { name: /create account/i });
+    expect(cta1).toHaveTextContent('Activate account');
+    expect(cta1).not.toBeNull();
+    expect(cta2).toBeNull();
+
+    rerender(
+      <Welcome
+        firstName="John Doe"
+        link="https://example.com"
+        variant={'Variant2'}
+      />,
+    );
+
+    cta1 = queryByRole('link', { name: /activate account/i });
+    cta2 = queryByRole('link', { name: /create account/i });
+    expect(cta2).toHaveTextContent('Create account');
+    expect(cta2).not.toBeNull();
+    expect(cta1).toBeNull();
+  });
 });

@@ -125,4 +125,7 @@ describe('when editing the biography', () => {
       expect.any(String),
     );
   });
+  it('does not allow to edit the works section', () => {
+    expect(result.queryByLabelText(/edit.+recent.+visib/i)).toBeNull();
+  });
 });

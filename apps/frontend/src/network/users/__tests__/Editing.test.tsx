@@ -4,11 +4,14 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
-
+import { network, discover } from '@asap-hub/routing';
+import { User } from '@auth0/auth0-spa-js';
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
+import { getUserClaimKey } from '@asap-hub/react-context';
+
 import Editing from '../Editing';
 import { patchUser, getInstitutions } from '../api';
+import CheckOnboarded from '../../../auth/CheckOnboarded';
 
 jest.mock('../api');
 
@@ -267,5 +270,66 @@ describe('the onboarded modal', () => {
         expect.any(String),
       );
     });
+  });
+
+  it('redirects to dashboard', async () => {
+    let user: User = {
+      ...createUserResponse(),
+      id,
+      onboarded: false,
+    };
+    const ownProfileRoute = network({})
+      .users({})
+      .user({ userId: user.id })
+      .about({});
+    const dashboard = discover({}).$;
+
+    const { findByText } = render(
+      <Auth0Provider
+        user={user}
+        auth0Overrides={() => ({
+          user: {
+            sub: 'testuser',
+            name: user.displayName,
+            given_name: user.firstName,
+            family_name: user.lastName,
+            aud: 'Av2psgVspAN00Kez9v1vR2c496a9zCW3',
+            [getUserClaimKey()]: user,
+          },
+        })}
+      >
+        <MemoryRouter initialEntries={[ownProfileRoute.editOnboarded({}).$]}>
+          <CheckOnboarded>
+            <Route path={ownProfileRoute.$}>
+              <Editing
+                user={{
+                  ...createUserResponse(),
+                  ...user,
+                }}
+                backHref={aboutPath}
+              />
+            </Route>
+            <Route exact path={dashboard}>
+              Dashboard!
+            </Route>
+          </CheckOnboarded>
+        </MemoryRouter>
+      </Auth0Provider>,
+      { wrapper },
+    );
+
+    userEvent.click(await findByText(/Continue and Publish/i));
+    await waitFor(() => {
+      expect(mockPatchUser).toHaveBeenLastCalledWith(
+        id,
+        expect.objectContaining({ onboarded: true }),
+        expect.any(String),
+      );
+    });
+    user = {
+      ...user,
+      onboarded: true,
+    };
+    expect(await findByText('Dashboard!')).toBeVisible();
   });
 });

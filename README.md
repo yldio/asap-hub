@@ -59,7 +59,7 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 
 ## Editor setup
 
-Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler and ESLint linter in this repository. You will also need to set up your editor to run ESLint with the same CLI options that the scripts do—they are in [this file](jest-runner-eslint.config.js).
+Refer to [this Yarn documentation page](https://yarnpkg.com/advanced/editor-sdks) for how to integrate your editor with the TypeScript compiler and ESLint linter in this repository. You will also need to set up your editor to run ESLint with the same CLI options that the scripts do — they are in [this file](jest-runner-eslint.config.js).
 
 ## Further documentation
 

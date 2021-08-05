@@ -17,6 +17,7 @@ import Signin from './auth/Signin';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
 import { GTM_CONTAINER_ID, SENTRY_DSN, NODE_ENV } from './config';
+import SentryAuth0 from './auth/SentryAuth0';
 
 Sentry.init({
   dsn: SENTRY_DSN,
@@ -56,6 +57,7 @@ const App: FC<Record<string, never>> = () => {
     <Frame title="ASAP Hub">
       <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       <AuthProvider>
+        <SentryAuth0 />
         <Router history={history}>
           <LastLocationProvider>
             <Frame title={null}>

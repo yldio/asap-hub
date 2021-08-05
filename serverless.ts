@@ -26,6 +26,7 @@ export const plugins = [
   'serverless-s3-sync',
   'serverless-iam-roles-per-function',
   'serverless-webpack',
+  'serverless-apigateway-service-proxy',
 ];
 
 const serverlessConfig: AWS = {
@@ -138,6 +139,16 @@ const serverlessConfig: AWS = {
     ],
     webpack: {
       config: 'serverless/webpack.config.js',
+    },
+    apiGatewayServiceProxies: {
+      sns: {
+        path: '/webhook/user-created',
+        method: 'post',
+        topicName: {
+          'Fn::GetAtt': ['UserCreatedSNSTopic', 'TopicName'],
+        },
+        cors: true,
+      },
     },
   },
   functions: {
@@ -278,6 +289,20 @@ const serverlessConfig: AWS = {
       handler:
         'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
+    },
+    inviteUser: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/user-created/invite.handler',
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['InviteUserQueue', 'Arn'],
+            },
+          },
+        },
+      ],
+      environment: {},
     },
     ...(NODE_ENV === 'production'
       ? {
@@ -759,6 +784,29 @@ const serverlessConfig: AWS = {
               },
             },
           ],
+        },
+      },
+      UserCreatedSnsTopic: {
+        Type: 'AWS::SNS::Topic',
+        Properties: {
+          TopicName: 'UserCreatedEvent-${self:provider.stage}',
+        },
+      },
+      InviteUserQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'InviteUserQueue-${self:provider.stage}',
+        },
+      },
+      InviteUserSnsSubscription: {
+        Type: 'AWS::SNS::Subscription',
+        Properties: {
+          TopicArn: { Ref: 'UserCreatedSnsTopic' },
+          Endpoint: {
+            'Fn::GetAtt': ['InviteUserQueue', 'Arn'],
+          },
+          Protocol: 'sqs',
+          RawMessageDelivery: false,
         },
       },
     },

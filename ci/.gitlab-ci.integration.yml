@@ -11,9 +11,9 @@ build:docker-images:
     - docker:19.03.12-dind
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build --no-cache --pull -t $SQUIDEX_BASE_DOCKER_IMAGE . -f dev/base.Dockerfile
+    - docker build -t $SQUIDEX_BASE_DOCKER_IMAGE . -f dev/base.Dockerfile
     - docker push $SQUIDEX_BASE_DOCKER_IMAGE
-    - docker build --no-cache --pull -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
+    - docker build -t $INTEGRATION_DOCKER_IMAGE . -f ci/integration/Dockerfile
     - docker push $INTEGRATION_DOCKER_IMAGE
 
 test:integration:

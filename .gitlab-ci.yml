@@ -158,10 +158,7 @@ deploy:sls:branch:
     - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
     - tar -xf $MOST_RECENT_BACKUP
     - ./ci/config-squidex-rules.sh ./backup/rules
-    # create-app.py configures sq to new app
-    - sq sync in backup
-    # apply schema changes on top of dev backup
-    - sq sync in packages/squidex/schema -t schemas --delete
+    - ./ci/import-squidex-data.sh
     - source ci/env-setup.sh
     - yarn sls deploy --verbose
 

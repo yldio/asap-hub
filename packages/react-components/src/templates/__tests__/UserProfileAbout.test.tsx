@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { UserProfileContext } from '@asap-hub/react-context';
 
 import UserProfileAbout from '../UserProfileAbout';
 
@@ -40,26 +39,4 @@ it('renders an edit button for the biography', () => {
     'href',
     '/edit-biography',
   );
-});
-it('does not render an edit for the recent works', () => {
-  const { queryByLabelText, rerender } = render(
-    <UserProfileAbout orcidWorks={[]} />,
-  );
-  expect(queryByLabelText(/edit.+recent.+visib/i)).toBeNull();
-
-  rerender(
-    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <UserProfileAbout
-        orcidWorks={[
-          {
-            title: 'Title',
-            type: 'BOOK' as const,
-            publicationDate: {},
-            lastModifiedDate: '1478865224685',
-          },
-        ]}
-      />
-    </UserProfileContext.Provider>,
-  );
-  expect(queryByLabelText(/edit.+recent.+visib/i)).toBeNull();
 });

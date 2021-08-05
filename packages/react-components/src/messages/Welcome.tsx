@@ -3,7 +3,9 @@ import { mailToSupport } from '../mail';
 
 type WelcomeContentProps = { link: string };
 
-const Variant1: React.FC<WelcomeContentProps> = ({ link }) => (
+const InviteScriptWelcomeTemplate: React.FC<WelcomeContentProps> = ({
+  link,
+}) => (
   <>
     <Paragraph>
       Thank you for filling out your Profile Form, you’re one step away from
@@ -33,7 +35,7 @@ const Variant1: React.FC<WelcomeContentProps> = ({ link }) => (
   </>
 );
 
-const Variant2: React.FC<WelcomeContentProps> = ({ link }) => (
+const InviteWelcomeTemplate: React.FC<WelcomeContentProps> = ({ link }) => (
   <>
     <Paragraph>Thank you for starting this journey with us!</Paragraph>
     <Paragraph>
@@ -65,15 +67,18 @@ const Variant2: React.FC<WelcomeContentProps> = ({ link }) => (
 type WelcomeProps = {
   readonly firstName: string;
   readonly link: string;
-  readonly variant?: 'Variant1' | 'Variant2';
+  readonly variant?: 'InviteScriptWelcomeTemplate' | 'InviteWelcomeTemplate';
 };
 
 const Welcome: React.FC<WelcomeProps> = ({
   firstName,
   link,
-  variant = 'Variant1',
+  variant = 'InviteScriptWelcomeTemplate',
 }) => {
-  const contentVariants = { Variant1, Variant2 };
+  const contentVariants = {
+    InviteScriptWelcomeTemplate,
+    InviteWelcomeTemplate,
+  };
   const ContentTag = contentVariants[variant];
   return (
     <section>

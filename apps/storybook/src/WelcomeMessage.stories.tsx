@@ -9,17 +9,17 @@ export default {
   decorators: [MessageLayoutDecorator],
 };
 
-export const Variant1 = () => (
+export const InviteScript = () => (
   <WelcomeMessage
     firstName={text('First Name', 'John')}
     link={text('Link', 'https://example.com/register')}
   />
 );
 
-export const Variant2 = () => (
+export const Invite = () => (
   <WelcomeMessage
     firstName={text('First Name', 'John')}
     link={text('Link', 'https://example.com/register')}
-    variant={'Variant2'}
+    variant={'InviteWelcomeTemplate'}
   />
 );

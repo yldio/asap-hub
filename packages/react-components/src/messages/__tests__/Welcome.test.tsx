@@ -45,7 +45,7 @@ describe('welcome email template', () => {
       <Welcome
         firstName="John Doe"
         link="https://example.com"
-        variant={'Variant2'}
+        variant={'InviteWelcomeTemplate'}
       />,
     );
 

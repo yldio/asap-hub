@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { disable } from '@asap-hub/flags';
+import { UserProfileContext } from '@asap-hub/react-context';
 
 import UserProfileAbout from '../UserProfileAbout';
 
@@ -41,19 +41,41 @@ it('renders an edit button for the biography', () => {
     '/edit-biography',
   );
 });
-it('renders an edit button for the recent works visibility', () => {
-  const { getByLabelText } = render(
-    <UserProfileAbout orcidWorks={[]} editOrcidWorksHref="/edit-works" />,
+it('does not render an edit for the recent works', () => {
+  const { queryByLabelText, rerender } = render(
+    <UserProfileAbout orcidWorks={[]} />,
   );
-  expect(getByLabelText(/edit.+recent.+visib/i)).toHaveAttribute(
-    'href',
-    '/edit-works',
+  expect(queryByLabelText(/edit.+recent.+visib/i)).toBeNull();
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileAbout
+        orcidWorks={[
+          {
+            title: 'Title',
+            type: 'BOOK' as const,
+            publicationDate: {},
+            lastModifiedDate: '1478865224685',
+          },
+        ]}
+      />
+    </UserProfileContext.Provider>,
   );
-});
-it('disables the edit button for the recent works visibility (REGRESSION)', () => {
-  disable('USER_PROFILE_EDIT_WORKS');
-  const { getByLabelText } = render(
-    <UserProfileAbout orcidWorks={[]} editOrcidWorksHref="/edit-works" />,
+  expect(queryByLabelText(/edit.+recent.+visib/i)).toBeNull();
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: false }}>
+      <UserProfileAbout
+        orcidWorks={[
+          {
+            title: 'Title',
+            type: 'BOOK' as const,
+            publicationDate: {},
+            lastModifiedDate: '1478865224685',
+          },
+        ]}
+      />
+    </UserProfileContext.Provider>,
   );
-  expect(getByLabelText(/edit.+recent.+visib/i)).not.toHaveAttribute('href');
+  expect(queryByLabelText(/edit.+recent.+visib/i)).toBeNull();
 });

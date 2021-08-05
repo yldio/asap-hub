@@ -25,7 +25,6 @@ const About: React.FC<AboutProps> = ({ user }) => {
         editBiographyHref={
           id === user.id ? route.editBiography({}).$ : undefined
         }
-        editOrcidWorksHref={id === user.id ? route.editWorks({}).$ : undefined}
       />
       <Route exact path={path + route.editBiography.template}>
         <Frame title="Edit Biography">

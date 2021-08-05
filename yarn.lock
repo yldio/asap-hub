@@ -10495,8 +10495,6 @@ __metadata:
       built: false
     serverless-apigateway-service-proxy:
       unplugged: true
-    serverless-apigateway-service-proxy@1.14.0:
-      unplugged: true
     serverless-iam-roles-per-function:
       unplugged: true
     serverless-s3-sync:

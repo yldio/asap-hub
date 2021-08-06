@@ -109,7 +109,7 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
                   try {
                     await onSave({ onboarded: true });
                     setStatus('hasSaved');
-                    historyPush(discover.template);
+                    historyPush('/');
                   } catch (e) {
                     setStatus('hasError');
                   }

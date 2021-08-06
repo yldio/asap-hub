@@ -4,7 +4,7 @@ import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createUserResponse } from '@asap-hub/fixtures';
-import { network, discover } from '@asap-hub/routing';
+import { network } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
 import { Auth0Provider } from '@asap-hub/frontend/src/auth/test-utils';
 import { getUserClaimKey } from '@asap-hub/react-context';
@@ -272,7 +272,7 @@ describe('the onboarded modal', () => {
     });
   });
 
-  it('redirects to dashboard', async () => {
+  it('redirects to homepage', async () => {
     let user: User = {
       ...createUserResponse(),
       id,
@@ -282,7 +282,6 @@ describe('the onboarded modal', () => {
       .users({})
       .user({ userId: user.id })
       .about({});
-    const dashboard = discover({}).$;
 
     const { findByText } = render(
       <Auth0Provider
@@ -309,8 +308,8 @@ describe('the onboarded modal', () => {
                 backHref={aboutPath}
               />
             </Route>
-            <Route exact path={dashboard}>
-              Dashboard!
+            <Route exact path={'/'}>
+              Homepage!
             </Route>
           </CheckOnboarded>
         </MemoryRouter>
@@ -330,6 +329,6 @@ describe('the onboarded modal', () => {
       ...user,
       onboarded: true,
     };
-    expect(await findByText('Dashboard!')).toBeVisible();
+    expect(await findByText('Homepage!')).toBeVisible();
   });
 });

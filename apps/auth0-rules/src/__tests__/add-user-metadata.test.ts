@@ -93,6 +93,7 @@ const apiUser: UserMetadataResponse = {
   questions: [],
   role: 'Grantee',
   algoliaApiKey: 'test-api-key',
+  labs: [],
 };
 
 describe('Auth0 Rule - Add User Metadata', () => {

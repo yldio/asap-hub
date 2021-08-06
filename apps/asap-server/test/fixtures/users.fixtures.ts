@@ -56,6 +56,7 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             ],
             role: 'Grantee',
             connections: [],
+            labs: [],
           },
         },
         {
@@ -108,6 +109,7 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             ],
             connections: [],
             role: 'Grantee',
+            labs: [],
           },
         },
       ],
@@ -312,6 +314,7 @@ export const patchResponse: RestUser = {
     },
     connections: { iv: [] },
     questions: { iv: [] },
+    labs: { iv: [] },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -364,6 +367,7 @@ export const userResponse: UserResponse = {
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
   biography: 'Biography',
+  labs: [],
 };
 
 export const fetchExpectation: ListUserResponse = {
@@ -398,6 +402,7 @@ export const fetchExpectation: ListUserResponse = {
         },
       ],
       role: 'Grantee',
+      labs: [],
     },
     {
       id: 'userId2',
@@ -425,6 +430,7 @@ export const fetchExpectation: ListUserResponse = {
         },
       ],
       role: 'Grantee',
+      labs: [],
     },
   ],
 };

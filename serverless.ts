@@ -279,6 +279,20 @@ const serverlessConfig: AWS = {
         'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
     },
+    inviteUser: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/user-created/invite.handler',
+      events: [
+        {
+          sqs: {
+            arn: {
+              'Fn::GetAtt': ['InviteUserQueue', 'Arn'],
+            },
+          },
+        },
+      ],
+      environment: {},
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {
@@ -759,6 +773,12 @@ const serverlessConfig: AWS = {
               },
             },
           ],
+        },
+      },
+      InviteUserQueue: {
+        Type: 'AWS::SQS::Queue',
+        Properties: {
+          QueueName: 'InviteUserQueue-${self:provider.stage}',
         },
       },
     },

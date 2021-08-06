@@ -40,14 +40,7 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
       title="Expertise and resources"
       backHref={backHref}
       dirty={skillsDescription !== newSkillsDescription || skills !== newSkills}
-      validate={() => {
-        const skillsValid = validateSkills(newSkills);
-        !skillsValid &&
-          setSkillsCustomValidationMessage(
-            `Please add a minimum of ${MIN_SKILLS} tags`,
-          );
-        return skillsValid;
-      }}
+      validate={() => validateSkills(newSkills)}
       onSave={() =>
         onSave({
           skillsDescription: newSkillsDescription || undefined,
@@ -71,8 +64,11 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
                 enabled={!isSaving}
                 onChange={(newValue) => {
                   setNewSkills(newValue);
-                  if (validateSkills(newValue))
-                    setSkillsCustomValidationMessage('');
+                  validateSkills(newValue)
+                    ? setSkillsCustomValidationMessage('')
+                    : setSkillsCustomValidationMessage(
+                        `Please add a minimum of ${MIN_SKILLS} tags`,
+                      );
                 }}
                 suggestions={skillSuggestions}
                 noOptionsMessage={({ inputValue }) =>

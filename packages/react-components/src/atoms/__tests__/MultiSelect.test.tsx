@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
 import MultiSelect from '../MultiSelect';
-import { ember, pine } from '../../colors';
+import { ember, pine, fern } from '../../colors';
 
 it('shows the selected value', () => {
   const { getByText } = render(
@@ -77,23 +77,37 @@ it('shows the focused suggestion in green', () => {
 });
 
 describe('invalidity', () => {
-  it('makes the input border red', () => {
-    const { getByDisplayValue, rerender } = render(
-      <MultiSelect suggestions={['LHR', 'LGW']} values={['LHR']} />,
-    );
-    expect(
-      findParentWithStyle(getByDisplayValue(''), 'borderColor')?.borderColor,
-    ).not.toBe(ember.rgb);
-
-    rerender(
+  it('shows the error state when input is not focused', () => {
+    const { getByRole, getByText } = render(
       <MultiSelect
         suggestions={['LHR', 'LGW']}
-        values={['LHR']}
         customValidationMessage="Nope."
       />,
     );
-    expect(
-      findParentWithStyle(getByDisplayValue(''), 'borderColor')?.borderColor,
-    ).toBe(ember.rgb);
+
+    const input = getByRole('textbox');
+    fireEvent.focusIn(input);
+    fireEvent.focusOut(input);
+
+    expect(getByText('Nope.')).toBeDefined();
+    expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
+      ember.rgb,
+    );
+  });
+
+  it('shows the default state when input is focused', () => {
+    const { getByRole, queryByText } = render(
+      <MultiSelect
+        suggestions={['LHR', 'LGW']}
+        customValidationMessage="Nope."
+      />,
+    );
+    const input = getByRole('textbox');
+    fireEvent.focusIn(input);
+
+    expect(queryByText('Nope.')).toBeNull();
+    expect(findParentWithStyle(input, 'borderColor')?.borderColor).toBe(
+      fern.rgb,
+    );
   });
 });

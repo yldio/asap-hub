@@ -31,6 +31,7 @@ const user: RestUser = {
     onboarded: {
       iv: true,
     },
+    labs: { iv: [] },
   },
 };
 

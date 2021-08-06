@@ -81,6 +81,11 @@ export interface OrcidWork {
   lastModifiedDate: string;
 }
 
+export interface UserLab {
+  name?: string | null;
+  id: string;
+}
+
 export interface UserTeam {
   id: string;
   displayName?: string;
@@ -122,6 +127,7 @@ export interface UserResponse extends Invitee {
   responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
+  labs: UserLab[];
 }
 
 export type UserMetadataResponse = UserResponse & {

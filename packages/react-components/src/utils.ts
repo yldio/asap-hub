@@ -63,3 +63,30 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   });
   return icon?.[1];
 };
+
+export const capitalizeStr = (str: string = '') =>
+  str
+    .toLocaleLowerCase()
+    .split(' ')
+    .map((word) => {
+      const [firstLetter, ...rest] = word;
+      return `${firstLetter.toUpperCase()}${rest.join('')}`;
+    })
+    .join(' ');
+
+export const getListStrWithSuffix = (
+  arr: string[] = [],
+  suffix: string = '',
+): string =>
+  Array.from(new Set(arr))
+    .reduce((acc: string[], item, currentIdx, arr) => {
+      const lastIdx = arr.length - 1;
+      const text = capitalizeStr(`${item} ${suffix}`);
+
+      arr.length === 1 || currentIdx !== lastIdx
+        ? acc.push(`${text}`)
+        : acc.push(`and ${text}`);
+
+      return acc;
+    }, [])
+    .join(',');

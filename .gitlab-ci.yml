@@ -49,7 +49,7 @@ stages:
 
 ###############
 # stage build #
-###############j
+###############
 
 build:ts:
   image: $INTEGRATION_DOCKER_IMAGE
@@ -69,6 +69,7 @@ build:ts:
     - export CI_REPO_NAME="$CI_PROJECT_NAME"
     - export CI_BRANCH="$CI_COMMIT_BRANCH"
     - yarn bundlewatch
+    - yarn workspace @asap-hub/frontend run sentry:release
   needs:
     - []
   stage: build

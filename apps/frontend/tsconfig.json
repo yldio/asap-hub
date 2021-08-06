@@ -8,10 +8,7 @@
     "noEmit": true,
 
     "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "react-jsx",
-    "sourceMap": true,
-    "inlineSources": true,
-    "sourceRoot": "/"
+    "jsx": "react-jsx"
   },
   "include": ["src"]
 }

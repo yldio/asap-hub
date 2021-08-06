@@ -7,3 +7,4 @@ export const ALGOLIA_INDEX =
   process.env.REACT_APP_ALGOLIA_INDEX || 'asap-hub_research_outputs_dev';
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN;
 export const NODE_ENV = process.env.NODE_ENV || 'development';
+export const RELEASE = process.env.REACT_APP_RELEASE;

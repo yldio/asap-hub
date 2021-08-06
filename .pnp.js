@@ -1129,7 +1129,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "@sentry/cli",
-        "npm:1.67.2"
+        "npm:1.68.0"
       ],
       [
         "@sentry/core",
@@ -1166,10 +1166,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@sentry/utils",
         "npm:6.7.1"
-      ],
-      [
-        "@sentry/webpack-plugin",
-        "npm:1.16.0"
       ],
       [
         "@serverless/cli",
@@ -9610,9 +9606,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@sentry/cli", "npm:1.68.0"],
             ["@sentry/react", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:6.10.0"],
             ["@sentry/tracing", "npm:6.10.0"],
-            ["@sentry/webpack-plugin", "npm:1.16.0"],
             ["@testing-library/dom", "npm:7.31.0"],
             ["@testing-library/jest-dom", "npm:5.12.0"],
             ["@testing-library/react", "virtual:d919308bb57156ea40fa108ac15660f3233a25251c8e0fddd394cbbb5120f00ad3631c78137c6462d601900c88553e005f9604914c68628e5c6bce22175854ef#npm:11.2.6"],
@@ -18947,10 +18943,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@sentry/cli", [
-        ["npm:1.67.2", {
-          "packageLocation": "./.yarn/unplugged/@sentry-cli-npm-1.67.2-2843a4964d/node_modules/@sentry/cli/",
+        ["npm:1.68.0", {
+          "packageLocation": "./.yarn/unplugged/@sentry-cli-npm-1.68.0-f29946c553/node_modules/@sentry/cli/",
           "packageDependencies": [
-            ["@sentry/cli", "npm:1.67.2"],
+            ["@sentry/cli", "npm:1.68.0"],
             ["https-proxy-agent", "npm:5.0.0"],
             ["mkdirp", "npm:0.5.5"],
             ["node-fetch", "npm:2.6.0"],
@@ -19152,16 +19148,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@sentry/utils", "npm:6.7.1"],
             ["@sentry/types", "npm:6.7.1"],
             ["tslib", "npm:1.14.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@sentry/webpack-plugin", [
-        ["npm:1.16.0", {
-          "packageLocation": "./.yarn/cache/@sentry-webpack-plugin-npm-1.16.0-2357702304-8be45c9147.zip/node_modules/@sentry/webpack-plugin/",
-          "packageDependencies": [
-            ["@sentry/webpack-plugin", "npm:1.16.0"],
-            ["@sentry/cli", "npm:1.67.2"]
           ],
           "linkType": "HARD",
         }]

@@ -458,9 +458,9 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": ^7.14.0
+    "@sentry/cli": ^1.68.0
     "@sentry/react": ^6.10.0
     "@sentry/tracing": ^6.10.0
-    "@sentry/webpack-plugin": ^1.16.0
     "@testing-library/dom": ^7.31.0
     "@testing-library/jest-dom": ^5.12.0
     "@testing-library/react": ^11.2.6
@@ -5335,9 +5335,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/cli@npm:^1.67.1":
-  version: 1.67.2
-  resolution: "@sentry/cli@npm:1.67.2"
+"@sentry/cli@npm:^1.68.0":
+  version: 1.68.0
+  resolution: "@sentry/cli@npm:1.68.0"
   dependencies:
     https-proxy-agent: ^5.0.0
     mkdirp: ^0.5.5
@@ -5347,7 +5347,7 @@ __metadata:
     proxy-from-env: ^1.1.0
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: d950d17476c4bd74bb6404ebff62f1c5d8f89538d6fcb943871aeab897c2b300c9ad5426e7a424b31c87c64b0cf229f4471075324530f0c9802b23f119dac0f1
+  checksum: b6121c52ff987950cc30651824c0c9a8b951f1f30938e110d8ad6c79c0cad2a5f798d7e3224446c9aabed358f767327fa68c62cc9ca3411a31bcc9baf487ea9d
   languageName: node
   linkType: hard
 
@@ -5527,15 +5527,6 @@ __metadata:
     "@sentry/types": 6.7.1
     tslib: ^1.9.3
   checksum: 7579666a37819bad85ec247574dbd4e000d23f254d5005037c86686d736f3a5346fc88d9df59a17c13372f68d1787f587f2237624792c0598697db8bb3794bdd
-  languageName: node
-  linkType: hard
-
-"@sentry/webpack-plugin@npm:^1.16.0":
-  version: 1.16.0
-  resolution: "@sentry/webpack-plugin@npm:1.16.0"
-  dependencies:
-    "@sentry/cli": ^1.67.1
-  checksum: 8be45c91472e3879f182ec38f3fc30bdc694dffe82be9f28ceb2ea7fec6b94237f6a58015ea5a9cee1c556e650a5ae6e776a3d50408264f1b2529ea57ae39471
   languageName: node
   linkType: hard
 

@@ -16,11 +16,12 @@ import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
-import { GTM_CONTAINER_ID, SENTRY_DSN, NODE_ENV } from './config';
+import { GTM_CONTAINER_ID, SENTRY_DSN, NODE_ENV, RELEASE } from './config';
 import SentryAuth0 from './auth/SentryAuth0';
 
 Sentry.init({
   dsn: SENTRY_DSN,
+  release: RELEASE,
   integrations: [
     new Integrations.BrowserTracing({
       // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation

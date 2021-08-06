@@ -15,7 +15,7 @@ import {
 type UserProfileStaffProps = ComponentProps<typeof UserProfileStaffBackground> &
   ComponentProps<typeof QuestionsSection> &
   ComponentProps<typeof ProfileSkills> &
-  Pick<UserResponse, 'email'> & {
+  Pick<UserResponse, 'email' | 'labs'> & {
     readonly biography?: ComponentProps<
       typeof UserProfileBiography
     >['biography'];
@@ -37,6 +37,7 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
   questions,
   reachOut,
   responsibilities,
+  labs,
 }) => (
   <ProfileCardList>
     {{
@@ -55,6 +56,7 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
               key={team.id}
               {...team}
               firstName={firstName}
+              labs={labs}
             />
           ))
         : null,

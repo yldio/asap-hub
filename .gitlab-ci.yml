@@ -63,13 +63,15 @@ build:ts:
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - export REACT_APP_ALGOLIA_INDEX=$ALGOLIA_INDEX
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
+    - yarn install --immutable --immutable-cache
     - yarn run build
-
     - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
     - export CI_REPO_NAME="$CI_PROJECT_NAME"
     - export CI_BRANCH="$CI_COMMIT_BRANCH"
     - yarn bundlewatch
-    - yarn workspace @asap-hub/frontend run sentry:release
+
+    - export FRONTEND_SENTRY_RELEASE_AUTH_TOKEN=$FRONTEND_SENTRY_RELEASE_AUTH_TOKEN
+    - yarn run release:frontend
   needs:
     - []
   stage: build
@@ -87,7 +89,7 @@ build:native:
 
 ##############
 # stage test #
-##############j
+##############
 
 .tmpl:test: &tmpl_test
   script:

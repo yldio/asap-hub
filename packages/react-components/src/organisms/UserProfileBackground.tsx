@@ -7,8 +7,10 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import { Card, Headline2, Headline3, Link } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
+import { getListStrWithSuffix, capitalizeText } from '../utils';
 
-type UserProfileBackgroundProps = UserTeam & Pick<UserResponse, 'firstName'>;
+type UserProfileBackgroundProps = UserTeam &
+  Pick<UserResponse, 'firstName' | 'labs'>;
 
 const dynamicContainerStyles = css({
   display: 'flex',
@@ -50,11 +52,23 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   approach = '',
   responsibilities = '',
   proposal,
+  labs,
 
   firstName,
 }) => {
   const teamHref = network({}).teams({}).team({ teamId: id }).$;
   const { isOwnProfile } = useContext(UserProfileContext);
+
+  const labsList = capitalizeText(
+    getListStrWithSuffix(
+      labs.reduce((acc: string[], item) => {
+        if (item?.name) acc.push(item.name);
+        return acc;
+      }, []),
+      'Lab',
+    ),
+  );
+
   return (
     <Card>
       <Headline2 styleAsHeading={3}>
@@ -71,6 +85,12 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
             <p>{role}</p>
           </div>
         </div>
+        {!!labs.length && (
+          <div css={detailsContentStyle}>
+            <Headline3 styleAsHeading={5}>Labs</Headline3>
+            {labsList}
+          </div>
+        )}
         {(approach || isOwnProfile) && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>

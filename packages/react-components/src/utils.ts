@@ -64,16 +64,6 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   return icon?.[1];
 };
 
-export const capitalizeStr = (str: string = '') =>
-  str
-    .toLocaleLowerCase()
-    .split(' ')
-    .map((word) => {
-      const [firstLetter, ...rest] = word;
-      return `${firstLetter.toUpperCase()}${rest.join('')}`;
-    })
-    .join(' ');
-
 export const getListStrWithSuffix = (
   arr: string[] = [],
   suffix: string = '',
@@ -81,7 +71,7 @@ export const getListStrWithSuffix = (
   Array.from(new Set(arr))
     .reduce((acc: string[], item, currentIdx, arr) => {
       const lastIdx = arr.length - 1;
-      const text = capitalizeStr(`${item} ${suffix}`);
+      const text = suffix ? `${item} ${suffix}` : item;
 
       arr.length === 1 || currentIdx !== lastIdx
         ? acc.push(`${text}`)
@@ -89,4 +79,16 @@ export const getListStrWithSuffix = (
 
       return acc;
     }, [])
-    .join(',');
+    .join(', ');
+
+export const capitalizeText = (str: string = '') =>
+  str
+    .split(' ')
+    .reduce((acc: string[], w) => {
+      if (!!w) {
+        const [firstLetter, ...rest] = w.toLocaleLowerCase();
+        acc.push(`${firstLetter.toUpperCase()}${rest.join('')}`);
+      }
+      return acc;
+    }, [])
+    .join(' ');

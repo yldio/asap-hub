@@ -361,7 +361,7 @@ export const userResponse: UserResponse = {
   questions: ['Question 1', 'Question 2'],
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
-  biography: 'biography',
+  biography: 'Biography',
 };
 
 export const fetchExpectation: ListUserResponse = {

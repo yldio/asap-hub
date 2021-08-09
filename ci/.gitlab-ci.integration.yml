@@ -3,9 +3,10 @@
 variables:
   INTEGRATION_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node-python-sq:latest
   SQUIDEX_BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/squidex-utils:latest
+  BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/docker:19.03.12
 
 build:docker-images:
-  image: docker:19.03.12
+  image: $BASE_DOCKER_IMAGE
   stage: .pre
   services:
     - docker:19.03.12-dind

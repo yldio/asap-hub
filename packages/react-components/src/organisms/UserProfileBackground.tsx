@@ -52,21 +52,16 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   approach = '',
   responsibilities = '',
   proposal,
-  labs,
-
+  labs = [],
   firstName,
 }) => {
   const teamHref = network({}).teams({}).team({ teamId: id }).$;
   const { isOwnProfile } = useContext(UserProfileContext);
 
-  const labsList = capitalizeText(
-    getListStrWithSuffix(
-      labs.reduce((acc: string[], item) => {
-        if (item?.name) acc.push(item.name);
-        return acc;
-      }, []),
-      'Lab',
-    ),
+  const labsList = getListStrWithSuffix(
+    labs.map((lab) => lab.name),
+    'Lab',
+    capitalizeText,
   );
 
   return (
@@ -85,7 +80,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
             <p>{role}</p>
           </div>
         </div>
-        {!!labs.length && (
+        {!!labsList.length && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Labs</Headline3>
             {labsList}

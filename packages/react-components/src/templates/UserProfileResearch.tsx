@@ -18,7 +18,10 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
   > &
   Pick<UserResponse, 'email' | 'contactEmail' | 'labs'> & {
     readonly teams: ReadonlyArray<
-      Omit<ComponentProps<typeof UserProfileBackground>, 'firstName'> & {
+      Omit<
+        ComponentProps<typeof UserProfileBackground>,
+        'firstName' | 'labs'
+      > & {
         editHref?: string;
       }
     >;

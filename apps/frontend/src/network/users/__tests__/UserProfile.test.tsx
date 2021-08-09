@@ -213,6 +213,7 @@ describe('a header edit button', () => {
       ...createUserResponse(),
       role: 'Staff',
     });
+
     await waitFor(() =>
       expect(queryByText(/loading/i)).not.toBeInTheDocument(),
     );

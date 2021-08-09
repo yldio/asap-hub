@@ -5,6 +5,8 @@ import {
   isInternalLink,
   getIconFromUrl,
   isLink,
+  getListStrWithSuffix,
+  capitalizeText,
 } from '../utils';
 
 describe('getSvgAspectRatio', () => {
@@ -91,5 +93,30 @@ describe('isLink', () => {
   });
   it('returns true when the input is a valid link', () => {
     expect(isLink('https://example.com')).toBeTruthy();
+  });
+});
+
+describe('getListStrWithSuffix', () => {
+  it('returns an empty string when the input is an not valid', () => {
+    expect(getListStrWithSuffix([])).toBe('');
+    expect(getListStrWithSuffix(undefined)).toBe('');
+  });
+
+  it('returns a string that represents a unique list of the values', () => {
+    expect(getListStrWithSuffix(['one', 'two', 'three', 'one'])).toEqual(
+      'one, two, and three',
+    );
+    expect(getListStrWithSuffix(['one lab', 'two labs', 'three labs'])).toEqual(
+      'one lab, two labs, and three labs',
+    );
+  });
+});
+
+describe('capitalizeText', () => {
+  it('capitalizes a give string', () => {
+    expect(capitalizeText('mike lab')).toEqual('Mike Lab');
+    expect(capitalizeText('mike-lab')).toEqual('Mike-lab');
+    expect(capitalizeText('mike        lab')).toEqual('Mike Lab');
+    expect(capitalizeText('mike ')).toEqual('Mike');
   });
 });

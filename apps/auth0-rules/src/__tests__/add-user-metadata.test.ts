@@ -77,7 +77,7 @@ const context: RuleContext = {
   authorization: { roles: [] },
 };
 
-const apiUser: UserMetadataResponse = {
+const apiUser: Omit<UserMetadataResponse, 'labs'> = {
   onboarded: true,
   displayName: 'Joao Tiago',
   firstName: 'Joao',
@@ -93,7 +93,6 @@ const apiUser: UserMetadataResponse = {
   questions: [],
   role: 'Grantee',
   algoliaApiKey: 'test-api-key',
-  labs: [],
 };
 
 describe('Auth0 Rule - Add User Metadata', () => {

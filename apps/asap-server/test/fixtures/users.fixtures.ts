@@ -56,7 +56,10 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             ],
             role: 'Grantee',
             connections: [],
-            labs: [],
+            labs: [
+              { id: 'cd7be4902', flatData: { name: 'Brighton' } },
+              { id: 'cd7be4903', flatData: { name: 'Liverpool' } },
+            ],
           },
         },
         {
@@ -187,6 +190,10 @@ export const getGraphQlResponseFetchUser = (): { data: ResponseFetchUser } => ({
         role: 'Grantee',
         biography: 'Biography',
         connections: [],
+        labs: [
+          { id: 'cd7be4904', flatData: { name: 'Manchester' } },
+          { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+        ],
       },
     },
   },
@@ -275,6 +282,10 @@ export const buildUserGraphqlResponse = (
         role: 'Grantee',
         biography: 'Biography',
         connections: [],
+        labs: [
+          { id: 'cd7be4904', flatData: { name: 'Manchester' } },
+          { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+        ],
         ...flatdata,
       },
     },
@@ -367,7 +378,10 @@ export const userResponse: UserResponse = {
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
   biography: 'Biography',
-  labs: [],
+  labs: [
+    { id: 'cd7be4904', name: 'Manchester' },
+    { id: 'cd7be4905', name: 'Glasgow' },
+  ],
 };
 
 export const fetchExpectation: ListUserResponse = {
@@ -402,7 +416,10 @@ export const fetchExpectation: ListUserResponse = {
         },
       ],
       role: 'Grantee',
-      labs: [],
+      labs: [
+        { id: 'cd7be4902', name: 'Brighton' },
+        { id: 'cd7be4903', name: 'Liverpool' },
+      ],
     },
     {
       id: 'userId2',

@@ -65,20 +65,20 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
 };
 
 export const getListStrWithSuffix = (
-  data: string[] = [],
+  data: (string | null | undefined)[] = [],
   suffix: string = '',
+  format?: (str: string) => string,
 ): string =>
   Array.from(new Set(data))
-    .reduce((acc: string[], item, currentIdx, arr) => {
+    .filter((value): value is string => !!value?.trim())
+    .map((item, idx, arr) => {
+      const itemFormatted = format ? format(item) : item;
+      const itemValue = suffix ? `${itemFormatted} ${suffix}` : itemFormatted;
       const lastIdx = arr.length - 1;
-      const text = suffix ? `${item} ${suffix}` : item;
-
-      arr.length === 1 || currentIdx !== lastIdx
-        ? acc.push(`${text}`)
-        : acc.push(`and ${text}`);
-
-      return acc;
-    }, [])
+      return arr.length === 1 || idx !== lastIdx
+        ? `${itemValue}`
+        : `and ${itemValue}`;
+    })
     .join(', ');
 
 export const capitalizeText = (str: string = ''): string =>

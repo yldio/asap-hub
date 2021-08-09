@@ -23,7 +23,7 @@ type UserProfileStaffProps = ComponentProps<typeof UserProfileStaffBackground> &
       typeof UserProfileRecentWorks
     >['orcidWorks'];
     readonly teams: ReadonlyArray<
-      Omit<ComponentProps<typeof UserProfileBackground>, 'firstName'>
+      Omit<ComponentProps<typeof UserProfileBackground>, 'firstName' | 'labs'>
     >;
   };
 
@@ -56,7 +56,6 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
               key={team.id}
               {...team}
               firstName={firstName}
-              labs={labs}
             />
           ))
         : null,

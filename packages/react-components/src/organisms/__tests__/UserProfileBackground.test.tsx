@@ -179,7 +179,7 @@ it('renders placeholder for your own profile when there is no approach', () => {
   expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);
 });
 
-it('renders list of labs', () => {
+it('renders the list of labs', () => {
   const { queryByText } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
       <UserProfileBackground
@@ -188,13 +188,14 @@ it('renders list of labs', () => {
         displayName="Phillip, M"
         role="Collaborating PI"
         labs={[
-          { name: 'Mike', id: '0000' },
-          { name: 'Bob', id: '0001' },
-          { name: 'Michael', id: '0000' },
+          { name: 'LONDON', id: '0001' },
+          { name: 'Paris', id: '0002' },
+          { name: 'barcelona', id: '0003' },
         ]}
       />
     </UserProfileContext.Provider>,
   );
+
   expect(queryByText(/labs/i)).toBeVisible();
-  expect(queryByText('Mike Lab, Bob Lab, And Michael Lab')).toBeVisible();
+  expect(queryByText('London Lab, Paris Lab, and Barcelona Lab')).toBeVisible();
 });

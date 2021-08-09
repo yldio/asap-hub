@@ -98,6 +98,8 @@ describe('isLink', () => {
 
 describe('getListStrWithSuffix', () => {
   it('returns an empty string when the input is an not valid', () => {
+    expect(getListStrWithSuffix([null, undefined, '      '])).toBe('');
+    expect(getListStrWithSuffix([null, undefined])).toBe('');
     expect(getListStrWithSuffix([])).toBe('');
     expect(getListStrWithSuffix(undefined)).toBe('');
   });
@@ -114,9 +116,9 @@ describe('getListStrWithSuffix', () => {
 
 describe('capitalizeText', () => {
   it('capitalizes a give string', () => {
-    expect(capitalizeText('mike lab')).toEqual('Mike Lab');
-    expect(capitalizeText('mike-lab')).toEqual('Mike-lab');
-    expect(capitalizeText('mike        lab')).toEqual('Mike Lab');
-    expect(capitalizeText('mike ')).toEqual('Mike');
+    expect(capitalizeText('london lab')).toEqual('London Lab');
+    expect(capitalizeText('london-lab')).toEqual('London-lab');
+    expect(capitalizeText('london        lab')).toEqual('London Lab');
+    expect(capitalizeText('london ')).toEqual('London');
   });
 });

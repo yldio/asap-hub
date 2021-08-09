@@ -26,6 +26,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     userProfileGroupsCard?: ReactNode;
     editSkillsHref?: string;
     editQuestionsHref?: string;
+    isOwnProfile?: boolean;
   };
 
 const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
@@ -37,6 +38,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   skills,
   skillsDescription,
   questions,
+  isOwnProfile,
 
   userProfileGroupsCard,
   editSkillsHref,
@@ -89,7 +91,7 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                 label: 'Edit open questions',
               },
       },
-      {
+      isOwnProfile || {
         card: (
           <CtaCard
             href={createMailTo(contactEmail || email)}

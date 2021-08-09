@@ -47,6 +47,7 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   userProfileGroupsCard: boolean('User Profile Groups Placeholder', true)
     ? 'User Profile Groups Placeholder'
     : undefined,
+  isOwnProfile: boolean(`Is own profile`, false),
 });
 
 export const ViewOnly = () => <UserProfileResearch {...props()} />;

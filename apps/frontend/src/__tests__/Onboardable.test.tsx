@@ -35,6 +35,7 @@ const onboardableUser: UserResponse = {
   city: 'a',
   country: 'a',
   skills: ['1', '2', '3', '4', '5'],
+  biography: 'a',
 };
 
 it('is undefined when there is no logged in user', async () => {

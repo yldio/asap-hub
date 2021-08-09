@@ -10,6 +10,7 @@ it('generates a heading', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
+      labs={[]}
     />,
   );
   expect(getByText(/role.on.asap/i).tagName).toBe('H2');
@@ -22,6 +23,7 @@ it('renders links to team page twice', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
+      labs={[]}
     />,
   );
 
@@ -43,6 +45,7 @@ it('renders proposal if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
+      labs={[]}
     />,
   );
 
@@ -56,6 +59,7 @@ it('renders proposal if present', () => {
       role="Collaborating PI"
       approach="text"
       proposal="42"
+      labs={[]}
     />,
   );
 
@@ -69,6 +73,7 @@ it('renders responsibilities if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
+      labs={[]}
     />,
   );
   expect(queryAllByText(/responsibilities/i)).toHaveLength(0);
@@ -80,6 +85,7 @@ it('renders responsibilities if present', () => {
       displayName="Phillip, M"
       role="Collaborating PI"
       responsibilities="text"
+      labs={[]}
     />,
   );
 
@@ -94,6 +100,7 @@ it('renders placeholder if no responsibilities provided for your own profile', (
         firstName="Phillip"
         displayName="Phillip, M"
         role="Collaborating PI"
+        labs={[]}
       />
       ,
     </UserProfileContext.Provider>,
@@ -107,6 +114,7 @@ it('renders placeholder if no responsibilities provided for your own profile', (
         firstName="Phillip"
         displayName="Phillip, M"
         role="Collaborating PI"
+        labs={[]}
       />
       ,
     </UserProfileContext.Provider>,
@@ -122,6 +130,7 @@ it('renders approach if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
+      labs={[]}
     />,
   );
 
@@ -134,6 +143,7 @@ it('renders approach if present', () => {
       displayName="Phillip, M"
       role="Collaborating PI"
       approach="text"
+      labs={[]}
     />,
   );
 
@@ -148,6 +158,7 @@ it('renders placeholder for your own profile when there is no approach', () => {
         firstName="Phillip"
         displayName="Phillip, M"
         role="Collaborating PI"
+        labs={[]}
       />
     </UserProfileContext.Provider>,
   );
@@ -160,9 +171,30 @@ it('renders placeholder for your own profile when there is no approach', () => {
         firstName="Phillip"
         displayName="Phillip, M"
         role="Collaborating PI"
+        labs={[]}
       />
     </UserProfileContext.Provider>,
   );
 
   expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);
+});
+
+it('renders list of labs', () => {
+  const { queryByText } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileBackground
+        id="42"
+        firstName="Phillip"
+        displayName="Phillip, M"
+        role="Collaborating PI"
+        labs={[
+          { name: 'Mike', id: '0000' },
+          { name: 'Bob', id: '0001' },
+          { name: 'Michael', id: '0000' },
+        ]}
+      />
+    </UserProfileContext.Provider>,
+  );
+  expect(queryByText(/labs/i)).toBeVisible();
+  expect(queryByText('Mike Lab, Bob Lab, And Michael Lab')).toBeVisible();
 });

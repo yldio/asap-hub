@@ -10,6 +10,7 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   teams: [],
   skills: [],
   questions: [],
+  labs: [],
 };
 
 it('renders the role on ASAP', () => {
@@ -21,6 +22,7 @@ it('renders the role on ASAP', () => {
           id: '42',
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
+          labs: [],
         },
       ]}
     />,
@@ -59,6 +61,7 @@ it('renders an edit button for the role on the team', () => {
           displayName: 'Team',
           role: 'Lead PI (Core Leadership)',
           editHref: '/edit-team-membership/42',
+          labs: [],
         },
       ]}
     />,

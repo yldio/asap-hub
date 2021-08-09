@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { UserPatchRequest } from '@asap-hub/model';
-import { discover } from '@asap-hub/routing';
 import { useState } from 'react';
 
 import { Modal } from '../molecules';
@@ -109,7 +108,7 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
                   try {
                     await onSave({ onboarded: true });
                     setStatus('hasSaved');
-                    historyPush(discover.template);
+                    historyPush('/');
                   } catch (e) {
                     setStatus('hasError');
                   }

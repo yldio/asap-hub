@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { UserPatchRequest } from '@asap-hub/model';
-import { discover } from '@asap-hub/routing';
 import { useState } from 'react';
 
 import { Modal } from '../molecules';

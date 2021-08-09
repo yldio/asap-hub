@@ -1,5 +1,6 @@
 import { ListResponse } from './common';
 import { TeamRole } from './team';
+import { Lab } from './lab';
 
 export type Role = 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
 export type UserDegree =
@@ -81,11 +82,6 @@ export interface OrcidWork {
   lastModifiedDate: string;
 }
 
-export interface UserLab {
-  name?: string | null;
-  id: string;
-}
-
 export interface UserTeam {
   id: string;
   displayName?: string;
@@ -127,7 +123,7 @@ export interface UserResponse extends Invitee {
   responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
-  labs: UserLab[];
+  labs: Lab[];
 }
 
 export type UserMetadataResponse = UserResponse & {

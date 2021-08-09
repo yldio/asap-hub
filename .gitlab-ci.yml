@@ -25,16 +25,17 @@ include:
     - build:ts
     - build:native
 
-image: node:14.17-alpine
+variables:
+  ASAP_HOSTNAME: hub.asap.science
+  PLAYWRIGHT_BROWSERS_PATH: 0
+  BASE_DOCKER_IMAGE: $CI_REGISTRY/$CI_PROJECT_PATH/node:14.17-alpine
+
+image: $BASE_DOCKER_IMAGE
 
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH == 'master'
     - if: $CI_EXTERNAL_PULL_REQUEST_IID
-
-variables:
-  ASAP_HOSTNAME: hub.asap.science
-  PLAYWRIGHT_BROWSERS_PATH: 0
 
 stages:
   - build

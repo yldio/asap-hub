@@ -107,6 +107,13 @@ const serverlessConfig: AWS = {
           ],
         },
       },
+      {
+        Effect: 'Allow',
+        Action: 'ses:SendTemplatedEmail',
+        Resource: [
+          'arn:aws:ses:eu-west-1:${aws:accountId}:identity/*',
+        ],
+      },
     ],
   },
   package: {

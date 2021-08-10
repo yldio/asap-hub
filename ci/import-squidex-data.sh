@@ -9,8 +9,7 @@ IFS=
 echo 'Importing data...'
 
 # create-app.py configures sq to new app
-#export SQ_SYNC_OUTPUT="$(sq sync in backup)"
-export SQ_SYNC_OUTPUT="FAIL: example failure"
+export SQ_SYNC_OUTPUT="$(sq sync in backup)"
 if echo "$SQ_SYNC_OUTPUT" | grep -q -i -E 'warn|error|fail|exception'; then
     echo "Data import failure - sq sync in backup failed:"
     echo $SQ_SYNC_OUTPUT

@@ -25,6 +25,7 @@
     "start:squidex": "docker-compose -f dev/docker-compose.yaml up",
     "start:backend": "yarn workspace @asap-hub/asap-server start",
     "start:frontend": "yarn workspace @asap-hub/frontend start",
+    "release:frontend": "yarn workspace @asap-hub/frontend release:frontend",
     "start:sb": "yarn workspace @asap-hub/storybook start",
     "sls": "babel-node --extensions=.js,.jsx,.ts,.tsx --config-file=./babel-cjs.config.js serverless/link-plugins.ts && TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn pnpify serverless",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",

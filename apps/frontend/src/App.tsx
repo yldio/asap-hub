@@ -1,6 +1,9 @@
 import { FC, lazy, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
+import * as Sentry from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
+
 import {
   BasicLayout,
   GoogleTagManager,
@@ -13,7 +16,24 @@ import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
-import { GTM_CONTAINER_ID } from './config';
+import { GTM_CONTAINER_ID, SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
+import SentryAuth0 from './auth/SentryAuth0';
+
+Sentry.init({
+  dsn: SENTRY_DSN,
+  release: RELEASE,
+  integrations: [
+    new Integrations.BrowserTracing({
+      // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation
+      routingInstrumentation: Sentry.reactRouterV5Instrumentation(history),
+    }),
+  ],
+  environment: ENVIRONMENT,
+  // Is recommended adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+  attachStacktrace: true,
+});
 
 const loadAuthProvider = () =>
   import(/* webpackChunkName: "auth-provider" */ './auth/AuthProvider');
@@ -38,6 +58,7 @@ const App: FC<Record<string, never>> = () => {
     <Frame title="ASAP Hub">
       <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       <AuthProvider>
+        <SentryAuth0 />
         <Router history={history}>
           <LastLocationProvider>
             <Frame title={null}>

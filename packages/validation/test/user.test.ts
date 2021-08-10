@@ -203,4 +203,14 @@ describe('isUserOnboardable validation', () => {
       isOnboardable: false,
     });
   });
+  test('Should fail if biography is missing from user profile', async () => {
+    const userIncompleteResponse: UserResponse = {
+      ...userResponse,
+      biography: undefined,
+    };
+
+    expect(isUserOnboardable(userIncompleteResponse)).toEqual({
+      isOnboardable: false,
+    });
+  });
 });

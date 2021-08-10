@@ -183,6 +183,7 @@ export const getGraphQlResponseFetchUser = (): { data: ResponseFetchUser } => ({
           },
         ],
         role: 'Grantee',
+        biography: 'Biography',
         connections: [],
       },
     },
@@ -270,6 +271,7 @@ export const buildUserGraphqlResponse = (
           },
         ],
         role: 'Grantee',
+        biography: 'Biography',
         connections: [],
         ...flatdata,
       },
@@ -361,6 +363,7 @@ export const userResponse: UserResponse = {
   questions: ['Question 1', 'Question 2'],
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
+  biography: 'Biography',
 };
 
 export const fetchExpectation: ListUserResponse = {

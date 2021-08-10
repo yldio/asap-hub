@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, UserResponse, UserTeam } from '@asap-hub/model';
+import { OrcidWork, UserResponse, UserTeam, Lab } from '@asap-hub/model';
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 
@@ -92,9 +92,9 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const displayName = `${item.flatData!.firstName} ${item.flatData!.lastName}`;
 
-  const flatLabs =
+  const flatLabs: Lab[] =
     item.flatData?.labs?.map((lab) => ({
-      name: lab.flatData?.name,
+      name: lab.flatData?.name ?? undefined,
       id: lab.id,
     })) || [];
 

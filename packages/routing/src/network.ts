@@ -6,7 +6,6 @@ const user = (() => {
   const editOnboarded = route('/edit-onboarded', {}, {});
 
   const editBiography = route('/edit-biography', {}, {});
-  const editWorks = route('/edit-works', {}, {});
   const about = route(
     '/about',
     {},
@@ -15,7 +14,6 @@ const user = (() => {
       editContactInfo,
       editOnboarded,
       editBiography,
-      editWorks,
     },
   );
 

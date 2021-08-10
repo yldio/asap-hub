@@ -1,17 +1,11 @@
 import { ComponentProps } from 'react';
 import { UserProfileAbout } from '@asap-hub/react-components';
 import { text } from '@storybook/addon-knobs';
-import { makeFlagDecorator } from './flags';
 
 export default {
   title: 'Templates / User Profile / About',
   component: UserProfileAbout,
-  decorators: [
-    makeFlagDecorator(
-      'Enable Works Visibility Editing',
-      'USER_PROFILE_EDIT_WORKS',
-    ),
-  ],
+  decorators: [],
 };
 
 const props = (): ComponentProps<typeof UserProfileAbout> => ({
@@ -37,9 +31,5 @@ const props = (): ComponentProps<typeof UserProfileAbout> => ({
 
 export const ViewOnly = () => <UserProfileAbout {...props()} />;
 export const Editable = () => (
-  <UserProfileAbout
-    {...props()}
-    editBiographyHref="/wrong"
-    editOrcidWorksHref="/wrong"
-  />
+  <UserProfileAbout {...props()} editBiographyHref="/wrong" />
 );

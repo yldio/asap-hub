@@ -62,7 +62,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               }
             : undefined,
       })),
-
       {
         card: (
           <ProfileSkills

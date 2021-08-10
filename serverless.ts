@@ -305,7 +305,9 @@ const serverlessConfig: AWS = {
           },
         },
       ],
-      environment: {},
+      environment: {
+        SES_REGION: '${env:SES_SANDBOX_REGION}',
+      },
     },
     ...(NODE_ENV === 'production'
       ? {

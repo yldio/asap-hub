@@ -1,7 +1,7 @@
 import { FC, lazy, useEffect } from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 import { LastLocationProvider } from 'react-router-last-location';
-import * as Sentry from '@sentry/react';
+import { init, reactRouterV5Instrumentation } from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
 import {
@@ -19,13 +19,13 @@ import Frame from './structure/Frame';
 import { GTM_CONTAINER_ID, SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
 import SentryAuth0 from './auth/SentryAuth0';
 
-Sentry.init({
+init({
   dsn: SENTRY_DSN,
   release: RELEASE,
   integrations: [
     new Integrations.BrowserTracing({
       // Can also use reactRouterV3Instrumentation or reactRouterV4Instrumentation
-      routingInstrumentation: Sentry.reactRouterV5Instrumentation(history),
+      routingInstrumentation: reactRouterV5Instrumentation(history),
     }),
   ],
   environment: ENVIRONMENT,

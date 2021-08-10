@@ -1,9 +1,9 @@
 import { useCurrentUser } from '@asap-hub/react-context';
-import * as Sentry from '@sentry/react';
+import { setContext } from '@sentry/react';
 
 const SentryAuth0: React.FC = () => {
   const user = useCurrentUser();
-  Sentry.setContext('user', user);
+  setContext('user', user);
   return null;
 };
 

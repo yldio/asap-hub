@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 
 ASAP_HOSTNAME=${ASAP_HOSTNAME:-"hub.asap.science"}
-REACT_APP_RELEASE=${CI_PIPELINE_ID}
 if [ ! -z $CI_EXTERNAL_PULL_REQUEST_IID ]; then
     export ASAP_API_URL="https://api-${CI_EXTERNAL_PULL_REQUEST_IID}.${ASAP_HOSTNAME}"
     export ASAP_APP_URL="https://${CI_EXTERNAL_PULL_REQUEST_IID}.${ASAP_HOSTNAME}"

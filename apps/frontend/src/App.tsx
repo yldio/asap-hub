@@ -16,7 +16,7 @@ import CheckAuth from './auth/CheckAuth';
 import Signin from './auth/Signin';
 import Logout from './auth/Logout';
 import Frame from './structure/Frame';
-import { GTM_CONTAINER_ID, SENTRY_DSN, NODE_ENV, RELEASE } from './config';
+import { GTM_CONTAINER_ID, SENTRY_DSN, ENVIRONMENT, RELEASE } from './config';
 import SentryAuth0 from './auth/SentryAuth0';
 
 Sentry.init({
@@ -28,7 +28,7 @@ Sentry.init({
       routingInstrumentation: Sentry.reactRouterV5Instrumentation(history),
     }),
   ],
-  environment: NODE_ENV,
+  environment: ENVIRONMENT,
   // Is recommended adjusting this value in production, or using tracesSampler
   // for finer control
   tracesSampleRate: 1.0,

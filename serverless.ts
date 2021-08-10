@@ -109,10 +109,13 @@ const serverlessConfig: AWS = {
       },
       {
         Effect: 'Allow',
-        Action: 'ses:SendTemplatedEmail',
-        Resource: [
-          'arn:aws:ses:eu-west-1:${aws:accountId}:identity/*',
-        ],
+        Action: 'ses:SendEmail',
+        Resource: ['*'],
+        Condition: {
+          'ForAllValues:StringLike': {
+            'ses:Recipients': ['piotr.lukasz.szpak@gmail.com', '*@yld.io'],
+          },
+        },
       },
     ],
   },

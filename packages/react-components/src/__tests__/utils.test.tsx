@@ -112,6 +112,22 @@ describe('getListStrWithSuffix', () => {
       'one lab, two labs, and three labs',
     );
   });
+  it('can add a suffix to each value of the list', () => {
+    expect(getListStrWithSuffix(['london', 'paris'], 'Lab')).toBe(
+      'london Lab, and paris Lab',
+    );
+    expect(getListStrWithSuffix(['london', undefined, null], 'Lab')).toBe(
+      'london Lab',
+    );
+  });
+  it('can apply a custom format function to each value of the list', () => {
+    expect(
+      getListStrWithSuffix(['london', 'paris'], 'Lab', capitalizeText),
+    ).toBe('London Lab, and Paris Lab');
+    expect(
+      getListStrWithSuffix(['london', undefined, null], 'Lab', capitalizeText),
+    ).toBe('London Lab');
+  });
 });
 
 describe('capitalizeText', () => {

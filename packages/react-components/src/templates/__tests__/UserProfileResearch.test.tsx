@@ -114,6 +114,18 @@ it('create mailto for contactEmail', () => {
   );
 });
 
+it('doesnt render contact card if isOwnProfile is true', async () => {
+  const { queryByText } = render(
+    <UserProfileResearch
+      {...commonProps}
+      email="email@example.com"
+      contactEmail="contactEmail@example.com"
+      isOwnProfile={true}
+    />,
+  );
+  expect(queryByText(/contact/i)).not.toBeInTheDocument();
+});
+
 it('renders user profile groups card', () => {
   const { getByText } = render(
     <UserProfileResearch

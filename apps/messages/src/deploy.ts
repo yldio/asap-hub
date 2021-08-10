@@ -4,7 +4,9 @@ import path from 'path';
 
 import config from './webpack.config';
 
-const ses = new aws.SES({ apiVersion: '2010-12-01' });
+const region = process.argv[2] || 'us-east-1';
+const ses = new aws.SES({ apiVersion: '2010-12-01', region });
+
 const syncTemplate = async (src: string): Promise<void> => {
   const template = require(src);
   const templateName = template.TemplateName;
@@ -44,6 +46,7 @@ const syncTemplates = async () => {
     .filter((file) => path.extname(file) === '.json')
     .map((file) => path.resolve(outputDir, file));
 
+  console.log(`Using region ${region}`);
   console.log('Available templates:', templates);
   if (!templates.length) {
     process.exit(1);

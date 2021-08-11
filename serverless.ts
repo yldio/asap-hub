@@ -383,6 +383,18 @@ const serverlessConfig: AWS = {
           AuthorizerPayloadFormatVersion: '2.0',
         },
       },
+      HttpApiAuthorizerPermission: {
+        Type: 'AWS::Lambda::Permission',
+        Properties: {
+          FunctionName: {
+            'Fn::GetAtt': ['SquidexWebhookAuthorizerLambdaFunction', 'Arn'],
+          },
+          Action: 'lambda:InvokeFunction',
+          Principal: {
+            'Fn::Join': ['', ['apigateway.', { Ref: 'AWS::URLSuffix' }]],
+          },
+        },
+      },
       HttpApiApiMapping: {
         Type: 'AWS::ApiGatewayV2::ApiMapping',
         DependsOn: ['HttpApiDomain'],

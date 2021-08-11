@@ -77,7 +77,7 @@ const context: RuleContext = {
   authorization: { roles: [] },
 };
 
-const apiUser: Omit<UserMetadataResponse, 'labs'> = {
+const apiUser: UserMetadataResponse = {
   onboarded: true,
   displayName: 'Joao Tiago',
   firstName: 'Joao',

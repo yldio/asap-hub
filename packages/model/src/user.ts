@@ -126,7 +126,7 @@ export interface UserResponse extends Invitee {
   labs: Lab[];
 }
 
-export type UserMetadataResponse = UserResponse & {
+export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 

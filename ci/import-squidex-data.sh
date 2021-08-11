@@ -1,9 +1,7 @@
 #!/usr/bin/env sh
 
 # Set this envvar to true in GitLab if you want to print the sq sync logs on success for debugging
-if [ -z "$PRINT_SYNC_LOGS_ON_SUCCESS" ]; then
-    PRINT_SYNC_LOGS_ON_SUCCESS=false
-fi
+PRINT_SYNC_LOGS_ON_SUCCESS="${PRINT_SYNC_LOGS_ON_SUCCESS:-false}"
 
 # Render whitespace properly
 IFS=

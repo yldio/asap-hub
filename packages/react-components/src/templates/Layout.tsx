@@ -41,7 +41,7 @@ const UserNavigation = lazy(
 
 const styles = css({
   position: 'relative',
-  height: '100%',
+  overflowY: 'auto',
   display: 'grid',
   grid: `
     "header     header"  max-content
@@ -156,6 +156,10 @@ const userMenuShownStyles = css({
   [crossQuery]: {
     display: 'unset',
   },
+});
+const wrapperStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
 });
 
 type LayoutProps = {

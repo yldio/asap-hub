@@ -17,6 +17,7 @@ async function createReleaseAndUpload() {
     console.log('Creating sentry release ' + release);
     await cli.releases.new(release);
     console.log('Uploading source maps');
+    cli.releases.setCommits(release, { commit: process.env.CI_COMMIT_SHA });
     await cli.releases.uploadSourceMaps(release, {
       include: ['build/static/js'],
       urlPrefix: '~/static/js',

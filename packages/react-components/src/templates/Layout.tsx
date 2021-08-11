@@ -157,10 +157,6 @@ const userMenuShownStyles = css({
     display: 'unset',
   },
 });
-const wrapperStyles = css({
-  display: 'flex',
-  flexDirection: 'column',
-});
 
 type LayoutProps = {
   readonly children: ReactNode;

@@ -1,0 +1,21 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "User webhook",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "users",
+        "condition": "event.type == 'Created'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "https://api-996.hub.asap.science/webhook/user-created",
+    "method": "POST",
+    "sharedSecret": "squidex_shared_secret",
+    "actionType": "Webhook"
+  }
+}

@@ -309,6 +309,10 @@ const serverlessConfig: AWS = {
         SES_REGION: '${env:SES_SANDBOX_REGION}',
       },
     },
+    squidexWebhookAuthorizer: {
+      handler:
+        'apps/asap-server/src/handlers/authorizers/squidex-webhook-authorizer.handler',
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {
@@ -355,6 +359,30 @@ const serverlessConfig: AWS = {
           ],
         },
       },
+      HttpApiAuthorizer: {
+        Type: 'AWS::ApiGatewayV2::Authorizer',
+        Properties: {
+          ApiId: { Ref: 'HttpApi' },
+          AuthorizerType: 'REQUEST',
+          AuthorizerUri: {
+            'Fn::Join': [
+              '',
+              [
+                'arn:aws:apigateway:${aws:region}:lambda:path/2015-03-31/functions/',
+                {
+                  'Fn::GetAtt': [
+                    'SquidexWebhookAuthorizerLambdaFunction',
+                    'Arn',
+                  ],
+                },
+                '/invocations',
+              ],
+            ],
+          },
+          Name: 'HttpApiSquidexWebhookAuthorizer',
+          AuthorizerPayloadFormatVersion: '2.0',
+        },
+      },
       HttpApiApiMapping: {
         Type: 'AWS::ApiGatewayV2::ApiMapping',
         DependsOn: ['HttpApiDomain'],
@@ -389,6 +417,10 @@ const serverlessConfig: AWS = {
         Type: 'AWS::ApiGatewayV2::Route',
         Properties: {
           ApiId: { Ref: 'HttpApi' },
+          AuthorizationType: 'CUSTOM',
+          AuthorizerId: {
+            Ref: 'HttpApiAuthorizer',
+          },
           RouteKey: 'POST /webhook/user',
           Target: {
             'Fn::Join': [

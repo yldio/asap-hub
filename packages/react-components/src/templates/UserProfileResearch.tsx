@@ -62,9 +62,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
               }
             : undefined,
       })),
-      userProfileGroupsCard !== undefined && {
-        card: userProfileGroupsCard,
-      },
       {
         card: (
           <ProfileSkills
@@ -90,6 +87,9 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
                 href: editQuestionsHref,
                 label: 'Edit open questions',
               },
+      },
+      userProfileGroupsCard !== undefined && {
+        card: userProfileGroupsCard,
       },
       isOwnProfile || {
         card: (

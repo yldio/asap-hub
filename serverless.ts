@@ -313,6 +313,24 @@ const serverlessConfig: AWS = {
       handler:
         'apps/asap-server/src/handlers/authorizers/squidex-webhook-authorizer.handler',
     },
+    testHandler: {
+      handler: 'apps/asap-server/src/handlers/user/test-handler.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/test',
+            authorizer: {
+              arn: {
+                Ref: 'HttpApiAuthorizer',
+              },
+              type: 'REQUEST',
+              name: 'MyAuthorizer',
+            },
+          },
+        },
+      ],
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

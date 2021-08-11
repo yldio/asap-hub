@@ -240,7 +240,8 @@ deploy:sls:production:
   <<: *tmpl_deploy
   artifacts:
     paths:
-      - 'apps/auth-frontend/build'
+      - 'apps/*/build*'
+      - 'packages/*/build*'
   before_script:
     - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
@@ -248,10 +249,7 @@ deploy:sls:production:
     - export REACT_APP_ENVIRONMENT="production"
     - export REACT_APP_ALGOLIA_INDEX="asap-hub_research_outputs_prod"
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-prod" --query Parameter.Value --output text)
-    - yarn install --immutable --immutable-cache
     - yarn run build # create production build
-    - export FRONTEND_SENTRY_RELEASE_AUTH_TOKEN=$FRONTEND_SENTRY_RELEASE_AUTH_TOKEN
-    - yarn run release:frontend
   environment:
     name: production
     url: $ASAP_APP_URL
@@ -271,6 +269,17 @@ deploy:sls:production:
 #####################
 # stage verify-prod #
 #####################
+
+report:frontend:release:production:
+  <<: *tmpl_master
+  stage: verify-prod
+  needs:
+    - deploy:sls:production
+  script:
+    - yarn install --immutable --immutable-cache
+    - export FRONTEND_SENTRY_RELEASE_AUTH_TOKEN=$FRONTEND_SENTRY_RELEASE_AUTH_TOKEN
+    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-production
+    - yarn run release:frontend
 
 verify:production:
   <<: *tmpl_master

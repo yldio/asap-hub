@@ -381,6 +381,7 @@ const serverlessConfig: AWS = {
           },
           Name: 'HttpApiSquidexWebhookAuthorizer',
           AuthorizerPayloadFormatVersion: '2.0',
+          EnableSimpleResponses: true,
         },
       },
       HttpApiAuthorizerPermission: {

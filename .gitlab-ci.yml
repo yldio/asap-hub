@@ -53,6 +53,13 @@ stages:
 
 build:ts:
   image: $INTEGRATION_DOCKER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+      variables:
+        REACT_APP_SENTRY_DSN: ${REACT_APP_SENTRY_DSN_DEV}
+    - if: $CI_COMMIT_BRANCH != 'master'
+      variables:
+        REACT_APP_SENTRY_DSN: ''
   artifacts:
     expire_in: 2 weeks
     paths:
@@ -63,15 +70,15 @@ build:ts:
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
     - export REACT_APP_ALGOLIA_INDEX=$ALGOLIA_INDEX
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-dev" --query Parameter.Value --output text)
-    - export REACT_APP_RELEASE=$CI_PIPELINE_ID
+    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-dev
+    - export REACT_APP_SENTRY_DSN=$REACT_APP_SENTRY_DSN
     - export REACT_APP_ENVIRONMENT="development"
     - yarn run build
     - export CI_REPO_OWNER="$CI_PROJECT_NAMESPACE"
     - export CI_REPO_NAME="$CI_PROJECT_NAME"
     - export CI_BRANCH="$CI_COMMIT_BRANCH"
     - yarn bundlewatch
-  needs:
-    - []
+  needs: []
   stage: build
 
 build:native:
@@ -81,8 +88,7 @@ build:native:
       - '.yarn/unplugged'
   script:
     - yarn rebuild
-  needs:
-    - []
+  needs: []
   stage: build
 
 ##############
@@ -199,7 +205,7 @@ verify:branch:
   script:
     - ASAP_API_URL=$API_URL yarn test:e2e
 
-verify:report:frontend:release:
+report:frontend:release:dev:
   <<: *tmpl_master
   stage: verify-dev
   needs:
@@ -209,6 +215,7 @@ verify:report:frontend:release:
   script:
     - yarn install --immutable --immutable-cache
     - export FRONTEND_SENTRY_RELEASE_AUTH_TOKEN=$FRONTEND_SENTRY_RELEASE_AUTH_TOKEN
+    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-dev
     - yarn run release:frontend
 
 verify:development:
@@ -237,11 +244,14 @@ deploy:sls:production:
   before_script:
     - export AUTH_FRONTEND_BASE_URL=$ASAP_APP_URL/.auth/
     - export REACT_APP_API_BASE_URL=$ASAP_API_URL
-    - export REACT_APP_RELEASE=$CI_PIPELINE_ID
+    - export REACT_APP_RELEASE=${CI_PIPELINE_ID}-production
     - export REACT_APP_ENVIRONMENT="production"
     - export REACT_APP_ALGOLIA_INDEX="asap-hub_research_outputs_prod"
     - export REACT_APP_ALGOLIA_APP_ID=$(aws ssm get-parameter --name "algolia-app-id-prod" --query Parameter.Value --output text)
+    - yarn install --immutable --immutable-cache
     - yarn run build # create production build
+    - export FRONTEND_SENTRY_RELEASE_AUTH_TOKEN=$FRONTEND_SENTRY_RELEASE_AUTH_TOKEN
+    - yarn run release:frontend
   environment:
     name: production
     url: $ASAP_APP_URL

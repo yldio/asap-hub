@@ -293,14 +293,14 @@ const serverlessConfig: AWS = {
       timeout: 900,
     },
     inviteUser: {
-      handler:
-        'apps/asap-server/src/handlers/webhooks/user-created/invite.handler',
+      handler: 'apps/asap-server/src/handlers/user/invite-handler.handler',
       events: [
         {
           eventBridge: {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
-              source: ['user.created'],
+              source: ['asap.user'],
+              'detail-type': ['Created'],
             },
           },
         },
@@ -389,7 +389,7 @@ const serverlessConfig: AWS = {
         Type: 'AWS::ApiGatewayV2::Route',
         Properties: {
           ApiId: { Ref: 'HttpApi' },
-          RouteKey: 'POST /webhook/user-created',
+          RouteKey: 'POST /webhook/user',
           Target: {
             'Fn::Join': [
               '/',
@@ -413,9 +413,9 @@ const serverlessConfig: AWS = {
             'Fn::GetAtt': ['HttpApiIntegrationEventBridgeRole', 'Arn'],
           },
           RequestParameters: {
-            Source: 'user.created',
+            Source: 'asap.user',
             Detail: '$request.body',
-            DetailType: 'User successfully created',
+            DetailType: '$request.body.type',
             EventBusName:
               'arn:aws:events:${aws:region}:${aws:accountId}:event-bus/asap-events-${self:provider.stage}',
           },

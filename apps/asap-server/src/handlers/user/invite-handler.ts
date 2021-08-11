@@ -1,6 +1,6 @@
 import aws from 'aws-sdk';
 import { SendEmailRequest } from 'aws-sdk/clients/ses';
-import { sesRegion } from '../../../config';
+import { sesRegion } from '../../config';
 
 const ses = new aws.SES({ apiVersion: '2010-12-01', region: 'eu-west-1' });
 

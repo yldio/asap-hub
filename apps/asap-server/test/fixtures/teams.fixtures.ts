@@ -151,7 +151,12 @@ export const usersResponseTeam1: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
-        labs: { iv: [] },
+        labs: {
+          iv: [
+            { id: 'cd7be4904', flatData: { name: 'Manchester' } },
+            { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+          ],
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -189,7 +194,12 @@ export const usersResponseTeam2: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
-        labs: { iv: [] },
+        labs: {
+          iv: [
+            { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
+            { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+          ],
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -534,7 +544,12 @@ export const fetchByIdUserResponse: { total: number; items: RestUser[] } = {
         connections: {
           iv: [],
         },
-        labs: { iv: [] },
+        labs: {
+          iv: [
+            { id: 'cd7be4904', flatData: { name: 'Manchester' } },
+            { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+          ],
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',

@@ -100,6 +100,10 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                       orcidLastModifiedDate: null,
                       orcidLastSyncDate: null,
                       orcidWorks: [],
+                      labs: [
+                        { id: 'cd7be4904', flatData: { name: 'Manchester' } },
+                        { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+                      ],
                       questions: [
                         {
                           question: 'What is the meaning of life?',
@@ -167,6 +171,10 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                       questions: [],
                       skills: [],
                       skillsDescription: null,
+                      labs: [
+                        { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
+                        { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+                      ],
                       teams: [],
                     },
                   },
@@ -271,7 +279,10 @@ export const listGroupsResponse: ListGroupResponse = {
             },
             avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/asset-id-1`,
             role: 'Guest',
-            labs: [],
+            labs: [
+              { id: 'cd7be4904', name: 'Manchester' },
+              { id: 'cd7be4905', name: 'Glasgow' },
+            ],
           },
           role: 'Chair',
         },
@@ -292,7 +303,10 @@ export const listGroupsResponse: ListGroupResponse = {
             teams: [],
             social: { github: 'johnytiago' },
             role: 'Guest',
-            labs: [],
+            labs: [
+              { id: 'cd7be4902', name: 'Barcelona' },
+              { id: 'cd7be4905', name: 'Glasgow' },
+            ],
           },
           role: 'Project Manager',
         },

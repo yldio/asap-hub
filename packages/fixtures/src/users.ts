@@ -60,7 +60,6 @@ export const createUserResponse = (
   id: `u${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
   teams: createUserTeams(options),
-  labs: [],
 });
 
 export const createListUserResponse = (

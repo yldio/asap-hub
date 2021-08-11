@@ -202,7 +202,7 @@ const Layout: FC<LayoutProps> = ({
           onboardable={onboardable}
         />
       )}
-      <article css={[styles, menuShown || { overflow: 'hidden' }]}>
+      <article css={[styles]}>
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
           <MenuHeader

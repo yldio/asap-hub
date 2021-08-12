@@ -3,7 +3,7 @@ import Users from '../src/controllers/users';
 
 export const VALID_ORCID = /^\d{4}-\d{4}-\d{4}-\d{3}(\d|X)$/;
 
-const validateOrcids = async (): Promise<void> => {    
+const validateOrcids = async (): Promise<void> => {
   const users = new Users();
   // Delete these logs
   // eslint-disable-next-line no-console

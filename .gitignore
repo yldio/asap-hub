@@ -21,7 +21,6 @@ node_modules
 
 # production
 /apps/*/build*
-/packages/validation/out
 /packages/*/build*
 
 /.serverless*

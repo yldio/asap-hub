@@ -197,5 +197,5 @@ it('renders the list of labs', () => {
   );
 
   expect(queryByText(/labs/i)).toBeVisible();
-  expect(queryByText('London Lab, Paris Lab, and Barcelona Lab')).toBeVisible();
+  expect(queryByText('LONDON Lab, Paris Lab, and barcelona Lab')).toBeVisible();
 });

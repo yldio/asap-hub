@@ -5,9 +5,7 @@ import {
   isInternalLink,
   getIconFromUrl,
   isLink,
-  getListStrWithSuffix,
-  capitalizeText,
-} from '../utils';
+} from '../index';
 
 describe('getSvgAspectRatio', () => {
   it('throws if the element does not contain a svg', () => {
@@ -93,48 +91,5 @@ describe('isLink', () => {
   });
   it('returns true when the input is a valid link', () => {
     expect(isLink('https://example.com')).toBeTruthy();
-  });
-});
-
-describe('getListStrWithSuffix', () => {
-  it('returns an empty string when the input is an not valid', () => {
-    expect(getListStrWithSuffix([null, undefined, '      '])).toBe('');
-    expect(getListStrWithSuffix([null, undefined])).toBe('');
-    expect(getListStrWithSuffix([])).toBe('');
-    expect(getListStrWithSuffix(undefined)).toBe('');
-  });
-
-  it('returns a string that represents a unique list of the values', () => {
-    expect(getListStrWithSuffix(['one', 'two', 'three', 'one'])).toEqual(
-      'one, two, and three',
-    );
-    expect(getListStrWithSuffix(['one lab', 'two labs', 'three labs'])).toEqual(
-      'one lab, two labs, and three labs',
-    );
-  });
-  it('can add a suffix to each value of the list', () => {
-    expect(getListStrWithSuffix(['london', 'paris'], 'Lab')).toBe(
-      'london Lab, and paris Lab',
-    );
-    expect(getListStrWithSuffix(['london', undefined, null], 'Lab')).toBe(
-      'london Lab',
-    );
-  });
-  it('can apply a custom format function to each value of the list', () => {
-    expect(
-      getListStrWithSuffix(['london', 'paris'], 'Lab', capitalizeText),
-    ).toBe('London Lab, and Paris Lab');
-    expect(
-      getListStrWithSuffix(['london', undefined, null], 'Lab', capitalizeText),
-    ).toBe('London Lab');
-  });
-});
-
-describe('capitalizeText', () => {
-  it('capitalizes a give string', () => {
-    expect(capitalizeText('london lab')).toEqual('London Lab');
-    expect(capitalizeText('london-lab')).toEqual('London-lab');
-    expect(capitalizeText('london        lab')).toEqual('London Lab');
-    expect(capitalizeText('london ')).toEqual('London');
   });
 });

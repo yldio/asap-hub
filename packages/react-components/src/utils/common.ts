@@ -4,7 +4,7 @@ import {
   protocolsIcon,
   slackIcon,
   googleCalendarIcon,
-} from './icons';
+} from '../icons';
 
 /* istanbul ignore next */
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -63,32 +63,3 @@ export const getIconFromUrl = (url: string): JSX.Element | undefined => {
   });
   return icon?.[1];
 };
-
-export const getListStrWithSuffix = (
-  data: (string | null | undefined)[] = [],
-  suffix: string = '',
-  format?: (str: string) => string,
-): string =>
-  Array.from(new Set(data))
-    .filter((value): value is string => !!value?.trim())
-    .map((item, idx, arr) => {
-      const itemFormatted = format ? format(item) : item;
-      const itemValue = suffix ? `${itemFormatted} ${suffix}` : itemFormatted;
-      const lastIdx = arr.length - 1;
-      return arr.length === 1 || idx !== lastIdx
-        ? `${itemValue}`
-        : `and ${itemValue}`;
-    })
-    .join(', ');
-
-export const capitalizeText = (str: string = ''): string =>
-  str
-    .split(' ')
-    .reduce((acc: string[], w) => {
-      if (w) {
-        const [firstLetter, ...rest] = w.toLocaleLowerCase();
-        acc.push(`${firstLetter.toUpperCase()}${rest.join('')}`);
-      }
-      return acc;
-    }, [])
-    .join(' ');

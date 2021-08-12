@@ -8,6 +8,48 @@ import {
 import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
 import { fetchExpectation } from './users.fixtures';
 
+export const referencingUsersContentsResponse = ({
+  avatar,
+}: {
+  avatar?: null;
+}) => [
+  {
+    id: 'user-id-1',
+    created: '2020-09-25T09:42:51.132Z',
+    lastModified: '2020-09-25T09:42:51.132Z',
+    flatData: {
+      avatar,
+      email: 'cristiano@ronaldo.com',
+      firstName: 'Cristiano',
+      lastName: 'Ronaldo',
+      jobTitle: 'Junior',
+      institution: 'Dollar General Corporation',
+      connections: [],
+      biography: '',
+      teams: [
+        {
+          id: [
+            {
+              id: 'team-id-1',
+              created: '2020-09-23T20:33:36Z',
+              lastModified: '2020-11-26T11:56:04Z',
+              flatData: {
+                displayName: 'Schipa, A',
+              },
+            },
+          ],
+          role: 'Lead PI (Core Leadership)',
+        },
+      ],
+      questions: [],
+      skills: [],
+      role: 'Grantee',
+      onboarded: true,
+      labs: [],
+    },
+  },
+];
+
 export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
   data: {
     queryTeamsContentsWithTotal: {
@@ -484,6 +526,47 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
         ],
         tools: [],
       },
+      referencingUsersContents: [
+        {
+          id: 'user-id-1',
+          created: '2020-09-25T09:42:51.132Z',
+          lastModified: '2020-09-25T09:42:51.132Z',
+          flatData: {
+            avatar: [
+              {
+                id: 'uuid-user-id-1',
+              },
+            ],
+            email: 'cristiano@ronaldo.com',
+            firstName: 'Cristiano',
+            lastName: 'Ronaldo',
+            jobTitle: 'Junior',
+            institution: 'Dollar General Corporation',
+            connections: [],
+            biography: '',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-1',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {
+                      displayName: 'Schipa, A',
+                    },
+                  },
+                ],
+                role: 'Lead PI (Core Leadership)',
+              },
+            ],
+            questions: [],
+            skills: [],
+            role: 'Grantee',
+            onboarded: true,
+            labs: [],
+          },
+        },
+      ],
     },
   },
 };
@@ -627,6 +710,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       email: 'cristiano@ronaldo.com',
       displayName: 'Cristiano Ronaldo',
       role: 'Lead PI (Core Leadership)',
+      labs: [],
     },
   ],
   projectTitle:
@@ -737,6 +821,47 @@ export const getGraphQlTeamResponse = (
         ],
         tools,
       },
+      referencingUsersContents: [
+        {
+          id: 'user-id-1',
+          created: '2020-09-25T09:42:51.132Z',
+          lastModified: '2020-09-25T09:42:51.132Z',
+          flatData: {
+            avatar: [
+              {
+                id: 'uuid-user-id-1',
+              },
+            ],
+            email: 'cristiano@ronaldo.com',
+            firstName: 'Cristiano',
+            lastName: 'Ronaldo',
+            jobTitle: 'Junior',
+            institution: 'Dollar General Corporation',
+            connections: [],
+            biography: '',
+            teams: [
+              {
+                id: [
+                  {
+                    id: 'team-id-1',
+                    created: '2020-09-23T20:33:36Z',
+                    lastModified: '2020-11-26T11:56:04Z',
+                    flatData: {
+                      displayName: 'Schipa, A',
+                    },
+                  },
+                ],
+                role: 'Lead PI (Core Leadership)',
+              },
+            ],
+            questions: [],
+            skills: [],
+            role: 'Grantee',
+            onboarded: true,
+            labs: [],
+          },
+        },
+      ],
     },
   },
 });
@@ -849,6 +974,7 @@ export const updateExpectation: TeamResponse = {
       email: 'cristiano@ronaldo.com',
       displayName: 'Cristiano Ronaldo',
       role: 'Lead PI (Core Leadership)',
+      labs: [],
     },
   ],
   projectTitle:

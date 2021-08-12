@@ -15,6 +15,7 @@ import {
   getGraphQlTeamResponse,
   updateResponseTeam,
   updateExpectation,
+  referencingUsersContentsResponse,
 } from '../fixtures/teams.fixtures';
 import Teams, {
   buildGraphQLQueryFetchTeams,
@@ -54,11 +55,8 @@ describe('Team controller', () => {
   });
 
   afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
-
-  afterEach(() => {
     nock.cleanAll();
+    expect(nock.isDone()).toBe(true);
   });
 
   describe('Fetch method', () => {
@@ -253,7 +251,16 @@ describe('Team controller', () => {
             id: teamId,
           },
         })
-        .reply(200, graphQlTeamResponse)
+        .reply(200, {
+          ...graphQlTeamResponse,
+          data: {
+            ...graphQlTeamResponse.data,
+            findTeamsContent: {
+              ...graphQlTeamResponse.data.findTeamsContent,
+              referencingUsersContents: [],
+            },
+          },
+        })
         .get(`/api/content/${config.appName}/users`)
         .query({
           $filter: getUserFilterExpectation(teamId),
@@ -275,7 +282,16 @@ describe('Team controller', () => {
             id: teamId,
           },
         })
-        .reply(200, graphQlTeamResponse)
+        .reply(200, {
+          ...graphQlTeamResponse,
+          data: {
+            ...graphQlTeamResponse.data,
+            findTeamsContent: {
+              ...graphQlTeamResponse.data.findTeamsContent,
+              referencingUsersContents: [],
+            },
+          },
+        })
         .get(`/api/content/${config.appName}/users`)
         .query({
           $filter: getUserFilterExpectation(teamId),
@@ -374,7 +390,18 @@ describe('Team controller', () => {
               id: teamId,
             },
           })
-          .reply(200, graphQlTeamResponse)
+          .reply(200, {
+            ...graphQlTeamResponse,
+            data: {
+              ...graphQlTeamResponse.data,
+              findTeamsContent: {
+                ...graphQlTeamResponse.data.findTeamsContent,
+                referencingUsersContents: referencingUsersContentsResponse({
+                  avatar: null,
+                }),
+              },
+            },
+          })
           .get(`/api/content/${config.appName}/users`)
           .query({
             $filter: getUserFilterExpectation(teamId),
@@ -413,7 +440,18 @@ describe('Team controller', () => {
               id: teamId,
             },
           })
-          .reply(200, graphQlTeamResponse)
+          .reply(200, {
+            ...graphQlTeamResponse,
+            data: {
+              ...graphQlTeamResponse.data,
+              findTeamsContent: {
+                ...graphQlTeamResponse.data.findTeamsContent,
+                referencingUsersContents: referencingUsersContentsResponse({
+                  avatar: undefined,
+                }),
+              },
+            },
+          })
           .get(`/api/content/${config.appName}/users`)
           .query({
             $filter: getUserFilterExpectation(teamId),

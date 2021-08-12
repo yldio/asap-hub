@@ -448,10 +448,10 @@ const serverlessConfig: AWS = {
         Type: 'AWS::ApiGatewayV2::Route',
         Properties: {
           ApiId: { Ref: 'HttpApi' },
-          AuthorizationType: 'CUSTOM',
-          AuthorizerId: {
-            Ref: 'HttpApiAuthorizer',
-          },
+          // AuthorizationType: 'CUSTOM',
+          // AuthorizerId: {
+          //   Ref: 'HttpApiAuthorizer',
+          // },
           RouteKey: 'POST /webhook/user',
           Target: {
             'Fn::Join': [

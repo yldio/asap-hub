@@ -1,13 +1,13 @@
 import {
-  getUniqueOxfordCommaString,
+  getUniqueCommaStringWithSuffix,
   getUniqueList,
   appendSuffix,
+  getUniqueCommaString,
 } from '../index';
 
 describe('appendSuffix', () => {
   it('can add a suffix to each value of the list', () => {
     expect(appendSuffix('one', 'LAB')).toEqual('one LAB');
-    expect(appendSuffix('one')).toEqual('one');
   });
 });
 
@@ -37,19 +37,36 @@ describe('getUniqueList', () => {
       'three labs',
     ]);
   });
-  describe('getUniqueOxfordCommaString', () => {
-    it('add oz', () => {
+
+  describe('getUniqueCommaString', () => {
+    it('separates items in array with commas (except last)', () => {
+      expect(getUniqueCommaString(['one'])).toEqual('one');
+      expect(getUniqueCommaString(['one', 'two'])).toEqual('one, and two');
+      expect(getUniqueCommaString(['one', 'two', 'three'])).toEqual(
+        'one, two, and three',
+      );
+      expect(getUniqueCommaString([' one ', ' two '])).toEqual('one, and two');
       expect(
-        getUniqueOxfordCommaString(['one', 'two', 'three', 'one']),
-      ).toEqual('one, two, and three');
-      expect(
-        getUniqueOxfordCommaString(['one lab', 'two labs', 'three labs']),
+        getUniqueCommaString(['one lab', 'two labs', 'three labs']),
       ).toEqual('one lab, two labs, and three labs');
     });
-    it('can add a suffix to each value of the list', () => {
+  });
+
+  describe('getUniqueCommaStringWithSuffix', () => {
+    it('appends a suffix to each item in the array', () => {
+      expect(getUniqueCommaStringWithSuffix(['one'], 'lab')).toEqual('one lab');
+      expect(getUniqueCommaStringWithSuffix(['one', 'two'], 'lab')).toEqual(
+        'one lab, and two lab',
+      );
       expect(
-        getUniqueOxfordCommaString(['london', 'paris', 'london'], 'Lab'),
-      ).toBe('london Lab, and paris Lab');
+        getUniqueCommaStringWithSuffix(['one', 'two', 'three'], 'lab'),
+      ).toEqual('one lab, two lab, and three lab');
+      expect(
+        getUniqueCommaStringWithSuffix(
+          ['BCN one', 'LON two', 'MAD three'],
+          'lab',
+        ),
+      ).toEqual('BCN one lab, LON two lab, and MAD three lab');
     });
   });
 });

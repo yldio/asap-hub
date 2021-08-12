@@ -7,7 +7,7 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import { Card, Headline2, Headline3, Link } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
-import { getUniqueOxfordCommaString } from '../utils';
+import { getUniqueCommaStringWithSuffix } from '../utils';
 
 type UserProfileBackgroundProps = UserTeam &
   Pick<UserResponse, 'firstName'> & { labs?: Lab[] };
@@ -58,7 +58,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   const teamHref = network({}).teams({}).team({ teamId: id }).$;
   const { isOwnProfile } = useContext(UserProfileContext);
 
-  const labsList = getUniqueOxfordCommaString(
+  const labsList = getUniqueCommaStringWithSuffix(
     labs.map((lab) => lab?.name || '') || [],
     'Lab',
   );

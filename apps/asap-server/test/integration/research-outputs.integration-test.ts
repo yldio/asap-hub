@@ -48,14 +48,14 @@ describe('Research Outputs', () => {
 
   test('Invalid dois should fail', async () => {
     expect(true).toBe(true);
-  //   researchOutput.doi = 'invalid doi';
+    //   researchOutput.doi = 'invalid doi';
 
-  //   try {
-  //     await createResearchOutput(researchOutput);
-  //   } catch (e) {
-  //     expect(e.name).toBe('HTTPError');
-  //     expect(e.output.statusCode).toBe(400);
-  //     expect(e.data).toMatch('doi.iv: Must follow the pattern');
-  //   }
+    //   try {
+    //     await createResearchOutput(researchOutput);
+    //   } catch (e) {
+    //     expect(e.name).toBe('HTTPError');
+    //     expect(e.output.statusCode).toBe(400);
+    //     expect(e.data).toMatch('doi.iv: Must follow the pattern');
+    //   }
   });
 });

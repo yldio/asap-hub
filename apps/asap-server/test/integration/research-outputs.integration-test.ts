@@ -7,6 +7,8 @@
 // const chance = new Chance();
 // const researchOutputs = new ResearchOutputs();
 
+export {};
+
 describe('Research Outputs', () => {
   // const randomTitle = chance.guid();
 

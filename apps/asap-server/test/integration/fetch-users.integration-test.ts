@@ -8,6 +8,8 @@
 // const chance = new Chance();
 // const users = new Users();
 
+export {};
+
 describe('Users', () => {
   test('Should create and fetch a user', async () => {
     expect(true).toBe(true);

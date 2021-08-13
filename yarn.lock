@@ -225,6 +225,7 @@ __metadata:
   dependencies:
     "@algolia/cli": ^4.0.8
     "@asap-hub/auth": "workspace:*"
+    "@asap-hub/message-templates": "workspace:*"
     "@asap-hub/model": "workspace:*"
     "@asap-hub/services-common": "workspace:*"
     "@asap-hub/squidex": "workspace:*"
@@ -262,6 +263,7 @@ __metadata:
     "@types/source-map-support": ^0
     "@types/stream-json": ^1
     "@types/supertest": ^2.0.11
+    "@types/uuid": ^8.3.0
     algoliasearch: ^4.10.3
     apr-intercept: ^3.0.4
     aws-lambda: ^1.0.6
@@ -301,6 +303,7 @@ __metadata:
     source-map-support: ^0.5.19
     stream-json: ^1.7.2
     supertest: ^6.1.3
+    uuid: ^8.3.2
   languageName: unknown
   linkType: soft
 

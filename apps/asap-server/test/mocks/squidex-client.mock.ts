@@ -1,6 +1,8 @@
-import { RestMigration, Squidex } from '@asap-hub/squidex';
+import { Squidex } from '@asap-hub/squidex';
 
-export const squidexClientMock: jest.Mocked<Squidex<RestMigration>> = {
+export const getSquidexClientMock = <
+  T extends { id: string; data: Record<string, unknown> },
+>(): jest.Mocked<Squidex<T>> => ({
   client: null as any,
   collection: 'some collection',
   fetch: jest.fn(),
@@ -11,4 +13,4 @@ export const squidexClientMock: jest.Mocked<Squidex<RestMigration>> = {
   put: jest.fn(),
   patch: jest.fn(),
   fetchOne: jest.fn(),
-};
+});

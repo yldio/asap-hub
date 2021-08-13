@@ -14,6 +14,7 @@
   "dependencies": {
     "@algolia/cli": "^4.0.8",
     "@asap-hub/auth": "workspace:*",
+    "@asap-hub/message-templates": "workspace:*",
     "@asap-hub/model": "workspace:*",
     "@asap-hub/services-common": "workspace:*",
     "@asap-hub/squidex": "workspace:*",
@@ -61,7 +62,8 @@
     "pino-noir": "^2.2.1",
     "pump": "^3.0.0",
     "serverless-http": "^2.7.0",
-    "source-map-support": "^0.5.19"
+    "source-map-support": "^0.5.19",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/apr-intercept": "workspace:*",
@@ -89,6 +91,7 @@
     "@types/source-map-support": "^0",
     "@types/stream-json": "^1",
     "@types/supertest": "^2.0.11",
+    "@types/uuid": "^8.3.0",
     "jwt-encode": "^1.0.1",
     "node-dev": "^6.7.0",
     "stream-json": "^1.7.2",

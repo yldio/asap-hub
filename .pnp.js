@@ -9383,6 +9383,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/asap-server", "workspace:apps/asap-server"],
             ["@algolia/cli", "npm:4.0.8"],
             ["@asap-hub/auth", "workspace:packages/auth"],
+            ["@asap-hub/message-templates", "workspace:packages/message-templates"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@asap-hub/services-common", "workspace:packages/services-common"],
             ["@asap-hub/squidex", "workspace:packages/squidex"],
@@ -9420,6 +9421,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/source-map-support", "npm:0.5.3"],
             ["@types/stream-json", "npm:1.7.1"],
             ["@types/supertest", "npm:2.0.11"],
+            ["@types/uuid", "npm:8.3.0"],
             ["algoliasearch", "npm:4.10.3"],
             ["apr-intercept", "npm:3.0.4"],
             ["aws-lambda", "npm:1.0.6"],
@@ -9458,7 +9460,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["serverless-http", "npm:2.7.0"],
             ["source-map-support", "npm:0.5.19"],
             ["stream-json", "npm:1.7.2"],
-            ["supertest", "npm:6.1.3"]
+            ["supertest", "npm:6.1.3"],
+            ["uuid", "npm:8.3.2"]
           ],
           "linkType": "SOFT",
         }]

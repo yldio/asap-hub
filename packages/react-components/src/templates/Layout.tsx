@@ -41,7 +41,7 @@ const UserNavigation = lazy(
 
 const styles = css({
   position: 'relative',
-  overflowY: 'auto',
+  height: '100%',
   display: 'grid',
   grid: `
     "header     header"  max-content
@@ -111,11 +111,16 @@ const userButtonStyles = css({
 
 const menuStyles = css({
   backgroundColor: paper.rgb,
-
+  gridRow: `main-menu/-1`,
+  gridColumnStart: '1',
+  overflowY: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
   [drawerQuery]: {
     visibility: 'hidden',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,
+    boxShadow: `0 -1px 0 ${steel.rgb}`, // instead of header border bottom
   },
 });
 const menuMenuShownStyles = css({
@@ -134,8 +139,9 @@ const mainMenuStyles = css({
   },
 });
 const userMenuStyles = css({
+  backgroundColor: paper.rgb,
   gridArea: 'user-menu',
-
+  flexGrow: 1,
   [crossQuery]: {
     gridArea: 'content',
 
@@ -202,7 +208,7 @@ const Layout: FC<LayoutProps> = ({
           onboardable={onboardable}
         />
       )}
-      <article css={[styles]}>
+      <article css={[styles, menuShown || { overflow: 'hidden' }]}>
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
           <MenuHeader
@@ -225,24 +231,17 @@ const Layout: FC<LayoutProps> = ({
         <div css={[overlayStyles, menuShown && overlayMenuShownStyles]}>
           <Overlay shown={menuShown} onClick={() => setMenuShown(false)} />
         </div>
-        <div
-          css={[menuStyles, menuShown && menuMenuShownStyles, mainMenuStyles]}
-        >
-          <Suspense fallback={<Loading />}>
-            <MainNavigation userOnboarded={userNavProps.userOnboarded} />
-          </Suspense>
-        </div>
-        <div
-          css={[
-            menuStyles,
-            menuShown && menuMenuShownStyles,
-            userMenuStyles,
-            menuShown && userMenuShownStyles,
-          ]}
-        >
-          <Suspense fallback={<Loading />}>
-            <UserNavigation {...userNavProps} />
-          </Suspense>
+        <div css={[menuStyles, menuShown && menuMenuShownStyles]}>
+          <div css={[mainMenuStyles]}>
+            <Suspense fallback={<Loading />}>
+              <MainNavigation userOnboarded={userNavProps.userOnboarded} />
+            </Suspense>
+          </div>
+          <div css={[userMenuStyles, menuShown && userMenuShownStyles]}>
+            <Suspense fallback={<Loading />}>
+              <UserNavigation {...userNavProps} />
+            </Suspense>
+          </div>
         </div>
       </article>
     </ToastStack>

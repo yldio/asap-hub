@@ -9626,6 +9626,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
             ["@types/uuid", "npm:8.3.0"],
+            ["algoliasearch", "npm:4.10.3"],
             ["browser-image-compression", "npm:1.0.14"],
             ["browserslist-useragent-regexp", "npm:3.0.0"],
             ["cross-env", "npm:7.0.3"],

@@ -10,11 +10,13 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 
 import { getResearchOutput, getResearchOutputs } from './api';
 import { GetListOptions } from '../api-util';
 import { authorizationState } from '../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
+import { useAlgolia } from '../hooks/algolia';
 
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -116,12 +118,29 @@ export const usePrefetchResearchOutputs = (
     }
   }, [authorization, researchOutputs, options, setResearchOutputs]);
 };
+
 export const useResearchOutputs = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
-  if (researchOutputs === undefined) {
+  const {
+    index: { search },
+  } = useAlgolia();
+  if (!isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
+    throw search<ResearchOutputResponse>(options.searchQuery, {
+      page: options.currentPage ?? 0,
+      hitsPerPage: options.pageSize ?? 10,
+    })
+      .then((data) => {
+        const oldFormat: ListResearchOutputResponse = {
+          total: data.nbHits,
+          items: data.hits,
+        };
+        setResearchOutputs(oldFormat);
+      })
+      .catch(setResearchOutputs);
+  } else if (researchOutputs === undefined) {
     throw getResearchOutputs(options, authorization)
       .then(setResearchOutputs)
       .catch(setResearchOutputs);

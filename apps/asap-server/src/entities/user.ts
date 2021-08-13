@@ -94,7 +94,8 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
 
   const flatLabs: Lab[] =
     item.flatData?.labs?.map((lab) => ({
-      name: lab.flatData?.name ?? undefined,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      name: lab.flatData!.name!,
       id: lab.id,
     })) || [];
 

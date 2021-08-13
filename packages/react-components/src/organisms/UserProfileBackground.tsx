@@ -59,7 +59,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   const { isOwnProfile } = useContext(UserProfileContext);
 
   const labsList = getUniqueCommaStringWithSuffix(
-    labs.map((lab) => lab?.name || '') || [],
+    labs.map((lab) => lab.name) || [],
     'Lab',
   );
 

@@ -268,22 +268,24 @@ export default class Teams implements TeamController {
 
   async fetchById(teamId: string, user: User): Promise<TeamResponse> {
     const query = buildGraphQLQueryFetchTeam();
-    const teamPromise = this.client.request<ResponseFetchTeam, { id: string }>(
-      query,
-      { id: teamId },
-    );
-
-    const teamResponse = await teamPromise;
+    const teamResponse = await this.client.request<
+      ResponseFetchTeam,
+      { id: string }
+    >(query, { id: teamId });
 
     const { findTeamsContent: team } = teamResponse;
-    const members = transformGraphQLUser(
-      teamResponse?.findTeamsContent?.referencingUsersContents || [],
-      team,
-    );
+
     if (!team) {
       throw Boom.notFound();
     }
 
-    return transformGraphQLTeam(team, members, user);
+    return transformGraphQLTeam(
+      team,
+      transformGraphQLUser(
+        teamResponse?.findTeamsContent?.referencingUsersContents || [],
+        team,
+      ),
+      user,
+    );
   }
 }

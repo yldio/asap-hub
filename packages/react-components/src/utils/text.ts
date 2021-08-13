@@ -1,5 +1,5 @@
 export const appendSuffix = (val: string, suffix: string): string =>
-  suffix ? `${val} ${suffix}` : `${val}`;
+  `${val} ${suffix}`;
 
 export const getUniqueList = (array: string[]): string[] =>
   Array.from(new Set(array.filter((value) => value.trim())));

@@ -2,7 +2,7 @@ import {
   getUniqueCommaStringWithSuffix,
   getUniqueList,
   appendSuffix,
-  getUniqueCommaString,
+  getCommaAndString,
 } from '../index';
 
 describe('appendSuffix', () => {
@@ -38,19 +38,19 @@ describe('getUniqueList', () => {
     ]);
   });
 
-  describe('getUniqueCommaString', () => {
+  describe('getCommaAndString', () => {
     it('separates items in array with commas (except last)', () => {
-      expect(getUniqueCommaString([])).toEqual('');
-      expect(getUniqueCommaString([''])).toEqual('');
-      expect(getUniqueCommaString(['one'])).toEqual('one');
-      expect(getUniqueCommaString(['one', 'two'])).toEqual('one and two');
-      expect(getUniqueCommaString(['one', 'two', 'three'])).toEqual(
+      expect(getCommaAndString([])).toEqual('');
+      expect(getCommaAndString([''])).toEqual('');
+      expect(getCommaAndString(['one'])).toEqual('one');
+      expect(getCommaAndString(['one', 'two'])).toEqual('one and two');
+      expect(getCommaAndString(['one', 'two', 'three'])).toEqual(
         'one, two and three',
       );
-      expect(getUniqueCommaString([' one ', ' two '])).toEqual('one and two');
-      expect(
-        getUniqueCommaString(['one lab', 'two labs', 'three labs']),
-      ).toEqual('one lab, two labs and three labs');
+      expect(getCommaAndString([' one ', ' two '])).toEqual('one and two');
+      expect(getCommaAndString(['one lab', 'two labs', 'three labs'])).toEqual(
+        'one lab, two labs and three labs',
+      );
     });
   });
 

@@ -4,7 +4,7 @@ export const appendSuffix = (val: string, suffix: string): string =>
 export const getUniqueList = (array: string[]): string[] =>
   Array.from(new Set(array.filter((value) => value.trim())));
 
-export const getUniqueCommaString = (array: string[]): string => {
+export const getCommaAndString = (array: string[]): string => {
   const [last, ...head] = array.reverse().map((v) => v.trim());
 
   switch (array.length) {
@@ -24,6 +24,4 @@ export const getUniqueCommaStringWithSuffix = (
   array: string[],
   suffix: string,
 ): string =>
-  getUniqueCommaString(
-    getUniqueList(array).map((s) => `${appendSuffix(s, suffix)}`),
-  );
+  getCommaAndString(getUniqueList(array).map((s) => appendSuffix(s, suffix)));

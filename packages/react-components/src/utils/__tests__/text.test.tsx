@@ -40,33 +40,37 @@ describe('getUniqueList', () => {
 
   describe('getUniqueCommaString', () => {
     it('separates items in array with commas (except last)', () => {
+      expect(getUniqueCommaString([])).toEqual('');
+      expect(getUniqueCommaString([''])).toEqual('');
       expect(getUniqueCommaString(['one'])).toEqual('one');
-      expect(getUniqueCommaString(['one', 'two'])).toEqual('one, and two');
+      expect(getUniqueCommaString(['one', 'two'])).toEqual('one and two');
       expect(getUniqueCommaString(['one', 'two', 'three'])).toEqual(
-        'one, two, and three',
+        'one, two and three',
       );
-      expect(getUniqueCommaString([' one ', ' two '])).toEqual('one, and two');
+      expect(getUniqueCommaString([' one ', ' two '])).toEqual('one and two');
       expect(
         getUniqueCommaString(['one lab', 'two labs', 'three labs']),
-      ).toEqual('one lab, two labs, and three labs');
+      ).toEqual('one lab, two labs and three labs');
     });
   });
 
   describe('getUniqueCommaStringWithSuffix', () => {
     it('appends a suffix to each item in the array', () => {
+      expect(getUniqueCommaStringWithSuffix([], 'lab')).toEqual('');
+      expect(getUniqueCommaStringWithSuffix([''], 'lab')).toEqual('');
       expect(getUniqueCommaStringWithSuffix(['one'], 'lab')).toEqual('one lab');
       expect(getUniqueCommaStringWithSuffix(['one', 'two'], 'lab')).toEqual(
-        'one lab, and two lab',
+        'one lab and two lab',
       );
       expect(
         getUniqueCommaStringWithSuffix(['one', 'two', 'three'], 'lab'),
-      ).toEqual('one lab, two lab, and three lab');
+      ).toEqual('one lab, two lab and three lab');
       expect(
         getUniqueCommaStringWithSuffix(
           ['BCN one', 'LON two', 'MAD three'],
           'lab',
         ),
-      ).toEqual('BCN one lab, LON two lab, and MAD three lab');
+      ).toEqual('BCN one lab, LON two lab and MAD three lab');
     });
   });
 });

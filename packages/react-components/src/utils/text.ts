@@ -7,9 +7,17 @@ export const getUniqueList = (array: string[]): string[] =>
 export const getUniqueCommaString = (array: string[]): string => {
   const [last, ...head] = array.reverse().map((v) => v.trim());
 
-  return array.length > 1
-    ? `${head.reverse().join(', ')}, and ${last}`
-    : `${last}`;
+  switch (array.length) {
+    case 0: {
+      return '';
+    }
+    case 1: {
+      return `${last}`;
+    }
+    default: {
+      return `${head.reverse().join(', ')} and ${last}`;
+    }
+  }
 };
 
 export const getUniqueCommaStringWithSuffix = (

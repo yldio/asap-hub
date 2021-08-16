@@ -2,6 +2,7 @@ import { welcome } from '@asap-hub/message-templates';
 import { AWSError } from 'aws-sdk';
 import SES, { SendTemplatedEmailResponse } from 'aws-sdk/clients/ses';
 import { PromiseResult } from 'aws-sdk/lib/request';
+import { sesSender } from '../config';
 
 export interface Welcome {
   displayName: string;
@@ -23,7 +24,7 @@ export const sendEmailFactory =
       },
       Template: template,
       TemplateData: JSON.stringify(values),
-      Source: 'no-reply@hub.asap.science',
+      Source: sesSender,
     };
 
     return ses.sendTemplatedEmail(params).promise();

@@ -49,5 +49,6 @@ export const algoliaResearchOutputIndex =
   ALGOLIA_RESEARCH_OUTPUT_INDEX || 'asap-hub_research_outputs_dev';
 export const algoliaApiKeyTtl = 36060;
 export const sesRegion = SES_REGION || 'eu-west-1';
+export const sesSender = `"ASAP Hub" <hub@asap.science>`;
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';

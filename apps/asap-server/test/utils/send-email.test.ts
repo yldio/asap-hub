@@ -1,4 +1,5 @@
 import { SES } from 'aws-sdk';
+import { sesSender } from '../../src/config';
 import { sendEmailFactory } from '../../src/utils/send-email';
 
 describe('Send Email helper', () => {
@@ -26,7 +27,7 @@ describe('Send Email helper', () => {
       },
       Template: 'Invite',
       TemplateData: JSON.stringify(params),
-      Source: 'no-reply@hub.asap.science',
+      Source: sesSender,
     });
   });
 });

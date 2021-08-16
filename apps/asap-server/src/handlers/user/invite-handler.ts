@@ -7,9 +7,6 @@ import { RestUser, Squidex } from '@asap-hub/squidex';
 import { origin, sesRegion } from '../../config';
 import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 
-const uuidMatch =
-  /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
-
 export const inviteHandlerFactory =
   (sendEmail: SendEmail, userClient: Squidex<RestUser>) =>
   async (
@@ -47,6 +44,9 @@ const ses = new SES({
   apiVersion: '2010-12-01',
   region: sesRegion,
 });
+
+const uuidMatch =
+  /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
 
 export const handler = inviteHandlerFactory(
   sendEmailFactory(ses),

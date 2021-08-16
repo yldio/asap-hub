@@ -815,12 +815,6 @@ const serverlessConfig: AWS = {
           ],
         },
       },
-      InviteUserQueue: {
-        Type: 'AWS::SQS::Queue',
-        Properties: {
-          QueueName: 'InviteUserQueue-${self:provider.stage}',
-        },
-      },
     },
   },
 };

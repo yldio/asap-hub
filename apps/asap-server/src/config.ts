@@ -20,6 +20,8 @@ const {
   ALGOLIA_SEARCH_API_KEY,
   ALGOLIA_RESEARCH_OUTPUT_INDEX,
   SES_REGION,
+  EVENT_BUS,
+  EVENT_SOURCE,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -47,3 +49,5 @@ export const algoliaResearchOutputIndex =
   ALGOLIA_RESEARCH_OUTPUT_INDEX || 'asap-hub_research_outputs_dev';
 export const algoliaApiKeyTtl = 36060;
 export const sesRegion = SES_REGION || 'eu-west-1';
+export const eventBus = EVENT_BUS || 'asap-events-dev';
+export const eventSource = EVENT_SOURCE || '';

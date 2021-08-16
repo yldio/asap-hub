@@ -30,8 +30,8 @@ if (lightstepToken && NODE_ENV !== 'test') {
 }
 
 export const http =
-  (
-    fn: (request: lambda.Request) => Promise<lambda.Response>,
+  <T = unknown>(
+    fn: (request: lambda.Request<T>) => Promise<lambda.Response>,
     logger?: PinoLambdaLogger,
   ) =>
   async (

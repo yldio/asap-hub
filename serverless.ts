@@ -44,18 +44,11 @@ const serverlessConfig: AWS = {
         allowedOrigins: [ASAP_APP_URL],
         allowCredentials: true,
       },
-      authorizers: {
-        squidexAuthorizer: {
-          type: 'request',
-          functionName: 'squidexAuthorizerHandler',
-          payloadVersion: '2.0',
-          enableSimpleResponses: true,
-        },
-      },
     },
     logs: {
       httpApi: {
-        format: `{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "path":"$context.path", "routeKey":"$context.routeKey", "status":"$context.status", "protocol":"$context.protocol", "responseLength":"$context.responseLength", "integrationError": "$context.integrationErrorMessage", "errorMessage": "$context.error.message", "context.authorizer.error.errorMessage":"$context.authorizer.error.errorMessage", "context.authorizer.error.errorMessage":"$context.authorizer.error.errorMessage", "context.authorizer.errorMessage":"$context.authorizer.errorMessage", "context.authorizer.messageString":"$context.authorizer.messageString", "authorizerServiceStatus": "$context.authorizer.status", "authorizerLatency": "$context.authorizer.latency", "authorizerRequestId": "$context.authorizer.requestId" }`,
+        format:
+          '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp", "requestTime":"$context.requestTime", "httpMethod":"$context.httpMethod", "path":"$context.path", "routeKey":"$context.routeKey", "status":"$context.status","protocol":"$context.protocol", "responseLength":"$context.responseLength" }',
       },
     },
     tracing: {
@@ -316,10 +309,6 @@ const serverlessConfig: AWS = {
         SES_REGION: '${env:SES_SANDBOX_REGION}',
       },
     },
-    squidexAuthorizerHandler: {
-      handler:
-        'apps/asap-server/src/handlers/authorizers/squidex-authorizer.handler',
-    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {
@@ -400,10 +389,6 @@ const serverlessConfig: AWS = {
         Type: 'AWS::ApiGatewayV2::Route',
         Properties: {
           ApiId: { Ref: 'HttpApi' },
-          AuthorizationType: 'CUSTOM',
-          AuthorizerId: {
-            Ref: 'HttpApiAuthorizerSquidexAuthorizer',
-          },
           RouteKey: 'POST /webhook/user',
           Target: {
             'Fn::Join': [

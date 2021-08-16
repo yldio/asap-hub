@@ -114,6 +114,12 @@ const serverlessConfig: AWS = {
           },
         },
       },
+      {
+        Effect: 'Allow',
+        Action: 'events:*',
+        Resource:
+          'arn:aws:events:${aws:region}:${aws:accountId}:event-bus/asap-events-${self:provider.stage}',
+      },
     ],
   },
   package: {

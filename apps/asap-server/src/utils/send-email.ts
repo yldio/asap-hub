@@ -1,30 +1,22 @@
-/* istanbul ignore file */
 import { welcome } from '@asap-hub/message-templates';
-import aws, { AWSError } from 'aws-sdk';
-import { SendTemplatedEmailResponse } from 'aws-sdk/clients/ses';
+import { AWSError } from 'aws-sdk';
+import SES, { SendTemplatedEmailResponse } from 'aws-sdk/clients/ses';
 import { PromiseResult } from 'aws-sdk/lib/request';
-import { sesRegion } from '../config';
 
 export interface Welcome {
   displayName: string;
   link: string;
 }
 
-export const sendEmailFactory = (): ((params: {
-  to: string[];
-  template: 'Welcome' | 'Invite';
-  values: typeof welcome;
-}) => Promise<PromiseResult<SendTemplatedEmailResponse, AWSError>>) => {
-  const ses = new aws.SES({
-    apiVersion: '2010-12-01',
-    region: sesRegion,
-  });
-
-  return async ({
-    to,
-    template,
-    values,
-  }): Promise<PromiseResult<SendTemplatedEmailResponse, AWSError>> => {
+export const sendEmailFactory =
+  (
+    ses: SES,
+  ): ((params: {
+    to: string[];
+    template: 'Welcome' | 'Invite';
+    values: typeof welcome;
+  }) => Promise<PromiseResult<SendTemplatedEmailResponse, AWSError>>) =>
+  async ({ to, template, values }) => {
     const params = {
       Destination: {
         ToAddresses: to,
@@ -36,6 +28,5 @@ export const sendEmailFactory = (): ((params: {
 
     return ses.sendTemplatedEmail(params).promise();
   };
-};
 
 export type SendEmail = ReturnType<typeof sendEmailFactory>;

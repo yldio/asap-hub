@@ -1,9 +1,10 @@
 import path from 'path';
 import url from 'url';
+import { SES } from 'aws-sdk';
 import { EventBridgeEvent } from 'aws-lambda';
 import { v4 as uuidV4 } from 'uuid';
 import { RestUser, Squidex } from '@asap-hub/squidex';
-import { origin } from '../../config';
+import { origin, sesRegion } from '../../config';
 import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 
 const uuidMatch =
@@ -42,8 +43,13 @@ export const inviteHandlerFactory =
     });
   };
 
+const ses = new SES({
+  apiVersion: '2010-12-01',
+  region: sesRegion,
+});
+
 export const handler = inviteHandlerFactory(
-  sendEmailFactory(),
+  sendEmailFactory(ses),
   new Squidex('users'),
 );
 

@@ -55,9 +55,6 @@ const serverlessConfig: AWS = {
       apiGateway: true,
       lambda: true,
     },
-    eventBridge: {
-      useCloudFormation: true,
-    },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',
@@ -292,6 +289,21 @@ const serverlessConfig: AWS = {
         'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
     },
+    userCreated: {
+      handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/users',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.user',
+      },
+    },
     inviteUser: {
       handler: 'apps/asap-server/src/handlers/user/invite-handler.handler',
       events: [
@@ -300,7 +312,7 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: ['asap.user'],
-              'detail-type': ['Created'],
+              'detail-type': ['UserCreated'],
             },
           },
         },
@@ -380,77 +392,6 @@ const serverlessConfig: AWS = {
                 HostedZoneId: {
                   'Fn::GetAtt': ['HttpApiDomain', 'RegionalHostedZoneId'],
                 },
-              },
-            },
-          ],
-        },
-      },
-      HttpApiRoute: {
-        Type: 'AWS::ApiGatewayV2::Route',
-        Properties: {
-          ApiId: { Ref: 'HttpApi' },
-          RouteKey: 'POST /webhook/user',
-          Target: {
-            'Fn::Join': [
-              '/',
-              [
-                'integrations',
-                {
-                  Ref: 'HttpApiIntegrationEventBridge',
-                },
-              ],
-            ],
-          },
-        },
-      },
-      HttpApiIntegrationEventBridge: {
-        Type: 'AWS::ApiGatewayV2::Integration',
-        Properties: {
-          ApiId: { Ref: 'HttpApi' },
-          IntegrationType: 'AWS_PROXY',
-          IntegrationSubtype: 'EventBridge-PutEvents',
-          CredentialsArn: {
-            'Fn::GetAtt': ['HttpApiIntegrationEventBridgeRole', 'Arn'],
-          },
-          RequestParameters: {
-            Source: 'asap.user',
-            Detail: '$request.body',
-            DetailType: '$request.body.type',
-            EventBusName:
-              'arn:aws:events:${aws:region}:${aws:accountId}:event-bus/asap-events-${self:provider.stage}',
-          },
-          PayloadFormatVersion: '1.0',
-          TimeoutInMillis: 10000,
-        },
-      },
-      HttpApiIntegrationEventBridgeRole: {
-        Type: 'AWS::IAM::Role',
-        Properties: {
-          AssumeRolePolicyDocument: {
-            Version: '2012-10-17',
-            Statement: [
-              {
-                Effect: 'Allow',
-                Action: ['sts:AssumeRole'],
-                Principal: {
-                  Service: ['apigateway.amazonaws.com'],
-                },
-              },
-            ],
-          },
-          Policies: [
-            {
-              PolicyName: '${self:provider.stage}-${self:service}-eventBridge',
-              PolicyDocument: {
-                Version: '2012-10-17',
-                Statement: [
-                  {
-                    Effect: 'Allow',
-                    Action: 'events:*',
-                    Resource:
-                      'arn:aws:events:${aws:region}:${aws:accountId}:event-bus/asap-events-${self:provider.stage}',
-                  },
-                ],
               },
             },
           ],

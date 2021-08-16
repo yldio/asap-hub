@@ -15,11 +15,11 @@ const debug = Debug('http');
 interface Query {
   [key: string]: string[] | string | undefined;
 }
-export interface Request {
+export interface Request<T = unknown> {
   method: 'get' | 'post';
   headers: Record<string, string>;
   params?: { [key: string]: string };
-  payload?: unknown;
+  payload?: T;
   query?: Query;
 }
 
@@ -116,8 +116,8 @@ const handlerError = (error: Error): APIGatewayProxyResultV2 => {
 // ensure any thrown exception is handled and returned correctly
 // complaining about `request` here is a lint rule bug
 export const http =
-  (
-    fn: (request: Request) => Promise<Response>, // eslint-disable-line no-unused-vars
+  <T = unknown>(
+    fn: (request: Request<T>) => Promise<Response>, // eslint-disable-line no-unused-vars
   ) =>
   async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
     // we assume the body is json
@@ -156,7 +156,7 @@ export const http =
       params: event.pathParameters,
       payload: body,
       query,
-    } as Request;
+    } as Request<T>;
 
     const [err, res] = await Intercept(fn(request));
 

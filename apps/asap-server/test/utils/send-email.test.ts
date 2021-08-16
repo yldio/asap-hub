@@ -1,5 +1,5 @@
 import { SES } from 'aws-sdk';
-import { sesSender } from '../../src/config';
+import { userInviteBcc, userInviteSender } from '../../src/config';
 import { sendEmailFactory } from '../../src/utils/send-email';
 
 describe('Send Email helper', () => {
@@ -24,10 +24,11 @@ describe('Send Email helper', () => {
     expect(sesMock.sendTemplatedEmail).toHaveBeenCalledWith({
       Destination: {
         ToAddresses: recipients,
+        BccAddresses: [userInviteBcc],
       },
       Template: 'Invite',
       TemplateData: JSON.stringify(params),
-      Source: sesSender,
+      Source: userInviteSender,
     });
   });
 });

@@ -106,11 +106,11 @@ const serverlessConfig: AWS = {
       },
       {
         Effect: 'Allow',
-        Action: 'ses:SendEmail',
+        Action: 'ses:SendTemplatedEmail',
         Resource: ['*'],
         Condition: {
-          'ForAllValues:StringLike': {
-            'ses:Recipients': ['piotr.lukasz.szpak@gmail.com', '*@yld.io'],
+          StringLike: {
+            'ses:FromAddress': '*@asap.science',
           },
         },
       },

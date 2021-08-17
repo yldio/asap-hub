@@ -40,7 +40,15 @@ const ToastStack: React.FC<ToastStackProps> = ({ children }) => {
             ))}
           </ol>
         </div>
-        <div css={{ overflowY: 'hidden' }}>{children}</div>
+        <div
+          css={{
+            overflowY: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {children}
+        </div>
       </div>
     </ToastContext.Provider>
   );

@@ -33,6 +33,20 @@ init({
   // for finer control
   tracesSampleRate: 1.0,
   attachStacktrace: true,
+  // Turn sampleRate on to reduce the amount of data sent to Sentry
+  // sampleRate: 0.1, // 0.1 = 10% of error events will be sent
+  allowUrls: [
+    'hub.asap.science/static/js/', // your code
+    'asap-hub.us.auth0.com', // code served from Auth0
+    'hub.asap.science/.auth/static/js', // code served from Auth0
+  ],
+  denyUrls: [
+    /fonts\.googleapis\.com/i, // code served from Google Fonts
+    /extensions\//i, // Chrome extensions
+    /^chrome:\/\//i, // Chrome extensions
+    /gtag\/js\//i, // Google Tag Manager
+  ],
+  ignoreErrors: [],
 });
 
 const loadAuthProvider = () =>

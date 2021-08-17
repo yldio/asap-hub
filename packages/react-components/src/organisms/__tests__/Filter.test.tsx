@@ -112,7 +112,7 @@ describe('GTM data', () => {
       <Filter
         filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
-        filters={new Set()}
+        filters={new Set<string>()}
       />,
     );
     act(() => {
@@ -134,7 +134,7 @@ describe('GTM data', () => {
       <Filter
         filterTitle="title"
         filterOptions={[{ value: 'f1', label: 'F1' }]}
-        filters={new Set()}
+        filters={new Set<string>()}
       />,
     );
     expect(window.dataLayer?.reduce(Object.assign)).not.toHaveProperty(

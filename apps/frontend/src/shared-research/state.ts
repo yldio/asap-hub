@@ -9,6 +9,7 @@ import {
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
+  ResearchOutputType,
 } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
@@ -119,6 +120,19 @@ export const usePrefetchResearchOutputs = (
   }, [authorization, researchOutputs, options, setResearchOutputs]);
 };
 
+export const researchOutputFilters: Record<
+  ResearchOutputType,
+  { filter: string }
+> = {
+  Proposal: { filter: 'type:Proposal' },
+  Presentation: { filter: 'type:Presentation' },
+  Protocol: { filter: 'type:Protocol' },
+  Dataset: { filter: 'type:Dataset' },
+  Bioinformatics: { filter: 'type:Bioinformatics' },
+  'Lab Resource': { filter: 'type:Lab Resource' },
+  Article: { filter: 'type:Article' },
+};
+
 export const useResearchOutputs = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
@@ -127,10 +141,17 @@ export const useResearchOutputs = (options: GetListOptions) => {
   const {
     index: { search },
   } = useAlgolia();
-  if (!isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
+  if (isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
     throw search<ResearchOutputResponse>(options.searchQuery, {
       page: options.currentPage ?? 0,
       hitsPerPage: options.pageSize ?? 10,
+      filters: [...options.filters]
+        .map(
+          (filter) =>
+            researchOutputFilters[filter as ResearchOutputType]?.filter,
+        )
+        .filter((s) => !!s)
+        .join(' OR '),
     })
       .then((data) => {
         const oldFormat: ListResearchOutputResponse = {

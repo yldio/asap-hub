@@ -46,7 +46,11 @@ init({
     /^chrome:\/\//i, // Chrome extensions
     /gtag\/js\//i, // Google Tag Manager
   ],
-  ignoreErrors: [],
+  ignoreErrors: [
+    'Failed to fetch event list. Expected status 2xx. Received status 401',
+    'Failed to fetch dynamically imported module: (gtm)',
+    'Failed to fetch dynamically imported module: https://www.googletagmanager.com/gtm.js?id=GTM-M5HZBRZ',
+  ],
 });
 
 const loadAuthProvider = () =>

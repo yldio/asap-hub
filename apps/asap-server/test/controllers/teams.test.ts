@@ -1,16 +1,12 @@
 import nock from 'nock';
-import { config, RestUser } from '@asap-hub/squidex';
+import { config } from '@asap-hub/squidex';
 import { User } from '@asap-hub/auth';
 import {
   graphQlTeamsResponseSingle,
-  usersResponseTeam1,
   listTeamResponse,
   graphQlTeamsResponse,
-  usersResponseTeam2,
-  usersResponseTeam3,
   fetchTeamByIdExpectation,
   graphQlTeamResponse,
-  fetchByIdUserResponse,
   getUpdateTeamResponse,
   getGraphQlTeamResponse,
   updateExpectation,
@@ -45,9 +41,6 @@ describe('Team controller', () => {
     ],
     algoliaApiKey: 'test-api-key',
   };
-
-  const getUserFilterExpectation = (teamId: string): string =>
-    `data/teams/iv/id eq '${teamId}' and data/onboarded/iv eq true`;
 
   beforeAll(() => {
     identity();
@@ -101,12 +94,7 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponseSingle)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1);
+        .reply(200, graphQlTeamsResponseSingle);
 
       const result = await teams.fetch(
         { take: 8, skip: 0, search: 'Cristiano Ronaldo' },
@@ -134,12 +122,7 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponseSingle)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1);
+        .reply(200, graphQlTeamsResponseSingle);
 
       const result = await teams.fetch(
         { take: 8, skip: 0, search: "'" },
@@ -167,12 +150,7 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponseSingle)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1);
+        .reply(200, graphQlTeamsResponseSingle);
 
       const result = await teams.fetch(
         { take: 8, skip: 0, search: '"' },
@@ -195,22 +173,7 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponse)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-2'),
-        })
-        .reply(200, usersResponseTeam2)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-3'),
-        })
-        .reply(200, usersResponseTeam3);
+        .reply(200, graphQlTeamsResponse);
 
       const result = await teams.fetch({ take: 8, skip: 0 }, mockUser);
 
@@ -343,18 +306,8 @@ describe('Team controller', () => {
     });
 
     describe('Avatar', () => {
-      const user: RestUser = {
-        ...fetchByIdUserResponse.items[0],
-        data: {
-          ...fetchByIdUserResponse.items[0].data,
-          avatar: { iv: ['test-avatar'] },
-        },
-      };
-
       test('Should parse the team user correctly when the avatar is null', async () => {
         const teamId = 'team-id-1';
-
-        user.data.avatar.iv = null as any;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -393,8 +346,6 @@ describe('Team controller', () => {
 
       test('Should parse the team user correctly when the avatar is undefined', async () => {
         const teamId = 'team-id-1';
-
-        delete (user.data as any).avatar;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {

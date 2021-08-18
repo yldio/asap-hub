@@ -51,4 +51,35 @@ describe('Users', () => {
       items: [expect.objectContaining(expectedResponse)],
     });
   });
+
+  test('Invalid orcids should fail', async () => {
+    const randomEmail = chance.email();
+    const randomName = chance.guid();
+
+    // Refactor duplicate user like above?
+    const user: Partial<User> = {
+      firstName: 'John',
+      lastName: randomName,
+      jobTitle: 'Project Manager',
+      orcid: 'invalid orcid',
+      institution: 'Instituto Superior Tecnico',
+      email: randomEmail,
+      role: 'Grantee' as Role,
+      degree: 'MPH',
+    };
+
+    try {
+      const result = await createUser(user);
+      console.log(result);
+    } catch (e) {
+      expect(e.name).toBe('HTTPError');
+      expect(e.output.statusCode).toBe(400);
+
+      const parsedErrorData = JSON.parse(e.data);
+      expect(parsedErrorData.details[0]).toBe("orcid.iv: ORCID must have the following format: 0000-0000-0000-0000");
+    }
+  });
+
+  // Duplicate orcid test?
+
 });

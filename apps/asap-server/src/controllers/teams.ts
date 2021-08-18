@@ -2,7 +2,12 @@ import get from 'lodash.get';
 import Boom from '@hapi/boom';
 import { Got } from 'got';
 import Intercept from 'apr-intercept';
-import { RestTeam, RestUser, GraphqlTeam } from '@asap-hub/squidex';
+import {
+  RestTeam,
+  RestUser,
+  GraphqlTeam,
+  GraphqlUser,
+} from '@asap-hub/squidex';
 import {
   ListTeamResponse,
   TeamResponse,
@@ -16,16 +21,19 @@ import {
   InstrumentedSquidexGraphql,
 } from '../utils/instrumented-client';
 import { getGraphQLQueryResearchOutput } from './research-outputs';
-import { parseGraphQLTeam } from '../entities';
+import { parseGraphQLTeam, parseGraphQLUser } from '../entities';
 import { createURL, sanitiseForSquidex } from '../utils/squidex';
 import { GraphqlFetchOptions } from '../utils/types';
+import { GraphQLQueryUser } from './users';
 
 export const getGraphQLQueryTeam = ({
   withResearchOutputs = true,
   researchOutputsWithTeams = true,
+  withUsersContents = false,
 }: {
   withResearchOutputs?: boolean;
   researchOutputsWithTeams?: boolean;
+  withUsersContents?: boolean;
 }): string => `
 id
 created
@@ -51,6 +59,13 @@ flatData {
     name
     url
   }
+}
+${
+  withUsersContents
+    ? `referencingUsersContents {
+      ${GraphQLQueryUser}
+}`
+    : ''
 }`;
 
 export const buildGraphQLQueryFetchTeams = (): string => `
@@ -67,7 +82,11 @@ export const buildGraphQLQueryFetchTeams = (): string => `
 export const buildGraphQLQueryFetchTeam = (): string => `
   query FetchTeam($id: String!) {
     findTeamsContent(id: $id) {
-      ${getGraphQLQueryTeam({ researchOutputsWithTeams: false })}
+      ${getGraphQLQueryTeam({
+        researchOutputsWithTeams: false,
+        withUsersContents: true,
+      })}
+      
     }
   }
 `;
@@ -115,6 +134,18 @@ const transformGraphQLTeam = (
       })) || []
     : undefined,
 });
+
+const transformGraphQLUser = (members: GraphqlUser[], team: GraphqlTeam) =>
+  members.map(parseGraphQLUser).map((user) => ({
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    displayName: user.displayName,
+    email: user.email,
+    avatarUrl: user.avatarUrl,
+    labs: user.labs,
+    role: user.teams.filter((t) => t.id === team.id)[0].role,
+  }));
 
 const fetchUsers = async (id: string, client: Got): Promise<RestUser[]> => {
   const [, res] = await Intercept(
@@ -237,26 +268,23 @@ export default class Teams implements TeamController {
 
   async fetchById(teamId: string, user: User): Promise<TeamResponse> {
     const query = buildGraphQLQueryFetchTeam();
-    const teamPromise = this.client.request<ResponseFetchTeam, { id: string }>(
-      query,
-      { id: teamId },
-    );
-
-    const usersPromise = fetchUsers(teamId, this.users.client);
-
-    const [teamResponse, users] = await Promise.all([
-      teamPromise,
-      usersPromise,
-    ]);
+    const teamResponse = await this.client.request<
+      ResponseFetchTeam,
+      { id: string }
+    >(query, { id: teamId });
 
     const { findTeamsContent: team } = teamResponse;
+
     if (!team) {
       throw Boom.notFound();
     }
 
     return transformGraphQLTeam(
       team,
-      transformRestTeamMember(users, teamId),
+      transformGraphQLUser(
+        teamResponse?.findTeamsContent?.referencingUsersContents || [],
+        team,
+      ),
       user,
     );
   }

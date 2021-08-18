@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, UserResponse, UserTeam } from '@asap-hub/model';
+import { OrcidWork, UserResponse, UserTeam, Lab } from '@asap-hub/model';
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 
@@ -92,6 +92,13 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const displayName = `${item.flatData!.firstName} ${item.flatData!.lastName}`;
 
+  const flatLabs: Lab[] =
+    item.flatData?.labs?.map((lab) => ({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      name: lab.flatData!.name!,
+      id: lab.id,
+    })) || [];
+
   return {
     id: item.id,
     onboarded:
@@ -124,6 +131,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     role,
     responsibilities: item.flatData?.responsibilities || undefined,
     reachOut: item.flatData?.reachOut || undefined,
+    labs: flatLabs || [],
   };
 };
 
@@ -172,6 +180,7 @@ export const parseUser = (user: RestUser): UserResponse => {
       role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
       responsibilities: user.data.responsibilities?.iv || undefined,
       reachOut: user.data.reachOut?.iv || undefined,
+      labs: user.data.labs?.iv || [],
     }),
   );
 };

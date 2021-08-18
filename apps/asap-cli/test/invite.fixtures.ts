@@ -24,6 +24,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
+        labs: { iv: [] },
       },
     },
     {
@@ -47,6 +48,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
+        labs: { iv: [] },
       },
     },
     {
@@ -76,6 +78,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
+        labs: { iv: [] },
       },
     },
   ],

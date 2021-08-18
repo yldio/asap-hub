@@ -29,6 +29,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
+        labs: { iv: [] },
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',
@@ -58,6 +59,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
+        labs: { iv: [] },
       },
       created: '2020-08-27T13:20:57Z',
       lastModified: '2020-08-31T13:57:51Z',

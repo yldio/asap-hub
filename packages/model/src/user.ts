@@ -1,5 +1,6 @@
 import { ListResponse } from './common';
 import { TeamRole } from './team';
+import { Lab } from './lab';
 
 export type Role = 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
 export type UserDegree =
@@ -122,9 +123,10 @@ export interface UserResponse extends Invitee {
   responsibilities?: string;
   role: Role;
   social?: UserSocialLinks;
+  labs: Lab[];
 }
 
-export type UserMetadataResponse = UserResponse & {
+export type UserMetadataResponse = Omit<UserResponse, 'labs'> & {
   algoliaApiKey: string;
 };
 

@@ -29,7 +29,7 @@ it.each`
 
 it('does not show the location icon if no location is available', () => {
   const { queryByTitle } = render(
-    <UserProfilePersonalText teams={[]} role={'Grantee'} />,
+    <UserProfilePersonalText teams={[]} role={'Grantee'} labs={[]} />,
   );
   expect(queryByTitle(/location/i)).toBe(null);
 });
@@ -50,15 +50,32 @@ it("generates information about the user's team", async () => {
         },
       ]}
       role={'Grantee'}
+      labs={[]}
     />,
   );
   expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
 });
 it('does not show team information if the user is not on a team', async () => {
   const { container } = render(
-    <UserProfilePersonalText teams={[]} role={'Grantee'} />,
+    <UserProfilePersonalText teams={[]} role={'Grantee'} labs={[]} />,
   );
   expect(container).not.toHaveTextContent(/\w on \w/);
+});
+
+it('only show lab information if the user is on a lab', async () => {
+  const { container, rerender } = render(
+    <UserProfilePersonalText teams={[]} labs={[]} role={'Grantee'} />,
+  );
+  expect(container).not.toHaveTextContent('Lab');
+
+  rerender(
+    <UserProfilePersonalText
+      teams={[]}
+      labs={[{ id: 'cd7be4905', name: 'Glasgow' }]}
+      role={'Grantee'}
+    />,
+  );
+  expect(container).toHaveTextContent('Glasgow Lab');
 });
 
 it('shows placeholder text on your own profile', () => {
@@ -69,6 +86,7 @@ it('shows placeholder text on your own profile', () => {
         city={undefined}
         country={undefined}
         role={'Grantee'}
+        labs={[]}
       />
     </UserProfileContext.Provider>,
   );
@@ -77,7 +95,7 @@ it('shows placeholder text on your own profile', () => {
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <UserProfilePersonalText teams={[]} role={'Grantee'} />
+      <UserProfilePersonalText teams={[]} role={'Grantee'} labs={[]} />
     </UserProfileContext.Provider>,
   );
   expect(queryByTitle(/location/i)).toBeInTheDocument();

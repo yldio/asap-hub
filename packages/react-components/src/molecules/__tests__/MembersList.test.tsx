@@ -3,7 +3,7 @@ import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
 
 import MembersList from '../MembersList';
 
-it('renders name and role for each member', async () => {
+it('renders name, role and labs for each member', async () => {
   const { getAllByRole } = render(
     <MembersList
       members={[
@@ -30,6 +30,30 @@ it('renders name and role for each member', async () => {
   expect(batman).toHaveTextContent('Boss');
   expect(someone).toHaveTextContent('Some One');
   expect(someone).toHaveTextContent('Apprentice');
+});
+
+it('only show lab information if the user is on a lab', async () => {
+  const { queryAllByText } = render(
+    <MembersList
+      members={[
+        {
+          ...createListUserResponse(1).items[0],
+          displayName: 'Bat Man',
+          role: 'Boss',
+          teams: [],
+        },
+        {
+          ...createListUserResponse(2).items[1],
+          id: '1337',
+          displayName: 'Some One',
+          role: 'Apprentice',
+          teams: [],
+          labs: [],
+        },
+      ]}
+    />,
+  );
+  expect(queryAllByText('Brighton Lab and Liverpool Lab')).toHaveLength(1);
 });
 it('renders a team link for each team provided', async () => {
   const { getByText } = render(

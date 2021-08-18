@@ -41,3 +41,4 @@ export { default as ToastCard } from './ToastCard';
 export { default as UserMenuButton } from './UserMenuButton';
 export { default as UserProfilePersonalText } from './UserProfilePersonalText';
 export { default as UsersList } from './UsersList';
+export { default as UserProfileLabText } from './UserProfileLabText';

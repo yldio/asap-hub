@@ -5,6 +5,7 @@ import { network } from '@asap-hub/routing';
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
 import { Link, Avatar, Anchor } from '../atoms';
+import UserProfileLabText from './UserProfileLabText';
 
 const containerStyles = css({
   margin: 0,
@@ -22,7 +23,7 @@ const multiColumnContainerStyles = css({
 });
 
 const avatarStyles = css({
-  gridRowEnd: 'span 3',
+  gridRowEnd: 'span 4',
   paddingTop: `${12 / perRem}em`,
 });
 
@@ -53,7 +54,9 @@ const teamStyles = css({
 interface MembersListProps {
   readonly members: ReadonlyArray<
     Pick<UserResponse, 'id' | 'displayName'> &
-      Partial<Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl'>> & {
+      Partial<
+        Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl' | 'labs'>
+      > & {
         readonly role: string;
         readonly teams: ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
       }
@@ -65,7 +68,7 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(({ id, displayName, role, teams, ...member }) => {
+    {members.map(({ id, displayName, role, teams, labs, ...member }) => {
       const href = network({}).users({}).user({ userId: id }).$;
 
       return (
@@ -91,6 +94,17 @@ const MembersList: React.FC<MembersListProps> = ({
               ]}
             >
               {role}
+            </div>
+          </Anchor>
+          <Anchor href={href} css={{ display: 'contents' }}>
+            <div
+              css={[
+                addToColumnStyles,
+                singleColumn || multiColumnAddToColumnStyles,
+                roleStyles,
+              ]}
+            >
+              <UserProfileLabText labs={labs} />
             </div>
           </Anchor>
           <ul

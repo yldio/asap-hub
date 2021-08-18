@@ -121,3 +121,19 @@ it('shows placeholder text for degree on own profile when omitted', () => {
   );
   expect(queryByText(/, BA/i)).toBeVisible();
 });
+
+it('only show lab information if the user is on a lab', async () => {
+  const { container, rerender } = render(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileHeader {...boilerplateProps} degree="BA" labs={[]} />,
+    </UserProfileContext.Provider>,
+  );
+  expect(container).not.toHaveTextContent('Lab');
+
+  rerender(
+    <UserProfileContext.Provider value={{ isOwnProfile: true }}>
+      <UserProfileHeader {...boilerplateProps} degree="BA" />,
+    </UserProfileContext.Provider>,
+  );
+  expect(container).toHaveTextContent('Brighton Lab and Liverpool Lab');
+});

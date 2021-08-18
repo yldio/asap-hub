@@ -27,6 +27,10 @@ const peopleProps = (): ComponentProps<typeof NetworkPeople> => {
           role: 'Co-Investigator' as TeamRole,
         },
       ],
+      labs: [
+        { id: 'cd7be4904', name: 'Manchester' },
+        { id: 'cd7be4905', name: 'Glasgow' },
+      ],
       role: 'Grantee' as const,
     })).slice(currentPageIndex * 10, currentPageIndex * 10 + 10),
     numberOfItems,

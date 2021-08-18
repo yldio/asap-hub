@@ -30,6 +30,15 @@ it('renders the date in the correct format', () => {
     `"Joined: 1st January 2021"`,
   );
 });
+it('only show lab information if the user is on a lab', async () => {
+  const { queryByText, rerender } = render(
+    <PeopleCard {...props} displayName="John Doe" />,
+  );
+  expect(queryByText('Brighton Lab and Liverpool Lab')).toBeVisible();
+
+  rerender(<PeopleCard {...props} displayName="John Doe" labs={[]} />);
+  expect(queryByText('Brighton Lab and Liverpool Lab')).toBeNull();
+});
 
 it('links to the profile', () => {
   const { getByText } = render(

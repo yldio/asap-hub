@@ -5,6 +5,7 @@ import { discover, network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Link, Paragraph, Ellipsis } from '../atoms';
+import UserProfileLabText from './UserProfileLabText';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight } from '../pixels';
 import { lead, tin } from '../colors';
@@ -31,7 +32,7 @@ const paragraphStyles = css({
 
 type UserProfilePersonalTextProps = Pick<
   UserResponse,
-  'institution' | 'jobTitle' | 'country' | 'city' | 'teams' | 'role'
+  'institution' | 'jobTitle' | 'country' | 'city' | 'teams' | 'role' | 'labs'
 >;
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
@@ -40,8 +41,10 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   jobTitle,
   teams,
   role,
+  labs,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
+
   return (
     <div>
       <p css={paragraphStyles}>
@@ -63,6 +66,8 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             ASAP Staff on <Link href={discover({}).$}>Team ASAP</Link>
           </>
         ) : null}
+        <br />
+        <UserProfileLabText labs={labs} />
         {teams.map(({ id, role: teamRole, displayName }) => (
           <Fragment key={id}>
             <br />

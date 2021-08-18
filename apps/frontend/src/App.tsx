@@ -47,9 +47,8 @@ init({
     /gtag\/js\//i, // Google Tag Manager
   ],
   ignoreErrors: [
-    'Failed to fetch event list. Expected status 2xx. Received status 401',
-    'Failed to fetch dynamically imported module: (gtm)',
-    'Failed to fetch dynamically imported module: https://www.googletagmanager.com/gtm.js?id=GTM-M5HZBRZ',
+    /Failed to fetch \w+.*? list. Expected status 2xx. Received status 401/g,
+    /Loading chunk [0-9]*? failed/g,
   ],
 });
 

@@ -6,6 +6,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { RestUser, Squidex } from '@asap-hub/squidex';
 import { origin, sesRegion } from '../../config';
 import { SendEmail, sendEmailFactory } from '../../utils/send-email';
+import logger from '../../utils/logger';
 
 export const inviteHandlerFactory =
   (sendEmail: SendEmail, userClient: Squidex<RestUser>) =>
@@ -38,6 +39,8 @@ export const inviteHandlerFactory =
         link: link.toString(),
       },
     });
+
+    logger.info(`Invited user with ID ${user.id}`);
   };
 
 const ses = new SES({

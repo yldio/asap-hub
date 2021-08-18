@@ -41,7 +41,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   jobTitle,
   teams,
   role,
-  labs,
+  labs = [],
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
 
@@ -66,8 +66,12 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             ASAP Staff on <Link href={discover({}).$}>Team ASAP</Link>
           </>
         ) : null}
-        <br />
-        <UserProfileLabText labs={labs} />
+        {!!labs.length && (
+          <>
+            <br />
+            <UserProfileLabText labs={labs} />
+          </>
+        )}
         {teams.map(({ id, role: teamRole, displayName }) => (
           <Fragment key={id}>
             <br />

@@ -56,14 +56,18 @@ export const createListResearchOutputResponse = (
   ),
 });
 
+// Incomplete mock. @todo: Make helper function to add algolia meta data in future.
 export const createAlgoliaResearchOutputResponse = (
   items: number,
-): Partial<SearchResponse<ResearchOutputResponse>> => ({
-  nbHits: items,
-  hits: Array.from({ length: items }, (_, itemIndex) => ({
-    ...createResearchOutputResponse(itemIndex),
-    objectID: `ro${itemIndex}`,
-  })),
-});
+): SearchResponse<ResearchOutputResponse> => {
+  const response: Partial<SearchResponse<ResearchOutputResponse>> = {
+    nbHits: items,
+    hits: Array.from({ length: items }, (_, itemIndex) => ({
+      ...createResearchOutputResponse(itemIndex),
+      objectID: `ro${itemIndex}`,
+    })),
+  };
+  return response as SearchResponse<ResearchOutputResponse>;
+};
 
 export default createListResearchOutputResponse;

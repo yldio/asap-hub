@@ -10,13 +10,17 @@ import {
 import { disable } from '@asap-hub/flags';
 
 import Routes from '../Routes';
-import { getResearchOutputsLegacy } from '../api';
+import { getResearchOutputsLegacy, getResearchOutputs } from '../api';
 
 jest.mock('../api');
 const mockGetResearchOutputsLegacy =
   getResearchOutputsLegacy as jest.MockedFunction<
     typeof getResearchOutputsLegacy
   >;
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
 
 const renderSharedResearchPage = async (pathname: string, query = '') => {
   const result = render(
@@ -40,8 +44,9 @@ const renderSharedResearchPage = async (pathname: string, query = '') => {
   return result;
 };
 
-describe('the shared research page', () => {
-  it('allows typing in search queries', async () => {
+describe('the shared research listing page (REGRESSION)', () => {
+  it('allows typing in search queries (REGRESSION)', async () => {
+    disable('ALGOLIA_RESEARCH_OUTPUTS');
     const { getByRole } = await renderSharedResearchPage('/shared-research');
     const searchBox = getByRole('searchbox') as HTMLInputElement;
 
@@ -84,6 +89,51 @@ describe('the shared research page', () => {
     expect(mockGetResearchOutputsLegacy).toHaveBeenLastCalledWith(
       expect.objectContaining({ filters: new Set(['Proposal']) }),
       expect.anything(),
+    );
+  });
+});
+
+describe('the shared research listing page', () => {
+  it('allows typing in search queries', async () => {
+    const { getByRole } = await renderSharedResearchPage('/shared-research');
+    const searchBox = getByRole('searchbox') as HTMLInputElement;
+
+    userEvent.type(searchBox, 'test123');
+    expect(searchBox.value).toEqual('test123');
+  });
+
+  it('allows selection of filters', async () => {
+    const { getByText, getByLabelText } = await renderSharedResearchPage(
+      '/shared-research',
+    );
+
+    userEvent.click(getByText('Filters'));
+    const checkbox = getByLabelText('Proposal');
+    expect(checkbox).not.toBeChecked();
+
+    userEvent.click(checkbox);
+    expect(checkbox).toBeChecked();
+    await waitFor(() => {
+      expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
+        expect.anything(),
+        expect.objectContaining({ filters: new Set(['Proposal']) }),
+      );
+    });
+  });
+
+  it('reads filters from url', async () => {
+    const { getByText, getByLabelText } = await renderSharedResearchPage(
+      '/shared-research',
+      '?filter=Proposal',
+    );
+
+    userEvent.click(getByText('Filters'));
+    const checkbox = getByLabelText('Proposal');
+    expect(checkbox).toBeChecked();
+
+    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({ filters: new Set(['Proposal']) }),
     );
   });
 });

@@ -106,7 +106,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@algolia/client-search@npm:4.10.3":
+"@algolia/client-search@npm:*, @algolia/client-search@npm:4.10.3":
   version: 4.10.3
   resolution: "@algolia/client-search@npm:4.10.3"
   dependencies:
@@ -421,6 +421,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/fixtures@workspace:packages/fixtures"
   dependencies:
+    "@algolia/client-search": "*"
     "@asap-hub/model": "workspace:*"
     "@babel/runtime-corejs3": ^7.14.0
     core-js: ^3.12.1
@@ -445,6 +446,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@asap-hub/frontend@workspace:apps/frontend"
   dependencies:
+    "@algolia/client-search": "*"
     "@asap-hub/auth": "workspace:*"
     "@asap-hub/dom-test-utils": "workspace:*"
     "@asap-hub/eslint-config-asap-hub": "workspace:*"

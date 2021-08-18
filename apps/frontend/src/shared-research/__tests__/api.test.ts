@@ -5,7 +5,7 @@ import {
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
 
-import { getResearchOutput, getResearchOutputs } from '../api';
+import { getResearchOutput, getResearchOutputsLegacy } from '../api';
 import { API_BASE_URL } from '../../config';
 import { GetListOptions } from '../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
@@ -23,13 +23,13 @@ const options: GetListOptions = {
   searchQuery: '',
 };
 
-describe('getResearchOutputs', () => {
+describe('getResearchOutputsLegacy', () => {
   it('makes an authorized GET request for research outputs', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/research-outputs')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getResearchOutputs(options, 'Bearer x');
+    await getResearchOutputsLegacy(options, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -39,7 +39,7 @@ describe('getResearchOutputs', () => {
       .get('/research-outputs')
       .query({ take: '10', skip: '0' })
       .reply(200, users);
-    expect(await getResearchOutputs(options, '')).toEqual(users);
+    expect(await getResearchOutputsLegacy(options, '')).toEqual(users);
   });
 
   it('errors for error status', async () => {
@@ -48,7 +48,7 @@ describe('getResearchOutputs', () => {
       .query({ take: '10', skip: '0' })
       .reply(500);
     await expect(
-      getResearchOutputs(options, ''),
+      getResearchOutputsLegacy(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch research output list. Expected status 2xx. Received status 500."`,
     );

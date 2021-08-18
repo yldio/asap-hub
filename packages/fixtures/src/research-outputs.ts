@@ -2,6 +2,8 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { SearchResponse } from '@algolia/client-search';
+
 import { listUserResponseItem } from './users';
 
 const researchOutputResponse: Omit<
@@ -52,6 +54,16 @@ export const createListResearchOutputResponse = (
   items: Array.from({ length: items }, (_, itemIndex) =>
     createResearchOutputResponse(itemIndex),
   ),
+});
+
+export const createAlgoliaResearchOutputResponse = (
+  items: number,
+): Partial<SearchResponse<ResearchOutputResponse>> => ({
+  nbHits: items,
+  hits: Array.from({ length: items }, (_, itemIndex) => ({
+    ...createResearchOutputResponse(itemIndex),
+    objectID: `ro${itemIndex}`,
+  })),
 });
 
 export default createListResearchOutputResponse;

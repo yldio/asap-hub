@@ -3,17 +3,18 @@ import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { createListResearchOutputResponse } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
+import { disable } from '@asap-hub/flags';
 
 import ResearchOutputList from '../ResearchOutputList';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
-import { getResearchOutputs } from '../api';
+import { getResearchOutputsLegacy } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { researchOutputsState } from '../state';
 
 jest.mock('../api');
 
-const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
-  typeof getResearchOutputs
+const mockGetResearchOutputs = getResearchOutputsLegacy as jest.MockedFunction<
+  typeof getResearchOutputsLegacy
 >;
 afterEach(() => {
   mockGetResearchOutputs
@@ -54,7 +55,8 @@ const renderResearchOutputList = async (searchQuery = '') => {
   return result;
 };
 
-it('renders a list of research outputs', async () => {
+it('renders a list of research outputs (REGRESSION)', async () => {
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
   mockGetResearchOutputs.mockResolvedValue({
     ...createListResearchOutputResponse(2),
     items: createListResearchOutputResponse(2).items.map((item, index) => ({

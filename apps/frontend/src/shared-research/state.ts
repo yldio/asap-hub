@@ -9,11 +9,14 @@ import {
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
-  ResearchOutputType,
 } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 
-import { getResearchOutput, getResearchOutputs } from './api';
+import {
+  getResearchOutput,
+  getResearchOutputs,
+  getResearchOutputsLegacy,
+} from './api';
 import { GetListOptions } from '../api-util';
 import { authorizationState } from '../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
@@ -113,24 +116,11 @@ export const usePrefetchResearchOutputs = (
   );
   useDeepCompareEffect(() => {
     if (researchOutputs === undefined) {
-      getResearchOutputs(options, authorization)
+      getResearchOutputsLegacy(options, authorization)
         .then(setResearchOutputs)
         .catch();
     }
   }, [authorization, researchOutputs, options, setResearchOutputs]);
-};
-
-export const researchOutputFilters: Record<
-  ResearchOutputType,
-  { filter: string }
-> = {
-  Proposal: { filter: 'type:Proposal' },
-  Presentation: { filter: 'type:Presentation' },
-  Protocol: { filter: 'type:Protocol' },
-  Dataset: { filter: 'type:Dataset' },
-  Bioinformatics: { filter: 'type:Bioinformatics' },
-  'Lab Resource': { filter: 'type:Lab Resource' },
-  Article: { filter: 'type:Article' },
 };
 
 export const useResearchOutputs = (options: GetListOptions) => {
@@ -138,21 +128,9 @@ export const useResearchOutputs = (options: GetListOptions) => {
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
-  const {
-    index: { search },
-  } = useAlgolia();
+  const { index } = useAlgolia();
   if (isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
-    throw search<ResearchOutputResponse>(options.searchQuery, {
-      page: options.currentPage ?? 0,
-      hitsPerPage: options.pageSize ?? 10,
-      filters: [...options.filters]
-        .map(
-          (filter) =>
-            researchOutputFilters[filter as ResearchOutputType]?.filter,
-        )
-        .filter((s) => !!s)
-        .join(' OR '),
-    })
+    throw getResearchOutputs(index, options)
       .then((data) => {
         const oldFormat: ListResearchOutputResponse = {
           total: data.nbHits,
@@ -162,7 +140,7 @@ export const useResearchOutputs = (options: GetListOptions) => {
       })
       .catch(setResearchOutputs);
   } else if (researchOutputs === undefined) {
-    throw getResearchOutputs(options, authorization)
+    throw getResearchOutputsLegacy(options, authorization)
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
   }

@@ -30,7 +30,7 @@ export const teamRouteFactory = (
       filter?: string[] | string;
     };
 
-    const result = await teamsController.fetch(options, req.loggedInUser!);
+    const result = await teamsController.fetch(options);
 
     res.json(result);
   });
@@ -39,7 +39,7 @@ export const teamRouteFactory = (
     const { params } = req;
     const { teamId } = framework.validate('parameters', params, paramSchema);
 
-    const result = await teamsController.fetchById(teamId, req.loggedInUser!);
+    const result = await teamsController.fetchById(teamId);
 
     res.json(result);
   });
@@ -58,11 +58,7 @@ export const teamRouteFactory = (
       throw Boom.forbidden();
     }
 
-    const result = await teamsController.update(
-      teamId,
-      tools,
-      req.loggedInUser!,
-    );
+    const result = await teamsController.update(teamId, tools);
 
     res.json(result);
   });

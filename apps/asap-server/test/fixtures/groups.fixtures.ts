@@ -59,7 +59,12 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                       id: 'output-id-1',
                     },
                   ],
-                  tools: [],
+                  tools: [
+                    {
+                      name: 'dropbox',
+                      url: '  https://example.com/secure-comms',
+                    },
+                  ],
                 },
               },
             ],
@@ -243,6 +248,12 @@ export const listGroupsResponse: ListGroupResponse = {
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
           proposalURL: 'output-id-1',
+          tools: [
+            {
+              name: 'dropbox',
+              url: '  https://example.com/secure-comms',
+            },
+          ],
         },
       ],
       leaders: [

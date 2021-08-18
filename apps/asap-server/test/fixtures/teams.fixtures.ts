@@ -451,6 +451,7 @@ export const listTeamResponse: ListTeamResponse = {
         },
       ],
       lastModifiedDate: '2020-10-26T20:54:00.000Z',
+      tools: [],
     },
     {
       id: 'team-id-3',
@@ -578,6 +579,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
                     lastModified: '2020-11-26T11:56:04Z',
                     flatData: {
                       displayName: 'Schipa, A',
+                      tools: [],
                     },
                   },
                 ],

@@ -217,7 +217,6 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 skills: [],
                 role: 'Grantee',
                 onboarded: true,
-                labs: [],
               },
             },
             {

@@ -4,8 +4,14 @@ import {
   createListResearchOutputResponse,
   createResearchOutputResponse,
 } from '@asap-hub/fixtures';
+import { SearchIndex } from 'algoliasearch/lite';
+import { ResearchOutputType } from '@asap-hub/model';
 
-import { getResearchOutput, getResearchOutputsLegacy } from '../api';
+import {
+  getResearchOutput,
+  getResearchOutputs,
+  getResearchOutputsLegacy,
+} from '../api';
 import { API_BASE_URL } from '../../config';
 import { GetListOptions } from '../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
@@ -17,11 +23,83 @@ afterEach(() => {
 });
 
 const options: GetListOptions = {
-  filters: new Set(),
+  filters: new Set<string>(),
   pageSize: CARD_VIEW_PAGE_SIZE,
   currentPage: 0,
   searchQuery: '',
 };
+
+describe('getResearchOutputs', () => {
+  // This mock is pretty basic. @todo: Refactor into something reusable and think about
+  // how to make more generic query building that can be tested in isolation
+  const mockIndex = {
+    search: jest.fn(),
+  } as Partial<SearchIndex> as SearchIndex;
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  it('makes a search request with query, default page and page size', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      searchQuery: 'test',
+      currentPage: null,
+      pageSize: null,
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      'test',
+      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+    );
+  });
+  it('passes page number and page size to request', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+    );
+  });
+  it('builds a single filter query', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article']),
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'type:Article' }),
+    );
+  });
+
+  it('builds a multiple filter query', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'type:Article OR type:Proposal' }),
+    );
+  });
+
+  it('ignores unknown filters', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType | 'invalid'>(['Article', 'invalid']),
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'type:Article' }),
+    );
+  });
+});
 
 describe('getResearchOutputsLegacy', () => {
   it('makes an authorized GET request for research outputs', async () => {

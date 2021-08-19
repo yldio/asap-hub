@@ -4,6 +4,7 @@ import {
   TeamResponse,
   TeamRole,
   TeamMember,
+  Lab,
 } from '@asap-hub/model';
 import {
   GraphqlTeam,
@@ -44,11 +45,12 @@ export const parseGraphQLTeamMember = (
     user.flatData?.avatar || [];
 
   const labs =
-    user.flatData?.labs?.map((lab) => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      name: lab.flatData!.name!,
-      id: lab.id,
-    })) || [];
+    user.flatData?.labs?.reduce((acc: Lab[], lab) => {
+      const labsData = lab.flatData?.name
+        ? [...acc, { id: lab.id, name: lab.flatData.name }]
+        : acc;
+      return labsData;
+    }, []) ?? [];
 
   const role = user.flatData?.teams
     ?.filter((t) => t.id[0].id === teamId)

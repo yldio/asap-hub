@@ -41,7 +41,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   jobTitle,
   teams,
   role,
-  labs = [],
+  labs,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
 

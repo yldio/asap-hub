@@ -37,12 +37,8 @@ const props: ComponentProps<typeof NetworkPeople> = {
 };
 
 it('renders multiple people cards', () => {
-  const { queryAllByRole, queryAllByText } = render(
-    <NetworkPeople {...props} />,
-  );
+  const { queryAllByRole } = render(<NetworkPeople {...props} />);
   expect(
     queryAllByRole('heading').map(({ textContent }) => textContent),
   ).toEqual(['Person A', 'Person B']);
-
-  expect(queryAllByText('Barcelona Lab and Glasgow Lab')).toHaveLength(1);
 });

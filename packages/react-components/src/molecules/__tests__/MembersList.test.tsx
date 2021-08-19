@@ -3,7 +3,7 @@ import { createUserResponse, createListUserResponse } from '@asap-hub/fixtures';
 
 import MembersList from '../MembersList';
 
-it('renders name, role and labs for each member', async () => {
+it('renders name and role for each member', async () => {
   const { getAllByRole } = render(
     <MembersList
       members={[
@@ -41,6 +41,10 @@ it('only show lab information if the user is on a lab', async () => {
           displayName: 'Bat Man',
           role: 'Boss',
           teams: [],
+          labs: [
+            { id: 'cd7be4904', name: 'Manchester' },
+            { id: 'cd7be4905', name: 'Glasgow' },
+          ],
         },
         {
           ...createListUserResponse(2).items[1],
@@ -53,7 +57,7 @@ it('only show lab information if the user is on a lab', async () => {
       ]}
     />,
   );
-  expect(queryAllByText('Brighton Lab and Liverpool Lab')).toHaveLength(1);
+  expect(queryAllByText('Manchester Lab and Glasgow Lab')).toHaveLength(1);
 });
 it('renders a team link for each team provided', async () => {
   const { getByText } = render(

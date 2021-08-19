@@ -7,7 +7,7 @@ import { UserProfileContext } from '@asap-hub/react-context';
 import { Card, Headline2, Headline3, Link } from '../atoms';
 import { mobileScreen, perRem } from '../pixels';
 import UserProfilePlaceholderCard from './UserProfilePlaceholderCard';
-import { UserProfileLabText } from '../molecules';
+import { getUniqueCommaStringWithSuffix } from '../utils';
 
 type UserProfileBackgroundProps = UserTeam &
   Pick<UserResponse, 'firstName'> & { labs?: Lab[] };
@@ -58,6 +58,10 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   const teamHref = network({}).teams({}).team({ teamId: id }).$;
   const { isOwnProfile } = useContext(UserProfileContext);
 
+  const labsList = getUniqueCommaStringWithSuffix(
+    labs.map((lab) => lab.name),
+    'Lab',
+  );
   return (
     <Card>
       <Headline2 styleAsHeading={3}>
@@ -74,10 +78,10 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
             <p>{role}</p>
           </div>
         </div>
-        {!!labs.length && (
+        {!!labsList?.length && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Labs</Headline3>
-            <UserProfileLabText labs={labs} />
+            <span>{labsList}</span>
           </div>
         )}
         {(approach || isOwnProfile) && (

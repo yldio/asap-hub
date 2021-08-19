@@ -9,7 +9,7 @@ it.each`
   ${'Job'}     | ${'Inst'}    | ${/Job at Inst/}
 `('generates the position description "$text"', ({ text, ...position }) => {
   const { container } = render(
-    <UserProfilePersonalText teams={[]} {...position} />,
+    <UserProfilePersonalText teams={[]} {...position} labs={[]} />,
   );
   expect(container).toHaveTextContent(text);
 });
@@ -21,7 +21,7 @@ it.each`
   ${'Country'} | ${'City'}    | ${/City, Country/}
 `('generates the location description "$text"', ({ text, ...location }) => {
   const { container, getByTitle } = render(
-    <UserProfilePersonalText teams={[]} {...location} />,
+    <UserProfilePersonalText teams={[]} {...location} labs={[]} />,
   );
   expect(container).toHaveTextContent(text);
   expect(getByTitle(/location/i)).toBeInTheDocument();
@@ -77,7 +77,6 @@ it('only show lab information if the user is on a lab', async () => {
   );
   expect(container).toHaveTextContent('Glasgow Lab');
 });
-
 it('shows placeholder text on your own profile', () => {
   const { queryByTitle, queryByText, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>

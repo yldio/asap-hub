@@ -5,10 +5,10 @@ import { discover, network } from '@asap-hub/routing';
 import { UserProfileContext } from '@asap-hub/react-context';
 
 import { Link, Paragraph, Ellipsis } from '../atoms';
-import UserProfileLabText from './UserProfileLabText';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight } from '../pixels';
 import { lead, tin } from '../colors';
+import { getUniqueCommaStringWithSuffix } from '../utils';
 
 const locationStyles = css({
   padding: `${6 / perRem}em 0`,
@@ -45,6 +45,11 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
 
+  const labsList = getUniqueCommaStringWithSuffix(
+    labs.map((lab) => lab.name),
+    'Lab',
+  );
+
   return (
     <div>
       <p css={paragraphStyles}>
@@ -66,10 +71,10 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             ASAP Staff on <Link href={discover({}).$}>Team ASAP</Link>
           </>
         ) : null}
-        {!!labs.length && (
+        {!!labsList?.length && (
           <>
             <br />
-            <UserProfileLabText labs={labs} />
+            <span>{labsList}</span>
           </>
         )}
         {teams.map(({ id, role: teamRole, displayName }) => (

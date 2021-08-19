@@ -4,8 +4,8 @@ import { network } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
-import { Link, Avatar, Anchor } from '../atoms';
-import UserProfileLabText from './UserProfileLabText';
+import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
+import { getUniqueCommaStringWithSuffix } from '../utils';
 
 const containerStyles = css({
   margin: 0,
@@ -68,9 +68,12 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(({ id, displayName, role, teams, labs, ...member }) => {
+    {members.map(({ id, displayName, role, teams, labs = [], ...member }) => {
       const href = network({}).users({}).user({ userId: id }).$;
-
+      const labsList = getUniqueCommaStringWithSuffix(
+        labs.map((lab) => lab.name),
+        'Lab',
+      );
       return (
         <li key={id} css={{ display: 'contents' }}>
           <Anchor href={href} css={{ display: 'contents' }}>
@@ -104,7 +107,7 @@ const MembersList: React.FC<MembersListProps> = ({
                 roleStyles,
               ]}
             >
-              <UserProfileLabText labs={labs} />
+              <Ellipsis>{labsList}</Ellipsis>
             </div>
           </Anchor>
           <ul

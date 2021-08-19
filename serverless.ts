@@ -55,6 +55,9 @@ const serverlessConfig: AWS = {
       apiGateway: true,
       lambda: true,
     },
+    eventBridge: {
+      useCloudFormation: true,
+    },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',

@@ -78,7 +78,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
             <p>{role}</p>
           </div>
         </div>
-        {!!labsList?.length && (
+        {!!labsList.length && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Labs</Headline3>
             <span>{labsList}</span>

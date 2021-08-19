@@ -71,7 +71,7 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             ASAP Staff on <Link href={discover({}).$}>Team ASAP</Link>
           </>
         ) : null}
-        {!!labsList?.length && (
+        {!!labsList.length && (
           <>
             <br />
             <span>{labsList}</span>

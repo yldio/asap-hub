@@ -102,7 +102,7 @@ export const researchOutputState = atomFamily<
 export const useResearchOutputById = (id: string) =>
   useRecoilValue(researchOutputState(id));
 
-export const usePrefetchResearchOutputs = (
+export const usePrefetchResearchOutputsLegacy = (
   options: GetListOptions = {
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
@@ -115,7 +115,10 @@ export const usePrefetchResearchOutputs = (
     researchOutputsState(options),
   );
   useDeepCompareEffect(() => {
-    if (researchOutputs === undefined) {
+    if (
+      !isEnabled('ALGOLIA_RESEARCH_OUTPUTS') &&
+      researchOutputs === undefined
+    ) {
       getResearchOutputsLegacy(options, authorization)
         .then(setResearchOutputs)
         .catch();

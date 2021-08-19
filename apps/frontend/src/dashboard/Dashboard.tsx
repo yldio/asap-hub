@@ -8,7 +8,7 @@ import { useCurrentUser } from '@asap-hub/react-context';
 import { usePrefetchTeams } from '@asap-hub/frontend/src/network/teams/state';
 import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/frontend/src/events/calendar/state';
-import { usePrefetchResearchOutputs } from '@asap-hub/frontend/src/shared-research/state';
+import { usePrefetchResearchOutputsLegacy } from '@asap-hub/frontend/src/shared-research/state';
 import { useDashboard } from '../api';
 import Frame from '../structure/Frame';
 
@@ -33,7 +33,7 @@ const Dashboard: FC<Record<string, never>> = () => {
     filters: new Set(),
   });
   usePrefetchCalendars();
-  usePrefetchResearchOutputs();
+  usePrefetchResearchOutputsLegacy();
 
   if (loading) {
     return <Loading />;

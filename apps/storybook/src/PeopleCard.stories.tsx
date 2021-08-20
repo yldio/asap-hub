@@ -34,6 +34,9 @@ export const Normal = () => {
         'https://www.hhmi.org/sites/default/files/styles/epsa_250_250/public/Programs/Investigator/Randy-Schekman-400x400.jpg',
       )}
       role={select('ASAP Hub Role', ['Staff', 'Grantee', 'Guest'], 'Grantee')}
+      labs={Array.from({ length: number('Labs', 0, { min: 0 }) }).map(
+        (_, i) => ({ id: `${i}`, name: `${i}` }),
+      )}
     />
   );
 };

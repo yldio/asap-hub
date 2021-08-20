@@ -1,16 +1,11 @@
 import nock from 'nock';
-import { config, RestUser } from '@asap-hub/squidex';
-import { User } from '@asap-hub/auth';
+import { config } from '@asap-hub/squidex';
 import {
   graphQlTeamsResponseSingle,
-  usersResponseTeam1,
   listTeamResponse,
   graphQlTeamsResponse,
-  usersResponseTeam2,
-  usersResponseTeam3,
   fetchTeamByIdExpectation,
   graphQlTeamResponse,
-  fetchByIdUserResponse,
   getUpdateTeamResponse,
   getGraphQlTeamResponse,
   updateExpectation,
@@ -24,30 +19,6 @@ import { identity } from '../helpers/squidex';
 
 describe('Team controller', () => {
   const teams = new Teams();
-  const mockUser: User = {
-    id: 'userId',
-    onboarded: true,
-    displayName: 'JT',
-    email: 'joao.tiago@asap.science',
-    firstName: 'Joao',
-    lastName: 'Tiago',
-    teams: [
-      {
-        id: 'team-id-1',
-        displayName: 'Awesome Team',
-        role: 'Project Manager',
-      },
-      {
-        id: 'team-id-3',
-        displayName: 'Zac Torres',
-        role: 'Collaborating PI',
-      },
-    ],
-    algoliaApiKey: 'test-api-key',
-  };
-
-  const getUserFilterExpectation = (teamId: string): string =>
-    `data/teams/iv/id eq '${teamId}' and data/onboarded/iv eq true`;
 
   beforeAll(() => {
     identity();
@@ -55,6 +26,9 @@ describe('Team controller', () => {
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
+  });
+
+  afterEach(() => {
     nock.cleanAll();
   });
 
@@ -78,7 +52,8 @@ describe('Team controller', () => {
           },
         });
 
-      const result = await teams.fetch({ take: 10, skip: 8 }, mockUser);
+      const result = await teams.fetch({ take: 10, skip: 8 });
+
       expect(result).toEqual({ items: [], total: 0 });
     });
 
@@ -101,17 +76,13 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponseSingle)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1);
+        .reply(200, graphQlTeamsResponseSingle);
 
-      const result = await teams.fetch(
-        { take: 8, skip: 0, search: 'Cristiano Ronaldo' },
-        mockUser,
-      );
+      const result = await teams.fetch({
+        take: 8,
+        skip: 0,
+        search: 'Cristiano Ronaldo',
+      });
 
       expect(result).toEqual({
         total: 1,
@@ -134,17 +105,9 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponseSingle)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1);
+        .reply(200, graphQlTeamsResponseSingle);
 
-      const result = await teams.fetch(
-        { take: 8, skip: 0, search: "'" },
-        mockUser,
-      );
+      const result = await teams.fetch({ take: 8, skip: 0, search: "'" });
 
       expect(result).toEqual({
         total: 1,
@@ -167,17 +130,9 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponseSingle)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1);
+        .reply(200, graphQlTeamsResponseSingle);
 
-      const result = await teams.fetch(
-        { take: 8, skip: 0, search: '"' },
-        mockUser,
-      );
+      const result = await teams.fetch({ take: 8, skip: 0, search: '"' });
 
       expect(result).toEqual({
         total: 1,
@@ -195,24 +150,9 @@ describe('Team controller', () => {
             skip: 0,
           },
         })
-        .reply(200, graphQlTeamsResponse)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-1'),
-        })
-        .reply(200, usersResponseTeam1)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-2'),
-        })
-        .reply(200, usersResponseTeam2)
-        .get(`/api/content/${config.appName}/users`)
-        .query({
-          $filter: getUserFilterExpectation('team-id-3'),
-        })
-        .reply(200, usersResponseTeam3);
+        .reply(200, graphQlTeamsResponse);
 
-      const result = await teams.fetch({ take: 8, skip: 0 }, mockUser);
+      const result = await teams.fetch({ take: 8, skip: 0 });
 
       expect(result).toEqual(listTeamResponse);
     });
@@ -235,9 +175,7 @@ describe('Team controller', () => {
           },
         });
 
-      await expect(teams.fetchById(teamId, mockUser)).rejects.toThrow(
-        'Not Found',
-      );
+      await expect(teams.fetchById(teamId)).rejects.toThrow('Not Found');
     });
 
     test('Should return the team even when team members are not found', async () => {
@@ -261,7 +199,7 @@ describe('Team controller', () => {
           },
         });
 
-      const result = await teams.fetchById(teamId, mockUser);
+      const result = await teams.fetchById(teamId);
       expect(result).toEqual({ ...fetchTeamByIdExpectation, members: [] });
     });
 
@@ -286,7 +224,7 @@ describe('Team controller', () => {
           },
         });
 
-      const result = await teams.fetchById(teamId, mockUser);
+      const result = await teams.fetchById(teamId);
 
       expect(result).toEqual({ ...fetchTeamByIdExpectation, members: [] });
     });
@@ -303,7 +241,7 @@ describe('Team controller', () => {
         })
         .reply(200, graphQlTeamResponse);
 
-      const result = await teams.fetchById(teamId, mockUser);
+      const result = await teams.fetchById(teamId);
 
       expect(result).toEqual(fetchTeamByIdExpectation);
     });
@@ -329,7 +267,7 @@ describe('Team controller', () => {
         })
         .reply(200, getGraphQlTeamResponse(tools));
 
-      const result = await teams.fetchById(teamId, mockUser);
+      const result = await teams.fetchById(teamId);
 
       expect(result).toEqual({
         ...fetchTeamByIdExpectation,
@@ -343,18 +281,8 @@ describe('Team controller', () => {
     });
 
     describe('Avatar', () => {
-      const user: RestUser = {
-        ...fetchByIdUserResponse.items[0],
-        data: {
-          ...fetchByIdUserResponse.items[0].data,
-          avatar: { iv: ['test-avatar'] },
-        },
-      };
-
       test('Should parse the team user correctly when the avatar is null', async () => {
         const teamId = 'team-id-1';
-
-        user.data.avatar.iv = null as any;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -376,7 +304,7 @@ describe('Team controller', () => {
             },
           });
 
-        const result = await teams.fetchById(teamId, mockUser);
+        const result = await teams.fetchById(teamId);
 
         const expectedResponse = {
           ...fetchTeamByIdExpectation,
@@ -393,8 +321,6 @@ describe('Team controller', () => {
 
       test('Should parse the team user correctly when the avatar is undefined', async () => {
         const teamId = 'team-id-1';
-
-        delete (user.data as any).avatar;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -416,7 +342,7 @@ describe('Team controller', () => {
             },
           });
 
-        const result = await teams.fetchById(teamId, mockUser);
+        const result = await teams.fetchById(teamId);
 
         const expectedResponse = {
           ...fetchTeamByIdExpectation,
@@ -440,9 +366,7 @@ describe('Team controller', () => {
         .patch(`/api/content/${config.appName}/teams/${teamId}`)
         .reply(404);
 
-      await expect(teams.update(teamId, [], mockUser)).rejects.toThrow(
-        'Not Found',
-      );
+      await expect(teams.update(teamId, [])).rejects.toThrow('Not Found');
     });
 
     test('Should remove the tools are return the team', async () => {
@@ -461,7 +385,7 @@ describe('Team controller', () => {
         })
         .reply(200, getGraphQlTeamResponse());
 
-      const result = await teams.update(teamId, [], mockUser);
+      const result = await teams.update(teamId, []);
 
       expect(result).toEqual(updateExpectation);
     });
@@ -488,17 +412,13 @@ describe('Team controller', () => {
         })
         .reply(200, getGraphQlTeamResponse(tools));
 
-      const result = await teams.update(
-        teamId,
-        [
-          {
-            url: 'https://example.com',
-            name: 'good link',
-            description: '',
-          },
-        ],
-        mockUser,
-      );
+      const result = await teams.update(teamId, [
+        {
+          url: 'https://example.com',
+          name: 'good link',
+          description: '',
+        },
+      ]);
 
       expect(result).toEqual({ ...updateExpectation, tools });
     });

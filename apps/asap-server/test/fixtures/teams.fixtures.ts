@@ -45,7 +45,10 @@ export const referencingUsersContentsResponse = ({
       skills: [],
       role: 'Grantee',
       onboarded: true,
-      labs: [],
+      labs: [
+        { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
+        { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+      ],
     },
   },
 ];
@@ -117,6 +120,50 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
               },
             ],
           },
+          referencingUsersContents: [
+            {
+              id: 'user-id-1',
+              created: '2020-09-25T09:42:51.132Z',
+              lastModified: '2020-09-25T09:42:51.132Z',
+              flatData: {
+                avatar: [
+                  {
+                    id: 'uuid-user-id-1',
+                  },
+                ],
+                email: 'cristiano@ronaldo.com',
+                firstName: 'Cristiano',
+                lastName: 'Ronaldo',
+                jobTitle: 'Junior',
+                institution: 'Dollar General Corporation',
+                connections: [],
+                biography: '',
+                teams: [
+                  {
+                    id: [
+                      {
+                        id: 'team-id-1',
+                        created: '2020-09-23T20:33:36Z',
+                        lastModified: '2020-11-26T11:56:04Z',
+                        flatData: {
+                          displayName: 'Schipa, A',
+                        },
+                      },
+                    ],
+                    role: 'Lead PI (Core Leadership)',
+                  },
+                ],
+                questions: [],
+                skills: [],
+                role: 'Grantee',
+                onboarded: true,
+                labs: [
+                  { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
+                  { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+                ],
+              },
+            },
+          ],
         },
         {
           id: 'team-id-2',
@@ -133,6 +180,85 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
             proposal: null,
             tools: null,
           },
+          referencingUsersContents: [
+            {
+              id: 'user-id-2',
+              created: '2020-09-25T09:42:51.132Z',
+              lastModified: '2020-09-25T09:42:51.132Z',
+              flatData: {
+                avatar: [
+                  {
+                    id: 'uuid-user-id-2',
+                  },
+                ],
+                email: 'john@ed.ma',
+                firstName: 'John',
+                lastName: 'Travista',
+                jobTitle: 'Junior',
+                institution: 'Dollar General Corporation',
+                connections: [],
+                biography: '',
+                teams: [
+                  {
+                    id: [
+                      {
+                        id: 'team-id-2',
+                        created: '2020-09-23T20:33:36Z',
+                        lastModified: '2020-11-26T11:56:04Z',
+                        flatData: {
+                          displayName: 'Schipa, A',
+                        },
+                      },
+                    ],
+                    role: 'Lead PI (Core Leadership)',
+                  },
+                ],
+                questions: [],
+                skills: [],
+                role: 'Grantee',
+                onboarded: true,
+              },
+            },
+            {
+              id: 'user-id-3',
+              created: '2020-09-25T09:42:51.132Z',
+              lastModified: '2020-09-25T09:42:51.132Z',
+              flatData: {
+                avatar: [
+                  {
+                    id: 'uuid-user-id-3',
+                  },
+                ],
+                email: 'bill@ed.ma',
+                firstName: 'Bill',
+                lastName: 'Travista',
+                jobTitle: 'Junior',
+                institution: 'Dollar General Corporation',
+                connections: [],
+                biography: '',
+                teams: [
+                  {
+                    id: [
+                      {
+                        id: 'team-id-2',
+                        created: '2020-09-23T20:33:36Z',
+                        lastModified: '2020-11-26T11:56:04Z',
+                        flatData: {
+                          displayName: 'Schipa, A',
+                        },
+                      },
+                    ],
+                    role: 'Key Personnel',
+                  },
+                ],
+                questions: [],
+                skills: [],
+                role: 'Grantee',
+                onboarded: true,
+                labs: [],
+              },
+            },
+          ],
         },
         {
           id: 'team-id-3',
@@ -148,6 +274,50 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
             proposal: null,
             tools: null,
           },
+          referencingUsersContents: [
+            {
+              id: 'user-id-4',
+              created: '2020-09-25T09:42:51.132Z',
+              lastModified: '2020-09-25T09:42:51.132Z',
+              flatData: {
+                avatar: [
+                  {
+                    id: 'uuid-user-id-4',
+                  },
+                ],
+                email: 'seb@.da',
+                firstName: 'Seb',
+                lastName: 'Oliver',
+                jobTitle: 'Junior',
+                institution: 'Dollar General Corporation',
+                connections: [],
+                biography: '',
+                teams: [
+                  {
+                    id: [
+                      {
+                        id: 'team-id-3',
+                        created: '2020-09-23T20:33:36Z',
+                        lastModified: '2020-11-26T11:56:04Z',
+                        flatData: {
+                          displayName: 'Schipa, A',
+                        },
+                      },
+                    ],
+                    role: 'Lead PI (Core Leadership)',
+                  },
+                ],
+                questions: [],
+                skills: [],
+                role: 'Grantee',
+                onboarded: true,
+                labs: [
+                  { id: 'cd7be4904', flatData: { name: 'Manchester' } },
+                  { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+                ],
+              },
+            },
+          ],
         },
       ],
     },
@@ -161,162 +331,6 @@ export const graphQlTeamsResponseSingle: { data: ResponseFetchTeams } = {
       items: [graphQlTeamsResponse.data.queryTeamsContentsWithTotal.items[0]],
     },
   },
-};
-
-export const usersResponseTeam1: { total: number; items: RestUser[] } = {
-  total: 1,
-  items: [
-    {
-      id: 'user-id-1',
-      data: {
-        role: { iv: 'Grantee' },
-        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-        email: { iv: 'cristiano@ronaldo.com' },
-        firstName: { iv: 'Cristiano' },
-        lastName: { iv: 'Ronaldo' },
-        jobTitle: { iv: 'Junior' },
-        orcid: { iv: '363-98-9330' },
-        institution: { iv: 'Dollar General Corporation' },
-        avatar: { iv: ['uuid-user-id-1'] },
-        orcidWorks: { iv: [] },
-        teams: {
-          iv: [
-            {
-              role: 'Lead PI (Core Leadership)',
-              id: ['team-id-1'],
-            },
-          ],
-        },
-        connections: { iv: [] },
-        questions: { iv: [] },
-        skills: { iv: [] },
-        onboarded: {
-          iv: true,
-        },
-        labs: {
-          iv: [
-            { id: 'cd7be4904', flatData: { name: 'Manchester' } },
-            { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-          ],
-        },
-      },
-      created: '2020-09-25T09:42:51Z',
-      lastModified: '2020-09-25T09:42:51Z',
-    },
-  ],
-};
-
-export const usersResponseTeam2: { total: number; items: RestUser[] } = {
-  total: 2,
-  items: [
-    {
-      id: 'user-id-2',
-      data: {
-        role: { iv: 'Grantee' },
-        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-        email: { iv: 'john@ed.ma' },
-        firstName: { iv: 'John' },
-        lastName: { iv: 'Travista' },
-        jobTitle: { iv: 'Junior' },
-        orcid: { iv: '363-98-9330' },
-        institution: { iv: 'Dollar General Corporation' },
-        avatar: { iv: ['uuid-user-id-2'] },
-        orcidWorks: { iv: [] },
-        teams: {
-          iv: [
-            {
-              role: 'Lead PI (Core Leadership)',
-              id: ['team-id-2'],
-            },
-          ],
-        },
-        connections: { iv: [] },
-        skills: { iv: [] },
-        questions: { iv: [] },
-        onboarded: {
-          iv: true,
-        },
-        labs: {
-          iv: [
-            { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
-            { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-          ],
-        },
-      },
-      created: '2020-09-25T09:42:51Z',
-      lastModified: '2020-09-25T09:42:51Z',
-    },
-    {
-      id: 'user-id-3',
-      data: {
-        role: { iv: 'Grantee' },
-        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-        email: { iv: 'bill@ed.ma' },
-        firstName: { iv: 'Bill' },
-        lastName: { iv: 'Travista' },
-        jobTitle: { iv: 'Junior' },
-        orcid: { iv: '363-98-9330' },
-        institution: { iv: 'Dollar General Corporation' },
-        avatar: { iv: ['uuid-user-id-3'] },
-        orcidWorks: { iv: [] },
-        teams: {
-          iv: [
-            {
-              role: 'Key Personnel',
-              id: ['team-id-2'],
-            },
-          ],
-        },
-        connections: { iv: [] },
-        skills: { iv: [] },
-        questions: { iv: [] },
-        onboarded: {
-          iv: true,
-        },
-        labs: { iv: [] },
-      },
-      created: '2020-09-25T09:42:51Z',
-      lastModified: '2020-09-25T09:42:51Z',
-    },
-  ],
-};
-
-export const usersResponseTeam3: { total: number; items: RestUser[] } = {
-  total: 1,
-  items: [
-    {
-      id: 'user-id-4',
-      data: {
-        role: { iv: 'Grantee' },
-        lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
-        email: { iv: 'seb@.da' },
-        firstName: { iv: 'Seb' },
-        lastName: { iv: 'Oliver' },
-        jobTitle: { iv: 'Junior' },
-        orcid: { iv: '363-98-9335' },
-        institution: { iv: 'Euro General Corporation' },
-        avatar: { iv: ['uuid-user-id-4'] },
-        orcidWorks: { iv: [] },
-        teams: {
-          iv: [
-            {
-              role: 'Lead PI (Core Leadership)',
-              id: ['team-id-3'],
-            },
-          ],
-        },
-        connections: { iv: [] },
-        skills: { iv: [] },
-        questions: { iv: [] },
-        onboarded: {
-          iv: true,
-        },
-        labs: { iv: [] },
-      },
-      created: '2020-09-25T09:42:51Z',
-      lastModified: '2020-09-25T09:42:51Z',
-    },
-  ],
 };
 
 export const listTeamResponse: ListTeamResponse = {
@@ -389,6 +403,10 @@ export const listTeamResponse: ListTeamResponse = {
           email: 'cristiano@ronaldo.com',
           role: 'Lead PI (Core Leadership)',
           avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
+          labs: [
+            { id: 'cd7be4902', name: 'Barcelona' },
+            { id: 'cd7be4905', name: 'Glasgow' },
+          ],
         },
       ],
       projectTitle:
@@ -418,6 +436,7 @@ export const listTeamResponse: ListTeamResponse = {
           email: 'john@ed.ma',
           displayName: 'John Travista',
           role: 'Lead PI (Core Leadership)',
+          labs: [],
         },
         {
           id: 'user-id-3',
@@ -427,9 +446,11 @@ export const listTeamResponse: ListTeamResponse = {
           email: 'bill@ed.ma',
           displayName: 'Bill Travista',
           role: 'Key Personnel',
+          labs: [],
         },
       ],
       lastModifiedDate: '2020-10-26T20:54:00.000Z',
+      tools: [],
     },
     {
       id: 'team-id-3',
@@ -445,6 +466,10 @@ export const listTeamResponse: ListTeamResponse = {
           id: 'user-id-4',
           lastName: 'Oliver',
           role: 'Lead PI (Core Leadership)',
+          labs: [
+            { id: 'cd7be4904', name: 'Manchester' },
+            { id: 'cd7be4905', name: 'Glasgow' },
+          ],
         },
       ],
       tools: [],
@@ -553,6 +578,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
                     lastModified: '2020-11-26T11:56:04Z',
                     flatData: {
                       displayName: 'Schipa, A',
+                      tools: [],
                     },
                   },
                 ],
@@ -563,81 +589,15 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             skills: [],
             role: 'Grantee',
             onboarded: true,
-            labs: [],
+            labs: [
+              { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
+              { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+            ],
           },
         },
       ],
     },
   },
-};
-
-export const fetchByIdUserResponse: { total: number; items: RestUser[] } = {
-  total: 1,
-  items: [
-    {
-      id: 'user-id-1',
-      data: {
-        role: {
-          iv: 'Grantee',
-        },
-        onboarded: {
-          iv: true,
-        },
-        lastModifiedDate: {
-          iv: '2020-09-25T09:42:51.132Z',
-        },
-        email: {
-          iv: 'cristiano@ronaldo.com',
-        },
-        firstName: {
-          iv: 'Cristiano',
-        },
-        lastName: {
-          iv: 'Ronaldo',
-        },
-        jobTitle: {
-          iv: 'Junior',
-        },
-        orcid: {
-          iv: '363-98-9330',
-        },
-        institution: {
-          iv: 'Dollar General Corporation',
-        },
-        avatar: {
-          iv: ['uuid-user-id-1'],
-        },
-        skills: {
-          iv: [],
-        },
-        questions: {
-          iv: [],
-        },
-        orcidWorks: {
-          iv: [],
-        },
-        teams: {
-          iv: [
-            {
-              role: 'Lead PI (Core Leadership)',
-              id: ['team-id-1'],
-            },
-          ],
-        },
-        connections: {
-          iv: [],
-        },
-        labs: {
-          iv: [
-            { id: 'cd7be4904', flatData: { name: 'Manchester' } },
-            { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-          ],
-        },
-      },
-      created: '2020-09-25T09:42:51Z',
-      lastModified: '2020-09-25T09:42:51Z',
-    },
-  ],
 };
 
 export const fetchTeamByIdExpectation: TeamResponse = {
@@ -710,7 +670,10 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       email: 'cristiano@ronaldo.com',
       displayName: 'Cristiano Ronaldo',
       role: 'Lead PI (Core Leadership)',
-      labs: [],
+      labs: [
+        { id: 'cd7be4902', name: 'Barcelona' },
+        { id: 'cd7be4905', name: 'Glasgow' },
+      ],
     },
   ],
   projectTitle:
@@ -858,7 +821,10 @@ export const getGraphQlTeamResponse = (
             skills: [],
             role: 'Grantee',
             onboarded: true,
-            labs: [],
+            labs: [
+              { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
+              { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+            ],
           },
         },
       ],
@@ -896,7 +862,12 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
         onboarded: {
           iv: true,
         },
-        labs: { iv: [] },
+        labs: {
+          iv: [
+            { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
+            { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+          ],
+        },
       },
       created: '2020-09-25T09:42:51Z',
       lastModified: '2020-09-25T09:42:51Z',
@@ -974,7 +945,10 @@ export const updateExpectation: TeamResponse = {
       email: 'cristiano@ronaldo.com',
       displayName: 'Cristiano Ronaldo',
       role: 'Lead PI (Core Leadership)',
-      labs: [],
+      labs: [
+        { id: 'cd7be4902', name: 'Barcelona' },
+        { id: 'cd7be4905', name: 'Glasgow' },
+      ],
     },
   ],
   projectTitle:

@@ -30,7 +30,6 @@ it('renders the date in the correct format', () => {
     `"Joined: 1st January 2021"`,
   );
 });
-
 it('links to the profile', () => {
   const { getByText } = render(
     <PeopleCard {...props} displayName="John Doe" id="42" />,

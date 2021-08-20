@@ -62,7 +62,6 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
     labs.map((lab) => lab.name),
     'Lab',
   );
-
   return (
     <Card>
       <Headline2 styleAsHeading={3}>
@@ -82,7 +81,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
         {!!labsList.length && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Labs</Headline3>
-            {labsList}
+            <span>{labsList}</span>
           </div>
         )}
         {(approach || isOwnProfile) && (

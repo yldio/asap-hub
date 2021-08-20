@@ -4,11 +4,16 @@ import {
   TeamResponse,
   TeamRole,
   TeamMember,
+  Lab,
 } from '@asap-hub/model';
-import { GraphqlTeam, GraphqlResearchOutput } from '@asap-hub/squidex';
+import {
+  GraphqlTeam,
+  GraphqlResearchOutput,
+  GraphqlUser,
+} from '@asap-hub/squidex';
 
 import { parseGraphQLResearchOutput } from './research-output';
-import { parseDate } from '../utils/squidex';
+import { parseDate, createURL } from '../utils/squidex';
 
 export const teamUpdateSchema = Joi.object({
   tools: Joi.array()
@@ -32,13 +37,54 @@ const priorities: Record<TeamRole, number> = {
   'Key Personnel': 5,
 };
 
-export const parseGraphQLTeam = (
-  team: GraphqlTeam,
-  members: TeamMember[] = [],
-): TeamResponse => {
+export const parseGraphQLTeamMember = (
+  user: GraphqlUser,
+  teamId: string,
+): TeamMember => {
+  const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
+    user.flatData?.avatar || [];
+
+  const labs =
+    user.flatData?.labs?.reduce((acc: Lab[], lab) => {
+      const labsData = lab.flatData?.name
+        ? [...acc, { id: lab.id, name: lab.flatData.name }]
+        : acc;
+      return labsData;
+    }, []) ?? [];
+
+  const role = user.flatData?.teams
+    ?.filter((t) => t.id[0].id === teamId)
+    .filter((s) => s.role)[0].role as TeamRole;
+  return {
+    id: user.id,
+    firstName: user.flatData?.firstName || undefined,
+    lastName: user.flatData?.lastName || undefined,
+    displayName: `${user.flatData?.firstName} ${user.flatData?.lastName}`,
+    email: user.flatData?.email || '',
+    role,
+    labs,
+    avatarUrl: flatAvatar?.length
+      ? createURL(flatAvatar.map((a) => a.id))[0]
+      : undefined,
+  };
+};
+
+export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
   const flatOutputs: NonNullable<GraphqlTeam['flatData']>['outputs'] =
     team.flatData?.outputs || [];
   const displayName = team.flatData?.displayName || '';
+
+  const members =
+    team.referencingUsersContents?.map((user) =>
+      parseGraphQLTeamMember(user, team.id),
+    ) || [];
+
+  const tools =
+    team?.flatData?.tools?.map(({ name, description, url }) => ({
+      name,
+      url,
+      description: description ?? undefined,
+    })) || [];
 
   const outputs: ResearchOutputResponse[] = flatOutputs
     .map((o) => {
@@ -67,6 +113,7 @@ export const parseGraphQLTeam = (
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
     skills: team.flatData?.skills || [],
     outputs,
+    tools,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
     projectTitle: team.flatData?.projectTitle || '',

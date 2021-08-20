@@ -3,6 +3,7 @@ import nock from 'nock';
 import {
   createListResearchOutputResponse,
   createResearchOutputResponse,
+  createAlgoliaResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { SearchIndex } from 'algoliasearch/lite';
 import { ResearchOutputType } from '@asap-hub/model';
@@ -32,12 +33,16 @@ const options: GetListOptions = {
 describe('getResearchOutputs', () => {
   // This mock is pretty basic. @todo: Refactor into something reusable and think about
   // how to make more generic query building that can be tested in isolation
+  const mockedSearch: jest.MockedFunction<SearchIndex['search']> = jest
+    .fn()
+    .mockResolvedValue(createAlgoliaResearchOutputResponse(10));
+
   const mockIndex = {
-    search: jest.fn(),
-  } as Partial<SearchIndex> as SearchIndex;
+    search: mockedSearch,
+  } as jest.Mocked<SearchIndex>;
 
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
   it('makes a search request with query, default page and page size', async () => {
     await getResearchOutputs(mockIndex, {
@@ -98,6 +103,13 @@ describe('getResearchOutputs', () => {
       '',
       expect.objectContaining({ filters: 'type:Article' }),
     );
+  });
+
+  it('throws an error of type error', async () => {
+    mockedSearch.mockRejectedValue({ message: 'Some Error' });
+    await expect(
+      getResearchOutputs(mockIndex, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
   });
 });
 

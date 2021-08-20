@@ -53,6 +53,8 @@ export const getResearchOutputs = (
         [],
       )
       .join(' OR '),
+  }).catch((error: Error) => {
+    throw new Error(`Could not search: ${error.message}`);
   });
 
 export const getResearchOutputsLegacy = async (

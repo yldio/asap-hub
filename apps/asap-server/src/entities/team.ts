@@ -107,9 +107,16 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
       (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
     );
 
+  const labCount = members
+    .flatMap((member) => member.labs || [])
+    .filter(
+      (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
+    ).length;
+
   return {
     id: team.id,
     displayName,
+    labCount,
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
     skills: team.flatData?.skills || [],
     outputs,

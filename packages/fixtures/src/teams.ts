@@ -27,6 +27,7 @@ const listTeamResponseItem: Omit<ListTeamResponse['items'][0], 'id'> = {
   outputs: [],
   members: [],
   lastModifiedDate: '2020-09-07T17:36:54Z',
+  labCount: 0,
 };
 
 type FixtureOptions = {

@@ -217,6 +217,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                 skills: [],
                 role: 'Grantee',
                 onboarded: true,
+                labs: [],
               },
             },
             {
@@ -342,6 +343,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
       id: 'team-id-1',
       displayName: 'Schipa, A',
       lastModifiedDate: '2020-11-26T11:56:04.000Z',
+      labCount: 2,
       skills: ['Animal resources'],
       outputs: [
         {
@@ -425,6 +427,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
     {
       id: 'team-id-2',
       displayName: 'John T.',
+      labCount: 0,
       projectTitle:
         'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
       skills: [],
@@ -457,6 +460,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
     {
       id: 'team-id-3',
       displayName: 'Zac T.',
+      labCount: 2,
       skills: [],
       outputs: [],
       members: [
@@ -682,6 +686,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
   tools: [],
+  labCount: 2,
 };
 
 export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
@@ -957,6 +962,7 @@ export const updateExpectation: TeamResponse = {
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
   tools: [],
+  labCount: 2,
 };
 
 export const teamResponse: TeamResponse = updateExpectation;

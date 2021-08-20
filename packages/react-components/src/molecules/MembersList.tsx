@@ -45,6 +45,11 @@ const multiColumnAddToColumnStyles = css({
 const roleStyles = css({
   color: lead.rgb,
 });
+
+const labStyles = css({
+  color: lead.rgb,
+  padding: `0 0 ${24 / perRem}em`,
+});
 const teamStyles = css({
   listStyle: 'none',
   margin: 0,
@@ -104,10 +109,10 @@ const MembersList: React.FC<MembersListProps> = ({
               css={[
                 addToColumnStyles,
                 singleColumn || multiColumnAddToColumnStyles,
-                roleStyles,
+                labStyles,
               ]}
             >
-              <Ellipsis>{labsList}</Ellipsis>
+              {labsList && <Ellipsis>{labsList}</Ellipsis>}
             </div>
           </Anchor>
           <ul

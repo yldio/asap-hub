@@ -46,11 +46,12 @@ export const getResearchOutputs = (
   search<ResearchOutputResponse>(options.searchQuery, {
     page: options.currentPage ?? 0,
     hitsPerPage: options.pageSize ?? 10,
-    filters: [...options.filters]
-      .map(
-        (filter) => researchOutputFilters[filter as ResearchOutputType]?.filter,
+    filters: Object.entries(researchOutputFilters)
+      .reduce<string[]>(
+        (acc, [key, { filter }]) =>
+          options.filters.has(key) ? [filter, ...acc] : acc,
+        [],
       )
-      .filter((s) => !!s)
       .join(' OR '),
   });
 

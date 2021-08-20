@@ -5,6 +5,7 @@ import {
 import { SearchResponse } from '@algolia/client-search';
 
 import { listUserResponseItem } from './users';
+import { createAlgoliaResponse } from './util';
 
 const researchOutputResponse: Omit<
   ListResearchOutputResponse['items'][0],
@@ -56,18 +57,13 @@ export const createListResearchOutputResponse = (
   ),
 });
 
-// Incomplete mock. @todo: Make helper function to add algolia meta data in future.
 export const createAlgoliaResearchOutputResponse = (
   items: number,
-): SearchResponse<ResearchOutputResponse> => {
-  const response: Partial<SearchResponse<ResearchOutputResponse>> = {
-    nbHits: items,
-    hits: Array.from({ length: items }, (_, itemIndex) => ({
-      ...createResearchOutputResponse(itemIndex),
-      objectID: `ro${itemIndex}`,
-    })),
-  };
-  return response as SearchResponse<ResearchOutputResponse>;
-};
+): SearchResponse<ResearchOutputResponse> =>
+  createAlgoliaResponse(
+    Array.from({ length: items }, (_, itemIndex) =>
+      createResearchOutputResponse(itemIndex),
+    ),
+  );
 
 export default createListResearchOutputResponse;

@@ -35,7 +35,7 @@ export const researchOutputFilters: Record<
   Protocol: { filter: 'type:Protocol' },
   Dataset: { filter: 'type:Dataset' },
   Bioinformatics: { filter: 'type:Bioinformatics' },
-  'Lab Resource': { filter: 'type:Lab Resource' },
+  'Lab Resource': { filter: 'type:"Lab Resource"' },
   Article: { filter: 'type:Article' },
 };
 

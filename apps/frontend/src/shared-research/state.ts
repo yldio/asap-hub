@@ -134,13 +134,13 @@ export const useResearchOutputs = (options: GetListOptions) => {
   const { index } = useAlgolia();
   if (isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
     throw getResearchOutputs(index, options)
-      .then((data) => {
-        const oldFormat: ListResearchOutputResponse = {
+      .then(
+        (data): ListResearchOutputResponse => ({
           total: data.nbHits,
           items: data.hits,
-        };
-        setResearchOutputs(oldFormat);
-      })
+        }),
+      )
+      .then(setResearchOutputs)
       .catch(setResearchOutputs);
   } else if (researchOutputs === undefined) {
     throw getResearchOutputsLegacy(options, authorization)

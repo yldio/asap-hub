@@ -9,4 +9,4 @@ export default (
   </MessageLayout>
 );
 
-export const subject = `Welcome ${welcome.firstName}!`;
+export const subject = `Welcome to the ASAP Hub`;

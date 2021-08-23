@@ -113,7 +113,7 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
     skills: team.flatData?.skills || [],
     outputs,
-    tools,
+    tools: undefined,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
     projectTitle: team.flatData?.projectTitle || '',

@@ -4,10 +4,12 @@ import { User } from '@asap-hub/auth';
 import { render, waitFor } from '@testing-library/react';
 import { RecoilRoot } from 'recoil';
 import { DashboardResponse } from '@asap-hub/model';
+import { disable } from '@asap-hub/flags';
 
 import Dashboard from '../Dashboard';
 import { API_BASE_URL } from '../../config';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
+import { getResearchOutputsLegacy } from '../../shared-research/api';
 
 jest.mock('../../config');
 jest.mock('../../events/api');
@@ -15,8 +17,14 @@ jest.mock('../../shared-research/api');
 jest.mock('../../network/teams/api');
 
 afterEach(() => {
+  jest.clearAllMocks();
   nock.cleanAll();
 });
+
+const mockGetResearchOutputsLegacy =
+  getResearchOutputsLegacy as jest.MockedFunction<
+    typeof getResearchOutputsLegacy
+  >;
 
 const renderDashboard = async (user: Partial<User>) => {
   const result = render(
@@ -74,4 +82,33 @@ it('renders dashboard with news and events', async () => {
   });
   expect(await findByText(/john/i, { selector: 'h1' })).toBeVisible();
   expect(queryAllByText(/title/i, { selector: 'h2' }).length).toBe(2);
+});
+
+it('prefetches research outputs (REGRESSION)', async () => {
+  nock(API_BASE_URL)
+    .get('/dashboard')
+    .reply(200, {
+      newsAndEvents: [],
+      pages: [],
+    } as DashboardResponse)
+    .persist();
+
+  const { rerender } = await renderDashboard({});
+  expect(mockGetResearchOutputsLegacy).not.toHaveBeenCalled();
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
+
+  rerender(
+    <Suspense fallback="loading">
+      <RecoilRoot>
+        <Auth0Provider user={{}}>
+          <WhenReady>
+            <Dashboard />
+          </WhenReady>
+        </Auth0Provider>
+      </RecoilRoot>
+    </Suspense>,
+  );
+  await waitFor(() =>
+    expect(mockGetResearchOutputsLegacy).toHaveBeenCalledTimes(1),
+  );
 });

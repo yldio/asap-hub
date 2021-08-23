@@ -1,4 +1,7 @@
-export type Flag = 'PERSISTENT_EXAMPLE' | 'RESEARCH_OUTPUT_SHOW_AUTHORS_LIST';
+export type Flag =
+  | 'PERSISTENT_EXAMPLE'
+  | 'RESEARCH_OUTPUT_SHOW_AUTHORS_LIST'
+  | 'ALGOLIA_RESEARCH_OUTPUTS';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {

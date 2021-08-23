@@ -9596,6 +9596,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./packages/fixtures/",
           "packageDependencies": [
             ["@asap-hub/fixtures", "workspace:packages/fixtures"],
+            ["@algolia/client-search", "npm:4.10.3"],
             ["@asap-hub/model", "workspace:packages/model"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
             ["core-js", "npm:3.12.1"],
@@ -9624,6 +9625,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./apps/frontend/",
           "packageDependencies": [
             ["@asap-hub/frontend", "workspace:apps/frontend"],
+            ["@algolia/client-search", "npm:4.10.3"],
             ["@asap-hub/auth", "workspace:packages/auth"],
             ["@asap-hub/dom-test-utils", "workspace:packages/dom-test-utils"],
             ["@asap-hub/eslint-config-asap-hub", "workspace:packages/eslint-config-asap-hub"],
@@ -9657,6 +9659,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
             ["@types/uuid", "npm:8.3.0"],
+            ["algoliasearch", "npm:4.10.3"],
             ["browser-image-compression", "npm:1.0.14"],
             ["browserslist-useragent-regexp", "npm:3.0.0"],
             ["cross-env", "npm:7.0.3"],

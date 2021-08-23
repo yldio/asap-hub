@@ -5,7 +5,10 @@ import {
 import {
   createResearchOutputResponse,
   createListResearchOutputResponse,
+  createAlgoliaResearchOutputResponse,
 } from '@asap-hub/fixtures';
+
+import { SearchResponse } from '@algolia/client-search';
 
 export const getResearchOutput = jest.fn(
   async (id: string): Promise<ResearchOutputResponse> => ({
@@ -15,7 +18,11 @@ export const getResearchOutput = jest.fn(
 );
 
 export const getResearchOutputs = jest.fn(
-  async (): Promise<ListResearchOutputResponse> => ({
-    ...createListResearchOutputResponse(2),
-  }),
+  async (): Promise<Partial<SearchResponse<ResearchOutputResponse>>> =>
+    createAlgoliaResearchOutputResponse(2),
+);
+
+export const getResearchOutputsLegacy = jest.fn(
+  async (): Promise<ListResearchOutputResponse> =>
+    createListResearchOutputResponse(2),
 );

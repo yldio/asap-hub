@@ -1,10 +1,11 @@
-import { ComponentProps } from 'react';
+import React, { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import { SearchField } from '../molecules';
 import { perRem } from '../pixels';
 import { noop } from '../utils';
 import { Filter } from '.';
+import { Option } from '../select';
 
 const styles = css({
   display: 'grid',
@@ -14,13 +15,18 @@ const styles = css({
 });
 
 type SearchFieldProps = ComponentProps<typeof SearchField>;
-type SearchAndFilterProps = ComponentProps<typeof Filter> & {
+interface SearchAndFilterProps<V extends string> {
+  readonly filterTitle: ComponentProps<typeof Filter>['filterTitle'];
+  readonly filters?: Set<V>;
+  readonly onChangeFilter?: (filter: V) => void;
+  readonly filterOptions: Option<V>[];
+
   readonly searchQuery: SearchFieldProps['value'];
   readonly onChangeSearch: SearchFieldProps['onChange'];
   readonly searchPlaceholder: SearchFieldProps['placeholder'];
-};
+}
 
-const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
+export default function SearchAndFilter<V extends string>({
   searchQuery,
   onChangeSearch = noop,
   searchPlaceholder,
@@ -29,20 +35,20 @@ const SearchAndFilter: React.FC<SearchAndFilterProps> = ({
   onChangeFilter,
   filterOptions,
   filterTitle,
-}) => (
-  <div role="search" css={styles}>
-    <SearchField
-      value={searchQuery}
-      placeholder={searchPlaceholder}
-      onChange={onChangeSearch}
-    />
-    <Filter
-      filters={filters}
-      onChangeFilter={onChangeFilter}
-      filterOptions={filterOptions}
-      filterTitle={filterTitle}
-    />
-  </div>
-);
-
-export default SearchAndFilter;
+}: SearchAndFilterProps<V>): ReturnType<React.FC> {
+  return (
+    <div role="search" css={styles}>
+      <SearchField
+        value={searchQuery}
+        placeholder={searchPlaceholder}
+        onChange={onChangeSearch}
+      />
+      <Filter<V>
+        filters={filters}
+        onChangeFilter={onChangeFilter}
+        filterOptions={filterOptions}
+        filterTitle={filterTitle}
+      />
+    </div>
+  );
+}

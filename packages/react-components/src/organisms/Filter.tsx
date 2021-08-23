@@ -51,18 +51,18 @@ const showMenuStyles = css({
   display: 'flex',
 });
 
-interface FilterProps {
-  readonly filters?: Set<string>;
-  readonly onChangeFilter?: (filter: string) => void;
-  readonly filterOptions: Option<string>[];
+interface FilterProps<V extends string> {
+  readonly filters?: Set<V>;
+  readonly onChangeFilter?: (filter: V) => void;
+  readonly filterOptions: Option<V>[];
   readonly filterTitle: string;
 }
-const Filter: React.FC<FilterProps> = ({
+export default function Filter<V extends string>({
   filters = new Set(),
   onChangeFilter = noop,
   filterOptions,
   filterTitle,
-}) => {
+}: FilterProps<V>): ReturnType<React.FC> {
   const [menuShown, setMenuShown] = useState(false);
   useEffect(() => {
     setMenuShown(false);
@@ -101,7 +101,7 @@ const Filter: React.FC<FilterProps> = ({
           <Caption asParagraph>
             <strong>{filterTitle}</strong>
           </Caption>
-          <CheckboxGroup
+          <CheckboxGroup<V>
             onChange={onChangeFilter}
             options={filterOptions}
             values={filters}
@@ -110,6 +110,4 @@ const Filter: React.FC<FilterProps> = ({
       </div>
     </div>
   );
-};
-
-export default Filter;
+}

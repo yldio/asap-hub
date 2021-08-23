@@ -3,9 +3,16 @@ import nock from 'nock';
 import {
   createListResearchOutputResponse,
   createResearchOutputResponse,
+  createAlgoliaResearchOutputResponse,
 } from '@asap-hub/fixtures';
+import { SearchIndex } from 'algoliasearch/lite';
+import { ResearchOutputType } from '@asap-hub/model';
 
-import { getResearchOutput, getResearchOutputs } from '../api';
+import {
+  getResearchOutput,
+  getResearchOutputs,
+  getResearchOutputsLegacy,
+} from '../api';
 import { API_BASE_URL } from '../../config';
 import { GetListOptions } from '../../api-util';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
@@ -17,19 +24,102 @@ afterEach(() => {
 });
 
 const options: GetListOptions = {
-  filters: new Set(),
+  filters: new Set<string>(),
   pageSize: CARD_VIEW_PAGE_SIZE,
   currentPage: 0,
   searchQuery: '',
 };
 
 describe('getResearchOutputs', () => {
+  // This mock is pretty basic. @todo: Refactor into something reusable and think about
+  // how to make more generic query building that can be tested in isolation
+  const mockedSearch: jest.MockedFunction<SearchIndex['search']> = jest
+    .fn()
+    .mockResolvedValue(createAlgoliaResearchOutputResponse(10));
+
+  const mockIndex = {
+    search: mockedSearch,
+  } as jest.Mocked<SearchIndex>;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  it('makes a search request with query, default page and page size', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      searchQuery: 'test',
+      currentPage: null,
+      pageSize: null,
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      'test',
+      expect.objectContaining({ hitsPerPage: 10, page: 0 }),
+    );
+  });
+  it('passes page number and page size to request', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      currentPage: 1,
+      pageSize: 20,
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ hitsPerPage: 20, page: 1 }),
+    );
+  });
+  it('builds a single filter query', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article']),
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'type:Article' }),
+    );
+  });
+
+  it('builds a multiple filter query', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'type:Article OR type:Proposal' }),
+    );
+  });
+
+  it('ignores unknown filters', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType | 'invalid'>(['Article', 'invalid']),
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'type:Article' }),
+    );
+  });
+
+  it('throws an error of type error', async () => {
+    mockedSearch.mockRejectedValue({ message: 'Some Error' });
+    await expect(
+      getResearchOutputs(mockIndex, options),
+    ).rejects.toMatchInlineSnapshot(`[Error: Could not search: Some Error]`);
+  });
+});
+
+describe('getResearchOutputsLegacy', () => {
   it('makes an authorized GET request for research outputs', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/research-outputs')
       .query({ take: '10', skip: '0' })
       .reply(200, {});
-    await getResearchOutputs(options, 'Bearer x');
+    await getResearchOutputsLegacy(options, 'Bearer x');
     expect(nock.isDone()).toBe(true);
   });
 
@@ -39,7 +129,7 @@ describe('getResearchOutputs', () => {
       .get('/research-outputs')
       .query({ take: '10', skip: '0' })
       .reply(200, users);
-    expect(await getResearchOutputs(options, '')).toEqual(users);
+    expect(await getResearchOutputsLegacy(options, '')).toEqual(users);
   });
 
   it('errors for error status', async () => {
@@ -48,7 +138,7 @@ describe('getResearchOutputs', () => {
       .query({ take: '10', skip: '0' })
       .reply(500);
     await expect(
-      getResearchOutputs(options, ''),
+      getResearchOutputsLegacy(options, ''),
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Failed to fetch research output list. Expected status 2xx. Received status 500."`,
     );

@@ -10,11 +10,17 @@ import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { isEnabled } from '@asap-hub/flags';
 
-import { getResearchOutput, getResearchOutputs } from './api';
+import {
+  getResearchOutput,
+  getResearchOutputs,
+  getResearchOutputsLegacy,
+} from './api';
 import { GetListOptions } from '../api-util';
 import { authorizationState } from '../auth/state';
 import { CARD_VIEW_PAGE_SIZE } from '../hooks';
+import { useAlgolia } from '../hooks/algolia';
 
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
@@ -96,7 +102,7 @@ export const researchOutputState = atomFamily<
 export const useResearchOutputById = (id: string) =>
   useRecoilValue(researchOutputState(id));
 
-export const usePrefetchResearchOutputs = (
+export const usePrefetchResearchOutputsLegacy = (
   options: GetListOptions = {
     currentPage: 0,
     pageSize: CARD_VIEW_PAGE_SIZE,
@@ -109,20 +115,35 @@ export const usePrefetchResearchOutputs = (
     researchOutputsState(options),
   );
   useDeepCompareEffect(() => {
-    if (researchOutputs === undefined) {
-      getResearchOutputs(options, authorization)
+    if (
+      !isEnabled('ALGOLIA_RESEARCH_OUTPUTS') &&
+      researchOutputs === undefined
+    ) {
+      getResearchOutputsLegacy(options, authorization)
         .then(setResearchOutputs)
         .catch();
     }
   }, [authorization, researchOutputs, options, setResearchOutputs]);
 };
+
 export const useResearchOutputs = (options: GetListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
   );
-  if (researchOutputs === undefined) {
-    throw getResearchOutputs(options, authorization)
+  const { index } = useAlgolia();
+  if (isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && researchOutputs === undefined) {
+    throw getResearchOutputs(index, options)
+      .then(
+        (data): ListResearchOutputResponse => ({
+          total: data.nbHits,
+          items: data.hits,
+        }),
+      )
+      .then(setResearchOutputs)
+      .catch(setResearchOutputs);
+  } else if (researchOutputs === undefined) {
+    throw getResearchOutputsLegacy(options, authorization)
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
   }

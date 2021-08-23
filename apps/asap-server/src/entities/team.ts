@@ -79,12 +79,12 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
       parseGraphQLTeamMember(user, team.id),
     ) || [];
 
-  const tools =
-    team?.flatData?.tools?.map(({ name, description, url }) => ({
-      name,
-      url,
-      description: description ?? undefined,
-    })) || [];
+  // const tools =
+  //   team?.flatData?.tools?.map(({ name, description, url }) => ({
+  //     name,
+  //     url,
+  //     description: description ?? undefined,
+  //   })) || [];
 
   const outputs: ResearchOutputResponse[] = flatOutputs
     .map((o) => {

@@ -55,6 +55,9 @@ const serverlessConfig: AWS = {
       apiGateway: true,
       lambda: true,
     },
+    eventBridge: {
+      useCloudFormation: true,
+    },
     environment: {
       APP_ORIGIN: ASAP_APP_URL,
       DEBUG: SLS_STAGE === 'production' ? '' : 'asap-server,http',
@@ -103,6 +106,22 @@ const serverlessConfig: AWS = {
             ],
           ],
         },
+      },
+      {
+        Effect: 'Allow',
+        Action: 'ses:SendTemplatedEmail',
+        Resource: ['*'],
+        Condition: {
+          StringLike: {
+            'ses:FromAddress': '*@asap.science',
+          },
+        },
+      },
+      {
+        Effect: 'Allow',
+        Action: 'events:*',
+        Resource:
+          'arn:aws:events:${aws:region}:${aws:accountId}:event-bus/asap-events-${self:provider.stage}',
       },
     ],
   },
@@ -278,6 +297,44 @@ const serverlessConfig: AWS = {
       handler:
         'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
       timeout: 900,
+    },
+    userCreated: {
+      handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/users',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.user',
+      },
+    },
+    inviteUser: {
+      handler: 'apps/asap-server/src/handlers/user/invite-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.user'],
+              'detail-type': ['UserCreated'],
+            },
+          },
+        },
+      ],
+      environment: {
+        SES_REGION: '${env:SES_SANDBOX_REGION}',
+        EMAIL_SENDER: `\${ssm:email-invite-sender-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+        EMAIL_BCC: `\${ssm:email-invite-bcc-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+      },
     },
     ...(NODE_ENV === 'production'
       ? {

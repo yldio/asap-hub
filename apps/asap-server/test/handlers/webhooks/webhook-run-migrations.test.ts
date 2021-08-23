@@ -6,11 +6,13 @@ import {
   runFactory,
 } from '../../../src/handlers/webhooks/webhook-run-migrations';
 import { loggerMock } from '../../mocks/logger.mock';
-import { squidexClientMock } from '../../mocks/squidex-client.mock';
+import { getSquidexClientMock } from '../../mocks/squidex-client.mock';
 import { promises as fsPromise } from 'fs';
 import { identity } from '../../helpers/squidex';
+import { RestMigration } from '@asap-hub/squidex';
 
 describe('Run-migrations Webhook', () => {
+  const squidexClientMock = getSquidexClientMock<RestMigration>();
   const mockReadDir: jest.MockedFunction<typeof fsPromise.readdir> = jest.fn();
   const mockHandlerArguments = [{}, {}, undefined] as [any, any, any];
   const mockImportModule: jest.MockedFunction<ImportModuleFromPath> = jest.fn();

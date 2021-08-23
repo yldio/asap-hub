@@ -1,0 +1,22 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "User created",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "users",
+        "condition": "event.type == 'Created'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "ASAP_API_URL/webhook/users",
+    "method": "POST",
+    "sharedSecret": "squidex_shared_secret",
+    "isFrozen": true,
+    "actionType": "Webhook"
+  }
+}

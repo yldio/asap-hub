@@ -15,7 +15,7 @@
   "action": {
     "url": "ASAP_API_URL/webhook/users",
     "method": "POST",
-    "sharedSecret": "squidex_shared_secret",
+    "sharedSecret": "SQUIDEX_SHARED_SECRET",
     "isFrozen": true,
     "actionType": "Webhook"
   }

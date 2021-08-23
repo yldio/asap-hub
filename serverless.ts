@@ -313,6 +313,22 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.user',
       },
     },
+    researchOutputUpserted: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-research-output.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/research-outputs',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.research-output',
+      },
+    },
     inviteUser: {
       handler: 'apps/asap-server/src/handlers/user/invite-handler.handler',
       events: [
@@ -332,6 +348,26 @@ const serverlessConfig: AWS = {
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }}`,
         EMAIL_BCC: `\${ssm:email-invite-bcc-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+      },
+    },
+    indexResearchOutput: {
+      handler:
+        'apps/asap-server/src/handlers/research-output/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.research-output'],
+              'detail-type': ['ResearchOutputCreated', 'ResearchOutputUpdated'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }}`,
       },

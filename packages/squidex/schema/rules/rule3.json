@@ -1,0 +1,22 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "Research Output updated",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "research-outputs",
+        "condition": "(event.type == 'Updated' || event.type == 'Published') && event.status == 'Published'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "ASAP_API_URL/webhook/research-outputs",
+    "method": "POST",
+    "sharedSecret": "squidex_shared_secret",
+    "isFrozen": true,
+    "actionType": "Webhook"
+  }
+}

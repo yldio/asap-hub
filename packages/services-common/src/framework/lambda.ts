@@ -19,7 +19,7 @@ export interface Request<T = unknown> {
   method: 'get' | 'post';
   headers: Record<string, string>;
   params?: { [key: string]: string };
-  payload?: T;
+  payload: T;
   query?: Query;
 }
 

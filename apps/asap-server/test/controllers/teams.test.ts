@@ -246,7 +246,7 @@ describe('Team controller', () => {
       expect(result).toEqual(fetchTeamByIdExpectation);
     });
 
-    test.skip('Should return team information when user is part of the team', async () => {
+    test('Should return team information when user is part of the team', async () => {
       const teamId = 'team-id-1';
 
       const tools = [
@@ -390,7 +390,7 @@ describe('Team controller', () => {
       expect(result).toEqual(updateExpectation);
     });
 
-    test.skip('Should remove a field are return the team', async () => {
+    test('Should remove a field are return the team', async () => {
       const teamId = 'team-id-1';
       const tools = [
         {

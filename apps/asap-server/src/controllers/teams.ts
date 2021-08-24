@@ -102,6 +102,7 @@ export type FetchTeamsOptions = {
   search?: string;
   filter?: string | string[];
   // select team IDs of which tools should be returned
+  // leave undefined to return all teams' tools
   showTeamTools?: string[];
 };
 
@@ -181,7 +182,7 @@ export default class Teams implements TeamController {
 
         return {
           ...parsedTeam,
-          tools: [],
+          tools: undefined,
         };
       }),
     };
@@ -208,7 +209,7 @@ export default class Teams implements TeamController {
     if (options?.showTools === false) {
       return {
         ...parsedTeam,
-        tools: [],
+        tools: undefined,
       };
     }
 

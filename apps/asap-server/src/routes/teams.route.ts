@@ -39,7 +39,11 @@ export const teamRouteFactory = (
     const { params } = req;
     const { teamId } = framework.validate('parameters', params, paramSchema);
 
-    const result = await teamsController.fetchById(teamId);
+    const showTools = !!req.loggedInUser?.teams.find(
+      (team) => team.id === teamId,
+    );
+
+    const result = await teamsController.fetchById(teamId, { showTools });
 
     res.json(result);
   });

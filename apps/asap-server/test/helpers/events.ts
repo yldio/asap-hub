@@ -48,7 +48,7 @@ export const apiGatewayEvent = (
   } as APIGatewayProxyEventV2;
 };
 
-export const createEventBridgeEventMock = (): EventBridgeEvent<
+export const createEventBridgeScheduledEventMock = (): EventBridgeEvent<
   'Scheduled Event',
   ScheduledEvent
 > => ({
@@ -61,6 +61,21 @@ export const createEventBridgeEventMock = (): EventBridgeEvent<
   source: 'some-source',
   'detail-type': 'Scheduled Event',
   detail: {} as any,
+});
+
+export const createEventBridgeEventMock = <T, P extends string>(
+  detail: T,
+  detailType: P,
+): EventBridgeEvent<P, T> => ({
+  id: 'test-id',
+  version: '1',
+  account: 'test-account',
+  time: '3234234234',
+  region: 'eu-west-1',
+  resources: [],
+  source: 'asap.user',
+  'detail-type': detailType,
+  detail,
 });
 
 export const createHandlerContext = () =>

@@ -7,7 +7,10 @@ import {
   GraphqlResearchOutputAuthors,
   GraphqlResearchOutput,
   GraphqlUserAssoc,
+  WebhookPayload,
+  ResearchOutput,
 } from '@asap-hub/squidex';
+import { Rest } from '@asap-hub/squidex/src/entities/common';
 import {
   ResponseFetchResearchOutput,
   ResponseFetchResearchOutputs,
@@ -293,3 +296,51 @@ export const getListResearchOutputResponse =
     total: 1,
     items: [getResearchOutputResponse()],
   });
+
+export const createResearchOutputEvent: WebhookPayload<ResearchOutput> = {
+  type: 'ResearchOutputsPublished',
+  timestamp: '2021-02-15T13:11:25Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Published',
+    id: 'researchOutputId',
+    created: '2020-07-31T15:52:33Z',
+    lastModified: '2020-07-31T15:52:33Z',
+    data: {
+      type: { iv: 'Article' },
+      title: { iv: 'Research Output' },
+      description: { iv: 'Description' },
+      sharingStatus: { iv: 'Network Only' },
+      asapFunded: { iv: 'Not Sure' },
+      usedInAPublication: { iv: 'Not Sure' },
+    } as Rest<ResearchOutput>['data'],
+  },
+};
+
+export const updateResearchOutputEvent: WebhookPayload<ResearchOutput> = {
+  type: 'ResearchOutputsUpdated',
+  timestamp: '2021-02-15T13:11:25Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Updated',
+    id: 'userId',
+    created: '2020-07-31T14:11:58Z',
+    lastModified: '2020-07-31T15:49:41Z',
+    data: {
+      type: { iv: 'Article' },
+      title: { iv: 'Research Output' },
+      description: { iv: 'Description' },
+      sharingStatus: { iv: 'Network Only' },
+      asapFunded: { iv: 'Not Sure' },
+      usedInAPublication: { iv: 'Not Sure' },
+    } as Rest<ResearchOutput>['data'],
+    dataOld: {
+      type: { iv: 'Article' },
+      title: { iv: 'Research Output' },
+      description: { iv: 'Description' },
+      sharingStatus: { iv: 'Network Only' },
+      asapFunded: { iv: 'Not Sure' },
+      usedInAPublication: { iv: 'Not Sure' },
+    } as Rest<ResearchOutput>['data'],
+  },
+};

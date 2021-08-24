@@ -160,7 +160,7 @@ const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
   return res.items[0];
 };
 
-export default class Users {
+export default class Users implements UserController {
   users: InstrumentedSquidex<RestUser>;
 
   client: InstrumentedSquidexGraphql;

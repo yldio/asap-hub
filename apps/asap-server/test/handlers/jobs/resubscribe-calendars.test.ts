@@ -10,7 +10,7 @@ import {
   SubscribeToEventChanges,
 } from '../../../src/handlers/webhooks/calendar-created/calendar-created';
 import {
-  createEventBridgeEventMock,
+  createEventBridgeScheduledEventMock,
   createHandlerContext,
 } from '../../helpers/events';
 
@@ -25,7 +25,7 @@ describe('Resubscribe calendar handler', () => {
   );
   const invokeHandler = () =>
     resubscribeCalendarsHandler(
-      createEventBridgeEventMock(),
+      createEventBridgeScheduledEventMock(),
       createHandlerContext(),
     );
 

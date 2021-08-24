@@ -128,7 +128,7 @@ describe('Invite Handler', () => {
 
 const getEventBridgeEventMock = (
   userId?: string,
-): EventBridgeEvent<'Created', SquidexWebhookUserPayload> => ({
+): EventBridgeEvent<'UserCreated', SquidexWebhookUserPayload> => ({
   id: 'test-id',
   version: '1',
   account: 'test-account',
@@ -136,7 +136,7 @@ const getEventBridgeEventMock = (
   region: 'eu-west-1',
   resources: [],
   source: 'asap.user',
-  'detail-type': 'Created',
+  'detail-type': 'UserCreated',
   detail: {
     type: 'UsersCreated',
     payload: {

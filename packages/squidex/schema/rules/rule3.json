@@ -1,19 +1,19 @@
 {
   "$schema": "./../__json/rule.json",
   "isEnabled": true,
-  "name": "User created",
+  "name": "Research Output updated",
   "trigger": {
     "triggerType": "ContentChanged",
     "schemas": [
       {
-        "schemaId": "users",
-        "condition": "event.type == 'Created'"
+        "schemaId": "research-outputs",
+        "condition": "(event.type == 'Updated' || event.type == 'Published') && event.status == 'Published'"
       }
     ],
     "handleAll": false
   },
   "action": {
-    "url": "ASAP_API_URL/webhook/users",
+    "url": "ASAP_API_URL/webhook/research-outputs",
     "method": "POST",
     "sharedSecret": "SQUIDEX_SHARED_SECRET",
     "isFrozen": true,

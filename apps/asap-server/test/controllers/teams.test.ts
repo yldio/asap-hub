@@ -2,8 +2,8 @@ import nock from 'nock';
 import { config } from '@asap-hub/squidex';
 import {
   graphQlTeamsResponseSingle,
-  listTeamResponse,
-  graphQlTeamsResponse,
+  getListTeamResponse,
+  getGraphQlTeamsResponse,
   fetchTeamByIdExpectation,
   graphQlTeamResponse,
   getUpdateTeamResponse,
@@ -57,104 +57,163 @@ describe('Team controller', () => {
       expect(result).toEqual({ items: [], total: 0 });
     });
 
-    test('Should search by name and return the teams', async () => {
-      const searchQ =
-        "(contains(data/displayName/iv, 'Cristiano')" +
-        " or contains(data/projectTitle/iv, 'Cristiano')" +
-        " or contains(data/skills/iv, 'Cristiano'))" +
-        ' and' +
-        " (contains(data/displayName/iv, 'Ronaldo')" +
-        " or contains(data/projectTitle/iv, 'Ronaldo')" +
-        " or contains(data/skills/iv, 'Ronaldo'))";
+    describe('Text search', () => {
+      test('Should search by name and return the teams', async () => {
+        const searchQ =
+          "(contains(data/displayName/iv, 'Cristiano')" +
+          " or contains(data/projectTitle/iv, 'Cristiano')" +
+          " or contains(data/skills/iv, 'Cristiano'))" +
+          ' and' +
+          " (contains(data/displayName/iv, 'Ronaldo')" +
+          " or contains(data/projectTitle/iv, 'Ronaldo')" +
+          " or contains(data/skills/iv, 'Ronaldo'))";
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(),
-          variables: {
-            filter: searchQ,
-            top: 8,
-            skip: 0,
-          },
-        })
-        .reply(200, graphQlTeamsResponseSingle);
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeams(),
+            variables: {
+              filter: searchQ,
+              top: 8,
+              skip: 0,
+            },
+          })
+          .reply(200, graphQlTeamsResponseSingle);
 
-      const result = await teams.fetch({
-        take: 8,
-        skip: 0,
-        search: 'Cristiano Ronaldo',
+        const result = await teams.fetch({
+          take: 8,
+          skip: 0,
+          search: 'Cristiano Ronaldo',
+        });
+
+        expect(result).toEqual({
+          total: 1,
+          items: getListTeamResponse().items.slice(0, 1),
+        });
       });
 
-      expect(result).toEqual({
-        total: 1,
-        items: listTeamResponse.items.slice(0, 1),
+      test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
+        const expectedSearchFilter =
+          `(contains(data/displayName/iv, '%27%27')` +
+          ` or contains(data/projectTitle/iv, '%27%27')` +
+          ` or contains(data/skills/iv, '%27%27'))`;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeams(),
+            variables: {
+              filter: expectedSearchFilter,
+              top: 8,
+              skip: 0,
+            },
+          })
+          .reply(200, graphQlTeamsResponseSingle);
+
+        const result = await teams.fetch({ take: 8, skip: 0, search: "'" });
+
+        expect(result).toEqual({
+          total: 1,
+          items: getListTeamResponse().items.slice(0, 1),
+        });
+      });
+
+      test('Should sanitise double quotation mark by encoding to hex', async () => {
+        const expectedSearchFilter =
+          `(contains(data/displayName/iv, '%22')` +
+          ` or contains(data/projectTitle/iv, '%22')` +
+          ` or contains(data/skills/iv, '%22'))`;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeams(),
+            variables: {
+              filter: expectedSearchFilter,
+              top: 8,
+              skip: 0,
+            },
+          })
+          .reply(200, graphQlTeamsResponseSingle);
+
+        const result = await teams.fetch({ take: 8, skip: 0, search: '"' });
+
+        expect(result).toEqual({
+          total: 1,
+          items: getListTeamResponse().items.slice(0, 1),
+        });
       });
     });
 
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-      const expectedSearchFilter =
-        `(contains(data/displayName/iv, '%27%27')` +
-        ` or contains(data/projectTitle/iv, '%27%27')` +
-        ` or contains(data/skills/iv, '%27%27'))`;
+    describe('Tools', () => {
+      const tools = [
+        {
+          url: 'testUrl',
+          name: 'slack',
+          description: 'this is a test',
+        },
+      ];
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(),
-          variables: {
-            filter: expectedSearchFilter,
-            top: 8,
-            skip: 0,
-          },
-        })
-        .reply(200, graphQlTeamsResponseSingle);
+      test('Should return all the team tools by default', async () => {
+        const squidexTeamResponse = getGraphQlTeamsResponse();
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0].flatData!.tools =
+          tools;
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[1].flatData!.tools =
+          tools;
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2].flatData!.tools =
+          tools;
 
-      const result = await teams.fetch({ take: 8, skip: 0, search: "'" });
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeams(),
+            variables: {
+              filter: '',
+              top: 8,
+              skip: 0,
+            },
+          })
+          .reply(200, squidexTeamResponse);
 
-      expect(result).toEqual({
-        total: 1,
-        items: listTeamResponse.items.slice(0, 1),
+        const result = await teams.fetch({
+          take: 8,
+          skip: 0,
+        });
+
+        expect(result.items[0].tools).toEqual(tools);
+        expect(result.items[1].tools).toEqual(tools);
+        expect(result.items[2].tools).toEqual(tools);
       });
-    });
 
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
-      const expectedSearchFilter =
-        `(contains(data/displayName/iv, '%22')` +
-        ` or contains(data/projectTitle/iv, '%22')` +
-        ` or contains(data/skills/iv, '%22'))`;
+      test('Should select the teams for which the tools should be returned', async () => {
+        const squidexTeamResponse = getGraphQlTeamsResponse();
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0].flatData!.tools =
+          tools;
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[1].flatData!.tools =
+          tools;
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2].flatData!.tools =
+          tools;
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(),
-          variables: {
-            filter: expectedSearchFilter,
-            top: 8,
-            skip: 0,
-          },
-        })
-        .reply(200, graphQlTeamsResponseSingle);
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeams(),
+            variables: {
+              filter: '',
+              top: 8,
+              skip: 0,
+            },
+          })
+          .reply(200, squidexTeamResponse);
 
-      const result = await teams.fetch({ take: 8, skip: 0, search: '"' });
+        const result = await teams.fetch({
+          take: 8,
+          skip: 0,
+          showTeamTools: [
+            squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0].id,
+            squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2].id,
+          ],
+        });
 
-      expect(result).toEqual({
-        total: 1,
-        items: listTeamResponse.items.slice(0, 1),
+        expect(result.items[0].tools).toEqual(tools);
+        expect(result.items[1].tools).toEqual([]);
+        expect(result.items[2].tools).toEqual(tools);
       });
-    });
-
-    test('Should search by the teams the user belongs to and return the groups', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(),
-          variables: {
-            filter: '',
-            top: 8,
-            skip: 0,
-          },
-        })
-        .reply(200, graphQlTeamsResponse);
-
-      const result = await teams.fetch({ take: 8, skip: 0 });
-
-      expect(result).toEqual(listTeamResponse);
     });
   });
 

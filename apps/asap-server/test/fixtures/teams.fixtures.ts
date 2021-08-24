@@ -53,7 +53,7 @@ export const referencingUsersContentsResponse = ({
   },
 ];
 
-export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
+export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
   data: {
     queryTeamsContentsWithTotal: {
       total: 3,
@@ -322,18 +322,20 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
       ],
     },
   },
-};
+});
 
 export const graphQlTeamsResponseSingle: { data: ResponseFetchTeams } = {
   data: {
     queryTeamsContentsWithTotal: {
       total: 1,
-      items: [graphQlTeamsResponse.data.queryTeamsContentsWithTotal.items[0]],
+      items: [
+        getGraphQlTeamsResponse().data.queryTeamsContentsWithTotal.items[0],
+      ],
     },
   },
 };
 
-export const listTeamResponse: ListTeamResponse = {
+export const getListTeamResponse = (): ListTeamResponse => ({
   total: 3,
   items: [
     {
@@ -478,7 +480,7 @@ export const listTeamResponse: ListTeamResponse = {
       lastModifiedDate: '2020-09-23T20:29:52.000Z',
     },
   ],
-};
+});
 
 export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
   data: {

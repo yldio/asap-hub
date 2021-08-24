@@ -85,17 +85,25 @@ export interface ResponseFetchTeam {
 
 export interface TeamController {
   update: (id: string, tools: TeamTool[]) => Promise<TeamResponse>;
-  fetch: (options: {
-    take: number;
-    skip: number;
-    search?: string;
-    filter?: string | string[];
-  }) => Promise<ListTeamResponse>;
+  fetch: (options: FetchTeamsOptions) => Promise<ListTeamResponse>;
   fetchById: (
     teamId: string,
     options?: FetchTeamOptions,
   ) => Promise<TeamResponse>;
 }
+
+type FetchTeamOptions = {
+  showTools: boolean;
+};
+
+type FetchTeamsOptions = {
+  take: number;
+  skip: number;
+  search?: string;
+  filter?: string | string[];
+  // select team IDs of which tools should be returned
+  showTeamTools?: string[];
+};
 
 export default class Teams implements TeamController {
   teams: InstrumentedSquidex<RestTeam>;
@@ -125,12 +133,7 @@ export default class Teams implements TeamController {
     return this.fetchById(id);
   }
 
-  async fetch(options: {
-    take: number;
-    skip: number;
-    search?: string;
-    filter?: string | string[];
-  }): Promise<ListTeamResponse> {
+  async fetch(options: FetchTeamsOptions): Promise<ListTeamResponse> {
     const { take = 8, skip = 0, search } = options;
 
     const searchQ = (search || '')
@@ -165,7 +168,22 @@ export default class Teams implements TeamController {
 
     return {
       total,
-      items: teams.map((team) => parseGraphQLTeam(team)),
+      items: teams.map((team) => {
+        const parsedTeam = parseGraphQLTeam(team);
+
+        if (!options.showTeamTools) {
+          return parseGraphQLTeam(team);
+        }
+
+        if (options.showTeamTools.includes(parsedTeam.id)) {
+          return parseGraphQLTeam(team);
+        }
+
+        return {
+          ...parsedTeam,
+          tools: [],
+        };
+      }),
     };
   }
 
@@ -197,7 +215,3 @@ export default class Teams implements TeamController {
     return parsedTeam;
   }
 }
-
-type FetchTeamOptions = {
-  showTools: boolean;
-};

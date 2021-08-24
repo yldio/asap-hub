@@ -5,7 +5,7 @@ import { FetchOptions } from '../../src/utils/types';
 import * as fixtures from '../fixtures/groups.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';
-import { listTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
+import { getListTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { User } from '@asap-hub/auth';
@@ -114,15 +114,15 @@ describe('/teams/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      teamControllerMock.fetch.mockResolvedValueOnce(listTeamResponse);
+      teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
 
       const response = await supertest(app).get('/teams');
 
-      expect(response.body).toEqual(listTeamResponse);
+      expect(response.body).toEqual(getListTeamResponse());
     });
 
     test('Should call the controller with the right parameters', async () => {
-      teamControllerMock.fetch.mockResolvedValueOnce(listTeamResponse);
+      teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
 
       const expectedParams: FetchOptions = {
         take: 15,

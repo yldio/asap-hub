@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import Boom from '@hapi/boom';
-import { TeamPatchRequest } from '@asap-hub/model';
+import {
+  ListGroupResponse,
+  ListTeamResponse,
+  TeamPatchRequest,
+  TeamResponse,
+} from '@asap-hub/model';
 
 import { TeamController } from '../controllers/teams';
 import { teamUpdateSchema } from '../entities/team';
@@ -16,7 +21,7 @@ export const teamRouteFactory = (
 ): Router => {
   const teamRoutes = Router();
 
-  teamRoutes.get('/teams', async (req, res) => {
+  teamRoutes.get('/teams', async (req, res: Response<ListTeamResponse>) => {
     const { query } = req;
 
     const options = framework.validate(
@@ -38,7 +43,7 @@ export const teamRouteFactory = (
     res.json(result);
   });
 
-  teamRoutes.get('/teams/:teamId', async (req, res) => {
+  teamRoutes.get('/teams/:teamId', async (req, res: Response<TeamResponse>) => {
     const { params } = req;
     const { teamId } = framework.validate('parameters', params, paramSchema);
 
@@ -51,39 +56,45 @@ export const teamRouteFactory = (
     res.json(result);
   });
 
-  teamRoutes.patch('/teams/:teamId', async (req, res) => {
-    const { body, params } = req;
+  teamRoutes.patch(
+    '/teams/:teamId',
+    async (req, res: Response<TeamResponse>) => {
+      const { body, params } = req;
 
-    const { teamId } = framework.validate('parameters', params, paramSchema);
-    const { tools } = framework.validate(
-      'payload',
-      body,
-      teamUpdateSchema,
-    ) as TeamPatchRequest;
+      const { teamId } = framework.validate('parameters', params, paramSchema);
+      const { tools } = framework.validate(
+        'payload',
+        body,
+        teamUpdateSchema,
+      ) as TeamPatchRequest;
 
-    if (!req.loggedInUser!.teams.find(({ id }) => id === teamId)) {
-      throw Boom.forbidden();
-    }
+      if (!req.loggedInUser!.teams.find(({ id }) => id === teamId)) {
+        throw Boom.forbidden();
+      }
 
-    const result = await teamsController.update(teamId, tools);
+      const result = await teamsController.update(teamId, tools);
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
-  teamRoutes.get('/teams/:teamId/groups', async (req, res) => {
-    const { query, params } = req;
+  teamRoutes.get(
+    '/teams/:teamId/groups',
+    async (req, res: Response<ListGroupResponse>) => {
+      const { query, params } = req;
 
-    const { teamId } = framework.validate('parameters', params, paramSchema);
-    const options = framework.validate(
-      'query',
-      query,
-      querySchema,
-    ) as unknown as FetchOptions;
+      const { teamId } = framework.validate('parameters', params, paramSchema);
+      const options = framework.validate(
+        'query',
+        query,
+        querySchema,
+      ) as unknown as FetchOptions;
 
-    const result = await groupsController.fetchByTeamId(teamId, options);
+      const result = await groupsController.fetchByTeamId(teamId, options);
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
   return teamRoutes;
 };

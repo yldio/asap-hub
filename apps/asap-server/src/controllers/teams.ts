@@ -44,7 +44,7 @@ flatData {
     url
   }
 }
-referencingUsersContents {
+referencingUsersContents(filter: "data/onboarded/iv eq true") {
     ${GraphQLQueryUser}
 }`;
 

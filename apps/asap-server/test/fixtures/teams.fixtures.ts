@@ -53,7 +53,7 @@ export const referencingUsersContentsResponse = ({
   },
 ];
 
-export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
+export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
   data: {
     queryTeamsContentsWithTotal: {
       total: 3,
@@ -112,7 +112,13 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
                 id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
               },
             ],
-            tools: undefined,
+            tools: [
+              {
+                url: 'testUrl',
+                name: 'slack',
+                description: 'this is a test',
+              },
+            ],
           },
           referencingUsersContents: [
             {
@@ -172,7 +178,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
               'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
             skills: [],
             proposal: null,
-            tools: undefined,
+            tools: null,
           },
           referencingUsersContents: [
             {
@@ -266,7 +272,7 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
             projectTitle: 'This is good',
             skills: [],
             proposal: null,
-            tools: undefined,
+            tools: null,
           },
           referencingUsersContents: [
             {
@@ -316,18 +322,20 @@ export const graphQlTeamsResponse: { data: ResponseFetchTeams } = {
       ],
     },
   },
-};
+});
 
 export const graphQlTeamsResponseSingle: { data: ResponseFetchTeams } = {
   data: {
     queryTeamsContentsWithTotal: {
       total: 1,
-      items: [graphQlTeamsResponse.data.queryTeamsContentsWithTotal.items[0]],
+      items: [
+        getGraphQlTeamsResponse().data.queryTeamsContentsWithTotal.items[0],
+      ],
     },
   },
 };
 
-export const listTeamResponse: ListTeamResponse = {
+export const getListTeamResponse = (): ListTeamResponse => ({
   total: 3,
   items: [
     {
@@ -406,7 +414,13 @@ export const listTeamResponse: ListTeamResponse = {
       projectTitle:
         'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
       proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-      tools: undefined,
+      tools: [
+        {
+          url: 'testUrl',
+          name: 'slack',
+          description: 'this is a test',
+        },
+      ],
     },
     {
       id: 'team-id-2',
@@ -438,7 +452,7 @@ export const listTeamResponse: ListTeamResponse = {
         },
       ],
       lastModifiedDate: '2020-10-26T20:54:00.000Z',
-      tools: undefined,
+      tools: [],
     },
     {
       id: 'team-id-3',
@@ -460,13 +474,13 @@ export const listTeamResponse: ListTeamResponse = {
           ],
         },
       ],
-      tools: undefined,
+      tools: [],
       projectTitle: 'This is good',
       projectSummary: 'Its good',
       lastModifiedDate: '2020-09-23T20:29:52.000Z',
     },
   ],
-};
+});
 
 export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
   data: {
@@ -537,7 +551,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
             id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
           },
         ],
-        tools: undefined,
+        tools: [],
       },
       referencingUsersContents: [
         {
@@ -566,7 +580,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
                     lastModified: '2020-11-26T11:56:04Z',
                     flatData: {
                       displayName: 'Schipa, A',
-                      tools: undefined,
+                      tools: [],
                     },
                   },
                 ],
@@ -667,7 +681,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-  tools: undefined,
+  tools: [],
 };
 
 export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
@@ -690,7 +704,7 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
 });
 
 export const getGraphQlTeamResponse = (
-  tools: TeamTool[] = [],
+  tools: TeamTool[] | null = [],
 ): { data: ResponseFetchTeam } => ({
   data: {
     findTeamsContent: {
@@ -942,7 +956,7 @@ export const updateExpectation: TeamResponse = {
   projectTitle:
     'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-  tools: undefined,
+  tools: [],
 };
 
 export const teamResponse: TeamResponse = updateExpectation;

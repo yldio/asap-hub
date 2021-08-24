@@ -3,12 +3,30 @@ import Boom from '@hapi/boom';
 import { appFactory } from '../../src/app';
 import { FetchOptions } from '../../src/utils/types';
 import * as fixtures from '../fixtures/groups.fixtures';
-import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';
-import { listTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
+import { getListTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
+import { AuthHandler } from '../../src/middleware/auth-handler';
+import { userMock } from '../../src/utils/__mocks__/validate-token';
+import { User } from '@asap-hub/auth';
+import { FetchTeamsOptions } from '../../src/controllers/teams';
 
 describe('/teams/ route', () => {
+  const loggedUser: User = {
+    ...userMock,
+    teams: [
+      {
+        id: 'team-id-1',
+        role: 'Project Manager',
+      },
+    ],
+  };
+  const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
+  const authHandlerMock: AuthHandler = (req, _res, next) => {
+    req.loggedInUser = getLoggedUser();
+    next();
+  };
+
   const app = appFactory({
     groupController: groupControllerMock,
     teamController: teamControllerMock,
@@ -16,10 +34,7 @@ describe('/teams/ route', () => {
   });
 
   afterEach(() => {
-    groupControllerMock.fetchByTeamId.mockReset();
-    teamControllerMock.fetch.mockReset();
-    teamControllerMock.fetchById.mockReset();
-    teamControllerMock.update.mockReset();
+    jest.clearAllMocks();
   });
 
   describe('GET /teams/{team_id}/groups', () => {
@@ -101,26 +116,69 @@ describe('/teams/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      teamControllerMock.fetch.mockResolvedValueOnce(listTeamResponse);
+      teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
 
       const response = await supertest(app).get('/teams');
 
-      expect(response.body).toEqual(listTeamResponse);
+      expect(response.body).toEqual(getListTeamResponse());
     });
 
     test('Should call the controller with the right parameters', async () => {
-      teamControllerMock.fetch.mockResolvedValueOnce(listTeamResponse);
+      teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
 
-      const expectedParams: FetchOptions = {
+      const params: FetchOptions = {
         take: 15,
         skip: 5,
         search: 'something',
         filter: ['one', 'two'],
       };
 
-      await supertest(app).get('/teams').query(expectedParams);
+      await supertest(app).get('/teams').query(params);
+
+      const expectedParams: FetchTeamsOptions = {
+        ...(params as Required<FetchOptions>),
+        showTeamTools: [loggedUser.teams[0].id],
+      };
 
       expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
+    });
+
+    describe('Team tools', () => {
+      test('Should select the team tools for the teams the user is a member of', async () => {
+        teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
+        getLoggedUser.mockReturnValueOnce({
+          ...userMock,
+          teams: [
+            {
+              id: 'team-id-1',
+              role: 'Project Manager',
+            },
+            {
+              id: 'team-id-2',
+              role: 'Some role',
+            },
+            {
+              id: 'team-id-3',
+              role: 'Some other role',
+            },
+          ],
+        });
+
+        const params: FetchOptions = {
+          take: 15,
+          skip: 5,
+        };
+
+        await supertest(app).get('/teams').query(params);
+
+        const expectedParams: FetchTeamsOptions = {
+          take: 15,
+          skip: 5,
+          showTeamTools: ['team-id-1', 'team-id-2', 'team-id-3'],
+        };
+
+        expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
+      });
     });
 
     describe('Parameter validation', () => {
@@ -151,14 +209,42 @@ describe('/teams/ route', () => {
       expect(response.body).toEqual(teamResponse);
     });
 
-    test('Should call the controller with the right parameter', async () => {
+    test('Should call the controller with the right parameters', async () => {
       const teamId = 'abc123';
 
       teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
 
       await supertest(app).get(`/teams/${teamId}`);
 
-      expect(teamControllerMock.fetchById).toBeCalledWith(teamId);
+      expect(teamControllerMock.fetchById).toBeCalledWith(teamId, {
+        showTools: expect.any(Boolean),
+      });
+    });
+
+    describe('Team tools', () => {
+      test('Should ask the controller to hide the tools when the user is not part of the requested team', async () => {
+        const teamId = 'abc123';
+
+        teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
+
+        await supertest(app).get(`/teams/${teamId}`);
+
+        expect(teamControllerMock.fetchById).toBeCalledWith(teamId, {
+          showTools: false,
+        });
+      });
+
+      test('Should ask the controller to display the tools when the user is part of the requested team', async () => {
+        const teamId = loggedUser.teams[0].id;
+
+        teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
+
+        await supertest(app).get(`/teams/${teamId}`);
+
+        expect(teamControllerMock.fetchById).toBeCalledWith(teamId, {
+          showTools: true,
+        });
+      });
     });
   });
 

@@ -9,8 +9,8 @@ export const createDashboardResponse = (
     ...Array.from({ length }).map((_, i) =>
       createNewsAndEventsResponse(`${i}`, 'News'),
     ),
-    ...Array.from({ length: 5 }).map((_, i) =>
-      createNewsAndEventsResponse(`${i + length}`, 'Event'),
+    ...Array.from({ length }).map((_, i) =>
+      createNewsAndEventsResponse(`${i}`, 'Event'),
     ),
   ],
   pages: ['content', 'about', 'slides'].map(createPageResponse),

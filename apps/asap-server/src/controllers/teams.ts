@@ -67,7 +67,7 @@ export const buildGraphQLQueryFetchTeam = (): string => `
       ${getGraphQLQueryTeam({
         researchOutputsWithTeams: false,
       })}
-      
+
     }
   }
 `;
@@ -91,7 +91,10 @@ export interface TeamController {
     search?: string;
     filter?: string | string[];
   }) => Promise<ListTeamResponse>;
-  fetchById: (teamId: string) => Promise<TeamResponse>;
+  fetchById: (
+    teamId: string,
+    options?: FetchTeamOptions,
+  ) => Promise<TeamResponse>;
 }
 
 export default class Teams implements TeamController {
@@ -166,7 +169,10 @@ export default class Teams implements TeamController {
     };
   }
 
-  async fetchById(teamId: string): Promise<TeamResponse> {
+  async fetchById(
+    teamId: string,
+    options?: FetchTeamOptions,
+  ): Promise<TeamResponse> {
     const query = buildGraphQLQueryFetchTeam();
     const teamResponse = await this.client.request<
       ResponseFetchTeam,
@@ -179,6 +185,19 @@ export default class Teams implements TeamController {
       throw Boom.notFound();
     }
 
-    return parseGraphQLTeam(team);
+    const parsedTeam = parseGraphQLTeam(team);
+
+    if (options?.showTools === false) {
+      return {
+        ...parsedTeam,
+        tools: [],
+      };
+    }
+
+    return parsedTeam;
   }
 }
+
+type FetchTeamOptions = {
+  showTools: boolean;
+};

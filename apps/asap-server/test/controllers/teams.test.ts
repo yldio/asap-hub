@@ -246,37 +246,65 @@ describe('Team controller', () => {
       expect(result).toEqual(fetchTeamByIdExpectation);
     });
 
-    test('Should return team information when user is part of the team', async () => {
-      const teamId = 'team-id-1';
+    describe('Tools', () => {
+      test('Should return the tools when the showTools parameter is missing', async () => {
+        const teamId = 'team-id-1';
 
-      const tools = [
-        {
-          url: 'https://example.com',
-          name: 'good link',
-          // squidex graphql api typings aren't perfect
-          description: null as unknown as undefined,
-        },
-      ];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
-          variables: {
-            id: teamId,
-          },
-        })
-        .reply(200, getGraphQlTeamResponse(tools));
-
-      const result = await teams.fetchById(teamId);
-
-      expect(result).toEqual({
-        ...fetchTeamByIdExpectation,
-        tools: [
+        const tools = [
           {
             url: 'https://example.com',
             name: 'good link',
+            // squidex graphql api typings aren't perfect
+            description: null as unknown as undefined,
           },
-        ],
+        ];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
+          })
+          .reply(200, getGraphQlTeamResponse(tools));
+
+        const result = await teams.fetchById(teamId);
+
+        expect(result).toEqual({
+          ...fetchTeamByIdExpectation,
+          tools: [
+            {
+              url: 'https://example.com',
+              name: 'good link',
+            },
+          ],
+        });
+      });
+
+      test('Should NOT return the tools when the "showTools" parameter is set to false', async () => {
+        const teamId = 'team-id-1';
+
+        const tools = [
+          {
+            url: 'https://example.com',
+            name: 'good link',
+            // squidex graphql api typings aren't perfect
+            description: null as unknown as undefined,
+          },
+        ];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
+          })
+          .reply(200, getGraphQlTeamResponse(tools));
+
+        const result = await teams.fetchById(teamId, { showTools: false });
+
+        expect(result.tools).toEqual([]);
       });
     });
 

@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "pages",
   "isSingleton": false,
-  "isPublished": false,
+  "schemaType": "Default",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -135,6 +135,7 @@
     "previewUrls": {
       "Web": "https://hub.asap.science${data.path.iv}"
     },
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
   }

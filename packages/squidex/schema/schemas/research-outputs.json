@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "research-outputs",
   "isSingleton": false,
-  "isPublished": false,
+  "schemaType": "Default",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -516,6 +516,7 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/shared-research/${id}"
     },
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
   }

@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "my-schema",
   "isSingleton": false,
-  "isPublished": false,
+  "schemaType": "Default",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,

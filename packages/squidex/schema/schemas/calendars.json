@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "calendars",
   "isSingleton": false,
-  "isPublished": false,
+  "schemaType": "Default",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -204,6 +204,7 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
   }

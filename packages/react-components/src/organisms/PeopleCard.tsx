@@ -48,7 +48,6 @@ type PeopleCardProps = Pick<
   | 'role'
   | 'teams'
   | 'degree'
-  | 'labs'
 >;
 const PeopleCard: React.FC<PeopleCardProps> = ({
   id,

@@ -10,7 +10,6 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   teams: [],
   skills: [],
   questions: [],
-  labs: [],
 };
 
 it('renders the role on ASAP', () => {

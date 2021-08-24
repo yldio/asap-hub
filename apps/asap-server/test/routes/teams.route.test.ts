@@ -7,6 +7,7 @@ import { authHandlerMock } from '../mocks/auth-handler.mock';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { teamControllerMock } from '../mocks/team-controller.mock';
 import { listTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
+import { userMock } from '../../src/utils/__mocks__/validate-token';
 
 describe('/teams/ route', () => {
   const app = appFactory({
@@ -120,7 +121,7 @@ describe('/teams/ route', () => {
 
       await supertest(app).get('/teams').query(expectedParams);
 
-      expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
+      expect(teamControllerMock.fetch).toBeCalledWith(expectedParams, userMock);
     });
 
     describe('Parameter validation', () => {
@@ -158,7 +159,7 @@ describe('/teams/ route', () => {
 
       await supertest(app).get(`/teams/${teamId}`);
 
-      expect(teamControllerMock.fetchById).toBeCalledWith(teamId);
+      expect(teamControllerMock.fetchById).toBeCalledWith(teamId, userMock);
     });
   });
 
@@ -212,7 +213,7 @@ describe('/teams/ route', () => {
         tools,
       });
 
-      expect(teamControllerMock.update).toBeCalledWith(teamId, tools);
+      expect(teamControllerMock.update).toBeCalledWith(teamId, tools, userMock);
     });
   });
 });

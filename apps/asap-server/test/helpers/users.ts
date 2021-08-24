@@ -34,7 +34,6 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
     questions: [],
     teams: [],
     connections: [],
-    labs: [],
     ...overwrites,
   };
 

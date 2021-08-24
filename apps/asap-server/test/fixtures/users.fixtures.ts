@@ -56,10 +56,6 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             ],
             role: 'Grantee',
             connections: [],
-            labs: [
-              { id: 'cd7be4902', flatData: { name: 'Brighton' } },
-              { id: 'cd7be4903', flatData: { name: 'Liverpool' } },
-            ],
           },
         },
         {
@@ -112,7 +108,6 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             ],
             connections: [],
             role: 'Grantee',
-            labs: [],
           },
         },
       ],
@@ -190,10 +185,6 @@ export const getGraphQlResponseFetchUser = (): { data: ResponseFetchUser } => ({
         role: 'Grantee',
         biography: 'Biography',
         connections: [],
-        labs: [
-          { id: 'cd7be4904', flatData: { name: 'Manchester' } },
-          { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-        ],
       },
     },
   },
@@ -282,10 +273,6 @@ export const buildUserGraphqlResponse = (
         role: 'Grantee',
         biography: 'Biography',
         connections: [],
-        labs: [
-          { id: 'cd7be4904', flatData: { name: 'Manchester' } },
-          { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-        ],
         ...flatdata,
       },
     },
@@ -325,7 +312,6 @@ export const patchResponse: RestUser = {
     },
     connections: { iv: [] },
     questions: { iv: [] },
-    labs: { iv: [] },
   },
   created: '2020-09-25T09:42:51Z',
   lastModified: '2020-09-25T09:42:51Z',
@@ -378,10 +364,6 @@ export const userResponse: UserResponse = {
   avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/squidex-asset-id`,
   role: 'Grantee',
   biography: 'Biography',
-  labs: [
-    { id: 'cd7be4904', name: 'Manchester' },
-    { id: 'cd7be4905', name: 'Glasgow' },
-  ],
 };
 
 export const fetchExpectation: ListUserResponse = {
@@ -416,10 +398,6 @@ export const fetchExpectation: ListUserResponse = {
         },
       ],
       role: 'Grantee',
-      labs: [
-        { id: 'cd7be4902', name: 'Brighton' },
-        { id: 'cd7be4903', name: 'Liverpool' },
-      ],
     },
     {
       id: 'userId2',
@@ -447,7 +425,6 @@ export const fetchExpectation: ListUserResponse = {
         },
       ],
       role: 'Grantee',
-      labs: [],
     },
   ],
 };

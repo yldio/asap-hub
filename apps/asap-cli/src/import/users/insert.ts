@@ -168,9 +168,6 @@ const insertUser = async (
     onboarded: {
       iv: true,
     },
-    labs: {
-      iv: [],
-    },
   };
 
   if (orcid) {

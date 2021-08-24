@@ -1,6 +1,5 @@
 import { ListResponse } from './common';
 import { ResearchOutputResponse } from './research-output';
-import { Lab } from './lab';
 
 export type TeamRole =
   | 'Lead PI (Core Leadership)'
@@ -31,7 +30,6 @@ export interface TeamMember {
   email: string;
   role: TeamRole;
   avatarUrl?: string;
-  labs?: Lab[];
 }
 
 export interface TeamResponse

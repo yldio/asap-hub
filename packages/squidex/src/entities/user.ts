@@ -22,10 +22,6 @@ export type UserTeamConnection<T = string> = T extends string
       id: T[];
     };
 
-export type UserLabConnection = { id: string } & Graphql<{
-  name: string;
-}>;
-
 type OrNull<T> = { [K in keyof T]: T[K] | null };
 
 export interface User<
@@ -59,7 +55,6 @@ export interface User<
   skillsDescription?: string;
   teams: TConnection[];
   social?: TSocial[];
-  labs: UserLabConnection[];
 }
 
 export interface RestUser extends Entity, Rest<User> {}

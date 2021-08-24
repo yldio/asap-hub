@@ -4,8 +4,7 @@ import { network } from '@asap-hub/routing';
 
 import { perRem, tabletScreen } from '../pixels';
 import { lead } from '../colors';
-import { Link, Avatar, Anchor, Ellipsis } from '../atoms';
-import { getUniqueCommaStringWithSuffix } from '../utils';
+import { Link, Avatar, Anchor } from '../atoms';
 
 const containerStyles = css({
   margin: 0,
@@ -23,7 +22,7 @@ const multiColumnContainerStyles = css({
 });
 
 const avatarStyles = css({
-  gridRowEnd: 'span 4',
+  gridRowEnd: 'span 3',
   paddingTop: `${12 / perRem}em`,
 });
 
@@ -42,12 +41,8 @@ const multiColumnAddToColumnStyles = css({
     },
   },
 });
-const textStyles = css({
+const roleStyles = css({
   color: lead.rgb,
-});
-
-const labStyles = css({
-  padding: `0 0 ${24 / perRem}em`,
 });
 const teamStyles = css({
   listStyle: 'none',
@@ -58,9 +53,7 @@ const teamStyles = css({
 interface MembersListProps {
   readonly members: ReadonlyArray<
     Pick<UserResponse, 'id' | 'displayName'> &
-      Partial<
-        Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl' | 'labs'>
-      > & {
+      Partial<Pick<UserResponse, 'firstName' | 'lastName' | 'avatarUrl'>> & {
         readonly role: string;
         readonly teams: ReadonlyArray<Pick<UserTeam, 'id' | 'displayName'>>;
       }
@@ -72,12 +65,9 @@ const MembersList: React.FC<MembersListProps> = ({
   singleColumn = false,
 }) => (
   <ul css={[containerStyles, singleColumn || multiColumnContainerStyles]}>
-    {members.map(({ id, displayName, role, teams, labs = [], ...member }) => {
+    {members.map(({ id, displayName, role, teams, ...member }) => {
       const href = network({}).users({}).user({ userId: id }).$;
-      const labsList = getUniqueCommaStringWithSuffix(
-        labs.map((lab) => lab.name),
-        'Lab',
-      );
+
       return (
         <li key={id} css={{ display: 'contents' }}>
           <Anchor href={href} css={{ display: 'contents' }}>
@@ -97,22 +87,10 @@ const MembersList: React.FC<MembersListProps> = ({
               css={[
                 addToColumnStyles,
                 singleColumn || multiColumnAddToColumnStyles,
-                textStyles,
+                roleStyles,
               ]}
             >
               {role}
-            </div>
-          </Anchor>
-          <Anchor href={href} css={{ display: 'contents' }}>
-            <div
-              css={[
-                addToColumnStyles,
-                singleColumn || multiColumnAddToColumnStyles,
-                textStyles,
-                labStyles,
-              ]}
-            >
-              {labsList && <Ellipsis>{labsList}</Ellipsis>}
             </div>
           </Anchor>
           <ul

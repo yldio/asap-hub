@@ -1,13 +1,6 @@
-import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 import UserProfilePersonalText from '../UserProfilePersonalText';
-
-const props: ComponentProps<typeof UserProfilePersonalText> = {
-  labs: [],
-  teams: [],
-  role: 'Grantee',
-};
 
 it.each`
   jobTitle     | institution  | text
@@ -16,7 +9,7 @@ it.each`
   ${'Job'}     | ${'Inst'}    | ${/Job at Inst/}
 `('generates the position description "$text"', ({ text, ...position }) => {
   const { container } = render(
-    <UserProfilePersonalText {...props} {...position} />,
+    <UserProfilePersonalText teams={[]} {...position} />,
   );
   expect(container).toHaveTextContent(text);
 });
@@ -28,21 +21,22 @@ it.each`
   ${'Country'} | ${'City'}    | ${/City, Country/}
 `('generates the location description "$text"', ({ text, ...location }) => {
   const { container, getByTitle } = render(
-    <UserProfilePersonalText {...props} {...location} />,
+    <UserProfilePersonalText teams={[]} {...location} />,
   );
   expect(container).toHaveTextContent(text);
   expect(getByTitle(/location/i)).toBeInTheDocument();
 });
 
 it('does not show the location icon if no location is available', () => {
-  const { queryByTitle } = render(<UserProfilePersonalText {...props} />);
+  const { queryByTitle } = render(
+    <UserProfilePersonalText teams={[]} role={'Grantee'} />,
+  );
   expect(queryByTitle(/location/i)).toBe(null);
 });
 
 it("generates information about the user's team", async () => {
   const { container } = render(
     <UserProfilePersonalText
-      {...props}
       teams={[
         {
           id: '42',
@@ -55,36 +49,26 @@ it("generates information about the user's team", async () => {
           role: 'Collaborating PI',
         },
       ]}
+      role={'Grantee'}
     />,
   );
   expect(container).toHaveTextContent(/Lead PI \(Core Leadership\) on Team/);
 });
 it('does not show team information if the user is not on a team', async () => {
-  const { container } = render(<UserProfilePersonalText {...props} />);
+  const { container } = render(
+    <UserProfilePersonalText teams={[]} role={'Grantee'} />,
+  );
   expect(container).not.toHaveTextContent(/\w on \w/);
 });
 
-it('only show lab information if the user is on a lab', async () => {
-  const { container, rerender } = render(
-    <UserProfilePersonalText {...props} />,
-  );
-  expect(container).not.toHaveTextContent('Lab');
-
-  rerender(
-    <UserProfilePersonalText
-      {...props}
-      labs={[{ id: 'cd7be4905', name: 'Glasgow' }]}
-    />,
-  );
-  expect(container).toHaveTextContent('Glasgow Lab');
-});
 it('shows placeholder text on your own profile', () => {
   const { queryByTitle, queryByText, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfilePersonalText
-        {...props}
+        teams={[]}
         city={undefined}
         country={undefined}
+        role={'Grantee'}
       />
     </UserProfileContext.Provider>,
   );
@@ -93,7 +77,7 @@ it('shows placeholder text on your own profile', () => {
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <UserProfilePersonalText {...props} labs={[]} />
+      <UserProfilePersonalText teams={[]} role={'Grantee'} />
     </UserProfileContext.Provider>,
   );
   expect(queryByTitle(/location/i)).toBeInTheDocument();

@@ -5,7 +5,7 @@ import {
   isInternalLink,
   getIconFromUrl,
   isLink,
-} from '../index';
+} from '../utils';
 
 describe('getSvgAspectRatio', () => {
   it('throws if the element does not contain a svg', () => {

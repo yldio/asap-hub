@@ -8,7 +8,6 @@ import { Link, Paragraph, Ellipsis } from '../atoms';
 import { locationIcon } from '../icons';
 import { perRem, lineHeight } from '../pixels';
 import { lead, tin } from '../colors';
-import { getUniqueCommaStringWithSuffix } from '../utils';
 
 const locationStyles = css({
   padding: `${6 / perRem}em 0`,
@@ -32,7 +31,7 @@ const paragraphStyles = css({
 
 type UserProfilePersonalTextProps = Pick<
   UserResponse,
-  'institution' | 'jobTitle' | 'country' | 'city' | 'teams' | 'role' | 'labs'
+  'institution' | 'jobTitle' | 'country' | 'city' | 'teams' | 'role'
 >;
 const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   institution,
@@ -41,15 +40,8 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
   jobTitle,
   teams,
   role,
-  labs,
 }) => {
   const { isOwnProfile } = useContext(UserProfileContext);
-
-  const labsList = getUniqueCommaStringWithSuffix(
-    labs.map((lab) => lab.name),
-    'Lab',
-  );
-
   return (
     <div>
       <p css={paragraphStyles}>
@@ -71,12 +63,6 @@ const UserProfilePersonalText: FC<UserProfilePersonalTextProps> = ({
             ASAP Staff on <Link href={discover({}).$}>Team ASAP</Link>
           </>
         ) : null}
-        {!!labsList.length && (
-          <>
-            <br />
-            <span>{labsList}</span>
-          </>
-        )}
         {teams.map(({ id, role: teamRole, displayName }) => (
           <Fragment key={id}>
             <br />

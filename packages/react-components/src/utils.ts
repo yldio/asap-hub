@@ -4,7 +4,7 @@ import {
   protocolsIcon,
   slackIcon,
   googleCalendarIcon,
-} from '../icons';
+} from './icons';
 
 /* istanbul ignore next */
 // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -9,4 +9,3 @@ export * from './user';
 export * from './calendar';
 export * from './group';
 export * from './event';
-export * from './lab';

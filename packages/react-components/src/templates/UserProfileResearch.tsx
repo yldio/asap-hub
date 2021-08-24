@@ -16,12 +16,9 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     ComponentProps<typeof UserProfileBackground>,
     'firstName' | 'displayName'
   > &
-  Pick<UserResponse, 'email' | 'contactEmail' | 'labs'> & {
+  Pick<UserResponse, 'email' | 'contactEmail'> & {
     readonly teams: ReadonlyArray<
-      Omit<
-        ComponentProps<typeof UserProfileBackground>,
-        'firstName' | 'labs'
-      > & {
+      Omit<ComponentProps<typeof UserProfileBackground>, 'firstName'> & {
         editHref?: string;
       }
     >;
@@ -42,7 +39,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   skillsDescription,
   questions,
   isOwnProfile,
-  labs,
 
   userProfileGroupsCard,
   editSkillsHref,
@@ -56,7 +52,6 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
             key={team.id}
             {...team}
             firstName={firstName}
-            labs={labs}
           />
         ),
         editLink:

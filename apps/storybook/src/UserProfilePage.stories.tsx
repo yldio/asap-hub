@@ -65,10 +65,6 @@ const propsViewOnly = (): Omit<
       website1: text('Website 1', 'http://example.com/website1'),
       website2: text('Website 2', 'http://example.com/website2'),
     },
-    labs: [
-      { id: 'cd7be4904', name: 'Manchester' },
-      { id: 'cd7be4905', name: 'Glasgow' },
-    ],
   };
 };
 const propsEditable = (): ReturnType<typeof propsViewOnly> => ({

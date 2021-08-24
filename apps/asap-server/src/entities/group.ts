@@ -16,13 +16,12 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
   const teams: GroupTeam[] = (item.flatData?.teams || []).map((t) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { members, outputs, ...team } = parseGraphQLTeam(t);
+    const { members, outputs, ...team } = parseGraphQLTeam(t, []);
     return team;
   });
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(
     parseGraphQLCalendar,
   );
-
   const leaders: GroupResponse['leaders'] = (item.flatData?.leaders || []).map(
     (leader) => ({
       user: parseGraphQLUser(leader.user[0]),

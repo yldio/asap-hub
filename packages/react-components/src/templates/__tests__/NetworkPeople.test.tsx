@@ -19,15 +19,8 @@ const person: ComponentProps<typeof NetworkPeople>['people'][0] = {
     },
   ],
   role: 'Grantee',
-  labs: [
-    { id: 'cd7be4902', name: 'Barcelona' },
-    { id: 'cd7be4905', name: 'Glasgow' },
-  ],
 };
-const people = [
-  person,
-  { ...person, id: '43', displayName: 'Person B', labs: [] },
-];
+const people = [person, { ...person, id: '43', displayName: 'Person B' }];
 const props: ComponentProps<typeof NetworkPeople> = {
   people,
   numberOfItems: people.length,

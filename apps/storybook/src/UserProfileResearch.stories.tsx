@@ -13,7 +13,6 @@ const props = (): ComponentProps<typeof UserProfileResearch> => ({
   firstName: text('First Name', 'Phillip'),
   email: text('Email', 'me@example.com'),
   contactEmail: text('Contact email', 'contact@example.com'),
-  labs: [],
   teams: [
     {
       id: '42',

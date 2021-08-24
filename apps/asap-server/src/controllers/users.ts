@@ -82,12 +82,6 @@ flatData {
   role
   responsibilities
   reachOut
-  labs {
-    id
-    flatData {
-      name
-    }
-  }
 }`;
 
 export const buildGraphQLQueryFetchUsers = (): string => `

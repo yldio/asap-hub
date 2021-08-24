@@ -60,9 +60,6 @@ const body = {
   onboarded: {
     iv: true,
   },
-  labs: {
-    iv: [],
-  },
 };
 
 describe('Import user', () => {

@@ -41,8 +41,4 @@ export const userResponse: UserResponse = {
   avatarUrl: `https://test.com/api/assets/asap-dev/squidex-asset-id`,
   role: 'Grantee',
   biography: 'Biography',
-  labs: [
-    { id: 'cd7be4902', name: 'Barcelona' },
-    { id: 'cd7be4905', name: 'Glasgow' },
-  ],
 };

@@ -131,7 +131,6 @@ export const discoverResponse: DiscoverResponse = {
       teams: [],
       avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-1`,
       role: 'Guest',
-      labs: [],
     },
     {
       id: 'uuid-2',
@@ -150,7 +149,6 @@ export const discoverResponse: DiscoverResponse = {
       reachOut: 'reach out',
       responsibilities: 'responsibilities',
       role: 'Staff',
-      labs: [],
     },
   ],
   aboutUs: '<p>content<p>',

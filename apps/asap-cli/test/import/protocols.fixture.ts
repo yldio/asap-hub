@@ -56,7 +56,6 @@ export const fetchUserResponse: RestUser = {
     onboarded: {
       iv: true,
     },
-    labs: { iv: [] },
   },
 };
 

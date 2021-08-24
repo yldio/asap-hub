@@ -149,7 +149,6 @@ type UserProfileHeaderProps = Pick<
   | 'social'
   | 'teams'
   | 'degree'
-  | 'labs'
 > & {
   readonly onImageSelect?: (file: File) => void;
   readonly avatarSaving?: boolean;
@@ -174,7 +173,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
   degree,
   onImageSelect,
   avatarSaving,
-  labs,
 
   editPersonalInfoHref,
   editContactInfoHref,
@@ -205,7 +203,6 @@ const UserProfileHeader: React.FC<UserProfileHeaderProps> = ({
             jobTitle={jobTitle}
             teams={teams}
             role={role}
-            labs={labs}
           />
         </div>
         <div css={avatarContainer}>

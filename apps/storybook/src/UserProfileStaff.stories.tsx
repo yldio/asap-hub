@@ -11,7 +11,6 @@ const props = (): ComponentProps<typeof UserProfileStaff> => ({
   firstName: text('First Name', 'Phillip'),
   email: text('Email', 'me@example.com'),
   teams: [],
-  labs: [],
   skills: array('Skills', [
     'Neurological Diseases',
     'Clinical Neurology',

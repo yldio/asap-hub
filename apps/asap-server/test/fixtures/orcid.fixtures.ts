@@ -40,7 +40,6 @@ export const updateUserEvent: WebhookPayload<User> = {
       onboarded: {
         iv: true,
       },
-      labs: { iv: [] },
     },
     dataOld: {
       firstName: { iv: 'Bill' },
@@ -71,7 +70,6 @@ export const updateUserEvent: WebhookPayload<User> = {
       onboarded: {
         iv: true,
       },
-      labs: { iv: [] },
     },
   },
 };
@@ -114,7 +112,6 @@ export const createUserEvent: WebhookPayload<User> = {
       onboarded: {
         iv: true,
       },
-      labs: { iv: [] },
     },
   },
 };

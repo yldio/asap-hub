@@ -18,11 +18,6 @@ export const Normal = () => (
     role={text('Role', 'Researcher') as TeamRole}
     approach={text('Approach', '')}
     responsibilities={text('Responsibilities', '')}
-    labs={[
-      { id: '0001', name: 'London' },
-      { id: '0001', name: 'PARIS' },
-      { id: '0001', name: 'barcelona' },
-    ]}
   />
 );
 

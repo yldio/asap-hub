@@ -3,32 +3,41 @@ import { getMeetingMaterial } from '../../src/entities/event';
 describe('events entity', () => {
   describe('getMeetingMaterial', () => {
     it.each([null, undefined, [], 'detail', ['item']])(
-      'always returns null when meeting material permanently unavailable',
-      (value) => expect(getMeetingMaterial(value, true, false, [])).toBeNull(),
+      'always returns null when meeting material "%s" specified unavailable',
+      (material) => {
+        expect(getMeetingMaterial(material, true, false, [])).toBeNull();
+        expect(getMeetingMaterial(material, true, true, [])).toBeNull();
+      },
     );
+
+    it.each([null, undefined, []])(
+      'returns null when stale and meeting material is missing "%s"',
+      (material) =>
+        expect(getMeetingMaterial(material, false, true, [])).toBeNull(),
+    );
+
     it.each`
-      value        | result
-      ${null}      | ${null}
+      material     | empty
+      ${null}      | ${undefined}
       ${undefined} | ${null}
-      ${[]}        | ${null}
-      ${'string'}  | ${'string'}
-      ${['a']}     | ${['a']}
+      ${[]}        | ${undefined}
     `(
-      'returns $result when material is $value and stale',
-      ({ value, result }) =>
-        expect(getMeetingMaterial(value, false, true, [])).toEqual(result),
+      'returns empty value "$empty" when fresh and missing material is "$material"',
+      ({ material, empty }) =>
+        expect(getMeetingMaterial(material, false, false, empty)).toEqual(
+          empty,
+        ),
     );
-    it.each`
-      value       | empty        | result
-      ${null}     | ${undefined} | ${undefined}
-      ${null}     | ${null}      | ${null}
-      ${[]}       | ${[]}        | ${[]}
-      ${'string'} | ${undefined} | ${'string'}
-      ${['a']}    | ${[]}        | ${['a']}
-    `(
-      'returns $result when material is $value, empty is $empty and fresh',
-      ({ value, result, empty }) =>
-        expect(getMeetingMaterial(value, false, false, empty)).toEqual(result),
+    it.each(['string', ['a']])(
+      'always returns material "%s" when not permanently unavailable',
+      (material) => {
+        expect(getMeetingMaterial(material, false, false, undefined)).toEqual(
+          material,
+        );
+        expect(getMeetingMaterial(material, false, true, undefined)).toEqual(
+          material,
+        );
+      },
     );
   });
 });

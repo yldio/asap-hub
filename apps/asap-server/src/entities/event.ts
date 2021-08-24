@@ -17,7 +17,7 @@ export const getMeetingMaterial = <T>(
 ): T | null => {
   const isEmpty = !(Array.isArray(material) ? material.length : material);
   if (isPermanentlyUnavailable || (isEmpty && isStale)) return null;
-  return material ?? emptyState;
+  return isEmpty ? emptyState : material;
 };
 
 export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {

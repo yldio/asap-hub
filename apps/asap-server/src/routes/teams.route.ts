@@ -30,7 +30,10 @@ export const teamRouteFactory = (
       filter?: string[] | string;
     };
 
-    const result = await teamsController.fetch(options);
+    const result = await teamsController.fetch({
+      ...options,
+      showTeamTools: req.loggedInUser?.teams.map((team) => team.id),
+    });
 
     res.json(result);
   });

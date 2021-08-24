@@ -96,7 +96,7 @@ type FetchTeamOptions = {
   showTools: boolean;
 };
 
-type FetchTeamsOptions = {
+export type FetchTeamsOptions = {
   take: number;
   skip: number;
   search?: string;

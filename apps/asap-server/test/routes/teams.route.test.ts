@@ -9,6 +9,7 @@ import { getListTeamResponse, teamResponse } from '../fixtures/teams.fixtures';
 import { AuthHandler } from '../../src/middleware/auth-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { User } from '@asap-hub/auth';
+import { FetchTeamsOptions } from '../../src/controllers/teams';
 
 describe('/teams/ route', () => {
   const loggedUser: User = {
@@ -20,8 +21,9 @@ describe('/teams/ route', () => {
       },
     ],
   };
+  const getLoggedUser = jest.fn().mockReturnValue(loggedUser);
   const authHandlerMock: AuthHandler = (req, _res, next) => {
-    req.loggedInUser = loggedUser;
+    req.loggedInUser = getLoggedUser();
     next();
   };
 
@@ -124,16 +126,59 @@ describe('/teams/ route', () => {
     test('Should call the controller with the right parameters', async () => {
       teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
 
-      const expectedParams: FetchOptions = {
+      const params: FetchOptions = {
         take: 15,
         skip: 5,
         search: 'something',
         filter: ['one', 'two'],
       };
 
-      await supertest(app).get('/teams').query(expectedParams);
+      await supertest(app).get('/teams').query(params);
+
+      const expectedParams: FetchTeamsOptions = {
+        ...(params as Required<FetchOptions>),
+        showTeamTools: [loggedUser.teams[0].id],
+      };
 
       expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
+    });
+
+    describe('Team tools', () => {
+      test('Should select the team tools for the teams the user is a member of', async () => {
+        teamControllerMock.fetch.mockResolvedValueOnce(getListTeamResponse());
+        getLoggedUser.mockReturnValueOnce({
+          ...userMock,
+          teams: [
+            {
+              id: 'team-id-1',
+              role: 'Project Manager',
+            },
+            {
+              id: 'team-id-2',
+              role: 'Some role',
+            },
+            {
+              id: 'team-id-3',
+              role: 'Some other role',
+            },
+          ],
+        });
+
+        const params: FetchOptions = {
+          take: 15,
+          skip: 5,
+        };
+
+        await supertest(app).get('/teams').query(params);
+
+        const expectedParams: FetchTeamsOptions = {
+          take: 15,
+          skip: 5,
+          showTeamTools: ['team-id-1', 'team-id-2', 'team-id-3'],
+        };
+
+        expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
+      });
     });
 
     describe('Parameter validation', () => {

@@ -309,6 +309,28 @@ describe('Team controller', () => {
     });
 
     describe('Tools', () => {
+      test('Should return the tools as an empty array when they are defined as null in squidex', async () => {
+        const teamId = 'team-id-1';
+
+        const tools = null;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
+          })
+          .reply(200, getGraphQlTeamResponse(tools));
+
+        const result = await teams.fetchById(teamId);
+
+        expect(result).toEqual({
+          ...fetchTeamByIdExpectation,
+          tools: [],
+        });
+      });
+
       test('Should return the tools when the showTools parameter is missing', async () => {
         const teamId = 'team-id-1';
 

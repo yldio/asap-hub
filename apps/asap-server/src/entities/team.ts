@@ -80,7 +80,7 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
     ) || [];
 
   const tools =
-    team?.flatData?.tools?.map(({ name, description, url }) => ({
+    team.flatData?.tools?.map(({ name, description, url }) => ({
       name,
       url,
       description: description ?? undefined,

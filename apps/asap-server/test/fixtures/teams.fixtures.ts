@@ -704,7 +704,7 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
 });
 
 export const getGraphQlTeamResponse = (
-  tools: TeamTool[] = [],
+  tools: TeamTool[] | null = [],
 ): { data: ResponseFetchTeam } => ({
   data: {
     findTeamsContent: {

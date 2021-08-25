@@ -62,6 +62,7 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
                 <Frame title="Edit Team Membership">
                   <TeamMembershipModal
                     {...team}
+                    labs={user.labs}
                     backHref={route.$}
                     onSave={patchUser}
                   />

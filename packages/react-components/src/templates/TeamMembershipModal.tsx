@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserTeam, UserPatchRequest } from '@asap-hub/model';
+import { UserTeam, UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import {
@@ -29,10 +29,11 @@ const textFieldsContainerStyles = css({
 type TeamMembershipModalProps = Pick<
   UserTeam,
   'approach' | 'responsibilities' | 'id' | 'proposal' | 'role' | 'displayName'
-> & {
-  onSave?: (data: UserPatchRequest) => Promise<void>;
-  backHref: string;
-};
+> &
+  Pick<UserResponse, 'labs'> & {
+    onSave?: (data: UserPatchRequest) => Promise<void>;
+    backHref: string;
+  };
 
 const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   id,
@@ -40,6 +41,7 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   displayName = '',
   approach = '',
   responsibilities = '',
+  labs = [],
   onSave = noop,
   backHref,
 }) => {
@@ -85,6 +87,9 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
                 value={role}
                 options={[{ label: role, value: role }]}
               />
+              {labs.map(({ name }) => (
+                <LabeledTextField title="Lab" value={name} enabled={false} />
+              ))}
             </div>
             <LabeledTextArea
               required

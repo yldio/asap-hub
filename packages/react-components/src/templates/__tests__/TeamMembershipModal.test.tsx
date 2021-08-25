@@ -7,6 +7,7 @@ import { createUserResponse } from '@asap-hub/fixtures';
 import TeamMembershipModal from '../TeamMembershipModal';
 
 const props: ComponentProps<typeof TeamMembershipModal> = {
+  ...createUserResponse(),
   ...createUserResponse().teams[0],
   backHref: '/wrong',
 };

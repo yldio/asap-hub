@@ -14,7 +14,28 @@
       "update": "const modified = Object.keys(ctx.data)\n        .filter(key => JSON.stringify(ctx.data[key]) !== JSON.stringify(ctx.oldData[key]))\n        .filter(key => key !== 'publishDate' && key !== 'adminNotes');\n        \nif (modified.length > 0) {\n    ctx.data.lastUpdatedPartial.iv = new Date().toISOString().split('.')[0]+\"Z\";\n    replace();\n}\n\n"
     },
     "fieldsInReferences": ["title", "type"],
-    "fieldsInLists": ["title", "type"],
+    "fieldsInLists": [
+      "title",
+      "type",
+      "subtype",
+      "addedDate",
+      "lastUpdatedPartial",
+      "link",
+      "description",
+      "tags",
+      "accessInstructions",
+      "labs",
+      "authors",
+      "asapFunded",
+      "sharingStatus",
+      "usedInAPublication",
+      "publishDate",
+      "rrid",
+      "accession",
+      "labCatalogNumber",
+      "doi",
+      "adminNotes"
+    ],
     "fields": [
       {
         "name": "Overview",
@@ -66,7 +87,7 @@
             "Article"
           ],
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Type",
@@ -120,7 +141,7 @@
             "Viral Vector"
           ],
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Subtype",
@@ -175,7 +196,7 @@
           "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
           "patternMessage": "URL must start with http:// or https://",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "External Link",

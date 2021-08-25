@@ -23,7 +23,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": true,
+          "inlineEditable": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Display Name",
@@ -41,7 +41,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
-          "inlineEditable": true,
+          "inlineEditable": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Application Number",
@@ -94,7 +94,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": true,
+          "inlineEditable": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Title",
@@ -112,7 +112,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": true,
+          "inlineEditable": false,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Summary",
@@ -162,7 +162,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": true,
+              "inlineEditable": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Name",
@@ -179,7 +179,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": true,
+              "inlineEditable": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Description",
@@ -196,7 +196,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": true,
+              "inlineEditable": false,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "URL",

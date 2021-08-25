@@ -61,7 +61,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "About Us",

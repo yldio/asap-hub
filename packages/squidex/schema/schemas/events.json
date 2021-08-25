@@ -23,7 +23,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Title",
@@ -61,7 +61,7 @@
           "fieldType": "String",
           "allowedValues": ["Confirmed", "Tentative", "Cancelled"],
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Status",
@@ -102,7 +102,7 @@
         "properties": {
           "fieldType": "Boolean",
           "defaultValue": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "editor": "Checkbox",
           "label": "Hide Event",
           "hints": "Hidden events will NOT show on the Hub. (Note: any event cancelled on GCal will be hidden by default. To show a cancelled event on the Hub, you have to manually un-hide the event here)",
@@ -136,7 +136,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Meeting Link",
@@ -208,7 +208,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Boolean",
-          "inlineEditable": false,
+          "inlineEditable": true,
           "editor": "Checkbox",
           "label": "Mark Notes as permanently unavailable",
           "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
@@ -227,7 +227,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Notes",
@@ -245,7 +245,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Boolean",
-          "inlineEditable": false,
+          "inlineEditable": true,
           "editor": "Checkbox",
           "label": "Mark Video Recording as permanently unavailable",
           "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
@@ -264,7 +264,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Video Recording",
@@ -282,7 +282,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Boolean",
-          "inlineEditable": false,
+          "inlineEditable": true,
           "editor": "Checkbox",
           "label": "Mark Presentation as permanently unavailable",
           "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
@@ -301,7 +301,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "RichText",
           "label": "Presentation",
@@ -319,7 +319,7 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Boolean",
-          "inlineEditable": false,
+          "inlineEditable": true,
           "editor": "Checkbox",
           "label": "Mark Additional Meeting Materials as permanently unavailable",
           "hints": "This box is automatically ticked if no output is added after 14 days from the event's end date.",
@@ -353,7 +353,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Title",
@@ -374,7 +374,7 @@
               "pattern": "^(?:http(s)?:\\/\\/)[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:\\/?#%[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
               "patternMessage": "URL must start with http:// or https://",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "URL",
@@ -410,7 +410,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "TextArea",
           "label": "Description",
@@ -430,7 +430,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Start Date Time Zone",
@@ -465,7 +465,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "End Date Time Zone",
@@ -483,7 +483,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Event Link",
@@ -503,7 +503,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Id",

@@ -40,7 +40,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -60,7 +60,7 @@
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "minLength": 8,
           "isUnique": true,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Calendar ID",
@@ -123,7 +123,7 @@
             "#333333"
           ],
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Color",
@@ -158,7 +158,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Last Sync Token",
@@ -176,7 +176,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google resource ID",
@@ -194,7 +194,7 @@
         "properties": {
           "fieldType": "Number",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "editor": "Input",
           "label": "Google subscription expiration date",
           "isRequired": false,

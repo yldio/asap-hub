@@ -1,70 +1,92 @@
 {
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "SchemeModel",
   "type": "object",
   "properties": {
     "name": {
-      "type": ["null", "string"]
+      "type": "string",
+      "x-nullable": true
     },
     "isSingleton": {
       "type": "boolean"
     },
-    "isPublished": {
-      "type": "boolean"
+    "schemaType": {
+      "$ref": "#/definitions/SchemaType"
     },
     "schema": {
+      "x-nullable": true,
       "oneOf": [
         {
-          "type": "null"
-        },
-        {}
+          "$ref": "#/definitions/SynchronizeSchemaDto"
+        }
       ]
     }
   },
   "definitions": {
+    "SchemaType": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": ["Default", "Singleton", "Component"],
+      "enum": ["Default", "Singleton", "Component"]
+    },
     "SynchronizeSchemaDto": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
         "properties": {
+          "x-nullable": true,
           "oneOf": [
             {
-              "type": "null"
-            },
-            {}
+              "$ref": "#/definitions/SchemaPropertiesDto"
+            }
           ]
         },
         "scripts": {
+          "x-nullable": true,
           "oneOf": [
             {
-              "type": "null"
-            },
-            {}
+              "$ref": "#/definitions/SchemaScriptsDto"
+            }
           ]
         },
         "fieldsInReferences": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
         "fieldsInLists": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
         "fields": {
-          "type": ["array", "null"],
-          "items": {}
+          "type": "array",
+          "x-nullable": true,
+          "items": {
+            "$ref": "#/definitions/UpsertSchemaFieldDto"
+          }
         },
         "previewUrls": {
-          "type": ["null", "object"],
+          "type": "object",
+          "x-nullable": true,
           "additionalProperties": {
             "type": "string"
           }
         },
+        "fieldRules": {
+          "type": "array",
+          "x-nullable": true,
+          "items": {
+            "$ref": "#/definitions/FieldRuleDto"
+          }
+        },
         "category": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "isPublished": {
           "type": "boolean"
@@ -82,29 +104,35 @@
       "additionalProperties": false,
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "contentsSidebarUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "contentSidebarUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "contentEditorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "validateOnPublish": {
           "type": "boolean"
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
@@ -116,19 +144,24 @@
       "additionalProperties": false,
       "properties": {
         "query": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "create": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "update": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "delete": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "change": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         }
       }
     },
@@ -152,12 +185,18 @@
           "type": "boolean"
         },
         "partitioning": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
-        "properties": {},
+        "properties": {
+          "$ref": "#/definitions/FieldPropertiesDto"
+        },
         "nested": {
-          "type": ["array", "null"],
-          "items": {}
+          "type": "array",
+          "x-nullable": true,
+          "items": {
+            "$ref": "#/definitions/UpsertSchemaNestedFieldDto"
+          }
         }
       }
     },
@@ -167,19 +206,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -191,10 +233,12 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
@@ -209,19 +253,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -233,21 +280,25 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
         "minItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "fieldType": {
           "type": "string"
@@ -259,19 +310,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -283,64 +337,82 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "previewMode": {},
-        "defaultValues": {},
+        "previewMode": {
+          "$ref": "#/definitions/AssetPreviewMode"
+        },
+        "defaultValues": {
+          "$ref": "#/definitions/LocalizedValueOfImmutableListOfString"
+        },
         "defaultValue": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
         "folderId": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "minItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "minSize": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxSize": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "minWidth": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxWidth": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "minHeight": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxHeight": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "aspectWidth": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "aspectHeight": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "mustBeImage": {
           "type": "boolean"
@@ -351,10 +423,11 @@
         "resolveImage": {
           "type": "boolean",
           "x-deprecated": true,
-          "x-deprecatedMessage": "Use ResolveFirst now"
+          "x-deprecatedMessage": "Use 'resolveFirst' field now"
         },
         "allowedExtensions": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
@@ -373,7 +446,7 @@
       "x-enumNames": ["ImageAndFileName", "Image", "FileName"],
       "enum": ["ImageAndFileName", "Image", "FileName"]
     },
-    "LocalizedValueOfStringOf": {
+    "LocalizedValueOfImmutableListOfString": {
       "type": "object",
       "additionalProperties": false
     },
@@ -382,19 +455,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -406,22 +482,29 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "defaultValues": {},
+        "defaultValues": {
+          "$ref": "#/definitions/LocalizedValueOfNullableBoolean"
+        },
         "defaultValue": {
-          "type": ["boolean", "null"]
+          "type": "boolean",
+          "x-nullable": true
         },
         "inlineEditable": {
           "type": "boolean"
         },
-        "editor": {},
+        "editor": {
+          "$ref": "#/definitions/BooleanFieldEditor"
+        },
         "fieldType": {
           "type": "string"
         }
@@ -437,24 +520,27 @@
       "x-enumNames": ["Checkbox", "Toggle"],
       "enum": ["Checkbox", "Toggle"]
     },
-    "DateTimeFieldPropertiesDto": {
+    "ComponentFieldPropertiesDto": {
       "type": "object",
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -466,34 +552,161 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "defaultValues": {},
+        "schemaIds": {
+          "type": "array",
+          "x-nullable": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "fieldType": {
+          "type": "string"
+        }
+      }
+    },
+    "ComponentsFieldPropertiesDto": {
+      "type": "object",
+      "required": ["fieldType"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0,
+          "x-nullable": true
+        },
+        "hints": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 0,
+          "x-nullable": true
+        },
+        "placeholder": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0,
+          "x-nullable": true
+        },
+        "isRequired": {
+          "type": "boolean"
+        },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
+        "editorUrl": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "tags": {
+          "type": "array",
+          "x-nullable": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "minItems": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
+        },
+        "maxItems": {
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
+        },
+        "schemaIds": {
+          "type": "array",
+          "x-nullable": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "fieldType": {
+          "type": "string"
+        }
+      }
+    },
+    "DateTimeFieldPropertiesDto": {
+      "type": "object",
+      "required": ["fieldType"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0,
+          "x-nullable": true
+        },
+        "hints": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 0,
+          "x-nullable": true
+        },
+        "placeholder": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 0,
+          "x-nullable": true
+        },
+        "isRequired": {
+          "type": "boolean"
+        },
+        "isRequiredOnPublish": {
+          "type": "boolean"
+        },
+        "isHalfWidth": {
+          "type": "boolean"
+        },
+        "editorUrl": {
+          "type": "string",
+          "x-nullable": true
+        },
+        "tags": {
+          "type": "array",
+          "x-nullable": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "defaultValues": {
+          "$ref": "#/definitions/LocalizedValueOfNullableInstant"
+        },
         "defaultValue": {
-          "type": ["null", "string"],
-          "format": "date-time"
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
         },
         "maxValue": {
-          "type": ["null", "string"],
-          "format": "date-time"
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
         },
         "minValue": {
-          "type": ["null", "string"],
-          "format": "date-time"
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
         },
-        "editor": {},
+        "editor": {
+          "$ref": "#/definitions/DateTimeFieldEditor"
+        },
         "calculatedDefaultValue": {
+          "x-nullable": true,
           "oneOf": [
             {
-              "type": "null"
-            },
-            {}
+              "$ref": "#/definitions/DateTimeCalculatedDefaultValue"
+            }
           ]
         },
         "fieldType": {
@@ -522,19 +735,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -546,15 +762,19 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "editor": {},
+        "editor": {
+          "$ref": "#/definitions/GeolocationFieldEditor"
+        },
         "fieldType": {
           "type": "string"
         }
@@ -571,19 +791,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -595,10 +818,12 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
@@ -613,19 +838,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -637,29 +865,37 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "defaultValues": {},
+        "defaultValues": {
+          "$ref": "#/definitions/LocalizedValueOfNullableDouble"
+        },
         "defaultValue": {
-          "type": ["null", "number"],
-          "format": "double"
+          "type": "number",
+          "format": "double",
+          "x-nullable": true
         },
         "maxValue": {
-          "type": ["null", "number"],
-          "format": "double"
+          "type": "number",
+          "format": "double",
+          "x-nullable": true
         },
         "minValue": {
-          "type": ["null", "number"],
-          "format": "double"
+          "type": "number",
+          "format": "double",
+          "x-nullable": true
         },
         "allowedValues": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "number",
             "format": "double"
@@ -671,7 +907,9 @@
         "inlineEditable": {
           "type": "boolean"
         },
-        "editor": {},
+        "editor": {
+          "$ref": "#/definitions/NumberFieldEditor"
+        },
         "fieldType": {
           "type": "string"
         }
@@ -692,19 +930,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -716,28 +957,35 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "defaultValues": {},
+        "defaultValues": {
+          "$ref": "#/definitions/LocalizedValueOfImmutableListOfString"
+        },
         "defaultValue": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
         "minItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "allowDuplicates": {
           "type": "boolean"
@@ -748,9 +996,12 @@
         "mustBePublished": {
           "type": "boolean"
         },
-        "editor": {},
+        "editor": {
+          "$ref": "#/definitions/ReferencesFieldEditor"
+        },
         "schemaIds": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
@@ -771,19 +1022,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -795,53 +1049,68 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "defaultValues": {},
+        "defaultValues": {
+          "$ref": "#/definitions/LocalizedValueOfString"
+        },
         "defaultValue": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "pattern": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "patternMessage": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "folderId": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "minLength": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxLength": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "minCharacters": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxCharacters": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "minWords": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxWords": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "allowedValues": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
@@ -852,8 +1121,12 @@
         "inlineEditable": {
           "type": "boolean"
         },
-        "contentType": {},
-        "editor": {},
+        "contentType": {
+          "$ref": "#/definitions/StringContentType"
+        },
+        "editor": {
+          "$ref": "#/definitions/StringFieldEditor"
+        },
         "fieldType": {
           "type": "string"
         }
@@ -902,19 +1175,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -926,36 +1202,46 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "defaultValues": {},
+        "defaultValues": {
+          "$ref": "#/definitions/LocalizedValueOfImmutableListOfString"
+        },
         "defaultValue": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
         "minItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "maxItems": {
-          "type": ["integer", "null"],
-          "format": "int32"
+          "type": "integer",
+          "format": "int32",
+          "x-nullable": true
         },
         "allowedValues": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "editor": {},
+        "editor": {
+          "$ref": "#/definitions/TagsFieldEditor"
+        },
         "fieldType": {
           "type": "string"
         }
@@ -972,19 +1258,22 @@
       "required": ["fieldType"],
       "properties": {
         "label": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "hints": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 1000,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "placeholder": {
-          "type": ["null", "string"],
+          "type": "string",
           "maxLength": 100,
-          "minLength": 0
+          "minLength": 0,
+          "x-nullable": true
         },
         "isRequired": {
           "type": "boolean"
@@ -996,15 +1285,19 @@
           "type": "boolean"
         },
         "editorUrl": {
-          "type": ["null", "string"]
+          "type": "string",
+          "x-nullable": true
         },
         "tags": {
-          "type": ["array", "null"],
+          "type": "array",
+          "x-nullable": true,
           "items": {
             "type": "string"
           }
         },
-        "editor": {},
+        "editor": {
+          "$ref": "#/definitions/UIFieldEditor"
+        },
         "fieldType": {
           "type": "string"
         }
@@ -1035,8 +1328,34 @@
         "isDisabled": {
           "type": "boolean"
         },
-        "properties": {}
+        "properties": {
+          "$ref": "#/definitions/FieldPropertiesDto"
+        }
       }
+    },
+    "FieldRuleDto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "field"],
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/FieldRuleAction"
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "condition": {
+          "type": "string",
+          "x-nullable": true
+        }
+      }
+    },
+    "FieldRuleAction": {
+      "type": "string",
+      "description": "",
+      "x-enumNames": ["Disable", "Hide", "Require"],
+      "enum": ["Disable", "Hide", "Require"]
     }
   }
 }

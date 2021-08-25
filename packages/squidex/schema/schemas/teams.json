@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "teams",
   "isSingleton": false,
-  "isPublished": false,
+  "schemaType": "Default",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -211,6 +211,7 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/network/teams/${id}"
     },
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
   }

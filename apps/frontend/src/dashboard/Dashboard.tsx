@@ -1,16 +1,12 @@
 import { FC, lazy } from 'react';
-import {
-  DashboardPage,
-  NotFoundPage,
-  Loading,
-} from '@asap-hub/react-components';
+import { DashboardPage, NotFoundPage } from '@asap-hub/react-components';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { usePrefetchTeams } from '@asap-hub/frontend/src/network/teams/state';
 import { CARD_VIEW_PAGE_SIZE } from '@asap-hub/frontend/src/hooks';
 import { usePrefetchCalendars } from '@asap-hub/frontend/src/events/calendar/state';
 import { usePrefetchResearchOutputsLegacy } from '@asap-hub/frontend/src/shared-research/state';
-import { useDashboard } from '../api';
 import Frame from '../structure/Frame';
+import { useDashboardState } from './state';
 
 const loadBody = () =>
   import(/* webpackChunkName: "dashboard-body" */ './Body');
@@ -24,7 +20,7 @@ const Dashboard: FC<Record<string, never>> = () => {
   }
 
   const { firstName, id, teams } = currentUser;
-  const { loading, data: dashboard } = useDashboard();
+  const dashboard = useDashboardState();
 
   usePrefetchTeams({
     currentPage: 0,
@@ -34,10 +30,6 @@ const Dashboard: FC<Record<string, never>> = () => {
   });
   usePrefetchCalendars();
   usePrefetchResearchOutputsLegacy();
-
-  if (loading) {
-    return <Loading />;
-  }
 
   if (dashboard) {
     return (

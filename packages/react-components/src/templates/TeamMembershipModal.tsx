@@ -41,7 +41,7 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   displayName = '',
   approach = '',
   responsibilities = '',
-  labs = [],
+  labs,
   onSave = noop,
   backHref,
 }) => {
@@ -72,7 +72,8 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
         <>
           <Paragraph accent="lead">
             Tell the network what role you play in your team and your main
-            research goals by completing this part of your profile.
+            research goals by completing this part of your profile. (Note: if
+            you need to change any locked fields, please contact ASAP)
           </Paragraph>
           <div css={fieldsContainer}>
             <div css={textFieldsContainerStyles}>
@@ -87,8 +88,13 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
                 value={role}
                 options={[{ label: role, value: role }]}
               />
-              {labs.map(({ name }) => (
-                <LabeledTextField title="Lab" value={name} enabled={false} />
+              {labs.map(({ name, id: labID }) => (
+                <LabeledTextField
+                  key={`lab${labID}`}
+                  title="Lab"
+                  value={name}
+                  enabled={false}
+                />
               ))}
             </div>
             <LabeledTextArea

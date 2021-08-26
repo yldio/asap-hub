@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "users",
   "isSingleton": false,
-  "isPublished": false,
+  "schemaType": "Default",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -1057,6 +1057,7 @@
     "previewUrls": {
       "Web": "https://hub.asap.science/network/users/${id}"
     },
+    "fieldRules": [],
     "category": "Storage",
     "isPublished": true
   }

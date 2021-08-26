@@ -2,7 +2,7 @@
   "$schema": "./../__json/schema.json",
   "name": "discover",
   "isSingleton": true,
-  "isPublished": false,
+  "schemaType": "Singleton",
   "schema": {
     "noFieldDeletion": false,
     "noFieldRecreation": false,
@@ -91,6 +91,7 @@
       }
     ],
     "previewUrls": {},
+    "fieldRules": [],
     "category": "Content",
     "isPublished": true
   }

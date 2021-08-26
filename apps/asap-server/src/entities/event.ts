@@ -9,6 +9,17 @@ import { parseGraphQLCalendar } from './calendar';
 import { parseDate, createURL } from '../utils/squidex';
 import { parseGraphQLGroup } from './group';
 
+export const getMeetingMaterial = <T>(
+  material: T,
+  isPermanentlyUnavailable: boolean,
+  isStale: boolean,
+  emptyState: T,
+): T | null => {
+  const isEmpty = !(Array.isArray(material) ? material.length : material);
+  if (isPermanentlyUnavailable || (isEmpty && isStale)) return null;
+  return isEmpty ? emptyState : material;
+};
+
 export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
   const calendar = parseGraphQLCalendar(item.flatData!.calendar![0]);
   const group =
@@ -42,42 +53,6 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     meetingMaterials,
   } = item.flatData!;
 
-  const getMeetingDetail = <O = undefined, T = string>(
-    isPermanentlyUnavailable: boolean | null | undefined,
-    detail: T | null,
-    emptyState: O,
-  ): T | O | null => {
-    if (isPermanentlyUnavailable || (!notes && isStale)) return null;
-    return detail ?? emptyState;
-  };
-
-  const materials =
-    meetingMaterials?.map(({ title, url }) => ({
-      title,
-      url,
-    })) || [];
-
-  const meetingMaterialsRes = getMeetingDetail(
-    meetingMaterialsPermanentlyUnavailable,
-    materials,
-    [],
-  );
-  const notesRes = getMeetingDetail(
-    notesPermanentlyUnavailable,
-    notes,
-    undefined,
-  );
-  const videoRecordingRes = getMeetingDetail(
-    videoRecordingPermanentlyUnavailable,
-    videoRecording,
-    undefined,
-  );
-  const presentationRes = getMeetingDetail(
-    presentationPermanentlyUnavailable,
-    presentation,
-    undefined,
-  );
-
   return {
     id: item.id,
     description: item.flatData?.description || '',
@@ -87,10 +62,30 @@ export const parseGraphQLEvent = (item: GraphqlEvent): EventResponse => {
     endDateTimeZone: item.flatData!.endDateTimeZone!,
     lastModifiedDate: parseDate(item.lastModified).toISOString(),
     title: item.flatData!.title!,
-    notes: notesRes,
-    videoRecording: videoRecordingRes,
-    presentation: presentationRes,
-    meetingMaterials: meetingMaterialsRes,
+    notes: getMeetingMaterial(
+      notes,
+      !!notesPermanentlyUnavailable,
+      isStale,
+      undefined,
+    ),
+    videoRecording: getMeetingMaterial(
+      videoRecording,
+      !!videoRecordingPermanentlyUnavailable,
+      isStale,
+      undefined,
+    ),
+    presentation: getMeetingMaterial(
+      presentation,
+      !!presentationPermanentlyUnavailable,
+      isStale,
+      undefined,
+    ),
+    meetingMaterials: getMeetingMaterial(
+      meetingMaterials ?? [],
+      !!meetingMaterialsPermanentlyUnavailable,
+      isStale,
+      [],
+    ),
     thumbnail,
     meetingLink,
     status: item.flatData!.status!,

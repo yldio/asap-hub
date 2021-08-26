@@ -1,26 +1,36 @@
+import { EventBridgeEvent } from 'aws-lambda';
 import Joi from '@hapi/joi';
+import { Auth } from 'googleapis';
+import * as Sentry from '@sentry/serverless';
 import { framework as lambda } from '@asap-hub/services-common';
 import { WebhookPayload, Calendar } from '@asap-hub/squidex';
-import { Auth } from 'googleapis';
 
-import { googleApiUrl, asapApiUrl, googleApiToken } from '../../../config';
-import { http } from '../../../utils/instrumented-framework';
-import { Handler } from '../../../utils/types';
-import validateRequest from '../../../utils/validate-squidex-request';
-import { CalendarController } from '../../../controllers/calendars';
-import { GetJWTCredentials } from '../../../utils/aws-secret-manager';
-import logger from '../../../utils/logger';
-import { Alerts } from '../../../utils/alerts';
+import {
+  googleApiUrl,
+  asapApiUrl,
+  googleApiToken,
+  sentryDsn,
+  currentRevision,
+  environment,
+} from '../../config';
+import Calendars, { CalendarController } from '../../controllers/calendars';
+import getJWTCredentialsAWS, {
+  GetJWTCredentials,
+} from '../../utils/aws-secret-manager';
+import logger from '../../utils/logger';
+import { Alerts, AlertsSentry } from '../../utils/alerts';
+import { CalendarEventType } from '../webhooks/webhook-calendar';
 
-export const calendarCreatedHandlerFactory = (
-  subscribe: SubscribeToEventChanges,
-  unsubscribe: UnsubscribeFromEventChanges,
-  calendarController: CalendarController,
-  alerts: Alerts,
-): Handler =>
-  http(async (request: lambda.Request): Promise<lambda.Response> => {
-    validateRequest(request);
-
+export const calendarCreatedHandlerFactory =
+  (
+    subscribe: SubscribeToEventChanges,
+    unsubscribe: UnsubscribeFromEventChanges,
+    calendarController: CalendarController,
+    alerts: Alerts,
+  ) =>
+  async (
+    event: EventBridgeEvent<CalendarEventType, WebhookPayload<Calendar>>,
+  ): Promise<'OK'> => {
     const bodySchema = Joi.object({
       type: Joi.string().required(),
       payload: Joi.object({
@@ -34,26 +44,23 @@ export const calendarCreatedHandlerFactory = (
       .unknown()
       .required();
 
-    const { payload, type: event } = lambda.validate(
+    const { type: eventType, payload } = lambda.validate(
       'body',
-      request.payload,
+      event.detail,
       bodySchema,
-    ) as WebhookPayload<Calendar>;
-
-    logger.info(
-      `Received a '${event}' event for the calendar ${payload.data.id.iv}`,
     );
 
-    if (event === 'CalendarsUpdated') {
+    logger.info(
+      `Received a '${eventType}' event for the calendar ${payload.id}`,
+    );
+
+    if (eventType === 'CalendarsUpdated') {
       if (
         !payload.dataOld ||
         !payload.dataOld.id ||
         payload.dataOld.id.iv === payload.data.id.iv
       ) {
-        return {
-          statusCode: 200,
-          payload: payload.data.id,
-        };
+        return 'OK';
       }
 
       if (payload.dataOld.resourceId) {
@@ -71,15 +78,10 @@ export const calendarCreatedHandlerFactory = (
     }
 
     if (payload.data.id.iv === '') {
-      return {
-        statusCode: 200,
-        payload: {
-          message: 'Subscription skipped due to missing Calendar ID',
-        },
-      };
+      return 'OK';
     }
 
-    if (['CalendarsCreated', 'CalendarsUpdated'].includes(event)) {
+    if (['CalendarsCreated', 'CalendarsUpdated'].includes(eventType)) {
       try {
         const { resourceId, expiration } = await subscribe(
           payload.data.id.iv,
@@ -94,22 +96,14 @@ export const calendarCreatedHandlerFactory = (
         logger.error(error, 'Error subscribing to the calendar');
         alerts.error(error);
 
-        return {
-          statusCode: 502,
-          payload: {
-            message: error.message,
-          },
-        };
+        throw error;
       }
 
-      return {
-        statusCode: 200,
-        payload: payload.data.id,
-      };
+      return 'OK';
     }
 
-    return { statusCode: 204 };
-  }, logger);
+    return 'OK';
+  };
 
 export const subscribeToEventChangesFactory =
   (getJWTCredentials: GetJWTCredentials) =>
@@ -182,6 +176,31 @@ export const unsubscribeFromEventChangesFactory =
     logger.debug({ response }, 'Google API unsubscribing response');
   };
 
+Sentry.AWSLambda.init({
+  dsn: sentryDsn,
+  tracesSampleRate: 1.0,
+  environment,
+  release: currentRevision,
+});
+
+const webhookHandler = calendarCreatedHandlerFactory(
+  subscribeToEventChangesFactory(getJWTCredentialsAWS),
+  unsubscribeFromEventChangesFactory(getJWTCredentialsAWS),
+  new Calendars(),
+  new AlertsSentry(Sentry.captureException.bind(Sentry)),
+);
+
+export const handler = Sentry.AWSLambda.wrapHandler(webhookHandler);
+
 export type UnsubscribeFromEventChanges = ReturnType<
   typeof unsubscribeFromEventChangesFactory
 >;
+
+export type SquidexWebhookCalendarPayload = {
+  type: 'CalendarsCreated' | 'CalendarsUpdated';
+  payload: {
+    $type: 'EnrichedContentEvent';
+    type: 'Created' | 'Updated';
+    id: string;
+  };
+};

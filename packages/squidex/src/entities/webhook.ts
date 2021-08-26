@@ -7,6 +7,7 @@ export interface WebhookPayload<T> {
     Rest<T> & {
       type: string;
       $type: string;
+      data: Rest<T>['data'];
       dataOld?: Rest<T>['data'];
       [key: string]: string | number | unknown;
     };

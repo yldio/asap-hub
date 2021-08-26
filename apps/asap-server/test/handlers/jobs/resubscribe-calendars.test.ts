@@ -1,14 +1,14 @@
 import { Settings } from 'luxon';
-import { resubscribeCalendarsHandlerFactory } from '../../../src/handlers/jobs/resubscribe-calendars';
+import { resubscribeCalendarsHandlerFactory } from '../../../src/handlers/calendar/resubscribe-handler';
 import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import {
   calendarRaw,
-  calendarResponse,
+  getCalendarResponse,
 } from '../../fixtures/calendars.fixtures';
 import {
   UnsubscribeFromEventChanges,
   SubscribeToEventChanges,
-} from '../../../src/handlers/webhooks/calendar-created/calendar-created';
+} from '../../../src/handlers/calendar/subscribe-handler';
 import {
   createEventBridgeScheduledEventMock,
   createHandlerContext,
@@ -173,7 +173,7 @@ describe('Resubscribe calendar handler', () => {
           throw new Error();
         }
 
-        return calendarResponse;
+        return getCalendarResponse();
       },
     );
 

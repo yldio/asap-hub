@@ -12,7 +12,15 @@
     },
     "scripts": {},
     "fieldsInReferences": ["name", "orcid"],
-    "fieldsInLists": ["name", "orcid"],
+    "fieldsInLists": [
+      "meta.status.color",
+      "name",
+      "orcid",
+      "meta.created",
+      "meta.createdBy.avatar",
+      "meta.lastModified",
+      "meta.lastModifiedBy.avatar"
+    ],
     "fields": [
       {
         "name": "name",
@@ -23,7 +31,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -41,7 +49,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Orcid",

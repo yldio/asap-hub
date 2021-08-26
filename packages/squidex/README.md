@@ -8,7 +8,7 @@ We use [squidex-cli](https://github.com/Squidex/squidex-samples/releases) to int
 To configure an app on the cli use:
 
 ```
-$ sq config add asap-hub asap-hub-dev:default ASAP_HUB_CLIENT_SECRET -l asap-hub-dev
+$ sq config add asap-hub-dev asap-hub-dev:default ASAP_HUB_CLIENT_SECRET -l asap-hub-dev
 $ sq config use asap-hub-dev
 ```
 

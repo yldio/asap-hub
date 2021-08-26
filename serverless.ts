@@ -226,14 +226,17 @@ const serverlessConfig: AWS = {
         },
       ],
     },
-    calendarCreated: {
+    subscribeCalendar: {
       handler:
-        'apps/asap-server/src/handlers/webhooks/calendar-created/handler.handler',
+        'apps/asap-server/src/handlers/calendar/subscribe-handler.handler',
       events: [
         {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/calendar',
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.calendar'],
+              'detail-type': ['CalendarCreated', 'CalendarUpdated'],
+            },
           },
         },
       ],
@@ -247,30 +250,9 @@ const serverlessConfig: AWS = {
         SENTRY_DSN: '${env:SENTRY_DSN_CALENDAR}',
       },
     },
-    eventsUpdated: {
-      timeout: 300,
-      handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-events-updated.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/events',
-          },
-        },
-      ],
-      environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
-      },
-    },
     resubscribeCalendars: {
       handler:
-        'apps/asap-server/src/handlers/jobs/resubscribe-calendars.handler',
+        'apps/asap-server/src/handlers/calendar/resubscribe-handler.handler',
       timeout: 120,
       events: [
         {
@@ -286,47 +268,6 @@ const serverlessConfig: AWS = {
         GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }}`,
-      },
-    },
-    runMigrations: {
-      handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.run',
-      timeout: 900,
-    },
-    rollbackMigrations: {
-      handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
-      timeout: 900,
-    },
-    userCreated: {
-      handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/users',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.user',
-      },
-    },
-    researchOutputUpserted: {
-      handler:
-        'apps/asap-server/src/handlers/webhooks/webhook-research-output.handler',
-      events: [
-        {
-          httpApi: {
-            method: 'POST',
-            path: '/webhook/research-outputs',
-          },
-        },
-      ],
-      environment: {
-        EVENT_BUS: 'asap-events-${self:provider.stage}',
-        EVENT_SOURCE: 'asap.research-output',
       },
     },
     inviteUser: {
@@ -372,6 +313,85 @@ const serverlessConfig: AWS = {
         }}`,
       },
     },
+    eventsUpdated: {
+      timeout: 300,
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-events-updated.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/events',
+          },
+        },
+      ],
+      environment: {
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
+      },
+    },
+    runMigrations: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.run',
+      timeout: 900,
+    },
+    rollbackMigrations: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-run-migrations.rollback',
+      timeout: 900,
+    },
+    calendarUpserted: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-calendar.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/calendars',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.calendar',
+      },
+    },
+    userCreated: {
+      handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/users',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.user',
+      },
+    },
+    researchOutputUpserted: {
+      handler:
+        'apps/asap-server/src/handlers/webhooks/webhook-research-output.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/research-outputs',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.research-output',
+      },
+    },
+
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

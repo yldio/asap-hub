@@ -37,7 +37,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                 lastModified: '2020-12-11T15:06:26Z',
                 flatData: {
                   color: '#B1365F',
-                  id: 'hub@asap.science',
+                  googleCalendarId: 'hub@asap.science',
                   name: 'ASAP Hub',
                 },
               },
@@ -209,7 +209,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                 lastModified: '2020-12-11T15:06:26Z',
                 flatData: {
                   color: '#B1365F',
-                  id: 'hub@asap.science',
+                  googleCalendarId: 'hub@asap.science',
                   name: 'ASAP Hub',
                 },
               },

@@ -63,7 +63,7 @@
         }
       },
       {
-        "name": "id",
+        "name": "googleCalendarId",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,

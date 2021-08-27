@@ -263,7 +263,7 @@ const getCalendarsResponse: Results<RestCalendar> = {
     {
       id: 'cms-calendar-id-1',
       data: {
-        id: { iv: 'calendar-id-1' },
+        googleCalendarId: { iv: 'calendar-id-1' },
         color: { iv: '#5C1158' },
         name: { iv: 'Kubernetes Meetups' },
         resourceId: { iv: 'resource-id' },
@@ -276,7 +276,7 @@ const getCalendarsResponse: Results<RestCalendar> = {
     {
       id: 'cms-calendar-id-2',
       data: {
-        id: { iv: 'calendar-id-2' },
+        googleCalendarId: { iv: 'calendar-id-2' },
         color: { iv: '#B1365F' },
         name: { iv: 'Service Mesh Conferences' },
         resourceId: { iv: 'resource-id-2' },

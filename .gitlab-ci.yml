@@ -162,6 +162,7 @@ deploy:squidex:branch:
     - export MOST_RECENT_BACKUP=$(aws s3api list-objects-v2 --bucket "asap-hub-dev-data-backup" --query 'sort_by(Contents, &LastModified)[-1].Key' --output=text)
     - aws s3api get-object --bucket "asap-hub-dev-data-backup" --key $MOST_RECENT_BACKUP  $MOST_RECENT_BACKUP
     - tar -xf $MOST_RECENT_BACKUP
+    - source ci/env-setup.sh
     - ./ci/config-squidex-rules.sh ./backup/rules
     - ./ci/import-squidex-data.sh
 

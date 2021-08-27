@@ -55,7 +55,7 @@ const getRestCalendar = (): Rest<Calendar> => ({
     name: {
       iv: 'Tech 3 - Structural Biology',
     },
-    id: {
+    googleCalendarId: {
       iv: 'c_v8ma9lsbsjf90rk30ougr54iig@group.calendar.google.com',
     },
     color: {

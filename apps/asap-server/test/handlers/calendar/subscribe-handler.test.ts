@@ -58,7 +58,7 @@ describe('Calendar Webhook', () => {
 
       expect(res).toBe('OK');
       expect(subscribe).toHaveBeenCalledWith(
-        getCalendarCreateEvent().payload.data.id.iv,
+        getCalendarCreateEvent().payload.data.googleCalendarId.iv,
         getCalendarCreateEvent().payload.id,
       );
       expect(calendarControllerMock.update).toHaveBeenCalledWith(
@@ -82,7 +82,7 @@ describe('Calendar Webhook', () => {
 
     test('Should unsubscribe and skip the subscription if the calendar ID was set to an empty string', async () => {
       const calendarUpdateEvent = getCalendarUpdateEvent();
-      calendarUpdateEvent.payload.data.id.iv = '';
+      calendarUpdateEvent.payload.data.googleCalendarId.iv = '';
 
       const res = await handler(
         getEvent('CalendarUpdated', calendarUpdateEvent),
@@ -97,9 +97,9 @@ describe('Calendar Webhook', () => {
   describe('Calendar Update trigger', () => {
     test('Should skip subscription and unsubscribing and return 200 if the calendar ID did not change', async () => {
       const calendarUpdateEvent = getCalendarUpdateEvent();
-      calendarUpdateEvent.payload.dataOld!.id.iv = 'calendar-id';
-      calendarUpdateEvent.payload.data.id.iv =
-        calendarUpdateEvent.payload.dataOld!.id.iv;
+      calendarUpdateEvent.payload.dataOld!.googleCalendarId.iv = 'calendar-id';
+      calendarUpdateEvent.payload.data.googleCalendarId.iv =
+        calendarUpdateEvent.payload.dataOld!.googleCalendarId.iv;
 
       const res = await handler(
         getEvent('CalendarUpdated', calendarUpdateEvent),

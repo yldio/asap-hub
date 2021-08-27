@@ -49,7 +49,7 @@ export const webhookEventUpdatedHandlerFactory = (
     }
 
     const squidexCalendarId = calendar.id;
-    const googleCalendarId = calendar.data.id.iv;
+    const googleCalendarId = calendar.data.googleCalendarId.iv;
     const syncToken = calendar.data.syncToken?.iv;
 
     const credentials = await getJWTCredentials().catch((err) => {

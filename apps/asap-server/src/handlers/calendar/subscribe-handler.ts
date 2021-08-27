@@ -57,8 +57,8 @@ export const calendarCreatedHandlerFactory =
     if (eventType === 'CalendarsUpdated') {
       if (
         !payload.dataOld ||
-        !payload.dataOld.id ||
-        payload.dataOld.id.iv === payload.data.id.iv
+        !payload.dataOld.googleCalendarId ||
+        payload.dataOld.googleCalendarId.iv === payload.data.googleCalendarId.iv
       ) {
         return 'OK';
       }
@@ -77,14 +77,14 @@ export const calendarCreatedHandlerFactory =
       }
     }
 
-    if (payload.data.id.iv === '') {
+    if (payload.data.googleCalendarId.iv === '') {
       return 'OK';
     }
 
     if (['CalendarsCreated', 'CalendarsUpdated'].includes(eventType)) {
       try {
         const { resourceId, expiration } = await subscribe(
-          payload.data.id.iv,
+          payload.data.googleCalendarId.iv,
           payload.id,
         );
 

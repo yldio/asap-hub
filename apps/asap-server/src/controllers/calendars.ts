@@ -57,7 +57,7 @@ export default class Calendars implements CalendarController {
     return calendars.map(
       (restCalendar): CalendarRaw => ({
         id: restCalendar.id,
-        googleCalendarId: restCalendar.data.id.iv,
+        googleCalendarId: restCalendar.data.googleCalendarId.iv,
         color: restCalendar.data.color.iv,
         name: restCalendar.data.name.iv,
         expirationDate: restCalendar.data.expirationDate?.iv,
@@ -128,5 +128,5 @@ export interface CalendarController {
 }
 
 export type CalendarRaw = Calendar & {
-  googleCalendarId: string;
+  id: string;
 };

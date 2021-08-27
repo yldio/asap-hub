@@ -3,7 +3,7 @@ import { Rest, Entity, Graphql } from './common';
 import { GraphqlGroup } from './group';
 
 export interface Calendar {
-  id: string;
+  googleCalendarId: string;
   color: GoogleLegacyCalendarColor;
   name: string;
   syncToken?: string;

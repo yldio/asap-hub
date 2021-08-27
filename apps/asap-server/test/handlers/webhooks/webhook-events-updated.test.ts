@@ -20,7 +20,7 @@ const updateCalendarResponse: CalendarResponse = {
 const fetchCalendarRawResponse: RestCalendar = {
   id: squidexCalendarId,
   data: {
-    id: { iv: googleCalendarId },
+    googleCalendarId: { iv: googleCalendarId },
     color: { iv: '#5C1158' as GoogleLegacyCalendarColor },
     name: { iv: 'Kubernetes Meetups' },
     syncToken: { iv: 'google-sync-token' },

@@ -2,7 +2,7 @@ import { Settings } from 'luxon';
 import { resubscribeCalendarsHandlerFactory } from '../../../src/handlers/calendar/resubscribe-handler';
 import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
 import {
-  calendarRaw,
+  getCalendarRaw,
   getCalendarResponse,
 } from '../../fixtures/calendars.fixtures';
 import {
@@ -57,9 +57,9 @@ describe('Resubscribe calendar handler', () => {
   });
 
   test('Should get the list of calendars, unsubscribe each and subscribe again', async () => {
-    const calendarRaw1 = calendarRaw;
+    const calendarRaw1 = getCalendarRaw();
     const calendarRaw2 = {
-      ...calendarRaw,
+      ...getCalendarRaw(),
       id: 'uuid2',
       resourceId: 'resource-id-2',
     };
@@ -94,9 +94,9 @@ describe('Resubscribe calendar handler', () => {
   });
 
   test('Should resubscribe all calendars even if one of them fails to subscribe', async () => {
-    const calendarRaw1 = calendarRaw;
+    const calendarRaw1 = getCalendarRaw();
     const calendarRaw2 = {
-      ...calendarRaw,
+      ...getCalendarRaw(),
       id: 'uuid2',
       resourceId: 'resource-id-2',
     };
@@ -125,7 +125,7 @@ describe('Resubscribe calendar handler', () => {
   });
 
   test('Should remove the resourceId after unsubscribing and update it again along with expiration after successfully subscribing', async () => {
-    calendarControllerMock.fetchRaw.mockResolvedValueOnce([calendarRaw]);
+    calendarControllerMock.fetchRaw.mockResolvedValueOnce([getCalendarRaw()]);
     const resourceId = 'some-resource-id';
     const expiration = 123456;
     subscribeMock.mockResolvedValueOnce({ resourceId, expiration });
@@ -133,18 +133,24 @@ describe('Resubscribe calendar handler', () => {
     await invokeHandler();
 
     expect(unsubscribeMock).toHaveBeenCalled();
-    expect(calendarControllerMock.update).toHaveBeenCalledWith(calendarRaw.id, {
-      resourceId: null,
-    });
+    expect(calendarControllerMock.update).toHaveBeenCalledWith(
+      getCalendarRaw().id,
+      {
+        resourceId: null,
+      },
+    );
     expect(subscribeMock).toHaveBeenCalled();
-    expect(calendarControllerMock.update).toHaveBeenCalledWith(calendarRaw.id, {
-      resourceId,
-      expirationDate: expiration,
-    });
+    expect(calendarControllerMock.update).toHaveBeenCalledWith(
+      getCalendarRaw().id,
+      {
+        resourceId,
+        expirationDate: expiration,
+      },
+    );
   });
 
   test('Should continue to subscribe even after unsubscribing fails', async () => {
-    calendarControllerMock.fetchRaw.mockResolvedValueOnce([calendarRaw]);
+    calendarControllerMock.fetchRaw.mockResolvedValueOnce([getCalendarRaw()]);
     unsubscribeMock.mockRejectedValueOnce(new Error());
     const resourceId = 'some-resource-id';
     const expiration = 123456;
@@ -153,20 +159,23 @@ describe('Resubscribe calendar handler', () => {
     await invokeHandler();
 
     expect(calendarControllerMock.update).not.toHaveBeenCalledWith(
-      calendarRaw.id,
+      getCalendarRaw().id,
       {
         resourceId: null,
       },
     );
     expect(subscribeMock).toHaveBeenCalled();
-    expect(calendarControllerMock.update).toHaveBeenCalledWith(calendarRaw.id, {
-      resourceId,
-      expirationDate: expiration,
-    });
+    expect(calendarControllerMock.update).toHaveBeenCalledWith(
+      getCalendarRaw().id,
+      {
+        resourceId,
+        expirationDate: expiration,
+      },
+    );
   });
 
   test('Should continue to subscribe even after nullifying resourceId fails', async () => {
-    calendarControllerMock.fetchRaw.mockResolvedValueOnce([calendarRaw]);
+    calendarControllerMock.fetchRaw.mockResolvedValueOnce([getCalendarRaw()]);
     calendarControllerMock.update.mockImplementation(
       async (_calendarId, data) => {
         if ('resourceId' in data && data.resourceId === null) {
@@ -184,15 +193,18 @@ describe('Resubscribe calendar handler', () => {
     await invokeHandler();
 
     expect(subscribeMock).toHaveBeenCalled();
-    expect(calendarControllerMock.update).toHaveBeenCalledWith(calendarRaw.id, {
-      resourceId,
-      expirationDate: expiration,
-    });
+    expect(calendarControllerMock.update).toHaveBeenCalledWith(
+      getCalendarRaw().id,
+      {
+        resourceId,
+        expirationDate: expiration,
+      },
+    );
   });
 
   test('Should skip unsubscribing if resourceId is not present', async () => {
     const calendarWithNoResource = {
-      ...calendarRaw,
+      ...getCalendarRaw(),
       resourceId: null,
     };
     calendarControllerMock.fetchRaw.mockResolvedValueOnce([
@@ -206,9 +218,12 @@ describe('Resubscribe calendar handler', () => {
 
     expect(unsubscribeMock).not.toHaveBeenCalled();
     expect(subscribeMock).toHaveBeenCalled();
-    expect(calendarControllerMock.update).toHaveBeenCalledWith(calendarRaw.id, {
-      resourceId,
-      expirationDate: expiration,
-    });
+    expect(calendarControllerMock.update).toHaveBeenCalledWith(
+      getCalendarRaw().id,
+      {
+        resourceId,
+        expirationDate: expiration,
+      },
+    );
   });
 });

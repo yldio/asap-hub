@@ -1,7 +1,17 @@
 import nock from 'nock';
-import Calendars from '../../src/controllers/calendars';
+import { config } from '@asap-hub/squidex';
+import { notFound } from '@hapi/boom';
+import Calendars, {
+  buildGraphQLQueryFetchCalendar,
+} from '../../src/controllers/calendars';
 import { identity } from '../helpers/squidex';
-import { config, Results, RestCalendar } from '@asap-hub/squidex';
+import {
+  getCalendarRaw,
+  getCalendarResponse,
+  getCalendarsGraphqlResponse,
+  getCalendarsRestResponse,
+  getRestCalendar,
+} from '../fixtures/calendars.fixtures';
 
 describe('Calendars controller', () => {
   const calendars = new Calendars();
@@ -12,6 +22,10 @@ describe('Calendars controller', () => {
 
   afterEach(() => {
     expect(nock.isDone()).toBe(true);
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   describe('Fetch method', () => {
@@ -42,7 +56,7 @@ describe('Calendars controller', () => {
             sort: [{ path: 'data.name.iv', order: 'ascending' }],
           }),
         })
-        .reply(200, getCalendarsResponse);
+        .reply(200, getCalendarsRestResponse());
 
       const result = await calendars.fetch({ take: 20, skip: 10 });
 
@@ -99,7 +113,7 @@ describe('Calendars controller', () => {
             },
           }),
         })
-        .reply(200, getCalendarsResponse);
+        .reply(200, getCalendarsRestResponse());
 
       const result = await calendars.fetchRaw({
         take: 50,
@@ -127,6 +141,61 @@ describe('Calendars controller', () => {
           expirationDate: 1614697621081,
         },
       ]);
+    });
+  });
+
+  describe('FetchById method', () => {
+    test('Should throw an error when the calendar is not found', async () => {
+      const calendarId = 'not-found';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchCalendar(),
+          variables: {
+            id: calendarId,
+          },
+        })
+        .reply(200, {
+          data: {
+            findCalendarsContent: null,
+          },
+        });
+
+      await expect(calendars.fetchById(calendarId)).rejects.toThrow(notFound());
+    });
+
+    test('Should return the calendar response', async () => {
+      const calendarId = 'calendar-id-1';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchCalendar(),
+          variables: {
+            id: calendarId,
+          },
+        })
+        .reply(200, getCalendarsGraphqlResponse());
+
+      const result = await calendars.fetchById(calendarId);
+
+      expect(result).toEqual(getCalendarResponse());
+    });
+
+    test('Should return the calendar raw response', async () => {
+      const calendarId = 'calendar-id-1';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchCalendar(),
+          variables: {
+            id: calendarId,
+          },
+        })
+        .reply(200, getCalendarsGraphqlResponse());
+
+      const result = await calendars.fetchById(calendarId, { raw: true });
+
+      expect(result).toEqual(getCalendarRaw());
     });
   });
 
@@ -203,19 +272,20 @@ describe('Calendars controller', () => {
     test('Should return the calendars', async () => {
       const syncToken = 'google-sync-token';
       const calendarId = 'calendar-id';
+      const restCalendar = getRestCalendar();
 
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/calendars/${calendarId}`, {
           syncToken: { iv: syncToken },
         })
-        .reply(200, updateCalendarResponse);
+        .reply(200, restCalendar);
 
       const result = await calendars.update(calendarId, { syncToken });
 
       expect(result).toEqual({
-        id: 'calendar-id-1',
-        color: '#5C1158',
-        name: 'Kubernetes Meetups',
+        id: restCalendar.data.googleCalendarId.iv,
+        color: restCalendar.data.color.iv,
+        name: restCalendar.data.name.iv,
       });
     });
   });
@@ -233,58 +303,15 @@ describe('Calendars controller', () => {
 
     test('Should return the syncToken', async () => {
       const calendarId = 'calendar-id';
+      const restCalendar = getRestCalendar();
 
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/calendars/${calendarId}`)
-        .reply(200, updateCalendarResponse);
+        .reply(200, restCalendar);
 
       const result = await calendars.getSyncToken(calendarId);
 
-      expect(result).toEqual('google-sync-token');
+      expect(result).toEqual(restCalendar.data.syncToken!.iv);
     });
   });
 });
-
-const updateCalendarResponse = {
-  id: 'cms-calendar-id-1',
-  data: {
-    id: { iv: 'calendar-id-1' },
-    color: { iv: '#5C1158' },
-    name: { iv: 'Kubernetes Meetups' },
-    syncToken: { iv: 'google-sync-token' },
-  },
-  created: '2021-01-07T16:44:09Z',
-  lastModified: '2021-01-07T16:44:09Z',
-};
-
-const getCalendarsResponse: Results<RestCalendar> = {
-  total: 2,
-  items: [
-    {
-      id: 'cms-calendar-id-1',
-      data: {
-        googleCalendarId: { iv: 'calendar-id-1' },
-        color: { iv: '#5C1158' },
-        name: { iv: 'Kubernetes Meetups' },
-        resourceId: { iv: 'resource-id' },
-        syncToken: { iv: 'sync-token' },
-        expirationDate: { iv: 1614697798681 },
-      },
-      created: '2021-01-07T16:44:09Z',
-      lastModified: '2021-01-07T16:44:09Z',
-    },
-    {
-      id: 'cms-calendar-id-2',
-      data: {
-        googleCalendarId: { iv: 'calendar-id-2' },
-        color: { iv: '#B1365F' },
-        name: { iv: 'Service Mesh Conferences' },
-        resourceId: { iv: 'resource-id-2' },
-        syncToken: { iv: 'sync-token-2' },
-        expirationDate: { iv: 1614697621081 },
-      },
-      created: '2021-01-07T16:44:09Z',
-      lastModified: '2021-01-07T16:44:09Z',
-    },
-  ],
-};

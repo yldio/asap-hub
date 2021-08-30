@@ -150,11 +150,13 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             </Link>
           </div>
         )}
-        <div css={labCountStyles}>
-          <span css={iconStyles}>{labIcon} </span>
-          {labCount} Lab
-          {labCount === 1 ? '' : 's'}
-        </div>
+        {labCount > 0 && (
+          <div css={labCountStyles}>
+            <span css={iconStyles}>{labIcon} </span>
+            {labCount} Lab
+            {labCount === 1 ? '' : 's'}
+          </div>
+        )}
         {lastModifiedDate && (
           <div css={updateContainerStyles}>
             <Paragraph accent="lead">

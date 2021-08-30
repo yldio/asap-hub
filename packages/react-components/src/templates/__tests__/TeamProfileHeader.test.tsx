@@ -102,6 +102,14 @@ it('renders a lab count for a single lab using singular form', () => {
   expect(container).toHaveTextContent(/1 Lab(?!s)/);
 });
 
+it('does not display labs when 0 labs are avaialble', () => {
+  const { container } = render(
+    <TeamProfileHeader {...boilerplateProps} labCount={0} />,
+  );
+
+  expect(container).not.toHaveTextContent(/Lab/);
+});
+
 it('renders tabs', () => {
   const { getAllByRole } = render(<TeamProfileHeader {...boilerplateProps} />);
   expect(getAllByRole('link').map(({ textContent }) => textContent)).toEqual([

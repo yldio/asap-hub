@@ -3,6 +3,7 @@ import { Calendar, WebhookPayload } from '@asap-hub/squidex';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../config';
 import { http } from '../../utils/instrumented-framework';
+import logger from '../../utils/logger';
 import { Handler } from '../../utils/types';
 import validateRequest from '../../utils/validate-squidex-request';
 
@@ -16,6 +17,8 @@ export const calendarWebhookFactory = (eventBridge: EventBridge): Handler =>
       const type = getEventType(request.payload.type);
 
       if (!type) {
+        logger.debug(`Event type "${request.payload.type}" not supported`);
+
         return {
           statusCode: 204,
         };
@@ -43,7 +46,10 @@ export const calendarWebhookFactory = (eventBridge: EventBridge): Handler =>
 export type CalendarEventType = 'CalendarCreated' | 'CalendarUpdated';
 
 const getEventType = (customType: string): CalendarEventType | undefined => {
-  if (customType === 'CalendarsPublished') {
+  if (
+    customType === 'CalendarsPublished' ||
+    customType === 'CalendarsCreated'
+  ) {
     return 'CalendarCreated';
   }
 

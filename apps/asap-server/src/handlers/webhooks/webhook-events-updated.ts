@@ -24,6 +24,8 @@ export const webhookEventUpdatedHandlerFactory = (
   syncCalendarFactory: SyncCalendarFactory,
 ): Handler =>
   http(async (request: lambda.Request): Promise<lambda.Response> => {
+    logger.debug(JSON.stringify(request, null, 2), 'Request');
+
     const channelToken = request.headers['x-goog-channel-token'];
     if (!channelToken) {
       throw Boom.unauthorized('Missing x-goog-channel-token header');

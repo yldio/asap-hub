@@ -85,7 +85,7 @@ const labCountStyles = css({
 });
 const iconStyles = css({
   display: 'inline-grid',
-  paddingRight: `${15 / perRem}em`,
+  paddingRight: `${12 / perRem}em`,
 });
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {

@@ -1,11 +1,9 @@
 import { TeamProfileOutputs } from '@asap-hub/react-components';
-import { TeamProfileOutputsProps } from '@asap-hub/react-components/build/templates/TeamProfileOutputs';
-import { Component, ComponentProps } from 'react';
+import { ResearchOutputResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
 import { network } from '@asap-hub/routing';
-import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { usePagination, usePaginationParams } from '../../hooks';
 import { useResearchOutputs } from '../../shared-research/state';
-import { ResearchOutputResponse } from '@asap-hub/model';
 
 type OutputsProps = {
   searchQuery: string;

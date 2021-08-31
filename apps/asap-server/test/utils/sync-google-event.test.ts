@@ -1,8 +1,7 @@
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { syncEventFactory } from '../../src/utils/sync-google-event';
 import { eventControllerMock } from '../mocks/event-controller.mock';
-import { restEvent } from '../fixtures/events.fixtures';
-import { RestEvent } from '@asap-hub/squidex';
+import { getRestEvent } from '../fixtures/events.fixtures';
 
 describe('Sync calendar util hook', () => {
   const calendarId = 'squidex-calendar-id';
@@ -35,8 +34,8 @@ describe('Sync calendar util hook', () => {
   });
 
   test('Should update event when it exists', async () => {
-    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(restEvent);
-    await syncEvent(googleEvent, defaultCalendarTimezone);
+    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(getRestEvent());
+    await syncEvent(event, defaultCalendarTimezone);
 
     expect(eventControllerMock.create).not.toHaveBeenCalled();
     expect(eventControllerMock.update).toHaveBeenCalledTimes(1);
@@ -54,6 +53,16 @@ describe('Sync calendar util hook', () => {
         hidden: false,
       },
     );
+  });
+
+  test('Should not update the event if it belongs to a different calendar', async () => {
+    const existingEvent = getRestEvent();
+    existingEvent.data.calendar.iv![0] = 'some-other-calendar-id';
+    eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
+    await syncEvent(event, defaultCalendarTimezone);
+
+    expect(eventControllerMock.create).not.toHaveBeenCalled();
+    expect(eventControllerMock.update).not.toHaveBeenCalled();
   });
 
   describe('Hidden flag', () => {
@@ -84,13 +93,8 @@ describe('Sync calendar util hook', () => {
     });
 
     test('Should update to hidden when the event status changes to cancelled', async () => {
-      const existingEvent: RestEvent = {
-        ...restEvent,
-        data: {
-          ...restEvent.data,
-          status: { iv: 'Confirmed' },
-        },
-      };
+      const existingEvent = getRestEvent();
+      existingEvent.data.status.iv = 'Confirmed';
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
@@ -117,16 +121,9 @@ describe('Sync calendar util hook', () => {
     });
 
     test('Should remain hidden when the event status remains cancelled', async () => {
-      const existingEvent: RestEvent = {
-        ...restEvent,
-        data: {
-          ...restEvent.data,
-          status: { iv: 'Cancelled' },
-          hidden: {
-            iv: true,
-          },
-        },
-      };
+      const existingEvent = getRestEvent();
+      existingEvent.data.status.iv = 'Cancelled';
+      existingEvent.data.hidden!.iv = true;
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
@@ -153,16 +150,9 @@ describe('Sync calendar util hook', () => {
     });
 
     test('Should remain visible (ie not hidden) when the event status remains cancelled', async () => {
-      const existingEvent: RestEvent = {
-        ...restEvent,
-        data: {
-          ...restEvent.data,
-          status: { iv: 'Cancelled' },
-          hidden: {
-            iv: false,
-          },
-        },
-      };
+      const existingEvent = getRestEvent();
+      existingEvent.data.status.iv = 'Cancelled';
+      existingEvent.data.hidden!.iv = false;
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
@@ -189,13 +179,8 @@ describe('Sync calendar util hook', () => {
     });
 
     test('Should remain visible (ie not hidden) when the event hidden flag is missing', async () => {
-      const existingEvent: RestEvent = {
-        ...restEvent,
-        data: {
-          ...restEvent.data,
-          status: { iv: 'Cancelled' },
-        },
-      };
+      const existingEvent = getRestEvent();
+      existingEvent.data.status.iv = 'Cancelled';
       delete existingEvent.data.hidden;
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
@@ -223,16 +208,9 @@ describe('Sync calendar util hook', () => {
     });
 
     test('Should remain hidden when the status changes from confirmed to tentative', async () => {
-      const existingEvent: RestEvent = {
-        ...restEvent,
-        data: {
-          ...restEvent.data,
-          status: { iv: 'Confirmed' },
-          hidden: {
-            iv: true,
-          },
-        },
-      };
+      const existingEvent = getRestEvent();
+      existingEvent.data.status.iv = 'Confirmed';
+      existingEvent.data.hidden!.iv = true;
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
@@ -270,7 +248,7 @@ describe('Sync calendar util hook', () => {
     });
 
     test('update', async () => {
-      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(restEvent);
+      eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(getRestEvent());
       eventControllerMock.update.mockRejectedValueOnce(new Error('Squidex'));
       await expect(
         syncEvent(googleEvent, defaultCalendarTimezone),

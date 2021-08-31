@@ -16,7 +16,7 @@ import {
   graphqlEvent,
   findEventResponse,
   eventResponse,
-  restEvent,
+  getRestEvent,
 } from '../fixtures/events.fixtures';
 import { queryGroupsResponse } from '../fixtures/groups.fixtures';
 
@@ -880,7 +880,7 @@ describe('Event controller', () => {
           tags: { iv: [] },
           hidden: { iv: false },
         })
-        .reply(200, restEvent);
+        .reply(200, getRestEvent());
 
       await events.create(eventData);
     });
@@ -907,10 +907,10 @@ describe('Event controller', () => {
           tags: { iv: ['kubernetes'] },
           meetingLink: { iv: 'https://zweem.com' },
         })
-        .reply(200, restEvent);
+        .reply(200, getRestEvent());
 
       const result = await events.update(eventId, eventData);
-      expect(result).toStrictEqual(restEvent);
+      expect(result).toStrictEqual(getRestEvent());
     });
 
     test('Should throw when squidex return an error', async () => {
@@ -958,10 +958,10 @@ describe('Event controller', () => {
           $top: 1,
           $filter: filter,
         })
-        .reply(200, { total: 1, items: [restEvent] });
+        .reply(200, { total: 1, items: [getRestEvent()] });
 
       const result = await events.fetchByGoogleId(googleId);
-      expect(result).toEqual(restEvent);
+      expect(result).toEqual(getRestEvent());
     });
   });
 });

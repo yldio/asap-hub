@@ -73,6 +73,16 @@ export const syncEventFactory = (
 
       if (existingEvent) {
         if (
+          existingEvent?.data.calendar.iv &&
+          existingEvent?.data.calendar.iv[0] !== calendarId
+        ) {
+          logger.debug(
+            { existingEvent, newEvent },
+            'Found event with a different parent, skipping.',
+          );
+          return existingEvent;
+        }
+        if (
           newEvent.status === 'Cancelled' &&
           existingEvent.data.status.iv !== 'Cancelled'
         ) {

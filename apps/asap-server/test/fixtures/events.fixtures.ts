@@ -224,7 +224,7 @@ export const findEventResponse: { data: ResponseFetchEvent } = {
   },
 };
 
-export const restEvent: RestEvent = {
+export const getRestEvent = (): RestEvent => ({
   id: 'squidex-event-id',
   created: '2021-02-23T19:32:00Z',
   lastModified: '2021-02-23T19:32:00Z',
@@ -242,4 +242,4 @@ export const restEvent: RestEvent = {
     meetingLink: { iv: 'https://meetings.com' },
     hidden: { iv: false },
   },
-};
+});

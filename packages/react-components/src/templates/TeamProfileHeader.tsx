@@ -9,6 +9,7 @@ import { contentSidePaddingWithNavigation } from '../layout';
 import { createMailTo } from '../mail';
 import { perRem, mobileScreen } from '../pixels';
 import { paper } from '../colors';
+import { labIcon } from '../icons';
 
 const MAX_MEMBER_AVATARS = 5;
 const MEMBER_AVATAR_BORDER_WIDTH = 1;
@@ -77,6 +78,15 @@ const listItemStyles = css({
   borderRadius: '50%',
   position: 'relative',
 });
+const labCountStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  padding: `${12 / perRem}em 0`,
+});
+const iconStyles = css({
+  display: 'inline-grid',
+  paddingRight: `${12 / perRem}em`,
+});
 
 type TeamProfileHeaderProps = Readonly<Omit<TeamResponse, 'tools'>> & {
   readonly tools?: ReadonlyArray<TeamTool>;
@@ -90,6 +100,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
   pointOfContact,
   tools,
   teamListElementId,
+  labCount,
 }) => {
   const route = network({}).teams({}).team({ teamId: id });
   return (
@@ -137,6 +148,13 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
             >
               Contact PM
             </Link>
+          </div>
+        )}
+        {labCount > 0 && (
+          <div css={labCountStyles}>
+            <span css={iconStyles}>{labIcon} </span>
+            {labCount} Lab
+            {labCount === 1 ? '' : 's'}
           </div>
         )}
         {lastModifiedDate && (

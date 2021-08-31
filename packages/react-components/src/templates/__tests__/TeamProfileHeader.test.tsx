@@ -14,6 +14,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   outputs: [],
   lastModifiedDate: formatISO(new Date()),
   teamListElementId: '',
+  labCount: 15,
 };
 
 it('renders the name as the top-level heading', () => {
@@ -83,6 +84,30 @@ it('renders a contact button when there is a pointOfContact', () => {
     'href',
     'mailto:test@test.com',
   );
+});
+
+it('renders a lab count for multiple labs', () => {
+  const { container } = render(
+    <TeamProfileHeader {...boilerplateProps} labCount={23} />,
+  );
+
+  expect(container).toHaveTextContent(/23 Labs/);
+});
+
+it('renders a lab count for a single lab using singular form', () => {
+  const { container } = render(
+    <TeamProfileHeader {...boilerplateProps} labCount={1} />,
+  );
+
+  expect(container).toHaveTextContent(/1 Lab(?!s)/);
+});
+
+it('does not display labs when 0 labs are avaialble', () => {
+  const { container } = render(
+    <TeamProfileHeader {...boilerplateProps} labCount={0} />,
+  );
+
+  expect(container).not.toHaveTextContent(/Lab/);
 });
 
 it('renders tabs', () => {

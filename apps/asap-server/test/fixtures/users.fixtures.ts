@@ -120,82 +120,84 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
   },
 };
 
-export const getGraphQlResponseFetchUser = (): { data: ResponseFetchUser } => ({
-  data: {
-    findUsersContent: {
-      id: 'userId',
-      created: '2020-09-25T09:42:51Z',
-      lastModified: '2020-09-25T09:42:51Z',
-      data: null,
-      flatData: {
-        onboarded: true,
-        degree: 'MPH',
-        email: 'cristiano@ronaldo.com',
-        contactEmail: 'cristiano@ronaldo.com',
-        firstName: 'Cristiano',
-        lastName: 'Ronaldo',
-        lastModifiedDate: '2020-09-25T09:42:51.132Z',
-        jobTitle: 'Junior',
-        orcid: '363-98-9330',
-        institution: 'Dollar General Corporation',
-        country: 'United Kingdom',
-        city: 'Brighton',
-        avatar: [{ id: 'squidex-asset-id' }],
-        questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
-        skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
-        teams: [
+export const getGraphQLUser = (): GraphqlUser => ({
+  id: 'userId',
+  created: '2020-09-25T09:42:51Z',
+  lastModified: '2020-09-25T09:42:51Z',
+  data: null,
+  flatData: {
+    onboarded: true,
+    degree: 'MPH',
+    email: 'cristiano@ronaldo.com',
+    contactEmail: 'cristiano@ronaldo.com',
+    firstName: 'Cristiano',
+    lastName: 'Ronaldo',
+    lastModifiedDate: '2020-09-25T09:42:51.132Z',
+    jobTitle: 'Junior',
+    orcid: '363-98-9330',
+    institution: 'Dollar General Corporation',
+    country: 'United Kingdom',
+    city: 'Brighton',
+    avatar: [{ id: 'squidex-asset-id' }],
+    questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
+    skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
+    teams: [
+      {
+        role: 'Lead PI (Core Leadership)',
+        approach: 'Exact',
+        responsibilities: 'Make sure coverage is high',
+        id: [
           {
-            role: 'Lead PI (Core Leadership)',
-            approach: 'Exact',
-            responsibilities: 'Make sure coverage is high',
-            id: [
-              {
-                id: 'team-id-1',
-                created: '2020-09-23T20:45:22Z',
-                lastModified: '2020-10-26T15:33:18Z',
-                data: null,
-                flatData: {
-                  applicationNumber: 'applicationNumber',
-                  projectTitle: 'Awesome project',
-                  displayName: 'Jackson, M',
-                  proposal: [{ id: 'proposal-id-1' }],
-                  skills: [],
-                  outputs: [],
-                },
-              },
-            ],
+            id: 'team-id-1',
+            created: '2020-09-23T20:45:22Z',
+            lastModified: '2020-10-26T15:33:18Z',
+            data: null,
+            flatData: {
+              applicationNumber: 'applicationNumber',
+              projectTitle: 'Awesome project',
+              displayName: 'Jackson, M',
+              proposal: [{ id: 'proposal-id-1' }],
+              skills: [],
+              outputs: [],
+            },
           },
-          {
-            role: 'Collaborating PI',
-            approach: null,
-            responsibilities: null,
-            id: [
-              {
-                id: 'team-id-3',
-                created: '2020-09-23T20:45:22Z',
-                lastModified: '2020-10-26T15:33:18Z',
-                data: null,
-                flatData: {
-                  applicationNumber: 'applicationNumber',
-                  projectTitle: 'Another Awesome project',
-                  displayName: 'Tarantino, M',
-                  proposal: [{ id: 'proposal-id-2' }],
-                  skills: [],
-                  outputs: [],
-                },
-              },
-            ],
-          },
-        ],
-        role: 'Grantee',
-        biography: 'Biography',
-        connections: [],
-        labs: [
-          { id: 'cd7be4904', flatData: { name: 'Manchester' } },
-          { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
         ],
       },
-    },
+      {
+        role: 'Collaborating PI',
+        approach: null,
+        responsibilities: null,
+        id: [
+          {
+            id: 'team-id-3',
+            created: '2020-09-23T20:45:22Z',
+            lastModified: '2020-10-26T15:33:18Z',
+            data: null,
+            flatData: {
+              applicationNumber: 'applicationNumber',
+              projectTitle: 'Another Awesome project',
+              displayName: 'Tarantino, M',
+              proposal: [{ id: 'proposal-id-2' }],
+              skills: [],
+              outputs: [],
+            },
+          },
+        ],
+      },
+    ],
+    role: 'Grantee',
+    biography: 'Biography',
+    connections: [],
+    labs: [
+      { id: 'cd7be4904', flatData: { name: 'Manchester' } },
+      { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
+    ],
+  },
+});
+
+export const getGraphQlResponseFetchUser = (): { data: ResponseFetchUser } => ({
+  data: {
+    findUsersContent: getGraphQLUser(),
   },
 });
 

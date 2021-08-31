@@ -43,6 +43,7 @@ export interface TeamResponse
   pointOfContact?: TeamMember;
   tools?: TeamTool[];
   outputs: ResearchOutputResponse[];
+  labCount: number;
 }
 
 export type ListTeamResponse = ListResponse<TeamResponse>;

@@ -1,5 +1,6 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
+import { TeamTool } from '@asap-hub/model';
 import {
   graphQlTeamsResponseSingle,
   getListTeamResponse,
@@ -16,7 +17,7 @@ import Teams, {
   buildGraphQLQueryFetchTeam,
 } from '../../src/controllers/teams';
 import { identity } from '../helpers/squidex';
-import { TeamTool } from '@asap-hub/model';
+import { getGraphQLUser } from '../fixtures/users.fixtures';
 
 describe('Team controller', () => {
   const teams = new Teams();
@@ -262,7 +263,11 @@ describe('Team controller', () => {
         });
 
       const result = await teams.fetchById(teamId);
-      expect(result).toEqual({ ...fetchTeamByIdExpectation, members: [] });
+      expect(result).toEqual({
+        ...fetchTeamByIdExpectation,
+        members: [],
+        labCount: 0,
+      });
     });
 
     test('Should return the team even when team members do not exist', async () => {
@@ -288,7 +293,11 @@ describe('Team controller', () => {
 
       const result = await teams.fetchById(teamId);
 
-      expect(result).toEqual({ ...fetchTeamByIdExpectation, members: [] });
+      expect(result).toEqual({
+        ...fetchTeamByIdExpectation,
+        members: [],
+        labCount: 0,
+      });
     });
 
     test('Should return the result when the team exists', async () => {
@@ -445,6 +454,61 @@ describe('Team controller', () => {
 
         expect(result.tools).toBeUndefined();
       });
+    });
+
+    test('Should return the lab count', async () => {
+      const teamId = 'team-id-1';
+      const teamResponse = getGraphQlTeamResponse();
+      // create a user with labs
+      const graphqlUser1 = getGraphQLUser();
+      graphqlUser1.flatData!.labs = [
+        {
+          id: 'lab-id-1',
+          flatData: {
+            name: 'lab name',
+          },
+        },
+        {
+          id: 'lab-id-2',
+          flatData: {
+            name: 'lab name',
+          },
+        },
+      ];
+      // create another user with labs one of which is a duplicate of the first user's lab
+      const graphqlUser2 = getGraphQLUser();
+      graphqlUser2.flatData!.labs = [
+        {
+          id: 'lab-id-2',
+          flatData: {
+            name: 'lab name',
+          },
+        },
+        {
+          id: 'lab-id-3',
+          flatData: {
+            name: 'lab name',
+          },
+        },
+      ];
+
+      teamResponse.data.findTeamsContent.referencingUsersContents = [
+        graphqlUser1,
+        graphqlUser2,
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchTeam(),
+          variables: {
+            id: teamId,
+          },
+        })
+        .reply(200, teamResponse);
+
+      const result = await teams.fetchById(teamId);
+
+      expect(result.labCount).toEqual(3);
     });
 
     describe('Avatar', () => {

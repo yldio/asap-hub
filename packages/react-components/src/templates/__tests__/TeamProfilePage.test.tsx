@@ -15,6 +15,7 @@ const boilerplateProps: Omit<
   skills: [],
   outputs: [],
   teamListElementId: '',
+  labCount: 15,
 };
 
 it('renders the header', () => {

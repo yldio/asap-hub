@@ -12,7 +12,22 @@
     },
     "scripts": {},
     "fieldsInReferences": ["displayName"],
-    "fieldsInLists": ["displayName"],
+    "fieldsInLists": [
+      "meta.status.color",
+      "displayName",
+      "applicationNumber",
+      "proposal",
+      "outputs",
+      "projectTitle",
+      "projectSummary",
+      "skills",
+      "tools",
+      "meta.id",
+      "meta.created",
+      "meta.createdBy.avatar",
+      "meta.lastModified",
+      "meta.lastModifiedBy.avatar"
+    ],
     "fields": [
       {
         "name": "displayName",
@@ -23,7 +38,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Display Name",
@@ -41,7 +56,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Application Number",
@@ -75,7 +90,7 @@
           "fieldType": "References",
           "maxItems": 1,
           "allowDuplicates": false,
-          "resolveReference": false,
+          "resolveReference": true,
           "mustBePublished": false,
           "editor": "Dropdown",
           "schemaIds": ["research-outputs"],
@@ -94,7 +109,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Title",
@@ -112,7 +127,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Project Summary",
@@ -162,7 +177,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Name",
@@ -179,7 +194,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Description",
@@ -196,7 +211,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "URL",

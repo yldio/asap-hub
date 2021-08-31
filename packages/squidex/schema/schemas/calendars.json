@@ -12,7 +12,20 @@
     },
     "scripts": {},
     "fieldsInReferences": ["name"],
-    "fieldsInLists": [],
+    "fieldsInLists": [
+      "meta.status.color",
+      "name",
+      "id",
+      "color",
+      "syncToken",
+      "resourceId",
+      "expirationDate",
+      "meta.id",
+      "meta.created",
+      "meta.createdBy.avatar",
+      "meta.lastModified",
+      "meta.lastModifiedBy.avatar"
+    ],
     "fields": [
       {
         "name": "calendarData",
@@ -40,7 +53,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Name",
@@ -60,7 +73,7 @@
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "minLength": 8,
           "isUnique": true,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Google Calendar ID",
@@ -123,7 +136,7 @@
             "#333333"
           ],
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Color",

@@ -12,7 +12,40 @@
     },
     "scripts": {},
     "fieldsInReferences": ["firstName", "lastName", "orcid"],
-    "fieldsInLists": ["firstName", "lastName", "orcid"],
+    "fieldsInLists": [
+      "meta.status.color",
+      "avatar",
+      "firstName",
+      "lastName",
+      "orcid",
+      "email",
+      "onboarded",
+      "connections",
+      "adminNotes",
+      "meta.id",
+      "role",
+      "labs",
+      "teams",
+      "degree",
+      "country",
+      "city",
+      "institution",
+      "jobTitle",
+      "skillsDescription",
+      "skills",
+      "questions",
+      "biography",
+      "social",
+      "contactEmail",
+      "orcidWorks",
+      "orcidLastSyncDate",
+      "responsibilities",
+      "reachOut",
+      "meta.created",
+      "meta.createdBy.avatar",
+      "meta.lastModified",
+      "meta.lastModifiedBy.avatar"
+    ],
     "fields": [
       {
         "name": "separatorBasicData",
@@ -40,7 +73,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "First Name",
@@ -60,7 +93,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Last Name",
@@ -81,7 +114,7 @@
           "fieldType": "String",
           "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`'{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
           "isUnique": true,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Email",
@@ -99,7 +132,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": true,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID",
@@ -184,7 +217,7 @@
                 "Key Personnel"
               ],
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Dropdown",
               "label": "Role",
@@ -202,7 +235,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Main Research Interests",
@@ -219,7 +252,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Responsibilities",
@@ -269,7 +302,7 @@
             "MBA"
           ],
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "Degree",
@@ -289,7 +322,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Country",
@@ -307,7 +340,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "City",
@@ -325,7 +358,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Job Title",
@@ -345,7 +378,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Institution",
@@ -365,7 +398,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Correspondence Email",
@@ -384,12 +417,12 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Assets",
-          "previewMode": "ImageAndFileName",
+          "previewMode": "Image",
           "minItems": 0,
           "maxItems": 1,
           "mustBeImage": true,
-          "resolveFirst": false,
-          "resolveImage": false,
+          "resolveFirst": true,
+          "resolveImage": true,
           "allowDuplicates": false,
           "label": "Avatar",
           "hints": "",
@@ -422,7 +455,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Website 1",
@@ -439,7 +472,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Website 2",
@@ -456,7 +489,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "LinkedIn",
@@ -473,7 +506,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Researcher ID",
@@ -490,7 +523,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Twitter",
@@ -507,7 +540,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Github",
@@ -524,7 +557,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Google Scholar",
@@ -541,7 +574,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Research Gate",
@@ -578,7 +611,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Expertise and Resources Description",
@@ -628,7 +661,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Question",
@@ -798,7 +831,7 @@
           "defaultValue": "Grantee",
           "allowedValues": ["Staff", "Grantee", "Guest", "Hidden"],
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Dropdown",
           "label": "ASAP Hub Role",
@@ -818,7 +851,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID Last Sync Date",
@@ -838,7 +871,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "ORCID Last Modified Date",
@@ -912,7 +945,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "DOI",
@@ -931,7 +964,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Title",
@@ -950,7 +983,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Type",
@@ -969,7 +1002,7 @@
             "properties": {
               "fieldType": "String",
               "isUnique": false,
-              "inlineEditable": false,
+              "inlineEditable": true,
               "contentType": "Unspecified",
               "editor": "Input",
               "label": "Last Modified Date",
@@ -1023,7 +1056,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Reach Out",
@@ -1043,7 +1076,7 @@
         "properties": {
           "fieldType": "String",
           "isUnique": false,
-          "inlineEditable": false,
+          "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
           "label": "Responsibilities",

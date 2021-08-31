@@ -7,8 +7,8 @@ import SharedResearchList from '../SharedResearchList';
 
 const props: Omit<ComponentProps<typeof SharedResearchList>, 'children'> = {
   researchOutputs: createListResearchOutputResponse(2).items,
-  listViewParams: '',
-  cardViewParams: '',
+  listViewHref: '',
+  cardViewHref: '',
   numberOfItems: 2,
   numberOfPages: 1,
   currentPageIndex: 0,

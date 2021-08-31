@@ -1,3 +1,4 @@
+import { emptyString } from 'react-select/src/utils';
 import { isEnabled } from '@asap-hub/flags';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
@@ -14,24 +15,24 @@ export type TeamProfileOutputsProps = {
   outputs: ReadonlyArray<
     ComponentProps<typeof SharedResearchCard> & { id: string }
   >;
-  numberOfPages: number;
-  currentPage: number;
-  isListView: boolean;
-  cardViewHref: string;
-  listViewHref: string;
-  renderPageHref: (page: number) => string;
-  numberOfItems: number;
+  numberOfPages?: number;
+  currentPage?: number;
+  isListView?: boolean;
+  cardViewHref?: string;
+  listViewHref?: string;
+  renderPageHref?: (page: number) => string;
+  numberOfItems?: number;
 };
 
 const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({
   outputs,
-  numberOfPages,
-  currentPage,
-  isListView,
-  cardViewHref,
-  listViewHref,
-  renderPageHref,
-  numberOfItems,
+  numberOfPages = 0,
+  currentPage = 0,
+  isListView = false,
+  cardViewHref = '',
+  listViewHref = '',
+  renderPageHref = emptyString,
+  numberOfItems = 0,
 }) => {
   return (
     <div css={containerStyles}>

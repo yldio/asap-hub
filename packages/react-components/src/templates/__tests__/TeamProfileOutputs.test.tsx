@@ -1,9 +1,11 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
+import { disable } from '@asap-hub/flags';
 import { render } from '@testing-library/react';
 
 import TeamProfileOutputs from '../TeamProfileOutputs';
 
 it('renders a coming soon text', () => {
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getByText } = render(<TeamProfileOutputs outputs={[]} />);
 
   expect(getByText(/more\sto\scome/i)).toBeVisible();
@@ -11,6 +13,7 @@ it('renders a coming soon text', () => {
 });
 
 it('renders output cards', () => {
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getAllByRole } = render(
     <TeamProfileOutputs
       outputs={[

@@ -1,4 +1,3 @@
-import { sharedResearch } from '@asap-hub/routing';
 import { ComponentProps } from 'react';
 
 import {
@@ -14,21 +13,15 @@ type SharedResearchListProps = Omit<
   readonly researchOutputs: ReadonlyArray<
     ComponentProps<typeof SharedResearchCard> & { id: string }
   >;
-  readonly listViewParams: string;
-  readonly cardViewParams: string;
+  readonly listViewHref: string;
+  readonly cardViewHref: string;
 };
 
 const SharedResearchList: React.FC<SharedResearchListProps> = ({
   researchOutputs,
-  listViewParams,
-  cardViewParams,
   ...cardListProps
 }) => (
-  <ResultList
-    {...cardListProps}
-    listViewHref={sharedResearch({}).$ + listViewParams}
-    cardViewHref={sharedResearch({}).$ + cardViewParams}
-  >
+  <ResultList {...cardListProps}>
     {cardListProps.isListView ? (
       <SharedResearchListCard researchOutputs={researchOutputs} />
     ) : (

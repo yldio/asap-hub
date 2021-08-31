@@ -1,4 +1,5 @@
 import { SharedResearchList } from '@asap-hub/react-components';
+import { sharedResearch } from '@asap-hub/routing';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
@@ -33,8 +34,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       isListView={isListView}
-      cardViewParams={cardViewParams}
-      listViewParams={listViewParams}
+      cardViewParams={sharedResearch({}).$ + cardViewParams}
+      listViewParams={sharedResearch({}).$ + listViewParams}
     />
   );
 };

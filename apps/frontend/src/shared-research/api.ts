@@ -52,7 +52,14 @@ export const getResearchOutputs = (
           options.filters.has(key) ? [filter, ...acc] : acc,
         [],
       )
-      .join(' OR '),
+      .join(' OR ')
+      .concat(
+        options.teamId
+          ? `${options.filters.size > 0 ? ' AND ' : ''}team.id:"${
+              options.teamId
+            }"`
+          : '',
+      ),
   }).catch((error: Error) => {
     throw new Error(`Could not search: ${error.message}`);
   });

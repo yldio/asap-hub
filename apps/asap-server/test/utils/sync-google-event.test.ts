@@ -51,7 +51,6 @@ describe('Sync calendar util hook', () => {
         endDate: '2021-02-28T00:00:00.000Z',
         endDateTimeZone: 'Europe/Lisbon',
         status: 'Confirmed',
-        calendar: ['squidex-calendar-id'],
         hidden: false,
       },
     );
@@ -112,7 +111,6 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
-          calendar: ['squidex-calendar-id'],
           hidden: true,
         },
       );
@@ -149,7 +147,6 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
-          calendar: ['squidex-calendar-id'],
           hidden: true,
         },
       );
@@ -186,7 +183,6 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
-          calendar: ['squidex-calendar-id'],
           hidden: false,
         },
       );
@@ -221,7 +217,6 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
-          calendar: ['squidex-calendar-id'],
           hidden: false,
         },
       );
@@ -258,7 +253,6 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Tentative',
-          calendar: ['squidex-calendar-id'],
           hidden: true,
         },
       );

@@ -1,4 +1,3 @@
-import { emptyString } from 'react-select/src/utils';
 import { isEnabled } from '@asap-hub/flags';
 import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
@@ -31,7 +30,7 @@ const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({
   isListView = false,
   cardViewHref = '',
   listViewHref = '',
-  renderPageHref = emptyString,
+  renderPageHref = () => '',
   numberOfItems = 0,
 }) => {
   return (

@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import React, { ComponentProps } from 'react';
 import { ComingSoon, SharedResearchCard } from '../organisms';
 import { perRem } from '../pixels';
-import { SharedResearchList } from '.';
 
 const containerStyles = css({
   display: 'grid',
@@ -25,32 +24,15 @@ export type TeamProfileOutputsProps = {
 
 const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({
   outputs,
-  numberOfPages = 0,
-  currentPage = 0,
-  isListView = false,
-  cardViewHref = '',
-  listViewHref = '',
-  renderPageHref = () => '',
-  numberOfItems = 0,
+  children,
 }) => {
   return (
     <div css={containerStyles}>
-      {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') ? (
-        <SharedResearchList
-          researchOutputs={outputs}
-          numberOfItems={numberOfItems}
-          numberOfPages={numberOfPages}
-          currentPageIndex={currentPage}
-          renderPageHref={renderPageHref}
-          isListView={isListView}
-          cardViewHref={cardViewHref}
-          listViewHref={listViewHref}
-        />
-      ) : (
-        outputs.map((output) => (
-          <SharedResearchCard {...output} key={output.id} />
-        ))
-      )}
+      {isEnabled('ALGOLIA_RESEARCH_OUTPUTS')
+        ? children
+        : outputs.map((output) => (
+            <SharedResearchCard {...output} key={output.id} />
+          ))}
       <ComingSoon>
         As teams create and share more research outputs - such as datasets,
         protocols, code and other resources - they will be listed here. As

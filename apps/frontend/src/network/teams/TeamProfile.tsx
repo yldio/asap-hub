@@ -1,18 +1,12 @@
 import { useEffect, FC, lazy, useState } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import {
-  TeamProfilePage,
-  NotFoundPage,
-  TeamProfileOutputsHeader,
-} from '@asap-hub/react-components';
+import { TeamProfilePage, NotFoundPage } from '@asap-hub/react-components';
 
 import { network, useRouteParams } from '@asap-hub/routing';
-import { isEnabled } from '@asap-hub/flags';
 import { v4 as uuid } from 'uuid';
 
 import { useTeamById } from './state';
-import Frame, { SearchFrame } from '../../structure/Frame';
-import { useSearch } from '../../hooks';
+import Frame from '../../structure/Frame';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -31,13 +25,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
 
   const { path } = useRouteMatch();
   const { teamId } = useRouteParams(route);
-  const {
-    filters,
-    searchQuery,
-    toggleFilter,
-    setSearchQuery,
-    debouncedSearchQuery,
-  } = useSearch();
+
   const team = useTeamById(teamId);
   useEffect(() => {
     loadAbout()
@@ -55,22 +43,7 @@ const TeamProfile: FC<Record<string, never>> = () => {
               </Frame>
             </Route>
             <Route path={path + route({ teamId }).outputs.template}>
-              {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && (
-                <TeamProfileOutputsHeader
-                  setSearchQuery={setSearchQuery}
-                  searchQuery={searchQuery}
-                  onChangeFilter={toggleFilter}
-                  filters={filters}
-                />
-              )}
-              <SearchFrame title="Outputs">
-                <Outputs
-                  teamId={teamId}
-                  searchQuery={debouncedSearchQuery}
-                  filters={filters}
-                  teamOutputs={team.outputs}
-                />
-              </SearchFrame>
+              <Outputs teamId={teamId} teamOutputs={team.outputs} />
             </Route>
             {team.tools && (
               <Route path={path + route({ teamId }).workspace.template}>

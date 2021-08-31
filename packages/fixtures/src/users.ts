@@ -1,5 +1,7 @@
 import { ListUserResponse, UserTeam, UserResponse } from '@asap-hub/model';
 
+import { createLabs } from './labs';
+
 const listUserResponseTeam: Omit<UserTeam, 'id'> = {
   displayName: 'Jakobsson, J',
   role: 'Project Manager',
@@ -32,14 +34,12 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
     researcherId: '',
     twitter: '',
   },
-  labs: [
-    { id: 'cd7be4902', name: 'Brighton' },
-    { id: 'cd7be4903', name: 'Liverpool' },
-  ],
+  labs: [],
 };
 
 type FixtureOptions = {
   teams?: number;
+  labs?: number;
 };
 
 export const createUserTeams = ({
@@ -47,7 +47,7 @@ export const createUserTeams = ({
 }: {
   teams?: number;
 }): UserTeam[] =>
-  Array.from({ length: teams }, (__, teamIndex) => ({
+  Array.from({ length: teams }, (_, teamIndex) => ({
     ...listUserResponseTeam,
     id: `t${teamIndex}`,
   }));
@@ -60,6 +60,7 @@ export const createUserResponse = (
   id: `u${itemIndex}`,
   displayName: `${listUserResponseItem.displayName} ${itemIndex + 1}`,
   teams: createUserTeams(options),
+  labs: createLabs(options),
 });
 
 export const createListUserResponse = (

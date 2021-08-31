@@ -7,6 +7,7 @@ import { createUserResponse } from '@asap-hub/fixtures';
 import TeamMembershipModal from '../TeamMembershipModal';
 
 const props: ComponentProps<typeof TeamMembershipModal> = {
+  ...createUserResponse(),
   ...createUserResponse().teams[0],
   backHref: '/wrong',
 };
@@ -20,20 +21,28 @@ it('renders the title', () => {
 });
 
 it('renders default values into text inputs', () => {
-  const { getByLabelText, getByText } = render(
-    <TeamMembershipModal
-      {...props}
-      approach="approach"
-      responsibilities="responsibilities"
-      role="Collaborating PI"
-      displayName="Team Name"
-    />,
-    { wrapper: StaticRouter },
-  );
+  const { getByLabelText, getAllByLabelText, getByDisplayValue, getByText } =
+    render(
+      <TeamMembershipModal
+        {...props}
+        approach="approach"
+        responsibilities="responsibilities"
+        role="Collaborating PI"
+        displayName="Team Name"
+        labs={[
+          { name: 'Lab 1', id: '1' },
+          { name: 'Lab 2', id: '2' },
+        ]}
+      />,
+      { wrapper: StaticRouter },
+    );
   expect(getByLabelText(/team/i)).toHaveValue('Team Name');
   expect(getByText('Collaborating PI')).toBeVisible();
   expect(getByLabelText(/main.+interests/i)).toHaveValue('approach');
   expect(getByLabelText(/responsibilities/i)).toHaveValue('responsibilities');
+  expect(getAllByLabelText(/lab/i)).toHaveLength(2);
+  expect(getByDisplayValue('Lab 1')).toBeVisible();
+  expect(getByDisplayValue('Lab 2')).toBeVisible();
 });
 
 it('triggers the save function', async () => {

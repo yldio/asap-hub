@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserTeam, UserPatchRequest } from '@asap-hub/model';
+import { UserTeam, UserPatchRequest, UserResponse } from '@asap-hub/model';
 import { css } from '@emotion/react';
 
 import {
@@ -29,10 +29,11 @@ const textFieldsContainerStyles = css({
 type TeamMembershipModalProps = Pick<
   UserTeam,
   'approach' | 'responsibilities' | 'id' | 'proposal' | 'role' | 'displayName'
-> & {
-  onSave?: (data: UserPatchRequest) => Promise<void>;
-  backHref: string;
-};
+> &
+  Pick<UserResponse, 'labs'> & {
+    onSave?: (data: UserPatchRequest) => Promise<void>;
+    backHref: string;
+  };
 
 const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   id,
@@ -40,6 +41,7 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   displayName = '',
   approach = '',
   responsibilities = '',
+  labs,
   onSave = noop,
   backHref,
 }) => {
@@ -70,7 +72,8 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
         <>
           <Paragraph accent="lead">
             Tell the network what role you play in your team and your main
-            research goals by completing this part of your profile.
+            research goals by completing this part of your profile. (Note: if
+            you need to change any locked fields, please contact ASAP)
           </Paragraph>
           <div css={fieldsContainer}>
             <div css={textFieldsContainerStyles}>
@@ -85,6 +88,14 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
                 value={role}
                 options={[{ label: role, value: role }]}
               />
+              {labs.map(({ name, id: labID }) => (
+                <LabeledTextField
+                  key={`lab${labID}`}
+                  title="Lab"
+                  value={name}
+                  enabled={false}
+                />
+              ))}
             </div>
             <LabeledTextArea
               required

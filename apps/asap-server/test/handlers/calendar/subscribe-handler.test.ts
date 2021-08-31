@@ -46,6 +46,17 @@ describe('Calendar Webhook', () => {
         /is required/,
       );
     });
+
+    test('Should skip any actions and return status OK for an unknown event type', async () => {
+      const event = getEvent();
+      event.detail.type = 'some-other-type';
+
+      const res = await handler(event);
+
+      expect(res).toBe('OK');
+      expect(subscribe).not.toHaveBeenCalled();
+      expect(calendarControllerMock.update).not.toHaveBeenCalled();
+    });
   });
 
   describe('Create and Update events', () => {

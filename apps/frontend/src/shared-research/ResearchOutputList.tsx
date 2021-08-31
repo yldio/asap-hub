@@ -34,8 +34,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       isListView={isListView}
-      cardViewParams={sharedResearch({}).$ + cardViewParams}
-      listViewParams={sharedResearch({}).$ + listViewParams}
+      cardViewHref={sharedResearch({}).$ + cardViewParams}
+      listViewHref={sharedResearch({}).$ + listViewParams}
     />
   );
 };

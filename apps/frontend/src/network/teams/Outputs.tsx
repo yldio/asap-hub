@@ -20,18 +20,13 @@ const Outputs: React.FC<OutputsProps> = ({
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
-  const result = isEnabled('ALGOLIA_RESEARCH_OUTPUTS')
-    ? useResearchOutputs({
-        searchQuery,
-        filters,
-        currentPage,
-        pageSize,
-        teamId,
-      })
-    : {
-        items: teamOutputs,
-        total: teamOutputs.length,
-      };
+  const result = useResearchOutputs({
+    searchQuery,
+    filters,
+    currentPage,
+    pageSize,
+    teamId,
+  });
 
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
@@ -39,13 +34,19 @@ const Outputs: React.FC<OutputsProps> = ({
   );
   return (
     <TeamProfileOutputs
-      outputs={result.items}
+      outputs={
+        isEnabled('ALGOLIA_RESEARCH_OUTPUTS') ? result.items : teamOutputs
+      }
       numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPage={currentPage}
       isListView={isListView}
-      cardViewHref={network({}).teams({}).team({ teamId }).$ + cardViewParams}
-      listViewHref={network({}).teams({}).team({ teamId }).$ + listViewParams}
+      cardViewHref={
+        network({}).teams({}).team({ teamId }).outputs({}).$ + cardViewParams
+      }
+      listViewHref={
+        network({}).teams({}).team({ teamId }).outputs({}).$ + listViewParams
+      }
       renderPageHref={renderPageHref}
     />
   );

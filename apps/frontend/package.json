@@ -26,7 +26,7 @@
     "@auth0/auth0-spa-js": "^1.15.0",
     "@sentry/react": "^6.11.0",
     "@sentry/tracing": "^6.11.0",
-    "algoliasearch": "^4.10.3",
+    "algoliasearch": "^4.10.5",
     "browser-image-compression": "^1.0.14",
     "date-fns": "^2.21.3",
     "history": "^4",

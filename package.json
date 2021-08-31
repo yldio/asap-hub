@@ -15,26 +15,28 @@
     "url": "https://github.com/yldio/asap-hub.git"
   },
   "scripts": {
-    "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
+    "algolia:download": "algolia getsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX | prettier --parser json > ./ci/algolia-schema.json",
+    "algolia:upload": "algolia setsettings -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -s ./ci/algolia-schema.json",
+    "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
     "build:babel": "yarn workspaces foreach -vp run build:babel",
     "build:typecheck": "tsc -b -v $(node scripts/get-composite-ts-projects.js)",
-    "build": "yarn build:typecheck && yarn build:babel && yarn workspaces foreach -vpt run typecheck && yarn workspaces foreach -vpt run build",
-    "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
-    "watch:typecheck": "yarn build:typecheck -w",
-    "start": "yarn workspaces foreach -vpi -j 1000 run start",
-    "start:squidex": "docker-compose -f dev/docker-compose.yaml up",
-    "start:backend": "yarn workspace @asap-hub/asap-server start",
-    "start:frontend": "yarn workspace @asap-hub/frontend start",
-    "release:frontend": "yarn workspace @asap-hub/frontend release:frontend",
-    "start:sb": "yarn workspace @asap-hub/storybook start",
-    "sls": "babel-node --extensions=.js,.jsx,.ts,.tsx --config-file=./babel-cjs.config.js serverless/link-plugins.ts && TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn pnpify serverless",
+    "clean": "rimraf \"{apps,packages}/*/{build*,*.tsbuildinfo}\" \"coverage\" \".serverless*\"",
     "fix:format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
     "lint:format": "prettier -l \"**/*.{js,jsx,ts,tsx,json,html,css,scss,md,mdx,yml,yaml}\"",
-    "test:build-output": "yarn test --config=jest-build-output.config.js",
+    "release:frontend": "yarn workspace @asap-hub/frontend release:frontend",
+    "sls": "babel-node --extensions=.js,.jsx,.ts,.tsx --config-file=./babel-cjs.config.js serverless/link-plugins.ts && TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn pnpify serverless",
+    "start": "yarn workspaces foreach -vpi -j 1000 run start",
+    "start:backend": "yarn workspace @asap-hub/asap-server start",
+    "start:frontend": "yarn workspace @asap-hub/frontend start",
+    "start:sb": "yarn workspace @asap-hub/storybook start",
+    "start:squidex": "docker-compose -f dev/docker-compose.yaml up",
+    "test": "LANG=en_US TZ=UTC jest",
     "test:browser": "yarn test --config=packages/react-components/jest-browser.config.js",
+    "test:build-output": "yarn test --config=jest-build-output.config.js",
     "test:e2e": "yarn test --config=apps/e2e-tests/jest-e2e.config.js",
     "test:integration": "yarn test --config=jest-integration.config.js",
-    "test": "LANG=en_US TZ=UTC jest"
+    "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
+    "watch:typecheck": "yarn build:typecheck -w"
   },
   "resolutions": {
     "encoding": "0.1.13"
@@ -141,6 +143,8 @@
     "webpack": "^5.37.0"
   },
   "dependencies": {
+    "@algolia/cli": "^4.0.8",
+    "algoliasearch": "^4.10.5",
     "ts-node": "^9.1.1"
   }
 }

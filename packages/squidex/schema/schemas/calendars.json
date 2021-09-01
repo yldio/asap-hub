@@ -63,6 +63,27 @@
         }
       },
       {
+        "name": "id",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "pattern": "^[a-zA-Z0-9.!#$%&’*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$",
+          "minLength": 8,
+          "isUnique": true,
+          "inlineEditable": false,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Google Calendar ID - DEPRECATED",
+          "hints": "Make sure this GCal is Public BEFORE adding it. Syncing will NOT work otherwise.",
+          "isRequired": true,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
         "name": "googleCalendarId",
         "isHidden": false,
         "isLocked": false,

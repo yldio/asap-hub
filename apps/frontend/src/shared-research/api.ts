@@ -26,7 +26,7 @@ export const getResearchOutput = async (
   return resp.json();
 };
 
-export const researchOutputFilters: Record<
+export const researchOutputTypeFilters: Record<
   ResearchOutputType,
   { filter: string }
 > = {
@@ -39,6 +39,44 @@ export const researchOutputFilters: Record<
   Article: { filter: 'type:Article' },
 };
 
+export const ResearchOutputOwnersFilters: Record<string, string> = {
+  teamId: 'team.id:',
+};
+
+export const getTypeFilters = (filters: Set<string>): string =>
+  Object.entries(researchOutputTypeFilters)
+    .reduce<string[]>(
+      (acc, [key, { filter }]) => (filters.has(key) ? [filter, ...acc] : acc),
+      [],
+    )
+    .join(' OR ');
+
+export const getFiltersByKey = (
+  filters: Set<string>,
+  key: string,
+): string[] => {
+  const filterArray = [];
+  for (const filter of filters.values()) {
+    filter.startsWith(key) && filterArray.push(filter);
+  }
+  return filterArray;
+};
+
+export const getOwnersFilters = (filters: Set<string>): string =>
+  Object.values(ResearchOutputOwnersFilters)
+    .reduce<string[]>(
+      (acc, key) => [...acc, ...getFiltersByKey(filters, key)],
+      [],
+    )
+    .join(' AND ');
+
+export const getAllFilters = (filters: Set<string>) => {
+  const typeFilters = getTypeFilters(filters);
+  const ownerFilters = getOwnersFilters(filters);
+  const filtersSeparator = !!typeFilters && !!ownerFilters ? ' AND ' : '';
+  return `${typeFilters}${filtersSeparator}${ownerFilters}`;
+};
+
 export const getResearchOutputs = (
   { search }: SearchIndex,
   options: GetListOptions,
@@ -46,20 +84,7 @@ export const getResearchOutputs = (
   search<ResearchOutputResponse>(options.searchQuery, {
     page: options.currentPage ?? 0,
     hitsPerPage: options.pageSize ?? 10,
-    filters: Object.entries(researchOutputFilters)
-      .reduce<string[]>(
-        (acc, [key, { filter }]) =>
-          options.filters.has(key) ? [filter, ...acc] : acc,
-        [],
-      )
-      .join(' OR ')
-      .concat(
-        options.teamId
-          ? `${options.filters.size > 0 ? ' AND ' : ''}team.id:"${
-              options.teamId
-            }"`
-          : '',
-      ),
+    filters: getAllFilters(options.filters),
   }).catch((error: Error) => {
     throw new Error(`Could not search: ${error.message}`);
   });

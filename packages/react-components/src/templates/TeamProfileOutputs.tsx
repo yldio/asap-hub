@@ -5,8 +5,7 @@ import { ComingSoon, SharedResearchCard } from '../organisms';
 import { perRem } from '../pixels';
 
 const containerStyles = css({
-  display: 'grid',
-  gridRowGap: `${36 / perRem}em`,
+  padding: `${36 / perRem}em 0`,
 });
 
 export type TeamProfileOutputsProps = {

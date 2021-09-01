@@ -27,12 +27,12 @@ const OutputsList: React.FC<OutputsListProps> = ({
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
+
   const result = useResearchOutputs({
     searchQuery,
     filters,
     currentPage,
     pageSize,
-    teamId,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
@@ -65,8 +65,11 @@ const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
     setSearchQuery,
     debouncedSearchQuery,
   } = useSearch();
+
+  filters.add(`team.id:"${teamId}"`);
+
   return (
-    <>
+    <article>
       {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && (
         <TeamProfileOutputsHeader
           setSearchQuery={setSearchQuery}
@@ -86,7 +89,7 @@ const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
           </SearchFrame>
         )}
       </TeamProfileOutputs>
-    </>
+    </article>
   );
 };
 export default Outputs;

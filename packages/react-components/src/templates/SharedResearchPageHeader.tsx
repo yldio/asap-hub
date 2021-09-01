@@ -33,7 +33,7 @@ type SharedResearchPageHeaderProps = {
   filters: Set<string>;
 };
 
-const researchOutputFilters: Option<ResearchOutputType>[] = [
+export const researchOutputFilters: Option<ResearchOutputType>[] = [
   { label: 'Proposal', value: 'Proposal' },
   { label: 'Presentation', value: 'Presentation' },
   { label: 'Protocol', value: 'Protocol' },

@@ -87,6 +87,10 @@ export const syncEventFactory = (
         return await eventsController.update(existingEvent.id, newEvent);
       }
 
+      if (newEvent.status === 'Cancelled') {
+        newEvent.hidden = true;
+      }
+
       logger.info(
         { id: googleEvent.id, event: newEvent },
         'Event not found. Creating.',

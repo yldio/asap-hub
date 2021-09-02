@@ -153,7 +153,6 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
                 </>
               }
               title="ORCID"
-              subtitle="(Required)"
               onChange={setNewOrcid}
               value={newOrcid}
               enabled={false}

@@ -10,10 +10,12 @@ const subtitleStyles = css({
 
 type LabeledMultiSelectProps = {
   readonly title: ReactNode;
+  readonly titleLabel?: React.ReactNode;
   readonly subtitle?: ReactNode;
 } & Exclude<ComponentProps<typeof MultiSelect>, 'id'>;
 const LabeledMultiSelect: React.FC<LabeledMultiSelectProps> = ({
   title,
+  titleLabel,
   subtitle,
   ...multiSelectProps
 }) => (
@@ -21,6 +23,7 @@ const LabeledMultiSelect: React.FC<LabeledMultiSelectProps> = ({
     <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
+        <span css={{ paddingLeft: '5px' }}>{titleLabel}</span>
         <br />
         <span css={subtitleStyles}>{subtitle}</span>
       </Paragraph>

@@ -17,6 +17,6 @@ it('renders the onboardable footer', () => {
   const { getByTitle, getByRole } = render(
     <OnboardingFooter {...props} onboardable={{ isOnboardable: true }} />,
   );
-  expect(getByTitle(/tick/i)).toBeInTheDocument();
+  expect(getByTitle(/success/i)).toBeInTheDocument();
   expect(getByRole('heading')).toHaveTextContent(/ complete/i);
 });

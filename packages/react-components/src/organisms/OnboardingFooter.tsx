@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { isUserOnboardable } from '@asap-hub/validation';
 
-import { padlockIcon, tickIcon } from '../icons';
+import { padlockIcon, successIcon } from '../icons';
 import { Link, Headline2, Paragraph } from '../atoms';
 import { paper, steel } from '../colors';
 
@@ -49,7 +49,7 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
   onboardModalHref,
   onboardable: { isOnboardable },
 }) => (
-  <header css={[headerStyles, irisCeruleanGradientStyles]}>
+  <footer css={[headerStyles, irisCeruleanGradientStyles]}>
     <div css={containerStyles}>
       <div css={textStyles}>
         <Headline2 styleAsHeading={3}>
@@ -65,13 +65,13 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
         <div>
           <Link href={onboardModalHref} buttonStyle enabled={isOnboardable}>
             <span css={iconStyles}>
-              {isOnboardable ? tickIcon : padlockIcon}
+              {isOnboardable ? successIcon : padlockIcon}
             </span>
             Explore the Hub
           </Link>
         </div>
       </div>
     </div>
-  </header>
+  </footer>
 );
 export default OnboardingFooter;

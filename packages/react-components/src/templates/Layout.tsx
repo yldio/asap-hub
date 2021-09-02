@@ -14,7 +14,7 @@ import { css } from '@emotion/react';
 import { isUserOnboardable } from '@asap-hub/validation';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
-import { MenuHeader, OnboardingHeader, ToastStack } from '../organisms';
+import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
@@ -202,12 +202,6 @@ const Layout: FC<LayoutProps> = ({
 
   return (
     <ToastStack>
-      {onboardable && (
-        <OnboardingHeader
-          onboardModalHref={onboardModalHref}
-          onboardable={onboardable}
-        />
-      )}
       <article css={[styles, menuShown || { overflow: 'hidden' }]}>
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
@@ -244,6 +238,12 @@ const Layout: FC<LayoutProps> = ({
           </div>
         </div>
       </article>
+      {onboardable && (
+        <OnboardingFooter
+          onboardModalHref={onboardModalHref}
+          onboardable={onboardable}
+        />
+      )}
     </ToastStack>
   );
 };

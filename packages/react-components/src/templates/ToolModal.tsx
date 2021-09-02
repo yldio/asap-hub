@@ -51,7 +51,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
         <div css={fieldsContainer}>
           <LabeledTextField
             title="Add URL*"
-            subtitle="Ensure sharing settings have been adjusted so that your team can access
+            description="Ensure sharing settings have been adjusted so that your team can access
         this link."
             value={newUrl}
             onChange={setNewUrl}
@@ -73,7 +73,7 @@ const ToolModal: React.FC<ToolModalProps> = ({
 
           <LabeledTextField
             title="Description (optional)"
-            subtitle="Help your team understand what this link is used for."
+            description="Help your team understand what this link is used for."
             value={newDescription}
             onChange={setNewDescription}
             enabled={!isSaving}

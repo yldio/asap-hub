@@ -9,8 +9,9 @@ export default {
 export const Normal = () => (
   <LabeledMultiSelect
     title={text('Title', 'Tags')}
-    subtitle={text(
-      'Subtitle',
+    subtitle={text('Subtitle', '(Required)')}
+    description={text(
+      'Description',
       'Select the keywords that best apply to your work. Please add a minimum of 5 tags.',
     )}
     placeholder={text('Placeholder', 'Add a tag (E.g. Cell Biology)')}
@@ -32,7 +33,8 @@ export const Normal = () => (
 export const Invalid = () => (
   <LabeledMultiSelect
     title={text('Title', 'Airport')}
-    subtitle={text('Subtitle', 'Pick some airports')}
+    subtitle={text('Subtitle', '(Required)')}
+    description={text('Description', 'Pick some airports')}
     suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN']}
     values={[]}
     placeholder={text('Placeholder', 'Please select some airports')}

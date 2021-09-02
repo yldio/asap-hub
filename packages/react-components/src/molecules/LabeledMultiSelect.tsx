@@ -4,28 +4,28 @@ import { MultiSelect, Paragraph, Label } from '../atoms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 
-const subtitleStyles = css({
+const descriptionStyles = css({
   color: lead.rgb,
 });
 
 type LabeledMultiSelectProps = {
   readonly title: ReactNode;
-  readonly titleLabel?: React.ReactNode;
-  readonly subtitle?: ReactNode;
+  readonly subtitle?: React.ReactNode;
+  readonly description?: ReactNode;
 } & Exclude<ComponentProps<typeof MultiSelect>, 'id'>;
 const LabeledMultiSelect: React.FC<LabeledMultiSelectProps> = ({
   title,
-  titleLabel,
   subtitle,
+  description,
   ...multiSelectProps
 }) => (
   <div css={{ paddingBottom: `${18 / perRem}em` }}>
     <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
-        <span css={{ paddingLeft: '5px' }}>{titleLabel}</span>
+        <span css={{ paddingLeft: `${6 / perRem}em` }}>{subtitle}</span>
         <br />
-        <span css={subtitleStyles}>{subtitle}</span>
+        <span css={descriptionStyles}>{description}</span>
       </Paragraph>
     </Label>
   </div>

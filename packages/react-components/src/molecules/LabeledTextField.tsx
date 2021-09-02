@@ -9,7 +9,7 @@ const containerStyles = css({
   paddingBottom: `${18 / perRem}em`,
 });
 
-const subtitleStyles = css({
+const descriptionStyles = css({
   color: lead.rgb,
 });
 const hintStyles = css({
@@ -23,15 +23,15 @@ const hintStyles = css({
 
 type LabeledTextFieldProps = {
   readonly title: React.ReactNode;
-  readonly titleLabel?: React.ReactNode;
   readonly subtitle?: React.ReactNode;
+  readonly description?: React.ReactNode;
   readonly hint?: React.ReactNode;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
 
 const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   title,
-  titleLabel,
   subtitle,
+  description,
   hint,
   ...textFieldProps
 }) => (
@@ -39,9 +39,9 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
-        <span css={{ paddingLeft: '5px' }}>{titleLabel}</span>
+        <span css={{ paddingLeft: `${6 / perRem}em` }}>{subtitle}</span>
         <br />
-        <span css={subtitleStyles}>{subtitle}</span>
+        <span css={descriptionStyles}>{description}</span>
       </Paragraph>
     </Label>
     <div css={hintStyles}>{hint}</div>

@@ -97,8 +97,8 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               onChange={setNewEmail}
               enabled={!isSaving}
               title="Contact email"
-              titleLabel="(Optional)"
-              subtitle={
+              subtitle="(Optional)"
+              description={
                 <>
                   People in the ASAP Network will contact you using{' '}
                   <strong css={{ color: charcoal.rgb }}>{fallbackEmail}</strong>
@@ -112,7 +112,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           <div css={[fieldsContainerStyles, paddingStyles]}>
             <LabeledTextField
               title="Website 1"
-              titleLabel="(Optional)"
+              subtitle="(Optional)"
               pattern={USER_SOCIAL_WEBSITE.source}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'
@@ -125,7 +125,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             />
             <LabeledTextField
               title="Website 2"
-              titleLabel="(Optional)"
+              subtitle="(Optional)"
               pattern={USER_SOCIAL_WEBSITE.source}
               getValidationMessage={() =>
                 'Please enter a valid URL, starting with http://'
@@ -153,7 +153,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
                 </>
               }
               title="ORCID"
-              titleLabel="(Required)"
+              subtitle="(Required)"
               onChange={setNewOrcid}
               value={newOrcid}
               enabled={false}
@@ -162,7 +162,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             />
             <LabeledTextField
               title="ResearcherID"
-              titleLabel="(Optional)"
+              subtitle="(Optional)"
               pattern={USER_SOCIAL_RESEARCHER_ID.source}
               getValidationMessage={() => 'Please enter a valid ResearcherID'}
               onChange={setNewResearcherId}
@@ -173,7 +173,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             />
             <LabeledTextField
               title="Twitter"
-              titleLabel="(Optional)"
+              subtitle="(Optional)"
               pattern={USER_SOCIAL_NOT_URL.source}
               getValidationMessage={() => 'Please enter a valid Twitter handle'}
               onChange={setNewTwitter}
@@ -184,7 +184,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             />
             <LabeledTextField
               title="Github"
-              titleLabel="(Optional)"
+              subtitle="(Optional)"
               pattern={USER_SOCIAL_NOT_URL.source}
               getValidationMessage={() =>
                 'Please enter a valid Github username'
@@ -197,7 +197,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             />
             <LabeledTextField
               title="LinkedIn"
-              titleLabel="(Optional)"
+              subtitle="(Optional)"
               pattern={USER_SOCIAL_NOT_URL.source}
               getValidationMessage={() =>
                 'Please enter a valid LinkedIn username'
@@ -210,7 +210,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             />
             <LabeledTextField
               title="Researchgate"
-              titleLabel="(Optional)"
+              subtitle="(Optional)"
               pattern={USER_SOCIAL_NOT_URL.source}
               getValidationMessage={() =>
                 'Please enter a valid Research Gate Profile ID'
@@ -224,7 +224,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           </div>
           <LabeledTextField
             title="Google Scholar"
-            titleLabel="(Optional)"
+            subtitle="(Optional)"
             pattern={USER_SOCIAL_NOT_URL.source}
             getValidationMessage={() =>
               'Please enter a valid Google Scholar Profile ID'

@@ -17,11 +17,11 @@ it('renders the title in bold font', () => {
   );
 });
 
-it('renders a greyed out subtitle', () => {
+it('renders a greyed out description', () => {
   const { getByText } = render(
-    <LabeledTextField title="Title" subtitle="Subtitle" value="" />,
+    <LabeledTextField title="Title" description="Description" value="" />,
   );
-  expect(getComputedStyle(getByText('Subtitle')).color).toBe(lead.rgb);
+  expect(getComputedStyle(getByText('Description')).color).toBe(lead.rgb);
 });
 
 it('renders a greyed out hint', () => {

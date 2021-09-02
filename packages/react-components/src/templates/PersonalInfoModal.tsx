@@ -98,6 +98,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
           <div css={[fieldsContainerStyles, paddingStyles]}>
             <LabeledTextField
               title="First name*"
+              titleLabel="(Required)"
               onChange={setNewFirstName}
               value={newFirstName}
               enabled={!isSaving}
@@ -105,6 +106,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             />
             <LabeledTextField
               title="Last name(s)*"
+              titleLabel="(Required)"
               onChange={setNewLastName}
               value={newLastName}
               enabled={!isSaving}
@@ -112,6 +114,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             />
             <LabeledDropdown<UserDegree | ''>
               title="Degree"
+              titleLabel="(Optional)"
               onChange={setNewDegree}
               options={[
                 { label: 'Choose a degree', value: '' },
@@ -137,6 +140,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
           >
             <LabeledTypeahead
               title="Institution*"
+              titleLabel="(Required)"
               required
               getValidationMessage={() => 'Please add your institution'}
               maxLength={44}
@@ -147,6 +151,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             />
             <LabeledTypeahead
               title="Position*"
+              titleLabel="(Required)"
               required
               getValidationMessage={() => 'Please add your position'}
               maxLength={35}
@@ -172,6 +177,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             />
             <LabeledTypeahead
               title="Country*"
+              titleLabel="(Required)"
               required
               getValidationMessage={() => 'Please add your country'}
               suggestions={countrySuggestions}
@@ -181,6 +187,7 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
             />
             <LabeledTextField
               title="City*"
+              titleLabel="(Required)"
               required
               getValidationMessage={() => 'Please add your city'}
               onChange={setNewCity}

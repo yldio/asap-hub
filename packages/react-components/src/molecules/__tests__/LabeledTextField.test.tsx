@@ -5,13 +5,18 @@ import { lead } from '../../colors';
 
 it('renders a labeled text field, passing through props', () => {
   const { getByLabelText } = render(
-    <LabeledTextField title="Title" value="val" />,
+    <LabeledTextField title="Title" subtitle="Subtitle" value="val" />,
   );
-  expect(getByLabelText('Title')).toHaveValue('val');
+
+  expect(getByLabelText(/Title/i)).toBeVisible();
+  expect(getByLabelText(/Subtitle/i)).toBeVisible();
+  expect(getByLabelText(/Title/i)).toHaveValue('val');
 });
 
 it('renders the title in bold font', () => {
-  const { getByText } = render(<LabeledTextField title="Title" value="" />);
+  const { getByText } = render(
+    <LabeledTextField title="Title" subtitle="Required" value="" />,
+  );
   expect(getComputedStyle(getByText('Title')).fontWeight).toMatchInlineSnapshot(
     `"bold"`,
   );

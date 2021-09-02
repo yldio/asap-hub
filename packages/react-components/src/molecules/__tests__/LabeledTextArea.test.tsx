@@ -4,10 +4,13 @@ import LabeledTextArea from '../LabeledTextArea';
 import { lead } from '../../colors';
 
 it('renders a labeled text area, passing through props', () => {
-  const { getByLabelText } = render(
-    <LabeledTextArea title="Title" value="val" />,
+  const { getByRole, getByLabelText } = render(
+    <LabeledTextArea title="Title" subtitle="Optional" value="val" />,
   );
-  expect(getByLabelText('Title')).toHaveValue('val');
+
+  expect(getByLabelText(/Title/i)).toBeVisible();
+  expect(getByLabelText(/Optional/i)).toBeVisible();
+  expect(getByRole('textbox')).toHaveValue('val');
 });
 
 it('renders a greyed out tip', () => {

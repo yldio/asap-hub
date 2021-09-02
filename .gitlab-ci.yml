@@ -144,10 +144,8 @@ test:build-output:
 ####################
 # stage deploy-dev #
 ####################
-
-deploy:sls:branch:
+deploy:squidex:branch:
   <<: *tmpl_branch
-  <<: *tmpl_deploy
   image: $INTEGRATION_DOCKER_IMAGE
   stage: deploy-dev
   environment:
@@ -156,7 +154,6 @@ deploy:sls:branch:
     auto_stop_in: 3 days
   variables:
     <<: *tmpl_branch_variables
-    <<: *tmpl_deploy_variables
   script:
     - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
@@ -167,6 +164,16 @@ deploy:sls:branch:
     - tar -xf $MOST_RECENT_BACKUP
     - ./ci/config-squidex-rules.sh ./backup/rules
     - ./ci/import-squidex-data.sh
+
+deploy:sls:branch:
+  <<: *tmpl_branch
+  <<: *tmpl_deploy
+  image: $INTEGRATION_DOCKER_IMAGE
+  stage: deploy-dev
+  variables:
+    <<: *tmpl_branch_variables
+    <<: *tmpl_deploy_variables
+  script:
     - source ci/env-setup.sh
     - yarn sls deploy --verbose
 

@@ -205,6 +205,7 @@ verify:branch:
   needs:
     - build:ts
     - build:native
+    - deploy:squidex:branch
     - deploy:sls:branch
   script:
     - ASAP_API_URL=$API_URL yarn test:e2e

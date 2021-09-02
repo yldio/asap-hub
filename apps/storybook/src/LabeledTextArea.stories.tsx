@@ -19,6 +19,7 @@ export const Empty = () => (
   <LabeledTextArea
     title="Members"
     subtitle={text('Subtitle', '(Required)')}
+    tip={text('Tip', 'Tip: One member name per line')}
     value=""
     placeholder={array(
       'Placeholder',
@@ -34,6 +35,7 @@ export const Invalid = () => (
   <LabeledTextArea
     title="Members"
     subtitle={text('Subtitle', '(Required)')}
+    tip={text('Tip', 'Tip: One member name per line')}
     value={'John Doe\nBat Man'}
     customValidationMessage={text(
       'Validation Error Message',
@@ -47,6 +49,7 @@ export const MaxLength = () => {
     <LabeledTextArea
       title="Members"
       subtitle={text('Subtitle', '(Required)')}
+      tip={text('Tip', 'Tip: One member name per line')}
       value={value}
       maxLength={number('Maximum length', value.length, { min: value.length })}
     />

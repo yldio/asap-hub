@@ -8,7 +8,8 @@ import { RequiredAndNonNullable } from './squidex';
 
 export type SyncEvent = (
   eventPayload: calendarV3.Schema$Event,
-  calendarId: string,
+  googleCalendarId: string,
+  squidexCalendarId: string,
   defaultTimezone: string,
 ) => Promise<RestEvent>;
 
@@ -16,7 +17,8 @@ export const syncEventFactory =
   (eventsController: EventController): SyncEvent =>
   async (
     eventPayload: calendarV3.Schema$Event,
-    calendarId: string,
+    googleCalendarId: string,
+    squidexCalendarId: string,
     defaultTimezone: string,
   ): Promise<RestEvent> => {
     const schema = Joi.object({
@@ -46,7 +48,7 @@ export const syncEventFactory =
     const googleEvent = value as GoogleEvent;
     logger.debug({ googleEvent }, 'google event');
 
-    if (googleEvent.organizer?.email !== calendarId) {
+    if (googleEvent.organizer?.email !== googleCalendarId) {
       logger.error('The calendar is not the organiser of the event');
       throw new Error('Invalid organiser');
     }
@@ -61,7 +63,7 @@ export const syncEventFactory =
       endDateTimeZone: googleEvent.end.timeZone || defaultTimezone,
       status: (googleEvent.status.charAt(0).toUpperCase() +
         googleEvent.status.slice(1)) as EventStatus, // TODO: use lowercase
-      calendar: [calendarId],
+      calendar: [squidexCalendarId],
       hidden: false,
     };
 

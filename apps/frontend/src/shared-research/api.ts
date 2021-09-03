@@ -39,10 +39,6 @@ export const researchOutputTypeFilters: Record<
   Article: { filter: 'type:Article' },
 };
 
-export const ResearchOutputOwnersFilters: Record<string, string> = {
-  teamId: 'team.id:',
-};
-
 export const getTypeFilters = (filters: Set<string>): string =>
   Object.entries(researchOutputTypeFilters)
     .reduce<string[]>(
@@ -51,30 +47,11 @@ export const getTypeFilters = (filters: Set<string>): string =>
     )
     .join(' OR ');
 
-export const getFiltersByKey = (
-  filters: Set<string>,
-  key: string,
-): string[] => {
-  const filterArray = [];
-  for (const filter of filters.values()) {
-    filter.startsWith(key) && filterArray.push(filter);
-  }
-  return filterArray;
-};
-
-export const getOwnersFilters = (filters: Set<string>): string =>
-  Object.values(ResearchOutputOwnersFilters)
-    .reduce<string[]>(
-      (acc, key) => [...acc, ...getFiltersByKey(filters, key)],
-      [],
-    )
-    .join(' AND ');
-
-export const getAllFilters = (filters: Set<string>) => {
+export const getAllFilters = (filters: Set<string>, teamId?: string) => {
   const typeFilters = getTypeFilters(filters);
-  const ownerFilters = getOwnersFilters(filters);
-  const filtersSeparator = !!typeFilters && !!ownerFilters ? ' AND ' : '';
-  return `${typeFilters}${filtersSeparator}${ownerFilters}`;
+  const teamFilter = teamId ? `team.id:"${teamId}"` : '';
+  const filtersSeparator = !!typeFilters && !!teamFilter ? ' AND ' : '';
+  return `${typeFilters}${filtersSeparator}${teamFilter}`;
 };
 
 export const getResearchOutputs = (
@@ -84,7 +61,7 @@ export const getResearchOutputs = (
   search<ResearchOutputResponse>(options.searchQuery, {
     page: options.currentPage ?? 0,
     hitsPerPage: options.pageSize ?? 10,
-    filters: getAllFilters(options.filters),
+    filters: getAllFilters(options.filters, options.teamId),
   }).catch((error: Error) => {
     throw new Error(`Could not search: ${error.message}`);
   });

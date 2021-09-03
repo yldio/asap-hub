@@ -142,7 +142,7 @@ export const useResearchOutputs = (options: GetListOptions) => {
       )
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
-  } else if (researchOutputs === undefined) {
+  } else if (researchOutputs === undefined && !options.teamId) {
     throw getResearchOutputsLegacy(options, authorization)
       .then(setResearchOutputs)
       .catch(setResearchOutputs);

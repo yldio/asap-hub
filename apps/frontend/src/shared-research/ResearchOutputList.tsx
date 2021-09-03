@@ -23,13 +23,13 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total,
+    result?.total || 0,
     pageSize,
   );
   return (
     <SharedResearchList
-      researchOutputs={result.items}
-      numberOfItems={result.total}
+      researchOutputs={result?.items || []}
+      numberOfItems={result?.total || 0}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

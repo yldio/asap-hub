@@ -1,5 +1,4 @@
 import {
-  SharedResearchList,
   TeamProfileOutputs,
   TeamProfileOutputsHeader,
 } from '@asap-hub/react-components';
@@ -14,6 +13,7 @@ type OutputsListProps = {
   searchQuery: string;
   filters: Set<string>;
   teamId: string;
+  teamOutputs: ReadonlyArray<ResearchOutputResponse>;
 };
 type OutputsProps = {
   teamId: string;
@@ -24,6 +24,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
   searchQuery,
   filters,
   teamId,
+  teamOutputs,
 }) => {
   const { currentPage, pageSize, isListView, cardViewParams, listViewParams } =
     usePaginationParams();
@@ -33,18 +34,23 @@ const OutputsList: React.FC<OutputsListProps> = ({
     filters,
     currentPage,
     pageSize,
+    teamId,
   });
 
   const { numberOfPages, renderPageHref } = usePagination(
-    result.total,
+    result?.total || 0,
     pageSize,
   );
   return (
-    <SharedResearchList
-      researchOutputs={result.items}
-      numberOfItems={result.total}
+    <TeamProfileOutputs
+      outputs={
+        isEnabled('ALGOLIA_RESEARCH_OUTPUTS')
+          ? result?.items || []
+          : teamOutputs
+      }
+      numberOfItems={result?.total || 0}
       numberOfPages={numberOfPages}
-      currentPageIndex={currentPage}
+      currentPage={currentPage}
       renderPageHref={renderPageHref}
       isListView={isListView}
       cardViewHref={
@@ -66,8 +72,6 @@ const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
     debouncedSearchQuery,
   } = useSearch();
 
-  filters.add(`team.id:"${teamId}"`);
-
   return (
     <article>
       {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && (
@@ -78,17 +82,14 @@ const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
           filters={filters}
         />
       )}
-      <TeamProfileOutputs outputs={teamOutputs}>
-        {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && (
-          <SearchFrame title="outputs">
-            <OutputsList
-              teamId={teamId}
-              searchQuery={debouncedSearchQuery}
-              filters={filters}
-            />
-          </SearchFrame>
-        )}
-      </TeamProfileOutputs>
+      <SearchFrame title="outputs">
+        <OutputsList
+          teamId={teamId}
+          teamOutputs={teamOutputs}
+          searchQuery={debouncedSearchQuery}
+          filters={filters}
+        />
+      </SearchFrame>
     </article>
   );
 };

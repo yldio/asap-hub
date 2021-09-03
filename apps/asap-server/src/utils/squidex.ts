@@ -32,7 +32,7 @@ export const validatePropertiesRequired = <
   return true;
 };
 
-type RequiredAndNonNullable<T> = Required<
+export type RequiredAndNonNullable<T> = Required<
   {
     [Property in keyof T]: NonNullable<T[Property]>;
   }

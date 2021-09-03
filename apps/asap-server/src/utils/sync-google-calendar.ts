@@ -1,84 +1,84 @@
 import { google, calendar_v3 as calendarV3, Auth } from 'googleapis';
 import { DateTime } from 'luxon';
+import { GetJWTCredentials } from './aws-secret-manager';
 import logger from './logger';
+import { SyncEvent } from './sync-google-event';
 
-export type SyncCalendarFactory = (
-  syncToken: string | undefined,
-  syncEvent: SyncEvent,
-  auth: Auth.GoogleAuth | Auth.OAuth2Client,
-) => (googleCalendarId: string) => Promise<string | undefined | null>;
-
-interface SyncEvent {
-  (
-    event: calendarV3.Schema$Event,
-    defaultCalendarTimezone: string,
-  ): Promise<unknown>;
-}
-
-export const syncCalendarFactory: SyncCalendarFactory = (
-  syncToken: string | undefined,
-  syncEvent: SyncEvent,
-  auth: Auth.GoogleAuth | Auth.OAuth2Client,
-) => {
-  const syncCalendar = async (googleCalendarId: string) =>
-    fetchEvents(googleCalendarId, auth, syncEvent, syncToken);
-
-  return syncCalendar;
-};
-
-const fetchEvents = async (
+export type SyncCalendar = (
   googleCalendarId: string,
-  auth: Auth.GoogleAuth | Auth.OAuth2Client,
-  syncEvent: SyncEvent,
   syncToken: string | undefined,
-  pageToken?: string,
-): Promise<string | undefined | null> => {
-  const params: calendarV3.Params$Resource$Events$List = {
-    pageToken: pageToken || undefined,
-    calendarId: googleCalendarId,
-    singleEvents: true, // recurring events come returned as single events
-    showDeleted: true,
-  };
+) => Promise<string | null | undefined>;
 
-  if (!syncToken) {
-    params.timeMin = new Date('2020-10-01').toISOString();
-    params.timeMax = DateTime.utc().plus({ months: 6 }).toISO();
-  }
+export const syncCalendarFactory = (
+  syncEvent: SyncEvent,
+  getJWTCredentials: GetJWTCredentials,
+): SyncCalendar => {
+  const fetchEvents = async (
+    googleCalendarId: string,
+    syncToken: string | undefined,
+    pageToken?: string,
+  ): Promise<string | undefined | null> => {
+    let credentials: Auth.JWTInput;
 
-  const calendar = google.calendar({ version: 'v3', auth });
-
-  const res = await calendar.events.list(params).catch((err) => {
-    if (err.code === '410') {
-      logger.warn(err, 'Token is Gone, doing full sync');
-      return fetchEvents(googleCalendarId, auth, syncEvent, undefined); // syncToken "Gone", do full sync
+    try {
+      credentials = await getJWTCredentials();
+    } catch (error) {
+      logger.error(error, 'Error fetching AWS credentials');
+      throw error;
     }
-    logger.error(err, 'The API returned an error');
-    throw err;
-  });
 
-  if (res && typeof res === 'object') {
-    const eventItems = res.data.items ?? [];
-    const defaultCalendarTimezone = res.data.timeZone || 'America/New_York';
+    const auth = new Auth.GoogleAuth({
+      scopes: [
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/calendar.events',
+      ],
+    }).fromJSON(credentials) as Auth.JWT;
+
+    const params: calendarV3.Params$Resource$Events$List = {
+      pageToken: pageToken || undefined,
+      calendarId: googleCalendarId,
+      singleEvents: true, // recurring events come returned as single events
+      showDeleted: true,
+    };
+
+    if (!syncToken) {
+      params.timeMin = new Date('2020-10-01').toISOString();
+      params.timeMax = DateTime.utc().plus({ months: 6 }).toISO();
+    }
+
+    const calendar = google.calendar({ version: 'v3', auth });
+
+    let data: calendarV3.Schema$Events;
+    try {
+      const res = await calendar.events.list(params);
+      data = res.data;
+    } catch (error) {
+      if (error.code === '410') {
+        logger.warn(error, 'Token is Gone, doing full sync');
+        return fetchEvents(googleCalendarId, undefined); // syncToken "Gone", do full sync
+      }
+      logger.error(error, 'The API returned an error');
+      throw error;
+    }
+
+    const eventItems = data.items ?? [];
+    const defaultCalendarTimezone = data.timeZone || 'America/New_York';
 
     const syncResults = await Promise.allSettled(
-      eventItems.map((e) => syncEvent(e, defaultCalendarTimezone)),
+      eventItems.map((e) =>
+        syncEvent(e, googleCalendarId, defaultCalendarTimezone),
+      ),
     );
     logger.debug({ syncResults }, 'Sync events results');
 
-    if (res.data.nextPageToken) {
+    if (data.nextPageToken) {
       // get next page
-      return fetchEvents(
-        googleCalendarId,
-        auth,
-        syncEvent,
-        syncToken,
-        res.data.nextPageToken,
-      );
+      return fetchEvents(googleCalendarId, data.nextPageToken);
     }
 
-    return res.data.nextSyncToken;
-  }
+    return data.nextSyncToken;
+  };
 
-  // return the syncToken from a previous iteration
-  return res;
+  return async (googleCalendarId: string, syncToken: string | undefined) =>
+    fetchEvents(googleCalendarId, syncToken);
 };

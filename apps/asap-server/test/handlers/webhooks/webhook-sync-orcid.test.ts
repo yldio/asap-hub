@@ -4,14 +4,14 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { config, WebhookPayload, User } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/webhooks/webhook-sync-orcid';
-import { apiGatewayEvent } from '../../helpers/events';
+import { getApiGatewayEvent } from '../../helpers/events';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
 import { identity } from '../../helpers/squidex';
 
 import * as fixtures from './webhook-sync-orcid.fixtures';
 
 const createSignedPayload = (payload: WebhookPayload<User>) =>
-  apiGatewayEvent({
+  getApiGatewayEvent({
     headers: {
       'x-signature': signPayload(payload),
     },

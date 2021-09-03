@@ -1,29 +1,47 @@
-import { Auth } from 'googleapis';
-
+import { GetJWTCredentials } from '../../src/utils/aws-secret-manager';
 import { syncCalendarFactory } from '../../src/utils/sync-google-calendar';
 import * as fixtures from '../fixtures/google-events.fixtures';
 
 const mockList = jest.fn();
-jest.mock('googleapis', () => ({
-  google: {
-    auth: {
-      GoogleAuth: jest.fn(),
-    },
-    calendar: () => ({
-      events: {
-        list: mockList,
+jest.mock('googleapis', () => {
+  const googleapis = jest.requireActual('googleapis');
+  return {
+    ...googleapis,
+    google: {
+      auth: {
+        GoogleAuth: jest.fn(),
       },
-    }),
-  },
-}));
+      calendar: () => ({
+        events: {
+          list: mockList,
+        },
+      }),
+    },
+    Auth: {
+      GoogleAuth: jest.fn().mockReturnValue({
+        fromJSON: () => ({
+          scopes: [
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/calendar.events',
+          ],
+        }),
+      }),
+    },
+  };
+});
 
 describe('Sync calendar util hook', () => {
   const syncEvent = jest.fn();
   const syncToken = '';
+  const getJWTCredentialsMock: jest.MockedFunction<GetJWTCredentials> = jest
+    .fn()
+    .mockResolvedValue({
+      client_email: 'random-data',
+      private_key: 'random-data',
+    });
   const syncCalendarHandler = syncCalendarFactory(
-    syncToken,
     syncEvent,
-    {} as Auth.GoogleAuth,
+    getJWTCredentialsMock,
   );
 
   const calendarId = 'google-calendar-id';
@@ -35,8 +53,16 @@ describe('Sync calendar util hook', () => {
 
   test('Should throw when get unknown error from google', async () => {
     mockList.mockRejectedValueOnce(new Error('Google Error'));
-    await expect(syncCalendarHandler(calendarId)).rejects.toThrow(
+    await expect(syncCalendarHandler(calendarId, syncToken)).rejects.toThrow(
       'Google Error',
+    );
+  });
+
+  test('Should throw when it fails to get the credentials from AWS', async () => {
+    getJWTCredentialsMock.mockRejectedValueOnce(new Error('AWS Error'));
+
+    await expect(syncCalendarHandler(calendarId, syncToken)).rejects.toThrow(
+      'AWS Error',
     );
   });
 
@@ -46,7 +72,7 @@ describe('Sync calendar util hook', () => {
     mockList.mockRejectedValueOnce({ code: '410' });
     mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
 
-    const result = await syncCalendarHandler(calendarId);
+    const result = await syncCalendarHandler(calendarId, syncToken);
 
     const googleParams = {
       calendarId: 'google-calendar-id',
@@ -70,7 +96,7 @@ describe('Sync calendar util hook', () => {
       },
     });
 
-    await syncCalendarHandler(calendarId);
+    await syncCalendarHandler(calendarId, syncToken);
     expect(syncEvent).toBeCalledTimes(0);
   });
 
@@ -78,23 +104,25 @@ describe('Sync calendar util hook', () => {
     syncEvent.mockRejectedValueOnce(new Error('Squidex Error'));
     mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
 
-    await syncCalendarHandler(calendarId);
+    await syncCalendarHandler(calendarId, syncToken);
     expect(syncEvent).toBeCalledTimes(2);
   });
 
   test('Should call syncEvent with the google events', async () => {
     mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
 
-    await syncCalendarHandler(calendarId);
+    await syncCalendarHandler(calendarId, syncToken);
 
     expect(mockList).toHaveBeenCalledTimes(1);
     expect(syncEvent).toBeCalledTimes(2);
     expect(syncEvent).toHaveBeenCalledWith(
       fixtures.listEventsResponse.items![0],
+      calendarId,
       defaultCalendarTimezone,
     );
     expect(syncEvent).toHaveBeenCalledWith(
       fixtures.listEventsResponse.items![1],
+      calendarId,
       defaultCalendarTimezone,
     );
   });
@@ -108,7 +136,7 @@ describe('Sync calendar util hook', () => {
     });
     mockList.mockResolvedValueOnce({ data: fixtures.listEventsResponse });
 
-    await syncCalendarHandler(calendarId);
+    await syncCalendarHandler(calendarId, syncToken);
 
     expect(mockList).toHaveBeenCalledTimes(2);
     expect(syncEvent).toBeCalledTimes(4);

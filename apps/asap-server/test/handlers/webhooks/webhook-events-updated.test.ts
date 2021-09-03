@@ -1,12 +1,11 @@
-import { CalendarResponse, GoogleLegacyCalendarColor } from '@asap-hub/model';
 import { APIGatewayProxyResult } from 'aws-lambda';
-
-import { GetJWTCredentials } from '../../../src/utils/aws-secret-manager';
-import { webhookEventUpdatedHandlerFactory } from '../../../src/handlers/webhooks/webhook-events-updated';
-import { apiGatewayEvent } from '../../helpers/events';
-import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
+import { CalendarResponse, GoogleLegacyCalendarColor } from '@asap-hub/model';
 import { RestCalendar } from '@asap-hub/squidex';
-import { SyncCalendarFactory } from '../../../src/utils/sync-google-calendar';
+import { webhookEventUpdatedHandlerFactory } from '../../../src/handlers/webhooks/webhook-events-updated';
+import { getApiGatewayEvent } from '../../helpers/events';
+import { calendarControllerMock } from '../../mocks/calendar-controller.mock';
+import { SyncCalendar } from '../../../src/utils/sync-google-calendar';
+import { googleApiToken } from '../../../src/config';
 
 const googleCalendarId = 'calendar-id@group.calendar.google.com';
 const squidexCalendarId = 'squidex-calendar-id';
@@ -34,61 +33,37 @@ describe('Event Webhook', () => {
     jest.clearAllMocks();
   });
 
-  const getJWTCredentialsMock: jest.MockedFunction<GetJWTCredentials> = jest
-    .fn()
-    .mockResolvedValue({
-      client_email: 'random-data',
-      private_key: 'random-data',
-    });
-
-  const syncCalendarMock = jest.fn();
-  const syncCalendarFactoryMock: jest.MockedFunction<SyncCalendarFactory> = jest
-    .fn()
-    .mockReturnValue(syncCalendarMock);
+  const syncCalendarMock: jest.MockedFunction<SyncCalendar> = jest.fn();
 
   const handler = webhookEventUpdatedHandlerFactory(
     calendarControllerMock,
-    getJWTCredentialsMock,
-    syncCalendarFactoryMock,
+    syncCalendarMock,
   );
 
   test('Should return 401 when x-goog-channel-token is not set', async () => {
-    const res = (await handler(
-      apiGatewayEvent({
-        ...googlePayload,
-        headers: {
-          ...googlePayload.headers,
-          'x-goog-channel-token': undefined,
-        },
-      }),
-    )) as APIGatewayProxyResult;
+    const event = getApiGatewayEvent();
+    event.headers['x-goog-channel-token'] = undefined;
+
+    const res = (await handler(event)) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(401);
   });
 
-  test('Should return 403 when x-goog-channel-token is not the same', async () => {
-    const res = (await handler(
-      apiGatewayEvent({
-        ...googlePayload,
-        headers: {
-          ...googlePayload.headers,
-          'x-goog-channel-token': 'not-the-same-token',
-        },
-      }),
-    )) as APIGatewayProxyResult;
+  test('Should return 403 when x-goog-channel-token does not match the token from the config', async () => {
+    const event = getApiGatewayEvent();
+    event.headers['x-goog-channel-token'] = 'not-the-same-token';
+
+    const res = (await handler(event)) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(403);
   });
+
   test('Should return 400 when x-goog-resource-id is not set', async () => {
-    const res = (await handler(
-      apiGatewayEvent({
-        ...googlePayload,
-        headers: {
-          ...googlePayload.headers,
-          'x-goog-resource-id': undefined,
-        },
-      }),
-    )) as APIGatewayProxyResult;
+    const event = getApiGatewayEvent();
+    event.headers['x-goog-channel-token'] = googleApiToken;
+    event.headers['x-goog-resource-id'] = undefined;
+
+    const res = (await handler(event)) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(400);
   });
@@ -99,27 +74,13 @@ describe('Event Webhook', () => {
     );
 
     const res = (await handler(
-      apiGatewayEvent(googlePayload),
+      getApiGatewayEvent(googlePayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(502);
   });
 
-  test('Should return 502 when fails to get credentials from AWS', async () => {
-    calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
-      fetchCalendarRawResponse,
-    );
-    calendarControllerMock.getSyncToken.mockResolvedValueOnce(undefined);
-    getJWTCredentialsMock.mockRejectedValueOnce(new Error('AWS Error'));
-
-    const res = (await handler(
-      apiGatewayEvent(googlePayload),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(502);
-  });
-
-  test('Should return 200 and save nextSyncToken to squidex when receives one', async () => {
+  test('Should return 200 and save nextSyncToken to squidex when it receives one from google', async () => {
     calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
       fetchCalendarRawResponse,
     );
@@ -127,7 +88,7 @@ describe('Event Webhook', () => {
     calendarControllerMock.update.mockResolvedValueOnce(updateCalendarResponse);
 
     const res = (await handler(
-      apiGatewayEvent(googlePayload),
+      getApiGatewayEvent(googlePayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -148,7 +109,7 @@ describe('Event Webhook', () => {
     calendarControllerMock.update.mockResolvedValueOnce(updateCalendarResponse);
 
     const res = (await handler(
-      apiGatewayEvent(googlePayload),
+      getApiGatewayEvent(googlePayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -165,7 +126,7 @@ describe('Event Webhook', () => {
     );
 
     const res = (await handler(
-      apiGatewayEvent(googlePayload),
+      getApiGatewayEvent(googlePayload),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);

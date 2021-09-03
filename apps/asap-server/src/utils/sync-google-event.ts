@@ -1,19 +1,21 @@
 import Joi from '@hapi/joi';
-import { RestEvent } from '@asap-hub/squidex';
+import { RestEvent, Event } from '@asap-hub/squidex';
 import { EventStatus } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { EventController } from '../controllers/events';
 import logger from './logger';
 
-export const syncEventFactory = (
-  eventsController: EventController,
-  calendarId: string,
-): ((
+export type SyncEvent = (
   eventPayload: calendarV3.Schema$Event,
+  calendarId: string,
   defaultTimezone: string,
-) => Promise<RestEvent>) => {
-  const syncEvent = async (
+) => Promise<RestEvent>;
+
+export const syncEventFactory =
+  (eventsController: EventController): SyncEvent =>
+  async (
     eventPayload: calendarV3.Schema$Event,
+    calendarId: string,
     defaultTimezone: string,
   ): Promise<RestEvent> => {
     const schema = Joi.object({
@@ -51,7 +53,7 @@ export const syncEventFactory = (
       return new Date(eventDate.date || 0).toISOString();
     };
 
-    const newEvent = {
+    const newEvent: Omit<Event, 'tags'> = {
       googleId: googleEvent.id,
       title: googleEvent.summary,
       description: googleEvent.description,
@@ -61,7 +63,7 @@ export const syncEventFactory = (
       endDateTimeZone: googleEvent.end.timeZone || defaultTimezone,
       status: (googleEvent.status.charAt(0).toUpperCase() +
         googleEvent.status.slice(1)) as EventStatus, // TODO: use lowercase
-
+      calendar: [calendarId],
       hidden: false,
     };
 
@@ -105,19 +107,12 @@ export const syncEventFactory = (
         { id: googleEvent.id, event: newEvent },
         'Event not found. Creating.',
       );
-      return await eventsController.create({
-        ...newEvent,
-        calendar: [calendarId],
-        tags: [],
-      });
+      return await eventsController.create({ ...newEvent, tags: [] });
     } catch (err) {
       logger.error(err, 'Error syncing event');
       throw err;
     }
   };
-
-  return syncEvent;
-};
 
 type GoogleEvent = {
   id: string;

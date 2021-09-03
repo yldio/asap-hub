@@ -7,7 +7,7 @@ import {
   getCalendarPublishedWebhookEvent,
   getCalendarUpdatedWebhookEvent,
 } from '../../fixtures/calendars.fixtures';
-import { apiGatewayEvent } from '../../helpers/events';
+import { getApiGatewayEvent } from '../../helpers/events';
 import { createSignedPayload } from '../../helpers/webhooks';
 
 describe('Calendar webhook', () => {
@@ -21,7 +21,7 @@ describe('Calendar webhook', () => {
   });
 
   test('Should return 403 when the request is not signed correctly', async () => {
-    const event = apiGatewayEvent({
+    const event = getApiGatewayEvent({
       headers: {
         'x-signature': 'XYZ',
       },

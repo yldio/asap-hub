@@ -4,7 +4,7 @@ import { EventBridge } from 'aws-sdk';
 import { userWebhookFactory } from '../../../src/handlers/webhooks/webhook-user';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
 import { createUserEvent } from '../../fixtures/orcid.fixtures';
-import { apiGatewayEvent } from '../../helpers/events';
+import { getApiGatewayEvent } from '../../helpers/events';
 
 describe('User webhook', () => {
   const evenBridgeMock = {
@@ -17,7 +17,7 @@ describe('User webhook', () => {
   });
 
   test('Should return 403 when the request is not signed correctly', async () => {
-    const event = apiGatewayEvent({
+    const event = getApiGatewayEvent({
       headers: {
         'x-signature': 'XYZ',
       },
@@ -53,7 +53,7 @@ describe('User webhook', () => {
 });
 
 const createSignedPayload = (payload: WebhookPayload<User>) =>
-  apiGatewayEvent({
+  getApiGatewayEvent({
     headers: {
       'x-signature': signPayload(payload),
     },

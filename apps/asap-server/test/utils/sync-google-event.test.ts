@@ -6,15 +6,15 @@ import { getRestEvent } from '../fixtures/events.fixtures';
 describe('Sync calendar util hook', () => {
   const calendarId = 'squidex-calendar-id';
   const defaultCalendarTimezone = 'Europe/Lisbon';
-  const syncEvent = syncEventFactory(eventControllerMock, calendarId);
+  const syncEvent = syncEventFactory(eventControllerMock);
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test('Should create event when it is not found', async () => {
+  test('Should create the event when it is not found', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    await syncEvent(googleEvent, defaultCalendarTimezone);
+    await syncEvent(event, calendarId, defaultCalendarTimezone);
 
     expect(eventControllerMock.update).not.toHaveBeenCalled();
     expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
@@ -35,7 +35,7 @@ describe('Sync calendar util hook', () => {
 
   test('Should update event when it exists', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(getRestEvent());
-    await syncEvent(event, defaultCalendarTimezone);
+    await syncEvent(event, calendarId, defaultCalendarTimezone);
 
     expect(eventControllerMock.create).not.toHaveBeenCalled();
     expect(eventControllerMock.update).toHaveBeenCalledTimes(1);
@@ -50,19 +50,35 @@ describe('Sync calendar util hook', () => {
         endDate: '2021-02-28T00:00:00.000Z',
         endDateTimeZone: 'Europe/Lisbon',
         status: 'Confirmed',
+        calendar: ['squidex-calendar-id'],
         hidden: false,
       },
     );
   });
 
-  test('Should not update the event if it belongs to a different calendar', async () => {
+  test('Should update the event if it belongs to a different calendar', async () => {
     const existingEvent = getRestEvent();
     existingEvent.data.calendar.iv![0] = 'some-other-calendar-id';
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
-    await syncEvent(event, defaultCalendarTimezone);
+    await syncEvent(event, calendarId, defaultCalendarTimezone);
 
     expect(eventControllerMock.create).not.toHaveBeenCalled();
-    expect(eventControllerMock.update).not.toHaveBeenCalled();
+    expect(eventControllerMock.update).toHaveBeenCalledTimes(1);
+    expect(eventControllerMock.update).toHaveBeenCalledWith(
+      'squidex-event-id',
+      {
+        googleId: '04rteq6hj3gfq9g3i8v2oqetvd',
+        title: 'Event Title',
+        description: 'Event Description',
+        startDate: '2021-02-27T00:00:00.000Z',
+        startDateTimeZone: 'Europe/Lisbon',
+        endDate: '2021-02-28T00:00:00.000Z',
+        endDateTimeZone: 'Europe/Lisbon',
+        status: 'Confirmed',
+        calendar: ['squidex-calendar-id'],
+        hidden: false,
+      },
+    );
   });
 
   describe('Hidden flag', () => {
@@ -102,7 +118,7 @@ describe('Sync calendar util hook', () => {
         ...googleEvent,
         status: 'cancelled',
       };
-      await syncEvent(updatedEvent, defaultCalendarTimezone);
+      await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
         'squidex-event-id',
@@ -115,6 +131,7 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
           hidden: true,
         },
       );
@@ -131,7 +148,7 @@ describe('Sync calendar util hook', () => {
         ...googleEvent,
         status: 'cancelled',
       };
-      await syncEvent(updatedEvent, defaultCalendarTimezone);
+      await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
         'squidex-event-id',
@@ -144,6 +161,7 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
           hidden: true,
         },
       );
@@ -160,7 +178,7 @@ describe('Sync calendar util hook', () => {
         ...googleEvent,
         status: 'cancelled',
       };
-      await syncEvent(updatedEvent, defaultCalendarTimezone);
+      await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
         'squidex-event-id',
@@ -173,6 +191,7 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
           hidden: false,
         },
       );
@@ -189,7 +208,7 @@ describe('Sync calendar util hook', () => {
         ...googleEvent,
         status: 'cancelled',
       };
-      await syncEvent(updatedEvent, defaultCalendarTimezone);
+      await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
         'squidex-event-id',
@@ -202,6 +221,7 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Cancelled',
+          calendar: ['squidex-calendar-id'],
           hidden: false,
         },
       );
@@ -218,7 +238,7 @@ describe('Sync calendar util hook', () => {
         ...googleEvent,
         status: 'tentative',
       };
-      await syncEvent(updatedEvent, defaultCalendarTimezone);
+      await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
         'squidex-event-id',
@@ -231,6 +251,7 @@ describe('Sync calendar util hook', () => {
           endDate: '2021-02-28T00:00:00.000Z',
           endDateTimeZone: 'Europe/Lisbon',
           status: 'Tentative',
+          calendar: ['squidex-calendar-id'],
           hidden: true,
         },
       );
@@ -243,7 +264,7 @@ describe('Sync calendar util hook', () => {
         new Error('Squidex'),
       );
       await expect(
-        syncEvent(googleEvent, defaultCalendarTimezone),
+        syncEvent(event, calendarId, defaultCalendarTimezone),
       ).rejects.toThrow();
     });
 
@@ -251,7 +272,7 @@ describe('Sync calendar util hook', () => {
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(getRestEvent());
       eventControllerMock.update.mockRejectedValueOnce(new Error('Squidex'));
       await expect(
-        syncEvent(googleEvent, defaultCalendarTimezone),
+        syncEvent(event, calendarId, defaultCalendarTimezone),
       ).rejects.toThrow();
     });
 
@@ -259,7 +280,7 @@ describe('Sync calendar util hook', () => {
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
       eventControllerMock.create.mockRejectedValueOnce(new Error('Squidex'));
       await expect(
-        syncEvent(googleEvent, defaultCalendarTimezone),
+        syncEvent(event, calendarId, defaultCalendarTimezone),
       ).rejects.toThrow();
     });
   });
@@ -272,6 +293,7 @@ describe('Sync calendar util hook', () => {
         ...googleEvent,
         end: { dateTime: '2021-02-27T10:00:00Z', timeZone: 'Europe/London' },
       },
+      calendarId,
       defaultCalendarTimezone,
     );
 
@@ -303,6 +325,7 @@ describe('Sync calendar util hook', () => {
           timeZone: 'America/New_York',
         },
       },
+      calendarId,
       defaultCalendarTimezone,
     );
 
@@ -325,19 +348,26 @@ describe('Sync calendar util hook', () => {
 
   describe('Validation test', () => {
     test('Should reject when validation fails - empty object', async () => {
-      await expect(syncEvent({}, defaultCalendarTimezone)).rejects.toThrow();
+      await expect(
+        syncEvent({}, calendarId, defaultCalendarTimezone),
+      ).rejects.toThrow();
     });
 
     test('Should reject when validation fails - missing fields: id', async () => {
       await expect(
-        syncEvent({ ...googleEvent, id: undefined }, defaultCalendarTimezone),
+        syncEvent(
+          { ...event, id: undefined },
+          calendarId,
+          defaultCalendarTimezone,
+        ),
       ).rejects.toThrow();
     });
 
     test('Should reject when validation fails - missing fields: summary', async () => {
       await expect(
         syncEvent(
-          { ...googleEvent, summary: undefined },
+          { ...event, summary: undefined },
+          calendarId,
           defaultCalendarTimezone,
         ),
       ).rejects.toThrow();
@@ -346,7 +376,8 @@ describe('Sync calendar util hook', () => {
     test('Should reject when validation fails - missing dates', async () => {
       await expect(
         syncEvent(
-          { ...googleEvent, start: {}, end: {} },
+          { ...event, start: {}, end: {} },
+          calendarId,
           defaultCalendarTimezone,
         ),
       ).rejects.toThrow();
@@ -360,6 +391,7 @@ describe('Sync calendar util hook', () => {
             start: { timeZone: 'notice-no-dates' },
             end: { timeZone: 'notice-no-dates' },
           },
+          calendarId,
           defaultCalendarTimezone,
         ),
       ).rejects.toThrow();

@@ -1,6 +1,6 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 import Boom from '@hapi/boom';
-import { apiGatewayEvent } from '../../../helpers/events';
+import { getApiGatewayEvent } from '../../../helpers/events';
 import {
   algoliaSearchApiKey,
   auth0SharedSecret as secret,
@@ -23,7 +23,7 @@ describe('Fetch-user-by-code handler', () => {
   describe('Validation', () => {
     test("return 400 when code isn't present", async () => {
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           headers: {
             Authorization: `Basic ${secret}`,
           },
@@ -35,7 +35,7 @@ describe('Fetch-user-by-code handler', () => {
 
     test('returns 401 when request is not authorized', async () => {
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           pathParameters: {
             code: 'welcomeCode',
           },
@@ -47,7 +47,7 @@ describe('Fetch-user-by-code handler', () => {
 
     test('returns 401 when request is not using Basic Auth', async () => {
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           pathParameters: {
             code: 'welcomeCode',
           },
@@ -62,7 +62,7 @@ describe('Fetch-user-by-code handler', () => {
 
     test('returns 403 when secret doesnt match', async () => {
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           pathParameters: {
             code: 'welcomeCode',
           },
@@ -85,7 +85,7 @@ describe('Fetch-user-by-code handler', () => {
       userControllerMock.fetchByCode.mockRejectedValueOnce(Boom.forbidden());
 
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           pathParameters: {
             code: 'notFound',
           },
@@ -102,7 +102,7 @@ describe('Fetch-user-by-code handler', () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
 
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           pathParameters: {
             code: 'welcomeCode',
           },
@@ -122,7 +122,7 @@ describe('Fetch-user-by-code handler', () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
 
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           pathParameters: {
             code: 'welcomeCode',
           },
@@ -151,7 +151,7 @@ describe('Fetch-user-by-code handler', () => {
       userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
 
       const result = (await handler(
-        apiGatewayEvent({
+        getApiGatewayEvent({
           pathParameters: {
             code: 'welcomeCode',
           },

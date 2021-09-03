@@ -4,60 +4,66 @@ export const USER_SOCIAL_WEBSITE = /^http(s?):\/\/\S+/i;
 export const USER_SOCIAL_RESEARCHER_ID = /^[a-z]{1,3}-\d{4}-20\d\d$/i;
 export const USER_SOCIAL_NOT_URL = /^(?!\s*http(s?):\/\/)\S+/i;
 
-const getFailedResponse = () => ({
-  isOnboardable: false,
-});
-
 type UserValidationResponse = {
   isOnboardable: boolean;
-};
+} & Partial<
+  Pick<
+    { [P in keyof UserResponse]: { valid: boolean } },
+    | 'questions'
+    | 'teams'
+    | 'institution'
+    | 'jobTitle'
+    | 'city'
+    | 'country'
+    | 'biography'
+    | 'skills'
+  >
+>;
 
 export const isUserOnboardable = (
   user: UserResponse,
 ): UserValidationResponse => {
+  let response: Omit<UserValidationResponse, 'isOnboardable'> = {};
   if (user.questions.length < 2) {
-    return getFailedResponse();
-  }
-
-  if (user.teams.length === 0) {
-    return getFailedResponse();
-  }
-
-  if (user.teams.map((team) => team.approach).filter(Boolean).length === 0) {
-    return getFailedResponse();
+    response.questions = { valid: false };
   }
 
   if (
+    user.teams.length === 0 ||
+    user.teams.map((team) => team.approach).filter(Boolean).length === 0 ||
     user.teams.map((team) => team.responsibilities).filter(Boolean).length === 0
   ) {
-    return getFailedResponse();
+    response.teams = { valid: false };
   }
 
-  if (typeof user.institution === 'undefined') {
-    return getFailedResponse();
+  if (!user.institution) {
+    response.institution = { valid: false };
   }
 
-  if (typeof user.jobTitle === 'undefined') {
-    return getFailedResponse();
+  if (!user.jobTitle) {
+    response.jobTitle = { valid: false };
   }
 
-  if (typeof user.city === 'undefined') {
-    return getFailedResponse();
+  if (!user.city) {
+    response.city = { valid: false };
   }
 
-  if (typeof user.country === 'undefined') {
-    return getFailedResponse();
+  if (!user.country) {
+    response.country = { valid: false };
   }
 
-  if (typeof user.biography === 'undefined') {
-    return getFailedResponse();
+  if (!user.biography) {
+    response.biography = { valid: false };
   }
 
   if (user.skills.length < 5) {
-    return getFailedResponse();
+    response.skills = { valid: false };
   }
 
-  return {
-    isOnboardable: true,
-  };
+  if (Object.keys(response).length === 0) {
+    return {
+      isOnboardable: true,
+    };
+  }
+  return { ...response, isOnboardable: false };
 };

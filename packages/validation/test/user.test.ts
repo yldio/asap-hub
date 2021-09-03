@@ -17,6 +17,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      teams: { valid: false },
     });
   });
 
@@ -37,6 +38,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      teams: { valid: false },
     });
   });
 
@@ -85,6 +87,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      teams: { valid: false },
     });
   });
 
@@ -124,6 +127,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      questions: { valid: false },
     });
   });
 
@@ -135,6 +139,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      questions: { valid: false },
     });
   });
 
@@ -146,6 +151,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      institution: { valid: false },
     });
   });
 
@@ -157,6 +163,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      jobTitle: { valid: false },
     });
   });
 
@@ -168,6 +175,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      city: { valid: false },
     });
   });
 
@@ -179,6 +187,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      country: { valid: false },
     });
   });
 
@@ -190,6 +199,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      skills: { valid: false },
     });
   });
 
@@ -201,6 +211,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      skills: { valid: false },
     });
   });
   test('Should fail if biography is missing from user profile', async () => {
@@ -211,6 +222,7 @@ describe('isUserOnboardable validation', () => {
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
+      biography: { valid: false },
     });
   });
 });

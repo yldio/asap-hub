@@ -14,7 +14,8 @@ describe('Sync calendar util hook', () => {
 
   test('Should create the event when it is not found', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
-    await syncEvent(event, calendarId, defaultCalendarTimezone);
+
+    await syncEvent(getGoogleEvent(), calendarId, defaultCalendarTimezone);
 
     expect(eventControllerMock.update).not.toHaveBeenCalled();
     expect(eventControllerMock.create).toHaveBeenCalledTimes(1);
@@ -35,7 +36,8 @@ describe('Sync calendar util hook', () => {
 
   test('Should update event when it exists', async () => {
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(getRestEvent());
-    await syncEvent(event, calendarId, defaultCalendarTimezone);
+
+    await syncEvent(getGoogleEvent(), calendarId, defaultCalendarTimezone);
 
     expect(eventControllerMock.create).not.toHaveBeenCalled();
     expect(eventControllerMock.update).toHaveBeenCalledTimes(1);
@@ -56,11 +58,14 @@ describe('Sync calendar util hook', () => {
     );
   });
 
-  test('Should update the event if it belongs to a different calendar', async () => {
+  test('Should update the event when it belongs to a different calendar', async () => {
     const existingEvent = getRestEvent();
     existingEvent.data.calendar.iv![0] = 'some-other-calendar-id';
     eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
-    await syncEvent(event, calendarId, defaultCalendarTimezone);
+
+    const googleEvent = getGoogleEvent();
+
+    await syncEvent(googleEvent, calendarId, defaultCalendarTimezone);
 
     expect(eventControllerMock.create).not.toHaveBeenCalled();
     expect(eventControllerMock.update).toHaveBeenCalledTimes(1);
@@ -75,10 +80,22 @@ describe('Sync calendar util hook', () => {
         endDate: '2021-02-28T00:00:00.000Z',
         endDateTimeZone: 'Europe/Lisbon',
         status: 'Confirmed',
-        calendar: ['squidex-calendar-id'],
+        calendar: [googleEvent.organizer!.email],
         hidden: false,
       },
     );
+  });
+
+  test('Should NOT update the event if the organiser of the event is different from the current calendar', async () => {
+    const googleEvent = getGoogleEvent();
+    googleEvent.organizer!.email = 'some-other-organizer';
+
+    await expect(
+      syncEvent(googleEvent, calendarId, defaultCalendarTimezone),
+    ).rejects.toThrow('Invalid organiser');
+
+    expect(eventControllerMock.create).not.toHaveBeenCalled();
+    expect(eventControllerMock.update).not.toHaveBeenCalled();
   });
 
   describe('Hidden flag', () => {
@@ -114,10 +131,9 @@ describe('Sync calendar util hook', () => {
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
-      const updatedEvent = {
-        ...googleEvent,
-        status: 'cancelled',
-      };
+      const updatedEvent = getGoogleEvent();
+      updatedEvent.status = 'cancelled';
+
       await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
@@ -144,10 +160,9 @@ describe('Sync calendar util hook', () => {
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
-      const updatedEvent = {
-        ...googleEvent,
-        status: 'cancelled',
-      };
+      const updatedEvent = getGoogleEvent();
+      updatedEvent.status = 'cancelled';
+
       await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
@@ -174,10 +189,8 @@ describe('Sync calendar util hook', () => {
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
-      const updatedEvent = {
-        ...googleEvent,
-        status: 'cancelled',
-      };
+      const updatedEvent = getGoogleEvent();
+      updatedEvent.status = 'cancelled';
       await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
@@ -204,10 +217,8 @@ describe('Sync calendar util hook', () => {
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
-      const updatedEvent = {
-        ...googleEvent,
-        status: 'cancelled',
-      };
+      const updatedEvent = getGoogleEvent();
+      updatedEvent.status = 'cancelled';
       await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
@@ -234,10 +245,8 @@ describe('Sync calendar util hook', () => {
 
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(existingEvent);
 
-      const updatedEvent = {
-        ...googleEvent,
-        status: 'tentative',
-      };
+      const updatedEvent = getGoogleEvent();
+      updatedEvent.status = 'tentative';
       await syncEvent(updatedEvent, calendarId, defaultCalendarTimezone);
 
       expect(eventControllerMock.update).toHaveBeenCalledWith(
@@ -264,7 +273,7 @@ describe('Sync calendar util hook', () => {
         new Error('Squidex'),
       );
       await expect(
-        syncEvent(event, calendarId, defaultCalendarTimezone),
+        syncEvent(getGoogleEvent(), calendarId, defaultCalendarTimezone),
       ).rejects.toThrow();
     });
 
@@ -272,7 +281,7 @@ describe('Sync calendar util hook', () => {
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(getRestEvent());
       eventControllerMock.update.mockRejectedValueOnce(new Error('Squidex'));
       await expect(
-        syncEvent(event, calendarId, defaultCalendarTimezone),
+        syncEvent(getGoogleEvent(), calendarId, defaultCalendarTimezone),
       ).rejects.toThrow();
     });
 
@@ -280,7 +289,7 @@ describe('Sync calendar util hook', () => {
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
       eventControllerMock.create.mockRejectedValueOnce(new Error('Squidex'));
       await expect(
-        syncEvent(event, calendarId, defaultCalendarTimezone),
+        syncEvent(getGoogleEvent(), calendarId, defaultCalendarTimezone),
       ).rejects.toThrow();
     });
   });
@@ -290,7 +299,7 @@ describe('Sync calendar util hook', () => {
 
     await syncEvent(
       {
-        ...googleEvent,
+        ...getGoogleEvent(),
         end: { dateTime: '2021-02-27T10:00:00Z', timeZone: 'Europe/London' },
       },
       calendarId,
@@ -319,7 +328,7 @@ describe('Sync calendar util hook', () => {
 
     await syncEvent(
       {
-        ...googleEvent,
+        ...getGoogleEvent(),
         end: {
           dateTime: '2040-09-13T13:30:00-04:00',
           timeZone: 'America/New_York',
@@ -356,7 +365,7 @@ describe('Sync calendar util hook', () => {
     test('Should reject when validation fails - missing fields: id', async () => {
       await expect(
         syncEvent(
-          { ...event, id: undefined },
+          { ...getGoogleEvent(), id: undefined },
           calendarId,
           defaultCalendarTimezone,
         ),
@@ -366,7 +375,7 @@ describe('Sync calendar util hook', () => {
     test('Should reject when validation fails - missing fields: summary', async () => {
       await expect(
         syncEvent(
-          { ...event, summary: undefined },
+          { ...getGoogleEvent(), summary: undefined },
           calendarId,
           defaultCalendarTimezone,
         ),
@@ -376,7 +385,7 @@ describe('Sync calendar util hook', () => {
     test('Should reject when validation fails - missing dates', async () => {
       await expect(
         syncEvent(
-          { ...event, start: {}, end: {} },
+          { ...getGoogleEvent(), start: {}, end: {} },
           calendarId,
           defaultCalendarTimezone,
         ),
@@ -387,7 +396,7 @@ describe('Sync calendar util hook', () => {
       await expect(
         syncEvent(
           {
-            ...googleEvent,
+            ...getGoogleEvent(),
             start: { timeZone: 'notice-no-dates' },
             end: { timeZone: 'notice-no-dates' },
           },
@@ -399,7 +408,7 @@ describe('Sync calendar util hook', () => {
   });
 });
 
-const googleEvent: calendarV3.Schema$Event = {
+const getGoogleEvent = (): calendarV3.Schema$Event => ({
   kind: 'calendar#event',
   etag: '"3228679679662000"',
   id: '04rteq6hj3gfq9g3i8v2oqetvd',
@@ -414,7 +423,7 @@ const googleEvent: calendarV3.Schema$Event = {
     email: 'yld@asap.science',
   },
   organizer: {
-    email: 'c_5u3bak8da7gsfkd34atk0211rg@group.calendar.google.com',
+    email: 'squidex-calendar-id',
     displayName: 'New Test',
     self: true,
   },
@@ -430,4 +439,4 @@ const googleEvent: calendarV3.Schema$Event = {
   reminders: {
     useDefault: false,
   },
-};
+});

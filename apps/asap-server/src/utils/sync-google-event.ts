@@ -4,6 +4,7 @@ import { EventStatus } from '@asap-hub/model';
 import { calendar_v3 as calendarV3 } from 'googleapis';
 import { EventController } from '../controllers/events';
 import logger from './logger';
+import { RequiredAndNonNullable } from './squidex';
 
 export type SyncEvent = (
   eventPayload: calendarV3.Schema$Event,
@@ -39,19 +40,16 @@ export const syncEventFactory =
 
     if (error) {
       logger.error(error, 'Ignored event update, validation error');
-      return Promise.reject(error);
+      throw error;
     }
 
     const googleEvent = value as GoogleEvent;
     logger.debug({ googleEvent }, 'google event');
 
-    const getEventDate = (
-      eventDate: calendarV3.Schema$EventDateTime,
-    ): string => {
-      if (eventDate.dateTime) return new Date(eventDate.dateTime).toISOString();
-
-      return new Date(eventDate.date || 0).toISOString();
-    };
+    if (googleEvent.organizer?.email !== calendarId) {
+      logger.error('The calendar is not the organiser of the event');
+      throw new Error('Invalid organiser');
+    }
 
     const newEvent: Omit<Event, 'tags'> = {
       googleId: googleEvent.id,
@@ -74,16 +72,6 @@ export const syncEventFactory =
       );
 
       if (existingEvent) {
-        if (
-          existingEvent?.data.calendar.iv &&
-          existingEvent?.data.calendar.iv[0] !== calendarId
-        ) {
-          logger.debug(
-            { existingEvent, newEvent },
-            'Found event with a different parent, skipping.',
-          );
-          return existingEvent;
-        }
         if (
           newEvent.status === 'Cancelled' &&
           existingEvent.data.status.iv !== 'Cancelled'
@@ -114,11 +102,10 @@ export const syncEventFactory =
     }
   };
 
-type GoogleEvent = {
-  id: string;
-  summary: string;
-  description?: string;
-  status: EventStatus;
-  start: calendarV3.Schema$EventDateTime;
-  end: calendarV3.Schema$EventDateTime;
+const getEventDate = (eventDate: calendarV3.Schema$EventDateTime): string => {
+  if (eventDate.dateTime) return new Date(eventDate.dateTime).toISOString();
+
+  return new Date(eventDate.date || 0).toISOString();
 };
+
+type GoogleEvent = RequiredAndNonNullable<calendarV3.Schema$Event>;

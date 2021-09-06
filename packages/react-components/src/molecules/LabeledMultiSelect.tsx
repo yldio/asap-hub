@@ -4,6 +4,10 @@ import { MultiSelect, Paragraph, Label } from '../atoms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 
+const subtitleStyles = css({
+  paddingLeft: `${6 / perRem}em`,
+});
+
 const descriptionStyles = css({
   color: lead.rgb,
 });
@@ -23,7 +27,7 @@ const LabeledMultiSelect: React.FC<LabeledMultiSelectProps> = ({
     <Label forContent={(id) => <MultiSelect {...multiSelectProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
-        <span css={{ paddingLeft: `${6 / perRem}em` }}>{subtitle}</span>
+        <span css={subtitleStyles}>{subtitle}</span>
         <br />
         <span css={descriptionStyles}>{description}</span>
       </Paragraph>

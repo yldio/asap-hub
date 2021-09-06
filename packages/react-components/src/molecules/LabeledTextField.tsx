@@ -28,6 +28,10 @@ type LabeledTextFieldProps = {
   readonly hint?: React.ReactNode;
 } & Exclude<ComponentProps<typeof TextField>, 'id'>;
 
+const subtitleStyles = css({
+  paddingLeft: `${6 / perRem}em`,
+});
+
 const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
   title,
   subtitle,
@@ -39,7 +43,7 @@ const LabeledTextField: React.FC<LabeledTextFieldProps> = ({
     <Label forContent={(id) => <TextField {...textFieldProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
-        <span css={{ paddingLeft: `${6 / perRem}em` }}>{subtitle}</span>
+        <span css={subtitleStyles}>{subtitle}</span>
         <br />
         <span css={descriptionStyles}>{description}</span>
       </Paragraph>

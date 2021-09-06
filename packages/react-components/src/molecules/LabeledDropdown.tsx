@@ -1,6 +1,10 @@
 import { Dropdown, Paragraph, Label, DropdownProps } from '../atoms';
 import { perRem } from '../pixels';
 
+const subtitleStyles = {
+  paddingLeft: `${6 / perRem}em`,
+};
+
 type LabeledDropdownProps<V extends string> = {
   readonly title: React.ReactNode;
   readonly subtitle?: React.ReactNode;
@@ -15,7 +19,7 @@ export default function LabeledDropdown<V extends string>({
       <Label forContent={(id) => <Dropdown {...dropdownProps} id={id} />}>
         <Paragraph>
           <strong>{title}</strong>
-          <span css={{ paddingLeft: `${6 / perRem}em` }}>{subtitle}</span>
+          <span css={subtitleStyles}>{subtitle}</span>
         </Paragraph>
       </Label>
     </div>

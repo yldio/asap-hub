@@ -2,10 +2,15 @@ import { ComponentProps, ReactNode } from 'react';
 import { Typeahead, Paragraph, Label } from '../atoms';
 import { perRem } from '../pixels';
 
+const subtitleStyles = {
+  paddingLeft: `${6 / perRem}em`,
+};
+
 type LabeledTypeaheadProps = {
   readonly title: ReactNode;
   readonly subtitle?: React.ReactNode;
 } & Exclude<ComponentProps<typeof Typeahead>, 'id'>;
+
 const LabeledTypeahead: React.FC<LabeledTypeaheadProps> = ({
   title,
   subtitle,
@@ -15,7 +20,7 @@ const LabeledTypeahead: React.FC<LabeledTypeaheadProps> = ({
     <Label forContent={(id) => <Typeahead {...typeaheadProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
-        <span css={{ paddingLeft: `${6 / perRem}em` }}>{subtitle}</span>
+        <span css={subtitleStyles}>{subtitle}</span>
       </Paragraph>
     </Label>
   </div>

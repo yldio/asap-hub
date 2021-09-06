@@ -19,6 +19,20 @@ it('renders the title', () => {
   expect(getByText('ModalTitle', { selector: 'h3' })).toBeVisible();
 });
 
+it('indicates which fields are required or optional', () => {
+  const { getByText } = render(<ToolModal {...props} title="ModalTitle" />, {
+    wrapper: StaticRouter,
+  });
+
+  [
+    { title: 'Add URL', subtitle: 'Required' },
+    { title: 'Tool Name', subtitle: 'Required' },
+    { title: 'Description', subtitle: 'Optional' },
+  ].forEach(({ title, subtitle }) =>
+    expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
+  );
+});
+
 it('renders default values into inputs', () => {
   const { queryAllByRole } = render(
     <ToolModal

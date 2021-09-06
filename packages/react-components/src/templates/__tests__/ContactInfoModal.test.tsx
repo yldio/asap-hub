@@ -12,6 +12,28 @@ it('renders a form to edit the contact info', () => {
   );
   expect(getByText(/contact/i, { selector: 'h3' })).toBeVisible();
 });
+
+it('indicates which fields are optional', () => {
+  const { getByText } = render(
+    <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,
+    { wrapper: StaticRouter },
+  );
+
+  [
+    { title: 'Contact email', subtitle: 'Optional' },
+    { title: 'Website 1', subtitle: 'Optional' },
+    { title: 'Website 2', subtitle: 'Optional' },
+    { title: 'ResearcherID', subtitle: 'Optional' },
+    { title: 'Twitter', subtitle: 'Optional' },
+    { title: 'Github', subtitle: 'Optional' },
+    { title: 'LinkedIn', subtitle: 'Optional' },
+    { title: 'Researchgate', subtitle: 'Optional' },
+    { title: 'Google Scholar', subtitle: 'Optional' },
+  ].forEach(({ title, subtitle }) =>
+    expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
+  );
+});
+
 it('shows the fallback email', () => {
   const { container } = render(
     <ContactInfoModal fallbackEmail="fallback@example.com" backHref="#" />,

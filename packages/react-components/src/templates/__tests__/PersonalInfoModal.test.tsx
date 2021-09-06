@@ -27,6 +27,31 @@ it('renders the title', () => {
   expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
 });
 
+it('indicates which fields are required or optional', () => {
+  const { getByText } = render(
+    <PersonalInfoModal
+      countrySuggestions={[]}
+      loadInstitutionOptions={() => Promise.resolve([])}
+      backHref="/wrong"
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+
+  [
+    { title: 'First name', subtitle: 'Required' },
+    { title: 'Last name(s)', subtitle: 'Required' },
+    { title: 'Degree', subtitle: 'Optional' },
+    { title: 'Institution', subtitle: 'Required' },
+    { title: 'Position', subtitle: 'Required' },
+    { title: 'Country', subtitle: 'Required' },
+    { title: 'City', subtitle: 'Required' },
+  ].forEach(({ title, subtitle }) =>
+    expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
+  );
+});
+
 it('renders default values into text inputs', () => {
   const { queryAllByRole } = render(
     <PersonalInfoModal

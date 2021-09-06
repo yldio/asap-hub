@@ -17,15 +17,32 @@ it('renders the title', () => {
   expect(getByText('Your Open Questions', { selector: 'h3' })).toBeVisible();
 });
 
+it('renders which fields are mandatory/optional', () => {
+  const { getByText } = render(<OpenQuestionsModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+
+  [
+    { title: 'Open Question 1', subtitle: 'Required' },
+    { title: 'Open Question 2', subtitle: 'Required' },
+    { title: 'Open Question 3', subtitle: 'Optional' },
+    { title: 'Open Question 4', subtitle: 'Optional' },
+  ].forEach(({ title, subtitle }) =>
+    expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
+  );
+});
+
 it('renders default values into text inputs', () => {
-  const { getByLabelText } = render(
-    <OpenQuestionsModal {...props} questions={['1', '2', '3', '4']} />,
+  const questions = ['1', '2', '3', '4'];
+
+  const { container } = render(
+    <OpenQuestionsModal {...props} questions={questions} />,
     { wrapper: StaticRouter },
   );
-  expect(getByLabelText(/open question 1/i)).toHaveValue('1');
-  expect(getByLabelText(/open question 2/i)).toHaveValue('2');
-  expect(getByLabelText(/open question 3/i)).toHaveValue('3');
-  expect(getByLabelText(/open question 4/i)).toHaveValue('4');
+
+  container.querySelectorAll('textbox').forEach((elem, idx) => {
+    expect(elem).toHaveValue(questions[idx]);
+  });
 });
 
 describe('triggers the save function', () => {
@@ -40,7 +57,9 @@ describe('triggers the save function', () => {
     const answerQuestion = (index: number) =>
       userEvent.type(
         getByLabelText(
-          `Open Question ${index}${index === 1 || index === 2 ? '*' : ''}`,
+          `Open Question ${index}${
+            index === 1 || index === 2 ? '(Required)' : '(Optional)'
+          }`,
         ),
         questions[index],
       );

@@ -1,22 +1,22 @@
 import { render } from '@testing-library/react';
 import { ComponentProps } from 'react';
-import OnboardingHeader from '../OnboardingHeader';
+import OnboardingFooter from '../OnboardingFooter';
 
-const props: ComponentProps<typeof OnboardingHeader> = {
+const props: ComponentProps<typeof OnboardingFooter> = {
   onboardable: { isOnboardable: false },
 };
-it('renders the not onboardable header', () => {
+it('renders the not onboardable footer', () => {
   const { getByTitle, getByRole } = render(
-    <OnboardingHeader {...props} onboardable={{ isOnboardable: false }} />,
+    <OnboardingFooter {...props} onboardable={{ isOnboardable: false }} />,
   );
   expect(getByTitle(/lock/i)).toBeInTheDocument();
   expect(getByRole('heading')).toHaveTextContent(/ incomplete/i);
 });
 
-it('renders the onboardable header', () => {
+it('renders the onboardable footer', () => {
   const { getByTitle, getByRole } = render(
-    <OnboardingHeader {...props} onboardable={{ isOnboardable: true }} />,
+    <OnboardingFooter {...props} onboardable={{ isOnboardable: true }} />,
   );
-  expect(getByTitle(/tick/i)).toBeInTheDocument();
+  expect(getByTitle(/success/i)).toBeInTheDocument();
   expect(getByRole('heading')).toHaveTextContent(/ complete/i);
 });

@@ -56,6 +56,7 @@ export { default as searchIcon } from './search-icon';
 export { default as settingsIcon } from './settings';
 export { default as showPasswordIcon } from './show-password';
 export { default as slackIcon } from './slack';
+export { default as successIcon } from './success';
 export { default as teamIcon } from './team';
 export { default as tickIcon } from './tick';
 export { default as trainingPlaceholderIcon } from './training-placeholder';

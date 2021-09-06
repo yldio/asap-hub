@@ -14,7 +14,7 @@ import { css } from '@emotion/react';
 import { isUserOnboardable } from '@asap-hub/validation';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
-import { MenuHeader, OnboardingHeader, ToastStack } from '../organisms';
+import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
 import { Overlay } from '../atoms';
 import { navigationGrey, crossQuery, drawerQuery } from '../layout';
 import { Loading } from '../molecules';
@@ -46,12 +46,14 @@ const styles = css({
   grid: `
     "header     header"  max-content
     "main-menu  content" max-content
-    "user-menu  content" 1fr         / max-content 1fr`,
+    "user-menu  content" 1fr
+    "footer     footer"  auto   / max-content 1fr`,
 
   [crossQuery]: {
     grid: `
       "header     user-button" max-content
-      "main-menu  content"     1fr         / max-content 1fr`,
+      "main-menu  content"     1fr
+      "footer     footer" auto / max-content 1fr`,
   },
 });
 
@@ -68,7 +70,7 @@ const headerMenuShownStyles = css({
 });
 
 const contentStyles = css({
-  gridRow: 'header-end / -1',
+  gridRow: 'header-end / -2',
   gridColumn: '1 / -1',
   [crossQuery]: {
     gridColumn: 'content',
@@ -111,12 +113,13 @@ const userButtonStyles = css({
 
 const menuStyles = css({
   backgroundColor: paper.rgb,
-  gridRow: `main-menu/-1`,
+  gridRow: `main-menu`,
   gridColumnStart: '1',
   overflowY: 'auto',
   display: 'flex',
   flexDirection: 'column',
   [drawerQuery]: {
+    gridRow: `main-menu/-1`,
     visibility: 'hidden',
     transform: 'translateX(-100%)',
     transition: `transform 250ms ease, visibility 0s 250ms`,
@@ -202,12 +205,6 @@ const Layout: FC<LayoutProps> = ({
 
   return (
     <ToastStack>
-      {onboardable && (
-        <OnboardingHeader
-          onboardModalHref={onboardModalHref}
-          onboardable={onboardable}
-        />
-      )}
       <article css={[styles, menuShown || { overflow: 'hidden' }]}>
         {/* order relevant for overlap */}
         <div css={[headerStyles, menuShown && headerMenuShownStyles]}>
@@ -243,6 +240,14 @@ const Layout: FC<LayoutProps> = ({
             </Suspense>
           </div>
         </div>
+        {onboardable && (
+          <div css={{ gridArea: 'footer' }}>
+            <OnboardingFooter
+              onboardModalHref={onboardModalHref}
+              onboardable={onboardable}
+            />
+          </div>
+        )}
       </article>
     </ToastStack>
   );

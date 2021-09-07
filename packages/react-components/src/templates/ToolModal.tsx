@@ -50,8 +50,9 @@ const ToolModal: React.FC<ToolModalProps> = ({
       {({ isSaving }) => (
         <div css={fieldsContainer}>
           <LabeledTextField
-            title="Add URL*"
-            subtitle="Ensure sharing settings have been adjusted so that your team can access
+            title="Add URL"
+            subtitle="(Required)"
+            description="Ensure sharing settings have been adjusted so that your team can access
         this link."
             value={newUrl}
             onChange={setNewUrl}
@@ -64,7 +65,8 @@ const ToolModal: React.FC<ToolModalProps> = ({
             required
           />
           <LabeledTextField
-            title="Tool Name*"
+            title="Tool Name"
+            subtitle="(Required)"
             value={newName}
             onChange={setNewName}
             enabled={!isSaving}
@@ -72,8 +74,9 @@ const ToolModal: React.FC<ToolModalProps> = ({
           />
 
           <LabeledTextField
-            title="Description (optional)"
-            subtitle="Help your team understand what this link is used for."
+            title="Description"
+            subtitle="(Optional)"
+            description="Help your team understand what this link is used for."
             value={newDescription}
             onChange={setNewDescription}
             enabled={!isSaving}

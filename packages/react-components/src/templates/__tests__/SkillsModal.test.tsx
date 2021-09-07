@@ -22,6 +22,19 @@ it('renders the title', () => {
   ).toBeVisible();
 });
 
+it('indicates which fields are required or optional', () => {
+  const { getByText } = render(<SkillsModal {...props} />, {
+    wrapper: StaticRouter,
+  });
+
+  [
+    { title: 'Tags', subtitle: 'Required' },
+    { title: 'Overview', subtitle: 'Optional' },
+  ].forEach(({ title, subtitle }) =>
+    expect(getByText(title).nextSibling?.textContent).toContain(subtitle),
+  );
+});
+
 it('renders default values into text inputs', () => {
   const { getByLabelText } = render(
     <SkillsModal {...props} skillsDescription="example description" />,

@@ -10,6 +10,7 @@ export default {
 export const Normal = () => (
   <LabeledDropdown
     title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '(Required)')}
     options={[
       { value: 'LHR', label: 'Heathrow' },
       { value: 'LGW', label: 'Gatwick' },
@@ -36,6 +37,7 @@ export const Normal = () => (
 export const EmptyOption = () => (
   <LabeledDropdown
     title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '(Required)')}
     options={[
       { value: '', label: text('Empty Label', 'Select airport') },
       { value: 'LHR', label: 'Heathrow' },
@@ -52,6 +54,7 @@ export const EmptyOption = () => (
 export const Invalid = () => (
   <LabeledDropdown
     title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '(Required)')}
     options={[
       { value: 'LHR', label: 'Heathrow' },
       { value: 'LGW', label: 'Gatwick' },

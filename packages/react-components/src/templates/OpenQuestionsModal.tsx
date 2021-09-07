@@ -47,7 +47,8 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
           <div css={[fieldsContainerStyles]}>
             <LabeledTextArea
               required
-              title="Open Question 1*"
+              title="Open Question 1"
+              subtitle="(Required)"
               placeholder="Example: Are alpha-synuclein deposits the cause or consequence of something deeper wrong with neurons?"
               getValidationMessage={() => 'Please add your first Open Question'}
               maxLength={200}
@@ -61,7 +62,8 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             />
             <LabeledTextArea
               required
-              title="Open Question 2*"
+              title="Open Question 2"
+              subtitle="(Required)"
               placeholder="Does alpha-synuclein represent a pathologically relevant stimulator of microglial activation?"
               getValidationMessage={() =>
                 'Please add your second Open Question'
@@ -77,6 +79,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             />
             <LabeledTextArea
               title="Open Question 3"
+              subtitle="(Optional)"
               placeholder="Example: To what extent do pre-formed fibrils (PFFs) of alpha-synuclein alter neuronal (synaptic) activity prior to neuronal loss?"
               maxLength={200}
               enabled={!isSaving}
@@ -89,6 +92,7 @@ const OpenQuestionsModal: React.FC<OpenQuestionsModalProps> = ({
             />
             <LabeledTextArea
               title="Open Question 4"
+              subtitle="(Optional)"
               placeholder="Example: Is it possible that LRRK2 alters the expression of multiple different miRNAs in different systems?"
               maxLength={200}
               enabled={!isSaving}

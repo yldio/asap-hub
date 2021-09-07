@@ -7,11 +7,13 @@ it('renders a labeled multi select, passing through props', () => {
     <LabeledMultiSelect
       title="Title"
       subtitle="Subtitle"
+      description="Description"
       suggestions={['Value']}
       values={['Value']}
     />,
   );
   expect(getByLabelText(/Title/i)).toBeVisible();
   expect(getByLabelText(/Subtitle/i)).toBeVisible();
+  expect(getByLabelText(/Description/i)).toBeVisible();
   expect(getByText('Value')).toBeVisible();
 });

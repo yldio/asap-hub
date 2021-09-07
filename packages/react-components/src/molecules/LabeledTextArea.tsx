@@ -14,13 +14,19 @@ const tipStyles = css({
   color: lead.rgb,
 });
 
+const subtitleStyles = css({
+  paddingLeft: `${6 / perRem}em`,
+});
+
 type LabeledTextAreaProps = {
   readonly title: React.ReactNode;
+  readonly subtitle?: React.ReactNode;
   readonly tip?: React.ReactNode;
 } & Exclude<ComponentProps<typeof TextArea>, 'id'>;
 
 const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
   title,
+  subtitle,
   tip,
   ...textAreaProps
 }) => (
@@ -28,6 +34,7 @@ const LabeledTextArea: React.FC<LabeledTextAreaProps> = ({
     <Label forContent={(id) => <TextArea {...textAreaProps} id={id} />}>
       <Paragraph>
         <strong>{title}</strong>
+        <span css={subtitleStyles}>{subtitle}</span>
         <br />
         <span css={tipStyles}>{tip}</span>
       </Paragraph>

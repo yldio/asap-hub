@@ -10,7 +10,8 @@ export default {
 export const AllLabels = () => (
   <LabeledTextField
     title={text('Title', 'Full Name')}
-    subtitle={text('Subtitle', 'As stated on passport')}
+    subtitle={text('Subtitle', '(Required)')}
+    description={text('Description', 'As stated on passport')}
     value={text('Value', 'John Doe')}
     hint={text(
       'Hint',
@@ -21,6 +22,7 @@ export const AllLabels = () => (
 export const Empty = () => (
   <LabeledTextField
     title="Full Name"
+    subtitle={text('Subtitle', '')}
     value=""
     placeholder={text('Placeholder', '')}
   />
@@ -28,6 +30,7 @@ export const Empty = () => (
 export const Disabled = () => (
   <LabeledTextField
     title="Full Name"
+    subtitle={text('Subtitle', '(Required)')}
     value={text('Value', 'John Doe')}
     enabled={false}
   />
@@ -36,6 +39,7 @@ export const Disabled = () => (
 export const Invalid = () => (
   <LabeledTextField
     title={text('Title', 'Full Name')}
+    subtitle={text('Subtitle', '(Required)')}
     value={text('Value', 'John|Doe')}
     customValidationMessage={text(
       'Validation Error Message',
@@ -48,6 +52,7 @@ export const Invalid = () => (
 export const LabelIndicator = () => (
   <LabeledTextField
     title={text('Title', 'Twitter')}
+    subtitle={text('Subtitle', '(Required)')}
     value={text('Value', 'handle')}
     enabled={boolean('Enabled', true)}
     hint={text('Hint', '')}

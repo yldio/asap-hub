@@ -9,6 +9,7 @@ export default {
 export const Normal = () => (
   <LabeledTypeahead
     title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '(Required)')}
     suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN']}
     value="LHR"
     enabled={boolean('Enabled', true)}
@@ -19,6 +20,7 @@ export const Normal = () => (
 export const Invalid = () => (
   <LabeledTypeahead
     title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '(Required)')}
     suggestions={['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN']}
     value="LHR"
     enabled={boolean('Enabled', true)}
@@ -45,6 +47,7 @@ export const loadOptionsMock =
 export const Async = () => (
   <LabeledTypeahead
     title={text('Title', 'Airport')}
+    subtitle={text('Subtitle', '(Required)')}
     loadOptions={loadOptionsMock(['LHR', 'LGW', 'STN', 'LTN', 'LCY', 'SEN'])}
     value=""
     enabled={boolean('Enabled', true)}

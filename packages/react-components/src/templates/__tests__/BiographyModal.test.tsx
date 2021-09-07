@@ -11,11 +11,12 @@ it('renders a form to edit the biography', () => {
   expect(getByRole('heading')).toHaveTextContent(/bio/i);
 });
 
-it('renders a text field containing the biography', () => {
-  const { getByDisplayValue } = render(
+it('renders a text field containing the biography, marked as mandatory', () => {
+  const { getByDisplayValue, container } = render(
     <BiographyModal backHref="#" biography="My Bio" />,
     { wrapper: StaticRouter },
   );
+  expect(container.querySelector('label')?.textContent).toContain('Required');
   expect(getByDisplayValue('My Bio')).toBeEnabled();
 });
 

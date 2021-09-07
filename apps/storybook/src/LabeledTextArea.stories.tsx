@@ -10,6 +10,7 @@ export default {
 export const AllLabels = () => (
   <LabeledTextArea
     title={text('Title', 'Members')}
+    subtitle={text('Subtitle', '(Required)')}
     tip={text('Tip', 'Tip: One member name per line')}
     value={array('Value', ['John Doe', 'Bat Man'], '\n').join('\n')}
   />
@@ -17,6 +18,8 @@ export const AllLabels = () => (
 export const Empty = () => (
   <LabeledTextArea
     title="Members"
+    subtitle={text('Subtitle', '(Required)')}
+    tip={text('Tip', 'Tip: One member name per line')}
     value=""
     placeholder={array(
       'Placeholder',
@@ -31,6 +34,8 @@ export const Disabled = () => (
 export const Invalid = () => (
   <LabeledTextArea
     title="Members"
+    subtitle={text('Subtitle', '(Required)')}
+    tip={text('Tip', 'Tip: One member name per line')}
     value={'John Doe\nBat Man'}
     customValidationMessage={text(
       'Validation Error Message',
@@ -43,6 +48,8 @@ export const MaxLength = () => {
   return (
     <LabeledTextArea
       title="Members"
+      subtitle={text('Subtitle', '(Required)')}
+      tip={text('Tip', 'Tip: One member name per line')}
       value={value}
       maxLength={number('Maximum length', value.length, { min: value.length })}
     />

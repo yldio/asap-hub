@@ -57,8 +57,9 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
           <div css={fieldsContainerStyles}>
             <div>
               <LabeledMultiSelect
-                title="Tags*"
-                subtitle="Select 5 to 10 keywords that best apply to your work."
+                title="Tags"
+                subtitle="(Required)"
+                description="Select 5 to 10 keywords that best apply to your work."
                 placeholder="Start typing…"
                 values={newSkills}
                 enabled={!isSaving}
@@ -82,6 +83,7 @@ const SkillsModal: React.FC<SkillsModalProps> = ({
             </div>
             <LabeledTextArea
               title="Overview"
+              subtitle="(Optional)"
               tip="Summarize your expertise and resources in one to two sentences"
               placeholder="Example: Randy has years of experience in membrane assembly, vesicular transport, and membrane fusion among organelles of the secretory pathway."
               maxLength={200}

@@ -6,7 +6,7 @@ import { network, useRouteParams } from '@asap-hub/routing';
 import { v4 as uuid } from 'uuid';
 
 import { useTeamById } from './state';
-import Frame from '../../structure/Frame';
+import Frame, { SearchFrame } from '../../structure/Frame';
 
 const loadAbout = () =>
   import(/* webpackChunkName: "network-team-about" */ './About');
@@ -43,7 +43,9 @@ const TeamProfile: FC<Record<string, never>> = () => {
               </Frame>
             </Route>
             <Route path={path + route({ teamId }).outputs.template}>
-              <Outputs teamId={teamId} teamOutputs={team.outputs} />
+              <SearchFrame title="outputs">
+                <Outputs teamId={teamId} teamOutputs={team.outputs} />
+              </SearchFrame>
             </Route>
             {team.tools && (
               <Route path={path + route({ teamId }).workspace.template}>

@@ -1,30 +1,64 @@
 import { Suspense } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
-import { createResearchOutputResponse } from '@asap-hub/fixtures';
-import { network } from '@asap-hub/routing';
 import {
-  Auth0Provider,
-  WhenReady,
-} from '@asap-hub/react-components/build/auth-test-utils';
+  createAlgoliaResearchOutputResponse,
+  createResearchOutputResponse,
+} from '@asap-hub/fixtures';
+import { network } from '@asap-hub/routing';
 import { disable } from '@asap-hub/flags';
 import { ResearchOutputResponse } from '@asap-hub/model';
 
 import { RecoilRoot } from 'recoil';
 import Outputs from '../Outputs';
+import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
+import { getResearchOutputs } from '../../../shared-research/api';
+import { researchOutputsState } from '../../../shared-research/state';
+import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
 
-const renderOutputs = async (teamOutputs: ResearchOutputResponse[]) => {
+jest.mock('../../../shared-research/api');
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
+
+const renderOutputs = async (
+  teamOutputs: ResearchOutputResponse[],
+  searchQuery = '',
+) => {
   const result = render(
-    <RecoilRoot>
+    <RecoilRoot
+      initializeState={({ reset }) => {
+        reset(
+          researchOutputsState({
+            searchQuery,
+            currentPage: 0,
+            filters: new Set(),
+            pageSize: CARD_VIEW_PAGE_SIZE,
+          }),
+        );
+      }}
+    >
       <Suspense fallback="loading">
         <Auth0Provider user={{}}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[
-                { pathname: network({}).teams({}).$, search: '' },
+                {
+                  pathname: network({})
+                    .teams({})
+                    .team({ teamId: '12345' })
+                    .outputs({}).$,
+                },
               ]}
             >
-              <Outputs teamOutputs={teamOutputs} teamId={'12345'} />
+              <Route
+                path={
+                  network({}).teams({}).team({ teamId: '12345' }).outputs({}).$
+                }
+              >
+                <Outputs teamOutputs={teamOutputs} teamId={'12345'} />
+              </Route>
             </MemoryRouter>
           </WhenReady>
         </Auth0Provider>
@@ -61,11 +95,24 @@ it('generates a link back to the team (REGRESSION)', async () => {
   );
 });
 
-it('renders search and filter when ALGOLIA_RESEARCH_OUTPUTS is enabled', async () => {
+it('renders search and filter', async () => {
   const { getByRole } = await renderOutputs([
     { ...createResearchOutputResponse(), id: 'ro0', title: 'Some RO' },
   ]);
   expect(
     (getByRole('searchbox') as HTMLInputElement).placeholder,
   ).toMatchInlineSnapshot(`"Enter a keyword, method, resource…"`);
+});
+
+it('renders a list of research outputs', async () => {
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createAlgoliaResearchOutputResponse(2),
+    hits: createAlgoliaResearchOutputResponse(2).hits.map((hit, index) => ({
+      ...hit,
+      title: `Test Output ${index}`,
+    })),
+  });
+  const { container } = await renderOutputs([], '');
+  expect(container.textContent).toContain('Test Output 0');
+  expect(container.textContent).toContain('Test Output 1');
 });

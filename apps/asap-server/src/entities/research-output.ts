@@ -7,6 +7,7 @@ import {
   researchOutputTypes,
   sharingStatuses,
 } from '@asap-hub/model';
+import { GraphqlUser } from '@asap-hub/squidex';
 import {
   FetchResearchOutput_findResearchOutputsContent,
   FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents,
@@ -34,7 +35,8 @@ export const parseGraphQLResearchOutput = (
             )
             .map((author) => {
               if (author.__typename === 'Users') {
-                return parseGraphQLUser(author);
+                // TODO: REMOVE casting once other GraphqlTypes are generated
+                return parseGraphQLUser(author as GraphqlUser);
               }
 
               return {
@@ -127,9 +129,8 @@ const convertDecisionToBoolean = (
 
 const isSharingStatus = (
   status: string,
-): status is ResearchOutputSharingStatus => {
-  return (sharingStatuses as ReadonlyArray<string>).includes(status);
-};
+): status is ResearchOutputSharingStatus =>
+  (sharingStatuses as ReadonlyArray<string>).includes(status);
 
 const isResearchOutputType = (type: string): type is ResearchOutputType =>
   (researchOutputTypes as ReadonlyArray<string>).includes(type);

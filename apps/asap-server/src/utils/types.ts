@@ -41,5 +41,5 @@ export type DeepWriteable<T> = {
 
 declare global {
   type Instant = string & { __type: 'SquidexDate' };
-  type JsonScalar = object & { __type: 'JsonScalar' };
+  type JsonScalar = Record<string, unknown> & { __type: 'JsonScalar' };
 }

@@ -1,10 +1,21 @@
-import { DecisionOption, ResearchOutputResponse } from '@asap-hub/model';
-import { GraphqlResearchOutput, GraphqlTeam } from '@asap-hub/squidex';
+import {
+  ResearchOutputResponse,
+  ResearchOutputSharingStatus,
+  ResearchOutputSubtype,
+  researchOutputSubtypes,
+  ResearchOutputType,
+  researchOutputTypes,
+  sharingStatuses,
+} from '@asap-hub/model';
+import {
+  FetchResearchOutput_findResearchOutputsContent,
+  FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents,
+} from '../queries/__generated__/FetchResearchOutput';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
 
 export const parseGraphQLResearchOutput = (
-  output: GraphqlResearchOutput,
+  output: FetchResearchOutput_findResearchOutputsContent,
   options?: {
     includeAuthors?: boolean;
     includeTeams?: boolean;
@@ -15,7 +26,7 @@ export const parseGraphQLResearchOutput = (
   const optionalAuthors = options?.includeAuthors
     ? {
         authors:
-          output.flatData?.authors
+          output.flatData.authors
             ?.filter(
               (author) =>
                 author.__typename !== 'Users' ||
@@ -67,45 +78,63 @@ export const parseGraphQLResearchOutput = (
 
   const uniquePmsEmails = [...new Set(filteredPmsEmails)];
 
+  const data = output.flatData;
+
   return {
     id: output.id,
     created: parseDate(output.created).toISOString(),
-    link: output.flatData?.link || undefined,
-    type: output.flatData?.type || 'Proposal',
-    subTypes: output.flatData?.subtype ? [output.flatData.subtype] : [],
-    title: output.flatData?.title || '',
-    description: output.flatData?.description || '',
-    tags: output.flatData?.tags || [],
-    publishDate: output.flatData?.publishDate || undefined,
-    labCatalogNumber: output.flatData?.labCatalogNumber || undefined,
-    doi: output.flatData?.doi || undefined,
-    accession: output.flatData?.accession || undefined,
-    rrid: output.flatData?.rrid || undefined,
-    addedDate: output.flatData?.addedDate || undefined,
+    link: data.link || undefined,
+    type: data.type && isResearchOutputType(data.type) ? data.type : 'Proposal',
+    subTypes:
+      data.subtype && isResearchOutputSubtype(data.subtype)
+        ? [data.subtype]
+        : [],
+    title: data.title || '',
+    description: data.description || '',
+    tags: data.tags || [],
+    publishDate: data.publishDate || undefined,
+    labCatalogNumber: data.labCatalogNumber || undefined,
+    doi: data.doi || undefined,
+    accession: data.accession || undefined,
+    rrid: data.rrid || undefined,
+    addedDate: data.addedDate || undefined,
     lastUpdatedPartial:
-      output.flatData?.lastUpdatedPartial ||
-      output.lastModified ||
-      output.created,
-    accessInstructions: output.flatData?.accessInstructions || undefined,
+      data.lastUpdatedPartial || output.lastModified || output.created,
+    accessInstructions: data.accessInstructions || undefined,
     ...optionalAuthors,
     ...optionalTeams,
-    sharingStatus: output.flatData?.sharingStatus || 'Network Only',
-    asapFunded: convertDecisionToBoolean(output.flatData?.asapFunded),
-    usedInPublication: convertDecisionToBoolean(
-      output.flatData?.usedInAPublication,
-    ),
+    sharingStatus:
+      data.sharingStatus !== null && isSharingStatus(data.sharingStatus)
+        ? data.sharingStatus
+        : 'Network Only',
+    asapFunded: convertDecisionToBoolean(data.asapFunded),
+    usedInPublication: convertDecisionToBoolean(data.usedInAPublication),
     pmsEmails: uniquePmsEmails,
   };
 };
 
 const parseGraphqlTeamLite = (
-  graphqlTeam: GraphqlTeam,
+  graphqlTeam: FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents,
 ): ResearchOutputResponse['team'] => ({
   id: graphqlTeam.id,
   displayName: graphqlTeam.flatData?.displayName || '',
 });
 
 const convertDecisionToBoolean = (
-  decision?: DecisionOption | null,
+  decision: string | null,
 ): boolean | undefined =>
   decision && ['Yes', 'No'].includes(decision) ? decision === 'Yes' : undefined;
+
+const isSharingStatus = (
+  status: string,
+): status is ResearchOutputSharingStatus => {
+  return (sharingStatuses as ReadonlyArray<string>).includes(status);
+};
+
+const isResearchOutputType = (type: string): type is ResearchOutputType =>
+  (researchOutputTypes as ReadonlyArray<string>).includes(type);
+
+const isResearchOutputSubtype = (
+  subtype: string,
+): subtype is ResearchOutputSubtype =>
+  (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);

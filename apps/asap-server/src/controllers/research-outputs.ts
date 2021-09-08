@@ -9,7 +9,19 @@ import { parseGraphQLResearchOutput } from '../entities/research-output';
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { GraphQLQueryUser } from './users';
-import { GraphqlFetchOptions } from '../utils/types';
+import {
+  FETCH_RESEARCH_OUTPUT,
+  FETCH_RESEARCH_OUTPUTS,
+} from '../queries/research-outputs.queries';
+import {
+  FetchResearchOutput,
+  FetchResearchOutputVariables,
+} from '../queries/__generated__/FetchResearchOutput';
+import {
+  FetchResearchOutputs,
+  FetchResearchOutputsVariables,
+} from '../queries/__generated__/FetchResearchOutputs';
+import logger from '../utils/logger';
 
 export const getGraphQLQueryResearchOutput = ({
   withTeams,
@@ -78,25 +90,6 @@ ${
 }
 `;
 
-export const buildGraphQLQueryResearchOutput = (): string => `
-  query FetchResearchOutput($id: String!) {
-    findResearchOutputsContent(id: $id) {
-      ${getGraphQLQueryResearchOutput({ withTeams: true })}
-    }
-  }
-`;
-
-export const buildGraphQLQueryFetchResearchOutputs = (): string => `
-  query FetchResearchOutputs($top: Int, $skip: Int, $filter: String) {
-    queryResearchOutputsContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: "created desc") {
-      total
-      items {
-        ${getGraphQLQueryResearchOutput({ withTeams: true })}
-      }
-    }
-  }
-`;
-
 export default class ResearchOutputs implements ResearchOutputController {
   graphqlSquidexClient: InstrumentedSquidexGraphql;
 
@@ -105,15 +98,15 @@ export default class ResearchOutputs implements ResearchOutputController {
   }
 
   async fetchById(id: string): Promise<ResearchOutputResponse> {
-    const query = buildGraphQLQueryResearchOutput();
     const researchOutputGraphqlResponse =
       await this.graphqlSquidexClient.request<
-        ResponseFetchResearchOutput,
-        { id: string }
-      >(query, { id });
+        FetchResearchOutput,
+        FetchResearchOutputVariables
+      >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
 
     const { findResearchOutputsContent: researchOutputContent } =
       researchOutputGraphqlResponse;
+
     if (!researchOutputContent) {
       throw Boom.notFound();
     }
@@ -157,20 +150,35 @@ export default class ResearchOutputs implements ResearchOutputController {
       .filter(Boolean)
       .join(' and ');
 
-    const query = buildGraphQLQueryFetchResearchOutputs();
-
     const { queryResearchOutputsContentsWithTotal } =
       await this.graphqlSquidexClient.request<
-        ResponseFetchResearchOutputs,
-        GraphqlFetchOptions
-      >(query, {
+        FetchResearchOutputs,
+        FetchResearchOutputsVariables
+      >(FETCH_RESEARCH_OUTPUTS, {
         top: take,
         skip,
         filter: filterGraphql,
+        withTeams: true,
       });
+
+    if (queryResearchOutputsContentsWithTotal === null) {
+      logger.warn('queryResearchOutputsContentsWithTotal returned null');
+      return {
+        total: 0,
+        items: [],
+      };
+    }
 
     const { total, items: researchOutputs } =
       queryResearchOutputsContentsWithTotal;
+
+    if (researchOutputs === null) {
+      logger.warn('queryResearchOutputsContentsWithTotal items returned null');
+      return {
+        total: 0,
+        items: [],
+      };
+    }
 
     return {
       total,

@@ -4,10 +4,10 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL query operation: FetchResearchOutput
+// GraphQL query operation: FetchResearchOutputs
 // ====================================================
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_avatar {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_avatar {
   __typename: 'Asset';
   /**
    * The id of the asset.
@@ -15,7 +15,7 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   id: string;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_orcidWorks {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_orcidWorks {
   __typename: 'UsersDataOrcidWorksChildDto';
   doi: string | null;
   id: string | null;
@@ -25,12 +25,12 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   type: string | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_questions {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_questions {
   __typename: 'UsersDataQuestionsChildDto';
   question: string | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams_id_flatData_proposal {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams_id_flatData_proposal {
   __typename: 'ResearchOutputs';
   /**
    * The id of the content.
@@ -38,15 +38,15 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   id: string;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams_id_flatData {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams_id_flatData {
   __typename: 'TeamsFlatDataDto';
   displayName: string | null;
   proposal:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams_id_flatData_proposal[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams_id_flatData_proposal[]
     | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams_id {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams_id {
   __typename: 'Teams';
   /**
    * The id of the content.
@@ -55,10 +55,10 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   /**
    * The flat data of the content.
    */
-  flatData: FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams_id_flatData;
+  flatData: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams_id_flatData;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams {
   __typename: 'UsersDataTeamsChildDto';
   /**
    * Attention: Check if this user needs to be added to Smart Simple
@@ -67,11 +67,11 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   approach: string | null;
   responsibilities: string | null;
   id:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams_id[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams_id[]
     | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_social {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_social {
   __typename: 'UsersDataSocialChildDto';
   github: string | null;
   googleScholar: string | null;
@@ -83,12 +83,12 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   website2: string | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_labs_flatData {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_labs_flatData {
   __typename: 'LabsFlatDataDto';
   name: string | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_labs {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_labs {
   __typename: 'Labs';
   /**
    * The id of the content.
@@ -97,13 +97,13 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   /**
    * The flat data of the content.
    */
-  flatData: FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_labs_flatData;
+  flatData: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_labs_flatData;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData {
   __typename: 'UsersFlatDataDto';
   avatar:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_avatar[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_avatar[]
     | null;
   biography: string | null;
   degree: string | null;
@@ -124,10 +124,10 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   orcidLastModifiedDate: string | null;
   orcidLastSyncDate: string | null;
   orcidWorks:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_orcidWorks[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_orcidWorks[]
     | null;
   questions:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_questions[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_questions[]
     | null;
   skills: string[] | null;
   skillsDescription: string | null;
@@ -135,10 +135,10 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
    * Mandatory for grantees. They cannot publish profile without a team.
    */
   teams:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_teams[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_teams[]
     | null;
   social:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_social[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_social[]
     | null;
   /**
    * Role on the ASAP Hub
@@ -156,11 +156,11 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
    * Mandatory for grantees. They cannot publish profile without a lab.
    */
   labs:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData_labs[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData_labs[]
     | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users {
   __typename: 'Users';
   /**
    * The id of the content.
@@ -177,16 +177,16 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   /**
    * The flat data of the content.
    */
-  flatData: FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users_flatData;
+  flatData: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users_flatData;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_ExternalAuthors_flatData {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_ExternalAuthors_flatData {
   __typename: 'ExternalAuthorsFlatDataDto';
   name: string | null;
   orcid: string | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors_ExternalAuthors {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_ExternalAuthors {
   __typename: 'ExternalAuthors';
   /**
    * The id of the content.
@@ -203,14 +203,15 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData_authors
   /**
    * The flat data of the content.
    */
-  flatData: FetchResearchOutput_findResearchOutputsContent_flatData_authors_ExternalAuthors_flatData;
+  flatData: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_ExternalAuthors_flatData;
 }
 
-export type FetchResearchOutput_findResearchOutputsContent_flatData_authors =
-  | FetchResearchOutput_findResearchOutputsContent_flatData_authors_Users
-  | FetchResearchOutput_findResearchOutputsContent_flatData_authors_ExternalAuthors;
+export type FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors =
 
-export interface FetchResearchOutput_findResearchOutputsContent_flatData {
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_Users
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors_ExternalAuthors;
+
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData {
   __typename: 'ResearchOutputsFlatDataDto';
   title: string | null;
   type: string | null;
@@ -263,16 +264,16 @@ export interface FetchResearchOutput_findResearchOutputsContent_flatData {
    */
   usedInAPublication: string | null;
   authors:
-    | FetchResearchOutput_findResearchOutputsContent_flatData_authors[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData_authors[]
     | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_flatData {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_flatData {
   __typename: 'TeamsFlatDataDto';
   displayName: string | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents_flatData_teams_id {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents_flatData_teams_id {
   __typename: 'Teams';
   /**
    * The id of the content.
@@ -280,37 +281,37 @@ export interface FetchResearchOutput_findResearchOutputsContent_referencingTeams
   id: string;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents_flatData_teams {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents_flatData_teams {
   __typename: 'UsersDataTeamsChildDto';
   /**
    * Attention: Check if this user needs to be added to Smart Simple
    */
   role: string | null;
   id:
-    | FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents_flatData_teams_id[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents_flatData_teams_id[]
     | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents_flatData {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents_flatData {
   __typename: 'UsersFlatDataDto';
   email: string | null;
   /**
    * Mandatory for grantees. They cannot publish profile without a team.
    */
   teams:
-    | FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents_flatData_teams[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents_flatData_teams[]
     | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents {
   __typename: 'Users';
   /**
    * The flat data of the content.
    */
-  flatData: FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents_flatData;
+  flatData: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents_flatData;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents {
   __typename: 'Teams';
   /**
    * The id of the content.
@@ -327,16 +328,16 @@ export interface FetchResearchOutput_findResearchOutputsContent_referencingTeams
   /**
    * The flat data of the content.
    */
-  flatData: FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_flatData;
+  flatData: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_flatData;
   /**
    * Query Users content items.
    */
   referencingUsersContents:
-    | FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents_referencingUsersContents[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents_referencingUsersContents[]
     | null;
 }
 
-export interface FetchResearchOutput_findResearchOutputsContent {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items {
   __typename: 'ResearchOutputs';
   /**
    * The id of the content.
@@ -353,23 +354,39 @@ export interface FetchResearchOutput_findResearchOutputsContent {
   /**
    * The flat data of the content.
    */
-  flatData: FetchResearchOutput_findResearchOutputsContent_flatData;
+  flatData: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_flatData;
   /**
    * Query Teams content items.
    */
   referencingTeamsContents:
-    | FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents[]
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items_referencingTeamsContents[]
     | null;
 }
 
-export interface FetchResearchOutput {
+export interface FetchResearchOutputs_queryResearchOutputsContentsWithTotal {
+  __typename: 'ResearchOutputsResultDto';
   /**
-   * Find an Research Outputs content by id.
+   * The total number of Research Outputs items.
    */
-  findResearchOutputsContent: FetchResearchOutput_findResearchOutputsContent | null;
+  total: number;
+  /**
+   * The Research Outputs items.
+   */
+  items:
+    | FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items[]
+    | null;
 }
 
-export interface FetchResearchOutputVariables {
-  id: string;
+export interface FetchResearchOutputs {
+  /**
+   * Query Research Outputs content items with total count.
+   */
+  queryResearchOutputsContentsWithTotal: FetchResearchOutputs_queryResearchOutputsContentsWithTotal | null;
+}
+
+export interface FetchResearchOutputsVariables {
+  top?: number | null;
+  skip?: number | null;
+  filter?: string | null;
   withTeams: boolean;
 }

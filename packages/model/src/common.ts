@@ -3,4 +3,6 @@ export interface ListResponse<T> {
   readonly items: ReadonlyArray<T>;
 }
 
-export type DecisionOption = 'Yes' | 'No' | 'Not Sure';
+export const decisionOptions = ['Yes', 'No', 'Not Sure'] as const;
+
+export type DecisionOption = typeof decisionOptions[number];

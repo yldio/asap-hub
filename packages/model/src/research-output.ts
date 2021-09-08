@@ -2,50 +2,58 @@ import { TeamResponse } from './team';
 import { ListResponse } from './common';
 import { UserResponse } from './user';
 
-export type ResearchOutputType =
-  | 'Proposal'
-  | 'Presentation'
-  | 'Dataset'
-  | 'Bioinformatics'
-  | 'Protocol'
-  | 'Lab Resource'
-  | 'Article';
+export const researchOutputTypes = [
+  'Proposal',
+  'Presentation',
+  'Dataset',
+  'Bioinformatics',
+  'Protocol',
+  'Lab Resource',
+  'Article',
+] as const;
 
-export type ResearchOutputSubtype =
-  | 'ASAP annual meeting'
-  | 'ASAP subgroup meeting'
-  | 'External meeting'
-  | 'Preprint'
-  | 'Published'
-  | 'Genetic Data - DNA'
-  | 'Genetic Data - RNA'
-  | 'Protein Data'
-  | 'Microscopy'
-  | 'Electrophysiology'
-  | 'Mass Spectrometry'
-  | 'Code'
-  | 'Data portal'
-  | 'Web Portal'
-  | 'Analysis'
-  | 'Assays'
-  | 'Cell Culture & Differentiation'
-  | 'Cloning'
-  | 'Imaging'
-  | 'Model System'
-  | 'Protein expression'
-  | 'Sample Collection'
-  | 'Shipment Procedures'
-  | '3D Printing'
-  | 'Animal Models'
-  | 'Antibodies'
-  | 'Biosample'
-  | 'Cell line'
-  | 'Compounds'
-  | 'Plasmid'
-  | 'Protein'
-  | 'Viral Vector';
+export type ResearchOutputType = typeof researchOutputTypes[number];
 
-export type ResearchOutputSharingStatus = 'Public' | 'Network Only';
+export const researchOutputSubtypes = [
+  'ASAP annual meeting',
+  'ASAP subgroup meeting',
+  'External meeting',
+  'Preprint',
+  'Published',
+  'Genetic Data - DNA',
+  'Genetic Data - RNA',
+  'Protein Data',
+  'Microscopy',
+  'Electrophysiology',
+  'Mass Spectrometry',
+  'Code',
+  'Data portal',
+  'Web Portal',
+  'Analysis',
+  'Assays',
+  'Cell Culture & Differentiation',
+  'Cloning',
+  'Imaging',
+  'Model System',
+  'Protein expression',
+  'Sample Collection',
+  'Shipment Procedures',
+  '3D Printing',
+  'Animal Models',
+  'Antibodies',
+  'Biosample',
+  'Cell line',
+  'Compounds',
+  'Plasmid',
+  'Protein',
+  'Viral Vector',
+] as const;
+
+export type ResearchOutputSubtype = typeof researchOutputSubtypes[number];
+
+export const sharingStatuses = ['Public', 'Network Only'] as const;
+
+export type ResearchOutputSharingStatus = typeof sharingStatuses[number];
 
 export type ExternalAuthor = Pick<UserResponse, 'displayName' | 'orcid'>;
 

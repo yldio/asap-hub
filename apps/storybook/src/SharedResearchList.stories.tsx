@@ -19,8 +19,8 @@ const props = (): ComponentProps<typeof SharedResearchList> => {
     numberOfPages: Math.max(1, Math.ceil(numberOfItems / 10)),
     currentPageIndex,
     renderPageHref: (index) => `#${index}`,
-    listViewParams: '',
-    cardViewParams: '',
+    listViewHref: '',
+    cardViewHref: '',
   };
 };
 

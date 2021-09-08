@@ -36,7 +36,6 @@ const OutputsList: React.FC<OutputsListProps> = ({
     pageSize,
     teamId,
   });
-
   const { numberOfPages, renderPageHref } = usePagination(
     result?.total || 0,
     pageSize,

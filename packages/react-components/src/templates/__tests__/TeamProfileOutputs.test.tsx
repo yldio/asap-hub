@@ -4,17 +4,27 @@ import { render } from '@testing-library/react';
 
 import TeamProfileOutputs from '../TeamProfileOutputs';
 
-it('renders a coming soon text', () => {
+it('renders a coming soon text (REGRESSION)', () => {
   disable('ALGOLIA_RESEARCH_OUTPUTS');
-  const { getByText } = render(<TeamProfileOutputs outputs={[]} />);
+  const { getByText } = render(
+    <TeamProfileOutputs
+      outputs={[]}
+      numberOfItems={0}
+      numberOfPages={1}
+      currentPage={1}
+      renderPageHref={() => ''}
+      isListView={false}
+      cardViewHref={''}
+      listViewHref={''}
+    />,
+  );
 
   expect(getByText(/more\sto\scome/i)).toBeVisible();
   expect(getByText(/research\soutputs/i)).toBeVisible();
 });
 
 it('renders output cards', () => {
-  disable('ALGOLIA_RESEARCH_OUTPUTS');
-  const { getAllByRole } = render(
+  const { getAllByRole, queryByText } = render(
     <TeamProfileOutputs
       outputs={[
         {
@@ -30,6 +40,13 @@ it('renders output cards', () => {
           ],
         },
       ]}
+      numberOfItems={1}
+      numberOfPages={1}
+      currentPage={0}
+      renderPageHref={() => ''}
+      isListView={false}
+      cardViewHref={''}
+      listViewHref={''}
     />,
   );
 
@@ -45,4 +62,6 @@ it('renders output cards', () => {
     expect.stringMatching(/uuid-output$/),
   );
   expect(teamLink).toHaveAttribute('href', expect.stringMatching(/uuid-team$/));
+
+  expect(queryByText(/more\sto\scome/i)).not.toBeInTheDocument();
 });

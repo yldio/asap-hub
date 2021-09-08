@@ -121,13 +121,17 @@ describe('Sync calendar util hook', () => {
 
   describe('Hidden flag', () => {
     test('Should create an event and mark as hidden when the status is cancelled', async () => {
-      const cancelledGoogleEvent = {
-        ...googleEvent,
-        status: 'cancelled',
-      };
+      const cancelledGoogleEvent = getGoogleEvent();
+      cancelledGoogleEvent.status = 'cancelled';
+
       eventControllerMock.fetchByGoogleId.mockResolvedValueOnce(null);
 
-      await syncEvent(cancelledGoogleEvent, defaultCalendarTimezone);
+      await syncEvent(
+        cancelledGoogleEvent,
+        googleCalendarId,
+        squidexCalendarId,
+        defaultCalendarTimezone,
+      );
 
       expect(eventControllerMock.update).not.toHaveBeenCalled();
       expect(eventControllerMock.create).toHaveBeenCalledTimes(1);

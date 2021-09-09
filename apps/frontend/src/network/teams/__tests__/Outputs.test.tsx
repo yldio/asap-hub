@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { MemoryRouter, Route } from 'react-router-dom';
 import { render, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   createAlgoliaResearchOutputResponse,
   createResearchOutputResponse,
@@ -115,4 +116,32 @@ it('renders a list of research outputs', async () => {
   const { container } = await renderOutputs([], '');
   expect(container.textContent).toContain('Test Output 0');
   expect(container.textContent).toContain('Test Output 1');
+});
+
+it('calls getResearchOutputs with the right arguments', async () => {
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createAlgoliaResearchOutputResponse(2),
+  });
+  const { getByRole, getByText, getByLabelText } = await renderOutputs([
+    { ...createResearchOutputResponse(), id: 'ro0', title: 'Some RO' },
+  ]);
+  userEvent.type(getByRole('searchbox'), 'searchterm');
+
+  userEvent.click(getByText('Filters'));
+  const checkbox = getByLabelText('Proposal');
+  expect(checkbox).not.toBeChecked();
+
+  userEvent.click(checkbox);
+  expect(checkbox).toBeChecked();
+
+  await waitFor(() =>
+    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        searchQuery: 'searchterm',
+        teamId: '12345',
+        filters: new Set(['Proposal']),
+      }),
+    ),
+  );
 });

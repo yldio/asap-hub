@@ -90,6 +90,14 @@ export const calendarCreatedHandlerFactory =
           payload.id,
         );
 
+        logger.debug(
+          {
+            resourceId,
+            expirationDate: expiration,
+          },
+          `Attempting to update the calendar with ID '${payload.id}'`,
+        );
+
         await calendarController.update(payload.id, {
           resourceId,
           expirationDate: expiration,

@@ -1,20 +1,20 @@
-import { ResearchOutput } from '@asap-hub/squidex';
+import { Calendar } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../../src/config';
-import { researchOutputWebhookFactory } from '../../../src/handlers/webhooks/webhook-research-output';
+import { calendarWebhookFactory } from '../../../src/handlers/webhooks/webhook-calendar';
 import {
-  getResearchOutputEvent,
-  updateResearchOutputEvent,
-} from '../../fixtures/research-output.fixtures';
+  getCalendarPublishedWebhookEvent,
+  getCalendarUpdatedWebhookEvent,
+} from '../../fixtures/calendars.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { createSignedPayload } from '../../helpers/webhooks';
 
-describe('Research output webhook', () => {
+describe('Calendar webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),
   } as unknown as jest.Mocked<EventBridge>;
-  const handler = researchOutputWebhookFactory(evenBridgeMock);
+  const handler = calendarWebhookFactory(evenBridgeMock);
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -25,7 +25,7 @@ describe('Research output webhook', () => {
       headers: {
         'x-signature': 'XYZ',
       },
-      body: JSON.stringify(getResearchOutputEvent),
+      body: JSON.stringify(getCalendarPublishedWebhookEvent()),
     });
 
     const res = (await handler(event)) as APIGatewayProxyResult;
@@ -36,8 +36,8 @@ describe('Research output webhook', () => {
 
   test('Should return 204 and not raise an event when the event type is not supported', async () => {
     const res = (await handler(
-      createSignedPayload<ResearchOutput>({
-        ...getResearchOutputEvent(),
+      createSignedPayload<Calendar>({
+        ...getCalendarPublishedWebhookEvent(),
         type: 'SomeEvent',
       }),
     )) as APIGatewayProxyResult;
@@ -46,9 +46,9 @@ describe('Research output webhook', () => {
     expect(evenBridgeMock.putEvents).not.toHaveBeenCalled();
   });
 
-  test('Should put the research-output-created event into the event bus and return 200', async () => {
+  test('Should put the calendar-created event into the event bus and return 200', async () => {
     const res = (await handler(
-      createSignedPayload(getResearchOutputEvent()),
+      createSignedPayload(getCalendarPublishedWebhookEvent()),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -57,16 +57,16 @@ describe('Research output webhook', () => {
         {
           EventBusName: eventBus,
           Source: eventSource,
-          DetailType: 'ResearchOutputCreated',
-          Detail: JSON.stringify(getResearchOutputEvent()),
+          DetailType: 'CalendarCreated',
+          Detail: JSON.stringify(getCalendarPublishedWebhookEvent()),
         },
       ],
     });
   });
 
-  test('Should put the research-output-updated event into the event bus and return 200', async () => {
+  test('Should put the calendar-updated event into the event bus and return 200', async () => {
     const res = (await handler(
-      createSignedPayload(updateResearchOutputEvent),
+      createSignedPayload(getCalendarUpdatedWebhookEvent()),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -75,8 +75,8 @@ describe('Research output webhook', () => {
         {
           EventBusName: eventBus,
           Source: eventSource,
-          DetailType: 'ResearchOutputUpdated',
-          Detail: JSON.stringify(updateResearchOutputEvent),
+          DetailType: 'CalendarUpdated',
+          Detail: JSON.stringify(getCalendarUpdatedWebhookEvent()),
         },
       ],
     });

@@ -5,7 +5,7 @@ import {
   SubscribeToEventChanges,
   subscribeToEventChangesFactory,
   unsubscribeFromEventChangesFactory,
-} from '../webhooks/calendar-created/calendar-created';
+} from './subscribe-handler';
 import getJWTCredentials from '../../utils/aws-secret-manager';
 import logger from '../../utils/logger';
 import { ScheduledHandlerAsync } from '../../utils/types';

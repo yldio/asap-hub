@@ -297,7 +297,7 @@ export const getListResearchOutputResponse =
     items: [getResearchOutputResponse()],
   });
 
-export const createResearchOutputEvent: WebhookPayload<ResearchOutput> = {
+export const getResearchOutputEvent = (): WebhookPayload<ResearchOutput> => ({
   type: 'ResearchOutputsPublished',
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
@@ -315,7 +315,7 @@ export const createResearchOutputEvent: WebhookPayload<ResearchOutput> = {
       usedInAPublication: { iv: 'Not Sure' },
     } as Rest<ResearchOutput>['data'],
   },
-};
+});
 
 export const updateResearchOutputEvent: WebhookPayload<ResearchOutput> = {
   type: 'ResearchOutputsUpdated',

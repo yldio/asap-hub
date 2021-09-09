@@ -3,7 +3,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { config } from '@asap-hub/squidex';
 
 import { handler } from '../../../src/handlers/webhooks/webhook-connect-by-code';
-import { apiGatewayEvent } from '../../helpers/events';
+import { getApiGatewayEvent } from '../../helpers/events';
 import { identity } from '../../helpers/squidex';
 import { auth0SharedSecret as secret } from '../../../src/config';
 import { RestUser } from '@asap-hub/squidex';
@@ -38,7 +38,7 @@ const user: RestUser = {
 describe('POST /webhook/users/connections - validations', () => {
   test('returns 400 when code is not defined', async () => {
     const res = (await handler(
-      apiGatewayEvent({
+      getApiGatewayEvent({
         body: JSON.stringify({
           userId: 'userId',
         }),
@@ -53,7 +53,7 @@ describe('POST /webhook/users/connections - validations', () => {
 
   test('returns 403 when secret doesnt match', async () => {
     const res = (await handler(
-      apiGatewayEvent({
+      getApiGatewayEvent({
         body: JSON.stringify({
           code: 'asap|token',
           userId: 'userId',
@@ -87,7 +87,7 @@ describe('POST /webhook/users/connections - success', () => {
       .reply(404);
 
     const res = (await handler(
-      apiGatewayEvent({
+      getApiGatewayEvent({
         body: JSON.stringify({
           code: 'invalidConnectCode',
           userId: 'userId',
@@ -120,7 +120,7 @@ describe('POST /webhook/users/connections - success', () => {
       .reply(200, patchedUser);
 
     const res = (await handler(
-      apiGatewayEvent({
+      getApiGatewayEvent({
         body: JSON.stringify({
           code: 'asapWelcomeCode',
           userId,

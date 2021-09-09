@@ -10,8 +10,8 @@ type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
 };
 
-export const apiGatewayEvent = (
-  event: RecursivePartial<APIGatewayProxyEventV2>,
+export const getApiGatewayEvent = (
+  event: RecursivePartial<APIGatewayProxyEventV2> = {},
 ): APIGatewayProxyEventV2 => {
   return {
     headers: {

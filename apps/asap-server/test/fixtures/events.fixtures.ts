@@ -48,7 +48,8 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
                 created: '2021-01-14T16:38:40Z',
                 lastModified: '2021-01-14T16:38:40Z',
                 flatData: {
-                  id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
+                  googleCalendarId:
+                    'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
                   color: '#125A12',
                   name: 'Tech 1 - Sequencing/omics',
                 },
@@ -82,7 +83,8 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
                 created: '2021-01-14T16:39:17Z',
                 lastModified: '2021-01-14T16:39:17Z',
                 flatData: {
-                  id: 'c_v8ma9lsbsjf90rk30ougr54iig@group.calendar.google.com',
+                  googleCalendarId:
+                    'c_v8ma9lsbsjf90rk30ougr54iig@group.calendar.google.com',
                   color: '#7A367A',
                   name: 'Tech 3 - Structural Biology',
                 },
@@ -205,7 +207,8 @@ export const graphqlEvent: GraphqlEvent = {
         created: '2021-01-14T16:38:40Z',
         lastModified: '2021-01-14T16:38:40Z',
         flatData: {
-          id: 'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
+          googleCalendarId:
+            'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
           color: '#125A12',
           name: 'Tech 1 - Sequencing/omics',
         },
@@ -221,7 +224,7 @@ export const findEventResponse: { data: ResponseFetchEvent } = {
   },
 };
 
-export const restEvent: RestEvent = {
+export const getRestEvent = (): RestEvent => ({
   id: 'squidex-event-id',
   created: '2021-02-23T19:32:00Z',
   lastModified: '2021-02-23T19:32:00Z',
@@ -239,4 +242,4 @@ export const restEvent: RestEvent = {
     meetingLink: { iv: 'https://meetings.com' },
     hidden: { iv: false },
   },
-};
+});

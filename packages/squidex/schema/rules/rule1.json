@@ -13,7 +13,7 @@
     "handleAll": false
   },
   "action": {
-    "url": "ASAP_API_URL/webhook/calendar",
+    "url": "ASAP_API_URL/webhook/calendars",
     "method": "POST",
     "payload": "",
     "payloadType": "",

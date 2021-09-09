@@ -81,13 +81,15 @@ describe('Calendar Webhook', () => {
       );
     });
 
-    test('Should return 502 and alert when the subscription was unsuccessful', async () => {
+    test('Should return "ERROR" and alert when the subscription was unsuccessful, but should not throw', async () => {
       const errorMessage =
         'Channel id 238c6b46-706e-11eb-9439-0242ac130002 not unique';
       const error = new Error(errorMessage);
       subscribe.mockRejectedValueOnce(error);
 
-      await expect(handler(getEvent())).rejects.toThrow(error);
+      const res = await handler(getEvent());
+
+      expect(res).toBe('ERROR');
       expect(alerts.error).toBeCalledWith(error);
     });
 

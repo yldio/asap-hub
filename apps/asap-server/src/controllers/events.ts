@@ -191,7 +191,7 @@ flatData{
   }
   calendar {
     flatData {
-      id
+      googleCalendarId
       color
       name
     }

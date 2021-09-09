@@ -205,6 +205,10 @@ export class Squidex<
         .json();
       return res as T;
     } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log(err);
+      // eslint-disable-next-line no-console
+      console.log({ response: JSON.stringify(err.response) });
       if (
         err.response?.statusCode === 400 &&
         err.response?.body.includes('invalid_client')

@@ -105,6 +105,31 @@ describe('getResearchOutputs', () => {
     );
   });
 
+  it('uses teamId as a filter', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      teamId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'team.id:"12345"' }),
+    );
+  });
+
+  it('adds teamId to other filters', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article']),
+      teamId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'type:Article AND team.id:"12345"' }),
+    );
+  });
+
   it('throws an error of type error', async () => {
     mockedSearch.mockRejectedValue({ message: 'Some Error' });
     await expect(

@@ -13,18 +13,16 @@ const TeamProfileOutputsHeader: React.FC<TeamProfileOutputsHeaderProps> = ({
   searchQuery,
   onChangeFilter,
   filters,
-}) => {
-  return (
-    <SearchAndFilter
-      searchPlaceholder="Enter a keyword, method, resource…"
-      onChangeSearch={setSearchQuery}
-      searchQuery={searchQuery}
-      filterOptions={researchOutputFilters}
-      filterTitle="TYPE OF OUTPUTS"
-      onChangeFilter={onChangeFilter}
-      filters={filters}
-    />
-  );
-};
+}) => (
+  <SearchAndFilter
+    searchPlaceholder="Enter a keyword, method, resource…"
+    onChangeSearch={setSearchQuery}
+    searchQuery={searchQuery}
+    filterOptions={researchOutputFilters}
+    filterTitle="TYPE OF OUTPUTS"
+    onChangeFilter={onChangeFilter}
+    filters={filters}
+  />
+);
 
 export default TeamProfileOutputsHeader;

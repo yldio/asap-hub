@@ -31,7 +31,7 @@ export const calendarCreatedHandlerFactory =
   async (
     event: EventBridgeEvent<CalendarEventType, WebhookPayload<Calendar>>,
   ): Promise<'OK' | 'ERROR'> => {
-    logger.debug(JSON.stringify(event, null, 2), 'Event input');
+    logger.debug(event, 'Event input');
 
     const bodySchema = Joi.object({
       type: Joi.string().required(),

@@ -51,7 +51,9 @@ export const getAllFilters = (filters: Set<string>, teamId?: string) => {
   const typeFilters = getTypeFilters(filters);
   const teamFilter = teamId ? `team.id:"${teamId}"` : '';
   const filtersSeparator = !!typeFilters && !!teamFilter ? ' AND ' : '';
-  return `${typeFilters}${filtersSeparator}${teamFilter}`;
+  const typeFiltersWithParentheses =
+    !!filtersSeparator && filters.size > 1 ? `(${typeFilters})` : typeFilters;
+  return `${typeFiltersWithParentheses}${filtersSeparator}${teamFilter}`;
 };
 
 export const getResearchOutputs = (

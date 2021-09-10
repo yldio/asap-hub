@@ -117,7 +117,7 @@ describe('getResearchOutputs', () => {
     );
   });
 
-  it('adds teamId to other filters', async () => {
+  it('adds teamId to type filter', async () => {
     await getResearchOutputs(mockIndex, {
       ...options,
       filters: new Set<ResearchOutputType>(['Article']),
@@ -126,7 +126,24 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'type:Article AND team.id:"12345"' }),
+      expect.objectContaining({
+        filters: 'type:Article AND team.id:"12345"',
+      }),
+    );
+  });
+
+  it('adds teamId to type filters', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+      teamId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({
+        filters: '(type:Article OR type:Proposal) AND team.id:"12345"',
+      }),
     );
   });
 

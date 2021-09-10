@@ -80,7 +80,7 @@ const wrapper =
 
 describe('useOnboarding', () => {
   beforeEach(() => mockGetUser.mockClear());
-  it('calculates the modal href the required fields', async () => {
+  it('calculates the steps needed to complete the profile', async () => {
     const user = createUser({ id: '1234' });
     mockGetUser.mockResolvedValue(user);
 
@@ -90,72 +90,19 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(result.current.institution?.valid).toBe(false);
-        expect(result.current.institution?.modalHref).toContain(
-          `/network/users/${user.id}/research/edit-contact-info`,
-        );
-
-        expect(result.current.jobTitle?.valid).toBe(false);
-        expect(result.current.jobTitle?.modalHref).toBe(
-          `/network/users/${user.id}/research/edit-contact-info`,
-        );
-
-        expect(result.current.city?.valid).toBe(false);
-        expect(result.current.city?.modalHref).toBe(
-          `/network/users/${user.id}/research/edit-contact-info`,
-        );
-
-        expect(result.current.country?.valid).toBe(false);
-        expect(result.current.country?.modalHref).toBe(
-          `/network/users/${user.id}/research/edit-contact-info`,
-        );
-
-        expect(result.current.biography?.valid).toBe(false);
-        expect(result.current.biography?.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .about({})
-            .editBiography({}).$,
-        );
-
-        expect(result.current.skills?.valid).toBe(false);
-        expect(result.current.skills?.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .research({})
-            .editSkills({}).$,
-        );
-
-        expect(result.current.questions?.valid).toBe(false);
-        expect(result.current.questions?.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .research({})
-            .editQuestions({}).$,
-        );
-
-        expect(result.current.teams?.valid).toBe(false);
-        expect(result.current.teams?.modalHref).toBe(
-          network({})
-            .users({})
-            .user({ userId: user.id })
-            .research({})
-            .editTeamMembership({ teamId: user.teams[0]?.id }).$,
-        );
+        expect(Object.values(result.current.steps).map((c) => c.id)).toEqual([
+          'details',
+          'role',
+          'skills',
+          'questions',
+          'bio',
+        ]);
       });
     });
   });
-  it('calculates the modal href the required fieldssss', async () => {
-    const user = createUser({
-      id: '1234',
-      institution: 'institution',
-      questions: ['1', '2'],
-      skills: ['A', 'B', 'C'],
-    });
 
+  it('returns the step in the correct order', async () => {
+    const user = createUser({ id: '1234', questions: ['1', '2'] });
     mockGetUser.mockResolvedValue(user);
 
     const { result } = renderHook(() => useOnboarding(user.id), {
@@ -164,15 +111,56 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(result.current.institution).toBeUndefined();
-        expect(result.current.questions).toBeUndefined();
-        expect(result.current.questions).toBeUndefined();
+        expect(Object.values(result.current.steps).map((c) => c.id)).toEqual([
+          'details',
+          'role',
+          'skills',
+          'bio',
+        ]);
+      });
+    });
+  });
 
-        expect(result.current.skills).toBeDefined();
-        expect(result.current.jobTitle).toBeDefined();
-        expect(result.current.country).toBeDefined();
-        expect(result.current.city).toBeDefined();
-        expect(result.current.teams).toBeDefined();
+  it('calculates the modal href for every step', async () => {
+    const user = createUser({ id: '1234', skills: ['1', '2', '3', '4', '5'] });
+    mockGetUser.mockResolvedValue(user);
+
+    const { result } = renderHook(() => useOnboarding(user.id), {
+      wrapper: wrapper({ user }),
+    });
+
+    await act(async () => {
+      await waitFor(() => {
+        const [details, role, questions, bio] = Object.values(
+          result.current.steps,
+        );
+
+        expect(details.modalHref).toBe(
+          `/network/users/${user.id}/research/edit-contact-info`,
+        );
+        expect(role.modalHref).toBe(
+          network({})
+            .users({})
+            .user({ userId: user.id })
+            .research({})
+            .editTeamMembership({ teamId: user.teams[0]?.id }).$,
+        );
+
+        expect(questions.modalHref).toBe(
+          network({})
+            .users({})
+            .user({ userId: user.id })
+            .research({})
+            .editQuestions({}).$,
+        );
+
+        expect(bio.modalHref).toBe(
+          network({})
+            .users({})
+            .user({ userId: user.id })
+            .about({})
+            .editBiography({}).$,
+        );
       });
     });
   });

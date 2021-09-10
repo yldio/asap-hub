@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
-import { isUserOnboardable } from '@asap-hub/validation';
 
-import { padlockIcon, successIcon } from '../icons';
+import { successIcon } from '../icons';
 import { Link, Headline2, Paragraph } from '../atoms';
 import { paper, steel } from '../colors';
 
 import { perRem, smallDesktopScreen } from '../pixels';
 import { irisCeruleanGradientStyles } from '../appearance';
+import { curryN } from 'ramda';
 
 const headerStyles = css({
   borderTop: `1px solid ${steel.rgb}`,
@@ -42,7 +42,36 @@ const iconStyles = css({
 
 type OnboardingFooterProps = {
   onboardModalHref?: string;
-  onboardable: ReturnType<typeof isUserOnboardable>;
+  onboardable: {
+    steps: {
+      label: string;
+      id: string;
+      modalHref?: string;
+    }[];
+    isOnboardable: boolean;
+  };
+};
+
+const OnboardinButton = ({
+  onboardable,
+  onboardModalHref,
+}: OnboardingFooterProps) => {
+  const buttonProps = !onboardable.steps?.length
+    ? {
+        label: 'Explore the Hub',
+        modalHref: onboardModalHref,
+      }
+    : {
+        label: `Next Step: ${onboardable.steps[0].label}`,
+        modalHref: onboardable.steps[0].modalHref,
+      };
+
+  return (
+    <Link href={buttonProps.modalHref} buttonStyle>
+      <span css={iconStyles}>{!onboardable.steps?.length && successIcon}</span>
+      {buttonProps.label}
+    </Link>
+  );
 };
 
 const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
@@ -64,19 +93,14 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
       </div>
       <div css={buttonStyles}>
         <div>
-          <Link
-            href={onboardModalHref}
-            buttonStyle
-            enabled={onboardable.isOnboardable}
-          >
-            <span css={iconStyles}>
-              {onboardable.isOnboardable ? successIcon : padlockIcon}
-            </span>
-            Explore the Hub
-          </Link>
+          <OnboardinButton
+            onboardable={onboardable}
+            onboardModalHref={onboardModalHref}
+          />
         </div>
       </div>
     </div>
   </footer>
 );
+
 export default OnboardingFooter;

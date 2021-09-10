@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react';
 import { useCurrentUser } from '@asap-hub/react-context';
 import { isUserOnboardable } from '@asap-hub/validation';
 
-import { useUserByIdLoadable } from './network/users/state';
+import { useOnboarding } from './hooks';
 
 type OnboardableResult = ReturnType<typeof isUserOnboardable> | undefined;
 
@@ -14,12 +14,9 @@ const OnboardableLoadUser: FC<OnboardableLoadUserProps> = ({
   id,
   children,
 }) => {
-  const result = useUserByIdLoadable(id);
-  const isOnboardable =
-    result.state === 'hasValue' && result.contents
-      ? isUserOnboardable(result.contents).isOnboardable
-      : false;
-  return <>{children({ isOnboardable })}</>;
+  const onboardingState = useOnboarding(id);
+
+  return <>{children(onboardingState)}</>;
 };
 
 type OnboardableProps = {

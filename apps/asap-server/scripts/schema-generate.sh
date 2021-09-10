@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 echo "Generating queries..."
 yarn workspace @asap-hub/asap-server run apollo codegen:generate --localSchemaFile=../../packages/squidex/graphql-schema/schema.json --target=typescript --tagName=gql --includes=./src/queries/* --passthroughCustomScalars

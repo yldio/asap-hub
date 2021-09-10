@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 TOKEN=$(curl -s --request POST --url $SQUIDEX_BASE_URL/identity-server/connect/token --header 'Content-Type: application/x-www-form-urlencoded' --data grant_type=client_credentials --data client_id=$SQUIDEX_CLIENT_ID --data client_secret=$SQUIDEX_CLIENT_SECRET --data scope=squidex-api | jq .access_token -r)
 echo "Downloading schema..."

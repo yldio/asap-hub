@@ -216,6 +216,7 @@ verify:branch:
 
 verify:schema:branch:
   <<: *tmpl_branch
+  image: $INTEGRATION_DOCKER_IMAGE
   stage: verify-dev
   variables:
     API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME

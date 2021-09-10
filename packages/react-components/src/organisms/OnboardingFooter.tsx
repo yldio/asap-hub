@@ -47,25 +47,30 @@ type OnboardingFooterProps = {
 
 const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
   onboardModalHref,
-  onboardable: { isOnboardable },
+  onboardable,
 }) => (
   <footer css={[headerStyles, irisCeruleanGradientStyles]}>
     <div css={containerStyles}>
       <div css={textStyles}>
         <Headline2 styleAsHeading={3}>
-          Your profile is {isOnboardable ? 'complete' : 'incomplete'}
+          Your profile is{' '}
+          {onboardable.isOnboardable ? 'complete' : 'incomplete'}
         </Headline2>
         <Paragraph>
-          {isOnboardable
+          {onboardable.isOnboardable
             ? 'Click to publish your profile and start exploring the Hub.'
             : 'Complete your profile to unlock access to the Hub. Any edits will be privately stored until you’re ready to publish.'}
         </Paragraph>
       </div>
       <div css={buttonStyles}>
         <div>
-          <Link href={onboardModalHref} buttonStyle enabled={isOnboardable}>
+          <Link
+            href={onboardModalHref}
+            buttonStyle
+            enabled={onboardable.isOnboardable}
+          >
             <span css={iconStyles}>
-              {isOnboardable ? successIcon : padlockIcon}
+              {onboardable.isOnboardable ? successIcon : padlockIcon}
             </span>
             Explore the Hub
           </Link>

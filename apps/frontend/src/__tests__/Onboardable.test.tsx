@@ -1,10 +1,11 @@
 import { RecoilRoot } from 'recoil';
+import { MemoryRouter } from 'react-router-dom';
 import { render, act } from '@testing-library/react';
 import { waitFor } from '@testing-library/dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { UserResponse } from '@asap-hub/model';
 
-import { Auth0Provider } from '../auth/test-utils';
+import { Auth0Provider, WhenReady } from '../auth/test-utils';
 import Onboardable from '../Onboardable';
 import { getUser } from '../network/users/api';
 import { refreshUserState } from '../network/users/state';
@@ -58,9 +59,13 @@ const renderOnboardable = (onboarded: boolean) => (
     }}
   >
     <Auth0Provider user={{ id: onboardableUser.id, onboarded }}>
-      <Onboardable>
-        {(onboardable) => `isOnboardable: ${onboardable?.isOnboardable}`}
-      </Onboardable>
+      <WhenReady>
+        <MemoryRouter>
+          <Onboardable>
+            {(onboardable) => `isOnboardable: ${onboardable?.isOnboardable}`}
+          </Onboardable>
+        </MemoryRouter>
+      </WhenReady>
     </Auth0Provider>
   </RecoilRoot>
 );

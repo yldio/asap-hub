@@ -113,7 +113,7 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'team.id:"12345"' }),
+      expect.objectContaining({ filters: 'teams.id:"12345"' }),
     );
   });
 
@@ -127,7 +127,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: 'type:Article AND team.id:"12345"',
+        filters: 'type:Article AND teams.id:"12345"',
       }),
     );
   });
@@ -142,7 +142,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: '(type:Article OR type:Proposal) AND team.id:"12345"',
+        filters: '(type:Article OR type:Proposal) AND teams.id:"12345"',
       }),
     );
   });

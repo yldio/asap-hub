@@ -6,6 +6,7 @@ export const USER_SOCIAL_NOT_URL = /^(?!\s*http(s?):\/\/)\S+/i;
 
 export type UserValidationFields = Partial<
   Pick<
+    // eslint-disable-next-line no-unused-vars
     { [P in keyof UserResponse]: { valid: boolean } },
     | 'questions'
     | 'teams'
@@ -25,7 +26,7 @@ export type UserValidationResponse = {
 export const isUserOnboardable = (
   user: UserResponse,
 ): UserValidationResponse => {
-  let response: Omit<UserValidationResponse, 'isOnboardable'> = {};
+  const response: Omit<UserValidationResponse, 'isOnboardable'> = {};
   if (user.questions.length < 2) {
     response.questions = { valid: false };
   }

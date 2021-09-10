@@ -43,7 +43,10 @@ export const Onboardable = () => (
       <Layout
         {...props}
         onboardModalHref="/wrong"
-        onboardable={{ isOnboardable: boolean('isOnboardable', false) }}
+        onboardable={{
+          steps: [],
+          isOnboardable: boolean('isOnboardable', false),
+        }}
       >
         Content
       </Layout>

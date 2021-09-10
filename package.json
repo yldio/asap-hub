@@ -37,7 +37,8 @@
     "test:integration": "yarn test --config=jest-integration.config.js",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
-    "schema:download": ". ./apps/asap-server/scripts/schema-download.sh"
+    "schema:download": ". ./apps/asap-server/scripts/schema-download.sh",
+    "schema:generate": ". ./apps/asap-server/scripts/schema-generate.sh"
   },
   "resolutions": {
     "encoding": "0.1.13"

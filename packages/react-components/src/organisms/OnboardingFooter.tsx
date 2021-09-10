@@ -6,7 +6,6 @@ import { paper, steel } from '../colors';
 
 import { perRem, smallDesktopScreen } from '../pixels';
 import { irisCeruleanGradientStyles } from '../appearance';
-import { curryN } from 'ramda';
 
 const headerStyles = css({
   borderTop: `1px solid ${steel.rgb}`,

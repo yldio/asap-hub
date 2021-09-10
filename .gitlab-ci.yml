@@ -214,6 +214,24 @@ verify:branch:
   script:
     - ASAP_API_URL=$API_URL yarn test:e2e
 
+verify:schema:branch:
+  <<: *tmpl_branch
+  stage: verify-dev
+  variables:
+    API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME
+  needs:
+    - build:ts
+    - build:native
+    - deploy:squidex:branch
+    - deploy:sls:branch
+  script:
+    - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
+    - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
+    - export SQUIDEX_CLIENT_SECRET=$SQUIDEX_TEST_CLIENT_SECRET
+    - export SQUIDEX_BASE_URL=https://cloud.squidex.io
+    - yarn schema:download && yarn schema:generate
+    - yarn tsc -b -v apps/asap-server/
+
 report:frontend:release:dev:
   <<: *tmpl_master
   stage: verify-dev

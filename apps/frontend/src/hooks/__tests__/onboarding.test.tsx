@@ -51,22 +51,22 @@ const createUser = ({
 });
 
 const wrapper =
-  ({ user }: { user: UserResponse }): React.FC =>
+  ({ user }: { user?: UserResponse }): React.FC =>
   ({ children }) =>
     (
       <RecoilRoot
         initializeState={({ set }) => {
-          set(refreshUserState(user.id), Math.random());
+          user?.id && set(refreshUserState(user.id), Math.random());
         }}
       >
-        <Auth0Provider user={{ id: user.id, onboarded: user.onboarded }}>
+        <Auth0Provider user={{ id: user?.id, onboarded: user?.onboarded }}>
           <WhenReady>
             <MemoryRouter
               initialEntries={[
                 network({})
                   .users({})
                   .user({
-                    userId: user.id,
+                    userId: user?.id ?? '',
                   })
                   .research({}).$,
               ]}
@@ -80,6 +80,22 @@ const wrapper =
 
 describe('useOnboarding', () => {
   beforeEach(() => mockGetUser.mockClear());
+
+  it('handles user undefines', async () => {
+    mockGetUser.mockResolvedValue(undefined);
+
+    const { result } = renderHook(() => useOnboarding(''), {
+      wrapper: wrapper({ user: undefined }),
+    });
+
+    await act(async () => {
+      await waitFor(() => {
+        expect(result.current.steps).toBeUndefined();
+        expect(result.current.isOnboardable).toBe(false);
+      });
+    });
+  });
+
   it('calculates the steps needed to complete the profile', async () => {
     const user = createUser({ id: '1234' });
     mockGetUser.mockResolvedValue(user);
@@ -91,7 +107,7 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         expect(
-          Object.values(result.current.steps).map(({ label }) => label),
+          Object.values(result.current.steps ?? {}).map(({ label }) => label),
         ).toEqual(['Details', 'Role', 'Expertise', 'Questions', 'Biography']);
       });
     });
@@ -108,7 +124,7 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         expect(
-          Object.values(result.current.steps).map(({ label }) => label),
+          Object.values(result.current.steps ?? {}).map(({ label }) => label),
         ).toEqual(['Details', 'Role', 'Expertise', 'Biography']);
       });
     });
@@ -125,11 +141,11 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         const [details, role, questions, bio] = Object.values(
-          result.current.steps,
+          result.current.steps ?? {},
         );
 
         expect(details.modalHref).toBe(
-          `/network/users/${user.id}/research/edit-contact-info`,
+          `/network/users/${user.id}/research/edit-personal-info`,
         );
         expect(role.modalHref).toBe(
           network({})

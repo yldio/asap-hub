@@ -4,46 +4,16 @@ import { network } from '@asap-hub/routing';
 import { useUserByIdLoadable } from '../network/users/state';
 import { useCurrentUserProfileTabRoute } from './current-user-profile-tab-route';
 
-const isValidStep = ({
+const validateOnboardingStep = ({
   fields,
-  response,
+  onboardingValidation,
 }: {
   fields: string[];
-  response: ReturnType<typeof isUserOnboardable>;
-}) => fields.some((field) => Object.keys(response).includes(field));
-
-const isStepDetailsValid = (response: ReturnType<typeof isUserOnboardable>) =>
-  isValidStep({
-    fields: ['institution', 'jobTitle', 'country', 'city'],
-    response,
-  });
-
-const isStepRoleValid = (response: ReturnType<typeof isUserOnboardable>) =>
-  isValidStep({
-    fields: ['teams'],
-    response,
-  });
-
-const isStepSkillsValid = (response: ReturnType<typeof isUserOnboardable>) =>
-  isValidStep({
-    fields: ['skills'],
-    response,
-  });
-
-const isStepQuestionsValid = (response: ReturnType<typeof isUserOnboardable>) =>
-  isValidStep({
-    fields: ['questions'],
-    response,
-  });
-
-const isStepBioValid = (response: ReturnType<typeof isUserOnboardable>) =>
-  isValidStep({
-    fields: ['biography'],
-    response,
-  });
+  onboardingValidation: ReturnType<typeof isUserOnboardable>;
+}) => fields.some((field) => Object.keys(onboardingValidation).includes(field));
 
 export const useOnboarding = (id: string): UserOnboardingResult => {
-  let steps: { label: string; modalHref?: string }[] = [];
+  let invalidOnboardingSteps: { label: string; modalHref?: string }[] = [];
 
   const userById = useUserByIdLoadable(id);
   const profileTab = useCurrentUserProfileTabRoute();
@@ -57,82 +27,103 @@ export const useOnboarding = (id: string): UserOnboardingResult => {
     ? isUserOnboardable(user)
     : { isOnboardable: false };
 
-  if (isStepDetailsValid(onboardingValidation)) {
-    steps = [
-      ...steps,
+  if (!user) {
+    return {
+      isOnboardable: false,
+    };
+  }
+
+  if (
+    validateOnboardingStep({
+      fields: ['institution', 'jobTitle', 'country', 'city'],
+      onboardingValidation,
+    })
+  ) {
+    invalidOnboardingSteps = [
+      ...invalidOnboardingSteps,
       {
         label: 'Details',
-        modalHref: profileTab
-          ? profileTab({}).editContactInfo({}).$
-          : undefined,
+        modalHref: profileTab?.({}).editPersonalInfo({}).$,
       },
     ];
   }
 
-  if (isStepRoleValid(onboardingValidation)) {
-    steps = [
-      ...steps,
+  if (
+    validateOnboardingStep({
+      fields: ['teams'],
+      onboardingValidation,
+    })
+  ) {
+    invalidOnboardingSteps = [
+      ...invalidOnboardingSteps,
       {
         label: 'Role',
-        modalHref: user
-          ? network({})
-              .users({})
-              .user({ userId: user.id })
-              .research({})
-              .editTeamMembership({ teamId: user.teams[0]?.id }).$
-          : undefined,
+        modalHref: network({})
+          .users({})
+          .user({ userId: user.id })
+          .research({})
+          .editTeamMembership({ teamId: user.teams[0]?.id }).$,
       },
     ];
   }
-  if (isStepSkillsValid(onboardingValidation)) {
-    steps = [
-      ...steps,
+  if (
+    validateOnboardingStep({
+      fields: ['skills'],
+      onboardingValidation,
+    })
+  ) {
+    invalidOnboardingSteps = [
+      ...invalidOnboardingSteps,
       {
         label: 'Expertise',
-        modalHref: user
-          ? network({})
-              .users({})
-              .user({ userId: user.id })
-              .research({})
-              .editSkills({}).$
-          : undefined,
+        modalHref: network({})
+          .users({})
+          .user({ userId: user.id })
+          .research({})
+          .editSkills({}).$,
       },
     ];
   }
 
-  if (isStepQuestionsValid(onboardingValidation)) {
-    steps = [
-      ...steps,
+  if (
+    validateOnboardingStep({
+      fields: ['questions'],
+      onboardingValidation,
+    })
+  ) {
+    invalidOnboardingSteps = [
+      ...invalidOnboardingSteps,
       {
         label: 'Questions',
-        modalHref: user
-          ? network({})
-              .users({})
-              .user({ userId: user.id })
-              .research({})
-              .editQuestions({}).$
-          : undefined,
+        modalHref: network({})
+          .users({})
+          .user({ userId: user.id })
+          .research({})
+          .editQuestions({}).$,
       },
     ];
   }
-  if (isStepBioValid(onboardingValidation)) {
-    steps = [
-      ...steps,
+  if (
+    validateOnboardingStep({
+      fields: ['biography'],
+      onboardingValidation,
+    })
+  ) {
+    invalidOnboardingSteps = [
+      ...invalidOnboardingSteps,
       {
         label: 'Biography',
-        modalHref: user
-          ? network({})
-              .users({})
-              .user({ userId: user.id })
-              .about({})
-              .editBiography({}).$
-          : undefined,
+        modalHref: network({})
+          .users({})
+          .user({ userId: user.id })
+          .about({})
+          .editBiography({}).$,
       },
     ];
   }
 
   return {
-    steps,
+    steps: invalidOnboardingSteps,
     isOnboardable: onboardingValidation.isOnboardable,
   };
 };

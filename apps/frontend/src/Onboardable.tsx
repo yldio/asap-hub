@@ -1,16 +1,12 @@
 import { FC, ReactNode } from 'react';
 import { useCurrentUser } from '@asap-hub/react-context';
+import { UserOnboardingResult } from '@asap-hub/validation';
 
-import { useOnboarding, OnboardingStep } from './hooks';
-
-type OnboardableResult = {
-  steps: OnboardingStep[];
-  isOnboardable: boolean;
-};
+import { useOnboarding } from './hooks';
 
 export type OnboardableLoadUserProps = {
   id: string;
-  children: (state: OnboardableResult) => ReactNode;
+  children: (state: UserOnboardingResult) => ReactNode;
 };
 const OnboardableLoadUser: FC<OnboardableLoadUserProps> = ({
   id,
@@ -22,7 +18,7 @@ const OnboardableLoadUser: FC<OnboardableLoadUserProps> = ({
 };
 
 type OnboardableProps = {
-  children: (state?: OnboardableResult) => ReactNode;
+  children: (state?: UserOnboardingResult) => ReactNode;
 };
 export const Onboardable: FC<OnboardableProps> = ({ children }) => {
   const auth0user = useCurrentUser();

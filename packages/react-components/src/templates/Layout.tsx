@@ -11,6 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
+import { UserOnboardingResult } from '@asap-hub/validation';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
@@ -169,15 +170,7 @@ const userMenuShownStyles = css({
 type LayoutProps = {
   readonly children: ReactNode;
   readonly onboardModalHref?: string;
-  readonly onboardable?: {
-    steps: {
-      id: string;
-      label: string;
-      fields: string[];
-      modalHref?: string;
-    }[];
-    isOnboardable: boolean;
-  };
+  readonly onboardable?: UserOnboardingResult;
 } & ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
 const Layout: FC<LayoutProps> = ({

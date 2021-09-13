@@ -216,7 +216,9 @@ verify:branch:
 
 verify:schema:branch:
   <<: *tmpl_branch
-  image: $INTEGRATION_DOCKER_IMAGE
+  image:
+    name: alpine/git
+    entrypoint: ['/bin/sh', '-c']
   stage: verify-dev
   variables:
     API_URL: https://api-$CI_EXTERNAL_PULL_REQUEST_IID.$ASAP_HOSTNAME

@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { UserOnboardingResult } from '@asap-hub/validation';
 
 import { successIcon } from '../icons';
 import { Link, Headline2, Paragraph } from '../atoms';
@@ -41,14 +42,7 @@ const iconStyles = css({
 
 type OnboardingFooterProps = {
   onboardModalHref?: string;
-  onboardable: {
-    steps: {
-      label: string;
-      id: string;
-      modalHref?: string;
-    }[];
-    isOnboardable: boolean;
-  };
+  onboardable: UserOnboardingResult;
 };
 
 const OnboardinButton = ({

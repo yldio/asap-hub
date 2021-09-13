@@ -23,6 +23,11 @@ export type UserValidationResponse = {
   isOnboardable: boolean;
 } & UserValidationFields;
 
+export type UserOnboardingResult = {
+  steps: { label: string; modalHref?: string }[];
+  isOnboardable: boolean;
+};
+
 export const isUserOnboardable = (
   user: UserResponse,
 ): UserValidationResponse => {

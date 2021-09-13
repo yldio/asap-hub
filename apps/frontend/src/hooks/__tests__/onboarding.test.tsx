@@ -90,13 +90,9 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(Object.values(result.current.steps).map((c) => c.id)).toEqual([
-          'details',
-          'role',
-          'skills',
-          'questions',
-          'bio',
-        ]);
+        expect(
+          Object.values(result.current.steps).map(({ label }) => label),
+        ).toEqual(['Details', 'Role', 'Expertise', 'Questions', 'Biography']);
       });
     });
   });
@@ -111,12 +107,9 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(Object.values(result.current.steps).map((c) => c.id)).toEqual([
-          'details',
-          'role',
-          'skills',
-          'bio',
-        ]);
+        expect(
+          Object.values(result.current.steps).map(({ label }) => label),
+        ).toEqual(['Details', 'Role', 'Expertise', 'Biography']);
       });
     });
   });

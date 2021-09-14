@@ -9,7 +9,7 @@ const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
   outputs: [],
   numberOfItems: 0,
   numberOfPages: 1,
-  currentPage: 1,
+  currentPage: 0,
   renderPageHref: () => '',
   isListView: false,
   cardViewHref: '',

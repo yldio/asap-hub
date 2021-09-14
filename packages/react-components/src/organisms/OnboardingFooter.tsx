@@ -40,6 +40,11 @@ const iconStyles = css({
   alignSelf: 'center',
 });
 
+const buttonContainer = css({
+  display: 'flex',
+  width: '100%',
+});
+
 type OnboardingFooterProps = {
   onboardModalHref?: string;
   onboardable: UserOnboardingResult;
@@ -87,7 +92,7 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
         </Paragraph>
       </div>
       <div css={buttonStyles}>
-        <div>
+        <div css={buttonContainer}>
           {onboardable.steps && (
             <OnboardinButton
               onboardable={onboardable}

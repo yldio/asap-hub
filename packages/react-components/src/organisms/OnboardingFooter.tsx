@@ -5,7 +5,7 @@ import { successIcon } from '../icons';
 import { Link, Headline2, Paragraph } from '../atoms';
 import { paper, steel } from '../colors';
 
-import { perRem, smallDesktopScreen } from '../pixels';
+import { perRem, tabletScreen } from '../pixels';
 import { irisCeruleanGradientStyles } from '../appearance';
 
 const headerStyles = css({
@@ -18,7 +18,7 @@ const containerStyles = css({
   display: 'flex',
   width: '100%',
   flexDirection: 'column',
-  [`@media (min-width: ${smallDesktopScreen.min}px)`]: {
+  [`@media (min-width: ${tabletScreen.min}px)`]: {
     flexDirection: 'row',
   },
 });

@@ -76,20 +76,24 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
       <div css={textStyles}>
         <Headline2 styleAsHeading={3}>
           Your profile is{' '}
-          {onboardable.isOnboardable ? 'complete' : 'incomplete'}
+          {onboardable.steps && onboardable.steps.length === 0
+            ? 'complete'
+            : 'incomplete'}
         </Headline2>
         <Paragraph>
-          {onboardable.isOnboardable
+          {onboardable.steps && onboardable.steps.length === 0
             ? 'Click to publish your profile and start exploring the Hub.'
             : 'Complete your profile to unlock access to the Hub. Any edits will be privately stored until you’re ready to publish.'}
         </Paragraph>
       </div>
       <div css={buttonStyles}>
         <div>
-          <OnboardinButton
-            onboardable={onboardable}
-            onboardModalHref={onboardModalHref}
-          />
+          {onboardable.steps && (
+            <OnboardinButton
+              onboardable={onboardable}
+              onboardModalHref={onboardModalHref}
+            />
+          )}
         </div>
       </div>
     </div>

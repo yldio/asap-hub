@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { Layout, authTestUtils } from '@asap-hub/react-components';
-import { boolean } from '@storybook/addon-knobs';
+import { boolean, number } from '@storybook/addon-knobs';
 
 import { NoPaddingDecorator } from './layout';
 import { toastGenerator } from './toast';
@@ -44,8 +44,10 @@ export const Onboardable = () => (
         {...props}
         onboardModalHref="/wrong"
         onboardable={{
-          steps: [],
-          isOnboardable: boolean('isOnboardable', false),
+          steps: Array.from({ length: number('Steps', 0, { min: 0 }) }).map(
+            (_, i) => ({ label: `${i} step`, modalHref: '/' }),
+          ),
+          isOnboardable: boolean('isOnboardable', true),
         }}
       >
         Content

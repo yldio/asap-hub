@@ -13,15 +13,13 @@ import {
   FETCH_RESEARCH_OUTPUT,
   FETCH_RESEARCH_OUTPUTS,
 } from '../queries/research-outputs.queries';
-import {
-  FetchResearchOutput,
-  FetchResearchOutputVariables,
-} from '../queries/__generated__/FetchResearchOutput';
-import {
-  FetchResearchOutputs,
-  FetchResearchOutputsVariables,
-} from '../queries/__generated__/FetchResearchOutputs';
 import logger from '../utils/logger';
+import {
+  FetchResearchOutputQuery,
+  FetchResearchOutputQueryVariables,
+  FetchResearchOutputsQuery,
+  FetchResearchOutputsQueryVariables,
+} from '../gql/graphql';
 
 export const getGraphQLQueryResearchOutput = ({
   withTeams,
@@ -100,8 +98,8 @@ export default class ResearchOutputs implements ResearchOutputController {
   async fetchById(id: string): Promise<ResearchOutputResponse> {
     const researchOutputGraphqlResponse =
       await this.graphqlSquidexClient.request<
-        FetchResearchOutput,
-        FetchResearchOutputVariables
+        FetchResearchOutputQuery,
+        FetchResearchOutputQueryVariables
       >(FETCH_RESEARCH_OUTPUT, { id, withTeams: true });
 
     const { findResearchOutputsContent: researchOutputContent } =
@@ -152,8 +150,8 @@ export default class ResearchOutputs implements ResearchOutputController {
 
     const { queryResearchOutputsContentsWithTotal } =
       await this.graphqlSquidexClient.request<
-        FetchResearchOutputs,
-        FetchResearchOutputsVariables
+        FetchResearchOutputsQuery,
+        FetchResearchOutputsQueryVariables
       >(FETCH_RESEARCH_OUTPUTS, {
         top: take,
         skip,

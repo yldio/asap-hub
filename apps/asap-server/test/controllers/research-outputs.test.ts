@@ -17,10 +17,7 @@ import {
   FETCH_RESEARCH_OUTPUT,
   FETCH_RESEARCH_OUTPUTS,
 } from '../../src/queries/research-outputs.queries';
-import {
-  FetchResearchOutputs,
-  FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items,
-} from '../../src/queries/__generated__/FetchResearchOutputs';
+import { FetchResearchOutputsQuery } from '../../src/gql/graphql';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputs = new ResearchOutputs();
@@ -654,16 +651,19 @@ describe('ResearchOutputs controller', () => {
 });
 
 type FetchResearchOutputsGraphqlResponse = {
-  data: FetchResearchOutputs;
+  data: FetchResearchOutputsQuery;
 };
 
+type FetchResearchOutputsQuery_items = NonNullable<
+  FetchResearchOutputsQuery['queryResearchOutputsContentsWithTotal']
+>['items'];
+
 const getFetchResearchOutputsGraphqlResponse = (
-  items: FetchResearchOutputs_queryResearchOutputsContentsWithTotal_items[] = [],
+  items: FetchResearchOutputsQuery_items = [],
   total: number = 0,
 ): FetchResearchOutputsGraphqlResponse => ({
   data: {
     queryResearchOutputsContentsWithTotal: {
-      __typename: 'ResearchOutputsResultDto',
       total,
       items,
     },

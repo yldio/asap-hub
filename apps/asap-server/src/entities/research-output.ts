@@ -8,15 +8,12 @@ import {
   sharingStatuses,
 } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
-import {
-  FetchResearchOutput_findResearchOutputsContent,
-  FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents,
-} from '../queries/__generated__/FetchResearchOutput';
+import { FetchResearchOutputQuery } from '../gql/graphql';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
 
 export const parseGraphQLResearchOutput = (
-  output: FetchResearchOutput_findResearchOutputsContent,
+  output: NonNullable<FetchResearchOutputQuery['findResearchOutputsContent']>,
   options?: {
     includeAuthors?: boolean;
     includeTeams?: boolean;
@@ -115,8 +112,14 @@ export const parseGraphQLResearchOutput = (
   };
 };
 
+type FetchResearchOutput_teamContents = NonNullable<
+  NonNullable<
+    FetchResearchOutputQuery['findResearchOutputsContent']
+  >['referencingTeamsContents']
+>[number];
+
 const parseGraphqlTeamLite = (
-  graphqlTeam: FetchResearchOutput_findResearchOutputsContent_referencingTeamsContents,
+  graphqlTeam: FetchResearchOutput_teamContents,
 ): ResearchOutputResponse['team'] => ({
   id: graphqlTeam.id,
   displayName: graphqlTeam.flatData?.displayName || '',

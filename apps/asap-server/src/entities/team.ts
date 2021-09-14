@@ -14,7 +14,7 @@ import {
 
 import { parseGraphQLResearchOutput } from './research-output';
 import { parseDate, createURL } from '../utils/squidex';
-import { FetchResearchOutput_findResearchOutputsContent } from '../queries/__generated__/FetchResearchOutput';
+import { FetchResearchOutputQuery } from '../gql/graphql';
 
 export const teamUpdateSchema = Joi.object({
   tools: Joi.array()
@@ -69,6 +69,10 @@ export const parseGraphQLTeamMember = (
       : undefined,
   };
 };
+
+type FetchResearchOutput_findResearchOutputsContent = NonNullable<
+  FetchResearchOutputQuery['findResearchOutputsContent']
+>;
 
 export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
   const flatOutputs: NonNullable<GraphqlTeam['flatData']>['outputs'] =

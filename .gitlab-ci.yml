@@ -232,7 +232,7 @@ verify:schema:branch:
     - export SQUIDEX_BASE_URL=https://cloud.squidex.io
     - git init
     - yarn schema:update
-    - git diff --exit-code ./packages/squidex/graphql-schema/ && git diff --exit-code ./apps/asap-server/src/queries/
+    - git diff --exit-code ./apps/asap-server/src/gql/
 
 report:frontend:release:dev:
   <<: *tmpl_master

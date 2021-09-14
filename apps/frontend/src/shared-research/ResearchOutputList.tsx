@@ -28,8 +28,8 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   );
   return (
     <SharedResearchList
-      researchOutputs={result?.items || []}
-      numberOfItems={result?.total || 0}
+      researchOutputs={result.items}
+      numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}

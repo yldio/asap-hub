@@ -37,17 +37,15 @@ const OutputsList: React.FC<OutputsListProps> = ({
     teamId,
   });
   const { numberOfPages, renderPageHref } = usePagination(
-    result?.total || 0,
+    result.total,
     pageSize,
   );
   return (
     <TeamProfileOutputs
       outputs={
-        isEnabled('ALGOLIA_RESEARCH_OUTPUTS')
-          ? result?.items || []
-          : teamOutputs
+        isEnabled('ALGOLIA_RESEARCH_OUTPUTS') ? result.items : teamOutputs
       }
-      numberOfItems={result?.total || 0}
+      numberOfItems={result.total}
       numberOfPages={numberOfPages}
       currentPage={currentPage}
       renderPageHref={renderPageHref}

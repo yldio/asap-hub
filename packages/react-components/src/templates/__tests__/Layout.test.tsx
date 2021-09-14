@@ -93,7 +93,13 @@ it('scrolls to top between page navigations', async () => {
 
 it('displays onboarding header', async () => {
   const { getByText } = render(
-    <Layout {...props} onboardable={{ steps: [], isOnboardable: false }} />,
+    <Layout
+      {...props}
+      onboardable={{
+        steps: [{ label: 'Details', modalHref: '/' }],
+        isOnboardable: false,
+      }}
+    />,
   );
   expect(getByText(/profile.+incomplete/i)).toBeVisible();
 });

@@ -5,6 +5,19 @@ import OnboardingFooter from '../OnboardingFooter';
 const props: ComponentProps<typeof OnboardingFooter> = {
   onboardable: { steps: [], isOnboardable: false },
 };
+
+it('renders the button, after validate onboarding', () => {
+  const { container } = render(
+    <OnboardingFooter
+      {...props}
+      onboardable={{
+        isOnboardable: false,
+      }}
+    />,
+  );
+  expect(container.querySelector('button')).toBeNull();
+});
+
 it('renders the not onboardable UI, when profile incomplete', () => {
   const { getByRole, getByText } = render(
     <OnboardingFooter

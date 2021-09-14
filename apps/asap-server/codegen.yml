@@ -6,13 +6,17 @@ schema:
 documents:
   - 'src/**/*.ts'
   - '!src/gql/**/*'
+  - '!src/utils/**/*'
 generates:
   ./src/gql/:
     preset: gql-tag-operations-preset
+    plugins:
+      - graphql-typescript-integration/empty
     config:
       avoidOptionals: true
       preResolveTypes: false
       skipTypename: true
       exportFragmentSpreadSubTypes: true
-      flattenGeneratedTypes: true
       withResultType: true
+pluckConfig:
+  skipIndent: true

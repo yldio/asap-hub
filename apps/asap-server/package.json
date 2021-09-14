@@ -100,6 +100,7 @@
     "@types/stream-json": "^1",
     "@types/supertest": "^2.0.11",
     "@types/uuid": "^8.3.0",
+    "graphql-typescript-integration": "^1.2.0",
     "jwt-encode": "^1.0.1",
     "node-dev": "^6.7.0",
     "stream-json": "^1.7.2",

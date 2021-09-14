@@ -1,6 +1,6 @@
 import {
   TeamProfileOutputs,
-  TeamProfileOutputsHeader,
+  ResearchOutputsSearch,
 } from '@asap-hub/react-components';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { isEnabled } from '@asap-hub/flags';
@@ -74,8 +74,8 @@ const Outputs: React.FC<OutputsProps> = ({ teamOutputs, teamId }) => {
   return (
     <article>
       {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') && (
-        <TeamProfileOutputsHeader
-          setSearchQuery={setSearchQuery}
+        <ResearchOutputsSearch
+          onChangeSearch={setSearchQuery}
           searchQuery={searchQuery}
           onChangeFilter={toggleFilter}
           filters={filters}

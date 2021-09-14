@@ -1,23 +1,23 @@
 import { createResearchOutputResponse } from '@asap-hub/fixtures';
 import { disable } from '@asap-hub/flags';
 import { render } from '@testing-library/react';
+import { ComponentProps } from 'react';
 
 import TeamProfileOutputs from '../TeamProfileOutputs';
 
+const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
+  outputs: [],
+  numberOfItems: 0,
+  numberOfPages: 1,
+  currentPage: 1,
+  renderPageHref: () => '',
+  isListView: false,
+  cardViewHref: '',
+  listViewHref: '',
+};
 it('renders a coming soon text (REGRESSION)', () => {
   disable('ALGOLIA_RESEARCH_OUTPUTS');
-  const { getByText } = render(
-    <TeamProfileOutputs
-      outputs={[]}
-      numberOfItems={0}
-      numberOfPages={1}
-      currentPage={1}
-      renderPageHref={() => ''}
-      isListView={false}
-      cardViewHref={''}
-      listViewHref={''}
-    />,
-  );
+  const { getByText } = render(<TeamProfileOutputs {...baseProps} />);
 
   expect(getByText(/more\sto\scome/i)).toBeVisible();
   expect(getByText(/research\soutputs/i)).toBeVisible();
@@ -26,6 +26,7 @@ it('renders output cards (REGRESSION)', () => {
   disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getAllByRole } = render(
     <TeamProfileOutputs
+      {...baseProps}
       outputs={[
         {
           ...createResearchOutputResponse(),
@@ -41,12 +42,6 @@ it('renders output cards (REGRESSION)', () => {
         },
       ]}
       numberOfItems={1}
-      numberOfPages={1}
-      currentPage={0}
-      renderPageHref={() => ''}
-      isListView={false}
-      cardViewHref={''}
-      listViewHref={''}
     />,
   );
 
@@ -67,6 +62,7 @@ it('renders output cards (REGRESSION)', () => {
 it('renders output cards', () => {
   const { getAllByRole, queryByText } = render(
     <TeamProfileOutputs
+      {...baseProps}
       outputs={[
         {
           ...createResearchOutputResponse(),
@@ -82,12 +78,6 @@ it('renders output cards', () => {
         },
       ]}
       numberOfItems={1}
-      numberOfPages={1}
-      currentPage={0}
-      renderPageHref={() => ''}
-      isListView={false}
-      cardViewHref={''}
-      listViewHref={''}
     />,
   );
 

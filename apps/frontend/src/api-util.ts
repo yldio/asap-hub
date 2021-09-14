@@ -5,7 +5,6 @@ export type GetListOptions = {
   filters: Set<string>;
   currentPage: number | null;
   pageSize: number | null;
-  teamId?: string;
 };
 
 export const createListApiUrl = (

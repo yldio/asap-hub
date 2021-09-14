@@ -8,6 +8,10 @@ import { SearchIndex } from 'algoliasearch/lite';
 import { createListApiUrl, GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
 
+export type ResearchOutputListOptions = GetListOptions & {
+  teamId?: string;
+};
+
 export const getResearchOutput = async (
   id: string,
   authorization: string,
@@ -58,7 +62,7 @@ export const getAllFilters = (filters: Set<string>, teamId?: string) => {
 
 export const getResearchOutputs = (
   { search }: SearchIndex,
-  options: GetListOptions,
+  options: ResearchOutputListOptions,
 ) =>
   search<ResearchOutputResponse>(options.searchQuery, {
     page: options.currentPage ?? 0,

@@ -150,7 +150,7 @@ export {
   TeamMembershipModal,
   TeamProfileAbout,
   TeamProfileOutputs,
-  TeamProfileOutputsHeader,
+  ResearchOutputsSearch,
   TeamProfilePage,
   TeamProfileWorkspace,
   ToolModal,

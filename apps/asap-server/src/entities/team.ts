@@ -70,7 +70,7 @@ export const parseGraphQLTeamMember = (
   };
 };
 
-type FetchResearchOutput_findResearchOutputsContent = NonNullable<
+type FetchResearchOutputFindResearchOutputsContent = NonNullable<
   FetchResearchOutputQuery['findResearchOutputsContent']
 >;
 
@@ -95,7 +95,7 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
     .map((o) => {
       const output = parseGraphQLResearchOutput(
         // TODO: REMOVE casting once other GraphqlTypes are generated
-        o as FetchResearchOutput_findResearchOutputsContent,
+        o as FetchResearchOutputFindResearchOutputsContent,
         {
           includeAuthors: true,
         },

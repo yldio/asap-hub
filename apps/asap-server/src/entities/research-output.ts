@@ -112,14 +112,14 @@ export const parseGraphQLResearchOutput = (
   };
 };
 
-type FetchResearchOutput_teamContents = NonNullable<
+type FetchResearchOutputTeamContents = NonNullable<
   NonNullable<
     FetchResearchOutputQuery['findResearchOutputsContent']
   >['referencingTeamsContents']
 >[number];
 
 const parseGraphqlTeamLite = (
-  graphqlTeam: FetchResearchOutput_teamContents,
+  graphqlTeam: FetchResearchOutputTeamContents,
 ): ResearchOutputResponse['team'] => ({
   id: graphqlTeam.id,
   displayName: graphqlTeam.flatData?.displayName || '',

@@ -14,9 +14,5 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['__typename'] }],
     'no-dupe-class-members': 'off',
     '@typescript-eslint/no-dupe-class-members': ['error'],
-    camelcase: [
-      'error',
-      { properties: 'never', allow: ['FetchResearchOutput.*'] },
-    ],
   },
 };

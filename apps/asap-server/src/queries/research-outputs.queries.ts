@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const researchOutputContentQuery = gql(`#graphql
+export const researchOutputContentQueryFragment = gql`
   fragment ResearchOutputContent on ResearchOutputs {
     id
     created
@@ -127,17 +127,18 @@ export const researchOutputContentQuery = gql(`#graphql
       }
     }
   }
-`);
+`;
 
-export const FETCH_RESEARCH_OUTPUT = gql(`#graphql
+export const FETCH_RESEARCH_OUTPUT = gql`
   query FetchResearchOutput($id: String!, $withTeams: Boolean!) {
     findResearchOutputsContent(id: $id) {
       ...ResearchOutputContent
     }
   }
-`);
+  ${researchOutputContentQueryFragment}
+`;
 
-export const FETCH_RESEARCH_OUTPUTS = gql(`#graphql
+export const FETCH_RESEARCH_OUTPUTS = gql`
   query FetchResearchOutputs(
     $top: Int
     $skip: Int
@@ -153,6 +154,8 @@ export const FETCH_RESEARCH_OUTPUTS = gql(`#graphql
       total
       items {
         ...ResearchOutputContent
+      }
     }
   }
-}`);
+  ${researchOutputContentQueryFragment}
+`;

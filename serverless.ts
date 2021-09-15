@@ -125,6 +125,7 @@ const serverlessConfig: AWS = {
       },
     ],
   },
+  variablesResolutionMode: '20210326',
   package: {
     individually: true,
     excludeDevDependencies: false,

@@ -5,7 +5,7 @@ it('renders the button, after validate onboarding', () => {
   const { container } = render(
     <OnboardingFooter
       onboardable={{
-        steps: [],
+        incompleteSteps: [],
         isOnboardable: false,
       }}
     />,
@@ -17,7 +17,7 @@ it('renders the not onboardable UI, when profile incomplete', () => {
   const { getByRole, getByText } = render(
     <OnboardingFooter
       onboardable={{
-        steps: [{ label: 'Role', modalHref: '/' }],
+        incompleteSteps: [{ label: 'Role', modalHref: '/' }],
         isOnboardable: false,
       }}
     />,
@@ -28,7 +28,9 @@ it('renders the not onboardable UI, when profile incomplete', () => {
 
 it('renders the not onboardable UI, when profile complete', () => {
   const { getByTitle, getByRole } = render(
-    <OnboardingFooter onboardable={{ steps: [], isOnboardable: true }} />,
+    <OnboardingFooter
+      onboardable={{ incompleteSteps: [], isOnboardable: true }}
+    />,
   );
   expect(getByTitle(/success/i)).toBeInTheDocument();
   expect(getByRole('heading')).toHaveTextContent(/ complete/i);

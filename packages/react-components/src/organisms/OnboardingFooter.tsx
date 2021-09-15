@@ -54,19 +54,21 @@ const OnboardingButton = ({
   onboardable,
   onboardModalHref,
 }: OnboardingFooterProps) => {
-  const buttonProps = !onboardable.steps?.length
+  const buttonProps = onboardable.incompleteSteps.length
     ? {
-        label: 'Publish my profile',
-        modalHref: onboardModalHref,
+        label: `Next Step: ${onboardable.incompleteSteps[0].label}`,
+        modalHref: onboardable.incompleteSteps[0].modalHref,
       }
     : {
-        label: `Next Step: ${onboardable.steps[0].label}`,
-        modalHref: onboardable.steps[0].modalHref,
+        label: 'Publish my profile',
+        modalHref: onboardModalHref,
       };
 
   return (
     <Link href={buttonProps.modalHref} buttonStyle>
-      <span css={iconStyles}>{!onboardable.steps?.length && successIcon}</span>
+      <span css={iconStyles}>
+        {!onboardable.incompleteSteps.length && successIcon}
+      </span>
       {buttonProps.label}
     </Link>
   );
@@ -81,19 +83,17 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
       <div css={textStyles}>
         <Headline2 styleAsHeading={3}>
           Your profile is{' '}
-          {onboardable.steps && onboardable.steps.length === 0
-            ? 'complete'
-            : 'incomplete'}
+          {onboardable.incompleteSteps.length ? 'incomplete' : 'complete'}
         </Headline2>
         <Paragraph>
-          {onboardable.steps && onboardable.steps.length === 0
-            ? 'Click to publish your profile and start exploring the Hub.'
-            : 'Complete your profile to unlock access to the Hub. Any edits will be privately stored until you’re ready to publish.'}
+          {onboardable.incompleteSteps.length
+            ? 'Complete your profile to unlock access to the Hub. Any edits will be privately stored until you’re ready to publish.'
+            : 'Click to publish your profile and start exploring the Hub.'}
         </Paragraph>
       </div>
       <div css={buttonStyles}>
         <div css={buttonContainer}>
-          {onboardable.steps && (
+          {onboardable.incompleteSteps && (
             <OnboardingButton
               onboardable={onboardable}
               onboardModalHref={onboardModalHref}

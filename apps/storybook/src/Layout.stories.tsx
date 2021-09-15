@@ -44,9 +44,9 @@ export const Onboardable = () => (
         {...props}
         onboardModalHref="/wrong"
         onboardable={{
-          steps: Array.from({ length: number('Steps', 0, { min: 0 }) }).map(
-            (_, i) => ({ label: `${i} step`, modalHref: '/' }),
-          ),
+          incompleteSteps: Array.from({
+            length: number('Steps', 0, { min: 0 }),
+          }).map((_, i) => ({ label: `${i} step`, modalHref: '/' })),
           isOnboardable: boolean('isOnboardable', true),
         }}
       >

@@ -354,6 +354,15 @@ describe('/users/ route', () => {
       expect(userControllerMock.update).toBeCalledWith(userId, { onboarded });
     });
 
+    test('Should not call the controller method if parameters are not valid', async () => {
+      const response = await supertest(appWithMockedAuth)
+        .patch(`/users/${userId}`)
+        .send({ orcid: '123-456-789', jobTitle: 'Professor' });
+
+      expect(response.status).toBe(400);
+      expect(userControllerMock.update).not.toHaveBeenCalled();
+    });
+
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {
         const response = await supertest(appWithMockedAuth)

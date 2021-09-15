@@ -121,7 +121,7 @@ const serverlessConfig: AWS = {
         Effect: 'Allow',
         Action: 'events:*',
         Resource:
-          'arn:aws:events:${aws:region}:${aws:accountId}:event-bus/asap-events-${self:provider.stage}',
+          'arn:aws:events:${opt:region, self:provider.region, "us-east-1"}:${aws:accountId}:event-bus/asap-events-${self:provider.stage}',
       },
     ],
   },

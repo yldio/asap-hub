@@ -114,7 +114,7 @@ const OnboardModal: React.FC<OnboardModalProps> = ({
                   }
                 }}
               >
-                Continue and Publish
+                Publish and Explore
               </Button>
             </div>
           </div>

@@ -3,7 +3,7 @@ import { waitFor } from '@testing-library/dom';
 import { network } from '@asap-hub/routing';
 import { RecoilRoot } from 'recoil';
 import { MemoryRouter } from 'react-router-dom';
-import { UserResponse, UserTeam } from '@asap-hub/model';
+import { UserResponse } from '@asap-hub/model';
 import { createUserResponse } from '@asap-hub/fixtures';
 
 import { useOnboarding } from '../onboarding';
@@ -13,42 +13,18 @@ import { getUser } from '../../network/users/api';
 
 jest.mock('../../network/users/api');
 const mockGetUser = getUser as jest.MockedFunction<typeof getUser>;
-
-const createUser = ({
-  id = '1234',
-  onboarded = false,
-  biography = undefined,
-  institution = undefined,
-  jobTitle = undefined,
-  city = undefined,
-  country = undefined,
-  questions = [],
-  skills = [],
-  teams = [],
-}: {
-  id?: string;
-  institution?: string;
-  jobTitle?: string;
-  city?: string;
-  country?: string;
-  biography?: string;
-  questions?: string[];
-  skills?: string[];
-  onboarded?: boolean;
-  teams?: UserTeam[];
-}): UserResponse => ({
+const emptyUser: UserResponse = {
   ...createUserResponse(),
-  id,
-  biography,
-  questions,
-  teams,
-  institution,
-  jobTitle,
-  city,
-  country,
-  skills,
-  onboarded,
-});
+  onboarded: false,
+  biography: undefined,
+  institution: undefined,
+  jobTitle: undefined,
+  city: undefined,
+  country: undefined,
+  skills: [],
+  teams: [],
+  questions: [],
+};
 
 const wrapper =
   ({ user }: { user?: UserResponse }): React.FC =>
@@ -81,7 +57,7 @@ const wrapper =
 describe('useOnboarding', () => {
   beforeEach(() => mockGetUser.mockClear());
 
-  it('handles user undefines', async () => {
+  it('handles when a user is not logged in', async () => {
     mockGetUser.mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useOnboarding(''), {
@@ -90,14 +66,14 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(result.current.steps).toBeUndefined();
+        expect(result.current.steps).toEqual([]);
         expect(result.current.isOnboardable).toBe(false);
       });
     });
   });
 
-  it('calculates the steps needed to complete the profile', async () => {
-    const user = createUser({ id: '1234' });
+  it('returns all steps required to complete the profile', async () => {
+    const user = { ...emptyUser };
     mockGetUser.mockResolvedValue(user);
 
     const { result } = renderHook(() => useOnboarding(user.id), {
@@ -113,8 +89,8 @@ describe('useOnboarding', () => {
     });
   });
 
-  it('returns the step in the correct order', async () => {
-    const user = createUser({ id: '1234', questions: ['1', '2'] });
+  it('returns incomplete step in order', async () => {
+    const user = { ...emptyUser, questions: ['1', '2'] };
     mockGetUser.mockResolvedValue(user);
 
     const { result } = renderHook(() => useOnboarding(user.id), {
@@ -131,7 +107,10 @@ describe('useOnboarding', () => {
   });
 
   it('calculates the modal href for every step', async () => {
-    const user = createUser({ id: '1234', skills: ['1', '2', '3', '4', '5'] });
+    const user = {
+      ...emptyUser,
+      skills: ['1', '2', '3', '4', '5'],
+    };
     mockGetUser.mockResolvedValue(user);
 
     const { result } = renderHook(() => useOnboarding(user.id), {

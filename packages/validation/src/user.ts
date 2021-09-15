@@ -24,7 +24,7 @@ export type UserValidationResponse = {
 } & UserValidationFields;
 
 export type UserOnboardingResult = {
-  steps?: { label: string; modalHref?: string }[];
+  steps: { label: string; modalHref: string }[];
   isOnboardable: boolean;
 };
 

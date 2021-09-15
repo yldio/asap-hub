@@ -6,7 +6,6 @@ import {
   useRecoilValue,
   useRecoilState,
   DefaultValue,
-  useRecoilValueLoadable,
 } from 'recoil';
 import {
   UserResponse,
@@ -123,8 +122,6 @@ export const useUsers = (options: GetListOptions) => {
 };
 
 export const useUserById = (id: string) => useRecoilValue(userState(id));
-export const useUserByIdLoadable = (id: string) =>
-  useRecoilValueLoadable(userState(id));
 
 export const usePatchUserById = (id: string) => {
   const { getTokenSilently } = useAuth0();

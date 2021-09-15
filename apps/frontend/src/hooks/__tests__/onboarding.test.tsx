@@ -66,7 +66,7 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(result.current.steps).toEqual([]);
+        expect(result.current.incompleteSteps).toEqual([]);
         expect(result.current.isOnboardable).toBe(false);
       });
     });
@@ -83,7 +83,9 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         expect(
-          Object.values(result.current.steps ?? {}).map(({ label }) => label),
+          Object.values(result.current.incompleteSteps).map(
+            ({ label }) => label,
+          ),
         ).toEqual(['Details', 'Role', 'Expertise', 'Questions', 'Biography']);
       });
     });
@@ -100,7 +102,9 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         expect(
-          Object.values(result.current.steps ?? {}).map(({ label }) => label),
+          Object.values(result.current.incompleteSteps).map(
+            ({ label }) => label,
+          ),
         ).toEqual(['Details', 'Role', 'Expertise', 'Biography']);
       });
     });
@@ -120,7 +124,7 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         const [details, role, questions, bio] = Object.values(
-          result.current.steps ?? {},
+          result.current.incompleteSteps,
         );
 
         expect(details.modalHref).toBe(

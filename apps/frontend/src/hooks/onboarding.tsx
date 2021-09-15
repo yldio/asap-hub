@@ -2,7 +2,7 @@ import { isUserOnboardable, UserOnboardingResult } from '@asap-hub/validation';
 import { network } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
 
-import { useUserByIdLoadable } from '../network/users/state';
+import { useUserById } from '../network/users/state';
 import { useCurrentUserProfileTabRoute } from './current-user-profile-tab-route';
 
 const orderedSteps = [
@@ -73,16 +73,11 @@ const steps = (
 });
 
 export const useOnboarding = (id: string): UserOnboardingResult => {
-  const userById = useUserByIdLoadable(id);
+  const user = useUserById(id);
   const profileTab = useCurrentUserProfileTabRoute();
-  const user =
-    userById.state === 'hasValue' && userById.contents
-      ? userById.contents
-      : undefined;
-
   if (!user || !profileTab) {
     return {
-      steps: [],
+      incompleteSteps: [],
       isOnboardable: false,
     };
   }
@@ -90,7 +85,7 @@ export const useOnboarding = (id: string): UserOnboardingResult => {
   const stepDetails = steps(profileTab, user);
 
   return {
-    steps: orderedSteps.reduce((acc, stepKey) => {
+    incompleteSteps: orderedSteps.reduce((acc, stepKey) => {
       const fieldsToCheck = Object.entries(fieldToStep)
         .filter(([_, step]) => step === stepKey)
         .map(([field]) => field);
@@ -100,7 +95,7 @@ export const useOnboarding = (id: string): UserOnboardingResult => {
       )
         ? [...acc, stepDetails[stepKey]]
         : acc;
-    }, [] as UserOnboardingResult['steps']),
+    }, [] as UserOnboardingResult['incompleteSteps']),
     isOnboardable,
   };
 };

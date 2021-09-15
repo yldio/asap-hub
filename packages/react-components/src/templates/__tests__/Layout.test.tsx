@@ -96,7 +96,7 @@ it('displays onboarding header', async () => {
     <Layout
       {...props}
       onboardable={{
-        steps: [{ label: 'Details', modalHref: '/' }],
+        incompleteSteps: [{ label: 'Details', modalHref: '/' }],
         isOnboardable: false,
       }}
     />,

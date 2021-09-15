@@ -16,6 +16,7 @@ import {
   getResearchOutput,
   getResearchOutputs,
   getResearchOutputsLegacy,
+  ResearchOutputListOptions,
 } from './api';
 import { GetListOptions } from '../api-util';
 import { authorizationState } from '../auth/state';
@@ -126,7 +127,7 @@ export const usePrefetchResearchOutputsLegacy = (
   }, [authorization, researchOutputs, options, setResearchOutputs]);
 };
 
-export const useResearchOutputs = (options: GetListOptions) => {
+export const useResearchOutputs = (options: ResearchOutputListOptions) => {
   const authorization = useRecoilValue(authorizationState);
   const [researchOutputs, setResearchOutputs] = useRecoilState(
     researchOutputsState(options),
@@ -143,6 +144,12 @@ export const useResearchOutputs = (options: GetListOptions) => {
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
   } else if (researchOutputs === undefined) {
+    if (options.teamId) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
     throw getResearchOutputsLegacy(options, authorization)
       .then(setResearchOutputs)
       .catch(setResearchOutputs);

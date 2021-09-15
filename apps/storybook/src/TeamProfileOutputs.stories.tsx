@@ -12,5 +12,12 @@ export const Normal = () => (
     outputs={
       createListResearchOutputResponse(number('Number of outputs', 2)).items
     }
+    numberOfItems={2}
+    numberOfPages={1}
+    currentPage={0}
+    renderPageHref={() => ''}
+    isListView={false}
+    cardViewHref={''}
+    listViewHref={''}
   />
 );

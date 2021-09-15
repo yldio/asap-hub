@@ -45,6 +45,7 @@ export { default as SkillsModal } from './SkillsModal';
 export { default as TeamMembershipModal } from './TeamMembershipModal';
 export { default as TeamProfileAbout } from './TeamProfileAbout';
 export { default as TeamProfileHeader } from './TeamProfileHeader';
+export { default as ResearchOutputsSearch } from './ResearchOutputsSearch';
 export { default as TeamProfileOutputs } from './TeamProfileOutputs';
 export { default as TeamProfilePage } from './TeamProfilePage';
 export { default as TeamProfileWorkspace } from './TeamProfileWorkspace';

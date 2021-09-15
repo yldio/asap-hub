@@ -3,9 +3,13 @@ import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { createTeamResponse } from '@asap-hub/fixtures';
+import {
+  createAlgoliaResearchOutputResponse,
+  createTeamResponse,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 
+import { disable } from '@asap-hub/flags';
 import {
   Auth0Provider,
   WhenReady,
@@ -13,9 +17,15 @@ import {
 import TeamProfile from '../TeamProfile';
 import { getTeam } from '../api';
 import { refreshTeamState } from '../state';
+import { getResearchOutputs } from '../../../shared-research/api';
 
 jest.mock('../api');
 jest.mock('../groups/api');
+jest.mock('../../../shared-research/api');
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
 
 const mockGetTeam = getTeam as jest.MockedFunction<typeof getTeam>;
 const renderTeamProfile = async (
@@ -71,12 +81,24 @@ it('renders the about info', async () => {
   expect(getByText(/project overview/i)).toBeVisible();
 });
 
-it('navigates to the outputs tab', async () => {
+it('navigates to the outputs tab (REGRESSION)', async () => {
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
   const { getByText, findByText } = await renderTeamProfile();
 
   userEvent.click(getByText(/outputs/i, { selector: 'nav *' }));
   expect(await findByText(/research outputs/i)).toBeVisible();
 });
+
+it('navigates to the outputs tab', async () => {
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createAlgoliaResearchOutputResponse(1),
+  });
+  const { getByText, findByText } = await renderTeamProfile();
+
+  userEvent.click(getByText(/outputs/i, { selector: 'nav *' }));
+  expect(await findByText(/Output 1/i)).toBeVisible();
+});
+
 it('navigates to the workspace tab', async () => {
   const { getByText, findByText } = await renderTeamProfile({
     ...createTeamResponse(),

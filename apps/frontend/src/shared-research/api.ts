@@ -8,6 +8,10 @@ import { SearchIndex } from 'algoliasearch/lite';
 import { createListApiUrl, GetListOptions } from '../api-util';
 import { API_BASE_URL } from '../config';
 
+export type ResearchOutputListOptions = GetListOptions & {
+  teamId?: string;
+};
+
 export const getResearchOutput = async (
   id: string,
   authorization: string,
@@ -26,7 +30,7 @@ export const getResearchOutput = async (
   return resp.json();
 };
 
-export const researchOutputFilters: Record<
+export const researchOutputTypeFilters: Record<
   ResearchOutputType,
   { filter: string }
 > = {
@@ -39,20 +43,31 @@ export const researchOutputFilters: Record<
   Article: { filter: 'type:Article' },
 };
 
+export const getTypeFilters = (filters: Set<string>): string =>
+  Object.entries(researchOutputTypeFilters)
+    .reduce<string[]>(
+      (acc, [key, { filter }]) => (filters.has(key) ? [filter, ...acc] : acc),
+      [],
+    )
+    .join(' OR ');
+
+export const getAllFilters = (filters: Set<string>, teamId?: string) => {
+  const typeFilters = getTypeFilters(filters);
+  const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
+  const filtersSeparator = !!typeFilters && !!teamFilter ? ' AND ' : '';
+  const typeFiltersWithParentheses =
+    !!filtersSeparator && filters.size > 1 ? `(${typeFilters})` : typeFilters;
+  return `${typeFiltersWithParentheses}${filtersSeparator}${teamFilter}`;
+};
+
 export const getResearchOutputs = (
   { search }: SearchIndex,
-  options: GetListOptions,
+  options: ResearchOutputListOptions,
 ) =>
   search<ResearchOutputResponse>(options.searchQuery, {
     page: options.currentPage ?? 0,
     hitsPerPage: options.pageSize ?? 10,
-    filters: Object.entries(researchOutputFilters)
-      .reduce<string[]>(
-        (acc, [key, { filter }]) =>
-          options.filters.has(key) ? [filter, ...acc] : acc,
-        [],
-      )
-      .join(' OR '),
+    filters: getAllFilters(options.filters, options.teamId),
   }).catch((error: Error) => {
     throw new Error(`Could not search: ${error.message}`);
   });

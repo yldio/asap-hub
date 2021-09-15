@@ -1,13 +1,11 @@
 import { css } from '@emotion/react';
-import { ResearchOutputType } from '@asap-hub/model';
 
 import { Display, Paragraph } from '../atoms';
 import { perRem } from '../pixels';
 import { paper, steel } from '../colors';
 import { contentSidePaddingWithNavigation } from '../layout';
 import { noop } from '../utils';
-import { SearchAndFilter } from '../organisms';
-import { Option } from '../organisms/CheckboxGroup';
+import ResearchOutputsSearch from './ResearchOutputsSearch';
 
 const visualHeaderStyles = css({
   marginBottom: `${30 / perRem}em`,
@@ -33,21 +31,11 @@ type SharedResearchPageHeaderProps = {
   filters: Set<string>;
 };
 
-const researchOutputFilters: Option<ResearchOutputType>[] = [
-  { label: 'Proposal', value: 'Proposal' },
-  { label: 'Presentation', value: 'Presentation' },
-  { label: 'Protocol', value: 'Protocol' },
-  { label: 'Dataset', value: 'Dataset' },
-  { label: 'Bioinformatics', value: 'Bioinformatics' },
-  { label: 'Lab Resource', value: 'Lab Resource' },
-  { label: 'Article', value: 'Article' },
-];
-
 const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
   onChangeSearch = noop,
   searchQuery,
   filters,
-  onChangeFilter,
+  onChangeFilter = noop,
 }) => (
   <header>
     <div css={visualHeaderStyles}>
@@ -62,12 +50,9 @@ const SharedResearchPageHeader: React.FC<SharedResearchPageHeaderProps> = ({
       </div>
     </div>
     <div css={controlsStyles}>
-      <SearchAndFilter
-        searchPlaceholder="Enter a keyword, method, resource…"
+      <ResearchOutputsSearch
         onChangeSearch={onChangeSearch}
         searchQuery={searchQuery}
-        filterOptions={researchOutputFilters}
-        filterTitle="TYPE OF OUTPUTS"
         onChangeFilter={onChangeFilter}
         filters={filters}
       />

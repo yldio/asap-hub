@@ -50,13 +50,13 @@ type OnboardingFooterProps = {
   onboardable: UserOnboardingResult;
 };
 
-const OnboardinButton = ({
+const OnboardingButton = ({
   onboardable,
   onboardModalHref,
 }: OnboardingFooterProps) => {
   const buttonProps = !onboardable.steps?.length
     ? {
-        label: 'Explore the Hub',
+        label: 'Publish my profile',
         modalHref: onboardModalHref,
       }
     : {
@@ -94,7 +94,7 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
       <div css={buttonStyles}>
         <div css={buttonContainer}>
           {onboardable.steps && (
-            <OnboardinButton
+            <OnboardingButton
               onboardable={onboardable}
               onboardModalHref={onboardModalHref}
             />

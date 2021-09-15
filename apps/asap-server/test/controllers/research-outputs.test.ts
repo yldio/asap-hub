@@ -1,10 +1,8 @@
 import nock from 'nock';
 import { config, GraphqlUser } from '@asap-hub/squidex';
+import { print } from 'graphql';
 import { identity } from '../helpers/squidex';
-import ResearchOutputs, {
-  buildGraphQLQueryFetchResearchOutputs,
-  buildGraphQLQueryResearchOutput,
-} from '../../src/controllers/research-outputs';
+import ResearchOutputs from '../../src/controllers/research-outputs';
 import {
   getListResearchOutputResponse,
   getResearchOutputResponse,
@@ -15,6 +13,11 @@ import { graphQlResponseFetchUsers } from '../fixtures/users.fixtures';
 import { GraphqlWithTypename } from '@asap-hub/squidex/src/entities/common';
 import { GraphqlExternalAuthor } from '@asap-hub/squidex/src/entities/external-author';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import {
+  FETCH_RESEARCH_OUTPUT,
+  FETCH_RESEARCH_OUTPUTS,
+} from '../../src/queries/research-outputs.queries';
+import { FetchResearchOutputsQuery } from '../../src/gql/graphql';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputs = new ResearchOutputs();
@@ -33,23 +36,61 @@ describe('ResearchOutputs controller', () => {
 
   describe('Fetch method', () => {
     test('Should return an empty result when the client returns an empty array of data', async () => {
+      const mockResponse = getFetchResearchOutputsGraphqlResponse();
+
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchResearchOutputs(),
+          query: print(FETCH_RESEARCH_OUTPUTS),
           variables: {
             top: 10,
             skip: 5,
             filter: '',
+            withTeams: true,
           },
         })
-        .reply(200, {
-          data: {
-            queryResearchOutputsContentsWithTotal: {
-              total: 0,
-              items: [],
-            },
+        .reply(200, mockResponse);
+
+      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
+      const mockResponse = getFetchResearchOutputsGraphqlResponse();
+      mockResponse.data.queryResearchOutputsContentsWithTotal = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_RESEARCH_OUTPUTS),
+          variables: {
+            top: 10,
+            skip: 5,
+            filter: '',
+            withTeams: true,
           },
-        });
+        })
+        .reply(200, mockResponse);
+
+      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const mockResponse = getFetchResearchOutputsGraphqlResponse();
+      mockResponse.data.queryResearchOutputsContentsWithTotal!.items = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_RESEARCH_OUTPUTS),
+          variables: {
+            top: 10,
+            skip: 5,
+            filter: '',
+            withTeams: true,
+          },
+        })
+        .reply(200, mockResponse);
 
       const result = await researchOutputs.fetch({ take: 10, skip: 5 });
 
@@ -59,11 +100,12 @@ describe('ResearchOutputs controller', () => {
     test('Should return the list of research outputs', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchResearchOutputs(),
+          query: print(FETCH_RESEARCH_OUTPUTS),
           variables: {
             top: 8,
             skip: 0,
             filter: '',
+            withTeams: true,
           },
         })
         .reply(200, {
@@ -81,11 +123,12 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchResearchOutputs(),
+          query: print(FETCH_RESEARCH_OUTPUTS),
           variables: {
             filter: expectedFilter,
             top: 8,
             skip: 0,
+            withTeams: true,
           },
         })
         .reply(200, {
@@ -108,11 +151,12 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchResearchOutputs(),
+          query: print(FETCH_RESEARCH_OUTPUTS),
           variables: {
             filter: expectedFilter,
             top: 8,
             skip: 0,
+            withTeams: true,
           },
         })
         .reply(200, {
@@ -133,11 +177,12 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchResearchOutputs(),
+          query: print(FETCH_RESEARCH_OUTPUTS),
           variables: {
             filter: expectedFilter,
             top: 8,
             skip: 0,
+            withTeams: true,
           },
         })
         .reply(200, {
@@ -159,11 +204,12 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchResearchOutputs(),
+          query: print(FETCH_RESEARCH_OUTPUTS),
           variables: {
             filter: expectedFilter,
             top: 8,
             skip: 0,
+            withTeams: true,
           },
         })
         .reply(200, {
@@ -186,9 +232,10 @@ describe('ResearchOutputs controller', () => {
     test('Should throw a Not Found error when the research output is not found', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, {
@@ -205,9 +252,10 @@ describe('ResearchOutputs controller', () => {
     test('Should return the research output and the team', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: getSquidexResearchOutputGraphqlResponse() });
@@ -225,9 +273,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -244,9 +293,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -264,9 +314,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -283,9 +334,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -302,9 +354,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -321,9 +374,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -340,9 +394,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -359,9 +414,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: squidexGraphqlResponse });
@@ -378,9 +434,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: researchOutputResponse });
@@ -426,9 +483,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: researchOutputResponse });
@@ -477,9 +535,10 @@ describe('ResearchOutputs controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: researchOutputResponse });
@@ -500,9 +559,10 @@ describe('ResearchOutputs controller', () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: researchOutputResponse });
@@ -519,9 +579,10 @@ describe('ResearchOutputs controller', () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryResearchOutput(),
+          query: print(FETCH_RESEARCH_OUTPUT),
           variables: {
             id: researchOutputId,
+            withTeams: true,
           },
         })
         .reply(200, { data: researchOutputResponse });
@@ -546,9 +607,10 @@ describe('ResearchOutputs controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryResearchOutput(),
+            query: print(FETCH_RESEARCH_OUTPUT),
             variables: {
               id: researchOutputId,
+              withTeams: true,
             },
           })
           .reply(200, { data: researchOutputResponse });
@@ -570,9 +632,10 @@ describe('ResearchOutputs controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryResearchOutput(),
+            query: print(FETCH_RESEARCH_OUTPUT),
             variables: {
               id: researchOutputId,
+              withTeams: true,
             },
           })
           .reply(200, { data: researchOutputResponse });
@@ -585,4 +648,24 @@ describe('ResearchOutputs controller', () => {
       });
     });
   });
+});
+
+type FetchResearchOutputsGraphqlResponse = {
+  data: FetchResearchOutputsQuery;
+};
+
+type FetchResearchOutputsQuery_items = NonNullable<
+  FetchResearchOutputsQuery['queryResearchOutputsContentsWithTotal']
+>['items'];
+
+const getFetchResearchOutputsGraphqlResponse = (
+  items: FetchResearchOutputsQuery_items = [],
+  total: number = 0,
+): FetchResearchOutputsGraphqlResponse => ({
+  data: {
+    queryResearchOutputsContentsWithTotal: {
+      total,
+      items,
+    },
+  },
 });

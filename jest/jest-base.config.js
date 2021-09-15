@@ -8,6 +8,7 @@ const testPathIgnorePatterns = [
   '\\.browser-test\\.(js|jsx|ts|tsx)$',
   '\\.e2e-test\\.(js|jsx|ts|tsx)$',
   '\\.integration-test\\.(js|jsx|ts|tsx)$',
+  'gql/',
 ];
 
 module.exports = {

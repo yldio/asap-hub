@@ -38,3 +38,8 @@ export type ScheduledHandlerAsync = (
 export type DeepWriteable<T> = {
   -readonly [P in keyof T]: DeepWriteable<T[P]>;
 };
+
+declare global {
+  type Instant = string & { __type: 'SquidexDate' };
+  type JsonScalar = Record<string, unknown> & { __type: 'JsonScalar' };
+}

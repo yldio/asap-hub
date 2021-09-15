@@ -14,6 +14,7 @@ import {
 
 import { parseGraphQLResearchOutput } from './research-output';
 import { parseDate, createURL } from '../utils/squidex';
+import { FetchResearchOutputQuery } from '../gql/graphql';
 
 export const teamUpdateSchema = Joi.object({
   tools: Joi.array()
@@ -69,6 +70,10 @@ export const parseGraphQLTeamMember = (
   };
 };
 
+type FetchResearchOutputFindResearchOutputsContent = NonNullable<
+  FetchResearchOutputQuery['findResearchOutputsContent']
+>;
+
 export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
   const flatOutputs: NonNullable<GraphqlTeam['flatData']>['outputs'] =
     team.flatData?.outputs || [];
@@ -88,9 +93,13 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
 
   const outputs: ResearchOutputResponse[] = flatOutputs
     .map((o) => {
-      const output = parseGraphQLResearchOutput(o as GraphqlResearchOutput, {
-        includeAuthors: true,
-      }) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
+      const output = parseGraphQLResearchOutput(
+        // TODO: REMOVE casting once other GraphqlTypes are generated
+        o as FetchResearchOutputFindResearchOutputsContent,
+        {
+          includeAuthors: true,
+        },
+      ) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
 
       return {
         ...output,

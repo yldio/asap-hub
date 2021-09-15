@@ -62,6 +62,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
     sharingStatus: 'Network Only',
     asapFunded: 'Yes',
     usedInAPublication: 'No',
+    subtype: '3D Printing',
   },
   referencingTeamsContents: [
     {
@@ -257,7 +258,7 @@ export const getResearchOutputResponse =
     description: 'Text',
     title: 'Test Proposal 1234',
     type: 'Proposal',
-    subTypes: [],
+    subTypes: ['3D Printing'],
     tags: ['tag', 'test'],
     authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
     team: {

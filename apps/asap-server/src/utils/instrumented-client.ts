@@ -15,10 +15,14 @@ interface QueryAST extends Omit<DocumentNode, 'definitions'> {
   readonly definitions: ReadonlyArray<OperationDefinitionNode>;
 }
 
-const getQueryName = (query: string): string => {
-  const parsedQuery = gql`
-    ${query}
-  ` as QueryAST;
+const getQueryName = (query: string | DocumentNode): string => {
+  const parsedQuery = (
+    typeof query === 'string'
+      ? gql`
+          ${query}
+        `
+      : query
+  ) as QueryAST;
   return parsedQuery.definitions
     .filter(({ operation }) => operation === 'query')
     .map(({ selectionSet }) => selectionSet)
@@ -41,7 +45,7 @@ export class InstrumentedSquidexGraphql extends SquidexGraphql {
       tracer.extract(opentracing.FORMAT_HTTP_HEADERS, ctxHeaders) || undefined;
   }
 
-  async request<T, V>(query: string, variables?: V): Promise<T> {
+  async request<T, V>(query: string | DocumentNode, variables?: V): Promise<T> {
     const queryName = getQueryName(query) || 'Graphql Request';
     const span = startSpan(queryName, this.tracingContext);
     span.log({ event: 'request_started', query });

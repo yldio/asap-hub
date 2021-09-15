@@ -1,4 +1,6 @@
-// This is a one-off script. It was run on prod on 19/08/2021 and the results (invalid ORCIDs) were passed on to product
+// This is a one-off script. It validates that orcids are valid
+// It was run on prod on 19/08/2021 and the results (invalid ORCIDs) were passed on to product
+
 import Users from '../src/controllers/users';
 
 import { VALID_ORCID } from '@asap-hub/validation';

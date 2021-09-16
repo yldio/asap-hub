@@ -2300,19 +2300,22 @@ export type ExternalAuthorsDataNameInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Orcid field of the External authors content type. */
+/** The structure of the ORCID field of the External authors content type. */
 export type ExternalAuthorsDataOrcidDto = {
+  /** ORCIDs cannot be repeated on the Hub */
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Orcid field of the External authors content input type. */
+/** The structure of the ORCID field of the External authors content input type. */
 export type ExternalAuthorsDataOrcidInputDto = {
+  /** ORCIDs cannot be repeated on the Hub */
   iv: Maybe<Scalars['String']>;
 };
 
 /** The structure of the flat External authors data type. */
 export type ExternalAuthorsFlatDataDto = {
   name: Maybe<Scalars['String']>;
+  /** ORCIDs cannot be repeated on the Hub */
   orcid: Maybe<Scalars['String']>;
 };
 
@@ -4011,11 +4014,13 @@ export type UsersDataOnboardedInputDto = {
 
 /** The structure of the ORCID field of the Users content type. */
 export type UsersDataOrcidDto = {
+  /** Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub */
   iv: Maybe<Scalars['String']>;
 };
 
 /** The structure of the ORCID field of the Users content input type. */
 export type UsersDataOrcidInputDto = {
+  /** Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub */
   iv: Maybe<Scalars['String']>;
 };
 
@@ -4234,6 +4239,7 @@ export type UsersFlatDataDto = {
   lastName: Maybe<Scalars['String']>;
   /** Use this to allow the user to see the full Hub and skip profile completion */
   onboarded: Maybe<Scalars['Boolean']>;
+  /** Mandatory for grantees. They cannot publish profile without an ORCID. ORCIDs cannot be repeated on the Hub */
   orcid: Maybe<Scalars['String']>;
   orcidLastModifiedDate: Maybe<Scalars['String']>;
   orcidLastSyncDate: Maybe<Scalars['String']>;

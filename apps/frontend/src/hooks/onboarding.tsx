@@ -85,9 +85,12 @@ export const useOnboarding = (id: string): UserOnboardingResult => {
   const stepDetails = steps(profileTab, user);
 
   return {
-    incompleteSteps: orderedSteps.reduce((acc, stepKey) => {
+    isOnboardable,
+    incompleteSteps: orderedSteps.reduce<
+      UserOnboardingResult['incompleteSteps']
+    >((acc, stepKey) => {
       const fieldsToCheck = Object.entries(fieldToStep)
-        .filter(([_, step]) => step === stepKey)
+        .filter(([, step]) => step === stepKey)
         .map(([field]) => field);
 
       return fieldsToCheck.some((field) =>
@@ -95,7 +98,6 @@ export const useOnboarding = (id: string): UserOnboardingResult => {
       )
         ? [...acc, stepDetails[stepKey]]
         : acc;
-    }, [] as UserOnboardingResult['incompleteSteps']),
-    isOnboardable,
+    }, []),
   };
 };

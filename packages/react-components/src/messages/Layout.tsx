@@ -37,10 +37,10 @@ const footerContainerStyles = css({
 });
 
 const footerContentContainerStyles = css({
-  display: 'grid',
-  gridAutoFlow: 'column',
+  display: 'flex',
+  flexDirection: 'row',
   justifyContent: 'start',
-  columnGap: '16px',
+  '*': { paddingRight: `${12 / perRem}em` },
 });
 
 interface LayoutProps {

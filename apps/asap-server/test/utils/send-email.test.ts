@@ -29,6 +29,7 @@ describe('Send Email helper', () => {
       Template: 'Invite',
       TemplateData: JSON.stringify(params),
       Source: userInviteSender,
+      ReturnPath: 'piotr.szpak@yld.io',
     });
   });
 });

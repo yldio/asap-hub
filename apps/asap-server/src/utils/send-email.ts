@@ -26,6 +26,7 @@ export const sendEmailFactory =
       Template: template,
       TemplateData: JSON.stringify(values),
       Source: userInviteSender,
+      ReturnPath: 'piotr.szpak@yld.io',
     };
 
     return ses.sendTemplatedEmail(params).promise();

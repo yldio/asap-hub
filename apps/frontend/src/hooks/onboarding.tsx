@@ -1,10 +1,15 @@
-import { isUserOnboardable, UserOnboardingResult } from '@asap-hub/validation';
+import { ComponentProps } from 'react';
+import { isUserOnboardable } from '@asap-hub/validation';
 import { network } from '@asap-hub/routing';
 import { User } from '@auth0/auth0-spa-js';
+import { OnboardingFooter } from '@asap-hub/react-components';
 
 import { useUserById } from '../network/users/state';
 import { useCurrentUserProfileTabRoute } from './current-user-profile-tab-route';
 
+export type UserOnboardingResult = NonNullable<
+  ComponentProps<typeof OnboardingFooter>['onboardable']
+>;
 const orderedSteps = [
   'Details',
   'Role',
@@ -72,20 +77,18 @@ const steps = (
   },
 });
 
-export const useOnboarding = (id: string): UserOnboardingResult => {
+export const useOnboarding = (id: string): UserOnboardingResult | undefined => {
   const user = useUserById(id);
   const profileTab = useCurrentUserProfileTabRoute();
   if (!user || !profileTab) {
-    return {
-      incompleteSteps: [],
-      isOnboardable: false,
-    };
+    return undefined;
   }
   const { isOnboardable, ...onboardingValidation } = isUserOnboardable(user);
   const stepDetails = steps(profileTab, user);
 
   return {
     isOnboardable,
+    totalSteps: Object.keys(stepDetails).length,
     incompleteSteps: orderedSteps.reduce<
       UserOnboardingResult['incompleteSteps']
     >((acc, stepKey) => {

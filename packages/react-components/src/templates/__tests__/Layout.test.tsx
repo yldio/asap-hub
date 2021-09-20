@@ -91,15 +91,17 @@ it('scrolls to top between page navigations', async () => {
   expect(getByRole('main').scrollTo).toHaveBeenCalled();
 });
 
-it('displays onboarding header', async () => {
+it('displays onboarding footer', async () => {
   const { getByText } = render(
     <Layout
       {...props}
+      onboardModalHref={'/example'}
       onboardable={{
         incompleteSteps: [{ label: 'Details', modalHref: '/' }],
+        totalSteps: 5,
         isOnboardable: false,
       }}
     />,
   );
-  expect(getByText(/profile.+incomplete/i)).toBeVisible();
+  expect(getByText(/profile.+% complete/i)).toBeVisible();
 });

@@ -66,8 +66,7 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        expect(result.current.incompleteSteps).toEqual([]);
-        expect(result.current.isOnboardable).toBe(false);
+        expect(result.current).toEqual(undefined);
       });
     });
   });
@@ -83,9 +82,7 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         expect(
-          Object.values(result.current.incompleteSteps).map(
-            ({ label }) => label,
-          ),
+          (result.current?.incompleteSteps ?? []).map(({ label }) => label),
         ).toEqual(['Details', 'Role', 'Expertise', 'Questions', 'Biography']);
       });
     });
@@ -102,9 +99,7 @@ describe('useOnboarding', () => {
     await act(async () => {
       await waitFor(() => {
         expect(
-          Object.values(result.current.incompleteSteps).map(
-            ({ label }) => label,
-          ),
+          (result.current?.incompleteSteps ?? []).map(({ label }) => label),
         ).toEqual(['Details', 'Role', 'Expertise', 'Biography']);
       });
     });
@@ -123,10 +118,8 @@ describe('useOnboarding', () => {
 
     await act(async () => {
       await waitFor(() => {
-        const [details, role, questions, bio] = Object.values(
-          result.current.incompleteSteps,
-        );
-
+        const [details, role, questions, bio] =
+          result.current?.incompleteSteps ?? [];
         expect(details.modalHref).toBe(
           `/network/users/${user.id}/research/edit-personal-info`,
         );

@@ -1,19 +1,17 @@
 import { FC, ReactNode } from 'react';
 import { useCurrentUser } from '@asap-hub/react-context';
-import { UserOnboardingResult } from '@asap-hub/validation';
 
-import { useOnboarding } from './hooks';
+import { useOnboarding, UserOnboardingResult } from './hooks';
 
 export type OnboardableLoadUserProps = {
   id: string;
-  children: (state: UserOnboardingResult) => ReactNode;
+  children: (state?: UserOnboardingResult) => ReactNode;
 };
 const OnboardableLoadUser: FC<OnboardableLoadUserProps> = ({
   id,
   children,
 }) => {
   const onboardingState = useOnboarding(id);
-
   return <>{children(onboardingState)}</>;
 };
 

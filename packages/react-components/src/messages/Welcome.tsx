@@ -44,8 +44,8 @@ const InviteWelcomeTemplate: React.FC<WelcomeContentProps> = ({ link }) => (
       team, join events and access research.
     </Paragraph>
     <Paragraph>
-      Before you can explore the Hub you’ll need to complete your profile, which
-      should take you 20-30 minutes. Besides basic data, you'll be asked to add:
+      Before you can explore the Hub you’ll need to complete your profile.
+      You'll be asked to add:
     </Paragraph>
     <ul>
       <li>your role on the project</li>

@@ -1,13 +1,13 @@
 export type Flag =
   | 'PERSISTENT_EXAMPLE'
   | 'RESEARCH_OUTPUT_SHOW_AUTHORS_LIST'
-  | 'ALGOLIA_RESEARCH_OUTPUTS';
+  | 'ALGOLIA_RESEARCH_OUTPUTS'
+  | 'RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE';
 
 export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
-  ALGOLIA_RESEARCH_OUTPUTS: false,
 };
 
 const envDefaults: Record<string, boolean> = {

@@ -19,7 +19,7 @@
   "unretrievableAttributes": null,
   "optionalWords": null,
   "queryLanguages": ["en"],
-  "attributesForFaceting": ["teams.id", "type"],
+  "attributesForFaceting": ["teams.id", "type", "authors.id"],
   "attributesToSnippet": null,
   "attributesToHighlight": null,
   "paginationLimitedTo": 1000,

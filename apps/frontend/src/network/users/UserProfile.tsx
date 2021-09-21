@@ -118,7 +118,7 @@ const User: FC<Record<string, never>> = () => {
                   </Route>
                   <Route path={path + tabRoutes.outputs.template}>
                     <Frame title="Outputs">
-                      <Outputs />
+                      <Outputs userId={user?.id} />
                     </Frame>
                   </Route>
                   <Redirect to={tabRoutes.research({}).$} />

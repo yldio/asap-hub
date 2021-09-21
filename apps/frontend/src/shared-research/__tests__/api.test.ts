@@ -146,6 +146,47 @@ describe('getResearchOutputs', () => {
       }),
     );
   });
+  it('uses userId as a filter', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      userId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'authors.id:"12345"' }),
+    );
+  });
+
+  it('adds userId to type filter', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article']),
+      userId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({
+        filters: 'type:Article AND authors.id:"12345"',
+      }),
+    );
+  });
+
+  it('adds userId to type filters', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+      userId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({
+        filters: '(type:Article OR type:Proposal) AND authors.id:"12345"',
+      }),
+    );
+  });
 
   it('throws an error of type error', async () => {
     mockedSearch.mockRejectedValue({ message: 'Some Error' });

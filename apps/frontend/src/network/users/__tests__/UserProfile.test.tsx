@@ -2,7 +2,11 @@ import { ContextType, Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { createUserResponse, createUserTeams } from '@asap-hub/fixtures';
+import {
+  createAlgoliaResearchOutputResponse,
+  createUserResponse,
+  createUserTeams,
+} from '@asap-hub/fixtures';
 import { network } from '@asap-hub/routing';
 import { UserResponse } from '@asap-hub/model';
 import { ToastContext } from '@asap-hub/react-context';
@@ -16,14 +20,22 @@ import { join } from 'path';
 import imageCompression from 'browser-image-compression';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import { Auth0User, Auth0 } from '@asap-hub/auth';
+import { disable } from '@asap-hub/flags';
 
 import UserProfile from '../UserProfile';
 import { getUser, patchUser, postUserAvatar } from '../api';
 import { refreshUserState } from '../state';
+import { getResearchOutputs } from '../../../shared-research/api';
 
 jest.mock('../api');
 jest.mock('../groups/api');
 jest.mock('browser-image-compression');
+
+jest.mock('../../../shared-research/api');
+
+const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
+  typeof getResearchOutputs
+>;
 
 const imageCompressionMock = imageCompression as jest.MockedFunction<
   typeof imageCompression
@@ -133,11 +145,31 @@ it('navigates to the background tab', async () => {
   expect(await findByText('My Bio')).toBeVisible();
 });
 
-it('navigates to the outputs tab', async () => {
+it('navigates to the outputs tab (regression)', async () => {
+  disable('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE');
   const { findByText } = await renderUserProfile(createUserResponse());
 
   userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
   expect(await findByText(/research.+outputs/i)).toBeVisible();
+});
+
+it('navigates to the outputs tab', async () => {
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createAlgoliaResearchOutputResponse(1),
+    hits: createAlgoliaResearchOutputResponse(1).hits.map((hit, index) => ({
+      ...hit,
+      title: `Test Output ${index}`,
+    })),
+  });
+  const { findByText, getByRole } = await renderUserProfile(
+    createUserResponse(),
+  );
+
+  userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
+  expect(
+    (getByRole('searchbox') as HTMLInputElement).placeholder,
+  ).toMatchInlineSnapshot(`"Enter a keyword, method, resource…"`);
+  expect(await findByText(/Test Output 0/i)).toBeVisible();
 });
 
 it("links to the user's team", async () => {

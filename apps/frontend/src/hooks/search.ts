@@ -9,16 +9,17 @@ export const useSearch = () => {
 
   const { resetPagination } = usePaginationParams();
 
-  const filters = new Set<string>(currentUrlParams.getAll('filter'));
+  const currentFilters = new Set<string>(currentUrlParams.getAll('filter'));
   const searchQuery = currentUrlParams.get(searchQueryParam) || '';
-
   const toggleFilter = (filter: string) => {
     resetPagination();
 
     const newUrlParams = new URLSearchParams(history.location.search);
     newUrlParams.delete('filter');
-    filters.has(filter) ? filters.delete(filter) : filters.add(filter);
-    filters.forEach((f) => newUrlParams.append('filter', f));
+    currentFilters.has(filter)
+      ? currentFilters.delete(filter)
+      : currentFilters.add(filter);
+    currentFilters.forEach((f) => newUrlParams.append('filter', f));
 
     history.replace({ search: newUrlParams.toString() });
   };
@@ -40,7 +41,7 @@ export const useSearch = () => {
     searchQuery,
     debouncedSearchQuery,
     setSearchQuery,
-    filters,
+    filters: new Set<string>(currentFilters),
     toggleFilter,
   };
 };

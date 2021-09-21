@@ -10,6 +10,7 @@ import { API_BASE_URL } from '../config';
 
 export type ResearchOutputListOptions = GetListOptions & {
   teamId?: string;
+  userId?: string;
 };
 
 export const getResearchOutput = async (
@@ -51,13 +52,19 @@ export const getTypeFilters = (filters: Set<string>): string =>
     )
     .join(' OR ');
 
-export const getAllFilters = (filters: Set<string>, teamId?: string) => {
+export const getAllFilters = (
+  filters: Set<string>,
+  teamId?: string,
+  userId?: string,
+) => {
   const typeFilters = getTypeFilters(filters);
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
-  const filtersSeparator = !!typeFilters && !!teamFilter ? ' AND ' : '';
+  const authorFilter = userId ? `authors.id:"${userId}"` : '';
+  const filtersSeparator =
+    !!typeFilters && (!!teamFilter || !!authorFilter) ? ' AND ' : '';
   const typeFiltersWithParentheses =
     !!filtersSeparator && filters.size > 1 ? `(${typeFilters})` : typeFilters;
-  return `${typeFiltersWithParentheses}${filtersSeparator}${teamFilter}`;
+  return `${typeFiltersWithParentheses}${filtersSeparator}${teamFilter}${authorFilter}`;
 };
 
 export const getResearchOutputs = (
@@ -67,7 +74,7 @@ export const getResearchOutputs = (
   search<ResearchOutputResponse>(options.searchQuery, {
     page: options.currentPage ?? 0,
     hitsPerPage: options.pageSize ?? 10,
-    filters: getAllFilters(options.filters, options.teamId),
+    filters: getAllFilters(options.filters, options.teamId, options.userId),
   }).catch((error: Error) => {
     throw new Error(`Could not search: ${error.message}`);
   });

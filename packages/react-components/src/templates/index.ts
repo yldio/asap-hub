@@ -53,7 +53,6 @@ export { default as ToolModal } from './ToolModal';
 export { default as UnsupportedBrowserPage } from './UnsupportedBrowserPage';
 export { default as UserProfileAbout } from './UserProfileAbout';
 export { default as UserProfileHeader } from './UserProfileHeader';
-export { default as UserProfileOutputs } from './UserProfileOutputs';
 export { default as UserProfilePage } from './UserProfilePage';
 export { default as UserProfileResearch } from './UserProfileResearch';
 export { default as UserProfileStaff } from './UserProfileStaff';

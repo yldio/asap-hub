@@ -8,6 +8,15 @@ import { RecoilRoot } from 'recoil';
 import CheckOnboarded from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
 
+jest.mock('../../structure/RouterPrompt.tsx', () =>
+  jest.fn(({ children }) => (
+    <div>
+      <span>RouterPrompt</span>
+      <span>{children}</span>
+    </div>
+  )),
+);
+
 describe('an unauthenticated user', () => {
   mockConsoleError();
 
@@ -96,5 +105,31 @@ describe('an authenticated user in onboarding', () => {
       { wrapper: RecoilRoot },
     );
     expect(await findByText('own profile')).toBeVisible();
+  });
+
+  it('should call the custom prompt', async () => {
+    const { findByText, rerender } = render(
+      <Auth0Provider user={{ id: '42', onboarded: false }}>
+        <WhenReady>
+          <CheckOnboarded>profile</CheckOnboarded>
+        </WhenReady>
+      </Auth0Provider>,
+      { wrapper: RecoilRoot },
+    );
+
+    expect(await findByText('RouterPrompt')).toBeVisible();
+    expect(await findByText('profile')).toBeVisible();
+
+    rerender(
+      <Auth0Provider user={{ id: '42', onboarded: true }}>
+        <WhenReady>
+          <CheckOnboarded>
+            <span>profile</span>
+          </CheckOnboarded>
+        </WhenReady>
+      </Auth0Provider>,
+    );
+
+    expect(await findByText('profile')).toBeVisible();
   });
 });

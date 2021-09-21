@@ -1359,23 +1359,23 @@ export type AppQueriesQueryUsersContentsWithTotalArgs = {
 
 /** An asset */
 export type Asset = {
-  /** The date and time when the asset has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the asset. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the asset. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The hash of the file. Can be null for old files. */
   fileHash: Scalars['String'];
-  /** The file name. */
+  /** The file name of the asset. */
   fileName: Scalars['String'];
   /** The size of the file in bytes. */
   fileSize: Scalars['Int'];
-  /** The file type. */
+  /** The file type (file extension) of the asset. */
   fileType: Scalars['String'];
   /** The version of the file. */
   fileVersion: Scalars['Int'];
-  /** The id of the asset. */
+  /** The ID of the object. */
   id: Scalars['String'];
   /**
    * Determines if the uploaded file is an image.
@@ -1384,15 +1384,15 @@ export type Asset = {
   isImage: Scalars['Boolean'];
   /** True, when the asset is not public. */
   isProtected: Scalars['Boolean'];
-  /** The date and time when the asset has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the asset last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has created the asset. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The asset metadata. */
   metadata: Maybe<Scalars['JsonScalar']>;
-  /** The text representation of the metadata. */
+  /** The type of the image. */
   metadataText: Scalars['String'];
   /** The mime type. */
   mimeType: Scalars['String'];
@@ -1410,13 +1410,13 @@ export type Asset = {
   slug: Scalars['String'];
   /** The asset tags. */
   tags: Array<Scalars['String']>;
-  /** The thumbnail url to the asset. */
+  /** The thumbnail URL to the asset. */
   thumbnailUrl: Maybe<Scalars['String']>;
   /** The type of the image. */
   type: AssetType;
-  /** The url to the asset. */
+  /** The URL to the asset. */
   url: Scalars['String'];
-  /** The version of the asset. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -1442,27 +1442,27 @@ export enum AssetType {
 
 /** The structure of a Calendars content type. */
 export type Calendars = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: CalendarsDataDto;
   /** The flat data of the content. */
   flatData: CalendarsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Events content items. */
   referencingEventsContents: Maybe<Array<Events>>;
@@ -1476,9 +1476,9 @@ export type Calendars = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -1613,75 +1613,75 @@ export type CalendarsFlatDataDto = {
 
 /** List of Calendars items and total count. */
 export type CalendarsResultDto = {
-  /** The Calendars items. */
+  /** The contents. */
   items: Maybe<Array<Calendars>>;
-  /** The total number of Calendars items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of all content types. */
 export type Component = {
-  /** The id of the schema. */
+  /** The ID of the schema. */
   schemaId: Scalars['String'];
 };
 
 /** The structure of all content types. */
 export type Content = {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
 /** The structure of a Dashboard content type. */
 export type Dashboard = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: DashboardDataDto;
   /** The flat data of the content. */
   flatData: DashboardFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -1725,43 +1725,43 @@ export type DashboardFlatDataDto = {
 
 /** List of Dashboard items and total count. */
 export type DashboardResultDto = {
-  /** The Dashboard items. */
+  /** The contents. */
   items: Maybe<Array<Dashboard>>;
-  /** The total number of Dashboard items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a Discover ASAP content type. */
 export type Discover = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: DiscoverDataDto;
   /** The flat data of the content. */
   flatData: DiscoverFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -1831,9 +1831,9 @@ export type DiscoverFlatDataDto = {
 
 /** List of Discover ASAP items and total count. */
 export type DiscoverResultDto = {
-  /** The Discover ASAP items. */
+  /** The contents. */
   items: Maybe<Array<Discover>>;
-  /** The total number of Discover ASAP items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
@@ -1845,35 +1845,35 @@ export type EntitySavedResultDto = {
 
 /** The structure of a Events content type. */
 export type Events = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: EventsDataDto;
   /** The flat data of the content. */
   flatData: EventsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -2216,35 +2216,35 @@ export type EventsFlatDataDto = {
 
 /** List of Events items and total count. */
 export type EventsResultDto = {
-  /** The Events items. */
+  /** The contents. */
   items: Maybe<Array<Events>>;
-  /** The total number of Events items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a External authors content type. */
 export type ExternalAuthors = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: ExternalAuthorsDataDto;
   /** The flat data of the content. */
   flatData: ExternalAuthorsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Research Outputs content items. */
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
@@ -2254,9 +2254,9 @@ export type ExternalAuthors = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -2321,43 +2321,43 @@ export type ExternalAuthorsFlatDataDto = {
 
 /** List of External authors items and total count. */
 export type ExternalAuthorsResultDto = {
-  /** The External authors items. */
+  /** The contents. */
   items: Maybe<Array<ExternalAuthors>>;
-  /** The total number of External authors items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a Groups content type. */
 export type Groups = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: GroupsDataDto;
   /** The flat data of the content. */
   flatData: GroupsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -2503,35 +2503,35 @@ export type GroupsFlatDataDto = {
 
 /** List of Groups items and total count. */
 export type GroupsResultDto = {
-  /** The Groups items. */
+  /** The contents. */
   items: Maybe<Array<Groups>>;
-  /** The total number of Groups items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a Labs content type. */
 export type Labs = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: LabsDataDto;
   /** The flat data of the content. */
   flatData: LabsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Research Outputs content items. */
   referencingResearchOutputsContents: Maybe<Array<ResearchOutputs>>;
@@ -2545,9 +2545,9 @@ export type Labs = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -2614,43 +2614,43 @@ export type LabsFlatDataDto = {
 
 /** List of Labs items and total count. */
 export type LabsResultDto = {
-  /** The Labs items. */
+  /** The contents. */
   items: Maybe<Array<Labs>>;
-  /** The total number of Labs items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a Migrations content type. */
 export type Migrations = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: MigrationsDataDto;
   /** The flat data of the content. */
   flatData: MigrationsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** The status of the content. */
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -2681,35 +2681,35 @@ export type MigrationsFlatDataDto = {
 
 /** List of Migrations items and total count. */
 export type MigrationsResultDto = {
-  /** The Migrations items. */
+  /** The contents. */
   items: Maybe<Array<Migrations>>;
-  /** The total number of Migrations items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a News and Events content type. */
 export type NewsAndEvents = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: NewsAndEventsDataDto;
   /** The flat data of the content. */
   flatData: NewsAndEventsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Dashboard content items. */
   referencingDashboardContents: Maybe<Array<Dashboard>>;
@@ -2723,9 +2723,9 @@ export type NewsAndEvents = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -2892,35 +2892,35 @@ export type NewsAndEventsFlatDataDto = {
 
 /** List of News and Events items and total count. */
 export type NewsAndEventsResultDto = {
-  /** The News and Events items. */
+  /** The contents. */
   items: Maybe<Array<NewsAndEvents>>;
-  /** The total number of News and Events items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a Pages content type. */
 export type Pages = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: PagesDataDto;
   /** The flat data of the content. */
   flatData: PagesFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Dashboard content items. */
   referencingDashboardContents: Maybe<Array<Dashboard>>;
@@ -2934,9 +2934,9 @@ export type Pages = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -3068,35 +3068,35 @@ export type PagesFlatDataDto = {
 
 /** List of Pages items and total count. */
 export type PagesResultDto = {
-  /** The Pages items. */
+  /** The contents. */
   items: Maybe<Array<Pages>>;
-  /** The total number of Pages items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a Research Outputs content type. */
 export type ResearchOutputs = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: ResearchOutputsDataDto;
   /** The flat data of the content. */
   flatData: ResearchOutputsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Teams content items. */
   referencingTeamsContents: Maybe<Array<Teams>>;
@@ -3106,9 +3106,9 @@ export type ResearchOutputs = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -3442,35 +3442,35 @@ export type ResearchOutputsFlatDataDto = {
 
 /** List of Research Outputs items and total count. */
 export type ResearchOutputsResultDto = {
-  /** The Research Outputs items. */
+  /** The contents. */
   items: Maybe<Array<ResearchOutputs>>;
-  /** The total number of Research Outputs items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
 /** The structure of a Teams content type. */
 export type Teams = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: TeamsDataDto;
   /** The flat data of the content. */
   flatData: TeamsFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Groups content items. */
   referencingGroupsContents: Maybe<Array<Groups>>;
@@ -3484,9 +3484,9 @@ export type Teams = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -3658,9 +3658,9 @@ export type TeamsFlatDataDto = {
 
 /** List of Teams items and total count. */
 export type TeamsResultDto = {
-  /** The Teams items. */
+  /** The contents. */
   items: Maybe<Array<Teams>>;
-  /** The total number of Teams items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 
@@ -3668,35 +3668,35 @@ export type TeamsResultDto = {
 export type User = {
   /** The display name of the user. */
   displayName: Maybe<Scalars['String']>;
-  /** The email of the user. */
+  /** The email address of the current user. */
   email: Maybe<Scalars['String']>;
-  /** The id of the user. */
+  /** The ID of the user. */
   id: Scalars['String'];
 };
 
 /** The structure of a Users content type. */
 export type Users = Content & {
-  /** The date and time when the content has been created. */
+  /** The timestamp when the object was created. */
   created: Scalars['Instant'];
-  /** The user that has created the content. */
+  /** The user who created the object. */
   createdBy: Scalars['String'];
-  /** The full info of the user that has created the content. */
+  /** The user who created the object. */
   createdByUser: User;
   /** The data of the content. */
   data: UsersDataDto;
   /** The flat data of the content. */
   flatData: UsersFlatDataDto;
-  /** The id of the content. */
+  /** The ID of the object. */
   id: Scalars['String'];
-  /** The date and time when the content has been modified last. */
+  /** The timestamp when the object was updated the last time. */
   lastModified: Scalars['Instant'];
-  /** The user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedBy: Scalars['String'];
-  /** The full info of the user that has updated the content last. */
+  /** The user who updated the object the last time. */
   lastModifiedByUser: User;
   /** The new status of the content. */
   newStatus: Maybe<Scalars['String']>;
-  /** The new status color of the content. */
+  /** The status color of the content. */
   newStatusColor: Maybe<Scalars['String']>;
   /** Query Discover ASAP content items. */
   referencingDiscoverContents: Maybe<Array<Discover>>;
@@ -3714,9 +3714,9 @@ export type Users = Content & {
   status: Scalars['String'];
   /** The status color of the content. */
   statusColor: Scalars['String'];
-  /** The url to the content. */
+  /** The URL to the content. */
   url: Scalars['String'];
-  /** The version of the content. */
+  /** The version of the object (usually GUID). */
   version: Scalars['Int'];
 };
 
@@ -4260,9 +4260,9 @@ export type UsersFlatDataDto = {
 
 /** List of Users items and total count. */
 export type UsersResultDto = {
-  /** The Users items. */
+  /** The contents. */
   items: Maybe<Array<Users>>;
-  /** The total number of Users items. */
+  /** The total count of  contents. */
   total: Scalars['Int'];
 };
 

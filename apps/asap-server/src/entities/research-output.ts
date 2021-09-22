@@ -61,11 +61,11 @@ export const parseGraphQLResearchOutput = (
       team.referencingUsersContents
         ?.filter(
           (user) =>
-            user.flatData?.teams !== undefined &&
-            user.flatData?.teams?.filter(
+            user.flatData.teams &&
+            user.flatData.teams.filter(
               (innerTeam) =>
-                innerTeam?.role === 'Project Manager' &&
-                innerTeam?.id?.[0]?.id === team?.id,
+                innerTeam.role === 'Project Manager' &&
+                innerTeam.id?.[0]?.id === team.id,
             ).length !== 0,
         )
         .map((user) => user.flatData?.email),
@@ -109,6 +109,11 @@ export const parseGraphQLResearchOutput = (
     asapFunded: convertDecisionToBoolean(data.asapFunded),
     usedInPublication: convertDecisionToBoolean(data.usedInAPublication),
     pmsEmails: uniquePmsEmails,
+    labs:
+      data.labs?.map((lab) => ({
+        id: lab.id,
+        name: lab.flatData.name || '',
+      })) || [],
   };
 };
 

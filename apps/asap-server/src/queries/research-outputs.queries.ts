@@ -106,6 +106,12 @@ export const researchOutputContentQueryFragment = gql`
           }
         }
       }
+      labs {
+        id
+        flatData {
+          name
+        }
+      }
     }
     referencingTeamsContents @include(if: $withTeams) {
       id

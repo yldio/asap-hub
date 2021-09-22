@@ -4380,6 +4380,9 @@ export type ResearchOutputContentFragment = Pick<
             })
       >
     >;
+    labs: Maybe<
+      Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
+    >;
   };
   referencingTeamsContents?: Maybe<
     Array<
@@ -4531,6 +4534,9 @@ export type FetchResearchOutputQuery = {
                   };
                 })
           >
+        >;
+        labs: Maybe<
+          Array<Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }>
         >;
       };
       referencingTeamsContents?: Maybe<
@@ -4692,6 +4698,11 @@ export type FetchResearchOutputsQuery = {
                           >;
                         };
                       })
+                >
+              >;
+              labs: Maybe<
+                Array<
+                  Pick<Labs, 'id'> & { flatData: Pick<LabsFlatDataDto, 'name'> }
                 >
               >;
             };
@@ -5206,6 +5217,29 @@ export const ResearchOutputContentFragmentDoc = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'labs' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'flatData' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
                             },
                           ],
                         },

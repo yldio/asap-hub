@@ -38,6 +38,7 @@ const researchOutputResponse: Omit<
   ],
   sharingStatus: 'Public',
   pmsEmails: [],
+  labs: [],
 };
 
 export const createResearchOutputResponse = (

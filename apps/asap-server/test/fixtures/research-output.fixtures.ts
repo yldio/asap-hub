@@ -3,44 +3,47 @@ import {
   ListUserResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
-import {
-  GraphqlResearchOutputAuthors,
-  GraphqlResearchOutput,
-  GraphqlUserAssoc,
-  WebhookPayload,
-  ResearchOutput,
-} from '@asap-hub/squidex';
+import { WebhookPayload, ResearchOutput } from '@asap-hub/squidex';
 import { Rest } from '@asap-hub/squidex/src/entities/common';
 import {
-  ResponseFetchResearchOutput,
-  ResponseFetchResearchOutputs,
-} from '../../src/controllers/research-outputs';
+  FetchResearchOutputQuery,
+  FetchResearchOutputsQuery,
+} from '../../src/gql/graphql';
 import { DeepWriteable } from '../../src/utils/types';
 import { fetchExpectation, graphQlResponseFetchUsers } from './users.fixtures';
 
 export const getSquidexResearchOutputsGraphqlResponse =
-  (): ResponseFetchResearchOutputs => ({
+  (): FetchResearchOutputsQuery => ({
     queryResearchOutputsContentsWithTotal: {
       total: 1,
       items: [getSquidexGraphqlResearchOutput()],
     },
   });
 
-export const getSquidexResearchOutputGraphqlResponseAuthors =
-  (): GraphqlResearchOutputAuthors[] =>
-    graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items.map(
-      (item): GraphqlUserAssoc => ({
-        __typename: 'Users',
-        ...item,
-      }),
-    );
+export const getSquidexResearchOutputGraphqlResponseAuthors = (): NonNullable<
+  NonNullable<
+    FetchResearchOutputQuery['findResearchOutputsContent']
+  >['flatData']['authors']
+> =>
+  graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items.map(
+    (item) => ({
+      __typename: 'Users',
+      ...item,
+    }),
+  ) as NonNullable<
+    NonNullable<
+      FetchResearchOutputQuery['findResearchOutputsContent']
+    >['flatData']['authors']
+  >;
 
 export const getSquidexResearchOutputGraphqlResponse =
-  (): ResponseFetchResearchOutput => ({
+  (): FetchResearchOutputQuery => ({
     findResearchOutputsContent: getSquidexGraphqlResearchOutput(),
   });
 
-export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
+export const getSquidexGraphqlResearchOutput = (): NonNullable<
+  FetchResearchOutputQuery['findResearchOutputsContent']
+> => ({
   id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
   created: '2020-09-23T16:34:26.842Z',
   lastModified: '2021-05-14T14:48:46Z',
@@ -63,6 +66,20 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
     asapFunded: 'Yes',
     usedInAPublication: 'No',
     subtype: '3D Printing',
+    labs: [
+      {
+        id: '99c78dd7-627e-4fbd-aaec-d1977895189e',
+        flatData: {
+          name: 'Test',
+        },
+      },
+      {
+        id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9',
+        flatData: {
+          name: 'mike',
+        },
+      },
+    ],
   },
   referencingTeamsContents: [
     {
@@ -74,9 +91,6 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       },
       referencingUsersContents: [
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a3',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'pm1@example.com',
             teams: [
@@ -95,9 +109,6 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
           },
         },
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a3',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'pm1@example.com',
             teams: [
@@ -116,17 +127,12 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
           },
         },
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a0',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'notapm1@example.com',
+            teams: null,
           },
         },
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'notapm2@example.com',
             teams: [
@@ -145,9 +151,6 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
           },
         },
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a2',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'notapm3@example.com',
             teams: [
@@ -176,9 +179,6 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
       },
       referencingUsersContents: [
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'pm2@example.com',
             teams: [
@@ -197,9 +197,6 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
           },
         },
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'pm2@example.com',
             teams: [
@@ -218,9 +215,6 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
           },
         },
         {
-          id: '94adc252-cf5e-4950-bbcf-339e46d326a1',
-          created: '2020-09-23T20:33:36Z',
-          lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'multiple-pms-on-same-team@example.com',
             teams: [
@@ -244,6 +238,7 @@ export const getSquidexGraphqlResearchOutput = (): GraphqlResearchOutput => ({
           lastModified: '2020-11-26T11:56:04Z',
           flatData: {
             email: 'notapm4@example.com',
+            teams: null,
           },
         },
       ],
@@ -289,6 +284,16 @@ export const getResearchOutputResponse =
       'pm1@example.com',
       'pm2@example.com',
       'multiple-pms-on-same-team@example.com',
+    ],
+    labs: [
+      {
+        id: '99c78dd7-627e-4fbd-aaec-d1977895189e',
+        name: 'Test',
+      },
+      {
+        id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9',
+        name: 'mike',
+      },
     ],
   });
 

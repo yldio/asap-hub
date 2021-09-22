@@ -12,6 +12,24 @@ import { Auth0Provider, WhenReady } from '../test-utils';
 
 let history!: History;
 
+const user = {
+  id: '42',
+  teams: [{ id: '2', role: 'Project Manager' as TeamRole }],
+  onboarded: false,
+};
+
+const ownProfilePath = network({})
+  .users({})
+  .user({ userId: user.id })
+  .research({}).$;
+
+const teamPage = network({})
+  .teams({})
+  .team({ teamId: user.teams[0].id })
+  .about({}).$;
+
+const outputs = network({}).users({}).user({ userId: user.id }).outputs({}).$;
+
 beforeEach(() => {
   history = createBrowserHistory();
 });
@@ -37,7 +55,7 @@ describe('an unauthenticated user', () => {
 describe('an authenticated and onboarded user', () => {
   it('is let through', async () => {
     const { findByText } = render(
-      <Auth0Provider user={{ id: '42', onboarded: true }}>
+      <Auth0Provider user={{ ...user, onboarded: true }}>
         <WhenReady>
           <Router history={history}>
             <CheckOnboarded>text</CheckOnboarded>
@@ -48,13 +66,41 @@ describe('an authenticated and onboarded user', () => {
     );
     expect(await findByText('text')).toBeVisible();
   });
+
+  it('can navigate to any page', async () => {
+    window.alert = jest.fn();
+    const { findByText } = render(
+      <Auth0Provider user={{ ...user, onboarded: true }}>
+        <WhenReady>
+          <Router history={history}>
+            <CheckOnboarded>
+              <Route path={ownProfilePath}>profile page</Route>
+              <Route path={teamPage}>team page</Route>
+              <Route path={outputs}>outputs page</Route>
+            </CheckOnboarded>
+          </Router>
+        </WhenReady>
+      </Auth0Provider>,
+      { wrapper: RecoilRoot },
+    );
+
+    history.push(ownProfilePath);
+    expect(await findByText('profile page')).toBeVisible();
+
+    history.push(teamPage);
+    expect(await findByText('team page')).toBeVisible();
+    expect(window.alert).not.toHaveBeenCalled();
+
+    history.push(outputs);
+    expect(await findByText('outputs page')).toBeVisible();
+    expect(window.alert).not.toHaveBeenCalled();
+  });
 });
 
 describe('an authenticated user in onboarding', () => {
   it('is let through to their own profile', async () => {
-    const ownProfilePath = network({}).users({}).user({ userId: '42' }).$;
     const { findByText } = render(
-      <Auth0Provider user={{ id: '42', onboarded: false }}>
+      <Auth0Provider user={{ ...user, onboarded: false }}>
         <WhenReady>
           <Router history={history}>
             <CheckOnboarded>
@@ -69,10 +115,11 @@ describe('an authenticated user in onboarding', () => {
     history.push(ownProfilePath);
     expect(await findByText('profile')).toBeVisible();
   });
+
   it("is not let through to someone else's profile", async () => {
     const foreignProfilePath = network({}).users({}).user({ userId: '1337' }).$;
     const { findByText } = render(
-      <Auth0Provider user={{ id: '42', onboarded: false }}>
+      <Auth0Provider user={{ ...user, onboarded: false }}>
         <WhenReady>
           <Router history={history}>
             <CheckOnboarded>
@@ -93,7 +140,7 @@ describe('an authenticated user in onboarding', () => {
   it('is not let through to another page', async () => {
     const anotherPagePath = sharedResearch({}).$;
     const { findByText } = render(
-      <Auth0Provider user={{ id: '42', onboarded: false }}>
+      <Auth0Provider user={{ ...user, onboarded: false }}>
         <WhenReady>
           <Router history={history}>
             <CheckOnboarded>
@@ -114,20 +161,9 @@ describe('an authenticated user in onboarding', () => {
   });
   it('should trigger an alert', async () => {
     window.alert = jest.fn();
-    const user = {
-      id: '42',
-      teams: [{ id: '2', role: 'Project Manager' as TeamRole }],
-      onboarded: false,
-    };
-
-    const teamPage = network({})
-      .teams({})
-      .team({ teamId: user.teams[0].id })
-      .about({}).$;
-    const ownProfilePath = network({}).users({}).user({ userId: user.id }).$;
 
     const { findByText } = render(
-      <Auth0Provider user={{ ...user }}>
+      <Auth0Provider user={{ ...user, onboarded: false }}>
         <WhenReady>
           <Router history={history}>
             <CheckOnboarded>
@@ -144,6 +180,7 @@ describe('an authenticated user in onboarding', () => {
     expect(await findByText('profile page')).toBeVisible();
 
     history.push(teamPage);
+    expect(await findByText('profile page')).toBeVisible();
     expect(window.alert).toHaveBeenCalled();
   });
 });

@@ -85,6 +85,22 @@ it('shows the percentage of completed steps', () => {
   expect(getByRole('link').textContent).toEqual('Next Step: Role 2');
 });
 
+it('shows the last step messaging and next step button when there is 1 incomplete step', () => {
+  const { getByRole, getByText } = render(
+    <OnboardingFooter
+      {...props}
+      onboardable={{
+        incompleteSteps: [{ label: 'Role 4', modalHref: '/' }],
+        totalSteps: 5,
+        isOnboardable: false,
+      }}
+    />,
+  );
+  expect(getByText(/last step/i)).toBeInTheDocument();
+  expect(getByRole('heading')).toHaveTextContent(/is \d+% complete/i);
+  expect(getByRole('link').textContent).toEqual('Next Step: Role 4');
+});
+
 it('provides a link to the complete onboarding modal and copy when all steps have been completed', () => {
   const { getByRole, getByTitle } = render(
     <OnboardingFooter

@@ -45,7 +45,7 @@ const subtitleStyles = css({
 const buttonStyles = css({
   gridArea: 'button',
   display: 'flex',
-  height: `${90 / perRem}em`,
+  maxHeight: `${90 / perRem}em`,
 });
 
 const iconStyles = css({
@@ -88,7 +88,7 @@ const OnboardingContent = ({
       </div>
       <div css={buttonStyles}>
         <Link href={modalHref} buttonStyle>
-          <span css={iconStyles}>{isOnboardable && successIcon}</span>
+          {isOnboardable && <span css={iconStyles}>{successIcon}</span>}
           {label}
         </Link>
       </div>
@@ -104,9 +104,12 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
   const { incompleteSteps, totalSteps, isOnboardable } = onboardable;
   if (incompleteSteps.length) {
     const props = {
+      isOnboardable,
       modalHref: incompleteSteps[0].modalHref,
       label: `Next Step: ${incompleteSteps[0].label}`,
-      isOnboardable,
+      title: `Your profile is ${Math.round(
+        (1 - incompleteSteps.length / totalSteps) * 100,
+      )}% complete`,
     };
     if (incompleteSteps.length === totalSteps) {
       return (
@@ -117,12 +120,17 @@ const OnboardingFooter: React.FC<OnboardingFooterProps> = ({
         />
       );
     }
+    if (incompleteSteps.length === 1) {
+      return (
+        <OnboardingContent
+          {...props}
+          subtitle="Complete one last step to unlock access to the Hub."
+        />
+      );
+    }
     return (
       <OnboardingContent
         {...props}
-        title={`Your profile is ${Math.round(
-          (1 - incompleteSteps.length / totalSteps) * 100,
-        )}% complete`}
         subtitle="Complete your profile to unlock access to the Hub."
       />
     );

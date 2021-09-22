@@ -51,9 +51,13 @@ describe('Research Outputs', () => {
     try {
       await createResearchOutput(researchOutput);
     } catch (e) {
-      expect(e.name).toBe('HTTPError');
-      expect(e.output.statusCode).toBe(400);
-      expect(e.data).toMatch('doi.iv: Must follow the pattern');
+      const parsedErrorData = JSON.parse(e.data);
+
+      expect(parsedErrorData.message).toBe('Validation error');
+      expect(parsedErrorData.statusCode).toBe(400);
+      expect(parsedErrorData.details[0]).toBe(
+        'doi.iv: Must follow the pattern.',
+      );
     }
   });
 });

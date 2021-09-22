@@ -48,11 +48,14 @@
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
+          "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$",
+          "patternMessage": "ORCID must have the following format: 0000-0000-0000-0000",
           "isUnique": false,
           "inlineEditable": true,
           "contentType": "Unspecified",
           "editor": "Input",
-          "label": "Orcid",
+          "label": "ORCID",
+          "hints": "ORCIDs cannot be repeated on the Hub",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

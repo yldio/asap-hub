@@ -24,7 +24,7 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
     firstName: chance.first(),
     lastName: chance.last(),
     jobTitle: chance.suffix({ full: true }),
-    orcid: chance.ssn(),
+    orcid: createRandomOrcid(),
     institution: chance.company(),
     email: chance.email(),
     biography: chance.paragraph({ sentence: 3 }),
@@ -51,6 +51,17 @@ export const createRandomUser = async (
 ): Promise<TestUserResponse> => {
   const createdUser = await createUser(overwrites);
   return transform(createdUser);
+};
+
+export const createRandomOrcid = () => {
+  return (
+    [
+      chance.string({ length: 4, numeric: true }),
+      chance.string({ length: 4, numeric: true }),
+      chance.string({ length: 4, numeric: true }),
+      chance.string({ length: 3, numeric: true }),
+    ].join('-') + chance.string({ length: 1, pool: '0123456789X' })
+  );
 };
 
 export const createUserOnTeam = async (

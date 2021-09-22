@@ -64,20 +64,20 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
   return (
     <Onboardable>
       {(onboardable) => (
-        <CheckOnboarded>
-          <Layout
-            userOnboarded={user.onboarded}
-            onboardable={onboardable}
-            onboardModalHref={
-              tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
-            }
-            userProfileHref={network({}).users({}).user({ userId: user.id }).$}
-            teams={user.teams.map(({ id, displayName = '' }) => ({
-              name: displayName,
-              href: network({}).teams({}).team({ teamId: id }).$,
-            }))}
-            aboutHref="https://www.parkinsonsroadmap.org/"
-          >
+        <Layout
+          userOnboarded={user.onboarded}
+          onboardable={onboardable}
+          onboardModalHref={
+            tabRoute ? tabRoute({}).editOnboarded({}).$ : undefined
+          }
+          userProfileHref={network({}).users({}).user({ userId: user.id }).$}
+          teams={user.teams.map(({ id, displayName = '' }) => ({
+            name: displayName,
+            href: network({}).teams({}).team({ teamId: id }).$,
+          }))}
+          aboutHref="https://www.parkinsonsroadmap.org/"
+        >
+          <CheckOnboarded>
             <Switch>
               <Route exact path="/">
                 <Frame title="Dashboard">
@@ -115,8 +115,8 @@ const AuthenticatedApp: FC<Record<string, never>> = () => {
                 </Frame>
               </Route>
             </Switch>
-          </Layout>
-        </CheckOnboarded>
+          </CheckOnboarded>
+        </Layout>
       )}
     </Onboardable>
   );

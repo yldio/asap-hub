@@ -1,15 +1,36 @@
 import { useCurrentUser } from '@asap-hub/react-context';
-import { network } from '@asap-hub/routing';
-import { ReactNode } from 'react';
-import { Redirect, Route, Switch, BrowserRouter } from 'react-router-dom';
-
-import RouterPrompt from '../structure/RouterPrompt';
+import { network, logout } from '@asap-hub/routing';
+import { ReactNode, useEffect } from 'react';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 
 interface CheckOnboardedProps {
   children: ReactNode;
 }
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   const user = useCurrentUser();
+  const history = useHistory();
+
+  useEffect(
+    () =>
+      history.block(({ pathname }) => {
+        const isBlockedNav = user
+          ? ![
+              network({}).users({}).user({ userId: user.id }).about({}).$,
+              network({}).users({}).user({ userId: user.id }).research({}).$,
+              logout({}).$,
+            ].find((route) => pathname === '/' || pathname.startsWith(route))
+          : false;
+
+        if (isBlockedNav && !user?.onboarded) {
+          window.alert(
+            'This link will be available when your profile is complete',
+          );
+          return false;
+        }
+        return undefined;
+      }),
+    [user, history],
+  );
 
   if (!user) {
     throw new Error(
@@ -17,33 +38,17 @@ const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
     );
   }
 
+  const ownProfilePath = network({}).users({}).user({ userId: user.id }).$;
+
   if (user.onboarded) {
     return <>{children}</>;
   }
 
-  const ownProfilePath = network({}).users({}).user({ userId: user.id }).$;
   return (
-    <BrowserRouter
-      getUserConfirmation={() => {
-        /* Empty callback to block the default browser prompt */
-      }}
-    >
-      <Switch>
-        <Route path={ownProfilePath}>
-          <RouterPrompt
-            when={!user.onboarded}
-            pattern="(teams|groups)\b"
-            message="This link will be available when your profile is complete"
-          >
-            {children}
-          </RouterPrompt>
-        </Route>
-
-        <Route to="/">
-          <Redirect to={ownProfilePath} />;
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route path={ownProfilePath}>{children}</Route>
+      <Redirect to={ownProfilePath} />
+    </Switch>
   );
 };
 

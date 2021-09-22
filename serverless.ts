@@ -300,6 +300,9 @@ const serverlessConfig: AWS = {
         EMAIL_BCC: `\${ssm:email-invite-bcc-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }}`,
+        EMAIL_RETURN: `\${ssm:email-invite-return-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
       },
     },
     indexResearchOutput: {

@@ -1,5 +1,9 @@
 import { SES } from 'aws-sdk';
-import { userInviteBcc, userInviteSender } from '../../src/config';
+import {
+  userInviteBcc,
+  userInviteReturn,
+  userInviteSender,
+} from '../../src/config';
 import { sendEmailFactory } from '../../src/utils/send-email';
 
 describe('Send Email helper', () => {
@@ -29,6 +33,7 @@ describe('Send Email helper', () => {
       Template: 'Invite',
       TemplateData: JSON.stringify(params),
       Source: userInviteSender,
+      ReturnPath: userInviteReturn,
     });
   });
 });

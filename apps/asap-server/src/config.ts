@@ -25,6 +25,7 @@ const {
   EVENT_SOURCE,
   EMAIL_SENDER,
   EMAIL_BCC,
+  EMAIL_RETURN,
 } = process.env;
 
 export const origin = APP_ORIGIN || 'https://dev.hub.asap.science';
@@ -55,5 +56,6 @@ export const algoliaApiKeyTtl = 36060;
 export const sesRegion = SES_REGION || 'eu-west-1';
 export const userInviteSender = EMAIL_SENDER || `"ASAP Hub" <hub@asap.science>`;
 export const userInviteBcc = EMAIL_BCC || 'hub.invites.dev@asap.science';
+export const userInviteReturn = EMAIL_RETURN || 'hub.invites.dev@asap.science';
 export const eventBus = EVENT_BUS || 'asap-events-dev';
 export const eventSource = EVENT_SOURCE || '';

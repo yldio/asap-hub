@@ -12,7 +12,8 @@
     "unordered(teams.displayName)",
     "unordered(authors.firstName)",
     "unordered(authors.lastName)",
-    "unordered(authors.displayName)"
+    "unordered(authors.displayName)",
+    "unordered(labs.name)"
   ],
   "numericAttributesToIndex": null,
   "attributesToRetrieve": null,

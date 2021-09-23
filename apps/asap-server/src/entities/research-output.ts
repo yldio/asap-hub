@@ -8,7 +8,7 @@ import {
   sharingStatuses,
 } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
-import { FetchResearchOutputQuery } from '../gql/graphql';
+import { FetchResearchOutputQuery, Labs, Scalars } from '../gql/graphql';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
 
@@ -61,11 +61,11 @@ export const parseGraphQLResearchOutput = (
       team.referencingUsersContents
         ?.filter(
           (user) =>
-            user.flatData?.teams !== undefined &&
-            user.flatData?.teams?.filter(
+            user.flatData.teams &&
+            user.flatData.teams.filter(
               (innerTeam) =>
-                innerTeam?.role === 'Project Manager' &&
-                innerTeam?.id?.[0]?.id === team?.id,
+                innerTeam.role === 'Project Manager' &&
+                innerTeam.id?.[0]?.id === team.id,
             ).length !== 0,
         )
         .map((user) => user.flatData?.email),
@@ -109,14 +109,15 @@ export const parseGraphQLResearchOutput = (
     asapFunded: convertDecisionToBoolean(data.asapFunded),
     usedInPublication: convertDecisionToBoolean(data.usedInAPublication),
     pmsEmails: uniquePmsEmails,
+    labs:
+      data.labs
+        ?.filter((lab): lab is LabWithName => lab.flatData.name !== null)
+        .map((lab) => ({
+          id: lab.id,
+          name: lab.flatData.name,
+        })) || [],
   };
 };
-
-type FetchResearchOutputTeamContents = NonNullable<
-  NonNullable<
-    FetchResearchOutputQuery['findResearchOutputsContent']
-  >['referencingTeamsContents']
->[number];
 
 const parseGraphqlTeamLite = (
   graphqlTeam: FetchResearchOutputTeamContents,
@@ -142,3 +143,15 @@ const isResearchOutputSubtype = (
   subtype: string,
 ): subtype is ResearchOutputSubtype =>
   (researchOutputSubtypes as ReadonlyArray<string>).includes(subtype);
+
+type FetchResearchOutputTeamContents = NonNullable<
+  NonNullable<
+    FetchResearchOutputQuery['findResearchOutputsContent']
+  >['referencingTeamsContents']
+>[number];
+
+type LabWithName = Pick<Labs, 'id'> & {
+  flatData: {
+    name: Scalars['String'];
+  };
+};

@@ -1,5 +1,9 @@
 import { ListTeamResponse, TeamResponse, TeamTool } from '@asap-hub/model';
-import { config, RestTeam } from '@asap-hub/squidex';
+import {
+  config,
+  GraphqlResearchOutputAuthors,
+  RestTeam,
+} from '@asap-hub/squidex';
 import { RestUser } from '@asap-hub/squidex';
 import {
   ResponseFetchTeams,
@@ -78,7 +82,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   type: 'Proposal',
                   tags: ['test', 'tag'],
                   authors: [
-                    getSquidexResearchOutputGraphqlResponseAuthors()[0],
+                    getSquidexResearchOutputGraphqlResponseAuthors()![0] as GraphqlResearchOutputAuthors,
                   ],
                   sharingStatus: 'Network Only',
                   asapFunded: 'No',
@@ -98,7 +102,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   tags: ['test', 'tag'],
                   accessInstructions: 'some access instructions',
                   authors: [
-                    getSquidexResearchOutputGraphqlResponseAuthors()[1],
+                    getSquidexResearchOutputGraphqlResponseAuthors()[1] as GraphqlResearchOutputAuthors,
                   ],
                 },
               },
@@ -372,6 +376,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
           sharingStatus: 'Network Only',
           pmsEmails: [],
           labCatalogNumber: 'http://example.com',
+          labs: [],
         },
         {
           id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -396,6 +401,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
           sharingStatus: 'Network Only',
           asapFunded: false,
           pmsEmails: [],
+          labs: [],
         },
       ],
       members: [
@@ -509,7 +515,9 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               tags: ['test', 'tag'],
               sharingStatus: 'Network Only',
               asapFunded: 'No',
-              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[0]],
+              authors: [
+                getSquidexResearchOutputGraphqlResponseAuthors()[0] as GraphqlResearchOutputAuthors,
+              ],
             },
           },
           {
@@ -523,7 +531,9 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
-              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[1]],
+              authors: [
+                getSquidexResearchOutputGraphqlResponseAuthors()[1] as GraphqlResearchOutputAuthors,
+              ],
               usedInAPublication: 'No',
             },
             referencingTeamsContents: [
@@ -641,6 +651,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       usedInPublication: false,
       pmsEmails: [],
       labCatalogNumber: 'http://example.com',
+      labs: [],
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -665,6 +676,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       asapFunded: false,
       pmsEmails: [],
+      labs: [],
     },
   ],
   members: [
@@ -731,7 +743,9 @@ export const getGraphQlTeamResponse = (
               title: 'Proposal',
               type: 'Proposal',
               tags: ['test', 'tag'],
-              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[0]],
+              authors: [
+                getSquidexResearchOutputGraphqlResponseAuthors()[0] as GraphqlResearchOutputAuthors,
+              ],
               sharingStatus: 'Network Only',
               asapFunded: 'No',
             },
@@ -757,7 +771,9 @@ export const getGraphQlTeamResponse = (
               addedDate: null,
               title: "Team Salzer's intro slide deck",
               type: 'Presentation',
-              authors: [getSquidexResearchOutputGraphqlResponseAuthors()[1]],
+              authors: [
+                getSquidexResearchOutputGraphqlResponseAuthors()[1] as GraphqlResearchOutputAuthors,
+              ],
               usedInAPublication: 'No',
             },
             referencingTeamsContents: [
@@ -917,6 +933,7 @@ export const updateExpectation: TeamResponse = {
       usedInPublication: false,
       pmsEmails: [],
       labCatalogNumber: 'http://example.com',
+      labs: [],
     },
     {
       id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -941,6 +958,7 @@ export const updateExpectation: TeamResponse = {
       sharingStatus: 'Network Only',
       asapFunded: false,
       pmsEmails: [],
+      labs: [],
     },
   ],
   members: [

@@ -456,59 +456,151 @@ describe('Team controller', () => {
       });
     });
 
-    test('Should return the lab count', async () => {
-      const teamId = 'team-id-1';
-      const teamResponse = getGraphQlTeamResponse();
-      // create a user with labs
-      const graphqlUser1 = getGraphQLUser();
-      graphqlUser1.flatData!.labs = [
-        {
-          id: 'lab-id-1',
-          flatData: {
+    describe('Labs', () => {
+      test('Should return the lab count', async () => {
+        const teamId = 'team-id-1';
+        const teamResponse = getGraphQlTeamResponse();
+        // create a user with labs
+        const graphqlUser1 = getGraphQLUser();
+        graphqlUser1.flatData!.labs = [
+          {
+            id: 'lab-id-1',
+            flatData: {
+              name: 'lab name',
+            },
+          },
+          {
+            id: 'lab-id-2',
+            flatData: {
+              name: 'lab name',
+            },
+          },
+        ];
+        // create another user with labs one of which is a duplicate of the first user's lab
+        const graphqlUser2 = getGraphQLUser();
+        graphqlUser2.flatData!.labs = [
+          {
+            id: 'lab-id-2',
+            flatData: {
+              name: 'lab name',
+            },
+          },
+          {
+            id: 'lab-id-3',
+            flatData: {
+              name: 'lab name',
+            },
+          },
+        ];
+
+        teamResponse.data.findTeamsContent.referencingUsersContents = [
+          graphqlUser1,
+          graphqlUser2,
+        ];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
+          })
+          .reply(200, teamResponse);
+
+        const result = await teams.fetchById(teamId);
+
+        expect(result.labCount).toEqual(3);
+      });
+
+      test('Should return the team member lab list', async () => {
+        const teamId = 'team-id-1';
+        const teamResponse = getGraphQlTeamResponse();
+        // create a user with labs
+        const graphqlUser1 = getGraphQLUser();
+        graphqlUser1.flatData!.labs = [
+          {
+            id: 'lab-id-1',
+            flatData: {
+              name: 'lab name',
+            },
+          },
+          {
+            id: 'lab-id-2',
+            flatData: {
+              name: 'lab name',
+            },
+          },
+        ];
+
+        teamResponse.data.findTeamsContent.referencingUsersContents = [
+          graphqlUser1,
+        ];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
+          })
+          .reply(200, teamResponse);
+
+        const result = await teams.fetchById(teamId);
+
+        expect(result.members[0].labs).toEqual([
+          {
+            id: 'lab-id-1',
             name: 'lab name',
           },
-        },
-        {
-          id: 'lab-id-2',
-          flatData: {
+          {
+            id: 'lab-id-2',
             name: 'lab name',
           },
-        },
-      ];
-      // create another user with labs one of which is a duplicate of the first user's lab
-      const graphqlUser2 = getGraphQLUser();
-      graphqlUser2.flatData!.labs = [
-        {
-          id: 'lab-id-2',
-          flatData: {
+        ]);
+      });
+
+      test('Should skip the team member lab if the name is empty', async () => {
+        const teamId = 'team-id-1';
+        const teamResponse = getGraphQlTeamResponse();
+        // create a user with labs
+        const graphqlUser1 = getGraphQLUser();
+        graphqlUser1.flatData!.labs = [
+          {
+            id: 'lab-id-1',
+            flatData: {
+              name: null,
+            },
+          },
+          {
+            id: 'lab-id-2',
+            flatData: {
+              name: 'lab name',
+            },
+          },
+        ];
+
+        teamResponse.data.findTeamsContent.referencingUsersContents = [
+          graphqlUser1,
+        ];
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: buildGraphQLQueryFetchTeam(),
+            variables: {
+              id: teamId,
+            },
+          })
+          .reply(200, teamResponse);
+
+        const result = await teams.fetchById(teamId);
+
+        expect(result.members[0].labs).toEqual([
+          {
+            id: 'lab-id-2',
             name: 'lab name',
           },
-        },
-        {
-          id: 'lab-id-3',
-          flatData: {
-            name: 'lab name',
-          },
-        },
-      ];
-
-      teamResponse.data.findTeamsContent.referencingUsersContents = [
-        graphqlUser1,
-        graphqlUser2,
-      ];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
-          variables: {
-            id: teamId,
-          },
-        })
-        .reply(200, teamResponse);
-
-      const result = await teams.fetchById(teamId);
-
-      expect(result.labCount).toEqual(3);
+        ]);
+      });
     });
 
     describe('Avatar', () => {

@@ -1,6 +1,7 @@
 import { TeamResponse } from './team';
 import { ListResponse } from './common';
 import { UserResponse } from './user';
+import { Lab } from './lab';
 
 export const researchOutputTypes = [
   'Proposal',
@@ -91,6 +92,8 @@ export type ResearchOutputResponse = {
   readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
   readonly pmsEmails: string[];
+
+  readonly labs: Lab[];
 };
 
 export const researchOutputLabels: Record<ResearchOutputType, string> = {

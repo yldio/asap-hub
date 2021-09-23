@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { config, GraphqlUser } from '@asap-hub/squidex';
+import { config } from '@asap-hub/squidex';
 import { print } from 'graphql';
 import { identity } from '../helpers/squidex';
 import ResearchOutputs from '../../src/controllers/research-outputs';
@@ -10,14 +10,15 @@ import {
   getSquidexResearchOutputsGraphqlResponse,
 } from '../fixtures/research-output.fixtures';
 import { graphQlResponseFetchUsers } from '../fixtures/users.fixtures';
-import { GraphqlWithTypename } from '@asap-hub/squidex/src/entities/common';
-import { GraphqlExternalAuthor } from '@asap-hub/squidex/src/entities/external-author';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import {
   FETCH_RESEARCH_OUTPUT,
   FETCH_RESEARCH_OUTPUTS,
 } from '../../src/queries/research-outputs.queries';
-import { FetchResearchOutputsQuery } from '../../src/gql/graphql';
+import {
+  FetchResearchOutputQuery,
+  FetchResearchOutputsQuery,
+} from '../../src/gql/graphql';
 
 describe('ResearchOutputs controller', () => {
   const researchOutputs = new ResearchOutputs();
@@ -267,8 +268,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default team displayName to an empty string when not present', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      (squidexGraphqlResponse.findResearchOutputsContent
-        .referencingTeamsContents![0].flatData!.displayName as string | null) =
+      (squidexGraphqlResponse.findResearchOutputsContent!
+        .referencingTeamsContents![0].flatData.displayName as string | null) =
         null;
 
       nock(config.baseUrl)
@@ -288,8 +289,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default type to Proposal and title to an empty string when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      delete squidexGraphqlResponse.findResearchOutputsContent.flatData?.type;
-      delete squidexGraphqlResponse.findResearchOutputsContent.flatData?.title;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.type = null;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.title = null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -309,8 +310,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default sharingStatus to Network Only when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
-        ?.sharingStatus;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.sharingStatus =
+        null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -329,8 +330,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default asapFunded to undefined when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
-        ?.asapFunded;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.asapFunded =
+        null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -349,7 +350,7 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default asapFunded "Not Sure" option to undefined', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent.flatData!.asapFunded =
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData!.asapFunded =
         'Not Sure';
 
       nock(config.baseUrl)
@@ -369,8 +370,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default usedInPublication to undefined when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
-        ?.usedInAPublication;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.usedInAPublication =
+        null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -389,7 +390,7 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default usedInPublication "Not Sure" option to undefined', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent.flatData!.usedInAPublication =
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.usedInAPublication =
         'Not Sure';
 
       nock(config.baseUrl)
@@ -409,8 +410,8 @@ describe('ResearchOutputs controller', () => {
 
     test('Should default authors to an empty array when missing', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      delete squidexGraphqlResponse.findResearchOutputsContent.flatData
-        ?.authors;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.authors =
+        null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -427,9 +428,46 @@ describe('ResearchOutputs controller', () => {
       expect(result.authors).toEqual([]);
     });
 
+    test('Should skip the lab when the name is empty', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.labs = [
+        {
+          id: 'lab-id-1',
+          flatData: {
+            name: null,
+          },
+        },
+        {
+          id: 'lab-id-2',
+          flatData: {
+            name: 'lab name',
+          },
+        },
+      ];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_RESEARCH_OUTPUT),
+          variables: {
+            id: researchOutputId,
+            withTeams: true,
+          },
+        })
+        .reply(200, { data: squidexGraphqlResponse });
+
+      const result = await researchOutputs.fetchById(researchOutputId);
+
+      expect(result.labs).toEqual([
+        {
+          id: 'lab-id-2',
+          name: 'lab name',
+        },
+      ]);
+    });
+
     test('Should return the research output without the team', async () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      researchOutputResponse.findResearchOutputsContent.referencingTeamsContents =
+      researchOutputResponse.findResearchOutputsContent!.referencingTeamsContents =
         [];
 
       nock(config.baseUrl)
@@ -454,18 +492,15 @@ describe('ResearchOutputs controller', () => {
 
     test('Should return a mix of internal and external authors', async () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      const squidexUser1: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+      const squidexUser1 = {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0],
         __typename: 'Users',
-      };
-      const squidexUser2: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+      } as InternalUser;
+      const squidexUser2 = {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[1],
         __typename: 'Users',
-      };
-      const externalAuthor: GraphqlWithTypename<
-        GraphqlExternalAuthor,
-        'ExternalAuthors'
-      > = {
+      } as InternalUser;
+      const externalAuthor: ExternalUser = {
         __typename: 'ExternalAuthors',
         id: '3099015c-c9ed-40fd-830a-8fe1b6ec0482',
         created: '2021-06-04T09:37:54Z',
@@ -475,7 +510,7 @@ describe('ResearchOutputs controller', () => {
           orcid: '23423423',
         },
       };
-      researchOutputResponse.findResearchOutputsContent.flatData!.authors = [
+      researchOutputResponse.findResearchOutputsContent!.flatData.authors = [
         squidexUser1,
         externalAuthor,
         squidexUser2,
@@ -509,7 +544,7 @@ describe('ResearchOutputs controller', () => {
 
     test('Should not return the non-onboarded authors', async () => {
       const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      const squidexUser1: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+      const squidexUser1 = {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0],
         __typename: 'Users',
         flatData: {
@@ -517,8 +552,8 @@ describe('ResearchOutputs controller', () => {
             .flatData,
           onboarded: false,
         },
-      };
-      const squidexUser2: GraphqlWithTypename<GraphqlUser, 'Users'> = {
+      } as InternalUser;
+      const squidexUser2 = {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[1],
         __typename: 'Users',
         flatData: {
@@ -526,9 +561,9 @@ describe('ResearchOutputs controller', () => {
             .flatData,
           onboarded: true,
         },
-      };
+      } as InternalUser;
 
-      researchOutputResponse.findResearchOutputsContent.flatData!.authors = [
+      researchOutputResponse.findResearchOutputsContent!.flatData.authors = [
         squidexUser1,
         squidexUser2,
       ];
@@ -602,8 +637,8 @@ describe('ResearchOutputs controller', () => {
       test('Should default to last-modified if the last-updated-partial is not present', async () => {
         const researchOutputResponse =
           getSquidexResearchOutputGraphqlResponse();
-        delete researchOutputResponse.findResearchOutputsContent.flatData
-          ?.lastUpdatedPartial;
+        delete researchOutputResponse.findResearchOutputsContent!.flatData
+          .lastUpdatedPartial;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -618,15 +653,15 @@ describe('ResearchOutputs controller', () => {
         const result = await researchOutputs.fetchById(researchOutputId);
 
         expect(result.lastUpdatedPartial).toEqual(
-          researchOutputResponse.findResearchOutputsContent.lastModified,
+          researchOutputResponse.findResearchOutputsContent!.lastModified,
         );
       });
 
       test('Should default to created-date if the last-updated-partial and last-modified are not present', async () => {
         const researchOutputResponse =
           getSquidexResearchOutputGraphqlResponse();
-        delete researchOutputResponse.findResearchOutputsContent.flatData
-          ?.lastUpdatedPartial;
+        delete researchOutputResponse.findResearchOutputsContent!.flatData
+          .lastUpdatedPartial;
         delete (researchOutputResponse.findResearchOutputsContent as any)
           .lastModified;
 
@@ -643,7 +678,7 @@ describe('ResearchOutputs controller', () => {
         const result = await researchOutputs.fetchById(researchOutputId);
 
         expect(result.lastUpdatedPartial).toEqual(
-          researchOutputResponse.findResearchOutputsContent.created,
+          researchOutputResponse.findResearchOutputsContent!.created,
         );
       });
     });
@@ -669,3 +704,11 @@ const getFetchResearchOutputsGraphqlResponse = (
     },
   },
 });
+
+type Author = NonNullable<
+  NonNullable<
+    FetchResearchOutputQuery['findResearchOutputsContent']
+  >['flatData']['authors']
+>[number];
+type InternalUser = Extract<Author, { __typename: 'Users' }>;
+type ExternalUser = Extract<Author, { __typename: 'ExternalAuthors' }>;

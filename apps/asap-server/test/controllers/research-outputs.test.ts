@@ -428,10 +428,22 @@ describe('ResearchOutputs controller', () => {
       expect(result.authors).toEqual([]);
     });
 
-    test('Should default lab name to an empty string when not present', async () => {
+    test('Should skip the lab when the name is empty', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      squidexGraphqlResponse.findResearchOutputsContent!.flatData.labs![0].flatData.name =
-        null;
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.labs = [
+        {
+          id: 'lab-id-1',
+          flatData: {
+            name: null,
+          },
+        },
+        {
+          id: 'lab-id-2',
+          flatData: {
+            name: 'lab name',
+          },
+        },
+      ];
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -445,7 +457,12 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
-      expect(result.labs![0].name).toEqual('');
+      expect(result.labs).toEqual([
+        {
+          id: 'lab-id-2',
+          name: 'lab name',
+        },
+      ]);
     });
 
     test('Should return the research output without the team', async () => {

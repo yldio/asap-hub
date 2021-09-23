@@ -1,6 +1,6 @@
 import { ComponentProps } from 'react';
 import { Layout, authTestUtils } from '@asap-hub/react-components';
-import { boolean } from '@storybook/addon-knobs';
+import { number, optionsKnob } from '@storybook/addon-knobs';
 
 import { NoPaddingDecorator } from './layout';
 import { toastGenerator } from './toast';
@@ -33,20 +33,42 @@ export const Toasts = () => {
   );
 };
 
-export const Onboardable = () => (
-  <authTestUtils.Auth0Provider>
-    <authTestUtils.LoggedIn
-      user={{
-        onboarded: false,
-      }}
-    >
-      <Layout
-        {...props}
-        onboardModalHref="/wrong"
-        onboardable={{ isOnboardable: boolean('isOnboardable', false) }}
+export const Onboardable = () => {
+  const steps = optionsKnob(
+    'Incomplete Steps',
+    {
+      Details: 'Details',
+      Biography: 'Biography',
+      Questions: 'Questions',
+      Expertise: 'Expertise',
+      Role: 'Role',
+    },
+    [],
+    { display: 'inline-check' },
+  ) as unknown as string[]; // The typings for this are wrong. We should upgrade.
+
+  return (
+    <authTestUtils.Auth0Provider>
+      <authTestUtils.LoggedIn
+        user={{
+          onboarded: false,
+        }}
       >
-        Content
-      </Layout>
-    </authTestUtils.LoggedIn>
-  </authTestUtils.Auth0Provider>
-);
+        <Layout
+          {...props}
+          onboardModalHref="/wrong"
+          onboardable={{
+            incompleteSteps: steps.map((step) => ({
+              label: step,
+              modalHref: '/wrong',
+            })),
+            isOnboardable: !steps.length,
+            totalSteps: number('Total Steps', 5),
+          }}
+        >
+          Content
+        </Layout>
+      </authTestUtils.LoggedIn>
+    </authTestUtils.Auth0Provider>
+  );
+};

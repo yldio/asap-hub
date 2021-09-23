@@ -11,7 +11,6 @@ import {
 import { useLocation } from 'react-router-dom';
 import { Location } from 'history';
 import { css } from '@emotion/react';
-import { isUserOnboardable } from '@asap-hub/validation';
 
 import { steel, paper, tin, colorWithTransparency, pearl } from '../colors';
 import { MenuHeader, OnboardingFooter, ToastStack } from '../organisms';
@@ -169,9 +168,8 @@ const userMenuShownStyles = css({
 
 type LayoutProps = {
   readonly children: ReactNode;
-  readonly onboardModalHref?: string;
-  readonly onboardable?: ReturnType<typeof isUserOnboardable>;
-} & ComponentProps<typeof MainNavigation> &
+} & Partial<ComponentProps<typeof OnboardingFooter>> &
+  ComponentProps<typeof MainNavigation> &
   ComponentProps<typeof UserNavigation>;
 const Layout: FC<LayoutProps> = ({
   children,

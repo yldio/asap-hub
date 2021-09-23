@@ -262,7 +262,7 @@ describe('the onboarded modal', () => {
       { wrapper },
     );
 
-    userEvent.click(await findByText(/Continue and Publish/i));
+    userEvent.click(await findByText(/publish and explore/i));
     await waitFor(() => {
       expect(mockPatchUser).toHaveBeenLastCalledWith(
         id,
@@ -317,7 +317,7 @@ describe('the onboarded modal', () => {
       { wrapper },
     );
 
-    userEvent.click(await findByText(/Continue and Publish/i));
+    userEvent.click(await findByText(/publish and explore/i));
     await waitFor(() => {
       expect(mockPatchUser).toHaveBeenLastCalledWith(
         id,

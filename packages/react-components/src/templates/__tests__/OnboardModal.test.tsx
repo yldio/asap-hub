@@ -22,7 +22,7 @@ it('triggers the save function', async () => {
   const { getByText } = render(<OnboardModal {...props} onSave={jestFn} />, {
     wrapper: MemoryRouter,
   });
-  const publish = getByText(/continue and publish/i);
+  const publish = getByText(/Publish and Explore/i);
   userEvent.click(publish);
 
   expect(jestFn).toHaveBeenCalledWith({
@@ -42,7 +42,7 @@ it('disables publish & back while submitting', async () => {
     <OnboardModal {...props} onSave={handleSave} />,
     { wrapper: StaticRouter },
   );
-  const publish = getByText(/continue and publish/i);
+  const publish = getByText(/Publish and Explore/i);
 
   userEvent.click(publish);
   expect(publish.closest('button')).toBeDisabled();
@@ -63,7 +63,7 @@ it('displays error message when save fails', async () => {
     { wrapper: StaticRouter },
   );
 
-  const publish = getByText(/continue and publish/i);
+  const publish = getByText(/Publish and Explore/i);
   userEvent.click(publish);
   act(rejectSubmit);
 

@@ -83,6 +83,7 @@ export {
   MainNavigation,
   MenuHeader,
   NewsAndEventsCard,
+  OnboardingFooter,
   PageCard,
   PagesSection,
   PeopleCard,

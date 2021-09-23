@@ -1,5 +1,5 @@
 import { useCurrentUser } from '@asap-hub/react-context';
-import { network, logout } from '@asap-hub/routing';
+import { network, logout, staticPages } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { User } from '@asap-hub/auth';
@@ -17,6 +17,8 @@ export const navigationPromptHandler = (
       ? ![
           network({}).users({}).user({ userId: user.id }).about({}).$,
           network({}).users({}).user({ userId: user.id }).research({}).$,
+          staticPages({}).terms({}).$,
+          staticPages({}).privacyPolicy({}).$,
           logout({}).$,
         ].find((route) => pathname === '/' || pathname.startsWith(route))
       : false;

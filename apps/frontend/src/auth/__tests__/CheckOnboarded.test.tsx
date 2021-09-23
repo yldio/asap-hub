@@ -1,5 +1,5 @@
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
-import { network, sharedResearch } from '@asap-hub/routing';
+import { network, sharedResearch, staticPages } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Router } from 'react-router-dom';
@@ -29,6 +29,8 @@ const teamPage = network({})
   .about({}).$;
 
 const outputs = network({}).users({}).user({ userId: user.id }).outputs({}).$;
+const privacy = staticPages({}).privacyPolicy({}).$;
+const tos = staticPages({}).terms({}).$;
 
 beforeEach(() => {
   history = createBrowserHistory();
@@ -189,7 +191,7 @@ describe('navigationPromptHandler', () => {
 
     const nonOnboardedUser = { ...user, onboarded: false };
 
-    [ownProfilePath, '/'].forEach((route) => {
+    [ownProfilePath, '/', privacy, tos].forEach((route) => {
       const result = navigationPromptHandler(nonOnboardedUser, route);
       expect(result).toBeUndefined();
       expect(window.alert).not.toHaveBeenCalled();
@@ -207,7 +209,7 @@ describe('navigationPromptHandler', () => {
 
     const onboardedUser = { ...user, onboarded: true };
 
-    [teamPage, outputs, ownProfilePath, '/'].forEach((route) => {
+    [teamPage, outputs, privacy, tos, ownProfilePath, '/'].forEach((route) => {
       const result = navigationPromptHandler(onboardedUser, route);
       expect(result).toBeUndefined();
       expect(window.alert).not.toHaveBeenCalled();

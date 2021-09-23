@@ -2,33 +2,39 @@ import { useCurrentUser } from '@asap-hub/react-context';
 import { network, logout } from '@asap-hub/routing';
 import { ReactNode, useEffect } from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import { User } from '@asap-hub/auth';
 
 interface CheckOnboardedProps {
   children: ReactNode;
 }
+
+export const navigationPromptHandler = (
+  user: User | null,
+  pathname: string,
+) => {
+  const isNavigationBlocked =
+    user && !user?.onboarded
+      ? ![
+          network({}).users({}).user({ userId: user.id }).about({}).$,
+          network({}).users({}).user({ userId: user.id }).research({}).$,
+          logout({}).$,
+        ].find((route) => pathname === '/' || pathname.startsWith(route))
+      : false;
+
+  if (isNavigationBlocked) {
+    window.alert('This link will be available when your profile is complete');
+    return false;
+  }
+  return undefined;
+};
+
 const CheckOnboarded: React.FC<CheckOnboardedProps> = ({ children }) => {
   const user = useCurrentUser();
   const history = useHistory();
 
   useEffect(
     () =>
-      history.block(({ pathname }) => {
-        const isBlockedNav = user
-          ? ![
-              network({}).users({}).user({ userId: user.id }).about({}).$,
-              network({}).users({}).user({ userId: user.id }).research({}).$,
-              logout({}).$,
-            ].find((route) => pathname === '/' || pathname.startsWith(route))
-          : false;
-
-        if (isBlockedNav && !user?.onboarded) {
-          window.alert(
-            'This link will be available when your profile is complete',
-          );
-          return false;
-        }
-        return undefined;
-      }),
+      history.block(({ pathname }) => navigationPromptHandler(user, pathname)),
     [user, history],
   );
 

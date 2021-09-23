@@ -1,4 +1,3 @@
-import { TeamRole } from '@asap-hub/model';
 import { mockConsoleError } from '@asap-hub/dom-test-utils';
 import { network, sharedResearch } from '@asap-hub/routing';
 import { render } from '@testing-library/react';
@@ -6,16 +5,17 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Router } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { History, createBrowserHistory } from 'history';
+import { createUserResponse } from '@asap-hub/fixtures';
 
-import CheckOnboarded from '../CheckOnboarded';
+import CheckOnboarded, { navigationPromptHandler } from '../CheckOnboarded';
 import { Auth0Provider, WhenReady } from '../test-utils';
 
-let history!: History;
+let history: History;
 
 const user = {
-  id: '42',
-  teams: [{ id: '2', role: 'Project Manager' as TeamRole }],
+  ...createUserResponse({}, 1),
   onboarded: false,
+  algoliaApiKey: 'algolia-mock-key',
 };
 
 const ownProfilePath = network({})
@@ -68,7 +68,6 @@ describe('an authenticated and onboarded user', () => {
   });
 
   it('can navigate to any page', async () => {
-    window.alert = jest.fn();
     const { findByText } = render(
       <Auth0Provider user={{ ...user, onboarded: true }}>
         <WhenReady>
@@ -89,11 +88,9 @@ describe('an authenticated and onboarded user', () => {
 
     history.push(teamPage);
     expect(await findByText('team page')).toBeVisible();
-    expect(window.alert).not.toHaveBeenCalled();
 
     history.push(outputs);
     expect(await findByText('outputs page')).toBeVisible();
-    expect(window.alert).not.toHaveBeenCalled();
   });
 });
 
@@ -124,7 +121,7 @@ describe('an authenticated user in onboarding', () => {
           <Router history={history}>
             <CheckOnboarded>
               <Route path={foreignProfilePath}>foreign profile</Route>
-              <Route path={network({}).users({}).user({ userId: '42' }).$}>
+              <Route path={network({}).users({}).user({ userId: user.id }).$}>
                 own profile
               </Route>
             </CheckOnboarded>
@@ -145,7 +142,7 @@ describe('an authenticated user in onboarding', () => {
           <Router history={history}>
             <CheckOnboarded>
               <Route path={anotherPagePath}>another page</Route>
-              <Route path={network({}).users({}).user({ userId: '42' }).$}>
+              <Route path={network({}).users({}).user({ userId: user.id }).$}>
                 own profile
               </Route>
             </CheckOnboarded>
@@ -156,10 +153,10 @@ describe('an authenticated user in onboarding', () => {
     );
 
     history.push(anotherPagePath);
-
     expect(await findByText('own profile')).toBeVisible();
   });
-  it('should trigger an alert', async () => {
+
+  it('should trigger an alert when accessing protected routes', async () => {
     window.alert = jest.fn();
 
     const { findByText } = render(
@@ -178,9 +175,42 @@ describe('an authenticated user in onboarding', () => {
 
     history.push(ownProfilePath);
     expect(await findByText('profile page')).toBeVisible();
+    expect(window.alert).not.toHaveBeenCalled();
 
     history.push(teamPage);
     expect(await findByText('profile page')).toBeVisible();
     expect(window.alert).toHaveBeenCalled();
+  });
+});
+
+describe('navigationPromptHandler', () => {
+  it('should handle protected routes during onboarding', async () => {
+    window.alert = jest.fn();
+
+    const nonOnboardedUser = { ...user, onboarded: false };
+
+    [ownProfilePath, '/'].forEach((route) => {
+      const result = navigationPromptHandler(nonOnboardedUser, route);
+      expect(result).toBeUndefined();
+      expect(window.alert).not.toHaveBeenCalled();
+    });
+
+    [teamPage, outputs].forEach((protectedRoute) => {
+      const result = navigationPromptHandler(nonOnboardedUser, protectedRoute);
+      expect(result).toBe(false);
+      expect(window.alert).toHaveBeenCalled();
+    });
+  });
+
+  it('should allow navigation after onboarding', async () => {
+    window.alert = jest.fn();
+
+    const onboardedUser = { ...user, onboarded: true };
+
+    [teamPage, outputs, ownProfilePath, '/'].forEach((route) => {
+      const result = navigationPromptHandler(onboardedUser, route);
+      expect(result).toBeUndefined();
+      expect(window.alert).not.toHaveBeenCalled();
+    });
   });
 });

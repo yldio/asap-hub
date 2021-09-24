@@ -58,13 +58,15 @@ export const getAllFilters = (
   userId?: string,
 ) => {
   const typeFilters = getTypeFilters(filters);
+  const typeFiltersWithParenthesis = typeFilters
+    ? `(${getTypeFilters(filters)})`
+    : typeFilters;
   const teamFilter = teamId ? `teams.id:"${teamId}"` : '';
   const authorFilter = userId ? `authors.id:"${userId}"` : '';
-  const filtersSeparator =
-    !!typeFilters && (!!teamFilter || !!authorFilter) ? ' AND ' : '';
-  const typeFiltersWithParentheses =
-    !!filtersSeparator && filters.size > 1 ? `(${typeFilters})` : typeFilters;
-  return `${typeFiltersWithParentheses}${filtersSeparator}${teamFilter}${authorFilter}`;
+
+  return [typeFiltersWithParenthesis, teamFilter, authorFilter]
+    .filter(Boolean)
+    .join(' AND ');
 };
 
 export const getResearchOutputs = (

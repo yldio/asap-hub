@@ -74,9 +74,10 @@ it('shows the coming soon text  (REGRESSION)', async () => {
 
 it('renders search and filter', async () => {
   const { getByRole } = await renderOutputs();
-  expect(
-    (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Enter a keyword, method, resource…"`);
+  expect(getByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Enter a keyword, method, resource…',
+  );
 });
 
 it('renders a list of research outputs', async () => {

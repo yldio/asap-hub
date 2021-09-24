@@ -1,9 +1,7 @@
 import { isEnabled } from '@asap-hub/flags';
 import {
-  ResearchOutputsSearch,
-  ProfileCardList,
-  ComingSoon,
-  SharedResearchList,
+  UserProfileResearchOutputs,
+  UserProfileSearchAndFilter,
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
 import React from 'react';
@@ -41,7 +39,7 @@ const OutputsList: React.FC<OutputsListProps> = ({
     pageSize,
   );
   return (
-    <SharedResearchList
+    <UserProfileResearchOutputs
       researchOutputs={result.items}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}
@@ -69,49 +67,21 @@ const Outputs: React.FC<OutputsProps> = ({ userId }) => {
 
   return (
     <article>
-      <ProfileCardList>
-        {isEnabled('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE')
-          ? [
-              {
-                card: (
-                  <ResearchOutputsSearch
-                    onChangeSearch={setSearchQuery}
-                    searchQuery={searchQuery}
-                    onChangeFilter={toggleFilter}
-                    filters={filters}
-                  />
-                ),
-              },
-
-              {
-                card: (
-                  <SearchFrame title="outputs">
-                    <OutputsList
-                      userId={userId}
-                      searchQuery={debouncedSearchQuery}
-                      filters={filters}
-                    />
-                  </SearchFrame>
-                ),
-              },
-            ]
-          : [
-              {
-                card: (
-                  <ComingSoon>
-                    As individuals create and share more research outputs - such
-                    as datasets, protocols, code and other resources - they will
-                    be listed here. As information is shared, teams should be
-                    mindful to respect intellectual boundaries. No investigator
-                    or team should act on any of the privileged information
-                    shared within the Network without express permission from
-                    and credit to the investigator(s) that shared the
-                    information.
-                  </ComingSoon>
-                ),
-              },
-            ]}
-      </ProfileCardList>
+      {isEnabled('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE') && (
+        <UserProfileSearchAndFilter
+          onChangeSearch={setSearchQuery}
+          searchQuery={searchQuery}
+          onChangeFilter={toggleFilter}
+          filters={filters}
+        />
+      )}
+      <SearchFrame title="outputs">
+        <OutputsList
+          userId={userId}
+          searchQuery={debouncedSearchQuery}
+          filters={filters}
+        />
+      </SearchFrame>
     </article>
   );
 };

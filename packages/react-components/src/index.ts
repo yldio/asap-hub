@@ -161,5 +161,7 @@ export {
   UserProfileResearch,
   UserProfileStaff,
   WelcomePage,
+  UserProfileResearchOutputs,
+  UserProfileSearchAndFilter,
 } from './templates';
 export { MessageLayout, WelcomeMessage } from './messages';

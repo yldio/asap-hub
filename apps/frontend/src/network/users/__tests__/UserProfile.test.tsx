@@ -166,9 +166,10 @@ it('navigates to the outputs tab', async () => {
   );
 
   userEvent.click(await findByText(/output/i, { selector: 'nav *' }));
-  expect(
-    (getByRole('searchbox') as HTMLInputElement).placeholder,
-  ).toMatchInlineSnapshot(`"Enter a keyword, method, resource…"`);
+  expect(getByRole('searchbox')).toHaveAttribute(
+    'placeholder',
+    'Enter a keyword, method, resource…',
+  );
   expect(await findByText(/Test Output 0/i)).toBeVisible();
 });
 

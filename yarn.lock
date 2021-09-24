@@ -540,6 +540,7 @@ __metadata:
     "@asap-hub/validation": "workspace:*"
     "@auth0/auth0-spa-js": ^1.15.0
     "@babel/runtime-corejs3": ^7.14.0
+    "@fast-csv/format": ^4.3.5
     "@sentry/cli": ^1.68.0
     "@sentry/react": ^6.11.0
     "@sentry/tracing": ^6.11.0
@@ -556,6 +557,7 @@ __metadata:
     "@types/react-dom": ^17.0.5
     "@types/react-router-dom": ^5.1.7
     "@types/react-test-renderer": ^17.0.1
+    "@types/streamsaver": ^2.0.1
     "@types/testing-library__jest-dom": ^5.9.5
     "@types/testing-library__react": ^10.0.1
     "@types/testing-library__react-hooks": ^3.4.1
@@ -580,6 +582,7 @@ __metadata:
     react-test-renderer: ^17.0.2
     react-titled: ^1.0.1
     recoil: "patch:recoil@^0.1.2#../../patches/recoil.patch"
+    streamsaver: ^2.0.5
     typescript: ~4.2.4
     use-debounce: ^5.2.1
     use-deep-compare-effect: ^1.6.1
@@ -5142,6 +5145,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fast-csv/format@npm:^4.3.5":
+  version: 4.3.5
+  resolution: "@fast-csv/format@npm:4.3.5"
+  dependencies:
+    "@types/node": ^14.0.1
+    lodash.escaperegexp: ^4.1.2
+    lodash.isboolean: ^3.0.3
+    lodash.isequal: ^4.5.0
+    lodash.isfunction: ^3.0.9
+    lodash.isnil: ^4.0.0
+  checksum: 98bcc29736246587f6a2c75b2d8f2e43b8d21c2f92d1f3e4c4464a9957bece3db4772f159a2d49e09900a69f4273b6109cf823d818eefb3dde25fea47d81df17
+  languageName: node
+  linkType: hard
+
 "@figspec/components@npm:^0.1.1":
   version: 0.1.9
   resolution: "@figspec/components@npm:0.1.9"
@@ -8955,6 +8972,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^14.0.1":
+  version: 14.17.18
+  resolution: "@types/node@npm:14.17.18"
+  checksum: a887552fdbf5b57062a84764f6b390b24acb5f1fe17a37610e5e04d2809818e604ad40b1e0cce3032a129fff2deeb70db5450dd5312cbf1ba1b9908e0fabee53
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^14.0.10, @types/node@npm:^14.14.45":
   version: 14.14.45
   resolution: "@types/node@npm:14.14.45"
@@ -9438,6 +9462,13 @@ __metadata:
     "@types/node": "*"
     "@types/stream-chain": "*"
   checksum: 94bee61168db64a8f196b3b3dfc19043df086f2a0569c96161172593554f8665acfd2f2a6e315e77fd8a2df9d7c5dae3a5c5d74b79eecb0fd9d319ee14b00a16
+  languageName: node
+  linkType: hard
+
+"@types/streamsaver@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@types/streamsaver@npm:2.0.1"
+  checksum: 8240d9e2fc88496362f5fbcc63cefd57c699abcd3aefc3a900027944c92be543732138ff1a12051ea4314f0314be2c521741631f449ab696e46c7092ce39c0bb
   languageName: node
   linkType: hard
 
@@ -23709,6 +23740,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lodash.escaperegexp@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "lodash.escaperegexp@npm:4.1.2"
+  checksum: 475d069cdacfe279e0e2c72109821f38fc59ba44c88ddc2d96cdf5364e8ada2cd1dd73195df05893ab185fe4f503e9657f1e50e31dff624594c91ba1316f40e1
+  languageName: node
+  linkType: hard
+
 "lodash.flatten@npm:^4.4.0":
   version: 4.4.0
   resolution: "lodash.flatten@npm:4.4.0"
@@ -23744,10 +23782,31 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"lodash.isequal@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.isequal@npm:4.5.0"
+  checksum: 5b47e094641c18a915497343894c66f7da6aebb9aaa2a3fcc5643455aaf29d19df60ebbed664c8374fb959c8b4ce96810ee6becd8a71ac58c6c2ca8d29762947
+  languageName: node
+  linkType: hard
+
+"lodash.isfunction@npm:^3.0.9":
+  version: 3.0.9
+  resolution: "lodash.isfunction@npm:3.0.9"
+  checksum: 4c7c77b45e80014b6673cbc7b91d38ceecad41bf04e6bbb5c94a4887288c2caf63ee1ae4f38889fb4c82e1c26b5ad16270c806cd7790d52f7114ed2f3f98be4b
+  languageName: node
+  linkType: hard
+
 "lodash.isinteger@npm:^4.0.4":
   version: 4.0.4
   resolution: "lodash.isinteger@npm:4.0.4"
   checksum: a29551cc9aaaf24cc4fdd7ce1734c7a19c748c704f061ef079f6026dc9666ac10e8ae08e4f0cd3aeb6094e20be043a7402c72ce70cbae9ea6ecce67ad997332c
+  languageName: node
+  linkType: hard
+
+"lodash.isnil@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "lodash.isnil@npm:4.0.0"
+  checksum: d2a22aa6cd7495a61fd94670f50a635a6b80fea0b00dc46d6816bf0c3d2c6702a8f5028adaf5f3c9e80c0f1875a365bc6894f899bf6cc7ecad3689d60385741a
   languageName: node
   linkType: hard
 
@@ -31251,6 +31310,13 @@ resolve@^2.0.0-next.3:
   version: 1.0.8
   resolution: "stream-transform@npm:1.0.8"
   checksum: 11414eca895525122297cd0eb6f9bf304c87a8daed56d47065f39dcb06c5300649c7006348d343c13d2baf34ef3e42f54a1d1a0dc2a6b6ae1afd149f7afe56a4
+  languageName: node
+  linkType: hard
+
+"streamsaver@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "streamsaver@npm:2.0.5"
+  checksum: b7a6c48a7b3f487705bdc08beefb9c157c1f814c38b2bac21f09981b2b42482ae71483735a4bfcbeb421f1fe894c321f64954151018ba7ab537f9f7cb9db42e1
   languageName: node
   linkType: hard
 

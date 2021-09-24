@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
 
 import { ListControls, PageControls } from '../molecules';
-import { Paragraph } from '../atoms';
+import { Button, Paragraph } from '../atoms';
 import {
   perRem,
   vminLinearCalcClamped,
@@ -24,6 +24,8 @@ const headerNoResultsStyles = css({
     justifyContent: 'flex-end',
   },
 });
+
+const exportStyles = css({ marginLeft: `${24 / perRem}em` });
 
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -51,6 +53,7 @@ const pageControlsStyles = css({
 type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
   readonly isListView?: boolean;
+  readonly exportResults?: () => void;
   readonly cardViewHref?: string;
   readonly listViewHref?: string;
   readonly children: React.ReactNode;
@@ -58,6 +61,7 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
   isListView = false,
+  exportResults,
   cardViewHref,
   listViewHref,
   children,
@@ -70,6 +74,13 @@ const ResultList: React.FC<ResultListProps> = ({
           <strong>
             {numberOfItems} result{numberOfItems === 1 || 's'} found
           </strong>
+          {exportResults && (
+            <span css={exportStyles}>
+              <Button linkStyle onClick={exportResults}>
+                Export as CSV
+              </Button>
+            </span>
+          )}
         </Paragraph>
       )}
       {cardViewHref && listViewHref && (

@@ -1,6 +1,7 @@
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
 import { format } from '@fast-csv/format';
+import { format as dateFormat } from 'date-fns';
 import streamSaver from 'streamsaver';
 
 import { useResearchOutputs } from './state';
@@ -36,11 +37,16 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     let morePages = true;
     let page = 0;
     const csvStream = format({ headers: true });
-    const fileWriter = streamSaver.createWriteStream('export.csv').getWriter();
+    const fileWriter = streamSaver
+      .createWriteStream(
+        `SharedOutputs_${dateFormat(new Date(), 'MMddyy')}.csv`,
+      )
+      .getWriter();
     csvStream
       .on('data', (data) => fileWriter.write(data))
       .on('end', () => fileWriter.close());
     while (morePages) {
+      // We are doing this in chunks and streams to avoid filesize limits.
       // eslint-disable-next-line no-await-in-loop
       const data = await getResearchOutputs(index, {
         filters,

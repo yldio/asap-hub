@@ -77,7 +77,7 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'type:Article' }),
+      expect.objectContaining({ filters: '(type:Article)' }),
     );
   });
 
@@ -89,7 +89,7 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'type:Article OR type:Proposal' }),
+      expect.objectContaining({ filters: '(type:Article OR type:Proposal)' }),
     );
   });
 
@@ -101,7 +101,7 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'type:Article' }),
+      expect.objectContaining({ filters: '(type:Article)' }),
     );
   });
 
@@ -127,7 +127,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: 'type:Article AND teams.id:"12345"',
+        filters: '(type:Article) AND teams.id:"12345"',
       }),
     );
   });
@@ -168,7 +168,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: 'type:Article AND authors.id:"12345"',
+        filters: '(type:Article) AND authors.id:"12345"',
       }),
     );
   });

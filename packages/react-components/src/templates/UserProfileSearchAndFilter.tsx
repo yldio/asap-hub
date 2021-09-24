@@ -24,17 +24,9 @@ const styles = css({
 
 const UserProfileSearchAndFilter: React.FC<
   ComponentProps<typeof ResearchOutputsSearch>
-> = ({ filters, searchQuery, onChangeFilter, onChangeSearch }) => {
-  return (
-    <div css={styles}>
-      <ResearchOutputsSearch
-        onChangeSearch={onChangeSearch}
-        searchQuery={searchQuery}
-        onChangeFilter={onChangeFilter}
-        filters={filters}
-      />
-    </div>
-  );
-};
-
+> = ({ ...props }) => (
+  <div css={styles}>
+    <ResearchOutputsSearch {...props} />
+  </div>
+);
 export default UserProfileSearchAndFilter;

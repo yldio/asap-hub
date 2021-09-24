@@ -293,7 +293,9 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        SES_REGION: '${env:SES_SANDBOX_REGION}',
+        SES_REGION: `\${ssm:ses-region-${
+          SLS_STAGE === 'production' ? 'prod' : 'dev'
+        }}`,
         EMAIL_SENDER: `\${ssm:email-invite-sender-${
           SLS_STAGE === 'production' ? 'prod' : 'dev'
         }}`,

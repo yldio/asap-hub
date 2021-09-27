@@ -2,25 +2,26 @@
 // It was run on prod on 19/08/2021 and the results (invalid ORCIDs) were passed on to product
 // TS_NODE_COMPILER_OPTIONS='{"module": "commonjs"}' yarn ts-node apps/asap-server/validate-orcids-script/validate-orcids.ts
 
-import Users from '../src/controllers/users';
+import { applyToAllItemsInCollection } from '../src/utils/migrations';
 
 import { VALID_ORCID } from '@asap-hub/validation';
+import { RestUser } from '@asap-hub/squidex';
 
 const validateOrcids = async (): Promise<void> => {
-  const users = new Users();
-
-  const maxNumberOfUsers = 999999;
-  const allUsers = (await users.fetch({ take: maxNumberOfUsers })).items;
-
   let noInvalidOrcids = true;
+  let usersProcessed = 0;
 
-  for (const user of allUsers) {
-    if (user.orcid && user.orcid?.match(VALID_ORCID) === null) {
+  applyToAllItemsInCollection<RestUser>('users', async (user) => {
+    if (
+      user.data.orcid?.iv &&
+      user.data.orcid?.iv.match(VALID_ORCID) === null
+    ) {
       noInvalidOrcids = false;
       // eslint-disable-next-line no-console
-      console.log(`Invalid orcid on user ${user.id}: ${user.orcid}`);
+      console.log(`Invalid orcid on user ${user.id}: ${user.data.orcid?.iv}`);
     }
-  }
+    usersProcessed++;
+  });
 
   if (noInvalidOrcids) {
     // eslint-disable-next-line no-console

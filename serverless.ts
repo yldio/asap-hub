@@ -20,6 +20,7 @@ const {
 } = process.env;
 
 const region = process.env.AWS_REGION as AWS['provider']['region'];
+const envAlias = SLS_STAGE === 'production' ? 'prod' : 'dev';
 
 const service = paramCase(pkg.name);
 export const plugins = [
@@ -73,12 +74,8 @@ const serverlessConfig: AWS = {
       ASAP_API_URL: '${env:ASAP_API_URL}',
       LOG_LEVEL: SLS_STAGE === 'production' ? 'error' : 'info',
       NODE_OPTIONS: '--enable-source-maps',
-      ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${
-        SLS_STAGE === 'production' ? 'prod' : 'dev'
-      }}`,
-      ALGOLIA_SEARCH_API_KEY: `\${ssm:algolia-search-api-key-${
-        SLS_STAGE === 'production' ? 'prod' : 'dev'
-      }}`,
+      ALGOLIA_APP_ID: `\${ssm:algolia-app-id-${envAlias}}`,
+      ALGOLIA_SEARCH_API_KEY: `\${ssm:algolia-search-api-key-${envAlias}}`,
       ALGOLIA_RESEARCH_OUTPUT_INDEX: `asap-hub_research_outputs_${
         SLS_STAGE === 'production'
           ? 'prod'
@@ -100,9 +97,7 @@ const serverlessConfig: AWS = {
               { Ref: 'AWS::Region' },
               { Ref: 'AWS::AccountId' },
               'secret',
-              `google-api-credentials-${
-                SLS_STAGE === 'production' ? 'prod' : 'dev'
-              }*`,
+              `google-api-credentials-${envAlias}*`,
             ],
           ],
         },
@@ -195,12 +190,8 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
-        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
+        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${envAlias}}`,
+        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
       },
     },
     auth0ConnectByCode: {
@@ -215,12 +206,8 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
-        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
+        AUTH0_CLIENT_ID: `\${ssm:auth0-client-id-${envAlias}}`,
+        AUTH0_SHARED_SECRET: `\${ssm:auth0-shared-secret-${envAlias}}`,
       },
     },
     syncUserOrcid: {
@@ -250,12 +237,8 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
         SENTRY_DSN: '${env:SENTRY_DSN_CALENDAR}',
       },
     },
@@ -271,12 +254,8 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
       },
     },
     inviteUser: {
@@ -293,16 +272,10 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        SES_REGION: '${env:SES_SANDBOX_REGION}',
-        EMAIL_SENDER: `\${ssm:email-invite-sender-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
-        EMAIL_BCC: `\${ssm:email-invite-bcc-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
-        EMAIL_RETURN: `\${ssm:email-invite-return-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
+        SES_REGION: `\${ssm:ses-region-${envAlias}}`,
+        EMAIL_SENDER: `\${ssm:email-invite-sender-${envAlias}}`,
+        EMAIL_BCC: `\${ssm:email-invite-bcc-${envAlias}}`,
+        EMAIL_RETURN: `\${ssm:email-invite-return-${envAlias}}`,
       },
     },
     indexResearchOutput: {
@@ -320,9 +293,7 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
+        ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
       },
     },
     eventsUpdated: {
@@ -338,12 +309,8 @@ const serverlessConfig: AWS = {
         },
       ],
       environment: {
-        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }`,
-        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${
-          SLS_STAGE === 'production' ? 'prod' : 'dev'
-        }}`,
+        GOOGLE_API_CREDENTIALS_SECRET_ID: `google-api-credentials-${envAlias}`,
+        GOOGLE_API_TOKEN: `\${ssm:google-api-token-${envAlias}}`,
       },
     },
     runMigrations: {

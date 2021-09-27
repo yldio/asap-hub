@@ -1,14 +1,12 @@
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
-import { format } from '@fast-csv/format';
-import { format as dateFormat } from 'date-fns';
-import streamSaver from 'streamsaver';
+import { format } from 'date-fns';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
 import { useAlgolia } from '../hooks/algolia';
 import { getResearchOutputs } from './api';
-import { researchOutputToCSV } from './export';
+import { createCsvFileStream, researchOutputToCSV } from './export';
 
 interface ResearchOutputListProps {
   searchQuery?: string;
@@ -36,17 +34,12 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
   const exportResults = async () => {
     let morePages = true;
     let page = 0;
-    const csvStream = format({ headers: true });
-    const fileWriter = streamSaver
-      .createWriteStream(
-        `SharedOutputs_${dateFormat(new Date(), 'MMddyy')}.csv`,
-      )
-      .getWriter();
-    csvStream
-      .on('data', (data) => fileWriter.write(data))
-      .on('end', () => fileWriter.close());
+    const csvStream = createCsvFileStream(
+      { headers: true },
+      `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
+    );
     while (morePages) {
-      // We are doing this in chunks and streams to avoid filesize limits.
+      // We are doing this in chunks and streams to avoid blob/ram limits.
       // eslint-disable-next-line no-await-in-loop
       const data = await getResearchOutputs(index, {
         filters,

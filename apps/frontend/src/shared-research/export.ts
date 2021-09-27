@@ -1,4 +1,6 @@
 import { isInternalAuthor, ResearchOutputResponse } from '@asap-hub/model';
+import { format } from '@fast-csv/format';
+import streamSaver from 'streamsaver';
 
 type ResearchOutputCSV = Record<
   keyof Omit<ResearchOutputResponse, 'team'>,
@@ -55,3 +57,15 @@ export const researchOutputToCSV = (
   created: output.created,
   lastModifiedDate: output.lastModifiedDate,
 });
+
+export const createCsvFileStream = (
+  csvOptions: Parameters<typeof format>[0],
+  fileName: string,
+) => {
+  const csvStream = format(csvOptions);
+  const fileWriter = streamSaver.createWriteStream(fileName).getWriter();
+  csvStream
+    .on('data', (data) => fileWriter.write(data))
+    .on('end', () => fileWriter.close());
+  return csvStream;
+};

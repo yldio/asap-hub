@@ -8,6 +8,7 @@ import {
 } from 'react';
 import Select, { OptionTypeBase, components } from 'react-select';
 import { css } from '@emotion/react';
+import { v4 as uuidV4 } from 'uuid';
 
 import { noop } from '../utils';
 import { dropdownChevronIcon } from '../icons';
@@ -40,7 +41,7 @@ const Input: React.FC<ComponentProps<typeof components.Input>> = (props) => {
         onBlur(event);
       }}
       style={{ display: 'unset' }}
-      autoComplete="off"
+      autoComplete={uuidV4()}
       isHidden={false}
       innerRef={(element) => {
         ref.current = element;
@@ -79,6 +80,14 @@ export default function Dropdown<V extends string>({
   const [inputValue, setInputValue] = useState<string>(value);
   const [lastValidValue, setLastInputValue] = useState<V>(value);
 
+  const handleInputValue = (newValue: string) => {
+    const isValidValue =
+      options.filter((option: OptionTypeBase) => option.value === newValue)
+        .length > 0;
+
+    return isValidValue ? lastValidValue : '';
+  };
+
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLInputElement>(
       customValidationMessage,
@@ -94,8 +103,8 @@ export default function Dropdown<V extends string>({
           inputValue={inputValue}
           value={{ value, label: value }}
           options={options.filter((option) => option.value !== '')}
-          onBlur={() => {
-            setInputValue(lastValidValue);
+          onBlur={(option: OptionTypeBase) => {
+            setInputValue(handleInputValue(option.target.value));
             setTimeout(validationTargetProps.onBlur, 0);
           }}
           controlShouldRenderValue={false}
@@ -107,6 +116,7 @@ export default function Dropdown<V extends string>({
             onChange(option?.value);
             setLastInputValue(option?.value);
             setInputValue(option?.value);
+            setTimeout(validationTargetProps.onBlur, 0);
           }}
           onInputChange={(newInputValue, { action }) => {
             switch (action) {

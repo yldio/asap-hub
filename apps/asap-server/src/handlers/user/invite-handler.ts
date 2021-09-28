@@ -15,6 +15,10 @@ export const inviteHandlerFactory =
   ): Promise<void> => {
     const user = await userClient.fetchById(event.detail.payload.id);
 
+    logger.debug(
+      `Attempting to invite user with ID ${event.detail.payload.id}, e-mail address ${user.data.email}`,
+    );
+
     let code = user.data.connections.iv
       ?.map((c) => c.code)
       .find((c) => c.match(uuidMatch));

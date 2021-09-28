@@ -3,7 +3,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { userWebhookFactory } from '../../../src/handlers/webhooks/webhook-user';
 import { signPayload } from '../../../src/utils/validate-squidex-request';
-import { createUserEvent } from '../../fixtures/orcid.fixtures';
+import { userPublishedEvent } from '../../fixtures/users.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 
 describe('User webhook', () => {
@@ -21,7 +21,7 @@ describe('User webhook', () => {
       headers: {
         'x-signature': 'XYZ',
       },
-      body: JSON.stringify(createUserEvent),
+      body: JSON.stringify(userPublishedEvent),
     });
 
     const res = (await handler(event)) as APIGatewayProxyResult;
@@ -33,7 +33,7 @@ describe('User webhook', () => {
   test('Should return 204 and not raise an event when the event type is not supported', async () => {
     const res = (await handler(
       createSignedPayload({
-        ...createUserEvent,
+        ...userPublishedEvent,
         type: 'UsersUpdated',
       }),
     )) as APIGatewayProxyResult;
@@ -44,7 +44,7 @@ describe('User webhook', () => {
 
   test('Should return 200 and put an event into the event bus', async () => {
     const res = (await handler(
-      createSignedPayload(createUserEvent),
+      createSignedPayload(userPublishedEvent),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);

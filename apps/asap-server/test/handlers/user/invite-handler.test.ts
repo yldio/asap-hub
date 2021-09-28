@@ -1,11 +1,10 @@
 import { RestUser } from '@asap-hub/squidex';
-import { EventBridgeEvent } from 'aws-lambda';
 import path from 'path';
 import url from 'url';
 import { origin } from '../../../src/config';
 import {
   inviteHandlerFactory,
-  SquidexWebhookUserPayload,
+  UserEventBridgeEvent,
 } from '../../../src/handlers/user/invite-handler';
 import { SendEmail } from '../../../src/utils/send-email';
 import { restUserMock } from '../../fixtures/users.fixtures';
@@ -126,9 +125,7 @@ describe('Invite Handler', () => {
   });
 });
 
-const getEventBridgeEventMock = (
-  userId?: string,
-): EventBridgeEvent<'UserCreated', SquidexWebhookUserPayload> => ({
+const getEventBridgeEventMock = (userId?: string): UserEventBridgeEvent => ({
   id: 'test-id',
   version: '1',
   account: 'test-account',
@@ -136,7 +133,7 @@ const getEventBridgeEventMock = (
   region: 'eu-west-1',
   resources: [],
   source: 'asap.user',
-  'detail-type': 'UserCreated',
+  'detail-type': 'UserPublished',
   detail: {
     type: 'UsersCreated',
     payload: {

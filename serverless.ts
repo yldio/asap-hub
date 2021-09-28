@@ -266,7 +266,7 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: ['asap.user'],
-              'detail-type': ['UserCreated'],
+              'detail-type': ['UserPublished'],
             },
           },
         },
@@ -339,7 +339,7 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.calendar',
       },
     },
-    userCreated: {
+    userPublished: {
       handler: 'apps/asap-server/src/handlers/webhooks/webhook-user.handler',
       events: [
         {

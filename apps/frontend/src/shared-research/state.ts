@@ -144,7 +144,7 @@ export const useResearchOutputs = (options: ResearchOutputListOptions) => {
       .then(setResearchOutputs)
       .catch(setResearchOutputs);
   } else if (researchOutputs === undefined) {
-    if (options.teamId) {
+    if (options.teamId || options.userId) {
       return {
         total: 0,
         items: [],

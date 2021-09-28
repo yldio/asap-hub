@@ -14,12 +14,15 @@ export const useSearch = () => {
 
   const toggleFilter = (filter: string) => {
     resetPagination();
-
     const newUrlParams = new URLSearchParams(history.location.search);
     newUrlParams.delete('filter');
-    filters.has(filter) ? filters.delete(filter) : filters.add(filter);
-    filters.forEach((f) => newUrlParams.append('filter', f));
 
+    const currentFilters = currentUrlParams.getAll('filter');
+    const filterIndex = currentFilters.indexOf(filter);
+    filterIndex > -1
+      ? currentFilters.splice(filterIndex, 1)
+      : currentFilters.push(filter);
+    currentFilters.forEach((f) => newUrlParams.append('filter', f));
     history.replace({ search: newUrlParams.toString() });
   };
 

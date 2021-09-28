@@ -87,6 +87,7 @@ export {
   PageCard,
   PagesSection,
   PeopleCard,
+  ProfileCardList,
   ProfileSkills,
   QuestionsSection,
   RadioButtonGroup,
@@ -157,10 +158,11 @@ export {
   ToolModal,
   UnsupportedBrowserPage,
   UserProfileAbout,
-  UserProfileOutputs,
   UserProfilePage,
   UserProfileResearch,
   UserProfileStaff,
   WelcomePage,
+  UserProfileResearchOutputs,
+  UserProfileSearchAndFilter,
 } from './templates';
 export { MessageLayout, WelcomeMessage } from './messages';

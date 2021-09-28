@@ -77,7 +77,7 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'type:Article' }),
+      expect.objectContaining({ filters: '(type:Article)' }),
     );
   });
 
@@ -89,7 +89,7 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'type:Article OR type:Proposal' }),
+      expect.objectContaining({ filters: '(type:Article OR type:Proposal)' }),
     );
   });
 
@@ -101,7 +101,7 @@ describe('getResearchOutputs', () => {
 
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
-      expect.objectContaining({ filters: 'type:Article' }),
+      expect.objectContaining({ filters: '(type:Article)' }),
     );
   });
 
@@ -127,7 +127,7 @@ describe('getResearchOutputs', () => {
     expect(mockIndex.search).toHaveBeenLastCalledWith(
       '',
       expect.objectContaining({
-        filters: 'type:Article AND teams.id:"12345"',
+        filters: '(type:Article) AND teams.id:"12345"',
       }),
     );
   });
@@ -143,6 +143,47 @@ describe('getResearchOutputs', () => {
       '',
       expect.objectContaining({
         filters: '(type:Article OR type:Proposal) AND teams.id:"12345"',
+      }),
+    );
+  });
+  it('uses userId as a filter', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      userId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({ filters: 'authors.id:"12345"' }),
+    );
+  });
+
+  it('adds userId to type filter', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article']),
+      userId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({
+        filters: '(type:Article) AND authors.id:"12345"',
+      }),
+    );
+  });
+
+  it('adds userId to type filters', async () => {
+    await getResearchOutputs(mockIndex, {
+      ...options,
+      filters: new Set<ResearchOutputType>(['Article', 'Proposal']),
+      userId: '12345',
+    });
+
+    expect(mockIndex.search).toHaveBeenLastCalledWith(
+      '',
+      expect.objectContaining({
+        filters: '(type:Article OR type:Proposal) AND authors.id:"12345"',
       }),
     );
   });

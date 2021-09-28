@@ -6,11 +6,7 @@ import {
   useContext,
   useState,
 } from 'react';
-import Select, {
-  OptionTypeBase,
-  InputActionMeta,
-  components,
-} from 'react-select';
+import Select, { OptionTypeBase, components } from 'react-select';
 import { css } from '@emotion/react';
 
 import { noop } from '../utils';
@@ -25,7 +21,7 @@ const DropdownIndicator: FC = () => dropdownChevronIcon;
 
 const InputContext = createContext<
   ReturnType<typeof useValidation>['validationTargetProps'] &
-    Pick<DropdownProps, 'required'>
+    Pick<DropdownProps<string>, 'required'>
 >({
   ref: createRef(),
   onBlur: noop,
@@ -54,24 +50,22 @@ const Input: React.FC<ComponentProps<typeof components.Input>> = (props) => {
   );
 };
 
-type DropdownProps = {
+export interface DropdownProps<V extends string> {
   readonly customValidationMessage?: string;
   readonly getValidationMessage?: Parameters<typeof useValidation>[1];
 
   readonly id?: string;
-  readonly options: ReadonlyArray<Option<string>>;
+  readonly options: ReadonlyArray<Option<V>>;
   readonly enabled?: boolean;
   readonly required?: boolean;
 
-  readonly value: string;
-  readonly onChange?: (newValue: string) => void;
+  readonly value: V;
+  readonly onChange?: (newValue: V) => void;
   readonly noOptionsMessage?: (value: { inputValue: string }) => string | null;
-};
-
-const Dropdown: FC<DropdownProps> = ({
+}
+export default function Dropdown<V extends string>({
   customValidationMessage = '',
   getValidationMessage,
-  noOptionsMessage = () => null,
 
   id,
   options,
@@ -80,8 +74,10 @@ const Dropdown: FC<DropdownProps> = ({
 
   value,
   onChange = noop,
-}) => {
-  const [inputValue, setInputValue] = useState(value);
+  noOptionsMessage,
+}: DropdownProps<V>): ReturnType<FC> {
+  const [inputValue, setInputValue] = useState<string>(value);
+  const [lastValidValue, setLastInputValue] = useState<V>(value);
 
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLInputElement>(
@@ -89,12 +85,6 @@ const Dropdown: FC<DropdownProps> = ({
       getValidationMessage,
     );
 
-  const onNewValue = (newValue: string) => {
-    setInputValue(newValue);
-    onChange(newValue);
-    // Hack to re-validate once the selected value has been put in the state of the input field
-    setTimeout(validationTargetProps.onBlur, 0);
-  };
   return (
     <div css={containerStyles}>
       <InputContext.Provider value={{ ...validationTargetProps, required }}>
@@ -104,21 +94,24 @@ const Dropdown: FC<DropdownProps> = ({
           inputValue={inputValue}
           value={{ value, label: value }}
           options={options.filter((option) => option.value !== '')}
+          onBlur={() => {
+            setInputValue(lastValidValue);
+            setTimeout(validationTargetProps.onBlur, 0);
+          }}
+          controlShouldRenderValue={false}
           components={{ DropdownIndicator, Input }}
           styles={reactSelectStyles(!!validationMessage)}
           noOptionsMessage={noOptionsMessage}
           tabSelectsValue={false}
-          controlShouldRenderValue={false}
-          onChange={(option: OptionTypeBase | null) => {
-            onNewValue(option?.value || '');
+          onChange={(option) => {
+            onChange(option?.value);
+            setLastInputValue(option?.value);
+            setInputValue(option?.value);
           }}
-          onInputChange={(
-            newInputValue: string,
-            { action }: InputActionMeta,
-          ) => {
+          onInputChange={(newInputValue, { action }) => {
             switch (action) {
               case 'input-change':
-                onNewValue(newInputValue);
+                setInputValue(newInputValue);
                 break;
             }
           }}
@@ -127,6 +120,4 @@ const Dropdown: FC<DropdownProps> = ({
       <div css={validationMessageStyles}>{validationMessage}</div>
     </div>
   );
-};
-
-export default Dropdown;
+}

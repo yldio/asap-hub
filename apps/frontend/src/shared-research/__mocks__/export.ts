@@ -1,4 +1,6 @@
-export const createCsvFileStream = () => ({
+export const { researchOutputToCSV } = jest.requireActual('../export');
+
+export const createCsvFileStream = jest.fn(() => ({
   write: jest.fn(),
-  close: jest.fn(),
-});
+  end: jest.fn(),
+}));

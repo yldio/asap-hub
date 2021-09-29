@@ -7,14 +7,21 @@ import {
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
 import { disable } from '@asap-hub/flags';
+import userEvent from '@testing-library/user-event';
 
 import ResearchOutputList from '../ResearchOutputList';
 import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getResearchOutputsLegacy, getResearchOutputs } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { researchOutputsState } from '../state';
+import { createCsvFileStream } from '../export';
 
 jest.mock('../api');
+jest.mock('../export');
+
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
 
 const mockGetResearchOutputsLegacy =
   getResearchOutputsLegacy as jest.MockedFunction<
@@ -63,6 +70,10 @@ const renderResearchOutputList = async (searchQuery = '') => {
   return result;
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 it('renders a list of research outputs (REGRESSION)', async () => {
   disable('ALGOLIA_RESEARCH_OUTPUTS');
   mockGetResearchOutputsLegacy.mockResolvedValue({
@@ -88,4 +99,30 @@ it('renders a list of research outputs', async () => {
   const { container } = await renderResearchOutputList();
   expect(container.textContent).toContain('Test Output 0');
   expect(container.textContent).toContain('Test Output 1');
+});
+
+it('exports a single page of results', async () => {
+  mockGetResearchOutputs.mockResolvedValue(
+    createAlgoliaResearchOutputResponse(2, { nbPages: 1 }),
+  );
+  const { getByText } = await renderResearchOutputList();
+  expect(mockGetResearchOutputs).toHaveBeenCalledTimes(1);
+  userEvent.click(getByText(/export/i));
+  expect(mockCreateCsvFileStream).toHaveBeenCalledTimes(1);
+  await waitFor(() => {
+    expect(mockGetResearchOutputs).toHaveBeenCalledTimes(2);
+  });
+});
+
+it('exports multiple pages of results', async () => {
+  mockGetResearchOutputs.mockResolvedValue(
+    createAlgoliaResearchOutputResponse(2, { nbPages: 3 }),
+  );
+  const { getByText } = await renderResearchOutputList();
+  expect(mockGetResearchOutputs).toHaveBeenCalledTimes(1);
+  userEvent.click(getByText(/export/i));
+  expect(mockCreateCsvFileStream).toHaveBeenCalledTimes(1);
+  await waitFor(() => {
+    expect(mockGetResearchOutputs).toHaveBeenCalledTimes(4);
+  });
 });

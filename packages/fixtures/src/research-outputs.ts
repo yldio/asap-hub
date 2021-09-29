@@ -60,11 +60,13 @@ export const createListResearchOutputResponse = (
 
 export const createAlgoliaResearchOutputResponse = (
   items: number,
+  responseOverride?: Parameters<typeof createAlgoliaResponse>['1'],
 ): SearchResponse<ResearchOutputResponse> =>
   createAlgoliaResponse(
     Array.from({ length: items }, (_, itemIndex) =>
       createResearchOutputResponse(itemIndex),
     ),
+    responseOverride,
   );
 
 export default createListResearchOutputResponse;

@@ -80,19 +80,23 @@ export default function Dropdown<V extends string>({
   const [inputValue, setInputValue] = useState<string>(value);
   const [lastValidValue, setLastInputValue] = useState<V>(value);
 
-  const handleInputValue = (newValue: string) => {
-    const isValidValue =
-      options.filter((option: OptionTypeBase) => option.value === newValue)
-        .length > 0;
-
-    return isValidValue ? lastValidValue : '';
-  };
-
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLInputElement>(
       customValidationMessage,
       getValidationMessage,
     );
+
+  const handleInputValidation = (currentValue: string) => {
+    const updatedValue =
+      options.filter((option: OptionTypeBase) => option.value === currentValue)
+        .length > 0
+        ? lastValidValue
+        : ('' as V);
+
+    setInputValue(updatedValue);
+    onChange(updatedValue);
+    setTimeout(validationTargetProps.onBlur, 0);
+  };
 
   return (
     <div css={containerStyles}>
@@ -102,16 +106,24 @@ export default function Dropdown<V extends string>({
           isDisabled={!enabled}
           inputValue={inputValue}
           value={{ value, label: value }}
-          options={options.filter((option) => option.value !== '')}
+          options={options.filter(
+            (option) => option.label.length > 0 && option.label.length > 0,
+          )}
           onBlur={(option: OptionTypeBase) => {
-            setInputValue(handleInputValue(option.target.value));
-            setTimeout(validationTargetProps.onBlur, 0);
+            handleInputValidation(option.target.value);
           }}
           controlShouldRenderValue={false}
           components={{ DropdownIndicator, Input }}
           styles={reactSelectStyles(!!validationMessage)}
           noOptionsMessage={noOptionsMessage}
           tabSelectsValue={false}
+          onKeyDown={(option) => {
+            switch (option.keyCode) {
+              case 13:
+                handleInputValidation(inputValue);
+                break;
+            }
+          }}
           onChange={(option) => {
             onChange(option?.value);
             setLastInputValue(option?.value);

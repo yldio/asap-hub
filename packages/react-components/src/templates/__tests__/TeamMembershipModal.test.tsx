@@ -33,29 +33,28 @@ it('indicates which fields are required or optional', () => {
   );
 });
 
-it('renders default values into text inputs', () => {
-  const { getByLabelText, getAllByLabelText, getByDisplayValue, getByText } =
-    render(
-      <TeamMembershipModal
-        {...props}
-        approach="approach"
-        responsibilities="responsibilities"
-        role="Collaborating PI"
-        displayName="Team Name"
-        labs={[
-          { name: 'Lab 1', id: '1' },
-          { name: 'Lab 2', id: '2' },
-        ]}
-      />,
-      { wrapper: StaticRouter },
-    );
+it('renders default values into text inputs', async () => {
+  const { getByLabelText, getAllByLabelText } = render(
+    <TeamMembershipModal
+      {...props}
+      approach="approach"
+      responsibilities="responsibilities"
+      role="Collaborating PI"
+      displayName="Team Name"
+      labs={[
+        { name: 'Lab 1', id: '1' },
+        { name: 'Lab 2', id: '2' },
+      ]}
+    />,
+    { wrapper: StaticRouter },
+  );
   expect(getByLabelText(/team/i)).toHaveValue('Team Name');
-  expect(getByText('Collaborating PI')).toBeVisible();
+  expect(getByLabelText(/role/i)).toHaveValue('Collaborating PI');
   expect(getByLabelText(/main.+interests/i)).toHaveValue('approach');
   expect(getByLabelText(/responsibilities/i)).toHaveValue('responsibilities');
   expect(getAllByLabelText(/lab/i)).toHaveLength(2);
-  expect(getByDisplayValue('Lab 1')).toBeVisible();
-  expect(getByDisplayValue('Lab 2')).toBeVisible();
+  expect(getAllByLabelText(/lab/i)[0]).toHaveValue('Lab 1');
+  expect(getAllByLabelText(/lab/i)[1]).toHaveValue('Lab 2');
 });
 
 it('triggers the save function', async () => {

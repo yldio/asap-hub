@@ -13,36 +13,30 @@ const regressionListStyles = css({
   gridRowGap: `${36 / perRem}em`,
 });
 
-export type TeamProfileOutputsProps = {
-  outputs: ReadonlyArray<
-    ComponentProps<typeof SharedResearchCard> & { id: string }
-  >;
-  numberOfPages: number;
-  currentPage: number;
-  isListView: boolean;
-  cardViewHref: string;
-  listViewHref: string;
-  renderPageHref: (page: number) => string;
-  numberOfItems: number;
-};
+export type TeamProfileOutputsProps = Omit<
+  ComponentProps<typeof SharedResearchList>,
+  'children'
+>;
 
 const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({
-  outputs,
+  researchOutputs,
   numberOfItems,
   numberOfPages,
-  currentPage,
+  currentPageIndex,
   renderPageHref,
   isListView,
   cardViewHref,
+  exportResults,
   listViewHref,
 }) => (
   <div css={containerStyles}>
     {isEnabled('ALGOLIA_RESEARCH_OUTPUTS') ? (
       <SharedResearchList
-        researchOutputs={outputs}
+        exportResults={exportResults}
+        researchOutputs={researchOutputs}
         numberOfItems={numberOfItems}
         numberOfPages={numberOfPages}
-        currentPageIndex={currentPage}
+        currentPageIndex={currentPageIndex}
         renderPageHref={renderPageHref}
         isListView={isListView}
         cardViewHref={cardViewHref}
@@ -50,7 +44,7 @@ const TeamProfileOutputs: React.FC<TeamProfileOutputsProps> = ({
       />
     ) : (
       <div css={regressionListStyles}>
-        {outputs.map((output) => (
+        {researchOutputs.map((output) => (
           <SharedResearchCard {...output} key={output.id} />
         ))}
         <ComingSoon>

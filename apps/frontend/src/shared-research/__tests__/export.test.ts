@@ -2,12 +2,18 @@ import {
   createResearchOutputResponse,
   createTeamResponse,
   createUserResponse,
+  createAlgoliaResponse,
 } from '@asap-hub/fixtures';
 import { ResearchOutputResponse } from '@asap-hub/model';
+import { CsvFormatterStream, Row } from '@fast-csv/format';
 import { waitFor } from '@testing-library/dom';
 import streamSaver from 'streamsaver';
 
-import { researchOutputToCSV, createCsvFileStream } from '../export';
+import {
+  researchOutputToCSV,
+  createCsvFileStream,
+  algoliaResultsToStream,
+} from '../export';
 
 const mockWriteStream = { write: jest.fn(), close: jest.fn() };
 jest.mock('streamsaver', () => ({
@@ -159,5 +165,87 @@ describe('createCsvFileStream', () => {
 
     csvStream.end();
     await waitFor(() => expect(mockWriteStream.close).toHaveBeenCalled());
+  });
+});
+
+describe('algoliaResultsToStream', () => {
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+  const mockCsvStream = {
+    write: jest.fn(),
+    end: jest.fn(),
+  };
+  it('streams one page of results', async () => {
+    await algoliaResultsToStream(
+      mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
+      (parameters) =>
+        Promise.resolve(
+          createAlgoliaResponse([parameters], {
+            nbPages: 1,
+          }),
+        ),
+      (a) => a,
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPage: 0,
+        pageSize: 10000,
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(1);
+    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('streams multiple pages of results', async () => {
+    await algoliaResultsToStream(
+      mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
+      (parameters) =>
+        Promise.resolve(
+          createAlgoliaResponse([parameters], {
+            nbPages: 3,
+          }),
+        ),
+      (a) => a,
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPage: 0,
+        pageSize: 10000,
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPage: 1,
+        pageSize: 10000,
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentPage: 2,
+        pageSize: 10000,
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(3);
+    expect(mockCsvStream.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('streams transformed results', async () => {
+    await algoliaResultsToStream(
+      mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
+      (parameters) =>
+        Promise.resolve(
+          createAlgoliaResponse([{ example: 'a' }], {
+            nbPages: 2,
+          }),
+        ),
+      (a) => ({ example: `${a.example}-b` }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledWith(
+      expect.objectContaining({
+        example: 'a-b',
+      }),
+    );
+    expect(mockCsvStream.write).toHaveBeenCalledTimes(2);
   });
 });

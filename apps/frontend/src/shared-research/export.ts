@@ -1,6 +1,9 @@
+import { SearchResponse } from '@algolia/client-search';
 import { isInternalAuthor, ResearchOutputResponse } from '@asap-hub/model';
-import { format } from '@fast-csv/format';
+import { CsvFormatterStream, Row, format } from '@fast-csv/format';
 import streamSaver from 'streamsaver';
+
+import { GetListOptions } from '../api-util';
 
 type ResearchOutputCSV = Record<
   keyof Omit<ResearchOutputResponse, 'team'>,
@@ -68,4 +71,27 @@ export const createCsvFileStream = (
     .on('data', (data) => fileWriter.write(data))
     .on('end', () => fileWriter.close());
   return csvStream;
+};
+
+export const algoliaResultsToStream = async <V>(
+  csvStream: CsvFormatterStream<Row, Row>,
+  getResults: ({
+    currentPage,
+    pageSize,
+  }: Pick<GetListOptions, 'currentPage' | 'pageSize'>) => Readonly<
+    Promise<SearchResponse<V>>
+  >,
+  transform: (result: V) => Row,
+) => {
+  let morePages = true;
+  let currentPage = 0;
+  while (morePages) {
+    // We are doing this in chunks and streams to avoid blob/ram limits.
+    // eslint-disable-next-line no-await-in-loop
+    const data = await getResults({ currentPage, pageSize: 10000 });
+    data.hits.map(transform).forEach((row) => csvStream.write(row));
+    currentPage += 1;
+    morePages = currentPage <= data.nbPages - 1;
+  }
+  csvStream.end();
 };

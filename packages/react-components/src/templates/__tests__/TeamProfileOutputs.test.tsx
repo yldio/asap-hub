@@ -6,10 +6,10 @@ import { ComponentProps } from 'react';
 import TeamProfileOutputs from '../TeamProfileOutputs';
 
 const baseProps: ComponentProps<typeof TeamProfileOutputs> = {
-  outputs: [],
+  researchOutputs: [],
   numberOfItems: 0,
   numberOfPages: 1,
-  currentPage: 0,
+  currentPageIndex: 0,
   renderPageHref: () => '',
   isListView: false,
   cardViewHref: '',
@@ -27,7 +27,7 @@ it('renders output cards (REGRESSION)', () => {
   const { getAllByRole } = render(
     <TeamProfileOutputs
       {...baseProps}
-      outputs={[
+      researchOutputs={[
         {
           ...createResearchOutputResponse(),
           id: 'uuid-output',
@@ -63,7 +63,7 @@ it('renders output cards', () => {
   const { getAllByRole, queryByText } = render(
     <TeamProfileOutputs
       {...baseProps}
-      outputs={[
+      researchOutputs={[
         {
           ...createResearchOutputResponse(),
           id: 'uuid-output',

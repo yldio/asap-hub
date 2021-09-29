@@ -1,6 +1,6 @@
 import { SearchResponse } from '@algolia/client-search';
 
-export const createAlgoliaResponse = <V extends { id?: string }>(
+export const createAlgoliaResponse = <V extends Record<string, unknown>>(
   data: V[],
   overrides: Partial<Omit<SearchResponse<unknown>, 'hits'>> = {},
 ): SearchResponse<V> => ({
@@ -16,6 +16,6 @@ export const createAlgoliaResponse = <V extends { id?: string }>(
   ...overrides,
   hits: data.map((item, i) => ({
     ...item,
-    objectID: item.id ?? `${i}`,
+    objectID: `${i}`,
   })),
 });

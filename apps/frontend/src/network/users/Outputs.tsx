@@ -4,8 +4,17 @@ import {
   UserProfileSearchAndFilter,
 } from '@asap-hub/react-components';
 import { network } from '@asap-hub/routing';
+import format from 'date-fns/format';
 import React from 'react';
+
 import { usePagination, usePaginationParams, useSearch } from '../../hooks';
+import { useAlgolia } from '../../hooks/algolia';
+import { getResearchOutputs } from '../../shared-research/api';
+import {
+  algoliaResultsToStream,
+  createCsvFileStream,
+  researchOutputToCSV,
+} from '../../shared-research/export';
 import { useResearchOutputs } from '../../shared-research/state';
 import { SearchFrame } from '../../structure/Frame';
 
@@ -34,12 +43,30 @@ const OutputsList: React.FC<OutputsListProps> = ({
     pageSize,
     userId,
   });
+
   const { numberOfPages, renderPageHref } = usePagination(
     result.total,
     pageSize,
   );
+  const { index } = useAlgolia();
+  const exportResults = () =>
+    algoliaResultsToStream(
+      createCsvFileStream(
+        { headers: true },
+        `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
+      ),
+      (paginationParams) =>
+        getResearchOutputs(index, {
+          filters,
+          searchQuery,
+          userId,
+          ...paginationParams,
+        }),
+      researchOutputToCSV,
+    );
   return (
     <UserProfileResearchOutputs
+      exportResults={exportResults}
       researchOutputs={result.items}
       numberOfItems={result.total}
       numberOfPages={numberOfPages}

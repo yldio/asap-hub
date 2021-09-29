@@ -14,7 +14,7 @@ import { Auth0Provider, WhenReady } from '../../auth/test-utils';
 import { getResearchOutputsLegacy, getResearchOutputs } from '../api';
 import { CARD_VIEW_PAGE_SIZE } from '../../hooks';
 import { researchOutputsState } from '../state';
-import { createCsvFileStream } from '../export';
+import { createCsvFileStream, algoliaResultsToStream } from '../export';
 
 jest.mock('../api');
 jest.mock('../export');
@@ -22,6 +22,8 @@ jest.mock('../export');
 const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
   typeof createCsvFileStream
 >;
+const mockAlgoliaResultsToStream =
+  algoliaResultsToStream as jest.MockedFunction<typeof algoliaResultsToStream>;
 
 const mockGetResearchOutputsLegacy =
   getResearchOutputsLegacy as jest.MockedFunction<
@@ -101,28 +103,15 @@ it('renders a list of research outputs', async () => {
   expect(container.textContent).toContain('Test Output 1');
 });
 
-it('exports a single page of results', async () => {
+it('triggers and export', async () => {
   mockGetResearchOutputs.mockResolvedValue(
-    createAlgoliaResearchOutputResponse(2, { nbPages: 1 }),
+    createAlgoliaResearchOutputResponse(2),
   );
   const { getByText } = await renderResearchOutputList();
-  expect(mockGetResearchOutputs).toHaveBeenCalledTimes(1);
   userEvent.click(getByText(/export/i));
-  expect(mockCreateCsvFileStream).toHaveBeenCalledTimes(1);
-  await waitFor(() => {
-    expect(mockGetResearchOutputs).toHaveBeenCalledTimes(2);
-  });
-});
-
-it('exports multiple pages of results', async () => {
-  mockGetResearchOutputs.mockResolvedValue(
-    createAlgoliaResearchOutputResponse(2, { nbPages: 3 }),
+  expect(mockAlgoliaResultsToStream).toHaveBeenCalledTimes(1);
+  expect(mockCreateCsvFileStream).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.stringMatching(/SharedOutputs_\d+\.csv/),
   );
-  const { getByText } = await renderResearchOutputList();
-  expect(mockGetResearchOutputs).toHaveBeenCalledTimes(1);
-  userEvent.click(getByText(/export/i));
-  expect(mockCreateCsvFileStream).toHaveBeenCalledTimes(1);
-  await waitFor(() => {
-    expect(mockGetResearchOutputs).toHaveBeenCalledTimes(4);
-  });
 });

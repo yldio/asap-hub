@@ -9,12 +9,12 @@ export default {
 
 export const Normal = () => (
   <TeamProfileOutputs
-    outputs={
+    researchOutputs={
       createListResearchOutputResponse(number('Number of outputs', 2)).items
     }
     numberOfItems={2}
     numberOfPages={1}
-    currentPage={0}
+    currentPageIndex={0}
     renderPageHref={() => ''}
     isListView={false}
     cardViewHref={''}

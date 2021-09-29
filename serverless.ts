@@ -266,6 +266,9 @@ const serverlessConfig: AWS = {
               source: ['asap.user'],
               'detail-type': ['UserPublished'],
             },
+            retryPolicy: {
+              maximumRetryAttempts: 2,
+            },
           },
         },
       ],

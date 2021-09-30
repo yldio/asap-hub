@@ -233,7 +233,7 @@ describe('algoliaResultsToStream', () => {
   it('streams transformed results', async () => {
     await algoliaResultsToStream(
       mockCsvStream as unknown as CsvFormatterStream<Row, Row>,
-      (parameters) =>
+      () =>
         Promise.resolve(
           createAlgoliaResponse([{ example: 'a' }], {
             nbPages: 2,

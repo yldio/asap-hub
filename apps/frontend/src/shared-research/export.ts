@@ -73,6 +73,8 @@ export const createCsvFileStream = (
   return csvStream;
 };
 
+export const MAX_ALGOLIA_RESULTS = 10000;
+
 export const algoliaResultsToStream = async <V>(
   csvStream: CsvFormatterStream<Row, Row>,
   getResults: ({
@@ -88,7 +90,10 @@ export const algoliaResultsToStream = async <V>(
   while (morePages) {
     // We are doing this in chunks and streams to avoid blob/ram limits.
     // eslint-disable-next-line no-await-in-loop
-    const data = await getResults({ currentPage, pageSize: 10000 });
+    const data = await getResults({
+      currentPage,
+      pageSize: MAX_ALGOLIA_RESULTS,
+    });
     data.hits.map(transform).forEach((row) => csvStream.write(row));
     currentPage += 1;
     morePages = currentPage <= data.nbPages - 1;

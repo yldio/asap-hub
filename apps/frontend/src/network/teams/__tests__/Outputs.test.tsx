@@ -16,16 +16,31 @@ import { Auth0Provider, WhenReady } from '../../../auth/test-utils';
 import { getResearchOutputs } from '../../../shared-research/api';
 import { researchOutputsState } from '../../../shared-research/state';
 import { CARD_VIEW_PAGE_SIZE } from '../../../hooks';
+import {
+  createCsvFileStream,
+  MAX_ALGOLIA_RESULTS,
+} from '../../../shared-research/export';
 
 jest.mock('../../../shared-research/api');
+jest.mock('../../../shared-research/export');
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 const mockGetResearchOutputs = getResearchOutputs as jest.MockedFunction<
   typeof getResearchOutputs
 >;
 
+const mockCreateCsvFileStream = createCsvFileStream as jest.MockedFunction<
+  typeof createCsvFileStream
+>;
+
 const renderOutputs = async (
   teamOutputs: ResearchOutputResponse[],
   searchQuery = '',
+  filters = new Set<string>(),
+  teamId = '42',
 ) => {
   const result = render(
     <RecoilRoot
@@ -33,9 +48,19 @@ const renderOutputs = async (
         reset(
           researchOutputsState({
             searchQuery,
+            filters,
+            teamId,
             currentPage: 0,
-            filters: new Set(),
             pageSize: CARD_VIEW_PAGE_SIZE,
+          }),
+        );
+        reset(
+          researchOutputsState({
+            searchQuery,
+            filters,
+            teamId,
+            currentPage: 0,
+            pageSize: MAX_ALGOLIA_RESULTS,
           }),
         );
       }}
@@ -46,19 +71,15 @@ const renderOutputs = async (
             <MemoryRouter
               initialEntries={[
                 {
-                  pathname: network({})
-                    .teams({})
-                    .team({ teamId: '12345' })
-                    .outputs({}).$,
+                  pathname: network({}).teams({}).team({ teamId }).outputs({})
+                    .$,
                 },
               ]}
             >
               <Route
-                path={
-                  network({}).teams({}).team({ teamId: '12345' }).outputs({}).$
-                }
+                path={network({}).teams({}).team({ teamId }).outputs({}).$}
               >
-                <Outputs teamOutputs={teamOutputs} teamId={'12345'} />
+                <Outputs teamOutputs={teamOutputs} teamId={teamId} />
               </Route>
             </MemoryRouter>
           </WhenReady>
@@ -119,13 +140,19 @@ it('renders a list of research outputs', async () => {
 });
 
 it('calls getResearchOutputs with the right arguments', async () => {
+  const filters = new Set(['Proposal']);
+  const searchQuery = 'searchterm';
+  const teamId = '1234';
   mockGetResearchOutputs.mockResolvedValue({
     ...createAlgoliaResearchOutputResponse(2),
   });
-  const { getByRole, getByText, getByLabelText } = await renderOutputs([
-    { ...createResearchOutputResponse(), id: 'ro0', title: 'Some RO' },
-  ]);
-  userEvent.type(getByRole('searchbox'), 'searchterm');
+  const { getByRole, getByText, getByLabelText } = await renderOutputs(
+    [],
+    searchQuery,
+    filters,
+    teamId,
+  );
+  userEvent.type(getByRole('searchbox'), searchQuery);
 
   userEvent.click(getByText('Filters'));
   const checkbox = getByLabelText('Proposal');
@@ -138,10 +165,52 @@ it('calls getResearchOutputs with the right arguments', async () => {
     expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(
       expect.anything(),
       expect.objectContaining({
-        searchQuery: 'searchterm',
-        teamId: '12345',
-        filters: new Set(['Proposal']),
+        teamId,
+        searchQuery,
+        filters,
       }),
     ),
+  );
+});
+
+it('triggers and export with the same parameters', async () => {
+  const filters = new Set(['Proposal']);
+  const searchQuery = 'Some Search';
+  const teamId = '12345';
+  mockGetResearchOutputs.mockResolvedValue({
+    ...createAlgoliaResearchOutputResponse(2),
+  });
+  const { getByRole, getByText, getByLabelText } = await renderOutputs(
+    [],
+    searchQuery,
+    filters,
+    teamId,
+  );
+  userEvent.type(getByRole('searchbox'), searchQuery);
+  userEvent.click(getByText('Filters'));
+  userEvent.click(getByLabelText('Proposal'));
+  await waitFor(() =>
+    expect(mockGetResearchOutputs).toHaveBeenLastCalledWith(expect.anything(), {
+      searchQuery,
+      filters,
+      teamId,
+      currentPage: 0,
+      pageSize: CARD_VIEW_PAGE_SIZE,
+    }),
+  );
+
+  userEvent.click(getByText(/export/i));
+  expect(mockCreateCsvFileStream).toHaveBeenLastCalledWith(
+    expect.anything(),
+    expect.stringMatching(/SharedOutputs_\d+\.csv/),
+  );
+  await waitFor(() =>
+    expect(mockGetResearchOutputs).toHaveBeenCalledWith(expect.anything(), {
+      searchQuery,
+      filters,
+      teamId,
+      currentPage: 0,
+      pageSize: MAX_ALGOLIA_RESULTS,
+    }),
   );
 });

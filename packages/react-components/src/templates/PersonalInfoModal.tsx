@@ -116,8 +116,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               title="Degree"
               subtitle="(Optional)"
               onChange={setNewDegree}
+              placeholder="Choose a degree"
               options={[
-                { label: 'Choose a degree', value: '' },
                 { label: 'BA', value: 'BA' },
                 { label: 'BSc', value: 'BSc' },
                 { label: 'MSc', value: 'MSc' },

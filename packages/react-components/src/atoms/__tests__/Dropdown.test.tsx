@@ -14,17 +14,33 @@ it('shows the selected value', () => {
   expect(getByDisplayValue('LHR')).toBeVisible();
 });
 
+it('without selection shows a placeholder', () => {
+  const { getByText, rerender } = render(
+    <Dropdown
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value=""
+      placeholder="Choose something"
+    />,
+  );
+  expect(getByText('Choose something')).toBeVisible();
+
+  rerender(
+    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+  );
+  expect(getByText('Select')).toBeVisible();
+});
+
 it('without options shows a placeholder message that can be customized', () => {
   const { getByText, rerender } = render(<Dropdown options={[]} value="" />);
-  userEvent.click(getByText('Select...'));
+  userEvent.click(getByText('Select'));
   expect(getByText(/no.+options/i)).toBeVisible();
 
   rerender(
     <Dropdown options={[]} value="" noOptionsMessage={(a) => 'Not found LL'} />,
   );
 
-  userEvent.click(getByText('Select...'));
-  userEvent.type(getByText('Select...'), 'll');
+  userEvent.click(getByText('Select'));
+  userEvent.type(getByText('Select'), 'll');
   expect(getByText('Not found LL')).toBeVisible();
 });
 
@@ -41,11 +57,11 @@ it('allows selecting from a menu with available options', () => {
     />,
   );
 
-  userEvent.click(getByText('Select...'));
+  userEvent.click(getByText('Select'));
   userEvent.click(getByText('Heathrow'));
   expect(handleChange).toHaveBeenCalledWith('LHR');
 
-  userEvent.click(getByText('Select...'));
+  userEvent.click(getByText('Select'));
   userEvent.click(getByText('Gatwick'));
   expect(handleChange).toHaveBeenCalledWith('LGW');
 });
@@ -61,7 +77,7 @@ it('shows the focused option in green', () => {
     />,
   );
 
-  userEvent.click(getByText('Select...'));
+  userEvent.click(getByText('Select'));
 
   fireEvent.mouseOver(getByText('Gatwick'));
   expect(
@@ -79,7 +95,7 @@ it('shows a list of valid values', () => {
     <Dropdown options={[{ value: '', label: '' }]} value="" />,
   );
 
-  userEvent.click(getByText('Select...'));
+  userEvent.click(getByText('Select'));
   expect(queryByText('No options')).toBeVisible();
 });
 
@@ -152,7 +168,7 @@ it('shows an error message when required field not filled', () => {
       required
     />,
   );
-  userEvent.click(getByText('Select...'));
+  userEvent.click(getByText('Select'));
   userEvent.tab();
 
   expect(getByText('Please fill out this field.')).toBeVisible();
@@ -171,8 +187,8 @@ it('shows an error message  when required field has invalid value', async () => 
 
   expect(getByRole('textbox')).toBeRequired();
 
-  userEvent.click(getByText('Select...'));
-  userEvent.type(getByText('Select...'), 'xxx');
+  userEvent.click(getByText('Select'));
+  userEvent.type(getByText('Select'), 'xxx');
   fireEvent.focusOut(getByText('xxx'));
 
   await waitFor(() => {
@@ -186,16 +202,37 @@ it('clears invalid values, when it looses focus', async () => {
     <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
   );
 
-  userEvent.click(getByText('Select...'));
-  userEvent.type(getByText('Select...'), 'xxx');
+  userEvent.click(getByText('Select'));
+  userEvent.type(getByText('Select'), 'xxx');
 
-  expect(queryByText('Select...')).toBeNull();
+  expect(queryByText('Select')).toBeNull();
   expect(getByRole('textbox')).toHaveValue('xxx');
 
   userEvent.tab();
 
   await waitFor(() => {
-    expect(getByText('Select...')).toBeVisible();
+    expect(getByText('Select')).toBeVisible();
+    expect(getByRole('textbox')).toHaveValue('');
+  });
+});
+
+it('clears invalid values, when enter', async () => {
+  const { getByText, getByRole, queryByText } = render(
+    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+  );
+
+  userEvent.click(getByText('Select'));
+  userEvent.type(getByText('Select'), 'xxx');
+
+  expect(queryByText('Select')).toBeNull();
+  expect(getByRole('textbox')).toHaveValue('xxx');
+
+  fireEvent.keyDown(getByRole('textbox'), {
+    keyCode: 13,
+  });
+
+  await waitFor(() => {
+    expect(getByText('Select')).toBeVisible();
     expect(getByRole('textbox')).toHaveValue('');
   });
 });

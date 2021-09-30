@@ -59,6 +59,7 @@ export interface DropdownProps<V extends string> {
   readonly options: ReadonlyArray<Option<V>>;
   readonly enabled?: boolean;
   readonly required?: boolean;
+  readonly placeholder?: string;
 
   readonly value: V;
   readonly onChange?: (newValue: V) => void;
@@ -72,6 +73,7 @@ export default function Dropdown<V extends string>({
   options,
   enabled = true,
   required = false,
+  placeholder = 'Select',
 
   value,
   onChange = noop,
@@ -102,6 +104,7 @@ export default function Dropdown<V extends string>({
     <div css={containerStyles}>
       <InputContext.Provider value={{ ...validationTargetProps, required }}>
         <Select<OptionTypeBase>
+          placeholder={placeholder}
           inputId={id}
           isDisabled={!enabled}
           inputValue={inputValue}

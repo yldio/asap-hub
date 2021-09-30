@@ -27,6 +27,26 @@ it('renders the title', () => {
   expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
 });
 
+it('renders a country selector', async () => {
+  const { getByText } = render(
+    <PersonalInfoModal
+      country=""
+      countrySuggestions={['United States', 'Australia', 'Canada']}
+      loadInstitutionOptions={() => Promise.resolve([])}
+      backHref="/wrong"
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+
+  userEvent.click(getByText('Select'));
+
+  expect(getByText('United States')).toBeVisible();
+  expect(getByText('Australia')).toBeVisible();
+  expect(getByText('Canada')).toBeVisible();
+});
+
 it('indicates which fields are required or optional', () => {
   const { getByText } = render(
     <PersonalInfoModal

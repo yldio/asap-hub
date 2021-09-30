@@ -23,11 +23,13 @@ it('without selection shows a placeholder', () => {
     />,
   );
   expect(getByText('Choose something')).toBeVisible();
+  expect(getComputedStyle(getByText('Choose something')).color).toBe(lead.rgb);
 
   rerender(
     <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
   );
   expect(getByText('Select')).toBeVisible();
+  expect(getComputedStyle(getByText('Select')).color).toBe(lead.rgb);
 });
 
 it('without options shows a placeholder message that can be customized', () => {
@@ -64,6 +66,22 @@ it('allows selecting from a menu with available options', () => {
   userEvent.click(getByText('Select'));
   userEvent.click(getByText('Gatwick'));
   expect(handleChange).toHaveBeenCalledWith('LGW');
+});
+
+it('only shows valid options', () => {
+  const { getByText, queryByText } = render(
+    <Dropdown
+      options={[
+        { value: '', label: '-' },
+        { value: 'Heathrow', label: 'Heathrow' },
+      ]}
+      value=""
+    />,
+  );
+
+  userEvent.click(getByText('Select'));
+  expect(getByText('Heathrow')).toBeDefined();
+  expect(queryByText('-')).toBeNull();
 });
 
 it('shows the focused option in green', () => {

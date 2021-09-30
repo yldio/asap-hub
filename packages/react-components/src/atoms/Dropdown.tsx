@@ -109,9 +109,7 @@ export default function Dropdown<V extends string>({
           isDisabled={!enabled}
           inputValue={inputValue}
           value={{ value, label: value }}
-          options={options.filter(
-            (option) => option.label.length > 0 && option.label.length > 0,
-          )}
+          options={options.filter((option) => option.value !== '')}
           onBlur={(option: OptionTypeBase) => {
             handleInputValidation(option.target.value);
           }}

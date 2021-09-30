@@ -3,6 +3,7 @@ import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { DecodeToken } from '../utils/validate-token';
 import { origin } from '../config';
+import logger from '../utils/logger';
 
 export const authHandlerFactory =
   (decodeToken: DecodeToken): RequestHandler =>
@@ -22,12 +23,14 @@ export const authHandlerFactory =
     const [err, payload] = await Intercept(decodeToken(token));
 
     if (err) {
+      logger.error(err, 'Error while validating token');
       throw Boom.unauthorized();
     }
 
     const user = payload[`${origin}/user`];
 
     if (!user || typeof user === 'string') {
+      logger.error('User payload not found');
       throw Boom.unauthorized();
     }
 

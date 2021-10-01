@@ -12,5 +12,7 @@ jobs:
       SQUIDEX_APP_NAME: asap-hub-dev
       SQUIDEX_BASE_URL: https://cloud.squidex.io
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Download the Research Outputs
         run: yarn ro:export

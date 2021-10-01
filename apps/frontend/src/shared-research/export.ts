@@ -1,6 +1,7 @@
 import { SearchResponse } from '@algolia/client-search';
 import { isInternalAuthor, ResearchOutputResponse } from '@asap-hub/model';
 import { CsvFormatterStream, Row, format } from '@fast-csv/format';
+import { WritableStream } from 'web-streams-polyfill/ponyfill';
 import streamSaver from 'streamsaver';
 
 import { GetListOptions } from '../api-util';
@@ -66,6 +67,10 @@ export const createCsvFileStream = (
   fileName: string,
 ) => {
   const csvStream = format(csvOptions);
+  // If the WritableStream is not available (Firefox, Safari), take it from the ponyfill
+  if (!window.WritableStream) {
+    streamSaver.WritableStream = WritableStream;
+  }
   const fileWriter = streamSaver.createWriteStream(fileName).getWriter();
   csvStream
     .on('data', (data) => fileWriter.write(data))

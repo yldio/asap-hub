@@ -588,6 +588,7 @@ __metadata:
     use-deep-compare-effect: ^1.6.1
     use-http: ^1.0.20
     uuid: ^8.3.2
+    web-streams-polyfill: ^3.1.1
   languageName: unknown
   linkType: soft
 
@@ -33975,6 +33976,13 @@ typescript@~4.2.4:
     node-fetch: ^2.6.0
     valid-data-url: ^3.0.0
   checksum: 4e1b0305fb719ba341d8ec00598d0f6f904fc3a352b3d232baf0baf6d9b2d4b7e1f8279bfe7b629ba8848429bf44bc4f9ecad11e4a0b163fa7f473a30ce8320c
+  languageName: node
+  linkType: hard
+
+"web-streams-polyfill@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "web-streams-polyfill@npm:3.1.1"
+  checksum: 73f7cb030182b34751f20c596df4888985ae3bc5b6bcc1b204436b3f95c77bf25aba329c450c95c1721a7b3868ae1c5b9dae144e5f1853b55405243a537bedfa
   languageName: node
   linkType: hard
 

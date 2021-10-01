@@ -9299,6 +9299,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:5.0.0"
       ],
       [
+        "web-streams-polyfill",
+        "npm:3.1.1"
+      ],
+      [
         "webcrypto-core",
         "npm:1.2.0"
       ],
@@ -10241,7 +10245,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["use-deep-compare-effect", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.6.1"],
             ["use-http", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.20"],
-            ["uuid", "npm:8.3.2"]
+            ["uuid", "npm:8.3.2"],
+            ["web-streams-polyfill", "npm:3.1.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -53812,6 +53817,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime", "npm:2.4.6"],
             ["node-fetch", "npm:2.6.0"],
             ["valid-data-url", "npm:3.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["web-streams-polyfill", [
+        ["npm:3.1.1", {
+          "packageLocation": "./.yarn/cache/web-streams-polyfill-npm-3.1.1-ba7b0e5b2d-73f7cb0301.zip/node_modules/web-streams-polyfill/",
+          "packageDependencies": [
+            ["web-streams-polyfill", "npm:3.1.1"]
           ],
           "linkType": "HARD",
         }]

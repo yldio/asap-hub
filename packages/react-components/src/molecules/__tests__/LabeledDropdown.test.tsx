@@ -14,5 +14,5 @@ it('renders a labeled dropdown, passing through props', () => {
 
   expect(getByLabelText(/Title/i)).toBeVisible();
   expect(getByLabelText(/Optional/i)).toBeVisible();
-  expect(getByLabelText(/Title/i)).toHaveValue('val');
+  expect(getByLabelText(/Title/i)).toHaveValue('Value');
 });

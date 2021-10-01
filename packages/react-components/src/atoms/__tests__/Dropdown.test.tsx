@@ -7,43 +7,50 @@ import Dropdown from '../Dropdown';
 import { ember, fern, pine, lead, silver } from '../../colors';
 
 it('shows the selected value', () => {
-  const { getByDisplayValue } = render(
+  const { getByRole } = render(
     <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="LHR" />,
   );
 
-  expect(getByDisplayValue('LHR')).toBeVisible();
+  expect(getByRole('textbox')).toHaveValue('Heathrow');
 });
 
-it('without selection shows a placeholder', () => {
+it('shows a placeholder without a selection', () => {
   const { getByText, rerender } = render(
+    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+  );
+  expect(getByText('Select')).toBeVisible();
+  expect(getComputedStyle(getByText('Select')).color).toBe(lead.rgb);
+
+  rerender(
     <Dropdown
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       value=""
       placeholder="Choose something"
     />,
   );
+
   expect(getByText('Choose something')).toBeVisible();
   expect(getComputedStyle(getByText('Choose something')).color).toBe(lead.rgb);
-
-  rerender(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
-  );
-  expect(getByText('Select')).toBeVisible();
-  expect(getComputedStyle(getByText('Select')).color).toBe(lead.rgb);
 });
 
-it('without options shows a placeholder message that can be customized', () => {
-  const { getByText, rerender } = render(<Dropdown options={[]} value="" />);
+it('shows a placeholder message without options', () => {
+  const { getByText, queryByText, rerender } = render(
+    <Dropdown options={[]} value="" />,
+  );
   userEvent.click(getByText('Select'));
   expect(getByText(/no.+options/i)).toBeVisible();
 
   rerender(
-    <Dropdown options={[]} value="" noOptionsMessage={(a) => 'Not found LL'} />,
+    <Dropdown
+      options={[]}
+      value=""
+      noOptionsMessage={(value) => `Not found ${value.inputValue}`}
+    />,
   );
 
   userEvent.click(getByText('Select'));
   userEvent.type(getByText('Select'), 'll');
-  expect(getByText('Not found LL')).toBeVisible();
+  expect(queryByText('Not found LL')).toBeDefined();
 });
 
 it('allows selecting from a menu with available options', () => {
@@ -108,28 +115,19 @@ it('shows the focused option in green', () => {
   ).not.toBe(pine.rgb.replace(/ /g, ''));
 });
 
-it('shows a list of valid values', () => {
-  const { queryByText, getByText } = render(
-    <Dropdown options={[{ value: '', label: '' }]} value="" />,
+it('gets a green border when focused', () => {
+  const { getByText } = render(
+    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
   );
 
   userEvent.click(getByText('Select'));
-  expect(queryByText('No options')).toBeVisible();
-});
-
-it('gets a green border when focused', () => {
-  const { getByText, getByRole } = render(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="LHR" />,
-  );
-
-  userEvent.click(getByText('LHR'));
   expect(
-    findParentWithStyle(getByRole('textbox'), 'borderColor')?.borderColor,
+    findParentWithStyle(getByText('Select'), 'borderColor')?.borderColor,
   ).toBe(fern.rgb);
 
   userEvent.tab();
   expect(
-    findParentWithStyle(getByRole('textbox'), 'borderColor')?.borderColor,
+    findParentWithStyle(getByText('Select'), 'borderColor')?.borderColor,
   ).not.toBe(fern.rgb);
 });
 
@@ -137,49 +135,58 @@ it('gets greyed out when disabled', () => {
   const { getByRole, getByText, rerender } = render(
     <Dropdown
       options={[{ value: 'LHR', label: 'Heathrow' }]}
-      value="LHR"
       enabled={false}
+      value="LHR"
     />,
   );
 
-  expect(findParentWithStyle(getByText('LHR'), 'color')?.color).toBe(lead.rgb);
-  expect(findParentWithStyle(getByText('LHR'), 'background')?.background).toBe(
-    silver.rgb,
+  expect(findParentWithStyle(getByText('Heathrow'), 'color')?.color).toBe(
+    lead.rgb,
   );
+  expect(
+    findParentWithStyle(getByText('Heathrow'), 'background')?.background,
+  ).toBe(silver.rgb);
   expect(getByRole('textbox')).toBeDisabled();
 
   rerender(
     <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="LHR" />,
   );
-  expect(findParentWithStyle(getByText('LHR'), 'color')?.color).not.toBe(
+  expect(findParentWithStyle(getByText('Heathrow'), 'color')?.color).not.toBe(
     lead.rgb,
   );
   expect(
-    findParentWithStyle(getByText('LHR'), 'background')?.background,
+    findParentWithStyle(getByText('Heathrow'), 'background')?.background,
   ).not.toBe(silver.rgb);
   expect(getByRole('textbox')).not.toBeDisabled();
 });
 
-it('shows the value in red when invalid', () => {
-  const { getByText, rerender } = render(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="LHR" />,
+it('shows the field in red when required field not filled', async () => {
+  const { getByText, getByRole, rerender } = render(
+    <Dropdown
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      required={true}
+      value=""
+    />,
   );
-  expect(findParentWithStyle(getByText('LHR'), 'color')?.color).not.toBe(
+
+  userEvent.click(getByText('Select'));
+  userEvent.tab();
+  expect(findParentWithStyle(getByRole('textbox'), 'color')?.color).toBe(
     ember.rgb,
   );
 
   rerender(
-    <Dropdown
-      options={[{ value: 'LHR', label: 'Heathrow' }]}
-      value="LHR"
-      customValidationMessage="Nope."
-    />,
+    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
   );
-  expect(findParentWithStyle(getByText('LHR'), 'color')?.color).toBe(ember.rgb);
+  userEvent.click(getByText('Select'));
+  userEvent.tab();
+  expect(findParentWithStyle(getByRole('textbox'), 'color')?.color).not.toBe(
+    ember.rgb,
+  );
 });
 
 it('shows an error message when required field not filled', () => {
-  const { getByText, getByRole } = render(
+  const { getByText, getByRole, rerender } = render(
     <Dropdown
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       value=""
@@ -191,28 +198,21 @@ it('shows an error message when required field not filled', () => {
 
   expect(getByText('Please fill out this field.')).toBeVisible();
   expect(getByRole('textbox')).toBeRequired();
-});
 
-it('shows an error message  when required field has invalid value', async () => {
-  const { getByText, getByRole } = render(
+  rerender(
     <Dropdown
       options={[{ value: 'LHR', label: 'Heathrow' }]}
-      customValidationMessage={'Please select something'}
       value=""
       required
+      getValidationMessage={() => 'Please select something'}
     />,
   );
 
-  expect(getByRole('textbox')).toBeRequired();
-
   userEvent.click(getByText('Select'));
-  userEvent.type(getByText('Select'), 'xxx');
-  fireEvent.focusOut(getByText('xxx'));
+  userEvent.tab();
 
-  await waitFor(() => {
-    expect(getByText(/no.+options/i)).toBeVisible();
-    expect(getByText('Please select something')).toBeVisible();
-  });
+  expect(getByText('Please select something')).toBeVisible();
+  expect(getByRole('textbox')).toBeRequired();
 });
 
 it('clears invalid values, when it looses focus', async () => {

@@ -9,14 +9,14 @@ import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
   ...createUserResponse(),
-  countrySuggestions: [],
+  countrySuggestions: ['United States', 'Mexico'],
   loadInstitutionOptions: () => Promise.resolve([]),
   backHref: '/wrong',
 };
 it('renders the title', () => {
   const { getByText } = render(
     <PersonalInfoModal
-      countrySuggestions={[]}
+      {...props}
       loadInstitutionOptions={() => Promise.resolve([])}
       backHref="/wrong"
     />,
@@ -25,26 +25,6 @@ it('renders the title', () => {
     },
   );
   expect(getByText('Your details', { selector: 'h3' })).toBeVisible();
-});
-
-it('renders a country selector', async () => {
-  const { getByText } = render(
-    <PersonalInfoModal
-      country=""
-      countrySuggestions={['United States', 'Australia', 'Canada']}
-      loadInstitutionOptions={() => Promise.resolve([])}
-      backHref="/wrong"
-    />,
-    {
-      wrapper: StaticRouter,
-    },
-  );
-
-  userEvent.click(getByText('Select'));
-
-  expect(getByText('United States')).toBeVisible();
-  expect(getByText('Australia')).toBeVisible();
-  expect(getByText('Canada')).toBeVisible();
 });
 
 it('indicates which fields are required or optional', () => {
@@ -78,7 +58,7 @@ it('renders default values into text inputs', () => {
       {...props}
       firstName="firstName"
       lastName="lastName"
-      country="country"
+      country="United States"
       city="city"
       jobTitle="jobTitle"
       institution="institution"
@@ -93,7 +73,7 @@ it('renders default values into text inputs', () => {
       "",
       "institution",
       "jobTitle",
-      "country",
+      "United States",
       "city",
     ]
   `);
@@ -109,7 +89,9 @@ it.each`
   async ({ label, value, message }) => {
     const { getByLabelText, findByText } = render(
       <PersonalInfoModal {...props} />,
-      { wrapper: StaticRouter },
+      {
+        wrapper: StaticRouter,
+      },
     );
     const input = getByLabelText(label);
     fireEvent.change(input, {
@@ -127,7 +109,7 @@ it('triggers the save function', async () => {
       {...props}
       firstName="firstName"
       lastName="lastName"
-      country="country"
+      country="United States"
       city="city"
       jobTitle="jobTitle"
       institution="institution"
@@ -141,7 +123,7 @@ it('triggers the save function', async () => {
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
     lastName: 'lastName',
-    country: 'country',
+    country: 'United States',
     city: 'city',
     degree: 'MPH',
     jobTitle: 'jobTitle',
@@ -159,19 +141,17 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText } = render(
-    <PersonalInfoModal {...props} onSave={handleSave} />,
+  const { getByText, getAllByRole } = render(
+    <PersonalInfoModal {...props} country="Mexico" onSave={handleSave} />,
     { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));
-
-  const form = getByText(/save/i).closest('form')!;
-  expect(form.elements.length).toBeGreaterThan(1);
-  [...form.elements].forEach((element) => expect(element).toBeDisabled());
+  getAllByRole('textbox').forEach((field) => expect(field).toBeDisabled());
 
   act(resolveSubmit);
+
   await waitFor(() =>
-    expect(getByText(/save/i).closest('button')).toBeEnabled(),
+    getAllByRole('textbox').forEach((field) => expect(field).toBeEnabled()),
   );
 });

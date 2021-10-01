@@ -79,8 +79,9 @@ export default function Dropdown<V extends string>({
   onChange = noop,
   noOptionsMessage,
 }: DropdownProps<V>): ReturnType<FC> {
-  const [inputValue, setInputValue] = useState<string>(value);
-  const [lastValidValue, setLastInputValue] = useState<V>(value);
+  const [inputValue, setInputValue] = useState<string>(
+    options.find((opt) => value.length > 0 && opt.value === value)?.label ?? '',
+  );
 
   const { validationMessage, validationTargetProps } =
     useValidation<HTMLInputElement>(
@@ -89,14 +90,12 @@ export default function Dropdown<V extends string>({
     );
 
   const handleInputValidation = (currentValue: string) => {
-    const updatedValue =
-      options.filter((option: OptionTypeBase) => option.value === currentValue)
-        .length > 0
-        ? lastValidValue
-        : ('' as V);
+    const optionSelected = options.find(
+      (option: OptionTypeBase) => option.label === currentValue,
+    );
 
-    setInputValue(updatedValue);
-    onChange(updatedValue);
+    setInputValue(optionSelected?.label ?? '');
+    onChange(optionSelected?.value ?? ('' as V));
     setTimeout(validationTargetProps.onBlur, 0);
   };
 
@@ -108,7 +107,6 @@ export default function Dropdown<V extends string>({
           inputId={id}
           isDisabled={!enabled}
           inputValue={inputValue}
-          value={{ value, label: value }}
           options={options.filter((option) => option.value !== '')}
           onBlur={(option: OptionTypeBase) => {
             handleInputValidation(option.target.value);
@@ -127,8 +125,7 @@ export default function Dropdown<V extends string>({
           }}
           onChange={(option) => {
             onChange(option?.value);
-            setLastInputValue(option?.value);
-            setInputValue(option?.value);
+            setInputValue(option?.label);
             setTimeout(validationTargetProps.onBlur, 0);
           }}
           onInputChange={(newInputValue, { action }) => {

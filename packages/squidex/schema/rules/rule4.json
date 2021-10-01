@@ -1,0 +1,21 @@
+{
+  "$schema": "./../__json/rule.json",
+  "isEnabled": true,
+  "name": "Teams upated",
+  "trigger": {
+    "triggerType": "ContentChanged",
+    "schemas": [
+      {
+        "schemaId": "teams",
+        "condition": "event.type == 'Created' || event.type == 'Updated'"
+      }
+    ],
+    "handleAll": false
+  },
+  "action": {
+    "url": "ASAP_API_URL/webhook/teams",
+    "method": "POST",
+    "sharedSecret": "SQUIDEX_SHARED_SECRET",
+    "actionType": "Webhook"
+  }
+}

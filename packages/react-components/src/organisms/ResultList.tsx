@@ -1,5 +1,6 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, useContext } from 'react';
 import { css } from '@emotion/react';
+import { ToastContext } from '@asap-hub/react-context';
 
 import { ListControls, PageControls } from '../molecules';
 import { Button, Paragraph } from '../atoms';
@@ -53,7 +54,7 @@ const pageControlsStyles = css({
 type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
   readonly isListView?: boolean;
-  readonly exportResults?: () => void;
+  readonly exportResults?: () => Promise<void>;
   readonly cardViewHref?: string;
   readonly listViewHref?: string;
   readonly children: React.ReactNode;
@@ -66,51 +67,64 @@ const ResultList: React.FC<ResultListProps> = ({
   listViewHref,
   children,
   ...pageControlsProps
-}) => (
-  <article>
-    <header css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}>
-      {numberOfItems > 0 && (
-        <Paragraph primary>
-          <strong>
-            {numberOfItems} result{numberOfItems === 1 || 's'} found
-          </strong>
-          {exportResults && (
-            <span css={exportStyles}>
-              <Button linkStyle onClick={exportResults}>
-                Export as CSV
-              </Button>
+}) => {
+  const toast = useContext(ToastContext);
+  return (
+    <article>
+      <header
+        css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
+      >
+        {numberOfItems > 0 && (
+          <Paragraph primary>
+            <strong>
+              {numberOfItems} result{numberOfItems === 1 || 's'} found
+            </strong>
+            {exportResults && (
+              <span css={exportStyles}>
+                <Button
+                  linkStyle
+                  onClick={() =>
+                    exportResults().catch(() =>
+                      toast(
+                        'There was an issue exporting to CSV. Please try again.',
+                      ),
+                    )
+                  }
+                >
+                  Export as CSV
+                </Button>
+              </span>
+            )}
+          </Paragraph>
+        )}
+        {cardViewHref && listViewHref && (
+          <ListControls
+            isListView={isListView}
+            cardViewHref={cardViewHref}
+            listViewHref={listViewHref}
+          />
+        )}
+      </header>
+      {numberOfItems > 0 ? (
+        <>
+          <main css={mainStyles}>{children}</main>
+          <section css={pageControlsStyles}>
+            <PageControls {...pageControlsProps} />
+          </section>
+        </>
+      ) : (
+        <main css={{ textAlign: 'center' }}>
+          <Paragraph primary>
+            <strong>No matches found!</strong>
+            <br />
+            <span css={{ color: lead.rgb }}>
+              We're sorry, we couldn't find results to match your search. Please
+              check your spelling or try using fewer words.
             </span>
-          )}
-        </Paragraph>
+          </Paragraph>
+        </main>
       )}
-      {cardViewHref && listViewHref && (
-        <ListControls
-          isListView={isListView}
-          cardViewHref={cardViewHref}
-          listViewHref={listViewHref}
-        />
-      )}
-    </header>
-    {numberOfItems > 0 ? (
-      <>
-        <main css={mainStyles}>{children}</main>
-        <section css={pageControlsStyles}>
-          <PageControls {...pageControlsProps} />
-        </section>
-      </>
-    ) : (
-      <main css={{ textAlign: 'center' }}>
-        <Paragraph primary>
-          <strong>No matches found!</strong>
-          <br />
-          <span css={{ color: lead.rgb }}>
-            We're sorry, we couldn't find results to match your search. Please
-            check your spelling or try using fewer words.
-          </span>
-        </Paragraph>
-      </main>
-    )}
-  </article>
-);
-
+    </article>
+  );
+};
 export default ResultList;

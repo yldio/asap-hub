@@ -1,6 +1,8 @@
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentProps } from 'react';
+import { ToastContext } from '@asap-hub/react-context';
+import { waitFor } from '@testing-library/dom';
 
 import ResultList from '../ResultList';
 
@@ -63,12 +65,31 @@ it('renders export link', () => {
     </ResultList>,
   );
   expect(queryByText(/export/i)).toBeNull();
-  const exportFn = jest.fn();
+  const mockExport = jest.fn(() => Promise.resolve());
   rerender(
-    <ResultList {...props} exportResults={exportFn}>
+    <ResultList {...props} exportResults={mockExport}>
       cards
     </ResultList>,
   );
   userEvent.click(getByText(/export/i));
-  expect(exportFn).toHaveBeenCalled();
+  expect(mockExport).toHaveBeenCalled();
+});
+
+it('triggers an error toast when export fails', async () => {
+  const mockToast = jest.fn();
+  const mockExport = jest.fn(() => Promise.reject());
+  const { getByText } = render(
+    <ToastContext.Provider value={mockToast}>
+      <ResultList {...props} exportResults={mockExport}>
+        cards
+      </ResultList>
+    </ToastContext.Provider>,
+  );
+  userEvent.click(getByText(/export/i));
+  expect(mockExport).toHaveBeenCalled();
+  await waitFor(() =>
+    expect(mockToast).toHaveBeenCalledWith(
+      expect.stringMatching(/issue exporting/i),
+    ),
+  );
 });

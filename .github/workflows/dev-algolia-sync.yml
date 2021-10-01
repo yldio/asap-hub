@@ -1,0 +1,16 @@
+name: DEV - Sync Algolia with squidex
+on:
+  workflow_dispatch:
+jobs:
+  create_squidex_ro_dump:
+    runs-on: ubuntu-18.04
+    env:
+      SQUIDEX_APP: 'asap-hub-dev'
+      BUCKET_NAME: 'asap-hub-dev-data-backup'
+      SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
+      SQUIDEX_CLIENT_SECRET: ${{ secrets.SQUIDEX_CLIENT_SECRET_DEV }}
+      SQUIDEX_APP_NAME: asap-hub-dev
+      SQUIDEX_BASE_URL: https://cloud.squidex.io
+    steps:
+      - name: Download the Research Outputs
+        run: yarn ro:export

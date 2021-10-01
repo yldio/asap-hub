@@ -193,6 +193,8 @@ export const userRouteFactory = (
         ...result,
         onboarded,
       });
+
+      return;
     }
 
     res.json(result);

@@ -9,7 +9,7 @@ import PersonalInfoModal from '../PersonalInfoModal';
 
 const props: ComponentProps<typeof PersonalInfoModal> = {
   ...createUserResponse(),
-  countrySuggestions: ['United States', 'Mexico'],
+  countrySuggestions: [],
   loadInstitutionOptions: () => Promise.resolve([]),
   backHref: '/wrong',
 };
@@ -56,6 +56,7 @@ it('renders default values into text inputs', () => {
   const { queryAllByRole } = render(
     <PersonalInfoModal
       {...props}
+      countrySuggestions={['United States', 'Mexico']}
       firstName="firstName"
       lastName="lastName"
       country="United States"
@@ -77,6 +78,27 @@ it('renders default values into text inputs', () => {
       "city",
     ]
   `);
+});
+
+it('renders a country selector', () => {
+  const { getByText, queryByText } = render(
+    <PersonalInfoModal
+      {...props}
+      countrySuggestions={['United States', 'Mexico']}
+      country=""
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+
+  userEvent.click(getByText('Select'));
+  expect(queryByText('United States')).toBeVisible();
+  expect(queryByText('Mexico')).toBeVisible();
+
+  userEvent.click(getByText('Select'));
+  userEvent.type(getByText('Select'), 'xx');
+  expect(queryByText(new RegExp(/no+countries/, 'i'))).toBeDefined();
 });
 
 it.each`
@@ -107,6 +129,7 @@ it('triggers the save function', async () => {
   const { getByText } = render(
     <PersonalInfoModal
       {...props}
+      countrySuggestions={['United States', 'Mexico']}
       firstName="firstName"
       lastName="lastName"
       country="United States"
@@ -142,7 +165,12 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText, getAllByRole } = render(
-    <PersonalInfoModal {...props} country="Mexico" onSave={handleSave} />,
+    <PersonalInfoModal
+      {...props}
+      countrySuggestions={['United States', 'Mexico']}
+      country="Mexico"
+      onSave={handleSave}
+    />,
     { wrapper: StaticRouter },
   );
 

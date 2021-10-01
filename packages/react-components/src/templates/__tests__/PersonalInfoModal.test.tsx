@@ -164,22 +164,24 @@ it('disables the form elements while submitting', async () => {
     new Promise<void>((resolve) => {
       resolveSubmit = resolve;
     });
-  const { getByText, getAllByRole } = render(
+  const { getByText } = render(
     <PersonalInfoModal
       {...props}
+      onSave={handleSave}
       countrySuggestions={['United States', 'Mexico']}
       country="Mexico"
-      onSave={handleSave}
     />,
     { wrapper: StaticRouter },
   );
 
   userEvent.click(getByText(/save/i));
-  getAllByRole('textbox').forEach((field) => expect(field).toBeDisabled());
+
+  const form = getByText(/save/i).closest('form')!;
+  expect(form.elements.length).toBeGreaterThan(1);
+  [...form.elements].forEach((element) => expect(element).toBeDisabled());
 
   act(resolveSubmit);
-
   await waitFor(() =>
-    getAllByRole('textbox').forEach((field) => expect(field).toBeEnabled()),
+    expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
 });

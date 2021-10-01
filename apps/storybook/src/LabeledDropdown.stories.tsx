@@ -48,24 +48,15 @@ export const Required = () => (
       { value: 'LCY', label: 'City' },
       { value: 'SEN', label: 'Southend' },
     ]}
-    value={select(
-      'Value',
-      {
-        Heathrow: 'LHR',
-        Gatwick: 'LGW',
-        Stansted: 'STN',
-        Luton: 'LTN',
-        City: 'LCY',
-        Southend: 'SEN',
-      },
-      'LHR',
-    )}
+    value=""
     enabled={boolean('Enabled', true)}
   />
 );
 export const EmptyOption = () => (
   <LabeledDropdown
     title={text('Title', 'Airport')}
+    placeholder={text('Empty Label', 'Select airport')}
+    subtitle={text('Subtitle', '')}
     options={[
       { value: '', label: text('Empty Label', 'Select airport') },
       { value: 'LHR', label: 'Heathrow' },
@@ -82,7 +73,7 @@ export const EmptyOption = () => (
 export const Invalid = () => (
   <LabeledDropdown
     title={text('Title', 'Airport')}
-    subtitle={text('Subtitle', '(Required)')}
+    subtitle={text('Subtitle', '')}
     required={true}
     options={[
       { value: 'LHR', label: 'Heathrow' },
@@ -92,10 +83,10 @@ export const Invalid = () => (
       { value: 'LCY', label: 'City' },
       { value: 'SEN', label: 'Southend' },
     ]}
-    value=""
+    value="LHR"
     customValidationMessage={text(
       'Validation Error Message',
-      'Choose something',
+      'This airport is currently closed.',
     )}
     enabled={boolean('Enabled', true)}
   />

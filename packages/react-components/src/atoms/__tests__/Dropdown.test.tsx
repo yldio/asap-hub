@@ -33,10 +33,8 @@ it('shows a placeholder without a selection', () => {
   expect(getComputedStyle(getByText('Choose something')).color).toBe(lead.rgb);
 });
 
-it('shows a placeholder message without options', () => {
-  const { getByText, queryByText, rerender } = render(
-    <Dropdown options={[]} value="" />,
-  );
+it('shows no options message when there are no matching options', () => {
+  const { getByText, rerender } = render(<Dropdown options={[]} value="" />);
   userEvent.click(getByText('Select'));
   expect(getByText(/no.+options/i)).toBeVisible();
 
@@ -48,9 +46,8 @@ it('shows a placeholder message without options', () => {
     />,
   );
 
-  userEvent.click(getByText('Select'));
   userEvent.type(getByText('Select'), 'll');
-  expect(queryByText('Not found LL')).toBeDefined();
+  expect(getByText('Not found ll')).toBeVisible();
 });
 
 it('allows selecting from a menu with available options', () => {
@@ -87,7 +84,7 @@ it('only shows valid options', () => {
   );
 
   userEvent.click(getByText('Select'));
-  expect(getByText('Heathrow')).toBeDefined();
+  expect(getByText('Heathrow')).toBeVisible();
   expect(queryByText('-')).toBeNull();
 });
 

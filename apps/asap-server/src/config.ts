@@ -19,6 +19,7 @@ const {
   ALGOLIA_APP_ID,
   ALGOLIA_SEARCH_API_KEY,
   ALGOLIA_INDEX_API_KEY,
+  ALGOLIA_API_KEY,
   ALGOLIA_RESEARCH_OUTPUT_INDEX,
   SES_REGION,
   EVENT_BUS,
@@ -50,6 +51,7 @@ export const sentryDsn = SENTRY_DSN;
 export const algoliaAppId = ALGOLIA_APP_ID || 'LVYWOPQ0A9';
 export const algoliaSearchApiKey = ALGOLIA_SEARCH_API_KEY || '';
 export const algoliaIndexApiKey = ALGOLIA_INDEX_API_KEY || '';
+export const algoliaCiApiKey = ALGOLIA_API_KEY || '';
 export const algoliaResearchOutputIndex =
   ALGOLIA_RESEARCH_OUTPUT_INDEX || 'asap-hub_research_outputs_dev';
 export const algoliaApiKeyTtl = 36060;

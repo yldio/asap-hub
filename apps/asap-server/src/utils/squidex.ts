@@ -14,7 +14,16 @@ export const parseDate = (date: string): Date =>
   DateTime.fromISO(date).toJSDate();
 
 export const sanitiseForSquidex = (text: string): string =>
-  escape(text.replace(/'/g, "''"));
+  text
+    .replace(/'/g, "''")
+    .replace(/%/g, '%25')
+    .replace(/"/g, '%22')
+    .replace(/'/g, '%27')
+    .replace(/\+/g, '%2B')
+    .replace(/\//g, '%2F')
+    .replace(/\?/g, '%3F')
+    .replace(/#/g, '%23')
+    .replace(/&/g, '%26');
 
 export const validatePropertiesRequired = <
   T extends { [key: string]: unknown },

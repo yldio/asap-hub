@@ -158,6 +158,36 @@ describe('Users controller', () => {
 
       expect(result).toEqual(fetchExpectation);
     });
+
+    test('Should search with special characters', async () => {
+      const fetchOptions: FetchOptions = {
+        take: 12,
+        skip: 2,
+        search: 'Solène',
+      };
+
+      const expectedFilter =
+        "data/onboarded/iv eq true and data/role/iv ne 'Hidden' and" +
+        " ((contains(data/firstName/iv, 'Solène')" +
+        " or contains(data/lastName/iv, 'Solène')" +
+        " or contains(data/institution/iv, 'Solène')" +
+        " or contains(data/skills/iv, 'Solène')))";
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter: expectedFilter,
+            top: 12,
+            skip: 2,
+          },
+        })
+        .reply(200, graphQlResponseFetchUsers);
+
+      const result = await users.fetch(fetchOptions);
+
+      expect(result).toEqual(fetchExpectation);
+    });
   });
 
   describe('fetchById', () => {

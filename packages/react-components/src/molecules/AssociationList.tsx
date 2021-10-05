@@ -86,48 +86,50 @@ const AssociationList: React.FC<AssociationListProps> = ({
   type,
   inline = false,
   max = Number.POSITIVE_INFINITY,
-}) => (
-  <div
-    css={[
-      containerStyles,
-      inline && containerInlineStyles,
-      associations.length > max && containerSummarizedStyles,
-    ]}
-  >
-    {((inline && !!associations.length) || associations.length > max) &&
-      (type === 'Team' ? teamIcon : labIcon)}
-    {associations.length > max ? (
-      <>
-        {associations.length} {type}
-        {associations.length === 1 ? '' : 's'}
-      </>
-    ) : (
-      <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
-        {associations.flatMap(({ displayName, id }, i) => (
-          <li
-            css={inline ? itemInlineStyles : itemBlockStyles}
-            key={`sep-${i}`}
-          >
-            {inline || (type === 'Team' ? teamIcon : labIcon)}
-            <div css={inline ? associationInlineStyles : undefined}>
-              {type === 'Team' ? (
-                <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                  {type} {displayName}
-                </Link>
-              ) : (
-                <>
-                  {type} {displayName}
-                </>
-              )}
+}) => {
+  const icon = type === 'Team' ? teamIcon : labIcon;
+  return (
+    <div
+      css={[
+        containerStyles,
+        inline && containerInlineStyles,
+        associations.length > max && containerSummarizedStyles,
+      ]}
+    >
+      {((inline && !!associations.length) || associations.length > max) && icon}
+      {associations.length > max ? (
+        <>
+          {associations.length} {type}
+          {associations.length === 1 ? '' : 's'}
+        </>
+      ) : (
+        <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
+          {associations.flatMap(({ displayName, id }, i) => (
+            <li
+              css={inline ? itemInlineStyles : itemBlockStyles}
+              key={`sep-${i}`}
+            >
+              {inline || icon}
+              <div css={inline ? associationInlineStyles : undefined}>
+                {type === 'Team' ? (
+                  <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                    {type} {displayName}
+                  </Link>
+                ) : (
+                  <>
+                    {type} {displayName}
+                  </>
+                )}
 
-              {inline && <span css={bulletStyles}>·</span>}
-            </div>
-            <div css={dividerStyles}>{inline || <Divider />}</div>
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-);
+                {inline && <span css={bulletStyles}>·</span>}
+              </div>
+              <div css={dividerStyles}>{inline || <Divider />}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 
 export default AssociationList;

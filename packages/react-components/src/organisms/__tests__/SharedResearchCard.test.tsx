@@ -59,6 +59,26 @@ it('displays team information when present', () => {
     expect.stringMatching(/123$/),
   );
 });
+it('displays lab icon and name when present', () => {
+  const { getByText, queryByTitle, rerender } = render(
+    <SharedResearchCard {...sharedResearchCardProps} labs={[]} />,
+  );
+  expect(queryByTitle(/lab/i)).not.toBeInTheDocument();
+
+  rerender(
+    <SharedResearchCard
+      {...sharedResearchCardProps}
+      labs={[
+        {
+          id: '123',
+          name: 'A',
+        },
+      ]}
+    />,
+  );
+  expect(queryByTitle(/lab/i)).toBeInTheDocument();
+  expect(getByText('Lab A')).toBeVisible();
+});
 
 it('displays link component when link property present', () => {
   const { getByText } = render(

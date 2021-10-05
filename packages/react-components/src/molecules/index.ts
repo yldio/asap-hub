@@ -1,4 +1,5 @@
 export { default as AgreeToTerms } from './AgreeToTerms';
+export { default as AssociationList } from './AssociationList';
 export { default as BackLink } from './BackLink';
 export { default as BannerCard } from './BannerCard';
 export { default as CalendarLink } from './CalendarLink';
@@ -36,7 +37,6 @@ export { default as SearchField } from './SearchField';
 export { default as SocialIcons } from './SocialIcons';
 export { default as TabNav } from './TabNav';
 export { default as TagList } from './TagList';
-export { default as TeamsList } from './TeamsList';
 export { default as ToastCard } from './ToastCard';
 export { default as UserMenuButton } from './UserMenuButton';
 export { default as UserProfilePersonalText } from './UserProfilePersonalText';

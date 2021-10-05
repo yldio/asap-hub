@@ -6,7 +6,7 @@ import { RichText } from '../organisms';
 import { lead } from '../colors';
 import { perRem } from '../pixels';
 import { contentSidePaddingWithNavigation } from '../layout';
-import { BackLink, CtaCard, TeamsList } from '../molecules';
+import { BackLink, CtaCard, AssociationList } from '../molecules';
 import { formatDate } from '../date';
 import { createMailTo } from '../mail';
 
@@ -54,7 +54,7 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
       <Card>
         <Pill>{type}</Pill>
         <Display styleAsHeading={3}>{title}</Display>
-        <TeamsList inline teams={teams} />
+        <AssociationList type="Team" inline associations={teams} />
         <RichText toc text={description} />
         <div css={postedStyles}>
           <Caption asParagraph>

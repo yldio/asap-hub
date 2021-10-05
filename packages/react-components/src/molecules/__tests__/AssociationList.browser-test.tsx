@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import domToPlaywright from 'dom-to-playwright';
 
-import TeamsList from '../TeamsList';
+import AssociationList from '../AssociationList';
 import { largeDesktopScreen } from '../../pixels';
 import { getBoundingClientRect } from '../../browser-test-utils';
 
@@ -14,9 +14,10 @@ afterEach(async () => {
 
 it('supports the block and inline modes', async () => {
   const { getByText, rerender } = render(
-    <TeamsList
+    <AssociationList
       inline={false}
-      teams={[
+      type="Team"
+      associations={[
         { displayName: 'One', id: 't0' },
         { displayName: 'Two', id: 't1' },
       ]}
@@ -34,9 +35,10 @@ it('supports the block and inline modes', async () => {
   expect(blockY2).toBeGreaterThan(blockY1);
 
   rerender(
-    <TeamsList
+    <AssociationList
       inline
-      teams={[
+      type="Team"
+      associations={[
         { displayName: 'One', id: 't0' },
         { displayName: 'Two', id: 't1' },
       ]}

@@ -1,11 +1,12 @@
 import { render } from '@testing-library/react';
 
-import TeamsList from '../TeamsList';
+import AssociationList from '../AssociationList';
 
 it('generates an entry for each team', () => {
   const { getAllByRole } = render(
-    <TeamsList
-      teams={[
+    <AssociationList
+      type="Team"
+      associations={[
         { displayName: 'One', id: 't0' },
         { displayName: 'Two', id: 't1' },
       ]}
@@ -21,7 +22,10 @@ it('generates an entry for each team', () => {
 
 it('links to the teams', () => {
   const { getByText } = render(
-    <TeamsList teams={[{ displayName: 'One', id: 't0' }]} />,
+    <AssociationList
+      type="Team"
+      associations={[{ displayName: 'One', id: 't0' }]}
+    />,
   );
   expect(getByText(/team.one/i).closest('a')).toHaveAttribute(
     'href',
@@ -32,8 +36,9 @@ it('links to the teams', () => {
 describe('in inline mode', () => {
   it('renders one team icon as opposed to one each', () => {
     const { getAllByTitle, rerender } = render(
-      <TeamsList
-        teams={[
+      <AssociationList
+        type="Team"
+        associations={[
           { displayName: 'One', id: 't0' },
           { displayName: 'Two', id: 't1' },
         ]}
@@ -42,9 +47,10 @@ describe('in inline mode', () => {
     expect(getAllByTitle(/team/i)).toHaveLength(2);
 
     rerender(
-      <TeamsList
+      <AssociationList
         inline
-        teams={[
+        type="Team"
+        associations={[
           { displayName: 'One', id: 't0' },
           { displayName: 'Two', id: 't1' },
         ]}
@@ -54,7 +60,9 @@ describe('in inline mode', () => {
   });
 
   it('does not render a team icon if there are no teams', () => {
-    const { queryByTitle } = render(<TeamsList inline teams={[]} />);
+    const { queryByTitle } = render(
+      <AssociationList inline type="Team" associations={[]} />,
+    );
     expect(queryByTitle(/team/i)).not.toBeInTheDocument();
   });
 });
@@ -74,10 +82,11 @@ describe.each`
       'summarizes the list of $teams teams to a number',
       ({ teams, expectedText }: { teams: number; expectedText: RegExp }) => {
         const { container } = render(
-          <TeamsList
+          <AssociationList
             max={0}
             inline={inline}
-            teams={Array(teams)
+            type="Team"
+            associations={Array(teams)
               .fill(null)
               .map((_, i) => ({ id: `t${i}`, displayName: `Team ${i + 1}` }))}
           />,

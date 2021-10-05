@@ -3,13 +3,13 @@ import { network } from '@asap-hub/routing';
 
 import { Divider, Link } from '../atoms';
 import { perRem } from '../pixels';
-import { teamIcon } from '../icons';
 import { lead } from '../colors';
-import { themeStyles as linkStyles } from '../atoms/Link';
+import { labIcon, teamIcon } from '../icons';
 
 const containerStyles = css({
   display: 'grid',
   gridColumnGap: `${12 / perRem}em`,
+  color: lead.rgb,
 });
 const containerInlineStyles = css({
   gridTemplateColumns: 'max-content 1fr',
@@ -53,7 +53,7 @@ const inlinePaddingStyles = css({
   },
 });
 
-const teamInlineStyles = css(inlinePaddingStyles, linkStyles.light, {
+const associationInlineStyles = css(inlinePaddingStyles, {
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
@@ -72,13 +72,18 @@ const bulletStyles = css({
   },
 });
 
-interface TeamsListProps {
-  readonly teams: ReadonlyArray<{ id: string; displayName: string }>;
+interface AssociationListProps {
+  readonly associations: ReadonlyArray<{
+    displayName: string;
+    id: string;
+  }>;
+  readonly type: 'Team' | 'Lab';
   readonly inline?: boolean;
   readonly max?: number;
 }
-const TeamsList: React.FC<TeamsListProps> = ({
-  teams,
+const AssociationList: React.FC<AssociationListProps> = ({
+  associations,
+  type,
   inline = false,
   max = Number.POSITIVE_INFINITY,
 }) => (
@@ -86,26 +91,35 @@ const TeamsList: React.FC<TeamsListProps> = ({
     css={[
       containerStyles,
       inline && containerInlineStyles,
-      teams.length > max && containerSummarizedStyles,
+      associations.length > max && containerSummarizedStyles,
     ]}
   >
-    {((inline && !!teams.length) || teams.length > max) && teamIcon}
-    {teams.length > max ? (
-      <span css={{ color: lead.rgb }}>
-        {teams.length} Team{teams.length === 1 ? '' : 's'}
-      </span>
+    {((inline && !!associations.length) || associations.length > max) &&
+      (type === 'Team' ? teamIcon : labIcon)}
+    {associations.length > max ? (
+      <>
+        {associations.length} {type}
+        {associations.length === 1 ? '' : 's'}
+      </>
     ) : (
       <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
-        {teams.flatMap(({ id, displayName }, i) => (
+        {associations.flatMap(({ displayName, id }, i) => (
           <li
             css={inline ? itemInlineStyles : itemBlockStyles}
             key={`sep-${i}`}
           >
-            {inline || teamIcon}
-            <div css={inline ? teamInlineStyles : undefined}>
-              <Link href={network({}).teams({}).team({ teamId: id }).$}>
-                Team {displayName}
-              </Link>
+            {inline || (type === 'Team' ? teamIcon : labIcon)}
+            <div css={inline ? associationInlineStyles : undefined}>
+              {type === 'Team' ? (
+                <Link href={network({}).teams({}).team({ teamId: id }).$}>
+                  {type} {displayName}
+                </Link>
+              ) : (
+                <>
+                  {type} {displayName}
+                </>
+              )}
+
               {inline && <span css={bulletStyles}>·</span>}
             </div>
             <div css={dividerStyles}>{inline || <Divider />}</div>
@@ -116,4 +130,4 @@ const TeamsList: React.FC<TeamsListProps> = ({
   </div>
 );
 
-export default TeamsList;
+export default AssociationList;

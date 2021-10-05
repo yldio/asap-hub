@@ -73,7 +73,7 @@ export default function Dropdown<V extends string>({
   options,
   enabled = true,
   required = false,
-  placeholder = 'Select',
+  placeholder = 'Start Typing...',
 
   value,
   onChange = noop,
@@ -117,11 +117,7 @@ export default function Dropdown<V extends string>({
           noOptionsMessage={noOptionsMessage}
           tabSelectsValue={false}
           onKeyDown={(option) => {
-            switch (option.keyCode) {
-              case 13:
-                handleInputValidation(inputValue);
-                break;
-            }
+            if (option.keyCode === 13) handleInputValidation(inputValue);
           }}
           onChange={(option) => {
             onChange(option?.value);

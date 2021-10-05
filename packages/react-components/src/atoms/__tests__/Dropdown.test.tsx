@@ -16,7 +16,11 @@ it('shows the selected value', () => {
 
 it('shows a placeholder without a selection', () => {
   const { getByText, rerender } = render(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+    <Dropdown
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value=""
+      placeholder="Select"
+    />,
   );
   expect(getByText('Select')).toBeVisible();
   expect(getComputedStyle(getByText('Select')).color).toBe(lead.rgb);
@@ -34,12 +38,15 @@ it('shows a placeholder without a selection', () => {
 });
 
 it('shows no options message when there are no matching options', () => {
-  const { getByText, rerender } = render(<Dropdown options={[]} value="" />);
+  const { getByText, rerender } = render(
+    <Dropdown options={[]} value="" placeholder="Select" />,
+  );
   userEvent.click(getByText('Select'));
   expect(getByText(/no.+options/i)).toBeVisible();
 
   rerender(
     <Dropdown
+      placeholder="Select"
       options={[]}
       value=""
       noOptionsMessage={(value) => `Not found ${value.inputValue}`}
@@ -54,6 +61,7 @@ it('allows selecting from a menu with available options', () => {
   const handleChange = jest.fn();
   const { getByText } = render(
     <Dropdown
+      placeholder="Select"
       options={[
         { value: 'LHR', label: 'Heathrow' },
         { value: 'LGW', label: 'Gatwick' },
@@ -75,6 +83,7 @@ it('allows selecting from a menu with available options', () => {
 it('only shows valid options', () => {
   const { getByText, queryByText } = render(
     <Dropdown
+      placeholder="Select"
       options={[
         { value: '', label: '-' },
         { value: 'Heathrow', label: 'Heathrow' },
@@ -91,6 +100,7 @@ it('only shows valid options', () => {
 it('shows the focused option in green', () => {
   const { getByText } = render(
     <Dropdown
+      placeholder="Select"
       options={[
         { value: 'LHR', label: 'Heathrow' },
         { value: 'LGW', label: 'Gatwick' },
@@ -114,7 +124,11 @@ it('shows the focused option in green', () => {
 
 it('gets a green border when focused', () => {
   const { getByText } = render(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value=""
+    />,
   );
 
   userEvent.click(getByText('Select'));
@@ -131,6 +145,7 @@ it('gets a green border when focused', () => {
 it('gets greyed out when disabled', () => {
   const { getByRole, getByText, rerender } = render(
     <Dropdown
+      placeholder="Select"
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       enabled={false}
       value="LHR"
@@ -160,6 +175,7 @@ it('gets greyed out when disabled', () => {
 it('shows the field in red when required field not filled', async () => {
   const { getByText, getByRole, rerender } = render(
     <Dropdown
+      placeholder="Select"
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       required={true}
       value=""
@@ -173,7 +189,11 @@ it('shows the field in red when required field not filled', async () => {
   );
 
   rerender(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+    <Dropdown
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value=""
+      placeholder="Select"
+    />,
   );
   userEvent.click(getByText('Select'));
   userEvent.tab();
@@ -185,6 +205,7 @@ it('shows the field in red when required field not filled', async () => {
 it('shows an error message when required field not filled', () => {
   const { getByText, getByRole, rerender } = render(
     <Dropdown
+      placeholder="Select"
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       value=""
       required
@@ -198,6 +219,7 @@ it('shows an error message when required field not filled', () => {
 
   rerender(
     <Dropdown
+      placeholder="Select"
       options={[{ value: 'LHR', label: 'Heathrow' }]}
       value=""
       required
@@ -214,7 +236,11 @@ it('shows an error message when required field not filled', () => {
 
 it('clears invalid values, when it looses focus', async () => {
   const { getByText, getByRole, queryByText } = render(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value=""
+    />,
   );
 
   userEvent.click(getByText('Select'));
@@ -233,7 +259,11 @@ it('clears invalid values, when it looses focus', async () => {
 
 it('clears invalid values, when enter', async () => {
   const { getByText, getByRole, queryByText } = render(
-    <Dropdown options={[{ value: 'LHR', label: 'Heathrow' }]} value="" />,
+    <Dropdown
+      placeholder="Select"
+      options={[{ value: 'LHR', label: 'Heathrow' }]}
+      value=""
+    />,
   );
 
   userEvent.click(getByText('Select'));

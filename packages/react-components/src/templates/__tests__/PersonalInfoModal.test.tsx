@@ -92,12 +92,12 @@ it('renders a country selector', () => {
     },
   );
 
-  userEvent.click(getByText('Select'));
+  userEvent.click(getByText('Start Typing...'));
   expect(queryByText('United States')).toBeVisible();
   expect(queryByText('Mexico')).toBeVisible();
 
-  userEvent.click(getByText('Select'));
-  userEvent.type(getByText('Select'), 'xx');
+  userEvent.click(getByText('Start Typing...'));
+  userEvent.type(getByText('Start Typing...'), 'xx');
   expect(queryByText(new RegExp(/no+countries/, 'i'))).toBeDefined();
 });
 

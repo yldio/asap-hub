@@ -25,7 +25,19 @@ jobs:
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-prod' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-prod' --query Parameter.Value --output text)"
           echo "ALGOLIA_RESEARCH_OUTPUT_INDEX=asap-hub_research_outputs_prod" >> $GITHUB_ENV
-      # - name: Clear the index
-      #   run: yarn algolia:clear-index
-      - name: Import records into Algolia
-        run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -t ./apps/asap-server/scripts/algolia-transformation.js
+          echo "ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE=asap-hub_research_outputs_prod_restore" >> $GITHUB_ENV
+          echo "ALGOLIA_RESEARCH_OUTPUT_INDEX_BACKUP=asap-hub_research_outputs_prod_backup" >> $GITHUB_ENV
+      - name: Copy index settings to a temporary index
+        run: yarn run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE
+      - name: Import records into the temporary index
+        run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -t ./apps/asap-server/scripts/algolia-transformation.js
+      - name: Move old production index as a temporary backup
+        run: yarn run algolia transferindex -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_RESEARCH_OUTPUT_INDEX_BACKUP
+      - name: Delete old prod index
+        run: yarn run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_RESEARCH_OUTPUT_INDEX$" -x false
+      - name: Move temporary index to the prod one
+        run: yarn run algolia transferindex -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_RESEARCH_OUTPUT_INDEX
+      - name: Delete the backup index
+        run: yarn run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_RESEARCH_OUTPUT_INDEX_BACKUP$" -x false
+      - name: Delete the restore index
+        run: yarn run algolia deleteindicespattern -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -r "^$ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE$" -x false

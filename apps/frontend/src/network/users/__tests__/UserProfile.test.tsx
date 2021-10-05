@@ -272,7 +272,7 @@ describe('a header edit button', () => {
     const userProfile: UserResponse = {
       ...createUserResponse(),
       city: 'Lon',
-      country: 'UK',
+      country: 'United Kingdom of Great Britain and Northern Ireland',
       id: '42',
     };
 

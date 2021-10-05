@@ -16,7 +16,7 @@ const props: ComponentProps<typeof PersonalInfoModal> = {
 it('renders the title', () => {
   const { getByText } = render(
     <PersonalInfoModal
-      countrySuggestions={[]}
+      {...props}
       loadInstitutionOptions={() => Promise.resolve([])}
       backHref="/wrong"
     />,
@@ -56,9 +56,10 @@ it('renders default values into text inputs', () => {
   const { queryAllByRole } = render(
     <PersonalInfoModal
       {...props}
+      countrySuggestions={['United States', 'Mexico']}
       firstName="firstName"
       lastName="lastName"
-      country="country"
+      country="United States"
       city="city"
       jobTitle="jobTitle"
       institution="institution"
@@ -73,10 +74,31 @@ it('renders default values into text inputs', () => {
       "",
       "institution",
       "jobTitle",
-      "country",
+      "United States",
       "city",
     ]
   `);
+});
+
+it('renders a country selector', () => {
+  const { getByText, queryByText } = render(
+    <PersonalInfoModal
+      {...props}
+      countrySuggestions={['United States', 'Mexico']}
+      country=""
+    />,
+    {
+      wrapper: StaticRouter,
+    },
+  );
+
+  userEvent.click(getByText('Start Typing...'));
+  expect(queryByText('United States')).toBeVisible();
+  expect(queryByText('Mexico')).toBeVisible();
+
+  userEvent.click(getByText('Start Typing...'));
+  userEvent.type(getByText('Start Typing...'), 'xx');
+  expect(queryByText(new RegExp(/no+countries/, 'i'))).toBeDefined();
 });
 
 it.each`
@@ -89,7 +111,9 @@ it.each`
   async ({ label, value, message }) => {
     const { getByLabelText, findByText } = render(
       <PersonalInfoModal {...props} />,
-      { wrapper: StaticRouter },
+      {
+        wrapper: StaticRouter,
+      },
     );
     const input = getByLabelText(label);
     fireEvent.change(input, {
@@ -105,9 +129,10 @@ it('triggers the save function', async () => {
   const { getByText } = render(
     <PersonalInfoModal
       {...props}
+      countrySuggestions={['United States', 'Mexico']}
       firstName="firstName"
       lastName="lastName"
-      country="country"
+      country="United States"
       city="city"
       jobTitle="jobTitle"
       institution="institution"
@@ -121,7 +146,7 @@ it('triggers the save function', async () => {
   expect(jestFn).toHaveBeenCalledWith({
     firstName: 'firstName',
     lastName: 'lastName',
-    country: 'country',
+    country: 'United States',
     city: 'city',
     degree: 'MPH',
     jobTitle: 'jobTitle',
@@ -140,7 +165,12 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <PersonalInfoModal {...props} onSave={handleSave} />,
+    <PersonalInfoModal
+      {...props}
+      onSave={handleSave}
+      countrySuggestions={['United States', 'Mexico']}
+      country="Mexico"
+    />,
     { wrapper: StaticRouter },
   );
 

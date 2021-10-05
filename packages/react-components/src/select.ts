@@ -123,6 +123,10 @@ export const reactSelectStyles = (
     padding: 0,
     paddingRight: `${indicatorPadding / perRem}em`,
   }),
+  placeholder: (provided) => ({
+    ...provided,
+    color: lead.rgb,
+  }),
 });
 
 export const reactMultiSelectStyles = (

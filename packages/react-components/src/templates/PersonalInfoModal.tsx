@@ -116,8 +116,8 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               title="Degree"
               subtitle="(Optional)"
               onChange={setNewDegree}
+              placeholder="Choose a degree"
               options={[
-                { label: 'Choose a degree', value: '' },
                 { label: 'BA', value: 'BA' },
                 { label: 'BSc', value: 'BSc' },
                 { label: 'MSc', value: 'MSc' },
@@ -175,15 +175,21 @@ const PersonalInfoModal: React.FC<PersonalInfoModalProps> = ({
               value={newJobTitle}
               enabled={!isSaving}
             />
-            <LabeledTypeahead
+            <LabeledDropdown
               title="Country"
               subtitle="(Required)"
               required
               getValidationMessage={() => 'Please add your country'}
-              suggestions={countrySuggestions}
+              options={countrySuggestions.map((countryName) => ({
+                label: countryName,
+                value: countryName,
+              }))}
               onChange={setNewCountry}
               value={newCountry}
               enabled={!isSaving}
+              noOptionsMessage={(value: { inputValue: string }) =>
+                `No countries match "${value.inputValue}"`
+              }
             />
             <LabeledTextField
               title="City"

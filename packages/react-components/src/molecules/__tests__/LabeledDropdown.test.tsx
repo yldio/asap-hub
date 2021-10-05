@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import LabeledDropdown from '../LabeledDropdown';
 
 it('renders a labeled dropdown, passing through props', () => {
-  const { getByText, getByLabelText } = render(
+  const { getByLabelText } = render(
     <LabeledDropdown
       title="Title"
       subtitle="Optional"
@@ -14,5 +14,5 @@ it('renders a labeled dropdown, passing through props', () => {
 
   expect(getByLabelText(/Title/i)).toBeVisible();
   expect(getByLabelText(/Optional/i)).toBeVisible();
-  expect(getByText('Value')).toBeVisible();
+  expect(getByLabelText(/Title/i)).toHaveValue('Value');
 });

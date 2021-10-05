@@ -25,14 +25,14 @@ import { useAlgolia } from '../hooks/algolia';
 
 const researchOutputIndexState = atomFamily<
   { ids: ReadonlyArray<string>; total: number } | Error | undefined,
-  GetListOptions
+  ResearchOutputListOptions
 >({
   key: 'researchOutputIndex',
   default: undefined,
 });
 export const researchOutputsState = selectorFamily<
   ListResearchOutputResponse | Error | undefined,
-  GetListOptions
+  ResearchOutputListOptions
 >({
   key: 'researchOutputs',
   get:

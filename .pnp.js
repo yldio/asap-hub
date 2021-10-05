@@ -932,6 +932,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:0.4.1"
       ],
       [
+        "@fast-csv/format",
+        "npm:4.3.5"
+      ],
+      [
         "@figspec/components",
         "npm:0.1.9"
       ],
@@ -2074,6 +2078,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "@types/stream-json",
         "npm:1.7.1"
+      ],
+      [
+        "@types/streamsaver",
+        "npm:2.0.1"
       ],
       [
         "@types/superagent",
@@ -6083,6 +6091,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:4.5.0"
       ],
       [
+        "lodash.escaperegexp",
+        "npm:4.1.2"
+      ],
+      [
         "lodash.flatten",
         "npm:4.4.0"
       ],
@@ -6103,8 +6115,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:3.0.3"
       ],
       [
+        "lodash.isequal",
+        "npm:4.5.0"
+      ],
+      [
+        "lodash.isfunction",
+        "npm:3.0.9"
+      ],
+      [
         "lodash.isinteger",
         "npm:4.0.4"
+      ],
+      [
+        "lodash.isnil",
+        "npm:4.0.0"
       ],
       [
         "lodash.isnumber",
@@ -8451,6 +8475,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "npm:1.0.8"
       ],
       [
+        "streamsaver",
+        "npm:2.0.5"
+      ],
+      [
         "streamsink",
         "npm:1.2.0"
       ],
@@ -9269,6 +9297,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       [
         "web-resource-inliner",
         "npm:5.0.0"
+      ],
+      [
+        "web-streams-polyfill",
+        "npm:3.1.1"
       ],
       [
         "webcrypto-core",
@@ -10166,6 +10198,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@asap-hub/validation", "workspace:packages/validation"],
             ["@auth0/auth0-spa-js", "npm:1.15.0"],
             ["@babel/runtime-corejs3", "npm:7.14.0"],
+            ["@fast-csv/format", "npm:4.3.5"],
             ["@sentry/cli", "npm:1.68.0"],
             ["@sentry/react", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:6.11.0"],
             ["@sentry/tracing", "npm:6.11.0"],
@@ -10182,6 +10215,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/react-dom", "npm:17.0.5"],
             ["@types/react-router-dom", "npm:5.1.7"],
             ["@types/react-test-renderer", "npm:17.0.1"],
+            ["@types/streamsaver", "npm:2.0.1"],
             ["@types/testing-library__jest-dom", "npm:5.9.5"],
             ["@types/testing-library__react", "npm:10.0.1"],
             ["@types/testing-library__react-hooks", "npm:3.4.1"],
@@ -10206,11 +10240,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["react-test-renderer", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:17.0.2"],
             ["react-titled", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.1"],
             ["recoil", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#patch:recoil@npm%3A0.1.3#../../patches/recoil.patch::version=0.1.3&hash=08b51a&locator=%40asap-hub%2Ffrontend%40workspace%3Aapps%2Ffrontend"],
+            ["streamsaver", "npm:2.0.5"],
             ["typescript", "patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"],
             ["use-debounce", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:5.2.1"],
             ["use-deep-compare-effect", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.6.1"],
             ["use-http", "virtual:141d36d44af4b6731166e6172e8780f914aeab37a6dcbae67fcdbe0ff29aae79810737fc4482e7f5495801c3c6b8686f4717e34bde53971e4965b26dfb1e760e#npm:1.0.20"],
-            ["uuid", "npm:8.3.2"]
+            ["uuid", "npm:8.3.2"],
+            ["web-streams-polyfill", "npm:3.1.1"]
           ],
           "linkType": "SOFT",
         }]
@@ -19335,6 +19371,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@fast-csv/format", [
+        ["npm:4.3.5", {
+          "packageLocation": "./.yarn/cache/@fast-csv-format-npm-4.3.5-e0dba6439e-98bcc29736.zip/node_modules/@fast-csv/format/",
+          "packageDependencies": [
+            ["@fast-csv/format", "npm:4.3.5"],
+            ["@types/node", "npm:14.17.18"],
+            ["lodash.escaperegexp", "npm:4.1.2"],
+            ["lodash.isboolean", "npm:3.0.3"],
+            ["lodash.isequal", "npm:4.5.0"],
+            ["lodash.isfunction", "npm:3.0.9"],
+            ["lodash.isnil", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@figspec/components", [
         ["npm:0.1.9", {
           "packageLocation": "./.yarn/cache/@figspec-components-npm-0.1.9-25319e7d17-4621a8d664.zip/node_modules/@figspec/components/",
@@ -24335,6 +24386,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:14.14.45"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:14.17.18", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-14.17.18-89c5bb75f1-a887552fdb.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:14.17.18"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@types/node-fetch", [
@@ -24852,6 +24910,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/stream-json", "npm:1.7.1"],
             ["@types/node", "npm:13.11.1"],
             ["@types/stream-chain", "npm:2.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@types/streamsaver", [
+        ["npm:2.0.1", {
+          "packageLocation": "./.yarn/cache/@types-streamsaver-npm-2.0.1-e72c9c47e4-8240d9e2fc.zip/node_modules/@types/streamsaver/",
+          "packageDependencies": [
+            ["@types/streamsaver", "npm:2.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -41671,6 +41738,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["lodash.escaperegexp", [
+        ["npm:4.1.2", {
+          "packageLocation": "./.yarn/cache/lodash.escaperegexp-npm-4.1.2-c5b90e0e9c-475d069cda.zip/node_modules/lodash.escaperegexp/",
+          "packageDependencies": [
+            ["lodash.escaperegexp", "npm:4.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["lodash.flatten", [
         ["npm:4.4.0", {
           "packageLocation": "./.yarn/cache/lodash.flatten-npm-4.4.0-495935e617-f22a7f6f16.zip/node_modules/lodash.flatten/",
@@ -41716,11 +41792,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["lodash.isequal", [
+        ["npm:4.5.0", {
+          "packageLocation": "./.yarn/cache/lodash.isequal-npm-4.5.0-f8b0f64d63-5b47e09464.zip/node_modules/lodash.isequal/",
+          "packageDependencies": [
+            ["lodash.isequal", "npm:4.5.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["lodash.isfunction", [
+        ["npm:3.0.9", {
+          "packageLocation": "./.yarn/cache/lodash.isfunction-npm-3.0.9-72aaa7f66c-4c7c77b45e.zip/node_modules/lodash.isfunction/",
+          "packageDependencies": [
+            ["lodash.isfunction", "npm:3.0.9"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["lodash.isinteger", [
         ["npm:4.0.4", {
           "packageLocation": "./.yarn/cache/lodash.isinteger-npm-4.0.4-42add9f4e1-a29551cc9a.zip/node_modules/lodash.isinteger/",
           "packageDependencies": [
             ["lodash.isinteger", "npm:4.0.4"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["lodash.isnil", [
+        ["npm:4.0.0", {
+          "packageLocation": "./.yarn/cache/lodash.isnil-npm-4.0.0-8c8ee34fe6-d2a22aa6cd.zip/node_modules/lodash.isnil/",
+          "packageDependencies": [
+            ["lodash.isnil", "npm:4.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -50440,6 +50543,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["streamsaver", [
+        ["npm:2.0.5", {
+          "packageLocation": "./.yarn/cache/streamsaver-npm-2.0.5-dadc119841-b7a6c48a7b.zip/node_modules/streamsaver/",
+          "packageDependencies": [
+            ["streamsaver", "npm:2.0.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["streamsink", [
         ["npm:1.2.0", {
           "packageLocation": "./.yarn/cache/streamsink-npm-1.2.0-21a4f1b4ae-e814bf9ff4.zip/node_modules/streamsink/",
@@ -53705,6 +53817,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["mime", "npm:2.4.6"],
             ["node-fetch", "npm:2.6.0"],
             ["valid-data-url", "npm:3.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["web-streams-polyfill", [
+        ["npm:3.1.1", {
+          "packageLocation": "./.yarn/cache/web-streams-polyfill-npm-3.1.1-ba7b0e5b2d-73f7cb0301.zip/node_modules/web-streams-polyfill/",
+          "packageDependencies": [
+            ["web-streams-polyfill", "npm:3.1.1"]
           ],
           "linkType": "HARD",
         }]

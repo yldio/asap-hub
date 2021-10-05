@@ -1,8 +1,9 @@
-import { ComponentProps } from 'react';
+import { ComponentProps, useContext } from 'react';
 import { css } from '@emotion/react';
+import { ToastContext } from '@asap-hub/react-context';
 
 import { ListControls, PageControls } from '../molecules';
-import { Paragraph } from '../atoms';
+import { Button, Paragraph } from '../atoms';
 import {
   perRem,
   vminLinearCalcClamped,
@@ -24,6 +25,8 @@ const headerNoResultsStyles = css({
     justifyContent: 'flex-end',
   },
 });
+
+const exportStyles = css({ marginLeft: `${24 / perRem}em` });
 
 const mainStyles = css({
   justifySelf: 'stretch',
@@ -51,6 +54,7 @@ const pageControlsStyles = css({
 type ResultListProps = ComponentProps<typeof PageControls> & {
   readonly numberOfItems: number;
   readonly isListView?: boolean;
+  readonly exportResults?: () => Promise<void>;
   readonly cardViewHref?: string;
   readonly listViewHref?: string;
   readonly children: React.ReactNode;
@@ -58,48 +62,69 @@ type ResultListProps = ComponentProps<typeof PageControls> & {
 const ResultList: React.FC<ResultListProps> = ({
   numberOfItems,
   isListView = false,
+  exportResults,
   cardViewHref,
   listViewHref,
   children,
   ...pageControlsProps
-}) => (
-  <article>
-    <header css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}>
-      {numberOfItems > 0 && (
-        <Paragraph primary>
-          <strong>
-            {numberOfItems} result{numberOfItems === 1 || 's'} found
-          </strong>
-        </Paragraph>
+}) => {
+  const toast = useContext(ToastContext);
+  return (
+    <article>
+      <header
+        css={[headerStyles, numberOfItems === 0 && headerNoResultsStyles]}
+      >
+        {numberOfItems > 0 && (
+          <Paragraph primary>
+            <strong>
+              {numberOfItems} result{numberOfItems === 1 || 's'} found
+            </strong>
+            {exportResults && (
+              <span css={exportStyles}>
+                <Button
+                  linkStyle
+                  onClick={() =>
+                    exportResults().catch(() =>
+                      toast(
+                        'There was an issue exporting to CSV. Please try again.',
+                      ),
+                    )
+                  }
+                >
+                  Export as CSV
+                </Button>
+              </span>
+            )}
+          </Paragraph>
+        )}
+        {cardViewHref && listViewHref && (
+          <ListControls
+            isListView={isListView}
+            cardViewHref={cardViewHref}
+            listViewHref={listViewHref}
+          />
+        )}
+      </header>
+      {numberOfItems > 0 ? (
+        <>
+          <main css={mainStyles}>{children}</main>
+          <section css={pageControlsStyles}>
+            <PageControls {...pageControlsProps} />
+          </section>
+        </>
+      ) : (
+        <main css={{ textAlign: 'center' }}>
+          <Paragraph primary>
+            <strong>No matches found!</strong>
+            <br />
+            <span css={{ color: lead.rgb }}>
+              We're sorry, we couldn't find results to match your search. Please
+              check your spelling or try using fewer words.
+            </span>
+          </Paragraph>
+        </main>
       )}
-      {cardViewHref && listViewHref && (
-        <ListControls
-          isListView={isListView}
-          cardViewHref={cardViewHref}
-          listViewHref={listViewHref}
-        />
-      )}
-    </header>
-    {numberOfItems > 0 ? (
-      <>
-        <main css={mainStyles}>{children}</main>
-        <section css={pageControlsStyles}>
-          <PageControls {...pageControlsProps} />
-        </section>
-      </>
-    ) : (
-      <main css={{ textAlign: 'center' }}>
-        <Paragraph primary>
-          <strong>No matches found!</strong>
-          <br />
-          <span css={{ color: lead.rgb }}>
-            We're sorry, we couldn't find results to match your search. Please
-            check your spelling or try using fewer words.
-          </span>
-        </Paragraph>
-      </main>
-    )}
-  </article>
-);
-
+    </article>
+  );
+};
 export default ResultList;

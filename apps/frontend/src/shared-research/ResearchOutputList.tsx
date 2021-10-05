@@ -1,8 +1,16 @@
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
+import { format } from 'date-fns';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
+import { useAlgolia } from '../hooks/algolia';
+import { getResearchOutputs } from './api';
+import {
+  createCsvFileStream,
+  algoliaResultsToStream,
+  researchOutputToCSV,
+} from './export';
 
 interface ResearchOutputListProps {
   searchQuery?: string;
@@ -21,11 +29,27 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
     currentPage,
     pageSize,
   });
+  const { index } = useAlgolia();
 
   const { numberOfPages, renderPageHref } = usePagination(
     result?.total || 0,
     pageSize,
   );
+  const exportResults = () =>
+    algoliaResultsToStream(
+      createCsvFileStream(
+        { headers: true },
+        `SharedOutputs_${format(new Date(), 'MMddyy')}.csv`,
+      ),
+      (paginationParams) =>
+        getResearchOutputs(index, {
+          filters,
+          searchQuery,
+          ...paginationParams,
+        }),
+      researchOutputToCSV,
+    );
+
   return (
     <SharedResearchList
       researchOutputs={result.items}
@@ -34,6 +58,7 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       isListView={isListView}
+      exportResults={exportResults}
       cardViewHref={sharedResearch({}).$ + cardViewParams}
       listViewHref={sharedResearch({}).$ + listViewParams}
     />

@@ -1,13 +1,9 @@
 import { SearchResponse } from '@algolia/client-search';
 
-export const createAlgoliaResponse = <V extends { id?: string }>(
+export const createAlgoliaResponse = <V extends Record<string, unknown>>(
   data: V[],
-  overrides: Partial<SearchResponse<V>> = {},
+  overrides: Partial<Omit<SearchResponse<unknown>, 'hits'>> = {},
 ): SearchResponse<V> => ({
-  hits: data.map((item, i) => ({
-    ...item,
-    objectID: item.id ?? `${i}`,
-  })),
   nbHits: data.length,
   page: 0,
   nbPages: 1,
@@ -18,4 +14,8 @@ export const createAlgoliaResponse = <V extends { id?: string }>(
   renderingContent: {},
   processingTimeMS: 1,
   ...overrides,
+  hits: data.map((item, i) => ({
+    ...item,
+    objectID: `${i}`,
+  })),
 });

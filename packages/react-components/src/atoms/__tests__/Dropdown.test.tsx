@@ -3,7 +3,7 @@ import { waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
-import Dropdown from '../Dropdown';
+import Dropdown, { ENTER_KEYCODE } from '../Dropdown';
 import { ember, fern, pine, lead, silver } from '../../colors';
 
 it('shows the selected value', () => {
@@ -273,7 +273,7 @@ it('clears invalid values, when enter', async () => {
   expect(getByRole('textbox')).toHaveValue('xxx');
 
   fireEvent.keyDown(getByRole('textbox'), {
-    keyCode: 13,
+    keyCode: ENTER_KEYCODE,
   });
 
   await waitFor(() => {

@@ -15,6 +15,8 @@ import { dropdownChevronIcon } from '../icons';
 import { Option, reactSelectStyles } from '../select';
 import { useValidation, validationMessageStyles } from '../form';
 
+export const ENTER_KEYCODE = 13;
+
 const containerStyles = css({
   flexBasis: '100%',
 });
@@ -117,7 +119,8 @@ export default function Dropdown<V extends string>({
           noOptionsMessage={noOptionsMessage}
           tabSelectsValue={false}
           onKeyDown={(option) => {
-            if (option.keyCode === 13) handleInputValidation(inputValue);
+            if (option.keyCode === ENTER_KEYCODE)
+              handleInputValidation(inputValue);
           }}
           onChange={(option) => {
             onChange(option?.value);

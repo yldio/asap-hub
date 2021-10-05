@@ -3,6 +3,8 @@ import {
   config,
   GraphqlResearchOutputAuthors,
   RestTeam,
+  Team,
+  WebhookPayload,
 } from '@asap-hub/squidex';
 import { RestUser } from '@asap-hub/squidex';
 import {
@@ -981,6 +983,60 @@ export const updateExpectation: TeamResponse = {
   proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
   tools: [],
   labCount: 2,
+};
+
+export const getTeamsEvent = (): WebhookPayload<Team> => ({
+  type: 'TeamsCreated',
+  timestamp: '2021-10-05T12:49:49Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Updated',
+    id: 'teamId',
+    created: '2021-10-04T16:55:30Z',
+    lastModified: '2021-10-05T12:49:49Z',
+    data: {
+      displayName: { iv: 'Team 1' },
+      applicationNumber: { iv: '12345' },
+      skills: { iv: null },
+      proposal: { iv: [] },
+      projectTitle: { iv: 'Team Project' },
+      projectSummary: { iv: '' },
+      outputs: { iv: ['fe7347bc-5488-4e37-a39d-5434911260ba'] },
+      tools: { iv: [] },
+    },
+  },
+});
+
+export const updateTeamEvent: WebhookPayload<Team> = {
+  type: 'TeamsUpdated',
+  timestamp: '2021-10-05T12:49:49Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Updated',
+    id: 'teamId',
+    created: '2021-10-04T16:55:30Z',
+    lastModified: '2021-10-05T12:49:49Z',
+    data: {
+      displayName: { iv: 'Team 1' },
+      applicationNumber: { iv: '12345' },
+      skills: { iv: null },
+      proposal: { iv: [] },
+      projectTitle: { iv: 'Team Project' },
+      projectSummary: { iv: '' },
+      outputs: { iv: ['5434911260ba'] },
+      tools: { iv: [] },
+    },
+    dataOld: {
+      displayName: { iv: 'Team 1' },
+      applicationNumber: { iv: '12345' },
+      skills: { iv: null },
+      proposal: { iv: [] },
+      projectTitle: { iv: 'Team Project' },
+      projectSummary: { iv: '' },
+      outputs: { iv: ['5434911260ba'] },
+      tools: { iv: [] },
+    },
+  },
 };
 
 export const teamResponse: TeamResponse = updateExpectation;

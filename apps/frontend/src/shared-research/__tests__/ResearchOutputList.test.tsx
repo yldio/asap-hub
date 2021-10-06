@@ -101,6 +101,15 @@ it('renders a list of research outputs', async () => {
   expect(container.textContent).toContain('Test Output 1');
 });
 
+it('does not show export link when feature flag disabled (REGRESSION)', async () => {
+  disable('ALGOLIA_RESEARCH_OUTPUTS');
+  mockGetResearchOutputsLegacy.mockResolvedValue(
+    createListResearchOutputResponse(2),
+  );
+  const { queryByText } = await renderResearchOutputList();
+  expect(queryByText(/export/i)).toBeNull();
+});
+
 it('triggers and export with the same parameters', async () => {
   mockGetResearchOutputs.mockResolvedValue(
     createAlgoliaResearchOutputResponse(2),

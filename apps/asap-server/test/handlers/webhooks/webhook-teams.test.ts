@@ -6,12 +6,22 @@ import { getApiGatewayEvent } from '../../helpers/events';
 import { getTeamsEvent, updateTeamEvent } from '../../fixtures/teams.fixtures';
 import { createSignedPayload } from '../../helpers/webhooks';
 import { eventBus, eventSource } from '../../../src/config';
+// import { getListResearchOutputResponse } from '../../fixtures/research-output.fixtures';
+import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
+import {
+  algoliaClientMock,
+  // algoliaIndexMock,
+} from '../../mocks/algolia-client.mock';
 
 describe('Teams webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),
   } as unknown as jest.Mocked<EventBridge>;
-  const handler = teamsWebhookFactory(evenBridgeMock);
+  const handler = teamsWebhookFactory(
+    evenBridgeMock,
+    researchOutputControllerMock,
+    algoliaClientMock,
+  );
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -62,7 +72,7 @@ describe('Teams webhook', () => {
   });
   test('Should put the teams-updated event into the event bus and return 200', async () => {
     const res = (await handler(
-      createSignedPayload(updateTeamEvent),
+      createSignedPayload(updateTeamEvent()),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -72,7 +82,25 @@ describe('Teams webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'TeamsUpdated',
-          Detail: JSON.stringify(updateTeamEvent),
+          Detail: JSON.stringify(updateTeamEvent()),
+        },
+      ],
+    });
+  });
+
+  test('Should put the teams-updated event into the event bus and return 200', async () => {
+    const res = (await handler(
+      createSignedPayload(updateTeamEvent()),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(200);
+    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+      Entries: [
+        {
+          EventBusName: eventBus,
+          Source: eventSource,
+          DetailType: 'TeamsUpdated',
+          Detail: JSON.stringify(updateTeamEvent()),
         },
       ],
     });

@@ -986,7 +986,7 @@ export const updateExpectation: TeamResponse = {
 };
 
 export const getTeamsEvent = (): WebhookPayload<Team> => ({
-  type: 'TeamsCreated',
+  type: 'TeamsPublished',
   timestamp: '2021-10-05T12:49:49Z',
   payload: {
     $type: 'EnrichedContentEvent',
@@ -1007,7 +1007,9 @@ export const getTeamsEvent = (): WebhookPayload<Team> => ({
   },
 });
 
-export const updateTeamEvent: WebhookPayload<Team> = {
+export const updateTeamEvent = (
+  newOutputsIds: string[] = [],
+): WebhookPayload<Team> => ({
   type: 'TeamsUpdated',
   timestamp: '2021-10-05T12:49:49Z',
   payload: {
@@ -1023,7 +1025,7 @@ export const updateTeamEvent: WebhookPayload<Team> = {
       proposal: { iv: [] },
       projectTitle: { iv: 'Team Project' },
       projectSummary: { iv: '' },
-      outputs: { iv: ['5434911260ba'] },
+      outputs: { iv: ['5434911260ba'].concat(newOutputsIds) },
       tools: { iv: [] },
     },
     dataOld: {
@@ -1037,6 +1039,38 @@ export const updateTeamEvent: WebhookPayload<Team> = {
       tools: { iv: [] },
     },
   },
-};
+});
+
+// export const updateTeamEvent: WebhookPayload<Team> = {
+//   type: 'TeamsUpdated',
+//   timestamp: '2021-10-05T12:49:49Z',
+//   payload: {
+//     $type: 'EnrichedContentEvent',
+//     type: 'Updated',
+//     id: 'teamId',
+//     created: '2021-10-04T16:55:30Z',
+//     lastModified: '2021-10-05T12:49:49Z',
+//     data: {
+//       displayName: { iv: 'Team 1' },
+//       applicationNumber: { iv: '12345' },
+//       skills: { iv: null },
+//       proposal: { iv: [] },
+//       projectTitle: { iv: 'Team Project' },
+//       projectSummary: { iv: '' },
+//       outputs: { iv: ['5434911260ba'] },
+//       tools: { iv: [] },
+//     },
+//     dataOld: {
+//       displayName: { iv: 'Team 1' },
+//       applicationNumber: { iv: '12345' },
+//       skills: { iv: null },
+//       proposal: { iv: [] },
+//       projectTitle: { iv: 'Team Project' },
+//       projectSummary: { iv: '' },
+//       outputs: { iv: ['5434911260ba'] },
+//       tools: { iv: [] },
+//     },
+//   },
+// };
 
 export const teamResponse: TeamResponse = updateExpectation;

@@ -66,7 +66,7 @@ it('fires onSave when submitting', async () => {
   );
 
   userEvent.clear(getByLabelText(/email/i));
-  await userEvent.type(getByLabelText(/email/i), 'new-contact@example.com');
+  userEvent.type(getByLabelText(/email/i), 'new-contact@example.com');
   userEvent.click(getByText(/save/i));
   expect(handleSave).toHaveBeenLastCalledWith(
     expect.objectContaining({ contactEmail: 'new-contact@example.com' }),
@@ -88,7 +88,7 @@ it('does not fire onSave when the email is invalid', async () => {
   );
 
   userEvent.clear(getByLabelText(/email/i));
-  await userEvent.type(getByLabelText(/email/i), '.');
+  userEvent.type(getByLabelText(/email/i), '.');
   userEvent.click(getByText(/save/i));
   expect(handleSave).not.toHaveBeenCalled();
 });

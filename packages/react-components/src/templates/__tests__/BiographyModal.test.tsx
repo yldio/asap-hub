@@ -27,7 +27,7 @@ it('fires onSave when submitting', async () => {
     { wrapper: StaticRouter },
   );
 
-  await userEvent.type(getByDisplayValue('My Bio'), ' 2');
+  userEvent.type(getByDisplayValue('My Bio'), ' 2');
   userEvent.click(getByText(/save/i));
   expect(handleSave).toHaveBeenLastCalledWith('My Bio 2');
 

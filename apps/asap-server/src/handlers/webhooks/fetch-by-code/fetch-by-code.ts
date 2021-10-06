@@ -15,7 +15,7 @@ export const fetchUserByCodeHandlerFactory = (
   http(async (request: lambda.Request): Promise<
     lambda.Response<UserMetadataResponse>
   > => {
-    await validateRequest(request);
+    validateRequest(request);
 
     const paramsSchema = Joi.object({
       code: Joi.string().required(),

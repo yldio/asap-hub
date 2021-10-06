@@ -2,11 +2,20 @@ import { ComponentProps } from 'react';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { sharedResearch } from '@asap-hub/routing';
 import { isEnabled } from '@asap-hub/flags';
+import { css } from '@emotion/react';
 
 import { Card, Anchor, Headline2, Caption } from '../atoms';
 import { AssociationList, UsersList } from '../molecules';
 import { formatDate } from '../date';
 import { SharedResearchMetadata } from '.';
+import { perRem } from '../pixels';
+
+const associationStyles = css({
+  display: 'flex',
+  flexWrap: 'wrap',
+  columnGap: `${24 / perRem}em`,
+  rowGap: `${12 / perRem}em`,
+});
 
 type SharedResearchCardProps = Pick<
   ResearchOutputResponse,
@@ -32,13 +41,15 @@ const SharedResearchCard: React.FC<SharedResearchCardProps> = ({
     {isEnabled('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST') && (
       <UsersList max={3} users={authors} />
     )}
-    <AssociationList
-      type="Lab"
-      inline
-      max={1}
-      associations={labs.map(({ id, name }) => ({ displayName: name, id }))}
-    />
-    <AssociationList type="Team" inline max={3} associations={teams} />
+    <div css={associationStyles}>
+      <AssociationList
+        type="Lab"
+        inline
+        max={1}
+        associations={labs.map(({ id, name }) => ({ displayName: name, id }))}
+      />
+      <AssociationList type="Team" inline max={3} associations={teams} />
+    </div>
     <Caption accent={'lead'} asParagraph>
       Date Added: {formatDate(new Date(addedDate || created))}
     </Caption>

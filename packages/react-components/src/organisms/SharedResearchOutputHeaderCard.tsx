@@ -24,6 +24,11 @@ const timestampStyles = css({
     marginBottom: `${12 / perRem}em`,
   },
 });
+const associationStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: `${12 / perRem}em`,
+});
 
 type SharedResearchOutputHeaderCardProps = ComponentProps<
   typeof SharedResearchMetadata
@@ -59,13 +64,17 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
         {isEnabled('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST') && (
           <UsersList users={authors} />
         )}
-        <AssociationList
-          type="Lab"
-          inline
-          associations={labs.map(({ name, id }) => ({ displayName: name, id }))}
-        />
-
-        <AssociationList type="Team" inline associations={teams} />
+        <div css={associationStyles}>
+          <AssociationList
+            type="Lab"
+            inline
+            associations={labs.map(({ name, id }) => ({
+              displayName: name,
+              id,
+            }))}
+          />
+          <AssociationList type="Team" inline associations={teams} />
+        </div>
         <div css={[timestampStyles, captionStyles]}>
           <span>
             Date added: {formatDate(new Date(addedDate || created))} ·{' '}

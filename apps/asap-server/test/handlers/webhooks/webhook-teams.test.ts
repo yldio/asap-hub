@@ -1,10 +1,10 @@
-import { Team } from '@asap-hub/squidex';
 import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
+import { Team } from '@asap-hub/squidex';
 import { teamsWebhookFactory } from '../../../src/handlers/webhooks/webhook-teams';
-import { getApiGatewayEvent } from '../../helpers/events';
 import { getTeamsEvent, updateTeamEvent } from '../../fixtures/teams.fixtures';
 import { createSignedPayload } from '../../helpers/webhooks';
+import { getApiGatewayEvent } from '../../helpers/events';
 import { eventBus, eventSource } from '../../../src/config';
 
 describe('Teams webhook', () => {
@@ -62,7 +62,7 @@ describe('Teams webhook', () => {
   });
   test('Should put the teams-updated event into the event bus and return 200', async () => {
     const res = (await handler(
-      createSignedPayload(updateTeamEvent),
+      createSignedPayload(updateTeamEvent()),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -72,7 +72,25 @@ describe('Teams webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'TeamsUpdated',
-          Detail: JSON.stringify(updateTeamEvent),
+          Detail: JSON.stringify(updateTeamEvent()),
+        },
+      ],
+    });
+  });
+
+  test('Should put the teams-updated event into the event bus and return 200', async () => {
+    const res = (await handler(
+      createSignedPayload(updateTeamEvent()),
+    )) as APIGatewayProxyResult;
+
+    expect(res.statusCode).toStrictEqual(200);
+    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+      Entries: [
+        {
+          EventBusName: eventBus,
+          Source: eventSource,
+          DetailType: 'TeamsUpdated',
+          Detail: JSON.stringify(updateTeamEvent()),
         },
       ],
     });

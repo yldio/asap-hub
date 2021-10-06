@@ -1,6 +1,7 @@
 import { SharedResearchList } from '@asap-hub/react-components';
 import { sharedResearch } from '@asap-hub/routing';
 import { format } from 'date-fns';
+import { isEnabled } from '@asap-hub/flags';
 
 import { useResearchOutputs } from './state';
 import { usePaginationParams, usePagination } from '../hooks';
@@ -58,7 +59,9 @@ const ResearchOutputList: React.FC<ResearchOutputListProps> = ({
       currentPageIndex={currentPage}
       renderPageHref={renderPageHref}
       isListView={isListView}
-      exportResults={exportResults}
+      exportResults={
+        isEnabled('ALGOLIA_RESEARCH_OUTPUTS') ? exportResults : undefined
+      }
       cardViewHref={sharedResearch({}).$ + cardViewParams}
       listViewHref={sharedResearch({}).$ + listViewParams}
     />

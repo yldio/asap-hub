@@ -15,10 +15,8 @@ export const parseDate = (date: string): Date =>
 
 export const sanitiseForSquidex = (text: string): string =>
   text
-    .replace(/'/g, "''")
-    .replace(/%/g, '%25')
+    .replace(/'/g, '%27%27')
     .replace(/"/g, '%22')
-    .replace(/'/g, '%27')
     .replace(/\+/g, '%2B')
     .replace(/\//g, '%2F')
     .replace(/\?/g, '%3F')

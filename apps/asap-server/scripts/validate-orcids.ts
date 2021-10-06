@@ -27,6 +27,9 @@ const validateOrcids = async (): Promise<void> => {
     // eslint-disable-next-line no-console
     console.log('No users with invalid orcids found.');
   }
+
+  // eslint-disable-next-line no-console
+  console.log(`Validated ${usersProcessed}, no invalid ORCIDs found`);
 };
 
 validateOrcids();

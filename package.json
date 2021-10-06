@@ -37,7 +37,9 @@
     "test:integration": "yarn test --config=jest-integration.config.js",
     "watch:babel": "yarn workspaces foreach -vpi -j 1000 run watch:babel",
     "watch:typecheck": "yarn build:typecheck -w",
-    "schema:update": "./apps/asap-server/scripts/schema-update.sh"
+    "schema:update": "./apps/asap-server/scripts/schema-update.sh",
+    "ro:export": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/export-research-outputs.ts",
+    "algolia:clear-index": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/clear-index.ts"
   },
   "resolutions": {
     "encoding": "0.1.13"

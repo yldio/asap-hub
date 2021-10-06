@@ -6,7 +6,7 @@
     "outDir": "build",
     "module": "commonjs"
   },
-  "include": ["src", "test", "test/**/*.json", "@types/**/*.d.ts"],
+  "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
   "references": [
     { "path": "../../packages/auth" },
     { "path": "../../packages/model" },

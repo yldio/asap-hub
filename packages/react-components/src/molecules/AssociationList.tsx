@@ -88,23 +88,24 @@ const AssociationList: React.FC<AssociationListProps> = ({
   max = Number.POSITIVE_INFINITY,
 }) => {
   const icon = type === 'Team' ? teamIcon : labIcon;
+  const limitExceeded = associations.length > max;
   return (
     <div
       css={[
         containerStyles,
         inline && containerInlineStyles,
-        associations.length > max && containerSummarizedStyles,
+        limitExceeded && containerSummarizedStyles,
       ]}
     >
-      {((inline && !!associations.length) || associations.length > max) && icon}
-      {associations.length > max ? (
+      {inline && !!associations.length && icon}
+      {limitExceeded ? (
         <>
           {associations.length} {type}
           {associations.length === 1 ? '' : 's'}
         </>
       ) : (
         <ul css={[listStyles, inline ? listInlineStyles : listBlockStyles]}>
-          {associations.flatMap(({ displayName, id }, i) => (
+          {associations.map(({ displayName, id }, i) => (
             <li
               css={inline ? itemInlineStyles : itemBlockStyles}
               key={`sep-${i}`}

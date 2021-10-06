@@ -11,7 +11,7 @@ export const teamsWebhookFactory = (eventBridge: EventBridge): Handler =>
     async (
       request: lambda.Request<WebhookPayload<Team>>,
     ): Promise<lambda.Response> => {
-      await validateRequest(request);
+      validateRequest(request);
 
       const type = getEventType(request.payload.type);
 

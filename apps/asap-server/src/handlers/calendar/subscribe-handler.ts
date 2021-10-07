@@ -1,3 +1,4 @@
+import 'source-map-support/register';
 import { EventBridgeEvent } from 'aws-lambda';
 import Joi from '@hapi/joi';
 import { Auth } from 'googleapis';

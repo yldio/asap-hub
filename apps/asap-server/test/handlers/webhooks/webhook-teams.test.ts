@@ -6,22 +6,12 @@ import { getApiGatewayEvent } from '../../helpers/events';
 import { getTeamsEvent, updateTeamEvent } from '../../fixtures/teams.fixtures';
 import { createSignedPayload } from '../../helpers/webhooks';
 import { eventBus, eventSource } from '../../../src/config';
-// import { getListResearchOutputResponse } from '../../fixtures/research-output.fixtures';
-import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
-import {
-  algoliaClientMock,
-  // algoliaIndexMock,
-} from '../../mocks/algolia-client.mock';
 
 describe('Teams webhook', () => {
   const evenBridgeMock = {
     putEvents: jest.fn().mockReturnValue({ promise: jest.fn() }),
   } as unknown as jest.Mocked<EventBridge>;
-  const handler = teamsWebhookFactory(
-    evenBridgeMock,
-    researchOutputControllerMock,
-    algoliaClientMock,
-  );
+  const handler = teamsWebhookFactory(evenBridgeMock);
 
   afterEach(() => {
     jest.clearAllMocks();

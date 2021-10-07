@@ -1,25 +1,25 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import algoliasearch, { SearchClient } from 'algoliasearch';
-import ResearchOutputs, {
-  ResearchOutputController,
-} from '../../controllers/research-outputs';
+import { ListResearchOutputResponse } from '@asap-hub/model';
 import { TeamsEventType } from '../webhooks/webhook-teams';
 import {
   algoliaAppId,
   algoliaIndexApiKey,
   algoliaResearchOutputIndex,
 } from '../../config';
+import ResearchOutputs, {
+  ResearchOutputController,
+} from '../../controllers/research-outputs';
 import logger from '../../utils/logger';
 
-export const indexHandlerFactory = (
-  researchOutputController: ResearchOutputController,
-  algoliaClient: SearchClient,
-): ((
-  event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
-) => Promise<void>) => {
-  const algoliaIndex = algoliaClient.initIndex(algoliaResearchOutputIndex);
-
-  return async (
+export const indexHandlerFactory =
+  (
+    researchOutputController: ResearchOutputController,
+    algoliaClient: SearchClient,
+  ): ((
+    event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
+  ) => Promise<void>) =>
+  async (
     event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
   ): Promise<void> => {
     const outputsIds = event.detail.payload.data?.outputs.iv;
@@ -35,15 +35,27 @@ export const indexHandlerFactory = (
         .split(','),
     });
 
-    await algoliaIndex.saveObjects(
-      (researchOutputs?.items ?? []).map((researchOutput) => ({
-        ...researchOutput,
-        objectID: researchOutput.id,
-      })),
+    logger.info(
+      `Fetched Research-Outputs ${researchOutputs.items.length} of ${outputsIds.length}`,
     );
 
-    logger.info(`Saved Research-Outputs ${researchOutputs}`);
+    await indexResearchOutputs(researchOutputs, algoliaClient);
   };
+
+const indexResearchOutputs = async (
+  researchOutputs: ListResearchOutputResponse,
+  algoliaClient: SearchClient,
+) => {
+  const algoliaIndex = algoliaClient.initIndex(algoliaResearchOutputIndex);
+
+  await algoliaIndex.saveObjects(
+    (researchOutputs?.items ?? []).map((researchOutput) => ({
+      ...researchOutput,
+      objectID: researchOutput.id,
+    })),
+  );
+
+  logger.info(`Saved Research-Outputs ${researchOutputs}`);
 };
 
 export type SquidexWebhookTeamPayload = {

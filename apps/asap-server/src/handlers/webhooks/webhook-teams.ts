@@ -17,6 +17,7 @@ import validateRequest from '../../utils/validate-squidex-request';
 import ResearchOutputs, {
   ResearchOutputController,
 } from '../../controllers/research-outputs';
+import logger from '../../utils/logger';
 
 export const teamsWebhookFactory = (
   eventBridge: EventBridge,
@@ -30,6 +31,8 @@ export const teamsWebhookFactory = (
       validateRequest(request);
 
       const type = getEventType(request.payload.type);
+
+      logger.debug(`event type ${type}`);
 
       if (!type) {
         return {
@@ -50,6 +53,7 @@ export const teamsWebhookFactory = (
         })
         .promise();
 
+      logger.debug(`finding teams outputs`);
       await indexResearchOutputs(
         algoliaClient,
         await getTeamOutputsUpdate(
@@ -86,6 +90,8 @@ const getTeamOutputsUpdate = async (
     (outputId) => !(response.data?.outputs.iv ?? []).includes(outputId),
   );
 
+  logger.debug(`found outputs:${outputsIds}`);
+
   if (outputsIds.length === 0) return [];
 
   try {
@@ -95,8 +101,11 @@ const getTeamOutputsUpdate = async (
       filter: outputsIds.map((outputId) => `contains(id/, '${outputId}')`),
     });
 
+    logger.debug(`fetching research outputs ${results}`);
+
     return results.items;
   } catch (e) {
+    logger.debug(`failed to fetch research outputs`);
     throw Boom.badGateway();
   }
 };
@@ -110,6 +119,7 @@ const indexResearchOutputs = async (
   const algoliaIndex = algoliaClient.initIndex(algoliaResearchOutputIndex);
 
   try {
+    logger.debug(`indexing research outputs ${outputsData}`);
     await algoliaIndex.saveObjects(
       outputsData.map((researchOutput) => ({
         ...researchOutput,
@@ -118,6 +128,7 @@ const indexResearchOutputs = async (
       { autoGenerateObjectIDIfNotExist: true },
     );
   } catch (e) {
+    logger.debug(`index research outputs ${outputsData} failed`);
     throw Boom.badData();
   }
 };

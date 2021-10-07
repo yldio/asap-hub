@@ -29,10 +29,11 @@ export const indexHandlerFactory =
     const researchOutputs = await researchOutputController.fetch({
       take: outputsIds.length,
       skip: 0,
-      filter: outputsIds
-        .map((outputId) => `contains(id, ${outputId})`)
-        .join(' or ,')
-        .split(','),
+      filter: [
+        outputsIds
+          .map((outputId) => `contains(id, '${outputId}')`)
+          .join(' or '),
+      ],
     });
 
     logger.info(

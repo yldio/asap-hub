@@ -27,6 +27,8 @@ export const indexHandlerFactory = (
         !(event.detail.payload.dataOld?.outputs.iv ?? []).includes(outputId),
     );
 
+    logger.info(`Fetching Research-Outputs ${outputsIds}`);
+
     const researchOutputs = await researchOutputController.fetch({
       take: outputsIds.length,
       skip: 0,
@@ -40,7 +42,7 @@ export const indexHandlerFactory = (
       })),
     );
 
-    logger.info(`Saved Research-Outputs ${outputsIds}`);
+    logger.info(`Saved Research-Outputs ${researchOutputs}`);
   };
 };
 

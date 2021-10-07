@@ -3,8 +3,15 @@ import url from 'url';
 import { SES } from 'aws-sdk';
 import { EventBridgeEvent } from 'aws-lambda';
 import { v4 as uuidV4 } from 'uuid';
+import * as Sentry from '@sentry/serverless';
 import { RestUser, Squidex } from '@asap-hub/squidex';
-import { origin, sesRegion } from '../../config';
+import {
+  origin,
+  sentryDsn,
+  sesRegion,
+  environment,
+  currentRevision,
+} from '../../config';
 import { SendEmail, sendEmailFactory } from '../../utils/send-email';
 import logger from '../../utils/logger';
 
@@ -51,9 +58,15 @@ const ses = new SES({
 const uuidMatch =
   /^([\d\w]{8})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{4})-?([\d\w]{12})|[{0x]*([\d\w]{8})[0x, ]{4}([\d\w]{4})[0x, ]{4}([\d\w]{4})[0x, {]{5}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})[0x, ]{4}([\d\w]{2})$/;
 
-export const handler = inviteHandlerFactory(
-  sendEmailFactory(ses),
-  new Squidex('users'),
+Sentry.AWSLambda.init({
+  dsn: sentryDsn,
+  tracesSampleRate: 1.0,
+  environment,
+  release: currentRevision,
+});
+
+export const handler = Sentry.AWSLambda.wrapHandler(
+  inviteHandlerFactory(sendEmailFactory(ses), new Squidex('users')),
 );
 
 export type SquidexWebhookUserPayload = {

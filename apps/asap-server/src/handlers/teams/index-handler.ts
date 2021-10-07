@@ -22,17 +22,17 @@ export const indexHandlerFactory = (
   return async (
     event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
   ): Promise<void> => {
-    const outputsIds = (event.detail.payload.data?.outputs.iv ?? []).filter(
-      (outputId) =>
-        !(event.detail.payload.dataOld?.outputs.iv ?? []).includes(outputId),
-    );
+    const outputsIds = event.detail.payload.data?.outputs.iv;
 
     logger.info(`Fetching Research-Outputs ${outputsIds}`);
 
     const researchOutputs = await researchOutputController.fetch({
       take: outputsIds.length,
       skip: 0,
-      filter: outputsIds.map((outputId) => `contains(id/, '${outputId}')`),
+      filter: outputsIds
+        .map((outputId) => `contains(id, ${outputId})`)
+        .join(' or ,')
+        .split(','),
     });
 
     await algoliaIndex.saveObjects(

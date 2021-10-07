@@ -1,9 +1,9 @@
 import { EventBridge } from 'aws-sdk';
 import { framework as lambda } from '@asap-hub/services-common';
 import { Team, WebhookPayload } from '@asap-hub/squidex';
+import { eventBus, eventSource } from '../../config';
 import { http } from '../../utils/instrumented-framework';
 import { Handler } from '../../utils/types';
-import { eventBus, eventSource } from '../../config';
 import validateRequest from '../../utils/validate-squidex-request';
 import logger from '../../utils/logger';
 
@@ -16,9 +16,8 @@ export const teamsWebhookFactory = (eventBridge: EventBridge): Handler =>
 
       const type = getEventType(request.payload.type);
 
-      logger.debug(`event type ${type}`);
-
       if (!type) {
+        logger.debug(`Event type ${type} not supported`);
         return {
           statusCode: 204,
         };

@@ -9,6 +9,10 @@ import {
 import { identity } from '../helpers/squidex';
 import * as fixtures from '../fixtures/groups.fixtures';
 import { FetchOptions } from '../../src/utils/types';
+import {
+  getGroupResponse,
+  getResponseFetchGroup,
+} from '../fixtures/groups.fixtures';
 
 const groups = new Groups();
 
@@ -165,10 +169,34 @@ describe('Group controller', () => {
             id: groupId,
           },
         })
-        .reply(200, fixtures.findGroupResponse);
+        .reply(200, getResponseFetchGroup());
 
       const result = await groups.fetchById(groupId);
-      expect(result).toEqual(fixtures.groupResponse);
+      expect(result).toEqual(getGroupResponse());
+    });
+
+    test('Should return the group when the leader is undefined (ie entity marked as a draft)', async () => {
+      const groupId = 'group-id-1';
+      const responseFetchGroup = getResponseFetchGroup();
+      responseFetchGroup.data.findGroupsContent.flatData!.leaders![0].user = [];
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchGroup(),
+          variables: {
+            id: groupId,
+          },
+        })
+        .reply(200, responseFetchGroup);
+
+      const result = await groups.fetchById(groupId);
+
+      const expectedGroupResponse = getGroupResponse();
+      (expectedGroupResponse.leaders as any) = [
+        expectedGroupResponse.leaders[1],
+      ];
+
+      expect(result).toEqual(expectedGroupResponse);
     });
   });
 

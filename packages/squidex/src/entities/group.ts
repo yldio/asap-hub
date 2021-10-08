@@ -7,7 +7,7 @@ import { GraphqlCalendar } from './calendar';
 
 export interface GroupUserConnection<T = string> {
   role: GroupRole;
-  user: T[];
+  user: Array<T | undefined>;
 }
 
 export interface Group<

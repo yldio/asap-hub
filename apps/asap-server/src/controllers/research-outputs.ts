@@ -120,8 +120,9 @@ export default class ResearchOutputs implements ResearchOutputController {
     skip: number;
     search?: string;
     filter?: string[];
+    engine?: SearchEngine;
   }): Promise<ListResearchOutputResponse> {
-    const { search, filter, take = 8, skip = 0 } = options;
+    const { engine = 'squidex', search, filter, take = 8, skip = 0 } = options;
 
     const searchQ = (search || '')
       .split(' ')
@@ -144,9 +145,12 @@ export default class ResearchOutputs implements ResearchOutputController {
       )
       .join(' or ');
 
-    const filterGraphql = [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
-      .filter(Boolean)
-      .join(' and ');
+    const filterGraphql =
+      engine === 'squidex'
+        ? [filterQ && `(${filterQ})`, searchQ && `(${searchQ})`]
+            .filter(Boolean)
+            .join(' and ')
+        : filter?.join(' or ') ?? '';
 
     const { queryResearchOutputsContentsWithTotal } =
       await this.graphqlSquidexClient.request<
@@ -212,3 +216,5 @@ export interface ResponseFetchResearchOutputs {
     items: GraphqlResearchOutput[];
   };
 }
+
+type SearchEngine = 'squidex' | 'algolia';

@@ -6,10 +6,25 @@ import streamSaver from 'streamsaver';
 
 import { GetListOptions } from '../api-util';
 
+export const MAX_ALGOLIA_RESULTS = 10000;
+export const EXCEL_CELL_CHARACTER_LIMIT = 32767;
+const EXCEL_CELL_SAFE_CHARACTER_LIMIT = Math.floor(
+  (EXCEL_CELL_CHARACTER_LIMIT - 2) / 2, // Cell likely wrapped with ""; " escapes to ""
+);
+
 type ResearchOutputCSV = Record<
   keyof Omit<ResearchOutputResponse, 'team'>,
   string | undefined | boolean
 >;
+
+const htmlToCsvText = (html: string = '') => {
+  const doc = document.createElement('DIV');
+  doc.innerHTML = html;
+  return (doc.textContent || doc.innerText || '').substring(
+    0,
+    EXCEL_CELL_SAFE_CHARACTER_LIMIT,
+  );
+};
 
 const caseInsensitive = (a: string, b: string) =>
   a.localeCompare(b, undefined, { sensitivity: 'base' });
@@ -26,7 +41,7 @@ export const researchOutputToCSV = (
     .map((team) => team.displayName)
     .sort(caseInsensitive)
     .join(','),
-  labs: (output.labs ?? [])
+  labs: output.labs
     .map((lab) => lab.name)
     .sort(caseInsensitive)
     .join(','),
@@ -50,8 +65,8 @@ export const researchOutputToCSV = (
   rrid: output.rrid,
   accession: output.accession,
   labCatalogNumber: output.labCatalogNumber,
-  description: output.description,
-  accessInstructions: output.accessInstructions,
+  description: htmlToCsvText(output.description),
+  accessInstructions: htmlToCsvText(output.accessInstructions),
   pmsEmails: output.pmsEmails
     .map((item) => item)
     .sort(caseInsensitive)
@@ -66,7 +81,7 @@ export const createCsvFileStream = (
   csvOptions: Parameters<typeof format>[0],
   fileName: string,
 ) => {
-  const csvStream = format(csvOptions);
+  const csvStream = format({ writeBOM: true, ...csvOptions });
   // If the WritableStream is not available (Firefox, Safari), take it from the ponyfill
   if (!window.WritableStream) {
     streamSaver.WritableStream = WritableStream;
@@ -77,8 +92,6 @@ export const createCsvFileStream = (
     .on('end', () => fileWriter.close());
   return csvStream;
 };
-
-export const MAX_ALGOLIA_RESULTS = 10000;
 
 export const algoliaResultsToStream = async <V>(
   csvStream: CsvFormatterStream<Row, Row>,

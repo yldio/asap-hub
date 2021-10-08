@@ -13,6 +13,7 @@ import {
   researchOutputToCSV,
   createCsvFileStream,
   algoliaResultsToStream,
+  EXCEL_CELL_CHARACTER_LIMIT,
 } from '../export';
 
 const mockWriteStream = { write: jest.fn(), close: jest.fn() };
@@ -22,6 +23,9 @@ jest.mock('streamsaver', () => ({
   })),
 }));
 
+afterEach(() => {
+  jest.clearAllMocks();
+});
 describe('researchOutputToCSV', () => {
   it('handles flat data', () => {
     const output: ResearchOutputResponse = {
@@ -143,6 +147,20 @@ describe('researchOutputToCSV', () => {
       `"atest@example.com,ctest@example.com,ztest@example.com"`,
     );
   });
+
+  it('Removes HTML from RTF fields', () => {
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      description: '<a>example</a> <p>123</p>',
+      accessInstructions: '<a>example</a> <p>123</p>',
+    };
+    expect(researchOutputToCSV(output).description).toMatchInlineSnapshot(
+      `"example 123"`,
+    );
+    expect(
+      researchOutputToCSV(output).accessInstructions,
+    ).toMatchInlineSnapshot(`"example 123"`);
+  });
 });
 
 describe('createCsvFileStream', () => {
@@ -158,20 +176,40 @@ describe('createCsvFileStream', () => {
       a: 'test',
     });
 
-    expect(mockWriteStream.write.mock.calls[0].toString()).toEqual('a,b');
-    expect(mockWriteStream.write.mock.calls[1].toString()).toMatch(
+    expect(mockWriteStream.write.mock.calls[1].toString()).toEqual('a,b');
+    expect(mockWriteStream.write.mock.calls[2].toString()).toMatch(
       /test,test2/,
     );
 
     csvStream.end();
     await waitFor(() => expect(mockWriteStream.close).toHaveBeenCalled());
   });
+
+  it('Limits RTF fields to maximum safe excel cell character limit after escaping', async () => {
+    const csvStream = createCsvFileStream(undefined, 'example.csv');
+    const output: ResearchOutputResponse = {
+      ...createResearchOutputResponse(),
+      description: '"'.repeat(EXCEL_CELL_CHARACTER_LIMIT * 2),
+      accessInstructions: '"'.repeat(EXCEL_CELL_CHARACTER_LIMIT * 2),
+    };
+    const { accessInstructions, description } = researchOutputToCSV(output);
+    csvStream.write({
+      a: accessInstructions,
+    });
+    csvStream.write({
+      a: description,
+    });
+    csvStream.end();
+    expect(
+      mockWriteStream.write.mock.calls[1][0].toString().length,
+    ).toBeLessThanOrEqual(EXCEL_CELL_CHARACTER_LIMIT);
+    expect(
+      mockWriteStream.write.mock.calls[2][0].toString().length,
+    ).toBeLessThanOrEqual(EXCEL_CELL_CHARACTER_LIMIT);
+  });
 });
 
 describe('algoliaResultsToStream', () => {
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
   const mockCsvStream = {
     write: jest.fn(),
     end: jest.fn(),

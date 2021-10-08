@@ -27,7 +27,7 @@ const timestampStyles = css({
 const associationStyles = css({
   display: 'flex',
   flexDirection: 'column',
-  rowGap: `${12 / perRem}em`,
+  rowGap: `${6 / perRem}em`,
 });
 
 type SharedResearchOutputHeaderCardProps = ComponentProps<

@@ -12,7 +12,7 @@ import {
 import { teamControllerMock } from '../../mocks/team-controller.mock';
 import { teamResponse } from '../../fixtures/teams.fixtures';
 
-describe('Research Output index handler', () => {
+describe('Team Research Outputs Index', () => {
   const indexHandler = indexHandlerFactory(
     teamControllerMock,
     algoliaClientMock,
@@ -20,7 +20,7 @@ describe('Research Output index handler', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test('Should fetch the team outputs and create a record in Algolia when no records exists yet', async () => {
+  test('Should fetch the team and create a record in Algolia for every research output', async () => {
     teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
 
     await indexHandler(getEvent());

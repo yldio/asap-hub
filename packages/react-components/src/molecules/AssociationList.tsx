@@ -89,7 +89,7 @@ const AssociationList: React.FC<AssociationListProps> = ({
 }) => {
   const icon = type === 'Team' ? teamIcon : labIcon;
   const limitExceeded = associations.length > max;
-  return (
+  return associations.length ? (
     <div
       css={[
         containerStyles,
@@ -97,7 +97,7 @@ const AssociationList: React.FC<AssociationListProps> = ({
         limitExceeded && containerSummarizedStyles,
       ]}
     >
-      {inline && !!associations.length && icon}
+      {inline && icon}
       {limitExceeded ? (
         <>
           {associations.length} {type}
@@ -118,7 +118,7 @@ const AssociationList: React.FC<AssociationListProps> = ({
                   </Link>
                 ) : (
                   <>
-                    {type} {displayName}
+                    {displayName} {type}
                   </>
                 )}
 
@@ -130,7 +130,7 @@ const AssociationList: React.FC<AssociationListProps> = ({
         </ul>
       )}
     </div>
-  );
+  ) : null;
 };
 
 export default AssociationList;

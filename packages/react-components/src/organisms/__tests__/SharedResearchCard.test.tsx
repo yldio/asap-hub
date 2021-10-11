@@ -77,7 +77,7 @@ it('displays lab icon and name when present', () => {
     />,
   );
   expect(queryByTitle(/lab/i)).toBeInTheDocument();
-  expect(getByText('Lab A')).toBeVisible();
+  expect(getByText('A Lab')).toBeVisible();
 });
 
 it('displays link component when link property present', () => {

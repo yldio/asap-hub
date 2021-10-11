@@ -29,6 +29,7 @@ export {
   Tooltip,
 } from './atoms';
 export {
+  AssociationList,
   BackLink,
   BannerCard,
   CalendarLink,
@@ -59,7 +60,6 @@ export {
   SearchField,
   TabNav,
   TagList,
-  TeamsList,
   ToastCard,
   UserMenuButton,
   UsersList,

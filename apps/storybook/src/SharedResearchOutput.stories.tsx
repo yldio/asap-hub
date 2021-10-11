@@ -13,6 +13,7 @@ import {
 } from '@storybook/addon-knobs';
 
 import {
+  createLabs,
   createListTeamResponse,
   createListUserResponse,
   createResearchOutputResponse,
@@ -77,6 +78,7 @@ const props = (): ComponentProps<typeof SharedResearchOutput> => ({
       }),
     ),
   ],
+  labs: createLabs({ labs: number('Number of labs', 2) }),
 });
 
 export const Normal = () => <SharedResearchOutput {...props()} />;

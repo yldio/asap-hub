@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { GroupResponse } from '@asap-hub/model';
 
 import { Card, Headline2, Headline3 } from '../atoms';
-import { MembersList, TeamsList } from '../molecules';
+import { MembersList, AssociationList } from '../molecules';
 import { tabletScreen } from '../pixels';
 
 const gridStyles = css({
@@ -31,7 +31,7 @@ const GroupMembersSection: React.FC<GroupMembersSectionProps> = ({
         }))}
       />
       <Headline3 styleAsHeading={4}>Teams ({teams.length})</Headline3>
-      <TeamsList teams={teams} />
+      <AssociationList type="Team" associations={teams} />
     </div>
   </Card>
 );

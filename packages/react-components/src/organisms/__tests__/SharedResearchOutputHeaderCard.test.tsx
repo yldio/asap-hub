@@ -77,6 +77,16 @@ it('shows authors', () => {
   expect(getByText('John Doe')).toBeVisible();
 });
 
+it('shows labs', () => {
+  const { getByText } = render(
+    <SharedResearchOutputHeaderCard
+      {...createResearchOutputResponse()}
+      labs={[{ id: 'a', name: 'Example' }]}
+    />,
+  );
+  expect(getByText(/lab example/i)).toBeVisible();
+});
+
 it('renders an output with type and subtypes', () => {
   const { getAllByRole, rerender } = render(
     <SharedResearchOutputHeaderCard

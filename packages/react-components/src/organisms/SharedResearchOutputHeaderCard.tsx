@@ -8,7 +8,7 @@ import { lead } from '../colors';
 import { formatDate } from '../date';
 import { perRem, mobileScreen } from '../pixels';
 import { captionStyles } from '../text';
-import { TeamsList, UsersList } from '../molecules';
+import { AssociationList, UsersList } from '../molecules';
 import { SharedResearchMetadata } from '.';
 
 const timestampStyles = css({
@@ -24,6 +24,11 @@ const timestampStyles = css({
     marginBottom: `${12 / perRem}em`,
   },
 });
+const associationStyles = css({
+  display: 'flex',
+  flexDirection: 'column',
+  rowGap: `${6 / perRem}em`,
+});
 
 type SharedResearchOutputHeaderCardProps = ComponentProps<
   typeof SharedResearchMetadata
@@ -34,6 +39,7 @@ type SharedResearchOutputHeaderCardProps = ComponentProps<
     | 'addedDate'
     | 'authors'
     | 'teams'
+    | 'labs'
     | 'title'
     | 'lastUpdatedPartial'
   >;
@@ -46,6 +52,7 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
     teams,
     title,
     lastUpdatedPartial,
+    labs,
     ...props
   }) => {
     const { isEnabled } = useFlags();
@@ -57,7 +64,17 @@ const SharedResearchOutputHeaderCard: React.FC<SharedResearchOutputHeaderCardPro
         {isEnabled('RESEARCH_OUTPUT_SHOW_AUTHORS_LIST') && (
           <UsersList users={authors} />
         )}
-        <TeamsList inline teams={teams} />
+        <div css={associationStyles}>
+          <AssociationList
+            type="Lab"
+            inline
+            associations={labs.map(({ name, id }) => ({
+              displayName: name,
+              id,
+            }))}
+          />
+          <AssociationList type="Team" inline associations={teams} />
+        </div>
         <div css={[timestampStyles, captionStyles]}>
           <span>
             Date added: {formatDate(new Date(addedDate || created))} ·{' '}

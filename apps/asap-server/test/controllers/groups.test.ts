@@ -175,7 +175,7 @@ describe('Group controller', () => {
       expect(result).toEqual(getGroupResponse());
     });
 
-    test('Should return the group when the leader is undefined (ie entity marked as a draft)', async () => {
+    test('Should return the group when the leader user is undefined (ie entity marked as a draft) and skip the leader', async () => {
       const groupId = 'group-id-1';
       const responseFetchGroup = getResponseFetchGroup();
       responseFetchGroup.data.findGroupsContent.flatData!.leaders![0].user = [];
@@ -192,11 +192,12 @@ describe('Group controller', () => {
       const result = await groups.fetchById(groupId);
 
       const expectedGroupResponse = getGroupResponse();
-      (expectedGroupResponse.leaders as any) = [
-        expectedGroupResponse.leaders[1],
-      ];
 
-      expect(result).toEqual(expectedGroupResponse);
+      expect(result).toEqual(
+        expect.objectContaining({
+          leaders: [expectedGroupResponse.leaders[1]],
+        }),
+      );
     });
   });
 

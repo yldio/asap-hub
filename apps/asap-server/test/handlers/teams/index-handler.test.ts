@@ -9,6 +9,7 @@ import {
   algoliaClientMock,
   algoliaIndexMock,
 } from '../../mocks/algolia-client.mock';
+import { getResearchOutputResponse } from '../../fixtures/research-output.fixtures';
 import { teamControllerMock } from '../../mocks/team-controller.mock';
 import { teamResponse } from '../../fixtures/teams.fixtures';
 
@@ -20,17 +21,30 @@ describe('Team Research Outputs Index', () => {
 
   afterEach(() => jest.clearAllMocks());
 
-  test('Should fetch the team and create a record in Algolia for every research output', async () => {
+  test('Should fetch the team and create a record in Algolia for every research outputs', async () => {
     teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
+    teamResponse.outputs = [
+      { ...getResearchOutputResponse(), id: 'research-outputs-1' },
+      { ...getResearchOutputResponse(), id: 'research-outputs-2' },
+    ];
+
+    const teamOutputsIndexes = teamResponse.outputs.map((output) => ({
+      ...output,
+      objectID: output.id,
+    }));
 
     await indexHandler(getEvent());
-
     expect(algoliaIndexMock.saveObjects).toHaveBeenCalledWith(
-      teamResponse.outputs.map((output) => ({
-        ...output,
-        objectID: output.id,
-      })),
+      teamOutputsIndexes,
     );
+  });
+
+  test('Should not trigger algolia when there are no research outputs', async () => {
+    teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
+    teamResponse.outputs = [];
+
+    await indexHandler(getEvent());
+    expect(algoliaIndexMock.saveObjects).not.toHaveBeenCalled();
   });
 });
 

@@ -60,23 +60,6 @@ describe('Teams webhook', () => {
       ],
     });
   });
-  test('Should put the teams-updated event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(updateTeamEvent()),
-    )) as APIGatewayProxyResult;
-
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'TeamsUpdated',
-          Detail: JSON.stringify(updateTeamEvent()),
-        },
-      ],
-    });
-  });
 
   test('Should put the teams-updated event into the event bus and return 200', async () => {
     const res = (await handler(

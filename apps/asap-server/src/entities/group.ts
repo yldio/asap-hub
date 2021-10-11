@@ -23,12 +23,22 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     parseGraphQLCalendar,
   );
 
-  const leaders: GroupResponse['leaders'] = (item.flatData?.leaders || []).map(
-    (leader) => ({
-      user: parseGraphQLUser(leader.user[0]),
-      role: leader.role,
-    }),
-  );
+  const leaders: GroupResponse['leaders'] = (
+    item.flatData?.leaders || []
+  ).reduce<GroupResponse['leaders']>((leaderList, leader) => {
+    if (leader.user[0] === undefined) {
+      return leaderList;
+    }
+
+    return [
+      ...leaderList,
+      {
+        user: parseGraphQLUser(leader.user[0]),
+        role: leader.role,
+      },
+    ];
+  }, []);
+
   let tools: GroupTools = {};
   if (item.flatData?.tools?.length) {
     const [groupTools] = item.flatData?.tools;

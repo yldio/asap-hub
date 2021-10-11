@@ -1,6 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import {
-  indexHandlerFactory,
+  indexResearchOutputHandler,
   SquidexWebhookResearchOutputPayload,
 } from '../../../src/handlers/research-output/index-handler';
 import { ResearchOutputEventType } from '../../../src/handlers/webhooks/webhook-research-output';
@@ -13,7 +13,7 @@ import {
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
 
 describe('Research Output index handler', () => {
-  const indexHandler = indexHandlerFactory(
+  const indexHandler = indexResearchOutputHandler(
     researchOutputControllerMock,
     algoliaClientMock,
   );

@@ -9,7 +9,7 @@ import {
 } from '../../config';
 import logger from '../../utils/logger';
 
-export const indexHandlerFactory = (
+export const indexResearchOutputtByTeamHandler = (
   teamController: TeamController,
   algoliaClient: SearchClient,
 ): ((
@@ -45,7 +45,7 @@ export type SquidexWebhookTeamPayload = {
   };
 };
 
-export const handler = indexHandlerFactory(
+export const handler = indexResearchOutputtByTeamHandler(
   new Team(),
   algoliasearch(algoliaAppId, algoliaIndexApiKey),
 );

@@ -1,7 +1,9 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import algoliasearch, { SearchClient } from 'algoliasearch';
 import { TeamsEventType } from '../webhooks/webhook-teams';
-import Team, { TeamController } from '../../controllers/teams';
+import ResearchOutputs, {
+  ResearchOutputController,
+} from '../../controllers/research-outputs';
 import {
   algoliaAppId,
   algoliaIndexApiKey,
@@ -10,7 +12,7 @@ import {
 import logger from '../../utils/logger';
 
 export const indexResearchOutputtByTeamHandler = (
-  teamController: TeamController,
+  researchOutputController: ResearchOutputController,
   algoliaClient: SearchClient,
 ): ((
   event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
@@ -20,18 +22,26 @@ export const indexResearchOutputtByTeamHandler = (
   return async (
     event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
   ): Promise<void> => {
-    const team = await teamController.fetchById(event.detail.payload.id);
+    const outputsIds = event.detail.payload.data.outputs.iv;
 
-    logger.info(`Fetched team with id ${team.id}`);
+    if (outputsIds.length > 0) {
+      await Promise.all(
+        outputsIds.map(async (id) => {
+          logger.info(`Fetch research-output with id ${id}`);
+          const researchOutput = await researchOutputController.fetchById(id);
 
-    if (team.outputs.length > 0) {
-      await algoliaIndex.saveObjects(
-        team.outputs.map((researchOutput) => ({
-          ...researchOutput,
-          objectID: researchOutput.id,
-        })),
+          logger.info(
+            `Fetched research-output ${JSON.stringify(researchOutput)}`,
+          );
+
+          await algoliaIndex.saveObject({
+            ...researchOutput,
+            objectID: researchOutput.id,
+          });
+
+          logger.info(`Saved research-output with id ${id}`);
+        }),
       );
-      logger.info(`Saved outputs of team with id ${team.id}`);
     }
   };
 };
@@ -42,10 +52,13 @@ export type SquidexWebhookTeamPayload = {
     $type: 'EnrichedContentEvent';
     type: 'Created';
     id: string;
+    data: {
+      outputs: { iv: string[] };
+    };
   };
 };
 
 export const handler = indexResearchOutputtByTeamHandler(
-  new Team(),
+  new ResearchOutputs(),
   algoliasearch(algoliaAppId, algoliaIndexApiKey),
 );

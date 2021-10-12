@@ -37,15 +37,14 @@ describe('Team Research Outputs Index', () => {
     );
 
     const updateEvent = getEvent();
-    updateEvent.detail.payload.data.outputs.iv = outputs.map((ro) => ro.id);
-    await indexHandler(getEvent());
+    updateEvent.detail.payload.data.outputs.iv = outputs.map(({ id }) => id);
+    await indexHandler(updateEvent);
 
-    expect(algoliaIndexMock.saveObject).toHaveBeenCalledTimes(2);
-    expect(algoliaIndexMock.saveObject).toHaveBeenNthCalledWith(1, {
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
       ...outputs[0],
       objectID: outputs[0].id,
     });
-    expect(algoliaIndexMock.saveObject).toHaveBeenNthCalledWith(2, {
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
       ...outputs[1],
       objectID: outputs[1].id,
     });

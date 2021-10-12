@@ -39,6 +39,7 @@ const priorities: Record<TeamRole, number> = {
 };
 
 export const parseGraphQLTeamMember = (
+  //HERE: user: FetchTeamQuery['findTeamsContent']['referencingUsersContents'],
   user: GraphqlUser,
   teamId: string,
 ): TeamMember => {
@@ -69,10 +70,6 @@ export const parseGraphQLTeamMember = (
       : undefined,
   };
 };
-
-type FetchResearchOutputFindResearchOutputsContent = NonNullable<
-  FetchResearchOutputQuery['findResearchOutputsContent']
->;
 
 export const parseGraphQLTeam = (
   team: NonNullable<FetchTeamQuery['findTeamsContent']>,
@@ -123,15 +120,15 @@ export const parseGraphQLTeam = (
     displayName,
     labCount,
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
-    skills: team.flatData?.skills || [],
+    skills: team.flatData.skills || [],
     outputs,
     tools,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
-    projectTitle: team.flatData?.projectTitle || '',
-    projectSummary: team.flatData?.projectSummary || undefined,
-    proposalURL: team.flatData?.proposal
-      ? team.flatData?.proposal[0]?.id
+    projectTitle: team.flatData.projectTitle || '',
+    projectSummary: team.flatData.projectSummary || undefined,
+    proposalURL: team.flatData.proposal
+      ? team.flatData.proposal[0]?.id
       : undefined,
   };
 };

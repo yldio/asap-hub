@@ -11,6 +11,7 @@ import {
   ResponseFetchTeams,
   ResponseFetchTeam,
 } from '../../src/controllers/teams';
+import { TeamsEventType } from '../../src/handlers/webhooks/webhook-teams';
 import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
 import { fetchExpectation } from './users.fixtures';
 
@@ -985,60 +986,45 @@ export const updateExpectation: TeamResponse = {
   labCount: 2,
 };
 
-export const getTeamsEvent = (): WebhookPayload<Team> => ({
-  type: 'TeamsPublished',
+const getTeamsEvent = (
+  eventType: string,
+  type: TeamsEventType,
+  data = {
+    displayName: { iv: 'Team 1' },
+    applicationNumber: { iv: '12345' },
+    skills: { iv: [] },
+    proposal: { iv: [] },
+    projectTitle: { iv: 'Team Project' },
+    projectSummary: { iv: '' },
+    outputs: { iv: ['5434911260ba'] },
+    tools: { iv: [] },
+  },
+  dataOld = {
+    displayName: { iv: 'Team 1' },
+    applicationNumber: { iv: '12345' },
+    skills: { iv: [] },
+    proposal: { iv: [] },
+    projectTitle: { iv: 'Team Project' },
+    projectSummary: { iv: '' },
+    outputs: { iv: ['5434911260ba'] },
+    tools: { iv: [] },
+  },
+): WebhookPayload<Team> => ({
+  type,
   timestamp: '2021-10-05T12:49:49Z',
   payload: {
     $type: 'EnrichedContentEvent',
-    type: 'Updated',
+    type: eventType,
     id: 'teamId',
     created: '2021-10-04T16:55:30Z',
     lastModified: '2021-10-05T12:49:49Z',
-    data: {
-      displayName: { iv: 'Team 1' },
-      applicationNumber: { iv: '12345' },
-      skills: { iv: null },
-      proposal: { iv: [] },
-      projectTitle: { iv: 'Team Project' },
-      projectSummary: { iv: '' },
-      outputs: { iv: ['fe7347bc-5488-4e37-a39d-5434911260ba'] },
-      tools: { iv: [] },
-    },
+    data,
+    dataOld,
   },
 });
 
-export const updateTeamEvent = (
-  newOutputsIds: string[] = [],
-): WebhookPayload<Team> => ({
-  type: 'TeamsUpdated',
-  timestamp: '2021-10-05T12:49:49Z',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Updated',
-    id: 'teamId',
-    created: '2021-10-04T16:55:30Z',
-    lastModified: '2021-10-05T12:49:49Z',
-    data: {
-      displayName: { iv: 'Team 1' },
-      applicationNumber: { iv: '12345' },
-      skills: { iv: null },
-      proposal: { iv: [] },
-      projectTitle: { iv: 'Team Project' },
-      projectSummary: { iv: '' },
-      outputs: { iv: ['5434911260ba'].concat(newOutputsIds) },
-      tools: { iv: [] },
-    },
-    dataOld: {
-      displayName: { iv: 'Team 1' },
-      applicationNumber: { iv: '12345' },
-      skills: { iv: null },
-      proposal: { iv: [] },
-      projectTitle: { iv: 'Team Project' },
-      projectSummary: { iv: '' },
-      outputs: { iv: ['5434911260ba'] },
-      tools: { iv: [] },
-    },
-  },
-});
+export const getTeamsCreated = getTeamsEvent('Published', 'TeamsCreated');
+export const getTeamsUpdated = getTeamsEvent('Updated', 'TeamsUpdated');
+export const getTeamsDeleted = getTeamsEvent('Deleted', 'TeamsDeleted');
 
 export const teamResponse: TeamResponse = updateExpectation;

@@ -42,7 +42,7 @@ export const teamsWebhookFactory = (eventBridge: EventBridge): Handler =>
     },
   );
 
-export type TeamsEventType = 'TeamsCreated' | 'TeamsUpdated';
+export type TeamsEventType = 'TeamsCreated' | 'TeamsUpdated' | 'TeamsDeleted';
 
 const getEventType = (customType: string): TeamsEventType | undefined => {
   if (customType === 'TeamsPublished') {
@@ -51,6 +51,10 @@ const getEventType = (customType: string): TeamsEventType | undefined => {
 
   if (customType === 'TeamsUpdated') {
     return 'TeamsUpdated';
+  }
+
+  if (customType === 'TeamsDeleted') {
+    return 'TeamsDeleted';
   }
 
   return undefined;

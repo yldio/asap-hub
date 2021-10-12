@@ -393,7 +393,7 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: ['asap.teams'],
-              'detail-type': ['TeamsCreated', 'TeamsUpdated'],
+              'detail-type': ['TeamsCreated', 'TeamsUpdated', 'TeamsDeleted'],
             },
           },
         },

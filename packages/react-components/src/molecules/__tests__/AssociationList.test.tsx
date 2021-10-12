@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import AssociationList from '../AssociationList';
 
 describe('Teams', () => {
-  it('generates an entry for each team', () => {
+  it('generates an entry with team prefix for each team', () => {
     const { getAllByRole } = render(
       <AssociationList
         type="Team"
@@ -70,7 +70,7 @@ describe('Teams', () => {
 });
 
 describe('Labs', () => {
-  it('generates an entry for each lab without links', () => {
+  it('generates an entry for each lab with suffix without links', () => {
     const { getAllByRole, queryByRole } = render(
       <AssociationList
         type="Lab"
@@ -83,8 +83,8 @@ describe('Labs', () => {
     expect(
       getAllByRole('listitem').map(({ textContent }) => textContent),
     ).toEqual([
-      expect.stringContaining('Lab One'),
-      expect.stringContaining('Lab Two'),
+      expect.stringContaining('One Lab'),
+      expect.stringContaining('Two Lab'),
     ]);
     expect(queryByRole('link')).toBeNull();
   });
@@ -114,7 +114,7 @@ describe('Labs', () => {
       expect(getAllByTitle(/lab/i)).toHaveLength(1);
     });
 
-    it('does not render a lab icon if there are no teams', () => {
+    it('does not render a lab icon if there are no labs', () => {
       const { queryByTitle } = render(
         <AssociationList inline type="Lab" associations={[]} />,
       );

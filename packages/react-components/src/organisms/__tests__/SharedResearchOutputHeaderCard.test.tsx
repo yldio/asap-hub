@@ -84,7 +84,7 @@ it('shows labs', () => {
       labs={[{ id: 'a', name: 'Example' }]}
     />,
   );
-  expect(getByText(/lab example/i)).toBeVisible();
+  expect(getByText(/example lab/i)).toBeVisible();
 });
 
 it('renders an output with type and subtypes', () => {

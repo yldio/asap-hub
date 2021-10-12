@@ -1,6 +1,6 @@
 import { EventBridgeEvent } from 'aws-lambda';
 import {
-  indexResearchOutputtByTeamHandler,
+  indexResearchOutputByTeamHandler,
   SquidexWebhookTeamPayload,
 } from '../../../src/handlers/teams/index-handler';
 import { TeamsEventType } from '../../../src/handlers/webhooks/webhook-teams';
@@ -13,7 +13,7 @@ import { getResearchOutputResponse } from '../../fixtures/research-output.fixtur
 import { researchOutputControllerMock } from '../../mocks/research-outputs-controller.mock';
 
 describe('Team Research Outputs Index', () => {
-  const indexHandler = indexResearchOutputtByTeamHandler(
+  const indexHandler = indexResearchOutputByTeamHandler(
     researchOutputControllerMock,
     algoliaClientMock,
   );

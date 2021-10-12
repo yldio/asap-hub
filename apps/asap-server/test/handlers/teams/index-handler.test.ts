@@ -22,14 +22,9 @@ describe('Team Research Outputs Index', () => {
 
   test('Should fetch every research output and create a record on Algolia', async () => {
     const outputs = [
-      {
-        ...getResearchOutputResponse(),
-        id: 'research-outputs-1',
-      },
-      {
-        ...getResearchOutputResponse(),
-        id: 'research-outputs-2',
-      },
+      { ...getResearchOutputResponse(), id: 'research-outputs-1' },
+      { ...getResearchOutputResponse(), id: 'research-outputs-2' },
+      { ...getResearchOutputResponse(), id: 'research-outputs-3' },
     ];
 
     outputs.forEach((output) =>
@@ -37,7 +32,13 @@ describe('Team Research Outputs Index', () => {
     );
 
     const updateEvent = getEvent();
-    updateEvent.detail.payload.data.outputs.iv = outputs.map(({ id }) => id);
+
+    updateEvent.detail.payload = {
+      ...updateEvent.detail.payload,
+      data: { outputs: { iv: outputs.slice(0, 2).map(({ id }) => id) } },
+      dataOld: { outputs: { iv: [outputs[2].id] } },
+    };
+
     await indexHandler(updateEvent);
 
     expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
@@ -48,11 +49,23 @@ describe('Team Research Outputs Index', () => {
       ...outputs[1],
       objectID: outputs[1].id,
     });
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+      ...outputs[2],
+      objectID: outputs[2].id,
+    });
   });
 
   test('Should not trigger algolia save when there are no research outputs associated with the team', async () => {
     const updateEvent = getEvent();
-    updateEvent.detail.payload.data.outputs.iv = [];
+    updateEvent.detail.payload = {
+      ...updateEvent.detail.payload,
+      data: {
+        outputs: { iv: [] },
+      },
+      dataOld: {
+        outputs: { iv: [] },
+      },
+    };
 
     await indexHandler(updateEvent);
     expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -72,6 +85,11 @@ const createTeamSquidexWebhookPayload: SquidexWebhookTeamPayload = {
     type: 'Created',
     id: '0ecccf93-bd06-9821-90ea-783h7te652d',
     data: {
+      outputs: {
+        iv: [],
+      },
+    },
+    dataOld: {
       outputs: {
         iv: [],
       },

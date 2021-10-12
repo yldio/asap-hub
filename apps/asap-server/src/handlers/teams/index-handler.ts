@@ -22,7 +22,13 @@ export const indexResearchOutputByTeamHandler = (
   return async (
     event: EventBridgeEvent<TeamsEventType, SquidexWebhookTeamPayload>,
   ): Promise<void> => {
-    const outputsIds = event.detail.payload.data.outputs.iv;
+    const outputsIds = Array.from(
+      new Set(
+        event.detail.payload.data.outputs.iv.concat(
+          event.detail.payload.dataOld?.outputs.iv ?? [],
+        ),
+      ),
+    );
 
     if (outputsIds.length > 0) {
       await Promise.all(
@@ -53,6 +59,9 @@ export type SquidexWebhookTeamPayload = {
     type: 'Created';
     id: string;
     data: {
+      outputs: { iv: string[] };
+    };
+    dataOld?: {
       outputs: { iv: string[] };
     };
   };

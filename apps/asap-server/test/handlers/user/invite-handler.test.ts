@@ -50,6 +50,31 @@ describe('Invite Handler', () => {
     );
   });
 
+  test('Should throw when it fails to send the email but still save the new invitation code', async () => {
+    const userWithoutConnection: RestUser = {
+      ...restUserMock,
+      data: {
+        ...restUserMock.data,
+        connections: {
+          iv: [],
+        },
+      },
+    };
+    userClient.fetchById.mockResolvedValueOnce(userWithoutConnection);
+    sendEmailMock.mockRejectedValueOnce(new Error('some error'));
+
+    const event = getEventBridgeEventMock(restUserMock.id);
+
+    await expect(inviteHandler(event)).rejects.toThrow(
+      `Unable to send the email for the user with ID ${restUserMock.id}`,
+    );
+    expect(userClient.patch).toBeCalledWith(userWithoutConnection.id, {
+      connections: {
+        iv: [{ code: expect.any(String) }],
+      },
+    });
+  });
+
   test('Should not send the invitation email for a user that already has the invitation code', async () => {
     const code = 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b';
     const userWithConnection: RestUser = {

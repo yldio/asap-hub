@@ -1,6 +1,12 @@
 import { ListUserResponse, UserPatchRequest } from '@asap-hub/model';
 import { UserResponse } from '@asap-hub/model';
-import { RestUser, config, GraphqlUser } from '@asap-hub/squidex';
+import {
+  RestUser,
+  config,
+  GraphqlUser,
+  WebhookPayload,
+  User,
+} from '@asap-hub/squidex';
 import {
   ResponseFetchUsers,
   ResponseFetchUser,
@@ -463,4 +469,121 @@ export const userPatchRequest: UserPatchRequest = {
   onboarded: true,
   country: 'United Kingdom',
   city: 'Manchester',
+};
+
+export const updateUserEvent: WebhookPayload<User> = {
+  type: 'UsersUpdated',
+  timestamp: '2021-02-15T13:11:25Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Updated',
+    id: 'userId',
+    created: '2020-07-31T14:11:58Z',
+    lastModified: '2020-07-31T15:49:41Z',
+    data: {
+      role: {
+        iv: 'Grantee',
+      },
+      lastModifiedDate: {
+        iv: '2020-08-26T16:36:47.984Z',
+      },
+      firstName: { iv: 'Bill' },
+      lastName: { iv: 'Grades' },
+      connections: {
+        iv: [
+          {
+            code: 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b',
+          },
+        ],
+      },
+      email: {
+        iv: 'ti@sief.tg',
+      },
+      orcid: {
+        iv: 'notChanged',
+      },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
+      teams: { iv: [] },
+      onboarded: {
+        iv: true,
+      },
+      labs: { iv: [] },
+    },
+    dataOld: {
+      firstName: { iv: 'Bill' },
+      lastName: { iv: 'Grades' },
+      role: {
+        iv: 'Grantee',
+      },
+      lastModifiedDate: {
+        iv: '2020-08-26T16:36:47.984Z',
+      },
+      connections: {
+        iv: [
+          {
+            code: 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b',
+          },
+        ],
+      },
+      email: {
+        iv: 'ti@sief.tg',
+      },
+      orcid: {
+        iv: 'notChanged',
+      },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
+      teams: { iv: [] },
+      onboarded: {
+        iv: true,
+      },
+      labs: { iv: [] },
+    },
+  },
+};
+
+export const userPublishedEvent: WebhookPayload<User> = {
+  type: 'UsersPublished',
+  timestamp: '2021-02-15T13:11:25Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: 'Published',
+    id: 'userId',
+    created: '2020-07-31T15:52:33Z',
+    lastModified: '2020-07-31T15:52:33Z',
+    data: {
+      firstName: { iv: 'Gil' },
+      lastName: { iv: 'Eanes' },
+      role: {
+        iv: 'Grantee',
+      },
+      avatar: { iv: [] },
+      skills: { iv: [] },
+      questions: { iv: [] },
+      teams: { iv: [] },
+      lastModifiedDate: {
+        iv: '2020-08-26T16:36:47.984Z',
+      },
+      connections: {
+        iv: [
+          {
+            code: 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b',
+          },
+        ],
+      },
+      orcid: {
+        iv: '0000-0002-9079-593X',
+      },
+      email: {
+        iv: 'webhokk@ola.io',
+      },
+      onboarded: {
+        iv: true,
+      },
+      labs: { iv: [] },
+    },
+  },
 };

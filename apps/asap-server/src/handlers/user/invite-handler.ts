@@ -17,35 +17,64 @@ import logger from '../../utils/logger';
 
 export const inviteHandlerFactory =
   (sendEmail: SendEmail, userClient: Squidex<RestUser>) =>
-  async (
-    event: EventBridgeEvent<'UserCreated', SquidexWebhookUserPayload>,
-  ): Promise<void> => {
-    const user = await userClient.fetchById(event.detail.payload.id);
+  async (event: UserEventBridgeEvent): Promise<void> => {
+    let user: RestUser;
 
-    let code = user.data.connections.iv
+    try {
+      user = await userClient.fetchById(event.detail.payload.id);
+    } catch (error) {
+      logger.error(error, 'Error while fetching user');
+      throw new Error(
+        `Unable to find a user with ID ${event.detail.payload.id}`,
+      );
+    }
+
+    logger.debug(
+      `Attempting to invite user with ID ${event.detail.payload.id}, e-mail address ${user.data.email}`,
+    );
+
+    const previousCode = user.data.connections.iv
       ?.map((c) => c.code)
       .find((c) => c.match(uuidMatch));
 
-    if (!code) {
-      code = uuidV4();
+    if (previousCode) {
+      logger.info(
+        `Found a previous invitation code for user ${user.id}, exiting...`,
+      );
+      return;
+    }
+    const newCode = uuidV4();
 
+    try {
       await userClient.patch(user.id, {
         connections: {
-          iv: [{ code }],
+          iv: [{ code: newCode }],
         },
       });
+    } catch (error) {
+      logger.error(error, 'Error while saving user data');
+      throw new Error(
+        `Unable to save the code for the user with ID ${event.detail.payload.id}`,
+      );
     }
 
-    const link = new url.URL(path.join(`/welcome/${code}`), origin);
+    const link = new url.URL(path.join(`/welcome/${newCode}`), origin);
 
-    await sendEmail({
-      to: [user.data.email.iv],
-      template: 'Invite',
-      values: {
-        firstName: user.data.firstName.iv,
-        link: link.toString(),
-      },
-    });
+    try {
+      await sendEmail({
+        to: [user.data.email.iv],
+        template: 'Invite',
+        values: {
+          firstName: user.data.firstName.iv,
+          link: link.toString(),
+        },
+      });
+    } catch (error) {
+      logger.error(error, 'Error while sending email');
+      throw new Error(
+        `Unable to send the email for the user with ID ${event.detail.payload.id}`,
+      );
+    }
 
     logger.info(`Invited user with ID ${user.id}`);
   };
@@ -77,3 +106,8 @@ export type SquidexWebhookUserPayload = {
     id: string;
   };
 };
+
+export type UserEventBridgeEvent = EventBridgeEvent<
+  'UserPublished',
+  SquidexWebhookUserPayload
+>;

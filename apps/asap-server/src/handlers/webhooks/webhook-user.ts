@@ -13,7 +13,7 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
     ): Promise<lambda.Response> => {
       await validateRequest(request);
 
-      if (request.payload?.type !== 'UsersCreated') {
+      if (request.payload?.type !== 'UsersPublished') {
         return {
           statusCode: 204,
         };
@@ -25,7 +25,7 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
             {
               EventBusName: eventBus,
               Source: eventSource,
-              DetailType: 'UserCreated',
+              DetailType: 'UserPublished',
               Detail: JSON.stringify(request.payload),
             },
           ],

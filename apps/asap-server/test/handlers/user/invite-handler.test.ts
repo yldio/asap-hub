@@ -1,11 +1,11 @@
 import { RestUser } from '@asap-hub/squidex';
-import { EventBridgeEvent } from 'aws-lambda';
+import { notFound } from '@hapi/boom';
 import path from 'path';
 import url from 'url';
 import { origin } from '../../../src/config';
 import {
   inviteHandlerFactory,
-  SquidexWebhookUserPayload,
+  UserEventBridgeEvent,
 } from '../../../src/handlers/user/invite-handler';
 import { SendEmail } from '../../../src/utils/send-email';
 import { restUserMock } from '../../fixtures/users.fixtures';
@@ -20,7 +20,62 @@ describe('Invite Handler', () => {
     jest.clearAllMocks();
   });
 
-  test('Should find the user with invitation code and send the invitation email', async () => {
+  test('Should throw when the user is not found', async () => {
+    userClient.fetchById.mockRejectedValueOnce(notFound());
+
+    const event = getEventBridgeEventMock(restUserMock.id);
+
+    await expect(inviteHandler(event)).rejects.toThrow(
+      `Unable to find a user with ID ${restUserMock.id}`,
+    );
+  });
+
+  test('Should throw when it fails to save the user code', async () => {
+    const userWithoutConnection: RestUser = {
+      ...restUserMock,
+      data: {
+        ...restUserMock.data,
+        connections: {
+          iv: [],
+        },
+      },
+    };
+    userClient.fetchById.mockResolvedValueOnce(userWithoutConnection);
+    userClient.patch.mockRejectedValueOnce(new Error('some error'));
+
+    const event = getEventBridgeEventMock(restUserMock.id);
+
+    await expect(inviteHandler(event)).rejects.toThrow(
+      `Unable to save the code for the user with ID ${restUserMock.id}`,
+    );
+  });
+
+  test('Should throw when it fails to send the email but still save the new invitation code', async () => {
+    const userWithoutConnection: RestUser = {
+      ...restUserMock,
+      data: {
+        ...restUserMock.data,
+        connections: {
+          iv: [],
+        },
+      },
+    };
+    userClient.fetchById.mockResolvedValueOnce(userWithoutConnection);
+    sendEmailMock.mockRejectedValueOnce(new Error('some error'));
+
+    const event = getEventBridgeEventMock(restUserMock.id);
+
+    await expect(inviteHandler(event)).rejects.toThrow(
+      `Unable to send the email for the user with ID ${restUserMock.id}`,
+    );
+    expect(userClient.patch).toBeCalledWith(userWithoutConnection.id, {
+      connections: {
+        iv: [{ code: expect.any(String) }],
+      },
+    });
+  });
+
+  test('Should not send the invitation email for a user that already has the invitation code', async () => {
     const code = 'c6fdb21b-32f3-4549-ac17-d0c83dc5335b';
     const userWithConnection: RestUser = {
       ...restUserMock,
@@ -41,16 +96,8 @@ describe('Invite Handler', () => {
 
     await inviteHandler(event);
 
-    const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(userClient.fetchById).toBeCalledWith(userWithConnection.id);
-    expect(sendEmailMock).toBeCalledWith({
-      to: [userWithConnection.data.email.iv],
-      template: 'Invite',
-      values: {
-        firstName: userWithConnection.data.firstName.iv,
-        link: expectedLink.toString(),
-      },
-    });
+    expect(sendEmailMock).not.toBeCalled();
   });
 
   test('Should find the user with a non-matching invitation code, create an invitation code and send the invitation email', async () => {
@@ -126,9 +173,7 @@ describe('Invite Handler', () => {
   });
 });
 
-const getEventBridgeEventMock = (
-  userId?: string,
-): EventBridgeEvent<'UserCreated', SquidexWebhookUserPayload> => ({
+const getEventBridgeEventMock = (userId?: string): UserEventBridgeEvent => ({
   id: 'test-id',
   version: '1',
   account: 'test-account',
@@ -136,7 +181,7 @@ const getEventBridgeEventMock = (
   region: 'eu-west-1',
   resources: [],
   source: 'asap.user',
-  'detail-type': 'UserCreated',
+  'detail-type': 'UserPublished',
   detail: {
     type: 'UsersCreated',
     payload: {

@@ -4286,9 +4286,9 @@ export type FetchCalendarQuery = {
   >;
 };
 
-export type EventContentFragment = Pick<
-  Events,
-  'id' | 'lastModified' | 'created'
+export type ResearchOutputContentFragment = Pick<
+  ResearchOutputs,
+  'id' | 'created' | 'lastModified'
 > & {
   flatData: Pick<
     EventsFlatDataDto,
@@ -10527,7 +10527,87 @@ export const FetchGroupDocument = {
     },
     ...GroupsContentFragmentDoc.definitions,
   ],
-} as unknown as DocumentNode<FetchGroupQuery, FetchGroupQueryVariables>;
+} as unknown as DocumentNode<ResearchOutputContentFragment, unknown>;
+export const FetchCalendarDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FetchCalendar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'findCalendarsContent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'lastModified' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'flatData' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'googleCalendarId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'color' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'syncToken' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'resourceId' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'expirationDate' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<FetchCalendarQuery, FetchCalendarQueryVariables>;
 export const FetchResearchOutputDocument = {
   kind: 'Document',
   definitions: [

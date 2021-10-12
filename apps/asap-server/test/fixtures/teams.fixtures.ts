@@ -11,7 +11,6 @@ import {
   ResponseFetchTeams,
   ResponseFetchTeam,
 } from '../../src/controllers/teams';
-import { TeamsEventType } from '../../src/handlers/webhooks/webhook-teams';
 import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
 import { fetchExpectation } from './users.fixtures';
 
@@ -988,7 +987,7 @@ export const updateExpectation: TeamResponse = {
 
 const getTeamsEvent = (
   eventType: string,
-  type: TeamsEventType,
+  eventName: string,
   data = {
     displayName: { iv: 'Team 1' },
     applicationNumber: { iv: '12345' },
@@ -1010,7 +1009,7 @@ const getTeamsEvent = (
     tools: { iv: [] },
   },
 ): WebhookPayload<Team> => ({
-  type,
+  type: eventName,
   timestamp: '2021-10-05T12:49:49Z',
   payload: {
     $type: 'EnrichedContentEvent',
@@ -1023,7 +1022,7 @@ const getTeamsEvent = (
   },
 });
 
-export const getTeamsCreated = getTeamsEvent('Published', 'TeamsCreated');
+export const getTeamsCreated = getTeamsEvent('Published', 'TeamsPublished');
 export const getTeamsUpdated = getTeamsEvent('Updated', 'TeamsUpdated');
 export const getTeamsDeleted = getTeamsEvent('Deleted', 'TeamsDeleted');
 

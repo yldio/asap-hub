@@ -83,7 +83,7 @@ describe('Teams webhook', () => {
     });
   });
 
-  test.only('Should put the teams-deleted event into the event bus and return 200', async () => {
+  test('Should put the teams-deleted event into the event bus and return 200', async () => {
     const res = (await handler(
       createSignedPayload(getTeamsDeleted),
     )) as APIGatewayProxyResult;

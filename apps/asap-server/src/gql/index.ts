@@ -83,3 +83,357 @@ export function gql(source: string) {
 
 export type DocumentType<TDocumentNode extends DocumentNode<any, any>> =
   TDocumentNode extends DocumentNode<infer TType, any> ? TType : never;
+export type FetchEventQuery = {
+  findEventsContent: Maybe<
+    Pick<Events, 'id' | 'lastModified' | 'created'> & {
+      flatData: Pick<
+        EventsFlatDataDto,
+        | 'description'
+        | 'endDate'
+        | 'endDateTimeZone'
+        | 'startDate'
+        | 'startDateTimeZone'
+        | 'meetingLink'
+        | 'eventLink'
+        | 'status'
+        | 'tags'
+        | 'title'
+        | 'notesPermanentlyUnavailable'
+        | 'notes'
+        | 'videoRecordingPermanentlyUnavailable'
+        | 'videoRecording'
+        | 'presentationPermanentlyUnavailable'
+        | 'presentation'
+        | 'meetingMaterialsPermanentlyUnavailable'
+      > & {
+        meetingMaterials: Maybe<
+          Array<Pick<EventsDataMeetingMaterialsChildDto, 'url' | 'title'>>
+        >;
+        calendar: Maybe<
+          Array<{
+            flatData: Pick<
+              CalendarsFlatDataDto,
+              'googleCalendarId' | 'color' | 'name'
+            >;
+            referencingGroupsContents: Maybe<
+              Array<
+                Pick<Groups, 'id' | 'created' | 'lastModified'> & {
+                  flatData: Pick<
+                    GroupsFlatDataDto,
+                    'name' | 'description' | 'tags'
+                  > & {
+                    tools: Maybe<
+                      Array<
+                        Pick<GroupsDataToolsChildDto, 'slack' | 'googleDrive'>
+                      >
+                    >;
+                    teams: Maybe<
+                      Array<
+                        Pick<Teams, 'id' | 'created' | 'lastModified'> & {
+                          flatData: Pick<
+                            TeamsFlatDataDto,
+                            | 'applicationNumber'
+                            | 'displayName'
+                            | 'projectSummary'
+                            | 'projectTitle'
+                            | 'skills'
+                          > & {
+                            outputs?: Maybe<
+                              Array<
+                                Pick<
+                                  ResearchOutputs,
+                                  'id' | 'created' | 'lastModified'
+                                > & {
+                                  flatData: Pick<
+                                    ResearchOutputsFlatDataDto,
+                                    | 'title'
+                                    | 'type'
+                                    | 'subtype'
+                                    | 'description'
+                                    | 'link'
+                                    | 'addedDate'
+                                    | 'publishDate'
+                                    | 'doi'
+                                    | 'labCatalogNumber'
+                                    | 'accession'
+                                    | 'rrid'
+                                    | 'tags'
+                                    | 'lastUpdatedPartial'
+                                    | 'accessInstructions'
+                                    | 'sharingStatus'
+                                    | 'asapFunded'
+                                    | 'usedInAPublication'
+                                  > & {
+                                    authors: Maybe<
+                                      Array<
+                                        | ({
+                                            __typename: 'ExternalAuthors';
+                                          } & Pick<
+                                            ExternalAuthors,
+                                            'id' | 'created' | 'lastModified'
+                                          > & {
+                                              flatData: Pick<
+                                                ExternalAuthorsFlatDataDto,
+                                                'name' | 'orcid'
+                                              >;
+                                            })
+                                        | ({ __typename: 'Users' } & Pick<
+                                            Users,
+                                            'id' | 'created' | 'lastModified'
+                                          > & {
+                                              flatData: Pick<
+                                                UsersFlatDataDto,
+                                                | 'biography'
+                                                | 'degree'
+                                                | 'email'
+                                                | 'contactEmail'
+                                                | 'firstName'
+                                                | 'institution'
+                                                | 'jobTitle'
+                                                | 'lastModifiedDate'
+                                                | 'lastName'
+                                                | 'country'
+                                                | 'city'
+                                                | 'onboarded'
+                                                | 'orcid'
+                                                | 'orcidLastModifiedDate'
+                                                | 'orcidLastSyncDate'
+                                                | 'skills'
+                                                | 'skillsDescription'
+                                                | 'role'
+                                                | 'responsibilities'
+                                                | 'reachOut'
+                                              > & {
+                                                avatar: Maybe<
+                                                  Array<Pick<Asset, 'id'>>
+                                                >;
+                                                orcidWorks: Maybe<
+                                                  Array<
+                                                    Pick<
+                                                      UsersDataOrcidWorksChildDto,
+                                                      | 'doi'
+                                                      | 'id'
+                                                      | 'lastModifiedDate'
+                                                      | 'publicationDate'
+                                                      | 'title'
+                                                      | 'type'
+                                                    >
+                                                  >
+                                                >;
+                                                questions: Maybe<
+                                                  Array<
+                                                    Pick<
+                                                      UsersDataQuestionsChildDto,
+                                                      'question'
+                                                    >
+                                                  >
+                                                >;
+                                                teams: Maybe<
+                                                  Array<
+                                                    Pick<
+                                                      UsersDataTeamsChildDto,
+                                                      | 'role'
+                                                      | 'approach'
+                                                      | 'responsibilities'
+                                                    > & {
+                                                      id: Maybe<
+                                                        Array<
+                                                          Pick<Teams, 'id'> & {
+                                                            flatData: Pick<
+                                                              TeamsFlatDataDto,
+                                                              'displayName'
+                                                            > & {
+                                                              proposal: Maybe<
+                                                                Array<
+                                                                  Pick<
+                                                                    ResearchOutputs,
+                                                                    'id'
+                                                                  >
+                                                                >
+                                                              >;
+                                                            };
+                                                          }
+                                                        >
+                                                      >;
+                                                    }
+                                                  >
+                                                >;
+                                                social: Maybe<
+                                                  Array<
+                                                    Pick<
+                                                      UsersDataSocialChildDto,
+                                                      | 'github'
+                                                      | 'googleScholar'
+                                                      | 'linkedIn'
+                                                      | 'researcherId'
+                                                      | 'researchGate'
+                                                      | 'twitter'
+                                                      | 'website1'
+                                                      | 'website2'
+                                                    >
+                                                  >
+                                                >;
+                                                labs: Maybe<
+                                                  Array<
+                                                    Pick<Labs, 'id'> & {
+                                                      flatData: Pick<
+                                                        LabsFlatDataDto,
+                                                        'name'
+                                                      >;
+                                                    }
+                                                  >
+                                                >;
+                                              };
+                                            })
+                                      >
+                                    >;
+                                    labs: Maybe<
+                                      Array<
+                                        Pick<Labs, 'id'> & {
+                                          flatData: Pick<
+                                            LabsFlatDataDto,
+                                            'name'
+                                          >;
+                                        }
+                                      >
+                                    >;
+                                  };
+                                  referencingTeamsContents?: Maybe<
+                                    Array<
+                                      Pick<
+                                        Teams,
+                                        'id' | 'created' | 'lastModified'
+                                      > & {
+                                        flatData: Pick<
+                                          TeamsFlatDataDto,
+                                          'displayName'
+                                        >;
+                                        referencingUsersContents: Maybe<
+                                          Array<{
+                                            flatData: Pick<
+                                              UsersFlatDataDto,
+                                              'email'
+                                            > & {
+                                              teams: Maybe<
+                                                Array<
+                                                  Pick<
+                                                    UsersDataTeamsChildDto,
+                                                    'role'
+                                                  > & {
+                                                    id: Maybe<
+                                                      Array<Pick<Teams, 'id'>>
+                                                    >;
+                                                  }
+                                                >
+                                              >;
+                                            };
+                                          }>
+                                        >;
+                                      }
+                                    >
+                                  >;
+                                }
+                              >
+                            >;
+                            proposal: Maybe<Array<Pick<ResearchOutputs, 'id'>>>;
+                            tools: Maybe<
+                              Array<
+                                Pick<
+                                  TeamsDataToolsChildDto,
+                                  'description' | 'name' | 'url'
+                                >
+                              >
+                            >;
+                          };
+                          referencingUsersContents: Maybe<
+                            Array<
+                              Pick<Users, 'id' | 'created' | 'lastModified'> & {
+                                flatData: Pick<
+                                  UsersFlatDataDto,
+                                  | 'biography'
+                                  | 'degree'
+                                  | 'email'
+                                  | 'contactEmail'
+                                  | 'firstName'
+                                  | 'institution'
+                                  | 'jobTitle'
+                                  | 'lastModifiedDate'
+                                  | 'lastName'
+                                  | 'country'
+                                  | 'city'
+                                  | 'onboarded'
+                                  | 'orcid'
+                                  | 'orcidLastModifiedDate'
+                                  | 'orcidLastSyncDate'
+                                  | 'skills'
+                                  | 'skillsDescription'
+                                  | 'role'
+                                  | 'responsibilities'
+                                  | 'reachOut'
+                                > & {
+                                  avatar: Maybe<Array<Pick<Asset, 'id'>>>;
+                                  orcidWorks: Maybe<
+                                    Array<
+                                      Pick<
+                                        UsersDataOrcidWorksChildDto,
+                                        | 'doi'
+                                        | 'id'
+                                        | 'lastModifiedDate'
+                                        | 'publicationDate'
+                                        | 'title'
+                                        | 'type'
+                                      >
+                                    >
+                                  >;
+                                  questions: Maybe<
+                                    Array<
+                                      Pick<
+                                        UsersDataQuestionsChildDto,
+                                        'question'
+                                      >
+                                    >
+                                  >;
+                                  teams: Maybe<
+                                    Array<
+                                      Pick<
+                                        UsersDataTeamsChildDto,
+                                        'role' | 'approach' | 'responsibilities'
+                                      > & {
+                                        id: Maybe<
+                                          Array<
+                                            Pick<Teams, 'id'> & {
+                                              flatData: Pick<
+                                                TeamsFlatDataDto,
+                                                'displayName'
+                                              > & {
+                                                proposal: Maybe<
+                                                  Array<
+                                                    Pick<ResearchOutputs, 'id'>
+                                                  >
+                                                >;
+                                              };
+                                            }
+                                          >
+                                        >;
+                                      }
+                                    >
+                                  >;
+                                  social: Maybe<
+                                    Array<
+                                      Pick<
+                                        UsersDataSocialChildDto,
+                                        | 'github'
+                                        | 'googleScholar'
+                                        | 'linkedIn'
+                                        | 'researcherId'
+                                        | 'researchGate'
+                                        | 'twitter'
+                                        | 'website1'
+                                        | 'website2'
+                                      >
+                                    >
+                                  >;
+                                  labs: Maybe<
+                                    Array<
+                                      Pick<Labs, 'id'> & {
+                                        flatData: Pick<LabsFlatDataDto, 'name'>;

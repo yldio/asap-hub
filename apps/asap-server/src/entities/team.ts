@@ -14,7 +14,7 @@ import {
 
 import { parseGraphQLResearchOutput } from './research-output';
 import { parseDate, createURL } from '../utils/squidex';
-import { FetchResearchOutputQuery } from '../gql/graphql';
+import { FetchResearchOutputQuery, FetchTeamQuery } from '../gql/graphql';
 
 export const teamUpdateSchema = Joi.object({
   tools: Joi.array()
@@ -74,10 +74,11 @@ type FetchResearchOutputFindResearchOutputsContent = NonNullable<
   FetchResearchOutputQuery['findResearchOutputsContent']
 >;
 
-export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
-  const flatOutputs: NonNullable<GraphqlTeam['flatData']>['outputs'] =
-    team.flatData?.outputs || [];
-  const displayName = team.flatData?.displayName || '';
+export const parseGraphQLTeam = (
+  team: NonNullable<FetchTeamQuery['findTeamsContent']>,
+): TeamResponse => {
+  const flatOutputs = team.flatData.outputs || [];
+  const displayName = team.flatData.displayName || '';
 
   const members =
     team.referencingUsersContents?.map((user) =>
@@ -85,21 +86,17 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
     ) || [];
 
   const tools =
-    team.flatData?.tools?.map(({ name, description, url }) => ({
-      name,
-      url,
+    team.flatData.tools?.map(({ name, description, url }) => ({
+      name: name ?? undefined,
+      url: url ?? undefined,
       description: description ?? undefined,
     })) || [];
 
   const outputs: ResearchOutputResponse[] = flatOutputs
     .map((o) => {
-      const output = parseGraphQLResearchOutput(
-        // TODO: REMOVE casting once other GraphqlTypes are generated
-        o as FetchResearchOutputFindResearchOutputsContent,
-        {
-          includeAuthors: true,
-        },
-      ) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
+      const output = parseGraphQLResearchOutput(o, {
+        includeAuthors: true,
+      }) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
 
       return {
         ...output,

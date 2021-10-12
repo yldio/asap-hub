@@ -1,7 +1,4 @@
-import {
-  CalendarRaw,
-  ResponseFetchCalendar,
-} from '../../src/controllers/calendars';
+import { CalendarRaw } from '../../src/controllers/calendars';
 import { CalendarResponse } from '@asap-hub/model';
 import {
   Calendar,
@@ -9,6 +6,7 @@ import {
   Results,
   WebhookPayload,
 } from '@asap-hub/squidex';
+import { FetchCalendarQuery } from '../../src/gql/graphql';
 
 export const getCalendarRaw = (): CalendarRaw => ({
   id: 'cc5f74e0-c611-4043-abde-cd3c0d5a3414',
@@ -116,7 +114,7 @@ export const getCalendarsRestResponse = (): Results<RestCalendar> => ({
 });
 
 export const getCalendarsGraphqlResponse = (): {
-  data: ResponseFetchCalendar;
+  data: FetchCalendarQuery;
 } => ({
   data: {
     findCalendarsContent: {

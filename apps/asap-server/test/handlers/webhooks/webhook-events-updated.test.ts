@@ -69,7 +69,7 @@ describe('Event Webhook', () => {
   });
 
   test('Should return 502 when fails to get calendar from squidex', async () => {
-    calendarControllerMock.fetchByResouceId.mockRejectedValueOnce(
+    calendarControllerMock.fetchByResourceId.mockRejectedValueOnce(
       new Error('Squidex Error'),
     );
 
@@ -81,7 +81,7 @@ describe('Event Webhook', () => {
   });
 
   test('Should return 200 and save nextSyncToken to squidex when it receives one from google', async () => {
-    calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
+    calendarControllerMock.fetchByResourceId.mockResolvedValueOnce(
       fetchCalendarRawResponse,
     );
     syncCalendarMock.mockResolvedValueOnce('next-sync-token-1234');
@@ -102,7 +102,7 @@ describe('Event Webhook', () => {
   });
 
   test('Should return 200 event when doesnt receive a syncToken', async () => {
-    calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
+    calendarControllerMock.fetchByResourceId.mockResolvedValueOnce(
       fetchCalendarRawResponse,
     );
     syncCalendarMock.mockResolvedValueOnce(undefined);
@@ -117,7 +117,7 @@ describe('Event Webhook', () => {
   });
 
   test('Should return 200 even when fails to save nextSyncToken to squidex', async () => {
-    calendarControllerMock.fetchByResouceId.mockResolvedValueOnce(
+    calendarControllerMock.fetchByResourceId.mockResolvedValueOnce(
       fetchCalendarRawResponse,
     );
     syncCalendarMock.mockResolvedValueOnce('next-sync-token-1234');

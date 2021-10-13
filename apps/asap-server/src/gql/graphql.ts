@@ -6294,12 +6294,14 @@ export type GroupsContentFragment = Pick<
       >
     >;
     calendars: Maybe<
-      Array<{
-        flatData: Pick<
-          CalendarsFlatDataDto,
-          'color' | 'googleCalendarId' | 'name'
-        >;
-      }>
+      Array<
+        Pick<Calendars, 'id'> & {
+          flatData: Pick<
+            CalendarsFlatDataDto,
+            'color' | 'googleCalendarId' | 'name'
+          >;
+        }
+      >
     >;
     thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
   };
@@ -6737,12 +6739,14 @@ export type FetchGroupsQuery = {
                 >
               >;
               calendars: Maybe<
-                Array<{
-                  flatData: Pick<
-                    CalendarsFlatDataDto,
-                    'color' | 'googleCalendarId' | 'name'
-                  >;
-                }>
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<
+                      CalendarsFlatDataDto,
+                      'color' | 'googleCalendarId' | 'name'
+                    >;
+                  }
+                >
               >;
               thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
             };
@@ -7151,12 +7155,14 @@ export type FetchGroupQuery = {
           >
         >;
         calendars: Maybe<
-          Array<{
-            flatData: Pick<
-              CalendarsFlatDataDto,
-              'color' | 'googleCalendarId' | 'name'
-            >;
-          }>
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<
+                CalendarsFlatDataDto,
+                'color' | 'googleCalendarId' | 'name'
+              >;
+            }
+          >
         >;
         thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
       };
@@ -10429,6 +10435,7 @@ export const FetchGroupCalendarDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'calendars' },

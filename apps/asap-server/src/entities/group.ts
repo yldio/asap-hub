@@ -19,6 +19,7 @@ export const parseGraphQLGroup = (
 ): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
   const teams: GroupTeam[] = (item.flatData.teams || []).map((t) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { members, outputs, labCount, ...team } = parseGraphQLTeam(t);
     return team;
   });
@@ -38,7 +39,7 @@ export const parseGraphQLGroup = (
         role: leader.role,
       };
     })
-    // how shoul I handle user beign undefined?
+    //how shoul I handle user beign undefined?
     .filter(Boolean) as GroupLeader[];
   let tools: GroupTools = {};
   if (item.flatData.tools?.length) {
@@ -54,11 +55,8 @@ export const parseGraphQLGroup = (
 
   if (item.flatData.calendars?.length) {
     const url = new URL('https://calendar.google.com/calendar/r');
-    // is this correct? how should I handle undefined here
-    url.searchParams.set(
-      'cid',
-      item.flatData.calendars[0].flatData?.googleCalendarId || '',
-    );
+    //Is this correct? how should I handle undefined here
+    url.searchParams.set('cid', item.flatData.calendars[0].id || '');
     tools = { ...tools, googleCalendar: url.toString() };
   }
 

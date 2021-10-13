@@ -92,6 +92,7 @@ export const groupContentQueryFragment = gql`
         }
       }
       calendars {
+        id
         flatData {
           color
           googleCalendarId

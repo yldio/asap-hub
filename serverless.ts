@@ -372,7 +372,38 @@ const serverlessConfig: AWS = {
         EVENT_SOURCE: 'asap.research-output',
       },
     },
-
+    teamUpserted: {
+      handler: 'apps/asap-server/src/handlers/webhooks/webhook-teams.handler',
+      events: [
+        {
+          httpApi: {
+            method: 'POST',
+            path: '/webhook/teams',
+          },
+        },
+      ],
+      environment: {
+        EVENT_BUS: 'asap-events-${self:provider.stage}',
+        EVENT_SOURCE: 'asap.teams',
+      },
+    },
+    indexTeamResearchOutputs: {
+      handler: 'apps/asap-server/src/handlers/teams/index-handler.handler',
+      events: [
+        {
+          eventBridge: {
+            eventBus: 'asap-events-${self:provider.stage}',
+            pattern: {
+              source: ['asap.teams'],
+              'detail-type': ['TeamsCreated', 'TeamsUpdated', 'TeamsDeleted'],
+            },
+          },
+        },
+      ],
+      environment: {
+        ALGOLIA_INDEX_API_KEY: `\${ssm:algolia-index-api-key-${envAlias}}`,
+      },
+    },
     ...(NODE_ENV === 'production'
       ? {
           cronjobSyncOrcid: {

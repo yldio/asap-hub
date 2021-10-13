@@ -11,7 +11,7 @@ import {
 } from '../../config';
 import logger from '../../utils/logger';
 
-export const indexHandlerFactory = (
+export const indexResearchOutputHandler = (
   researchOutputController: ResearchOutputController,
   algoliaClient: SearchClient,
 ): ((
@@ -50,7 +50,7 @@ export type SquidexWebhookResearchOutputPayload = {
   };
 };
 
-export const handler = indexHandlerFactory(
+export const handler = indexResearchOutputHandler(
   new ResearchOutputs(),
   algoliasearch(algoliaAppId, algoliaIndexApiKey),
 );

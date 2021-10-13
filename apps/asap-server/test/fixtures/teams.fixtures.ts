@@ -3,6 +3,8 @@ import {
   config,
   GraphqlResearchOutputAuthors,
   RestTeam,
+  Team,
+  WebhookPayload,
 } from '@asap-hub/squidex';
 import { RestUser } from '@asap-hub/squidex';
 import {
@@ -982,5 +984,46 @@ export const updateExpectation: TeamResponse = {
   tools: [],
   labCount: 2,
 };
+
+const getTeamsEvent = (
+  eventType: string,
+  eventName: string,
+  data = {
+    displayName: { iv: 'Team 1' },
+    applicationNumber: { iv: '12345' },
+    skills: { iv: [] },
+    proposal: { iv: [] },
+    projectTitle: { iv: 'Team Project' },
+    projectSummary: { iv: '' },
+    outputs: { iv: ['5434911260ba'] },
+    tools: { iv: [] },
+  },
+  dataOld = {
+    displayName: { iv: 'Team 1' },
+    applicationNumber: { iv: '12345' },
+    skills: { iv: [] },
+    proposal: { iv: [] },
+    projectTitle: { iv: 'Team Project' },
+    projectSummary: { iv: '' },
+    outputs: { iv: ['5434911260ba'] },
+    tools: { iv: [] },
+  },
+): WebhookPayload<Team> => ({
+  type: eventName,
+  timestamp: '2021-10-05T12:49:49Z',
+  payload: {
+    $type: 'EnrichedContentEvent',
+    type: eventType,
+    id: 'teamId',
+    created: '2021-10-04T16:55:30Z',
+    lastModified: '2021-10-05T12:49:49Z',
+    data,
+    dataOld,
+  },
+});
+
+export const getTeamsCreated = getTeamsEvent('Published', 'TeamsPublished');
+export const getTeamsUpdated = getTeamsEvent('Updated', 'TeamsUpdated');
+export const getTeamsDeleted = getTeamsEvent('Deleted', 'TeamsDeleted');
 
 export const teamResponse: TeamResponse = updateExpectation;

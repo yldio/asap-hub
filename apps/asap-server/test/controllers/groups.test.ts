@@ -1,11 +1,7 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
-
-import {
-  default as Groups,
-  buildGraphQLQueryFetchGroup,
-  buildGraphQLQueryFetchGroups,
-} from '../../src/controllers/groups';
+import { print } from 'graphql';
+import Groups from '../../src/controllers/groups';
 import { identity } from '../helpers/squidex';
 import * as fixtures from '../fixtures/groups.fixtures';
 import { FetchOptions } from '../../src/utils/types';
@@ -13,6 +9,7 @@ import {
   getGroupResponse,
   getResponseFetchGroup,
 } from '../fixtures/groups.fixtures';
+import { FETCH_GROUP, FETCH_GROUPS } from '../../src/queries/groups.queries';
 
 const groups = new Groups();
 
@@ -33,7 +30,7 @@ describe('Group controller', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: '',
             top: 50,
@@ -71,7 +68,7 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: expetedFilter,
             top: 12,
@@ -98,7 +95,7 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: expectedFilter,
             top: 12,
@@ -126,7 +123,7 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: expectedFilter,
             top: 12,
@@ -146,7 +143,7 @@ describe('Group controller', () => {
       const groupId = 'not-found';
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroup(),
+          query: print(FETCH_GROUP),
           variables: {
             id: groupId,
           },
@@ -164,7 +161,7 @@ describe('Group controller', () => {
       const groupId = 'group-id-1';
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroup(),
+          query: print(FETCH_GROUP),
           variables: {
             id: groupId,
           },
@@ -182,7 +179,7 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroup(),
+          query: print(FETCH_GROUP),
           variables: {
             id: groupId,
           },
@@ -192,7 +189,6 @@ describe('Group controller', () => {
       const result = await groups.fetchById(groupId);
 
       const expectedGroupResponse = getGroupResponse();
-
       expect(result).toEqual(
         expect.objectContaining({
           leaders: [expectedGroupResponse.leaders[1]],
@@ -208,7 +204,7 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: expectedFilter,
             top: 50,
@@ -240,7 +236,7 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: expectedFilter,
             top: 12,
@@ -263,7 +259,7 @@ describe('Group controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: userFilter,
             top: 50,
@@ -279,7 +275,7 @@ describe('Group controller', () => {
           },
         })
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: teamFilter,
             top: 50,
@@ -312,7 +308,7 @@ describe('Group controller', () => {
       // same response since the user is group leader and member a team
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: userFilter,
             top: 50,
@@ -321,7 +317,7 @@ describe('Group controller', () => {
         })
         .reply(200, fixtures.queryGroupsResponse)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchGroups(),
+          query: print(FETCH_GROUPS),
           variables: {
             filter: teamFilter,
             top: 50,

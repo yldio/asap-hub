@@ -5,6 +5,7 @@ import {
   GroupTeam,
   GroupTools,
   GroupLeader,
+  GroupRole,
 } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
 
@@ -27,20 +28,23 @@ export const parseGraphQLGroup = (
     (c) => parseGraphQLCalendar(c as Calendars), // @todo remove cast
   );
 
-  const leaders = (item.flatData.leaders || [])
-    .map((leader) => {
-      if (leader.user === null) {
-        return undefined;
+  const leaders = (item.flatData.leaders || []).reduce(
+    (leaderList: GroupLeader[], leader) => {
+      if (leader.user === null || !leader.user[0]) {
+        return leaderList;
       }
+      return [
+        ...leaderList,
+        {
+          //TODO: remove cast after user types
+          user: parseGraphQLUser(leader.user[0] as GraphqlUser),
+          role: leader.role as GroupRole,
+        },
+      ];
+    },
+    [],
+  );
 
-      return {
-        //TODO: remove cast after user types
-        user: parseGraphQLUser(leader.user[0] as GraphqlUser),
-        role: leader.role,
-      };
-    })
-    //how shoul I handle user beign undefined?
-    .filter(Boolean) as GroupLeader[];
   let tools: GroupTools = {};
   if (item.flatData.tools?.length) {
     const [groupTools] = item.flatData.tools;

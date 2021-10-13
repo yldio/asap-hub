@@ -27,9 +27,9 @@ describe('Team Research Outputs Index', () => {
       { ...getResearchOutputResponse(), id: 'research-outputs-3' },
     ];
 
-    outputs.forEach((output) =>
-      researchOutputControllerMock.fetchById.mockResolvedValueOnce(output),
-    );
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[0]);
+    researchOutputControllerMock.fetchById.mockRejectedValue(new Error());
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[2]);
 
     const updateEvent = getEvent();
 
@@ -45,7 +45,7 @@ describe('Team Research Outputs Index', () => {
       ...outputs[0],
       objectID: outputs[0].id,
     });
-    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+    expect(algoliaIndexMock.saveObject).not.toHaveBeenCalledWith({
       ...outputs[1],
       objectID: outputs[1].id,
     });

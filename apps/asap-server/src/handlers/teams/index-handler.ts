@@ -33,27 +33,23 @@ export const indexResearchOutputByTeamHandler = (
     logger.info(`Found ${outputsIds.length} research-output(s)`);
 
     if (outputsIds.length > 0) {
-      try {
-        await Promise.allSettled(
-          outputsIds.map(async (id) => {
-            logger.info(`Fetch research-output with id ${id}`);
-            const researchOutput = await researchOutputController.fetchById(id);
+      const teamOutputsResults = await Promise.allSettled(
+        outputsIds.map(async (id) => {
+          logger.debug(`Found research-output with id ${id}`);
 
-            logger.info(
-              `Fetched research-output ${JSON.stringify(researchOutput)}`,
-            );
+          const researchOutput = await researchOutputController.fetchById(id);
 
-            await algoliaIndex.saveObject({
-              ...researchOutput,
-              objectID: researchOutput.id,
-            });
+          logger.debug(`Fetched ${JSON.stringify(researchOutput.id)}`);
 
-            logger.info(`Saved research-output with id ${id}`);
-          }),
-        );
-      } catch (e) {
-        logger.info(`Failed to fetch research-outputs ${JSON.stringify(e)}`);
-      }
+          await algoliaIndex.saveObject({
+            ...researchOutput,
+            objectID: researchOutput.id,
+          });
+
+          logger.debug(`Saved research-output with id ${id}`);
+        }),
+      );
+      logger.info(JSON.stringify(teamOutputsResults));
     }
   };
 };

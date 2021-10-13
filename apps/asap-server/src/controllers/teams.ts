@@ -55,6 +55,12 @@ referencingUsersContents(filter: "data/onboarded/iv eq true") {
     ${GraphQLQueryUser}
 }`;
 
+export interface ResponseFetchTeams {
+  queryTeamsContentsWithTotal: {
+    total: number;
+    items: GraphqlTeam[];
+  };
+}
 export interface ResponseFetchTeam {
   findTeamsContent: GraphqlTeam;
 }

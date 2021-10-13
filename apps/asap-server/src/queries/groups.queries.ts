@@ -106,7 +106,7 @@ export const groupContentQueryFragment = gql`
   ${teamsContentQueryFragment}
 `;
 
-export const buildGraphQLQueryFetchGroups = gql`
+export const FETCH_GROUPS = gql`
   query FetchGroups(
     $top: Int
     $skip: Int
@@ -129,7 +129,7 @@ export const buildGraphQLQueryFetchGroups = gql`
   ${groupContentQueryFragment}
 `;
 
-export const buildGraphQLQueryFetchGroup = gql`
+export const FETCH_GROUP = gql`
   query FetchGroup(
     $id: String!
     $withResearchOutputs: Boolean = false

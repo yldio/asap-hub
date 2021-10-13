@@ -11,7 +11,12 @@ import { parseGraphQLTeam } from '../entities';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { GraphQLQueryUser } from './users';
 import { FETCH_TEAM, FETCH_TEAMS } from '../queries/teams.queries';
-import { FetchTeamsQuery, FetchTeamsQueryVariables } from '../gql/graphql';
+import {
+  FetchTeamQuery,
+  FetchTeamQueryVariables,
+  FetchTeamsQuery,
+  FetchTeamsQueryVariables,
+} from '../gql/graphql';
 import logger from '../utils/logger';
 
 export const getGraphQLQueryTeam = ({
@@ -177,8 +182,8 @@ export default class Teams implements TeamController {
     options?: FetchTeamOptions,
   ): Promise<TeamResponse> {
     const teamResponse = await this.client.request<
-      ResponseFetchTeam,
-      { id: string }
+      FetchTeamQuery,
+      FetchTeamQueryVariables
     >(FETCH_TEAM, { id: teamId });
 
     const { findTeamsContent: team } = teamResponse;

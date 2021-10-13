@@ -6,15 +6,11 @@ import {
   TeamMember,
   Lab,
 } from '@asap-hub/model';
-import {
-  GraphqlTeam,
-  GraphqlResearchOutput,
-  GraphqlUser,
-} from '@asap-hub/squidex';
+import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
 import { parseGraphQLResearchOutput } from './research-output';
 import { parseDate, createURL } from '../utils/squidex';
-import { FetchResearchOutputQuery, FetchTeamQuery } from '../gql/graphql';
+import { FetchTeamQuery } from '../gql/graphql';
 
 export const teamUpdateSchema = Joi.object({
   tools: Joi.array()
@@ -39,33 +35,34 @@ const priorities: Record<TeamRole, number> = {
 };
 
 export const parseGraphQLTeamMember = (
-  //HERE: user: FetchTeamQuery['findTeamsContent']['referencingUsersContents'],
-  user: GraphqlUser,
+  user: NonNullable<
+    NonNullable<FetchTeamQuery['findTeamsContent']>['referencingUsersContents']
+  >[number],
   teamId: string,
 ): TeamMember => {
-  const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
-    user.flatData?.avatar || [];
+  const flatAvatar = user.flatData.avatar || [];
 
   const labs =
-    user.flatData?.labs?.reduce((acc: Lab[], lab) => {
+    user.flatData.labs?.reduce((acc: Lab[], lab) => {
       const labsData = lab.flatData?.name
         ? [...acc, { id: lab.id, name: lab.flatData.name }]
         : acc;
       return labsData;
     }, []) ?? [];
 
-  const role = user.flatData?.teams
-    ?.filter((t) => t.id[0].id === teamId)
+  const role = user.flatData.teams
+    ?.filter((t) => t.id && t.id[0].id === teamId)
     .filter((s) => s.role)[0].role as TeamRole;
+
   return {
     id: user.id,
-    firstName: user.flatData?.firstName || undefined,
-    lastName: user.flatData?.lastName || undefined,
-    displayName: `${user.flatData?.firstName} ${user.flatData?.lastName}`,
-    email: user.flatData?.email || '',
+    firstName: user.flatData.firstName || undefined,
+    lastName: user.flatData.lastName || undefined,
+    displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
+    email: user.flatData.email || '',
     role,
     labs,
-    avatarUrl: flatAvatar?.length
+    avatarUrl: flatAvatar.length
       ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,
   };

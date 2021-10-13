@@ -1,5 +1,6 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
+import { print } from 'graphql';
 import { TeamTool } from '@asap-hub/model';
 import {
   graphQlTeamsResponseSingle,
@@ -12,12 +13,10 @@ import {
   updateExpectation,
   referencingUsersContentsResponse,
 } from '../fixtures/teams.fixtures';
-import Teams, {
-  buildGraphQLQueryFetchTeams,
-  buildGraphQLQueryFetchTeam,
-} from '../../src/controllers/teams';
+import Teams from '../../src/controllers/teams';
 import { identity } from '../helpers/squidex';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
+import { FETCH_TEAM, FETCH_TEAMS } from '../../src/queries/teams.queries';
 
 describe('Team controller', () => {
   const teams = new Teams();
@@ -38,7 +37,7 @@ describe('Team controller', () => {
     test('Should return an empty result', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeams(),
+          query: print(FETCH_TEAMS),
           variables: {
             filter: '',
             top: 10,
@@ -72,7 +71,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeams(),
+            query: print(FETCH_TEAMS),
             variables: {
               filter: searchQ,
               top: 8,
@@ -101,7 +100,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeams(),
+            query: print(FETCH_TEAMS),
             variables: {
               filter: expectedSearchFilter,
               top: 8,
@@ -126,7 +125,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeams(),
+            query: print(FETCH_TEAMS),
             variables: {
               filter: expectedSearchFilter,
               top: 8,
@@ -164,7 +163,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeams(),
+            query: print(FETCH_TEAMS),
             variables: {
               filter: '',
               top: 8,
@@ -195,7 +194,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeams(),
+            query: print(FETCH_TEAMS),
             variables: {
               filter: '',
               top: 8,
@@ -227,7 +226,7 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
+          query: print(FETCH_TEAM),
           variables: {
             id: teamId,
           },
@@ -246,7 +245,7 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
+          query: print(FETCH_TEAM),
           variables: {
             id: teamId,
           },
@@ -275,7 +274,7 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
+          query: print(FETCH_TEAM),
           variables: {
             id: teamId,
           },
@@ -305,7 +304,7 @@ describe('Team controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
+          query: print(FETCH_TEAM),
           variables: {
             id: teamId,
           },
@@ -325,7 +324,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -354,7 +353,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -388,7 +387,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -414,7 +413,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -443,7 +442,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -500,7 +499,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -538,7 +537,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -585,7 +584,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -609,7 +608,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -647,7 +646,7 @@ describe('Team controller', () => {
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
-            query: buildGraphQLQueryFetchTeam(),
+            query: print(FETCH_TEAM),
             variables: {
               id: teamId,
             },
@@ -701,7 +700,7 @@ describe('Team controller', () => {
         })
         .reply(200, getUpdateTeamResponse()) // response is not used
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
+          query: print(FETCH_TEAM),
           variables: {
             id: teamId,
           },
@@ -728,7 +727,7 @@ describe('Team controller', () => {
         })
         .reply(200, getUpdateTeamResponse(tools)) // response is not used
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchTeam(),
+          query: print(FETCH_TEAM),
           variables: {
             id: teamId,
           },

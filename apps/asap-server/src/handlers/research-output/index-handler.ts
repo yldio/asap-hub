@@ -28,24 +28,47 @@ export const indexResearchOutputHandler = (
       SquidexWebhookResearchOutputPayload
     >,
   ): Promise<void> => {
-    const researchOutput = await researchOutputController.fetchById(
-      event.detail.payload.id,
-    );
+    logger.debug(`Event ${event['detail-type']}`);
 
-    await algoliaIndex.saveObject({
-      ...researchOutput,
-      objectID: researchOutput.id,
-    });
+    if (
+      ['ResearchOutputCreated', 'ResearchOutputUpdated'].includes(
+        event['detail-type'],
+      )
+    ) {
+      const researchOutput = await researchOutputController.fetchById(
+        event.detail.payload.id,
+      );
 
-    logger.info(`Saved Research-Output with ID ${researchOutput.id}`);
+      logger.debug(`Fetched research-output ${researchOutput.id}`);
+
+      await algoliaIndex.saveObject({
+        ...researchOutput,
+        objectID: researchOutput.id,
+      });
+
+      logger.debug(`Saved research-output ${researchOutput.id}`);
+    }
+
+    if (
+      ['ResearchOutputUnpublished', 'ResearchOutputDeleted'].includes(
+        event['detail-type'],
+      )
+    ) {
+      await algoliaIndex.deleteObject(event.detail.payload.id);
+      logger.debug(`Deleted research-output ${event.detail.payload.id}`);
+    }
   };
 };
 
 export type SquidexWebhookResearchOutputPayload = {
-  type: 'ResearchOutputsCreated' | 'ResearchOutputsUpdated';
+  type:
+    | 'ResearchOutputsCreated'
+    | 'ResearchOutputsUpdated'
+    | 'ResearchOutputsUnpublished'
+    | 'ResearchOutputsDeleted';
   payload: {
     $type: 'EnrichedContentEvent';
-    type: 'Created';
+    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
     id: string;
   };
 };

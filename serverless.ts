@@ -289,7 +289,12 @@ const serverlessConfig: AWS = {
             eventBus: 'asap-events-${self:provider.stage}',
             pattern: {
               source: ['asap.research-output'],
-              'detail-type': ['ResearchOutputCreated', 'ResearchOutputUpdated'],
+              'detail-type': [
+                'ResearchOutputCreated',
+                'ResearchOutputUpdated',
+                'ResearchOutputUnpublished',
+                'ResearchOutputDeleted',
+              ],
             },
           },
         },

@@ -3,10 +3,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../../src/config';
 import { researchOutputWebhookFactory } from '../../../src/handlers/webhooks/webhook-research-output';
-import {
-  getResearchOutputEvent,
-  researchOutputEvent,
-} from '../../fixtures/research-output.fixtures';
+import { researchOutputEvent } from '../../fixtures/research-output.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { createSignedPayload } from '../../helpers/webhooks';
 
@@ -25,7 +22,9 @@ describe('Research output webhook', () => {
       headers: {
         'x-signature': 'XYZ',
       },
-      body: JSON.stringify(getResearchOutputEvent),
+      body: JSON.stringify(
+        researchOutputEvent('ResearchOutputsPublished', 'Published'),
+      ),
     });
 
     const res = (await handler(event)) as APIGatewayProxyResult;
@@ -37,7 +36,7 @@ describe('Research output webhook', () => {
   test('Should return 204 and not raise an event when the event type is not supported', async () => {
     const res = (await handler(
       createSignedPayload<ResearchOutput>({
-        ...getResearchOutputEvent(),
+        ...researchOutputEvent('ResearchOutputsPublished', 'Published'),
         type: 'SomeEvent',
       }),
     )) as APIGatewayProxyResult;
@@ -47,8 +46,13 @@ describe('Research output webhook', () => {
   });
 
   test('Should put the research-output-created event into the event bus and return 200', async () => {
+    const createEvent = researchOutputEvent(
+      'ResearchOutputsPublished',
+      'Published',
+    );
+
     const res = (await handler(
-      createSignedPayload(getResearchOutputEvent()),
+      createSignedPayload(createEvent),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -58,17 +62,20 @@ describe('Research output webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'ResearchOutputCreated',
-          Detail: JSON.stringify(getResearchOutputEvent()),
+          Detail: JSON.stringify(createEvent),
         },
       ],
     });
   });
 
   test('Should put the research-output-updated event into the event bus and return 200', async () => {
+    const updateEvent = researchOutputEvent(
+      'ResearchOutputsUpdated',
+      'Updated',
+    );
+
     const res = (await handler(
-      createSignedPayload(
-        researchOutputEvent('ResearchOutputsUpdated', 'Updated'),
-      ),
+      createSignedPayload(updateEvent),
     )) as APIGatewayProxyResult;
 
     expect(res.statusCode).toStrictEqual(200);
@@ -78,19 +85,20 @@ describe('Research output webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'ResearchOutputUpdated',
-          Detail: JSON.stringify(
-            researchOutputEvent('ResearchOutputsUpdated', 'Updated'),
-          ),
+          Detail: JSON.stringify(updateEvent),
         },
       ],
     });
   });
 
   test('Should put the research-output-deleted event into the event bus and return 200', async () => {
+    const deleteEvent = researchOutputEvent(
+      'ResearchOutputsDeleted',
+      'Deleted',
+    );
+
     const res = (await handler(
-      createSignedPayload(
-        researchOutputEvent('ResearchOutputsDeleted', 'Deleted'),
-      ),
+      createSignedPayload(deleteEvent),
     )) as APIGatewayProxyResult;
     expect(res.statusCode).toStrictEqual(200);
     expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
@@ -99,9 +107,7 @@ describe('Research output webhook', () => {
           EventBusName: eventBus,
           Source: eventSource,
           DetailType: 'ResearchOutputDeleted',
-          Detail: JSON.stringify(
-            researchOutputEvent('ResearchOutputsDeleted', 'Deleted'),
-          ),
+          Detail: JSON.stringify(deleteEvent),
         },
       ],
     });

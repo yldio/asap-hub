@@ -303,26 +303,6 @@ export const getListResearchOutputResponse =
     items: [getResearchOutputResponse()],
   });
 
-export const getResearchOutputEvent = (): WebhookPayload<ResearchOutput> => ({
-  type: 'ResearchOutputsPublished',
-  timestamp: '2021-02-15T13:11:25Z',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Published',
-    id: 'researchOutputId',
-    created: '2020-07-31T15:52:33Z',
-    lastModified: '2020-07-31T15:52:33Z',
-    data: {
-      type: { iv: 'Article' },
-      title: { iv: 'Research Output' },
-      description: { iv: 'Description' },
-      sharingStatus: { iv: 'Network Only' },
-      asapFunded: { iv: 'Not Sure' },
-      usedInAPublication: { iv: 'Not Sure' },
-    } as Rest<ResearchOutput>['data'],
-  },
-});
-
 export const researchOutputEvent = (
   type:
     | 'ResearchOutputsPublished'

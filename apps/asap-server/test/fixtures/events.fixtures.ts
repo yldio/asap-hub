@@ -1,7 +1,11 @@
 import { RestEvent, config } from '@asap-hub/squidex';
 import { listGroupsResponse, queryGroupsResponse } from './groups.fixtures';
 import { ListEventResponse, EventResponse } from '@asap-hub/model';
-import { FetchEventQuery, FetchEventsQuery } from '../../src/gql/graphql';
+import {
+  EventContentFragment,
+  FetchEventQuery,
+  FetchEventsQuery,
+} from '../../src/gql/graphql';
 
 export const fetchEventsResponse: { data: FetchEventsQuery } = {
   data: {
@@ -92,7 +96,8 @@ export const fetchEventsResponse: { data: FetchEventsQuery } = {
         },
       ],
     },
-  },
+    // eslint-disable-next-line
+  } as any as FetchEventsQuery, // @todo Remove with fixtures work
 };
 
 export const listEventResponse: ListEventResponse = {
@@ -183,7 +188,7 @@ export const eventResponse: EventResponse = {
   group: listGroupsResponse.items[0],
 };
 
-export const graphqlEvent: any = {
+export const graphqlEvent = {
   id: 'afcee0ec-fcd5-479c-9809-e397636f815a',
   created: '2021-02-08T16:04:56Z',
   lastModified: '2021-02-08T16:22:12Z',
@@ -197,22 +202,18 @@ export const graphqlEvent: any = {
     title: 'Example Event',
     calendar: [
       {
-        id: 'd7e3181a-f9d3-4f0c-bc77-5f17c722d93e',
-        created: '2021-01-14T16:38:40Z',
-        lastModified: '2021-01-14T16:38:40Z',
         flatData: {
           googleCalendarId:
             'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
           color: '#125A12' as const,
           name: 'Tech 1 - Sequencing/omics',
-          expirationDate: null,
-          resourceId: '',
-          syncToken: '',
         },
+        referencingGroupsContents: [],
       },
     ],
   },
-};
+  // eslint-disable-next-line
+} as any as EventContentFragment; // @todo Remove with fixtures work
 
 export const findEventResponse: { data: FetchEventQuery } = {
   data: {

@@ -19,7 +19,7 @@ import {
   FETCH_EVENTS,
   FETCH_GROUP_CALENDAR,
 } from '../../src/queries/events.queries';
-import { FetchEventQuery } from '../../src/gql/graphql';
+import { FetchEventQuery, FetchEventsQuery } from '../../src/gql/graphql';
 
 describe('Event controller', () => {
   const events = new Events();
@@ -418,7 +418,7 @@ describe('Event controller', () => {
         // change event start date to 06/06/2020, one hour from the above
         event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-        const fetchEventsResponse: { data: ResponseFetchEvents } = {
+        const fetchEventsResponse: { data: FetchEventsQuery } = {
           data: {
             queryEventsContentsWithTotal: {
               total: 2,
@@ -449,7 +449,7 @@ describe('Event controller', () => {
         // change event start date to 2020
         event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-        const fetchEventsResponse: { data: ResponseFetchEvents } = {
+        const fetchEventsResponse: { data: FetchEventsQuery } = {
           data: {
             queryEventsContentsWithTotal: {
               total: 2,
@@ -480,7 +480,7 @@ describe('Event controller', () => {
         // change event start date to year 2021
         event.flatData!.startDate = '2021-06-06T13:00:00Z';
 
-        const fetchEventsResponse: { data: ResponseFetchEvents } = {
+        const fetchEventsResponse: { data: FetchEventsQuery } = {
           data: {
             queryEventsContentsWithTotal: {
               total: 2,
@@ -709,7 +709,7 @@ describe('Event controller', () => {
         // change event start date to 06/06/2020, one hour from the above
         event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-        const fetchEventResponse: { data: ResponseFetchEvent } = {
+        const fetchEventResponse: { data: FetchEventQuery } = {
           data: {
             findEventsContent: event,
           },
@@ -735,7 +735,7 @@ describe('Event controller', () => {
         // change event start date to 2020
         event.flatData!.startDate = '2020-06-06T14:00:00Z';
 
-        const fetchEventResponse: { data: ResponseFetchEvent } = {
+        const fetchEventResponse: { data: FetchEventQuery } = {
           data: {
             findEventsContent: event,
           },
@@ -785,10 +785,10 @@ describe('Event controller', () => {
         data: {
           findEventsContent:
             fetchEventsResponse.data.queryEventsContentsWithTotal!.items![0],
+          referencingGroupsContents:
+            queryGroupsResponse.data.queryGroupsContentsWithTotal.items,
         },
       };
-      findEventResponseMultiRef.data.findEventsContent!.flatData.calendar![0].referencingGroupsContents =
-        queryGroupsResponse.data.queryGroupsContentsWithTotal.items;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -809,9 +809,10 @@ describe('Event controller', () => {
           findEventsContent:
             fetchEventsResponse.data.queryEventsContentsWithTotal!.items![0],
         },
+        referencingGroupsContents: [
+          queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0],
+        ],
       };
-      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents =
-        [queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0]];
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

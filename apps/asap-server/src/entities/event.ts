@@ -29,7 +29,7 @@ export const parseGraphQLEvent = (
   const calendar = parseGraphQLCalendar(item.flatData.calendar![0]);
   const group =
     item.flatData.calendar![0].referencingGroupsContents?.map(
-      (calGroup) => parseGraphQLGroup(calGroup as GraphqlGroup), //@TODO remove cast
+      (calGroup) => parseGraphQLGroup(calGroup as GraphqlGroup), // @todo remove cast
     )[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData.startDate!);
   const now = DateTime.utc();

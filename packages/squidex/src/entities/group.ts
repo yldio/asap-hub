@@ -1,5 +1,5 @@
 import { GroupRole } from '@asap-hub/model';
-import { Calendar } from './calendar';
+import { GraphqlCalendar } from './calendar';
 
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
@@ -27,9 +27,6 @@ export interface Group<
   leaders: GroupUserConnection<TUserConnection>[];
   calendars: TCalendar[];
   thumbnail: TThumbnail[];
-}
-interface GraphqlCalendar extends Entity, Graphql<Calendar> {
-  referencingGroupsContents?: GraphqlGroup[];
 }
 
 export interface RestGroup extends Entity, Rest<Group> {}

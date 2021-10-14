@@ -18,7 +18,7 @@ import {
 } from '../gql/graphql';
 import logger from '../utils/logger';
 
-//TODO: remove when is not needed in the events query
+// TODO: remove when is not needed in the events query
 export const GraphQLQueryGroup = `
 id
 created

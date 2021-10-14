@@ -19,7 +19,7 @@ import {
 } from '../gql/graphql';
 import logger from '../utils/logger';
 
-//TODO: remove when not needed in events query (dependency)
+// TODO: remove when not needed in events query (dependency)
 export const getGraphQLQueryTeam = ({
   withResearchOutputs = true,
   researchOutputsWithTeams = true,

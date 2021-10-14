@@ -292,7 +292,6 @@ const serverlessConfig: AWS = {
               'detail-type': [
                 'ResearchOutputCreated',
                 'ResearchOutputUpdated',
-                'ResearchOutputUnpublished',
                 'ResearchOutputDeleted',
               ],
             },

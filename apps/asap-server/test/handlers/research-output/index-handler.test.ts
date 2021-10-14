@@ -72,36 +72,13 @@ describe('Research Output index handler', () => {
     });
   });
 
-  test('Should remove the record Algolia when research-output has been converted to draft', async () => {
+  test('Should remove the record Algolia when research-output has been deleted', async () => {
     const event: EventBridgeEvent<
       ResearchOutputEventType,
       SquidexWebhookResearchOutputPayload
     > = createEventBridgeEventMock(
       {
         type: 'ResearchOutputsUnpublished',
-        payload: {
-          $type: 'EnrichedContentEvent',
-          type: 'Unpublished',
-          id: '0ecccf93-bd06-4307-90ea-c153fe495580',
-        },
-      },
-      'ResearchOutputUnpublished',
-    );
-    await indexHandler(event);
-
-    expect(researchOutputControllerMock.fetchById).not.toHaveBeenCalled();
-    expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
-      event.detail.payload.id,
-    );
-  });
-
-  test('Should remove the record Algolia when research-output has been converted to draft', async () => {
-    const event: EventBridgeEvent<
-      ResearchOutputEventType,
-      SquidexWebhookResearchOutputPayload
-    > = createEventBridgeEventMock(
-      {
-        type: 'ResearchOutputsDeleted',
         payload: {
           $type: 'EnrichedContentEvent',
           type: 'Unpublished',

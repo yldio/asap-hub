@@ -47,7 +47,6 @@ export const researchOutputWebhookFactory = (
 export type ResearchOutputEventType =
   | 'ResearchOutputCreated'
   | 'ResearchOutputUpdated'
-  | 'ResearchOutputUnpublished'
   | 'ResearchOutputDeleted';
 
 const getEventType = (
@@ -61,7 +60,7 @@ const getEventType = (
       return 'ResearchOutputUpdated';
 
     case 'ResearchOutputsUnpublished':
-      return 'ResearchOutputUnpublished';
+      return 'ResearchOutputDeleted';
 
     case 'ResearchOutputsDeleted':
       return 'ResearchOutputDeleted';

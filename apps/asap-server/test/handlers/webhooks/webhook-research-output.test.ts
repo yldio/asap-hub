@@ -86,27 +86,6 @@ describe('Research output webhook', () => {
     });
   });
 
-  test('Should put the research-output-unpublished event into the event bus and return 200', async () => {
-    const res = (await handler(
-      createSignedPayload(
-        researchOutputEvent('ResearchOutputsUnpublished', 'Unpublished'),
-      ),
-    )) as APIGatewayProxyResult;
-    expect(res.statusCode).toStrictEqual(200);
-    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
-      Entries: [
-        {
-          EventBusName: eventBus,
-          Source: eventSource,
-          DetailType: 'ResearchOutputUnpublished',
-          Detail: JSON.stringify(
-            researchOutputEvent('ResearchOutputsUnpublished', 'Unpublished'),
-          ),
-        },
-      ],
-    });
-  });
-
   test('Should put the research-output-deleted event into the event bus and return 200', async () => {
     const res = (await handler(
       createSignedPayload(
@@ -123,6 +102,28 @@ describe('Research output webhook', () => {
           Detail: JSON.stringify(
             researchOutputEvent('ResearchOutputsDeleted', 'Deleted'),
           ),
+        },
+      ],
+    });
+  });
+
+  test('Should treat the research-output-unpublished event as research-output-deleted', async () => {
+    const unpublishedEvent = researchOutputEvent(
+      'ResearchOutputsUnpublished',
+      'Unpublished',
+    );
+
+    const res = (await handler(
+      createSignedPayload(unpublishedEvent),
+    )) as APIGatewayProxyResult;
+    expect(res.statusCode).toStrictEqual(200);
+    expect(evenBridgeMock.putEvents).toHaveBeenCalledWith({
+      Entries: [
+        {
+          EventBusName: eventBus,
+          Source: eventSource,
+          DetailType: 'ResearchOutputDeleted',
+          Detail: JSON.stringify(unpublishedEvent),
         },
       ],
     });

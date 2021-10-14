@@ -49,11 +49,7 @@ export const indexResearchOutputHandler = (
       logger.debug(`Saved research-output ${researchOutput.id}`);
     }
 
-    if (
-      ['ResearchOutputUnpublished', 'ResearchOutputDeleted'].includes(
-        event['detail-type'],
-      )
-    ) {
+    if (event['detail-type'] === 'ResearchOutputDeleted') {
       await algoliaIndex.deleteObject(event.detail.payload.id);
       logger.debug(`Deleted research-output ${event.detail.payload.id}`);
     }

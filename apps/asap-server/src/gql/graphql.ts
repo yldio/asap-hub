@@ -9946,7 +9946,6 @@ export const EventContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-<<<<<<< HEAD
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },
@@ -10323,11 +10322,6 @@ export const FetchGroupCalendarDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'calendars' },
-=======
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'flatData' },
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -10335,33 +10329,6 @@ export const FetchGroupCalendarDocument = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'googleCalendarId' },
                             },
-<<<<<<< HEAD
-=======
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'color' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: {
-                          kind: 'Name',
-                          value: 'referencingGroupsContents',
-                        },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'FragmentSpread',
-                              name: { kind: 'Name', value: 'GroupsContent' },
-                            },
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
                           ],
                         },
                       },
@@ -10471,216 +10438,13 @@ export const FetchGroupsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'total' } },
                 {
                   kind: 'Field',
-<<<<<<< HEAD
-=======
-                  name: { kind: 'Name', value: 'thumbnail' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...GroupsContentFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<EventContentFragment, unknown>;
-export const FetchCalendarDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchCalendar' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'findCalendarsContent' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'created' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'lastModified' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'flatData' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'googleCalendarId' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'color' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'syncToken' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'resourceId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'expirationDate' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<FetchCalendarQuery, FetchCalendarQueryVariables>;
-export const FetchEventsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchEvents' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'top' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'skip' } },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'filter' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'order' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withResearchOutputs' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'withTeams' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'queryEventsContentsWithTotal' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'top' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'top' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'skip' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'skip' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'filter' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'filter' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'orderby' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'order' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
-                {
-                  kind: 'Field',
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
                   name: { kind: 'Name', value: 'items' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       {
                         kind: 'FragmentSpread',
-<<<<<<< HEAD
                         name: { kind: 'Name', value: 'GroupsContent' },
-=======
-                        name: { kind: 'Name', value: 'EventContent' },
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
                       },
                     ],
                   },
@@ -10691,27 +10455,16 @@ export const FetchEventsDocument = {
         ],
       },
     },
-<<<<<<< HEAD
     ...GroupsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchGroupsQuery, FetchGroupsQueryVariables>;
 export const FetchGroupDocument = {
-=======
-    ...EventContentFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<FetchEventsQuery, FetchEventsQueryVariables>;
-export const FetchEventDocument = {
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-<<<<<<< HEAD
       name: { kind: 'Name', value: 'FetchGroup' },
-=======
-      name: { kind: 'Name', value: 'FetchEvent' },
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -10748,11 +10501,7 @@ export const FetchEventDocument = {
         selections: [
           {
             kind: 'Field',
-<<<<<<< HEAD
             name: { kind: 'Name', value: 'findGroupsContent' },
-=======
-            name: { kind: 'Name', value: 'findEventsContent' },
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
             arguments: [
               {
                 kind: 'Argument',
@@ -10766,85 +10515,9 @@ export const FetchEventDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-<<<<<<< HEAD
                 {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'GroupsContent' },
-=======
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'EventContent' },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    ...EventContentFragmentDoc.definitions,
-  ],
-} as unknown as DocumentNode<FetchEventQuery, FetchEventQueryVariables>;
-export const FetchGroupCalendarDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'FetchGroupCalendar' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'findGroupsContent' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'id' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'flatData' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'calendars' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
->>>>>>> Events Queries. Also some stuff from Jhonny's branch
                 },
               ],
             },

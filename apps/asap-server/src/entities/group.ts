@@ -21,7 +21,11 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     return team;
   });
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(
+<<<<<<< HEAD
     (c) => parseGraphQLCalendar(c as Calendars), // @todo remove cast
+=======
+    (c) => parseGraphQLCalendar(c as Calendars), //@todo remove cast
+>>>>>>> Events mostly working
   );
 
   const leaders: GroupResponse['leaders'] = (

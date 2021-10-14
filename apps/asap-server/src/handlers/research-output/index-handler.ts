@@ -30,11 +30,7 @@ export const indexResearchOutputHandler = (
   ): Promise<void> => {
     logger.debug(`Event ${event['detail-type']}`);
 
-    if (
-      ['ResearchOutputCreated', 'ResearchOutputUpdated'].includes(
-        event['detail-type'],
-      )
-    ) {
+    try {
       const researchOutput = await researchOutputController.fetchById(
         event.detail.payload.id,
       );
@@ -47,9 +43,9 @@ export const indexResearchOutputHandler = (
       });
 
       logger.debug(`Saved research-output ${researchOutput.id}`);
-    }
+    } catch (e) {
+      logger.debug(JSON.stringify(e));
 
-    if (event['detail-type'] === 'ResearchOutputDeleted') {
       await algoliaIndex.deleteObject(event.detail.payload.id);
       logger.debug(`Deleted research-output ${event.detail.payload.id}`);
     }
@@ -58,7 +54,7 @@ export const indexResearchOutputHandler = (
 
 export type SquidexWebhookResearchOutputPayload = {
   type:
-    | 'ResearchOutputsCreated'
+    | 'ResearchOutputsPublished'
     | 'ResearchOutputsUpdated'
     | 'ResearchOutputsUnpublished'
     | 'ResearchOutputsDeleted';

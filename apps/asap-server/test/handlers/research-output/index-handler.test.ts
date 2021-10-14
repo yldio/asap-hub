@@ -29,7 +29,7 @@ describe('Research Output index handler', () => {
     await indexHandler(
       createEventBridgeEventMock(
         {
-          type: 'ResearchOutputsCreated',
+          type: 'ResearchOutputsPublished',
           payload: {
             $type: 'EnrichedContentEvent',
             type: 'Published',
@@ -72,7 +72,11 @@ describe('Research Output index handler', () => {
     });
   });
 
-  test('Should remove the record Algolia when research-output has been deleted', async () => {
+  test('Should remove the record Algolia when research-output when research-output is not found', async () => {
+    researchOutputControllerMock.fetchById.mockRejectedValueOnce({
+      statusCode: 404,
+    });
+
     const event: EventBridgeEvent<
       ResearchOutputEventType,
       SquidexWebhookResearchOutputPayload
@@ -90,9 +94,53 @@ describe('Research Output index handler', () => {
 
     await indexHandler(event);
 
-    expect(researchOutputControllerMock.fetchById).not.toHaveBeenCalled();
     expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
+  });
+
+  test('Should not relay on the order of the events, i.e. unpublished and published', async () => {
+    const researchOutputResponse = getResearchOutputResponse();
+    researchOutputControllerMock.fetchById.mockRejectedValueOnce(new Error());
+
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(
+      researchOutputResponse,
+    );
+
+    await indexHandler(
+      createEventBridgeEventMock(
+        {
+          type: 'ResearchOutputsUnpublished',
+          payload: {
+            $type: 'EnrichedContentEvent',
+            type: 'Unpublished',
+            id: researchOutputResponse.id,
+          },
+        },
+        'ResearchOutputDeleted',
+      ),
+    );
+
+    await indexHandler(
+      createEventBridgeEventMock(
+        {
+          type: 'ResearchOutputsUpdated',
+          payload: {
+            $type: 'EnrichedContentEvent',
+            type: 'Published',
+            id: researchOutputResponse.id,
+          },
+        },
+        'ResearchOutputUpdated',
+      ),
+    );
+
+    expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
+      researchOutputResponse.id,
+    );
+    expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
+      ...researchOutputResponse,
+      objectID: researchOutputResponse.id,
+    });
   });
 });

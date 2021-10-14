@@ -5,7 +5,7 @@ import {
   GroupTeam,
   GroupTools,
   GroupLeader,
-  GroupRole,
+  isGroupRole,
 } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
 
@@ -33,12 +33,16 @@ export const parseGraphQLGroup = (
       if (leader.user === null || !leader.user[0]) {
         return leaderList;
       }
+      if (!isGroupRole(leader.role)) {
+        throw new Error(`Invalid group role on leaders : ${leader.role}`);
+      }
+
       return [
         ...leaderList,
         {
           //TODO: remove cast after user types
           user: parseGraphQLUser(leader.user[0] as GraphqlUser),
-          role: leader.role as GroupRole,
+          role: leader.role,
         },
       ];
     },

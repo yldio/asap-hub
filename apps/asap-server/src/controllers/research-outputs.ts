@@ -21,6 +21,7 @@ import {
   FetchResearchOutputsQueryVariables,
 } from '../gql/graphql';
 
+//TODO: remove when not needed in events query (dependency)
 export const getGraphQLQueryResearchOutput = ({
   withTeams,
 }: {

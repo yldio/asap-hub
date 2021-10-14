@@ -11,12 +11,17 @@ export type GroupTools = {
 
 export type GroupTeam = Omit<TeamResponse, 'members' | 'outputs' | 'labCount'>;
 
-export type GroupRole = 'Chair' | 'Project Manager';
+export const groupRole = ['Chair', 'Project Manager'];
+
+export type GroupRole = typeof groupRole[number];
+
 export type GroupLeader = {
   readonly user: UserResponse;
   readonly role: GroupRole;
 };
 
+export const isGroupRole = (data: string | null): data is GroupRole =>
+  groupRole.includes(data as GroupRole);
 export interface GroupResponse {
   readonly id: string;
   readonly createdDate: string;

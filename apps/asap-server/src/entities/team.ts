@@ -5,6 +5,7 @@ import {
   TeamRole,
   TeamMember,
   Lab,
+  isTeamRole,
 } from '@asap-hub/model';
 import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
@@ -53,6 +54,10 @@ export const parseGraphQLTeamMember = (
   const role = user.flatData.teams
     ?.filter((t) => t.id && t.id[0].id === teamId)
     .filter((s) => s.role)[0].role as TeamRole;
+
+  if (!isTeamRole(role)) {
+    throw new Error(`Invalid team role on user ${user.id} : ${role}`);
+  }
 
   return {
     id: user.id,

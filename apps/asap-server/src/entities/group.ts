@@ -20,7 +20,7 @@ export const parseGraphQLGroup = (
 ): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
   const teams: GroupTeam[] = (item.flatData.teams || []).map((t) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { members, outputs, labCount, ...team } = parseGraphQLTeam(t);
     return team;
   });

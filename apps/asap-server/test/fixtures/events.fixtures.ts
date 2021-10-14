@@ -1,13 +1,9 @@
-// import { ListEventsResponse } from '@asap-hub/model';
-import {
-  ResponseFetchEvents,
-  ResponseFetchEvent,
-} from '../../src/controllers/events';
-import { GraphqlEvent, RestEvent, config } from '@asap-hub/squidex';
+import { RestEvent, config } from '@asap-hub/squidex';
 import { listGroupsResponse, queryGroupsResponse } from './groups.fixtures';
 import { ListEventResponse, EventResponse } from '@asap-hub/model';
+import { FetchEventQuery, FetchEventsQuery } from '../../src/gql/graphql';
 
-export const fetchEventsResponse: { data: ResponseFetchEvents } = {
+export const fetchEventsResponse: { data: FetchEventsQuery } = {
   data: {
     queryEventsContentsWithTotal: {
       total: 2,
@@ -25,8 +21,6 @@ export const fetchEventsResponse: { data: ResponseFetchEvents } = {
             thumbnail: [
               {
                 id: 'uuid-thumbnail-2',
-                created: '2021-02-08T16:04:56Z',
-                lastModified: '2021-02-08T16:22:12Z',
               },
             ],
             notes: 'These are the notes from the meeting',
@@ -189,7 +183,7 @@ export const eventResponse: EventResponse = {
   group: listGroupsResponse.items[0],
 };
 
-export const graphqlEvent: GraphqlEvent = {
+export const graphqlEvent: any = {
   id: 'afcee0ec-fcd5-479c-9809-e397636f815a',
   created: '2021-02-08T16:04:56Z',
   lastModified: '2021-02-08T16:22:12Z',
@@ -209,18 +203,21 @@ export const graphqlEvent: GraphqlEvent = {
         flatData: {
           googleCalendarId:
             'c_t92qa82jd702q1fkreoi0hf4hk@group.calendar.google.com',
-          color: '#125A12',
+          color: '#125A12' as const,
           name: 'Tech 1 - Sequencing/omics',
+          expirationDate: null,
+          resourceId: '',
+          syncToken: '',
         },
       },
     ],
   },
 };
 
-export const findEventResponse: { data: ResponseFetchEvent } = {
+export const findEventResponse: { data: FetchEventQuery } = {
   data: {
     findEventsContent:
-      fetchEventsResponse.data.queryEventsContentsWithTotal.items[0],
+      fetchEventsResponse.data.queryEventsContentsWithTotal!.items![0],
   },
 };
 

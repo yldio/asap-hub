@@ -11,6 +11,7 @@ import { parseGraphQLTeam } from './team';
 import { parseGraphQLUser } from './user';
 import { parseGraphQLCalendar } from './calendar';
 import { parseDate, createURL } from '../utils/squidex';
+import { Calendars } from '../gql/graphql';
 
 export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
   const createdDate = parseDate(item.created).toISOString();
@@ -20,7 +21,7 @@ export const parseGraphQLGroup = (item: GraphqlGroup): GroupResponse => {
     return team;
   });
   const calendars: CalendarResponse[] = (item.flatData?.calendars || []).map(
-    parseGraphQLCalendar,
+    (c) => parseGraphQLCalendar(c as Calendars), //@todo remove cast
   );
 
   const leaders: GroupResponse['leaders'] = (

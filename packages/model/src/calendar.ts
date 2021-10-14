@@ -56,6 +56,6 @@ export interface CalendarResponse {
 export type ListCalendarResponse = ListResponse<CalendarResponse>;
 
 export const isGoogleLegacyCalendarColor = (
-  data: string,
+  data: string | null,
 ): data is GoogleLegacyCalendarColor =>
   googleLegacyCalendarColor.includes(data as GoogleLegacyCalendarColor);

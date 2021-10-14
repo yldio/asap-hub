@@ -6,7 +6,8 @@ export const MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT: number = 24;
 export const EVENT_CONSIDERED_PAST_HOURS_AFTER_EVENT: number = 1;
 export const EVENT_CONSIDERED_IN_PROGRESS_MINUTES_BEFORE_EVENT: number = 5;
 
-export type EventStatus = 'Confirmed' | 'Tentative' | 'Cancelled';
+export const eventStatus = ['Confirmed', 'Tentative', 'Cancelled'] as const;
+export type EventStatus = typeof eventStatus[number];
 
 export interface EventResponse {
   id: string;
@@ -48,3 +49,6 @@ export const eventMaterialTypes: ReadonlyArray<
     'notes' | 'videoRecording' | 'presentation' | 'meetingMaterials'
   >
 > = ['notes', 'videoRecording', 'presentation', 'meetingMaterials'];
+
+export const isEventStatus = (status: string | null): status is EventStatus =>
+  eventStatus.includes(status as EventStatus);

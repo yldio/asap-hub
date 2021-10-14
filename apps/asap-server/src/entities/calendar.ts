@@ -1,5 +1,6 @@
-import { CalendarResponse } from '@asap-hub/model';
-import { RestCalendar, GraphqlCalendar } from '@asap-hub/squidex';
+import { CalendarResponse, isGoogleLegacyCalendarColor } from '@asap-hub/model';
+import { RestCalendar } from '@asap-hub/squidex';
+import { Calendars } from '../gql/graphql';
 
 export const parseCalendar = (item: RestCalendar): CalendarResponse => ({
   id: item.data.googleCalendarId.iv,
@@ -7,11 +8,13 @@ export const parseCalendar = (item: RestCalendar): CalendarResponse => ({
   name: item.data.name.iv,
 });
 
-export const parseGraphQLCalendar = (
-  item: GraphqlCalendar,
-): CalendarResponse => ({
-  id: item.flatData?.googleCalendarId || '',
+export const parseGraphQLCalendar = ({
+  flatData: { color, googleCalendarId, name },
+}: {
+  flatData: Pick<Calendars['flatData'], 'googleCalendarId' | 'name' | 'color'>;
+}): CalendarResponse => ({
+  id: googleCalendarId ?? '',
   // default should never be picked. Field required on CMS
-  color: item.flatData?.color || '#333333',
-  name: item.flatData?.name || '',
+  color: isGoogleLegacyCalendarColor(color) ? color : ('#333333' as const),
+  name: name ?? '',
 });

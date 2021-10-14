@@ -1,15 +1,28 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
-import { GraphqlEvent, RestEvent, Event } from '@asap-hub/squidex';
+import { RestEvent, Event } from '@asap-hub/squidex';
 import {
   InstrumentedSquidexGraphql,
   InstrumentedSquidex,
 } from '../utils/instrumented-client';
-import { FetchOptions, AllOrNone, GraphqlFetchOptions } from '../utils/types';
 import { parseGraphQLEvent } from '../entities/event';
-import { ResponseFetchGroup, GraphQLQueryGroup } from './groups';
+import { AllOrNone, FetchOptions } from '../utils/types';
+
 import { sanitiseForSquidex } from '../utils/squidex';
+import {
+  FETCH_EVENT,
+  FETCH_EVENTS,
+  FETCH_GROUP_CALENDAR,
+} from '../queries/events.queries';
+import {
+  FetchEventQuery,
+  FetchEventQueryVariables,
+  FetchEventsQuery,
+  FetchEventsQueryVariables,
+  FetchGroupCalendarQuery,
+  FetchGroupCalendarQueryVariables,
+} from '../gql/graphql';
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;
@@ -74,35 +87,35 @@ export default class Events implements EventController {
 
     if (groupId) {
       const { findGroupsContent } = await this.client.request<
-        ResponseFetchGroup,
-        { id: string }
-      >(buildGraphQLQueryFetchGroup(), { id: groupId });
+        FetchGroupCalendarQuery,
+        FetchGroupCalendarQueryVariables
+      >(FETCH_GROUP_CALENDAR, {
+        id: groupId,
+      });
 
       if (!findGroupsContent) {
         throw Boom.notFound();
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const calendarIds = findGroupsContent.flatData!.calendars!.map(
-        (calendar) => `'${calendar.id}'`,
+      const calendarIds = (findGroupsContent.flatData.calendars ?? []).map(
+        ({ id }) => `'${id}'`,
       );
 
       filters.push(`data/calendar/iv in [${calendarIds.join(', ')}]`);
     }
 
-    const query = buildGraphQLQueryFetchEvents();
-
-    const { queryEventsContentsWithTotal } = await this.client.request<
-      ResponseFetchEvents,
-      GraphqlFetchOptions
-    >(query, {
+    const result = await this.client.request<
+      FetchEventsQuery,
+      FetchEventsQueryVariables
+    >(FETCH_EVENTS, {
       filter: filters.join(' and '),
       top: take,
       skip,
       order: orderby,
     });
 
-    const { total, items: events } = queryEventsContentsWithTotal;
+    const total = result.queryEventsContentsWithTotal?.total ?? 0;
+    const events = result.queryEventsContentsWithTotal?.items ?? [];
 
     const items = events.map((item) => parseGraphQLEvent(item));
 
@@ -113,11 +126,10 @@ export default class Events implements EventController {
   }
 
   async fetchById(eventId: string): Promise<EventResponse> {
-    const query = buildGraphQLQueryFetchEvent();
     const { findEventsContent: event } = await this.client.request<
-      ResponseFetchEvent,
-      { id: string }
-    >(query, { id: eventId });
+      FetchEventQuery,
+      FetchEventQueryVariables
+    >(FETCH_EVENT, { id: eventId });
 
     if (!event) {
       throw Boom.notFound();
@@ -163,89 +175,6 @@ const toEventData = (data: Partial<Event>): RestEvent['data'] =>
     return acc;
   }, {} as { [key: string]: { iv: unknown } }) as RestEvent['data'];
 
-export const GraphQLQueryEvent = `
-id
-lastModified
-created
-flatData{
-  description
-  endDate
-  endDateTimeZone
-  startDate
-  startDateTimeZone
-  meetingLink
-  eventLink
-  status
-  tags
-  title
-  notesPermanentlyUnavailable
-  notes
-  videoRecordingPermanentlyUnavailable
-  videoRecording
-  presentationPermanentlyUnavailable
-  presentation
-  meetingMaterialsPermanentlyUnavailable
-  meetingMaterials {
-    url
-    title
-  }
-  calendar {
-    flatData {
-      googleCalendarId
-      color
-      name
-    }
-    referencingGroupsContents {
-      ${GraphQLQueryGroup}
-    }
-  }
-  thumbnail {
-    id
-  }
-}`;
-
-export const buildGraphQLQueryFetchEvents = (): string => `
-  query FetchEvents($top: Int, $skip: Int, $filter: String, $order: String) {
-    queryEventsContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: $order){
-      total,
-      items {
-        ${GraphQLQueryEvent}
-      }
-    }
-  }
-`;
-
-export const buildGraphQLQueryFetchEvent = (): string => `
-  query FetchEvent($id: String!) {
-    findEventsContent(id: $id) {
-      ${GraphQLQueryEvent}
-    }
-  }
-`;
-
-export const buildGraphQLQueryFetchGroup = (): string => `
-  query FetchGroup($id: String!) {
-    findGroupsContent(id: $id) {
-      flatData {
-        calendars {
-          id
-        }
-      }
-    }
-  }
-`;
-
-export interface ResponseFetchEvents {
-  queryEventsContentsWithTotal: {
-    total: number;
-    items: GraphqlEvent[];
-  };
-}
-
-export interface ResponseFetchEvent {
-  findEventsContent: GraphqlEvent;
-}
-
 export type FetchEventsOptions = (
   | {
       before: string;
@@ -257,7 +186,6 @@ export type FetchEventsOptions = (
     }
 ) & { groupId?: string } & SortOptions &
   FetchOptions;
-
 type SortOptions = AllOrNone<{
   sortBy: 'startDate' | 'endDate';
   sortOrder: 'asc' | 'desc';

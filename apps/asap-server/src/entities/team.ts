@@ -88,7 +88,7 @@ export const parseGraphQLTeam = (
     team.flatData.tools?.map(({ name, description, url }) => ({
       name: name ?? '',
       url: url ?? '',
-      description: description ?? '',
+      description: description ?? undefined,
     })) || [];
 
   const outputs: ResearchOutputResponse[] = flatOutputs

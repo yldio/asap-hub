@@ -3,7 +3,7 @@ import { APIGatewayProxyResult } from 'aws-lambda';
 import { EventBridge } from 'aws-sdk';
 import { eventBus, eventSource } from '../../../src/config';
 import { researchOutputWebhookFactory } from '../../../src/handlers/webhooks/webhook-research-output';
-import { researchOutputEvent } from '../../fixtures/research-output.fixtures';
+import { getResearchOutputWebhookPayload } from '../../fixtures/research-output.fixtures';
 import { getApiGatewayEvent } from '../../helpers/events';
 import { createSignedPayload } from '../../helpers/webhooks';
 
@@ -23,7 +23,7 @@ describe('Research output webhook', () => {
         'x-signature': 'XYZ',
       },
       body: JSON.stringify(
-        researchOutputEvent('ResearchOutputsPublished', 'Published'),
+        getResearchOutputWebhookPayload('ro-1234', 'ResearchOutputsPublished'),
       ),
     });
 
@@ -36,7 +36,10 @@ describe('Research output webhook', () => {
   test('Should return 204 and not raise an event when the event type is not supported', async () => {
     const res = (await handler(
       createSignedPayload<ResearchOutput>({
-        ...researchOutputEvent('ResearchOutputsPublished', 'Published'),
+        ...getResearchOutputWebhookPayload(
+          'ro-1234',
+          'ResearchOutputsPublished',
+        ),
         type: 'SomeEvent',
       }),
     )) as APIGatewayProxyResult;
@@ -46,9 +49,9 @@ describe('Research output webhook', () => {
   });
 
   test('Should put the research-output-created event into the event bus and return 200', async () => {
-    const createEvent = researchOutputEvent(
+    const createEvent = getResearchOutputWebhookPayload(
+      'ro-1234',
       'ResearchOutputsPublished',
-      'Published',
     );
 
     const res = (await handler(
@@ -69,9 +72,9 @@ describe('Research output webhook', () => {
   });
 
   test('Should put the research-output-updated event into the event bus and return 200', async () => {
-    const updateEvent = researchOutputEvent(
+    const updateEvent = getResearchOutputWebhookPayload(
+      'ro-1234',
       'ResearchOutputsUpdated',
-      'Updated',
     );
 
     const res = (await handler(
@@ -92,9 +95,9 @@ describe('Research output webhook', () => {
   });
 
   test('Should put the research-output-deleted event into the event bus and return 200', async () => {
-    const deleteEvent = researchOutputEvent(
+    const deleteEvent = getResearchOutputWebhookPayload(
+      'ro-1234',
       'ResearchOutputsDeleted',
-      'Deleted',
     );
 
     const res = (await handler(
@@ -114,9 +117,9 @@ describe('Research output webhook', () => {
   });
 
   test('Should treat the research-output-unpublished event as research-output-deleted', async () => {
-    const unpublishedEvent = researchOutputEvent(
+    const unpublishedEvent = getResearchOutputWebhookPayload(
+      'ro-1234',
       'ResearchOutputsUnpublished',
-      'Unpublished',
     );
 
     const res = (await handler(

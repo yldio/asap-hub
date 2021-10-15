@@ -11,6 +11,8 @@ import {
 } from '../../src/gql/graphql';
 import { DeepWriteable } from '../../src/utils/types';
 import { fetchExpectation, graphQlResponseFetchUsers } from './users.fixtures';
+import { createEventBridgeEventMock } from '../../test/helpers/events';
+import { ResearchOutputEventType } from '../../src/handlers/webhooks/webhook-research-output';
 
 export const getSquidexResearchOutputsGraphqlResponse =
   (): FetchResearchOutputsQuery => ({
@@ -303,20 +305,20 @@ export const getListResearchOutputResponse =
     items: [getResearchOutputResponse()],
   });
 
-export const researchOutputEvent = (
+export const getResearchOutputWebhookPayload = (
+  id: string,
   type:
     | 'ResearchOutputsPublished'
     | 'ResearchOutputsUpdated'
     | 'ResearchOutputsUnpublished'
     | 'ResearchOutputsDeleted',
-  action: 'Published' | 'Updated' | 'Deleted' | 'Unpublished',
 ): WebhookPayload<ResearchOutput> => ({
   type,
   timestamp: '2021-02-15T13:11:25Z',
   payload: {
     $type: 'EnrichedContentEvent',
-    type: action,
-    id: 'userId',
+    type: '',
+    id,
     created: '2020-07-31T14:11:58Z',
     lastModified: '2020-07-31T15:49:41Z',
     data: {
@@ -338,30 +340,17 @@ export const researchOutputEvent = (
   },
 });
 
-export const updateResearchOutputEvent: WebhookPayload<ResearchOutput> = {
-  type: 'ResearchOutputsUpdated',
-  timestamp: '2021-02-15T13:11:25Z',
-  payload: {
-    $type: 'EnrichedContentEvent',
-    type: 'Updated',
-    id: 'userId',
-    created: '2020-07-31T14:11:58Z',
-    lastModified: '2020-07-31T15:49:41Z',
-    data: {
-      type: { iv: 'Article' },
-      title: { iv: 'Research Output' },
-      description: { iv: 'Description' },
-      sharingStatus: { iv: 'Network Only' },
-      asapFunded: { iv: 'Not Sure' },
-      usedInAPublication: { iv: 'Not Sure' },
-    } as Rest<ResearchOutput>['data'],
-    dataOld: {
-      type: { iv: 'Article' },
-      title: { iv: 'Research Output' },
-      description: { iv: 'Description' },
-      sharingStatus: { iv: 'Network Only' },
-      asapFunded: { iv: 'Not Sure' },
-      usedInAPublication: { iv: 'Not Sure' },
-    } as Rest<ResearchOutput>['data'],
-  },
-};
+export const getResearchOutputEvent = (
+  id: string,
+  squidexEvent:
+    | 'ResearchOutputsPublished'
+    | 'ResearchOutputsUpdated'
+    | 'ResearchOutputsUnpublished'
+    | 'ResearchOutputsDeleted',
+  eventType: ResearchOutputEventType,
+) =>
+  createEventBridgeEventMock(
+    getResearchOutputWebhookPayload(id, squidexEvent),
+    eventType,
+    id,
+  );

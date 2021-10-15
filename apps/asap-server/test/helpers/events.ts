@@ -66,8 +66,9 @@ export const createEventBridgeScheduledEventMock = (): EventBridgeEvent<
 export const createEventBridgeEventMock = <T, P extends string>(
   detail: T,
   detailType: P,
+  id?: string,
 ): EventBridgeEvent<P, T> => ({
-  id: 'test-id',
+  id: id ?? 'test-id',
   version: '1',
   account: 'test-account',
   time: '3234234234',

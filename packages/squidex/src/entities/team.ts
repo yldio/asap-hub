@@ -10,9 +10,9 @@ export interface Team<T = string> {
   proposal?: T[];
   skills: string[];
   tools?: {
-    url?: string;
+    url: string;
     description?: string;
-    name?: string;
+    name: string;
   }[];
   outputs: T[];
 }

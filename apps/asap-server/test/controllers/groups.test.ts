@@ -49,6 +49,47 @@ describe('Group controller', () => {
       const result = await groups.fetch({});
       expect(result).toEqual({ items: [], total: 0 });
     });
+    test('Should return an empty result when the client returns a response with queryGroupsContentsWithTotal property set to null', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_GROUPS),
+          variables: {
+            filter: '',
+            top: 50,
+            skip: 0,
+          },
+        })
+        .reply(200, {
+          data: {
+            queryGroupsContentsWithTotal: {
+              total: 0,
+              items: null,
+            },
+          },
+        });
+
+      const result = await groups.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+    test('Should return an empty result when the client returns a response with item property set to null', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_GROUPS),
+          variables: {
+            filter: '',
+            top: 50,
+            skip: 0,
+          },
+        })
+        .reply(200, {
+          data: {
+            queryGroupsContentsWithTotal: null,
+          },
+        });
+
+      const result = await groups.fetch({});
+      expect(result).toEqual({ items: [], total: 0 });
+    });
 
     test('Should query with filters and return the groups', async () => {
       const fetchOptions: FetchOptions = {

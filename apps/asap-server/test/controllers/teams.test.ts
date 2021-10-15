@@ -57,6 +57,49 @@ describe('Team controller', () => {
 
       expect(result).toEqual({ items: [], total: 0 });
     });
+    test('Should return an empty result when the client returns a response with queryTeamsContentsWithTotal property set to null', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_TEAMS),
+          variables: {
+            filter: '',
+            top: 10,
+            skip: 8,
+          },
+        })
+        .reply(200, {
+          data: {
+            queryTeamsContentsWithTotal: null,
+          },
+        });
+
+      const result = await teams.fetch({ take: 10, skip: 8 });
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_TEAMS),
+          variables: {
+            filter: '',
+            top: 10,
+            skip: 8,
+          },
+        })
+        .reply(200, {
+          data: {
+            queryTeamsContentsWithTotal: {
+              total: 0,
+              items: null,
+            },
+          },
+        });
+
+      const result = await teams.fetch({ take: 10, skip: 8 });
+
+      expect(result).toEqual({ items: [], total: 0 });
+    });
 
     describe('Text search', () => {
       test('Should search by name and return the teams', async () => {

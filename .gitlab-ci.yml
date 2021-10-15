@@ -154,6 +154,10 @@ deploy:squidex:branch:
     auto_stop_in: 3 days
   variables:
     <<: *tmpl_branch_variables
+  cache:
+    key: '$CI_EXTERNAL_PULL_REQUEST_IID'
+    paths:
+      - first_run/
   script:
     - export SQUIDEX_APP_NAME=${CI_EXTERNAL_PULL_REQUEST_IID}
     - export SQUIDEX_CLIENT_ID=$SQUIDEX_TEST_CLIENT_ID
@@ -164,7 +168,11 @@ deploy:squidex:branch:
     - tar -xf $MOST_RECENT_BACKUP
     - source ci/env-setup.sh
     - ./ci/config-squidex-rules.sh ./backup/rules
+    # Check if this is the first run of squidex-app-create - cache is persisted between PR workflows
+    - export FIRST_RUN=$(test -f "first_run/squidex_app_create" && echo "false" || echo "true")
     - ./ci/import-squidex-data.sh
+    # Store a random file in the cached directory to mark completion of squidex-app-create
+    - mkdir -p first_run && touch first_run/squidex_app_create
 
 deploy:sls:branch:
   <<: *tmpl_branch

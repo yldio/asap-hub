@@ -1,6 +1,6 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
-import { notFound } from '@hapi/boom';
+import { badGateway, notFound } from '@hapi/boom';
 import { print } from 'graphql';
 
 import Calendars from '../../src/controllers/calendars';
@@ -184,11 +184,8 @@ describe('Calendars controller', () => {
 
     test('Should throw if squidex response has invalid colour', async () => {
       const id = 'calendar-id-1';
-      const response = {
-        ...getCalendarResponse(),
-        color: 'invalid',
-        id,
-      };
+      const response = getCalendarsGraphqlResponse();
+      response.data.findCalendarsContent!.flatData.color = 'invalid';
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -198,8 +195,27 @@ describe('Calendars controller', () => {
           },
         })
         .reply(200, response);
+      await expect(calendars.fetchById(id)).rejects.toThrow(
+        badGateway('Invalid colour'),
+      );
+    });
 
-      await expect(calendars.fetchById(id)).rejects.toThrow();
+    test('Should throw if missing required data', async () => {
+      const id = 'calendar-id-1';
+      const response = getCalendarsGraphqlResponse();
+      response.data.findCalendarsContent!.flatData.color = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_CALENDAR),
+          variables: {
+            id,
+          },
+        })
+        .reply(200, response);
+      await expect(calendars.fetchById(id)).rejects.toThrow(
+        badGateway('Missing required data'),
+      );
     });
 
     test('Should return the calendar raw response', async () => {

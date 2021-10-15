@@ -114,7 +114,7 @@ export const getCalendarsRestResponse = (): Results<RestCalendar> => ({
 });
 
 export const getCalendarsGraphqlResponse = (): {
-  data: FetchCalendarQuery;
+  data: NonNullable<FetchCalendarQuery>;
 } => ({
   data: {
     findCalendarsContent: {

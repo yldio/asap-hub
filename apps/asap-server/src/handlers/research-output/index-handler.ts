@@ -46,8 +46,10 @@ export const indexResearchOutputHandler = (
     } catch (e) {
       logger.debug(JSON.stringify(e));
 
-      await algoliaIndex.deleteObject(event.detail.payload.id);
-      logger.debug(`Deleted research-output ${event.detail.payload.id}`);
+      if (e.output.statusCode === 404) {
+        await algoliaIndex.deleteObject(event.detail.payload.id);
+        logger.debug(`Deleted research-output ${event.detail.payload.id}`);
+      }
     }
   };
 };

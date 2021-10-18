@@ -199,7 +199,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
         ...context,
         request: {
           query: {},
-          body: { redirect_uri: 'https://hub.asap.science/' },
+          body: { redirect_uri: 'https://other-uri.com/' },
         },
       },
       cb,
@@ -210,7 +210,55 @@ describe('Auth0 Rule - Add User Metadata', () => {
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
-    expect(resContext.idToken['https://hub.asap.science/user']).toStrictEqual({
+    expect(resContext.idToken['https://other-uri.com/user']).toStrictEqual({
+      displayName: 'Joao Tiago',
+      email: 'joao.tiago@yld.io',
+      id: 'myRandomId123',
+      onboarded: true,
+      firstName: 'Joao',
+      lastName: 'Tiago',
+      avatarUrl: undefined,
+      teams: [
+        {
+          id: 'team-1',
+          displayName: 'Team 1',
+          role: 'Lead PI (Core Leadership)',
+        },
+      ],
+      algoliaApiKey: 'test-api-key',
+    });
+  });
+
+  it('fetches user metadata from the PR API url when a PR redirect uri is given', async () => {
+    const apiPRUrl = 'https://api-1234.hub.asap.science';
+    nock(apiPRUrl, {
+      reqheaders: {
+        authorization: `Basic ${apiSharedSecret}`,
+      },
+    })
+      .get(`/webhook/users/${user.user_id}`)
+      .reply(200, apiUser);
+
+    const cb: jest.MockedFunction<Parameters<typeof addUserMetadata>[2]> =
+      jest.fn();
+
+    await addUserMetadata(
+      user,
+      {
+        ...context,
+        request: {
+          query: {},
+          body: { redirect_uri: 'https://1234.hub.asap.science/' },
+        },
+      },
+      cb,
+    );
+
+    expect(cb).toHaveBeenCalled();
+    const resContext = cb.mock.calls[0][2];
+    expect(
+      resContext.idToken['https://1234.hub.asap.science/user'],
+    ).toStrictEqual({
       displayName: 'Joao Tiago',
       email: 'joao.tiago@yld.io',
       id: 'myRandomId123',

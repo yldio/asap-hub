@@ -9,9 +9,6 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
   context,
   callback,
 ) => {
-  const apiURL = configuration?.APP_ORIGIN;
-  const apiSharedSecret = configuration?.API_SHARED_SECRET;
-
   const redirect_uri = new URLSearchParams(context.request.query).get(
     'redirect_uri',
   )
@@ -20,6 +17,14 @@ const addUserMetadata: Rule<{ invitationCode: string }> = async (
   if (!redirect_uri) {
     return callback(new Error('Missing redirect_uri'));
   }
+
+  const prUrlRegex = /https:\/\/(?<pr_number>[0-9]+)\.hub.asap.science/;
+  const matches = prUrlRegex.exec(redirect_uri);
+
+  const apiURL = matches?.groups?.pr_number
+    ? `https://api-${matches.groups.pr_number}.hub.asap.science`
+    : configuration?.APP_ORIGIN;
+  const apiSharedSecret = configuration?.API_SHARED_SECRET;
 
   try {
     const {

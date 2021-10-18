@@ -8,7 +8,6 @@ import { GraphqlResearchOutput } from '@asap-hub/squidex';
 import { parseGraphQLResearchOutput } from '../entities/research-output';
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { sanitiseForSquidex } from '../utils/squidex';
-import { GraphQLQueryUser } from './users';
 import {
   FETCH_RESEARCH_OUTPUT,
   FETCH_RESEARCH_OUTPUTS,
@@ -20,74 +19,6 @@ import {
   FetchResearchOutputsQuery,
   FetchResearchOutputsQueryVariables,
 } from '../gql/graphql';
-
-// TODO: remove when not needed in events query (dependency)
-export const getGraphQLQueryResearchOutput = ({
-  withTeams,
-}: {
-  withTeams: boolean;
-}): string => `
-id
-created
-lastModified
-flatData{
-  title
-  type
-  subtype
-  description
-  link
-  addedDate
-  publishDate
-  doi
-  labCatalogNumber
-  accession
-  rrid
-  tags
-  lastUpdatedPartial
-  accessInstructions
-  sharingStatus
-  asapFunded
-  usedInAPublication
-  authors {
-    __typename
-    ... on Users {
-      ${GraphQLQueryUser}
-    }
-    ... on ExternalAuthors {
-      id
-      created
-      lastModified
-      flatData {
-        name
-        orcid
-      }
-    }
-  }
-}
-${
-  withTeams
-    ? `referencingTeamsContents {
-  id
-  created
-  lastModified
-  flatData {
-    displayName
-  }
-  referencingUsersContents {
-    flatData {
-      email
-      teams {
-        role
-        id {
-          id
-        }
-      }
-    }
-  }
-}`
-    : ''
-}
-`;
 
 export default class ResearchOutputs implements ResearchOutputController {
   graphqlSquidexClient: InstrumentedSquidexGraphql;

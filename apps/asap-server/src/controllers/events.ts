@@ -7,6 +7,7 @@ import {
   InstrumentedSquidex,
 } from '../utils/instrumented-client';
 import { parseGraphQLEvent } from '../entities/event';
+<<<<<<< HEAD
 import { AllOrNone, FetchOptions } from '../utils/types';
 
 import { sanitiseForSquidex } from '../utils/squidex';
@@ -24,6 +25,11 @@ import {
   FetchGroupCalendarQueryVariables,
 } from '../gql/graphql';
 import logger from '../utils/logger';
+=======
+import { ResponseFetchGroup } from './groups';
+import { sanitiseForSquidex } from '../utils/squidex';
+import { GraphQLQueryUser } from './users';
+>>>>>>> moving fragments to events
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;

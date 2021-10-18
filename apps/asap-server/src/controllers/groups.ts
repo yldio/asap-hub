@@ -6,8 +6,6 @@ import uniqBy from 'lodash.uniqby';
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import { FetchOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
-import { GraphQLQueryUser } from './users';
-import { getGraphQLQueryTeam } from './teams';
 import { sanitiseForSquidex } from '../utils/squidex';
 import { FETCH_GROUP, FETCH_GROUPS } from '../queries/groups.queries';
 import {
@@ -17,40 +15,6 @@ import {
   FetchGroupsQueryVariables,
 } from '../gql/graphql';
 import logger from '../utils/logger';
-
-// TODO: remove when is not needed in the events query
-export const GraphQLQueryGroup = `
-id
-created
-lastModified
-flatData {
-  name
-  description
-  tags
-  tools {
-    slack
-    googleDrive
-  }
-  teams {
-    ${getGraphQLQueryTeam({ withResearchOutputs: false })}
-  }
-  leaders{
-    role
-    user{
-      ${GraphQLQueryUser}
-    }
-  }
-  calendars {
-    flatData {
-      color
-      googleCalendarId
-      name
-    }
-  }
-  thumbnail {
-    id
-  }
-}`;
 
 export interface ResponseFetchGroups {
   queryGroupsContentsWithTotal: {

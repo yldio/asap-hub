@@ -6,10 +6,8 @@ import {
   InstrumentedSquidex,
   InstrumentedSquidexGraphql,
 } from '../utils/instrumented-client';
-import { getGraphQLQueryResearchOutput } from './research-outputs';
 import { parseGraphQLTeam } from '../entities';
 import { sanitiseForSquidex } from '../utils/squidex';
-import { GraphQLQueryUser } from './users';
 import { FETCH_TEAM, FETCH_TEAMS } from '../queries/teams.queries';
 import {
   FetchTeamQuery,
@@ -18,43 +16,6 @@ import {
   FetchTeamsQueryVariables,
 } from '../gql/graphql';
 import logger from '../utils/logger';
-
-// TODO: remove when not needed in events query (dependency)
-export const getGraphQLQueryTeam = ({
-  withResearchOutputs = true,
-  researchOutputsWithTeams = true,
-}: {
-  withResearchOutputs?: boolean;
-  researchOutputsWithTeams?: boolean;
-}): string => `
-id
-created
-lastModified
-flatData {
-  applicationNumber
-  displayName
-  ${
-    withResearchOutputs
-      ? `outputs {
-    ${getGraphQLQueryResearchOutput({ withTeams: researchOutputsWithTeams })}
-  }`
-      : ''
-  }
-  projectSummary
-  projectTitle
-  skills
-  proposal {
-    id
-  }
-  tools{
-    description
-    name
-    url
-  }
-}
-referencingUsersContents(filter: "data/onboarded/iv eq true") {
-    ${GraphQLQueryUser}
-}`;
 
 export interface ResponseFetchTeams {
   queryTeamsContentsWithTotal: {

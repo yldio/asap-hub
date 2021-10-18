@@ -23,6 +23,7 @@ import {
   FetchGroupCalendarQuery,
   FetchGroupCalendarQueryVariables,
 } from '../gql/graphql';
+import logger from '../utils/logger';
 
 export interface EventController {
   fetch: (options: FetchEventsOptions) => Promise<ListEventResponse>;
@@ -104,7 +105,7 @@ export default class Events implements EventController {
       filters.push(`data/calendar/iv in [${calendarIds.join(', ')}]`);
     }
 
-    const result = await this.client.request<
+    const { queryEventsContentsWithTotal } = await this.client.request<
       FetchEventsQuery,
       FetchEventsQueryVariables
     >(FETCH_EVENTS, {
@@ -114,14 +115,22 @@ export default class Events implements EventController {
       order: orderby,
     });
 
-    const total = result.queryEventsContentsWithTotal?.total ?? 0;
-    const events = result.queryEventsContentsWithTotal?.items ?? [];
-
-    const items = events.map((item) => parseGraphQLEvent(item));
+    if (
+      !queryEventsContentsWithTotal?.total ||
+      !queryEventsContentsWithTotal?.items
+    ) {
+      logger.warn('queryEventsContentsWithTotal returned null');
+      return {
+        total: 0,
+        items: [],
+      };
+    }
 
     return {
-      total,
-      items,
+      total: queryEventsContentsWithTotal.total,
+      items: queryEventsContentsWithTotal.items.map((item) =>
+        parseGraphQLEvent(item),
+      ),
     };
   }
 

@@ -47,7 +47,7 @@ export const eventContentFragment = gql`
   ${groupContentQueryFragment}
 `;
 
-export const FETCH_EVENT = gql`
+export const FETCH_EVENTS = gql`
   query FetchEvents(
     $top: Int
     $skip: Int
@@ -71,7 +71,7 @@ export const FETCH_EVENT = gql`
   ${eventContentFragment}
 `;
 
-export const FETCH_EVENTS = gql`
+export const FETCH_EVENT = gql`
   query FetchEvent(
     $id: String!
     $withResearchOutputs: Boolean = false

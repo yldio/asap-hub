@@ -4740,12 +4740,14 @@ export type EventContentFragment = Pick<
                   >
                 >;
                 calendars: Maybe<
-                  Array<{
-                    flatData: Pick<
-                      CalendarsFlatDataDto,
-                      'color' | 'googleCalendarId' | 'name'
-                    >;
-                  }>
+                  Array<
+                    Pick<Calendars, 'id'> & {
+                      flatData: Pick<
+                        CalendarsFlatDataDto,
+                        'color' | 'googleCalendarId' | 'name'
+                      >;
+                    }
+                  >
                 >;
                 thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
               };
@@ -5276,12 +5278,14 @@ export type FetchEventsQuery = {
                             >
                           >;
                           calendars: Maybe<
-                            Array<{
-                              flatData: Pick<
-                                CalendarsFlatDataDto,
-                                'color' | 'googleCalendarId' | 'name'
-                              >;
-                            }>
+                            Array<
+                              Pick<Calendars, 'id'> & {
+                                flatData: Pick<
+                                  CalendarsFlatDataDto,
+                                  'color' | 'googleCalendarId' | 'name'
+                                >;
+                              }
+                            >
                           >;
                           thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
                         };
@@ -5662,32 +5666,10 @@ export type FetchEventQuery = {
                                       }
                                     >
                                   >;
-                                }
-                              >
-                            >;
-                            social: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataSocialChildDto,
-                                  | 'github'
-                                  | 'googleScholar'
-                                  | 'linkedIn'
-                                  | 'researcherId'
-                                  | 'researchGate'
-                                  | 'twitter'
-                                  | 'website1'
-                                  | 'website2'
-                                >
-                              >
-                            >;
-                            labs: Maybe<
-                              Array<
-                                Pick<Labs, 'id'> & {
-                                  flatData: Pick<LabsFlatDataDto, 'name'>;
-                                }
-                              >
-                            >;
-                          };
+                                };
+                              }
+                            >
+                          >;
                         }
                       >
                     >;
@@ -5797,12 +5779,14 @@ export type FetchEventQuery = {
                       >
                     >;
                     calendars: Maybe<
-                      Array<{
-                        flatData: Pick<
-                          CalendarsFlatDataDto,
-                          'color' | 'googleCalendarId' | 'name'
-                        >;
-                      }>
+                      Array<
+                        Pick<Calendars, 'id'> & {
+                          flatData: Pick<
+                            CalendarsFlatDataDto,
+                            'color' | 'googleCalendarId' | 'name'
+                          >;
+                        }
+                      >
                     >;
                     thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
                   };
@@ -5977,95 +5961,8 @@ export type GroupsContentFragment = Pick<
                     >;
                     labs: Maybe<
                       Array<
-                        Pick<Users, 'id' | 'created' | 'lastModified'> & {
-                          flatData: Pick<
-                            UsersFlatDataDto,
-                            | 'biography'
-                            | 'degree'
-                            | 'email'
-                            | 'contactEmail'
-                            | 'firstName'
-                            | 'institution'
-                            | 'jobTitle'
-                            | 'lastModifiedDate'
-                            | 'lastName'
-                            | 'country'
-                            | 'city'
-                            | 'onboarded'
-                            | 'orcid'
-                            | 'orcidLastModifiedDate'
-                            | 'orcidLastSyncDate'
-                            | 'skills'
-                            | 'skillsDescription'
-                            | 'role'
-                            | 'responsibilities'
-                            | 'reachOut'
-                          > & {
-                            avatar: Maybe<Array<Pick<Asset, 'id'>>>;
-                            orcidWorks: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataOrcidWorksChildDto,
-                                  | 'doi'
-                                  | 'id'
-                                  | 'lastModifiedDate'
-                                  | 'publicationDate'
-                                  | 'title'
-                                  | 'type'
-                                >
-                              >
-                            >;
-                            questions: Maybe<
-                              Array<
-                                Pick<UsersDataQuestionsChildDto, 'question'>
-                              >
-                            >;
-                            teams: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataTeamsChildDto,
-                                  'role' | 'approach' | 'responsibilities'
-                                > & {
-                                  id: Maybe<
-                                    Array<
-                                      Pick<Teams, 'id'> & {
-                                        flatData: Pick<
-                                          TeamsFlatDataDto,
-                                          'displayName'
-                                        > & {
-                                          proposal: Maybe<
-                                            Array<Pick<ResearchOutputs, 'id'>>
-                                          >;
-                                        };
-                                      }
-                                    >
-                                  >;
-                                }
-                              >
-                            >;
-                            social: Maybe<
-                              Array<
-                                Pick<
-                                  UsersDataSocialChildDto,
-                                  | 'github'
-                                  | 'googleScholar'
-                                  | 'linkedIn'
-                                  | 'researcherId'
-                                  | 'researchGate'
-                                  | 'twitter'
-                                  | 'website1'
-                                  | 'website2'
-                                >
-                              >
-                            >;
-                            labs: Maybe<
-                              Array<
-                                Pick<Labs, 'id'> & {
-                                  flatData: Pick<LabsFlatDataDto, 'name'>;
-                                }
-                              >
-                            >;
-                          };
+                        Pick<Labs, 'id'> & {
+                          flatData: Pick<LabsFlatDataDto, 'name'>;
                         }
                       >
                     >;
@@ -9526,7 +9423,6 @@ export const GroupsContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'TeamsContent' },
@@ -9930,6 +9826,7 @@ export const GroupsContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },
@@ -10435,7 +10332,6 @@ export const FetchGroupCalendarDocument = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'calendars' },

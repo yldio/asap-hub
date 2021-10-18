@@ -8,6 +8,9 @@ export type Flags = Partial<Record<Flag, boolean>>;
 let overrides: Flags = {
   // flags already live in prod:
   // can also be used to manually disable a flag in development:
+  RESEARCH_OUTPUT_SHOW_AUTHORS_LIST: true,
+  ALGOLIA_RESEARCH_OUTPUTS: true,
+  RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE: true,
 };
 
 const envDefaults: Record<string, boolean> = {

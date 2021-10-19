@@ -363,10 +363,6 @@ export const getListTeamResponse = (): ListTeamResponse => ({
           tags: ['test', 'tag'],
           addedDate: '2021-05-24T17:33:30Z',
           authors: [fetchExpectation.items[1]],
-          team: {
-            id: 'team-id-1',
-            displayName: 'Schipa, A',
-          },
           teams: [
             {
               id: 'team-id-1',
@@ -389,10 +385,6 @@ export const getListTeamResponse = (): ListTeamResponse => ({
           description: '',
           tags: ['test', 'tag'],
           authors: [fetchExpectation.items[0]],
-          team: {
-            id: 'team-id-1',
-            displayName: 'Schipa, A',
-          },
           teams: [
             {
               id: 'team-id-1',
@@ -634,10 +626,6 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       description: '',
       tags: [],
       authors: [fetchExpectation.items[1]],
-      team: {
-        id: 'team-id-1',
-        displayName: 'Schipa, A',
-      },
       teams: [
         {
           id: 'team-id-1',
@@ -664,10 +652,6 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       description: '',
       tags: ['test', 'tag'],
       authors: [fetchExpectation.items[0]],
-      team: {
-        id: 'team-id-1',
-        displayName: 'Schipa, A',
-      },
       teams: [
         {
           id: 'team-id-1',
@@ -916,10 +900,6 @@ export const updateExpectation: TeamResponse = {
       description: '',
       tags: [],
       authors: [fetchExpectation.items[1]],
-      team: {
-        id: 'team-id-1',
-        displayName: 'Schipa, A',
-      },
       teams: [
         {
           id: 'team-id-1',
@@ -946,10 +926,6 @@ export const updateExpectation: TeamResponse = {
       description: '',
       tags: ['test', 'tag'],
       authors: [fetchExpectation.items[0]],
-      team: {
-        id: 'team-id-1',
-        displayName: 'Schipa, A',
-      },
       teams: [
         {
           id: 'team-id-1',

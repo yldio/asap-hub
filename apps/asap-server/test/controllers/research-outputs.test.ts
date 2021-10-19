@@ -284,7 +284,9 @@ describe('ResearchOutputs controller', () => {
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
-      expect(result.team?.displayName).toEqual('');
+      result.teams
+        .filter((team) => !team.displayName)
+        .map(({ displayName }) => expect(displayName).toEqual(''));
     });
 
     test('Should default type to Proposal and title to an empty string when missing', async () => {
@@ -483,7 +485,6 @@ describe('ResearchOutputs controller', () => {
       const result = await researchOutputs.fetchById(researchOutputId);
 
       const expectedResult = getResearchOutputResponse();
-      expectedResult.team = undefined;
       expectedResult.teams = [];
       expectedResult.pmsEmails = []; // as there are no referencing teams, there won't be any PMs
 

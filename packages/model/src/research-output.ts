@@ -86,10 +86,6 @@ export type ResearchOutputResponse = {
   readonly usedInPublication?: boolean;
 
   readonly authors: ReadonlyArray<UserResponse | ExternalAuthor>;
-  /**
-   * @deprecated in favour of teams
-   */
-  readonly team?: Pick<TeamResponse, 'id' | 'displayName'>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
   readonly pmsEmails: string[];
 

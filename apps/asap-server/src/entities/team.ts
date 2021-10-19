@@ -103,7 +103,6 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
 
       return {
         ...output,
-        team: { id: team.id, displayName },
         teams: (o as GraphqlResearchOutput).referencingTeamsContents?.map(
           (t) => ({
             displayName: t.flatData?.displayName || '',

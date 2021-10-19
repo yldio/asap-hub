@@ -26,10 +26,6 @@ const researchOutputResponse: Omit<
       ...listUserResponseItem,
     },
   ],
-  team: {
-    id: 'e12729e0-a244-471f-a554-7b58eae83a8d',
-    displayName: 'Jakobsson, J',
-  },
   teams: [
     {
       id: 'e12729e0-a244-471f-a554-7b58eae83a8d',

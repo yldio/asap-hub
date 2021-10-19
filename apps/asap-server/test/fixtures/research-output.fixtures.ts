@@ -256,10 +256,6 @@ export const getResearchOutputResponse =
     subTypes: ['3D Printing'],
     tags: ['tag', 'test'],
     authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
-    team: {
-      id: 'team-id-1',
-      displayName: 'Schipa, A',
-    },
     teams: [
       {
         id: 'team-id-1',

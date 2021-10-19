@@ -6,6 +6,7 @@ import {
   ResearchOutputType,
   researchOutputTypes,
   sharingStatuses,
+  TeamResponse,
 } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
 import { FetchResearchOutputQuery, Labs, Scalars } from '../gql/graphql';
@@ -19,8 +20,8 @@ export const parseGraphQLResearchOutput = (
     includeTeams?: boolean;
   },
 ):
-  | Omit<ResearchOutputResponse, 'authors' | 'teams' | 'team'>
-  | Partial<Pick<ResearchOutputResponse, 'authors' | 'teams' | 'team'>> => {
+  | Omit<ResearchOutputResponse, 'authors' | 'teams'>
+  | Partial<Pick<ResearchOutputResponse, 'authors' | 'teams'>> => {
   const optionalAuthors = options?.includeAuthors
     ? {
         authors:
@@ -50,9 +51,6 @@ export const parseGraphQLResearchOutput = (
           output.referencingTeamsContents?.map((team) =>
             parseGraphqlTeamLite(team),
           ) || [],
-        team: output.referencingTeamsContents?.[0]
-          ? parseGraphqlTeamLite(output.referencingTeamsContents[0])
-          : undefined,
       }
     : {};
 
@@ -121,7 +119,7 @@ export const parseGraphQLResearchOutput = (
 
 const parseGraphqlTeamLite = (
   graphqlTeam: FetchResearchOutputTeamContents,
-): ResearchOutputResponse['team'] => ({
+): Pick<TeamResponse, 'id' | 'displayName'> => ({
   id: graphqlTeam.id,
   displayName: graphqlTeam.flatData?.displayName || '',
 });

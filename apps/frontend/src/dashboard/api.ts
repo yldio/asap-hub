@@ -1,11 +1,12 @@
 import { DashboardResponse } from '@asap-hub/model';
+import { createSentryHeaders } from '../api-util';
 import { API_BASE_URL } from '../config';
 
 export const getDashboard = async (
   authorization: string,
 ): Promise<DashboardResponse> => {
   const resp = await fetch(`${API_BASE_URL}/dashboard`, {
-    headers: { authorization },
+    headers: { authorization, ...createSentryHeaders() },
   });
   if (!resp.ok) {
     throw new Error(

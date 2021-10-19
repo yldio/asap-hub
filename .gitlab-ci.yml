@@ -275,6 +275,7 @@ verify:development:
 deploy:sls:production:
   <<: *tmpl_master
   <<: *tmpl_deploy
+  image: $INTEGRATION_DOCKER_IMAGE
   artifacts:
     paths:
       - 'apps/*/build*'

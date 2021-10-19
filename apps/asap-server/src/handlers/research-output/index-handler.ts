@@ -46,6 +46,7 @@ export const indexResearchOutputHandler = (
     } catch (e) {
       if (e?.output?.statusCode === 404) {
         await algoliaIndex.deleteObject(event.detail.payload.id);
+        return;
       }
       throw e;
     }

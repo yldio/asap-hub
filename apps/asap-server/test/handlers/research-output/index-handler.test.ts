@@ -50,23 +50,25 @@ describe('Research Output index handler', () => {
     });
   });
 
-  test('Should remove the record Algolia and throw a 404 error when research-output is unpublished', async () => {
+  test('Should fetch the research-output and remove the record in Algolia when research-output is unpublished', async () => {
     const event = unpublishedEvent('ro-1234');
 
     researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
-    await expect(indexHandler(event)).rejects.toThrow(Boom.notFound());
+    await indexHandler(event);
+
     expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
   });
 
-  test('Should remove the record Algolia and throw a 404 error when research-output is deleted', async () => {
+  test('Should fetch the research-output and remove the record in Algolia when research-output is deleted', async () => {
     const event = deleteEvent('ro-1234');
 
     researchOutputControllerMock.fetchById.mockRejectedValue(Boom.notFound());
 
-    await expect(indexHandler(event)).rejects.toThrow(Boom.notFound());
+    await indexHandler(event);
+
     expect(algoliaIndexMock.deleteObject).toHaveBeenCalledWith(
       event.detail.payload.id,
     );
@@ -161,7 +163,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(createEv)).rejects.toEqual(Boom.notFound());
+      await indexHandler(createEv);
       await expect(indexHandler(unpublishedEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -181,9 +183,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(unpublishedEv)).rejects.toEqual(
-        Boom.notFound(),
-      );
+      await indexHandler(unpublishedEv);
       await expect(indexHandler(createEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -203,7 +203,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(createEv)).rejects.toEqual(Boom.notFound());
+      await indexHandler(createEv);
       await expect(indexHandler(deleteEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -223,7 +223,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(deleteEv)).rejects.toEqual(Boom.notFound());
+      await indexHandler(deleteEv);
       await expect(indexHandler(createEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -243,7 +243,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(updateEv)).rejects.toEqual(Boom.notFound());
+      await indexHandler(updateEv);
       await expect(indexHandler(deleteEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -263,7 +263,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(deleteEv)).rejects.toEqual(Boom.notFound());
+      await indexHandler(deleteEv);
       await expect(indexHandler(updateEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -282,7 +282,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(updateEv)).rejects.toEqual(Boom.notFound());
+      await indexHandler(updateEv);
       await expect(indexHandler(unpublishedEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();
@@ -302,9 +302,7 @@ describe('Research Output index handler', () => {
       algoliaIndexMock.deleteObject.mockResolvedValueOnce({ taskID: 1 });
       algoliaIndexMock.deleteObject.mockRejectedValue(algoliaError);
 
-      await expect(indexHandler(unpublishedEv)).rejects.toEqual(
-        Boom.notFound(),
-      );
+      await indexHandler(unpublishedEv);
       await expect(indexHandler(updateEv)).rejects.toEqual(algoliaError);
 
       expect(algoliaIndexMock.saveObject).not.toHaveBeenCalled();

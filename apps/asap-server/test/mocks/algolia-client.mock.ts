@@ -2,6 +2,7 @@ import { SearchClient, SearchIndex } from 'algoliasearch';
 
 export const algoliaIndexMock = {
   saveObject: jest.fn(),
+  deleteObject: jest.fn(),
 } as unknown as jest.Mocked<SearchIndex>;
 
 export const algoliaClientMock = {

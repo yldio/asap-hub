@@ -28,24 +28,40 @@ export const indexResearchOutputHandler = (
       SquidexWebhookResearchOutputPayload
     >,
   ): Promise<void> => {
-    const researchOutput = await researchOutputController.fetchById(
-      event.detail.payload.id,
-    );
+    logger.debug(`Event ${event['detail-type']}`);
 
-    await algoliaIndex.saveObject({
-      ...researchOutput,
-      objectID: researchOutput.id,
-    });
+    try {
+      const researchOutput = await researchOutputController.fetchById(
+        event.detail.payload.id,
+      );
 
-    logger.info(`Saved Research-Output with ID ${researchOutput.id}`);
+      logger.debug(`Fetched research-output ${researchOutput.id}`);
+
+      await algoliaIndex.saveObject({
+        ...researchOutput,
+        objectID: researchOutput.id,
+      });
+
+      logger.debug(`Saved research-output ${researchOutput.id}`);
+    } catch (e) {
+      if (e?.output?.statusCode === 404) {
+        await algoliaIndex.deleteObject(event.detail.payload.id);
+        return;
+      }
+      throw e;
+    }
   };
 };
 
 export type SquidexWebhookResearchOutputPayload = {
-  type: 'ResearchOutputsCreated' | 'ResearchOutputsUpdated';
+  type:
+    | 'ResearchOutputsPublished'
+    | 'ResearchOutputsUpdated'
+    | 'ResearchOutputsUnpublished'
+    | 'ResearchOutputsDeleted';
   payload: {
     $type: 'EnrichedContentEvent';
-    type: 'Created';
+    type: 'Published' | 'Updated' | 'Unpublished' | 'Deleted';
     id: string;
   };
 };

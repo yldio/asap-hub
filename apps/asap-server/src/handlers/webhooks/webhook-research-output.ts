@@ -5,6 +5,7 @@ import { Handler } from '../../utils/types';
 import { http } from '../../utils/instrumented-framework';
 import validateRequest from '../../utils/validate-squidex-request';
 import { eventBus, eventSource } from '../../config';
+import logger from '../../utils/logger';
 
 export const researchOutputWebhookFactory = (
   eventBridge: EventBridge,
@@ -13,10 +14,11 @@ export const researchOutputWebhookFactory = (
     async (
       request: lambda.Request<WebhookPayload<ResearchOutput>>,
     ): Promise<lambda.Response> => {
-      await validateRequest(request);
+      validateRequest(request);
 
       const type = getEventType(request.payload.type);
 
+      logger.debug(`Event type ${type}`);
       if (!type) {
         return {
           statusCode: 204,
@@ -44,20 +46,28 @@ export const researchOutputWebhookFactory = (
 
 export type ResearchOutputEventType =
   | 'ResearchOutputCreated'
-  | 'ResearchOutputUpdated';
+  | 'ResearchOutputUpdated'
+  | 'ResearchOutputDeleted';
 
 const getEventType = (
   customType: string,
 ): ResearchOutputEventType | undefined => {
-  if (customType === 'ResearchOutputsPublished') {
-    return 'ResearchOutputCreated';
-  }
+  switch (customType) {
+    case 'ResearchOutputsPublished':
+      return 'ResearchOutputCreated';
 
-  if (customType === 'ResearchOutputsUpdated') {
-    return 'ResearchOutputUpdated';
-  }
+    case 'ResearchOutputsUpdated':
+      return 'ResearchOutputUpdated';
 
-  return undefined;
+    case 'ResearchOutputsUnpublished':
+      return 'ResearchOutputDeleted';
+
+    case 'ResearchOutputsDeleted':
+      return 'ResearchOutputDeleted';
+
+    default:
+      return undefined;
+  }
 };
 
 const eventBridge = new EventBridge();

@@ -20,3 +20,24 @@ $ sq sync out packages/squidex/schema -t schemas
 
 To ensure consistency run the `fix:format` script before looking at the unstaged changes.
 **Note:** don't commit everything, we have some TEMPLATE strings that are replaced on deploy.
+
+# Squidex Rules
+
+Squidex rules for content events can be one of the following values:
+
+- Created: The content has been created
+- Updated: The content has been updated
+- Published: The status of the content has been changed to Published
+- Unpublished: The status of the content has been changed from Published to another status.
+- StatusChanged: The status has been changed, e.g. Draft to Archived
+- Deleted: The content has been deleted.
+
+Algolia sync is trigger by the following events:
+
+| Entity           | Created | Published | Updated | Unpublished | Status changed | Deleted |
+| :--------------- | :-----: | --------: | ------: | ----------: | -------------: | ------: |
+| Research Outputs |    -    |         x |       x |           x |              - |       x |
+| Teams            |    -    |         x |       x |           - |              - |       x |
+| User             |    -    |         x |       - |           - |              - |       - |
+| External authors |    -    |         - |       - |           - |              - |       - |
+| Labs             |    -    |         - |       - |           - |              - |       - |

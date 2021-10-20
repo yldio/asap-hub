@@ -26,7 +26,7 @@ export const tracingHandlerFactory =
     const responseHeaders: Record<string, string | number | string[]> = {};
     tracer.inject(span, opentracing.FORMAT_TEXT_MAP, responseHeaders);
     Object.keys(responseHeaders).forEach((key) =>
-      res.setHeader(key, responseHeaders[key]),
+      res.setHeader(key, responseHeaders[key]!),
     );
 
     // add the span to the request object for handlers to use

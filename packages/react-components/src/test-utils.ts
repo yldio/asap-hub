@@ -12,7 +12,7 @@ export const viewportCalc = (
 ): string => {
   const baseUnitRegex = /\d(cm|mm|in|px|pt|pc|em|ex|ch|rem)\W/g;
 
-  const [[, baseUnit], [, excessUnit] = []] =
+  const [[, baseUnit = 'px'] = [], [, excessUnit] = []] =
     calcExpression.matchAll(baseUnitRegex);
   if (excessUnit) {
     throw new Error(`Found more than one base unit in viewport calc expression.

@@ -8,7 +8,7 @@ it('renders name and role for each member', async () => {
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           displayName: 'Bat Man',
           role: 'Boss',
           teams: [],
@@ -37,7 +37,7 @@ it('only show lab information if the user is on a lab', async () => {
     <MembersList
       members={[
         {
-          ...createListUserResponse(1).items[0],
+          ...createListUserResponse(1).items[0]!,
           displayName: 'Bat Man',
           role: 'Boss',
           teams: [],

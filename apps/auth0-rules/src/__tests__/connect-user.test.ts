@@ -98,7 +98,7 @@ describe('Auth0 Rule - Connect User', () => {
 
     connectUser(user, context, cb);
     expect(cb).toHaveBeenCalled();
-    const [err, resUser, resContext] = cb.mock.calls[0];
+    const [err, resUser, resContext] = cb.mock.calls[0]!;
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
@@ -126,7 +126,7 @@ describe('Auth0 Rule - Connect User', () => {
     );
 
     expect(cb).toHaveBeenCalled();
-    const [err, resUser, resContext] = cb.mock.calls[0];
+    const [err, resUser, resContext] = cb.mock.calls[0]!;
     expect(err).not.toBeNull();
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
@@ -154,7 +154,7 @@ describe('Auth0 Rule - Connect User', () => {
     );
 
     expect(cb).toHaveBeenCalled();
-    const [err, resUser, resContext] = cb.mock.calls[0];
+    const [err, resUser, resContext] = cb.mock.calls[0]!;
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();

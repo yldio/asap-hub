@@ -27,6 +27,10 @@ export const userPublicRouteFactory = (
         publicParamSchema,
       );
 
+      if (code === undefined) {
+        throw Boom.badRequest('code cannot be undefined');
+      }
+
       try {
         const result = await userController.fetchByCode(code);
 
@@ -72,6 +76,10 @@ export const userRouteFactory = (
       paramSchema,
     );
 
+    if (userId === undefined) {
+      throw Boom.badRequest('userId cannot be undefined');
+    }
+
     if (
       req.loggedInUser?.onboarded !== true &&
       userId !== req.loggedInUser?.id
@@ -97,6 +105,10 @@ export const userRouteFactory = (
       query,
       querySchema,
     ) as unknown as FetchOptions;
+
+    if (userId === undefined) {
+      throw Boom.badRequest('userId cannot be undefined');
+    }
 
     const user = await userController.fetchById(userId);
     const teams = user.teams.map((t) => t.id);

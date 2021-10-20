@@ -130,6 +130,9 @@ export class Squidex<
     if (items.length === 0) {
       throw Boom.notFound();
     }
+    if (items[0] === undefined) {
+      throw Boom.notFound();
+    }
 
     return items[0];
   }

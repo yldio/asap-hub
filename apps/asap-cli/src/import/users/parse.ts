@@ -69,30 +69,34 @@ export default (data: string[]): Data => {
     twitter,
   ] = data.map((s) => s.trim());
 
-  const orcid = norcid.match(/((\d|X){4}-(\d|X){4}-(\d|X){4}-(\d|X){4})/i);
+  const orcid = norcid?.match(/((\d|X){4}-(\d|X){4}-(\d|X){4}-(\d|X){4})/i);
   return {
-    application,
-    biography,
-    degree: ['BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'].includes(degree)
+    application: application || '',
+    biography: biography || '',
+    degree: ['BA', 'BSc', 'MSc', 'PhD', 'MD', 'PhD, MD'].includes(degree || '')
       ? (degree as Degree)
       : undefined,
-    email,
-    firstName,
-    institution,
-    jobTitle,
-    lastName,
-    orcid: orcid ? orcid[0] : '',
-    projectTitle,
-    questions: [question1, question2, question3, question4].filter(Boolean),
-    researchInterest,
-    responsibilities,
+    email: email || '',
+    firstName: firstName || '',
+    institution: institution || '',
+    jobTitle: jobTitle || '',
+    lastName: lastName || '',
+    orcid: (orcid && orcid[0]) || '',
+    projectTitle: projectTitle || '',
+    questions: [question1, question2, question3, question4].filter(
+      Boolean,
+    ) as string[],
+    researchInterest: researchInterest || '',
+    responsibilities: responsibilities || '',
     role: role as TeamRole,
     skills: skills
-      .split(',')
-      .map((a) => a.trim())
-      .filter(Boolean),
-    skillsDescription,
-    asapRole: ['Staff', 'Grantee', 'Guest'].includes(asapRole)
+      ? skills
+          .split(',')
+          .map((a) => a.trim())
+          .filter(Boolean)
+      : [],
+    skillsDescription: skillsDescription || '',
+    asapRole: ['Staff', 'Grantee', 'Guest'].includes(asapRole || '')
       ? (asapRole as Role)
       : 'Guest',
     social: {

@@ -6,7 +6,7 @@ const connectUser: Rule<{ invitation_code: string }> = async (
   context,
   callback,
 ) => {
-  const invitationCode: string = context.request.query?.invitation_code;
+  const invitationCode = context.request.query?.invitation_code;
 
   if (!invitationCode) {
     return callback(null, user, context);

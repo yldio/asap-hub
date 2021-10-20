@@ -87,7 +87,7 @@ describe('NewsAndEvents controller', () => {
           {
             ...newsAndEventsSquidexApiResponse.items[0],
             data: {
-              ...newsAndEventsSquidexApiResponse.items[0].data,
+              ...newsAndEventsSquidexApiResponse.items[0]!.data,
               thumbnail: {
                 iv: null,
               },
@@ -110,7 +110,7 @@ describe('NewsAndEvents controller', () => {
 
       const result = await newsAndEvents.fetch({ take: 8, skip: 5 });
 
-      expect(result.items[0].thumbnail).toBeUndefined();
+      expect(result.items[0]!.thumbnail).toBeUndefined();
     });
   });
 

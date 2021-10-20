@@ -86,9 +86,14 @@ export const rollbackFactory =
     logger.debug({ migrations: migrationPath }, 'Latest migrations');
 
     if (migrationPath !== null) {
-      let migration: Migration;
+      let migration;
       try {
         [migration] = await getMigrationsFromPaths([migrationPath]);
+        if (migration === undefined) {
+          throw new Error(
+            `Could not load the migration from file ${migrationPath}`,
+          );
+        }
       } catch (error) {
         logger.error(
           error,
@@ -146,6 +151,9 @@ const getLatestMigrationPathFromDbFactory =
     const { items: migrations } = await client.fetch(query);
 
     if (migrations.length === 0) {
+      return null;
+    }
+    if (migrations[0] === undefined) {
       return null;
     }
 

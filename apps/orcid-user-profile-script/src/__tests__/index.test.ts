@@ -25,7 +25,7 @@ it('calls back with the user profile object', () => {
     cb,
   );
   expect(cb).toHaveBeenCalled();
-  const [err, profile] = cb.mock.calls[0];
+  const [err, profile] = cb.mock.calls[0]!;
   expect(err).toBeFalsy();
   expect(profile).toStrictEqual({
     user_id: '0000-0002-7164-1580',

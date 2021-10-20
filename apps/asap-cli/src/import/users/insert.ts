@@ -69,12 +69,14 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
     role === 'Lead PI (Core Leadership)'
   ) {
     const t = await cache[team.applicationNumber.iv];
-    cache[team.applicationNumber.iv] = teams.patch(t.id, {
-      ...t,
-      displayName: {
-        iv: lastName,
-      },
-    });
+    if (t) {
+      cache[team.applicationNumber.iv] = teams.patch(t.id, {
+        ...t,
+        displayName: {
+          iv: lastName,
+        },
+      });
+    }
   }
 
   if (!cache[team.displayName.iv]) {

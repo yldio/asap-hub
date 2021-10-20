@@ -57,12 +57,12 @@ export const parseGraphQLGroup = (
       tools = { ...tools, slack: groupTools.slack };
     }
 
-    if (groupTools.googleDrive) {
+    if (groupTools?.googleDrive) {
       tools = { ...tools, googleDrive: groupTools.googleDrive };
     }
   }
 
-  if (item.flatData.calendars?.length) {
+  if (item.flatData?.calendars?.length && item.flatData?.calendars[0]) {
     const url = new URL('https://calendar.google.com/calendar/r');
     url.searchParams.set('cid', item.flatData.calendars[0].id || '');
     tools = { ...tools, googleCalendar: url.toString() };

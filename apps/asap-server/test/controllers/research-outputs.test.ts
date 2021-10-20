@@ -269,7 +269,7 @@ describe('ResearchOutputs controller', () => {
     test('Should default team displayName to an empty string when not present', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       (squidexGraphqlResponse.findResearchOutputsContent!
-        .referencingTeamsContents![0].flatData.displayName as string | null) =
+        .referencingTeamsContents![0]!.flatData.displayName as string | null) =
         null;
 
       nock(config.baseUrl)
@@ -532,12 +532,12 @@ describe('ResearchOutputs controller', () => {
       const { authors } = getResearchOutputResponse();
 
       const expectedAuthorsResponse: ResearchOutputResponse['authors'] = [
-        authors[0],
+        authors[0]!,
         {
           displayName: externalAuthor.flatData!.name!,
           orcid: externalAuthor.flatData!.orcid!,
         },
-        authors[1],
+        authors[1]!,
       ];
 
       expect(result.authors).toEqual(expectedAuthorsResponse);
@@ -549,8 +549,8 @@ describe('ResearchOutputs controller', () => {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0],
         __typename: 'Users',
         flatData: {
-          ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0]
-            .flatData,
+          ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+            .items[0]!.flatData,
           onboarded: false,
         },
       } as InternalUser;
@@ -558,8 +558,8 @@ describe('ResearchOutputs controller', () => {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[1],
         __typename: 'Users',
         flatData: {
-          ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[1]
-            .flatData,
+          ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal
+            .items[1]!.flatData,
           onboarded: true,
         },
       } as InternalUser;
@@ -584,7 +584,7 @@ describe('ResearchOutputs controller', () => {
       const { authors } = getResearchOutputResponse();
 
       const expectedAuthorsResponse: ResearchOutputResponse['authors'] = [
-        authors[1],
+        authors[1]!,
       ];
 
       expect(result.authors).toHaveLength(1);

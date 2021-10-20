@@ -71,11 +71,11 @@ export default class Dashboard {
 
     return {
       newsAndEvents:
-        res.queryDashboardContents[0].flatData.news?.map(
+        res.queryDashboardContents[0]?.flatData.news?.map(
           parseGraphQLNewsAndEvents,
         ) ?? [],
       pages:
-        res.queryDashboardContents[0].flatData.pages?.map(parseGraphQLPage) ??
+        res.queryDashboardContents[0]?.flatData.pages?.map(parseGraphQLPage) ??
         [],
     };
   }

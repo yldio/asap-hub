@@ -48,6 +48,11 @@ export const parseGraphQLUserTeamConnection = (
   item: NonNullable<NonNullable<GraphqlUser['flatData']>['teams']>[0],
 ): UserTeam => {
   const team = item.id[0];
+
+  if (team === undefined) {
+    throw new Error('User team connection is undefined');
+  }
+
   const displayName = team.flatData?.displayName;
   const proposal = team.flatData?.proposal;
 
@@ -56,7 +61,7 @@ export const parseGraphQLUserTeamConnection = (
     role: item.role,
     approach: item.approach ? item.approach : undefined,
     responsibilities: item.responsibilities ? item.responsibilities : undefined,
-    proposal: proposal?.length ? proposal[0].id : undefined,
+    proposal: proposal?.length ? proposal[0]?.id : undefined,
     displayName: displayName || '',
   };
 };
@@ -134,7 +139,7 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
 };
 
 export const parseUser = (user: RestUser): UserResponse => {
-  const teams: UserTeam[] =
+  const teams =
     user.data.teams?.iv?.map(({ id, ...t }) => ({
       id: id[0],
       displayName: 'Unknown',

@@ -118,7 +118,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     );
 
     expect(cb).toHaveBeenCalledWith(expect.any(Error));
-    const [err] = cb.mock.calls[0];
+    const [err] = cb.mock.calls[0]!;
     expect(String(err)).toMatch(/redirect/i);
   });
 
@@ -137,7 +137,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     await addUserMetadata(user, context, cb);
 
     expect(cb).toHaveBeenCalled();
-    const [err, resUser, resContext] = cb.mock.calls[0];
+    const [err, resUser, resContext] = cb.mock.calls[0]!;
     expect(String(err)).toMatch(/(^|\D)404(\D|$)/i);
     expect(resUser).toBeUndefined();
     expect(resContext).toBeUndefined();
@@ -158,7 +158,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     await addUserMetadata(user, context, cb);
 
     expect(cb).toHaveBeenCalled();
-    const [err, resUser, resContext] = cb.mock.calls[0];
+    const [err, resUser, resContext] = cb.mock.calls[0]!;
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
@@ -206,7 +206,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     );
 
     expect(cb).toHaveBeenCalled();
-    const [err, resUser, resContext] = cb.mock.calls[0];
+    const [err, resUser, resContext] = cb.mock.calls[0]!;
     expect(err).toBeFalsy();
     expect(resUser).not.toBeNull();
     expect(resContext).not.toBeNull();
@@ -255,7 +255,7 @@ describe('Auth0 Rule - Add User Metadata', () => {
     );
 
     expect(cb).toHaveBeenCalled();
-    const resContext = cb.mock.calls[0][2];
+    const resContext = cb.mock.calls[0]![2];
     expect(
       resContext.idToken['https://1234.hub.asap.science/user'],
     ).toStrictEqual({

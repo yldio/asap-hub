@@ -12,7 +12,7 @@ it('renders a list of leaders', async () => {
       leaders={[
         {
           user: {
-            ...createListUserResponse(1).items[0],
+            ...createListUserResponse(1).items[0]!,
             displayName: 'Bat Man',
             teams: [],
           },
@@ -20,7 +20,7 @@ it('renders a list of leaders', async () => {
         },
         {
           user: {
-            ...createListUserResponse(2).items[1],
+            ...createListUserResponse(2).items[1]!,
             displayName: 'Some One',
             teams: [],
           },
@@ -50,12 +50,12 @@ it('renders a list of teams', async () => {
     <GroupMembersSection
       teams={[
         {
-          ...createListTeamResponse(1).items[0],
+          ...createListTeamResponse(1).items[0]!,
           displayName: 'One',
           id: 't0',
         },
         {
-          ...createListTeamResponse(2).items[1],
+          ...createListTeamResponse(2).items[1]!,
           displayName: 'Two',
           id: 't1',
         },

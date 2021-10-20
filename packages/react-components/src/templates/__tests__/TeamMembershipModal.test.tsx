@@ -8,7 +8,7 @@ import TeamMembershipModal from '../TeamMembershipModal';
 
 const props: ComponentProps<typeof TeamMembershipModal> = {
   ...createUserResponse(),
-  ...createUserResponse().teams[0],
+  ...createUserResponse().teams[0]!,
   backHref: '/wrong',
 };
 it('renders the title', () => {

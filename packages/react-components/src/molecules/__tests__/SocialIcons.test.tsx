@@ -19,7 +19,7 @@ it('renders icon and link', () => {
   );
   expect(
     queryAllByRole('link').map((link) => [
-      link.getElementsByTagName('title')[0].innerHTML,
+      link.getElementsByTagName('title')[0]!.innerHTML,
       link.getAttribute('href'),
     ]),
   ).toMatchInlineSnapshot(`

@@ -16,10 +16,12 @@ export const authHandlerFactory =
 
     const [type, token] = headers.authorization.split(' ');
 
-    if (type.toLowerCase() !== 'bearer') {
+    if (type?.toLowerCase() !== 'bearer') {
       throw Boom.unauthorized();
     }
-
+    if (token === undefined) {
+      throw Boom.unauthorized();
+    }
     const [err, payload] = await Intercept(decodeToken(token));
 
     if (err) {

@@ -87,7 +87,7 @@ export const createCalendarResponse = (itemIndex = 0): CalendarResponse => {
   if (itemIndex > calendarResponses.length) {
     throw new Error(`Exceeds fixture data limit ${calendarResponses.length}`);
   }
-  return calendarResponses[itemIndex];
+  return calendarResponses[itemIndex]!;
 };
 
 export const createListCalendarResponse = (

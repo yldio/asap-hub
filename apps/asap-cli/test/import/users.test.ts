@@ -144,7 +144,7 @@ describe('Import user', () => {
       .reply(200, fetchTeamsResponse.items[0])
       .patch(`/api/content/${config.appName}/users/userId1`, {
         email: {
-          iv: fetchUsersResponse.items[0].data.email.iv,
+          iv: fetchUsersResponse.items[0]!.data.email.iv,
         },
         teams: {
           iv: [

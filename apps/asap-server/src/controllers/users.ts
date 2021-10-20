@@ -157,6 +157,10 @@ const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
     throw Boom.forbidden();
   }
 
+  if (res.items[0] === undefined) {
+    throw Boom.forbidden();
+  }
+
   return res.items[0];
 };
 
@@ -333,6 +337,10 @@ export default class Users implements UserController {
 
     const { total, items } = queryUsersContentsWithTotal;
     if (total !== 1) {
+      throw Boom.forbidden();
+    }
+
+    if (items[0] === undefined) {
       throw Boom.forbidden();
     }
 

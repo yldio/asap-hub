@@ -103,6 +103,10 @@ export default class Calendars implements CalendarController {
       throw Boom.notFound();
     }
 
+    if (res.items[0] === undefined) {
+      throw Boom.notFound();
+    }
+
     return res.items[0];
   }
 

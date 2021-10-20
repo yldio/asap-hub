@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { NewsAndEventsController } from '../controllers/news-and-events';
+import Boom from '@hapi/boom';
 
 export const newsAndEventsRouteFactory = (
   newsAndEventsController: NewsAndEventsController,
@@ -34,6 +35,10 @@ export const newsAndEventsRouteFactory = (
         params,
         paramSchema,
       );
+
+      if (newsAndEventsId === undefined) {
+        throw Boom.badRequest('newsAndEventsId cannot be undefined');
+      }
 
       const result = await newsAndEventsController.fetchById(newsAndEventsId);
 

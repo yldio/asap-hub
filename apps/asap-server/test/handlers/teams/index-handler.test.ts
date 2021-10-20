@@ -27,31 +27,31 @@ describe('Team Research Outputs Index', () => {
       { ...getResearchOutputResponse(), id: 'research-outputs-3' },
     ];
 
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[0]);
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[0]!);
     researchOutputControllerMock.fetchById.mockRejectedValue(new Error());
-    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[2]);
+    researchOutputControllerMock.fetchById.mockResolvedValueOnce(outputs[2]!);
 
     const updateEvent = getEvent();
 
     updateEvent.detail.payload = {
       ...updateEvent.detail.payload,
       data: { outputs: { iv: outputs.slice(0, 2).map(({ id }) => id) } },
-      dataOld: { outputs: { iv: [outputs[2].id] } },
+      dataOld: { outputs: { iv: [outputs[2]!.id] } },
     };
 
     await indexHandler(updateEvent);
 
     expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
       ...outputs[0],
-      objectID: outputs[0].id,
+      objectID: outputs[0]!.id,
     });
     expect(algoliaIndexMock.saveObject).not.toHaveBeenCalledWith({
       ...outputs[1],
-      objectID: outputs[1].id,
+      objectID: outputs[1]!.id,
     });
     expect(algoliaIndexMock.saveObject).toHaveBeenCalledWith({
       ...outputs[2],
-      objectID: outputs[2].id,
+      objectID: outputs[2]!.id,
     });
   });
 

@@ -96,10 +96,11 @@ export default class Discover implements DiscoverController {
 
     const [content] = res.queryDiscoverContents;
     return {
-      aboutUs: content.flatData.aboutUs || '',
-      training: content.flatData.training?.map(parseGraphQLNewsAndEvents) ?? [],
-      members: content.flatData.members?.map(parseGraphQLUser) ?? [],
-      pages: content.flatData.pages?.map(parseGraphQLPage) ?? [],
+      aboutUs: content?.flatData.aboutUs || '',
+      training:
+        content?.flatData.training?.map(parseGraphQLNewsAndEvents) ?? [],
+      members: content?.flatData.members?.map(parseGraphQLUser) ?? [],
+      pages: content?.flatData.pages?.map(parseGraphQLPage) ?? [],
     };
   }
 }

@@ -206,8 +206,8 @@ describe('the page numbers', () => {
         ([numberOfPages, currentPageIndex]) => {
           result.rerender(
             <PageControls
-              numberOfPages={numberOfPages}
-              currentPageIndex={currentPageIndex}
+              numberOfPages={numberOfPages!}
+              currentPageIndex={currentPageIndex!}
               renderPageHref={renderPageHref}
             />,
           );
@@ -225,8 +225,8 @@ describe('the page numbers', () => {
         ([numberOfPages, currentPageIndex]) => {
           result.rerender(
             <PageControls
-              numberOfPages={numberOfPages}
-              currentPageIndex={currentPageIndex}
+              numberOfPages={numberOfPages!}
+              currentPageIndex={currentPageIndex!}
               renderPageHref={renderPageHref}
             />,
           );
@@ -246,13 +246,13 @@ describe('the page numbers', () => {
         ([numberOfPages, currentPageIndex]) => {
           result.rerender(
             <PageControls
-              numberOfPages={numberOfPages}
-              currentPageIndex={currentPageIndex}
+              numberOfPages={numberOfPages!}
+              currentPageIndex={currentPageIndex!}
               renderPageHref={renderPageHref}
             />,
           );
           expect(
-            result.getByText(String(currentPageIndex + 1), { exact: true }),
+            result.getByText(String(currentPageIndex! + 1), { exact: true }),
           ).toBeVisible();
         },
       ),

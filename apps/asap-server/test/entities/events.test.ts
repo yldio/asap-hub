@@ -1,6 +1,25 @@
-import { getMeetingMaterial } from '../../src/entities/event';
+import {
+  getMeetingMaterial,
+  parseGraphQLEvent,
+} from '../../src/entities/event';
+import { graphqlEvent } from '../fixtures/events.fixtures';
 
 describe('events entity', () => {
+  describe('parseGraphQLEvent', () => {
+    it('throws when provided an invalid event status', () => {
+      const event = {
+        ...graphqlEvent,
+        id: 'example',
+        flatData: {
+          ...graphqlEvent.flatData,
+          status: 'invalid',
+        },
+      };
+      expect(() => parseGraphQLEvent(event)).toThrowErrorMatchingInlineSnapshot(
+        `"Invalid event (example) status \\"invalid\\""`,
+      );
+    });
+  });
   describe('getMeetingMaterial', () => {
     it.each([null, undefined, [], 'detail', ['item']])(
       'always returns null when meeting material "%s" specified unavailable',

@@ -1,9 +1,9 @@
 import { GroupRole } from '@asap-hub/model';
+import { GraphqlCalendar } from './calendar';
 
 import { Rest, Entity, Graphql } from './common';
 import { GraphqlTeam } from './team';
 import { GraphqlUser } from './user';
-import { GraphqlCalendar } from './calendar';
 
 export interface GroupUserConnection<T = string> {
   role: GroupRole;

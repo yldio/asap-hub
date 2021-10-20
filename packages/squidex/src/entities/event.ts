@@ -1,6 +1,5 @@
 import { EventStatus } from '@asap-hub/model';
-import { Rest, Entity, Graphql } from './common';
-import { GraphqlCalendar } from './calendar';
+import { Rest, Entity } from './common';
 
 type GoogleEventStatus = EventStatus;
 
@@ -37,6 +36,3 @@ export interface Event<TCalendar = string, TThumbnail = string> {
 }
 
 export interface RestEvent extends Entity, Rest<Event> {}
-export interface GraphqlEvent
-  extends Entity,
-    Graphql<Event<GraphqlCalendar, Entity>> {}

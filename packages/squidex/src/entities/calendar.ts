@@ -12,6 +12,10 @@ export interface Calendar {
 }
 
 export interface RestCalendar extends Entity, Rest<Calendar> {}
+
+/**
+ * @deprecated while we wait for group work
+ */
 export interface GraphqlCalendar extends Entity, Graphql<Calendar> {
   referencingGroupsContents?: GraphqlGroup[];
 }

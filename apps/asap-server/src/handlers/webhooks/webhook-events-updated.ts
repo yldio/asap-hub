@@ -39,7 +39,7 @@ export const webhookEventUpdatedHandlerFactory = (
     let calendar: RestCalendar;
 
     try {
-      calendar = await calendars.fetchByResouceId(resourceId);
+      calendar = await calendars.fetchByResourceId(resourceId);
     } catch (error) {
       logger.error(error, 'Error fetching calendar');
       throw Boom.badGateway();

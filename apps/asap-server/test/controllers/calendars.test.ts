@@ -1,9 +1,9 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
-import { badData, notFound } from '@hapi/boom';
-import Calendars, {
-  buildGraphQLQueryFetchCalendar,
-} from '../../src/controllers/calendars';
+import { badGateway, notFound } from '@hapi/boom';
+import { print } from 'graphql';
+
+import Calendars from '../../src/controllers/calendars';
 import { identity } from '../helpers/squidex';
 import {
   getCalendarRaw,
@@ -12,6 +12,7 @@ import {
   getCalendarsRestResponse,
   getRestCalendar,
 } from '../fixtures/calendars.fixtures';
+import { FETCH_CALENDAR } from '../../src/queries/calendars.queries';
 
 describe('Calendars controller', () => {
   const calendars = new Calendars();
@@ -150,7 +151,7 @@ describe('Calendars controller', () => {
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchCalendar(),
+          query: print(FETCH_CALENDAR),
           variables: {
             id: calendarId,
           },
@@ -164,46 +165,12 @@ describe('Calendars controller', () => {
       await expect(calendars.fetchById(calendarId)).rejects.toThrow(notFound());
     });
 
-    test('Should throw an error when the calendar data object is null', async () => {
-      const calendarId = 'calendar-id-1';
-      const calendarsGraphqlResponse = getCalendarsGraphqlResponse();
-      calendarsGraphqlResponse.data.findCalendarsContent.flatData = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchCalendar(),
-          variables: {
-            id: calendarId,
-          },
-        })
-        .reply(200, calendarsGraphqlResponse);
-
-      await expect(calendars.fetchById(calendarId)).rejects.toThrow(notFound());
-    });
-
-    test('Should throw an error when a required property is null', async () => {
-      const calendarId = 'calendar-id-1';
-      const calendarsGraphqlResponse = getCalendarsGraphqlResponse();
-      calendarsGraphqlResponse.data.findCalendarsContent.flatData!.color = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchCalendar(),
-          variables: {
-            id: calendarId,
-          },
-        })
-        .reply(200, calendarsGraphqlResponse);
-
-      await expect(calendars.fetchById(calendarId)).rejects.toThrow(badData());
-    });
-
     test('Should return the calendar response', async () => {
       const calendarId = 'calendar-id-1';
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchCalendar(),
+          query: print(FETCH_CALENDAR),
           variables: {
             id: calendarId,
           },
@@ -215,12 +182,48 @@ describe('Calendars controller', () => {
       expect(result).toEqual(getCalendarResponse());
     });
 
+    test('Should throw if squidex response has invalid colour', async () => {
+      const id = 'calendar-id-1';
+      const response = getCalendarsGraphqlResponse();
+      response.data.findCalendarsContent!.flatData.color = 'invalid';
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_CALENDAR),
+          variables: {
+            id,
+          },
+        })
+        .reply(200, response);
+      await expect(calendars.fetchById(id)).rejects.toThrow(
+        badGateway('Invalid colour'),
+      );
+    });
+
+    test('Should throw if missing required data', async () => {
+      const id = 'calendar-id-1';
+      const response = getCalendarsGraphqlResponse();
+      response.data.findCalendarsContent!.flatData.color = null;
+
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_CALENDAR),
+          variables: {
+            id,
+          },
+        })
+        .reply(200, response);
+      await expect(calendars.fetchById(id)).rejects.toThrow(
+        badGateway('Missing required data'),
+      );
+    });
+
     test('Should return the calendar raw response', async () => {
       const calendarId = 'calendar-id-1';
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchCalendar(),
+          query: print(FETCH_CALENDAR),
           variables: {
             id: calendarId,
           },
@@ -244,7 +247,7 @@ describe('Calendars controller', () => {
         })
         .reply(500);
 
-      await expect(calendars.fetchByResouceId(resourceId)).rejects.toThrow(
+      await expect(calendars.fetchByResourceId(resourceId)).rejects.toThrow(
         'Bad Gateway',
       );
     });
@@ -258,7 +261,7 @@ describe('Calendars controller', () => {
         })
         .reply(200, { total: 0, items: [] });
 
-      await expect(calendars.fetchByResouceId(resourceId)).rejects.toThrow(
+      await expect(calendars.fetchByResourceId(resourceId)).rejects.toThrow(
         'Not Found',
       );
     });
@@ -286,7 +289,7 @@ describe('Calendars controller', () => {
         })
         .reply(200, { total: 1, items: [rawCalendarResponse] });
 
-      const result = await calendars.fetchByResouceId(resourceId);
+      const result = await calendars.fetchByResourceId(resourceId);
 
       expect(result).toEqual(rawCalendarResponse);
     });

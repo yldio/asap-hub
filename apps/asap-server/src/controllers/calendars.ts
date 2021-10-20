@@ -1,12 +1,11 @@
 import Boom from '@hapi/boom';
 import Intercept from 'apr-intercept';
+import { RestCalendar, Calendar, Query } from '@asap-hub/squidex';
 import {
-  RestCalendar,
-  Calendar,
-  Query,
-  GraphqlCalendar,
-} from '@asap-hub/squidex';
-import { ListCalendarResponse, CalendarResponse } from '@asap-hub/model';
+  ListCalendarResponse,
+  CalendarResponse,
+  isGoogleLegacyCalendarColor,
+} from '@asap-hub/model';
 
 import {
   InstrumentedSquidex,
@@ -15,6 +14,11 @@ import {
 import { parseCalendar } from '../entities';
 import logger from '../utils/logger';
 import { validatePropertiesRequired } from '../utils/squidex';
+import { FETCH_CALENDAR } from '../queries/calendars.queries';
+import {
+  FetchCalendarQuery,
+  FetchCalendarQueryVariables,
+} from '../gql/graphql';
 
 export default class Calendars implements CalendarController {
   calendars: InstrumentedSquidex<RestCalendar>;
@@ -78,7 +82,7 @@ export default class Calendars implements CalendarController {
     );
   }
 
-  async fetchByResouceId(resourceId: string): Promise<RestCalendar> {
+  async fetchByResourceId(resourceId: string): Promise<RestCalendar> {
     const [err, res] = await Intercept(
       this.calendars.client
         .get('calendars', {
@@ -108,11 +112,10 @@ export default class Calendars implements CalendarController {
     calendarId: string,
     options?: { raw: boolean },
   ): Promise<CalendarRaw | CalendarResponse> {
-    const query = buildGraphQLQueryFetchCalendar();
     const calendarResponse = await this.graphqlClient.request<
-      ResponseFetchCalendar,
-      { id: string }
-    >(query, { id: calendarId });
+      FetchCalendarQuery,
+      FetchCalendarQueryVariables
+    >(FETCH_CALENDAR, { id: calendarId });
 
     const { findCalendarsContent: calendar } = calendarResponse;
 
@@ -120,12 +123,12 @@ export default class Calendars implements CalendarController {
       throw Boom.notFound();
     }
 
-    if (!calendar.flatData) {
-      throw Boom.notFound();
+    if (!validatePropertiesRequired(calendar.flatData)) {
+      throw Boom.badGateway('Missing required data');
     }
 
-    if (!validatePropertiesRequired(calendar.flatData)) {
-      throw Boom.badData();
+    if (!isGoogleLegacyCalendarColor(calendar.flatData.color)) {
+      throw Boom.badGateway('Invalid colour');
     }
 
     if (options?.raw === true) {
@@ -175,7 +178,7 @@ export interface CalendarController {
     skip: number;
     maxExpiration: number;
   }) => Promise<CalendarRaw[]>;
-  fetchByResouceId: (resourceId: string) => Promise<RestCalendar>;
+  fetchByResourceId: (resourceId: string) => Promise<RestCalendar>;
   getSyncToken: (calendarId: string) => Promise<string | undefined>;
   update: (
     calendarId: string,
@@ -189,26 +192,3 @@ export interface CalendarController {
 export type CalendarRaw = Calendar & {
   id: string;
 };
-
-export interface ResponseFetchCalendar {
-  findCalendarsContent: GraphqlCalendar;
-}
-
-export const buildGraphQLQueryFetchCalendar = (): string => `
-  query GetCalendar($id: String!) {
-    findCalendarsContent(id: $id){
-      id
-      created
-      lastModified
-      flatData {
-        googleCalendarId
-        name
-        color
-        syncToken
-        resourceId
-        expirationDate
-      }
-    }
-  }
-
-`;

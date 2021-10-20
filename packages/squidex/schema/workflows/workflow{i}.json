@@ -1,0 +1,18 @@
+{
+  "$schema": "./../__json/workflow.json",
+  "name": "No draft",
+  "steps": {
+    "Draft": {
+      "transitions": {},
+      "color": "#8091a5",
+      "noUpdate": false
+    },
+    "Published": {
+      "transitions": {},
+      "color": "#4bb958",
+      "noUpdate": true
+    }
+  },
+  "schemaIds": ["calendars"],
+  "initial": "Draft"
+}

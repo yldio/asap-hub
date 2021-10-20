@@ -1,4 +1,4 @@
-import requests 
+import requests
 import os
 import sys
 
@@ -15,12 +15,12 @@ def createAPP(appName):
 def getAppClient(appName):
     url = SQUIDEX_URL + "/api/apps/" + appName + "/clients"
     r = requests.get(url = url, headers = headers)
-    json_data = r.json() 
+    json_data = r.json()
     return json_data['items'][0]
 
 def promoteClient(appName, client):
     # Make user owner to allow him deleting the app
-    clientUrl = SQUIDEX_URL + "/api/apps/" + appName + "/clients/" + client['id'] 
+    clientUrl = SQUIDEX_URL + "/api/apps/" + appName + "/clients/" + client['id']
     update = { 'role': 'Owner'}
     requests.put(url = clientUrl, headers = headers, json = update)
 
@@ -31,8 +31,8 @@ def syncApp(appName, clientId, clientSecret):
         clientSecret = clientSecret
     ))
     os.system('sq config use {appName}'.format( appName = appName ))
-    # ATM we have not contents in the repo, but we can easily use this feature to setup fixture data 
-    os.system('sq sync in packages/squidex/schema/ -t app -t schemas -t contents')
+    # ATM we have not contents in the repo, but we can easily use this feature to setup fixture data
+    os.system('sq sync in packages/squidex/schema/ -t app -t schemas -t contents -t workflow')
 
 def main():
     appName = os.getenv('SQUIDEX_APP_NAME')

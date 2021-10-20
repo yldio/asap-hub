@@ -8,7 +8,9 @@
     },
     "steps": {
       "type": "object",
-      "additionalProperties": {}
+      "additionalProperties": {
+        "$ref": "#/definitions/WorkflowStepDto"
+      }
     },
     "schemaIds": {
       "type": ["array", "null"],
@@ -29,7 +31,9 @@
       "properties": {
         "transitions": {
           "type": "object",
-          "additionalProperties": {}
+          "additionalProperties": {
+            "$ref": "#/definitions/WorkflowTransitionDto"
+          }
         },
         "color": {
           "type": ["null", "string"]

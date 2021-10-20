@@ -19,7 +19,7 @@ it('redirects to the logout URL', async () => {
   await waitFor(() => expect(mockAssign).toHaveBeenCalled());
 
   const { origin, pathname, searchParams } = new URL(
-    mockAssign.mock.calls[0][0],
+    mockAssign.mock.calls[0]![0],
   );
   expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
   expect(pathname).toMatchInlineSnapshot(`"/v2/logout"`);

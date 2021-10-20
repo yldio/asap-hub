@@ -178,7 +178,7 @@ it("links to the user's team", async () => {
     ...createUserResponse(),
     teams: [
       {
-        ...createUserTeams({ teams: 1 })[0],
+        ...createUserTeams({ teams: 1 })[0]!,
         id: '42',
         displayName: 'Kool Krew',
       },
@@ -196,7 +196,7 @@ it("links to the user's team proposal", async () => {
     ...createUserResponse(),
     teams: [
       {
-        ...createUserTeams({ teams: 1 })[0],
+        ...createUserTeams({ teams: 1 })[0]!,
         proposal: '1337',
       },
     ],
@@ -208,7 +208,7 @@ it('does not show a proposal for a user whose team has none', async () => {
     ...createUserResponse(),
     teams: [
       {
-        ...createUserTeams({ teams: 1 })[0],
+        ...createUserTeams({ teams: 1 })[0]!,
         proposal: undefined,
       },
     ],

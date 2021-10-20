@@ -120,18 +120,18 @@ describe('useOnboarding', () => {
       await waitFor(() => {
         const [details, role, questions, bio] =
           result.current?.incompleteSteps ?? [];
-        expect(details.modalHref).toBe(
+        expect(details!.modalHref).toBe(
           `/network/users/${user.id}/research/edit-personal-info`,
         );
-        expect(role.modalHref).toBe(
+        expect(role!.modalHref).toBe(
           network({})
             .users({})
             .user({ userId: user.id })
             .research({})
-            .editTeamMembership({ teamId: user.teams[0]?.id }).$,
+            .editTeamMembership({ teamId: user.teams[0]!.id }).$,
         );
 
-        expect(questions.modalHref).toBe(
+        expect(questions!.modalHref).toBe(
           network({})
             .users({})
             .user({ userId: user.id })
@@ -139,7 +139,7 @@ describe('useOnboarding', () => {
             .editQuestions({}).$,
         );
 
-        expect(bio.modalHref).toBe(
+        expect(bio!.modalHref).toBe(
           network({})
             .users({})
             .user({ userId: user.id })

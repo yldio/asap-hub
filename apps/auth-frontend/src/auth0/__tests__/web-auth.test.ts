@@ -48,7 +48,7 @@ describe('authorizeWithSso', () => {
     expect(mockSetLocation).toHaveBeenCalled();
 
     const { origin, pathname, searchParams } = new URL(
-      mockSetLocation.mock.calls[0][0],
+      mockSetLocation.mock.calls[0]![0],
     );
     expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
     expect(pathname).toMatchInlineSnapshot(`"/authorize"`);
@@ -68,7 +68,8 @@ describe('authorizeWithEmailPassword', () => {
     );
     expect(mockLogin).toHaveBeenCalled();
 
-    const { email, password, realm, responseType } = mockLogin.mock.calls[0][0];
+    const { email, password, realm, responseType } =
+      mockLogin.mock.calls[0]![0];
     expect(email).toBe('john.doe@example.com');
     expect(password).toBe('PW');
     expect(responseType).toBe('code');
@@ -91,7 +92,7 @@ describe('authorizeWithEmailPassword', () => {
       );
 
       expect(mockSignup).toHaveBeenCalled();
-      const { email, password, connection } = mockSignup.mock.calls[0][0];
+      const { email, password, connection } = mockSignup.mock.calls[0]![0];
       expect(email).toBe('john.doe@example.com');
       expect(password).toBe('PW');
       expect(connection).toMatchInlineSnapshot(
@@ -114,7 +115,7 @@ describe('authorizeWithEmailPassword', () => {
       );
       expect(mockLogin).toHaveBeenCalled();
 
-      const { email, password } = mockLogin.mock.calls[0][0];
+      const { email, password } = mockLogin.mock.calls[0]![0];
       expect(email).toBe('john.doe@example.com');
       expect(password).toBe('PW');
     });
@@ -146,7 +147,7 @@ describe('sendPasswordResetLink', () => {
     await sendPasswordResetLink('john.doe@example.com');
     expect(mockChangePassword).toHaveBeenCalled();
 
-    const { email, connection } = mockChangePassword.mock.calls[0][0];
+    const { email, connection } = mockChangePassword.mock.calls[0]![0];
     expect(email).toBe('john.doe@example.com');
     expect(connection).toMatchInlineSnapshot(
       `"Username-Password-Authentication"`,

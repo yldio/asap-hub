@@ -58,7 +58,7 @@ it('renders a list of people', async () => {
     ...listUserResponse,
     items: listUserResponse.items.map((item, itemIndex) => ({
       ...item,
-      displayName: names[itemIndex],
+      displayName: names[itemIndex]!,
     })),
   });
 

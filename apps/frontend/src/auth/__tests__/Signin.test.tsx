@@ -87,7 +87,7 @@ describe('when clicking the button', () => {
     await waitFor(() => expect(mockAssign).toHaveBeenCalledTimes(1));
 
     const { origin, pathname, searchParams } = new URL(
-      mockAssign.mock.calls[0][0],
+      mockAssign.mock.calls[0]![0],
     );
     expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
     expect(pathname).toMatchInlineSnapshot(`"/authorize"`);
@@ -99,7 +99,7 @@ describe('when clicking the button', () => {
       await waitFor(() => {
         if (mockAssign.mock.calls.length !== 1) throw new Error();
       });
-      const { searchParams } = new URL(mockAssign.mock.calls[0][0]);
+      const { searchParams } = new URL(mockAssign.mock.calls[0]![0]);
       nonce = searchParams.get('nonce')!;
       mockAssign.mockClear();
 

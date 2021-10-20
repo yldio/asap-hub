@@ -60,7 +60,7 @@ describe('the welcome page', () => {
       await waitFor(() => expect(mockAssign).toHaveBeenCalled());
 
       const { origin, pathname, searchParams } = new URL(
-        mockAssign.mock.calls[0][0],
+        mockAssign.mock.calls[0]![0],
       );
       expect(origin).toMatchInlineSnapshot(`"https://auth.example.com"`);
       expect(pathname).toMatchInlineSnapshot(`"/authorize"`);

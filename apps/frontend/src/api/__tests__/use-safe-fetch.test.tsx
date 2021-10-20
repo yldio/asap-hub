@@ -93,7 +93,7 @@ describe('when the request URL changes', () => {
   it('aborts the old request', async () => {
     await act(async () => {
       result.rerender(<TestComponent path="/hi2" />);
-      await waitFor(() => expect(requests[0].context.req.aborted).toBe(true));
+      await waitFor(() => expect(requests[0]!.context.req.aborted).toBe(true));
     });
   });
 
@@ -102,16 +102,16 @@ describe('when the request URL changes', () => {
       result.rerender(<TestComponent path="/hi2" />);
       await waitFor(() => expect(requests).toHaveLength(2));
     });
-    expect(requests[1].context.req.path).toBe('/hi2');
+    expect(requests[1]!.context.req.path).toBe('/hi2');
   });
 
   it('ignores an outdated response coming in shortly after a URL change', async () => {
     await act(async () => {
       result.rerender(<TestComponent path="/hi2" />);
-      requests[0].cb(null, [200, 'hello']);
+      requests[0]!.cb(null, [200, 'hello']);
 
       await waitFor(() => expect(requests).toHaveLength(2));
-      requests[1].cb(null, [200, 'hello2']);
+      requests[1]!.cb(null, [200, 'hello2']);
       await waitFor(() =>
         expect(result.container).not.toHaveTextContent(/loading/i),
       );
@@ -124,12 +124,12 @@ describe('when the request URL changes', () => {
       result.rerender(<TestComponent path="/hi2" />);
       await waitFor(() => expect(requests).toHaveLength(2));
 
-      requests[1].cb(null, [200, 'hello2']);
+      requests[1]!.cb(null, [200, 'hello2']);
       await waitFor(() =>
         expect(result.container).not.toHaveTextContent(/loading/i),
       );
 
-      requests[0].cb(null, [200, 'hello']);
+      requests[0]!.cb(null, [200, 'hello']);
       await waitFor(() =>
         expect(result.container).not.toHaveTextContent(/loading/i),
       );

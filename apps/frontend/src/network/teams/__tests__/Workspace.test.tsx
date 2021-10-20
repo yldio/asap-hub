@@ -169,7 +169,7 @@ describe('a tool', () => {
         }),
     );
 
-    userEvent.click((await findAllByText(/delete/i))[0]);
+    userEvent.click((await findAllByText(/delete/i))[0]!);
     await findByText(/deleting/i);
     mockPatchTeam.mockClear();
 

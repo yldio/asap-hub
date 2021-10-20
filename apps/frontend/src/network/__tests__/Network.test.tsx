@@ -78,7 +78,7 @@ describe('the network page', () => {
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
       await waitFor(() => {
-        const [[options]] = mockGetUsers.mock.calls.slice(-1);
+        const [[options] = []] = mockGetUsers.mock.calls.slice(-1);
         expect(options).toMatchObject({
           searchQuery: 'test123',
           filters: new Set(),
@@ -120,7 +120,7 @@ describe('the network page', () => {
       fireEvent.click(toggle);
       expect(searchBox.value).toEqual('test123');
       await waitFor(() => {
-        const [[options]] = mockGetTeams.mock.calls.slice(-1);
+        const [[options] = []] = mockGetTeams.mock.calls.slice(-1);
         expect(options).toMatchObject({
           searchQuery: 'test123',
           filters: new Set(),

@@ -1879,11 +1879,13 @@ export type Events = Content & {
 
 /** The structure of the Calendar field of the Events content type. */
 export type EventsDataCalendarDto = {
+  /** The event will NOT be shown if this field is empty. */
   iv: Maybe<Array<Calendars>>;
 };
 
 /** The structure of the Calendar field of the Events content input type. */
 export type EventsDataCalendarInputDto = {
+  /** The event will NOT be shown if this field is empty. */
   iv: Maybe<Array<Scalars['String']>>;
 };
 
@@ -2181,6 +2183,7 @@ export type EventsDataVideoRecordingPermanentlyUnavailableInputDto = {
 
 /** The structure of the flat Events data type. */
 export type EventsFlatDataDto = {
+  /** The event will NOT be shown if this field is empty. */
   calendar: Maybe<Array<Calendars>>;
   description: Maybe<Scalars['String']>;
   endDate: Maybe<Scalars['Instant']>;

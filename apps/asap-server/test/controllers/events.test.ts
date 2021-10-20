@@ -42,7 +42,8 @@ describe('Event controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: print(FETCH_EVENTS),
           variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+            filter:
+              'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv lt before',
             order: '',
             top: 10,
             skip: 0,
@@ -56,7 +57,6 @@ describe('Event controller', () => {
             },
           },
         });
-
       const result = await events.fetch({
         before: 'before',
       });
@@ -74,7 +74,8 @@ describe('Event controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: print(FETCH_EVENTS),
           variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+            filter:
+              'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv lt before',
             order: '',
             top: 10,
             skip: 0,
@@ -94,7 +95,8 @@ describe('Event controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: print(FETCH_EVENTS),
           variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv lt before',
+            filter:
+              'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv lt before',
             order: '',
             top: 10,
             skip: 0,
@@ -114,7 +116,8 @@ describe('Event controller', () => {
         .post(`/api/content/${config.appName}/graphql`, {
           query: print(FETCH_EVENTS),
           variables: {
-            filter: 'data/hidden/iv ne true and data/endDate/iv gt after-date',
+            filter:
+              'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date',
             order: '',
             top: 10,
             skip: 0,
@@ -134,7 +137,7 @@ describe('Event controller', () => {
             query: print(FETCH_EVENTS),
             variables: {
               filter:
-                'data/hidden/iv ne true and data/endDate/iv gt after-date',
+                'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date',
               order: '',
               top: 10,
               skip: 0,
@@ -153,7 +156,7 @@ describe('Event controller', () => {
             query: print(FETCH_EVENTS),
             variables: {
               filter:
-                'data/hidden/iv ne true and data/endDate/iv lt before-date',
+                'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv lt before-date',
               order: '',
               top: 10,
               skip: 0,
@@ -168,7 +171,7 @@ describe('Event controller', () => {
 
       test('Should apply both the "after" and "before" filters', async () => {
         const expectedFilter =
-          'data/hidden/iv ne true and data/endDate/iv gt after-date and data/endDate/iv lt before-date';
+          'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date and data/endDate/iv lt before-date';
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -190,7 +193,7 @@ describe('Event controller', () => {
 
       test('Should apply search query params', async () => {
         const expectedFilter =
-          "(contains(data/title/iv, 'a') or contains(data/tags/iv, 'a')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+          "(contains(data/title/iv, 'a') or contains(data/tags/iv, 'a')) and not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date";
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -212,7 +215,7 @@ describe('Event controller', () => {
 
       test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
         const expectedFilter =
-          "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+          "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27')) and not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date";
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -234,7 +237,7 @@ describe('Event controller', () => {
 
       test('Should sanitise double quotation mark by encoding to hex', async () => {
         const expectedFilter =
-          "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22')) and data/hidden/iv ne true and data/endDate/iv gt after-date";
+          "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22')) and not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date";
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -300,7 +303,7 @@ describe('Event controller', () => {
           .reply(200, findGroupResponse);
 
         const expectedFilter =
-          "data/hidden/iv ne true and data/endDate/iv gt after-date and data/calendar/iv in ['calendar-id-1']";
+          "not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date and data/calendar/iv in ['calendar-id-1']";
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -323,7 +326,7 @@ describe('Event controller', () => {
 
     describe('Sorting', () => {
       const expectedFilter =
-        'data/hidden/iv ne true and data/endDate/iv gt after-date';
+        'not(empty(data/calendar/iv)) and data/hidden/iv ne true and data/endDate/iv gt after-date';
 
       test('Should apply the "orderBy" option using the startDate field and ascending order', async () => {
         const expectedOrder = 'data/startDate/iv asc';

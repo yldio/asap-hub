@@ -115,6 +115,7 @@
           "editor": "Dropdown",
           "schemaIds": ["calendars"],
           "label": "Calendar",
+          "hints": "The event will NOT be shown if this field is empty.",
           "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

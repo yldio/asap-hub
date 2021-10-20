@@ -70,6 +70,7 @@ export default class Events implements EventController {
         [],
       );
 
+    filters.push('not(empty(data/calendar/iv))');
     filters.push('data/hidden/iv ne true');
 
     if (after) {

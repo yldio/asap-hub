@@ -25,7 +25,10 @@ export const getMeetingMaterial = <T>(
 export const parseGraphQLEvent = (
   item: EventContentFragment,
 ): EventResponse => {
-  const calendar = parseGraphQLCalendar(item.flatData.calendar![0]);
+  const calendar =
+    item.flatData.calendar &&
+    item.flatData.calendar[0] &&
+    parseGraphQLCalendar(item.flatData.calendar[0]);
   const group =
     item.flatData.calendar![0].referencingGroupsContents?.map((calGroup) =>
       parseGraphQLGroup(calGroup),

@@ -102,24 +102,34 @@ it('renders a country selector', () => {
 });
 
 it.each`
-  label             | value | message
-  ${/country/i}     | ${''} | ${'Please add your country'}
-  ${/city/i}        | ${''} | ${'Please add your city'}
-  ${/institution/i} | ${''} | ${'Please add your institution'}
+  label             | message
+  ${/country/i}     | ${'Please add your country'}
+  ${/city/i}        | ${'Please add your city'}
+  ${/institution/i} | ${'Please add your institution'}
+  ${/position/i}    | ${'Please add your position'}
 `(
   'shows validation message $message when value set to $value on $label',
-  async ({ label, value, message }) => {
-    const { getByLabelText, findByText } = render(
-      <PersonalInfoModal {...props} />,
+  async ({ label, message }) => {
+    const { getByLabelText, findByText, getByText } = render(
+      <PersonalInfoModal
+        {...props}
+        country="Spain"
+        countrySuggestions={['Spain']}
+        institution="UCM"
+        city="Madrid"
+        jobTitle="Assistant Professor"
+      />,
       {
         wrapper: StaticRouter,
       },
     );
-    const input = getByLabelText(label);
-    fireEvent.change(input, {
-      target: { value },
-    });
-    fireEvent.focusOut(input);
+    const field = getByLabelText(label);
+    const input = field.closest('input') || field;
+
+    fireEvent.change(input, { target: { value: '' } });
+    expect(input).toHaveValue('');
+
+    userEvent.click(getByText(/save/i));
     expect(await findByText(new RegExp(message, 'i'))).toBeVisible();
   },
 );

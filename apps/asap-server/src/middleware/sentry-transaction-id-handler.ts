@@ -1,13 +1,18 @@
-import { RequestHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { configureScope } from '@sentry/serverless';
 
-export const sentryTransactionIdFactory =
-  (): RequestHandler => async (req, res, next) => {
-    const transactionId = req.header('X-Transaction-Id');
-    if (transactionId) {
-      configureScope((scope) => {
-        scope.setTag('transaction_id', transactionId);
-      });
-    }
-    return next();
-  };
+export const sentryTransactionIdMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const transactionId = req.header('X-Transaction-Id');
+  if (transactionId) {
+    configureScope((scope) => {
+      scope.setTag('transaction_id', transactionId);
+    });
+  } else {
+    req.log.warn(`No transaction id on request to ${req.originalUrl}`);
+  }
+  return next();
+};

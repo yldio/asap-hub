@@ -41,7 +41,7 @@ import { discoverRouteFactory } from './routes/discover.route';
 import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
 import { permissionHandler } from './middleware/permission-handler';
-import { sentryTransactionIdFactory } from './middleware/sentry-transaction-id-handler';
+import { sentryTransactionIdMiddleware } from './middleware/sentry-transaction-id-handler';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -77,7 +77,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
   const tracingHandler = tracingHandlerFactory(libs.tracer);
   const sentryTransactionIdHandler =
-    libs.sentryTransactionIdHandler || sentryTransactionIdFactory();
+    libs.sentryTransactionIdHandler || sentryTransactionIdMiddleware;
 
   // Routes
   const calendarRoutes = calendarRouteFactory(calendarController);
@@ -110,8 +110,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   if (libs.sentryRequestHandler) {
     app.use(libs.sentryRequestHandler());
   }
-  app.use(sentryTransactionIdHandler);
   app.use(httpLogger);
+  app.use(sentryTransactionIdHandler);
   app.use(tracingHandler);
   app.use(cors());
   app.use(express.json({ limit: '10MB' }));

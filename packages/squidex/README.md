@@ -38,6 +38,6 @@ Algolia sync is trigger by the following events:
 | :--------------- | :-----: | --------: | ------: | ----------: | -------------: | ------: |
 | Research Outputs |    -    |         x |       x |           x |              - |       x |
 | Teams            |    -    |         x |       x |           - |              - |       x |
-| User             |    -    |         x |       - |           - |              - |       - |
+| User             |    -    |         - |       - |           - |              - |       - |
 | External authors |    -    |         - |       - |           - |              - |       - |
 | Labs             |    -    |         - |       - |           - |              - |       - |

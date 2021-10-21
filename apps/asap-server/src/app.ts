@@ -41,6 +41,7 @@ import { discoverRouteFactory } from './routes/discover.route';
 import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
 import { permissionHandler } from './middleware/permission-handler';
+import { sentryTransactionIdFactory } from './middleware/sentry-transaction-id-handler';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -75,6 +76,8 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Handlers
   const authHandler = libs.authHandler || authHandlerFactory(decodeToken);
   const tracingHandler = tracingHandlerFactory(libs.tracer);
+  const sentryTransactionIdHandler =
+    libs.sentryTransactionIdHandler || sentryTransactionIdFactory();
 
   // Routes
   const calendarRoutes = calendarRouteFactory(calendarController);
@@ -107,7 +110,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   if (libs.sentryRequestHandler) {
     app.use(libs.sentryRequestHandler());
   }
-
+  app.use(sentryTransactionIdHandler);
   app.use(httpLogger);
   app.use(tracingHandler);
   app.use(cors());
@@ -194,4 +197,5 @@ export type Libs = {
   xRay?: typeof AWSXray;
   sentryErrorHandler?: typeof Sentry.Handlers.errorHandler;
   sentryRequestHandler?: typeof Sentry.Handlers.requestHandler;
+  sentryTransactionIdHandler?: RequestHandler;
 };

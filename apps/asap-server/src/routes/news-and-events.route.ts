@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
-import { NewsAndEventsController } from '../controllers/news-and-events';
 import Boom from '@hapi/boom';
+import { NewsAndEventsController } from '../controllers/news-and-events';
 
 export const newsAndEventsRouteFactory = (
   newsAndEventsController: NewsAndEventsController,

@@ -88,12 +88,12 @@ interface PageNumber {
   followsGap?: boolean;
 }
 function* optimizeGaps(pageNumbers: PageNumber[]) {
-  if (pageNumbers.length < 2) {
+  if (pageNumbers.length < 2 || !pageNumbers[0]) {
     yield* pageNumbers;
     return;
   }
 
-  yield pageNumbers[0]!;
+  yield pageNumbers[0];
   for (const [prev, curr] of aperture(2, pageNumbers)) {
     // No point in leaving a gap of 1 if we can just render the number instead of the ellipsis
     if (prev.index + 1 === curr.index - 1) {
@@ -111,12 +111,16 @@ function* optimizeGaps(pageNumbers: PageNumber[]) {
   }
 }
 function* makeFillersMandatory(pageNumbers: PageNumber[]) {
-  if (pageNumbers.length < 3) {
+  if (
+    pageNumbers.length < 3 ||
+    !pageNumbers[0] ||
+    !pageNumbers[pageNumbers.length - 1]
+  ) {
     yield* pageNumbers;
     return;
   }
 
-  yield pageNumbers[0]!;
+  yield pageNumbers[0];
   for (const [prev, curr, next] of aperture(3, pageNumbers)) {
     if (
       prev.index + 1 === curr.index &&

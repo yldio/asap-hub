@@ -139,9 +139,9 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
 };
 
 export const parseUser = (user: RestUser): UserResponse => {
-  const teams =
+  const teams: UserTeam[] =
     user.data.teams?.iv?.map(({ id, ...t }) => ({
-      id: id[0],
+      id: id[0] || '',
       displayName: 'Unknown',
       ...t,
       approach: t.approach ? t.approach : undefined,
@@ -155,35 +155,33 @@ export const parseUser = (user: RestUser): UserResponse => {
   };
 
   const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;
-
-  return JSON.parse(
-    JSON.stringify({
-      id: user.id,
-      displayName,
-      createdDate: parseDate(user.created).toISOString(),
-      lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
-      email: user.data.email.iv,
-      contactEmail: user.data?.contactEmail?.iv,
-      degree: user.data.degree?.iv,
-      firstName: user.data.firstName?.iv,
-      lastName: user.data.lastName?.iv,
-      biography: user.data.biography?.iv,
-      jobTitle: user.data.jobTitle?.iv,
-      institution: user.data.institution?.iv,
-      teams,
-      social,
-      orcid: user.data.orcid?.iv,
-      orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
-      orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
-      orcidWorks: user.data.orcidWorks?.iv,
-      skills: user.data.skills?.iv || [],
-      skillsDescription: user.data.skillsDescription,
-      questions: user.data.questions?.iv?.map(({ question }) => question) || [],
-      avatarUrl: user.data.avatar?.iv && createURL(user.data.avatar.iv)[0],
-      role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
-      responsibilities: user.data.responsibilities?.iv || undefined,
-      reachOut: user.data.reachOut?.iv || undefined,
-      labs: user.data.labs?.iv || [],
-    }),
-  );
+  return {
+    id: user.id,
+    displayName,
+    onboarded: user.data.onboarded.iv,
+    createdDate: parseDate(user.created).toISOString(),
+    lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
+    email: user.data.email.iv,
+    contactEmail: user.data?.contactEmail?.iv,
+    degree: user.data.degree?.iv,
+    firstName: user.data.firstName?.iv,
+    lastName: user.data.lastName?.iv,
+    biography: user.data.biography?.iv,
+    jobTitle: user.data.jobTitle?.iv,
+    institution: user.data.institution?.iv,
+    teams,
+    social,
+    orcid: user.data.orcid?.iv,
+    orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
+    orcidWorks: user.data.orcidWorks?.iv,
+    skills: user.data.skills?.iv || [],
+    skillsDescription: user.data.skillsDescription?.iv,
+    questions: user.data.questions?.iv?.map(({ question }) => question) || [],
+    avatarUrl:
+      (user.data.avatar?.iv && createURL(user.data.avatar.iv)[0]) ?? undefined,
+    role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
+    responsibilities: user.data.responsibilities?.iv,
+    reachOut: user.data.reachOut?.iv,
+    labs: (user.data.labs?.iv || []) as Lab[],
+  };
 };

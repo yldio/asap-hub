@@ -26,6 +26,7 @@ export const tracingHandlerFactory =
     const responseHeaders: Record<string, string | number | string[]> = {};
     tracer.inject(span, opentracing.FORMAT_TEXT_MAP, responseHeaders);
     Object.keys(responseHeaders).forEach((key) =>
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       res.setHeader(key, responseHeaders[key]!),
     );
 

@@ -11,10 +11,10 @@ const getPublicKey = (header: JwtHeader, cb: SigningKeyCallback): void => {
   if (!key) {
     return cb(new Error(`Unable to find Public Key with kid=${header.kid}`));
   }
-  if (key.length === 0 || key[0]!.trim().length === 0) {
+  if (key.length === 0 || !key[0] || key[0].trim().length === 0) {
     return cb(new Error('Received an invalid key'));
   }
-  return cb(null, certToPEM(key[0]!));
+  return cb(null, certToPEM(key[0]));
 };
 
 const decodeToken = (token: string): Promise<Auth0User> =>

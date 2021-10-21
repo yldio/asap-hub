@@ -128,7 +128,7 @@ describe('useOnboarding', () => {
             .users({})
             .user({ userId: user.id })
             .research({})
-            .editTeamMembership({ teamId: user.teams[0]!.id }).$,
+            .editTeamMembership({ teamId: '' }).$,
         );
 
         expect(questions!.modalHref).toBe(

@@ -182,6 +182,9 @@ export const parseUser = (user: RestUser): UserResponse => {
     role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
     responsibilities: user.data.responsibilities?.iv,
     reachOut: user.data.reachOut?.iv,
-    labs: (user.data.labs?.iv || []) as Lab[],
+    labs: (user.data.labs?.iv || []).map((lab) => ({
+      id: lab.id,
+      name: lab.flatData?.name ?? '',
+    })),
   };
 };

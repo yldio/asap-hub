@@ -137,7 +137,7 @@ function* makeFillersMandatory(pageNumbers: PageNumber[]) {
       yield curr;
     }
   }
-  yield pageNumbers[pageNumbers.length - 1]!;
+  yield pageNumbers[pageNumbers.length - 1];
 }
 
 interface PageControlsProps {

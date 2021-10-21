@@ -74,7 +74,7 @@ export const transformOrcidWorks = (
             // return such value
             'external-id-url.value',
           ),
-          id: get(work, "['work-summary'][0]['put-code']"),
+          id: `${get(work, "['work-summary'][0]['put-code']")}`,
           title: get(work, '["work-summary"][0].title.title.value'),
           type: get(work, '["work-summary"][0].type'),
           publicationDate: {

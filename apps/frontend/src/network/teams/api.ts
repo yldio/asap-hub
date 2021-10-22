@@ -4,18 +4,14 @@ import {
   ListTeamResponse,
 } from '@asap-hub/model';
 import { API_BASE_URL } from '../../config';
-import {
-  GetListOptions,
-  createListApiUrl,
-  createSentryHeaders,
-} from '../../api-util';
+import { GetListOptions, createListApiUrl } from '../../api-util';
 
 export const getTeam = async (
   id: string,
   authorization: string,
 ): Promise<TeamResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/teams/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: { authorization },
   });
   if (!resp.ok) {
     if (resp.status === 404) {
@@ -33,7 +29,7 @@ export const getTeams = async (
   authorization: string,
 ): Promise<ListTeamResponse> => {
   const resp = await fetch(createListApiUrl('teams', options).toString(), {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: { authorization },
   });
 
   if (!resp.ok) {
@@ -51,11 +47,7 @@ export const patchTeam = async (
 ): Promise<TeamResponse> => {
   const resp = await fetch(`${API_BASE_URL}/teams/${id}`, {
     method: 'PATCH',
-    headers: {
-      authorization,
-      'content-type': 'application/json',
-      ...createSentryHeaders(),
-    },
+    headers: { authorization, 'content-type': 'application/json' },
     body: JSON.stringify(patch),
   });
   if (!resp.ok) {

@@ -6,18 +6,14 @@ import {
 } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../../config';
-import {
-  GetListOptions,
-  createListApiUrl,
-  createSentryHeaders,
-} from '../../api-util';
+import { GetListOptions, createListApiUrl } from '../../api-util';
 
 export const getUser = async (
   id: string,
   authorization: string,
 ): Promise<UserResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/users/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: { authorization },
   });
   if (!resp.ok) {
     if (resp.status === 404) {
@@ -35,7 +31,7 @@ export const getUsers = async (
   authorization: string,
 ): Promise<ListUserResponse> => {
   const resp = await fetch(createListApiUrl('users', options).toString(), {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: { authorization },
   });
 
   if (!resp.ok) {
@@ -56,7 +52,6 @@ export const patchUser = async (
     headers: {
       authorization,
       'content-type': 'application/json',
-      ...createSentryHeaders(),
     },
     body: JSON.stringify(patch),
   });
@@ -78,7 +73,6 @@ export const postUserAvatar = async (
     headers: {
       authorization,
       'content-type': 'application/json',
-      ...createSentryHeaders(),
     },
     body: JSON.stringify(post),
   });

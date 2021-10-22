@@ -210,24 +210,28 @@ const PageControls: React.FC<PageControlsProps> = ({
             </span>
           </Anchor>
         </li>
-        {shownPages.map(({ index, followsGap, wideScreenOnly }) => {
-          const active = index === currentPageIndex;
-          return (
-            <li
-              key={index}
-              css={itemStyles}
-              className={[
-                followsGap ? 'follows-gap' : '',
-                wideScreenOnly ? 'wide-screen-only' : '',
-              ].join(' ')}
-            >
-              <Anchor href={renderPageHref(index)}>
-                <span css={[textStyles, active && activeTextStyles]}>
-                  {index + 1}
-                </span>
-              </Anchor>
-            </li>
-          );
+        {shownPages.map((page) => {
+          if (page) {
+            const { index, followsGap, wideScreenOnly } = page;
+            const active = index === currentPageIndex;
+            return (
+              <li
+                key={index}
+                css={itemStyles}
+                className={[
+                  followsGap ? 'follows-gap' : '',
+                  wideScreenOnly ? 'wide-screen-only' : '',
+                ].join(' ')}
+              >
+                <Anchor href={renderPageHref(index)}>
+                  <span css={[textStyles, active && activeTextStyles]}>
+                    {index + 1}
+                  </span>
+                </Anchor>
+              </li>
+            );
+          }
+          return;
         })}
         <li css={itemStyles}>
           <Anchor href={nextPageHref}>

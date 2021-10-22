@@ -10,6 +10,7 @@ import {
   algoliaResearchOutputIndex,
 } from '../../config';
 import logger from '../../utils/logger';
+import { InstrumentedSquidexGraphql } from '../../utils/instrumented-client';
 
 export const indexResearchOutputHandler = (
   researchOutputController: ResearchOutputController,
@@ -67,6 +68,6 @@ export type SquidexWebhookResearchOutputPayload = {
 };
 
 export const handler = indexResearchOutputHandler(
-  new ResearchOutputs(),
+  new ResearchOutputs(new InstrumentedSquidexGraphql()),
   algoliasearch(algoliaAppId, algoliaIndexApiKey),
 );

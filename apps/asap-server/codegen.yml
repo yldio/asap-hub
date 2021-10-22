@@ -9,6 +9,7 @@ documents:
   - '!src/utils/**/*'
 generates:
   ./src/gql/:
+    schema: ./src/schema.graphql
     preset: gql-tag-operations-preset
     plugins:
       - graphql-typescript-integration/empty
@@ -18,5 +19,10 @@ generates:
       skipTypename: true
       exportFragmentSpreadSubTypes: true
       withResultType: true
+  ./src/schema/schema.graphql:
+    plugins:
+      - schema-ast
+    config:
+      includeDirectives: true
 pluckConfig:
   skipIndent: true

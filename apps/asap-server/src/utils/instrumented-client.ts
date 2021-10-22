@@ -2,7 +2,11 @@
 /* eslint-disable max-classes-per-file */
 import * as opentracing from 'opentracing';
 import { SpanContext, Span } from 'opentracing';
-import { Squidex, SquidexGraphql } from '@asap-hub/squidex';
+import {
+  Squidex,
+  SquidexGraphql,
+  SquidexGraphqlClient,
+} from '@asap-hub/squidex';
 import gql from 'graphql-tag';
 import { DocumentNode, OperationDefinitionNode, FieldNode } from 'graphql';
 
@@ -35,7 +39,10 @@ const getQueryName = (query: string | DocumentNode): string => {
     .join(' ');
 };
 
-export class InstrumentedSquidexGraphql extends SquidexGraphql {
+export class InstrumentedSquidexGraphql
+  extends SquidexGraphql
+  implements SquidexGraphqlClient
+{
   tracingContext: SpanContext | undefined;
 
   constructor(ctxHeaders?: Record<string, string>) {

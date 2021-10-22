@@ -4,7 +4,6 @@ import pino from 'pino';
 import supertest from 'supertest';
 import { appFactory } from '../../src/app';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
-import { sentryTransactionIdHandlerMock } from '../mocks/sentry-transaction-id-handler.mock';
 
 describe('User info logging handler', () => {
   // mock auth handler
@@ -36,7 +35,6 @@ describe('User info logging handler', () => {
   const app = appFactory({
     mockRequestHandlers: [logRoutes],
     authHandler: authHandlerMock,
-    sentryTransactionIdHandler: sentryTransactionIdHandlerMock,
     logger: logger,
   });
 

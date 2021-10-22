@@ -1,7 +1,7 @@
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 
 import { API_BASE_URL } from '../config';
-import { createListApiUrl, createSentryHeaders } from '../api-util';
+import { createListApiUrl } from '../api-util';
 import { GetEventListOptions } from './options';
 
 export const getEvents = async (
@@ -19,7 +19,7 @@ export const getEvents = async (
   }
 
   const resp = await fetch(url.toString(), {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: { authorization },
   });
 
   if (!resp.ok) {
@@ -35,7 +35,7 @@ export const getEvent = async (
   authorization: string,
 ): Promise<EventResponse | undefined> => {
   const resp = await fetch(`${API_BASE_URL}/events/${id}`, {
-    headers: { authorization, ...createSentryHeaders() },
+    headers: { authorization },
   });
   if (!resp.ok) {
     if (resp.status === 404) {

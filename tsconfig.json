@@ -23,7 +23,7 @@
     "noFallthroughCasesInSwitch": true,
     "allowJs": false,
     "forceConsistentCasingInFileNames": true,
-    "noUncheckedIndexedAccess":true,
+    "noUncheckedIndexedAccess": true,
 
     "noErrorTruncation": true
   },

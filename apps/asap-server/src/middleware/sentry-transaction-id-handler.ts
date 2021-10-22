@@ -5,7 +5,7 @@ export const sentryTransactionIdMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void => {
   const transactionId = req.header('X-Transaction-Id');
   if (transactionId) {
     configureScope((scope) => {

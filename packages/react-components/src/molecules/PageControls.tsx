@@ -231,7 +231,7 @@ const PageControls: React.FC<PageControlsProps> = ({
               </li>
             );
           }
-          return;
+          return null;
         })}
         <li css={itemStyles}>
           <Anchor href={nextPageHref}>

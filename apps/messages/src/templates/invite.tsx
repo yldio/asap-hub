@@ -5,7 +5,7 @@ import { APP_ORIGIN } from '../config';
 
 export default (
   <MessageLayout appOrigin={APP_ORIGIN}>
-    <WelcomeMessage {...welcome} variant={'InviteWelcomeTemplate'} />
+    <WelcomeMessage {...welcome} />
   </MessageLayout>
 );
 

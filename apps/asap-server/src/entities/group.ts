@@ -6,6 +6,7 @@ import {
   GroupTools,
   GroupLeader,
   isGroupRole,
+  GroupRole,
 } from '@asap-hub/model';
 import { GraphqlUser } from '@asap-hub/squidex';
 
@@ -42,7 +43,7 @@ export const parseGraphQLGroup = (
         {
           // TODO: remove cast after user types
           user: parseGraphQLUser(leader.user[0] as GraphqlUser),
-          role: leader.role,
+          role: leader.role as GroupRole,
         },
       ];
     },

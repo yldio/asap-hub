@@ -3,8 +3,7 @@ import { join } from 'path';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
 import { users as importUsers } from '../../src/import';
-import { fetchUsersResponse } from '../invite.fixtures';
-import { fetchTeamsResponse } from './users.fixtures';
+import { fetchTeamsResponse, fetchUsersResponse } from './users.fixtures';
 
 const body = {
   email: {

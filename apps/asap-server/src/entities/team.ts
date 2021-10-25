@@ -6,6 +6,7 @@ import {
   TeamMember,
   Lab,
   isTeamRole,
+  TeamTool,
 } from '@asap-hub/model';
 import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
@@ -85,11 +86,19 @@ export const parseGraphQLTeam = (
     ) || [];
 
   const tools =
-    team.flatData.tools?.map(({ name, description, url }) => ({
-      name: name ?? '',
-      url: url ?? '',
-      description: description ?? undefined,
-    })) || [];
+    team.flatData.tools?.reduce((tools, { name, description, url }) => {
+      if (!name || !url) {
+        return tools;
+      }
+      return [
+        ...tools,
+        {
+          name: name,
+          url: url,
+          description: description ?? undefined,
+        },
+      ];
+    }, [] as TeamTool[]) || [];
 
   const outputs: ResearchOutputResponse[] = flatOutputs
     .map((o) => {

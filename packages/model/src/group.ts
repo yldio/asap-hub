@@ -11,7 +11,7 @@ export type GroupTools = {
 
 export type GroupTeam = Omit<TeamResponse, 'members' | 'outputs' | 'labCount'>;
 
-export const groupRole = ['Chair', 'Project Manager'];
+export const groupRole = ['Chair', 'Project Manager'] as const;
 
 export type GroupRole = typeof groupRole[number];
 

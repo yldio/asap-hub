@@ -9,7 +9,7 @@ import {
 import { parseGraphQLCalendar } from './calendar';
 import { parseDate, createURL } from '../utils/squidex';
 import { parseGraphQLGroup } from './group';
-import { EventContentFragment, FetchGroupQuery } from '../gql/graphql';
+import { EventContentFragment } from '../gql/graphql';
 
 export const getMeetingMaterial = <T>(
   material: T,
@@ -27,11 +27,8 @@ export const parseGraphQLEvent = (
 ): EventResponse => {
   const calendar = parseGraphQLCalendar(item.flatData.calendar![0]);
   const group =
-    item.flatData.calendar![0].referencingGroupsContents?.map(
-      (calGroup) =>
-        parseGraphQLGroup(
-          calGroup as NonNullable<FetchGroupQuery['findGroupsContent']>,
-        ), // @todo remove cast
+    item.flatData.calendar![0].referencingGroupsContents?.map((calGroup) =>
+      parseGraphQLGroup(calGroup),
     )[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData.startDate!);
   const now = DateTime.utc();

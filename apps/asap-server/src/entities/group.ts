@@ -64,7 +64,6 @@ export const parseGraphQLGroup = (
 
   if (item.flatData.calendars?.length) {
     const url = new URL('https://calendar.google.com/calendar/r');
-    // Is this correct? how should I handle undefined here
     url.searchParams.set('cid', item.flatData.calendars[0].id || '');
     tools = { ...tools, googleCalendar: url.toString() };
   }

@@ -50,7 +50,7 @@ beforeEach(() => {
   nock('https://auth.example.com')
     .defaultReplyHeaders({
       'access-control-allow-origin': '*',
-      'access-control-allow-headers': 'Auth0-Client',
+      'access-control-allow-headers': 'Auth0-Client, X-Request-Id',
       'access-control-allow-credentials': 'true',
     })
     .options('/oauth/token')

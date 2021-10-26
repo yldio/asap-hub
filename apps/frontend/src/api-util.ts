@@ -31,6 +31,6 @@ export const createSentryHeaders = () => {
     scope.setTag('transaction_id', transactionId);
   });
   return {
-    'X-Transaction-Id': transactionId,
+    'X-Request-Id': transactionId,
   };
 };

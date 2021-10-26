@@ -25,7 +25,7 @@ describe('Sentry Transaction Id  middleware', () => {
   test('Should set transaction id scope on sentry if present on request', async () => {
     const response = await supertest(app)
       .get('/example')
-      .set({ 'X-Transaction-Id': 'example-id' });
+      .set({ 'X-Request-Id': 'example-id' });
 
     expect(mockSetTag).toHaveBeenLastCalledWith('transaction_id', 'example-id');
     expect(response.status).toBe(200);

@@ -50,11 +50,11 @@ describe('createListApiUrl', () => {
 describe('createSentryHeaders', () => {
   it('generates a header with a random string', () => {
     expect(createSentryHeaders()).toEqual({
-      'X-Transaction-Id': expect.anything(),
+      'X-Request-Id': expect.anything(),
     });
   });
   it('sets the conte a header with a random string', () => {
-    const { 'X-Transaction-Id': transactionId } = createSentryHeaders();
+    const { 'X-Request-Id': transactionId } = createSentryHeaders();
     expect(mockSetTag).toHaveBeenLastCalledWith(
       'transaction_id',
       transactionId,

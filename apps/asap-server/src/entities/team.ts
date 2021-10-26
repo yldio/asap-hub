@@ -44,13 +44,12 @@ export const parseGraphQLTeamMember = (
 ): TeamMember => {
   const flatAvatar = user.flatData.avatar || [];
 
-  const labs =
-    user.flatData.labs?.reduce((acc: Lab[], lab) => {
-      const labsData = lab.flatData?.name
-        ? [...acc, { id: lab.id, name: lab.flatData.name }]
-        : acc;
-      return labsData;
-    }, []) ?? [];
+  const labs = user.flatData.labs?.reduce((acc: Lab[], lab) => {
+    const labsData = lab.flatData?.name
+      ? [...acc, { id: lab.id, name: lab.flatData.name }]
+      : acc;
+    return labsData;
+  }, []);
 
   const role = user.flatData.teams
     ?.filter((t) => t.id && t.id[0].id === teamId)
@@ -86,15 +85,15 @@ export const parseGraphQLTeam = (
     ) || [];
 
   const tools =
-    team.flatData.tools?.reduce((tools, { name, description, url }) => {
+    team.flatData.tools?.reduce((teamTools, { name, description, url }) => {
       if (!name || !url) {
-        return tools;
+        return teamTools;
       }
       return [
-        ...tools,
+        ...teamTools,
         {
-          name: name,
-          url: url,
+          name,
+          url,
           description: description ?? undefined,
         },
       ];

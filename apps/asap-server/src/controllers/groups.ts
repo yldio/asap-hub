@@ -14,7 +14,6 @@ import {
   FetchGroupsQuery,
   FetchGroupsQueryVariables,
 } from '../gql/graphql';
-import logger from '../utils/logger';
 
 export interface ResponseFetchGroups {
   queryGroupsContentsWithTotal: {

@@ -13,6 +13,11 @@ To work on this repository, you need to have [Node.js](https://nodejs.org/) inst
 You need to have [Yarn](https://yarnpkg.com/) installed. Any recent version (>=1.22) will automatically detect our local Yarn version and use that, so your exact version does not matter.
 The [zero-install strategy](https://yarnpkg.com/features/zero-installs) means that you do not need to run `yarn` after checking out the repository, all of the scripts will just work™.
 
+IDEs require special configuration for TypeScript to work when using Plug'n'Play installs.
+
+- [vscode](https://yarnpkg.com/getting-started/editor-sdks#vscode)
+- [vim](https://yarnpkg.com/getting-started/editor-sdks#vim)
+
 ## Repo structure
 
 This repository consists of packages and apps along with their tests inside the individual folders inside `/packages` and `/apps`. Packages are meant for consumption by other packages or apps, while apps are not depended on by other packages or apps but instead have build artifacts like a website bundle to be served by a web server, or a JavaScript application to be run by a Node.js process.
@@ -37,7 +42,7 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 
 ### Create a new user on Squidex
 
-- Log in to https://cloud.squidex.io/app/asap-hub-dev
+- Log in to <https://cloud.squidex.io/app/asap-hub-dev>
 - In `Content/Users`, create a new user (or edit if already created)
 - While creating, or editing the user, on `Functional/Connections`, add a new item to store your UUID (you can generate a random one [here](https://www.uuidgenerator.net/version4)) and save that (the save button is the blue one on top!). You'll need that UUID later, so save it.
 
@@ -54,7 +59,7 @@ For you, a newcomer, to be running your development setup, you'll need to comple
 ### Now that everything's up
 
 - On localhost:3000 you should have the hub running. You'll need to get your profile created.
-- Get your UUID from the previous step, and use it on https://dev.hub.asap.science/welcome/{uuid}
+- Get your UUID from the previous step, and use it on <https://dev.hub.asap.science/welcome/{uuid>}
 - Reload localhost:3000 and you should now have an account and be logged in.
 
 ## Editor setup

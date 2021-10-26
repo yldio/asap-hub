@@ -7,7 +7,6 @@
 
 import yargs from 'yargs/yargs';
 import * as importers from './import';
-import inviteUsersFactory from './invite';
 
 // eslint-disable-next-line no-unused-expressions
 yargs(process.argv.slice(2))
@@ -27,29 +26,6 @@ yargs(process.argv.slice(2))
         }),
     handler: async ({ path, entity }) =>
       importers[entity as 'users' | 'protocols'](path as string),
-  })
-  .command({
-    command: 'invite [Options]',
-    describe: 'invite people to the ASAP Hub',
-    builder: (cli) =>
-      cli
-        .positional('role', {
-          describe: 'specify a role to invite (optional)',
-          type: 'string',
-          default: undefined,
-          choices: ['Staff', 'Grantee', 'Guest'],
-        })
-        .option('reinvite', {
-          alias: 'r',
-          type: 'boolean',
-          description:
-            "flag to reinvite users that didn't complete the registration process",
-        }),
-
-    handler: async ({ role, reinvite }) => {
-      const inviteUsers = inviteUsersFactory();
-      inviteUsers(role as string | undefined, Boolean(reinvite));
-    },
   })
   .demandCommand(1)
   .help('h')

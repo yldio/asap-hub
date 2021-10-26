@@ -1,4 +1,4 @@
-import { RestTeam } from '@asap-hub/squidex';
+import { RestTeam, RestUser } from '@asap-hub/squidex';
 
 export const fetchTeamsResponse: { total: number; items: RestTeam[] } = {
   total: 1,
@@ -13,6 +13,90 @@ export const fetchTeamsResponse: { total: number; items: RestTeam[] } = {
         projectTitle: { iv: 'title' },
         skills: { iv: [] },
         outputs: { iv: [] },
+      },
+    },
+  ],
+};
+
+export const fetchUsersResponse: { total: number; items: RestUser[] } = {
+  total: 200,
+  items: [
+    {
+      id: 'userId1',
+      lastModified: '2020-09-25T11:06:27.164Z',
+      created: '2020-09-24T11:06:27.164Z',
+      data: {
+        avatar: { iv: [] },
+        lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
+        email: { iv: 'testUser@asap.science' },
+        firstName: { iv: 'First' },
+        lastName: { iv: 'Last' },
+        jobTitle: { iv: 'Title' },
+        institution: { iv: 'Institution' },
+        connections: { iv: [] },
+        biography: { iv: 'Biography' },
+        teams: { iv: [] },
+        questions: { iv: [] },
+        skills: { iv: [] },
+        role: { iv: 'Grantee' },
+        onboarded: {
+          iv: true,
+        },
+        labs: { iv: [] },
+      },
+    },
+    {
+      id: 'userId2',
+      lastModified: '2020-09-25T11:06:27.164Z',
+      created: '2020-09-24T11:06:27.164Z',
+      data: {
+        avatar: { iv: [] },
+        lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
+        email: { iv: 'testUser@asap.science' },
+        firstName: { iv: 'First' },
+        lastName: { iv: 'Last' },
+        jobTitle: { iv: 'Title' },
+        institution: { iv: 'Institution' },
+        connections: { iv: [] },
+        biography: { iv: 'Biography' },
+        questions: { iv: [{ question: 'Question?' }] },
+        teams: { iv: [] },
+        skills: { iv: [] },
+        role: { iv: 'Grantee' },
+        onboarded: {
+          iv: true,
+        },
+        labs: { iv: [] },
+      },
+    },
+    {
+      id: 'userId3',
+      lastModified: '2020-09-25T11:06:27.164Z',
+      created: '2020-09-24T11:06:27.164Z',
+      data: {
+        avatar: { iv: [] },
+        lastModifiedDate: { iv: '2020-09-25T11:06:27.164Z' },
+        email: { iv: 'me@example.com' },
+        firstName: { iv: 'First' },
+        lastName: { iv: 'Last' },
+        jobTitle: { iv: 'Title' },
+        institution: { iv: 'Institution' },
+        connections: {
+          iv: [
+            {
+              code: 'ALREADY_HAS_CODE',
+            },
+          ],
+        },
+        biography: { iv: 'Biography' },
+        questions: { iv: [{ question: 'Question?' }] },
+        teams: { iv: [] },
+        skills: { iv: [] },
+        role: { iv: 'Grantee' },
+        onboarded: {
+          iv: true,
+        },
+        labs: { iv: [] },
       },
     },
   ],

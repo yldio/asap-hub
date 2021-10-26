@@ -59,7 +59,6 @@ export default class Groups implements GroupController {
     >(FETCH_GROUPS, { filter, top: take, skip });
 
     if (queryGroupsContentsWithTotal === null) {
-      logger.warn('queryGroupsContentsWithTotal returned null');
       return {
         total: 0,
         items: [],
@@ -69,7 +68,6 @@ export default class Groups implements GroupController {
     const { total, items } = queryGroupsContentsWithTotal;
 
     if (items === null) {
-      logger.warn('queryGroupsContentsWithTotal items returned null');
       return {
         total: 0,
         items: [],

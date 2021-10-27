@@ -53,18 +53,22 @@ export const parseGraphQLTeamMember = (
 
   const role = user.flatData.teams
     ?.filter((t) => t.id && t.id[0].id === teamId)
-    .filter((s) => s.role)[0].role as TeamRole;
+    .filter((s) => s.role)[0].role;
 
-  if (!isTeamRole(role)) {
+  if (typeof role === 'undefined' || !isTeamRole(role)) {
     throw new Error(`Invalid team role on user ${user.id} : ${role}`);
+  }
+
+  if (!user.flatData.email) {
+    throw new Error(`Email is missing in user ${user.id}`);
   }
 
   return {
     id: user.id,
-    firstName: user.flatData.firstName || undefined,
-    lastName: user.flatData.lastName || undefined,
+    email: user.flatData.email,
+    firstName: user.flatData.firstName ?? undefined,
+    lastName: user.flatData.lastName ?? undefined,
     displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
-    email: user.flatData.email || '',
     role,
     labs,
     avatarUrl: flatAvatar.length
@@ -125,18 +129,22 @@ export const parseGraphQLTeam = (
       (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
     ).length;
 
+  if (!team.flatData.projectTitle) {
+    throw new Error(`Project Title is missing in team ${team.id}`);
+  }
+
   return {
     id: team.id,
     displayName,
     labCount,
+    projectTitle: team.flatData.projectTitle,
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
-    skills: team.flatData.skills || [],
+    skills: team.flatData.skills ?? [],
     outputs,
     tools,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
-    projectTitle: team.flatData.projectTitle || '',
-    projectSummary: team.flatData.projectSummary || undefined,
+    projectSummary: team.flatData.projectSummary ?? undefined,
     proposalURL: team.flatData.proposal
       ? team.flatData.proposal[0]?.id
       : undefined,

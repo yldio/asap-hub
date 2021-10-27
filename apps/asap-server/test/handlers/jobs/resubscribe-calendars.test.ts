@@ -179,7 +179,7 @@ describe('Resubscribe calendar handler', () => {
     calendarControllerMock.update.mockImplementation(
       async (_calendarId, data) => {
         if ('resourceId' in data && data.resourceId === null) {
-          throw new Error();
+          return Promise.reject(new Error()).catch((err) => err);
         }
 
         return getCalendarResponse();

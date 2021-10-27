@@ -3,7 +3,20 @@ import {
   getUniqueList,
   appendSuffix,
   getCommaAndString,
+  getCounterString,
 } from '../index';
+
+describe('getCounterString', () => {
+  it('can add the singular form to a given term, when value is equal to 1', () => {
+    expect(getCounterString(1, 'LAB')).toEqual('1 LAB');
+  });
+  it('can add the plural form to a given term, when value is equal to 0', () => {
+    expect(getCounterString(0, 'LAB')).toEqual('0 LABs');
+  });
+  it('can add the plural form to a given term, when value is greater than 1', () => {
+    expect(getCounterString(10, 'LAB')).toEqual('10 LABs');
+  });
+});
 
 describe('appendSuffix', () => {
   it('can add a suffix to each value of the list', () => {

@@ -63,7 +63,7 @@ export const inviteHandlerFactory =
     try {
       await sendEmail({
         to: [user.data.email.iv],
-        template: 'Invite',
+        template: 'Welcome',
         values: {
           firstName: user.data.firstName.iv,
           link: link.toString(),

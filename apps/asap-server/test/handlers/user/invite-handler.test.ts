@@ -130,7 +130,7 @@ describe('Invite Handler', () => {
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(sendEmailMock).toBeCalledWith({
       to: [userWithOtherConnection.data.email.iv],
-      template: 'Invite',
+      template: 'Welcome',
       values: {
         firstName: userWithOtherConnection.data.firstName.iv,
         link: expectedLink.toString(),
@@ -164,7 +164,7 @@ describe('Invite Handler', () => {
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(sendEmailMock).toBeCalledWith({
       to: [userWithoutConnection.data.email.iv],
-      template: 'Invite',
+      template: 'Welcome',
       values: {
         firstName: userWithoutConnection.data.firstName.iv,
         link: expectedLink.toString(),

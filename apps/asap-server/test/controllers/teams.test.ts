@@ -17,6 +17,7 @@ import Teams from '../../src/controllers/teams';
 import { identity } from '../helpers/squidex';
 import { getGraphQLUser } from '../fixtures/users.fixtures';
 import { FETCH_TEAM, FETCH_TEAMS } from '../../src/queries/teams.queries';
+import { FetchTeamsQuery } from '../../src/gql/graphql';
 
 describe('Team controller', () => {
   const teams = new Teams();
@@ -224,6 +225,65 @@ describe('Team controller', () => {
         expect(result.items[0].tools).toEqual([]);
         expect(result.items[1].tools).toEqual(tools);
         expect(result.items[2].tools).toEqual(tools);
+      });
+
+      test('should only return team tools with name and url defined', async () => {
+        const brokenUrlTools = [
+          ...tools,
+          {
+            url: null,
+            name: 'testTool',
+            description: 'tool description',
+          },
+        ];
+        const brokenNameTools = [
+          ...tools,
+          {
+            url: 'testUrl',
+            name: null,
+            description: 'tool description',
+          },
+        ];
+        const fullTools = [
+          ...tools,
+          {
+            url: 'testUrl',
+            name: 'testTool',
+            description: 'tool description',
+          },
+        ];
+
+        const squidexTeamResponse = {
+          data: getGraphQlTeamsResponse().data as FetchTeamsQuery,
+        };
+
+        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![0].flatData!.tools =
+          brokenUrlTools;
+        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![1].flatData!.tools =
+          brokenNameTools;
+        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![2].flatData!.tools =
+          fullTools;
+
+        nock(config.baseUrl)
+          .post(`/api/content/${config.appName}/graphql`, {
+            query: print(FETCH_TEAMS),
+            variables: {
+              filter: '',
+              top: 8,
+              skip: 0,
+            },
+          })
+          .reply(200, squidexTeamResponse);
+
+        const result = await teams.fetch({
+          take: 8,
+          skip: 0,
+        });
+
+        // should return empty arrays too
+        expect(result.items[0].tools).toEqual(tools);
+        expect(result.items[1].tools).toEqual(tools);
+        expect(result.items[2].tools).toEqual(fullTools);
       });
 
       test('Should select the teams for which the tools should be returned and mark the rest of them as undefined', async () => {

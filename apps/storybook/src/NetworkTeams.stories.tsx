@@ -28,6 +28,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
       projectTitle:
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
       skills: ['Neurological Diseases'],
+      labCount: number('Lab count', 15),
       members: [
         { ...member, id: 'm0' },
         { ...member, id: 'm1' },

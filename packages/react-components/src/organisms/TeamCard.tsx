@@ -5,8 +5,9 @@ import { network } from '@asap-hub/routing';
 import { Card, Anchor, Paragraph, Headline2 } from '../atoms';
 import { perRem } from '../pixels';
 import { lead } from '../colors';
-import { teamIcon } from '../icons';
+import { teamIcon, labIcon } from '../icons';
 import { TagList } from '../molecules';
+import { getCounterString } from '../utils';
 
 const teamMemberStyles = css({
   color: lead.rgb,
@@ -22,10 +23,14 @@ const iconStyles = css({
   verticalAlign: 'middle',
   paddingRight: `${15 / perRem}em`,
 });
-
+const labCountStyles = css({
+  display: 'flex',
+  alignItems: 'center',
+  marginLeft: `${12 / perRem}em`,
+});
 type TeamCardProps = Pick<
   TeamResponse,
-  'id' | 'displayName' | 'projectTitle' | 'skills' | 'members'
+  'id' | 'displayName' | 'projectTitle' | 'skills' | 'members' | 'labCount'
 >;
 
 const TeamCard: React.FC<TeamCardProps> = ({
@@ -34,6 +39,7 @@ const TeamCard: React.FC<TeamCardProps> = ({
   projectTitle,
   skills,
   members,
+  labCount,
 }) => (
   <Card>
     <Anchor href={network({}).teams({}).team({ teamId: id }).$}>
@@ -46,11 +52,18 @@ const TeamCard: React.FC<TeamCardProps> = ({
       </div>
     )}
 
-    <span css={teamMemberStyles}>
-      <span css={iconStyles}>{teamIcon} </span>
-      {members.length} Team Member
-      {members.length === 1 ? '' : 's'}
-    </span>
+    <div css={teamMemberStyles}>
+      <div>
+        <span css={iconStyles}>{teamIcon} </span>
+        <span>{getCounterString(members.length, 'Team Member')}</span>
+      </div>
+      {labCount > 0 && (
+        <div css={labCountStyles}>
+          <span css={iconStyles}>{labIcon} </span>
+          <span>{getCounterString(labCount, 'Lab')}</span>
+        </div>
+      )}
+    </div>
   </Card>
 );
 

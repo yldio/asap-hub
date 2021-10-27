@@ -10,6 +10,7 @@ import { createMailTo } from '../mail';
 import { perRem, mobileScreen } from '../pixels';
 import { paper } from '../colors';
 import { labIcon } from '../icons';
+import { getCounterString } from '../utils';
 
 const MAX_MEMBER_AVATARS = 5;
 const MEMBER_AVATAR_BORDER_WIDTH = 1;
@@ -153,8 +154,7 @@ const TeamProfileHeader: React.FC<TeamProfileHeaderProps> = ({
         {labCount > 0 && (
           <div css={labCountStyles}>
             <span css={iconStyles}>{labIcon} </span>
-            {labCount} Lab
-            {labCount === 1 ? '' : 's'}
+            <span>{getCounterString(labCount, 'Lab')}</span>
           </div>
         )}
         {lastModifiedDate && (

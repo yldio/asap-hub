@@ -35,7 +35,7 @@ export const resubscribeCalendarsHandlerFactory =
         if (calendar.resourceId) {
           try {
             await unsubscribe(calendar.resourceId, calendar.id);
-            calendarController.update(calendar.id, {
+            await calendarController.update(calendar.id, {
               resourceId: null,
             });
           } catch (error) {

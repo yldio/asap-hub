@@ -14,7 +14,7 @@ export const sendEmailFactory =
     ses: SES,
   ): ((params: {
     to: string[];
-    template: 'Welcome' | 'Invite';
+    template: 'Welcome';
     values: typeof welcome;
   }) => Promise<PromiseResult<SendTemplatedEmailResponse, AWSError>>) =>
   async ({ to, template, values }) => {

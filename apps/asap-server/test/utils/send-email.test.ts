@@ -21,7 +21,7 @@ describe('Send Email helper', () => {
 
     await sendEmail({
       to: recipients,
-      template: 'Invite',
+      template: 'Welcome',
       values: params,
     });
 
@@ -30,7 +30,7 @@ describe('Send Email helper', () => {
         ToAddresses: recipients,
         BccAddresses: [userInviteBcc],
       },
-      Template: 'Invite',
+      Template: 'Welcome',
       TemplateData: JSON.stringify(params),
       Source: userInviteSender,
       ReturnPath: userInviteReturn,

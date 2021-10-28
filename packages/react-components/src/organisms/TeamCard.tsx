@@ -9,11 +9,17 @@ import { teamIcon, labIcon } from '../icons';
 import { TagList } from '../molecules';
 import { getCounterString } from '../utils';
 
-const teamMemberStyles = css({
+const teamMemberMetaStyles = css({
   color: lead.rgb,
   display: 'flex',
   alignItems: 'center',
   padding: `${12 / perRem}em 0`,
+  ' > *': {
+    marginRight: `${24 / perRem}em`,
+  },
+  '> *:last-of-type': {
+    marginRight: '0',
+  },
 });
 const tagsPadding = css({
   paddingBottom: `${12 / perRem}em`,
@@ -23,11 +29,7 @@ const iconStyles = css({
   verticalAlign: 'middle',
   paddingRight: `${15 / perRem}em`,
 });
-const labCountStyles = css({
-  display: 'flex',
-  alignItems: 'center',
-  marginLeft: `${12 / perRem}em`,
-});
+
 type TeamCardProps = Pick<
   TeamResponse,
   'id' | 'displayName' | 'projectTitle' | 'skills' | 'members' | 'labCount'
@@ -52,13 +54,13 @@ const TeamCard: React.FC<TeamCardProps> = ({
       </div>
     )}
 
-    <div css={teamMemberStyles}>
+    <div css={teamMemberMetaStyles}>
       <div>
         <span css={iconStyles}>{teamIcon} </span>
         <span>{getCounterString(members.length, 'Team Member')}</span>
       </div>
       {labCount > 0 && (
-        <div css={labCountStyles}>
+        <div>
           <span css={iconStyles}>{labIcon} </span>
           <span>{getCounterString(labCount, 'Lab')}</span>
         </div>

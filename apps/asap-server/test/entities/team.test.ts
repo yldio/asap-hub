@@ -1,5 +1,12 @@
-import { parseGraphQLTeamMember } from '../../src/entities/team';
-import { referencingUsersContentsResponse } from '../fixtures/teams.fixtures';
+import {
+  parseGraphQLTeamMember,
+  parseGraphQLTeam,
+} from '../../src/entities/team';
+import { FetchTeamQuery } from '../../src/gql/graphql';
+import {
+  graphQlTeamsResponseSingle,
+  referencingUsersContentsResponse,
+} from '../fixtures/teams.fixtures';
 
 describe('parseGraphQLTeamMember', () => {
   const teamMember = {
@@ -36,5 +43,34 @@ describe('parseGraphQLTeamMember', () => {
     expect(() =>
       parseGraphQLTeamMember(teamMemberWithInvalidRole, 'team-id-1'),
     ).toThrow('Invalid team role on user user-id-1 : invalid role');
+  });
+  it('should throw when email is null', () => {
+    const teamMemberWithMissingEmail = {
+      ...teamMember,
+      flatData: {
+        ...teamMember.flatData,
+        email: null,
+      },
+    };
+    expect(() =>
+      parseGraphQLTeamMember(teamMemberWithMissingEmail, 'team-id-1'),
+    ).toThrow('Email is missing in user user-id-1');
+  });
+});
+describe('parseGraphQLTeam', () => {
+  const team = {
+    ...graphQlTeamsResponseSingle.data.queryTeamsContentsWithTotal.items[0],
+  };
+  it('should throw when projectTitle is null', () => {
+    const teamWithInvalidProjectTitle = {
+      ...team,
+      flatData: {
+        ...team.flatData,
+        projectTitle: null,
+      },
+    } as NonNullable<FetchTeamQuery['findTeamsContent']>;
+    expect(() => parseGraphQLTeam(teamWithInvalidProjectTitle)).toThrow(
+      'Project Title is missing in team team-id-1',
+    );
   });
 });

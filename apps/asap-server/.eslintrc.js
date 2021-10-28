@@ -1,6 +1,6 @@
 module.exports = {
   parserOptions: {
-    project: ['./tsconfig.json'],
+    project: ['tsconfig.json'],
   },
   rules: {
     'no-use-before-define': 'off',

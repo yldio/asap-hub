@@ -1,4 +1,9 @@
+const path = require('path');
 module.exports = {
+  parserOptions: {
+    project: ['tsconfig.json'],
+    tsconfigRootDir: path.resolve(__dirname),
+  },
   rules: {
     'no-use-before-define': 'off',
     'no-unused-vars': 'off',

@@ -32,6 +32,7 @@ const options: GetListOptions = {
 };
 
 describe('getUsers', () => {
+  jest.setTimeout(10000);
   it('makes an authorized GET request for users', async () => {
     nock(API_BASE_URL, { reqheaders: { authorization: 'Bearer x' } })
       .get('/users')

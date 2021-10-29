@@ -4,63 +4,16 @@ import { ListGroupResponse, GroupResponse } from '@asap-hub/model';
 import uniqBy from 'lodash.uniqby';
 
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
-import { FetchOptions, GraphqlFetchOptions } from '../utils/types';
+import { FetchOptions } from '../utils/types';
 import { parseGraphQLGroup } from '../entities';
-import { GraphQLQueryUser } from './users';
-import { getGraphQLQueryTeam } from './teams';
 import { sanitiseForSquidex } from '../utils/squidex';
-
-export const GraphQLQueryGroup = `
-id
-created
-lastModified
-flatData {
-  name
-  description
-  tags
-  tools {
-    slack
-    googleDrive
-  }
-  teams {
-    ${getGraphQLQueryTeam({ withResearchOutputs: false })}
-  }
-  leaders{
-    role
-    user{
-      ${GraphQLQueryUser}
-    }
-  }
-  calendars {
-    flatData {
-      color
-      googleCalendarId
-      name
-    }
-  }
-  thumbnail {
-    id
-  }
-}`;
-
-export const buildGraphQLQueryFetchGroups = (): string => `
-  query FetchGroups($top: Int, $skip: Int, $filter: String) {
-    queryGroupsContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: "data/name/iv") {
-      total
-      items {
-        ${GraphQLQueryGroup}
-      }
-    }
-  }
-`;
-
-export const buildGraphQLQueryFetchGroup = (): string => `
-  query FetchGroup($id: String!) {
-    findGroupsContent(id: $id) {
-      ${GraphQLQueryGroup}
-    }
-  }
-`;
+import { FETCH_GROUP, FETCH_GROUPS } from '../queries/groups.queries';
+import {
+  FetchGroupQuery,
+  FetchGroupQueryVariables,
+  FetchGroupsQuery,
+  FetchGroupsQueryVariables,
+} from '../gql/graphql';
 
 export interface ResponseFetchGroups {
   queryGroupsContentsWithTotal: {
@@ -99,13 +52,26 @@ export default class Groups implements GroupController {
     options: FetchOptions,
   ): Promise<ListGroupResponse> {
     const { take = 50, skip = 0 } = options;
-    const query = buildGraphQLQueryFetchGroups();
     const { queryGroupsContentsWithTotal } = await this.client.request<
-      ResponseFetchGroups,
-      GraphqlFetchOptions
-    >(query, { filter, top: take, skip });
+      FetchGroupsQuery,
+      FetchGroupsQueryVariables
+    >(FETCH_GROUPS, { filter, top: take, skip });
+
+    if (queryGroupsContentsWithTotal === null) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
+
     const { total, items } = queryGroupsContentsWithTotal;
 
+    if (items === null) {
+      return {
+        total: 0,
+        items: [],
+      };
+    }
     return {
       total,
       items: items.map(parseGraphQLGroup),
@@ -137,9 +103,9 @@ export default class Groups implements GroupController {
 
   async fetchById(groupId: string): Promise<GroupResponse> {
     const { findGroupsContent: group } = await this.client.request<
-      ResponseFetchGroup,
-      { id: string }
-    >(buildGraphQLQueryFetchGroup(), { id: groupId });
+      FetchGroupQuery,
+      FetchGroupQueryVariables
+    >(FETCH_GROUP, { id: groupId });
 
     if (!group) {
       throw Boom.notFound();

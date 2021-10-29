@@ -5,16 +5,14 @@ import {
   TeamRole,
   TeamMember,
   Lab,
+  isTeamRole,
+  TeamTool,
 } from '@asap-hub/model';
-import {
-  GraphqlTeam,
-  GraphqlResearchOutput,
-  GraphqlUser,
-} from '@asap-hub/squidex';
+import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
 import { parseGraphQLResearchOutput } from './research-output';
 import { parseDate, createURL } from '../utils/squidex';
-import { FetchResearchOutputQuery } from '../gql/graphql';
+import { FetchTeamQuery } from '../gql/graphql';
 
 export const teamUpdateSchema = Joi.object({
   tools: Joi.array()
@@ -39,45 +37,51 @@ const priorities: Record<TeamRole, number> = {
 };
 
 export const parseGraphQLTeamMember = (
-  user: GraphqlUser,
+  user: NonNullable<
+    NonNullable<FetchTeamQuery['findTeamsContent']>['referencingUsersContents']
+  >[number],
   teamId: string,
 ): TeamMember => {
-  const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
-    user.flatData?.avatar || [];
+  const flatAvatar = user.flatData.avatar || [];
 
-  const labs =
-    user.flatData?.labs?.reduce((acc: Lab[], lab) => {
-      const labsData = lab.flatData?.name
-        ? [...acc, { id: lab.id, name: lab.flatData.name }]
-        : acc;
-      return labsData;
-    }, []) ?? [];
+  const labs = user.flatData.labs?.reduce((acc: Lab[], lab) => {
+    const labsData = lab.flatData?.name
+      ? [...acc, { id: lab.id, name: lab.flatData.name }]
+      : acc;
+    return labsData;
+  }, []);
 
-  const role = user.flatData?.teams
-    ?.filter((t) => t.id[0].id === teamId)
-    .filter((s) => s.role)[0].role as TeamRole;
+  const role = user.flatData.teams
+    ?.filter((t) => t.id && t.id[0].id === teamId)
+    .filter((s) => s.role)[0].role;
+
+  if (typeof role === 'undefined' || !isTeamRole(role)) {
+    throw new Error(`Invalid team role on user ${user.id} : ${role}`);
+  }
+
+  if (!user.flatData.email) {
+    throw new Error(`Email is missing in user ${user.id}`);
+  }
+
   return {
     id: user.id,
-    firstName: user.flatData?.firstName || undefined,
-    lastName: user.flatData?.lastName || undefined,
-    displayName: `${user.flatData?.firstName} ${user.flatData?.lastName}`,
-    email: user.flatData?.email || '',
+    email: user.flatData.email,
+    firstName: user.flatData.firstName ?? undefined,
+    lastName: user.flatData.lastName ?? undefined,
+    displayName: `${user.flatData.firstName} ${user.flatData.lastName}`,
     role,
     labs,
-    avatarUrl: flatAvatar?.length
+    avatarUrl: flatAvatar.length
       ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,
   };
 };
 
-type FetchResearchOutputFindResearchOutputsContent = NonNullable<
-  FetchResearchOutputQuery['findResearchOutputsContent']
->;
-
-export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
-  const flatOutputs: NonNullable<GraphqlTeam['flatData']>['outputs'] =
-    team.flatData?.outputs || [];
-  const displayName = team.flatData?.displayName || '';
+export const parseGraphQLTeam = (
+  team: NonNullable<FetchTeamQuery['findTeamsContent']>,
+): TeamResponse => {
+  const flatOutputs = team.flatData.outputs || [];
+  const displayName = team.flatData.displayName || '';
 
   const members =
     team.referencingUsersContents?.map((user) =>
@@ -85,21 +89,25 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
     ) || [];
 
   const tools =
-    team.flatData?.tools?.map(({ name, description, url }) => ({
-      name,
-      url,
-      description: description ?? undefined,
-    })) || [];
+    team.flatData.tools?.reduce((teamTools, { name, description, url }) => {
+      if (!name || !url) {
+        return teamTools;
+      }
+      return [
+        ...teamTools,
+        {
+          name,
+          url,
+          description: description ?? undefined,
+        },
+      ];
+    }, [] as TeamTool[]) || [];
 
   const outputs: ResearchOutputResponse[] = flatOutputs
     .map((o) => {
-      const output = parseGraphQLResearchOutput(
-        // TODO: REMOVE casting once other GraphqlTypes are generated
-        o as FetchResearchOutputFindResearchOutputsContent,
-        {
-          includeAuthors: true,
-        },
-      ) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
+      const output = parseGraphQLResearchOutput(o, {
+        includeAuthors: true,
+      }) as Omit<ResearchOutputResponse, 'teams' | 'team'>;
 
       return {
         ...output,
@@ -121,20 +129,24 @@ export const parseGraphQLTeam = (team: GraphqlTeam): TeamResponse => {
       (lab, index, labs) => labs.findIndex((l) => l.id === lab.id) === index,
     ).length;
 
+  if (!team.flatData.projectTitle) {
+    throw new Error(`Project Title is missing in team ${team.id}`);
+  }
+
   return {
     id: team.id,
     displayName,
     labCount,
+    projectTitle: team.flatData.projectTitle,
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
-    skills: team.flatData?.skills || [],
+    skills: team.flatData.skills ?? [],
     outputs,
     tools,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),
     members: members.sort((a, b) => priorities[a.role] - priorities[b.role]),
-    projectTitle: team.flatData?.projectTitle || '',
-    projectSummary: team.flatData?.projectSummary || undefined,
-    proposalURL: team.flatData?.proposal
-      ? team.flatData?.proposal[0]?.id
+    projectSummary: team.flatData.projectSummary ?? undefined,
+    proposalURL: team.flatData.proposal
+      ? team.flatData.proposal[0]?.id
       : undefined,
   };
 };

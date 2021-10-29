@@ -5,7 +5,6 @@ import {
   MEETING_LINK_AVAILABLE_HOURS_BEFORE_EVENT,
   isEventStatus,
 } from '@asap-hub/model';
-import { GraphqlGroup } from '@asap-hub/squidex';
 
 import { parseGraphQLCalendar } from './calendar';
 import { parseDate, createURL } from '../utils/squidex';
@@ -28,8 +27,8 @@ export const parseGraphQLEvent = (
 ): EventResponse => {
   const calendar = parseGraphQLCalendar(item.flatData.calendar![0]);
   const group =
-    item.flatData.calendar![0].referencingGroupsContents?.map(
-      (calGroup) => parseGraphQLGroup(calGroup as GraphqlGroup), // @todo remove cast
+    item.flatData.calendar![0].referencingGroupsContents?.map((calGroup) =>
+      parseGraphQLGroup(calGroup),
     )[0] || undefined;
   const startDate = DateTime.fromISO(item.flatData.startDate!);
   const now = DateTime.utc();

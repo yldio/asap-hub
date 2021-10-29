@@ -4740,12 +4740,14 @@ export type EventContentFragment = Pick<
                   >
                 >;
                 calendars: Maybe<
-                  Array<{
-                    flatData: Pick<
-                      CalendarsFlatDataDto,
-                      'color' | 'googleCalendarId' | 'name'
-                    >;
-                  }>
+                  Array<
+                    Pick<Calendars, 'id'> & {
+                      flatData: Pick<
+                        CalendarsFlatDataDto,
+                        'color' | 'googleCalendarId' | 'name'
+                      >;
+                    }
+                  >
                 >;
                 thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
               };
@@ -5276,12 +5278,14 @@ export type FetchEventsQuery = {
                             >
                           >;
                           calendars: Maybe<
-                            Array<{
-                              flatData: Pick<
-                                CalendarsFlatDataDto,
-                                'color' | 'googleCalendarId' | 'name'
-                              >;
-                            }>
+                            Array<
+                              Pick<Calendars, 'id'> & {
+                                flatData: Pick<
+                                  CalendarsFlatDataDto,
+                                  'color' | 'googleCalendarId' | 'name'
+                                >;
+                              }
+                            >
                           >;
                           thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
                         };
@@ -5775,12 +5779,14 @@ export type FetchEventQuery = {
                       >
                     >;
                     calendars: Maybe<
-                      Array<{
-                        flatData: Pick<
-                          CalendarsFlatDataDto,
-                          'color' | 'googleCalendarId' | 'name'
-                        >;
-                      }>
+                      Array<
+                        Pick<Calendars, 'id'> & {
+                          flatData: Pick<
+                            CalendarsFlatDataDto,
+                            'color' | 'googleCalendarId' | 'name'
+                          >;
+                        }
+                      >
                     >;
                     thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
                   };
@@ -6185,12 +6191,14 @@ export type GroupsContentFragment = Pick<
       >
     >;
     calendars: Maybe<
-      Array<{
-        flatData: Pick<
-          CalendarsFlatDataDto,
-          'color' | 'googleCalendarId' | 'name'
-        >;
-      }>
+      Array<
+        Pick<Calendars, 'id'> & {
+          flatData: Pick<
+            CalendarsFlatDataDto,
+            'color' | 'googleCalendarId' | 'name'
+          >;
+        }
+      >
     >;
     thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
   };
@@ -6628,12 +6636,14 @@ export type FetchGroupsQuery = {
                 >
               >;
               calendars: Maybe<
-                Array<{
-                  flatData: Pick<
-                    CalendarsFlatDataDto,
-                    'color' | 'googleCalendarId' | 'name'
-                  >;
-                }>
+                Array<
+                  Pick<Calendars, 'id'> & {
+                    flatData: Pick<
+                      CalendarsFlatDataDto,
+                      'color' | 'googleCalendarId' | 'name'
+                    >;
+                  }
+                >
               >;
               thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
             };
@@ -7042,12 +7052,14 @@ export type FetchGroupQuery = {
           >
         >;
         calendars: Maybe<
-          Array<{
-            flatData: Pick<
-              CalendarsFlatDataDto,
-              'color' | 'googleCalendarId' | 'name'
-            >;
-          }>
+          Array<
+            Pick<Calendars, 'id'> & {
+              flatData: Pick<
+                CalendarsFlatDataDto,
+                'color' | 'googleCalendarId' | 'name'
+              >;
+            }
+          >
         >;
         thumbnail: Maybe<Array<Pick<Asset, 'id'>>>;
       };
@@ -7789,7 +7801,6 @@ export type TeamsContentFragment = Pick<
 export type FetchTeamQueryVariables = Exact<{
   id: Scalars['String'];
   withResearchOutputs?: Maybe<Scalars['Boolean']>;
-  researchOutputsWithTeams?: Maybe<Scalars['Boolean']>;
   withTeams?: Maybe<Scalars['Boolean']>;
 }>;
 
@@ -8063,7 +8074,6 @@ export type FetchTeamsQueryVariables = Exact<{
   skip: Maybe<Scalars['Int']>;
   filter: Maybe<Scalars['String']>;
   withResearchOutputs?: Maybe<Scalars['Boolean']>;
-  researchOutputsWithTeams?: Maybe<Scalars['Boolean']>;
   withTeams?: Maybe<Scalars['Boolean']>;
 }>;
 
@@ -9814,6 +9824,7 @@ export const GroupsContentFragmentDoc = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'flatData' },
@@ -10743,15 +10754,6 @@ export const FetchTeamDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'researchOutputsWithTeams' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: false },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
             name: { kind: 'Name', value: 'withTeams' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
@@ -10821,15 +10823,6 @@ export const FetchTeamsDocument = {
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'withResearchOutputs' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
-          defaultValue: { kind: 'BooleanValue', value: true },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'researchOutputsWithTeams' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Boolean' } },
           defaultValue: { kind: 'BooleanValue', value: true },

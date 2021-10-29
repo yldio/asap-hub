@@ -11,6 +11,12 @@ import {
   ResponseFetchTeams,
   ResponseFetchTeam,
 } from '../../src/controllers/teams';
+import {
+  Labs,
+  UsersDataQuestionsChildDto,
+  UsersDataTeamsChildDto,
+  UsersFlatDataDto,
+} from '../../src/gql/graphql';
 import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
 import { fetchExpectation } from './users.fixtures';
 
@@ -32,6 +38,18 @@ export const referencingUsersContentsResponse = ({
       institution: 'Dollar General Corporation',
       connections: [],
       biography: '',
+      degree: '',
+      contactEmail: '',
+      country: '',
+      city: '',
+      orcid: '',
+      orcidWorks: [],
+      skillsDescription: '',
+      responsibilities: '',
+      reachOut: '',
+      lastModifiedDate: '2020-11-26T11:56:04Z',
+      orcidLastModifiedDate: '2020-11-26T11:56:04Z',
+      orcidLastSyncDate: '2020-11-26T11:56:04Z',
       teams: [
         {
           id: [
@@ -46,16 +64,18 @@ export const referencingUsersContentsResponse = ({
           ],
           role: 'Lead PI (Core Leadership)',
         },
-      ],
-      questions: [],
+      ] as Array<UsersDataTeamsChildDto>,
+      questions: [] as Array<UsersDataQuestionsChildDto>,
       skills: [],
       role: 'Grantee',
       onboarded: true,
       labs: [
         { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
         { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-      ],
-    },
+      ] as Array<Labs>,
+      adminNotes: null,
+      social: [],
+    } as UsersFlatDataDto,
   },
 ];
 

@@ -6,71 +6,16 @@ import {
   InstrumentedSquidex,
   InstrumentedSquidexGraphql,
 } from '../utils/instrumented-client';
-import { getGraphQLQueryResearchOutput } from './research-outputs';
 import { parseGraphQLTeam } from '../entities';
 import { sanitiseForSquidex } from '../utils/squidex';
-import { GraphqlFetchOptions } from '../utils/types';
-import { GraphQLQueryUser } from './users';
-
-export const getGraphQLQueryTeam = ({
-  withResearchOutputs = true,
-  researchOutputsWithTeams = true,
-}: {
-  withResearchOutputs?: boolean;
-  researchOutputsWithTeams?: boolean;
-}): string => `
-id
-created
-lastModified
-flatData {
-  applicationNumber
-  displayName
-  ${
-    withResearchOutputs
-      ? `outputs {
-    ${getGraphQLQueryResearchOutput({ withTeams: researchOutputsWithTeams })}
-  }`
-      : ''
-  }
-  projectSummary
-  projectTitle
-  skills
-  proposal {
-    id
-  }
-  tools{
-    description
-    name
-    url
-  }
-}
-referencingUsersContents(filter: "data/onboarded/iv eq true") {
-    ${GraphQLQueryUser}
-}`;
-
-export const buildGraphQLQueryFetchTeams = (): string => `
-  query FetchTeams($top: Int, $skip: Int, $filter: String) {
-    queryTeamsContentsWithTotal(top: $top, skip: $skip, filter: $filter, orderby: "data/displayName/iv") {
-      total
-      items {
-        ${getGraphQLQueryTeam({
-          researchOutputsWithTeams: true,
-        })}
-      }
-    }
-  }
-`;
-
-export const buildGraphQLQueryFetchTeam = (): string => `
-  query FetchTeam($id: String!) {
-    findTeamsContent(id: $id) {
-      ${getGraphQLQueryTeam({
-        researchOutputsWithTeams: false,
-      })}
-
-    }
-  }
-`;
+import { FETCH_TEAM, FETCH_TEAMS } from '../queries/teams.queries';
+import {
+  FetchTeamQuery,
+  FetchTeamQueryVariables,
+  FetchTeamsQuery,
+  FetchTeamsQueryVariables,
+} from '../gql/graphql';
+import logger from '../utils/logger';
 
 export interface ResponseFetchTeams {
   queryTeamsContentsWithTotal: {
@@ -78,7 +23,6 @@ export interface ResponseFetchTeams {
     items: GraphqlTeam[];
   };
 }
-
 export interface ResponseFetchTeam {
   findTeamsContent: GraphqlTeam;
 }
@@ -154,18 +98,31 @@ export default class Teams implements TeamController {
       )
       .join(' and ');
 
-    const query = buildGraphQLQueryFetchTeams();
-
     const { queryTeamsContentsWithTotal } = await this.client.request<
-      ResponseFetchTeams,
-      GraphqlFetchOptions
-    >(query, {
+      FetchTeamsQuery,
+      FetchTeamsQueryVariables
+    >(FETCH_TEAMS, {
       filter: searchQ,
       top: take,
       skip,
     });
 
+    if (queryTeamsContentsWithTotal === null) {
+      logger.warn('queryTeamsContentsWithTotal returned null');
+      return {
+        total: 0,
+        items: [],
+      };
+    }
     const { total, items: teams } = queryTeamsContentsWithTotal;
+
+    if (teams === null) {
+      logger.warn('queryTeamsContentsWithTotal items returned null');
+      return {
+        total: 0,
+        items: [],
+      };
+    }
 
     return {
       total,
@@ -192,11 +149,10 @@ export default class Teams implements TeamController {
     teamId: string,
     options?: FetchTeamOptions,
   ): Promise<TeamResponse> {
-    const query = buildGraphQLQueryFetchTeam();
     const teamResponse = await this.client.request<
-      ResponseFetchTeam,
-      { id: string }
-    >(query, { id: teamId });
+      FetchTeamQuery,
+      FetchTeamQueryVariables
+    >(FETCH_TEAM, { id: teamId });
 
     const { findTeamsContent: team } = teamResponse;
 

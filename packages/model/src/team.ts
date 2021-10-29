@@ -2,12 +2,18 @@ import { ListResponse } from './common';
 import { ResearchOutputResponse } from './research-output';
 import { Lab } from './lab';
 
-export type TeamRole =
-  | 'Lead PI (Core Leadership)'
-  | 'Co-PI (Core Leadership)'
-  | 'Collaborating PI'
-  | 'Project Manager'
-  | 'Key Personnel';
+export const teamRole = [
+  'Lead PI (Core Leadership)',
+  'Co-PI (Core Leadership)',
+  'Collaborating PI',
+  'Project Manager',
+  'Key Personnel',
+] as const;
+
+export type TeamRole = typeof teamRole[number];
+
+export const isTeamRole = (data: string | null): data is TeamRole =>
+  teamRole.includes(data as TeamRole);
 
 export type TeamTool = { name: string; description?: string; url: string };
 

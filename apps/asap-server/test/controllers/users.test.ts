@@ -306,6 +306,28 @@ describe('Users controller', () => {
       await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
     });
 
+    test('Should throw 403 when user found is falsy', async () => {
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: buildGraphQLQueryFetchUsers(),
+          variables: {
+            filter,
+            top: 1,
+            skip: 0,
+          },
+        })
+        .reply(200, {
+          data: {
+            queryUsersContentsWithTotal: {
+              total: 1,
+              items: [null],
+            },
+          },
+        });
+
+      await expect(users.fetchByCode(code)).rejects.toThrow('Forbidden');
+    });
+
     test('Should return user when it finds it', async () => {
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

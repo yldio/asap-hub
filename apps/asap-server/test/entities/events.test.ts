@@ -6,6 +6,19 @@ import { graphqlEvent } from '../fixtures/events.fixtures';
 
 describe('events entity', () => {
   describe('parseGraphQLEvent', () => {
+    it(`throws when provided event doesn't have a calendar`, () => {
+      const event = {
+        ...graphqlEvent,
+        id: 'example',
+        flatData: {
+          ...graphqlEvent.flatData,
+          calendar: [],
+        },
+      };
+      expect(() => parseGraphQLEvent(event)).toThrowError(
+        `Event (example) doesn't have a calendar`,
+      );
+    });
     it('throws when provided an invalid event status', () => {
       const event = {
         ...graphqlEvent,

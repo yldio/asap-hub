@@ -336,11 +336,7 @@ export default class Users implements UserController {
     });
 
     const { total, items } = queryUsersContentsWithTotal;
-    if (total !== 1) {
-      throw Boom.forbidden();
-    }
-
-    if (items[0] === undefined) {
+    if (total !== 1 || !items[0]) {
       throw Boom.forbidden();
     }
 

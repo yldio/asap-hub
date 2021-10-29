@@ -99,11 +99,7 @@ export default class Calendars implements CalendarController {
       throw Boom.badGateway();
     }
 
-    if (res.items.length === 0) {
-      throw Boom.notFound();
-    }
-
-    if (res.items[0] === undefined) {
+    if (res.items.length === 0 || !res.items[0]) {
       throw Boom.notFound();
     }
 

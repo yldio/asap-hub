@@ -86,7 +86,7 @@ export const rollbackFactory =
     logger.debug({ migrations: migrationPath }, 'Latest migrations');
 
     if (migrationPath !== null) {
-      let migration;
+      let migration: Migration;
       try {
         [migration] = await getMigrationsFromPaths([migrationPath]);
         if (migration === undefined) {

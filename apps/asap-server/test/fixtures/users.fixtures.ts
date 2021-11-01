@@ -18,11 +18,11 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
       total: 2,
       items: [
         {
-          id: 'userId1',
+          id: 'user-id-1',
           lastModified: '2020-10-26T15:33:18Z',
           created: '2020-09-23T20:45:22Z',
-          data: null,
           flatData: {
+            onboarded: true,
             avatar: [],
             email: 'H@rdy.io',
             contactEmail: 'T@rdy.io',
@@ -30,11 +30,21 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             lastName: 'Hardy',
             country: 'United Kingdom',
             city: 'London',
+            biography: 'some bio',
             lastModifiedDate: '',
             questions: null,
             skills: ['React'],
             skillsDescription: null,
             orcid: '123-456-789',
+            orcidWorks: [
+              {
+                id: '123-456-789',
+                doi: 'test-doi',
+                type: 'ANNOTATION',
+                lastModifiedDate: '2020-10-26T15:33:18Z',
+                publicationDate: {},
+              },
+            ],
             social: null,
             degree: 'MPH',
             teams: [
@@ -44,15 +54,14 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
                 responsibilities: null,
                 id: [
                   {
-                    id: 'userId3',
+                    id: 'team-id-1',
                     created: '2020-09-23T20:45:22Z',
                     lastModified: '2020-10-26T15:33:18Z',
-                    data: null,
                     flatData: {
                       applicationNumber: 'applicationNumber',
                       projectTitle: 'Awesome project',
-                      displayName: 'Jackson, M',
-                      proposal: [{ id: 'proposalId' }],
+                      displayName: 'Team A',
+                      proposal: [{ id: 'proposalId1' }],
                       skills: [],
                       outputs: [],
                     },
@@ -69,11 +78,11 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
           },
         },
         {
-          id: 'userId2',
+          id: 'user-id-2',
           created: '2020-09-23T20:45:22Z',
           lastModified: '2020-10-26T15:33:18Z',
-          data: null,
           flatData: {
+            onboarded: true,
             avatar: null,
             email: 'iwillbeback@arnold.com',
             firstName: 'Arnold',
@@ -82,6 +91,15 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
             questions: [],
             skills: [],
             skillsDescription: 'Amazing person',
+            orcidWorks: [
+              {
+                id: '987-654-321',
+                doi: 'test-doi',
+                type: 'BOOK',
+                lastModifiedDate: '2020-10-26T15:33:18Z',
+                publicationDate: {},
+              },
+            ],
             social: [
               {
                 github: 'awesome',
@@ -101,17 +119,17 @@ export const graphQlResponseFetchUsers: { data: ResponseFetchUsers } = {
                 responsibilities: 'increase coverage',
                 id: [
                   {
-                    id: 'userId3',
+                    id: 'team-id-2',
                     created: '2020-09-23T20:45:22Z',
                     lastModified: '2020-10-26T15:33:18Z',
                     flatData: {
                       applicationNumber: 'applicationNumber',
                       projectTitle: 'Awesome project',
-                      displayName: 'Jackson, M',
+                      displayName: 'Team B',
                       skills: [],
                       outputs: [],
+                      proposal: [{ id: 'proposalId2' }],
                     },
-                    data: null,
                   },
                 ],
               },
@@ -396,7 +414,8 @@ export const fetchExpectation: ListUserResponse = {
   total: 2,
   items: [
     {
-      id: 'userId1',
+      id: 'user-id-1',
+      biography: 'some bio',
       onboarded: true,
       createdDate: '2020-09-23T20:45:22.000Z',
       questions: [],
@@ -409,7 +428,15 @@ export const fetchExpectation: ListUserResponse = {
       country: 'United Kingdom',
       city: 'London',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
-      orcidWorks: [],
+      orcidWorks: [
+        {
+          doi: 'test-doi',
+          id: '123-456-789',
+          lastModifiedDate: '2020-10-26T15:33:18Z',
+          publicationDate: {},
+          type: 'ANNOTATION',
+        },
+      ],
       orcid: '123-456-789',
       degree: 'MPH',
       social: {
@@ -417,10 +444,10 @@ export const fetchExpectation: ListUserResponse = {
       },
       teams: [
         {
-          id: 'userId3',
+          id: 'team-id-1',
           role: 'Lead PI (Core Leadership)',
-          displayName: 'Jackson, M',
-          proposal: 'proposalId',
+          displayName: 'Team A',
+          proposal: 'proposalId1',
         },
       ],
       role: 'Grantee',
@@ -430,7 +457,7 @@ export const fetchExpectation: ListUserResponse = {
       ],
     },
     {
-      id: 'userId2',
+      id: 'user-id-2',
       onboarded: true,
       createdDate: '2020-09-23T20:45:22.000Z',
       questions: [],
@@ -441,17 +468,26 @@ export const fetchExpectation: ListUserResponse = {
       firstName: 'Arnold',
       lastName: 'Schwatzneger',
       lastModifiedDate: '2020-09-23T20:45:22.000Z',
-      orcidWorks: [],
+      orcidWorks: [
+        {
+          doi: 'test-doi',
+          id: '987-654-321',
+          lastModifiedDate: '2020-10-26T15:33:18Z',
+          publicationDate: {},
+          type: 'BOOK',
+        },
+      ],
       social: {
         github: 'awesome',
       },
       teams: [
         {
-          id: 'userId3',
+          id: 'team-id-2',
           role: 'Project Manager',
-          displayName: 'Jackson, M',
+          displayName: 'Team B',
           approach: 'cover',
           responsibilities: 'increase coverage',
+          proposal: 'proposalId2',
         },
       ],
       role: 'Grantee',

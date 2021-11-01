@@ -89,7 +89,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       created: '2020-09-23T20:33:36Z',
       lastModified: '2020-11-26T11:56:04Z',
       flatData: {
-        displayName: 'Schipa, A',
+        displayName: 'Team A',
       },
       referencingUsersContents: [
         {
@@ -177,7 +177,7 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
       created: '2020-09-23T20:33:36Z',
       lastModified: '2020-11-26T11:56:04Z',
       flatData: {
-        displayName: 'Team, B',
+        displayName: 'Team B',
       },
       referencingUsersContents: [
         {
@@ -250,23 +250,17 @@ export const getSquidexGraphqlResearchOutput = (): NonNullable<
 
 export const getResearchOutputResponse =
   (): DeepWriteable<ResearchOutputResponse> => ({
-    created: '2020-09-23T16:34:26.842Z',
     id: 'ec3086d4-aa64-4f30-a0f7-5c5b95ffbcca',
-    description: 'Text',
-    title: 'Test Proposal 1234',
+    created: '2020-09-23T16:34:26.842Z',
     type: 'Proposal',
     subTypes: ['3D Printing'],
+    title: 'Test Proposal 1234',
+    description: 'Text',
     tags: ['tag', 'test'],
     authors: (fetchExpectation as DeepWriteable<ListUserResponse>).items,
     teams: [
-      {
-        id: 'team-id-1',
-        displayName: 'Schipa, A',
-      },
-      {
-        id: 'team-id-2',
-        displayName: 'Team, B',
-      },
+      { id: 'team-id-1', displayName: 'Team A' },
+      { id: 'team-id-2', displayName: 'Team B' },
     ],
     publishDate: '2021-05-21T13:18:31Z',
     labCatalogNumber: 'http://example.com',
@@ -278,25 +272,15 @@ export const getResearchOutputResponse =
     sharingStatus: 'Network Only',
     asapFunded: true,
     usedInPublication: false,
-    pmsEmails: [
-      'pm1@example.com',
-      'pm2@example.com',
-      'multiple-pms-on-same-team@example.com',
-    ],
+    pmsEmails: ['multiple-pms-on-same-team@example.com'],
     labs: [
-      {
-        id: '99c78dd7-627e-4fbd-aaec-d1977895189e',
-        name: 'Test',
-      },
-      {
-        id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9',
-        name: 'mike',
-      },
+      { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
+      { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },
     ],
   });
 
 export const getListResearchOutputResponse =
-  (): ListResearchOutputResponse => ({
+  (): DeepWriteable<ListResearchOutputResponse> => ({
     total: 1,
     items: [getResearchOutputResponse()],
   });

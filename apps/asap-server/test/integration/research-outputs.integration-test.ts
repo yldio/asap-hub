@@ -3,9 +3,10 @@ import { ResearchOutput } from '@asap-hub/squidex';
 import { ResearchOutputResponse } from '@asap-hub/model';
 import { createResearchOutput } from '../helpers/research-outputs';
 import ResearchOutputs from '../../src/controllers/research-outputs';
+import { InstrumentedSquidexGraphql } from '../../src/utils/instrumented-client';
 
 const chance = new Chance();
-const researchOutputs = new ResearchOutputs();
+const researchOutputs = new ResearchOutputs(new InstrumentedSquidexGraphql());
 
 describe('Research Outputs', () => {
   const randomTitle = chance.guid();

@@ -41,6 +41,7 @@ import { discoverRouteFactory } from './routes/discover.route';
 import pinoLogger, { redaction } from './utils/logger';
 import { userLoggerHandler } from './middleware/user-logger-handler';
 import { permissionHandler } from './middleware/permission-handler';
+import { InstrumentedSquidexGraphql } from './utils/instrumented-client';
 
 export const appFactory = (libs: Libs = {}): Express => {
   const app = express();
@@ -58,6 +59,9 @@ export const appFactory = (libs: Libs = {}): Express => {
   });
   const errorHandler = errorHandlerFactory();
 
+  // Clients
+  const squidexGraphlClient = new InstrumentedSquidexGraphql();
+
   // Controllers
   const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
@@ -68,7 +72,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   const groupController = libs.groupController || new Groups();
   const pageController = libs.pageController || new Pages();
   const researchOutputController =
-    libs.researchOutputController || new ResearchOutputs();
+    libs.researchOutputController || new ResearchOutputs(squidexGraphlClient);
   const teamController = libs.teamController || new Teams();
   const userController = libs.userController || new Users();
 

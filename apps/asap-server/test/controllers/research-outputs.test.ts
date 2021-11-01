@@ -1,7 +1,3 @@
-import nock from 'nock';
-import { config } from '@asap-hub/squidex';
-import { print } from 'graphql';
-import { identity } from '../helpers/squidex';
 import ResearchOutputs from '../../src/controllers/research-outputs';
 import {
   getListResearchOutputResponse,
@@ -11,276 +7,51 @@ import {
 } from '../fixtures/research-output.fixtures';
 import { graphQlResponseFetchUsers } from '../fixtures/users.fixtures';
 import { ResearchOutputResponse } from '@asap-hub/model';
-import {
-  FETCH_RESEARCH_OUTPUT,
-  FETCH_RESEARCH_OUTPUTS,
-} from '../../src/queries/research-outputs.queries';
-import {
-  FetchResearchOutputQuery,
-  FetchResearchOutputsQuery,
-} from '../../src/gql/graphql';
+import { FetchResearchOutputQuery } from '../../src/gql/graphql';
+import { getSquidexGraphqlClientMock } from '../mocks/squidex-graphql-client.mock';
+import { getSquidexGraphqlClientMockServer } from '../mocks/squidex-graphql-client-with-server.mock';
 
 describe('ResearchOutputs controller', () => {
-  const researchOutputs = new ResearchOutputs();
+  const squidexGraphqlClientMock = getSquidexGraphqlClientMock();
+  const researchOutputs = new ResearchOutputs(squidexGraphqlClientMock);
 
-  beforeAll(() => {
-    identity();
-  });
-
-  afterEach(() => {
-    expect(nock.isDone()).toBe(true);
-  });
+  const squidexGraphqlClientMockServer = getSquidexGraphqlClientMockServer();
+  const researchOutputsMockGraphql = new ResearchOutputs(
+    squidexGraphqlClientMockServer,
+  );
 
   afterEach(() => {
-    nock.cleanAll();
+    jest.resetAllMocks();
   });
 
-  describe('Fetch method', () => {
-    test('Should return an empty result when the client returns an empty array of data', async () => {
-      const mockResponse = getFetchResearchOutputsGraphqlResponse();
+  describe('Fetch by ID method', () => {
+    const researchOutputId = 'some-uuid';
 
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            top: 10,
-            skip: 5,
-            filter: '',
-            withTeams: true,
-          },
-        })
-        .reply(200, mockResponse);
+    test('Should fetch the research output from squidex graphql', async () => {
+      const result = await researchOutputsMockGraphql.fetchById(
+        researchOutputId,
+      );
 
-      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
-
-      expect(result).toEqual({ total: 0, items: [] });
+      expect(result).toMatchObject(getResearchOutputResponse());
     });
-
-    test('Should return an empty result when the client returns a response with query property set to null', async () => {
-      const mockResponse = getFetchResearchOutputsGraphqlResponse();
-      mockResponse.data.queryResearchOutputsContentsWithTotal = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            top: 10,
-            skip: 5,
-            filter: '',
-            withTeams: true,
-          },
-        })
-        .reply(200, mockResponse);
-
-      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
-
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should return an empty result when the client returns a response with items property set to null', async () => {
-      const mockResponse = getFetchResearchOutputsGraphqlResponse();
-      mockResponse.data.queryResearchOutputsContentsWithTotal!.items = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            top: 10,
-            skip: 5,
-            filter: '',
-            withTeams: true,
-          },
-        })
-        .reply(200, mockResponse);
-
-      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
-
-      expect(result).toEqual({ total: 0, items: [] });
-    });
-
-    test('Should return the list of research outputs', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            top: 8,
-            skip: 0,
-            filter: '',
-            withTeams: true,
-          },
-        })
-        .reply(200, {
-          data: getSquidexResearchOutputsGraphqlResponse(),
-        });
-
-      const result = await researchOutputs.fetch({ take: 8, skip: 0 });
-      expect(result).toEqual(getListResearchOutputResponse());
-    });
-
-    test('Should return the list of research outputs when using search and filter', async () => {
-      const expectedFilter =
-        "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation') " +
-        "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            filter: expectedFilter,
-            top: 8,
-            skip: 0,
-            withTeams: true,
-          },
-        })
-        .reply(200, {
-          data: getSquidexResearchOutputsGraphqlResponse(),
-        });
-
-      const result = await researchOutputs.fetch({
-        take: 8,
-        skip: 0,
-        search: 'Title',
-        filter: ['Proposal', 'Presentation'],
-      });
-
-      expect(result).toEqual(getListResearchOutputResponse());
-    });
-
-    test('Should return the list of research outputs when using search with multiple words', async () => {
-      const expectedFilter =
-        "(contains(data/title/iv, 'some') or contains(data/tags/iv, 'some') or contains(data/title/iv, 'words') or contains(data/tags/iv, 'words'))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            filter: expectedFilter,
-            top: 8,
-            skip: 0,
-            withTeams: true,
-          },
-        })
-        .reply(200, {
-          data: getSquidexResearchOutputsGraphqlResponse(),
-        });
-
-      const result = await researchOutputs.fetch({
-        take: 8,
-        skip: 0,
-        search: 'some words',
-      });
-      expect(result).toEqual(getListResearchOutputResponse());
-    });
-
-    test('Should sanitise single quotes by doubling them and encoding to hex', async () => {
-      const expectedFilter =
-        "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27'))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            filter: expectedFilter,
-            top: 8,
-            skip: 0,
-            withTeams: true,
-          },
-        })
-        .reply(200, {
-          data: getSquidexResearchOutputsGraphqlResponse(),
-        });
-
-      const result = await researchOutputs.fetch({
-        take: 8,
-        skip: 0,
-        search: "'",
-      });
-
-      expect(result).toEqual(getListResearchOutputResponse());
-    });
-
-    test('Should sanitise double quotation mark by encoding to hex', async () => {
-      const expectedFilter =
-        "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22'))";
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUTS),
-          variables: {
-            filter: expectedFilter,
-            top: 8,
-            skip: 0,
-            withTeams: true,
-          },
-        })
-        .reply(200, {
-          data: getSquidexResearchOutputsGraphqlResponse(),
-        });
-
-      const result = await researchOutputs.fetch({
-        take: 8,
-        skip: 0,
-        search: '"',
-      });
-
-      expect(result).toEqual(getListResearchOutputResponse());
-    });
-  });
-
-  describe('Fetch-by-ID method', () => {
-    const researchOutputId = 'uuid';
 
     test('Should throw a Not Found error when the research output is not found', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, {
-          data: {
-            findResearchOutputsContent: null,
-          },
-        });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce({
+        findResearchOutputsContent: null,
+      });
 
       await expect(researchOutputs.fetchById(researchOutputId)).rejects.toThrow(
         'Not Found',
       );
     });
 
-    test('Should return the research output and the team', async () => {
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: getSquidexResearchOutputGraphqlResponse() });
-
-      const result = await researchOutputs.fetchById(researchOutputId);
-
-      expect(result).toEqual(getResearchOutputResponse());
-    });
-
     test('Should default team displayName to an empty string when not present', async () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
-      (squidexGraphqlResponse.findResearchOutputsContent!
-        .referencingTeamsContents![0].flatData.displayName as string | null) =
+      squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents![0].flatData.displayName =
         null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -293,16 +64,9 @@ describe('ResearchOutputs controller', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.type = null;
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.title = null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -314,16 +78,9 @@ describe('ResearchOutputs controller', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.sharingStatus =
         null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -334,16 +91,9 @@ describe('ResearchOutputs controller', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.asapFunded =
         null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -354,16 +104,9 @@ describe('ResearchOutputs controller', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData!.asapFunded =
         'Not Sure';
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -374,16 +117,9 @@ describe('ResearchOutputs controller', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.usedInAPublication =
         null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -394,16 +130,9 @@ describe('ResearchOutputs controller', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.usedInAPublication =
         'Not Sure';
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -414,16 +143,9 @@ describe('ResearchOutputs controller', () => {
       const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       squidexGraphqlResponse.findResearchOutputsContent!.flatData.authors =
         null;
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -446,16 +168,9 @@ describe('ResearchOutputs controller', () => {
           },
         },
       ];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: squidexGraphqlResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -468,19 +183,12 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should return the research output without the team', async () => {
-      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      researchOutputResponse.findResearchOutputsContent!.referencingTeamsContents =
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlResponse.findResearchOutputsContent!.referencingTeamsContents =
         [];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: researchOutputResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -492,7 +200,7 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should return a mix of internal and external authors', async () => {
-      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       const squidexUser1 = {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0],
         __typename: 'Users',
@@ -511,21 +219,14 @@ describe('ResearchOutputs controller', () => {
           orcid: '23423423',
         },
       };
-      researchOutputResponse.findResearchOutputsContent!.flatData.authors = [
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.authors = [
         squidexUser1,
         externalAuthor,
         squidexUser2,
       ];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: researchOutputResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -544,7 +245,7 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should not return the non-onboarded authors', async () => {
-      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
       const squidexUser1 = {
         ...graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items[0],
         __typename: 'Users',
@@ -564,20 +265,13 @@ describe('ResearchOutputs controller', () => {
         },
       } as InternalUser;
 
-      researchOutputResponse.findResearchOutputsContent!.flatData.authors = [
+      squidexGraphqlResponse.findResearchOutputsContent!.flatData.authors = [
         squidexUser1,
         squidexUser2,
       ];
-
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: researchOutputResponse });
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -592,16 +286,10 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('Should return a list of PM emails', async () => {
-      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: researchOutputResponse });
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
       expect(result.pmsEmails).toEqual([
@@ -612,16 +300,10 @@ describe('ResearchOutputs controller', () => {
     });
 
     test('PM emails should be deduplicated', async () => {
-      const researchOutputResponse = getSquidexResearchOutputGraphqlResponse();
-      nock(config.baseUrl)
-        .post(`/api/content/${config.appName}/graphql`, {
-          query: print(FETCH_RESEARCH_OUTPUT),
-          variables: {
-            id: researchOutputId,
-            withTeams: true,
-          },
-        })
-        .reply(200, { data: researchOutputResponse });
+      const squidexGraphqlResponse = getSquidexResearchOutputGraphqlResponse();
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
 
       const result = await researchOutputs.fetchById(researchOutputId);
 
@@ -636,74 +318,211 @@ describe('ResearchOutputs controller', () => {
 
     describe('Last Updated Partial field', () => {
       test('Should default to last-modified if the last-updated-partial is not present', async () => {
-        const researchOutputResponse =
+        const squidexGraphqlResponse =
           getSquidexResearchOutputGraphqlResponse();
-        delete researchOutputResponse.findResearchOutputsContent!.flatData
+        delete squidexGraphqlResponse.findResearchOutputsContent!.flatData
           .lastUpdatedPartial;
-
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_RESEARCH_OUTPUT),
-            variables: {
-              id: researchOutputId,
-              withTeams: true,
-            },
-          })
-          .reply(200, { data: researchOutputResponse });
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
 
         const result = await researchOutputs.fetchById(researchOutputId);
 
         expect(result.lastUpdatedPartial).toEqual(
-          researchOutputResponse.findResearchOutputsContent!.lastModified,
+          squidexGraphqlResponse.findResearchOutputsContent!.lastModified,
         );
       });
 
       test('Should default to created-date if the last-updated-partial and last-modified are not present', async () => {
-        const researchOutputResponse =
+        const squidexGraphqlResponse =
           getSquidexResearchOutputGraphqlResponse();
-        delete researchOutputResponse.findResearchOutputsContent!.flatData
+        delete squidexGraphqlResponse.findResearchOutputsContent!.flatData
           .lastUpdatedPartial;
-        delete (researchOutputResponse.findResearchOutputsContent as any)
+        delete (squidexGraphqlResponse.findResearchOutputsContent as any)
           .lastModified;
-
-        nock(config.baseUrl)
-          .post(`/api/content/${config.appName}/graphql`, {
-            query: print(FETCH_RESEARCH_OUTPUT),
-            variables: {
-              id: researchOutputId,
-              withTeams: true,
-            },
-          })
-          .reply(200, { data: researchOutputResponse });
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          squidexGraphqlResponse,
+        );
 
         const result = await researchOutputs.fetchById(researchOutputId);
 
         expect(result.lastUpdatedPartial).toEqual(
-          researchOutputResponse.findResearchOutputsContent!.created,
+          squidexGraphqlResponse.findResearchOutputsContent!.created,
         );
       });
     });
   });
-});
 
-type FetchResearchOutputsGraphqlResponse = {
-  data: FetchResearchOutputsQuery;
-};
+  describe('Fetch method', () => {
+    test('Should fetch the research output from squidex graphql', async () => {
+      const result = await researchOutputsMockGraphql.fetch({
+        take: 8,
+        skip: 0,
+      });
 
-type FetchResearchOutputsQuery_items = NonNullable<
-  FetchResearchOutputsQuery['queryResearchOutputsContentsWithTotal']
->['items'];
+      expect(result).toMatchObject(getListResearchOutputResponse());
+    });
 
-const getFetchResearchOutputsGraphqlResponse = (
-  items: FetchResearchOutputsQuery_items = [],
-  total: number = 0,
-): FetchResearchOutputsGraphqlResponse => ({
-  data: {
-    queryResearchOutputsContentsWithTotal: {
-      total,
-      items,
-    },
-  },
+    test('Should return an empty result when the client returns an empty array of data', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
+      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.total = 0;
+      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.items = [];
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result when the client returns a response with query property set to null', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
+      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal = null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    test('Should return an empty result when the client returns a response with items property set to null', async () => {
+      const squidexGraphqlResponse = getSquidexResearchOutputsGraphqlResponse();
+      squidexGraphqlResponse.queryResearchOutputsContentsWithTotal!.items =
+        null;
+      squidexGraphqlClientMock.request.mockResolvedValueOnce(
+        squidexGraphqlResponse,
+      );
+
+      const result = await researchOutputs.fetch({ take: 10, skip: 5 });
+
+      expect(result).toEqual({ total: 0, items: [] });
+    });
+
+    describe('Parameters', () => {
+      const defaultParams = {
+        take: 8,
+        skip: 0,
+      };
+      const expectedDefaultParams = {
+        top: 8,
+        skip: 0,
+        filter: '',
+        withTeams: true,
+      };
+
+      beforeEach(() => {
+        squidexGraphqlClientMock.request.mockResolvedValueOnce(
+          getSquidexResearchOutputsGraphqlResponse(),
+        );
+      });
+
+      test('Should pass the pagination parameters as expected', async () => {
+        await researchOutputs.fetch({ take: 13, skip: 7 });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            top: 13,
+            skip: 7,
+          },
+        );
+      });
+
+      test('Should pass the search parameter as a squidex filter', async () => {
+        await researchOutputs.fetch({ ...defaultParams, search: 'Title' });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter:
+              "(contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))",
+          },
+        );
+      });
+
+      test('Should pass the filter parameter as a squidex filter', async () => {
+        await researchOutputs.fetch({
+          ...defaultParams,
+          filter: ['Proposal', 'Presentation'],
+        });
+
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter:
+              "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation')",
+          },
+        );
+      });
+
+      test('Should pass the search and filter parameter as a squidex filter', async () => {
+        await researchOutputs.fetch({
+          ...defaultParams,
+          search: 'Title',
+          filter: ['Proposal', 'Presentation'],
+        });
+
+        const expectedFilter =
+          "(data/type/iv eq 'Proposal' or data/type/iv eq 'Presentation') " +
+          "and (contains(data/title/iv, 'Title') or contains(data/tags/iv, 'Title'))";
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter: expectedFilter,
+          },
+        );
+      });
+
+      test('Should break up the search parameter into multiple words and send as a squidex filter', async () => {
+        await researchOutputs.fetch({ ...defaultParams, search: 'some words' });
+
+        const expectedFilter =
+          "(contains(data/title/iv, 'some') or contains(data/tags/iv, 'some') or contains(data/title/iv, 'words') or contains(data/tags/iv, 'words'))";
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter: expectedFilter,
+          },
+        );
+      });
+
+      test('Should sanitise single quote in the search parameter by doubling it and encoding to hex for the squidex filter', async () => {
+        await researchOutputs.fetch({ ...defaultParams, search: "'" });
+
+        const expectedFilter =
+          "(contains(data/title/iv, '%27%27') or contains(data/tags/iv, '%27%27'))";
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter: expectedFilter,
+          },
+        );
+      });
+
+      test('Should sanitise double quotation mark in the search parameter by doubling it and encoding to hex for the squidex filter', async () => {
+        await researchOutputs.fetch({ ...defaultParams, search: '"' });
+
+        const expectedFilter =
+          "(contains(data/title/iv, '%22') or contains(data/tags/iv, '%22'))";
+        expect(squidexGraphqlClientMock.request).toHaveBeenCalledWith(
+          expect.anything(),
+          {
+            ...expectedDefaultParams,
+            filter: expectedFilter,
+          },
+        );
+      });
+    });
+  });
 });
 
 type Author = NonNullable<

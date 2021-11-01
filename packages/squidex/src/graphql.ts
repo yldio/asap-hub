@@ -4,7 +4,11 @@ import { DocumentNode } from 'graphql';
 import squidex from './config';
 import { getAccessToken } from './client';
 
-export class SquidexGraphql {
+export interface SquidexGraphqlClient {
+  request<T, V>(query: string | DocumentNode, variables?: V): Promise<T>;
+}
+
+export class SquidexGraphql implements SquidexGraphqlClient {
   client: GraphQLClient;
 
   constructor() {

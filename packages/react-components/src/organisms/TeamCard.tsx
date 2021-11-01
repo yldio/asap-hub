@@ -14,12 +14,7 @@ const teamMemberMetaStyles = css({
   display: 'flex',
   alignItems: 'center',
   padding: `${12 / perRem}em 0`,
-  ' > *': {
-    marginRight: `${24 / perRem}em`,
-  },
-  '> *:last-of-type': {
-    marginRight: '0',
-  },
+  gap: `${24 / perRem}em`,
 });
 const tagsPadding = css({
   paddingBottom: `${12 / perRem}em`,

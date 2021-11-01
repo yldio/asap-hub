@@ -7,7 +7,7 @@ import { permissionHandler } from '../../src/middleware/permission-handler';
 import { userMock } from '../../src/utils/__mocks__/validate-token';
 import { listGroupsResponse } from '../fixtures/groups.fixtures';
 import { pageResponse } from '../fixtures/page.fixtures';
-import { userResponse } from '../fixtures/users.fixtures';
+import { getUserResponse } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { pageControllerMock } from '../mocks/page-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
@@ -121,7 +121,7 @@ describe('Permission middleware', () => {
 
       describe('User profile', () => {
         test('Should allow access to GET /users/{user_id} when the requested user is the logged-in user', async () => {
-          userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+          userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
 
           const response = await supertest(appWithMockedAuth).get(
             `/users/${userMock.id}`,
@@ -138,7 +138,7 @@ describe('Permission middleware', () => {
         });
 
         test('Should allow access to PATCH /users/{user_id}', async () => {
-          userControllerMock.update.mockResolvedValueOnce(userResponse);
+          userControllerMock.update.mockResolvedValueOnce(getUserResponse());
 
           const response = await supertest(appWithMockedAuth)
             .patch(`/users/${userMock.id}`)

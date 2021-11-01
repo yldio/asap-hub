@@ -1,7 +1,6 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
 import { print } from 'graphql';
-import { TeamTool } from '@asap-hub/model';
 import {
   graphQlTeamsResponseSingle,
   getListTeamResponse,
@@ -12,6 +11,7 @@ import {
   getGraphQlTeamResponse,
   updateExpectation,
   referencingUsersContentsResponse,
+  GraphTeamTool,
 } from '../fixtures/teams.fixtures';
 import Teams from '../../src/controllers/teams';
 import { identity } from '../helpers/squidex';
@@ -436,10 +436,7 @@ describe('Team controller', () => {
 
         const result = await teams.fetchById(teamId);
 
-        expect(result).toEqual({
-          ...fetchTeamByIdExpectation,
-          tools: [],
-        });
+        expect(result.tools).toEqual([]);
       });
 
       test('Should return the tools when the showTools parameter is missing', async () => {
@@ -450,7 +447,7 @@ describe('Team controller', () => {
             url: 'https://example.com',
             name: 'good link',
             // squidex graphql api typings aren't perfect
-            description: null as unknown as undefined,
+            description: null,
           },
         ];
 
@@ -465,15 +462,12 @@ describe('Team controller', () => {
 
         const result = await teams.fetchById(teamId);
 
-        expect(result).toEqual({
-          ...fetchTeamByIdExpectation,
-          tools: [
-            {
-              url: 'https://example.com',
-              name: 'good link',
-            },
-          ],
-        });
+        expect(result.tools).toEqual([
+          {
+            url: 'https://example.com',
+            name: 'good link',
+          },
+        ]);
       });
 
       test('Should return the tools when the showTools parameter is set to true', async () => {
@@ -483,8 +477,7 @@ describe('Team controller', () => {
           {
             url: 'https://example.com',
             name: 'good link',
-            // squidex graphql api typings aren't perfect
-            description: null as unknown as undefined,
+            description: null,
           },
         ];
 
@@ -499,20 +492,17 @@ describe('Team controller', () => {
 
         const result = await teams.fetchById(teamId, { showTools: true });
 
-        expect(result).toEqual({
-          ...fetchTeamByIdExpectation,
-          tools: [
-            {
-              url: 'https://example.com',
-              name: 'good link',
-            },
-          ],
-        });
+        expect(result.tools).toEqual([
+          {
+            url: 'https://example.com',
+            name: 'good link',
+          },
+        ]);
       });
 
       test('Should return the an empty array when the showTools parameter is missing but no tools are present', async () => {
         const teamId = 'team-id-1';
-        const tools: TeamTool[] = [];
+        const tools: GraphTeamTool[] = [];
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -525,10 +515,7 @@ describe('Team controller', () => {
 
         const result = await teams.fetchById(teamId);
 
-        expect(result).toEqual({
-          ...fetchTeamByIdExpectation,
-          tools: [],
-        });
+        expect(result.tools).toEqual([]);
       });
 
       test('Should return the tools as undefined you when the "showTools" parameter is set to false', async () => {
@@ -538,8 +525,7 @@ describe('Team controller', () => {
           {
             url: 'https://example.com',
             name: 'good link',
-            // squidex graphql api typings aren't perfect
-            description: null as unknown as undefined,
+            description: null,
           },
         ];
 
@@ -595,7 +581,7 @@ describe('Team controller', () => {
           },
         ];
 
-        teamResponse.data.findTeamsContent.referencingUsersContents = [
+        teamResponse.data.findTeamsContent!.referencingUsersContents = [
           graphqlUser1,
           graphqlUser2,
         ];
@@ -634,7 +620,7 @@ describe('Team controller', () => {
           },
         ];
 
-        teamResponse.data.findTeamsContent.referencingUsersContents = [
+        teamResponse.data.findTeamsContent!.referencingUsersContents = [
           graphqlUser1,
         ];
 
@@ -681,7 +667,7 @@ describe('Team controller', () => {
           },
         ];
 
-        teamResponse.data.findTeamsContent.referencingUsersContents = [
+        teamResponse.data.findTeamsContent!.referencingUsersContents = [
           graphqlUser1,
         ];
 
@@ -808,7 +794,7 @@ describe('Team controller', () => {
             id: teamId,
           },
         })
-        .reply(200, getGraphQlTeamResponse());
+        .reply(200, graphQlTeamResponse);
 
       const result = await teams.update(teamId, []);
 
@@ -817,25 +803,32 @@ describe('Team controller', () => {
 
     test('Should remove a field are return the team', async () => {
       const teamId = 'team-id-1';
-      const tools = [
+      const toolsUpdate = [
         {
           url: 'https://example.com',
           name: 'good link',
         },
       ];
+      const toolsResponse = [
+        {
+          url: 'https://example.com',
+          name: 'good link',
+          description: null,
+        },
+      ];
 
       nock(config.baseUrl)
         .patch(`/api/content/${config.appName}/teams/${teamId}`, {
-          tools: { iv: tools },
+          tools: { iv: toolsUpdate },
         })
-        .reply(200, getUpdateTeamResponse(tools)) // response is not used
+        .reply(200, getUpdateTeamResponse(toolsUpdate)) // response is not used
         .post(`/api/content/${config.appName}/graphql`, {
           query: print(FETCH_TEAM),
           variables: {
             id: teamId,
           },
         })
-        .reply(200, getGraphQlTeamResponse(tools));
+        .reply(200, getGraphQlTeamResponse(toolsResponse));
 
       const result = await teams.update(teamId, [
         {
@@ -845,7 +838,12 @@ describe('Team controller', () => {
         },
       ]);
 
-      expect(result).toEqual({ ...updateExpectation, tools });
+      expect(result.tools).toEqual([
+        {
+          url: 'https://example.com',
+          name: 'good link',
+        },
+      ]);
     });
   });
 });

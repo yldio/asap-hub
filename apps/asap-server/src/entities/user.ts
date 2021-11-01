@@ -1,7 +1,18 @@
 import Joi from '@hapi/joi';
-import { OrcidWork, UserResponse, UserTeam, Lab } from '@asap-hub/model';
+import {
+  OrcidWork,
+  UserResponse,
+  UserTeam,
+  Lab,
+  UserDegree,
+  userDegree,
+  OrcidWorkType,
+  orcidWorkType,
+} from '@asap-hub/model';
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
+import { FetchUserQuery } from '../gql/graphql';
+import { isTeamRole } from './team';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -44,12 +55,23 @@ export const userUpdateSchema = Joi.object({
   .min(1)
   .required();
 
+type GraphqlUserTeam = NonNullable<
+  NonNullable<FetchUserQuery['findUsersContent']>['flatData']['teams']
+>[number];
 export const parseGraphQLUserTeamConnection = (
-  item: NonNullable<NonNullable<GraphqlUser['flatData']>['teams']>[0],
+  item: GraphqlUserTeam,
 ): UserTeam => {
+  if (item.id === null) {
+    throw new Error('Invalid user-team connection');
+  }
+
   const team = item.id[0];
   const displayName = team.flatData?.displayName;
   const proposal = team.flatData?.proposal;
+
+  if (!item.role || !isTeamRole(item.role)) {
+    throw new Error(`Invalid team role: ${item.role}`);
+  }
 
   return {
     id: team.id,
@@ -61,41 +83,49 @@ export const parseGraphQLUserTeamConnection = (
   };
 };
 
-export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
-  const flatTeams: NonNullable<GraphqlUser['flatData']>['teams'] =
-    item.flatData?.teams || [];
+export const parseGraphQLUser = (
+  item: NonNullable<FetchUserQuery['findUsersContent']>,
+): UserResponse => {
+  const flatTeams = item.flatData.teams || [];
   const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
-    item.flatData?.avatar || [];
-  const flatQuestions = item.flatData?.questions || [];
-  const flatSkills = item.flatData?.skills || [];
+    item.flatData.avatar || [];
+  const flatQuestions = item.flatData.questions || [];
+  const flatSkills = item.flatData.skills || [];
   const createdDate = parseDate(item.created).toISOString();
 
-  const role = ['Guest', 'Staff', 'Grantee'].includes(item.flatData?.role || '')
-    ? (item.flatData?.role as 'Guest' | 'Staff' | 'Grantee')
+  const role = ['Guest', 'Staff', 'Grantee'].includes(item.flatData.role || '')
+    ? (item.flatData.role as 'Guest' | 'Staff' | 'Grantee')
     : 'Guest';
   const teams: UserTeam[] = (flatTeams || []).map(
     parseGraphQLUserTeamConnection,
   );
 
-  const orcid = item.flatData?.orcid || undefined;
+  const orcid = item.flatData.orcid || undefined;
   // merge both and remove null values
   const social = Object.entries({
-    ...((item.flatData?.social && item.flatData?.social[0]) || {}),
+    ...((item.flatData.social && item.flatData.social[0]) || {}),
     orcid,
   }).reduce((acc, [k, v]) => {
     if (v == null) return acc;
     return { ...acc, [k]: v };
   }, {} as { [key: string]: string });
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const displayName = `${item.flatData!.firstName} ${item.flatData!.lastName}`;
+  const displayName = `${item.flatData.firstName} ${item.flatData.lastName}`;
 
-  const flatLabs: Lab[] =
-    item.flatData?.labs?.map((lab) => ({
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      name: lab.flatData!.name!,
-      id: lab.id,
-    })) || [];
+  const flatLabs =
+    item.flatData.labs?.reduce<Lab[]>((labs, lab) => {
+      // skip Labs without names
+      if (!lab.flatData.name) {
+        return labs;
+      }
+      return [
+        ...labs,
+        {
+          name: lab.flatData.name || '',
+          id: lab.id,
+        },
+      ];
+    }, []) || [];
 
   return {
     id: item.id,
@@ -106,29 +136,57 @@ export const parseGraphQLUser = (item: GraphqlUser): UserResponse => {
     createdDate,
     displayName,
     orcid, // TODO: remove once edit social is added
-    firstName: item.flatData?.firstName || '',
-    lastName: item.flatData?.lastName || '',
-    biography: item.flatData?.biography || undefined,
-    degree: item.flatData?.degree || undefined,
-    email: item.flatData?.email || '',
-    contactEmail: item.flatData?.contactEmail || undefined,
-    institution: item.flatData?.institution || undefined,
-    jobTitle: item.flatData?.jobTitle || undefined,
-    country: item.flatData?.country || undefined,
-    city: item.flatData?.city || undefined,
-    orcidWorks: item.flatData?.orcidWorks?.slice(0, 5) || [],
-    questions: flatQuestions.map((q) => q.question) || [],
+    firstName: item.flatData.firstName || '',
+    lastName: item.flatData.lastName || '',
+    biography: item.flatData.biography || undefined,
+    degree:
+      item.flatData.degree && isUserDegree(item.flatData.degree)
+        ? item.flatData.degree
+        : undefined,
+    email: item.flatData.email || '',
+    contactEmail: item.flatData.contactEmail || undefined,
+    institution: item.flatData.institution || undefined,
+    jobTitle: item.flatData.jobTitle || undefined,
+    country: item.flatData.country || undefined,
+    city: item.flatData.city || undefined,
+    orcidWorks:
+      item.flatData.orcidWorks
+        ?.reduce<OrcidWork[]>((orcidWorks, orcidWork) => {
+          if (orcidWork.id === null || orcidWork.lastModifiedDate === null) {
+            return orcidWorks;
+          }
+
+          return [
+            ...orcidWorks,
+            {
+              id: orcidWork.id,
+              doi: orcidWork.doi || undefined,
+              title: orcidWork.title || undefined,
+              type:
+                orcidWork.type && isOrcidWorkType(orcidWork.type)
+                  ? orcidWork.type
+                  : 'UNDEFINED',
+              publicationDate: orcidWork.publicationDate,
+              lastModifiedDate: orcidWork.lastModifiedDate,
+            },
+          ];
+        }, [])
+        .slice(0, 5) || [],
+    questions:
+      flatQuestions
+        .map((q) => q.question)
+        .filter<string>((q): q is string => typeof q === 'string') || [],
     skills: flatSkills,
-    skillsDescription: item.flatData?.skillsDescription ?? undefined,
-    lastModifiedDate: item.flatData?.lastModifiedDate || createdDate,
+    skillsDescription: item.flatData.skillsDescription ?? undefined,
+    lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
     teams,
     social,
     avatarUrl: flatAvatar?.length
       ? createURL(flatAvatar.map((a) => a.id))[0]
       : undefined,
     role,
-    responsibilities: item.flatData?.responsibilities || undefined,
-    reachOut: item.flatData?.reachOut || undefined,
+    responsibilities: item.flatData.responsibilities || undefined,
+    reachOut: item.flatData.reachOut || undefined,
     labs: flatLabs || [],
   };
 };
@@ -182,3 +240,9 @@ export const parseUser = (user: RestUser): UserResponse => {
     }),
   );
 };
+
+const isUserDegree = (data: string): data is UserDegree =>
+  (userDegree as ReadonlyArray<string>).includes(data);
+
+const isOrcidWorkType = (data: string): data is OrcidWorkType =>
+  (orcidWorkType as ReadonlyArray<string>).includes(data);

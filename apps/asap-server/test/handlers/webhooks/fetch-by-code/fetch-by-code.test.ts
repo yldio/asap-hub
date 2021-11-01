@@ -9,7 +9,7 @@ import { identity } from '../../../helpers/squidex';
 import { fetchUserByCodeHandlerFactory } from '../../../../src/handlers/webhooks/fetch-by-code/fetch-by-code';
 import { SearchClient } from 'algoliasearch';
 import { userControllerMock } from '../../../mocks/user-controller.mock';
-import { userResponse } from '../../../fixtures/users.fixtures';
+import { getUserResponse } from '../../../fixtures/users.fixtures';
 
 describe('Fetch-user-by-code handler', () => {
   const algoliaClientMock = {
@@ -99,7 +99,7 @@ describe('Fetch-user-by-code handler', () => {
     });
 
     test('returns status 200 and user data when the user exists', async () => {
-      userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
       const result = (await handler(
         getApiGatewayEvent({
@@ -113,13 +113,13 @@ describe('Fetch-user-by-code handler', () => {
       )) as APIGatewayProxyResult;
 
       expect(result.statusCode).toStrictEqual(200);
-      expect(JSON.parse(result.body)).toMatchObject(userResponse);
+      expect(JSON.parse(result.body)).toMatchObject(getUserResponse());
     });
 
     test('should return an algolia API key', async () => {
       const mockApiKey = 'test-api-key';
       algoliaClientMock.generateSecuredApiKey.mockReturnValueOnce(mockApiKey);
-      userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
       const result = (await handler(
         getApiGatewayEvent({
@@ -148,7 +148,7 @@ describe('Fetch-user-by-code handler', () => {
       algoliaClientMock.generateSecuredApiKey.mockImplementationOnce(() => {
         throw new Error('some error');
       });
-      userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
       const result = (await handler(
         getApiGatewayEvent({

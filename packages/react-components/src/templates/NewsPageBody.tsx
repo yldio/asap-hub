@@ -10,7 +10,7 @@ interface NewsPageBodyProps {
   readonly renderPageHref: (idx: number) => string;
 }
 
-const NewsAndEventsPageBody: React.FC<NewsPageBodyProps> = ({
+const NewsPageBody: React.FC<NewsPageBodyProps> = ({
   news,
   numberOfItems,
   numberOfPages,
@@ -31,4 +31,4 @@ const NewsAndEventsPageBody: React.FC<NewsPageBodyProps> = ({
   </ResultList>
 );
 
-export default NewsAndEventsPageBody;
+export default NewsPageBody;

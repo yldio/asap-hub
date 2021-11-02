@@ -202,13 +202,18 @@ export const parseGraphQLUser = (
 
 export const parseUser = (user: RestUser): UserResponse => {
   const teams: UserTeam[] =
-    user.data.teams?.iv?.map(({ id, ...t }) => ({
-      id: id[0]!,
-      displayName: 'Unknown',
-      ...t,
-      approach: t.approach ? t.approach : undefined,
-      responsibilities: t.responsibilities ? t.responsibilities : undefined,
-    })) || [];
+    user.data.teams?.iv?.map(({ id, ...t }) => {
+      if (!id[0]) {
+        throw new Error('Team id cannot be undefined');
+      }
+      return {
+        id: id[0]!,
+        displayName: 'Unknown',
+        ...t,
+        approach: t.approach ? t.approach : undefined,
+        responsibilities: t.responsibilities ? t.responsibilities : undefined,
+      };
+    }) || [];
 
   const orcid = user.data.orcid?.iv;
   const social = {

@@ -18,14 +18,19 @@ export const getMeetingMaterial = <T>(
   emptyState: T,
 ): T | null => {
   const isEmpty = !(Array.isArray(material) ? material.length : material);
-  if (isPermanentlyUnavailable || (isEmpty && isStale)) return null;
+  if (isPermanentlyUnavailable || (isEmpty && isStale)) {
+    return null;
+  }
   return isEmpty ? emptyState : material;
 };
 
 export const parseGraphQLEvent = (
   item: EventContentFragment,
 ): EventResponse => {
-  const calendar = parseGraphQLCalendar(item.flatData.calendar![0]);
+  if (!item.flatData.calendar?.[0]) {
+    throw new Error(`Event (${item.id}) doesn't have a calendar"`);
+  }
+  const calendar = parseGraphQLCalendar(item.flatData.calendar[0]);
   const group =
     item.flatData.calendar![0].referencingGroupsContents?.map((calGroup) =>
       parseGraphQLGroup(calGroup),

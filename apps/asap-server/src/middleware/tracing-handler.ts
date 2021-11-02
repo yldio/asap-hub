@@ -25,8 +25,8 @@ export const tracingHandlerFactory =
     // the browser by looking up the trace ID found in response headers
     const responseHeaders: Record<string, string | number | string[]> = {};
     tracer.inject(span, opentracing.FORMAT_TEXT_MAP, responseHeaders);
-    Object.keys(responseHeaders).forEach((key) =>
-      res.setHeader(key, responseHeaders[key]),
+    Object.entries(responseHeaders).forEach(([key, value]) =>
+      res.setHeader(key, value),
     );
 
     // add the span to the request object for handlers to use

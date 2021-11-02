@@ -13,7 +13,7 @@ export default function validateRequest(request: lambda.Request): boolean {
 
   const [type, secret] = headers.authorization.split(' ');
 
-  if (type.toLowerCase() !== 'basic') {
+  if (type?.toLowerCase() !== 'basic') {
     throw Boom.unauthorized();
   }
 

@@ -1,5 +1,6 @@
 import { Router, Response } from 'express';
 import Joi from '@hapi/joi';
+import Boom from '@hapi/boom';
 import { framework } from '@asap-hub/services-common';
 import {
   ListResearchOutputResponse,
@@ -43,7 +44,9 @@ export const researchOutputRouteFactory = (
         params,
         paramsSchema,
       );
-
+      if (researchOutputId === undefined) {
+        throw Boom.badRequest('researchOutputId cannot be undefined');
+      }
       const result = await researchOutputController.fetchById(researchOutputId);
 
       res.json(result);

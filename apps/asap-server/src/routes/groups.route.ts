@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
+import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
 import { GroupController } from '../controllers/groups';
 import { FetchOptions } from '../utils/types';
@@ -29,7 +30,9 @@ export const groupRouteFactory = (
   groupRoutes.get('/groups/:groupId', async (req, res) => {
     const { params } = req;
     const { groupId } = framework.validate('parameters', params, paramSchema);
-
+    if (groupId === undefined) {
+      throw Boom.badRequest('groupId cannot be undefined');
+    }
     const result = await groupsController.fetchById(groupId);
 
     res.json(result);

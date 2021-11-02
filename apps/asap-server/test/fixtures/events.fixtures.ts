@@ -218,7 +218,7 @@ export const graphqlEvent = {
 export const findEventResponse: { data: FetchEventQuery } = {
   data: {
     findEventsContent:
-      fetchEventsResponse.data.queryEventsContentsWithTotal!.items![0],
+      fetchEventsResponse.data.queryEventsContentsWithTotal!.items![0]!,
   },
 };
 

@@ -8,7 +8,7 @@ describe('parseGraphQLGroup', () => {
   >;
   it('should throw when Leaders group roles are invalid', () => {
     const invalidLeaders = [
-      { ...group.flatData.leaders![0], role: 'invalid role' },
+      { ...group.flatData.leaders![0]!, role: 'invalid role' },
     ];
     const groupWithInvalidLeaders = {
       ...group,

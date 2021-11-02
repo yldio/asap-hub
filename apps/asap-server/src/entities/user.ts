@@ -12,6 +12,7 @@ import {
   userRole,
 } from '@asap-hub/model';
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
+
 import { parseDate, createURL } from '../utils/squidex';
 import { FetchUserQuery } from '../gql/graphql';
 import { isTeamRole } from './team';
@@ -68,6 +69,9 @@ export const parseGraphQLUserTeamConnection = (
   }
 
   const team = item.id[0];
+  if (!team) {
+    throw new Error(`User team connection is not defined`);
+  }
   const displayName = team.flatData?.displayName;
   const proposal = team.flatData?.proposal;
 
@@ -80,7 +84,7 @@ export const parseGraphQLUserTeamConnection = (
     role: item.role,
     approach: item.approach ? item.approach : undefined,
     responsibilities: item.responsibilities ? item.responsibilities : undefined,
-    proposal: proposal?.length ? proposal[0].id : undefined,
+    proposal: proposal?.length ? proposal[0]?.id : undefined,
     displayName: displayName || '',
   };
 };
@@ -109,7 +113,9 @@ export const parseGraphQLUser = (
     ...((item.flatData.social && item.flatData.social[0]) || {}),
     orcid,
   }).reduce((acc, [k, v]) => {
-    if (v == null) return acc;
+    if (v == null) {
+      return acc;
+    }
     return { ...acc, [k]: v };
   }, {} as { [key: string]: string });
 
@@ -197,7 +203,7 @@ export const parseGraphQLUser = (
 export const parseUser = (user: RestUser): UserResponse => {
   const teams: UserTeam[] =
     user.data.teams?.iv?.map(({ id, ...t }) => ({
-      id: id[0],
+      id: id[0]!,
       displayName: 'Unknown',
       ...t,
       approach: t.approach ? t.approach : undefined,

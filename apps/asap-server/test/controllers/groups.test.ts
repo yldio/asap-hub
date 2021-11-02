@@ -216,7 +216,8 @@ describe('Group controller', () => {
     test('Should return the group when the leader user is undefined (ie entity marked as a draft) and skip the leader', async () => {
       const groupId = 'group-id-1';
       const responseFetchGroup = getResponseFetchGroup();
-      responseFetchGroup.data.findGroupsContent.flatData!.leaders![0].user = [];
+      responseFetchGroup.data.findGroupsContent.flatData!.leaders![0]!.user =
+        [];
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {

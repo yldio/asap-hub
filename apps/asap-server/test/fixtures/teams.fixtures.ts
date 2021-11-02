@@ -362,7 +362,7 @@ export const graphQlTeamsResponseSingle: { data: ResponseFetchTeams } = {
     queryTeamsContentsWithTotal: {
       total: 1,
       items: [
-        getGraphQlTeamsResponse().data.queryTeamsContentsWithTotal.items[0],
+        getGraphQlTeamsResponse().data.queryTeamsContentsWithTotal.items[0]!,
       ],
     },
   },
@@ -388,7 +388,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
           description: '',
           tags: ['test', 'tag'],
           addedDate: '2021-05-24T17:33:30Z',
-          authors: [fetchExpectation.items[1]],
+          authors: [fetchExpectation.items[1]!],
           teams: [
             {
               id: 'team-id-1',
@@ -410,7 +410,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
           title: 'Proposal',
           description: '',
           tags: ['test', 'tag'],
-          authors: [fetchExpectation.items[0]],
+          authors: [fetchExpectation.items[0]!],
           teams: [
             {
               id: 'team-id-1',
@@ -651,7 +651,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       title: "Team Salzer's intro slide deck",
       description: '',
       tags: [],
-      authors: [fetchExpectation.items[1]],
+      authors: [fetchExpectation.items[1]!],
       teams: [
         {
           id: 'team-id-1',
@@ -677,7 +677,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
       title: 'Proposal',
       description: '',
       tags: ['test', 'tag'],
-      authors: [fetchExpectation.items[0]],
+      authors: [fetchExpectation.items[0]!],
       teams: [
         {
           id: 'team-id-1',

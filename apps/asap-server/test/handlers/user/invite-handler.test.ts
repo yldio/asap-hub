@@ -126,7 +126,7 @@ describe('Invite Handler', () => {
         iv: [{ code: expect.any(String) }],
       },
     });
-    const code = userClient.patch.mock.calls[0][1].connections!.iv![0].code;
+    const code = userClient.patch.mock.calls[0]![1].connections!.iv![0]!.code;
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(sendEmailMock).toBeCalledWith({
       to: [userWithOtherConnection.data.email.iv],
@@ -160,7 +160,7 @@ describe('Invite Handler', () => {
         iv: [{ code: expect.any(String) }],
       },
     });
-    const code = userClient.patch.mock.calls[0][1].connections!.iv![0].code;
+    const code = userClient.patch.mock.calls[0]![1].connections!.iv![0]!.code;
     const expectedLink = new url.URL(path.join(`/welcome/${code}`), origin);
     expect(sendEmailMock).toBeCalledWith({
       to: [userWithoutConnection.data.email.iv],

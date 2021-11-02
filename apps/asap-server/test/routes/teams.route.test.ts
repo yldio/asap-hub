@@ -137,7 +137,7 @@ describe('/teams/ route', () => {
 
       const expectedParams: FetchTeamsOptions = {
         ...(params as Required<FetchOptions>),
-        showTeamTools: [loggedUser.teams[0].id],
+        showTeamTools: [loggedUser.teams[0]!.id],
       };
 
       expect(teamControllerMock.fetch).toBeCalledWith(expectedParams);
@@ -235,7 +235,7 @@ describe('/teams/ route', () => {
       });
 
       test('Should ask the controller to display the tools when the user is part of the requested team', async () => {
-        const teamId = loggedUser.teams[0].id;
+        const teamId = loggedUser.teams[0]!.id;
 
         teamControllerMock.fetchById.mockResolvedValueOnce(teamResponse);
 

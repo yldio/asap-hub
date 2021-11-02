@@ -46,7 +46,9 @@ export const teamRouteFactory = (
   teamRoutes.get('/teams/:teamId', async (req, res: Response<TeamResponse>) => {
     const { params } = req;
     const { teamId } = framework.validate('parameters', params, paramSchema);
-
+    if (teamId === undefined) {
+      throw Boom.badRequest('teamId cannot be undefined');
+    }
     const showTools = !!req.loggedInUser?.teams.find(
       (team) => team.id === teamId,
     );
@@ -72,6 +74,10 @@ export const teamRouteFactory = (
         throw Boom.forbidden();
       }
 
+      if (teamId === undefined) {
+        throw Boom.badRequest('teamId cannot be undefined');
+      }
+
       const result = await teamsController.update(teamId, tools);
 
       res.json(result);
@@ -84,6 +90,9 @@ export const teamRouteFactory = (
       const { query, params } = req;
 
       const { teamId } = framework.validate('parameters', params, paramSchema);
+      if (teamId === undefined) {
+        throw Boom.badRequest('teamId cannot be undefined');
+      }
       const options = framework.validate(
         'query',
         query,

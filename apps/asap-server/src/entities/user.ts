@@ -207,7 +207,7 @@ export const parseUser = (user: RestUser): UserResponse => {
         throw new Error('Team id cannot be undefined');
       }
       return {
-        id: id[0]!,
+        id: id[0],
         displayName: 'Unknown',
         ...t,
         approach: t.approach ? t.approach : undefined,

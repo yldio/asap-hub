@@ -9,6 +9,7 @@ const team: ComponentProps<typeof NetworkTeams>['teams'][0] = {
   projectTitle: 'Unknown Project Title',
   members: [],
   skills: [],
+  labCount: 0,
 };
 const teams = [team, { ...team, id: '43', displayName: 'Unknown 2' }];
 const props: ComponentProps<typeof NetworkTeams> = {

@@ -27,6 +27,7 @@ const teamCardProps: ComponentProps<typeof TeamCard> = {
     'autophagy',
   ],
   members: [member],
+  labCount: 0,
 };
 
 it('renders the title', () => {
@@ -47,4 +48,19 @@ it('pluralises when more than one team member', () => {
     <TeamCard {...teamCardProps} members={Array(3).fill(member)} />,
   );
   expect(getByText('3 Team Members')).toBeVisible();
+});
+
+it('renders a lab count for multiple labs', () => {
+  const { getByText } = render(<TeamCard {...teamCardProps} labCount={13} />);
+  expect(getByText('13 Labs')).toBeVisible();
+});
+
+it('renders a lab count for a single lab using singular form', () => {
+  const { getByText } = render(<TeamCard {...teamCardProps} labCount={1} />);
+  expect(getByText('1 Lab')).toBeVisible();
+});
+
+it('does not display labs when 0 labs are avaialble', () => {
+  const { queryByText } = render(<TeamCard {...teamCardProps} labCount={0} />);
+  expect(queryByText(/lab/i)).toBeNull();
 });

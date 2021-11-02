@@ -1,4 +1,9 @@
-export const appendSuffix = (val: string, suffix: string): string =>
+export const getCounterString = (count: number, term: string): string => {
+  const int = Number(count.toFixed());
+  return appendSuffix(int, int === 1 ? term : `${term}s`);
+};
+
+export const appendSuffix = (val: string | number, suffix: string): string =>
   `${val} ${suffix}`;
 
 export const getUniqueList = (array: string[]): string[] =>

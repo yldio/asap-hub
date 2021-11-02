@@ -1,16 +1,14 @@
 import { DashboardResponse } from '@asap-hub/model';
 import { createPageResponse } from './pages';
-import { createNewsAndEventsResponse } from './news-and-events';
+import { createNewsResponse } from './news';
 
 export const createDashboardResponse = (
   length: number = 5,
 ): DashboardResponse => ({
-  newsAndEvents: [
+  news: [
+    ...Array.from({ length }).map((_, i) => createNewsResponse(`${i}`, 'News')),
     ...Array.from({ length }).map((_, i) =>
-      createNewsAndEventsResponse(`${i}`, 'News'),
-    ),
-    ...Array.from({ length }).map((_, i) =>
-      createNewsAndEventsResponse(`${i}`, 'Event'),
+      createNewsResponse(`${i}`, 'Event'),
     ),
   ],
   pages: ['content', 'about', 'slides'].map(createPageResponse),

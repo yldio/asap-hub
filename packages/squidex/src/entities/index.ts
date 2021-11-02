@@ -1,5 +1,5 @@
 export * from './calendar';
-export * from './news-or-event';
+export * from './news';
 export * from './page';
 export * from './research-output';
 export * from './team';

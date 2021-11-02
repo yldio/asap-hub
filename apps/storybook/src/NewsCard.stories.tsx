@@ -1,6 +1,6 @@
 import { text } from '@storybook/addon-knobs';
 
-import { NewsAndEventsCard } from '@asap-hub/react-components';
+import { NewsCard } from '@asap-hub/react-components';
 
 export default {
   title: 'Organisms / News / Card',
@@ -31,6 +31,6 @@ const eventProps = () => ({
   thumbnail: text('Thumbnail', 'https://picsum.photos/200'),
 });
 
-export const News = () => <NewsAndEventsCard {...newsProps()} />;
+export const News = () => <NewsCard {...newsProps()} />;
 
-export const Event = () => <NewsAndEventsCard {...eventProps()} />;
+export const Event = () => <NewsCard {...eventProps()} />;

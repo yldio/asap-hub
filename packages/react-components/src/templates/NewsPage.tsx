@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
-import NewsAndEventsPageHeader from './NewsAndEventsPageHeader';
+import NewsAndEventsPageHeader from './NewsPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({

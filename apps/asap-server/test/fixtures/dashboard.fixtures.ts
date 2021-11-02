@@ -2,9 +2,9 @@ import { DashboardResponse } from '@asap-hub/model';
 import { config } from '@asap-hub/squidex';
 
 export const dashboardResponse: DashboardResponse = {
-  newsAndEvents: [
+  news: [
     {
-      id: 'news-and-events-1',
+      id: 'news-1',
       title: 'News 1',
       type: 'News',
       shortText: 'Short text of news 1',
@@ -13,7 +13,7 @@ export const dashboardResponse: DashboardResponse = {
       created: '2020-09-08T16:35:28.000Z',
     },
     {
-      id: 'news-and-events-2',
+      id: 'news-2',
       title: 'Event 2',
       type: 'Event',
       shortText: 'Short text of event 2',

@@ -1,8 +1,5 @@
 import { ComponentProps } from 'react';
-import {
-  createPageResponse,
-  createNewsAndEventsResponse,
-} from '@asap-hub/fixtures';
+import { createPageResponse, createNewsResponse } from '@asap-hub/fixtures';
 import { render } from '@testing-library/react';
 
 import DiscoverPageBody from '../DiscoverPageBody';
@@ -54,10 +51,7 @@ it('renders training information', () => {
       {...props}
       pages={[]}
       aboutUs={''}
-      training={[
-        createNewsAndEventsResponse('1'),
-        createNewsAndEventsResponse('2'),
-      ].map((n) => ({
+      training={[createNewsResponse('1'), createNewsResponse('2')].map((n) => ({
         ...n,
         href: `/news-and-events/${n.id}`,
       }))}

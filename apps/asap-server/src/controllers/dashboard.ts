@@ -1,8 +1,8 @@
-import { GraphqlPage, GraphqlNewsOrEvent } from '@asap-hub/squidex';
+import { GraphqlPage, GraphqlNews } from '@asap-hub/squidex';
 import { DashboardResponse } from '@asap-hub/model';
 
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
-import { parseGraphQLPage, parseGraphQLNewsAndEvents } from '../entities';
+import { parseGraphQLPage, parseGraphQLNews } from '../entities';
 
 export const query = `
   {
@@ -43,7 +43,7 @@ export const query = `
 interface Response {
   queryDashboardContents: {
     flatData: {
-      news?: GraphqlNewsOrEvent[];
+      news?: GraphqlNews[];
       pages?: GraphqlPage[];
     };
   }[];
@@ -64,16 +64,15 @@ export default class Dashboard {
     const res = await this.client.request<Response, unknown>(query);
     if (res.queryDashboardContents.length === 0) {
       return {
-        newsAndEvents: [],
+        news: [],
         pages: [],
       };
     }
 
     return {
-      newsAndEvents:
-        res.queryDashboardContents[0].flatData.news?.map(
-          parseGraphQLNewsAndEvents,
-        ) ?? [],
+      news:
+        res.queryDashboardContents[0].flatData.news?.map(parseGraphQLNews) ??
+        [],
       pages:
         res.queryDashboardContents[0].flatData.pages?.map(parseGraphQLPage) ??
         [],

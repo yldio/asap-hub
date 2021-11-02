@@ -1,8 +1,13 @@
 import { ComponentProps } from 'react';
 import { css } from '@emotion/react';
-import { discover, network, news, sharedResearch } from '@asap-hub/routing';
+import {
+  discover,
+  network,
+  news as newsRoute,
+  sharedResearch,
+} from '@asap-hub/routing';
 
-import { PagesSection, NewsAndEventsSection, HelpSection } from '../organisms';
+import { PagesSection, NewsSection, HelpSection } from '../organisms';
 import { perRem } from '../pixels';
 import { Display, Card, Paragraph, Link } from '../atoms';
 
@@ -24,14 +29,14 @@ type DashboardPageBodyProps = Omit<
   ComponentProps<typeof PagesSection>,
   'title'
 > &
-  Omit<ComponentProps<typeof NewsAndEventsSection>, 'title'> & {
+  Omit<ComponentProps<typeof NewsSection>, 'title'> & {
     readonly userId: string;
     readonly teamId?: string;
   };
 
 const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
   pages,
-  newsAndEvents,
+  news,
   userId,
   teamId,
 }) => (
@@ -39,11 +44,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
     {pages.length ? (
       <PagesSection title={'Not sure where to start?'} pages={pages} />
     ) : null}
-    {newsAndEvents.length ? (
-      <NewsAndEventsSection
-        title={'Latest News from ASAP'}
-        newsAndEvents={newsAndEvents}
-      />
+    {news.length ? (
+      <NewsSection title="Latest News from ASAP" news={news} />
     ) : null}
     <section>
       <Display styleAsHeading={3}>You may want to try</Display>
@@ -70,7 +72,8 @@ const DashboardPageBody: React.FC<DashboardPageBodyProps> = ({
             </li>
             <li>
               <Paragraph primary accent="lead">
-                Stay up date with <Link href={news({}).$}>News and Events</Link>
+                Stay up date with{' '}
+                <Link href={newsRoute({}).$}>News and Events</Link>
               </Paragraph>
             </li>
             {teamId ? (

@@ -18,7 +18,7 @@ const props = (): ComponentProps<typeof DashboardPageBody> => ({
       text: '',
     },
   ],
-  newsAndEvents: [
+  news: [
     {
       id: 'uuid-1',
       created: new Date().toISOString(),

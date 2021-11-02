@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { NewsOrEventResponse } from '@asap-hub/model';
+import { NewsResponse } from '@asap-hub/model';
 
 import { Pill, Display, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
@@ -22,7 +22,7 @@ const richTextContainer = css({
 });
 
 type NewsOrEventPageProps = Pick<
-  NewsOrEventResponse,
+  NewsResponse,
   'text' | 'title' | 'type' | 'created' | 'link' | 'linkText'
 >;
 

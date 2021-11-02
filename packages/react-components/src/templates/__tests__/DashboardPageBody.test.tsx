@@ -5,7 +5,7 @@ import { createPageResponse } from '@asap-hub/fixtures';
 import DashboardPageBody from '../DashboardPageBody';
 
 const props: ComponentProps<typeof DashboardPageBody> = {
-  newsAndEvents: [
+  news: [
     {
       id: '55724942-3408-4ad6-9a73-14b92226ffb6',
       created: '2020-09-07T17:36:54Z',
@@ -35,7 +35,7 @@ it('renders multiple news cards', () => {
 
 it('renders news section when there are no news', () => {
   const { queryAllByText, queryByText } = render(
-    <DashboardPageBody {...props} newsAndEvents={[]} />,
+    <DashboardPageBody {...props} news={[]} />,
   );
 
   expect(queryByText('Latest news from ASAP')).not.toBeInTheDocument();

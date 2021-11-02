@@ -1,12 +1,12 @@
 import { ComponentProps } from 'react';
-import { NewsAndEventsPageBody } from '@asap-hub/react-components';
+import { NewsPageBody } from '@asap-hub/react-components';
 
 export default {
   title: 'Templates / News / Page Body',
 };
 
-const props = (): ComponentProps<typeof NewsAndEventsPageBody> => ({
-  newsAndEvents: [
+const props = (): ComponentProps<typeof NewsPageBody> => ({
+  news: [
     {
       id: 'uuid-1',
       created: new Date().toISOString(),
@@ -23,4 +23,4 @@ const props = (): ComponentProps<typeof NewsAndEventsPageBody> => ({
   ],
 });
 
-export const Normal = () => <NewsAndEventsPageBody {...props()} />;
+export const Normal = () => <NewsPageBody {...props()} />;

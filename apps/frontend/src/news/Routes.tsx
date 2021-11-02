@@ -1,17 +1,16 @@
 import { FC, lazy } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { NewsAndEventsPage } from '@asap-hub/react-components';
+import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 
 import Frame from '../structure/Frame';
 
-const loadNewsAndEventsList = () =>
-  import(/* webpackChunkName: "news-and-events-list" */ './NewsAndEventsList');
-const loadNewsOrEvent = () =>
-  import(/* webpackChunkName: "news-or-event" */ './NewsOrEvent');
-const NewsAndEventsList = lazy(loadNewsAndEventsList);
+const loadNewsList = () =>
+  import(/* webpackChunkName: "news-list" */ './NewsList');
+const loadNewsOrEvent = () => import(/* webpackChunkName: "news" */ './News');
+const NewsList = lazy(loadNewsList);
 const NewsOrEventPage = lazy(loadNewsOrEvent);
-loadNewsAndEventsList();
+loadNewsList();
 
 const NewsAndEvents: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
@@ -19,11 +18,11 @@ const NewsAndEvents: FC<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={path}>
-        <NewsAndEventsPage>
+        <NewsPage>
           <Frame title={null}>
-            <NewsAndEventsList />
+            <NewsList />
           </Frame>
-        </NewsAndEventsPage>
+        </NewsPage>
       </Route>
       <Route path={path + news({}).article.template}>
         <NewsOrEventPage />

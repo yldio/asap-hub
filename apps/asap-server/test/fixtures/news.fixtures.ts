@@ -1,14 +1,14 @@
-import { config, RestNewsOrEvent } from '@asap-hub/squidex';
-import { ListNewsAndEventsResponse } from '@asap-hub/model';
+import { config, RestNews } from '@asap-hub/squidex';
+import { ListNewsResponse } from '@asap-hub/model';
 
-export const newsAndEventsSquidexApiResponse: {
+export const newsSquidexApiResponse: {
   total: number;
-  items: RestNewsOrEvent[];
+  items: RestNews[];
 } = {
   total: 2,
   items: [
     {
-      id: 'news-and-events-1',
+      id: 'news-1',
       data: {
         title: {
           iv: 'News 1',
@@ -30,7 +30,7 @@ export const newsAndEventsSquidexApiResponse: {
       created: '2020-09-08T16:35:28Z',
     },
     {
-      id: 'news-and-events-2',
+      id: 'news-2',
       data: {
         title: {
           iv: 'Event 2',
@@ -54,11 +54,11 @@ export const newsAndEventsSquidexApiResponse: {
   ],
 };
 
-export const listNewsAndEventsResponse: ListNewsAndEventsResponse = {
+export const listNewsResponse: ListNewsResponse = {
   total: 2,
   items: [
     {
-      id: 'news-and-events-1',
+      id: 'news-1',
       title: 'News 1',
       type: 'News',
       shortText: 'Short text of news 1',
@@ -67,7 +67,7 @@ export const listNewsAndEventsResponse: ListNewsAndEventsResponse = {
       created: '2020-09-08T16:35:28.000Z',
     },
     {
-      id: 'news-and-events-2',
+      id: 'news-2',
       title: 'Event 2',
       type: 'Event',
       shortText: 'Short text of event 2',

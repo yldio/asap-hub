@@ -1,12 +1,12 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
-import NewsAndEvents from '../../src/controllers/news-and-events';
+import NewsAndEvents from '../../src/controllers/news';
 import {
-  newsAndEventsSquidexApiResponse,
-  listNewsAndEventsResponse,
-} from '../fixtures/news-and-events.fixtures';
-import { NewsOrEventResponse } from '@asap-hub/model';
+  newsSquidexApiResponse,
+  listNewsResponse,
+} from '../fixtures/news.fixtures';
+import { NewsResponse } from '@asap-hub/model';
 
 describe('NewsAndEvents controller', () => {
   const newsAndEvents = new NewsAndEvents();
@@ -20,7 +20,7 @@ describe('NewsAndEvents controller', () => {
   });
 
   describe('Fetch method', () => {
-    test('Should return an empty result when no news and events exist', async () => {
+    test('Should return an empty result when no news exist', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/news-and-events`)
         .query({
@@ -73,21 +73,21 @@ describe('NewsAndEvents controller', () => {
             sort: [{ order: 'descending', path: 'created' }],
           }),
         })
-        .reply(200, newsAndEventsSquidexApiResponse);
+        .reply(200, newsSquidexApiResponse);
 
       const result = await newsAndEvents.fetch({ take: 8, skip: 5 });
 
-      expect(result).toEqual(listNewsAndEventsResponse);
+      expect(result).toEqual(listNewsResponse);
     });
 
-    test('Should return news and events when the thumbnail is null', async () => {
+    test('Should return news when the thumbnail is null', async () => {
       const squidexResponse = {
         total: 1,
         items: [
           {
-            ...newsAndEventsSquidexApiResponse.items[0],
+            ...newsSquidexApiResponse.items[0],
             data: {
-              ...newsAndEventsSquidexApiResponse.items[0].data,
+              ...newsSquidexApiResponse.items[0].data,
               thumbnail: {
                 iv: null,
               },
@@ -142,7 +142,7 @@ describe('NewsAndEvents controller', () => {
 
       const result = await newsAndEvents.fetchById(id);
 
-      const expectedResponse: NewsOrEventResponse = {
+      const expectedResponse: NewsResponse = {
         created: '2020-09-23T16:34:26.842Z',
         id: 'uuid',
         text: 'Text',

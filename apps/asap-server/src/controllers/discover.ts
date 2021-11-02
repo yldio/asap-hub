@@ -1,15 +1,11 @@
-import {
-  GraphqlPage,
-  GraphqlNewsOrEvent,
-  GraphqlUser,
-} from '@asap-hub/squidex';
+import { GraphqlPage, GraphqlNews, GraphqlUser } from '@asap-hub/squidex';
 import { DiscoverResponse } from '@asap-hub/model';
 
 import { InstrumentedSquidexGraphql } from '../utils/instrumented-client';
 import {
   parseGraphQLUser,
   parseGraphQLPage,
-  parseGraphQLNewsAndEvents,
+  parseGraphQLNews,
 } from '../entities';
 import { FetchUserQuery } from '../gql/graphql';
 
@@ -68,7 +64,7 @@ export interface SquidexDiscoverResponse {
   queryDiscoverContents: {
     flatData: {
       aboutUs: string;
-      training: GraphqlNewsOrEvent[];
+      training: GraphqlNews[];
       members: GraphqlUser[];
       pages: GraphqlPage[];
     };
@@ -98,7 +94,7 @@ export default class Discover implements DiscoverController {
     const [content] = res.queryDiscoverContents;
     return {
       aboutUs: content.flatData.aboutUs || '',
-      training: content.flatData.training?.map(parseGraphQLNewsAndEvents) ?? [],
+      training: content.flatData.training?.map(parseGraphQLNews) ?? [],
       members:
         content.flatData.members?.map((member) =>
           parseGraphQLUser(

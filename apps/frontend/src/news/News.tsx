@@ -5,12 +5,12 @@ import {
 } from '@asap-hub/react-components';
 import { news, useRouteParams } from '@asap-hub/routing';
 
-import { useNewsOrEvent } from '../api';
+import { useNewsById } from '../api';
 import Frame from '../structure/Frame';
 
 const NewsOrEvent: React.FC<Record<string, never>> = () => {
   const { articleId } = useRouteParams(news({}).article);
-  const { loading, data: newsOrEvent } = useNewsOrEvent(articleId);
+  const { loading, data: newsOrEvent } = useNewsById(articleId);
 
   if (loading) {
     return <Loading />;

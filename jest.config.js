@@ -52,4 +52,5 @@ module.exports = {
     ...appPaths,
   ],
   testRegex: '^$', // root project does not have tests itself
+  testTimeout: 30000,
 };

@@ -300,7 +300,6 @@ export default class Users implements UserController {
     userId: string,
   ): Promise<UserResponse> {
     const user = await fetchByCode(welcomeCode, this.users.client);
-
     if (user.data.connections.iv?.find(({ code }) => code === userId)) {
       return Promise.resolve(parseUser(user));
     }

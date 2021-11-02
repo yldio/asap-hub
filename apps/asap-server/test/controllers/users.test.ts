@@ -864,6 +864,31 @@ describe('Users controller', () => {
       const result = await users.connectByCode('asapWelcomeCode', userId);
       expect(result).toBeDefined();
     });
+    test('Should throw if user team id is undefined', async () => {
+      const userId = 'google-oauth2|token';
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
+      connectedUser.data.connections.iv = [{ code: userId }];
+      connectedUser.data.teams.iv = [
+        {
+          id: [],
+          role: 'Lead PI (Core Leadership)',
+          approach: 'Exact',
+          responsibilities: 'Make sure coverage is high',
+        },
+      ];
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [connectedUser] });
+
+      await expect(
+        users.connectByCode('asapWelcomeCode', userId),
+      ).rejects.toThrow('Team id cannot be undefined');
+    });
 
     test('Should connect user', async () => {
       const userId = 'google-oauth2|token';

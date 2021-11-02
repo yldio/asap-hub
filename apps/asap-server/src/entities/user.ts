@@ -248,8 +248,8 @@ export const parseUser = (user: RestUser): UserResponse => {
       questions: user.data.questions?.iv?.map(({ question }) => question) || [],
       avatarUrl: user.data.avatar?.iv && createURL(user.data.avatar.iv)[0],
       role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
-      responsibilities: user.data.responsibilities?.iv || undefined,
-      reachOut: user.data.reachOut?.iv || undefined,
+      responsibilities: user.data.responsibilities?.iv,
+      reachOut: user.data.reachOut?.iv,
       labs: user.data.labs?.iv || [],
     }),
   );

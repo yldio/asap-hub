@@ -704,7 +704,7 @@ __metadata:
     date-fns-tz: ^1.1.4
     dom-to-playwright: ^0.1.2
     emotion-normalize: ^11
-    expect-playwright: ^0.3.4
+    expect-playwright: ^0.8.0
     fast-check: ^2.14.0
     fast-deep-equal: ^3.1.3
     hast-util-sanitize: ^3.0.2
@@ -17569,19 +17569,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expect-playwright@npm:^0.3.4":
-  version: 0.3.4
-  resolution: "expect-playwright@npm:0.3.4"
-  peerDependencies:
-    playwright-core: ^1.10.0
-  checksum: b4e4da8b15fdfc2fa58071d8ac7f4f0969dc683956e0414fb11bf85c30db8f06a2ef93293dfbfcdc9c172fcf31395222ee557b9a3ed191870c7d11f060e692b3
-  languageName: node
-  linkType: hard
-
 "expect-playwright@npm:^0.7.0":
   version: 0.7.2
   resolution: "expect-playwright@npm:0.7.2"
   checksum: 7503700e2695e07be2118372275b793039bd65320db415bb1c07b5987f960cdbf95e13d243deca70259e221461c5510bed4a8c01f9ca4a26c5f8bdcfdb934eec
+  languageName: node
+  linkType: hard
+
+"expect-playwright@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "expect-playwright@npm:0.8.0"
+  checksum: d9e8f0529527020524f2e27f454bdbee042df0c3b1e32f0902513d7c8cac927d87bd5b7cd835c8cc08776a4f61a8fd9adfde22a3390f253846a4c3422c415110
   languageName: node
   linkType: hard
 
@@ -26868,9 +26866,10 @@ fsevents@~2.1.2:
   linkType: hard
 
 "playwright-core@npm:>=1.2.0, playwright-core@npm:^1.2.1":
-  version: 1.7.1
-  resolution: "playwright-core@npm:1.7.1"
+  version: 1.16.3
+  resolution: "playwright-core@npm:1.16.3"
   dependencies:
+    commander: ^8.2.0
     debug: ^4.1.1
     extract-zip: ^2.0.1
     https-proxy-agent: ^5.0.0
@@ -26881,8 +26880,14 @@ fsevents@~2.1.2:
     proper-lockfile: ^4.1.1
     proxy-from-env: ^1.1.0
     rimraf: ^3.0.2
-    ws: ^7.3.1
-  checksum: c5d72b9131764cb31a0916da1345e7b050a4ff26458bd6a4cb8c5aca36dd6fd7002fe4b8a231c8f31e34b4cfcc811ffdf6c152944a1309eb9edc66f70f6dbd9d
+    socks-proxy-agent: ^6.1.0
+    stack-utils: ^2.0.3
+    ws: ^7.4.6
+    yauzl: ^2.10.0
+    yazl: ^2.5.1
+  bin:
+    playwright: cli.js
+  checksum: b37e5abadb22096f84515fa9307587747a65c2b465b10b0688ae228aff5537eb5faa88ee9d1cd1225ff9270747b6c9b72a76a008cfb670b8df939b078f3d29b9
   languageName: node
   linkType: hard
 

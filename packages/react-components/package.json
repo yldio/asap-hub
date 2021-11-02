@@ -81,7 +81,7 @@
     "@types/testing-library__react-hooks": "^3.4.1",
     "@types/uuid": "^8.3.0",
     "dom-to-playwright": "^0.1.2",
-    "expect-playwright": "^0.3.4",
+    "expect-playwright": "^0.8.0",
     "fast-check": "^2.14.0",
     "history": "^4",
     "jest-playwright-jsdom": "^0.0.4",

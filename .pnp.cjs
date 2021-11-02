@@ -4404,7 +4404,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       ],
       [
         "expect-playwright",
-        "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.3.4"
+        "npm:0.8.0"
       ],
       [
         "express",
@@ -10419,7 +10419,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
             ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
-            ["expect-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.3.4"],
+            ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
@@ -10508,7 +10508,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
             ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
-            ["expect-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.3.4"],
+            ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
@@ -10592,7 +10592,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
             ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
-            ["expect-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.3.4"],
+            ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
@@ -10679,7 +10679,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["date-fns-tz", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:1.1.4"],
             ["dom-to-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.1.2"],
             ["emotion-normalize", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:11.0.1"],
-            ["expect-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.3.4"],
+            ["expect-playwright", "npm:0.8.0"],
             ["fast-check", "npm:2.14.0"],
             ["fast-deep-equal", "npm:3.1.3"],
             ["hast-util-sanitize", "npm:3.0.2"],
@@ -34906,16 +34906,9 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/expect-playwright-npm-0.2.5-f673194b07-cc275f1de3.zip/node_modules/expect-playwright/",
           "packageDependencies": [
             ["expect-playwright", "npm:0.2.5"],
-            ["playwright-core", "npm:1.7.1"]
+            ["playwright-core", "npm:1.16.3"]
           ],
           "linkType": "HARD",
-        }],
-        ["npm:0.3.4", {
-          "packageLocation": "./.yarn/cache/expect-playwright-npm-0.3.4-36258d6455-b4e4da8b15.zip/node_modules/expect-playwright/",
-          "packageDependencies": [
-            ["expect-playwright", "npm:0.3.4"]
-          ],
-          "linkType": "SOFT",
         }],
         ["npm:0.7.2", {
           "packageLocation": "./.yarn/cache/expect-playwright-npm-0.7.2-c7b46c1403-7503700e26.zip/node_modules/expect-playwright/",
@@ -34924,16 +34917,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.3.4", {
-          "packageLocation": "./.yarn/__virtual__/expect-playwright-virtual-660889afd9/0/cache/expect-playwright-npm-0.3.4-36258d6455-b4e4da8b15.zip/node_modules/expect-playwright/",
+        ["npm:0.8.0", {
+          "packageLocation": "./.yarn/cache/expect-playwright-npm-0.8.0-0fec7940e9-d9e8f05295.zip/node_modules/expect-playwright/",
           "packageDependencies": [
-            ["expect-playwright", "virtual:a4c6bb32dfbbf947d13a0197041c2234b825c97508e81d202840e37113aeb8ad67038badebb8556b1d55925bb52ab345eef4de3ef6a2e7cabdbb4b290eac13b5#npm:0.3.4"],
-            ["@types/playwright-core", null],
-            ["playwright-core", "npm:1.16.1"]
-          ],
-          "packagePeers": [
-            "@types/playwright-core",
-            "playwright-core"
+            ["expect-playwright", "npm:0.8.0"]
           ],
           "linkType": "HARD",
         }]
@@ -40255,7 +40242,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-environment-node", "npm:26.6.0"],
             ["jest-process-manager", "npm:0.2.5"],
             ["nyc", "npm:15.1.0"],
-            ["playwright-core", "npm:1.7.1"],
+            ["playwright-core", "npm:1.16.3"],
             ["rimraf", "npm:3.0.2"],
             ["uuid", "npm:8.3.0"]
           ],
@@ -40283,7 +40270,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-process-manager", "npm:0.3.1"],
             ["jest-runner", null],
             ["nyc", "npm:15.1.0"],
-            ["playwright-core", "npm:1.7.1"],
+            ["playwright-core", "npm:1.16.3"],
             ["rimraf", "npm:3.0.2"],
             ["uuid", "npm:8.3.2"]
           ],
@@ -45371,10 +45358,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "HARD",
         }],
-        ["npm:1.7.1", {
-          "packageLocation": "./.yarn/unplugged/playwright-core-npm-1.7.1-c64a16131a/node_modules/playwright-core/",
+        ["npm:1.16.3", {
+          "packageLocation": "./.yarn/unplugged/playwright-core-npm-1.16.3-8b609a410f/node_modules/playwright-core/",
           "packageDependencies": [
-            ["playwright-core", "npm:1.7.1"],
+            ["playwright-core", "npm:1.16.3"],
+            ["commander", "npm:8.3.0"],
             ["debug", "virtual:48933b28331d16c1d73786360e7ba20f54f6df4949c6ab5c13ac4c4353b5c70f2d36a97de9a9c531027ad3588d8fd7f384706f298f0eff0356b58bb9c47f63ec#npm:4.2.0"],
             ["extract-zip", "npm:2.0.1"],
             ["https-proxy-agent", "npm:5.0.0"],
@@ -45385,7 +45373,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["proper-lockfile", "npm:4.1.1"],
             ["proxy-from-env", "npm:1.1.0"],
             ["rimraf", "npm:3.0.2"],
-            ["ws", "virtual:2fdb74b8139e6f2b1c20684b496ffe86fff49d1adabb88d69c4a20e0ac19be5c83cfdab9e0d8d20c61ddb364ce3ce8b41533f8a16ea0110099117b9cbb786169#npm:7.3.1"]
+            ["socks-proxy-agent", "npm:6.1.0"],
+            ["stack-utils", "npm:2.0.5"],
+            ["ws", "virtual:1e37b6e7e3bda4216d7d4bc6d836b8d461c1a7196444d848a19383a44c76b1d2f21e328dd83bccaf43b579aa1fe453b63bccbf08b7d4666ea80d5a30719887c4#npm:7.5.5"],
+            ["yauzl", "npm:2.10.0"],
+            ["yazl", "npm:2.5.1"]
           ],
           "linkType": "HARD",
         }]

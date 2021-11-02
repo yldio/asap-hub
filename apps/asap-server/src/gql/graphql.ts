@@ -40,7 +40,7 @@ export type AppMutations = {
   changeLabsContent: Labs;
   /** Change a Migrations content. */
   changeMigrationsContent: Migrations;
-  /** Change a News and Events content. */
+  /** Change a News content. */
   changeNewsAndEventsContent: NewsAndEvents;
   /** Change a Pages content. */
   changePagesContent: Pages;
@@ -66,7 +66,7 @@ export type AppMutations = {
   createLabsContent: Labs;
   /** Creates an Migrations content. */
   createMigrationsContent: Migrations;
-  /** Creates an News and Events content. */
+  /** Creates an News content. */
   createNewsAndEventsContent: NewsAndEvents;
   /** Creates an Pages content. */
   createPagesContent: Pages;
@@ -92,7 +92,7 @@ export type AppMutations = {
   deleteLabsContent: EntitySavedResultDto;
   /** Delete an Migrations content. */
   deleteMigrationsContent: EntitySavedResultDto;
-  /** Delete an News and Events content. */
+  /** Delete an News content. */
   deleteNewsAndEventsContent: EntitySavedResultDto;
   /** Delete an Pages content. */
   deletePagesContent: EntitySavedResultDto;
@@ -118,7 +118,7 @@ export type AppMutations = {
   patchLabsContent: Labs;
   /** Patch an Migrations content by id. */
   patchMigrationsContent: Migrations;
-  /** Patch an News and Events content by id. */
+  /** Patch an News content by id. */
   patchNewsAndEventsContent: NewsAndEvents;
   /** Patch an Pages content by id. */
   patchPagesContent: Pages;
@@ -169,7 +169,7 @@ export type AppMutations = {
    */
   publishMigrationsContent: Migrations;
   /**
-   * Publish a News and Events content.
+   * Publish a News content.
    * @deprecated Use 'changeNewsAndEventsContent' instead
    */
   publishNewsAndEventsContent: NewsAndEvents;
@@ -209,7 +209,7 @@ export type AppMutations = {
   updateLabsContent: Labs;
   /** Update an Migrations content by id. */
   updateMigrationsContent: Migrations;
-  /** Update an News and Events content by id. */
+  /** Update an News content by id. */
   updateNewsAndEventsContent: NewsAndEvents;
   /** Update an Pages content by id. */
   updatePagesContent: Pages;
@@ -235,7 +235,7 @@ export type AppMutations = {
   upsertLabsContent: Labs;
   /** Upsert an Migrations content by id. */
   upsertMigrationsContent: Migrations;
-  /** Upsert an News and Events content by id. */
+  /** Upsert an News content by id. */
   upsertNewsAndEventsContent: NewsAndEvents;
   /** Upsert an Pages content by id. */
   upsertPagesContent: Pages;
@@ -956,7 +956,7 @@ export type AppQueries = {
   findLabsContent: Maybe<Labs>;
   /** Find an Migrations content by id. */
   findMigrationsContent: Maybe<Migrations>;
-  /** Find an News and Events content by id. */
+  /** Find an News content by id. */
   findNewsAndEventsContent: Maybe<NewsAndEvents>;
   /** Find an Pages content by id. */
   findPagesContent: Maybe<Pages>;
@@ -1002,9 +1002,9 @@ export type AppQueries = {
   queryMigrationsContents: Maybe<Array<Migrations>>;
   /** Query Migrations content items with total count. */
   queryMigrationsContentsWithTotal: Maybe<MigrationsResultDto>;
-  /** Query News and Events content items. */
+  /** Query News content items. */
   queryNewsAndEventsContents: Maybe<Array<NewsAndEvents>>;
-  /** Query News and Events content items with total count. */
+  /** Query News content items with total count. */
   queryNewsAndEventsContentsWithTotal: Maybe<NewsAndEventsResultDto>;
   /** Query Pages content items. */
   queryPagesContents: Maybe<Array<Pages>>;
@@ -2687,7 +2687,7 @@ export type MigrationsResultDto = {
   total: Scalars['Int'];
 };
 
-/** The structure of a News and Events content type. */
+/** The structure of a News content type. */
 export type NewsAndEvents = Content & {
   /** The timestamp when the object was created. */
   created: Scalars['Instant'];
@@ -2729,7 +2729,7 @@ export type NewsAndEvents = Content & {
   version: Scalars['Int'];
 };
 
-/** The structure of a News and Events content type. */
+/** The structure of a News content type. */
 export type NewsAndEventsReferencingDashboardContentsArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
@@ -2738,7 +2738,7 @@ export type NewsAndEventsReferencingDashboardContentsArgs = {
   top: Maybe<Scalars['Int']>;
 };
 
-/** The structure of a News and Events content type. */
+/** The structure of a News content type. */
 export type NewsAndEventsReferencingDashboardContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
@@ -2747,7 +2747,7 @@ export type NewsAndEventsReferencingDashboardContentsWithTotalArgs = {
   top: Maybe<Scalars['Int']>;
 };
 
-/** The structure of a News and Events content type. */
+/** The structure of a News content type. */
 export type NewsAndEventsReferencingDiscoverContentsArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
@@ -2756,7 +2756,7 @@ export type NewsAndEventsReferencingDiscoverContentsArgs = {
   top: Maybe<Scalars['Int']>;
 };
 
-/** The structure of a News and Events content type. */
+/** The structure of a News content type. */
 export type NewsAndEventsReferencingDiscoverContentsWithTotalArgs = {
   filter: Maybe<Scalars['String']>;
   orderby: Maybe<Scalars['String']>;
@@ -2765,19 +2765,19 @@ export type NewsAndEventsReferencingDiscoverContentsWithTotalArgs = {
   top: Maybe<Scalars['Int']>;
 };
 
-/** The structure of the Event Date field of the News and Events content type. */
+/** The structure of the Event Date field of the News content type. */
 export type NewsAndEventsDataDateDto = {
   /** Property only used on Event type items */
   iv: Maybe<Scalars['Instant']>;
 };
 
-/** The structure of the Event Date field of the News and Events content input type. */
+/** The structure of the Event Date field of the News content input type. */
 export type NewsAndEventsDataDateInputDto = {
   /** Property only used on Event type items */
   iv: Maybe<Scalars['Instant']>;
 };
 
-/** The structure of the News and Events data type. */
+/** The structure of the News data type. */
 export type NewsAndEventsDataDto = {
   date: Maybe<NewsAndEventsDataDateDto>;
   link: Maybe<NewsAndEventsDataLinkDto>;
@@ -2789,7 +2789,7 @@ export type NewsAndEventsDataDto = {
   type: Maybe<NewsAndEventsDataTypeDto>;
 };
 
-/** The structure of the News and Events data input type. */
+/** The structure of the News data input type. */
 export type NewsAndEventsDataInputDto = {
   date: Maybe<NewsAndEventsDataDateInputDto>;
   link: Maybe<NewsAndEventsDataLinkInputDto>;
@@ -2801,81 +2801,81 @@ export type NewsAndEventsDataInputDto = {
   type: Maybe<NewsAndEventsDataTypeInputDto>;
 };
 
-/** The structure of the External Link field of the News and Events content type. */
+/** The structure of the External Link field of the News content type. */
 export type NewsAndEventsDataLinkDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the External Link field of the News and Events content input type. */
+/** The structure of the External Link field of the News content input type. */
 export type NewsAndEventsDataLinkInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the News and Events content type. */
+/** The structure of the External Link Text field of the News content type. */
 export type NewsAndEventsDataLinkTextDto = {
   /** Leave this empty to show "Open External Link" */
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the External Link Text field of the News and Events content input type. */
+/** The structure of the External Link Text field of the News content input type. */
 export type NewsAndEventsDataLinkTextInputDto = {
   /** Leave this empty to show "Open External Link" */
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Short Text field of the News and Events content type. */
+/** The structure of the Short Text field of the News content type. */
 export type NewsAndEventsDataShortTextDto = {
   /** The text visible on the card version of News and Events */
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Short Text field of the News and Events content input type. */
+/** The structure of the Short Text field of the News content input type. */
 export type NewsAndEventsDataShortTextInputDto = {
   /** The text visible on the card version of News and Events */
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Text field of the News and Events content type. */
+/** The structure of the Text field of the News content type. */
 export type NewsAndEventsDataTextDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Text field of the News and Events content input type. */
+/** The structure of the Text field of the News content input type. */
 export type NewsAndEventsDataTextInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Thumbnail field of the News and Events content type. */
+/** The structure of the Thumbnail field of the News content type. */
 export type NewsAndEventsDataThumbnailDto = {
   iv: Maybe<Array<Asset>>;
 };
 
-/** The structure of the Thumbnail field of the News and Events content input type. */
+/** The structure of the Thumbnail field of the News content input type. */
 export type NewsAndEventsDataThumbnailInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Title field of the News and Events content type. */
+/** The structure of the Title field of the News content type. */
 export type NewsAndEventsDataTitleDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Title field of the News and Events content input type. */
+/** The structure of the Title field of the News content input type. */
 export type NewsAndEventsDataTitleInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Type field of the News and Events content type. */
+/** The structure of the Type field of the News content type. */
 export type NewsAndEventsDataTypeDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Type field of the News and Events content input type. */
+/** The structure of the Type field of the News content input type. */
 export type NewsAndEventsDataTypeInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the flat News and Events data type. */
+/** The structure of the flat News data type. */
 export type NewsAndEventsFlatDataDto = {
   /** Property only used on Event type items */
   date: Maybe<Scalars['Instant']>;
@@ -2890,7 +2890,7 @@ export type NewsAndEventsFlatDataDto = {
   type: Maybe<Scalars['String']>;
 };
 
-/** List of News and Events items and total count. */
+/** List of News items and total count. */
 export type NewsAndEventsResultDto = {
   /** The contents. */
   items: Maybe<Array<NewsAndEvents>>;

@@ -93,7 +93,7 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): Migrations!
-  """Change a News and Events content."""
+  """Change a News content."""
   changeNewsAndEventsContent(
     """The timestamp when the status should be changed."""
     dueTime: Instant
@@ -236,7 +236,7 @@ type AppMutations {
     """The initial status."""
     status: String
   ): Migrations!
-  """Creates an News and Events content."""
+  """Creates an News content."""
   createNewsAndEventsContent(
     """The data for the content."""
     data: NewsAndEventsDataInputDto!
@@ -347,7 +347,7 @@ type AppMutations {
     """The id of the content (usually GUID)."""
     id: String!
   ): EntitySavedResultDto!
-  """Delete an News and Events content."""
+  """Delete an News content."""
   deleteNewsAndEventsContent(
     """The expected version."""
     expectedVersion: Int = -2
@@ -454,7 +454,7 @@ type AppMutations {
     """The ID of the object."""
     id: String
   ): Migrations!
-  """Patch an News and Events content by id."""
+  """Patch an News content by id."""
   patchNewsAndEventsContent(
     """The data for the content."""
     data: NewsAndEventsDataInputDto!
@@ -587,7 +587,7 @@ type AppMutations {
     """The status for the content."""
     status: String!
   ): Migrations! @deprecated(reason: "Use 'changeMigrationsContent' instead")
-  """Publish a News and Events content."""
+  """Publish a News content."""
   publishNewsAndEventsContent(
     """The timestamp when the status should be changed."""
     dueTime: Instant
@@ -714,7 +714,7 @@ type AppMutations {
     """The ID of the object."""
     id: String
   ): Migrations!
-  """Update an News and Events content by id."""
+  """Update an News content by id."""
   updateNewsAndEventsContent(
     """The data for the content."""
     data: NewsAndEventsDataInputDto!
@@ -863,7 +863,7 @@ type AppMutations {
     """The initial status."""
     status: String
   ): Migrations!
-  """Upsert an News and Events content by id."""
+  """Upsert an News content by id."""
   upsertNewsAndEventsContent(
     """The data for the content."""
     data: NewsAndEventsDataInputDto!
@@ -993,7 +993,7 @@ type AppQueries {
     """The optional version of the content to retrieve an older instance (not cached)."""
     version: Int
   ): Migrations
-  """Find an News and Events content by id."""
+  """Find an News content by id."""
   findNewsAndEventsContent(
     """The ID of the object."""
     id: String!
@@ -1258,7 +1258,7 @@ type AppQueries {
     """Optional number of contents to take."""
     top: Int
   ): MigrationsResultDto
-  """Query News and Events content items."""
+  """Query News content items."""
   queryNewsAndEventsContents(
     """Optional OData filter."""
     filter: String
@@ -1271,7 +1271,7 @@ type AppQueries {
     """Optional number of contents to take."""
     top: Int
   ): [NewsAndEvents!]
-  """Query News and Events content items with total count."""
+  """Query News content items with total count."""
   queryNewsAndEventsContentsWithTotal(
     """Optional OData filter."""
     filter: String
@@ -2737,7 +2737,7 @@ type MigrationsResultDto {
   total: Int!
 }
 
-"""The structure of a News and Events content type."""
+"""The structure of a News content type."""
 type NewsAndEvents implements Content {
   """The timestamp when the object was created."""
   created: Instant!
@@ -2823,19 +2823,19 @@ type NewsAndEvents implements Content {
   version: Int!
 }
 
-"""The structure of the Event Date field of the News and Events content type."""
+"""The structure of the Event Date field of the News content type."""
 type NewsAndEventsDataDateDto {
   """Property only used on Event type items"""
   iv: Instant
 }
 
-"""The structure of the Event Date field of the News and Events content input type."""
+"""The structure of the Event Date field of the News content input type."""
 input NewsAndEventsDataDateInputDto {
   """Property only used on Event type items"""
   iv: Instant
 }
 
-"""The structure of the News and Events data type."""
+"""The structure of the News data type."""
 type NewsAndEventsDataDto {
   date: NewsAndEventsDataDateDto
   link: NewsAndEventsDataLinkDto
@@ -2847,7 +2847,7 @@ type NewsAndEventsDataDto {
   type: NewsAndEventsDataTypeDto
 }
 
-"""The structure of the News and Events data input type."""
+"""The structure of the News data input type."""
 input NewsAndEventsDataInputDto {
   date: NewsAndEventsDataDateInputDto
   link: NewsAndEventsDataLinkInputDto
@@ -2859,17 +2859,17 @@ input NewsAndEventsDataInputDto {
   type: NewsAndEventsDataTypeInputDto
 }
 
-"""The structure of the External Link field of the News and Events content type."""
+"""The structure of the External Link field of the News content type."""
 type NewsAndEventsDataLinkDto {
   iv: String
 }
 
-"""The structure of the External Link field of the News and Events content input type."""
+"""The structure of the External Link field of the News content input type."""
 input NewsAndEventsDataLinkInputDto {
   iv: String
 }
 
-"""The structure of the External Link Text field of the News and Events content type."""
+"""The structure of the External Link Text field of the News content type."""
 type NewsAndEventsDataLinkTextDto {
   """
   Leave this empty to show "Open External Link"
@@ -2877,7 +2877,7 @@ type NewsAndEventsDataLinkTextDto {
   iv: String
 }
 
-"""The structure of the External Link Text field of the News and Events content input type."""
+"""The structure of the External Link Text field of the News content input type."""
 input NewsAndEventsDataLinkTextInputDto {
   """
   Leave this empty to show "Open External Link"
@@ -2885,59 +2885,59 @@ input NewsAndEventsDataLinkTextInputDto {
   iv: String
 }
 
-"""The structure of the Short Text field of the News and Events content type."""
+"""The structure of the Short Text field of the News content type."""
 type NewsAndEventsDataShortTextDto {
   """The text visible on the card version of News and Events"""
   iv: String
 }
 
-"""The structure of the Short Text field of the News and Events content input type."""
+"""The structure of the Short Text field of the News content input type."""
 input NewsAndEventsDataShortTextInputDto {
   """The text visible on the card version of News and Events"""
   iv: String
 }
 
-"""The structure of the Text field of the News and Events content type."""
+"""The structure of the Text field of the News content type."""
 type NewsAndEventsDataTextDto {
   iv: String
 }
 
-"""The structure of the Text field of the News and Events content input type."""
+"""The structure of the Text field of the News content input type."""
 input NewsAndEventsDataTextInputDto {
   iv: String
 }
 
-"""The structure of the Thumbnail field of the News and Events content type."""
+"""The structure of the Thumbnail field of the News content type."""
 type NewsAndEventsDataThumbnailDto {
   iv: [Asset!]
 }
 
-"""The structure of the Thumbnail field of the News and Events content input type."""
+"""The structure of the Thumbnail field of the News content input type."""
 input NewsAndEventsDataThumbnailInputDto {
   iv: [String!]
 }
 
-"""The structure of the Title field of the News and Events content type."""
+"""The structure of the Title field of the News content type."""
 type NewsAndEventsDataTitleDto {
   iv: String
 }
 
-"""The structure of the Title field of the News and Events content input type."""
+"""The structure of the Title field of the News content input type."""
 input NewsAndEventsDataTitleInputDto {
   iv: String
 }
 
-"""The structure of the Type field of the News and Events content type."""
+"""The structure of the Type field of the News content type."""
 type NewsAndEventsDataTypeDto {
   iv: String
 }
 
-"""The structure of the Type field of the News and Events content input type."""
+"""The structure of the Type field of the News content input type."""
 input NewsAndEventsDataTypeInputDto {
   iv: String
 }
 
-"""The structure of the flat News and Events data type."""
+"""The structure of the flat News data type."""
 type NewsAndEventsFlatDataDto {
   """Property only used on Event type items"""
   date: Instant
@@ -2954,7 +2954,7 @@ type NewsAndEventsFlatDataDto {
   type: String
 }
 
-"""List of News and Events items and total count."""
+"""List of News items and total count."""
 type NewsAndEventsResultDto {
   """The contents."""
   items: [NewsAndEvents!]

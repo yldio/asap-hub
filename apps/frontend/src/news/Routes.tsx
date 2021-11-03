@@ -7,12 +7,12 @@ import Frame from '../structure/Frame';
 
 const loadNewsList = () =>
   import(/* webpackChunkName: "news-list" */ './NewsList');
-const loadNewsOrEvent = () => import(/* webpackChunkName: "news" */ './News');
+const loadNews = () => import(/* webpackChunkName: "news" */ './News');
 const NewsList = lazy(loadNewsList);
-const NewsOrEventPage = lazy(loadNewsOrEvent);
+const NewsDetailsPage = lazy(loadNews);
 loadNewsList();
 
-const NewsAndEvents: FC<Record<string, never>> = () => {
+const News: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
 
   return (
@@ -25,10 +25,10 @@ const NewsAndEvents: FC<Record<string, never>> = () => {
         </NewsPage>
       </Route>
       <Route path={path + news({}).article.template}>
-        <NewsOrEventPage />
+        <NewsDetailsPage />
       </Route>
     </Switch>
   );
 };
 
-export default NewsAndEvents;
+export default News;

@@ -1,29 +1,29 @@
 import {
   Loading,
   NotFoundPage,
-  NewsOrEventPage,
+  NewsDetailsPage,
 } from '@asap-hub/react-components';
-import { news, useRouteParams } from '@asap-hub/routing';
+import { news as newsRoute, useRouteParams } from '@asap-hub/routing';
 
 import { useNewsById } from '../api';
 import Frame from '../structure/Frame';
 
-const NewsOrEvent: React.FC<Record<string, never>> = () => {
-  const { articleId } = useRouteParams(news({}).article);
-  const { loading, data: newsOrEvent } = useNewsById(articleId);
+const News: React.FC<Record<string, never>> = () => {
+  const { articleId } = useRouteParams(newsRoute({}).article);
+  const { loading, data: news } = useNewsById(articleId);
 
   if (loading) {
     return <Loading />;
   }
 
-  if (newsOrEvent) {
+  if (news) {
     const props = {
-      ...newsOrEvent,
-      text: newsOrEvent.text || '',
+      ...news,
+      text: news.text || '',
     };
     return (
-      <Frame title={newsOrEvent.title}>
-        <NewsOrEventPage {...props} />
+      <Frame title={news.title}>
+        <NewsDetailsPage {...props} />
       </Frame>
     );
   }
@@ -31,4 +31,4 @@ const NewsOrEvent: React.FC<Record<string, never>> = () => {
   return <NotFoundPage />;
 };
 
-export default NewsOrEvent;
+export default News;

@@ -5,7 +5,7 @@ import { NewsResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 
-import NewsOrEvent from '../News';
+import News from '../News';
 import { API_BASE_URL } from '../../config';
 
 const newsOrEvent: NewsResponse = {
@@ -24,7 +24,7 @@ const renderPage = async () => {
             initialEntries={[news({}).article({ articleId: newsOrEvent.id }).$]}
           >
             <Route path={news.template + news({}).article.template}>
-              <NewsOrEvent />
+              <News />
             </Route>
           </MemoryRouter>
         </authTestUtils.LoggedIn>

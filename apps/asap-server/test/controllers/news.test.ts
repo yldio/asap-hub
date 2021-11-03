@@ -1,15 +1,15 @@
 import nock from 'nock';
 import { config } from '@asap-hub/squidex';
 import { identity } from '../helpers/squidex';
-import NewsAndEvents from '../../src/controllers/news';
+import News from '../../src/controllers/news';
 import {
   newsSquidexApiResponse,
   listNewsResponse,
 } from '../fixtures/news.fixtures';
 import { NewsResponse } from '@asap-hub/model';
 
-describe('NewsAndEvents controller', () => {
-  const newsAndEvents = new NewsAndEvents();
+describe('News controller', () => {
+  const news = new News();
 
   beforeAll(() => {
     identity();
@@ -33,7 +33,7 @@ describe('NewsAndEvents controller', () => {
         })
         .reply(200, { total: 0, items: [] });
 
-      const result = await newsAndEvents.fetch({ take: 8, skip: 5 });
+      const result = await news.fetch({ take: 8, skip: 5 });
 
       expect(result).toEqual({
         items: [],
@@ -54,7 +54,7 @@ describe('NewsAndEvents controller', () => {
         })
         .reply(404);
 
-      const result = await newsAndEvents.fetch({ take: 8, skip: 5 });
+      const result = await news.fetch({ take: 8, skip: 5 });
 
       expect(result).toEqual({
         items: [],
@@ -62,7 +62,7 @@ describe('NewsAndEvents controller', () => {
       });
     });
 
-    test('Should return news and events', async () => {
+    test('Should return news', async () => {
       nock(config.baseUrl)
         .get(`/api/content/${config.appName}/news-and-events`)
         .query({
@@ -75,7 +75,7 @@ describe('NewsAndEvents controller', () => {
         })
         .reply(200, newsSquidexApiResponse);
 
-      const result = await newsAndEvents.fetch({ take: 8, skip: 5 });
+      const result = await news.fetch({ take: 8, skip: 5 });
 
       expect(result).toEqual(listNewsResponse);
     });
@@ -108,7 +108,7 @@ describe('NewsAndEvents controller', () => {
         })
         .reply(200, squidexResponse);
 
-      const result = await newsAndEvents.fetch({ take: 8, skip: 5 });
+      const result = await news.fetch({ take: 8, skip: 5 });
 
       expect(result.items[0].thumbnail).toBeUndefined();
     });
@@ -122,7 +122,7 @@ describe('NewsAndEvents controller', () => {
         .get(`/api/content/${config.appName}/news-and-events/${id}`)
         .reply(404);
 
-      await expect(newsAndEvents.fetchById(id)).rejects.toThrow('Not Found');
+      await expect(news.fetchById(id)).rejects.toThrow('Not Found');
     });
 
     test('Should return the result when the news and event exists', async () => {
@@ -140,7 +140,7 @@ describe('NewsAndEvents controller', () => {
           },
         });
 
-      const result = await newsAndEvents.fetchById(id);
+      const result = await news.fetchById(id);
 
       const expectedResponse: NewsResponse = {
         created: '2020-09-23T16:34:26.842Z',

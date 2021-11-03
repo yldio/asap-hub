@@ -272,7 +272,7 @@ export const getResearchOutputResponse =
     sharingStatus: 'Network Only',
     asapFunded: true,
     usedInPublication: false,
-    pmsEmails: ['multiple-pms-on-same-team@example.com'],
+    contactEmails: ['multiple-pms-on-same-team@example.com'],
     labs: [
       { id: '99c78dd7-627e-4fbd-aaec-d1977895189e', name: 'Test' },
       { id: 'cd7be402-84d7-4d21-a360-82e2695f2dd9', name: 'mike' },

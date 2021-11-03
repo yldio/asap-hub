@@ -36,7 +36,7 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
 
   membersSectionId,
 }) => {
-  const pmsEmails = leaders
+  const contactEmails = leaders
     .filter(({ role }) => role === 'Project Manager')
     .map(({ user }) => user.email);
 
@@ -47,8 +47,8 @@ const GroupProfileAbout: React.FC<GroupProfileAboutProps> = ({
       <div id={membersSectionId}>
         <GroupMembersSection teams={teams} leaders={leaders} />
       </div>
-      {pmsEmails.length !== 0 && (
-        <CtaCard href={createMailTo(pmsEmails)} buttonText="Contact PM">
+      {contactEmails.length !== 0 && (
+        <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
           <strong>Interested in what you have seen?</strong>
           <br /> Reach out to this group and see how you can collaborate
         </CtaCard>

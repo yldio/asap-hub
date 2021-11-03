@@ -28,7 +28,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
   asapFunded: DecisionOption;
   usedInAPublication: DecisionOption;
   authors?: TAuthorConnection[];
-  pmsEmails: string[];
+  contactEmails: string[];
   rrid?: string;
   accession?: string;
 }
@@ -36,7 +36,7 @@ export interface ResearchOutput<TAuthorConnection = string> {
 export interface RestResearchOutput extends Entity, Rest<ResearchOutput> {}
 export interface CreateResearchOutput
   extends Entity,
-    Rest<Omit<ResearchOutput, 'pmsEmails'>> {}
+    Rest<Omit<ResearchOutput, 'contactEmails'>> {}
 
 export type GraphqlExternalAuthorAssoc = GraphqlWithTypename<
   GraphqlExternalAuthor,

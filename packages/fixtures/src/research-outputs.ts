@@ -33,7 +33,7 @@ const researchOutputResponse: Omit<
     },
   ],
   sharingStatus: 'Public',
-  pmsEmails: [],
+  contactEmails: [],
   labs: [],
 };
 

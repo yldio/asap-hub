@@ -8,7 +8,7 @@ import { DecisionOption, ResearchOutputSharingStatus } from '@asap-hub/model';
 
 export const createProtocolsRequest: Omit<
   RestResearchOutput['data'],
-  'pmsEmails'
+  'contactEmails'
 > = {
   type: { iv: 'Protocol' },
   title: { iv: 'title 1' },

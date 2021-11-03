@@ -50,7 +50,7 @@ type SharedResearchOutputProps = Pick<
   | 'sharingStatus'
   | 'asapFunded'
   | 'usedInPublication'
-  | 'pmsEmails'
+  | 'contactEmails'
   | 'doi'
   | 'rrid'
   | 'accession'
@@ -68,7 +68,7 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
   sharingStatus,
   asapFunded,
   usedInPublication,
-  pmsEmails,
+  contactEmails,
   doi,
   rrid,
   accession,
@@ -207,8 +207,8 @@ const SharedResearchOutput: React.FC<SharedResearchOutputProps> = ({
           )}
         </ol>
       </Card>
-      {!!pmsEmails.length && (
-        <CtaCard href={createMailTo(pmsEmails)} buttonText="Contact PM">
+      {!!contactEmails.length && (
+        <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
           <strong>Interested in what you have seen?</strong>
           <br /> Reach out to the PMs associated with this output
         </CtaCard>

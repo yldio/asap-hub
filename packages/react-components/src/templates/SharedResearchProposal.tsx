@@ -33,7 +33,7 @@ type SharedResearchProposalProps = Pick<
   | 'description'
   | 'title'
   | 'type'
-  | 'pmsEmails'
+  | 'contactEmails'
 > & {
   backHref: string;
 };
@@ -45,7 +45,7 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
   description,
   title,
   type,
-  pmsEmails,
+  contactEmails,
   backHref,
 }) => (
   <div css={containerStyles}>
@@ -62,9 +62,9 @@ const SharedResearchProposal: React.FC<SharedResearchProposalProps> = ({
           </Caption>
         </div>
       </Card>
-      {!!pmsEmails.length && (
+      {!!contactEmails.length && (
         <div>
-          <CtaCard href={createMailTo(pmsEmails)} buttonText="Contact PM">
+          <CtaCard href={createMailTo(contactEmails)} buttonText="Contact PM">
             <strong>Interested in what you have seen?</strong>
             <br /> Reach out to the PMs associated with this output
           </CtaCard>

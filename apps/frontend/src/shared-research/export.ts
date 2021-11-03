@@ -67,7 +67,7 @@ export const researchOutputToCSV = (
   labCatalogNumber: output.labCatalogNumber,
   description: htmlToCsvText(output.description),
   accessInstructions: htmlToCsvText(output.accessInstructions),
-  pmsEmails: output.pmsEmails
+  contactEmails: output.contactEmails
     .map((item) => item)
     .sort(caseInsensitive)
     .join(','),

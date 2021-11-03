@@ -87,7 +87,7 @@ const addProtocolToTeam = async (
 
 export default async (data: Protocol): Promise<void> => {
   const promises: Cache = {};
-  const protocol: Omit<RestResearchOutput['data'], 'pmsEmails'> = {
+  const protocol: Omit<RestResearchOutput['data'], 'contactEmails'> = {
     type: { iv: 'Protocol' },
     title: { iv: data.name },
     link: { iv: data.link },

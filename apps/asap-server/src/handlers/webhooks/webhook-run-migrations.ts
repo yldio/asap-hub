@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Query, RestMigration, Squidex } from '@asap-hub/squidex';
 import { isBoom } from '@hapi/boom';
 import { Handler } from 'aws-lambda';
 import { promises as fsPromise } from 'fs';
-import { Logger } from 'pino';
 import path from 'path';
+import { Logger } from 'pino';
 import pinoLogger from '../../utils/logger';
 
 const squidexClient = new Squidex<RestMigration>('migrations');
@@ -89,11 +90,6 @@ export const rollbackFactory =
       let migration;
       try {
         [migration] = await getMigrationsFromPaths([migrationPath]);
-        if (!migration) {
-          throw new Error(
-            `Could not load the migration from file ${migrationPath}`,
-          );
-        }
       } catch (error) {
         logger.error(
           error,
@@ -103,14 +99,14 @@ export const rollbackFactory =
         throw error;
       }
 
-      logger.debug(`Executing rollback of migration '${migration.getPath()}`);
+      logger.debug(`Executing rollback of migration '${migration!.getPath()}`);
 
       try {
-        await migration.down();
+        await migration!.down();
       } catch (error) {
         logger.error(
           error,
-          `Error executing the rollback of migration ${migration.getPath()}`,
+          `Error executing the rollback of migration ${migration!.getPath()}`,
         );
 
         throw error;
@@ -122,11 +118,11 @@ export const rollbackFactory =
         await removeExecutedMigration(migrationPath);
 
         logger.info(
-          `Rolled back and removed migration '${migration.getPath()}'`,
+          `Rolled back and removed migration '${migration!.getPath()}'`,
         );
       } catch (error) {
         logger.error(
-          `Rolled back the migration '${migration.getPath()}' but failed to save the rollback progress`,
+          `Rolled back the migration '${migration!.getPath()}' but failed to save the rollback progress`,
         );
 
         throw error;
@@ -248,12 +244,12 @@ const isMigration = (instance: any): instance is Migration =>
 
 export abstract class Migration {
   path: string;
+  abstract up: () => Promise<void>;
+  abstract down: () => Promise<void>;
 
   constructor(filePath: string) {
     this.path = filePath;
   }
-  abstract up: () => Promise<void>;
-  abstract down: () => Promise<void>;
   getPath(): string {
     return this.path;
   }

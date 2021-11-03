@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Router, Response } from 'express';
-import { framework } from '@asap-hub/services-common';
-import Joi from '@hapi/joi';
-import Boom from '@hapi/boom';
 import {
   ListGroupResponse,
   ListTeamResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
+import { framework } from '@asap-hub/services-common';
+import Boom from '@hapi/boom';
+import Joi from '@hapi/joi';
+import { Response, Router } from 'express';
 
+import { GroupController } from '../controllers/groups';
 import { TeamController } from '../controllers/teams';
 import { teamUpdateSchema } from '../entities/team';
-import { GroupController } from '../controllers/groups';
 import { FetchOptions } from '../utils/types';
 
 export const teamRouteFactory = (
@@ -46,14 +46,12 @@ export const teamRouteFactory = (
   teamRoutes.get('/teams/:teamId', async (req, res: Response<TeamResponse>) => {
     const { params } = req;
     const { teamId } = framework.validate('parameters', params, paramSchema);
-    if (teamId === undefined) {
-      throw Boom.badRequest('teamId cannot be undefined');
-    }
+
     const showTools = !!req.loggedInUser?.teams.find(
       (team) => team.id === teamId,
     );
 
-    const result = await teamsController.fetchById(teamId, { showTools });
+    const result = await teamsController.fetchById(teamId!, { showTools });
 
     res.json(result);
   });
@@ -74,11 +72,7 @@ export const teamRouteFactory = (
         throw Boom.forbidden();
       }
 
-      if (teamId === undefined) {
-        throw Boom.badRequest('teamId cannot be undefined');
-      }
-
-      const result = await teamsController.update(teamId, tools);
+      const result = await teamsController.update(teamId!, tools);
 
       res.json(result);
     },
@@ -88,18 +82,14 @@ export const teamRouteFactory = (
     '/teams/:teamId/groups',
     async (req, res: Response<ListGroupResponse>) => {
       const { query, params } = req;
-
       const { teamId } = framework.validate('parameters', params, paramSchema);
-      if (teamId === undefined) {
-        throw Boom.badRequest('teamId cannot be undefined');
-      }
       const options = framework.validate(
         'query',
         query,
         querySchema,
       ) as unknown as FetchOptions;
 
-      const result = await groupsController.fetchByTeamId(teamId, options);
+      const result = await groupsController.fetchByTeamId(teamId!, options);
 
       res.json(result);
     },

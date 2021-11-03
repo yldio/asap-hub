@@ -1,11 +1,11 @@
-import { Router, Response } from 'express';
-import Joi from '@hapi/joi';
-import Boom from '@hapi/boom';
-import { framework } from '@asap-hub/services-common';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { framework } from '@asap-hub/services-common';
+import Joi from '@hapi/joi';
+import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
 
 export const researchOutputRouteFactory = (
@@ -44,10 +44,9 @@ export const researchOutputRouteFactory = (
         params,
         paramsSchema,
       );
-      if (researchOutputId === undefined) {
-        throw Boom.badRequest('researchOutputId cannot be undefined');
-      }
-      const result = await researchOutputController.fetchById(researchOutputId);
+      const result = await researchOutputController.fetchById(
+        researchOutputId!,
+      );
 
       res.json(result);
     },

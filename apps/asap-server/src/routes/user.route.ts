@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { Router, Response } from 'express';
-import { framework } from '@asap-hub/services-common';
-import parseURI from 'parse-data-url';
-import Joi from '@hapi/joi';
-import Boom, { isBoom } from '@hapi/boom';
 import { UserPatchRequest, UserResponse } from '@asap-hub/model';
+import { framework } from '@asap-hub/services-common';
 import { isUserOnboardable } from '@asap-hub/validation';
-import { FetchOptions } from '../utils/types';
+import Boom, { isBoom } from '@hapi/boom';
+import Joi from '@hapi/joi';
+import { Response, Router } from 'express';
+import parseURI from 'parse-data-url';
 import { GroupController } from '../controllers/groups';
 import { UserController } from '../controllers/users';
 import { userUpdateSchema } from '../entities/user';
 import { permissionHandler } from '../middleware/permission-handler';
+import { FetchOptions } from '../utils/types';
 
 export const userPublicRouteFactory = (
   userController: UserController,
@@ -26,11 +26,8 @@ export const userPublicRouteFactory = (
         req.params,
         publicParamSchema,
       );
-      if (code === undefined) {
-        throw Boom.badRequest('code cannot be undefined');
-      }
       try {
-        const result = await userController.fetchByCode(code);
+        const result = await userController.fetchByCode(code!);
 
         res.json({
           id: result.id,
@@ -73,11 +70,6 @@ export const userRouteFactory = (
       req.params,
       paramSchema,
     );
-
-    if (userId === undefined) {
-      throw Boom.badRequest('userId cannot be undefined');
-    }
-
     if (
       req.loggedInUser?.onboarded !== true &&
       userId !== req.loggedInUser?.id
@@ -85,7 +77,7 @@ export const userRouteFactory = (
       throw Boom.forbidden('User is not onboarded');
     }
 
-    const result = await userController.fetchById(userId);
+    const result = await userController.fetchById(userId!);
 
     if (result.onboarded === false && result.id !== req.loggedInUser?.id) {
       throw Boom.notFound();
@@ -98,18 +90,19 @@ export const userRouteFactory = (
     const { query, params } = req;
 
     const { userId } = framework.validate('parameters', params, paramSchema);
-    if (userId === undefined) {
-      throw Boom.badRequest('userId cannot be undefined');
-    }
     const options = framework.validate(
       'query',
       query,
       querySchema,
     ) as unknown as FetchOptions;
 
-    const user = await userController.fetchById(userId);
+    const user = await userController.fetchById(userId!);
     const teams = user.teams.map((t) => t.id);
-    const result = await groupsController.fetchByUserId(userId, teams, options);
+    const result = await groupsController.fetchByUserId(
+      userId!,
+      teams,
+      options,
+    );
 
     res.json(result);
   });

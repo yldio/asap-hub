@@ -1,8 +1,8 @@
-import { Router, Response } from 'express';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { framework } from '@asap-hub/services-common';
-import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
-import { ListEventResponse, EventResponse } from '@asap-hub/model';
+import { Response, Router } from 'express';
 import { EventController, FetchEventsOptions } from '../controllers/events';
 
 export const eventRouteFactory = (eventController: EventController): Router => {
@@ -25,10 +25,8 @@ export const eventRouteFactory = (eventController: EventController): Router => {
     async (req, res: Response<EventResponse>) => {
       const { params } = req;
       const { eventId } = framework.validate('parameters', params, paramSchema);
-      if (eventId === undefined) {
-        throw Boom.badRequest('eventId cannot be undefined');
-      }
-      const result = await eventController.fetchById(eventId);
+
+      const result = await eventController.fetchById(eventId!);
 
       res.json(result);
     },

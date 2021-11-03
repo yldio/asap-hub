@@ -1,10 +1,10 @@
-import { Router } from 'express';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { framework } from '@asap-hub/services-common';
-import Boom from '@hapi/boom';
 import Joi from '@hapi/joi';
+import { Router } from 'express';
+import { EventController, FetchEventsOptions } from '../controllers/events';
 import { GroupController } from '../controllers/groups';
 import { FetchOptions } from '../utils/types';
-import { FetchEventsOptions, EventController } from '../controllers/events';
 import { eventQuerySchema } from './events.route';
 
 export const groupRouteFactory = (
@@ -30,10 +30,7 @@ export const groupRouteFactory = (
   groupRoutes.get('/groups/:groupId', async (req, res) => {
     const { params } = req;
     const { groupId } = framework.validate('parameters', params, paramSchema);
-    if (groupId === undefined) {
-      throw Boom.badRequest('groupId cannot be undefined');
-    }
-    const result = await groupsController.fetchById(groupId);
+    const result = await groupsController.fetchById(groupId!);
 
     res.json(result);
   });

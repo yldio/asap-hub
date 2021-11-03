@@ -102,6 +102,7 @@ export default class Discover implements DiscoverController {
       members:
         content.flatData.members?.map((member) =>
           parseGraphQLUser(
+            // @todo remove the cast https://trello.com/c/5vW6YMsL/1694-replace-graphql-types-with-the-generated-ones-news
             member as NonNullable<FetchUserQuery['findUsersContent']>,
           ),
         ) ?? [],

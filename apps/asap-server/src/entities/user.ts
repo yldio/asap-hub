@@ -8,6 +8,8 @@ import {
   userDegree,
   OrcidWorkType,
   orcidWorkType,
+  Role,
+  userRole,
 } from '@asap-hub/model';
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
@@ -93,9 +95,10 @@ export const parseGraphQLUser = (
   const flatSkills = item.flatData.skills || [];
   const createdDate = parseDate(item.created).toISOString();
 
-  const role = ['Guest', 'Staff', 'Grantee'].includes(item.flatData.role || '')
-    ? (item.flatData.role as 'Guest' | 'Staff' | 'Grantee')
-    : 'Guest';
+  const role =
+    item.flatData.role && isUserRole(item.flatData.role)
+      ? item.flatData.role
+      : 'Guest';
   const teams: UserTeam[] = (flatTeams || []).map(
     parseGraphQLUserTeamConnection,
   );
@@ -240,6 +243,9 @@ export const parseUser = (user: RestUser): UserResponse => {
     }),
   );
 };
+
+const isUserRole = (data: string): data is Role =>
+  (userRole as ReadonlyArray<string>).includes(data);
 
 const isUserDegree = (data: string): data is UserDegree =>
   (userDegree as ReadonlyArray<string>).includes(data);

@@ -2,7 +2,9 @@ import { ListResponse } from './common';
 import { TeamRole } from './team';
 import { Lab } from './lab';
 
-export type Role = 'Staff' | 'Grantee' | 'Guest' | 'Hidden';
+export const userRole = ['Staff', 'Grantee', 'Guest', 'Hidden'] as const;
+
+export type Role = typeof userRole[number];
 
 export const userDegree = [
   'BA',

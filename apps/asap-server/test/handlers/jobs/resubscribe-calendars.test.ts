@@ -42,6 +42,7 @@ describe('Resubscribe calendar handler', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   test('Should get the list of calendars expiring within 24h', async () => {

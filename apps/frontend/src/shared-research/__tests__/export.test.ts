@@ -134,7 +134,7 @@ describe('researchOutputToCSV', () => {
     };
     expect(researchOutputToCSV(output).teams).toMatchInlineSnapshot(`"1,b,z"`);
   });
-  it('flattens and orders pm emails', () => {
+  it('flattens and orders contact emails', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
       contactEmails: [

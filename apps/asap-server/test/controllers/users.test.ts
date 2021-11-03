@@ -6,6 +6,7 @@ import Users from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import { FetchOptions } from '../../src/utils/types';
+import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchExpectation,
   fetchUserResponse,

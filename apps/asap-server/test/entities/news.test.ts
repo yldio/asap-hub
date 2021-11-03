@@ -38,7 +38,7 @@ describe('parse news entities', () => {
 describe('parse GraphQL news entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
-    const newsOrEvent: GraphqlNews = {
+    const news: GraphqlNews = {
       id: 'uuid',
       created: date,
       lastModified: date,
@@ -52,7 +52,7 @@ describe('parse GraphQL news entities', () => {
       },
     };
 
-    expect(parseGraphQLNews(newsOrEvent)).toMatchObject({
+    expect(parseGraphQLNews(news)).toMatchObject({
       id: 'uuid',
       created: date,
       type: 'News',

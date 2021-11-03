@@ -11,6 +11,7 @@ import {
   parseGraphQLPage,
   parseGraphQLNewsAndEvents,
 } from '../entities';
+import { FetchUserQuery } from '../gql/graphql';
 
 export const query = `
 {
@@ -98,7 +99,13 @@ export default class Discover implements DiscoverController {
     return {
       aboutUs: content.flatData.aboutUs || '',
       training: content.flatData.training?.map(parseGraphQLNewsAndEvents) ?? [],
-      members: content.flatData.members?.map(parseGraphQLUser) ?? [],
+      members:
+        content.flatData.members?.map((member) =>
+          parseGraphQLUser(
+            // @todo remove the cast https://trello.com/c/5vW6YMsL/1694-replace-graphql-types-with-the-generated-ones-news
+            member as NonNullable<FetchUserQuery['findUsersContent']>,
+          ),
+        ) ?? [],
       pages: content.flatData.pages?.map(parseGraphQLPage) ?? [],
     };
   }

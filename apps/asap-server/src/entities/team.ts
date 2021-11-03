@@ -5,8 +5,8 @@ import {
   TeamRole,
   TeamMember,
   Lab,
-  isTeamRole,
   TeamTool,
+  teamRole,
 } from '@asap-hub/model';
 import { GraphqlResearchOutput } from '@asap-hub/squidex';
 
@@ -150,3 +150,6 @@ export const parseGraphQLTeam = (
       : undefined,
   };
 };
+
+export const isTeamRole = (data: string | null): data is TeamRole =>
+  teamRole.includes(data as TeamRole);

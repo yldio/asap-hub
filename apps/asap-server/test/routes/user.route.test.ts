@@ -7,7 +7,7 @@ import {
   fetchExpectation,
   updateAvatarBody,
   userPatchRequest,
-  userResponse,
+  getUserResponse,
 } from '../fixtures/users.fixtures';
 import { groupControllerMock } from '../mocks/group-controller.mock';
 import { userControllerMock } from '../mocks/user-controller.mock';
@@ -117,12 +117,12 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
 
       const response = await supertest(appWithMockedAuth).get('/users/123');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(userResponse);
+      expect(response.body).toEqual(getUserResponse());
     });
 
     test('Should call the controller with the right parameter', async () => {
@@ -135,7 +135,7 @@ describe('/users/ route', () => {
 
     test('Should return 404 when the user is found but is not onboarded', async () => {
       const userNonOnboardedResponse = {
-        ...userResponse,
+        ...getUserResponse(),
         onboarded: false,
       };
       userControllerMock.fetchById.mockResolvedValueOnce(
@@ -149,7 +149,7 @@ describe('/users/ route', () => {
 
     test('Should return the result when the user is found and is not onboarded but is queried by the same, logged-in user', async () => {
       const userNonOnboardedResponse = {
-        ...userResponse,
+        ...getUserResponse(),
         onboarded: false,
         id: userMock.id,
       };
@@ -174,14 +174,14 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      userControllerMock.fetchByCode.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchByCode.mockResolvedValueOnce(getUserResponse());
 
       const response = await supertest(app).get('/users/invites/123');
 
       expect(response.status).toBe(200);
       const expectedResult = {
-        id: userResponse.id,
-        displayName: userResponse.displayName,
+        id: getUserResponse().id,
+        displayName: getUserResponse().displayName,
       };
       expect(response.body).toEqual(expectedResult);
     });
@@ -207,7 +207,7 @@ describe('/users/ route', () => {
     });
 
     test('Should return 200 when no grups exist', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
@@ -225,7 +225,7 @@ describe('/users/ route', () => {
     });
 
     test('Should return the results correctly', async () => {
-      userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
+      userControllerMock.fetchById.mockResolvedValueOnce(getUserResponse());
       groupControllerMock.fetchByUserId.mockResolvedValueOnce(
         listGroupsResponse,
       );
@@ -239,13 +239,26 @@ describe('/users/ route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
+      const userResponse = getUserResponse();
+      userResponse.teams = [
+        {
+          id: 'team-id-1',
+          role: 'Lead PI (Core Leadership)',
+          displayName: 'Team A',
+        },
+        {
+          id: 'team-id-3',
+          role: 'Lead PI (Core Leadership)',
+          displayName: 'Team B',
+        },
+      ];
       userControllerMock.fetchById.mockResolvedValueOnce(userResponse);
       groupControllerMock.fetchByUserId.mockResolvedValueOnce({
         items: [],
         total: 0,
       });
-      const teams = ['team-id-1', 'team-id-3'];
-      const userId = '123abcd';
+      const teams = [userResponse.teams[0].id, userResponse.teams[1].id];
+      const userId = userResponse.id;
 
       await supertest(appWithMockedAuth).get(`/users/${userId}/groups`).query({
         take: 15,
@@ -283,14 +296,14 @@ describe('/users/ route', () => {
     const userId = userMock.id;
 
     test('Should return the results correctly', async () => {
-      userControllerMock.update.mockResolvedValueOnce(userResponse);
+      userControllerMock.update.mockResolvedValueOnce(getUserResponse());
 
       const response = await supertest(appWithMockedAuth)
         .patch(`/users/${userId}`)
         .send({ jobTitle: 'CEO' });
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(userResponse);
+      expect(response.body).toEqual(getUserResponse());
     });
 
     test('Should return 500 when it fails to update the user', async () => {
@@ -338,7 +351,7 @@ describe('/users/ route', () => {
     });
 
     test('Should call the controller method with the correct parameters', async () => {
-      userControllerMock.update.mockResolvedValueOnce(userResponse);
+      userControllerMock.update.mockResolvedValueOnce(getUserResponse());
 
       const requestParams = {
         ...userPatchRequest,
@@ -381,7 +394,7 @@ describe('/users/ route', () => {
     describe('Profile completeness validation', () => {
       test('Should return an error when attempting to onboard the user with incomplete profile (missing questions)', async () => {
         const incompleteUserResponse: UserResponse = {
-          ...userResponse,
+          ...getUserResponse(),
           questions: [],
         };
         userControllerMock.update.mockResolvedValueOnce(incompleteUserResponse);
@@ -398,7 +411,7 @@ describe('/users/ route', () => {
 
       test('Should not return an error when updating a user with incomplete profile while sending onboarded flag set to false', async () => {
         const incompleteUserResponse: UserResponse = {
-          ...userResponse,
+          ...getUserResponse(),
           onboarded: false,
           questions: [],
         };
@@ -414,7 +427,7 @@ describe('/users/ route', () => {
 
       test('Should update and onboard the user', async () => {
         const nonOnboardedUserResponse: UserResponse = {
-          ...userResponse,
+          ...getUserResponse(),
           onboarded: false,
         };
         userControllerMock.update.mockResolvedValueOnce(
@@ -422,7 +435,7 @@ describe('/users/ route', () => {
         );
 
         const onboardedUserResponse: UserResponse = {
-          ...userResponse,
+          ...getUserResponse(),
           onboarded: true,
         };
         userControllerMock.update.mockResolvedValueOnce(onboardedUserResponse);
@@ -440,18 +453,18 @@ describe('/users/ route', () => {
     const userId = userMock.id;
 
     test('Should return the results correctly', async () => {
-      userControllerMock.updateAvatar.mockResolvedValueOnce(userResponse);
+      userControllerMock.updateAvatar.mockResolvedValueOnce(getUserResponse());
 
       const response = await supertest(appWithMockedAuth)
         .post(`/users/${userId}/avatar`)
         .send(updateAvatarBody);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(userResponse);
+      expect(response.body).toEqual(getUserResponse());
     });
 
     test('Should upload pictures of 2MB correctly', async () => {
-      userControllerMock.updateAvatar.mockResolvedValueOnce(userResponse);
+      userControllerMock.updateAvatar.mockResolvedValueOnce(getUserResponse());
       const blob = Crypto.randomBytes(2097152).toString('base64');
       const updateLargeAvatar = {
         avatar: `data:image/jpeg;base64,${blob}`,
@@ -462,7 +475,7 @@ describe('/users/ route', () => {
         .send(updateLargeAvatar);
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual(userResponse);
+      expect(response.body).toEqual(getUserResponse());
     });
 
     test('Should return 500 when it fails to update the avatar', async () => {

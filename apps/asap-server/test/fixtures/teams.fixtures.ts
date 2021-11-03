@@ -12,13 +12,17 @@ import {
   ResponseFetchTeam,
 } from '../../src/controllers/teams';
 import {
+  FetchTeamQuery,
   Labs,
   UsersDataQuestionsChildDto,
   UsersDataTeamsChildDto,
   UsersFlatDataDto,
 } from '../../src/gql/graphql';
-import { getSquidexResearchOutputGraphqlResponseAuthors } from './research-output.fixtures';
-import { fetchExpectation } from './users.fixtures';
+import {
+  getSquidexResearchOutputGraphqlResponseAuthors,
+  getSquidexGraphqlResearchOutput,
+} from './research-output.fixtures';
+import { fetchExpectation, getGraphQLUser } from './users.fixtures';
 
 export const referencingUsersContentsResponse = ({
   avatar,
@@ -726,9 +730,13 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
   lastModified: '2020-09-08T16:35:28Z',
 });
 
+export type GraphTeamTool = NonNullable<
+  NonNullable<FetchTeamQuery['findTeamsContent']>['flatData']['tools']
+>[number];
+
 export const getGraphQlTeamResponse = (
-  tools: TeamTool[] | null = [],
-): { data: ResponseFetchTeam } => ({
+  tools: GraphTeamTool[] | null = [],
+): { data: FetchTeamQuery } => ({
   data: {
     findTeamsContent: {
       id: 'team-id-1',
@@ -737,71 +745,7 @@ export const getGraphQlTeamResponse = (
       flatData: {
         applicationNumber: 'ASAP-000420',
         displayName: 'Schipa, A',
-        outputs: [
-          {
-            id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-            created: '2020-09-17T08:18:01Z',
-            lastModified: '2020-10-21T13:11:50.000Z',
-            flatData: {
-              link: null,
-              publishDate: null,
-              addedDate: null,
-              title: 'Proposal',
-              type: 'Proposal',
-              tags: ['test', 'tag'],
-              authors: [
-                getSquidexResearchOutputGraphqlResponseAuthors()[0] as GraphqlResearchOutputAuthors,
-              ],
-              sharingStatus: 'Network Only',
-              asapFunded: 'No',
-            },
-            referencingTeamsContents: [
-              {
-                id: 'team-id-1',
-                created: '2020-09-17T08:18:01Z',
-                lastModified: '2020-10-21T13:11:50Z',
-                flatData: {
-                  displayName: 'Schipa, A',
-                },
-              },
-            ],
-          },
-          {
-            id: '7198d072-de87-4b80-90ca-4a1abe67952e',
-            created: '2020-11-24T16:33:30Z',
-            lastModified: '2020-11-26T13:45:49.000Z',
-            flatData: {
-              link: 'docs.google.com',
-              publishDate: null,
-              labCatalogNumber: 'http://example.com',
-              addedDate: null,
-              title: "Team Salzer's intro slide deck",
-              type: 'Presentation',
-              authors: [
-                getSquidexResearchOutputGraphqlResponseAuthors()[1] as GraphqlResearchOutputAuthors,
-              ],
-              usedInAPublication: 'No',
-            },
-            referencingTeamsContents: [
-              {
-                id: 'team-id-1',
-                created: '2020-09-17T08:18:01Z',
-                lastModified: '2020-10-21T13:11:50Z',
-                flatData: {
-                  displayName: 'Schipa, A',
-                },
-              },
-              {
-                id: 'team-id-2',
-                created: '2020-09-17T08:18:01Z',
-                lastModified: '2020-10-21T13:11:50Z',
-                flatData: {
-                  displayName: 'Team, B',
-                },
-              },
-            ],
-          },
-        ],
+        outputs: [getSquidexGraphqlResearchOutput()],
         projectSummary: null,
         projectTitle:
           'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
@@ -813,50 +757,7 @@ export const getGraphQlTeamResponse = (
         ],
         tools,
       },
-      referencingUsersContents: [
-        {
-          id: 'user-id-1',
-          created: '2020-09-25T09:42:51.132Z',
-          lastModified: '2020-09-25T09:42:51.132Z',
-          flatData: {
-            avatar: [
-              {
-                id: 'uuid-user-id-1',
-              },
-            ],
-            email: 'cristiano@ronaldo.com',
-            firstName: 'Cristiano',
-            lastName: 'Ronaldo',
-            jobTitle: 'Junior',
-            institution: 'Dollar General Corporation',
-            connections: [],
-            biography: '',
-            teams: [
-              {
-                id: [
-                  {
-                    id: 'team-id-1',
-                    created: '2020-09-23T20:33:36Z',
-                    lastModified: '2020-11-26T11:56:04Z',
-                    flatData: {
-                      displayName: 'Schipa, A',
-                    },
-                  },
-                ],
-                role: 'Lead PI (Core Leadership)',
-              },
-            ],
-            questions: [],
-            skills: [],
-            role: 'Grantee',
-            onboarded: true,
-            labs: [
-              { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
-              { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
-            ],
-          },
-        },
-      ],
+      referencingUsersContents: [getGraphQLUser()],
     },
   },
 });
@@ -904,82 +805,7 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
   ],
 };
 
-export const updateExpectation: TeamResponse = {
-  id: 'team-id-1',
-  displayName: 'Schipa, A',
-  lastModifiedDate: '2020-11-26T11:56:04.000Z',
-  skills: ['Animal resources'],
-  outputs: [
-    {
-      id: '7198d072-de87-4b80-90ca-4a1abe67952e',
-      created: '2020-11-24T16:33:30.000Z',
-      link: 'docs.google.com',
-      type: 'Presentation',
-      subTypes: [],
-      title: "Team Salzer's intro slide deck",
-      description: '',
-      tags: [],
-      authors: [fetchExpectation.items[1]],
-      teams: [
-        {
-          id: 'team-id-1',
-          displayName: 'Schipa, A',
-        },
-        {
-          id: 'team-id-2',
-          displayName: 'Team, B',
-        },
-      ],
-      lastUpdatedPartial: '2020-11-26T13:45:49.000Z',
-      sharingStatus: 'Network Only',
-      usedInPublication: false,
-      contactEmails: [],
-      labCatalogNumber: 'http://example.com',
-      labs: [],
-    },
-    {
-      id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-      created: '2020-09-17T08:18:01.000Z',
-      type: 'Proposal',
-      subTypes: [],
-      title: 'Proposal',
-      description: '',
-      tags: ['test', 'tag'],
-      authors: [fetchExpectation.items[0]],
-      teams: [
-        {
-          id: 'team-id-1',
-          displayName: 'Schipa, A',
-        },
-      ],
-      lastUpdatedPartial: '2020-10-21T13:11:50.000Z',
-      sharingStatus: 'Network Only',
-      asapFunded: false,
-      contactEmails: [],
-      labs: [],
-    },
-  ],
-  members: [
-    {
-      id: 'user-id-1',
-      firstName: 'Cristiano',
-      lastName: 'Ronaldo',
-      avatarUrl: `${config.baseUrl}/api/assets/${config.appName}/uuid-user-id-1`,
-      email: 'cristiano@ronaldo.com',
-      displayName: 'Cristiano Ronaldo',
-      role: 'Lead PI (Core Leadership)',
-      labs: [
-        { id: 'cd7be4902', name: 'Barcelona' },
-        { id: 'cd7be4905', name: 'Glasgow' },
-      ],
-    },
-  ],
-  projectTitle:
-    'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-  proposalURL: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
-  tools: [],
-  labCount: 2,
-};
+export const updateExpectation: TeamResponse = fetchTeamByIdExpectation;
 
 const getTeamsEvent = (
   eventType: string,

@@ -10,7 +10,10 @@ import {
   FetchResearchOutputsQuery,
 } from '../../src/gql/graphql';
 import { DeepWriteable } from '../../src/utils/types';
-import { fetchExpectation, graphQlResponseFetchUsers } from './users.fixtures';
+import {
+  fetchExpectation,
+  getGraphqlResponseFetchUsers,
+} from './users.fixtures';
 import { createEventBridgeEventMock } from '../../test/helpers/events';
 import { ResearchOutputEventType } from '../../src/handlers/webhooks/webhook-research-output';
 
@@ -27,7 +30,7 @@ export const getSquidexResearchOutputGraphqlResponseAuthors = (): NonNullable<
     FetchResearchOutputQuery['findResearchOutputsContent']
   >['flatData']['authors']
 > =>
-  graphQlResponseFetchUsers.data.queryUsersContentsWithTotal.items.map(
+  getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!.items!.map(
     (item) => ({
       __typename: 'Users',
       ...item,

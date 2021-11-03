@@ -8,7 +8,6 @@ import {
   sharingStatuses,
   TeamResponse,
 } from '@asap-hub/model';
-import { GraphqlUser } from '@asap-hub/squidex';
 import { FetchResearchOutputQuery, Labs, Scalars } from '../gql/graphql';
 import { parseDate } from '../utils/squidex';
 import { parseGraphQLUser } from './user';
@@ -33,8 +32,7 @@ export const parseGraphQLResearchOutput = (
             )
             .map((author) => {
               if (author.__typename === 'Users') {
-                // TODO: REMOVE casting once other GraphqlTypes are generated
-                return parseGraphQLUser(author as GraphqlUser);
+                return parseGraphQLUser(author);
               }
 
               return {

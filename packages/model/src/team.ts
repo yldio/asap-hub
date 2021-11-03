@@ -12,9 +12,6 @@ export const teamRole = [
 
 export type TeamRole = typeof teamRole[number];
 
-export const isTeamRole = (data: string | null): data is TeamRole =>
-  teamRole.includes(data as TeamRole);
-
 export type TeamTool = { name: string; description?: string; url: string };
 
 export interface TeamCreateRequest {

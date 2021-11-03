@@ -75,7 +75,7 @@ export const calendarCreatedHandlerFactory =
           });
         } catch (error) {
           logger.error(error, 'Error during unsubscribing from the calendar');
-          alerts.error(error);
+          await alerts.error(error);
         }
       }
     }
@@ -97,7 +97,7 @@ export const calendarCreatedHandlerFactory =
         });
       } catch (error) {
         logger.error(error, 'Error subscribing to the calendar');
-        alerts.error(error);
+        await alerts.error(error);
 
         return 'ERROR';
       }

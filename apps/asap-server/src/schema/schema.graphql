@@ -3983,6 +3983,8 @@ type UsersDataDto {
   country: UsersDataCountryDto
   degree: UsersDataDegreeDto
   email: UsersDataEmailDto
+  expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionDto
+  expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsDto
   firstName: UsersDataFirstNameDto
   institution: UsersDataInstitutionDto
   jobTitle: UsersDataJobTitleDto
@@ -4014,6 +4016,26 @@ input UsersDataEmailInputDto {
   iv: String
 }
 
+"""The structure of the Expertise and Resources Description field of the Users content type."""
+type UsersDataExpertiseAndResourceDescriptionDto {
+  iv: String
+}
+
+"""The structure of the Expertise and Resources Description field of the Users content input type."""
+input UsersDataExpertiseAndResourceDescriptionInputDto {
+  iv: String
+}
+
+"""The structure of the Expertise and Resources field of the Users content type."""
+type UsersDataExpertiseAndResourceTagsDto {
+  iv: [String!]
+}
+
+"""The structure of the Expertise and Resources field of the Users content input type."""
+input UsersDataExpertiseAndResourceTagsInputDto {
+  iv: [String!]
+}
+
 """The structure of the First Name field of the Users content type."""
 type UsersDataFirstNameDto {
   iv: String
@@ -4035,6 +4057,8 @@ input UsersDataInputDto {
   country: UsersDataCountryInputDto
   degree: UsersDataDegreeInputDto
   email: UsersDataEmailInputDto
+  expertiseAndResourceDescription: UsersDataExpertiseAndResourceDescriptionInputDto
+  expertiseAndResourceTags: UsersDataExpertiseAndResourceTagsInputDto
   firstName: UsersDataFirstNameInputDto
   institution: UsersDataInstitutionInputDto
   jobTitle: UsersDataJobTitleInputDto
@@ -4299,6 +4323,7 @@ input UsersDataSocialInputDto {
 type UsersDataTeamsChildDto {
   approach: String
   id: [Teams!]
+  mainResearchInterests: String
   responsibilities: String
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
@@ -4308,6 +4333,7 @@ type UsersDataTeamsChildDto {
 input UsersDataTeamsChildInputDto {
   approach: String
   id: [String!]
+  mainResearchInterests: String
   responsibilities: String
   """Attention: Check if this user needs to be added to Smart Simple"""
   role: String
@@ -4336,6 +4362,8 @@ type UsersFlatDataDto {
   country: String
   degree: String
   email: String
+  expertiseAndResourceDescription: String
+  expertiseAndResourceTags: [String!]
   firstName: String
   institution: String
   jobTitle: String

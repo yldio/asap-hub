@@ -33,6 +33,8 @@
       "jobTitle",
       "skillsDescription",
       "skills",
+      "expertiseAndResourceDescription",
+      "expertiseAndResourceTags",
       "questions",
       "biography",
       "social",
@@ -231,6 +233,23 @@
           },
           {
             "name": "approach",
+            "isHidden": false,
+            "isLocked": false,
+            "isDisabled": false,
+            "properties": {
+              "fieldType": "String",
+              "isUnique": false,
+              "inlineEditable": true,
+              "contentType": "Unspecified",
+              "editor": "Input",
+              "label": "Main Research Interests",
+              "isRequired": false,
+              "isRequiredOnPublish": false,
+              "isHalfWidth": true
+            }
+          },
+          {
+            "name": "mainResearchInterests",
             "isHidden": false,
             "isLocked": false,
             "isDisabled": false,
@@ -624,6 +643,39 @@
       },
       {
         "name": "skills",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Expertise and Resources",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "expertiseAndResourceDescription",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "String",
+          "isUnique": false,
+          "inlineEditable": true,
+          "contentType": "Unspecified",
+          "editor": "Input",
+          "label": "Expertise and Resources Description",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "expertiseAndResourceTags",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,

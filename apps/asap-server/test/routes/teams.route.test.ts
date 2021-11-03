@@ -87,21 +87,6 @@ describe('/teams/ route', () => {
         expectedParams,
       );
     });
-    test.only('Should throw when teamId is not defined', async () => {
-      groupControllerMock.fetchByTeamId.mockResolvedValueOnce({
-        items: [],
-        total: 0,
-      });
-      const teamId = '';
-
-      await expect(
-        supertest(app).get(`/teams/${teamId}/groups`).query({
-          take: 15,
-          skip: 5,
-          search: 'something',
-        }),
-      ).rejects.toThrow();
-    });
 
     describe('Parameter validation', () => {
       test('Should return a validation error when the arguments are not valid', async () => {

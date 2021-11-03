@@ -87,7 +87,7 @@ export type ResearchOutputResponse = {
 
   readonly authors: ReadonlyArray<UserResponse | ExternalAuthor>;
   readonly teams: ReadonlyArray<Pick<TeamResponse, 'id' | 'displayName'>>;
-  readonly pmsEmails: string[];
+  readonly contactEmails: string[];
 
   readonly labs: Lab[];
 };

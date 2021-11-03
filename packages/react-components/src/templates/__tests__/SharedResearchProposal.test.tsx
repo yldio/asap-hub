@@ -68,11 +68,11 @@ it('falls back to created date when added date omitted', () => {
 
 it('displays contact pm card when there are contact emails', () => {
   const { queryByText, getByText, rerender } = render(
-    <SharedResearchProposal {...props} pmsEmails={[]} />,
+    <SharedResearchProposal {...props} contactEmails={[]} />,
   );
   expect(queryByText(/contact pm/i)).not.toBeInTheDocument();
   rerender(
-    <SharedResearchProposal {...props} pmsEmails={['blah@gmail.com']} />,
+    <SharedResearchProposal {...props} contactEmails={['blah@gmail.com']} />,
   );
   expect(getByText(/contact pm/i).closest('a')).toHaveAttribute(
     'href',

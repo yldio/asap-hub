@@ -194,7 +194,7 @@ describe('ResearchOutputs controller', () => {
 
       const expectedResult = getResearchOutputResponse();
       expectedResult.teams = [];
-      expectedResult.pmsEmails = []; // as there are no referencing teams, there won't be any PMs
+      expectedResult.contactEmails = []; // as there are no referencing teams, there won't be any PMs
 
       expect(result).toEqual(expectedResult);
     });
@@ -292,7 +292,7 @@ describe('ResearchOutputs controller', () => {
       );
 
       const result = await researchOutputs.fetchById(researchOutputId);
-      expect(result.pmsEmails).toEqual([
+      expect(result.contactEmails).toEqual([
         'pm1@example.com',
         'pm2@example.com',
         'multiple-pms-on-same-team@example.com',
@@ -309,10 +309,12 @@ describe('ResearchOutputs controller', () => {
 
       // Both these PMs are duplicated in the fixture
       expect(
-        result.pmsEmails.filter((email) => email === 'pm1@example.com').length,
+        result.contactEmails.filter((email) => email === 'pm1@example.com')
+          .length,
       ).toEqual(1);
       expect(
-        result.pmsEmails.filter((email) => email === 'pm2@example.com').length,
+        result.contactEmails.filter((email) => email === 'pm2@example.com')
+          .length,
       ).toEqual(1);
     });
 

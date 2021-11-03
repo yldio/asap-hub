@@ -66,7 +66,7 @@ describe('researchOutputToCSV', () => {
       labCatalogNumber: 'labCatalogNumber',
       lastModifiedDate: 'lastModifiedDate',
       link: 'link',
-      pmsEmails: '',
+      contactEmails: '',
       publishDate: 'publishDate',
       rrid: 'rrid',
       usedInPublication: false,
@@ -137,13 +137,13 @@ describe('researchOutputToCSV', () => {
   it('flattens and orders pm emails', () => {
     const output: ResearchOutputResponse = {
       ...createResearchOutputResponse(),
-      pmsEmails: [
+      contactEmails: [
         'ztest@example.com',
         'ctest@example.com',
         'atest@example.com',
       ],
     };
-    expect(researchOutputToCSV(output).pmsEmails).toMatchInlineSnapshot(
+    expect(researchOutputToCSV(output).contactEmails).toMatchInlineSnapshot(
       `"atest@example.com,ctest@example.com,ztest@example.com"`,
     );
   });

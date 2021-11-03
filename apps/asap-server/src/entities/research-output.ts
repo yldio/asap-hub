@@ -54,7 +54,7 @@ export const parseGraphQLResearchOutput = (
       }
     : {};
 
-  const pmsEmails =
+  const contactEmails =
     output.referencingTeamsContents?.flatMap((team) =>
       team.referencingUsersContents
         ?.filter(
@@ -69,11 +69,11 @@ export const parseGraphQLResearchOutput = (
         .map((user) => user.flatData?.email),
     ) || [];
 
-  const filteredPmsEmails = pmsEmails?.filter(
+  const filteredContactEmails = contactEmails?.filter(
     (email): email is string => email !== undefined,
   ) as string[];
 
-  const uniquePmsEmails = [...new Set(filteredPmsEmails)];
+  const uniqueContactEmails = [...new Set(filteredContactEmails)];
 
   const data = output.flatData;
 
@@ -106,7 +106,7 @@ export const parseGraphQLResearchOutput = (
         : 'Network Only',
     asapFunded: convertDecisionToBoolean(data.asapFunded),
     usedInPublication: convertDecisionToBoolean(data.usedInAPublication),
-    pmsEmails: uniquePmsEmails,
+    contactEmails: uniqueContactEmails,
     labs:
       data.labs
         ?.filter((lab): lab is LabWithName => lab.flatData.name !== null)

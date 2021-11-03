@@ -3875,6 +3875,8 @@ export type UsersDataDto = {
   country: Maybe<UsersDataCountryDto>;
   degree: Maybe<UsersDataDegreeDto>;
   email: Maybe<UsersDataEmailDto>;
+  expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionDto>;
+  expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsDto>;
   firstName: Maybe<UsersDataFirstNameDto>;
   institution: Maybe<UsersDataInstitutionDto>;
   jobTitle: Maybe<UsersDataJobTitleDto>;
@@ -3906,6 +3908,26 @@ export type UsersDataEmailInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
+/** The structure of the Expertise and Resources Description field of the Users content type. */
+export type UsersDataExpertiseAndResourceDescriptionDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Expertise and Resources Description field of the Users content input type. */
+export type UsersDataExpertiseAndResourceDescriptionInputDto = {
+  iv: Maybe<Scalars['String']>;
+};
+
+/** The structure of the Expertise and Resources field of the Users content type. */
+export type UsersDataExpertiseAndResourceTagsDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Expertise and Resources field of the Users content input type. */
+export type UsersDataExpertiseAndResourceTagsInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the First Name field of the Users content type. */
 export type UsersDataFirstNameDto = {
   iv: Maybe<Scalars['String']>;
@@ -3927,6 +3949,8 @@ export type UsersDataInputDto = {
   country: Maybe<UsersDataCountryInputDto>;
   degree: Maybe<UsersDataDegreeInputDto>;
   email: Maybe<UsersDataEmailInputDto>;
+  expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
+  expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsInputDto>;
   firstName: Maybe<UsersDataFirstNameInputDto>;
   institution: Maybe<UsersDataInstitutionInputDto>;
   jobTitle: Maybe<UsersDataJobTitleInputDto>;
@@ -4193,6 +4217,7 @@ export type UsersDataSocialInputDto = {
 export type UsersDataTeamsChildDto = {
   approach: Maybe<Scalars['String']>;
   id: Maybe<Array<Teams>>;
+  mainResearchInterests: Maybe<Scalars['String']>;
   responsibilities: Maybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
@@ -4202,6 +4227,7 @@ export type UsersDataTeamsChildDto = {
 export type UsersDataTeamsChildInputDto = {
   approach: Maybe<Scalars['String']>;
   id: Maybe<Array<Scalars['String']>>;
+  mainResearchInterests: Maybe<Scalars['String']>;
   responsibilities: Maybe<Scalars['String']>;
   /** Attention: Check if this user needs to be added to Smart Simple */
   role: Maybe<Scalars['String']>;
@@ -4230,6 +4256,8 @@ export type UsersFlatDataDto = {
   country: Maybe<Scalars['String']>;
   degree: Maybe<Scalars['String']>;
   email: Maybe<Scalars['String']>;
+  expertiseAndResourceDescription: Maybe<Scalars['String']>;
+  expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   firstName: Maybe<Scalars['String']>;
   institution: Maybe<Scalars['String']>;
   jobTitle: Maybe<Scalars['String']>;

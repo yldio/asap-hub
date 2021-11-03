@@ -1,4 +1,10 @@
+const path = require('path');
+
 module.exports = {
+  parserOptions: {
+    project: ['tsconfig.json'],
+    tsconfigRootDir: path.resolve(__dirname),
+  },
   rules: {
     'no-use-before-define': 'off',
     'no-unused-vars': 'off',
@@ -14,5 +20,6 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['__typename'] }],
     'no-dupe-class-members': 'off',
     '@typescript-eslint/no-dupe-class-members': ['error'],
+    '@typescript-eslint/no-floating-promises': 'error',
   },
 };

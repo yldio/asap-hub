@@ -21,6 +21,7 @@
       "projectTitle",
       "projectSummary",
       "skills",
+      "expertiseAndResourceTags",
       "tools",
       "meta.id",
       "meta.created",
@@ -67,6 +68,21 @@
       },
       {
         "name": "skills",
+        "isHidden": false,
+        "isLocked": false,
+        "isDisabled": false,
+        "partitioning": "invariant",
+        "properties": {
+          "fieldType": "Tags",
+          "editor": "Tags",
+          "label": "Expertise and Resources",
+          "isRequired": false,
+          "isRequiredOnPublish": false,
+          "isHalfWidth": false
+        }
+      },
+      {
+        "name": "expertiseAndResourceTags",
         "isHidden": false,
         "isLocked": false,
         "isDisabled": false,

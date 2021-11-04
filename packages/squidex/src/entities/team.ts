@@ -9,6 +9,7 @@ export interface Team<T = string> {
   projectTitle: string;
   proposal?: T[];
   skills: string[];
+  expertiseAndResourceTags?: string[];
   tools?: {
     url: string;
     description?: string;

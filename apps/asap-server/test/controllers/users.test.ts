@@ -3,7 +3,7 @@ import { print } from 'graphql';
 import matches from 'lodash.matches';
 import nock from 'nock';
 import Users from '../../src/controllers/users';
-import { identity } from '../helpers/squidex';;
+import { identity } from '../helpers/squidex';
 import { FETCH_USER, FETCH_USERS } from '../../src/queries/users.queries';
 import { FetchOptions } from '../../src/utils/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';

@@ -72,6 +72,14 @@ Individual `packages` or `apps` may contain their own readme files as deemed nec
 The [`docs`](docs) folder contains overall architecture / decision documentation.
 The [`dev`](dev) folder contains documentation regarding the local dev environment for the backend.
 
+## Squidex schema changes and graphql
+
+Once schema changes have added via packages/squidex/schema and released. The GraphQL definations need to be updated.
+
+`yarn schema:update`
+
+Then commit the changed.
+
 ## License
 
 The source code of this project is licensed under the MIT License.

@@ -80,6 +80,30 @@ Once schema changes have added via packages/squidex/schema and released. The Gra
 
 Then commit the changed.
 
+## Migrate squidex fields
+
+Create a migration script with the following command:
+
+`yarn workspace @asap-hub/asap-server migration:create <give-the-script-a-name>`
+
+This should create a new script in:
+
+src/apps/asap-server/src/migrations
+
+``` javascript
+export default class MoveRepurposedFields extends Migration {
+  up = async (): Promise<void> => {
+    /* put migration code here */
+  };
+  down = async (): Promise<void> => {
+    /* put rollback code here  */
+  };
+}
+```
+
+The up function is triggered by `asap-hub-{env}-runMigrations`
+The down function is triggered by `asap-hub-{env}-rollbackMigrations`
+
 ## License
 
 The source code of this project is licensed under the MIT License.

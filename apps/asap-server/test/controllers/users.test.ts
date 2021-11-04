@@ -1,9 +1,10 @@
-import nock from 'nock';
-import { print } from 'graphql';
 import { config } from '@asap-hub/squidex';
+import { print } from 'graphql';
 import matches from 'lodash.matches';
+import nock from 'nock';
 import Users from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';;
+import { FETCH_USER, FETCH_USERS } from '../../src/queries/users.queries';
 import { FetchOptions } from '../../src/utils/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
@@ -11,10 +12,9 @@ import {
   fetchUserResponse,
   getGraphqlResponseFetchUser,
   getGraphqlResponseFetchUsers,
-  patchResponse,
   getUserResponse,
+  patchResponse,
 } from '../fixtures/users.fixtures';
-import { FETCH_USER, FETCH_USERS } from '../../src/queries/users.queries';
 
 const users = new Users();
 
@@ -246,7 +246,7 @@ describe('Users controller', () => {
         }));
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
-          query: buildGraphQLQueryFetchUser(),
+          query: print(FETCH_USER),
           variables: {
             id: 'user-id',
           },

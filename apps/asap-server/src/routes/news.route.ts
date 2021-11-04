@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
@@ -27,7 +28,7 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
     const { params } = req;
     const { newsId } = framework.validate('parameters', params, paramSchema);
 
-    const result = await newsController.fetchById(newsId);
+    const result = await newsController.fetchById(newsId!);
 
     res.json(result);
   });

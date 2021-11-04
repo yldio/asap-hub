@@ -3550,6 +3550,7 @@ export type TeamsDataDisplayNameInputDto = {
 export type TeamsDataDto = {
   applicationNumber: Maybe<TeamsDataApplicationNumberDto>;
   displayName: Maybe<TeamsDataDisplayNameDto>;
+  expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsDto>;
   outputs: Maybe<TeamsDataOutputsDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
@@ -3558,10 +3559,21 @@ export type TeamsDataDto = {
   tools: Maybe<TeamsDataToolsDto>;
 };
 
+/** The structure of the Expertise and Resources field of the Teams content type. */
+export type TeamsDataExpertiseAndResourceTagsDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
+/** The structure of the Expertise and Resources field of the Teams content input type. */
+export type TeamsDataExpertiseAndResourceTagsInputDto = {
+  iv: Maybe<Array<Scalars['String']>>;
+};
+
 /** The structure of the Teams data input type. */
 export type TeamsDataInputDto = {
   applicationNumber: Maybe<TeamsDataApplicationNumberInputDto>;
   displayName: Maybe<TeamsDataDisplayNameInputDto>;
+  expertiseAndResourceTags: Maybe<TeamsDataExpertiseAndResourceTagsInputDto>;
   outputs: Maybe<TeamsDataOutputsInputDto>;
   projectSummary: Maybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: Maybe<TeamsDataProjectTitleInputDto>;
@@ -3648,6 +3660,7 @@ export type TeamsDataToolsInputDto = {
 export type TeamsFlatDataDto = {
   applicationNumber: Maybe<Scalars['String']>;
   displayName: Maybe<Scalars['String']>;
+  expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;

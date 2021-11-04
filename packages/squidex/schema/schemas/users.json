@@ -235,7 +235,7 @@
             "name": "approach",
             "isHidden": false,
             "isLocked": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "properties": {
               "fieldType": "String",
               "isUnique": false,
@@ -627,7 +627,7 @@
         "name": "skillsDescription",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "String",
@@ -645,7 +645,7 @@
         "name": "skills",
         "isHidden": false,
         "isLocked": false,
-        "isDisabled": false,
+        "isDisabled": true,
         "partitioning": "invariant",
         "properties": {
           "fieldType": "Tags",

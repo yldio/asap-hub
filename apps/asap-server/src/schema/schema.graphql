@@ -3646,6 +3646,7 @@ input TeamsDataDisplayNameInputDto {
 type TeamsDataDto {
   applicationNumber: TeamsDataApplicationNumberDto
   displayName: TeamsDataDisplayNameDto
+  expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsDto
   outputs: TeamsDataOutputsDto
   projectSummary: TeamsDataProjectSummaryDto
   projectTitle: TeamsDataProjectTitleDto
@@ -3654,10 +3655,21 @@ type TeamsDataDto {
   tools: TeamsDataToolsDto
 }
 
+"""The structure of the Expertise and Resources field of the Teams content type."""
+type TeamsDataExpertiseAndResourceTagsDto {
+  iv: [String!]
+}
+
+"""The structure of the Expertise and Resources field of the Teams content input type."""
+input TeamsDataExpertiseAndResourceTagsInputDto {
+  iv: [String!]
+}
+
 """The structure of the Teams data input type."""
 input TeamsDataInputDto {
   applicationNumber: TeamsDataApplicationNumberInputDto
   displayName: TeamsDataDisplayNameInputDto
+  expertiseAndResourceTags: TeamsDataExpertiseAndResourceTagsInputDto
   outputs: TeamsDataOutputsInputDto
   projectSummary: TeamsDataProjectSummaryInputDto
   projectTitle: TeamsDataProjectTitleInputDto
@@ -3744,6 +3756,7 @@ input TeamsDataToolsInputDto {
 type TeamsFlatDataDto {
   applicationNumber: String
   displayName: String
+  expertiseAndResourceTags: [String!]
   outputs: [ResearchOutputs!]
   projectSummary: String
   projectTitle: String

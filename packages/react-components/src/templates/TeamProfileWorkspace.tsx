@@ -62,7 +62,7 @@ const TeamProfileWorkspace: React.FC<TeamProfileWorkspaceProps> = ({
               <li key={`tool-${index}`}>
                 <ToolCard
                   {...tool}
-                  editHref={toolsRoute.tool({ toolIndex: index }).$}
+                  editHref={toolsRoute.tool({ toolIndex: `${index}` }).$}
                   onDelete={onDeleteTool && (() => onDeleteTool(index))}
                 />
               </li>

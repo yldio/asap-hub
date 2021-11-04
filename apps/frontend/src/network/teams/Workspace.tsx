@@ -77,7 +77,7 @@ const EditTool: React.FC<{
   const { toolIndex } = useRouteParams(
     network({}).teams({}).team({ teamId }).workspace({}).tools({}).tool,
   );
-  const tool = tools[toolIndex];
+  const tool = tools[parseInt(toolIndex, 10)];
 
   const patchTeam = usePatchTeamById(teamId);
 

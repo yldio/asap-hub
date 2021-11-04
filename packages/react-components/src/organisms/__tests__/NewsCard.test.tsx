@@ -1,10 +1,10 @@
 import { ComponentProps } from 'react';
 import { render } from '@testing-library/react';
 
-import NewsAndEventsCard from '../NewsAndEventsCard';
+import NewsCard from '../NewsCard';
 
 describe('News', () => {
-  const newsCardProps: ComponentProps<typeof NewsAndEventsCard> = {
+  const newsCardProps: ComponentProps<typeof NewsCard> = {
     id: 'uuid',
     type: 'News',
     title: 'Not a Title',
@@ -12,56 +12,49 @@ describe('News', () => {
   };
 
   it('renders the title', () => {
-    const { getByRole } = render(
-      <NewsAndEventsCard {...newsCardProps} title="Title" />,
-    );
+    const { getByRole } = render(<NewsCard {...newsCardProps} title="Title" />);
     expect(getByRole('heading').textContent).toEqual('Title');
     expect(getByRole('heading').tagName).toEqual('H2');
   });
 
   it('renders short text when present', () => {
     const { rerender, queryByText, getByText } = render(
-      <NewsAndEventsCard {...newsCardProps} />,
+      <NewsCard {...newsCardProps} />,
     );
     expect(queryByText(/short text/i)).not.toBeInTheDocument();
 
-    rerender(<NewsAndEventsCard {...newsCardProps} shortText="short text" />);
+    rerender(<NewsCard {...newsCardProps} shortText="short text" />);
     expect(getByText(/short text/i)).toBeVisible();
   });
 
   it('renders thumbnail when when present', () => {
     const { rerender, getByRole, queryByRole } = render(
-      <NewsAndEventsCard {...newsCardProps} />,
+      <NewsCard {...newsCardProps} />,
     );
     expect(queryByRole('img')).not.toBeInTheDocument();
 
-    rerender(<NewsAndEventsCard {...newsCardProps} thumbnail="/thumbnail" />);
+    rerender(<NewsCard {...newsCardProps} thumbnail="/thumbnail" />);
     expect(getByRole('img')).toBeVisible();
   });
 
   it('renders external link when present', () => {
     const { rerender, getByRole, queryByRole } = render(
-      <NewsAndEventsCard {...newsCardProps} />,
+      <NewsCard {...newsCardProps} />,
     );
     expect(queryByRole('link')).not.toBeInTheDocument();
 
-    rerender(
-      <NewsAndEventsCard
-        {...newsCardProps}
-        link={'https://hub.asap.science'}
-      />,
-    );
+    rerender(<NewsCard {...newsCardProps} link={'https://hub.asap.science'} />);
     expect(getByRole('link').textContent).toContain('External Link');
   });
 
   it('renders external link when present and use custom name', () => {
     const { rerender, getByRole, queryByRole } = render(
-      <NewsAndEventsCard {...newsCardProps} />,
+      <NewsCard {...newsCardProps} />,
     );
     expect(queryByRole('link')).not.toBeInTheDocument();
 
     rerender(
-      <NewsAndEventsCard
+      <NewsCard
         {...newsCardProps}
         link={'https://hub.asap.science'}
         linkText={'Name'}
@@ -72,11 +65,11 @@ describe('News', () => {
 
   it('links to detail page when text is present', () => {
     const { rerender, getByRole, queryByRole } = render(
-      <NewsAndEventsCard {...newsCardProps} />,
+      <NewsCard {...newsCardProps} />,
     );
     expect(queryByRole('link')).not.toBeInTheDocument();
 
-    rerender(<NewsAndEventsCard {...newsCardProps} text={'<h1>title</h1>'} />);
+    rerender(<NewsCard {...newsCardProps} text={'<h1>title</h1>'} />);
     expect(getByRole('link').textContent).toContain(newsCardProps.title);
   });
 });

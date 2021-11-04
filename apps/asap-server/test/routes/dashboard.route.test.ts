@@ -13,7 +13,7 @@ describe('/dashboard/ route', () => {
   describe('GET /dashboard', () => {
     test('Should return 200 when no news are found', async () => {
       dashboardControllerMock.fetch.mockResolvedValueOnce({
-        newsAndEvents: [],
+        news: [],
         pages: [],
       });
 
@@ -21,7 +21,7 @@ describe('/dashboard/ route', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        newsAndEvents: [],
+        news: [],
         pages: [],
       });
     });

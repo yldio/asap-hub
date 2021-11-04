@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { NewsOrEventResponse, NewsAndEventsType } from '@asap-hub/model';
+import { NewsResponse, NewsType } from '@asap-hub/model';
 import { news } from '@asap-hub/routing';
 
 import { Card, Paragraph, Headline2, Pill, Caption, Anchor } from '../atoms';
@@ -54,15 +54,15 @@ const footerStyles = css({
   justifySelf: 'flex-end',
 });
 
-const placeholders: Record<NewsAndEventsType, JSX.Element> = {
+const placeholders: Record<NewsType, JSX.Element> = {
   News: newsPlaceholder,
   Event: newsEventPlaceholderIcon,
   Training: trainingPlaceholderIcon,
 };
 
-type NewsAndEventsCardProps = NewsOrEventResponse;
+type NewsCardProps = NewsResponse;
 
-const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
+const NewsCard: React.FC<NewsCardProps> = ({
   id,
   type,
   title,
@@ -115,4 +115,4 @@ const NewsAndEventsCard: React.FC<NewsAndEventsCardProps> = ({
   );
 };
 
-export default NewsAndEventsCard;
+export default NewsCard;

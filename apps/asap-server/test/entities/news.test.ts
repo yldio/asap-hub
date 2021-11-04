@@ -1,14 +1,11 @@
-import { config, GraphqlNewsOrEvent } from '@asap-hub/squidex';
-import {
-  parseNewsAndEvents,
-  parseGraphQLNewsAndEvents,
-} from '../../src/entities';
+import { config, GraphqlNews } from '@asap-hub/squidex';
+import { parseNews, parseGraphQLNews } from '../../src/entities';
 
-describe('parse news and events entities', () => {
+describe('parse news entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
     expect(
-      parseNewsAndEvents({
+      parseNews({
         id: 'uuid',
         created: date,
         lastModified: date,
@@ -38,10 +35,10 @@ describe('parse news and events entities', () => {
   });
 });
 
-describe('parse GraphQL news and events entities', () => {
+describe('parse GraphQL news entities', () => {
   test('parse handles thumbnails', async () => {
     const date = new Date().toISOString();
-    const newsOrEvent: GraphqlNewsOrEvent = {
+    const news: GraphqlNews = {
       id: 'uuid',
       created: date,
       lastModified: date,
@@ -55,7 +52,7 @@ describe('parse GraphQL news and events entities', () => {
       },
     };
 
-    expect(parseGraphQLNewsAndEvents(newsOrEvent)).toMatchObject({
+    expect(parseGraphQLNews(news)).toMatchObject({
       id: 'uuid',
       created: date,
       type: 'News',

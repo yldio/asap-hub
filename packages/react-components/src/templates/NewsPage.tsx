@@ -1,18 +1,18 @@
 import { css } from '@emotion/react';
 
 import { perRem } from '../pixels';
-import NewsAndEventsPageHeader from './NewsAndEventsPageHeader';
+import NewsPageHeader from './NewsPageHeader';
 import { contentSidePaddingWithNavigation } from '../layout';
 
 const mainStyles = css({
   padding: `${36 / perRem}em ${contentSidePaddingWithNavigation(8)}`,
 });
 
-const NewsAndEventsPage: React.FC = ({ children }) => (
+const NewsPage: React.FC = ({ children }) => (
   <article>
-    <NewsAndEventsPageHeader />
+    <NewsPageHeader />
     <main css={mainStyles}>{children}</main>
   </article>
 );
 
-export default NewsAndEventsPage;
+export default NewsPage;

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { NewsOrEventResponse } from '@asap-hub/model';
+import { NewsResponse } from '@asap-hub/model';
 
 import { Pill, Display, Card, Caption } from '../atoms';
 import { RichText } from '../organisms';
@@ -21,12 +21,12 @@ const richTextContainer = css({
   marginBottom: `${24 / perRem}em`,
 });
 
-type NewsOrEventPageProps = Pick<
-  NewsOrEventResponse,
+type NewsDetailsPageProps = Pick<
+  NewsResponse,
   'text' | 'title' | 'type' | 'created' | 'link' | 'linkText'
 >;
 
-const NewsOrEventPage: React.FC<NewsOrEventPageProps> = ({
+const NewsDetailsPage: React.FC<NewsDetailsPageProps> = ({
   text = '',
   created,
   title,
@@ -64,4 +64,4 @@ const NewsOrEventPage: React.FC<NewsOrEventPageProps> = ({
   );
 };
 
-export default NewsOrEventPage;
+export default NewsDetailsPage;

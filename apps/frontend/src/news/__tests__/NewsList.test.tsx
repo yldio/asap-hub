@@ -1,13 +1,13 @@
 import nock from 'nock';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { ListNewsAndEventsResponse } from '@asap-hub/model';
+import { ListNewsResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
 
 import NewsAndEventsPage from '../Routes';
 import { API_BASE_URL } from '../../config';
 
-const newsAndEvents: ListNewsAndEventsResponse = {
+const newsAndEvents: ListNewsResponse = {
   total: 2,
   items: [
     {
@@ -30,8 +30,8 @@ const renderPage = async () => {
     <authTestUtils.Auth0Provider>
       <authTestUtils.WhenReady>
         <authTestUtils.LoggedIn user={undefined}>
-          <MemoryRouter initialEntries={['/news-and-events']}>
-            <Route path="/news-and-events">
+          <MemoryRouter initialEntries={['/news']}>
+            <Route path="/news">
               <NewsAndEventsPage />
             </Route>
           </MemoryRouter>
@@ -49,7 +49,7 @@ const renderPage = async () => {
   return result;
 };
 
-describe('news and events page', () => {
+describe('news page', () => {
   let nockInterceptor: nock.Interceptor;
 
   beforeEach(() => {
@@ -59,7 +59,7 @@ describe('news and events page', () => {
         authorization: 'Bearer token',
       },
     })
-      .get('/news-and-events')
+      .get('/news')
       .query(true);
   });
 

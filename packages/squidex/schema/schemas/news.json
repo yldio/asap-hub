@@ -7,7 +7,7 @@
     "noFieldDeletion": false,
     "noFieldRecreation": false,
     "properties": {
-      "label": "News and Events",
+      "label": "News",
       "validateOnPublish": false
     },
     "scripts": {},

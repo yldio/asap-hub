@@ -28,7 +28,7 @@ describe('Dashboard controller', () => {
       const result = await dashboard.fetch();
 
       expect(result).toEqual({
-        newsAndEvents: [],
+        news: [],
         pages: [],
       });
     });
@@ -45,7 +45,7 @@ describe('Dashboard controller', () => {
       const result = await dashboard.fetch();
 
       expect(result).toEqual({
-        newsAndEvents: [],
+        news: [],
         pages: [],
       });
     });
@@ -62,7 +62,7 @@ describe('Dashboard controller', () => {
       const result = await dashboard.fetch();
 
       expect(result).toEqual({
-        newsAndEvents: [],
+        news: [],
         pages: [],
       });
     });
@@ -77,7 +77,7 @@ describe('Dashboard controller', () => {
                 flatData: {
                   news: [
                     {
-                      id: 'news-and-events-1',
+                      id: 'news-1',
                       flatData: {
                         title: 'News 1',
                         type: 'News',
@@ -88,7 +88,7 @@ describe('Dashboard controller', () => {
                       created: '2020-09-08T16:35:28Z',
                     },
                     {
-                      id: 'news-and-events-2',
+                      id: 'news-2',
                       flatData: {
                         title: 'Event 2',
                         type: 'Event',

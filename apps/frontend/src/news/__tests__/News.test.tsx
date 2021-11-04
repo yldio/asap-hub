@@ -1,14 +1,14 @@
 import nock from 'nock';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { NewsOrEventResponse } from '@asap-hub/model';
+import { NewsResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 
-import NewsOrEvent from '../NewsOrEvent';
+import News from '../News';
 import { API_BASE_URL } from '../../config';
 
-const newsOrEvent: NewsOrEventResponse = {
+const newsOrEvent: NewsResponse = {
   id: '55724942-3408-4ad6-9a73-14b92226ffb6',
   created: '2020-09-07T17:36:54Z',
   title: 'News Title',
@@ -24,7 +24,7 @@ const renderPage = async () => {
             initialEntries={[news({}).article({ articleId: newsOrEvent.id }).$]}
           >
             <Route path={news.template + news({}).article.template}>
-              <NewsOrEvent />
+              <News />
             </Route>
           </MemoryRouter>
         </authTestUtils.LoggedIn>
@@ -41,7 +41,7 @@ const renderPage = async () => {
   return result;
 };
 
-describe('news and events detail page', () => {
+describe('news detail page', () => {
   let nockInterceptor: nock.Interceptor;
 
   beforeEach(() => {
@@ -50,7 +50,7 @@ describe('news and events detail page', () => {
       reqheaders: {
         authorization: 'Bearer token',
       },
-    }).get('/news-and-events/55724942-3408-4ad6-9a73-14b92226ffb6');
+    }).get('/news/55724942-3408-4ad6-9a73-14b92226ffb6');
   });
 
   it('renders title', async () => {

@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { Display } from '../atoms';
 import { perRem } from '../pixels';
 
-import NewsAndEventsCard from './NewsAndEventsCard';
+import NewsCard from './NewsCard';
 
 const styles = css({
   display: 'grid',
@@ -14,23 +14,18 @@ const styles = css({
 
 type LatestNewsProps = {
   readonly title: string;
-  readonly newsAndEvents: ReadonlyArray<
-    ComponentProps<typeof NewsAndEventsCard>
-  >;
+  readonly news: ReadonlyArray<ComponentProps<typeof NewsCard>>;
 };
 
-const NewsAndEventsSection: React.FC<LatestNewsProps> = ({
-  newsAndEvents,
-  title,
-}) => (
+const NewsSection: React.FC<LatestNewsProps> = ({ news, title }) => (
   <section>
     <Display styleAsHeading={3}>{title}</Display>
     <div css={styles}>
-      {newsAndEvents.map((newsAndEvent) => (
-        <NewsAndEventsCard key={newsAndEvent.id} {...newsAndEvent} />
+      {news.map((newsAndEvent) => (
+        <NewsCard key={newsAndEvent.id} {...newsAndEvent} />
       ))}
     </div>
   </section>
 );
 
-export default NewsAndEventsSection;
+export default NewsSection;

@@ -1,35 +1,34 @@
 import { FC, lazy } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import { NewsAndEventsPage } from '@asap-hub/react-components';
+import { NewsPage } from '@asap-hub/react-components';
 import { news } from '@asap-hub/routing';
 
 import Frame from '../structure/Frame';
 
-const loadNewsAndEventsList = () =>
-  import(/* webpackChunkName: "news-and-events-list" */ './NewsAndEventsList');
-const loadNewsOrEvent = () =>
-  import(/* webpackChunkName: "news-or-event" */ './NewsOrEvent');
-const NewsAndEventsList = lazy(loadNewsAndEventsList);
-const NewsOrEventPage = lazy(loadNewsOrEvent);
-loadNewsAndEventsList();
+const loadNewsList = () =>
+  import(/* webpackChunkName: "news-list" */ './NewsList');
+const loadNews = () => import(/* webpackChunkName: "news" */ './News');
+const NewsList = lazy(loadNewsList);
+const NewsDetailsPage = lazy(loadNews);
+loadNewsList();
 
-const NewsAndEvents: FC<Record<string, never>> = () => {
+const News: FC<Record<string, never>> = () => {
   const { path } = useRouteMatch();
 
   return (
     <Switch>
       <Route exact path={path}>
-        <NewsAndEventsPage>
+        <NewsPage>
           <Frame title={null}>
-            <NewsAndEventsList />
+            <NewsList />
           </Frame>
-        </NewsAndEventsPage>
+        </NewsPage>
       </Route>
       <Route path={path + news({}).article.template}>
-        <NewsOrEventPage />
+        <NewsDetailsPage />
       </Route>
     </Switch>
   );
 };
 
-export default NewsAndEvents;
+export default News;

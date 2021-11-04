@@ -32,10 +32,8 @@ import { eventRouteFactory } from './routes/events.route';
 import { groupRouteFactory } from './routes/groups.route';
 import Pages, { PageController } from './controllers/pages';
 import { pageRouteFactory } from './routes/pages.route';
-import NewsAndEvents, {
-  NewsAndEventsController,
-} from './controllers/news-and-events';
-import { newsAndEventsRouteFactory } from './routes/news-and-events.route';
+import News, { NewsController } from './controllers/news';
+import { newsRouteFactory } from './routes/news.route';
 import Discover, { DiscoverController } from './controllers/discover';
 import { discoverRouteFactory } from './routes/discover.route';
 import pinoLogger, { redaction } from './utils/logger';
@@ -65,8 +63,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Controllers
   const calendarController = libs.calendarController || new Calendars();
   const dashboardController = libs.dashboardController || new Dashboard();
-  const newsAndEventsController =
-    libs.newsAndEventsController || new NewsAndEvents();
+  const newsController = libs.newsController || new News();
   const discoverController = libs.discoverController || new Discover();
   const eventController = libs.eventController || new Events();
   const groupController = libs.groupController || new Groups();
@@ -83,9 +80,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   // Routes
   const calendarRoutes = calendarRouteFactory(calendarController);
   const dashboardRoutes = dashboardRouteFactory(dashboardController);
-  const newsAndEventsRoutes = newsAndEventsRouteFactory(
-    newsAndEventsController,
-  );
+  const newsRoutes = newsRouteFactory(newsController);
   const discoverRoutes = discoverRouteFactory(discoverController);
   const eventRoutes = eventRouteFactory(eventController);
   const groupRoutes = groupRouteFactory(groupController, eventController);
@@ -150,7 +145,7 @@ export const appFactory = (libs: Libs = {}): Express => {
   app.use(dashboardRoutes);
   app.use(discoverRoutes);
   app.use(eventRoutes);
-  app.use(newsAndEventsRoutes);
+  app.use(newsRoutes);
   app.use(groupRoutes);
   app.use(researchOutputsRoutes);
   app.use(teamRoutes);
@@ -186,7 +181,7 @@ export type Libs = {
   eventController?: EventController;
   groupController?: GroupController;
   pageController?: PageController;
-  newsAndEventsController?: NewsAndEventsController;
+  newsController?: NewsController;
   researchOutputController?: ResearchOutputController;
   teamController?: TeamController;
   userController?: UserController;

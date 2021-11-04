@@ -264,7 +264,7 @@ describe('ResearchOutputs controller', () => {
         __typename: 'Users',
         flatData: {
           ...getGraphqlResponseFetchUsers().data.queryUsersContentsWithTotal!
-            .items![1].flatData,
+            .items![1]!.flatData,
           onboarded: true,
         },
       } as InternalUser;

@@ -257,7 +257,7 @@ describe('/users/ route', () => {
         items: [],
         total: 0,
       });
-      const teams = [userResponse.teams[0].id, userResponse.teams[1].id];
+      const teams = [userResponse.teams[0]!.id, userResponse.teams[1]!.id];
       const userId = userResponse.id;
 
       await supertest(appWithMockedAuth).get(`/users/${userId}/groups`).query({

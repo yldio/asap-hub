@@ -3,8 +3,7 @@ import { print } from 'graphql';
 import { config } from '@asap-hub/squidex';
 import matches from 'lodash.matches';
 import Users from '../../src/controllers/users';
-import { identity } from '../helpers/squidex';
-import * as orcidFixtures from '../fixtures/orcid.fixtures';
+import { identity } from '../helpers/squidex';;
 import { FetchOptions } from '../../src/utils/types';
 import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
@@ -239,9 +238,9 @@ describe('Users controller', () => {
       await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
     });
     test('Should throw when user teams dont have id', async () => {
-      const response = getGraphQlResponseFetchUser();
-      response.data.findUsersContent.flatData!.teams =
-        response.data.findUsersContent.flatData?.teams?.map((item) => ({
+      const response = getGraphqlResponseFetchUser();
+      response.data.findUsersContent!.flatData!.teams =
+        response.data.findUsersContent!.flatData!.teams!.map((item) => ({
           ...item,
           id: [],
         }));
@@ -296,7 +295,7 @@ describe('Users controller', () => {
 
     test('Should throw an error when the team connection is invalid', async () => {
       const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams![0].id = null;
+      mockResponse.data.findUsersContent!.flatData.teams![0]!.id = null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -314,7 +313,7 @@ describe('Users controller', () => {
 
     test('Should throw an error when the team role is invalid', async () => {
       const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams![0].role =
+      mockResponse.data.findUsersContent!.flatData.teams![0]!.role =
         'invalid role';
 
       nock(config.baseUrl)

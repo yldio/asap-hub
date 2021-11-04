@@ -1,4 +1,4 @@
-import { intParser, route, stringParser } from 'typesafe-routes';
+import { route, stringParser } from 'typesafe-routes';
 
 const user = (() => {
   const editPersonalInfo = route('/edit-personal-info', {}, {});
@@ -55,7 +55,7 @@ const team = (() => {
   const about = route('/about', {}, {});
   const outputs = route('/outputs', {}, {});
 
-  const tool = route('/:toolIndex', { toolIndex: intParser }, {});
+  const tool = route('/:toolIndex', { toolIndex: stringParser }, {});
   const tools = route('/tools', {}, { tool });
   const workspace = route('/workspace', {}, { tools });
 

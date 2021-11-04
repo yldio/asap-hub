@@ -68,7 +68,7 @@ describe('a tool', () => {
     expect(getByText('Signal')).toBeVisible();
   });
 
-  it('has an edit link', () => {
+  it('has edit links', () => {
     const { getByText } = render(
       <TeamProfileWorkspace
         {...team}
@@ -85,6 +85,11 @@ describe('a tool', () => {
           },
         ]}
       />,
+    );
+    const signalCard = getByText('Signal').closest('li')!;
+    expect(getChildByText(signalCard, /edit/i).closest('a')).toHaveAttribute(
+      'href',
+      expect.stringMatching(/\/0(\D|$)/),
     );
     const discordCard = getByText('Discord').closest('li')!;
     expect(getChildByText(discordCard, /edit/i).closest('a')).toHaveAttribute(

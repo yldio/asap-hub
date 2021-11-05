@@ -3648,11 +3648,11 @@ export type TeamsDataToolsInputDto = {
 export type TeamsFlatDataDto = {
   applicationNumber: Maybe<Scalars['String']>;
   displayName: Maybe<Scalars['String']>;
+  expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   outputs: Maybe<Array<ResearchOutputs>>;
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;
   proposal: Maybe<Array<ResearchOutputs>>;
-  expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   tools: Maybe<Array<TeamsDataToolsChildDto>>;
 };
 
@@ -3947,6 +3947,8 @@ export type UsersDataInputDto = {
   country: Maybe<UsersDataCountryInputDto>;
   degree: Maybe<UsersDataDegreeInputDto>;
   email: Maybe<UsersDataEmailInputDto>;
+  expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
+  expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsInputDto>;
   firstName: Maybe<UsersDataFirstNameInputDto>;
   institution: Maybe<UsersDataInstitutionInputDto>;
   jobTitle: Maybe<UsersDataJobTitleInputDto>;
@@ -3962,8 +3964,6 @@ export type UsersDataInputDto = {
   reachOut: Maybe<UsersDataReachOutInputDto>;
   responsibilities: Maybe<UsersDataResponsibilitiesInputDto>;
   role: Maybe<UsersDataRoleInputDto>;
-  expertiseAndResourceTags: Maybe<UsersDataExpertiseAndResourceTagsDto>;
-  expertiseAndResourceDescription: Maybe<UsersDataExpertiseAndResourceDescriptionInputDto>;
   social: Maybe<UsersDataSocialInputDto>;
   teams: Maybe<UsersDataTeamsInputDto>;
 };
@@ -4230,6 +4230,8 @@ export type UsersFlatDataDto = {
   country: Maybe<Scalars['String']>;
   degree: Maybe<Scalars['String']>;
   email: Maybe<Scalars['String']>;
+  expertiseAndResourceDescription: Maybe<Scalars['String']>;
+  expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
   firstName: Maybe<Scalars['String']>;
   institution: Maybe<Scalars['String']>;
   jobTitle: Maybe<Scalars['String']>;
@@ -4251,8 +4253,6 @@ export type UsersFlatDataDto = {
   responsibilities: Maybe<Scalars['String']>;
   /** Role on the ASAP Hub */
   role: Maybe<Scalars['String']>;
-  expertiseAndResourceTags: Maybe<Array<Scalars['String']>>;
-  expertiseAndResourceDescription: Maybe<Scalars['String']>;
   social: Maybe<Array<UsersDataSocialChildDto>>;
   /** Mandatory for grantees. They cannot publish profile without a team. */
   teams: Maybe<Array<UsersDataTeamsChildDto>>;

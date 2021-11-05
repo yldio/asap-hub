@@ -1,17 +1,17 @@
 import { StaticRouter } from 'react-router-dom';
 import { array, text } from '@storybook/addon-knobs';
-import { SkillsModal } from '@asap-hub/react-components';
+import { ExpertiseAndResourcesModal } from '@asap-hub/react-components';
 
 export default {
-  title: 'Templates / User Profile / Skills Modal',
+  title: 'Templates / User Profile / Expertise and Resources Modal',
 };
 
 export const Normal = () => (
   <StaticRouter>
-    <SkillsModal
-      skillsDescription={text('Description', '')}
-      skills={[]}
-      skillSuggestions={array('Skills', [
+    <ExpertiseAndResourcesModal
+      expertiseAndResourceDescription={text('Description', '')}
+      expertiseAndResourceTags={[]}
+      expertiseAndResourceSuggestions={array('Expertise and Resources', [
         'Neurological Diseases',
         'Clinical Neurology',
         'Adult Neurology',

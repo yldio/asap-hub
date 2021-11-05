@@ -53,11 +53,11 @@ export const groupContentQueryFragment = gql`
             questions {
               question
             }
-            skills
-            skillsDescription
+            expertiseAndResourceTags
+            expertiseAndResourceDescription
             teams {
               role
-              approach
+              mainResearchInterests
               responsibilities
               id {
                 id

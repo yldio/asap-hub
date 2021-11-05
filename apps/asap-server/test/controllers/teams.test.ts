@@ -107,11 +107,11 @@ describe('Team controller', () => {
         const searchQ =
           "(contains(data/displayName/iv, 'Cristiano')" +
           " or contains(data/projectTitle/iv, 'Cristiano')" +
-          " or contains(data/skills/iv, 'Cristiano'))" +
+          " or contains(data/expertiseAndResourceTags/iv, 'Cristiano'))" +
           ' and' +
           " (contains(data/displayName/iv, 'Ronaldo')" +
           " or contains(data/projectTitle/iv, 'Ronaldo')" +
-          " or contains(data/skills/iv, 'Ronaldo'))";
+          " or contains(data/expertiseAndResourceTags/iv, 'Ronaldo'))";
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -140,7 +140,7 @@ describe('Team controller', () => {
         const expectedSearchFilter =
           `(contains(data/displayName/iv, '%27%27')` +
           ` or contains(data/projectTitle/iv, '%27%27')` +
-          ` or contains(data/skills/iv, '%27%27'))`;
+          ` or contains(data/expertiseAndResourceTags/iv, '%27%27'))`;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {
@@ -165,7 +165,7 @@ describe('Team controller', () => {
         const expectedSearchFilter =
           `(contains(data/displayName/iv, '%22')` +
           ` or contains(data/projectTitle/iv, '%22')` +
-          ` or contains(data/skills/iv, '%22'))`;
+          ` or contains(data/expertiseAndResourceTags/iv, '%22'))`;
 
         nock(config.baseUrl)
           .post(`/api/content/${config.appName}/graphql`, {

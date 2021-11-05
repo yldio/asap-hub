@@ -59,11 +59,11 @@ export const researchOutputContentQueryFragment = gql`
             questions {
               question
             }
-            skills
-            skillsDescription
+            expertiseAndResourceTags
+            expertiseAndResourceDescription
             teams {
               role
-              approach
+              mainResearchInterests
               responsibilities
               id {
                 id

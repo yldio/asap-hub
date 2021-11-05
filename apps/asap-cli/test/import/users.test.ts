@@ -21,7 +21,7 @@ const body = {
   institution: {
     iv: 'ACME',
   },
-  skillsDescription: {
+  expertiseAndResourceDescription: {
     iv: 'Expertise',
   },
   biography: {
@@ -30,7 +30,7 @@ const body = {
   degree: {
     iv: 'PhD',
   },
-  skills: {
+  expertiseAndResourceTags: {
     iv: ['aggregation', 'alpha-synuclein interactions'],
   },
   questions: {
@@ -151,7 +151,7 @@ describe('Import user', () => {
             {
               id: ['team-uuid-1'],
               role: 'Lead PI (Core Leadership)',
-              approach: 'Interests',
+              mainResearchInterests: 'Interests',
               responsibilities: 'Responsibilities',
             },
           ],

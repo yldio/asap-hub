@@ -28,7 +28,7 @@ const fieldToStep: Record<
   jobTitle: 'Details',
   biography: 'Biography',
   questions: 'Questions',
-  skills: 'Expertise',
+  expertiseAndResourceTags: 'Expertise',
   teams: 'Role',
 };
 
@@ -57,7 +57,7 @@ const steps = (
       .users({})
       .user({ userId: user.id })
       .research({})
-      .editSkills({}).$,
+      .editExpertiseAndResources({}).$,
   },
   Questions: {
     label: 'Questions',

@@ -1,5 +1,6 @@
 /* istanbul ignore file */
-import { RestTeam, RestUser } from '@asap-hub/squidex';
+import { RestTeam, RestUser, User } from '@asap-hub/squidex';
+import { Rest } from '@asap-hub/squidex/src/entities/common';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
@@ -14,10 +15,19 @@ export default class MoveRepurposedFields extends Migration {
   };
 }
 async function migrateUserFields() {
+  type OldTeamFields = {
+    approach: string;
+  };
+  interface OldUserFields extends User {
+    skills: string[];
+    skillsDescription: string;
+  }
   await applyToAllItemsInCollection<RestUser>(
     'users',
     async (user, squidexClient) => {
-      const { skills, skillsDescription, teams } = user.data;
+      const { skills, skillsDescription, teams } = (
+        user as unknown as Rest<OldUserFields>
+      ).data;
       await squidexClient.patch(user.id, {
         expertiseAndResourceTags: { iv: skills?.iv ?? [] },
         expertiseAndResourceDescription: skillsDescription,
@@ -26,8 +36,9 @@ async function migrateUserFields() {
             iv:
               teams.iv?.map((team) => ({
                 ...team,
-                mainResearchInterests: team.approach,
-              })) ?? [],
+                mainResearchInterests: (team as unknown as OldTeamFields)
+                  .approach,
+              })) ?? null,
           },
         }),
       });
@@ -39,8 +50,9 @@ async function migrateTeamFields() {
   await applyToAllItemsInCollection<RestTeam>(
     'teams',
     async (team, squidexClient) => {
+      const { skills } = (team as unknown as Rest<{ skills: string[] }>).data;
       await squidexClient.patch(team.id, {
-        expertiseAndResourceTags: { iv: team.data.skills?.iv ?? [] },
+        expertiseAndResourceTags: { iv: skills.iv ?? null },
       });
     },
   );

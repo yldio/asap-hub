@@ -16,7 +16,7 @@ export type UserValidationFields = Partial<
     | 'city'
     | 'country'
     | 'biography'
-    | 'skills'
+    | 'expertiseAndResourceTags'
   >
 >;
 
@@ -34,7 +34,8 @@ export const isUserOnboardable = (
 
   if (
     user.teams.length === 0 ||
-    user.teams.map((team) => team.approach).filter(Boolean).length === 0 ||
+    user.teams.map((team) => team.mainResearchInterests).filter(Boolean)
+      .length === 0 ||
     user.teams.map((team) => team.responsibilities).filter(Boolean).length === 0
   ) {
     response.teams = { valid: false };
@@ -60,8 +61,8 @@ export const isUserOnboardable = (
     response.biography = { valid: false };
   }
 
-  if (user.skills.length < 5) {
-    response.skills = { valid: false };
+  if (user.expertiseAndResourceTags.length < 5) {
+    response.expertiseAndResourceTags = { valid: false };
   }
 
   if (Object.keys(response).length === 0) {

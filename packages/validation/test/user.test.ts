@@ -30,7 +30,7 @@ describe('isUserOnboardable validation', () => {
           displayName: 'Jackson, M',
           role: 'Lead PI (Core Leadership)',
           proposal: 'proposal-id-1',
-          approach: undefined,
+          mainResearchInterests: undefined,
           responsibilities: 'Make sure coverage is high',
         },
       ],
@@ -51,7 +51,7 @@ describe('isUserOnboardable validation', () => {
           displayName: 'Jackson, M',
           role: 'Lead PI (Core Leadership)',
           proposal: 'proposal-id-1',
-          approach: undefined,
+          mainResearchInterests: undefined,
           responsibilities: 'Make sure coverage is high',
         },
         {
@@ -59,7 +59,7 @@ describe('isUserOnboardable validation', () => {
           displayName: 'Test, B',
           role: 'Key Personnel',
           proposal: 'proposal-id-1',
-          approach: 'some main research interests',
+          mainResearchInterests: 'some main research interests',
           responsibilities: 'Make sure coverage is high',
         },
       ],
@@ -79,7 +79,7 @@ describe('isUserOnboardable validation', () => {
           displayName: 'Jackson, M',
           role: 'Lead PI (Core Leadership)',
           proposal: 'proposal-id-1',
-          approach: 'some approach',
+          mainResearchInterests: 'some mainResearchInterests',
           responsibilities: undefined,
         },
       ],
@@ -100,7 +100,7 @@ describe('isUserOnboardable validation', () => {
           displayName: 'Jackson, M',
           role: 'Lead PI (Core Leadership)',
           proposal: 'proposal-id-1',
-          approach: 'some approach',
+          mainResearchInterests: 'some mainResearchInterests',
           responsibilities: undefined,
         },
         {
@@ -108,7 +108,7 @@ describe('isUserOnboardable validation', () => {
           displayName: 'Test, B',
           role: 'Key Personnel',
           proposal: 'proposal-id-1',
-          approach: 'some approach',
+          mainResearchInterests: 'some mainResearchInterests',
           responsibilities: 'Make sure coverage is high',
         },
       ],
@@ -194,24 +194,29 @@ describe('isUserOnboardable validation', () => {
   test('Should fail if Expertise and Resources are missing from user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...userResponse,
-      skills: [],
+      expertiseAndResourceTags: [],
     };
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
-      skills: { valid: false },
+      expertiseAndResourceTags: { valid: false },
     });
   });
 
   test('Should fail if fewer than 5 Expertise and Resources are provided in user profile', async () => {
     const userIncompleteResponse: UserResponse = {
       ...userResponse,
-      skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4'],
+      expertiseAndResourceTags: [
+        'expertise 1',
+        'expertise 2',
+        'expertise 3',
+        'expertise 4',
+      ],
     };
 
     expect(isUserOnboardable(userIncompleteResponse)).toEqual({
       isOnboardable: false,
-      skills: { valid: false },
+      expertiseAndResourceTags: { valid: false },
     });
   });
   test('Should fail if biography is missing from user profile', async () => {

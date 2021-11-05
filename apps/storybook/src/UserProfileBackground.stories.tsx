@@ -16,7 +16,7 @@ export const Normal = () => (
     displayName={text('Display Name', 'John Doe')}
     firstName={text('First Name', 'John')}
     role={text('Role', 'Researcher') as TeamRole}
-    approach={text('Approach', '')}
+    mainResearchInterests={text('Research Interests', '')}
     responsibilities={text('Responsibilities', '')}
     labs={[
       { id: '0001', name: 'London' },

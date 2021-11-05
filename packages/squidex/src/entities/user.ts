@@ -10,14 +10,12 @@ import { GraphqlTeam } from './team';
 
 export type UserTeamConnection<T = string> = T extends string
   ? {
-      approach?: string;
       mainResearchInterests?: string;
       responsibilities?: string;
       role: TeamRole;
       id: T[];
     }
   : {
-      approach?: string | null;
       mainResearchInterests?: string | null;
       responsibilities?: string | null;
       role: TeamRole;
@@ -55,10 +53,8 @@ export interface User<
   orcidLastModifiedDate?: string;
   questions: { question: string }[];
   role: Role;
-  skills: string[];
   responsibilities?: string;
   reachOut?: string;
-  skillsDescription?: string;
   teams: TConnection[];
   social?: TSocial[];
   labs: UserLabConnection[];

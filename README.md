@@ -90,7 +90,7 @@ This should create a new script in:
 
 src/apps/asap-server/src/migrations
 
-``` javascript
+```javascript
 export default class MoveRepurposedFields extends Migration {
   up = async (): Promise<void> => {
     /* put migration code here */

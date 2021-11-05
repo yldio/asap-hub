@@ -27,14 +27,19 @@ const iconStyles = css({
 
 type TeamCardProps = Pick<
   TeamResponse,
-  'id' | 'displayName' | 'projectTitle' | 'skills' | 'members' | 'labCount'
+  | 'id'
+  | 'displayName'
+  | 'projectTitle'
+  | 'expertiseAndResourceTags'
+  | 'members'
+  | 'labCount'
 >;
 
 const TeamCard: React.FC<TeamCardProps> = ({
   id,
   displayName,
   projectTitle,
-  skills,
+  expertiseAndResourceTags,
   members,
   labCount,
 }) => (
@@ -43,9 +48,9 @@ const TeamCard: React.FC<TeamCardProps> = ({
       <Headline2 styleAsHeading={4}>Team {displayName}</Headline2>
       <Paragraph accent="lead">{projectTitle}</Paragraph>
     </Anchor>
-    {!!skills.length && (
+    {!!expertiseAndResourceTags.length && (
       <div css={tagsPadding}>
-        <TagList min={5} max={5} tags={skills} />
+        <TagList min={5} max={5} tags={expertiseAndResourceTags} />
       </div>
     )}
 

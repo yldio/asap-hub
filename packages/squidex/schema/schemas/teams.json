@@ -20,7 +20,6 @@
       "outputs",
       "projectTitle",
       "projectSummary",
-      "skills",
       "expertiseAndResourceTags",
       "tools",
       "meta.id",
@@ -64,21 +63,6 @@
           "isRequired": true,
           "isRequiredOnPublish": false,
           "isHalfWidth": true
-        }
-      },
-      {
-        "name": "skills",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Expertise and Resources",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
         }
       },
       {

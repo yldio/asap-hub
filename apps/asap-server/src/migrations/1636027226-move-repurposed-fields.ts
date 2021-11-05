@@ -1,5 +1,6 @@
 /* istanbul ignore file */
-import { RestTeam, RestUser } from '@asap-hub/squidex';
+import { RestTeam, RestUser, User } from '@asap-hub/squidex';
+import { Rest } from '@asap-hub/squidex/src/entities/common';
 import { Migration } from '../handlers/webhooks/webhook-run-migrations';
 import { applyToAllItemsInCollection } from '../utils/migrations';
 
@@ -13,28 +14,30 @@ export default class MoveRepurposedFields extends Migration {
   };
 }
 async function migrateUserFields() {
+  type OldTeamFields = {
+    approach: string;
+  };
+  interface OldUserFields extends User {
+    skills: string[];
+    skillsDescription: string;
+  }
   await applyToAllItemsInCollection<RestUser>(
     'users',
-    async (
-      {
-        id,
-        data: {
-          skills,
-          skillsDescription,
-          teams: { iv: teams },
-        },
-      },
-      squidexClient,
-    ) => {
-      await squidexClient.patch(id, {
+    async (user, squidexClient) => {
+      const { skills, skillsDescription, teams } = (
+        user as unknown as Rest<OldUserFields>
+      ).data;
+      await squidexClient.patch(user.id, {
         expertiseAndResourceTags: { iv: skills.iv ?? [] },
         expertiseAndResourceDescription: skillsDescription,
         ...(teams && {
           teams: {
-            iv: teams.map((team) => ({
-              ...team,
-              mainResearchInterests: team.approach,
-            })),
+            iv:
+              teams.iv?.map((team) => ({
+                ...team,
+                mainResearchInterests: (team as unknown as OldTeamFields)
+                  .approach,
+              })) ?? null,
           },
         }),
       });
@@ -45,9 +48,10 @@ async function migrateUserFields() {
 async function migrateTeamFields() {
   await applyToAllItemsInCollection<RestTeam>(
     'teams',
-    async ({ id, data: { skills } }, squidexClient) => {
-      await squidexClient.patch(id, {
-        expertiseAndResourceTags: { iv: skills.iv ?? [] },
+    async (team, squidexClient) => {
+      const { skills } = (team as unknown as Rest<{ skills: string[] }>).data;
+      await squidexClient.patch(team.id, {
+        expertiseAndResourceTags: { iv: skills.iv ?? null },
       });
     },
   );

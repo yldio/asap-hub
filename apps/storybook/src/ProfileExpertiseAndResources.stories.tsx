@@ -1,19 +1,19 @@
 import { array, text } from '@storybook/addon-knobs';
-import { ProfileSkills } from '@asap-hub/react-components';
+import { ProfileExpertiseAndResources } from '@asap-hub/react-components';
 import { UserProfileDecorator } from './user-profile';
 
 export default {
-  title: 'Organisms / Profile / Skills',
+  title: 'Organisms / Profile / Expertise and Resources',
   decorators: [UserProfileDecorator],
 };
 
 export const Normal = () => (
-  <ProfileSkills
-    skillsDescription={text(
+  <ProfileExpertiseAndResources
+    expertiseAndResourceDescription={text(
       'Description',
       "Multiple years of experience in research on Parkinson's Disease.",
     )}
-    skills={array('Skills', [
+    expertiseAndResourceTags={array('Expertise and Resources', [
       'Neurological Diseases',
       'Clinical Neurology',
       'Adult Neurology',

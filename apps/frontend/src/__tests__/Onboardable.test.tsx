@@ -21,7 +21,7 @@ const onboardableUser: UserResponse = {
     {
       id: 'a',
       role: 'Co-PI (Core Leadership)',
-      approach: 'a',
+      mainResearchInterests: 'a',
       responsibilities: 'a',
     },
   ],
@@ -29,7 +29,7 @@ const onboardableUser: UserResponse = {
   jobTitle: 'a',
   city: 'a',
   country: 'a',
-  skills: ['1', '2', '3', '4', '5'],
+  expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
   biography: 'Biography',
 };
 

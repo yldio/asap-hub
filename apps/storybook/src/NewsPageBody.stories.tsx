@@ -11,7 +11,7 @@ const props = (): ComponentProps<typeof NewsPageBody> => ({
       id: 'uuid-1',
       created: new Date().toISOString(),
       type: 'News' as const,
-      title: "Coordinating different approaches into Parkinson's",
+      title: "Coordinating different research interests into Parkinson's",
     },
     {
       id: 'uuid-2',

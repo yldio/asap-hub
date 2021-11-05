@@ -27,7 +27,7 @@ export { default as PageCard } from './PageCard';
 export { default as PagesSection } from './PagesSection';
 export { default as PeopleCard } from './PeopleCard';
 export { default as ProfileCardList } from './ProfileCardList';
-export { default as ProfileSkills } from './ProfileSkills';
+export { default as ProfileExpertiseAndResources } from './ProfileExpertiseAndResources';
 export { default as QuestionsSection } from './QuestionsSection';
 export { default as RadioButtonGroup } from './RadioButtonGroup';
 export { default as ResultList } from './ResultList';

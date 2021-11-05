@@ -10,7 +10,7 @@ const boilerplateProps: ComponentProps<typeof TeamProfileHeader> = {
   displayName: 'John, D',
   projectTitle: 'Unknown',
   members: [],
-  skills: [],
+  expertiseAndResourceTags: [],
   outputs: [],
   lastModifiedDate: formatISO(new Date()),
   teamListElementId: '',

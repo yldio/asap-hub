@@ -12,10 +12,16 @@ const member = {
   displayName: 'Birdie Romeo',
   role: 'VrrPdl',
 };
-const skill = 'Neurological Diseases';
+const expertiseAndResource = 'Neurological Diseases';
 
 const teamCardProps = () => {
-  const numberOfSkills = number('Number of skills', 8, { min: 0 });
+  const numberOfExpertiseAndResources = number(
+    'Number of expertise and resources',
+    8,
+    {
+      min: 0,
+    },
+  );
   const numberOfMembers = number('Number of team members', 3, { min: 0 });
   return {
     id: 'ee98d044-79a7-4028-915d-7f88793e3190',
@@ -27,7 +33,13 @@ const teamCardProps = () => {
       'Project Summary',
       'Molecular actions of PD-associated pathological proteins using in vitro human pluripotent stem cell-derived brain organoids',
     ),
-    skills: [...Array(numberOfSkills).fill(skill, 0, numberOfSkills)],
+    expertiseAndResourceTags: [
+      ...Array(numberOfExpertiseAndResources).fill(
+        expertiseAndResource,
+        0,
+        numberOfExpertiseAndResources,
+      ),
+    ],
     members: [...Array(numberOfMembers).fill(member, 0, numberOfMembers)],
     lastModifiedDate: '2020-07-31T11:45:14Z',
     labCount: number('Lab count', 15),

@@ -11,7 +11,7 @@ export const createRandomTeam = (): Promise<RestTeam> => {
     applicationNumber: { iv: chance.word() },
     projectTitle: { iv: chance.sentence() },
     projectSummary: { iv: chance.paragraph() },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     outputs: { iv: [] },
   };
 

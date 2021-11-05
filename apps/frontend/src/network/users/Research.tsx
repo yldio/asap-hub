@@ -3,7 +3,7 @@ import {
   UserProfileResearch,
   TeamMembershipModal,
   OpenQuestionsModal,
-  SkillsModal,
+  ExpertiseAndResourcesModal,
 } from '@asap-hub/react-components';
 import { UserResponse } from '@asap-hub/model';
 import { useCurrentUser } from '@asap-hub/react-context';
@@ -12,7 +12,7 @@ import { network } from '@asap-hub/routing';
 import { usePatchUserById } from './state';
 import Frame from '../../structure/Frame';
 import GroupsCard from './groups/GroupsCard';
-import skillSuggestions from './skill-suggestions';
+import expertiseAndResourceSuggestions from './expertise-and-resource-suggestions';
 
 type ResearchProps = {
   user: UserResponse;
@@ -40,7 +40,9 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
               ? route.editTeamMembership({ teamId: team.id }).$
               : undefined,
         }))}
-        editSkillsHref={id === user.id ? route.editSkills({}).$ : undefined}
+        editExpertiseAndResourcesHref={
+          id === user.id ? route.editExpertiseAndResources({}).$ : undefined
+        }
         editQuestionsHref={
           id === user.id ? route.editQuestions({}).$ : undefined
         }
@@ -81,11 +83,13 @@ const Research: React.FC<ResearchProps> = ({ user }) => {
               />
             </Frame>
           </Route>
-          <Route path={path + route.editSkills.template}>
+          <Route path={path + route.editExpertiseAndResources.template}>
             <Frame title="Edit Expertise and Resources">
-              <SkillsModal
+              <ExpertiseAndResourcesModal
                 {...user}
-                skillSuggestions={skillSuggestions}
+                expertiseAndResourceSuggestions={
+                  expertiseAndResourceSuggestions
+                }
                 backHref={route.$}
                 onSave={patchUser}
               />

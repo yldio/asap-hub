@@ -9,7 +9,8 @@ export default class MoveRepurposedFields extends Migration {
     await migrateTeamFields();
   };
   down = async (): Promise<void> => {
-    /* Ignore  */
+    await resetUserFields();
+    await resetTeamFields();
   };
 }
 async function migrateUserFields() {
@@ -40,6 +41,39 @@ async function migrateTeamFields() {
     async (team, squidexClient) => {
       await squidexClient.patch(team.id, {
         expertiseAndResourceTags: { iv: team.data.skills.iv ?? [] },
+      });
+    },
+  );
+}
+
+async function resetUserFields() {
+  await applyToAllItemsInCollection<RestUser>(
+    'users',
+    async (user, squidexClient) => {
+      const { teams } = user.data;
+      await squidexClient.patch(user.id, {
+        expertiseAndResourceTags: undefined,
+        expertiseAndResourceDescription: undefined,
+        ...(teams && {
+          teams: {
+            iv:
+              teams.iv?.map((team) => ({
+                ...team,
+                mainResearchInterests: undefined,
+              })) ?? [],
+          },
+        }),
+      });
+    },
+  );
+}
+
+async function resetTeamFields() {
+  await applyToAllItemsInCollection<RestTeam>(
+    'teams',
+    async ({ id }, squidexClient) => {
+      await squidexClient.patch(id, {
+        expertiseAndResourceTags: undefined,
       });
     },
   );

@@ -15,26 +15,18 @@ export default class MoveRepurposedFields extends Migration {
 async function migrateUserFields() {
   await applyToAllItemsInCollection<RestUser>(
     'users',
-    async (
-      {
-        id,
-        data: {
-          skills,
-          skillsDescription,
-          teams: { iv: teams },
-        },
-      },
-      squidexClient,
-    ) => {
-      await squidexClient.patch(id, {
+    async (user, squidexClient) => {
+      const { skills, skillsDescription, teams } = user.data;
+      await squidexClient.patch(user.id, {
         expertiseAndResourceTags: { iv: skills.iv ?? [] },
         expertiseAndResourceDescription: skillsDescription,
         ...(teams && {
           teams: {
-            iv: teams.map((team) => ({
-              ...team,
-              mainResearchInterests: team.approach,
-            })),
+            iv:
+              teams.iv?.map((team) => ({
+                ...team,
+                mainResearchInterests: team.approach,
+              })) ?? [],
           },
         }),
       });
@@ -45,9 +37,9 @@ async function migrateUserFields() {
 async function migrateTeamFields() {
   await applyToAllItemsInCollection<RestTeam>(
     'teams',
-    async ({ id, data: { skills } }, squidexClient) => {
-      await squidexClient.patch(id, {
-        expertiseAndResourceTags: { iv: skills.iv ?? [] },
+    async (team, squidexClient) => {
+      await squidexClient.patch(team.id, {
+        expertiseAndResourceTags: { iv: team.data.skills.iv ?? [] },
       });
     },
   );

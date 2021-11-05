@@ -74,7 +74,7 @@ The [`dev`](dev) folder contains documentation regarding the local dev environme
 
 ## Squidex schema changes and graphql
 
-Once schema changes are added via packages/squidex/schema and released the GraphQL definitions need to be updated. 
+Once schema changes are added via packages/squidex/schema and released the GraphQL definitions need to be updated. This command updates the schema and queries according to the graphql schema of the application your environment is pointing to (see .env).
 
 `yarn schema:update`
 
@@ -90,7 +90,7 @@ This should create a new script in:
 
 src/apps/asap-server/src/migrations
 
-``` javascript
+```javascript
 export default class MoveRepurposedFields extends Migration {
   up = async (): Promise<void> => {
     /* put migration code here */

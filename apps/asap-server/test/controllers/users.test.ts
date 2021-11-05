@@ -108,12 +108,12 @@ describe('Users controller', () => {
         " ((contains(data/firstName/iv, 'first')" +
         " or contains(data/lastName/iv, 'first')" +
         " or contains(data/institution/iv, 'first')" +
-        " or contains(data/skills/iv, 'first'))" +
+        " or contains(data/expertiseAndResourceTags/iv, 'first'))" +
         ' and' +
         " (contains(data/firstName/iv, 'last')" +
         " or contains(data/lastName/iv, 'last')" +
         " or contains(data/institution/iv, 'last')" +
-        " or contains(data/skills/iv, 'last')))";
+        " or contains(data/expertiseAndResourceTags/iv, 'last')))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -142,7 +142,7 @@ describe('Users controller', () => {
         " ((contains(data/firstName/iv, '%27%27')" +
         " or contains(data/lastName/iv, '%27%27')" +
         " or contains(data/institution/iv, '%27%27')" +
-        " or contains(data/skills/iv, '%27%27')))";
+        " or contains(data/expertiseAndResourceTags/iv, '%27%27')))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -172,7 +172,7 @@ describe('Users controller', () => {
         " ((contains(data/firstName/iv, '%22')" +
         " or contains(data/lastName/iv, '%22')" +
         " or contains(data/institution/iv, '%22')" +
-        " or contains(data/skills/iv, '%22')))";
+        " or contains(data/expertiseAndResourceTags/iv, '%22')))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -202,7 +202,7 @@ describe('Users controller', () => {
         " ((contains(data/firstName/iv, 'Solène')" +
         " or contains(data/lastName/iv, 'Solène')" +
         " or contains(data/institution/iv, 'Solène')" +
-        " or contains(data/skills/iv, 'Solène')))";
+        " or contains(data/expertiseAndResourceTags/iv, 'Solène')))";
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -710,7 +710,7 @@ describe('Users controller', () => {
       mockResponse.data.findUsersContent!.flatData.teams = [
         {
           role: 'Lead PI (Core Leadership)',
-          approach: null,
+          mainResearchInterests: null,
           responsibilities: null,
           id: [
             {
@@ -725,7 +725,7 @@ describe('Users controller', () => {
         {
           role: 'Collaborating PI',
           responsibilities: 'I do stuff',
-          approach: 'orthodox',
+          mainResearchInterests: 'orthodox',
           id: [
             {
               id: 'team-id-3',
@@ -748,14 +748,14 @@ describe('Users controller', () => {
               {
                 role: 'Lead PI (Core Leadership)',
                 id: ['team-id-1'],
-                approach: null,
+                mainResearchInterests: null,
                 responsibilities: null,
               },
               {
                 role: 'Collaborating PI',
                 id: ['team-id-3'],
                 responsibilities: 'I do stuff',
-                approach: 'orthodox',
+                mainResearchInterests: 'orthodox',
               },
             ],
           },
@@ -774,12 +774,12 @@ describe('Users controller', () => {
           {
             id: 'team-id-1',
             responsibilities: '',
-            approach: '',
+            mainResearchInterests: '',
           },
           {
             id: 'team-id-3',
             responsibilities: 'I do stuff',
-            approach: 'orthodox',
+            mainResearchInterests: 'orthodox',
           },
         ],
       });
@@ -797,7 +797,7 @@ describe('Users controller', () => {
           proposal: 'proposal-id-2',
           role: 'Collaborating PI',
           responsibilities: 'I do stuff',
-          approach: 'orthodox',
+          mainResearchInterests: 'orthodox',
         },
       ]);
     });

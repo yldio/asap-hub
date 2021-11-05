@@ -51,7 +51,7 @@ export const fetchUserResponse: RestUser = {
     biography: { iv: 'Biography' },
     teams: { iv: [{ id: ['team-uuid-1'], role: 'Lead PI (Core Leadership)' }] },
     questions: { iv: [] },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     role: { iv: 'Grantee' },
     onboarded: {
       iv: true,
@@ -68,7 +68,7 @@ export const fetchTeamResponse: RestTeam = {
     applicationNumber: { iv: 'app-number' },
     displayName: { iv: 'team' },
     projectTitle: { iv: 'title' },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     outputs: { iv: ['ro-uuid-1'] },
   },
 };

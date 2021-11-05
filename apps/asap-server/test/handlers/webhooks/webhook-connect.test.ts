@@ -25,7 +25,7 @@ const user: RestUser = {
     connections: { iv: [] },
     biography: { iv: 'Biography' },
     avatar: { iv: [] },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     questions: { iv: [] },
     teams: { iv: [] },
     onboarded: {

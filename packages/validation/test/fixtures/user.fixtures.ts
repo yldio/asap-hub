@@ -21,7 +21,7 @@ export const userResponse: UserResponse = {
       displayName: 'Jackson, M',
       role: 'Lead PI (Core Leadership)',
       proposal: 'proposal-id-1',
-      approach: 'Exact',
+      mainResearchInterests: 'Exact',
       responsibilities: 'Make sure coverage is high',
     },
     {
@@ -36,7 +36,13 @@ export const userResponse: UserResponse = {
   social: {
     orcid: '363-98-9330',
   },
-  skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
+  expertiseAndResourceTags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
   questions: ['Question 1', 'Question 2'],
   avatarUrl: `https://test.com/api/assets/asap-dev/squidex-asset-id`,
   role: 'Grantee',

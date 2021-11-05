@@ -40,7 +40,7 @@ export interface TeamMember {
 export interface TeamResponse
   extends Omit<TeamCreateRequest, 'applicationNumber'> {
   id: string;
-  skills: string[];
+  expertiseAndResourceTags: string[];
   members: TeamMember[];
   lastModifiedDate: string;
   pointOfContact?: TeamMember;

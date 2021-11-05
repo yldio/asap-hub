@@ -30,7 +30,7 @@ export const createUser = (overwrites?: Partial<User>): Promise<RestUser> => {
     biography: chance.paragraph({ sentence: 3 }),
     role: 'Grantee',
     avatar: [],
-    skills: [],
+    expertiseAndResourceTags: [],
     questions: [],
     teams: [],
     connections: [],

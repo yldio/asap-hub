@@ -5,7 +5,7 @@ import TeamProfileAbout from '../TeamProfileAbout';
 
 const props: ComponentProps<typeof TeamProfileAbout> = {
   projectTitle: '',
-  skills: [],
+  expertiseAndResourceTags: [],
   members: [],
   teamListElementId: '',
 };
@@ -62,10 +62,13 @@ it('renders the team list', () => {
   );
 });
 
-it('renders the skill list', () => {
+it('renders the expertise and resources list', () => {
   const { getByText } = render(
-    <TeamProfileAbout {...props} skills={['example skill']} />,
+    <TeamProfileAbout
+      {...props}
+      expertiseAndResourceTags={['example expertise']}
+    />,
   );
-  expect(getByText(/example skill/i)).toBeVisible();
+  expect(getByText(/example expertise/i)).toBeVisible();
   expect(getByText(/expertise and resources/i)).toBeVisible();
 });

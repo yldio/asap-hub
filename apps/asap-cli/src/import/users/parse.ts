@@ -20,8 +20,8 @@ export interface Data {
   biography: string;
   researchInterest: string;
   responsibilities: string;
-  skills: string[];
-  skillsDescription: string;
+  expertiseAndResourceTags: string[];
+  expertiseAndResourceDescription: string;
   asapRole: Role;
   social: {
     website1?: string;
@@ -52,11 +52,11 @@ export default (data: string[]): Data => {
     question2,
     question3,
     question4,
-    skillsDescription,
+    expertiseAndResourceDescription,
     biography,
     researchInterest,
     responsibilities,
-    skills,
+    expertiseAndResourceTags,
     asapRole,
     ,
     website1,
@@ -87,11 +87,11 @@ export default (data: string[]): Data => {
     researchInterest,
     responsibilities,
     role: role as TeamRole,
-    skills: skills
+    expertiseAndResourceTags: expertiseAndResourceTags
       .split(',')
       .map((a) => a.trim())
       .filter(Boolean),
-    skillsDescription,
+    expertiseAndResourceDescription,
     asapRole: ['Staff', 'Grantee', 'Guest'].includes(asapRole)
       ? (asapRole as Role)
       : 'Guest',

@@ -8,7 +8,7 @@ const commonProps: ComponentProps<typeof UserProfileResearch> = {
   displayName: 'Phillip Winter',
   email: 'test@example.com',
   teams: [],
-  skills: [],
+  expertiseAndResourceTags: [],
   questions: [],
   labs: [],
 };
@@ -29,9 +29,12 @@ it('renders the role on ASAP', () => {
   expect(getByText(/role.+asap/i)).toBeVisible();
 });
 
-it('renders the skills list', () => {
+it('renders the expertiseAndResourceTags list', () => {
   const { getByText } = render(
-    <UserProfileResearch {...commonProps} skills={['Neurological Diseases']} />,
+    <UserProfileResearch
+      {...commonProps}
+      expertiseAndResourceTags={['Neurological Diseases']}
+    />,
   );
   expect(getByText(/expertise/i, { selector: 'h2' })).toBeVisible();
   expect(getByText('Neurological Diseases')).toBeVisible();
@@ -69,13 +72,16 @@ it('renders an edit button for the role on the team', () => {
     expect.stringMatching(/42$/),
   );
 });
-it('renders an edit button for the skills list', () => {
+it('renders an edit button for the expertiseAndResourceTags list', () => {
   const { getByLabelText } = render(
-    <UserProfileResearch {...commonProps} editSkillsHref="/edit-skills" />,
+    <UserProfileResearch
+      {...commonProps}
+      editExpertiseAndResourcesHref="/edit-expertise-and-resources"
+    />,
   );
   expect(getByLabelText(/edit.+expertise/i)).toHaveAttribute(
     'href',
-    '/edit-skills',
+    '/edit-expertise-and-resources',
   );
 });
 it('renders an edit button for the questions list', () => {

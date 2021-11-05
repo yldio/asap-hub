@@ -21,7 +21,7 @@ const emptyUser: UserResponse = {
   jobTitle: undefined,
   city: undefined,
   country: undefined,
-  skills: [],
+  expertiseAndResourceTags: [],
   teams: [],
   questions: [],
 };
@@ -108,7 +108,7 @@ describe('useOnboarding', () => {
   it('calculates the modal href for every step', async () => {
     const user = {
       ...emptyUser,
-      skills: ['1', '2', '3', '4', '5'],
+      expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
     };
     mockGetUser.mockResolvedValue(user);
 

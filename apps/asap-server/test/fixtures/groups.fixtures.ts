@@ -53,7 +53,7 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                   projectSummary: null,
                   projectTitle:
                     'Senescence in Parkinson’s disease and related disorders',
-                  skills: [],
+                  expertiseAndResourceTags: [],
                   proposal: [
                     {
                       id: 'output-id-1',
@@ -117,14 +117,14 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                           question: 'Question 2',
                         },
                       ],
-                      skills: ['React'],
-                      skillsDescription:
+                      expertiseAndResourceTags: ['React'],
+                      expertiseAndResourceDescription:
                         "In addition to his expertise in not for profit management, Todd has scientific experience in animal models and the cell biology of Parkinson's disease.",
                       teams: [
                         {
                           role: 'Co-PI (Core Leadership)',
                           responsibilities: null,
-                          approach: null,
+                          mainResearchInterests: null,
                           id: [
                             {
                               id: 'team-id-2',
@@ -174,8 +174,8 @@ export const queryGroupsResponse: { data: ResponseFetchGroups } = {
                       orcidLastSyncDate: null,
                       orcidWorks: [],
                       questions: [],
-                      skills: [],
-                      skillsDescription: null,
+                      expertiseAndResourceTags: [],
+                      expertiseAndResourceDescription: null,
                       labs: [
                         { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
                         { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
@@ -244,7 +244,7 @@ export const listGroupsResponse: ListGroupResponse = {
           id: 'team-id-1',
           displayName: 'Lee, M',
           lastModifiedDate: '2020-12-11T15:06:26.000Z',
-          skills: [],
+          expertiseAndResourceTags: [],
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
           proposalURL: 'output-id-1',
@@ -272,8 +272,8 @@ export const listGroupsResponse: ListGroupResponse = {
             jobTitle: 'Software Engineer',
             orcidWorks: [],
             questions: ['What is the meaning of life?', 'Question 2'],
-            skills: ['React'],
-            skillsDescription:
+            expertiseAndResourceTags: ['React'],
+            expertiseAndResourceDescription:
               "In addition to his expertise in not for profit management, Todd has scientific experience in animal models and the cell biology of Parkinson's disease.",
             lastModifiedDate: '2020-12-11T14:33:50.000Z',
             teams: [
@@ -309,7 +309,7 @@ export const listGroupsResponse: ListGroupResponse = {
             institution: 'YLD',
             orcidWorks: [],
             questions: [],
-            skills: [],
+            expertiseAndResourceTags: [],
             lastModifiedDate: '2020-12-11T14:33:50.000Z',
             teams: [],
             social: { github: 'johnytiago' },
@@ -390,7 +390,7 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
           projectSummary: null,
           projectTitle:
             'Senescence in Parkinson’s disease and related disorders',
-          skills: [],
+          expertiseAndResourceTags: [],
           proposal: [
             {
               id: 'output-id-1',
@@ -454,14 +454,14 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
                   question: 'Question 2',
                 },
               ],
-              skills: ['React'],
-              skillsDescription:
+              expertiseAndResourceTags: ['React'],
+              expertiseAndResourceDescription:
                 "In addition to his expertise in not for profit management, Todd has scientific experience in animal models and the cell biology of Parkinson's disease.",
               teams: [
                 {
                   role: 'Co-PI (Core Leadership)',
                   responsibilities: null,
-                  approach: null,
+                  mainResearchInterests: null,
                   id: [
                     {
                       id: 'team-id-2',
@@ -511,8 +511,8 @@ export const getGraphqlGroup = (): GraphqlGroup => ({
               orcidLastSyncDate: null,
               orcidWorks: [],
               questions: [],
-              skills: [],
-              skillsDescription: null,
+              expertiseAndResourceTags: [],
+              expertiseAndResourceDescription: null,
               labs: [
                 { id: 'cd7be4902', flatData: { name: 'Barcelona' } },
                 { id: 'cd7be4905', flatData: { name: 'Glasgow' } },
@@ -556,7 +556,7 @@ export const getGroupResponse = (): GroupResponse => ({
       id: 'team-id-1',
       displayName: 'Lee, M',
       lastModifiedDate: '2020-12-11T15:06:26.000Z',
-      skills: [],
+      expertiseAndResourceTags: [],
       projectTitle: 'Senescence in Parkinson’s disease and related disorders',
       proposalURL: 'output-id-1',
       tools: [
@@ -583,8 +583,8 @@ export const getGroupResponse = (): GroupResponse => ({
         jobTitle: 'Software Engineer',
         orcidWorks: [],
         questions: ['What is the meaning of life?', 'Question 2'],
-        skills: ['React'],
-        skillsDescription:
+        expertiseAndResourceTags: ['React'],
+        expertiseAndResourceDescription:
           "In addition to his expertise in not for profit management, Todd has scientific experience in animal models and the cell biology of Parkinson's disease.",
         lastModifiedDate: '2020-12-11T14:33:50.000Z',
         teams: [
@@ -620,7 +620,7 @@ export const getGroupResponse = (): GroupResponse => ({
         institution: 'YLD',
         orcidWorks: [],
         questions: [],
-        skills: [],
+        expertiseAndResourceTags: [],
         lastModifiedDate: '2020-12-11T14:33:50.000Z',
         teams: [],
         social: { github: 'johnytiago' },

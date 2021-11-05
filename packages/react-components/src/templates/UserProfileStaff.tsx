@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { UserResponse } from '@asap-hub/model';
 
 import {
-  ProfileSkills,
+  ProfileExpertiseAndResources,
   QuestionsSection,
   UserProfileBackground,
   UserProfileBiography,
@@ -14,7 +14,7 @@ import {
 
 type UserProfileStaffProps = ComponentProps<typeof UserProfileStaffBackground> &
   ComponentProps<typeof QuestionsSection> &
-  ComponentProps<typeof ProfileSkills> &
+  ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<UserResponse, 'email' | 'labs'> & {
     readonly biography?: ComponentProps<
       typeof UserProfileBiography
@@ -31,8 +31,8 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
   biography,
   firstName,
   teams,
-  skills,
-  skillsDescription,
+  expertiseAndResourceTags,
+  expertiseAndResourceDescription,
   orcidWorks,
   questions,
   reachOut,
@@ -64,8 +64,11 @@ const UserProfileStaff: React.FC<UserProfileStaffProps> = ({
       card: biography ? <UserProfileBiography biography={biography} /> : null,
     }}
     {{
-      card: skills.length ? (
-        <ProfileSkills skillsDescription={skillsDescription} skills={skills} />
+      card: expertiseAndResourceTags.length ? (
+        <ProfileExpertiseAndResources
+          expertiseAndResourceDescription={expertiseAndResourceDescription}
+          expertiseAndResourceTags={expertiseAndResourceTags}
+        />
       ) : null,
     }}
     {{

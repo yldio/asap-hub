@@ -133,16 +133,16 @@ export default class Users implements UserController {
           (team: {
             id: string[];
             responsibilities?: string | null;
-            approach?: string | null;
+            mainResearchInterests?: string | null;
           }) => {
             const teamUpdates = update.teams!.find(
               ({ id: teamId }) => team.id[0] === teamId,
             );
-            if (teamUpdates?.approach?.trim) {
-              team.approach =
-                teamUpdates.approach.trim() === ''
+            if (teamUpdates?.mainResearchInterests?.trim) {
+              team.mainResearchInterests =
+                teamUpdates.mainResearchInterests.trim() === ''
                   ? null
-                  : teamUpdates.approach;
+                  : teamUpdates.mainResearchInterests;
             }
             if (teamUpdates?.responsibilities?.trim) {
               team.responsibilities =
@@ -179,7 +179,7 @@ export default class Users implements UserController {
                 [`contains(data/firstName/iv, '${word}')`],
                 [`contains(data/lastName/iv, '${word}')`],
                 [`contains(data/institution/iv, '${word}')`],
-                [`contains(data/skills/iv, '${word}')`],
+                [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
               ].join(' or ')})`,
             ),
           [],

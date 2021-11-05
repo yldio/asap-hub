@@ -96,7 +96,7 @@ export interface UserTeam {
   displayName?: string;
   proposal?: string;
   role: TeamRole;
-  approach?: string;
+  mainResearchInterests?: string;
   responsibilities?: string;
 }
 
@@ -121,8 +121,8 @@ export interface UserResponse extends Invitee {
   createdDate: string;
   teams: UserTeam[];
   degree?: UserDegree;
-  skills: string[];
-  skillsDescription?: string;
+  expertiseAndResourceTags: string[];
+  expertiseAndResourceDescription?: string;
   questions: string[];
   biosketch?: string;
   orcid?: string;
@@ -151,10 +151,10 @@ export interface UserPatchRequest {
   degree?: UserDegree;
   country?: string;
   city?: string;
-  skills?: string[];
-  skillsDescription?: string;
+  expertiseAndResourceTags?: string[];
+  expertiseAndResourceDescription?: string;
   questions?: string[];
-  teams?: Pick<UserTeam, 'id' | 'approach' | 'responsibilities'>[];
+  teams?: Pick<UserTeam, 'id' | 'mainResearchInterests' | 'responsibilities'>[];
   social?: Omit<UserSocialLinks, 'orcid'>;
   onboarded?: boolean;
 }

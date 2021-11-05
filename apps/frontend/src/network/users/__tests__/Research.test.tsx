@@ -13,10 +13,10 @@ import { patchUser } from '../api';
 jest.mock('../api');
 jest.mock('../groups/api');
 
-const suggestedSkills = ['1', '2', '3', '4', '5'];
-jest.mock('../skill-suggestions', () => ({
+const suggestedExpertiseAndResources = ['1', '2', '3', '4', '5'];
+jest.mock('../expertise-and-resource-suggestions', () => ({
   __esModule: true,
-  default: suggestedSkills,
+  default: suggestedExpertiseAndResources,
 }));
 const mockPatchUser = patchUser as jest.MockedFunction<typeof patchUser>;
 
@@ -52,10 +52,15 @@ const wrapper = makeWrapper();
 
 it('renders the profile research section', async () => {
   const { findByText } = render(
-    <Research user={{ ...createUserResponse(), skills: ['Some Skill'] }} />,
+    <Research
+      user={{
+        ...createUserResponse(),
+        expertiseAndResourceTags: ['Some Expertise'],
+      }}
+    />,
     { wrapper },
   );
-  expect(await findByText('Some Skill')).toBeVisible();
+  expect(await findByText('Some Expertise')).toBeVisible();
 });
 
 it("does not allow editing somebody else's profile", async () => {
@@ -80,13 +85,13 @@ describe('when editing', () => {
     ...createUserResponse(),
     questions: ['question 1', 'question 2', 'question 3', 'question 4'],
     id,
-    skillsDescription: 'Skills Description',
+    expertiseAndResourceDescription: 'Expertise Description',
     teams: [
       {
         ...createTeamResponse(),
         id: '1',
         role: 'Collaborating PI',
-        approach: 'My Approach',
+        mainResearchInterests: 'My Interests',
         displayName: 'Example Team',
         responsibilities: 'My Responsibilities',
       },
@@ -109,12 +114,12 @@ describe('when editing', () => {
       } = result;
 
       userEvent.click(await findByLabelText(/edit.+team/i));
-      expect(getByDisplayValue('My Approach')).toBeVisible();
+      expect(getByDisplayValue('My Interests')).toBeVisible();
 
       userEvent.click(getByText(/close/i));
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
-        expect(queryByDisplayValue('My Approach')).not.toBeInTheDocument();
+        expect(queryByDisplayValue('My Interests')).not.toBeInTheDocument();
       });
     });
 
@@ -128,8 +133,8 @@ describe('when editing', () => {
       } = result;
 
       userEvent.click(await findByLabelText(/example.+team/i));
-      userEvent.type(getByDisplayValue('My Approach'), ' 2');
-      expect(getByDisplayValue('My Approach 2')).toBeVisible();
+      userEvent.type(getByDisplayValue('My Interests'), ' 2');
+      expect(getByDisplayValue('My Interests 2')).toBeVisible();
 
       userEvent.type(getByDisplayValue('My Responsibilities'), ' 2');
       expect(getByDisplayValue('My Responsibilities 2')).toBeVisible();
@@ -137,7 +142,7 @@ describe('when editing', () => {
       userEvent.click(getByText(/save/i));
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
-        expect(queryByDisplayValue('My Approach 2')).not.toBeInTheDocument();
+        expect(queryByDisplayValue('My Interests 2')).not.toBeInTheDocument();
       });
       expect(mockPatchUser).toHaveBeenCalledWith(
         id,
@@ -145,7 +150,7 @@ describe('when editing', () => {
           teams: [
             {
               id: '1',
-              approach: 'My Approach 2',
+              mainResearchInterests: 'My Interests 2',
               responsibilities: 'My Responsibilities 2',
             },
           ],
@@ -154,7 +159,7 @@ describe('when editing', () => {
       );
     });
   });
-  describe('skills', () => {
+  describe('expertise and resources', () => {
     it('opens and closes the dialog', async () => {
       const {
         getByText,
@@ -165,13 +170,13 @@ describe('when editing', () => {
       } = result;
 
       userEvent.click(await findByLabelText(/edit.+resources/i));
-      expect(getByDisplayValue('Skills Description')).toBeVisible();
+      expect(getByDisplayValue('Expertise Description')).toBeVisible();
 
       userEvent.click(getByText(/close/i));
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
         expect(
-          queryByDisplayValue('Skills Description'),
+          queryByDisplayValue('Expertise Description'),
         ).not.toBeInTheDocument();
       });
     });
@@ -187,10 +192,10 @@ describe('when editing', () => {
       } = result;
 
       userEvent.click(await findByLabelText(/edit.+resources/i));
-      userEvent.type(getByDisplayValue('Skills Description'), ' 2');
-      expect(getByDisplayValue('Skills Description 2')).toBeVisible();
-      suggestedSkills.forEach((skill) => {
-        userEvent.type(getByLabelText(/tags/i), skill);
+      userEvent.type(getByDisplayValue('Expertise Description'), ' 2');
+      expect(getByDisplayValue('Expertise Description 2')).toBeVisible();
+      suggestedExpertiseAndResources.forEach((expertise) => {
+        userEvent.type(getByLabelText(/tags/i), expertise);
         userEvent.tab();
       });
 
@@ -198,14 +203,14 @@ describe('when editing', () => {
       await waitFor(() => {
         expect(queryByText(/loading/i)).not.toBeInTheDocument();
         expect(
-          queryByDisplayValue('Skills Description 2'),
+          queryByDisplayValue('Expertise Description 2'),
         ).not.toBeInTheDocument();
       });
       expect(mockPatchUser).toHaveBeenCalledWith(
         id,
         {
-          skills: suggestedSkills,
-          skillsDescription: 'Skills Description 2',
+          expertiseAndResourceTags: suggestedExpertiseAndResources,
+          expertiseAndResourceDescription: 'Expertise Description 2',
         },
         expect.any(String),
       );

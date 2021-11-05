@@ -1,4 +1,4 @@
-const skillSuggestions = [
+const expertiseAndResourceSuggestions = [
   '2D cultures',
   '3D cultures',
   '3D human PD chip',
@@ -423,4 +423,4 @@ const skillSuggestions = [
   'Xenobiotics',
 ];
 
-export default skillSuggestions;
+export default expertiseAndResourceSuggestions;

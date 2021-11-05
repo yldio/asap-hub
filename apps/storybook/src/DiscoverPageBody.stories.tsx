@@ -33,7 +33,7 @@ const props = (): ComponentProps<typeof DiscoverPageBody> => ({
       id: 'uuid-1',
       created: new Date().toISOString(),
       type: 'Training' as const,
-      title: "Coordinating different approaches into Parkinson's",
+      title: "Coordinating different research interests into Parkinson's",
       shortText:
         'Point of view from ASAP scientific director, Randy Schekman, PhD and managing director, Ekemini A. U. Riley, PhD.',
       thumbnail: 'https://picsum.photos/200',

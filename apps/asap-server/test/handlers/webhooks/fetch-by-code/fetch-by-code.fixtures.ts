@@ -13,7 +13,7 @@ export const fetchUserResponse: { data: ResponseFetchUsers } = {
             firstName: 'First',
             lastName: 'Last',
             email: 'panog@ep.bv',
-            skills: [],
+            expertiseAndResourceTags: [],
             lastModifiedDate: '2020-09-02T10:34:13.259Z',
             orcid: '0000-0001-9884-1913',
             orcidWorks: [],

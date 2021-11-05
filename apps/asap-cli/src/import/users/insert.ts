@@ -26,7 +26,7 @@ const insertMembership = (
   const newTeam: UserTeamConnection<string> = {
     id: [team.id],
     role: data.role,
-    approach: data.researchInterest,
+    mainResearchInterests: data.researchInterest,
     responsibilities: data.responsibilities,
   };
 
@@ -56,7 +56,7 @@ const insertTeam = async (data: Data, cache: Cache): Promise<RestTeam> => {
     projectTitle: {
       iv: projectTitle,
     },
-    skills: {
+    expertiseAndResourceTags: {
       iv: [],
     },
     outputs: {
@@ -110,12 +110,12 @@ const insertUser = async (
     lastName,
     degree,
     jobTitle,
-    skills,
+    expertiseAndResourceTags,
     questions,
     institution,
     orcid,
     biography,
-    skillsDescription,
+    expertiseAndResourceDescription,
     asapRole,
     social,
   } = data;
@@ -139,14 +139,14 @@ const insertUser = async (
     institution: {
       iv: institution,
     },
-    skillsDescription: {
-      iv: skillsDescription,
+    expertiseAndResourceDescription: {
+      iv: expertiseAndResourceDescription,
     },
     biography: {
       iv: biography,
     },
-    skills: {
-      iv: skills,
+    expertiseAndResourceTags: {
+      iv: expertiseAndResourceTags,
     },
     questions: {
       iv: questions.map((q) => ({

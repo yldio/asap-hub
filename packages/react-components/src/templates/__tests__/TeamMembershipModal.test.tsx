@@ -37,7 +37,7 @@ it('renders default values into text inputs', async () => {
   const { getByLabelText, getAllByLabelText } = render(
     <TeamMembershipModal
       {...props}
-      approach="approach"
+      mainResearchInterests="mainResearchInterests"
       responsibilities="responsibilities"
       role="Collaborating PI"
       displayName="Team Name"
@@ -50,7 +50,9 @@ it('renders default values into text inputs', async () => {
   );
   expect(getByLabelText(/team/i)).toHaveValue('Team Name');
   expect(getByLabelText(/role/i)).toHaveValue('Collaborating PI');
-  expect(getByLabelText(/main.+interests/i)).toHaveValue('approach');
+  expect(getByLabelText(/main.+interests/i)).toHaveValue(
+    'mainResearchInterests',
+  );
   expect(getByLabelText(/responsibilities/i)).toHaveValue('responsibilities');
   expect(getAllByLabelText(/lab/i)).toHaveLength(2);
   expect(getAllByLabelText(/lab/i)[0]).toHaveValue('Lab 1');
@@ -63,7 +65,7 @@ it('triggers the save function', async () => {
     <TeamMembershipModal
       {...props}
       id="id"
-      approach="approach"
+      mainResearchInterests="mainResearchInterests"
       responsibilities="responsibilities"
       role="Collaborating PI"
       displayName="Team Name"
@@ -72,13 +74,13 @@ it('triggers the save function', async () => {
     { wrapper: MemoryRouter },
   );
 
-  userEvent.type(getByDisplayValue('approach'), ' 1');
+  userEvent.type(getByDisplayValue('mainResearchInterests'), ' 1');
   userEvent.click(getByText('Save'));
   expect(jestFn).toHaveBeenCalledWith({
     teams: [
       {
         id: 'id',
-        approach: 'approach 1',
+        mainResearchInterests: 'mainResearchInterests 1',
         responsibilities: 'responsibilities',
       },
     ],
@@ -98,7 +100,7 @@ it('disables the form elements while submitting', async () => {
   const { getByText } = render(
     <TeamMembershipModal
       {...props}
-      approach="approach"
+      mainResearchInterests="mainResearchInterests"
       responsibilities="responsibilities"
       onSave={handleSave}
     />,
@@ -121,7 +123,7 @@ it('shows validation message for inexistent Main research interests', async () =
   const { getByLabelText, findByText } = render(
     <TeamMembershipModal
       {...props}
-      approach="approach"
+      mainResearchInterests="mainResearchInterests"
       responsibilities="responsibilities"
     />,
     { wrapper: StaticRouter },
@@ -140,7 +142,7 @@ it('shows validation message for inexistent Your responsibilities', async () => 
   const { getByLabelText, findByText } = render(
     <TeamMembershipModal
       {...props}
-      approach="approach"
+      mainResearchInterests="mainResearchInterests"
       responsibilities="responsibilities"
     />,
     { wrapper: StaticRouter },

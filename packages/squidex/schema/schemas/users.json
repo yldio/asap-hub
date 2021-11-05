@@ -31,8 +31,6 @@
       "city",
       "institution",
       "jobTitle",
-      "skillsDescription",
-      "skills",
       "expertiseAndResourceDescription",
       "expertiseAndResourceTags",
       "questions",
@@ -227,23 +225,6 @@
               "label": "Role",
               "hints": "Attention: Check if this user needs to be added to Smart Simple",
               "isRequired": true,
-              "isRequiredOnPublish": false,
-              "isHalfWidth": true
-            }
-          },
-          {
-            "name": "approach",
-            "isHidden": false,
-            "isLocked": false,
-            "isDisabled": true,
-            "properties": {
-              "fieldType": "String",
-              "isUnique": false,
-              "inlineEditable": true,
-              "contentType": "Unspecified",
-              "editor": "Input",
-              "label": "Main Research Interests",
-              "isRequired": false,
               "isRequiredOnPublish": false,
               "isHalfWidth": true
             }
@@ -618,39 +599,6 @@
           "label": "Research Tab",
           "hints": "This data shows up in the first tab",
           "placeholder": "",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "skillsDescription",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "String",
-          "isUnique": false,
-          "inlineEditable": true,
-          "contentType": "Unspecified",
-          "editor": "Input",
-          "label": "Expertise and Resources Description",
-          "isRequired": false,
-          "isRequiredOnPublish": false,
-          "isHalfWidth": false
-        }
-      },
-      {
-        "name": "skills",
-        "isHidden": false,
-        "isLocked": false,
-        "isDisabled": true,
-        "partitioning": "invariant",
-        "properties": {
-          "fieldType": "Tags",
-          "editor": "Tags",
-          "label": "Expertise and Resources",
           "isRequired": false,
           "isRequiredOnPublish": false,
           "isHalfWidth": false

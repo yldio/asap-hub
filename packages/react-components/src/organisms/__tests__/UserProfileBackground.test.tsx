@@ -57,7 +57,7 @@ it('renders proposal if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      approach="text"
+      mainResearchInterests="text"
       proposal="42"
       labs={[]}
     />,
@@ -123,7 +123,7 @@ it('renders placeholder if no responsibilities provided for your own profile', (
   expect(queryAllByText(/responsibilities/i).length).toBeGreaterThan(0);
 });
 
-it('renders approach if present', () => {
+it('renders mainResearchInterests if present', () => {
   const { rerender, queryAllByText } = render(
     <UserProfileBackground
       id="42"
@@ -142,7 +142,7 @@ it('renders approach if present', () => {
       firstName="Phillip"
       displayName="Phillip, M"
       role="Collaborating PI"
-      approach="text"
+      mainResearchInterests="text"
       labs={[]}
     />,
   );
@@ -150,7 +150,7 @@ it('renders approach if present', () => {
   expect(queryAllByText(/interests/i).length).toBeGreaterThan(0);
 });
 
-it('renders placeholder for your own profile when there is no approach', () => {
+it('renders placeholder for your own profile when there is no mainResearchInterests', () => {
   const { rerender, queryAllByText } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
       <UserProfileBackground

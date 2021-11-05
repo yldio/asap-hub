@@ -22,7 +22,7 @@ export const listUserResponseItem: Omit<ListUserResponse['items'][0], 'id'> = {
   teams: [],
   orcid: '0000-0001-8203-6901',
   orcidWorks: [],
-  skills: [],
+  expertiseAndResourceTags: [],
   questions: [],
   role: 'Grantee',
   social: {

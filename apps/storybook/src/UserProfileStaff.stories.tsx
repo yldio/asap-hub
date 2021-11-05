@@ -12,7 +12,7 @@ const props = (): ComponentProps<typeof UserProfileStaff> => ({
   email: text('Email', 'me@example.com'),
   teams: [],
   labs: [],
-  skills: array('Skills', [
+  expertiseAndResourceTags: array('Expertise and Resources', [
     'Neurological Diseases',
     'Clinical Neurology',
     'Adult Neurology',

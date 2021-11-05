@@ -23,7 +23,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
           iv: [{ code: '22f012ba-a059-4673-b052-c097cddff13f' }],
         },
         avatar: { iv: [] },
-        skills: { iv: [] },
+        expertiseAndResourceTags: { iv: [] },
         questions: { iv: [] },
         teams: { iv: [] },
         onboarded: {
@@ -53,7 +53,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
           iv: [{ code: '22f012ba-a059-4673-b052-c097cddff13f' }],
         },
         avatar: { iv: [] },
-        skills: { iv: [] },
+        expertiseAndResourceTags: { iv: [] },
         questions: { iv: [] },
         teams: { iv: [] },
         onboarded: {

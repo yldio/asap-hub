@@ -14,7 +14,7 @@ export const teamsContentQueryFragment = gql`
       }
       projectSummary
       projectTitle
-      skills
+      expertiseAndResourceTags
       proposal {
         id
       }
@@ -58,11 +58,11 @@ export const teamsContentQueryFragment = gql`
         questions {
           question
         }
-        skills
-        skillsDescription
+        expertiseAndResourceTags
+        expertiseAndResourceDescription
         teams {
           role
-          approach
+          mainResearchInterests
           responsibilities
           id {
             id

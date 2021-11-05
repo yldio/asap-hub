@@ -48,7 +48,6 @@ export const referencingUsersContentsResponse = ({
       city: '',
       orcid: '',
       orcidWorks: [],
-      skillsDescription: '',
       responsibilities: '',
       reachOut: '',
       lastModifiedDate: '2020-11-26T11:56:04Z',
@@ -70,7 +69,6 @@ export const referencingUsersContentsResponse = ({
         },
       ] as Array<UsersDataTeamsChildDto>,
       questions: [] as Array<UsersDataQuestionsChildDto>,
-      skills: [],
       role: 'Grantee',
       onboarded: true,
       labs: [
@@ -138,7 +136,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
             projectSummary: null,
             projectTitle:
               'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-            skills: ['Animal resources'],
+            expertiseAndResourceTags: ['Animal resources'],
             proposal: [
               {
                 id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -186,7 +184,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   },
                 ],
                 questions: [],
-                skills: [],
+                expertiseAndResourceTags: [],
                 role: 'Grantee',
                 onboarded: true,
                 labs: [
@@ -208,7 +206,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
             projectSummary: null,
             projectTitle:
               'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
-            skills: [],
+            expertiseAndResourceTags: [],
             proposal: null,
             tools: null,
           },
@@ -246,7 +244,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   },
                 ],
                 questions: [],
-                skills: [],
+                expertiseAndResourceTags: [],
                 role: 'Grantee',
                 onboarded: true,
                 labs: [],
@@ -285,7 +283,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   },
                 ],
                 questions: [],
-                skills: [],
+                expertiseAndResourceTags: [],
                 role: 'Grantee',
                 onboarded: true,
                 labs: [],
@@ -303,7 +301,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
             outputs: null,
             projectSummary: 'Its good',
             projectTitle: 'This is good',
-            skills: [],
+            expertiseAndResourceTags: [],
             proposal: null,
             tools: null,
           },
@@ -341,7 +339,7 @@ export const getGraphQlTeamsResponse = (): { data: ResponseFetchTeams } => ({
                   },
                 ],
                 questions: [],
-                skills: [],
+                expertiseAndResourceTags: [],
                 role: 'Grantee',
                 onboarded: true,
                 labs: [
@@ -376,7 +374,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
       displayName: 'Schipa, A',
       lastModifiedDate: '2020-11-26T11:56:04.000Z',
       labCount: 2,
-      skills: ['Animal resources'],
+      expertiseAndResourceTags: ['Animal resources'],
       outputs: [
         {
           id: '7198d072-de87-4b80-90ca-4a1abe67952e',
@@ -456,7 +454,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
       labCount: 0,
       projectTitle:
         'Mapping the LRRK2 signalling pathway and its interplay with other Parkinson’s disease components',
-      skills: [],
+      expertiseAndResourceTags: [],
       outputs: [],
       members: [
         {
@@ -487,7 +485,7 @@ export const getListTeamResponse = (): ListTeamResponse => ({
       id: 'team-id-3',
       displayName: 'Zac T.',
       labCount: 2,
-      skills: [],
+      expertiseAndResourceTags: [],
       outputs: [],
       members: [
         {
@@ -579,7 +577,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
         projectSummary: null,
         projectTitle:
           'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-        skills: ['Animal resources'],
+        expertiseAndResourceTags: ['Animal resources'],
         proposal: [
           {
             id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -622,7 +620,7 @@ export const graphQlTeamResponse: { data: ResponseFetchTeam } = {
               },
             ],
             questions: [],
-            skills: [],
+            expertiseAndResourceTags: [],
             role: 'Grantee',
             onboarded: true,
             labs: [
@@ -640,7 +638,7 @@ export const fetchTeamByIdExpectation: TeamResponse = {
   id: 'team-id-1',
   displayName: 'Schipa, A',
   lastModifiedDate: '2020-11-26T11:56:04.000Z',
-  skills: ['Animal resources'],
+  expertiseAndResourceTags: ['Animal resources'],
   outputs: [
     {
       id: '7198d072-de87-4b80-90ca-4a1abe67952e',
@@ -724,7 +722,7 @@ export const getUpdateTeamResponse = (tools: TeamTool[] = []): RestTeam => ({
     projectSummary: {
       iv: 'Wi dalev fu jusjuh buw nauzi kas ma. Fo ajelo pu vaenusug ezuhsi resdudif ebsofak tav dan mumooz awgabu meki gicub bowec afegeir tozab umefarow.',
     },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     outputs: { iv: [] },
     tools: { iv: tools },
   },
@@ -751,7 +749,7 @@ export const getGraphQlTeamResponse = (
         projectSummary: null,
         projectTitle:
           'The genome-microbiome axis in the cause of Parkinson disease: Mechanistic insights and therapeutic implications from experimental models and a genetically stratified patient population.',
-        skills: ['Animal resources'],
+        expertiseAndResourceTags: ['Animal resources'],
         proposal: [
           {
             id: '4cfb1b7b-bafe-4fca-b2ab-197e84d98996',
@@ -779,7 +777,7 @@ export const updateResponseTeam: { total: number; items: RestUser[] } = {
         orcid: { iv: '363-98-9330' },
         institution: { iv: 'Dollar General Corporation' },
         avatar: { iv: ['uuid-user-id-1'] },
-        skills: { iv: [] },
+        expertiseAndResourceTags: { iv: [] },
         orcidWorks: { iv: [] },
         teams: {
           iv: [
@@ -815,7 +813,7 @@ const getTeamsEvent = (
   data = {
     displayName: { iv: 'Team 1' },
     applicationNumber: { iv: '12345' },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     proposal: { iv: [] },
     projectTitle: { iv: 'Team Project' },
     projectSummary: { iv: '' },
@@ -825,7 +823,7 @@ const getTeamsEvent = (
   dataOld = {
     displayName: { iv: 'Team 1' },
     applicationNumber: { iv: '12345' },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     proposal: { iv: [] },
     projectTitle: { iv: 'Team Project' },
     projectSummary: { iv: '' },

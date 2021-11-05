@@ -16,7 +16,7 @@ const teamCardProps: ComponentProps<typeof TeamCard> = {
   displayName: 'A Barnes',
   projectTitle:
     'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-  skills: [
+  expertiseAndResourceTags: [
     'Neurological Diseases',
     'Clinical Neurology',
     'Adult Neurology',

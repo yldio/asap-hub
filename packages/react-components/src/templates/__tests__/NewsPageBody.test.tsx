@@ -6,13 +6,14 @@ import NewsPageBody from '../NewsPageBody';
 it('renders multiple news cards', () => {
   const { getAllByRole } = render(
     <NewsPageBody
-      news={[
-        { ...createNewsResponse('1'), title: 'FirstNews' },
-        { ...createNewsResponse('2'), title: 'SecondEvent' },
-      ]}
+      news={[createNewsResponse('1'), createNewsResponse('2')]}
+      numberOfPages={1}
+      renderPageHref={(idx) => `${idx}`}
+      currentPage={0}
+      numberOfItems={4}
     />,
   );
   expect(getAllByRole('heading').map(({ textContent }) => textContent)).toEqual(
-    ['FirstNews', 'SecondEvent'],
+    ['News 1 title', 'News 2 title'],
   );
 });

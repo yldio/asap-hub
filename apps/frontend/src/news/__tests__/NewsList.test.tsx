@@ -1,29 +1,32 @@
 import nock from 'nock';
 import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route } from 'react-router-dom';
-import { ListNewsResponse } from '@asap-hub/model';
 import { authTestUtils } from '@asap-hub/react-components';
+import { renderHook } from '@testing-library/react-hooks';
+import { createNewsResponse } from '@asap-hub/fixtures';
+import { usePagination, usePaginationParams } from '../../hooks';
 
 import NewsAndEventsPage from '../Routes';
 import { API_BASE_URL } from '../../config';
 
-const newsAndEvents: ListNewsResponse = {
-  total: 2,
-  items: [
-    {
-      id: '55724942-3408-4ad6-9a73-14b92226ffb6',
-      created: '2020-09-07T17:36:54Z',
-      title: 'News Title',
-      type: 'News',
-    },
-    {
-      id: '55724942-3408-4ad6-9a73-14b92226ffb77',
-      created: '2020-09-07T17:36:54Z',
-      title: 'Event Title',
-      type: 'Event',
-    },
-  ],
-};
+const newsRequest = ({
+  pageSize,
+  numberOfItems,
+}: {
+  pageSize: number;
+  numberOfItems: number;
+}) =>
+  nock(API_BASE_URL, {
+    reqheaders: { authorization: 'Bearer token' },
+  })
+    .get('/news')
+    .query(true)
+    .reply(200, {
+      total: numberOfItems,
+      items: Array.from({ length: pageSize }).map((_, idx) =>
+        createNewsResponse(idx + 1),
+      ),
+    });
 
 const renderPage = async () => {
   const result = render(
@@ -50,26 +53,51 @@ const renderPage = async () => {
 };
 
 describe('news page', () => {
-  let nockInterceptor: nock.Interceptor;
-
-  beforeEach(() => {
-    nock.cleanAll();
-    nockInterceptor = nock(API_BASE_URL, {
-      reqheaders: {
-        authorization: 'Bearer token',
-      },
-    })
-      .get('/news')
-      .query(true);
+  afterEach(() => {
+    expect(nock.isDone()).toBe(true);
   });
 
-  it('renders title', async () => {
-    nockInterceptor.reply(200, newsAndEvents);
+  afterEach(() => {
+    nock.cleanAll();
+  });
 
-    const { container } = await renderPage();
+  it('renders the page title', async () => {
+    newsRequest({ pageSize: 10, numberOfItems: 20 });
+    const { getByText } = await renderPage();
 
-    await waitFor(() => nock.isDone());
-    expect(container.textContent).toContain('News Title');
-    expect(container.textContent).toContain('Event Title');
+    expect(getByText('News and Events')).toBeVisible();
+  });
+
+  it('renders a counter with the total number of items', async () => {
+    const pageSize = 10;
+    const numberOfItems = 20;
+    newsRequest({ pageSize, numberOfItems });
+
+    const { getByText } = await renderPage();
+    expect(getByText(`${numberOfItems} results found`)).toBeVisible();
+  });
+
+  it('renders a paginated list of news', async () => {
+    const pageSize = 5;
+    const numberOfItems = 20;
+    newsRequest({ pageSize, numberOfItems });
+
+    const { result } = renderHook(
+      () => ({
+        usePaginationParams: usePaginationParams(),
+        usePagination: usePagination(numberOfItems, pageSize),
+      }),
+      {
+        wrapper: MemoryRouter,
+        initialProps: {
+          initialEntries: [`/news`],
+        },
+      },
+    );
+
+    const { getAllByText } = await renderPage();
+    expect(getAllByText('News')).toHaveLength(pageSize);
+    expect(result.current.usePagination.numberOfPages).toBe(4);
+    expect(result.current.usePaginationParams.currentPage).toBe(0);
   });
 });

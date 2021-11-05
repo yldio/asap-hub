@@ -1,7 +1,7 @@
 import { NewsType, NewsResponse } from '@asap-hub/model';
 
 export const createNewsResponse = (
-  key: string,
+  key: string | number,
   type: NewsType = 'News',
 ): NewsResponse => ({
   id: `uuid-${type}-${key}`,

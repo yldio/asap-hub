@@ -12,32 +12,34 @@ export const fetchUserByCodeHandlerFactory = (
   userController: UserController,
   algoliaClient: SearchClient,
 ): Handler =>
-  http(async (request: lambda.Request): Promise<
-    lambda.Response<UserMetadataResponse>
-  > => {
-    await validateRequest(request);
+  http(
+    async (
+      request: lambda.Request,
+    ): Promise<lambda.Response<UserMetadataResponse>> => {
+      validateRequest(request);
 
-    const paramsSchema = Joi.object({
-      code: Joi.string().required(),
-    }).required();
+      const paramsSchema = Joi.object({
+        code: Joi.string().required(),
+      }).required();
 
-    const { code } = lambda.validate(
-      'params',
-      request.params,
-      paramsSchema,
-    ) as {
-      code: string;
-    };
+      const { code } = lambda.validate(
+        'params',
+        request.params,
+        paramsSchema,
+      ) as {
+        code: string;
+      };
 
-    const user = await userController.fetchByCode(code);
-    const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
-      validUntil: Date.now() + algoliaApiKeyTtl, // which is one minute over the TTL of the ID token
-    });
+      const user = await userController.fetchByCode(code);
+      const apiKey = algoliaClient.generateSecuredApiKey(algoliaSearchApiKey, {
+        validUntil: Date.now() + algoliaApiKeyTtl, // which is one minute over the TTL of the ID token
+      });
 
-    return {
-      payload: {
-        ...user,
-        algoliaApiKey: apiKey,
-      },
-    };
-  });
+      return {
+        payload: {
+          ...user,
+          algoliaApiKey: apiKey,
+        },
+      };
+    },
+  );

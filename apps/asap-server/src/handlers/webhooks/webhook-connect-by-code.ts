@@ -8,7 +8,7 @@ import validateRequest from '../../utils/validate-auth0-request';
 
 export const handler: Handler = http(
   async (request: lambda.Request): Promise<lambda.Response> => {
-    await validateRequest(request);
+    validateRequest(request);
 
     const bodySchema = Joi.object({
       code: Joi.string().required(),

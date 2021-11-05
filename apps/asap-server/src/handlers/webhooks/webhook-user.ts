@@ -11,7 +11,7 @@ export const userWebhookFactory = (eventBridge: EventBridge): Handler =>
     async (
       request: lambda.Request<WebhookPayload<User>>,
     ): Promise<lambda.Response> => {
-      await validateRequest(request);
+      validateRequest(request);
 
       if (request.payload?.type !== 'UsersPublished') {
         return {

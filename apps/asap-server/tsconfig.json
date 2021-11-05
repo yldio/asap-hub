@@ -4,7 +4,8 @@
     "rootDir": ".",
     "resolveJsonModule": true,
     "outDir": "build",
-    "module": "commonjs"
+    "module": "commonjs",
+    "composite": false
   },
   "include": ["src", "scripts", "test", "test/**/*.json", "@types/**/*.d.ts"],
   "references": [

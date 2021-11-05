@@ -1,4 +1,7 @@
 module.exports = {
+  parserOptions: {
+    project: ['./tsconfig.json'],
+  },
   rules: {
     'no-use-before-define': 'off',
     'no-unused-vars': 'off',
@@ -14,5 +17,6 @@ module.exports = {
     'no-underscore-dangle': ['error', { allow: ['__typename'] }],
     'no-dupe-class-members': 'off',
     '@typescript-eslint/no-dupe-class-members': ['error'],
+    '@typescript-eslint/await-thenable': 'error',
   },
 };

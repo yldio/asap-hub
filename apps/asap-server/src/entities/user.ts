@@ -113,7 +113,7 @@ export const parseGraphQLUser = (
     ...((item.flatData.social && item.flatData.social[0]) || {}),
     orcid,
   }).reduce((acc, [k, v]) => {
-    if (v == null) {
+    if (!v) {
       return acc;
     }
     return { ...acc, [k]: v };

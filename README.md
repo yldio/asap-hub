@@ -74,7 +74,7 @@ The [`dev`](dev) folder contains documentation regarding the local dev environme
 
 ## Squidex schema changes and graphql
 
-Once schema changes have added via packages/squidex/schema and released. The GraphQL definations need to be updated.
+Once schema changes are added via packages/squidex/schema and released the GraphQL definitions need to be updated. 
 
 `yarn schema:update`
 

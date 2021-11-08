@@ -16,6 +16,7 @@ import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 import { parseDate, createURL } from '../utils/squidex';
 import { FetchUserQuery } from '../gql/graphql';
 import { isTeamRole } from './team';
+import logger from '../utils/logger';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -202,18 +203,23 @@ export const parseGraphQLUser = (
 
 export const parseUser = (user: RestUser): UserResponse => {
   const teams: UserTeam[] =
-    user.data.teams?.iv?.map(({ id, ...t }) => {
+    user.data.teams?.iv?.reduce((acc: UserTeam[], team) => {
+      const { id, ...t } = team;
       if (!id[0]) {
-        throw new Error('Team id cannot be undefined');
+        logger.warn(`Team id is undefined on user: ${user.id}`);
+        return acc;
       }
-      return {
-        id: id[0],
-        displayName: 'Unknown',
-        ...t,
-        approach: t.approach ? t.approach : undefined,
-        responsibilities: t.responsibilities ? t.responsibilities : undefined,
-      };
-    }) || [];
+      return [
+        ...acc,
+        {
+          id: id[0],
+          displayName: 'Unknown',
+          ...t,
+          approach: t.approach ? t.approach : undefined,
+          responsibilities: t.responsibilities ? t.responsibilities : undefined,
+        },
+      ];
+    }, []) || [];
 
   const orcid = user.data.orcid?.iv;
   const social = {

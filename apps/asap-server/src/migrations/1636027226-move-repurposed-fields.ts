@@ -52,8 +52,8 @@ async function resetUserFields() {
     async (user, squidexClient) => {
       const { teams } = user.data;
       await squidexClient.patch(user.id, {
-        expertiseAndResourceTags: undefined,
-        expertiseAndResourceDescription: undefined,
+        expertiseAndResourceTags: { iv: [] },
+        expertiseAndResourceDescription: { iv: '' },
         ...(teams && {
           teams: {
             iv:
@@ -73,7 +73,7 @@ async function resetTeamFields() {
     'teams',
     async ({ id }, squidexClient) => {
       await squidexClient.patch(id, {
-        expertiseAndResourceTags: undefined,
+        expertiseAndResourceTags: { iv: [] },
       });
     },
   );

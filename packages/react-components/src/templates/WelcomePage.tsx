@@ -13,35 +13,27 @@ import { mailToSupport } from '../mail';
 const values = {
   signup: {
     title: 'Join the ASAP Hub',
-    content: 'Activate your account and start exploring the ASAP Network.',
+    content: 'Activate your account and start exploring the ASAP CRN Network.',
     buttonText: 'Activate account',
     footer: () => (
-      <>
-        <Paragraph accent="lead">
-          By proceeding you are agreeing to the{' '}
-          <Link href="/terms-and-conditions">Terms and Conditions</Link> of the
-          ASAP Hub.
-        </Paragraph>
-      </>
+      <Paragraph accent="lead">
+        By proceeding you are agreeing to our{' '}
+        <Link href="/terms-and-conditions">Terms and Conditions</Link> and{' '}
+        <Link href="/privacy-policy">Privacy Policy</Link>.
+      </Paragraph>
     ),
   },
   welcome: {
     title: 'Welcome to the ASAP Hub',
-    content: 'Where the ASAP Network collaborates!',
+    content:
+      'A private, invite-only network where the ASAP CRN community collaborates.',
     buttonText: 'Sign in',
     footer: () => (
-      <>
-        <Paragraph accent="lead">
-          This is a private network, only invited users can create an account.
-          For more info, visit{' '}
-          <Link href="https://parkinsonsroadmap.org/">ASAP</Link> website.
-        </Paragraph>
-        <Paragraph accent="lead">
-          By signing in you are agreeing to the{' '}
-          <Link href="/terms-and-conditions">Terms and Conditions</Link> of the
-          ASAP Hub.
-        </Paragraph>
-      </>
+      <Paragraph accent="lead">
+        By signing in you are agreeing to our{' '}
+        <Link href="/terms-and-conditions">Terms and Conditions</Link> and{' '}
+        <Link href="/privacy-policy">Privacy Policy</Link>.
+      </Paragraph>
     ),
   },
 };

@@ -19,7 +19,7 @@ async function migrateUserFields() {
     async (user, squidexClient) => {
       const { skills, skillsDescription, teams } = user.data;
       await squidexClient.patch(user.id, {
-        expertiseAndResourceTags: { iv: skills.iv ?? [] },
+        expertiseAndResourceTags: { iv: skills?.iv ?? [] },
         expertiseAndResourceDescription: skillsDescription,
         ...(teams && {
           teams: {
@@ -40,7 +40,7 @@ async function migrateTeamFields() {
     'teams',
     async (team, squidexClient) => {
       await squidexClient.patch(team.id, {
-        expertiseAndResourceTags: { iv: team.data.skills.iv ?? [] },
+        expertiseAndResourceTags: { iv: team.data.skills?.iv ?? [] },
       });
     },
   );

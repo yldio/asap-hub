@@ -18,7 +18,7 @@ export const userPublicRouteFactory = (
 ): Router => {
   const userPublicRoutes = Router();
 
-  userPublicRoutes.get(
+  userPublicRoutes.get<{ code: string }>(
     '/users/invites/:code',
     async (req, res: Response<UserPublicResponse>) => {
       const { code } = framework.validate(
@@ -27,7 +27,7 @@ export const userPublicRouteFactory = (
         publicParamSchema,
       );
       try {
-        const result = await userController.fetchByCode(code!);
+        const result = await userController.fetchByCode(code);
 
         res.json({
           id: result.id,
@@ -64,7 +64,7 @@ export const userRouteFactory = (
     res.json(result);
   });
 
-  userRoutes.get('/users/:userId', async (req, res) => {
+  userRoutes.get<{ userId: string }>('/users/:userId', async (req, res) => {
     const { userId } = framework.validate(
       'parameters',
       req.params,
@@ -77,7 +77,7 @@ export const userRouteFactory = (
       throw Boom.forbidden('User is not onboarded');
     }
 
-    const result = await userController.fetchById(userId!);
+    const result = await userController.fetchById(userId);
 
     if (result.onboarded === false && result.id !== req.loggedInUser?.id) {
       throw Boom.notFound();
@@ -86,26 +86,29 @@ export const userRouteFactory = (
     res.json(result);
   });
 
-  userRoutes.get('/users/:userId/groups', async (req, res) => {
-    const { query, params } = req;
+  userRoutes.get<{ userId: string }>(
+    '/users/:userId/groups',
+    async (req, res) => {
+      const { query, params } = req;
 
-    const { userId } = framework.validate('parameters', params, paramSchema);
-    const options = framework.validate(
-      'query',
-      query,
-      querySchema,
-    ) as unknown as FetchOptions;
+      const { userId } = framework.validate('parameters', params, paramSchema);
+      const options = framework.validate(
+        'query',
+        query,
+        querySchema,
+      ) as unknown as FetchOptions;
 
-    const user = await userController.fetchById(userId!);
-    const teams = user.teams.map((t) => t.id);
-    const result = await groupsController.fetchByUserId(
-      userId!,
-      teams,
-      options,
-    );
+      const user = await userController.fetchById(userId!);
+      const teams = user.teams.map((t) => t.id);
+      const result = await groupsController.fetchByUserId(
+        userId,
+        teams,
+        options,
+      );
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
   userRoutes.post('/users/:userId/avatar', async (req, res) => {
     const { userId } = framework.validate(

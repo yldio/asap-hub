@@ -146,7 +146,7 @@ const getLatestMigrationPathFromDbFactory =
 
     const { items: migrations } = await client.fetch(query);
 
-    if (migrations.length === 0 || !migrations[0]) {
+    if (!migrations[0]) {
       return null;
     }
 

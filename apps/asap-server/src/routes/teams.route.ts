@@ -43,20 +43,23 @@ export const teamRouteFactory = (
     res.json(result);
   });
 
-  teamRoutes.get('/teams/:teamId', async (req, res: Response<TeamResponse>) => {
-    const { params } = req;
-    const { teamId } = framework.validate('parameters', params, paramSchema);
+  teamRoutes.get<{ teamId: string }>(
+    '/teams/:teamId',
+    async (req, res: Response<TeamResponse>) => {
+      const { params } = req;
+      const { teamId } = framework.validate('parameters', params, paramSchema);
 
-    const showTools = !!req.loggedInUser?.teams.find(
-      (team) => team.id === teamId,
-    );
+      const showTools = !!req.loggedInUser?.teams.find(
+        (team) => team.id === teamId,
+      );
 
-    const result = await teamsController.fetchById(teamId!, { showTools });
+      const result = await teamsController.fetchById(teamId, { showTools });
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
-  teamRoutes.patch(
+  teamRoutes.patch<{ teamId: string }>(
     '/teams/:teamId',
     async (req, res: Response<TeamResponse>) => {
       const { body, params } = req;
@@ -72,13 +75,13 @@ export const teamRouteFactory = (
         throw Boom.forbidden();
       }
 
-      const result = await teamsController.update(teamId!, tools);
+      const result = await teamsController.update(teamId, tools);
 
       res.json(result);
     },
   );
 
-  teamRoutes.get(
+  teamRoutes.get<{ teamId: string }>(
     '/teams/:teamId/groups',
     async (req, res: Response<ListGroupResponse>) => {
       const { query, params } = req;
@@ -89,7 +92,7 @@ export const teamRouteFactory = (
         querySchema,
       ) as unknown as FetchOptions;
 
-      const result = await groupsController.fetchByTeamId(teamId!, options);
+      const result = await groupsController.fetchByTeamId(teamId, options);
 
       res.json(result);
     },

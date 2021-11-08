@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
 import { Router } from 'express';
@@ -27,10 +26,10 @@ export const groupRouteFactory = (
     res.json(result);
   });
 
-  groupRoutes.get('/groups/:groupId', async (req, res) => {
+  groupRoutes.get<{ groupId: string }>('/groups/:groupId', async (req, res) => {
     const { params } = req;
     const { groupId } = framework.validate('parameters', params, paramSchema);
-    const result = await groupsController.fetchById(groupId!);
+    const result = await groupsController.fetchById(groupId);
 
     res.json(result);
   });

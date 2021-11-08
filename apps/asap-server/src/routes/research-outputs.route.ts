@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
@@ -35,7 +34,7 @@ export const researchOutputRouteFactory = (
     },
   );
 
-  researchOutputRoutes.get(
+  researchOutputRoutes.get<{ researchOutputId: string }>(
     '/research-outputs/:researchOutputId',
     async (req, res: Response<ResearchOutputResponse>) => {
       const { params } = req;
@@ -44,9 +43,7 @@ export const researchOutputRouteFactory = (
         params,
         paramsSchema,
       );
-      const result = await researchOutputController.fetchById(
-        researchOutputId!,
-      );
+      const result = await researchOutputController.fetchById(researchOutputId);
 
       res.json(result);
     },

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
@@ -24,7 +23,7 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
     res.json(result);
   });
 
-  newsRoutes.get('/news/:newsId', async (req, res) => {
+  newsRoutes.get<{ newsId: string }>('/news/:newsId', async (req, res) => {
     const { params } = req;
     const { newsId } = framework.validate('parameters', params, paramSchema);
 

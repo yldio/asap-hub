@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
@@ -20,13 +19,12 @@ export const eventRouteFactory = (eventController: EventController): Router => {
     res.json(result);
   });
 
-  eventRoutes.get(
+  eventRoutes.get<{ eventId: string }>(
     '/events/:eventId',
     async (req, res: Response<EventResponse>) => {
       const { params } = req;
       const { eventId } = framework.validate('parameters', params, paramSchema);
-
-      const result = await eventController.fetchById(eventId!);
+      const result = await eventController.fetchById(eventId);
 
       res.json(result);
     },

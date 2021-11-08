@@ -903,7 +903,7 @@ describe('Users controller', () => {
       expect(result).toBeDefined();
     });
 
-    test('Should throw if user team id is undefined', async () => {
+    test('Should filter teams where teamId is undefined', async () => {
       const userId = 'google-oauth2|token';
       const connectedUser = JSON.parse(JSON.stringify(patchResponse));
       connectedUser.data.connections.iv = [{ code: userId }];
@@ -914,6 +914,10 @@ describe('Users controller', () => {
           approach: 'Exact',
           responsibilities: 'Make sure coverage is high',
         },
+        {
+          id: ['team-id-3'],
+          role: 'Collaborating PI',
+        },
       ];
 
       nock(config.baseUrl)
@@ -923,10 +927,17 @@ describe('Users controller', () => {
           $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
         })
         .reply(200, { total: 1, items: [connectedUser] });
-
-      await expect(
-        users.connectByCode('asapWelcomeCode', userId),
-      ).rejects.toThrow('Team id cannot be undefined');
+      const result = await users.connectByCode('asapWelcomeCode', userId);
+      expect(result).toBeDefined();
+      expect(result.teams).toEqual([
+        {
+          approach: undefined,
+          displayName: 'Unknown',
+          id: 'team-id-3',
+          responsibilities: undefined,
+          role: 'Collaborating PI',
+        },
+      ]);
     });
 
     test('Should connect user', async () => {

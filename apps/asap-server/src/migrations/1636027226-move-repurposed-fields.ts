@@ -36,6 +36,7 @@ async function migrateUserFields() {
 }
 
 async function migrateTeamFields() {
+  // test commit
   await applyToAllItemsInCollection<RestTeam>(
     'teams',
     async (team, squidexClient) => {

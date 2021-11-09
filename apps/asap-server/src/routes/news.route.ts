@@ -27,7 +27,7 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
     const { params } = req;
     const { newsId } = framework.validate('parameters', params, paramSchema);
 
-    const result = await newsController.fetchById(newsId!);
+    const result = await newsController.fetchById(newsId);
 
     res.json(result);
   });

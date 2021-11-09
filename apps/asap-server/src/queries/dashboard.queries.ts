@@ -7,6 +7,7 @@ export const FETCH_DASHBOARD = gql`
         news {
           id
           created
+          lastModified
           flatData {
             title
             shortText
@@ -22,6 +23,7 @@ export const FETCH_DASHBOARD = gql`
         pages {
           id
           created
+          lastModified
           flatData {
             path
             title

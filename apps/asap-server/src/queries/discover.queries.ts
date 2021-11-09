@@ -8,6 +8,7 @@ export const FETCH_DISCOVER = gql`
         training {
           id
           created
+          lastModified
           flatData {
             type
             shortText
@@ -23,6 +24,7 @@ export const FETCH_DISCOVER = gql`
         pages {
           id
           created
+          lastModified
           flatData {
             shortText
             text
@@ -34,6 +36,7 @@ export const FETCH_DISCOVER = gql`
         members {
           id
           created
+          lastModified
           flatData {
             avatar {
               id

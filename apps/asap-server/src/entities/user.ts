@@ -76,7 +76,8 @@ export const parseGraphQLUserTeamConnections = (
     const proposal = team.flatData?.proposal;
 
     if (!item.role || !isTeamRole(item.role)) {
-      throw new Error(`Invalid team role: ${item.role}`);
+      logger.warn(`Invalid team role: ${item.role}`);
+      return acc;
     }
 
     return [

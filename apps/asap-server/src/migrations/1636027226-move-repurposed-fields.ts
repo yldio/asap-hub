@@ -38,7 +38,7 @@ async function migrateUserFields() {
                 ...team,
                 mainResearchInterests: (team as unknown as OldTeamFields)
                   .approach,
-              })) ?? null,
+              })) ?? [],
           },
         }),
       });
@@ -50,9 +50,12 @@ async function migrateTeamFields() {
   await applyToAllItemsInCollection<RestTeam>(
     'teams',
     async (team, squidexClient) => {
-      const { skills } = (team as unknown as Rest<{ skills: string[] }>).data;
       await squidexClient.patch(team.id, {
-        expertiseAndResourceTags: { iv: skills.iv ?? null },
+        expertiseAndResourceTags: {
+          iv:
+            (team as unknown as Rest<{ skills: string[] }>).data.skills.iv ??
+            [],
+        },
       });
     },
   );

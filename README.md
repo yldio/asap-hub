@@ -72,6 +72,38 @@ Individual `packages` or `apps` may contain their own readme files as deemed nec
 The [`docs`](docs) folder contains overall architecture / decision documentation.
 The [`dev`](dev) folder contains documentation regarding the local dev environment for the backend.
 
+## Squidex schema changes and graphql
+
+Once schema changes are added via packages/squidex/schema and released the GraphQL definitions need to be updated. This command updates the schema and queries according to the graphql schema of the application your environment is pointing to (see .env).
+
+`yarn schema:update`
+
+Then commit the changed.
+
+## Migrate squidex fields
+
+Create a migration script with the following command:
+
+`yarn workspace @asap-hub/asap-server migration:create <give-the-script-a-name>`
+
+This should create a new script in:
+
+src/apps/asap-server/src/migrations
+
+```javascript
+export default class MoveRepurposedFields extends Migration {
+  up = async (): Promise<void> => {
+    /* put migration code here */
+  };
+  down = async (): Promise<void> => {
+    /* put rollback code here  */
+  };
+}
+```
+
+The up function is triggered by `asap-hub-{env}-runMigrations`
+The down function is triggered by `asap-hub-{env}-rollbackMigrations`
+
 ## License
 
 The source code of this project is licensed under the MIT License.

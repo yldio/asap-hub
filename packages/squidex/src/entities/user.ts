@@ -11,12 +11,14 @@ import { GraphqlTeam } from './team';
 export type UserTeamConnection<T = string> = T extends string
   ? {
       approach?: string;
+      mainResearchInterests?: string;
       responsibilities?: string;
       role: TeamRole;
       id: T[];
     }
   : {
       approach?: string | null;
+      mainResearchInterests?: string | null;
       responsibilities?: string | null;
       role: TeamRole;
       id: T[];
@@ -60,6 +62,8 @@ export interface User<
   teams: TConnection[];
   social?: TSocial[];
   labs: UserLabConnection[];
+  expertiseAndResourceTags?: string[];
+  expertiseAndResourceDescription?: string;
 }
 
 export interface RestUser extends Entity, Rest<User> {}

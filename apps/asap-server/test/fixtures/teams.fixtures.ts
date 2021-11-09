@@ -79,6 +79,8 @@ export const referencingUsersContentsResponse = ({
       ] as Array<Labs>,
       adminNotes: null,
       social: [],
+      expertiseAndResourceDescription: '',
+      expertiseAndResourceTags: [],
     } as UsersFlatDataDto,
   },
 ];

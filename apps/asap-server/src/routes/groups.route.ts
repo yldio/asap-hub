@@ -1,9 +1,9 @@
-import { Router } from 'express';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
+import { Router } from 'express';
+import { EventController, FetchEventsOptions } from '../controllers/events';
 import { GroupController } from '../controllers/groups';
 import { FetchOptions } from '../utils/types';
-import { FetchEventsOptions, EventController } from '../controllers/events';
 import { eventQuerySchema } from './events.route';
 
 export const groupRouteFactory = (
@@ -26,10 +26,9 @@ export const groupRouteFactory = (
     res.json(result);
   });
 
-  groupRoutes.get('/groups/:groupId', async (req, res) => {
+  groupRoutes.get<{ groupId: string }>('/groups/:groupId', async (req, res) => {
     const { params } = req;
     const { groupId } = framework.validate('parameters', params, paramSchema);
-
     const result = await groupsController.fetchById(groupId);
 
     res.json(result);

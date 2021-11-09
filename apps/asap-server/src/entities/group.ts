@@ -51,18 +51,18 @@ export const parseGraphQLGroup = (
   let tools: GroupTools = {};
   if (item.flatData.tools?.length) {
     const [groupTools] = item.flatData.tools;
-    if (groupTools.slack) {
+    if (groupTools?.slack) {
       tools = { ...tools, slack: groupTools.slack };
     }
 
-    if (groupTools.googleDrive) {
+    if (groupTools?.googleDrive) {
       tools = { ...tools, googleDrive: groupTools.googleDrive };
     }
   }
 
   if (item.flatData.calendars?.length) {
     const url = new URL('https://calendar.google.com/calendar/r');
-    url.searchParams.set('cid', item.flatData.calendars[0].id || '');
+    url.searchParams.set('cid', item.flatData.calendars[0]?.id || '');
     tools = { ...tools, googleCalendar: url.toString() };
   }
 

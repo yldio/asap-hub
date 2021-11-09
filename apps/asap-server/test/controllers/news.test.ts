@@ -87,7 +87,7 @@ describe('News controller', () => {
           {
             ...newsSquidexApiResponse.items[0],
             data: {
-              ...newsSquidexApiResponse.items[0].data,
+              ...newsSquidexApiResponse.items[0]!.data,
               thumbnail: {
                 iv: null,
               },
@@ -110,7 +110,7 @@ describe('News controller', () => {
 
       const result = await news.fetch({ take: 8, skip: 5 });
 
-      expect(result.items[0].thumbnail).toBeUndefined();
+      expect(result.items[0]!.thumbnail).toBeUndefined();
     });
   });
 

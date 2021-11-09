@@ -1,23 +1,15 @@
-import Boom from '@hapi/boom';
-import Intercept from 'apr-intercept';
-import { Got } from 'got';
-import FormData from 'form-data';
-import mime from 'mime-types';
-import { GraphqlUser, RestUser, config } from '@asap-hub/squidex';
 import {
-  UserResponse,
   ListUserResponse,
   UserPatchRequest,
+  UserResponse,
 } from '@asap-hub/model';
-
-import {
-  InstrumentedSquidex,
-  InstrumentedSquidexGraphql,
-} from '../utils/instrumented-client';
-import { parseUser, parseGraphQLUser } from '../entities';
-import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
-import { FetchOptions } from '../utils/types';
-import { sanitiseForSquidex } from '../utils/squidex';
+import { config, GraphqlUser, RestUser } from '@asap-hub/squidex';
+import Boom from '@hapi/boom';
+import Intercept from 'apr-intercept';
+import FormData from 'form-data';
+import { Got } from 'got';
+import mime from 'mime-types';
+import { parseGraphQLUser, parseUser } from '../entities';
 import {
   FetchUserQuery,
   FetchUserQueryVariables,
@@ -25,6 +17,13 @@ import {
   FetchUsersQueryVariables,
 } from '../gql/graphql';
 import { FETCH_USER, FETCH_USERS } from '../queries/users.queries';
+import { fetchOrcidProfile, transformOrcidWorks } from '../utils/fetch-orcid';
+import {
+  InstrumentedSquidex,
+  InstrumentedSquidexGraphql,
+} from '../utils/instrumented-client';
+import { sanitiseForSquidex } from '../utils/squidex';
+import { FetchOptions } from '../utils/types';
 
 export interface ResponseFetchUsers {
   queryUsersContentsWithTotal: {
@@ -38,20 +37,20 @@ export interface ResponseFetchUser {
 }
 
 export interface UserController {
-  fetch: (options: FetchOptions) => Promise<ListUserResponse>;
-  fetchById: (id: string) => Promise<UserResponse>;
-  fetchByCode: (code: string) => Promise<UserResponse>;
-  connectByCode: (welcomeCode: string, userId: string) => Promise<UserResponse>;
-  update: (id: string, update: UserPatchRequest) => Promise<UserResponse>;
-  updateAvatar: (
+  fetch(options: FetchOptions): Promise<ListUserResponse>;
+  fetchById(id: string): Promise<UserResponse>;
+  fetchByCode(code: string): Promise<UserResponse>;
+  connectByCode(welcomeCode: string, userId: string): Promise<UserResponse>;
+  update(id: string, update: UserPatchRequest): Promise<UserResponse>;
+  updateAvatar(
     id: string,
     avatar: Buffer,
     contentType: string,
-  ) => Promise<UserResponse>;
-  syncOrcidProfile: (
+  ): Promise<UserResponse>;
+  syncOrcidProfile(
     id: string,
     cachedUser: RestUser | undefined,
-  ) => Promise<UserResponse>;
+  ): Promise<UserResponse>;
 }
 
 const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
@@ -70,7 +69,7 @@ const fetchByCode = async (code: string, client: Got): Promise<RestUser> => {
     throw Boom.forbidden();
   }
 
-  if (res.items.length === 0) {
+  if (res.items.length === 0 || !res.items[0]) {
     throw Boom.forbidden();
   }
 
@@ -264,8 +263,7 @@ export default class Users implements UserController {
     }
 
     const { total, items } = queryUsersContentsWithTotal;
-
-    if (total !== 1 || items === null) {
+    if (total !== 1 || !items?.[0]) {
       throw Boom.forbidden();
     }
 
@@ -302,7 +300,6 @@ export default class Users implements UserController {
     userId: string,
   ): Promise<UserResponse> {
     const user = await fetchByCode(welcomeCode, this.users.client);
-
     if (user.data.connections.iv?.find(({ code }) => code === userId)) {
       return Promise.resolve(parseUser(user));
     }

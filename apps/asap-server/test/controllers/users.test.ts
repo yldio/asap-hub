@@ -1,20 +1,20 @@
-import nock from 'nock';
-import { print } from 'graphql';
 import { config } from '@asap-hub/squidex';
+import { print } from 'graphql';
 import matches from 'lodash.matches';
+import nock from 'nock';
 import Users from '../../src/controllers/users';
 import { identity } from '../helpers/squidex';
-import * as orcidFixtures from '../fixtures/orcid.fixtures';
+import { FETCH_USER, FETCH_USERS } from '../../src/queries/users.queries';
 import { FetchOptions } from '../../src/utils/types';
+import * as orcidFixtures from '../fixtures/orcid.fixtures';
 import {
   fetchExpectation,
   fetchUserResponse,
   getGraphqlResponseFetchUser,
   getGraphqlResponseFetchUsers,
-  patchResponse,
   getUserResponse,
+  patchResponse,
 } from '../fixtures/users.fixtures';
-import { FETCH_USER, FETCH_USERS } from '../../src/queries/users.queries';
 
 const users = new Users();
 
@@ -237,6 +237,26 @@ describe('Users controller', () => {
 
       await expect(users.fetchById('not-found')).rejects.toThrow('Not Found');
     });
+    test('Should throw when user teams dont have id', async () => {
+      const response = getGraphqlResponseFetchUser();
+      response.data.findUsersContent!.flatData!.teams =
+        response.data.findUsersContent!.flatData!.teams!.map((item) => ({
+          ...item,
+          id: [],
+        }));
+      nock(config.baseUrl)
+        .post(`/api/content/${config.appName}/graphql`, {
+          query: print(FETCH_USER),
+          variables: {
+            id: 'user-id',
+          },
+        })
+        .reply(200, response);
+
+      await expect(users.fetchById('user-id')).rejects.toThrow(
+        'User team connection is not defined',
+      );
+    });
 
     test('Should return the user when they are found, even if they are not onboarded', async () => {
       const nonOnboardedUserResponse = getGraphqlResponseFetchUser();
@@ -275,7 +295,7 @@ describe('Users controller', () => {
 
     test('Should throw an error when the team connection is invalid', async () => {
       const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams![0].id = null;
+      mockResponse.data.findUsersContent!.flatData.teams![0]!.id = null;
 
       nock(config.baseUrl)
         .post(`/api/content/${config.appName}/graphql`, {
@@ -293,7 +313,7 @@ describe('Users controller', () => {
 
     test('Should throw an error when the team role is invalid', async () => {
       const mockResponse = getGraphqlResponseFetchUser();
-      mockResponse.data.findUsersContent!.flatData.teams![0].role =
+      mockResponse.data.findUsersContent!.flatData.teams![0]!.role =
         'invalid role';
 
       nock(config.baseUrl)
@@ -863,6 +883,61 @@ describe('Users controller', () => {
 
       const result = await users.connectByCode('asapWelcomeCode', userId);
       expect(result).toBeDefined();
+    });
+
+    test('Shouldnt do anything if connecting with existing code', async () => {
+      const userId = 'google-oauth2|token';
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
+      connectedUser.data.connections.iv = [{ code: userId }];
+      connectedUser.data.teams = undefined;
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [connectedUser] });
+
+      const result = await users.connectByCode('asapWelcomeCode', userId);
+      expect(result).toBeDefined();
+    });
+
+    test('Should filter teams where teamId is undefined', async () => {
+      const userId = 'google-oauth2|token';
+      const connectedUser = JSON.parse(JSON.stringify(patchResponse));
+      connectedUser.data.connections.iv = [{ code: userId }];
+      connectedUser.data.teams.iv = [
+        {
+          id: [],
+          role: 'Lead PI (Core Leadership)',
+          approach: 'Exact',
+          responsibilities: 'Make sure coverage is high',
+        },
+        {
+          id: ['team-id-3'],
+          role: 'Collaborating PI',
+        },
+      ];
+
+      nock(config.baseUrl)
+        .get(`/api/content/${config.appName}/users`)
+        .query({
+          $top: 1,
+          $filter: `data/connections/iv/code eq 'asapWelcomeCode'`,
+        })
+        .reply(200, { total: 1, items: [connectedUser] });
+      const result = await users.connectByCode('asapWelcomeCode', userId);
+      expect(result).toBeDefined();
+      expect(result.teams).toEqual([
+        {
+          approach: undefined,
+          displayName: 'Unknown',
+          id: 'team-id-3',
+          responsibilities: undefined,
+          role: 'Collaborating PI',
+        },
+      ]);
     });
 
     test('Should connect user', async () => {

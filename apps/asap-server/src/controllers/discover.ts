@@ -82,7 +82,10 @@ export default class Discover implements DiscoverController {
     const res = await this.client.request<SquidexDiscoverResponse, unknown>(
       query,
     );
-    if (res.queryDiscoverContents.length === 0) {
+    if (
+      res.queryDiscoverContents.length === 0 ||
+      !res.queryDiscoverContents[0]
+    ) {
       return {
         aboutUs: '',
         training: [],

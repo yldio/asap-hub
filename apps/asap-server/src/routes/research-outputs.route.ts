@@ -1,10 +1,10 @@
-import { Router, Response } from 'express';
-import Joi from '@hapi/joi';
-import { framework } from '@asap-hub/services-common';
 import {
   ListResearchOutputResponse,
   ResearchOutputResponse,
 } from '@asap-hub/model';
+import { framework } from '@asap-hub/services-common';
+import Joi from '@hapi/joi';
+import { Response, Router } from 'express';
 import { ResearchOutputController } from '../controllers/research-outputs';
 
 export const researchOutputRouteFactory = (
@@ -34,7 +34,7 @@ export const researchOutputRouteFactory = (
     },
   );
 
-  researchOutputRoutes.get(
+  researchOutputRoutes.get<{ researchOutputId: string }>(
     '/research-outputs/:researchOutputId',
     async (req, res: Response<ResearchOutputResponse>) => {
       const { params } = req;
@@ -43,7 +43,6 @@ export const researchOutputRouteFactory = (
         params,
         paramsSchema,
       );
-
       const result = await researchOutputController.fetchById(researchOutputId);
 
       res.json(result);

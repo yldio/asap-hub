@@ -52,8 +52,8 @@ export const parseGraphQLTeamMember = (
   }, []);
 
   const role = user.flatData.teams
-    ?.filter((t) => t.id && t.id[0].id === teamId)
-    .filter((s) => s.role)[0].role;
+    ?.filter((t) => t.id && t.id[0]?.id === teamId)
+    .filter((s) => s.role)[0]?.role;
 
   if (typeof role === 'undefined' || !isTeamRole(role)) {
     throw new Error(`Invalid team role on user ${user.id} : ${role}`);

@@ -435,7 +435,7 @@ describe('Event controller', () => {
           before: 'before',
         });
 
-        expect(items[0].meetingLink).toBe('some-link');
+        expect(items[0]!.meetingLink).toBe('some-link');
       });
 
       test('Should reveal the event link when the event start date is in the past', async () => {
@@ -466,7 +466,7 @@ describe('Event controller', () => {
           before: 'before',
         });
 
-        expect(items[0].meetingLink).toBe('some-link');
+        expect(items[0]!.meetingLink).toBe('some-link');
       });
 
       test('Should remove the event link when the event starts in more than 24h from now', async () => {
@@ -497,7 +497,7 @@ describe('Event controller', () => {
           before: 'before',
         });
 
-        expect(items[0].meetingLink).toBeUndefined();
+        expect(items[0]!.meetingLink).toBeUndefined();
       });
     });
   });
@@ -834,7 +834,7 @@ describe('Event controller', () => {
             fetchEventsResponse.data.queryEventsContentsWithTotal!.items![0],
         },
       };
-      findEventResponseSingleRef.data.findEventsContent.flatData!.calendar![0].referencingGroupsContents =
+      findEventResponseSingleRef.data.findEventsContent!.flatData!.calendar![0]!.referencingGroupsContents =
         [];
 
       nock(config.baseUrl)

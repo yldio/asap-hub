@@ -23,7 +23,7 @@ export const newsRouteFactory = (newsController: NewsController): Router => {
     res.json(result);
   });
 
-  newsRoutes.get('/news/:newsId', async (req, res) => {
+  newsRoutes.get<{ newsId: string }>('/news/:newsId', async (req, res) => {
     const { params } = req;
     const { newsId } = framework.validate('parameters', params, paramSchema);
 

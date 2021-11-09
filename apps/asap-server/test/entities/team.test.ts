@@ -1,6 +1,6 @@
 import {
-  parseGraphQLTeamMember,
   parseGraphQLTeam,
+  parseGraphQLTeamMember,
 } from '../../src/entities/team';
 import { FetchTeamQuery } from '../../src/gql/graphql';
 import {
@@ -10,7 +10,7 @@ import {
 
 describe('parseGraphQLTeamMember', () => {
   const teamMember = {
-    ...referencingUsersContentsResponse({ avatar: null })[0],
+    ...referencingUsersContentsResponse({ avatar: null })[0]!,
   };
   it('should parse teamMember', () => {
     const parsedTeamMember = parseGraphQLTeamMember(teamMember, 'team-id-1');
@@ -30,7 +30,7 @@ describe('parseGraphQLTeamMember', () => {
   });
   it('should throw when teamRole dont match TeamRoles', () => {
     const invalidTeamRole = {
-      ...teamMember.flatData.teams![0],
+      ...teamMember.flatData.teams![0]!,
       role: 'invalid role',
     };
     const teamMemberWithInvalidRole = {

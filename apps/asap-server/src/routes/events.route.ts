@@ -1,7 +1,7 @@
-import { Router, Response } from 'express';
+import { EventResponse, ListEventResponse } from '@asap-hub/model';
 import { framework } from '@asap-hub/services-common';
 import Joi from '@hapi/joi';
-import { ListEventResponse, EventResponse } from '@asap-hub/model';
+import { Response, Router } from 'express';
 import { EventController, FetchEventsOptions } from '../controllers/events';
 
 export const eventRouteFactory = (eventController: EventController): Router => {
@@ -19,12 +19,11 @@ export const eventRouteFactory = (eventController: EventController): Router => {
     res.json(result);
   });
 
-  eventRoutes.get(
+  eventRoutes.get<{ eventId: string }>(
     '/events/:eventId',
     async (req, res: Response<EventResponse>) => {
       const { params } = req;
       const { eventId } = framework.validate('parameters', params, paramSchema);
-
       const result = await eventController.fetchById(eventId);
 
       res.json(result);

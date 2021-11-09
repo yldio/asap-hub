@@ -198,11 +198,11 @@ describe('Team controller', () => {
 
       test('Should return all the team tools by default', async () => {
         const squidexTeamResponse = getGraphQlTeamsResponse();
-        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0]!.flatData!.tools =
           [];
-        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[1].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[1]!.flatData!.tools =
           tools;
-        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2]!.flatData!.tools =
           tools;
 
         nock(config.baseUrl)
@@ -222,9 +222,9 @@ describe('Team controller', () => {
         });
 
         // should return empty arrays too
-        expect(result.items[0].tools).toEqual([]);
-        expect(result.items[1].tools).toEqual(tools);
-        expect(result.items[2].tools).toEqual(tools);
+        expect(result.items[0]!.tools).toEqual([]);
+        expect(result.items[1]!.tools).toEqual(tools);
+        expect(result.items[2]!.tools).toEqual(tools);
       });
 
       test('should only return team tools with name and url defined', async () => {
@@ -257,11 +257,11 @@ describe('Team controller', () => {
           data: getGraphQlTeamsResponse().data as FetchTeamsQuery,
         };
 
-        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![0].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![0]!.flatData!.tools =
           brokenUrlTools;
-        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![1].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![1]!.flatData!.tools =
           brokenNameTools;
-        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![2].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal!.items![2]!.flatData!.tools =
           fullTools;
 
         nock(config.baseUrl)
@@ -281,18 +281,18 @@ describe('Team controller', () => {
         });
 
         // should return empty arrays too
-        expect(result.items[0].tools).toEqual(tools);
-        expect(result.items[1].tools).toEqual(tools);
-        expect(result.items[2].tools).toEqual(fullTools);
+        expect(result.items[0]!.tools).toEqual(tools);
+        expect(result.items[1]!.tools).toEqual(tools);
+        expect(result.items[2]!.tools).toEqual(fullTools);
       });
 
       test('Should select the teams for which the tools should be returned and mark the rest of them as undefined', async () => {
         const squidexTeamResponse = getGraphQlTeamsResponse();
-        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0]!.flatData!.tools =
           tools;
-        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[1].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[1]!.flatData!.tools =
           tools;
-        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2].flatData!.tools =
+        squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2]!.flatData!.tools =
           [];
 
         nock(config.baseUrl)
@@ -310,15 +310,15 @@ describe('Team controller', () => {
           take: 8,
           skip: 0,
           showTeamTools: [
-            squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0].id,
-            squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2].id,
+            squidexTeamResponse.data.queryTeamsContentsWithTotal.items[0]!.id,
+            squidexTeamResponse.data.queryTeamsContentsWithTotal.items[2]!.id,
           ],
         });
 
-        expect(result.items[0].tools).toEqual(tools);
-        expect(result.items[1].tools).toBeUndefined();
+        expect(result.items[0]!.tools).toEqual(tools);
+        expect(result.items[1]!.tools).toBeUndefined();
         // should return empty array as empty array, not undefined
-        expect(result.items[2].tools).toEqual([]);
+        expect(result.items[2]!.tools).toEqual([]);
       });
     });
   });
@@ -635,7 +635,7 @@ describe('Team controller', () => {
 
         const result = await teams.fetchById(teamId);
 
-        expect(result.members[0].labs).toEqual([
+        expect(result.members[0]!.labs).toEqual([
           {
             id: 'lab-id-1',
             name: 'lab name',
@@ -682,7 +682,7 @@ describe('Team controller', () => {
 
         const result = await teams.fetchById(teamId);
 
-        expect(result.members[0].labs).toEqual([
+        expect(result.members[0]!.labs).toEqual([
           {
             id: 'lab-id-2',
             name: 'lab name',

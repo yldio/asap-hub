@@ -535,7 +535,7 @@ export const getResponseFetchGroup = (): { data: ResponseFetchGroup } => ({
 export const findGroupResponse: { data: ResponseFetchGroup } = {
   data: {
     findGroupsContent:
-      queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0],
+      queryGroupsResponse.data.queryGroupsContentsWithTotal.items[0]!,
   },
 };
 
@@ -636,4 +636,4 @@ export const getGroupResponse = (): GroupResponse => ({
   calendars: [{ id: 'hub@asap.science', color: '#B1365F', name: 'ASAP Hub' }],
 });
 
-export const groupResponse: GroupResponse = listGroupsResponse.items[0];
+export const groupResponse: GroupResponse = listGroupsResponse.items[0]!;

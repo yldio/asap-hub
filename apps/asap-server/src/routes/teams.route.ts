@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Router, Response } from 'express';
-import { framework } from '@asap-hub/services-common';
-import Joi from '@hapi/joi';
-import Boom from '@hapi/boom';
 import {
   ListGroupResponse,
   ListTeamResponse,
   TeamPatchRequest,
   TeamResponse,
 } from '@asap-hub/model';
+import { framework } from '@asap-hub/services-common';
+import Boom from '@hapi/boom';
+import Joi from '@hapi/joi';
+import { Response, Router } from 'express';
 
+import { GroupController } from '../controllers/groups';
 import { TeamController } from '../controllers/teams';
 import { teamUpdateSchema } from '../entities/team';
-import { GroupController } from '../controllers/groups';
 import { FetchOptions } from '../utils/types';
 
 export const teamRouteFactory = (
@@ -43,20 +43,23 @@ export const teamRouteFactory = (
     res.json(result);
   });
 
-  teamRoutes.get('/teams/:teamId', async (req, res: Response<TeamResponse>) => {
-    const { params } = req;
-    const { teamId } = framework.validate('parameters', params, paramSchema);
+  teamRoutes.get<{ teamId: string }>(
+    '/teams/:teamId',
+    async (req, res: Response<TeamResponse>) => {
+      const { params } = req;
+      const { teamId } = framework.validate('parameters', params, paramSchema);
 
-    const showTools = !!req.loggedInUser?.teams.find(
-      (team) => team.id === teamId,
-    );
+      const showTools = !!req.loggedInUser?.teams.find(
+        (team) => team.id === teamId,
+      );
 
-    const result = await teamsController.fetchById(teamId, { showTools });
+      const result = await teamsController.fetchById(teamId, { showTools });
 
-    res.json(result);
-  });
+      res.json(result);
+    },
+  );
 
-  teamRoutes.patch(
+  teamRoutes.patch<{ teamId: string }>(
     '/teams/:teamId',
     async (req, res: Response<TeamResponse>) => {
       const { body, params } = req;
@@ -78,11 +81,10 @@ export const teamRouteFactory = (
     },
   );
 
-  teamRoutes.get(
+  teamRoutes.get<{ teamId: string }>(
     '/teams/:teamId/groups',
     async (req, res: Response<ListGroupResponse>) => {
       const { query, params } = req;
-
       const { teamId } = framework.validate('parameters', params, paramSchema);
       const options = framework.validate(
         'query',

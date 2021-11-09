@@ -12,9 +12,11 @@ import {
   userRole,
 } from '@asap-hub/model';
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
+
 import { parseDate, createURL } from '../utils/squidex';
 import { FetchUserQuery } from '../gql/graphql';
 import { isTeamRole } from './team';
+import logger from '../utils/logger';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -68,6 +70,9 @@ export const parseGraphQLUserTeamConnection = (
   }
 
   const team = item.id[0];
+  if (!team) {
+    throw new Error(`User team connection is not defined`);
+  }
   const displayName = team.flatData?.displayName;
   const proposal = team.flatData?.proposal;
 
@@ -80,7 +85,7 @@ export const parseGraphQLUserTeamConnection = (
     role: item.role,
     approach: item.approach ? item.approach : undefined,
     responsibilities: item.responsibilities ? item.responsibilities : undefined,
-    proposal: proposal?.length ? proposal[0].id : undefined,
+    proposal: proposal?.length ? proposal[0]?.id : undefined,
     displayName: displayName || '',
   };
 };
@@ -109,7 +114,9 @@ export const parseGraphQLUser = (
     ...((item.flatData.social && item.flatData.social[0]) || {}),
     orcid,
   }).reduce((acc, [k, v]) => {
-    if (v == null) return acc;
+    if (!v) {
+      return acc;
+    }
     return { ...acc, [k]: v };
   }, {} as { [key: string]: string });
 
@@ -196,13 +203,23 @@ export const parseGraphQLUser = (
 
 export const parseUser = (user: RestUser): UserResponse => {
   const teams: UserTeam[] =
-    user.data.teams?.iv?.map(({ id, ...t }) => ({
-      id: id[0],
-      displayName: 'Unknown',
-      ...t,
-      approach: t.approach ? t.approach : undefined,
-      responsibilities: t.responsibilities ? t.responsibilities : undefined,
-    })) || [];
+    user.data.teams?.iv?.reduce((acc: UserTeam[], team) => {
+      const { id, ...t } = team;
+      if (!id[0]) {
+        logger.warn(`Team id is undefined on user: ${user.id}`);
+        return acc;
+      }
+      return [
+        ...acc,
+        {
+          id: id[0],
+          displayName: 'Unknown',
+          ...t,
+          approach: t.approach ? t.approach : undefined,
+          responsibilities: t.responsibilities ? t.responsibilities : undefined,
+        },
+      ];
+    }, []) || [];
 
   const orcid = user.data.orcid?.iv;
   const social = {
@@ -212,36 +229,38 @@ export const parseUser = (user: RestUser): UserResponse => {
 
   const displayName = `${user.data.firstName.iv} ${user.data.lastName.iv}`;
 
-  return JSON.parse(
-    JSON.stringify({
-      id: user.id,
-      displayName,
-      createdDate: parseDate(user.created).toISOString(),
-      lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
-      email: user.data.email.iv,
-      contactEmail: user.data?.contactEmail?.iv,
-      degree: user.data.degree?.iv,
-      firstName: user.data.firstName?.iv,
-      lastName: user.data.lastName?.iv,
-      biography: user.data.biography?.iv,
-      jobTitle: user.data.jobTitle?.iv,
-      institution: user.data.institution?.iv,
-      teams,
-      social,
-      orcid: user.data.orcid?.iv,
-      orcidLastSyncDate: user.data.orcidLastSyncDate?.iv,
-      orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
-      orcidWorks: user.data.orcidWorks?.iv,
-      skills: user.data.skills?.iv || [],
-      skillsDescription: user.data.skillsDescription,
-      questions: user.data.questions?.iv?.map(({ question }) => question) || [],
-      avatarUrl: user.data.avatar?.iv && createURL(user.data.avatar.iv)[0],
-      role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
-      responsibilities: user.data.responsibilities?.iv || undefined,
-      reachOut: user.data.reachOut?.iv || undefined,
-      labs: user.data.labs?.iv || [],
-    }),
-  );
+  return {
+    id: user.id,
+    displayName,
+    onboarded: user.data.onboarded.iv,
+    createdDate: parseDate(user.created).toISOString(),
+    lastModifiedDate: user.data.lastModifiedDate?.iv ?? user.created,
+    email: user.data.email.iv,
+    contactEmail: user.data?.contactEmail?.iv,
+    degree: user.data.degree?.iv,
+    firstName: user.data.firstName?.iv,
+    lastName: user.data.lastName?.iv,
+    biography: user.data.biography?.iv,
+    jobTitle: user.data.jobTitle?.iv,
+    institution: user.data.institution?.iv,
+    teams,
+    social,
+    orcid: user.data.orcid?.iv,
+    orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
+    orcidWorks: user.data.orcidWorks?.iv,
+    skills: user.data.skills?.iv || [],
+    skillsDescription: user.data.skillsDescription?.iv,
+    questions: user.data.questions?.iv?.map(({ question }) => question) || [],
+    avatarUrl:
+      (user.data.avatar?.iv && createURL(user.data.avatar.iv)[0]) ?? undefined,
+    role: user.data.role.iv === 'Hidden' ? 'Guest' : user.data.role.iv,
+    responsibilities: user.data.responsibilities?.iv,
+    reachOut: user.data.reachOut?.iv,
+    labs: (user.data.labs?.iv || []).map((lab) => ({
+      id: lab.id,
+      name: lab.flatData?.name ?? '',
+    })),
+  };
 };
 
 const isUserRole = (data: string): data is Role =>

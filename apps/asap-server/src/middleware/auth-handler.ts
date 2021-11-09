@@ -16,7 +16,7 @@ export const authHandlerFactory =
 
     const [type, token] = headers.authorization.split(' ');
 
-    if (type.toLowerCase() !== 'bearer') {
+    if (type?.toLowerCase() !== 'bearer' || !token) {
       throw Boom.unauthorized();
     }
 

@@ -28,7 +28,12 @@ const textFieldsContainerStyles = css({
 
 type TeamMembershipModalProps = Pick<
   UserTeam,
-  'approach' | 'responsibilities' | 'id' | 'proposal' | 'role' | 'displayName'
+  | 'mainResearchInterests'
+  | 'responsibilities'
+  | 'id'
+  | 'proposal'
+  | 'role'
+  | 'displayName'
 > &
   Pick<UserResponse, 'labs'> & {
     onSave?: (data: UserPatchRequest) => Promise<void>;
@@ -39,13 +44,15 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
   id,
   role,
   displayName = '',
-  approach = '',
+  mainResearchInterests = '',
   responsibilities = '',
   labs,
   onSave = noop,
   backHref,
 }) => {
-  const [newApproach, setNewApproach] = useState(approach);
+  const [newMainResearchInterests, setNewMainResearchInterests] = useState(
+    mainResearchInterests,
+  );
   const [newResponsibilities, setNewResponsibilities] =
     useState(responsibilities);
 
@@ -53,7 +60,8 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
     <EditModal
       title={'Your Role in ASAP Network'}
       dirty={
-        newApproach !== approach || newResponsibilities !== responsibilities
+        newMainResearchInterests !== mainResearchInterests ||
+        newResponsibilities !== responsibilities
       }
       backHref={backHref}
       onSave={() =>
@@ -61,7 +69,7 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
           teams: [
             {
               id,
-              approach: newApproach.trim(),
+              mainResearchInterests: newMainResearchInterests.trim(),
               responsibilities: newResponsibilities.trim(),
             },
           ],
@@ -105,8 +113,8 @@ const TeamMembershipModal: React.FC<TeamMembershipModalProps> = ({
               getValidationMessage={() => 'Please add your research interests.'}
               maxLength={200}
               enabled={!isSaving}
-              value={newApproach}
-              onChange={setNewApproach}
+              value={newMainResearchInterests}
+              onChange={setNewMainResearchInterests}
             />
             <LabeledTextArea
               required

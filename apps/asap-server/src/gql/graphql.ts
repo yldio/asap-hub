@@ -3555,7 +3555,6 @@ export type TeamsDataDto = {
   projectSummary: Maybe<TeamsDataProjectSummaryDto>;
   projectTitle: Maybe<TeamsDataProjectTitleDto>;
   proposal: Maybe<TeamsDataProposalDto>;
-  skills: Maybe<TeamsDataSkillsDto>;
   tools: Maybe<TeamsDataToolsDto>;
 };
 
@@ -3578,7 +3577,6 @@ export type TeamsDataInputDto = {
   projectSummary: Maybe<TeamsDataProjectSummaryInputDto>;
   projectTitle: Maybe<TeamsDataProjectTitleInputDto>;
   proposal: Maybe<TeamsDataProposalInputDto>;
-  skills: Maybe<TeamsDataSkillsInputDto>;
   tools: Maybe<TeamsDataToolsInputDto>;
 };
 
@@ -3622,16 +3620,6 @@ export type TeamsDataProposalInputDto = {
   iv: Maybe<Array<Scalars['String']>>;
 };
 
-/** The structure of the Expertise and Resources field of the Teams content type. */
-export type TeamsDataSkillsDto = {
-  iv: Maybe<Array<Scalars['String']>>;
-};
-
-/** The structure of the Expertise and Resources field of the Teams content input type. */
-export type TeamsDataSkillsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
-};
-
 /** The structure of the External Tools nested schema. */
 export type TeamsDataToolsChildDto = {
   description: Maybe<Scalars['String']>;
@@ -3665,7 +3653,6 @@ export type TeamsFlatDataDto = {
   projectSummary: Maybe<Scalars['String']>;
   projectTitle: Maybe<Scalars['String']>;
   proposal: Maybe<Array<ResearchOutputs>>;
-  skills: Maybe<Array<Scalars['String']>>;
   tools: Maybe<Array<TeamsDataToolsChildDto>>;
 };
 
@@ -3905,8 +3892,6 @@ export type UsersDataDto = {
   reachOut: Maybe<UsersDataReachOutDto>;
   responsibilities: Maybe<UsersDataResponsibilitiesDto>;
   role: Maybe<UsersDataRoleDto>;
-  skills: Maybe<UsersDataSkillsDto>;
-  skillsDescription: Maybe<UsersDataSkillsDescriptionDto>;
   social: Maybe<UsersDataSocialDto>;
   teams: Maybe<UsersDataTeamsDto>;
 };
@@ -3979,8 +3964,6 @@ export type UsersDataInputDto = {
   reachOut: Maybe<UsersDataReachOutInputDto>;
   responsibilities: Maybe<UsersDataResponsibilitiesInputDto>;
   role: Maybe<UsersDataRoleInputDto>;
-  skills: Maybe<UsersDataSkillsInputDto>;
-  skillsDescription: Maybe<UsersDataSkillsDescriptionInputDto>;
   social: Maybe<UsersDataSocialInputDto>;
   teams: Maybe<UsersDataTeamsInputDto>;
 };
@@ -4172,26 +4155,6 @@ export type UsersDataRoleInputDto = {
   iv: Maybe<Scalars['String']>;
 };
 
-/** The structure of the Expertise and Resources Description field of the Users content type. */
-export type UsersDataSkillsDescriptionDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Expertise and Resources Description field of the Users content input type. */
-export type UsersDataSkillsDescriptionInputDto = {
-  iv: Maybe<Scalars['String']>;
-};
-
-/** The structure of the Expertise and Resources field of the Users content type. */
-export type UsersDataSkillsDto = {
-  iv: Maybe<Array<Scalars['String']>>;
-};
-
-/** The structure of the Expertise and Resources field of the Users content input type. */
-export type UsersDataSkillsInputDto = {
-  iv: Maybe<Array<Scalars['String']>>;
-};
-
 /** The structure of the Social Links nested schema. */
 export type UsersDataSocialChildDto = {
   github: Maybe<Scalars['String']>;
@@ -4228,7 +4191,6 @@ export type UsersDataSocialInputDto = {
 
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildDto = {
-  approach: Maybe<Scalars['String']>;
   id: Maybe<Array<Teams>>;
   mainResearchInterests: Maybe<Scalars['String']>;
   responsibilities: Maybe<Scalars['String']>;
@@ -4238,7 +4200,6 @@ export type UsersDataTeamsChildDto = {
 
 /** The structure of the Teams nested schema. */
 export type UsersDataTeamsChildInputDto = {
-  approach: Maybe<Scalars['String']>;
   id: Maybe<Array<Scalars['String']>>;
   mainResearchInterests: Maybe<Scalars['String']>;
   responsibilities: Maybe<Scalars['String']>;
@@ -4292,8 +4253,6 @@ export type UsersFlatDataDto = {
   responsibilities: Maybe<Scalars['String']>;
   /** Role on the ASAP Hub */
   role: Maybe<Scalars['String']>;
-  skills: Maybe<Array<Scalars['String']>>;
-  skillsDescription: Maybe<Scalars['String']>;
   social: Maybe<Array<UsersDataSocialChildDto>>;
   /** Mandatory for grantees. They cannot publish profile without a team. */
   teams: Maybe<Array<UsersDataTeamsChildDto>>;
@@ -4379,7 +4338,7 @@ export type EventContentFragment = Pick<
                         | 'displayName'
                         | 'projectSummary'
                         | 'projectTitle'
-                        | 'skills'
+                        | 'expertiseAndResourceTags'
                       > & {
                         outputs?: Maybe<
                           Array<
@@ -4439,8 +4398,8 @@ export type EventContentFragment = Pick<
                                             | 'orcid'
                                             | 'orcidLastModifiedDate'
                                             | 'orcidLastSyncDate'
-                                            | 'skills'
-                                            | 'skillsDescription'
+                                            | 'expertiseAndResourceTags'
+                                            | 'expertiseAndResourceDescription'
                                             | 'role'
                                             | 'responsibilities'
                                             | 'reachOut'
@@ -4474,7 +4433,7 @@ export type EventContentFragment = Pick<
                                                 Pick<
                                                   UsersDataTeamsChildDto,
                                                   | 'role'
-                                                  | 'approach'
+                                                  | 'mainResearchInterests'
                                                   | 'responsibilities'
                                                 > & {
                                                   id: Maybe<
@@ -4603,8 +4562,8 @@ export type EventContentFragment = Pick<
                               | 'orcid'
                               | 'orcidLastModifiedDate'
                               | 'orcidLastSyncDate'
-                              | 'skills'
-                              | 'skillsDescription'
+                              | 'expertiseAndResourceTags'
+                              | 'expertiseAndResourceDescription'
                               | 'role'
                               | 'responsibilities'
                               | 'reachOut'
@@ -4632,7 +4591,9 @@ export type EventContentFragment = Pick<
                                 Array<
                                   Pick<
                                     UsersDataTeamsChildDto,
-                                    'role' | 'approach' | 'responsibilities'
+                                    | 'role'
+                                    | 'mainResearchInterests'
+                                    | 'responsibilities'
                                   > & {
                                     id: Maybe<
                                       Array<
@@ -4703,8 +4664,8 @@ export type EventContentFragment = Pick<
                               | 'orcid'
                               | 'orcidLastModifiedDate'
                               | 'orcidLastSyncDate'
-                              | 'skills'
-                              | 'skillsDescription'
+                              | 'expertiseAndResourceTags'
+                              | 'expertiseAndResourceDescription'
                               | 'role'
                               | 'responsibilities'
                               | 'reachOut'
@@ -4732,7 +4693,9 @@ export type EventContentFragment = Pick<
                                 Array<
                                   Pick<
                                     UsersDataTeamsChildDto,
-                                    'role' | 'approach' | 'responsibilities'
+                                    | 'role'
+                                    | 'mainResearchInterests'
+                                    | 'responsibilities'
                                   > & {
                                     id: Maybe<
                                       Array<
@@ -4869,7 +4832,7 @@ export type FetchEventsQuery = {
                                   | 'displayName'
                                   | 'projectSummary'
                                   | 'projectTitle'
-                                  | 'skills'
+                                  | 'expertiseAndResourceTags'
                                 > & {
                                   outputs?: Maybe<
                                     Array<
@@ -4935,8 +4898,8 @@ export type FetchEventsQuery = {
                                                       | 'orcid'
                                                       | 'orcidLastModifiedDate'
                                                       | 'orcidLastSyncDate'
-                                                      | 'skills'
-                                                      | 'skillsDescription'
+                                                      | 'expertiseAndResourceTags'
+                                                      | 'expertiseAndResourceDescription'
                                                       | 'role'
                                                       | 'responsibilities'
                                                       | 'reachOut'
@@ -4970,7 +4933,7 @@ export type FetchEventsQuery = {
                                                           Pick<
                                                             UsersDataTeamsChildDto,
                                                             | 'role'
-                                                            | 'approach'
+                                                            | 'mainResearchInterests'
                                                             | 'responsibilities'
                                                           > & {
                                                             id: Maybe<
@@ -5112,8 +5075,8 @@ export type FetchEventsQuery = {
                                         | 'orcid'
                                         | 'orcidLastModifiedDate'
                                         | 'orcidLastSyncDate'
-                                        | 'skills'
-                                        | 'skillsDescription'
+                                        | 'expertiseAndResourceTags'
+                                        | 'expertiseAndResourceDescription'
                                         | 'role'
                                         | 'responsibilities'
                                         | 'reachOut'
@@ -5145,7 +5108,7 @@ export type FetchEventsQuery = {
                                             Pick<
                                               UsersDataTeamsChildDto,
                                               | 'role'
-                                              | 'approach'
+                                              | 'mainResearchInterests'
                                               | 'responsibilities'
                                             > & {
                                               id: Maybe<
@@ -5228,8 +5191,8 @@ export type FetchEventsQuery = {
                                         | 'orcid'
                                         | 'orcidLastModifiedDate'
                                         | 'orcidLastSyncDate'
-                                        | 'skills'
-                                        | 'skillsDescription'
+                                        | 'expertiseAndResourceTags'
+                                        | 'expertiseAndResourceDescription'
                                         | 'role'
                                         | 'responsibilities'
                                         | 'reachOut'
@@ -5261,7 +5224,7 @@ export type FetchEventsQuery = {
                                             Pick<
                                               UsersDataTeamsChildDto,
                                               | 'role'
-                                              | 'approach'
+                                              | 'mainResearchInterests'
                                               | 'responsibilities'
                                             > & {
                                               id: Maybe<
@@ -5403,7 +5366,7 @@ export type FetchEventQuery = {
                             | 'displayName'
                             | 'projectSummary'
                             | 'projectTitle'
-                            | 'skills'
+                            | 'expertiseAndResourceTags'
                           > & {
                             outputs?: Maybe<
                               Array<
@@ -5465,8 +5428,8 @@ export type FetchEventQuery = {
                                                 | 'orcid'
                                                 | 'orcidLastModifiedDate'
                                                 | 'orcidLastSyncDate'
-                                                | 'skills'
-                                                | 'skillsDescription'
+                                                | 'expertiseAndResourceTags'
+                                                | 'expertiseAndResourceDescription'
                                                 | 'role'
                                                 | 'responsibilities'
                                                 | 'reachOut'
@@ -5500,7 +5463,7 @@ export type FetchEventQuery = {
                                                     Pick<
                                                       UsersDataTeamsChildDto,
                                                       | 'role'
-                                                      | 'approach'
+                                                      | 'mainResearchInterests'
                                                       | 'responsibilities'
                                                     > & {
                                                       id: Maybe<
@@ -5632,8 +5595,8 @@ export type FetchEventQuery = {
                                   | 'orcid'
                                   | 'orcidLastModifiedDate'
                                   | 'orcidLastSyncDate'
-                                  | 'skills'
-                                  | 'skillsDescription'
+                                  | 'expertiseAndResourceTags'
+                                  | 'expertiseAndResourceDescription'
                                   | 'role'
                                   | 'responsibilities'
                                   | 'reachOut'
@@ -5664,7 +5627,9 @@ export type FetchEventQuery = {
                                     Array<
                                       Pick<
                                         UsersDataTeamsChildDto,
-                                        'role' | 'approach' | 'responsibilities'
+                                        | 'role'
+                                        | 'mainResearchInterests'
+                                        | 'responsibilities'
                                       > & {
                                         id: Maybe<
                                           Array<
@@ -5737,8 +5702,8 @@ export type FetchEventQuery = {
                                   | 'orcid'
                                   | 'orcidLastModifiedDate'
                                   | 'orcidLastSyncDate'
-                                  | 'skills'
-                                  | 'skillsDescription'
+                                  | 'expertiseAndResourceTags'
+                                  | 'expertiseAndResourceDescription'
                                   | 'role'
                                   | 'responsibilities'
                                   | 'reachOut'
@@ -5769,7 +5734,9 @@ export type FetchEventQuery = {
                                     Array<
                                       Pick<
                                         UsersDataTeamsChildDto,
-                                        'role' | 'approach' | 'responsibilities'
+                                        | 'role'
+                                        | 'mainResearchInterests'
+                                        | 'responsibilities'
                                       > & {
                                         id: Maybe<
                                           Array<
@@ -5867,7 +5834,7 @@ export type GroupsContentFragment = Pick<
             | 'displayName'
             | 'projectSummary'
             | 'projectTitle'
-            | 'skills'
+            | 'expertiseAndResourceTags'
           > & {
             outputs?: Maybe<
               Array<
@@ -5924,8 +5891,8 @@ export type GroupsContentFragment = Pick<
                                 | 'orcid'
                                 | 'orcidLastModifiedDate'
                                 | 'orcidLastSyncDate'
-                                | 'skills'
-                                | 'skillsDescription'
+                                | 'expertiseAndResourceTags'
+                                | 'expertiseAndResourceDescription'
                                 | 'role'
                                 | 'responsibilities'
                                 | 'reachOut'
@@ -5953,7 +5920,9 @@ export type GroupsContentFragment = Pick<
                                   Array<
                                     Pick<
                                       UsersDataTeamsChildDto,
-                                      'role' | 'approach' | 'responsibilities'
+                                      | 'role'
+                                      | 'mainResearchInterests'
+                                      | 'responsibilities'
                                     > & {
                                       id: Maybe<
                                         Array<
@@ -6058,8 +6027,8 @@ export type GroupsContentFragment = Pick<
                   | 'orcid'
                   | 'orcidLastModifiedDate'
                   | 'orcidLastSyncDate'
-                  | 'skills'
-                  | 'skillsDescription'
+                  | 'expertiseAndResourceTags'
+                  | 'expertiseAndResourceDescription'
                   | 'role'
                   | 'responsibilities'
                   | 'reachOut'
@@ -6085,7 +6054,7 @@ export type GroupsContentFragment = Pick<
                     Array<
                       Pick<
                         UsersDataTeamsChildDto,
-                        'role' | 'approach' | 'responsibilities'
+                        'role' | 'mainResearchInterests' | 'responsibilities'
                       > & {
                         id: Maybe<
                           Array<
@@ -6156,8 +6125,8 @@ export type GroupsContentFragment = Pick<
                   | 'orcid'
                   | 'orcidLastModifiedDate'
                   | 'orcidLastSyncDate'
-                  | 'skills'
-                  | 'skillsDescription'
+                  | 'expertiseAndResourceTags'
+                  | 'expertiseAndResourceDescription'
                   | 'role'
                   | 'responsibilities'
                   | 'reachOut'
@@ -6183,7 +6152,7 @@ export type GroupsContentFragment = Pick<
                     Array<
                       Pick<
                         UsersDataTeamsChildDto,
-                        'role' | 'approach' | 'responsibilities'
+                        'role' | 'mainResearchInterests' | 'responsibilities'
                       > & {
                         id: Maybe<
                           Array<
@@ -6275,7 +6244,7 @@ export type FetchGroupsQuery = {
                       | 'displayName'
                       | 'projectSummary'
                       | 'projectTitle'
-                      | 'skills'
+                      | 'expertiseAndResourceTags'
                     > & {
                       outputs?: Maybe<
                         Array<
@@ -6335,8 +6304,8 @@ export type FetchGroupsQuery = {
                                           | 'orcid'
                                           | 'orcidLastModifiedDate'
                                           | 'orcidLastSyncDate'
-                                          | 'skills'
-                                          | 'skillsDescription'
+                                          | 'expertiseAndResourceTags'
+                                          | 'expertiseAndResourceDescription'
                                           | 'role'
                                           | 'responsibilities'
                                           | 'reachOut'
@@ -6370,7 +6339,7 @@ export type FetchGroupsQuery = {
                                               Pick<
                                                 UsersDataTeamsChildDto,
                                                 | 'role'
-                                                | 'approach'
+                                                | 'mainResearchInterests'
                                                 | 'responsibilities'
                                               > & {
                                                 id: Maybe<
@@ -6499,8 +6468,8 @@ export type FetchGroupsQuery = {
                             | 'orcid'
                             | 'orcidLastModifiedDate'
                             | 'orcidLastSyncDate'
-                            | 'skills'
-                            | 'skillsDescription'
+                            | 'expertiseAndResourceTags'
+                            | 'expertiseAndResourceDescription'
                             | 'role'
                             | 'responsibilities'
                             | 'reachOut'
@@ -6528,7 +6497,9 @@ export type FetchGroupsQuery = {
                               Array<
                                 Pick<
                                   UsersDataTeamsChildDto,
-                                  'role' | 'approach' | 'responsibilities'
+                                  | 'role'
+                                  | 'mainResearchInterests'
+                                  | 'responsibilities'
                                 > & {
                                   id: Maybe<
                                     Array<
@@ -6599,8 +6570,8 @@ export type FetchGroupsQuery = {
                             | 'orcid'
                             | 'orcidLastModifiedDate'
                             | 'orcidLastSyncDate'
-                            | 'skills'
-                            | 'skillsDescription'
+                            | 'expertiseAndResourceTags'
+                            | 'expertiseAndResourceDescription'
                             | 'role'
                             | 'responsibilities'
                             | 'reachOut'
@@ -6628,7 +6599,9 @@ export type FetchGroupsQuery = {
                               Array<
                                 Pick<
                                   UsersDataTeamsChildDto,
-                                  'role' | 'approach' | 'responsibilities'
+                                  | 'role'
+                                  | 'mainResearchInterests'
+                                  | 'responsibilities'
                                 > & {
                                   id: Maybe<
                                     Array<
@@ -6717,7 +6690,7 @@ export type FetchGroupQuery = {
                 | 'displayName'
                 | 'projectSummary'
                 | 'projectTitle'
-                | 'skills'
+                | 'expertiseAndResourceTags'
               > & {
                 outputs?: Maybe<
                   Array<
@@ -6774,8 +6747,8 @@ export type FetchGroupQuery = {
                                     | 'orcid'
                                     | 'orcidLastModifiedDate'
                                     | 'orcidLastSyncDate'
-                                    | 'skills'
-                                    | 'skillsDescription'
+                                    | 'expertiseAndResourceTags'
+                                    | 'expertiseAndResourceDescription'
                                     | 'role'
                                     | 'responsibilities'
                                     | 'reachOut'
@@ -6807,7 +6780,7 @@ export type FetchGroupQuery = {
                                         Pick<
                                           UsersDataTeamsChildDto,
                                           | 'role'
-                                          | 'approach'
+                                          | 'mainResearchInterests'
                                           | 'responsibilities'
                                         > & {
                                           id: Maybe<
@@ -6919,8 +6892,8 @@ export type FetchGroupQuery = {
                       | 'orcid'
                       | 'orcidLastModifiedDate'
                       | 'orcidLastSyncDate'
-                      | 'skills'
-                      | 'skillsDescription'
+                      | 'expertiseAndResourceTags'
+                      | 'expertiseAndResourceDescription'
                       | 'role'
                       | 'responsibilities'
                       | 'reachOut'
@@ -6946,7 +6919,9 @@ export type FetchGroupQuery = {
                         Array<
                           Pick<
                             UsersDataTeamsChildDto,
-                            'role' | 'approach' | 'responsibilities'
+                            | 'role'
+                            | 'mainResearchInterests'
+                            | 'responsibilities'
                           > & {
                             id: Maybe<
                               Array<
@@ -7017,8 +6992,8 @@ export type FetchGroupQuery = {
                       | 'orcid'
                       | 'orcidLastModifiedDate'
                       | 'orcidLastSyncDate'
-                      | 'skills'
-                      | 'skillsDescription'
+                      | 'expertiseAndResourceTags'
+                      | 'expertiseAndResourceDescription'
                       | 'role'
                       | 'responsibilities'
                       | 'reachOut'
@@ -7044,7 +7019,9 @@ export type FetchGroupQuery = {
                         Array<
                           Pick<
                             UsersDataTeamsChildDto,
-                            'role' | 'approach' | 'responsibilities'
+                            | 'role'
+                            | 'mainResearchInterests'
+                            | 'responsibilities'
                           > & {
                             id: Maybe<
                               Array<
@@ -7159,8 +7136,8 @@ export type ResearchOutputContentFragment = Pick<
                 | 'orcid'
                 | 'orcidLastModifiedDate'
                 | 'orcidLastSyncDate'
-                | 'skills'
-                | 'skillsDescription'
+                | 'expertiseAndResourceTags'
+                | 'expertiseAndResourceDescription'
                 | 'role'
                 | 'responsibilities'
                 | 'reachOut'
@@ -7186,7 +7163,7 @@ export type ResearchOutputContentFragment = Pick<
                   Array<
                     Pick<
                       UsersDataTeamsChildDto,
-                      'role' | 'approach' | 'responsibilities'
+                      'role' | 'mainResearchInterests' | 'responsibilities'
                     > & {
                       id: Maybe<
                         Array<
@@ -7311,8 +7288,8 @@ export type FetchResearchOutputQuery = {
                     | 'orcid'
                     | 'orcidLastModifiedDate'
                     | 'orcidLastSyncDate'
-                    | 'skills'
-                    | 'skillsDescription'
+                    | 'expertiseAndResourceTags'
+                    | 'expertiseAndResourceDescription'
                     | 'role'
                     | 'responsibilities'
                     | 'reachOut'
@@ -7338,7 +7315,7 @@ export type FetchResearchOutputQuery = {
                       Array<
                         Pick<
                           UsersDataTeamsChildDto,
-                          'role' | 'approach' | 'responsibilities'
+                          'role' | 'mainResearchInterests' | 'responsibilities'
                         > & {
                           id: Maybe<
                             Array<
@@ -7476,8 +7453,8 @@ export type FetchResearchOutputsQuery = {
                           | 'orcid'
                           | 'orcidLastModifiedDate'
                           | 'orcidLastSyncDate'
-                          | 'skills'
-                          | 'skillsDescription'
+                          | 'expertiseAndResourceTags'
+                          | 'expertiseAndResourceDescription'
                           | 'role'
                           | 'responsibilities'
                           | 'reachOut'
@@ -7503,7 +7480,9 @@ export type FetchResearchOutputsQuery = {
                             Array<
                               Pick<
                                 UsersDataTeamsChildDto,
-                                'role' | 'approach' | 'responsibilities'
+                                | 'role'
+                                | 'mainResearchInterests'
+                                | 'responsibilities'
                               > & {
                                 id: Maybe<
                                   Array<
@@ -7591,7 +7570,7 @@ export type TeamsContentFragment = Pick<
     | 'displayName'
     | 'projectSummary'
     | 'projectTitle'
-    | 'skills'
+    | 'expertiseAndResourceTags'
   > & {
     outputs?: Maybe<
       Array<
@@ -7648,8 +7627,8 @@ export type TeamsContentFragment = Pick<
                         | 'orcid'
                         | 'orcidLastModifiedDate'
                         | 'orcidLastSyncDate'
-                        | 'skills'
-                        | 'skillsDescription'
+                        | 'expertiseAndResourceTags'
+                        | 'expertiseAndResourceDescription'
                         | 'role'
                         | 'responsibilities'
                         | 'reachOut'
@@ -7675,7 +7654,9 @@ export type TeamsContentFragment = Pick<
                           Array<
                             Pick<
                               UsersDataTeamsChildDto,
-                              'role' | 'approach' | 'responsibilities'
+                              | 'role'
+                              | 'mainResearchInterests'
+                              | 'responsibilities'
                             > & {
                               id: Maybe<
                                 Array<
@@ -7774,8 +7755,8 @@ export type TeamsContentFragment = Pick<
           | 'orcid'
           | 'orcidLastModifiedDate'
           | 'orcidLastSyncDate'
-          | 'skills'
-          | 'skillsDescription'
+          | 'expertiseAndResourceTags'
+          | 'expertiseAndResourceDescription'
           | 'role'
           | 'responsibilities'
           | 'reachOut'
@@ -7799,7 +7780,7 @@ export type TeamsContentFragment = Pick<
             Array<
               Pick<
                 UsersDataTeamsChildDto,
-                'role' | 'approach' | 'responsibilities'
+                'role' | 'mainResearchInterests' | 'responsibilities'
               > & {
                 id: Maybe<
                   Array<
@@ -7854,7 +7835,7 @@ export type FetchTeamQuery = {
         | 'displayName'
         | 'projectSummary'
         | 'projectTitle'
-        | 'skills'
+        | 'expertiseAndResourceTags'
       > & {
         outputs?: Maybe<
           Array<
@@ -7911,8 +7892,8 @@ export type FetchTeamQuery = {
                             | 'orcid'
                             | 'orcidLastModifiedDate'
                             | 'orcidLastSyncDate'
-                            | 'skills'
-                            | 'skillsDescription'
+                            | 'expertiseAndResourceTags'
+                            | 'expertiseAndResourceDescription'
                             | 'role'
                             | 'responsibilities'
                             | 'reachOut'
@@ -7940,7 +7921,9 @@ export type FetchTeamQuery = {
                               Array<
                                 Pick<
                                   UsersDataTeamsChildDto,
-                                  'role' | 'approach' | 'responsibilities'
+                                  | 'role'
+                                  | 'mainResearchInterests'
+                                  | 'responsibilities'
                                 > & {
                                   id: Maybe<
                                     Array<
@@ -8041,8 +8024,8 @@ export type FetchTeamQuery = {
               | 'orcid'
               | 'orcidLastModifiedDate'
               | 'orcidLastSyncDate'
-              | 'skills'
-              | 'skillsDescription'
+              | 'expertiseAndResourceTags'
+              | 'expertiseAndResourceDescription'
               | 'role'
               | 'responsibilities'
               | 'reachOut'
@@ -8068,7 +8051,7 @@ export type FetchTeamQuery = {
                 Array<
                   Pick<
                     UsersDataTeamsChildDto,
-                    'role' | 'approach' | 'responsibilities'
+                    'role' | 'mainResearchInterests' | 'responsibilities'
                   > & {
                     id: Maybe<
                       Array<
@@ -8130,7 +8113,7 @@ export type FetchTeamsQuery = {
               | 'displayName'
               | 'projectSummary'
               | 'projectTitle'
-              | 'skills'
+              | 'expertiseAndResourceTags'
             > & {
               outputs?: Maybe<
                 Array<
@@ -8187,8 +8170,8 @@ export type FetchTeamsQuery = {
                                   | 'orcid'
                                   | 'orcidLastModifiedDate'
                                   | 'orcidLastSyncDate'
-                                  | 'skills'
-                                  | 'skillsDescription'
+                                  | 'expertiseAndResourceTags'
+                                  | 'expertiseAndResourceDescription'
                                   | 'role'
                                   | 'responsibilities'
                                   | 'reachOut'
@@ -8219,7 +8202,9 @@ export type FetchTeamsQuery = {
                                     Array<
                                       Pick<
                                         UsersDataTeamsChildDto,
-                                        'role' | 'approach' | 'responsibilities'
+                                        | 'role'
+                                        | 'mainResearchInterests'
+                                        | 'responsibilities'
                                       > & {
                                         id: Maybe<
                                           Array<
@@ -8324,8 +8309,8 @@ export type FetchTeamsQuery = {
                     | 'orcid'
                     | 'orcidLastModifiedDate'
                     | 'orcidLastSyncDate'
-                    | 'skills'
-                    | 'skillsDescription'
+                    | 'expertiseAndResourceTags'
+                    | 'expertiseAndResourceDescription'
                     | 'role'
                     | 'responsibilities'
                     | 'reachOut'
@@ -8351,7 +8336,7 @@ export type FetchTeamsQuery = {
                       Array<
                         Pick<
                           UsersDataTeamsChildDto,
-                          'role' | 'approach' | 'responsibilities'
+                          'role' | 'mainResearchInterests' | 'responsibilities'
                         > & {
                           id: Maybe<
                             Array<
@@ -8424,8 +8409,8 @@ export type UsersContentFragment = Pick<
     | 'orcid'
     | 'orcidLastModifiedDate'
     | 'orcidLastSyncDate'
-    | 'skills'
-    | 'skillsDescription'
+    | 'expertiseAndResourceTags'
+    | 'expertiseAndResourceDescription'
     | 'role'
     | 'responsibilities'
     | 'reachOut'
@@ -8449,7 +8434,7 @@ export type UsersContentFragment = Pick<
       Array<
         Pick<
           UsersDataTeamsChildDto,
-          'role' | 'approach' | 'responsibilities'
+          'role' | 'mainResearchInterests' | 'responsibilities'
         > & {
           id: Maybe<
             Array<
@@ -8508,8 +8493,8 @@ export type FetchUserQuery = {
         | 'orcid'
         | 'orcidLastModifiedDate'
         | 'orcidLastSyncDate'
-        | 'skills'
-        | 'skillsDescription'
+        | 'expertiseAndResourceTags'
+        | 'expertiseAndResourceDescription'
         | 'role'
         | 'responsibilities'
         | 'reachOut'
@@ -8533,7 +8518,7 @@ export type FetchUserQuery = {
           Array<
             Pick<
               UsersDataTeamsChildDto,
-              'role' | 'approach' | 'responsibilities'
+              'role' | 'mainResearchInterests' | 'responsibilities'
             > & {
               id: Maybe<
                 Array<
@@ -8599,8 +8584,8 @@ export type FetchUsersQuery = {
               | 'orcid'
               | 'orcidLastModifiedDate'
               | 'orcidLastSyncDate'
-              | 'skills'
-              | 'skillsDescription'
+              | 'expertiseAndResourceTags'
+              | 'expertiseAndResourceDescription'
               | 'role'
               | 'responsibilities'
               | 'reachOut'
@@ -8626,7 +8611,7 @@ export type FetchUsersQuery = {
                 Array<
                   Pick<
                     UsersDataTeamsChildDto,
-                    'role' | 'approach' | 'responsibilities'
+                    'role' | 'mainResearchInterests' | 'responsibilities'
                   > & {
                     id: Maybe<
                       Array<
@@ -8907,13 +8892,16 @@ export const ResearchOutputContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'skills' },
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'expertiseAndResourceTags',
+                                    },
                                   },
                                   {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
-                                      value: 'skillsDescription',
+                                      value: 'expertiseAndResourceDescription',
                                     },
                                   },
                                   {
@@ -8930,7 +8918,7 @@ export const ResearchOutputContentFragmentDoc = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
-                                            value: 'approach',
+                                            value: 'mainResearchInterests',
                                           },
                                         },
                                         {
@@ -9349,7 +9337,10 @@ export const TeamsContentFragmentDoc = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'projectTitle' },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'skills' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'expertiseAndResourceTags' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'proposal' },
@@ -9519,11 +9510,17 @@ export const TeamsContentFragmentDoc = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'skills' },
+                        name: {
+                          kind: 'Name',
+                          value: 'expertiseAndResourceTags',
+                        },
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'skillsDescription' },
+                        name: {
+                          kind: 'Name',
+                          value: 'expertiseAndResourceDescription',
+                        },
                       },
                       {
                         kind: 'Field',
@@ -9537,7 +9534,10 @@ export const TeamsContentFragmentDoc = {
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'approach' },
+                              name: {
+                                kind: 'Name',
+                                value: 'mainResearchInterests',
+                              },
                             },
                             {
                               kind: 'Field',
@@ -9913,13 +9913,16 @@ export const GroupsContentFragmentDoc = {
                                   },
                                   {
                                     kind: 'Field',
-                                    name: { kind: 'Name', value: 'skills' },
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'expertiseAndResourceTags',
+                                    },
                                   },
                                   {
                                     kind: 'Field',
                                     name: {
                                       kind: 'Name',
-                                      value: 'skillsDescription',
+                                      value: 'expertiseAndResourceDescription',
                                     },
                                   },
                                   {
@@ -9936,7 +9939,7 @@ export const GroupsContentFragmentDoc = {
                                           kind: 'Field',
                                           name: {
                                             kind: 'Name',
-                                            value: 'approach',
+                                            value: 'mainResearchInterests',
                                           },
                                         },
                                         {
@@ -10415,10 +10418,16 @@ export const UsersContentFragmentDoc = {
                     ],
                   },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'skills' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'skillsDescription' },
+                  name: { kind: 'Name', value: 'expertiseAndResourceTags' },
+                },
+                {
+                  kind: 'Field',
+                  name: {
+                    kind: 'Name',
+                    value: 'expertiseAndResourceDescription',
+                  },
                 },
                 {
                   kind: 'Field',
@@ -10429,7 +10438,7 @@ export const UsersContentFragmentDoc = {
                       { kind: 'Field', name: { kind: 'Name', value: 'role' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'approach' },
+                        name: { kind: 'Name', value: 'mainResearchInterests' },
                       },
                       {
                         kind: 'Field',

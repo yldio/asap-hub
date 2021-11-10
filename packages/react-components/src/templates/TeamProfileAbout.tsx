@@ -5,7 +5,7 @@ import { TeamResponse } from '@asap-hub/model';
 import { perRem } from '../pixels';
 import {
   TeamMembersSection,
-  ProfileSkills,
+  ProfileExpertiseAndResources,
   TeamProfileOverview,
 } from '../organisms';
 import { CtaCard } from '../molecules';
@@ -17,7 +17,7 @@ const styles = css({
 });
 
 type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
-  ComponentProps<typeof ProfileSkills> &
+  ComponentProps<typeof ProfileExpertiseAndResources> &
   Omit<ComponentProps<typeof TeamMembersSection>, 'title'> &
   Pick<TeamResponse, 'pointOfContact'> & {
     teamGroupsCard?: React.ReactNode;
@@ -27,7 +27,7 @@ type TeamProfileAboutProps = ComponentProps<typeof TeamProfileOverview> &
 const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
   projectTitle,
   projectSummary,
-  skills,
+  expertiseAndResourceTags,
   pointOfContact,
   members,
   proposalURL,
@@ -42,7 +42,11 @@ const TeamProfileAbout: React.FC<TeamProfileAboutProps> = ({
         proposalURL={proposalURL}
       />
     ) : null}
-    {skills.length ? <ProfileSkills skills={skills} /> : null}
+    {expertiseAndResourceTags.length ? (
+      <ProfileExpertiseAndResources
+        expertiseAndResourceTags={expertiseAndResourceTags}
+      />
+    ) : null}
     {members.length ? (
       <section id={teamListElementId}>
         <TeamMembersSection members={members} />

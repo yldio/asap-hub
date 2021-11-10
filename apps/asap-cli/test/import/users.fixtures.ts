@@ -11,7 +11,7 @@ export const fetchTeamsResponse: { total: number; items: RestTeam[] } = {
         displayName: { iv: 'team' },
         applicationNumber: { iv: 'app' },
         projectTitle: { iv: 'title' },
-        skills: { iv: [] },
+        expertiseAndResourceTags: { iv: [] },
         outputs: { iv: [] },
       },
     },
@@ -37,7 +37,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         biography: { iv: 'Biography' },
         teams: { iv: [] },
         questions: { iv: [] },
-        skills: { iv: [] },
+        expertiseAndResourceTags: { iv: [] },
         role: { iv: 'Grantee' },
         onboarded: {
           iv: true,
@@ -61,7 +61,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         biography: { iv: 'Biography' },
         questions: { iv: [{ question: 'Question?' }] },
         teams: { iv: [] },
-        skills: { iv: [] },
+        expertiseAndResourceTags: { iv: [] },
         role: { iv: 'Grantee' },
         onboarded: {
           iv: true,
@@ -91,7 +91,7 @@ export const fetchUsersResponse: { total: number; items: RestUser[] } = {
         biography: { iv: 'Biography' },
         questions: { iv: [{ question: 'Question?' }] },
         teams: { iv: [] },
-        skills: { iv: [] },
+        expertiseAndResourceTags: { iv: [] },
         role: { iv: 'Grantee' },
         onboarded: {
           iv: true,

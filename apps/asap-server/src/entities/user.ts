@@ -33,14 +33,14 @@ export const userUpdateSchema = Joi.object({
   biography: Joi.string().allow(''),
   country: Joi.string().allow(''),
   city: Joi.string().allow(''),
-  skills: Joi.array().items(Joi.string()),
-  skillsDescription: Joi.string().allow(''),
+  expertiseAndResourceTags: Joi.array().items(Joi.string()),
+  expertiseAndResourceDescription: Joi.string().allow(''),
   questions: Joi.array().items(Joi.string()),
   teams: Joi.array().items(
     Joi.object({
       id: Joi.string().required(),
       responsibilities: Joi.string().allow(''),
-      approach: Joi.string().allow(''),
+      mainResearchInterests: Joi.string().allow(''),
     })
       .min(2)
       .required(),
@@ -74,18 +74,18 @@ export const parseGraphQLUserTeamConnections = (
     const team = item.id[0];
     const displayName = team.flatData?.displayName;
     const proposal = team.flatData?.proposal;
-
     if (!item.role || !isTeamRole(item.role)) {
       logger.warn(`Invalid team role: ${item.role}`);
       return acc;
     }
-
     return [
       ...acc,
       {
         id: team.id,
         role: item.role,
-        approach: item.approach ? item.approach : undefined,
+        mainResearchInterests: item.mainResearchInterests
+          ? item.mainResearchInterests
+          : undefined,
         responsibilities: item.responsibilities
           ? item.responsibilities
           : undefined,
@@ -101,7 +101,8 @@ export const parseGraphQLUser = (
   const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =
     item.flatData.avatar || [];
   const flatQuestions = item.flatData.questions || [];
-  const flatSkills = item.flatData.skills || [];
+  const flatExpertiseAndResourceTags =
+    item.flatData.expertiseAndResourceTags || [];
   const createdDate = parseDate(item.created).toISOString();
 
   const role =
@@ -188,8 +189,9 @@ export const parseGraphQLUser = (
       flatQuestions
         .map((q) => q.question)
         .filter<string>((q): q is string => typeof q === 'string') || [],
-    skills: flatSkills,
-    skillsDescription: item.flatData.skillsDescription ?? undefined,
+    expertiseAndResourceTags: flatExpertiseAndResourceTags,
+    expertiseAndResourceDescription:
+      item.flatData.expertiseAndResourceDescription ?? undefined,
     lastModifiedDate: item.flatData.lastModifiedDate || createdDate,
     teams,
     social,
@@ -217,7 +219,9 @@ export const parseUser = (user: RestUser): UserResponse => {
           id: id[0],
           displayName: 'Unknown',
           ...t,
-          approach: t.approach ? t.approach : undefined,
+          mainResearchInterests: t.mainResearchInterests
+            ? t.mainResearchInterests
+            : undefined,
           responsibilities: t.responsibilities ? t.responsibilities : undefined,
         },
       ];
@@ -250,8 +254,9 @@ export const parseUser = (user: RestUser): UserResponse => {
     orcid: user.data.orcid?.iv,
     orcidLastModifiedDate: user.data.orcidLastModifiedDate?.iv,
     orcidWorks: user.data.orcidWorks?.iv,
-    skills: user.data.skills?.iv || [],
-    skillsDescription: user.data.skillsDescription?.iv,
+    expertiseAndResourceTags: user.data.expertiseAndResourceTags?.iv || [],
+    expertiseAndResourceDescription:
+      user.data.expertiseAndResourceDescription?.iv,
     questions: user.data.questions?.iv?.map(({ question }) => question) || [],
     avatarUrl:
       (user.data.avatar?.iv && createURL(user.data.avatar.iv)[0]) ?? undefined,

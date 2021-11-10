@@ -45,8 +45,8 @@ export const getGraphqlResponseFetchUsers = (): {
             lastModifiedDate: null,
             lastName: 'Schwatzneger',
             questions: [],
-            skills: [],
-            skillsDescription: 'Amazing person',
+            expertiseAndResourceTags: [],
+            expertiseAndResourceDescription: 'Amazing person',
             social: [
               {
                 github: 'awesome',
@@ -62,7 +62,7 @@ export const getGraphqlResponseFetchUsers = (): {
             teams: [
               {
                 role: 'Project Manager',
-                approach: 'cover',
+                mainResearchInterests: 'cover',
                 responsibilities: 'increase coverage',
                 id: [
                   {
@@ -108,8 +108,14 @@ export const getGraphQLUser = (): NonNullable<
     city: 'London',
     lastModifiedDate: '',
     questions: [{ question: 'Question 1' }, { question: 'Question 2' }],
-    skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
-    skillsDescription: null,
+    expertiseAndResourceTags: [
+      'expertise 1',
+      'expertise 2',
+      'expertise 3',
+      'expertise 4',
+      'expertise 5',
+    ],
+    expertiseAndResourceDescription: null,
     orcid: '123-456-789',
     orcidWorks: [
       {
@@ -126,7 +132,7 @@ export const getGraphQLUser = (): NonNullable<
     teams: [
       {
         role: 'Lead PI (Core Leadership)',
-        approach: 'some team approach',
+        mainResearchInterests: 'some team mainResearchInterests',
         responsibilities: 'some team responsibilities',
         id: [
           {
@@ -159,7 +165,7 @@ export const patchResponse: RestUser = {
     onboarded: { iv: true },
     reachOut: { iv: 'some reach out' },
     responsibilities: { iv: 'some responsibilities' },
-    skillsDescription: { iv: 'some skills' },
+    expertiseAndResourceDescription: { iv: 'some expertiseAndResourceTags' },
     role: { iv: 'Grantee' },
     lastModifiedDate: { iv: '2020-09-25T09:42:51.132Z' },
     email: { iv: 'cristiano@ronaldo.com' },
@@ -171,14 +177,14 @@ export const patchResponse: RestUser = {
     country: { iv: 'United Kingdom' },
     city: { iv: 'Brighton' },
     avatar: { iv: ['squidex-asset-id'] },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     orcidWorks: { iv: [] },
     teams: {
       iv: [
         {
           id: ['team-id-1'],
           role: 'Lead PI (Core Leadership)',
-          approach: 'Exact',
+          mainResearchInterests: 'Exact',
           responsibilities: 'Make sure coverage is high',
         },
         {
@@ -207,7 +213,13 @@ export const getUserResponse = (): UserResponse => ({
   onboarded: true,
   createdDate: '2020-09-23T20:45:22.000Z',
   questions: ['Question 1', 'Question 2'],
-  skills: ['skill 1', 'skill 2', 'skill 3', 'skill 4', 'skill 5'],
+  expertiseAndResourceTags: [
+    'expertise 1',
+    'expertise 2',
+    'expertise 3',
+    'expertise 4',
+    'expertise 5',
+  ],
   displayName: 'Tom Hardy',
   institution: 'some institution',
   jobTitle: 'some job title',
@@ -241,7 +253,7 @@ export const getUserResponse = (): UserResponse => ({
       role: 'Lead PI (Core Leadership)',
       displayName: 'Team A',
       proposal: 'proposalId1',
-      approach: 'some team approach',
+      mainResearchInterests: 'some team mainResearchInterests',
       responsibilities: 'some team responsibilities',
     },
   ],
@@ -270,8 +282,8 @@ export const fetchExpectation: ListUserResponse = {
       onboarded: true,
       createdDate: '2020-09-23T20:45:22.000Z',
       questions: [],
-      skills: [],
-      skillsDescription: 'Amazing person',
+      expertiseAndResourceTags: [],
+      expertiseAndResourceDescription: 'Amazing person',
       displayName: 'Arnold Schwatzneger',
       email: 'iwillbeback@arnold.com',
       firstName: 'Arnold',
@@ -296,7 +308,7 @@ export const fetchExpectation: ListUserResponse = {
           id: 'team-id-2',
           role: 'Project Manager',
           displayName: 'Team B',
-          approach: 'cover',
+          mainResearchInterests: 'cover',
           responsibilities: 'increase coverage',
           proposal: 'proposalId',
         },
@@ -350,7 +362,7 @@ export const updateUserEvent: WebhookPayload<User> = {
         iv: 'notChanged',
       },
       avatar: { iv: [] },
-      skills: { iv: [] },
+      expertiseAndResourceTags: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
       onboarded: {
@@ -381,7 +393,7 @@ export const updateUserEvent: WebhookPayload<User> = {
         iv: 'notChanged',
       },
       avatar: { iv: [] },
-      skills: { iv: [] },
+      expertiseAndResourceTags: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
       onboarded: {
@@ -408,7 +420,7 @@ export const userPublishedEvent: WebhookPayload<User> = {
         iv: 'Grantee',
       },
       avatar: { iv: [] },
-      skills: { iv: [] },
+      expertiseAndResourceTags: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
       lastModifiedDate: {

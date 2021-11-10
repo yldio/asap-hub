@@ -33,7 +33,7 @@ const props = (): ComponentProps<typeof EventCard> => {
       ['Cancelled', 'Confirmed', 'Tentative'],
       'Confirmed',
     ),
-    tags: array('Skills', [
+    tags: array('Expertise and Resources', [
       'Neurological Diseases',
       'Clinical Neurology',
       'Adult Neurology',

@@ -12,7 +12,7 @@ const boilerplateProps: Omit<
   displayName: 'Doe, J',
   lastModifiedDate: new Date(2020, 6, 12, 14, 32).toISOString(),
   members: [],
-  skills: [],
+  expertiseAndResourceTags: [],
   outputs: [],
   teamListElementId: '',
   labCount: 15,

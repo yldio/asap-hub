@@ -27,7 +27,7 @@ const teamsProps = (): ComponentProps<typeof NetworkTeams> => {
       displayName: `Barnes, A. ${i + 1}`,
       projectTitle:
         'Caczis lu ugez fotsilaz ijmomi uliruti lerohe ji godmiw suuzu imatorok vuk nubozo eveoluf hec sacme sevce wizlec.',
-      skills: ['Neurological Diseases'],
+      expertiseAndResourceTags: ['Neurological Diseases'],
       labCount: number('Lab count', 15),
       members: [
         { ...member, id: 'm0' },

@@ -3,7 +3,7 @@ import { UserResponse } from '@asap-hub/model';
 
 import {
   UserProfileBackground,
-  ProfileSkills,
+  ProfileExpertiseAndResources,
   QuestionsSection,
   ProfileCardList,
 } from '../organisms';
@@ -11,7 +11,7 @@ import { CtaCard } from '../molecules';
 import { createMailTo } from '../mail';
 
 type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
-  ComponentProps<typeof ProfileSkills> &
+  ComponentProps<typeof ProfileExpertiseAndResources> &
   Pick<
     ComponentProps<typeof UserProfileBackground>,
     'firstName' | 'displayName'
@@ -27,7 +27,7 @@ type UserProfileResearchProps = ComponentProps<typeof QuestionsSection> &
     >;
   } & {
     userProfileGroupsCard?: ReactNode;
-    editSkillsHref?: string;
+    editExpertiseAndResourcesHref?: string;
     editQuestionsHref?: string;
     isOwnProfile?: boolean;
   };
@@ -38,14 +38,14 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
   email,
   contactEmail,
   teams,
-  skills,
-  skillsDescription,
+  expertiseAndResourceTags,
+  expertiseAndResourceDescription,
   questions,
   isOwnProfile,
   labs,
 
   userProfileGroupsCard,
-  editSkillsHref,
+  editExpertiseAndResourcesHref,
   editQuestionsHref,
 }) => (
   <ProfileCardList>
@@ -69,17 +69,17 @@ const UserProfileResearch: React.FC<UserProfileResearchProps> = ({
       })),
       {
         card: (
-          <ProfileSkills
-            skillsDescription={skillsDescription}
-            skills={skills}
+          <ProfileExpertiseAndResources
+            expertiseAndResourceDescription={expertiseAndResourceDescription}
+            expertiseAndResourceTags={expertiseAndResourceTags}
           />
         ),
 
         editLink:
-          editSkillsHref === undefined
+          editExpertiseAndResourcesHref === undefined
             ? undefined
             : {
-                href: editSkillsHref,
+                href: editExpertiseAndResourcesHref,
                 label: 'Edit expertise and resources',
               },
       },

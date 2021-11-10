@@ -18,7 +18,7 @@ export type User = Pick<
   | 'algoliaApiKey'
 > & {
   teams: ReadonlyArray<
-    Omit<UserResponse['teams'][0], 'approach' | 'responsibilities'>
+    Omit<UserResponse['teams'][0], 'mainResearchInterests' | 'responsibilities'>
   >;
 };
 

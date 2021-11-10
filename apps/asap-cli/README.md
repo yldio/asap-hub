@@ -28,7 +28,7 @@ The csv format needs to respect the following structure:
 - biography
 - research_interest
 - responsibilities
-- skills
+- expertise_and_resources
 - asap_role
 - avatar
 - website1

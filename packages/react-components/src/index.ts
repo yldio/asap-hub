@@ -63,6 +63,7 @@ export {
   ToastCard,
   UserMenuButton,
   UsersList,
+  UtilityBar,
 } from './molecules';
 export {
   AdditionalMaterials,

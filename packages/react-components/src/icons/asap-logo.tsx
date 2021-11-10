@@ -29,16 +29,16 @@ const asapLogo = (
         y2="8.956"
         gradientUnits="userSpaceOnUse"
       >
-        <stop offset=".013" stop-color="#8D4F9F"></stop>
-        <stop offset=".132" stop-color="#8B519F"></stop>
-        <stop offset=".214" stop-color="#8655A1"></stop>
-        <stop offset=".285" stop-color="#7D5DA4"></stop>
-        <stop offset=".35" stop-color="#7067A9"></stop>
-        <stop offset=".41" stop-color="#5D71AF"></stop>
-        <stop offset=".467" stop-color="#3F7DB6"></stop>
-        <stop offset=".521" stop-color="#0088BE"></stop>
-        <stop offset=".549" stop-color="#008DC3"></stop>
-        <stop offset="1" stop-color="#41A03F"></stop>
+        <stop offset=".013" stopColor="#8D4F9F"></stop>
+        <stop offset=".132" stopColor="#8B519F"></stop>
+        <stop offset=".214" stopColor="#8655A1"></stop>
+        <stop offset=".285" stopColor="#7D5DA4"></stop>
+        <stop offset=".35" stopColor="#7067A9"></stop>
+        <stop offset=".41" stopColor="#5D71AF"></stop>
+        <stop offset=".467" stopColor="#3F7DB6"></stop>
+        <stop offset=".521" stopColor="#0088BE"></stop>
+        <stop offset=".549" stopColor="#008DC3"></stop>
+        <stop offset="1" stopColor="#41A03F"></stop>
       </linearGradient>
     </defs>
   </svg>

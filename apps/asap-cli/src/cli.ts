@@ -6,10 +6,98 @@
 'use strict';
 
 import yargs from 'yargs/yargs';
+import { hideBin } from 'yargs/helpers';
 import * as importers from './import';
+import { removeAlgoliaIndex } from './algolia/remove-index';
+import { moveAlgoliaIndex } from './algolia/move-index';
 
 // eslint-disable-next-line no-unused-expressions
-yargs(process.argv.slice(2))
+yargs(hideBin(process.argv))
+  .command({
+    command: 'algolia:remove-index',
+    describe: 'remove the index',
+    builder: (cli) =>
+      cli
+        .option('appid', {
+          alias: 'a',
+          type: 'string',
+          description: 'The App ID',
+          demandOption: true,
+        })
+        .option('apikey', {
+          alias: 'k',
+          type: 'string',
+          description: 'The API key',
+          demandOption: true,
+        })
+        .option('index', {
+          alias: 'n',
+          type: 'string',
+          description: 'Name of the index to remove',
+          demandOption: true,
+        }),
+    handler: async ({
+      index,
+      appid,
+      apikey,
+    }: {
+      index: string;
+      appid: string;
+      apikey: string;
+    }) =>
+      removeAlgoliaIndex({
+        algoliaAppId: appid,
+        algoliaCiApiKey: apikey,
+        indexName: index,
+      }),
+  })
+  .command({
+    command: 'algolia:move-index',
+    describe: 'move the index',
+    builder: (cli) =>
+      cli
+        .option('appid', {
+          alias: 'a',
+          type: 'string',
+          description: 'The App ID',
+          demandOption: true,
+        })
+        .option('apikey', {
+          alias: 'k',
+          type: 'string',
+          description: 'The API key',
+          demandOption: true,
+        })
+        .option('indexfrom', {
+          alias: 'n',
+          type: 'string',
+          description: 'Name of the index to move from',
+          demandOption: true,
+        })
+        .option('indexto', {
+          alias: 'i',
+          type: 'string',
+          description: 'Name of the index to move to',
+          demandOption: true,
+        }),
+    handler: async ({
+      indexfrom,
+      indexto,
+      appid,
+      apikey,
+    }: {
+      indexfrom: string;
+      indexto: string;
+      appid: string;
+      apikey: string;
+    }) =>
+      moveAlgoliaIndex({
+        algoliaAppId: appid,
+        algoliaCiApiKey: apikey,
+        indexNameFrom: indexfrom,
+        indexNameTo: indexto,
+      }),
+  })
   .command({
     command: 'import <entity> <path>',
     describe: 'import entities data to squidex from csv',

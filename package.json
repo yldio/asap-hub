@@ -39,7 +39,8 @@
     "watch:typecheck": "yarn build:typecheck -w",
     "schema:update": "./apps/asap-server/scripts/schema-update.sh",
     "ro:export": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/export-research-outputs.ts",
-    "algolia:clear-index": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"commonjs\"}' yarn ts-node --project ./apps/asap-server/tsconfig.json --files=./apps/asap-server/@types ./apps/asap-server/scripts/clear-index.ts"
+    "algolia:remove-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:remove-index",
+    "algolia:move-index": "yarn node apps/asap-cli/build-cjs/cli.js algolia:move-index"
   },
   "resolutions": {
     "encoding": "0.1.13"
@@ -147,7 +148,7 @@
   },
   "dependencies": {
     "@algolia/cli": "^4.0.8",
-    "algoliasearch": "^4.10.5",
+    "algoliasearch": "^4.11.0",
     "ts-node": "^9.1.1"
   }
 }

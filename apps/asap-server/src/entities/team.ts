@@ -139,7 +139,7 @@ export const parseGraphQLTeam = (
     labCount,
     projectTitle: team.flatData.projectTitle,
     lastModifiedDate: parseDate(team.lastModified).toISOString(),
-    skills: team.flatData.skills ?? [],
+    expertiseAndResourceTags: team.flatData.expertiseAndResourceTags ?? [],
     outputs,
     tools,
     pointOfContact: members.find(({ role }) => role === 'Project Manager'),

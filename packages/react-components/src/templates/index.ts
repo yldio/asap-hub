@@ -42,7 +42,7 @@ export { default as SharedResearchPageHeader } from './SharedResearchPageHeader'
 export { default as SharedResearchProposal } from './SharedResearchProposal';
 export { default as SigninForm } from './SigninForm';
 export { default as SigninPage } from './SigninPage';
-export { default as SkillsModal } from './SkillsModal';
+export { default as ExpertiseAndResourcesModal } from './ExpertiseAndResourcesModal';
 export { default as TeamMembershipModal } from './TeamMembershipModal';
 export { default as TeamProfileAbout } from './TeamProfileAbout';
 export { default as TeamProfileHeader } from './TeamProfileHeader';

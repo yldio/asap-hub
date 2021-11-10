@@ -16,13 +16,16 @@ it('renders the biography', () => {
   expect(getByText('Text content')).toBeVisible();
 });
 
-it('renders skills section', () => {
+it('renders expertiseAndResourceTags section', () => {
   const { getByText } = render(
-    <UserProfileStaff {...boilerplateProps} skills={['skill a']} />,
+    <UserProfileStaff
+      {...boilerplateProps}
+      expertiseAndResourceTags={['expertise 1']}
+    />,
   );
 
   expect(getByText('Expertise and Resources')).toBeVisible();
-  expect(getByText(/skill.a/i)).toBeVisible();
+  expect(getByText(/expertise.1/i)).toBeVisible();
 });
 
 it('renders questions section', () => {

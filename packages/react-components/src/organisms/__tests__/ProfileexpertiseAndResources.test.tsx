@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import { UserProfileContext } from '@asap-hub/react-context';
 
-import ProfileSkills from '../ProfileSkills';
+import ProfileExpertiseAndResources from '../ProfileExpertiseAndResources';
 
-it('renders skills and expertise', () => {
+it('renders expertiseAndResourceTags and expertise', () => {
   const { getByText, getByRole } = render(
-    <ProfileSkills skills={['a', 'b', 'c']} />,
+    <ProfileExpertiseAndResources expertiseAndResourceTags={['a', 'b', 'c']} />,
   );
   expect(getByText('a')).toBeVisible();
   expect(getByText('b')).toBeVisible();
@@ -15,11 +15,11 @@ it('renders skills and expertise', () => {
   );
 });
 
-it('renders skills and expertises with description', () => {
+it('renders expertiseAndResourceTags and expertises with description', () => {
   const { getByText, getByRole } = render(
-    <ProfileSkills
-      skillsDescription={'description'}
-      skills={['a', 'b', 'c']}
+    <ProfileExpertiseAndResources
+      expertiseAndResourceDescription={'description'}
+      expertiseAndResourceTags={['a', 'b', 'c']}
     />,
   );
 
@@ -33,14 +33,22 @@ it('renders skills and expertises with description', () => {
 it('renders description placeholder component when no description and own profile', () => {
   const { getByText, queryByText, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <ProfileSkills skillsDescription="" skills={['test']} />,
+      <ProfileExpertiseAndResources
+        expertiseAndResourceDescription=""
+        expertiseAndResourceTags={['test']}
+      />
+      ,
     </UserProfileContext.Provider>,
   );
   expect(queryByText(/you summarize/i)).toBeNull();
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <ProfileSkills skillsDescription="" skills={['test']} />,
+      <ProfileExpertiseAndResources
+        expertiseAndResourceDescription=""
+        expertiseAndResourceTags={['test']}
+      />
+      ,
     </UserProfileContext.Provider>,
   );
 
@@ -50,23 +58,34 @@ it('renders description placeholder component when no description and own profil
 it('renders tags placeholder component when description, no tags and own profile', () => {
   const { getByText, queryByText, rerender } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <ProfileSkills skillsDescription="test" skills={[]} />,
+      <ProfileExpertiseAndResources
+        expertiseAndResourceDescription="test"
+        expertiseAndResourceTags={[]}
+      />
+      ,
     </UserProfileContext.Provider>,
   );
   expect(queryByText(/add tags/i)).toBeNull();
 
   rerender(
     <UserProfileContext.Provider value={{ isOwnProfile: true }}>
-      <ProfileSkills skillsDescription="test" skills={[]} />,
+      <ProfileExpertiseAndResources
+        expertiseAndResourceDescription="test"
+        expertiseAndResourceTags={[]}
+      />
+      ,
     </UserProfileContext.Provider>,
   );
   expect(getByText(/add tags/i)).toBeVisible();
 });
 
-it('is not rendered when not own profile and without skills', () => {
+it('is not rendered when not own profile and without expertiseAndResourceTags', () => {
   const { container } = render(
     <UserProfileContext.Provider value={{ isOwnProfile: false }}>
-      <ProfileSkills skillsDescription="" skills={[]} />
+      <ProfileExpertiseAndResources
+        expertiseAndResourceDescription=""
+        expertiseAndResourceTags={[]}
+      />
     </UserProfileContext.Provider>,
   );
 

@@ -17,7 +17,11 @@ const user = (() => {
     },
   );
 
-  const editSkills = route('/edit-skills', {}, {});
+  const editExpertiseAndResources = route(
+    '/edit-expertise-and-resources',
+    {},
+    {},
+  );
   const editQuestions = route('/edit-questions', {}, {});
   const editTeamMembership = route(
     '/edit-team-membership/:teamId',
@@ -31,7 +35,7 @@ const user = (() => {
       editPersonalInfo,
       editContactInfo,
       editOnboarded,
-      editSkills,
+      editExpertiseAndResources,
       editQuestions,
       editTeamMembership,
     },

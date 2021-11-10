@@ -49,7 +49,7 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
   id,
   displayName,
   role,
-  approach = '',
+  mainResearchInterests = '',
   responsibilities = '',
   proposal,
   labs = [],
@@ -84,11 +84,11 @@ const UserProfileBackground: React.FC<UserProfileBackgroundProps> = ({
             <span>{labsList}</span>
           </div>
         )}
-        {(approach || isOwnProfile) && (
+        {(mainResearchInterests || isOwnProfile) && (
           <div css={detailsContentStyle}>
             <Headline3 styleAsHeading={5}>Main Research Interests</Headline3>
-            {approach ? (
-              <p css={textStyle}>{approach}</p>
+            {mainResearchInterests ? (
+              <p css={textStyle}>{mainResearchInterests}</p>
             ) : (
               <UserProfilePlaceholderCard title="What are your main research interests?">
                 Tell the network what your main research interests are to easily

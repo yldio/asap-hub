@@ -3651,7 +3651,6 @@ type TeamsDataDto {
   projectSummary: TeamsDataProjectSummaryDto
   projectTitle: TeamsDataProjectTitleDto
   proposal: TeamsDataProposalDto
-  skills: TeamsDataSkillsDto
   tools: TeamsDataToolsDto
 }
 
@@ -3674,7 +3673,6 @@ input TeamsDataInputDto {
   projectSummary: TeamsDataProjectSummaryInputDto
   projectTitle: TeamsDataProjectTitleInputDto
   proposal: TeamsDataProposalInputDto
-  skills: TeamsDataSkillsInputDto
   tools: TeamsDataToolsInputDto
 }
 
@@ -3718,16 +3716,6 @@ input TeamsDataProposalInputDto {
   iv: [String!]
 }
 
-"""The structure of the Expertise and Resources field of the Teams content type."""
-type TeamsDataSkillsDto {
-  iv: [String!]
-}
-
-"""The structure of the Expertise and Resources field of the Teams content input type."""
-input TeamsDataSkillsInputDto {
-  iv: [String!]
-}
-
 """The structure of the External Tools nested schema."""
 type TeamsDataToolsChildDto {
   description: String
@@ -3761,7 +3749,6 @@ type TeamsFlatDataDto {
   projectSummary: String
   projectTitle: String
   proposal: [ResearchOutputs!]
-  skills: [String!]
   tools: [TeamsDataToolsChildDto!]
 }
 
@@ -4013,8 +4000,6 @@ type UsersDataDto {
   reachOut: UsersDataReachOutDto
   responsibilities: UsersDataResponsibilitiesDto
   role: UsersDataRoleDto
-  skills: UsersDataSkillsDto
-  skillsDescription: UsersDataSkillsDescriptionDto
   social: UsersDataSocialDto
   teams: UsersDataTeamsDto
 }
@@ -4087,8 +4072,6 @@ input UsersDataInputDto {
   reachOut: UsersDataReachOutInputDto
   responsibilities: UsersDataResponsibilitiesInputDto
   role: UsersDataRoleInputDto
-  skills: UsersDataSkillsInputDto
-  skillsDescription: UsersDataSkillsDescriptionInputDto
   social: UsersDataSocialInputDto
   teams: UsersDataTeamsInputDto
 }
@@ -4278,26 +4261,6 @@ input UsersDataRoleInputDto {
   iv: String
 }
 
-"""The structure of the Expertise and Resources Description field of the Users content type."""
-type UsersDataSkillsDescriptionDto {
-  iv: String
-}
-
-"""The structure of the Expertise and Resources Description field of the Users content input type."""
-input UsersDataSkillsDescriptionInputDto {
-  iv: String
-}
-
-"""The structure of the Expertise and Resources field of the Users content type."""
-type UsersDataSkillsDto {
-  iv: [String!]
-}
-
-"""The structure of the Expertise and Resources field of the Users content input type."""
-input UsersDataSkillsInputDto {
-  iv: [String!]
-}
-
 """The structure of the Social Links nested schema."""
 type UsersDataSocialChildDto {
   github: String
@@ -4334,7 +4297,6 @@ input UsersDataSocialInputDto {
 
 """The structure of the Teams nested schema."""
 type UsersDataTeamsChildDto {
-  approach: String
   id: [Teams!]
   mainResearchInterests: String
   responsibilities: String
@@ -4344,7 +4306,6 @@ type UsersDataTeamsChildDto {
 
 """The structure of the Teams nested schema."""
 input UsersDataTeamsChildInputDto {
-  approach: String
   id: [String!]
   mainResearchInterests: String
   responsibilities: String
@@ -4398,8 +4359,6 @@ type UsersFlatDataDto {
   responsibilities: String
   """Role on the ASAP Hub"""
   role: String
-  skills: [String!]
-  skillsDescription: String
   social: [UsersDataSocialChildDto!]
   """Mandatory for grantees. They cannot publish profile without a team."""
   teams: [UsersDataTeamsChildDto!]

@@ -14,7 +14,7 @@ export const fetchUserResponse: RestUser = {
     orcid: { iv: '0000-0002-9079-593X' },
     orcidWorks: { iv: [] },
     avatar: { iv: ['uuid-user-id-1'] },
-    skills: { iv: [] },
+    expertiseAndResourceTags: { iv: [] },
     questions: { iv: [] },
     teams: { iv: [] },
     connections: {
@@ -64,7 +64,7 @@ export const updateUserEvent: WebhookPayload<User> = {
         iv: 'notChanged',
       },
       avatar: { iv: [] },
-      skills: { iv: [] },
+      expertiseAndResourceTags: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
       onboarded: {
@@ -95,7 +95,7 @@ export const updateUserEvent: WebhookPayload<User> = {
         iv: 'notChanged',
       },
       avatar: { iv: [] },
-      skills: { iv: [] },
+      expertiseAndResourceTags: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
       onboarded: {
@@ -122,7 +122,7 @@ export const createUserEvent: WebhookPayload<User> = {
         iv: 'Grantee',
       },
       avatar: { iv: [] },
-      skills: { iv: [] },
+      expertiseAndResourceTags: { iv: [] },
       questions: { iv: [] },
       teams: { iv: [] },
       lastModifiedDate: {

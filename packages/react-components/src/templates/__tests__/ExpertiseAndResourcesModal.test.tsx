@@ -5,16 +5,16 @@ import { MemoryRouter, StaticRouter } from 'react-router-dom';
 import { createUserResponse } from '@asap-hub/fixtures';
 import { findParentWithStyle } from '@asap-hub/dom-test-utils';
 
-import SkillsModal from '../SkillsModal';
+import ExpertiseAndResourcesModal from '../ExpertiseAndResourcesModal';
 import { ember, steel } from '../../colors';
 
-const props: ComponentProps<typeof SkillsModal> = {
+const props: ComponentProps<typeof ExpertiseAndResourcesModal> = {
   ...createUserResponse(),
-  skillSuggestions: [],
+  expertiseAndResourceSuggestions: [],
   backHref: '/wrong',
 };
 it('renders the title', () => {
-  const { getByText } = render(<SkillsModal {...props} />, {
+  const { getByText } = render(<ExpertiseAndResourcesModal {...props} />, {
     wrapper: StaticRouter,
   });
   expect(
@@ -23,7 +23,7 @@ it('renders the title', () => {
 });
 
 it('indicates which fields are required or optional', () => {
-  const { getByText } = render(<SkillsModal {...props} />, {
+  const { getByText } = render(<ExpertiseAndResourcesModal {...props} />, {
     wrapper: StaticRouter,
   });
 
@@ -37,7 +37,10 @@ it('indicates which fields are required or optional', () => {
 
 it('renders default values into text inputs', () => {
   const { getByLabelText } = render(
-    <SkillsModal {...props} skillsDescription="example description" />,
+    <ExpertiseAndResourcesModal
+      {...props}
+      expertiseAndResourceDescription="example description"
+    />,
     { wrapper: StaticRouter },
   );
   expect(getByLabelText(/overview/i)).toHaveValue('example description');
@@ -46,10 +49,10 @@ it('renders default values into text inputs', () => {
 it('triggers the save function', async () => {
   const handleSave = jest.fn();
   const { getByLabelText, getByText } = render(
-    <SkillsModal
+    <ExpertiseAndResourcesModal
       {...props}
-      skills={['1', '2', '3', '4']}
-      skillSuggestions={['1', '2', '3', '4', '5']}
+      expertiseAndResourceTags={['1', '2', '3', '4']}
+      expertiseAndResourceSuggestions={['1', '2', '3', '4', '5']}
       onSave={handleSave}
     />,
     { wrapper: MemoryRouter },
@@ -66,8 +69,8 @@ it('triggers the save function', async () => {
     expect(getByText(/save/i).closest('button')).toBeEnabled(),
   );
   expect(handleSave).toHaveBeenCalledWith({
-    skillsDescription: 'example description',
-    skills: ['1', '2', '3', '4', '5'],
+    expertiseAndResourceDescription: 'example description',
+    expertiseAndResourceTags: ['1', '2', '3', '4', '5'],
   });
 });
 
@@ -78,9 +81,9 @@ it('disables the form elements while submitting', async () => {
       resolveSubmit = resolve;
     });
   const { getByText } = render(
-    <SkillsModal
+    <ExpertiseAndResourcesModal
       {...props}
-      skills={['1', '2', '3', '4', '5']}
+      expertiseAndResourceTags={['1', '2', '3', '4', '5']}
       onSave={handleSave}
     />,
     {
@@ -103,7 +106,10 @@ it('disables the form elements while submitting', async () => {
 describe('tags selection', () => {
   it('displays a no options message', async () => {
     const { getByLabelText, getByText } = render(
-      <SkillsModal {...props} skillSuggestions={['abc']} />,
+      <ExpertiseAndResourcesModal
+        {...props}
+        expertiseAndResourceSuggestions={['abc']}
+      />,
       { wrapper: StaticRouter },
     );
 
@@ -111,12 +117,12 @@ describe('tags selection', () => {
     expect(getByText('Sorry, No current tags match "def"')).toBeVisible();
   });
 
-  it('displays an error message when not enough skills have been selected on save', () => {
+  it('displays an error message when not enough expertiseAndResourceTags have been selected on save', () => {
     const handleSave = jest.fn();
     const { getByText, getByLabelText } = render(
-      <SkillsModal
+      <ExpertiseAndResourcesModal
         {...props}
-        skills={['1', '2', '3', '4']}
+        expertiseAndResourceTags={['1', '2', '3', '4']}
         onSave={handleSave}
       />,
       {
@@ -134,13 +140,13 @@ describe('tags selection', () => {
     expect(handleSave).not.toHaveBeenCalled();
   });
 
-  it('removes error message when enough skills are selected', () => {
+  it('removes error message when enough expertiseAndResourceTags are selected', () => {
     const handleSave = jest.fn();
     const { getByLabelText, getByText, queryByText } = render(
-      <SkillsModal
+      <ExpertiseAndResourcesModal
         {...props}
-        skills={['1', '2', '3']}
-        skillSuggestions={['1', '2', '3', '4', '5']}
+        expertiseAndResourceTags={['1', '2', '3']}
+        expertiseAndResourceSuggestions={['1', '2', '3', '4', '5']}
         onSave={handleSave}
       />,
       {

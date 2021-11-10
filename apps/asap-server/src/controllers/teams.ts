@@ -91,7 +91,7 @@ export default class Teams implements TeamController {
             `(${[
               [`contains(data/displayName/iv, '${word}')`],
               [`contains(data/projectTitle/iv, '${word}')`],
-              [`contains(data/skills/iv, '${word}')`],
+              [`contains(data/expertiseAndResourceTags/iv, '${word}')`],
             ].join(' or ')})`,
           ),
         [],

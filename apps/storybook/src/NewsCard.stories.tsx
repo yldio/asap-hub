@@ -10,7 +10,10 @@ const newsProps = () => ({
   id: 'uuid-1',
   created: new Date().toISOString(),
   type: 'News' as const,
-  title: text('Title', "Coordinating different approaches into Parkinson's"),
+  title: text(
+    'Title',
+    "Coordinating different research interests into Parkinson's",
+  ),
   link: text('External Link', 'https://picsum.photos/200'),
   linkText: text('External Link Text', 'Read More'),
   shortText: text(

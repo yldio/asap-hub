@@ -273,7 +273,7 @@ describe('Users controller', () => {
       expect(result).toEqual(getUserResponse());
     });
 
-    test('Should filter out team the team role is invalid', async () => {
+    test('Should filter out a team when the team role is invalid', async () => {
       const mockResponse = getGraphqlResponseFetchUser();
       mockResponse.data.findUsersContent!.flatData.teams![0]!.role =
         'invalid role';

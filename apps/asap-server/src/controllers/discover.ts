@@ -30,13 +30,14 @@ export default class Discover implements DiscoverController {
   }
 
   async fetch(): Promise<DiscoverResponse> {
-    const res = await this.client.request<FetchDiscoverQuery, unknown>(
-      FETCH_DISCOVER,
-    );
+    const { queryDiscoverContents } = await this.client.request<
+      FetchDiscoverQuery,
+      unknown
+    >(FETCH_DISCOVER);
     if (
-      !res.queryDiscoverContents ||
-      res.queryDiscoverContents.length === 0 ||
-      !res.queryDiscoverContents[0]
+      !queryDiscoverContents ||
+      queryDiscoverContents.length === 0 ||
+      !queryDiscoverContents[0]
     ) {
       return {
         aboutUs: '',
@@ -46,14 +47,12 @@ export default class Discover implements DiscoverController {
       };
     }
 
-    const [content] = res.queryDiscoverContents;
+    const [{ flatData }] = queryDiscoverContents;
     return {
-      aboutUs: content.flatData.aboutUs || '',
-      training: content.flatData.training?.map(parseGraphQLNews) ?? [],
-      members:
-        content.flatData.members?.map((member) => parseGraphQLUser(member)) ??
-        [],
-      pages: content.flatData.pages?.map(parseGraphQLPage) ?? [],
+      aboutUs: flatData.aboutUs || '',
+      training: flatData.training?.map(parseGraphQLNews) ?? [],
+      members: flatData.members?.map(parseGraphQLUser) ?? [],
+      pages: flatData.pages?.map(parseGraphQLPage) ?? [],
     };
   }
 }

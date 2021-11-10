@@ -17,12 +17,14 @@ export default class Dashboard {
   }
 
   async fetch(): Promise<DashboardResponse> {
-    const res = await this.client.request<FetchDashboardQuery, unknown>(
-      FETCH_DASHBOARD,
-    );
+    const { queryDashboardContents } = await this.client.request<
+      FetchDashboardQuery,
+      unknown
+    >(FETCH_DASHBOARD);
     if (
-      !res.queryDashboardContents ||
-      res.queryDashboardContents.length === 0
+      !queryDashboardContents ||
+      queryDashboardContents.length === 0 ||
+      !queryDashboardContents[0]
     ) {
       return {
         news: [],
@@ -30,13 +32,10 @@ export default class Dashboard {
       };
     }
 
+    const [{ flatData }] = queryDashboardContents;
     return {
-      news:
-        res.queryDashboardContents[0]?.flatData.news?.map(parseGraphQLNews) ??
-        [],
-      pages:
-        res.queryDashboardContents[0]?.flatData.pages?.map(parseGraphQLPage) ??
-        [],
+      news: flatData.news?.map(parseGraphQLNews) ?? [],
+      pages: flatData.pages?.map(parseGraphQLPage) ?? [],
     };
   }
 }

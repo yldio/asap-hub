@@ -1,5 +1,6 @@
-import { NewsResponse } from '@asap-hub/model';
-import { GraphqlNews, RestNews } from '@asap-hub/squidex';
+import { NewsResponse, newsType, NewsType } from '@asap-hub/model';
+import { RestNews } from '@asap-hub/squidex';
+import { NewsFragment } from '../gql/graphql';
 import { parseDate, createURL } from '../utils/squidex';
 
 export const parseNews = (item: RestNews): NewsResponse => ({
@@ -16,7 +17,7 @@ export const parseNews = (item: RestNews): NewsResponse => ({
   type: item.data.type.iv,
 });
 
-export const parseGraphQLNews = (item: GraphqlNews): NewsResponse => {
+export const parseGraphQLNews = (item: NewsFragment): NewsResponse => {
   const createdDate = parseDate(item.created).toISOString();
   return {
     id: item.id,
@@ -26,9 +27,14 @@ export const parseGraphQLNews = (item: GraphqlNews): NewsResponse => {
     text: item.flatData?.text || undefined,
     link: item.flatData?.link || undefined,
     linkText: item.flatData?.linkText || undefined,
-    type: item.flatData?.type || 'News',
+    type:
+      item.flatData.type && isNewsType(item.flatData.type)
+        ? item.flatData.type
+        : 'News',
     thumbnail: item.flatData?.thumbnail?.length
       ? createURL(item.flatData.thumbnail.map((t) => t.id))[0]
       : undefined,
   };
 };
+const isNewsType = (type: string): type is NewsType =>
+  (newsType as ReadonlyArray<string>).includes(type);

@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import { newsQueryFragment } from './news.queries';
 
 export const FETCH_DISCOVER = gql`
   query FetchDiscover {
@@ -6,20 +7,7 @@ export const FETCH_DISCOVER = gql`
       flatData {
         aboutUs
         training {
-          id
-          created
-          lastModified
-          flatData {
-            type
-            shortText
-            text
-            title
-            link
-            linkText
-            thumbnail {
-              id
-            }
-          }
+          ...News
         }
         pages {
           id
@@ -51,5 +39,6 @@ export const FETCH_DISCOVER = gql`
         }
       }
     }
+  ${newsQueryFragment}
   }
 `;

@@ -4294,7 +4294,7 @@ export type FetchDashboardQuery = {
       flatData: {
         news: Maybe<
           Array<
-            Pick<NewsAndEvents, 'id' | 'created'> & {
+            Pick<NewsAndEvents, 'id' | 'created' | 'lastModified'> & {
               flatData: Pick<
                 NewsAndEventsFlatDataDto,
                 'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
@@ -4304,7 +4304,7 @@ export type FetchDashboardQuery = {
         >;
         pages: Maybe<
           Array<
-            Pick<Pages, 'id' | 'created'> & {
+            Pick<Pages, 'id' | 'created' | 'lastModified'> & {
               flatData: Pick<
                 PagesFlatDataDto,
                 'path' | 'title' | 'shortText' | 'text' | 'link' | 'linkText'
@@ -4325,17 +4325,17 @@ export type FetchDiscoverQuery = {
       flatData: Pick<DiscoverFlatDataDto, 'aboutUs'> & {
         training: Maybe<
           Array<
-            Pick<NewsAndEvents, 'id' | 'created'> & {
+            Pick<NewsAndEvents, 'id' | 'created' | 'lastModified'> & {
               flatData: Pick<
                 NewsAndEventsFlatDataDto,
-                'type' | 'shortText' | 'text' | 'title' | 'link' | 'linkText'
+                'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
               > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
             }
           >
         >;
         pages: Maybe<
           Array<
-            Pick<Pages, 'id' | 'created'> & {
+            Pick<Pages, 'id' | 'created' | 'lastModified'> & {
               flatData: Pick<
                 PagesFlatDataDto,
                 'shortText' | 'text' | 'title' | 'link' | 'linkText'
@@ -4345,7 +4345,7 @@ export type FetchDiscoverQuery = {
         >;
         members: Maybe<
           Array<
-            Pick<Users, 'id' | 'created'> & {
+            Pick<Users, 'id' | 'created' | 'lastModified'> & {
               flatData: Pick<
                 UsersFlatDataDto,
                 | 'email'
@@ -7160,6 +7160,16 @@ export type FetchGroupQuery = {
       };
     }
   >;
+};
+
+export type NewsFragment = Pick<
+  NewsAndEvents,
+  'id' | 'created' | 'lastModified'
+> & {
+  flatData: Pick<
+    NewsAndEventsFlatDataDto,
+    'title' | 'shortText' | 'text' | 'type' | 'link' | 'linkText'
+  > & { thumbnail: Maybe<Array<Pick<Asset, 'id'>>> };
 };
 
 export type ResearchOutputContentFragment = Pick<
@@ -10402,6 +10412,52 @@ export const EventContentFragmentDoc = {
     ...GroupsContentFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<EventContentFragment, unknown>;
+export const NewsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'News' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'NewsAndEvents' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastModified' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'flatData' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'shortText' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thumbnail' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'link' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'linkText' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<NewsFragment, unknown>;
 export const UsersContentFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -10753,58 +10809,8 @@ export const FetchDashboardDocument = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'created' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'shortText' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'text' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'type' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'thumbnail' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'link' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkText' },
-                                  },
-                                ],
-                              },
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'News' },
                             },
                           ],
                         },
@@ -10822,6 +10828,10 @@ export const FetchDashboardDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
                             },
                             {
                               kind: 'Field',
@@ -10868,6 +10878,7 @@ export const FetchDashboardDocument = {
         ],
       },
     },
+    ...NewsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDashboardQuery, FetchDashboardQueryVariables>;
 export const FetchDiscoverDocument = {
@@ -10903,58 +10914,8 @@ export const FetchDiscoverDocument = {
                           kind: 'SelectionSet',
                           selections: [
                             {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'created' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'flatData' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'type' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'shortText' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'text' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'title' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'link' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'linkText' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'thumbnail' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: { kind: 'Name', value: 'id' },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'News' },
                             },
                           ],
                         },
@@ -10972,6 +10933,10 @@ export const FetchDiscoverDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
                             },
                             {
                               kind: 'Field',
@@ -11018,6 +10983,10 @@ export const FetchDiscoverDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'created' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'lastModified' },
                             },
                             {
                               kind: 'Field',
@@ -11083,6 +11052,7 @@ export const FetchDiscoverDocument = {
         ],
       },
     },
+    ...NewsFragmentDoc.definitions,
   ],
 } as unknown as DocumentNode<FetchDiscoverQuery, FetchDiscoverQueryVariables>;
 export const FetchEventsDocument = {

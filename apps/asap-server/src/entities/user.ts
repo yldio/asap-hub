@@ -14,9 +14,10 @@ import {
 import { GraphqlUser, RestUser } from '@asap-hub/squidex';
 
 import { parseDate, createURL } from '../utils/squidex';
-import { FetchUserQuery } from '../gql/graphql';
+import { FetchUserQuery, UsersContentFragment } from '../gql/graphql';
 import { isTeamRole } from './team';
 import logger from '../utils/logger';
+import { usersContentQueryFragment } from '../queries/users.queries';
 
 export type CMSOrcidWork = OrcidWork;
 
@@ -94,8 +95,24 @@ export const parseGraphQLUserTeamConnections = (
       },
     ];
   }, []);
+type BaseProperties = 'id' | 'created' | 'lastModified';
+type BaseFlatDataProperties =
+  | 'email'
+  | 'firstName'
+  | 'institution'
+  | 'jobTitle'
+  | 'lastModifiedDate'
+  | 'lastName';
+type FlatData = UsersContentFragment['flatData'];
+type RequiredFlatData = Pick<FlatData, BaseFlatDataProperties>;
+type OptionalFlatData = Omit<FlatData, BaseFlatDataProperties>;
+type UserGQL = Pick<UsersContentFragment, BaseProperties> & {
+  flatData: RequiredFlatData & Partial<OptionalFlatData>;
+};
+
 export const parseGraphQLUser = (
-  item: NonNullable<FetchUserQuery['findUsersContent']>,
+  // item: NonNullable<FetchUserQuery['findUsersContent']>,
+  item: UserGQL,
 ): UserResponse => {
   const flatTeams = item.flatData.teams || [];
   const flatAvatar: NonNullable<GraphqlUser['flatData']>['avatar'] =

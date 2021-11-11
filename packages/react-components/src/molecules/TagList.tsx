@@ -51,16 +51,18 @@ const overflowContentStyles = css({
   },
 });
 
+const SAFARI_MAX_SAFE_INTEGER = 2 ** 31 - 2;
 interface TagListProps {
   tags: ReadonlyArray<string>;
   enabled?: boolean;
   min?: number;
   max?: number;
 }
+
 const TagList: React.FC<TagListProps> = ({
   tags,
-  min = Number.MAX_SAFE_INTEGER,
-  max = Number.MAX_SAFE_INTEGER,
+  min = SAFARI_MAX_SAFE_INTEGER,
+  max = SAFARI_MAX_SAFE_INTEGER,
   enabled = true,
 }) =>
   tags.length ? (

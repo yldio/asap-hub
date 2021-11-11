@@ -94,6 +94,7 @@ export const parseGraphQLUserTeamConnections = (
       },
     ];
   }, []);
+
 type GraphQLUserRequiredFlatDataProperties =
   | 'email'
   | 'firstName'

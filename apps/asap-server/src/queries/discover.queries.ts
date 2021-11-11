@@ -39,6 +39,6 @@ export const FETCH_DISCOVER = gql`
         }
       }
     }
-  ${newsQueryFragment}
   }
+  ${newsQueryFragment}
 `;

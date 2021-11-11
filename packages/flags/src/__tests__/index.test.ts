@@ -1,4 +1,10 @@
-import { isEnabled, disable, reset, getOverrides } from '..';
+import {
+  isEnabled,
+  disable,
+  reset,
+  getOverrides,
+  setManualOverrides,
+} from '..';
 
 const originalNodeEnv = process.env.NODE_ENV;
 beforeEach(() => {
@@ -26,6 +32,26 @@ describe('in test', () => {
     process.env.NODE_ENV = 'test';
   });
 
+  describe('setManualOverrides,', () => {
+    it('overrides a given set of flags', () => {
+      disable('PERSISTENT_EXAMPLE');
+      disable('ALGOLIA_RESEARCH_OUTPUTS');
+
+      setManualOverrides({
+        PERSISTENT_EXAMPLE: true,
+        ALGOLIA_RESEARCH_OUTPUTS: true,
+      });
+
+      expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+      expect(isEnabled('ALGOLIA_RESEARCH_OUTPUTS')).toBe(true);
+    });
+
+    it('handles when is called without arguments', () => {
+      setManualOverrides();
+      expect(getOverrides()).toMatchObject({});
+      expect(isEnabled('PERSISTENT_EXAMPLE')).toBe(true);
+    });
+  });
   describe('disable', () => {
     it('disables a flag', () => {
       disable('PERSISTENT_EXAMPLE');

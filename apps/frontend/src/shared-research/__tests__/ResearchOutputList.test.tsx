@@ -6,7 +6,8 @@ import {
   createAlgoliaResearchOutputResponse,
 } from '@asap-hub/fixtures';
 import { RecoilRoot } from 'recoil';
-import { disable } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
+import { renderHook } from '@testing-library/react-hooks';
 import userEvent from '@testing-library/user-event';
 
 import ResearchOutputList from '../ResearchOutputList';
@@ -75,7 +76,10 @@ beforeEach(() => {
 });
 
 it('renders a list of research outputs (REGRESSION)', async () => {
-  disable('ALGOLIA_RESEARCH_OUTPUTS');
+  const {
+    result: { current },
+  } = renderHook(useFlags);
+  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
   mockGetResearchOutputsLegacy.mockResolvedValue({
     ...createListResearchOutputResponse(2),
     items: createListResearchOutputResponse(2).items.map((item, index) => ({
@@ -102,7 +106,10 @@ it('renders a list of research outputs', async () => {
 });
 
 it('does not show export link when feature flag disabled (REGRESSION)', async () => {
-  disable('ALGOLIA_RESEARCH_OUTPUTS');
+  const {
+    result: { current },
+  } = renderHook(useFlags);
+  current.disable('ALGOLIA_RESEARCH_OUTPUTS');
   mockGetResearchOutputsLegacy.mockResolvedValue(
     createListResearchOutputResponse(2),
   );

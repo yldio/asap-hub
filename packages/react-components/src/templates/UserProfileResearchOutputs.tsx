@@ -1,4 +1,4 @@
-import { isEnabled } from '@asap-hub/flags';
+import { useFlags } from '@asap-hub/react-context';
 import { css } from '@emotion/react';
 import { ComponentProps } from 'react';
 import { SharedResearchList } from '.';
@@ -26,21 +26,24 @@ const styles = css({
 
 const UserProfileResearchOutputs: React.FC<
   ComponentProps<typeof SharedResearchList>
-> = ({ ...props }) => (
-  <div css={styles}>
-    {isEnabled('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE') ? (
-      <SharedResearchList {...props} />
-    ) : (
-      <ComingSoon>
-        As individuals create and share more research outputs - such as
-        datasets, protocols, code and other resources - they will be listed
-        here. As information is shared, teams should be mindful to respect
-        intellectual boundaries. No investigator or team should act on any of
-        the privileged information shared within the Network without express
-        permission from and credit to the investigator(s) that shared the
-        information.
-      </ComingSoon>
-    )}
-  </div>
-);
+> = ({ ...props }) => {
+  const { isEnabled } = useFlags();
+  return (
+    <div css={styles}>
+      {isEnabled('RESEARCH_OUTPUTS_ON_AUTHOR_PROFILE') ? (
+        <SharedResearchList {...props} />
+      ) : (
+        <ComingSoon>
+          As individuals create and share more research outputs - such as
+          datasets, protocols, code and other resources - they will be listed
+          here. As information is shared, teams should be mindful to respect
+          intellectual boundaries. No investigator or team should act on any of
+          the privileged information shared within the Network without express
+          permission from and credit to the investigator(s) that shared the
+          information.
+        </ComingSoon>
+      )}
+    </div>
+  );
+};
 export default UserProfileResearchOutputs;

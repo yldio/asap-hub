@@ -17,9 +17,9 @@ const parseCookie = (cookies: string, flag: Flag) =>
   cookies.split(';').reduce((acc, cookie) => {
     const [key, val] = cookie.split('=');
     const flagName = key.split('_').slice(1).join('_');
-    const validateCookie = (val: string) => {
+    const validateCookie = (str: string) => {
       try {
-        const parsed = JSON.parse(val);
+        const parsed = JSON.parse(str);
         return typeof parsed === 'boolean' ? parsed : false;
       } catch (e) {
         return false;

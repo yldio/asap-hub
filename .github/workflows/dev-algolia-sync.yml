@@ -2,7 +2,7 @@ name: DEV - Sync Algolia with squidex
 on:
   workflow_dispatch:
 jobs:
-  create_squidex_ro_dump:
+  sync_dev_index:
     runs-on: ubuntu-18.04
     env:
       SQUIDEX_CLIENT_ID: ${{ secrets.SQUIDEX_CLIENT_ID_DEV }}
@@ -25,7 +25,10 @@ jobs:
           echo "ALGOLIA_API_KEY=$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)" >> $GITHUB_ENV
           echo "::add-mask::$(aws ssm get-parameter --name 'algolia-api-key-ci-dev' --query Parameter.Value --output text)"
           echo "ALGOLIA_RESEARCH_OUTPUT_INDEX=asap-hub_research_outputs_dev" >> $GITHUB_ENV
-      - name: Clear the index
-        run: yarn algolia:clear-index
-      - name: Import records into Algolia
-        run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -t ./apps/asap-server/scripts/algolia-transformation.js
+          echo "ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE=asap-hub_research_outputs_dev_restore" >> $GITHUB_ENV
+      - name: Copy index settings to a temporary index
+        run: yarn run algolia transferindexconfig -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX -d $ALGOLIA_APP_ID -y $ALGOLIA_API_KEY -i $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE
+      - name: Import records into the temporary index
+        run: yarn run algolia import -s ./ro.json -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -t ./apps/asap-server/scripts/algolia-transformation.js
+      - name: Move temporary index to the prod one
+        run: yarn algolia:move-index -a $ALGOLIA_APP_ID -k $ALGOLIA_API_KEY -n $ALGOLIA_RESEARCH_OUTPUT_INDEX_RESTORE -i $ALGOLIA_RESEARCH_OUTPUT_INDEX
